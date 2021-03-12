@@ -1,0 +1,288 @@
+html {
+    overflow: -moz-scrollbars-vertical; 
+    overflow-y: scroll;
+}
+
+a:not(.btn):link, a:not(.btn):visited {
+    color: #228AD6;
+    text-decoration: none;
+}
+
+a:not(.btn):active, a:not(.btn):hover {
+    color: darkblue;
+    text-decoration: underline;
+}
+
+a.black:link, a.black:visited, .black a:link, .black a:visited {
+    color: black;
+    text-decoration: none;
+}
+
+a.black:active, a.black:hover, .black a:active, .black a:hover {
+    color: lightgray;
+    text-decoration: underline;
+}
+
+.newline {
+    white-space: pre-line;
+}
+
+.header {
+    position: fixed;
+    height: 80px;
+    background-color: white;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+}
+
+.header a:link, .header a:visited {
+    color: #333333;
+    text-decoration: none;
+}
+
+.header a.admin:link, .header a.admin:visited {
+    color: #228AD6;
+    text-decoration: none;
+}
+
+.header a:active, .header a:hover {
+    color: gray;
+    text-decoration: underline;
+}
+
+.header a.admin:active, .header a.admin:hover {
+    color: darkblue;
+    text-decoration: underline;
+}
+
+#topmost {
+    height: 90px;
+}
+
+.navbar {
+    margin-top: 12px;
+    margin-left: 0;
+    padding-left: 0;
+    font-size: 14px;
+    line-height: 18px;
+}
+
+.nav-link {
+    padding-left: 2px!important;
+    margin-right: 25px;
+}
+
+.nav-link.disabled {
+    border-bottom: solid 1px blue;
+}
+
+.nav-link#navbardrop {
+    padding-right: 5px!important;
+}
+
+li#nav-user {
+    background-color: #E6E7EB;
+    width: 36px;
+    height: 36px;
+    text-align: center;
+    border-radius: 50%;
+}
+
+#user-dropdown {
+    right: 0;
+    left: auto;
+}
+
+li#nav-user a.dropdown-toggle::after {
+    display: none;
+}
+
+.container-fluid.header {
+    padding-left: 45px;
+    padding-right: 15px;
+}
+
+.btn.disabled, .btn:disabled {
+    opacity: .25;
+}
+
+/*Заголовки*/
+.form-page h1 {
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 32px;
+}
+
+.form-page h2 {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 24px;
+    margin-top: 10px;
+    margin-bottom: 28px;
+}
+
+.list-page h1 {
+    font-size: 32px;
+    line-height: 48px;
+    font-weight: 600;
+    padding-left: 25px;
+}
+
+.btn:not(.btn-link) {
+    font-size: 14px;
+    line-height: 16px;
+    font-weight: 600;
+}
+
+.btn-dark {
+    background-color: #121232;
+}
+
+/*Второе меню*/
+.nav2 {
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 400;
+    margin-top: 20px;
+    margin-bottom: 20px!important;
+}
+
+.nav2 a:link, .nav2 a:visited {
+    color: #333333;
+    text-decoration: none;
+}
+
+.nav2 a.active:link, .nav2 a.active:visited {
+    color: #228AD6;
+    text-decoration: none;
+}
+
+.nav2 a:active, .nav2 a:hover {
+    color: gray;
+    text-decoration: underline;
+}
+
+.nav2 a.active:active, .nav2 a.active:hover {
+    color: darkblue;
+    text-decoration: none;
+}
+
+.nav2 a {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.nav2 a.active {
+    border-bottom: solid 1px blue;
+    padding-bottom: 10px;
+}
+
+/*Таблица*/
+table.table {
+    border-bottom: solid 1px #dee2e6;
+}
+
+table.table tr th {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16px;
+    padding-left: 25px;
+    padding-top: 6px;
+    padding-bottom: 18px;
+}
+
+table.table tr td {
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 400;
+    vertical-align: middle;
+    height: 40px;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+table.table tr td img {
+    vertical-align: top;
+    padding: 0;
+    margin: 0;
+}
+
+table.table.film-table {
+    border-bottom: 0;
+}
+
+table.table.film-table tr td {
+    border-top: 0;
+    border-bottom: solid 1px #E0E0E0;
+    padding-left: 12px;
+}
+
+table.table tr td button {
+    padding: 0;
+    margin: 0;
+}
+
+table tr.selected {
+    background-color: rgba(34, 170, 214, 0.2);
+}
+
+#content_table tr td, #content_table tr th {
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+/*Элементы страниц*/
+.backlink {
+    margin-top: 26px;
+    margin-bottom: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+}
+
+.backlink .fas {
+    font-size: 18px;
+    vertical-align: top;
+    margin-right: 5px;
+}
+
+/*Формы*/
+label {
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 600;
+}
+
+input.form-control {
+    border: solid 1px #A1A4B1;
+}
+
+select.form-control {
+    border: solid 1px #A1A4B1;
+}
+
+/* Выпадающее меню списка паллетов и рулонов */
+.film_menu {
+    position: absolute;
+    top: 80%;
+    right: 0;
+    border: solid 1px #A1A4B1;
+    padding-left: 13px;
+    padding-right: 13px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: white;
+    z-index: 2;
+    width: 170px;
+    display: none;
+}
+
+.film_menu .command {
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
