@@ -8,7 +8,7 @@
                 <a class="nav-link" href="<?=APPLICATION ?>/crm/">CRM</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<?=APPLICATION ?>/erp/">ERP</a>
+                <a class="nav-link" href="<?=APPLICATION ?>/erp/">Склад</a>
             </li>
         </ul>
     </nav>
