@@ -1,0 +1,16 @@
+@font-face {
+  font-family: 'fontawesome';
+  src: url(../fonts/fontawesome-webfont.ttf);
+}
+
+.font-awesome {
+    font-family: fontawesome;
+}
+
+body {
+    background-color: #EEEEEE;
+}
+
+.newline {
+    white-space: pre-line;
+}
