@@ -1,0 +1,74 @@
+body {
+    background-color: #EEEEEE;
+}
+
+body.print {
+    background-color: white;
+}
+
+.newline {
+    white-space: pre-line;
+}
+
+/**-- Таблицы --**/
+.table {
+    transform-style: preserve-3d;
+}
+
+.table th, .table td {
+    padding: 5px;
+}
+
+table.typography {
+    font-size: smaller;
+}
+
+table.typography tbody tr td {
+    background-color: white;
+}
+
+table.typography tbody tr td.top {
+    border-top: solid 2px darkgray;
+}
+
+table.print tr td.top {
+    border-top: solid 2px darkgray;
+}
+
+table.typography tbody tr td.night {
+    background-color: #F2F2F2;
+}
+
+thead#grafik-thead {
+    background-color: lightcyan;
+}
+
+table.in-cell {
+    margin: 0;
+}
+
+table.in-cell tr td {
+    border: 0;
+    padding: 0;
+    vertical-align: middle;
+    padding: 0;
+}
+
+/* Буфер обмена */
+.clipboard_copy {
+    position: relative;
+}
+
+.clipboard_alert {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    z-index: 100;
+    display: none;
+}
+
+/* Элементы управления */
+textarea#editable {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+}
