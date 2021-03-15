@@ -78,7 +78,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
     }
     
-    if(IsInRole(array('storekeeper'))) {
+    if(IsInRole(array('technologist', 'storekeeper'))) {
         $length = filter_input(INPUT_POST, 'length');
         if(empty($length)) {
             $length_valid = ISINVALID;
@@ -86,7 +86,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
     }
     
-    if(IsInRole(array('dev'))) {
+    if(IsInRole(array('technologist', 'storekeeper'))) {
         $net_weight = filter_input(INPUT_POST, 'net_weight');
         if(empty($net_weight)) {
             $net_weight_valid = ISINVALID;
@@ -120,7 +120,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         $net_weight = filter_input(INPUT_POST, 'net_weight');
         if(empty($net_weight)) $net_weight = $old_net_weight;
     }
-        
+
     // Определяем удельный вес
     $ud_ves = null;
     $sql = "select weight from film_brand_variation where film_brand_id=$film_brand_id and thickness=$thickness";
@@ -202,11 +202,11 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
                 $sql .= "thickness = $thickness, ";
             }
             
-            if(IsInRole(array('storekeeper'))) {
+            if(IsInRole(array('technologist', 'storekeeper'))) {
                 $sql .= "length = $length, ";
             }
             
-            if(IsInRole(array('dev'))) {
+            if(IsInRole(array('technologist', 'storekeeper'))) {
                 $sql .= "net_weight = $net_weight, ";
             }
             
@@ -386,7 +386,7 @@ $utilized_status_id = 2;
                         <div class="col-6 form-group">
                             <?php
                             $length_disabled = "";
-                            if(!IsInRole(array('storekeeper'))) {
+                            if(!IsInRole(array('technologist', 'storekeeper'))) {
                                 $length_disabled = " disabled='disabled'";
                             }
                             ?>
@@ -397,7 +397,7 @@ $utilized_status_id = 2;
                         <div class="col-6 form-group">
                             <?php
                             $net_weight_disabled = '';
-                            if(!IsInRole(array('dev'))) {
+                            if(!IsInRole(array('technologist', 'storekeeper'))) {
                                 $net_weight_disabled = " disabled='disabled'";
                             }
                             ?>
@@ -432,7 +432,7 @@ $utilized_status_id = 2;
                     <div class="form-group">
                         <?php
                         $status_id_disabled = "";
-                        if(!IsInRole(array('technologist', 'dev', 'storekeeper'))) {
+                        if(!IsInRole(array('technologist', 'storekeeper'))) {
                             $status_id_disabled = " disabled='disabled'";
                         }
                         ?>

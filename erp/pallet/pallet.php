@@ -87,7 +87,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
     }
     
-    if(IsInRole(array('technologist'))) {
+    if(IsInRole(array('technologist', 'storekeeper'))) {
         $net_weight = filter_input(INPUT_POST, 'net_weight');
         if(empty($net_weight)) {
             $net_weight_valid = ISINVALID;
@@ -140,7 +140,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         $invalid_message = "Неверное значение";
     }
     
-    if(IsInRole(array('technologist'))) {
+    if(IsInRole(array('technologist', 'storekeeper'))) {
         $rolls_number = filter_input(INPUT_POST, 'rolls_number');
         if(empty($rolls_number)) {
             $rolls_number_valid = ISINVALID;
@@ -215,11 +215,11 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
                 $sql .= "length = $length, ";
             }
             
-            if(IsInRole(array('technologist'))) {
+            if(IsInRole(array('technologist', 'storekeeper'))) {
                 $sql .= "net_weight = $net_weight, ";
             }
             
-            if(IsInRole(array('technologist'))) {
+            if(IsInRole(array('technologist', 'storekeeper'))) {
                 $sql .= "rolls_number = $rolls_number, ";
             }
             
@@ -413,7 +413,7 @@ $utilized_status_id = 2;
                         <div class="col-6 form-group">
                             <?php
                             $net_weight_disabled = '';
-                            if(!IsInRole(array('technologist'))) {
+                            if(!IsInRole(array('technologist', 'storekeeper'))) {
                                 $net_weight_disabled = " disabled='disabled'";
                             }
                             ?>
@@ -427,7 +427,7 @@ $utilized_status_id = 2;
                             <label for="rolls_number">Количество рулонов</label>
                             <?php
                             $rolls_number_disabled = '';
-                            if(!IsInRole(array('technologist'))) {
+                            if(!IsInRole(array('technologist', 'storekeeper'))) {
                                 $rolls_number_disabled = " disabled='disabled'";
                             }
                             ?>
@@ -468,7 +468,7 @@ $utilized_status_id = 2;
                     <div class="form-group">
                         <?php
                         $status_id_disabled = "";
-                        if(!IsInRole(array('technologist', 'dev', 'storekeeper'))) {
+                        if(!IsInRole(array('technologist', 'storekeeper'))) {
                             $status_id_disabled = " disabled='disabled'";
                         }
                         ?>
