@@ -84,11 +84,7 @@ $total_weight = $row['total_weight'];
                         <th style="padding-left: 5px; padding-right: 5px; width: 10%;">Поставщик</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">ID от поставщика</th>
                         <th style="padding-left: 5px; padding-right: 5px;">ID рулона</th>
-                        <?php
-                        if(IsInRole(array('technologist', 'dev', 'storekeeper'))):
-                        ?>
                         <th style="padding-left: 5px; padding-right: 5px;">№ ячейки</th>
-                        <?php endif; ?>
                         <th style="padding-left: 5px; padding-right: 5px;" class="d-none">Менеджер</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Статус</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 15%;">Комментарий</th>

@@ -84,11 +84,7 @@ $total_weight = $row['total_weight'];
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">ID от поставщика</th>
                         <th style="padding-left: 5px; padding-right: 5px;">ID паллета</th>
                         <th style="padding-left: 5px; padding-right: 5px;">Кол-во рулонов</th>
-                        <?php
-                        if(IsInRole(array('technologist', 'dev', 'storekeeper'))):
-                        ?>
                         <th style="padding-left: 5px; padding-right: 5px;">№ ячейки</th>
-                        <?php endif; ?>
                         <th style="padding-left: 5px; padding-right: 5px;" class="d-none">Кто заказал</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Статус</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 15%;">Комментарий</th>
@@ -203,11 +199,7 @@ $total_weight = $row['total_weight'];
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['id_from_supplier'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['id'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['rolls_number'] ?></td>
-                        <?php
-                        if(IsInRole(array('technologist', 'dev', 'storekeeper'))):
-                        ?>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['cell'] ?></td>
-                        <?php endif; ?>
                         <td style="padding-left: 5px; padding-right: 5px;" class="d-none"><?= $row['last_name'].' '.$row['first_name'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; font-size: 10px; line-height: 14px; font-weight: 600;<?=$colour_style ?>"><?= mb_strtoupper($status) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; white-space: pre-wrap;"><?= htmlentities($row['comment']) ?></td>
