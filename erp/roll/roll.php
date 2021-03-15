@@ -78,7 +78,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
     }
     
-    if(IsInRole(array('technologist', 'storekeeper'))) {
+    if(IsInRole(array('dev'))) {
         $length = filter_input(INPUT_POST, 'length');
         if(empty($length)) {
             $length_valid = ISINVALID;
@@ -86,7 +86,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
     }
     
-    if(IsInRole(array('technologist', 'storekeeper'))) {
+    if(IsInRole(array('dev'))) {
         $net_weight = filter_input(INPUT_POST, 'net_weight');
         if(empty($net_weight)) {
             $net_weight_valid = ISINVALID;
@@ -202,11 +202,11 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
                 $sql .= "thickness = $thickness, ";
             }
             
-            if(IsInRole(array('technologist', 'storekeeper'))) {
+            if(IsInRole(array('dev'))) {
                 $sql .= "length = $length, ";
             }
             
-            if(IsInRole(array('technologist', 'storekeeper'))) {
+            if(IsInRole(array('dev'))) {
                 $sql .= "net_weight = $net_weight, ";
             }
             
@@ -386,7 +386,7 @@ $utilized_status_id = 2;
                         <div class="col-6 form-group">
                             <?php
                             $length_disabled = "";
-                            if(!IsInRole(array('technologist', 'storekeeper'))) {
+                            if(!IsInRole(array('dev'))) {
                                 $length_disabled = " disabled='disabled'";
                             }
                             ?>
@@ -397,7 +397,7 @@ $utilized_status_id = 2;
                         <div class="col-6 form-group">
                             <?php
                             $net_weight_disabled = '';
-                            if(!IsInRole(array('technologist', 'storekeeper'))) {
+                            if(!IsInRole(array('dev'))) {
                                 $net_weight_disabled = " disabled='disabled'";
                             }
                             ?>
