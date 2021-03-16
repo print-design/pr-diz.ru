@@ -79,7 +79,7 @@ $errorCorrectionLevel = 'L'; // 'L','M','Q','H'
 $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/pallet/pallet.php?id='.$id;
 $current_date_time = date("dmYHis");
 $filename = "../temp/$current_date_time.png";
-QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 5, 2, true);
+QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
 
 // Удаление всех файлов, кроме текущего (чтобы диск не переполнился).
 $files = scandir("../temp/");
@@ -95,77 +95,78 @@ $pdf->SetDrawColor(222, 226, 230);
 $pdf->SetX(0);
 $pdf->SetY(0.6);
 $pdf->SetFont($arial, '', 8);
-$pdf->Cell(1.6, 0.2, iconv('utf-8', 'windows-1251', "Поставщик"), 'LRT');
-$pdf->Cell(1.6, 0.2, iconv('utf-8', 'windows-1251', "Ширина"), 'LRT');
-$pdf->SetX(3.8);
-$pdf->Cell(1.9, 0.2, iconv('utf-8', 'windows-1251', "Паллет № П$id от ". DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y')), 0);
+$pdf->Cell(1.4, 0.2, iconv('utf-8', 'windows-1251', "Поставщик"), 'LRT');
+$pdf->Cell(1.4, 0.2, iconv('utf-8', 'windows-1251', "Ширина"), 'LRT');
+$pdf->SetX(3.4);
+$pdf->Cell(2.6, 0.2, iconv('utf-8', 'windows-1251', "Паллет № П$id от ". DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y')), 0);
 
 $pdf->SetX(0);
 $pdf->SetY(0.8);
 $pdf->SetFont($arialBD);
-$pdf->Cell(1.6, 0.2, $supplier, 'LRB');
-$pdf->Cell(1.6, 0.2, iconv('utf-8', 'windows-1251', "$width мм"), 'LRB');
+$pdf->Cell(1.4, 0.2, $supplier, 'LRB');
+$pdf->Cell(1.4, 0.2, iconv('utf-8', 'windows-1251', "$width мм"), 'LRB');
 
-$pdf->SetX(3.8);
-$pdf->Image($filename, null, null, 1.5);
+$pdf->SetX(3.2);
+$pdf->Image($filename, null, null, 2.2);
 
 $pdf->SetX(0);
 $pdf->SetY(1);
 $pdf->SetFont($arial);
-$pdf->Cell(1.6, 0.2, iconv('utf-8', 'windows-1251', "ID от поставщика"), 'LRT');
-$pdf->Cell(1.6, 0.2, iconv('utf-8', 'windows-1251', "Толщина, уд.вес"), 'LRT');
+$pdf->Cell(1.4, 0.2, iconv('utf-8', 'windows-1251', "ID от поставщика"), 'LRT');
+$pdf->Cell(1.4, 0.2, iconv('utf-8', 'windows-1251', "Толщина, уд.вес"), 'LRT');
 
 $pdf->SetX(0);
 $pdf->SetY(1.2);
 $pdf->SetFont($arialBD);
-$pdf->Cell(1.6, 0.2, $id_from_supplier, 'LRB');
-$pdf->Cell(1.6, 0.2, iconv('utf-8', 'windows-1251', "$thickness мкм, $ud_ves г/м2"), 'LRB');
+$pdf->Cell(1.4, 0.2, $id_from_supplier, 'LRB');
+$pdf->Cell(1.4, 0.2, iconv('utf-8', 'windows-1251', "$thickness мкм, $ud_ves г/м2"), 'LRB');
 
 $pdf->SetX(0);
 $pdf->SetY(1.4);
 $pdf->SetFont($arial);
-$pdf->Cell(1.6, 0.2, iconv('utf-8', 'windows-1251', "Кладовщик"), 'LRT');
-$pdf->Cell(1.6, 0.2, iconv('utf-8', 'windows-1251', "Длина"), 'LRT');
+$pdf->Cell(1.4, 0.2, iconv('utf-8', 'windows-1251', "Кладовщик"), 'LRT');
+$pdf->Cell(1.4, 0.2, iconv('utf-8', 'windows-1251', "Длина"), 'LRT');
 
 $pdf->SetX(0);
 $pdf->SetY(1.6);
 $pdf->SetFont($arialBD);
-$pdf->Cell(1.6, 0.2, $storekeeper, 'LRB');
-$pdf->Cell(1.6, 0.2, iconv('utf-8', 'windows-1251', "$length м"), 'LRB');
+$pdf->Cell(1.4, 0.2, $storekeeper, 'LRB');
+$pdf->Cell(1.4, 0.2, iconv('utf-8', 'windows-1251', "$length м"), 'LRB');
 
 $pdf->SetX(0);
 $pdf->SetY(1.8);
 $pdf->SetFont($arial);
-$pdf->Cell(1.6, 0.2, iconv('utf-8', 'windows-1251', "Марка пленки"), 'LRT');
-$pdf->Cell(1.6, 0.2, iconv('utf-8', 'windows-1251', "Масса нетто"), 'LRT');
+$pdf->Cell(1.4, 0.2, iconv('utf-8', 'windows-1251', "Марка пленки"), 'LRT');
+$pdf->Cell(1.4, 0.2, iconv('utf-8', 'windows-1251', "Масса нетто"), 'LRT');
 
 $pdf->SetX(0);
 $pdf->SetY(2);
 $pdf->SetFont($arialBD);
-$pdf->Cell(1.6, 0.2, $film_brand, 'LRB');
-$pdf->Cell(1.6, 0.2, iconv('utf-8', 'windows-1251', "$net_weight кг"), 'LRB');
+$pdf->Cell(1.4, 0.2, $film_brand, 'LRB');
+$pdf->Cell(1.4, 0.2, iconv('utf-8', 'windows-1251', "$net_weight кг"), 'LRB');
 
 $pdf->SetX(0);
 $pdf->SetY(2.2);
 $pdf->SetFont($arial);
-$pdf->Cell(1.6, 0.2, iconv('utf-8', 'windows-1251', "Статус"), 'LRT');
-$pdf->Cell(1.6, 0.2, iconv('utf-8', 'windows-1251', "Количество рулонов"), 'LRT');
+$pdf->Cell(1.4, 0.2, iconv('utf-8', 'windows-1251', "Статус"), 'LRT');
+$pdf->Cell(1.4, 0.2, iconv('utf-8', 'windows-1251', "Количество рулонов"), 'LRT');
 
 $pdf->SetX(0);
 $pdf->SetY(2.4);
 $pdf->SetFont($arialBD);
-$pdf->Cell(1.6, 0.2, $status, 'LRB');
-$pdf->Cell(1.6, 0.2, $rolls_number, 'LRB');
+$pdf->Cell(1.4, 0.2, $status, 'LRB');
+$pdf->Cell(1.4, 0.2, $rolls_number, 'LRB');
 
 $pdf->SetX(0);
 $pdf->SetY(2.6);
 $pdf->SetFont($arial);
-$pdf->Cell(4.8, 0.2, iconv('utf-8', 'windows-1251', "Комментарий"), 'LRT');
+$pdf->Cell(2.8, 0.2, iconv('utf-8', 'windows-1251', "Комментарий"), 'LRT');
+
 
 $pdf->SetX(0);
 $pdf->SetY(2.8);
 $pdf->SetFont($arialBD);
-$pdf->MultiCell(4.8, 0.4, $comment, 'LRB');
+$pdf->MultiCell(2.8, 0.4, $comment, 'LRB');
 
 $pdf->Output();
 ?>
