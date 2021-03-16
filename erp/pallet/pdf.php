@@ -31,20 +31,20 @@ $sql = "select p.date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_i
 $row = (new Fetcher($sql))->Fetch();
 $date = $row['date'];
 $storekeeper_id = $row['storekeeper_id'];
-$storekeeper = $row['last_name'].' '.$row['first_name'];
+$storekeeper = iconv('utf-8', 'windows-1251', $row['last_name'].' '.$row['first_name']);
 $supplier_id = $row['supplier_id'];
-$supplier = $row['supplier'];
+$supplier = iconv('utf-8', 'windows-1251', $row['supplier']);
 $id_from_supplier = $row['id_from_supplier'];
 $film_brand_id = $row['film_brand_id'];
-$film_brand = $row['film_brand'];
+$film_brand = iconv('utf-8', 'windows-1251', $row['film_brand']);
 $width = $row['width'];
 $thickness = $row['thickness'];
 $length = $row['length'];
 $net_weight = $row['net_weight'];
 $rolls_number = $row['rolls_number'];
-$cell = $row['cell'];
-$status = $row['status'];
-$comment = $row['comment'];
+$cell = iconv('utf-8', 'windows-1251', $row['cell']);
+$status = iconv('utf-8', 'windows-1251', $row['status']);
+$comment = iconv('utf-8', 'windows-1251', $row['comment']);
 
 // Определяем удельный вес
 $ud_ves = null;
@@ -69,21 +69,6 @@ $pdf->SetTextColor(0, 0, 0);
 $pdf->Write(0, iconv('utf-8', 'windows-1251', "                    ООО «Принт-Дизайн»"));
 $pdf->Ln();
 
-// Таблица
-$pdf->SetDrawColor(222, 226, 230);
-$pdf->SetFont('Arial', '', 12);
-
-$pdf->SetX(0);
-$pdf->SetY(0.6);
-$pdf->Cell(2.8, 0.4, '', 1);
-$pdf->Cell(0.1, 0.4, '', 0);
-$pdf->Cell(2.6, 0.4, iconv('utf-8', 'windows-1251', "Паллет № П$id от ". DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y')), 0);
-
-$pdf->SetX(0);
-$pdf->SetY(1);
-$pdf->Cell(2.8, 0.4, '', 1);
-$pdf->Cell(0.1, 0.4, '', 0);
-
 // Формируем QR-код
 include '../qr/qrlib.php';
 $errorCorrectionLevel = 'L'; // 'L','M','Q','H'
@@ -99,7 +84,63 @@ foreach ($files as $file) {
         unlink("../temp/$file");
     }
 }
+
+// Таблица
+$pdf->SetDrawColor(222, 226, 230);
+$pdf->SetFont('Arial', '', 8);
+
+$pdf->SetX(0);
+$pdf->SetY(0.6);
+$pdf->Cell(2.8, 0.2, iconv('utf-8', 'windows-1251', "Поставщик"), 'LRT');
+$pdf->SetX(3.4);
+$pdf->Cell(2.6, 0.2, iconv('utf-8', 'windows-1251', "Паллет № П$id от ". DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y')), 0);
+
+$pdf->SetX(0);
+$pdf->SetY(0.8);
+$pdf->Cell(2.8, 0.2, '2', 'LRB');
+
+$pdf->SetX(3.2);
 $pdf->Image($filename, null, null, 2.2);
+
+$pdf->SetX(0);
+$pdf->SetY(1);
+$pdf->Cell(2.8, 0.2, '3', 'LRT');
+
+$pdf->SetX(0);
+$pdf->SetY(1.2);
+$pdf->Cell(2.8, 0.2, '4', 'LRB');
+
+$pdf->SetX(0);
+$pdf->SetY(1.4);
+$pdf->Cell(2.8, 0.2, '5', 'LRT');
+
+$pdf->SetX(0);
+$pdf->SetY(1.6);
+$pdf->Cell(2.8, 0.2, '6', 'LRB');
+
+$pdf->SetX(0);
+$pdf->SetY(1.8);
+$pdf->Cell(2.8, 0.2, '7', 'LRT');
+
+$pdf->SetX(0);
+$pdf->SetY(2);
+$pdf->Cell(2.8, 0.2, '8', 'LRB');
+
+$pdf->SetX(0);
+$pdf->SetY(2.2);
+$pdf->Cell(2.8, 0.2, '9', 'LRT');
+
+$pdf->SetX(0);
+$pdf->SetY(2.4);
+$pdf->Cell(2.8, 0.2, '10', 'LRB');
+
+$pdf->SetX(0);
+$pdf->SetY(2.6);
+$pdf->Cell(2.8, 0.2, 'Comment', 'LRT');
+
+$pdf->SetX(0);
+$pdf->SetY(2.8);
+$pdf->MultiCell(2.8, 0.4, 'COMM', 'LRB');
 
 $pdf->Output();
 ?>
