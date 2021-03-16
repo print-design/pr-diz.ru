@@ -60,7 +60,6 @@ if($row = $fetcher->Fetch()) {
             <div style="margin-bottom: 20px; margin-top: 30px;">
                 <a href="<?=APPLICATION ?>/pallet/pallet.php?id=<?=$id ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                 <div style="display: inline; margin-left: 400px; font-size: 32px; font-weight: bold; font-style: italic;">ООО &laquo;Принт-дизайн&raquo;</div>
-                
             </div>
             <table>
                 <tr>
@@ -94,7 +93,7 @@ if($row = $fetcher->Fetch()) {
                         </table>
                     </td>
                     <td style="vertical-align: top; padding-left: 50px;">
-                        <h1 style="font-size: 32px;">Паллет №<?=$id ?> от <?=$date ?></h1>
+                        <h1 style="font-size: 32px;">Паллет № <?="П".$id ?> от <?=$date ?></h1>
                         <?php
                         include '../qr/qrlib.php';
                         $errorCorrectionLevel = 'L'; // 'L','M','Q','H'

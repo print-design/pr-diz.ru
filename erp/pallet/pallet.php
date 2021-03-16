@@ -309,7 +309,7 @@ $utilized_status_id = 2;
             <div class="backlink" style="margin-bottom: 56px;">
                 <a href="<?=APPLICATION ?>/pallet/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
             </div>
-            <h1 style="font-size: 24px; line-height: 32px; fon24pxt-weight: 600; margin-bottom: 20px;">Информация о паллете № <?=$id ?> от <?= (DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></h1>
+            <h1 style="font-size: 24px; line-height: 32px; fon24pxt-weight: 600; margin-bottom: 20px;">Информация о паллете № <?="П".$id ?> от <?= (DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></h1>
             <h2 style="font-size: 24px; line-height: 32px; font-weight: 600; margin-bottom: 20px;">ID <?=$id_from_supplier ?></h2>
             <form method="post">
                 <div style="width: 423px;">
@@ -504,7 +504,7 @@ $utilized_status_id = 2;
                 <div class="form-inline" style="margin-top: 30px;">
                     <button type="submit" id="change-status-submit" name="change-status-submit" class="btn btn-dark" style="padding-left: 80px; padding-right: 80px; margin-right: 62px; padding-top: 14px; padding-bottom: 14px;">Сохранить</button>
                     <a href="print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="padding-top: 5px; padding-bottom: 5px; padding-left: 50px; padding-right: 50px;">Распечатать<br />стикер</a>
-                    <a href="pdf.php?id=<?= filter_input(INPUT_GET, 'id') ?>" target="_blank" class="btn btn-outline-dark" style="padding-top: 5px; padding-bottom: 5px; margin-left: 50px;">PDF</a>
+                    <a href="pdf.php?id=<?= filter_input(INPUT_GET, 'id') ?>" target="_blank" class="btn btn-outline-dark d-none" style="padding-top: 5px; padding-bottom: 5px; margin-left: 50px;">PDF</a>
                 </div>
             </form>
         </div>
