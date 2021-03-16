@@ -13,7 +13,7 @@ if(empty($id)) {
     $txt = 'Не задан параметр id';
     $txt = iconv('utf-8', 'windows-1251', $txt);
     $pdf->Cell(1, 2, $txt);
-    $pdf->Output();
+    $pdf->Output("error.pdf", "I");
 }
 
 // Получение данных
@@ -167,5 +167,5 @@ $pdf->SetY(2.8);
 $pdf->SetFont($arialBD);
 $pdf->MultiCell(4.8, 0.4, $comment, 'LRB');
 
-$pdf->Output();
+$pdf->Output($date."_".$id.".pdf", "I");
 ?>
