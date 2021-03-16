@@ -1,6 +1,6 @@
 <?php
 include '../include/topscripts.php';
-define(FPDF_FONTPATH, APPLICATION."/font");
+//define(FPDF_FONTPATH, APPLICATION."/font");
 include '../fpdf182/fpdf.php';
 
 // Если не задано значение id, сообщаем об этом
@@ -8,9 +8,9 @@ $id = filter_input(INPUT_GET, 'id');
 if(empty($id)) {
     $pdf = new FPDF('L', 'in', [4, 6]);
     $pdf->AddPage();
-    //$pdf->AddFont('Arial','','arial.php');
-    //$pdf->SetFont('Arial');
-    //$pdf->Write(0,iconv('utf-8', 'windows-1251',"Коммерческое предложение"));
+    $pdf->AddFont('Arial','','timesbi.php');
+    $pdf->SetFont('Arial');
+    $pdf->Write(0,iconv('utf-8', 'windows-1251',"Коммерческое предложение"));
     $txt = 'Не задан параметр id';
     $txt = iconv('utf-8', 'windows-1251', $txt);
     $pdf->Cell(1, 2, $txt);
