@@ -1,6 +1,5 @@
 <?php
 include '../include/topscripts.php';
-//define(FPDF_FONTPATH, APPLICATION."/font");
 include '../fpdf182/fpdf.php';
 
 // Если не задано значение id, сообщаем об этом
@@ -8,9 +7,9 @@ $id = filter_input(INPUT_GET, 'id');
 if(empty($id)) {
     $pdf = new FPDF('L', 'in', [4, 6]);
     $pdf->AddPage();
-    $pdf->AddFont('Arial','','timesbi.php');
-    $pdf->SetFont('Arial');
-    $pdf->Write(0,iconv('utf-8', 'windows-1251',"Коммерческое предложение"));
+    $pdf->AddFont('TimesBI','','timesbi.php');
+    $pdf->SetFont('TimesBI');
+    $pdf->Write(0,iconv('utf-8', 'windows-1251',"Ошибка"));
     $txt = 'Не задан параметр id';
     $txt = iconv('utf-8', 'windows-1251', $txt);
     $pdf->Cell(1, 2, $txt);
@@ -58,7 +57,49 @@ if($row = $fetcher->Fetch()) {
 // Генерация PDF
 $pdf = new FPDF('L', 'in', [4, 6]);
 $pdf->AddPage();
-$pdf->SetFont('Arial', 'B', 16);
-$pdf->Cell(1, 2, 'Hello world');
+$pdf->AddFont('Arial', '', 'arial.php');
+$pdf->AddFont('ArialBI', '', 'arialbi.php');
+
+// Заголовок
+$pdf->SetFont('Arial', '', 8);
+$pdf->SetTextColor(34, 138, 214);
+$pdf->Write(0, iconv('utf-8', 'windows-1251', "< Назад"), "pallet.php?id=".filter_input(INPUT_GET, 'id'));
+$pdf->SetFont('ArialBI', '', 12);
+$pdf->SetTextColor(0, 0, 0);
+$pdf->Write(0, iconv('utf-8', 'windows-1251', "                    ООО «Принт-Дизайн»"));
+$pdf->Ln();
+
+// Таблица
+$pdf->SetDrawColor(222, 226, 230);
+$pdf->SetFont('Arial', '', 12);
+
+$pdf->SetX(0);
+$pdf->SetY(0.6);
+$pdf->Cell(2.8, 0.4, '', 1);
+$pdf->Cell(0.1, 0.4, '', 0);
+$pdf->Cell(2.6, 0.4, iconv('utf-8', 'windows-1251', "Паллет № П$id от ". DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y')), 0);
+
+$pdf->SetX(0);
+$pdf->SetY(1);
+$pdf->Cell(2.8, 0.4, '', 1);
+$pdf->Cell(0.1, 0.4, '', 0);
+
+// Формируем QR-код
+include '../qr/qrlib.php';
+$errorCorrectionLevel = 'L'; // 'L','M','Q','H'
+$data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/pallet/pallet.php?id='.$id;
+$current_date_time = date("dmYHis");
+$filename = "../temp/$current_date_time.png";
+QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
+
+// Удаление всех файлов, кроме текущего (чтобы диск не переполнился).
+$files = scandir("../temp/");
+foreach ($files as $file) {
+    if($file != "$current_date_time.png" && !is_dir($file)) {
+        unlink("../temp/$file");
+    }
+}
+$pdf->Image($filename, null, null, 2.2);
+
 $pdf->Output();
 ?>
