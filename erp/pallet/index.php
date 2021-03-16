@@ -197,7 +197,7 @@ $total_weight = $row['total_weight'];
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['length'] ?> м</td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['supplier'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['id_from_supplier'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['id'] ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px;"><?= "п".$row['id'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['rolls_number'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['cell'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;" class="d-none"><?= $row['last_name'].' '.$row['first_name'] ?></td>
