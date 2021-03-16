@@ -467,7 +467,7 @@ $utilized_status_id = 2;
                 </div>
                 <div class="form-inline" style="margin-top: 30px;">
                     <button type="submit" id="change-status-submit" name="change-status-submit" class="btn btn-dark" style="padding-left: 80px; padding-right: 80px; margin-right: 62px; padding-top: 14px; padding-bottom: 14px;">Сохранить</button>
-                    <a href="pdfprint.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="padding-top: 5px; padding-bottom: 5px; padding-left: 50px; padding-right: 50px;">Распечатать<br />стикер</a>
+                    <a href="pdf.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="padding-top: 5px; padding-bottom: 5px; padding-left: 50px; padding-right: 50px;">Распечатать<br />стикер</a>
                 </div>
             </form>
         </div>
