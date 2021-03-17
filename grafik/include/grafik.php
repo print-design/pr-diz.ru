@@ -371,19 +371,6 @@ class Grafik {
                     <button type="submit" class="form-control btn btn-light" id="export_submit" name="export_submit">Экспорт&nbsp;<i class="fas fa-file-csv"></i></button>
                 </form>
             </div>
-            <div class="p-1 ml-1">
-                <form method="post" class="form-inline">
-                    <label>На&nbsp;</label>
-                    <input type="number" id="days" name="days" min="1" max="9" class="form-control" />
-                    <label>&nbsp;дней&nbsp;</label>
-                    <div class="form-check-inline">
-                        <input type="checkbox" id="half" name="half" />
-                        <label class="form-check-label" for="half">&nbsp;с половиной</label>
-                    </div>
-                    <button type="submit" id="move_back_submit" name="move_back_submit" class="form-control btn btn-light">Назад&nbsp;<i class="fas fa-arrow-up"></i></button>
-                    <button type="submit" id="move_forth_submit" name="move_forth_submit" class="form-control btn btn-light ml-1">Вперёд&nbsp;<i class="fas fa-arrow-down"></i></button>
-                </form>
-            </div>
         </div>
         <?php endif; ?>
     </div>
@@ -411,6 +398,7 @@ class Grafik {
             if($this->hasManager) echo '<th>Менеджер</th>'; 
             if($this->hasComment) echo '<th>Комментарий</th>';
             if(IsInRole('admin')) {
+                echo '<th></th>';
                 echo '<th></th>';
                 echo '<th></th>';
             }
@@ -709,6 +697,7 @@ class Grafik {
                 if($this->hasManager) echo "<td class='$top $shift'></td>";
                 if($this->hasComment) echo "<td class='$top $shift'></td>";
                 if(IsInRole('admin')) {
+                    echo "<td class='$top $shift'></td>";
                     echo "<td class='$top $shift'></td>";
                     echo "<td class='$top $shift'>";
                     if(isset($row['id'])) {
@@ -1027,15 +1016,20 @@ class Grafik {
         }
         
         // Удаление
-        if(IsInRole('admin')) {
-            echo "<td class='$top $shift'>";
-            echo "<form method='post'>";
-            echo '<input type="hidden" id="scroll" name="scroll" />';
-            echo "<input type='hidden' id='id' name='id' value='".$edition['id']."' />";
-            echo "<button type='submit' id='delete_edition_submit' name='delete_edition_submit' class='btn btn-outline-dark btn-sm confirmable' title='Удалить тираж'><i class='fas fa-trash-alt'></i></button>";
-            echo "</form>";
-            echo "</td>";
-        };
+        if(IsInRole('admin')):
+        ?>
+        <td class='<?=$top ?> <?=$shift ?>'>
+            <button class="btn btn-outline-dark btn-sm show_move_form" title="Сдвинуть несколько смен"><i class="fas fa-table"></i></button>
+        </td>
+        <td class='<?=$top ?> <?=$shift ?>'>
+        <form method='post'>
+            <input type="hidden" id="scroll" name="scroll" />
+            <input type='hidden' id='id' name='id' value='".$edition['id']."' />
+            <button type='submit' id='delete_edition_submit' name='delete_edition_submit' class='btn btn-outline-dark btn-sm confirmable' title='Удалить тираж'><i class='fas fa-trash-alt'></i></button>
+        </form>
+        </td>
+        <?php
+        endif;
     }
     
     function Print() {

@@ -229,6 +229,11 @@
         });
     });
     
+    // Сдвиг нескольких смен
+    $('.show_move_form').click(function(){
+        $('#move_shifts_form').modal('show');
+    });
+    
     // Прокрутка на прежнее место после отправки формы
     $(window).on("scroll", function(){
         $('input[name="scroll"]').val($(window).scrollTop());

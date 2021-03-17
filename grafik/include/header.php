@@ -131,3 +131,40 @@
     </nav>
 </div>
 <hr />
+<div class="modal fade" id="move_shifts_form">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Перемещение смен</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="form-group form-inline">
+                        <label for="from">от&nbsp;</label>
+                        <input type="date" id="from" name="from" class="form-control" value="<?= filter_input(INPUT_GET, 'from') ?>"/>
+                        <select id="shift" name="shift" class="form-control ml-1">
+                            <option value="day">день</option>
+                            <option value="night">ночь</option>
+                        </select>
+                    </div>
+                    <div class="form-group form-inline">
+                        <label for="days">на&nbsp;</label>
+                        <input type="number" id="days" name="days" min="1" max="9" class="form-control" />
+                        <label>&nbsp;дней&nbsp;</label>
+                        <input type="checkbox" id="half" name="half" />
+                        <label class="form-check-label" for="half">&nbsp;с половиной</label>
+                    </div>
+                    <input type="hidden" id="scroll" name="scroll" />
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="submit" id="move_back_submit" name="move_back_submit" class="btn">Назад&nbsp;<i class="fas fa-arrow-up"></i></button>
+                    <button type="submit" id="move_forth_submit" name="move_forth_submit" class="btn ml-1">Вперёд&nbsp;<i class="fas fa-arrow-down"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
