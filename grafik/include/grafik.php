@@ -371,6 +371,19 @@ class Grafik {
                     <button type="submit" class="form-control btn btn-light" id="export_submit" name="export_submit">Экспорт&nbsp;<i class="fas fa-file-csv"></i></button>
                 </form>
             </div>
+            <div class="p-1 ml-1">
+                <form method="post" class="form-inline">
+                    <label>На&nbsp;</label>
+                    <input type="number" id="days" name="days" min="1" max="9" class="form-control" />
+                    <label>&nbsp;дней&nbsp;</label>
+                    <div class="form-check-inline">
+                        <input type="checkbox" id="half" name="half" />
+                        <label class="form-check-label" for="half">&nbsp;с половиной</label>
+                    </div>
+                    <button type="submit" id="move_back_submit" name="move_back_submit" class="form-control btn btn-light">Назад&nbsp;<i class="fas fa-arrow-up"></i></button>
+                    <button type="submit" id="move_forth_submit" name="move_forth_submit" class="form-control btn btn-light ml-1">Вперёд&nbsp;<i class="fas fa-arrow-down"></i></button>
+                </form>
+            </div>
         </div>
         <?php endif; ?>
     </div>
