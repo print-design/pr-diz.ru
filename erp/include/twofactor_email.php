@@ -34,7 +34,7 @@
             $code_mail->setFrom('s9108350097@yandex.ru', 'ERP');
             
             // Кому
-            $code_mail->addAddress('printdiz@yandex.ru', 'Принт-Дизайн');
+            $code_mail->addAddress(EMAIL_TO, EMAIL_TO_NAME);
  
             // Тема письма
             $code_mail->Subject = 'ERP, код безопасности';

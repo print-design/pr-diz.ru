@@ -59,6 +59,9 @@ function Initials() {
             if($_SERVER['HTTP_HOST'] == "pr-diz-test.ru") {
                 echo "<li style='font-weight: bold; font-size: large; margin-left: 50px;'>ТЕСТОВАЯ</li>";
             }
+            else if($_SERVER['HTTP_HOST'] == "pr-diz-develop.ru") {
+                echo "<li style='font-weight: bold; font-size: large; margin-left: 50px;'>РАЗРАБОТКА</li>";
+            }
             ?>
         </ul>
         <?php
