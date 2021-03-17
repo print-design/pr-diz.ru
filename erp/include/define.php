@@ -9,6 +9,7 @@ define('DATABASE_NAME', 'erp');
 
 define('USER_ID', '8uh_87HHGyt_675fr_oolkj_u76TY__iju76ggV');
 define('USERNAME', 'kjUhyg-iJJuuggy___--yh7YYTR5412jN-98JIU');
+define('PASSWORD5', 'jj8_iUY6754_77yGT_76bgFF__098hu_11246bHHG');
 define('FIRST_NAME', 'kjjuYHG654_kkh--IIUY67tyGFRDeerguuYGTF67_98j');
 define('LAST_NAME', '4ij_ujjJJYH_876tgHGVCD__uih675HG_jhut_uuy');
 define('ROLE', 'MKJhytf__iuyTREfgyUH__iu76_7765GVFCffd_8u7y');

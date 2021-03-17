@@ -150,12 +150,14 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
     if($login_form_valid) {
         $user_id = '';
         $username = '';
+        $password = '';
+        $password5 = ''; // Первые 5 символов зашифрованного пароля
         $last_name = '';
         $first_name = '';
         $role = '';
         $twofactor = 0;
         
-        $sql = "select u.id, u.username, u.last_name, u.first_name, u.email, r.name role, r.twofactor "
+        $sql = "select u.id, u.username, u.password, u.last_name, u.first_name, u.email, r.name role, r.twofactor "
                 . "from user u "
                 . "inner join role r on u.role_id=r.id "
                 . "where u.username='$login_username' and u.password=password('$login_password')";
@@ -165,6 +167,11 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
         foreach ($users_result as $row) {
             $user_id = $row['id'];
             $username = $row['username'];
+            $password = $row['password'];
+            if(strlen($password) > 5) {
+                // Сохраняем первые 5 символов зашифрованного пароля (чтобы не хранить в куках весь пароль)
+                $password5 = substr($password, 0, 5);
+            }
             $last_name = $row['last_name'];
             $first_name = $row['first_name'];
             $role = $row['role'];
@@ -186,6 +193,7 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
             
             setcookie(USER_ID, $user_id, time() + 60 * 60 * 24 * 100, "/");
             setcookie(USERNAME, $username, time() + 60 * 60 * 24 * 100, "/");
+            setcookie(PASSWORD5, $password5, time() + 60 * 60 * 24 * 100, "/");
             setcookie(LAST_NAME, $last_name, time() + 60 * 60 * 24 * 100, "/");
             setcookie(FIRST_NAME, $first_name, time() + 60 * 60 * 24 * 100, "/");
             setcookie(ROLE, $role, time() + 60 * 60 * 24 * 100, "/");
@@ -198,7 +206,7 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
 // Обработка формы отправки кода безопасности
 if(null !== filter_input(INPUT_POST, 'security_code_submit')) {
     $id = filter_input(INPUT_POST, 'id');
-    $sql = "select u.id, u.username, u.last_name, u.first_name, u.email, u.code, r.name role "
+    $sql = "select u.id, u.username, u.password, u.last_name, u.first_name, u.email, u.code, r.name role "
             . "from user u inner join role r on u.role_id = r.id "
             . "where u.id=$id";
     $result = (new Grabber($sql))->result;
@@ -206,6 +214,10 @@ if(null !== filter_input(INPUT_POST, 'security_code_submit')) {
     foreach ($result as $row) {
         $user_id = $row['id'];
         $username = $row['username'];
+        $password = $row['password'];
+        if(strlen($password) > 5) {
+            $password5 = substr($password, 0, 5);
+        }
         $last_name = $row['last_name'];
         $first_name = $row['first_name'];
         $role = $row['role'];
@@ -218,6 +230,7 @@ if(null !== filter_input(INPUT_POST, 'security_code_submit')) {
             if($error_message == '') {
                 setcookie(USER_ID, $user_id, time() + 60 * 60 * 24 * 100, "/");
                 setcookie(USERNAME, $username, time() + 60 * 60 * 24 * 100, "/");
+                setcookie(PASSWORD5, $password5, time() + 60 * 60 * 24 * 100, "/");
                 setcookie(LAST_NAME, $last_name, time() + 60 * 60 * 24 * 100, "/");
                 setcookie(FIRST_NAME, $first_name, time() + 60 * 60 * 24 * 100, "/");
                 setcookie(ROLE, $role, time() + 60 * 60 * 24 * 100, '/');
@@ -237,6 +250,7 @@ if(null !== filter_input(INPUT_POST, 'security_code_submit')) {
 if(null !== filter_input(INPUT_POST, 'logout_submit')) {
     setcookie(USER_ID, '', time() + 60 * 60 * 24 * 100, "/");
     setcookie(USERNAME, '', time() + 60 * 60 * 24 * 100, "/");
+    setcookie(PASSWORD5, '', time() + 60 * 60 * 24 * 100, "/");
     setcookie(LAST_NAME, '', time() + 60 * 60 * 24 * 100, "/");
     setcookie(FIRST_NAME, '', time() + 60 * 60 * 24 * 100, "/");
     setcookie(LOGIN_TIME, '', time() + 60 * 60 * 24 * 100, "/");
