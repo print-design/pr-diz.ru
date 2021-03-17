@@ -170,7 +170,7 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
             $password = $row['password'];
             if(strlen($password) > 5) {
                 // Сохраняем первые 5 символов зашифрованного пароля (чтобы не хранить в куках весь пароль)
-                $password5 = substr($password, 0, 5);
+                $password5 = substr($password, 1, 5);
             }
             $last_name = $row['last_name'];
             $first_name = $row['first_name'];
@@ -216,7 +216,7 @@ if(null !== filter_input(INPUT_POST, 'security_code_submit')) {
         $username = $row['username'];
         $password = $row['password'];
         if(strlen($password) > 5) {
-            $password5 = substr($password, 0, 5);
+            $password5 = substr($password, 1, 5);
         }
         $last_name = $row['last_name'];
         $first_name = $row['first_name'];
@@ -246,8 +246,7 @@ if(null !== filter_input(INPUT_POST, 'security_code_submit')) {
     }
 }
 
-// Выход из системы
-if(null !== filter_input(INPUT_POST, 'logout_submit')) {
+function Logout() {
     setcookie(USER_ID, '', time() + 60 * 60 * 24 * 100, "/");
     setcookie(USERNAME, '', time() + 60 * 60 * 24 * 100, "/");
     setcookie(PASSWORD5, '', time() + 60 * 60 * 24 * 100, "/");
@@ -257,5 +256,22 @@ if(null !== filter_input(INPUT_POST, 'logout_submit')) {
     setcookie(ROLE, '', time() + 60 * 60 * 24 * 100, "/");
     header("Refresh:0");
     header('Location: '.APPLICATION.'/');
+}
+
+// Обработка кнопки выхода из системы
+if(null !== filter_input(INPUT_POST, 'logout_submit')) {
+    Logout();
+}
+
+// Выход из системы, если удалили пользователя или сменили пароль
+if(LoggedIn()) {
+    $username = filter_input(INPUT_COOKIE, USERNAME);
+    $password5 = filter_input(INPUT_COOKIE, PASSWORD5);
+    $sql = "select count(id) from user where username = '$username' and substring(password, 2, 5) = '$password5'";
+    $row = (new Fetcher($sql))->Fetch();
+    
+    if($row[0] == 0) {
+        Logout();
+    }
 }
 ?>
