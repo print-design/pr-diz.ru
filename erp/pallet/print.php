@@ -53,13 +53,13 @@ if($row = $fetcher->Fetch()) {
         ?>
     </head>
     <body class="print">
-        <div style="width: 660px;">
+        <div style="width: 660px; padding-left: 30px;">
             <div style="margin-bottom: 20px; margin-top: 30px; width: 650px;">
                 <a href="<?=APPLICATION ?>/pallet/new.php"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                 <div style="display: inline; margin-left: 80px; font-size: 32px; font-weight: bold; font-style: italic;">ООО &laquo;Принт-дизайн&raquo;</div>
             </div>
             <h1 style="font-size: 32px;">Паллет № <?="П".$id ?> от <?=$date ?></h1>
-            <table class="table table-bordered print" style="width: 650px;">
+            <table class="table table-bordered print" style="writing-mode: tb-rl;">
                 <tbody>
                     <tr>
                         <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
