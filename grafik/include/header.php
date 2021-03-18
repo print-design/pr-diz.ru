@@ -142,6 +142,7 @@
                 </div>
                 <!-- Modal body -->
                 <div class="modal-body">
+                    <input type="hidden" id="move_shifts_machine_id" name="move_shifts_machine_id" />
                     <div class="form-group form-inline">
                         <label for="from">от&nbsp;</label>
                         <input type="date" id="move_shifts_from" name="move_shifts_from" class="form-control" value="<?= filter_input(INPUT_GET, 'from') ?>"/>
@@ -161,8 +162,8 @@
                 </div>
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="submit" id="move_back_submit" name="move_back_submit" class="btn">Назад&nbsp;<i class="fas fa-arrow-up"></i></button>
-                    <button type="submit" id="move_forth_submit" name="move_forth_submit" class="btn ml-1">Вперёд&nbsp;<i class="fas fa-arrow-down"></i></button>
+                    <button type="submit" id="move_shifts_back_submit" name="move_shifts_back_submit" class="btn">Назад&nbsp;<i class="fas fa-arrow-up"></i></button>
+                    <button type="submit" id="move_shifts_forth_submit" name="move_shifts_forth_submit" class="btn ml-1">Вперёд&nbsp;<i class="fas fa-arrow-down"></i></button>
                 </div>
             </form>
         </div>
