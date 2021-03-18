@@ -153,7 +153,7 @@
                     </div>
                     <div class="form-group form-inline">
                         <label for="days">на&nbsp;</label>
-                        <input type="number" id="days" name="days" min="1" max="9" class="form-control" />
+                        <input type="number" id="days" name="days" min="1" max="9" class="form-control" required="required" />
                         <label>&nbsp;дней&nbsp;</label>
                         <input type="checkbox" id="half" name="half" />
                         <label class="form-check-label" for="half">&nbsp;с половиной</label>

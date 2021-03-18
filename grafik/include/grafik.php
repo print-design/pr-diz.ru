@@ -647,7 +647,7 @@ class Grafik {
                         echo '<input type="hidden" id="date" name="date" value="'.$dateshift['date']->format('Y-m-d').'" />';
                         echo '<input type="hidden" id="shift" name="shift" value="'.$dateshift['shift'].'" />';
                         echo "<input type='hidden' id='workshift_id' name='workshift_id' value='".$row['id']."' />";
-                        echo "<button id='create_edition_submit' name='create_edition_submit' class='btn btn-outline-dark btn-sm mb-1' title='Добавить тираж'><i class='fas fa-plus'></i></button>";
+                        echo "<button id='create_edition_submit' name='create_edition_submit' class='btn btn-outline-dark btn-sm mb-1' data-toggle='tooltip' title='Добавить тираж'><i class='fas fa-plus'></i></button>";
                         echo '</form>';
                     }
                     
@@ -671,7 +671,7 @@ class Grafik {
                     if(isset($row['id'])) {
                         echo "<input type='hidden' id='workshift_id' name='workshift_id' value='".$row['id']."' />";
                     }
-                    echo "<button id='paste_edition_submit' name='paste_edition_submit' class='btn btn-outline-dark btn-sm clipboard_paste' title='Вставить тираж'$disabled><i class='fas fa-paste'></i></button>";
+                    echo "<button id='paste_edition_submit' name='paste_edition_submit' class='btn btn-outline-dark btn-sm clipboard_paste' data-toggle='tooltip' title='Вставить тираж'$disabled><i class='fas fa-paste'></i></button>";
                     echo "</form>";
                     
                     echo '</td>';
@@ -704,7 +704,7 @@ class Grafik {
                         echo "<form method='post'>";
                         echo '<input type="hidden" id="scroll" name="scroll" />';
                         echo "<input type='hidden' id='id' name='id' value='".$row['id']."' />";
-                        echo "<button type='submit' id='delete_shift_submit' name='delete_shift_submit' class='btn btn-outline-dark btn-sm confirmable' title='Удалить смену'><i class='fas fa-trash-alt'></i></button>";
+                        echo "<button type='submit' id='delete_shift_submit' name='delete_shift_submit' class='btn btn-outline-dark btn-sm confirmable' data-toggle='tooltip' title='Удалить смену'><i class='fas fa-trash-alt'></i></button>";
                         echo "</form>";
                     }
                     echo "</td>";
@@ -751,7 +751,7 @@ class Grafik {
             echo "<input type='hidden' id='shift' name='shift' value='$shift' />";
             echo "<input type='hidden' id='position' name='position' value='$position' />";
             echo "<input type='hidden' id='direction' name='direction' value='up' />";
-            echo "<button type='submit' id='create_edition_submit' name='create_edition_submit' class='btn btn-outline-dark btn-sm mb-1' title='Добавить тираж выше'><i class='fas fa-plus'></i><i class='fas fa-long-arrow-alt-up'></i></button>";
+            echo "<button type='submit' id='create_edition_submit' name='create_edition_submit' class='btn btn-outline-dark btn-sm mb-1' data-toggle='tooltip' title='Добавить тираж выше'><i class='fas fa-plus'></i><i class='fas fa-long-arrow-alt-up'></i></button>";
             echo '</form>';
             
             echo "<form method='post'>";
@@ -761,7 +761,7 @@ class Grafik {
             echo "<input type='hidden' id='shift' name='shift' value='$shift' />";
             echo "<input type='hidden' id='position' name='position' value='$position' />";
             echo "<input type='hidden' id='direction' name='direction' value='down' />";
-            echo "<button type='submit' id='create_edition_submit' name='create_edition_submit' class='btn btn-outline-dark btn-sm' title='Добавить тираж ниже'><i class='fas fa-plus'></i><i class='fas fa-long-arrow-alt-down'></i></button>";
+            echo "<button type='submit' id='create_edition_submit' name='create_edition_submit' class='btn btn-outline-dark btn-sm' data-toggle='tooltip' title='Добавить тираж ниже'><i class='fas fa-plus'></i><i class='fas fa-long-arrow-alt-down'></i></button>";
             echo '</form>';
             
             echo "</td>";
@@ -789,7 +789,7 @@ class Grafik {
             echo "<input type='hidden' id='machine_id' name='machine_id' value='$machine_id' />";
             echo "<input type='hidden' id='position' name='position' value='$position' />";
             echo "<input type='hidden' id='direction' name='direction' value='up' />";
-            echo "<button id='paste_edition_submit' name='paste_edition_submit' class='btn btn-outline-dark btn-sm mb-1 clipboard_paste' title='Вставить тираж выше'$disabled><i class='fas fa-paste'></i><i class='fas fa-long-arrow-alt-up'></i></button>";
+            echo "<button id='paste_edition_submit' name='paste_edition_submit' class='btn btn-outline-dark btn-sm mb-1 clipboard_paste' data-toggle='tooltip' title='Вставить тираж выше'$disabled><i class='fas fa-paste'></i><i class='fas fa-long-arrow-alt-up'></i></button>";
             echo "</form>";
             
             echo "<form method='post'>";
@@ -801,7 +801,7 @@ class Grafik {
             echo "<input type='hidden' id='machine_id' name='machine_id' value='$machine_id' />";
             echo "<input type='hidden' id='position' name='position' value='$position' />";
             echo "<input type='hidden' id='direction' name='direction' value='down' />";
-            echo "<button id='paste_edition_submit' name='paste_edition_submit' class='btn btn-outline-dark btn-sm clipboard_paste' title='Вставить тираж ниже'$disabled><i class='fas fa-paste'></i><i class='fas fa-long-arrow-alt-down'></i></button>";
+            echo "<button id='paste_edition_submit' name='paste_edition_submit' class='btn btn-outline-dark btn-sm clipboard_paste' data-toggle='tooltip' title='Вставить тираж ниже'$disabled><i class='fas fa-paste'></i><i class='fas fa-long-arrow-alt-down'></i></button>";
             echo "</form>";
             
             echo "</td>";
@@ -1008,24 +1008,32 @@ class Grafik {
             echo "</td>";
         }
         
-        // Копирование
-        if(IsInRole('admin')){
-            echo "<td class='$top $shift'>";
-            echo "<button class='btn btn-outline-dark btn-sm clipboard_copy' data='".$edition['id']."' title='Копировать тираж'><i class='fas fa-copy'></i><div class='alert alert-info clipboard_alert'>Скопировано</div></button>";
-            echo "</td>";
-        }
-        
-        // Удаление
+        // Копирование тиража
         if(IsInRole('admin')):
         ?>
         <td class='<?=$top ?> <?=$shift ?>'>
-            <button class="btn btn-outline-dark btn-sm show_move_form" title="Сдвинуть несколько смен" data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-position='<?=$position ?>' data-machine_id='<?=$machine_id ?>' data-workshift_id='<?=$workshift_id ?>'><i class="fas fa-table"></i></button>
+        <button class='btn btn-outline-dark btn-sm clipboard_copy' data='<?=$edition['id'] ?>' title='Копировать тираж' data-toggle='tooltip'><i class='fas fa-copy'></i><div class='alert alert-info clipboard_alert'>Скопировано</div></button>
         </td>
+        <?php
+        endif;
+        
+        // Сдвиг нескольких тиражей
+        if(IsInRole('admin')):
+        ?>
+        <td class='<?=$top ?> <?=$shift ?>'>
+            <button class="btn btn-outline-dark btn-sm show_move_form" title="Сдвинуть несколько тиражей" data-toggle='tooltip' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-position='<?=$position ?>' data-machine_id='<?=$machine_id ?>' data-workshift_id='<?=$workshift_id ?>'><i class="fas fa-table"></i></button>
+        </td>
+        <?php
+        endif;
+        
+        // Удаление тиража
+        if(IsInRole('admin')):
+        ?>
         <td class='<?=$top ?> <?=$shift ?>'>
         <form method='post'>
             <input type="hidden" id="scroll" name="scroll" />
-            <input type='hidden' id='id' name='id' value='".$edition['id']."' />
-            <button type='submit' id='delete_edition_submit' name='delete_edition_submit' class='btn btn-outline-dark btn-sm confirmable' title='Удалить тираж'><i class='fas fa-trash-alt'></i></button>
+            <input type='hidden' id='id' name='id' value='<?=$edition['id'] ?>' />
+            <button type='submit' id='delete_edition_submit' name='delete_edition_submit' class='btn btn-outline-dark btn-sm confirmable' title='Удалить тираж' data-toggle="tooltip"><i class='fas fa-trash-alt'></i></button>
         </form>
         </td>
         <?php
