@@ -1019,7 +1019,7 @@ class Grafik {
         if(IsInRole('admin')):
         ?>
         <td class='<?=$top ?> <?=$shift ?>'>
-            <button class="btn btn-outline-dark btn-sm show_move_form" title="Сдвинуть несколько смен"><i class="fas fa-table"></i></button>
+            <button class="btn btn-outline-dark btn-sm show_move_form" title="Сдвинуть несколько смен" data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-position='<?=$position ?>' data-machine_id='<?=$machine_id ?>' data-workshift_id='<?=$workshift_id ?>'><i class="fas fa-table"></i></button>
         </td>
         <td class='<?=$top ?> <?=$shift ?>'>
         <form method='post'>

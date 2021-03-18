@@ -231,6 +231,8 @@
     
     // Сдвиг нескольких смен
     $('.show_move_form').click(function(){
+        $('#move_shifts_from').val($(this).attr('data-date'));
+        $('#move_shifts_shift').val($(this).attr('data-shift'));
         $('#move_shifts_form').modal('show');
     });
     

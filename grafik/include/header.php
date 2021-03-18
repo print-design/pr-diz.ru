@@ -144,8 +144,8 @@
                 <div class="modal-body">
                     <div class="form-group form-inline">
                         <label for="from">от&nbsp;</label>
-                        <input type="date" id="from" name="from" class="form-control" value="<?= filter_input(INPUT_GET, 'from') ?>"/>
-                        <select id="shift" name="shift" class="form-control ml-1">
+                        <input type="date" id="move_shifts_from" name="move_shifts_from" class="form-control" value="<?= filter_input(INPUT_GET, 'from') ?>"/>
+                        <select id="move_shifts_shift" name="move_shifts_shift" class="form-control ml-1">
                             <option value="day">день</option>
                             <option value="night">ночь</option>
                         </select>
