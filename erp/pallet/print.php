@@ -114,65 +114,6 @@ if($row = $fetcher->Fetch()) {
                     </td>
                 </tr>
             </table>
-            
-            <br /><br /><br />
-            
-            <div style="margin-bottom: 20px; margin-top: 30px;">
-                <div style="display: inline; margin-left: 480px; font-size: 32px; font-weight: bold; font-style: italic;">ООО &laquo;Принт-дизайн&raquo;</div>
-            </div>
-            <table>
-                <tr>
-                    <td>
-                        <table class="table table-bordered print" style="width: 400px;">
-                            <tbody>
-                                <tr>
-                                    <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
-                                    <td>Ширина<br /><strong><?=$width ?> мм</strong></td>
-                                </tr>
-                                <tr>
-                                    <td>ID от поставщика<br /><strong><?=$id_from_supplier ?></strong></td>
-                                    <td>Толщина, уд.вес<br /><strong><?=$thickness ?> мкм <?=$ud_ves ?> г/м<sup>2</sup></strong></td>
-                                </tr>
-                                <tr>
-                                    <td>Кладовщик<br /><strong><?=$storekeeper ?></strong></td>
-                                    <td>Длина<br /><strong><?=$length ?> м</strong></td>
-                                </tr>
-                                <tr>
-                                    <td>Марка пленки<br /><strong><?=$film_brand ?></strong></td>
-                                    <td>Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
-                                </tr>
-                                <tr>
-                                    <td>Статус<br /><strong><?=$status ?></strong></td>
-                                    <td>Количество рулонов<br /><strong><?=$rolls_number ?></strong></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" style="white-space: normal;">Комментарий<br /><strong><?= $comment ?></strong></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                    <td style="vertical-align: top; padding-left: 50px;">
-                        <h1 style="font-size: 32px;">Паллет № <?="П".$id ?> от <?=$date ?></h1>
-                        <?php
-                        //include '../qr/qrlib.php';
-                        $errorCorrectionLevel = 'L'; // 'L','M','Q','H'
-                        $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/pallet/pallet.php?id='.$id;
-                        $current_date_time = date("dmYHis");
-                        $filename = "../temp/$current_date_time.png";
-                        QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
-                        echo "<img src='$filename' />";
-            
-                        // Удаление всех файлов, кроме текущего (чтобы диск не переполнился).
-                        $files = scandir("../temp/");
-                        foreach ($files as $file) {
-                            if($file != "$current_date_time.png" && !is_dir($file)) {
-                                unlink("../temp/$file");
-                            }
-                        }
-                        ?>
-                    </td>
-                </tr>
-            </table>
         </div>
     </body>
 </html>
