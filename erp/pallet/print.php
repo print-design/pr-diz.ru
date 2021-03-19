@@ -66,6 +66,7 @@ if($row = $fetcher->Fetch()) {
         <div class="w-100" style="height: 1400px;">
             <div style="margin-bottom: 20px; margin-top: 30px;">
                 <a href="<?=APPLICATION ?>/pallet/new.php"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                <a class="yt-simple-endpoint style-scope ytd-button-renderer d-none" href="#">Поделиться&nbsp;<i class="fas fa-share-alt"></i></a>
             </div>
             <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-left: 50px;">
                 <tbody>
