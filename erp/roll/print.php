@@ -1,7 +1,6 @@
 <?php
 include '../include/topscripts.php';
 
-
 // Если не задано значение id, перенаправляем на список
 $id = filter_input(INPUT_GET, 'id');
 if(empty($id)) {
@@ -51,21 +50,50 @@ if($row = $fetcher->Fetch()) {
         <?php
         include '../include/head.php';
         ?>
+        <style>
+            table.print tr td {
+                font-size: 48px;
+                line-height: 52px;
+                vertical-align: top;
+                white-space: pre-wrap;
+                padding: 0;
+                padding-right: 10px;
+            }
+        </style>
     </head>
     <body class="print">
-        <div style="margin-left: 30px;">
+        <div class="w-100" style="height: 1400px;">
             <div style="margin-bottom: 20px; margin-top: 30px;">
                 <a href="<?=APPLICATION ?>/roll/new.php"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
-                <div style="display: inline; margin-left: 80px; font-size: 32px; font-weight: bold; font-style: italic;">
-                    ООО &laquo;Принт-дизайн&raquo;
-                </div>
             </div>
-            <h1 style="font-size: 32px;">Рулон № <?="Р".$id ?> от <?=$date ?></h1>
-            <table class="table table-bordered print">
+            <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-left: 50px;">
                 <tbody>
+                    <tr>
+                        <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
+                        <td class="text-center text-nowrap">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></td>
+                    </tr>
                     <tr>
                         <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
                         <td>Ширина<br /><strong><?=$width ?> мм</strong></td>
+                        <td rowspan="6" class="qr" style="height: 20%;">
+                            <?php
+                            include '../qr/qrlib.php';
+                            $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
+                            $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/roll/roll.php?id='.$id;
+                            $current_date_time = date("dmYHis");
+                            $filename = "../temp/$current_date_time.png";
+                            QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
+                            echo "<img src='$filename' />";
+                            
+                            // Удаление всех файлов, кроме текущего (чтобы диск не переполнился).
+                            $files = scandir("../temp/");
+                            foreach ($files as $file) {
+                                if($file != "$current_date_time.png" && !is_dir($file)) {
+                                    unlink("../temp/$file");
+                                }
+                            }
+                            ?>
+                        </td>
                     </tr>
                     <tr>
                         <td>ID от поставщика<br /><strong><?=$id_from_supplier ?></strong></td>
@@ -88,39 +116,39 @@ if($row = $fetcher->Fetch()) {
                     </tr>
                 </tbody>
             </table>
-            <?php
-            include '../qr/qrlib.php';
-            $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
-            $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/roll/roll.php?id='.$id;
-            $current_date_time = date("dmYHis");
-            $filename = "../temp/$current_date_time.png";
-            QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
-            echo "<img src='$filename' />";
-                        
-            // Удаление всех файлов, кроме текущего (чтобы диск не переполнился).
-            $files = scandir("../temp/");
-            foreach ($files as $file) {
-                if($file != "$current_date_time.png" && !is_dir($file)) {
-                    unlink("../temp/$file");
-                }
-            }
-            ?>
         </div>
         
-        <div style="height: 400px;"></div>
+        <div style="height: 300px;"></div>
         
-        <div style="margin-left: 30px;">
-            <div style="margin-bottom: 20px; margin-top: 30px;">
-                <div style="display: inline; margin-left: 140px; font-size: 32px; font-weight: bold; font-style: italic;">
-                    ООО &laquo;Принт-дизайн&raquo;
-                </div>
-            </div>
-            <h1 style="font-size: 32px;">Рулон № <?="Р".$id ?> от <?=$date ?></h1>
-            <table class="table table-bordered print">
+        <div class="w-100" style="height: 1400px;">
+            <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-left: 50px;">
                 <tbody>
+                    <tr>
+                        <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
+                        <td class="text-center text-nowrap">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></td>
+                    </tr>
                     <tr>
                         <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
                         <td>Ширина<br /><strong><?=$width ?> мм</strong></td>
+                        <td rowspan="6" class="qr" style="height: 20%;">
+                            <?php
+                            //include '../qr/qrlib.php';
+                            $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
+                            $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/roll/roll.php?id='.$id;
+                            $current_date_time = date("dmYHis");
+                            $filename = "../temp/$current_date_time.png";
+                            QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
+                            echo "<img src='$filename' />";
+                            
+                            // Удаление всех файлов, кроме текущего (чтобы диск не переполнился).
+                            $files = scandir("../temp/");
+                            foreach ($files as $file) {
+                                if($file != "$current_date_time.png" && !is_dir($file)) {
+                                    unlink("../temp/$file");
+                                }
+                            }
+                            ?>
+                        </td>
                     </tr>
                     <tr>
                         <td>ID от поставщика<br /><strong><?=$id_from_supplier ?></strong></td>
@@ -143,23 +171,6 @@ if($row = $fetcher->Fetch()) {
                     </tr>
                 </tbody>
             </table>
-            <?php
-            //include '../qr/qrlib.php';
-            $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
-            $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/roll/roll.php?id='.$id;
-            $current_date_time = date("dmYHis");
-            $filename = "../temp/$current_date_time.png";
-            QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
-            echo "<img src='$filename' />";
-                        
-            // Удаление всех файлов, кроме текущего (чтобы диск не переполнился).
-            $files = scandir("../temp/");
-            foreach ($files as $file) {
-                if($file != "$current_date_time.png" && !is_dir($file)) {
-                    unlink("../temp/$file");
-                }
-            }
-            ?>
         </div>
     </body>
 </html>

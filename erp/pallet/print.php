@@ -51,13 +51,23 @@ if($row = $fetcher->Fetch()) {
         <?php
         include '../include/head.php';
         ?>
+        <style>
+            table.print tr td {
+                font-size: 48px;
+                line-height: 52px;
+                vertical-align: top;
+                white-space: pre-wrap;
+                padding: 0;
+                padding-right: 10px;
+            }
+        </style>
     </head>
     <body class="print">
-        <div style="padding-left: 30px;">
+        <div class="w-100" style="height: 1400px;">
             <div style="margin-bottom: 20px; margin-top: 30px;">
                 <a href="<?=APPLICATION ?>/pallet/new.php"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
             </div>
-            <table class="table table-bordered print" style="writing-mode: vertical-rl;">
+            <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-left: 50px;">
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
@@ -66,10 +76,10 @@ if($row = $fetcher->Fetch()) {
                     <tr>
                         <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
                         <td>Ширина<br /><strong><?=$width ?> мм</strong></td>
-                        <td rowspan="6">
+                        <td rowspan="6" class="qr" style="height: 20%;">
                             <?php
                             include '../qr/qrlib.php';
-                            $errorCorrectionLevel = 'L'; // 'L','M','Q','H'
+                            $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
                             $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/pallet/pallet.php?id='.$id;
                             $current_date_time = date("dmYHis");
                             $filename = "../temp/$current_date_time.png";
@@ -109,10 +119,10 @@ if($row = $fetcher->Fetch()) {
             </table>
         </div>
         
-        <div style="height: 400px;"></div>
+        <div style="height: 300px;"></div>
         
-        <div style="padding-left: 30px;">
-            <table class="table table-bordered print" style="writing-mode: vertical-rl;">
+        <div class="w-100" style="height: 1400px;">
+            <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-left: 50px;">
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
@@ -121,10 +131,10 @@ if($row = $fetcher->Fetch()) {
                     <tr>
                         <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
                         <td>Ширина<br /><strong><?=$width ?> мм</strong></td>
-                        <td rowspan="6">
+                        <td rowspan="6" class="qr" style="height: 20%;">
                             <?php
                             //include '../qr/qrlib.php';
-                            $errorCorrectionLevel = 'L'; // 'L','M','Q','H'
+                            $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
                             $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/pallet/pallet.php?id='.$id;
                             $current_date_time = date("dmYHis");
                             $filename = "../temp/$current_date_time.png";
