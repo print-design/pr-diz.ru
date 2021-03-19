@@ -53,15 +53,15 @@ if($row = $fetcher->Fetch()) {
         ?>
     </head>
     <body class="print">
-        <div style="margin-left: 30px; width: 660px;">
-            <div style="margin-bottom: 20px; margin-top: 30px; width: 650px;">
+        <div style="margin-left: 30px;">
+            <div style="margin-bottom: 20px; margin-top: 30px;">
                 <a href="<?=APPLICATION ?>/roll/new.php"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                 <div style="display: inline; margin-left: 80px; font-size: 32px; font-weight: bold; font-style: italic;">
                     ООО &laquo;Принт-дизайн&raquo;
                 </div>
             </div>
             <h1 style="font-size: 32px;">Рулон № <?="Р".$id ?> от <?=$date ?></h1>
-            <table class="table table-bordered print" style="width: 650px;">
+            <table class="table table-bordered print">
                 <tbody>
                     <tr>
                         <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
@@ -109,14 +109,14 @@ if($row = $fetcher->Fetch()) {
         
         <div style="height: 400px;"></div>
         
-        <div style="margin-left: 30px; width: 660px;">
-            <div style="margin-bottom: 20px; margin-top: 30px; width: 650px;">
+        <div style="margin-left: 30px;">
+            <div style="margin-bottom: 20px; margin-top: 30px;">
                 <div style="display: inline; margin-left: 140px; font-size: 32px; font-weight: bold; font-style: italic;">
                     ООО &laquo;Принт-дизайн&raquo;
                 </div>
             </div>
             <h1 style="font-size: 32px;">Рулон № <?="Р".$id ?> от <?=$date ?></h1>
-            <table class="table table-bordered print" style="width: 650px;">
+            <table class="table table-bordered print">
                 <tbody>
                     <tr>
                         <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
