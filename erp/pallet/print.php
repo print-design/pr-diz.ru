@@ -120,7 +120,7 @@ if($row = $fetcher->Fetch()) {
             </table>
         </div>
         
-        <div style="height: 150px; text-align: right; vertical-align: central; padding-top: 20px; font-size: 50px;">
+        <div style="height: 150px; text-align: center; padding-top: 10px; font-size: 100px;">
             <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
         </div>
         
