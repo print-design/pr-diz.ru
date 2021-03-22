@@ -101,7 +101,7 @@ if($row = $fetcher->Fetch()) {
                     </tr>
                     <tr>
                         <td>ID от поставщика<br /><strong><?=$id_from_supplier ?></strong></td>
-                        <td>Толщина, уд.вес<br /><strong><?=$thickness ?> мкм <?=$ud_ves ?> г/м<sup>2</sup></strong></td>
+                        <td>Толщина, уд.вес<br /><strong><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></strong></td>
                     </tr>
                     <tr>
                         <td>Кладовщик<br /><strong><?=$storekeeper ?></strong></td>
@@ -156,7 +156,7 @@ if($row = $fetcher->Fetch()) {
                     </tr>
                     <tr>
                         <td>ID от поставщика<br /><strong><?=$id_from_supplier ?></strong></td>
-                        <td>Толщина, уд.вес<br /><strong><?=$thickness ?> мкм <?=$ud_ves ?> г/м<sup>2</sup></strong></td>
+                        <td>Толщина, уд.вес<br /><strong><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></strong></td>
                     </tr>
                     <tr>
                         <td>Кладовщик<br /><strong><?=$storekeeper ?></strong></td>
