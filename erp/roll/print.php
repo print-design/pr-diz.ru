@@ -118,7 +118,9 @@ if($row = $fetcher->Fetch()) {
             </table>
         </div>
         
-        <div style="height: 150px;"></div>
+        <div style="height: 150px; text-align: right; vertical-align: central; padding-top: 20px; font-size: 50px;">
+            <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
+        </div>
         
         <div class="w-100" style="height: 1400px;">
             <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-left: 50px;">
@@ -173,4 +175,14 @@ if($row = $fetcher->Fetch()) {
             </table>
         </div>
     </body>
+    <script>
+        let shareData = {
+            url: '<?=$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] ?>'
+        }
+        
+        const sharelink = document.getElementById("sharelink");
+        sharelink.addEventListener('click', () => {
+            navigator.share(shareData)
+        });
+    </script>
 </html>

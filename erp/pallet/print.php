@@ -179,15 +179,12 @@ if($row = $fetcher->Fetch()) {
     </body>
     <script>
         let shareData = {
-        title: 'MDN',
-        text: 'Learn web development on MDN!',
-        url: 'https://developer.mozilla.org',
-      }
-
-      const sharelink = document.getElementById("sharelink");
-      
-    sharelink.addEventListener('click', () => {
-        navigator.share(shareData)
-      });
+            url: '<?=$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] ?>'
+        }
+        
+        const sharelink = document.getElementById("sharelink");
+        sharelink.addEventListener('click', () => {
+            navigator.share(shareData)
+        });
     </script>
 </html>
