@@ -69,11 +69,7 @@ if($row = $fetcher->Fetch()) {
             <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-left: 50px;">
                 <tbody>
                     <tr>
-                        <td colspan="2" class="font-weight-bold font-italic text-center">
-                            ООО &laquo;Принт-дизайн&raquo;
-                            <script src="https://yastatic.net/share2/share.js"></script>
-                            <div class="ya-share2" data-curtain data-shape="round" data-limit="0" data-more-button-type="short" data-services="messenger,vkontakte,facebook,odnoklassniki,printershare"></div>
-                        </td>
+                        <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
                         <td class="text-center text-nowrap">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></td>
                     </tr>
                     <tr>
