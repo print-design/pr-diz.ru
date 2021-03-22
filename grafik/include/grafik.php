@@ -305,27 +305,13 @@ class Grafik {
         }
         
         /*
-         * 
-         * 
-         * <input type="hidden" id="move_shifts_machine_id" name="move_shifts_machine_id" />
-                    <div class="form-group form-inline">
-                        <label for="from">от&nbsp;</label>
-                        <input type="date" id="move_shifts_from" name="move_shifts_from" class="form-control" value="<?= filter_input(INPUT_GET, 'from') ?>"/>
-                        <select id="move_shifts_shift" name="move_shifts_shift" class="form-control ml-1">
-                            <option value="day">день</option>
-                            <option value="night">ночь</option>
-                        </select>
-                    </div>
-                    <div class="form-group form-inline">
-                        <label for="days">на&nbsp;</label>
-                        <input type="number" id="days" name="days" min="1" max="9" class="form-control" required="required" />
-                        <label>&nbsp;дней&nbsp;</label>
-                        <input type="checkbox" id="half" name="half" />
-                        <label class="form-check-label" for="half">&nbsp;с половиной</label>
-                    </div>
-         * 
-         * 
-         * 
+         * Array ( [move_shifts_machine_id] => 1 
+         * [move_shifts_from] => 2021-02-08 
+         * [move_shifts_shift] => night 
+         * [days] => 2 
+         * [half] => on 
+         * [scroll] => 1890 
+         * [move_shifts_forth_submit] => )
          */
         
         // Сдвиг нескольких тиражей назад
