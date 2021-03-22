@@ -120,7 +120,9 @@ if($row = $fetcher->Fetch()) {
             </table>
         </div>
         
-        <div style="height: 300px;"></div>
+        <div style="height: 300px; text-align: right; vertical-align: central; padding-top: 120px; font-size: 50px;">
+            <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
+        </div>
         
         <div class="w-100" style="height: 1400px;">
             <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-left: 50px;">
@@ -175,4 +177,17 @@ if($row = $fetcher->Fetch()) {
             </table>
         </div>
     </body>
+    <script>
+        let shareData = {
+        title: 'MDN',
+        text: 'Learn web development on MDN!',
+        url: 'https://developer.mozilla.org',
+      }
+
+      const sharelink = document.getElementById("sharelink");
+      
+    sharelink.addEventListener('click', () => {
+        navigator.share(shareData)
+      });
+    </script>
 </html>
