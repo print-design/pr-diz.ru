@@ -241,22 +241,10 @@ $total_weight = $row['total_weight'];
         </div>
         <div class="modal fixed-left fade" id="filterModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-aside" role="document">
-                <div class="modal-content" style="padding-left: 35px; padding-right: 35px;">
+                <div class="modal-content" style="padding-left: 35px; padding-right: 35px; width: 521px;">
                     <button type="button" class="close" data-dismiss="modal" style="position: absolute; right: 32px; top: 55px;">&times;</button>
                     <h1 style="margin-top: 53px; margin-bottom: 20px; font-size: 32px; line-height: 48px; font-weight: 600;">Фильтр</h1>
                     <form method="get">
-                        <h2 style="font-size: 24px; line-height: 32px; font-weight: 600; margin-bottom: 24px;">Статус</h2>
-                        <?php
-                        $statuses = (new Grabber("select distinct ps.id, ps.name from pallet_status_history psh inner join pallet_status ps on psh.status_id = ps.id where ps.id <> $utilized_status_id order by ps.name"))->result;
-                        foreach ($statuses as $status):
-                        ?>
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="chk<?=$status['id'] ?>" name="chk<?=$status['id'] ?>"<?= filter_input(INPUT_GET, 'chk'.$status['id']) == 'on' ? " checked='checked'" : "" ?> />
-                            <label class="form-check-label" for="chk<?=$status['id'] ?>"><?=$status['name'] ?></label>
-                        </div>
-                        <?php
-                        endforeach;
-                        ?>
                         <div class="form-group">
                             <select id="film_brand_id" name="film_brand_id" class="form-control" style="margin-top: 30px; margin-bottom: 30px;">
                                 <option value="">МАРКА ПЛЕНКИ</option>
@@ -290,18 +278,26 @@ $total_weight = $row['total_weight'];
                         <input type="hidden" id="thickness_from" name="thickness_from" />
                         <input type="hidden" id="thickness_to" name="thickness_to" />
                         <h2 style="font-size: 24px; line-height: 32px; font-weight: 600; margin-top: 43px; margin-bottom: 18px;">Ширина</h2>
-                        <div class="row">
-                            <div class="col-5 form-group">
-                                <label for="width_from">От</label>
-                                <input type="number" min="1" id="width_from" name="width_from" class="form-control" value="<?= filter_input(INPUT_GET, 'width_from') ?>" />
-                            </div>
-                            <div class="col-2 text-center" style="padding-top: 30px;"><strong>&ndash;</strong></div>
-                            <div class="col-5 form-group">
-                                <label for="width_to">До</label>
-                                <input type="number" min="1" id="width_to" name="width_to" class="form-control" value="<?= filter_input(INPUT_GET, 'width_to') ?>" />
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-dark" id="filter_submit" name="filter_submit" style="margin-top: 20px; margin-bottom: 35px;">Применить</button>
+                        <table style="margin-bottom: 30px;">
+                            <tr>
+                                <td>
+                                    <div style="display: inline; width: 120px;">
+                                        <div style="width: 100%; text-align: center; font-size: 14px; line-height: 18px; padding-bottom: 5px;">От</div>
+                                        <input type="number" min="1" id="width_from" name="width_from" class="form-control" style="width: 100px;" value="<?= filter_input(INPUT_GET, 'width_from') ?>" />
+                                    </div>
+                                </td>
+                                <td style="font-weight: bold; padding-top: 20px; padding-left: 5px; padding-right: 5px;">-</td>
+                                <td>
+                                    <div style="display: inline; width: 120px;">
+                                        <div style="width: 100%; text-align: center; font-size: 14px; line-height: 18px; padding-bottom: 5px;">До</div>
+                                        <input type="number" min="1" id="width_to" name="width_to" class="form-control" style="width: 100px;" value="<?= filter_input(INPUT_GET, 'width_to') ?>" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <button type="button" class="btn" id="filter_clear" name="filter_clear" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #E4E1ED;"><img src="../images/icons/white-times.svg" />&nbsp;&nbsp;Очистить</button>
+                        <button type="button" class="btn" id="filter_cancel" name="filter_cancel" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #FFFFFF;">Отменить</button>
+                        <button type="submit" class="btn" id="filter_submit" name="filter_submit" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #CECACA;">Применить</button>
                     </form>
                 </div>
             </div>
@@ -315,15 +311,8 @@ $total_weight = $row['total_weight'];
             var slider_start_to = <?= null === filter_input(INPUT_GET, 'thickness_to') ? "50" : filter_input(INPUT_GET, 'thickness_to') ?>;
             
             $( "#slider-range" ).slider({
-                range: true,
-                min: 8,
-                max: 80,
-                values: [slider_start_from, slider_start_to],
-                slide: function(event, ui) {
-                    $("#thickness_from").val(ui.values[0]);
-                    $("#thickness_to").val(ui.values[1]);
-                }
-            });
+                    step: 10
+           });
             
             $("#thickness_from").val(slider_start_from);
             $("#thickness_to").val(slider_start_to);
