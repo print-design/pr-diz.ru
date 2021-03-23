@@ -66,7 +66,8 @@ $total_weight = $row['total_weight'];
                     <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
                     <a href="new.php" class="btn btn-outline-dark" style="padding-top: 14px; padding-bottom: 14px; padding-left: 30px; width: 200px; text-align: left;"><i class="fas fa-plus" style="font-size: 10px; margin-right: 18px;"></i>Новый паллет</a>
                     <?php endif; ?>
-                    <button class="btn btn-outline-dark disabled d-none" data-toggle="modal" data-target="#filterModal" data-text="Фильтр"><img src="../images/icons/filter.svg" style="margin-right: 20px;" />Фильтр</button>
+                    <button class="btn btn-outline-dark disabled" data-toggle="modal" data-target="#filterModal" data-text="Фильтр"><img src="../images/icons/filter.svg" style="margin-right: 20px;" />Фильтр</button>
+                    <div style="display: inline; position: relative;"><img src="../images/icons/filter.svg" style="margin-right: 20px;" /></div>
                 </div>
             </div>
             <table class="table" id="content_table">
