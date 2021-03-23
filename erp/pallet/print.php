@@ -66,7 +66,9 @@ if($row = $fetcher->Fetch()) {
         <div class="w-100" style="height: 1400px;">
             <div style="margin-bottom: 20px; margin-top: 30px;">
                 <a href="<?=APPLICATION ?>/pallet/new.php"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
-                <a class="yt-simple-endpoint style-scope ytd-button-renderer d-none" href="#">Поделиться&nbsp;<i class="fas fa-share-alt"></i></a>
+                <div style="display: inline; margin-left: 300px; font-size: 30px;">
+                    <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
+                </div>
             </div>
             <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-left: 50px;">
                 <tbody>
@@ -120,9 +122,7 @@ if($row = $fetcher->Fetch()) {
             </table>
         </div>
         
-        <div style="height: 150px; text-align: center; padding-top: 10px; font-size: 100px;">
-            <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
-        </div>
+        <div style="height: 150px; text-align: center; padding-top: 10px; font-size: 100px;"></div>
         
         <div class="w-100" style="height: 1400px;">
             <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-left: 50px;">
