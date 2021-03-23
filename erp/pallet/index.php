@@ -239,9 +239,9 @@ $total_weight = $row['total_weight'];
             include '../include/pager_bottom.php';
             ?>
         </div>
-        <div class="modal fade" id="filterModal">
-            <div class="modal-dialog">
-                <div class="modal-content" style="width: 535px; padding-left: 35px; padding-right: 35px;">
+        <div class="modal fixed-left fade" id="filterModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-aside" role="document">
+                <div class="modal-content" style="padding-left: 35px; padding-right: 35px;">
                     <button type="button" class="close" data-dismiss="modal" style="position: absolute; right: 32px; top: 55px;">&times;</button>
                     <h1 style="margin-top: 53px; margin-bottom: 20px; font-size: 32px; line-height: 48px; font-weight: 600;">Фильтр</h1>
                     <form method="get">
