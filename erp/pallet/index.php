@@ -68,7 +68,7 @@ $total_weight = $row['total_weight'];
                     <?php endif; ?>
                     <button class="btn btn-outline-dark disabled d-none" data-toggle="modal" data-target="#filterModal" data-text="Фильтр"><img src="../images/icons/filter.svg" style="margin-right: 20px;" />Фильтр</button>
                     <div style="display: inline-block; position: relative; margin-right: 55px; margin-left: 80px;">
-                        <a href="javascript: void(0);"><img src="../images/icons/filter1.svg" /></a>
+                        <a href="javascript: void(0);"><img src="../images/icons/filter1.svg" data-toggle="modal" data-target="#filterModal" data-text="Фильтр" /></a>
                         <div id="filter_params_counter_round" style="position: absolute; top: -7px; right: 0;">
                             <img src="../images/icons/filter_params_counter.svg" />
                             <div id="filter_params_counter" style="position: absolute; top: 1px; left: 8px; color: white;">0</div>
