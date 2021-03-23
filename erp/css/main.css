@@ -1,6 +1,6 @@
 html {
-    overflow: -moz-scrollbars-vertical; 
-    overflow-y: scroll;
+    overflow: hidden;
+    height: 100%;
 }
 
 a:not(.btn):link, a:not(.btn):visited {
@@ -300,4 +300,9 @@ select.form-control {
 
 .modal.fade {
         padding-right: 0!important;
+        overflow: hidden;
+}
+
+.modal-open {
+    overflow: auto; 
 }
