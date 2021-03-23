@@ -321,7 +321,14 @@ class Grafik {
             $days = filter_input(INPUT_POST, 'days');
             $half = filter_input(INPUT_POST, 'half');
             
-            print_r($_POST);
+            if(filter_input(INPUT_POST, 'move_shifts_shift') == 'day') {
+                $sql = "update workshift set date = date_add(date, interval -$days day) where machine_id = $this->machineId and date >= '$from'";
+                $this->error_message = (new Executer($sql))->error;
+            }
+            else if(filter_input(INPUT_POST, 'move_shifts_shift') == 'night') {
+                $sql = "update workshift set date = date_add(date, interval -$days day) where machine_id = $this->machineId and (date > '$from' or (date = '$from' and shift = 'night'))";
+                $this->error_message = (new Executer($sql))->error;
+            }
         }
         
         // Сдвиг нескольких тиражей вперёд
@@ -331,7 +338,14 @@ class Grafik {
             $days = filter_input(INPUT_POST, 'days');
             $half = filter_input(INPUT_POST, 'half');
             
-            print_r($_POST);
+            if(filter_input(INPUT_POST, 'move_shifts_shift') == 'day') {
+                $sql = "update workshift set date = date_add(date, interval $days day) where machine_id = $this->machineId and date >= '$from'";
+                $this->error_message = (new Executer($sql))->error;
+            }
+            else if(filter_input(INPUT_POST, 'move_shifts_shift') == 'night') {
+                $sql = "update workshift set date = date_add(date, interval $days day) where machine_id = $this->machineId and (date > '$from' or (date = '$from' and shift = 'night'))";
+                $this->error_message = (new Executer($sql))->error;
+            }
         }
         
         // Удаление тиража
