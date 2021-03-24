@@ -309,54 +309,43 @@ class Grafik {
             $from = filter_input(INPUT_POST, 'move_shifts_from');
             $shift = filter_input(INPUT_POST, 'move_shifts_shift');
             $days = filter_input(INPUT_POST, 'days');
+            $days_1 = intval($days) + 1;
             $half = filter_input(INPUT_POST, 'half');
             
             if($shift == 'day') {
-                $sql = "update workshift set date = date_add(date, interval -$days day) where machine_id = $this->machineId and date >= '$from'";
-                $this->error_message = (new Executer($sql))->error;
-                if(!empty($this->error_message)) {
-                    echo $sql;
-                    exit($this->error_message);
+                if($half == 'on') {
+                    $sql = "update workshift set date = if(shift = 'day', date_add(date, interval -$days_1 day), date_add(date, -$days day)), shift = if(shift = 'day', 'night', 'day') where machine_id = $this->machineId and date >= '$from'";
+                    $this->error_message = (new Executer($sql))->error;
+                    if(!empty($this->error_message)) {
+                        echo $sql;
+                        exit($this->error_message);
+                    }
+                }
+                else {
+                    $sql = "update workshift set date = date_add(date, interval -$days day) where machine_id = $this->machineId and date >= '$from'";
+                    $this->error_message = (new Executer($sql))->error;
+                    if(!empty($this->error_message)) {
+                        echo $sql;
+                        exit($this->error_message);
+                    }
                 }
             }
             else if($shift == 'night') {
-                $sql = "update workshift set date = date_add(date, interval -$days day) where machine_id = $this->machineId and (date > '$from' or (date = '$from' and shift = 'night'))";
-                $this->error_message = (new Executer($sql))->error;
-                if(!empty($this->error_message)) {
-                    echo $sql;
-                    exif_imagetype($this->error_message);
+                if($half == 'on') {
+                    $sql = "update workshift set date = if(shift = 'day', date_add(date, interval -$days_1 day), date_add(date, interval -$days dat)), shift = if(shift = 'day', 'night', 'day') where machine_id = $this->machineId and (date > '$from' or (date = '$from and shift = 'night'))";
+                    $this->error_message = (new Executer($sql))->error;
+                    if(!empty($this->error_message)) {
+                        echo $sql;
+                        exit($this->error_message);
+                    }
                 }
-            }
-            
-            if($half == 'on' && $shift == 'day') {
-                $sql = "update workshift set date = if(shift = 'day', date_add(date, interval -1 day), date) where machine_id = $this->machineId and (date >= '$from' or (date == date_add('$from', interval 1 day) and shift = 'night'))";
-                $this->error_message = (new Executer($sql))->error;
-                if(!empty($this->error_message)) {
-                    echo $sql;
-                    exit($this->error_message);
-                }
-                
-                $sql = "update workshift set shift = if(shift = 'day', 'night', 'day') where machine_id = $this->machineId and date >= '$from'";
-                $this->error_message = (new Executer($sql))->error;
-                if(!empty($this->error_message)) {
-                    echo $sql;
-                    exit($this->error_message);
-                }
-            }
-            
-            if($half == 'on' && $shift == 'night') {
-                $sql = "update workshift set date = if(shift = 'day', date_add(date, interval -1 day), date) where machine_id = $this->machineId and (date > '$from' or (date = '$from' and shift = 'night'))";
-                $this->error_message = (new Executer($sql))->error;
-                if(!empty($this->error_message)) {
-                    echo $sql;
-                    exit($this->error_message);
-                }
-                
-                $sql = "update workshift set shift = if(shift = 'day', 'night', 'day') where machine_id = $this->machineId and (date > '$from' or (date = '$from' and shift = 'night'))";
-                $this->error_message = (new Executer($sql))->error;
-                if(!empty($this->error_message)) {
-                    echo $sql;
-                    exit($this->error_message);
+                else {
+                    $sql = "update workshift set date = date_add(date, interval -$days day) where machine_id = $this->machineId and (date > '$from' or (date = '$from' and shift = 'night'))";
+                    $this->error_message = (new Executer($sql))->error;
+                    if(!empty($this->error_message)) {
+                        echo $sql;
+                        exif_imagetype($this->error_message);
+                    }
                 }
             }
         }
