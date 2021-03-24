@@ -13,4 +13,6 @@ if(!empty($film_brand_id)) {
         echo "<option value='$thickness'>$thickness мкм $weight г/м<sup>2</sup></option>";
     }
 }
+
+echo 'OK';
 ?>

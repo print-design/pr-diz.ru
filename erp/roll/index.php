@@ -258,6 +258,7 @@ $total_weight = $row['total_weight'];
                                 ?>
                             </select>
                         </div>
+                        <div id="slider_temp"></div>
                         <h2 style="font-size: 24px; line-height: 32px; font-weight: 600;">Толщина</h2>
                         <div id="width_slider" style="width: 465px;">
                             <div id="width_slider_values" style="height: 50px; position: relative; font-size: 14px; line-height: 18px;">
@@ -309,7 +310,17 @@ $total_weight = $row['total_weight'];
             var slider_start_to = <?= null === filter_input(INPUT_GET, 'thickness_to') ? "50" : filter_input(INPUT_GET, 'thickness_to') ?>;
             
             $( "#slider" ).slider({
-                    step: 10
+                step: 10
+            });
+            
+            $('#film_brand_name').change(function(){
+                $.ajax({ url: "../ajax/thickness.php?film_brand_name="+$(this).val() })
+                        .done(function(data){
+                            $('#slider_temp').html(data);
+                })
+                        .fail(function(){
+                            alert("Ошибка при получении толщины по названию.");
+                });
             });
             
             $( "#slider-range" ).slider({
