@@ -70,10 +70,20 @@ $total_weight = $row['total_weight'];
                     <button class="btn btn-outline-dark disabled d-none" data-toggle="modal" data-target="#filterModal" data-text="Фильтр"><img src="../images/icons/filter.svg" style="margin-right: 20px;" />Фильтр</button>
                     <div style="display: inline-block; position: relative; margin-right: 55px; margin-left: 80px;">
                         <a href="javascript: void(0);"><img src="../images/icons/filter1.svg" data-toggle="modal" data-target="#filterModal" data-text="Фильтр" /></a>
+                        <?php
+                        $get_count = 0;
+                        foreach ($_GET as $get_key=>$get_value) {
+                            if(!empty($get_value) && $get_value != PAGE) {
+                                $get_count++;
+                            }
+                        }
+                        if($get_count > 0):
+                        ?>
                         <div id="filter_params_counter_round" style="position: absolute; top: -7px; right: 0;">
                             <img src="../images/icons/filter_params_counter.svg" />
-                            <div id="filter_params_counter" style="position: absolute; top: 1px; left: 8px; color: white;">0</div>
+                            <div id="filter_params_counter" style="position: absolute; top: 1px; left: 8px; color: white;"><?=$get_count ?></div>
                         </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -257,6 +267,8 @@ $total_weight = $row['total_weight'];
                 }
             }
         }
+        
+        $json_thicknesses = json_encode($thicknesses);
         ?>
         <div class="modal fixed-left fade" id="filterModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-aside" role="document">
@@ -321,12 +333,22 @@ $total_weight = $row['total_weight'];
         ?>
         <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
+            var thicknesses = JSON.parse('<?=$json_thicknesses ?>');
+            
             $("#slider").slider({
                 range: false,
                 min: 0,
                 max: <?= count($thicknesses) ?>,
                 step: 1,
-                value: <?=$slider_value ?>
+                value: <?=$slider_value ?>,
+                slide: function(event, ui) {
+                    if(ui.value == '') {
+                        $("#thickness").val('');
+                    }
+                    else {
+                        $("#thickness").val(thicknesses[ui.value - 1]);
+                    }
+                }
             });
             
             $('#film_brand_name').change(function(){
@@ -364,7 +386,8 @@ $total_weight = $row['total_weight'];
                                         }
                                     }
                                 });
-                                $("#thickness").val(thicknesses[0]);
+                                
+                                $("#thickness").val('');
                             })
                             .fail(function(){
                                 alert("Ошибка при получении толщины по названию.");
