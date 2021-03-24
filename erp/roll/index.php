@@ -238,6 +238,26 @@ $total_weight = $row['total_weight'];
             include '../include/pager_bottom.php';
             ?>
         </div>
+        
+        <?php
+        $film_brand_name = addslashes(filter_input(INPUT_GET, 'film_brand_name'));
+        $thicknesses = array();
+        $slider_value = 0;
+        $slider_index = 0;
+        
+        if(!empty($film_brand_name)) {
+            $grabber = (new Grabber("select distinct fbv.thickness from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name='$film_brand_name' order by thickness"))->result;
+            
+            foreach ($grabber as $row) {
+                $slider_index++;
+                array_push($thicknesses, $row['thickness']);
+                
+                if(filter_input(INPUT_GET, 'thickness') == $row['thickness']) {
+                    $slider_value = $slider_index;
+                }
+            }
+        }
+        ?>
         <div class="modal fixed-left fade" id="filterModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-aside" role="document">
                 <div class="modal-content" style="padding-left: 35px; padding-right: 35px; width: 521px;">
@@ -263,11 +283,14 @@ $total_weight = $row['total_weight'];
                             <div id="width_slider_values" style="height: 30px; position: relative; font-size: 14px; line-height: 18px;" class="d-flex justify-content-between mb-auto">
                                 <div class='p-1'>все</div>
                                 <?php
+                                foreach ($thicknesses as $thickness) {
+                                    echo "<div class='p-1'>$thickness</div>";
+                                }
                                 ?>
                             </div>
                             <div id="slider"></div>
                         </div>
-                        <input type="hidden" id="thickness" name="thickness" />
+                        <input type="hidden" id="thickness" name="thickness" value="<?= filter_input(INPUT_GET, 'thickness') ?>" />
                         <h2 style="font-size: 24px; line-height: 32px; font-weight: 600; margin-top: 43px; margin-bottom: 18px;">Ширина</h2>
                         <table style="margin-bottom: 30px;">
                             <tr>
@@ -286,9 +309,9 @@ $total_weight = $row['total_weight'];
                                 </td>
                             </tr>
                         </table>
-                        <button type="button" class="btn" id="filter_clear" name="filter_clear" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #E4E1ED;"><img src="../images/icons/white-times.svg" />&nbsp;&nbsp;Очистить</button>
-                        <button type="button" class="btn" id="filter_cancel" name="filter_cancel" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #EEEEEE;">Отменить</button>
-                        <button type="submit" class="btn" id="filter_submit" name="filter_submit" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #CECACA;">Применить</button>
+                        <button type="button" class="btn" name="filter_clear" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #E4E1ED;"><img src="../images/icons/white-times.svg" />&nbsp;&nbsp;Очистить</button>
+                        <button type="button" class="btn" data-dismiss="modal" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #EEEEEE;">Отменить</button>
+                        <button type="submit" class="btn" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #CECACA;">Применить</button>
                     </form>
                 </div>
             </div>
@@ -298,14 +321,12 @@ $total_weight = $row['total_weight'];
         ?>
         <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
-            var slider_start_from = <?= null === filter_input(INPUT_GET, 'thickness_from') ? "20" : filter_input(INPUT_GET, 'thickness_from') ?>;
-            var slider_start_to = <?= null === filter_input(INPUT_GET, 'thickness_to') ? "50" : filter_input(INPUT_GET, 'thickness_to') ?>;
-            
             $("#slider").slider({
                 range: false,
                 min: 0,
-                max: 0,
-                step: 1
+                max: <?= count($thicknesses) ?>,
+                step: 1,
+                value: <?=$slider_value ?>
             });
             
             $('#film_brand_name').change(function(){
@@ -323,9 +344,11 @@ $total_weight = $row['total_weight'];
                     $.ajax({ url: "../ajax/thickness.php?film_brand_name="+$(this).val() })
                             .done(function(data){
                                 var thicknesses = JSON.parse(data);
-                        var slider_labels = "<div class='p-1'>все</div>";
-                        thicknesses.forEach(thickness => slider_labels = slider_labels + "<div class='p-1'>" + thickness + "</div>");
+                        
+                                var slider_labels = "<div class='p-1'>все</div>";
+                                thicknesses.forEach(thickness => slider_labels = slider_labels + "<div class='p-1'>" + thickness + "</div>");
                                 $('#width_slider_values').html(slider_labels);
+                                
                                 $("#slider").slider({
                                     range: false,
                                     min: 0,
@@ -342,26 +365,12 @@ $total_weight = $row['total_weight'];
                                     }
                                 });
                                 $("#thickness").val(thicknesses[0]);
-                    })
+                            })
                             .fail(function(){
                                 alert("Ошибка при получении толщины по названию.");
-                    });
+                            });
                 }
             });
-            
-            $( "#slider-range" ).slider({
-                range: true,
-                min: 8,
-                max: 80,
-                values: [slider_start_from, slider_start_to],
-                slide: function(event, ui) {
-                    $("#thickness_from").val(ui.values[0]);
-                    $("#thickness_to").val(ui.values[1]);
-                }
-            });
-            
-            $("#thickness_from").val(slider_start_from);
-            $("#thickness_to").val(slider_start_to);
             
             $('#chkMain').change(function(){
                 if($(this).is(':checked')) {
