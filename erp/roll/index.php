@@ -261,16 +261,8 @@ $total_weight = $row['total_weight'];
                         <div id="slider_temp"></div>
                         <h2 style="font-size: 24px; line-height: 32px; font-weight: 600;">Толщина</h2>
                         <div id="width_slider" style="width: 465px;">
-                            <div id="width_slider_values" style="height: 50px; position: relative; font-size: 14px; line-height: 18px;">
-                                <div style="position: absolute; bottom: 10px; left: 0;">8 мкм</div>
-                                <div style="position: absolute; bottom: 10px;  left: <?=(465 * 10 / 72) + 6 ?>px;">20</div>
-                                <div style="position: absolute; bottom: 10px;  left: <?=(465 * 20 / 72) + 6 ?>px;">30</div>
-                                <div style="position: absolute; bottom: 10px;  left: <?=(465 * 30 / 72) + 6 ?>px;">40</div>
-                                <div style="position: absolute; bottom: 10px;  left: <?=(465 * 40 / 72) + 6 ?>px;">50</div>
-                                <div style="position: absolute; bottom: 10px;  left: <?=(465 * 50 / 72) + 6 ?>px;">60</div>
-                                <div style="position: absolute; bottom: 10px;  left: <?=(465 * 60 / 72) + 6 ?>px;">70</div>
-                                <div style="position: absolute; bottom: 10px; right: -7px;">80</div>
-                                <div style="position: absolute; bottom: 10px; right: -34px;">мкм</div>
+                            <div id="width_slider_values" style="height: 30px; position: relative; font-size: 14px; line-height: 18px;" class="d-flex justify-content-between mb-auto">
+                                0
                             </div>
                             <div id="slider"></div>
                         </div>
@@ -309,18 +301,36 @@ $total_weight = $row['total_weight'];
             var slider_start_from = <?= null === filter_input(INPUT_GET, 'thickness_from') ? "20" : filter_input(INPUT_GET, 'thickness_from') ?>;
             var slider_start_to = <?= null === filter_input(INPUT_GET, 'thickness_to') ? "50" : filter_input(INPUT_GET, 'thickness_to') ?>;
             
-            $( "#slider" ).slider({
-                step: 10
+            $("#slider").slider({
+                range: false,
+                min: 0,
+                max: 0,
+                step: 1
             });
             
             $('#film_brand_name').change(function(){
                 if($(this).val() == '') {
-                    alert("TEMP");
+                    $('#width_slider_values').html("0");
+                    $("#slider").slider({
+                        range: false,
+                        min: 0,
+                        max: 0,
+                        step: 1
+                    });
                 }
                 else {
                     $.ajax({ url: "../ajax/thickness.php?film_brand_name="+$(this).val() })
                             .done(function(data){
-                                alert(data);
+                                var thicknesses = JSON.parse(data);
+                        var slider_labels = '';
+                        thicknesses.forEach(thickness => slider_labels = slider_labels + "<div class='p-1'>" + thickness + "</div>");
+                                $('#width_slider_values').html(slider_labels);
+                                $("#slider").slider({
+                                    range: false,
+                                    min: 1,
+                                    max: thicknesses.length,
+                                    step: 1
+                                });
                     })
                             .fail(function(){
                                 alert("Ошибка при получении толщины по названию.");
