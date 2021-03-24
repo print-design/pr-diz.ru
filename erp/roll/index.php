@@ -258,7 +258,6 @@ $total_weight = $row['total_weight'];
                                 ?>
                             </select>
                         </div>
-                        <div id="slider_temp"></div>
                         <h2 style="font-size: 24px; line-height: 32px; font-weight: 600;">Толщина</h2>
                         <div id="width_slider" style="width: 465px;">
                             <div id="width_slider_values" style="height: 30px; position: relative; font-size: 14px; line-height: 18px;" class="d-flex justify-content-between mb-auto">
@@ -266,8 +265,7 @@ $total_weight = $row['total_weight'];
                             </div>
                             <div id="slider"></div>
                         </div>
-                        <input type="hidden" id="thickness_from" name="thickness_from" />
-                        <input type="hidden" id="thickness_to" name="thickness_to" />
+                        <input type="hidden" id="thickness" name="thickness" />
                         <h2 style="font-size: 24px; line-height: 32px; font-weight: 600; margin-top: 43px; margin-bottom: 18px;">Ширина</h2>
                         <table style="margin-bottom: 30px;">
                             <tr>
@@ -287,7 +285,7 @@ $total_weight = $row['total_weight'];
                             </tr>
                         </table>
                         <button type="button" class="btn" id="filter_clear" name="filter_clear" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #E4E1ED;"><img src="../images/icons/white-times.svg" />&nbsp;&nbsp;Очистить</button>
-                        <button type="button" class="btn" id="filter_cancel" name="filter_cancel" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #FFFFFF;">Отменить</button>
+                        <button type="button" class="btn" id="filter_cancel" name="filter_cancel" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #EEEEEE;">Отменить</button>
                         <button type="submit" class="btn" id="filter_submit" name="filter_submit" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #CECACA;">Применить</button>
                     </form>
                 </div>
@@ -317,6 +315,7 @@ $total_weight = $row['total_weight'];
                         max: 0,
                         step: 1
                     });
+                    $("#thickness").val('');
                 }
                 else {
                     $.ajax({ url: "../ajax/thickness.php?film_brand_name="+$(this).val() })
@@ -327,10 +326,15 @@ $total_weight = $row['total_weight'];
                                 $('#width_slider_values').html(slider_labels);
                                 $("#slider").slider({
                                     range: false,
-                                    min: 1,
-                                    max: thicknesses.length,
-                                    step: 1
+                                    min: 0,
+                                    max: thicknesses.length - 1,
+                                    step: 1,
+                                    value: 0,
+                                    slide: function(event, ui) {
+                                        $("#thickness").val(thicknesses[0]);
+                                    }
                                 });
+                                $("#thickness").val(thicknesses[0]);
                     })
                             .fail(function(){
                                 alert("Ошибка при получении толщины по названию.");
