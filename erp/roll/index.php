@@ -68,6 +68,13 @@ $total_weight = $row['total_weight'];
                     <a href="new.php" class="btn btn-outline-dark" style="padding-top: 14px; padding-bottom: 14px; padding-left: 30px; width: 200px; text-align: left;"><i class="fas fa-plus" style="font-size: 10px; margin-right: 18px;"></i>Новый ролик</a>
                     <?php endif; ?>
                     <button class="btn btn-outline-dark disabled d-none" data-toggle="modal" data-target="#filterModal" data-text="Фильтр"><img src="../images/icons/filter.svg" style="margin-right: 20px;" />Фильтр</button>
+                    <div style="display: inline-block; position: relative; margin-right: 55px; margin-left: 80px;">
+                        <a href="javascript: void(0);"><img src="../images/icons/filter1.svg" data-toggle="modal" data-target="#filterModal" data-text="Фильтр" /></a>
+                        <div id="filter_params_counter_round" style="position: absolute; top: -7px; right: 0;">
+                            <img src="../images/icons/filter_params_counter.svg" />
+                            <div id="filter_params_counter" style="position: absolute; top: 1px; left: 8px; color: white;">0</div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <table class="table" id="content_table">
@@ -231,35 +238,22 @@ $total_weight = $row['total_weight'];
             include '../include/pager_bottom.php';
             ?>
         </div>
-        <div class="modal fade" id="filterModal">
-            <div class="modal-dialog">
-                <div class="modal-content" style="width: 535px; padding-left: 35px; padding-right: 35px;">
-                    <button type="button" class="close" data-dismiss="modal" style="position: absolute; right: 32px; top: 55px;">&times;</button>
+        <div class="modal fixed-left fade" id="filterModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-aside" role="document">
+                <div class="modal-content" style="padding-left: 35px; padding-right: 35px; width: 521px;">
+                    <button type="button" class="close" data-dismiss="modal" style="position: absolute; right: 32px; top: 55px;"><img src="../images/icons//close_modal.png" /></button>
                     <h1 style="margin-top: 53px; margin-bottom: 20px; font-size: 32px; line-height: 48px; font-weight: 600;">Фильтр</h1>
                     <form method="get">
-                        <h2 style="font-size: 24px; line-height: 32px; font-weight: 600; margin-bottom: 24px;">Статус</h2>
-                        <?php
-                        $statuses = (new Grabber("select distinct rs.id, rs.name from roll_status_history rsh inner join roll_status rs on rsh.status_id = rs.id where rs.id <> $utilized_status_id order by rs.name"))->result;
-                        foreach ($statuses as $status):
-                        ?>
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="chk<?=$status['id'] ?>" name="chk<?=$status['id'] ?>"<?= filter_input(INPUT_GET, 'chk'.$status['id']) == 'on' ? " checked='checked'" : "" ?> />
-                            <label class="form-check-label" for="chk<?=$status['id'] ?>"><?=$status['name'] ?></label>
-                        </div>
-                        <?php
-                        endforeach;
-                        ?>
                         <div class="form-group">
-                            <select id="film_brand_id" name="film_brand_id" class="form-control" style="margin-top: 30px; margin-bottom: 30px;">
+                            <select id="film_brand_name" name="film_brand_name" class="form-control" style="margin-top: 30px; margin-bottom: 30px;">
                                 <option value="">МАРКА ПЛЕНКИ</option>
                                 <?php
-                                $film_brands = (new Grabber("select distinct fb.id, fb.name from roll r inner join film_brand fb on r.film_brand_id = fb.id order by fb.name"))->result;
+                                $film_brands = (new Grabber("select distinct fb.name from roll r inner join film_brand fb on r.film_brand_id = fb.id order by fb.name"))->result;
                                 foreach ($film_brands as $film_brand) {
-                                    $id = $film_brand['id'];
                                     $name = $film_brand['name'];
                                     $selected = '';
-                                    if(filter_input(INPUT_GET, 'film_brand_id') == $film_brand['id']) $selected = " selected='selected'";
-                                    echo "<option value='$id'$selected>$name</option>";
+                                    if(filter_input(INPUT_GET, 'film_brand_name') == $film_brand['name']) $selected = " selected='selected'";
+                                    echo "<option value='$name'$selected>$name</option>";
                                 }
                                 ?>
                             </select>
@@ -277,23 +271,31 @@ $total_weight = $row['total_weight'];
                                 <div style="position: absolute; bottom: 10px; right: -7px;">80</div>
                                 <div style="position: absolute; bottom: 10px; right: -34px;">мкм</div>
                             </div>
-                            <div id="slider-range"></div>
+                            <div id="slider"></div>
                         </div>
                         <input type="hidden" id="thickness_from" name="thickness_from" />
                         <input type="hidden" id="thickness_to" name="thickness_to" />
                         <h2 style="font-size: 24px; line-height: 32px; font-weight: 600; margin-top: 43px; margin-bottom: 18px;">Ширина</h2>
-                        <div class="row">
-                            <div class="col-5 form-group">
-                                <label for="width_from">От</label>
-                                <input type="number" min="1" id="width_from" name="width_from" class="form-control" value="<?= filter_input(INPUT_GET, 'width_from') ?>" />
-                            </div>
-                            <div class="col-2 text-center" style="padding-top: 30px;"><strong>&ndash;</strong></div>
-                            <div class="col-5 form-group">
-                                <label for="width_to">До</label>
-                                <input type="number" min="1" id="width_to" name="width_to" class="form-control" value="<?= filter_input(INPUT_GET, 'width_to') ?>" />
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-dark" id="filter_submit" name="filter_submit" style="margin-top: 20px; margin-bottom: 35px;">Применить</button>
+                        <table style="margin-bottom: 30px;">
+                            <tr>
+                                <td>
+                                    <div style="display: inline; width: 120px;">
+                                        <div style="width: 100%; text-align: center; font-size: 14px; line-height: 18px; padding-bottom: 5px;">От</div>
+                                        <input type="number" min="1" id="width_from" name="width_from" class="form-control" style="width: 100px;" value="<?= filter_input(INPUT_GET, 'width_from') ?>" />
+                                    </div>
+                                </td>
+                                <td style="font-weight: bold; padding-top: 20px; padding-left: 5px; padding-right: 5px;">-</td>
+                                <td>
+                                    <div style="display: inline; width: 120px;">
+                                        <div style="width: 100%; text-align: center; font-size: 14px; line-height: 18px; padding-bottom: 5px;">До</div>
+                                        <input type="number" min="1" id="width_to" name="width_to" class="form-control" style="width: 100px;" value="<?= filter_input(INPUT_GET, 'width_to') ?>" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <button type="button" class="btn" id="filter_clear" name="filter_clear" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #E4E1ED;"><img src="../images/icons/white-times.svg" />&nbsp;&nbsp;Очистить</button>
+                        <button type="button" class="btn" id="filter_cancel" name="filter_cancel" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #FFFFFF;">Отменить</button>
+                        <button type="submit" class="btn" id="filter_submit" name="filter_submit" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #CECACA;">Применить</button>
                     </form>
                 </div>
             </div>
@@ -305,6 +307,10 @@ $total_weight = $row['total_weight'];
         <script>
             var slider_start_from = <?= null === filter_input(INPUT_GET, 'thickness_from') ? "20" : filter_input(INPUT_GET, 'thickness_from') ?>;
             var slider_start_to = <?= null === filter_input(INPUT_GET, 'thickness_to') ? "50" : filter_input(INPUT_GET, 'thickness_to') ?>;
+            
+            $( "#slider" ).slider({
+                    step: 10
+            });
             
             $( "#slider-range" ).slider({
                 range: true,

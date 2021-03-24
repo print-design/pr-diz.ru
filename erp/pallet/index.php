@@ -66,7 +66,6 @@ $total_weight = $row['total_weight'];
                     <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
                     <a href="new.php" class="btn btn-outline-dark" style="padding-top: 14px; padding-bottom: 14px; padding-left: 30px; width: 222px; text-align: left; font-size: 14px;"><i class="fas fa-plus" style="font-size: 10px; margin-right: 18px;"></i>Новый паллет</a>
                     <?php endif; ?>
-                    <button class="btn btn-outline-dark disabled d-none" data-toggle="modal" data-target="#filterModal" data-text="Фильтр"><img src="../images/icons/filter.svg" style="margin-right: 20px;" />Фильтр</button>
                     <div style="display: inline-block; position: relative; margin-right: 55px; margin-left: 80px;">
                         <a href="javascript: void(0);"><img src="../images/icons/filter1.svg" data-toggle="modal" data-target="#filterModal" data-text="Фильтр" /></a>
                         <div id="filter_params_counter_round" style="position: absolute; top: -7px; right: 0;">
@@ -273,7 +272,7 @@ $total_weight = $row['total_weight'];
                                 <div style="position: absolute; bottom: 10px; right: -7px;">80</div>
                                 <div style="position: absolute; bottom: 10px; right: -34px;">мкм</div>
                             </div>
-                            <div id="slider-range"></div>
+                            <div id="slider"></div>
                         </div>
                         <input type="hidden" id="thickness_from" name="thickness_from" />
                         <input type="hidden" id="thickness_to" name="thickness_to" />
@@ -310,9 +309,9 @@ $total_weight = $row['total_weight'];
             var slider_start_from = <?= null === filter_input(INPUT_GET, 'thickness_from') ? "20" : filter_input(INPUT_GET, 'thickness_from') ?>;
             var slider_start_to = <?= null === filter_input(INPUT_GET, 'thickness_to') ? "50" : filter_input(INPUT_GET, 'thickness_to') ?>;
             
-            $( "#slider-range" ).slider({
+            $( "#slider" ).slider({
                     step: 10
-           });
+            });
             
             $("#thickness_from").val(slider_start_from);
             $("#thickness_to").val(slider_start_to);
