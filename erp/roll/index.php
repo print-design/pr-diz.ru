@@ -314,13 +314,18 @@ $total_weight = $row['total_weight'];
             });
             
             $('#film_brand_name').change(function(){
-                $.ajax({ url: "../ajax/thickness.php?film_brand_name="+$(this).val() })
-                        .done(function(data){
-                            $('#slider_temp').html(data);
-                })
-                        .fail(function(){
-                            alert("Ошибка при получении толщины по названию.");
-                });
+                if($(this).val() == '') {
+                    alert("TEMP");
+                }
+                else {
+                    $.ajax({ url: "../ajax/thickness.php?film_brand_name="+$(this).val() })
+                            .done(function(data){
+                                alert(data);
+                    })
+                            .fail(function(){
+                                alert("Ошибка при получении толщины по названию.");
+                    });
+                }
             });
             
             $( "#slider-range" ).slider({
