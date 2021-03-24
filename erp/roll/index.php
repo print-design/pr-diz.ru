@@ -282,14 +282,14 @@ $total_weight = $row['total_weight'];
                                 <td>
                                     <div style="display: inline; width: 120px;">
                                         <div style="width: 100%; text-align: center; font-size: 14px; line-height: 18px; padding-bottom: 5px;">От</div>
-                                        <input type="number" min="1" id="width_from" name="width_from" class="form-control" style="width: 100px;" value="<?= filter_input(INPUT_GET, 'width_from') ?>" />
+                                        <input type="text" id="width_from" name="width_from" class="form-control int-only" style="width: 100px;" value="<?= filter_input(INPUT_GET, 'width_from') ?>" />
                                     </div>
                                 </td>
                                 <td style="font-weight: bold; padding-top: 20px; padding-left: 5px; padding-right: 5px;">-</td>
                                 <td>
                                     <div style="display: inline; width: 120px;">
                                         <div style="width: 100%; text-align: center; font-size: 14px; line-height: 18px; padding-bottom: 5px;">До</div>
-                                        <input type="number" min="1" id="width_to" name="width_to" class="form-control" style="width: 100px;" value="<?= filter_input(INPUT_GET, 'width_to') ?>" />
+                                        <input type="text" id="width_to" name="width_to" class="form-control int-only" style="width: 100px;" value="<?= filter_input(INPUT_GET, 'width_to') ?>" />
                                     </div>
                                 </td>
                             </tr>
