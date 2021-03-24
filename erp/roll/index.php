@@ -261,7 +261,9 @@ $total_weight = $row['total_weight'];
                         <h2 style="font-size: 24px; line-height: 32px; font-weight: 600;">Толщина</h2>
                         <div id="width_slider" style="width: 465px;">
                             <div id="width_slider_values" style="height: 30px; position: relative; font-size: 14px; line-height: 18px;" class="d-flex justify-content-between mb-auto">
-                                0
+                                <div class='p-1'>все</div>
+                                <?php
+                                ?>
                             </div>
                             <div id="slider"></div>
                         </div>
@@ -308,7 +310,7 @@ $total_weight = $row['total_weight'];
             
             $('#film_brand_name').change(function(){
                 if($(this).val() == '') {
-                    $('#width_slider_values').html("0");
+                    $('#width_slider_values').html("<div class='p-1'>все</div>");
                     $("#slider").slider({
                         range: false,
                         min: 0,
@@ -321,17 +323,22 @@ $total_weight = $row['total_weight'];
                     $.ajax({ url: "../ajax/thickness.php?film_brand_name="+$(this).val() })
                             .done(function(data){
                                 var thicknesses = JSON.parse(data);
-                        var slider_labels = '';
+                        var slider_labels = "<div class='p-1'>все</div>";
                         thicknesses.forEach(thickness => slider_labels = slider_labels + "<div class='p-1'>" + thickness + "</div>");
                                 $('#width_slider_values').html(slider_labels);
                                 $("#slider").slider({
                                     range: false,
                                     min: 0,
-                                    max: thicknesses.length - 1,
+                                    max: thicknesses.length,
                                     step: 1,
                                     value: 0,
                                     slide: function(event, ui) {
-                                        $("#thickness").val(thicknesses[0]);
+                                        if(ui.value == '') {
+                                            $("#thickness").val('');
+                                        }
+                                        else {
+                                            $("#thickness").val(thicknesses[ui.value - 1]);
+                                        }
                                     }
                                 });
                                 $("#thickness").val(thicknesses[0]);
