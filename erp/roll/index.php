@@ -112,19 +112,15 @@ $total_weight = $row['total_weight'];
                     <?php
                     $where = "(rsh.status_id is null or rsh.status_id <> $utilized_status_id)";
                     
-                    $film_brand_id = filter_input(INPUT_GET, 'film_brand_id');
-                    if(!empty($film_brand_id)) {
-                        $where .= " and r.film_brand_id = $film_brand_id";
+                    $film_brand_name = filter_input(INPUT_GET, 'film_brand_name');
+                    if(!empty($film_brand_name)) {
+                        $film_brand_name = addslashes($film_brand_name);
+                        $where .= " and fb.name = '$film_brand_name'";
                     }
                     
-                    $thickness_from = filter_input(INPUT_GET, 'thickness_from');
-                    if(!empty($thickness_from)) {
-                        $where .= " and r.thickness >= ".$thickness_from;
-                    }
-                    
-                    $thickness_to = filter_input(INPUT_GET, 'thickness_to');
-                    if(!empty($thickness_to)) {
-                        $where .= " and r.thickness <= $thickness_to";
+                    $thickness = filter_input(INPUT_GET, 'thickness');
+                    if(!empty($thickness)) {
+                        $where .= " and r.thickness = ".$thickness;
                     }
                     
                     $width_from = filter_input(INPUT_GET, 'width_from');
@@ -135,29 +131,6 @@ $total_weight = $row['total_weight'];
                     $width_to = filter_input(INPUT_GET, 'width_to');
                     if(!empty($width_to)) {
                         $where .= " and r.width <= $width_to";
-                    }
-                    
-                    $arrStatuses = array();
-                    
-                    $sql = "select distinct id, name, colour from roll_status";
-                    $grabber = (new Grabber($sql));
-                    $error_message = $grabber->error;
-                    $statuses = $grabber->result;
-                    foreach ($statuses as $status) {
-                        if(!empty(filter_input(INPUT_GET, 'chk'.$status['id'])) && filter_input(INPUT_GET, 'chk'.$status['id']) == 'on') {
-                            array_push($arrStatuses, $status['id']);
-                        }
-                    }
-                    
-                    $statuses1 = array();
-                    foreach ($statuses as $status) {
-                        $statuses1[$status['id']] = $status;
-                    }
-                    
-                    $strStatuses = implode(", ", $arrStatuses);
-                    
-                    if(!empty($strStatuses)) {
-                        $where .= " and rsh.status_id in ($strStatuses)";
                     }
                     
                     if(!empty($where)) {
@@ -321,7 +294,7 @@ $total_weight = $row['total_weight'];
                                 </td>
                             </tr>
                         </table>
-                        <button type="button" class="btn" name="filter_clear" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #E4E1ED;"><img src="../images/icons/white-times.svg" />&nbsp;&nbsp;Очистить</button>
+                        <a href="<?=APPLICATION ?>/roll/" type="button" class="btn" name="filter_clear" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #E4E1ED;"><img src="../images/icons/white-times.svg" />&nbsp;&nbsp;Очистить</a>
                         <button type="button" class="btn" data-dismiss="modal" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #EEEEEE;">Отменить</button>
                         <button type="submit" class="btn" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #CECACA;">Применить</button>
                     </form>
