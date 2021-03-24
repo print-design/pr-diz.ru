@@ -19,9 +19,20 @@ if(null !== filter_input(INPUT_POST, 'delete-roll-submit')) {
 // СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
 $utilized_status_id = 2;
 
-// Получение общей массы паллетов
+// Получение общей массы рулонов
 $row = (new Fetcher("select sum(r.net_weight) total_weight from roll r left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id where rsh.status_id is null or rsh.status_id <> $utilized_status_id"))->Fetch();
 $total_weight = $row['total_weight'];
+
+// Получение всех статусов
+$fetcher = (new Fetcher("select id, name, colour from roll_status"));
+$statuses = array();
+
+while ($row = $fetcher->Fetch()) {
+    $status = array();
+    $status['name'] = $row['name'];
+    $status['colour'] = $row['colour'];
+    $statuses[$row['id']] = $status;
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -166,13 +177,13 @@ $total_weight = $row['total_weight'];
                     while ($row = $fetcher->Fetch()):
                         
                     $status = '';
-                    if(!empty($statuses1[$row['status_id']]['name'])) {
-                        $status = $statuses1[$row['status_id']]['name'];
+                    if(!empty($statuses[$row['status_id']]['name'])) {
+                        $status = $statuses[$row['status_id']]['name'];
                     }
 
                     $colour_style = '';
-                    if(!empty($statuses1[$row['status_id']]['colour'])) {
-                        $colour = $statuses1[$row['status_id']]['colour'];
+                    if(!empty($statuses[$row['status_id']]['colour'])) {
+                        $colour = $statuses[$row['status_id']]['colour'];
                         $colour_style = " color: $colour";
                     }
                     ?>

@@ -22,6 +22,17 @@ $utilized_status_id = 2;
 // Получение общей массы паллетов
 $row = (new Fetcher("select sum(p.net_weight) total_weight from pallet p left join (select * from pallet_status_history where id in (select max(id) from pallet_status_history group by pallet_id)) psh on psh.pallet_id = p.id where psh.status_id is null or psh.status_id <> $utilized_status_id"))->Fetch();
 $total_weight = $row['total_weight'];
+
+// Получение всех статусов
+$fetcher = (new Fetcher("select id, name, colour from roll_status"));
+$statuses = array();
+
+while ($row = $fetcher->Fetch()) {
+    $status = array();
+    $status['name'] = $row['name'];
+    $status['colour'] = $row['colour'];
+    $statuses[$row['id']] = $status;
+}
 ?>
 <!DOCTYPE html>
 <html>
