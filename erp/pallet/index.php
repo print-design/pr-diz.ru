@@ -112,19 +112,15 @@ while ($row = $fetcher->Fetch()) {
                     <?php
                     $where = "(psh.status_id is null or psh.status_id <> $utilized_status_id)";
                     
-                    $film_brand_id = filter_input(INPUT_GET, 'film_brand_id');
-                    if(!empty($film_brand_id)) {
-                        $where .= " and p.film_brand_id = $film_brand_id";
+                    $film_brand_name = filter_input(INPUT_GET, 'film_brand_name');
+                    if(!empty($film_brand_name)) {
+                        $film_brand_name = addslashes($film_brand_name);
+                        $where .= " and fb.name = '$film_brand_name'";
                     }
                     
-                    $thickness_from = filter_input(INPUT_GET, 'thickness_from');
-                    if(!empty($thickness_from)) {
-                        $where .= " and p.thickness >= ".$thickness_from;
-                    }
-                    
-                    $thickness_to = filter_input(INPUT_GET, 'thickness_to');
-                    if(!empty($thickness_to)) {
-                        $where .= " and p.thickness <= $thickness_to";
+                    $thickness = filter_input(INPUT_GET, 'thickness');
+                    if(!empty($thickness)) {
+                        $where .= " and p.thickness = ".$thickness;
                     }
                     
                     $width_from = filter_input(INPUT_GET, 'width_from');
@@ -135,29 +131,6 @@ while ($row = $fetcher->Fetch()) {
                     $width_to = filter_input(INPUT_GET, 'width_to');
                     if(!empty($width_to)) {
                         $where .= " and p.width <= $width_to";
-                    }
-                    
-                    $arrStatuses = array();
-                    
-                    $sql = "select distinct id, name, colour from pallet_status";
-                    $grabber = (new Grabber($sql));
-                    $error_message = $grabber->error;
-                    $statuses = $grabber->result;
-                    foreach ($statuses as $status) {
-                        if(!empty(filter_input(INPUT_GET, 'chk'.$status['id'])) && filter_input(INPUT_GET, 'chk'.$status['id']) == 'on') {
-                            array_push($arrStatuses, $status['id']);
-                        }
-                    }
-                    
-                    $statuses1 = array();
-                    foreach ($statuses as $status) {
-                        $statuses1[$status['id']] = $status;
-                    }
-                    
-                    $strStatuses = implode(", ", $arrStatuses);
-                    
-                    if(!empty($strStatuses)) {
-                        $where .= " and psh.status_id in ($strStatuses)";
                     }
                     
                     if(!empty($where)) {
@@ -193,13 +166,13 @@ while ($row = $fetcher->Fetch()) {
                     while ($row = $fetcher->Fetch()):
 
                     $status = '';
-                    if(!empty($statuses1[$row['status_id']]['name'])) {
-                        $status = $statuses1[$row['status_id']]['name'];
+                    if(!empty($statuses[$row['status_id']]['name'])) {
+                        $status = $statuses[$row['status_id']]['name'];
                     }
 
                     $colour_style = '';
-                    if(!empty($statuses1[$row['status_id']]['colour'])) {
-                        $colour = $statuses1[$row['status_id']]['colour'];
+                    if(!empty($statuses[$row['status_id']]['colour'])) {
+                        $colour = $statuses[$row['status_id']]['colour'];
                         $colour_style = " color: $colour";
                     }
                     ?>
