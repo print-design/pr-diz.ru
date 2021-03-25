@@ -264,7 +264,7 @@ while ($row = $fetcher->Fetch()) {
                             <select id="film_brand_name" name="film_brand_name" class="form-control" style="margin-top: 30px; margin-bottom: 30px;">
                                 <option value="">МАРКА ПЛЕНКИ</option>
                                 <?php
-                                $film_brands = (new Grabber("select distinct fb.id, fb.name from pallet p inner join film_brand fb on p.film_brand_id = fb.id order by fb.name"))->result;
+                                $film_brands = (new Grabber("select distinct name from film_brand order by name"))->result;
                                 foreach ($film_brands as $film_brand) {
                                     $name = $film_brand['name'];
                                     $selected = '';
