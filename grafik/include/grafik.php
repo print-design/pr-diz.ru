@@ -317,7 +317,7 @@ class Grafik {
             $where_to = '';
             if(!empty($to)) {
                 if($shift_to == 'day') {
-                    $where_to = " and (date < '$to' or (date = '$shift_to' and shift = 'day'))";
+                    $where_to = " and (date < '$to' or (date = '$to' and shift = 'day'))";
                 }
                 else if($shift_to == 'night') {
                     $where_to = " and date <= '$to'";
@@ -375,7 +375,7 @@ class Grafik {
             $where_to = '';
             if(!empty($to)) {
                 if($shift_to == 'day') {
-                    $where_to = " and (date < '$to' or (date = '$shift_to' and shift = 'day'))";
+                    $where_to = " and (date < '$to' or (date = '$to' and shift = 'day'))";
                 }
                 else if($shift_to == 'night') {
                     $where_to = " and date <= '$to'";
