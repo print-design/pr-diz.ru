@@ -307,14 +307,26 @@ class Grafik {
         // Сдвиг нескольких тиражей назад
         if(null !== filter_input(INPUT_POST, 'move_shifts_back_submit')) {
             $from = filter_input(INPUT_POST, 'move_shifts_from');
+            $to = filter_input(INPUT_POST, 'move_shifts_to');
             $shift = filter_input(INPUT_POST, 'move_shifts_shift');
+            $shift_to = filter_input(INPUT_POST, 'move_shifts_shift_to');
             $days = filter_input(INPUT_POST, 'days');
             $days_1 = intval($days) + 1;
             $half = filter_input(INPUT_POST, 'half');
             
+            $where_to = '';
+            if(!empty($to)) {
+                if($shift_to == 'day') {
+                    $where_to = " and (date < '$to' or (date = '$shift_to' and shift = 'day'))";
+                }
+                else if($shift_to == 'night') {
+                    $where_to = " and date <= '$to'";
+                }
+            }
+            
             if($shift == 'day') {
                 if($half == 'on') {
-                    $sql = "update workshift set date = if(shift = 'day', date_add(date, interval -$days_1 day), date_add(date, -$days day)), shift = if(shift = 'day', 'night', 'day') where machine_id = $this->machineId and date >= '$from'";
+                    $sql = "update workshift set date = if(shift = 'day', date_add(date, interval -$days_1 day), date_add(date, -$days day)), shift = if(shift = 'day', 'night', 'day') where machine_id = $this->machineId and date >= '$from'$where_to";
                     $this->error_message = (new Executer($sql))->error;
                     if(!empty($this->error_message)) {
                         echo $sql;
@@ -322,7 +334,7 @@ class Grafik {
                     }
                 }
                 else {
-                    $sql = "update workshift set date = date_add(date, interval -$days day) where machine_id = $this->machineId and date >= '$from'";
+                    $sql = "update workshift set date = date_add(date, interval -$days day) where machine_id = $this->machineId and date >= '$from'$where_to";
                     $this->error_message = (new Executer($sql))->error;
                     if(!empty($this->error_message)) {
                         echo $sql;
@@ -332,7 +344,7 @@ class Grafik {
             }
             else if($shift == 'night') {
                 if($half == 'on') {
-                    $sql = "update workshift set date = if(shift = 'day', date_add(date, interval -$days_1 day), date_add(date, interval -$days dat)), shift = if(shift = 'day', 'night', 'day') where machine_id = $this->machineId and (date > '$from' or (date = '$from and shift = 'night'))";
+                    $sql = "update workshift set date = if(shift = 'day', date_add(date, interval -$days_1 day), date_add(date, interval -$days dat)), shift = if(shift = 'day', 'night', 'day') where machine_id = $this->machineId and (date > '$from' or (date = '$from and shift = 'night'))$where_to";
                     $this->error_message = (new Executer($sql))->error;
                     if(!empty($this->error_message)) {
                         echo $sql;
@@ -340,11 +352,11 @@ class Grafik {
                     }
                 }
                 else {
-                    $sql = "update workshift set date = date_add(date, interval -$days day) where machine_id = $this->machineId and (date > '$from' or (date = '$from' and shift = 'night'))";
+                    $sql = "update workshift set date = date_add(date, interval -$days day) where machine_id = $this->machineId and (date > '$from' or (date = '$from' and shift = 'night'))$where_to";
                     $this->error_message = (new Executer($sql))->error;
                     if(!empty($this->error_message)) {
                         echo $sql;
-                        exif_imagetype($this->error_message);
+                        exit($this->error_message);
                     }
                 }
             }
@@ -353,14 +365,26 @@ class Grafik {
         // Сдвиг нескольких тиражей вперёд
         if(null !== filter_input(INPUT_POST, 'move_shifts_forth_submit')) {
             $from = filter_input(INPUT_POST, 'move_shifts_from');
+            $to = filter_input(INPUT_POST, 'move_shifts_to');
             $shift = filter_input(INPUT_POST, 'move_shifts_shift');
+            $shift_to = filter_input(INPUT_POST, 'move_shifts_shift_to');
             $days = filter_input(INPUT_POST, 'days');
             $days_1 = intval($days) + 1;
             $half = filter_input(INPUT_POST, 'half');
             
+            $where_to = '';
+            if(!empty($to)) {
+                if($shift_to == 'day') {
+                    $where_to = " and (date < '$to' or (date = '$shift_to' and shift = 'day'))";
+                }
+                else if($shift_to == 'night') {
+                    $where_to = " and date <= '$to'";
+                }
+            }
+            
             if($shift == 'day') {
                 if($half == 'on') {
-                    $sql = "update workshift set date = if(shift = 'day', date_add(date, interval $days day), date_add(date, interval $days_1 day)), shift = if(shift = 'day', 'night', 'day') where machine_id = $this->machineId and date >= '$from'";
+                    $sql = "update workshift set date = if(shift = 'day', date_add(date, interval $days day), date_add(date, interval $days_1 day)), shift = if(shift = 'day', 'night', 'day') where machine_id = $this->machineId and date >= '$from'$where_to";
                     $this->error_message = (new Executer($sql))->error;
                     if(!empty($this->error_message)) {
                         echo $sql;
@@ -368,7 +392,7 @@ class Grafik {
                     }
                 }
                 else {
-                    $sql = "update workshift set date = date_add(date, interval $days day) where machine_id = $this->machineId and date >= '$from'";
+                    $sql = "update workshift set date = date_add(date, interval $days day) where machine_id = $this->machineId and date >= '$from'$where_to";
                     $this->error_message = (new Executer($sql))->error;
                     if(!empty($this->error_message)) {
                         echo $sql;
@@ -378,7 +402,7 @@ class Grafik {
             }
             else if($shift == 'night') {
                 if($half == 'on') {
-                    $sql = "update workshift set date = if(shift = 'day', date_add(date, interval $days day), date_add(date, interval $days_1 day)), shift = if(shift = 'day', 'night', 'day') where machine_id = $this->machineId and (date > '$from' or (date = '$from' and shift = 'night'))";
+                    $sql = "update workshift set date = if(shift = 'day', date_add(date, interval $days day), date_add(date, interval $days_1 day)), shift = if(shift = 'day', 'night', 'day') where machine_id = $this->machineId and (date > '$from' or (date = '$from' and shift = 'night'))$where_to";
                     $this->error_message = (new Executer($sql))->error;
                     if(!empty($this->error_message)) {
                         echo $sql;
@@ -386,7 +410,7 @@ class Grafik {
                     }
                 }
                 else {
-                    $sql = "update workshift set date = date_add(date, interval $days day) where machine_id = $this->machineId and (date > '$from' or (date = '$from' and shift = 'night'))";
+                    $sql = "update workshift set date = date_add(date, interval $days day) where machine_id = $this->machineId and (date > '$from' or (date = '$from' and shift = 'night'))$where_to";
                     $this->error_message = (new Executer($sql))->error;
                     if(!empty($this->error_message)) {
                         echo $sql;
@@ -1369,8 +1393,16 @@ class Grafik {
                     <input type="hidden" id="move_shifts_machine_id" name="move_shifts_machine_id" />
                     <div class="form-group form-inline">
                         <label for="from">от&nbsp;</label>
-                        <input type="date" id="move_shifts_from" name="move_shifts_from" class="form-control" value="<?= filter_input(INPUT_GET, 'from') ?>"/>
+                        <input type="date" id="move_shifts_from" name="move_shifts_from" class="form-control" />
                         <select id="move_shifts_shift" name="move_shifts_shift" class="form-control ml-1">
+                            <option value="day">день</option>
+                            <option value="night">ночь</option>
+                        </select>
+                    </div>
+                    <div class="form-group form-inline">
+                        <label for="to">до&nbsp;</label>
+                        <input type="date" id="move_shifts_to" name="move_shifts_to" class="form-control" />
+                        <select id="move_shifts_shift_to" name="move_shifts_shift_to" class="form-control ml-1">
                             <option value="day">день</option>
                             <option value="night">ночь</option>
                         </select>
