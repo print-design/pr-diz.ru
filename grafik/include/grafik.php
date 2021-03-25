@@ -326,7 +326,7 @@ class Grafik {
             
             if($shift == 'day') {
                 if($half == 'on') {
-                    $sql = "update workshift set date = if(shift = 'day', date_add(date, interval -$days_1 day), date_add(date, -$days day)), shift = if(shift = 'day', 'night', 'day') where machine_id = $this->machineId and date >= '$from'$where_to";
+                    $sql = "update workshift set date = if(shift = 'day', date_add(date, interval -$days_1 day), date_add(date, interval -$days day)), shift = if(shift = 'day', 'night', 'day') where machine_id = $this->machineId and date >= '$from'$where_to";
                     $this->error_message = (new Executer($sql))->error;
                     if(!empty($this->error_message)) {
                         echo $sql;
