@@ -344,7 +344,7 @@ class Grafik {
             }
             else if($shift == 'night') {
                 if($half == 'on') {
-                    $sql = "update workshift set date = if(shift = 'day', date_add(date, interval -$days_1 day), date_add(date, interval -$days dat)), shift = if(shift = 'day', 'night', 'day') where machine_id = $this->machineId and (date > '$from' or (date = '$from and shift = 'night'))$where_to";
+                    $sql = "update workshift set date = if(shift = 'day', date_add(date, interval -$days_1 day), date_add(date, interval -$days day)), shift = if(shift = 'day', 'night', 'day') where machine_id = $this->machineId and (date > '$from' or (date = '$from' and shift = 'night'))$where_to";
                     $this->error_message = (new Executer($sql))->error;
                     if(!empty($this->error_message)) {
                         echo $sql;
@@ -1379,49 +1379,3 @@ class Grafik {
     }
 }
 ?>
-<div class="modal fade" id="move_shifts_form">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form method="post">
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">Перемещение смен</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <!-- Modal body -->
-                <div class="modal-body">
-                    <input type="hidden" id="move_shifts_machine_id" name="move_shifts_machine_id" />
-                    <div class="form-group form-inline">
-                        <label for="from">от&nbsp;</label>
-                        <input type="date" id="move_shifts_from" name="move_shifts_from" class="form-control" />
-                        <select id="move_shifts_shift" name="move_shifts_shift" class="form-control ml-1">
-                            <option value="day">день</option>
-                            <option value="night">ночь</option>
-                        </select>
-                    </div>
-                    <div class="form-group form-inline">
-                        <label for="to">до&nbsp;</label>
-                        <input type="date" id="move_shifts_to" name="move_shifts_to" class="form-control" />
-                        <select id="move_shifts_shift_to" name="move_shifts_shift_to" class="form-control ml-1">
-                            <option value="day">день</option>
-                            <option value="night">ночь</option>
-                        </select>
-                    </div>
-                    <div class="form-group form-inline">
-                        <label for="days">на&nbsp;</label>
-                        <input type="number" id="days" name="days" min="0" max="99" class="form-control" required="required" />
-                        <label>&nbsp;дней&nbsp;</label>
-                        <input type="checkbox" id="half" name="half" />
-                        <label class="form-check-label" for="half">&nbsp;с половиной</label>
-                    </div>
-                    <input type="hidden" id="scroll" name="scroll" />
-                </div>
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="submit" id="move_shifts_back_submit" name="move_shifts_back_submit" class="btn">Назад&nbsp;<i class="fas fa-arrow-up"></i></button>
-                    <button type="submit" id="move_shifts_forth_submit" name="move_shifts_forth_submit" class="btn ml-1">Вперёд&nbsp;<i class="fas fa-arrow-down"></i></button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
