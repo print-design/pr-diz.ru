@@ -1377,7 +1377,7 @@ class Grafik {
                     </div>
                     <div class="form-group form-inline">
                         <label for="days">на&nbsp;</label>
-                        <input type="number" id="days" name="days" min="0" max="9" class="form-control" required="required" />
+                        <input type="number" id="days" name="days" min="0" max="99" class="form-control" required="required" />
                         <label>&nbsp;дней&nbsp;</label>
                         <input type="checkbox" id="half" name="half" />
                         <label class="form-check-label" for="half">&nbsp;с половиной</label>
