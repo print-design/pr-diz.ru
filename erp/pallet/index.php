@@ -82,7 +82,7 @@ while ($row = $fetcher->Fetch()) {
                         <?php
                         $get_count = 0;
                         foreach ($_GET as $get_key=>$get_value) {
-                            if(!empty($get_value) && $get_value != PAGE) {
+                            if(!empty($get_value) && $get_key != PAGE) {
                                 $get_count++;
                             }
                         }
