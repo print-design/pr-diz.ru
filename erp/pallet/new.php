@@ -136,10 +136,11 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                 // Заполнение роликов этого паллета
                 $roll_number = 1;
                 
-                while (filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") !== null) {
+                while (filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") !== null && filter_input(INPUT_POST, "ordinal_roll$roll_number") != null) {
                     $weight = filter_input(INPUT_POST, "weight_roll$roll_number");
                     $length = filter_input(INPUT_POST, "length_roll$roll_number");
-                    $sql = "insert into pallet_roll (pallet_id, weight, length) values ($pallet_id, $weight, $length)";
+                    $ordinal = filter_input(INPUT_POST, "ordinal_roll$roll_number");
+                    $sql = "insert into pallet_roll (pallet_id, weight, length, ordinal) values ($pallet_id, $weight, $length, $ordinal)";
                     $executer = new Executer($sql);
                     $error_message = $executer->error;
                     $roll_number++;
@@ -311,6 +312,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         while (filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") != null):
                         ?>
                         <div class='mt-1'><?=$roll_number ?> рулон</div>
+                        <input type='hidden' id='ordinal_roll<?=$roll_number ?>' name='ordinal_roll<?=$roll_number ?>' value='<?=$roll_number ?>' />";
                         <div class='row'>
                             <div class='col-6 form-group'>
                                 <label for='weight_roll<?=$roll_number ?>'>Масса Нетто</label>
@@ -442,6 +444,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     
                     for(var i=1; i<=num_val; i++) {
                         var form_row = "<div class='mt-1'>" + i + " рулон</div>";
+                        form_row += "<input type='hidden' id='ordinal_roll" + i + "' name='ordinal_roll" + i + "' value='" + i + "' />";
                         form_row += "<div class='row'>";
                         form_row += "<div class='col-6 form-group'>";
                         form_row += "<label for='weight_roll" + i + "'>Масса Нетто</label>";
