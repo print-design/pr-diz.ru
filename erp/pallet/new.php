@@ -133,7 +133,21 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
             $error_message = $executer->error;
             
             if(empty($error_message)) {
-                header('Location: '.APPLICATION."/pallet/print.php?id=$pallet_id");
+                // Заполнение роликов этого паллета
+                $roll_number = 1;
+                
+                while (filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") !== null) {
+                    $weight = filter_input(INPUT_POST, "weight_roll$roll_number");
+                    $length = filter_input(INPUT_POST, "length_roll$roll_number");
+                    $sql = "insert into pallet_roll (pallet_id, weight, length) values ($pallet_id, $weight, $length)";
+                    $executer = new Executer($sql);
+                    $error_message = $executer->error;
+                    $roll_number++;
+                }
+              
+                if(empty($error_message)) {
+                    header('Location: '.APPLICATION."/pallet/print.php?id=$pallet_id");
+                }
             }
         }
     }
@@ -294,13 +308,13 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     <div id="rolls_info">
                         <?php
                         $roll_number = 1;
-                        while (filter_input(INPUT_POST, "net_weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") != null):
+                        while (filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") != null):
                         ?>
                         <div class='mt-1'><?=$roll_number ?> рулон</div>
                         <div class='row'>
                             <div class='col-6 form-group'>
-                                <label for='net_weight_roll<?=$roll_number ?>'>Масса Нетто</label>
-                                <input type='text' id='net_weight_roll<?=$roll_number ?>' name='net_weight_roll<?=$roll_number ?>' class='form-control' placeholder='Масса Нетто рулона' value="<?= filter_input(INPUT_POST, "net_weight_roll$roll_number") ?>" required='required' />
+                                <label for='weight_roll<?=$roll_number ?>'>Масса Нетто</label>
+                                <input type='text' id='weight_roll<?=$roll_number ?>' name='weight_roll<?=$roll_number ?>' class='form-control' placeholder='Масса Нетто рулона' value="<?= filter_input(INPUT_POST, "weight_roll$roll_number") ?>" required='required' />
                             </div>
                             <div class='col-6 form-group'>
                                 <label for='length_roll<?=$roll_number ?>'>Длина</label>
@@ -430,8 +444,8 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         var form_row = "<div class='mt-1'>" + i + " рулон</div>";
                         form_row += "<div class='row'>";
                         form_row += "<div class='col-6 form-group'>";
-                        form_row += "<label for='net_weight_roll" + i + "'>Масса Нетто</label>";
-                        form_row += "<input type='text' id='net_weight_roll" + i + "' name='net_weight_roll" + i + "' class='form-control' placeholder='Масса Нетто рулона' required='required' />";
+                        form_row += "<label for='weight_roll" + i + "'>Масса Нетто</label>";
+                        form_row += "<input type='text' id='weight_roll" + i + "' name='weight_roll" + i + "' class='form-control' placeholder='Масса Нетто рулона' required='required' />";
                         form_row += "</div>";
                         form_row += "<div class='col-6 form-group'>";
                         form_row += "<label for='length_roll" + i + "'>Длина</label>";
