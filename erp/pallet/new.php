@@ -291,6 +291,27 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                             <div class="invalid-feedback">Ячейка на складе обязательно</div>
                         </div>
                     </div>
+                    <div id="rolls_info">
+                        <?php
+                        $roll_number = 1;
+                        while (filter_input(INPUT_POST, "net_weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") != null):
+                        ?>
+                        <div class='mt-1'><?=$roll_number ?> рулон</div>
+                        <div class='row'>
+                            <div class='col-6 form-group'>
+                                <label for='net_weight_roll<?=$roll_number ?>'>Масса Нетто</label>
+                                <input type='text' id='net_weight_roll<?=$roll_number ?>' name='net_weight_roll<?=$roll_number ?>' class='form-control' placeholder='Масса Нетто рулона' value="<?= filter_input(INPUT_POST, "net_weight_roll$roll_number") ?>" required='required' />
+                            </div>
+                            <div class='col-6 form-group'>
+                                <label for='length_roll<?=$roll_number ?>'>Длина</label>
+                                <input type='text' id='length_roll<?=$roll_number ?>' name='length_roll<?=$roll_number ?>' class='form-control' placeholder='Длина рулона' value="<?= filter_input(INPUT_POST, "length_roll$roll_number") ?>" required='required' />
+                            </div>
+                        </div>
+                        <?php
+                        $roll_number++;
+                        endwhile;
+                        ?>
+                    </div>
                     <div class="form-group d-none">
                         <label for="manager_id">Менеджер</label>
                         <select id="manager_id" name="manager_id" class="form-control" disabled="true">
@@ -397,6 +418,31 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
             if($('.is-invalid').first() != null) {
                 $('.is-invalid').first().focus();
             }
+            
+            // Открытие информация о роликах
+            $('#rolls_number').change(function(e) {
+                var val = $(e.target).val();
+                if(!Number.isNaN(val)) {
+                    var num_val = parseInt(val);
+                    $('#rolls_info').html("");
+                    
+                    for(var i=1; i<=num_val; i++) {
+                        var form_row = "<div class='mt-1'>" + i + " рулон</div>";
+                        form_row += "<div class='row'>";
+                        form_row += "<div class='col-6 form-group'>";
+                        form_row += "<label for='net_weight_roll" + i + "'>Масса Нетто</label>";
+                        form_row += "<input type='text' id='net_weight_roll" + i + "' name='net_weight_roll" + i + "' class='form-control' placeholder='Масса Нетто рулона' required='required' />";
+                        form_row += "</div>";
+                        form_row += "<div class='col-6 form-group'>";
+                        form_row += "<label for='length_roll" + i + "'>Длина</label>";
+                        form_row += "<input type='text' id='length_roll" + i + "' name='length_roll" + i + "' class='form-control' placeholder='Длина рулона' required='required' />";
+                        form_row += "</div>";
+                        form_row += "</div>";
+                        
+                        $('#rolls_info').append(form_row);
+                    }
+                }
+            });
         </script>
     </body>
 </html>
