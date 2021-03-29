@@ -236,7 +236,6 @@ tr.pallet_tr:hover {
 }
 
 tr.pallet_tr:hover > td {
-    border-bottom: solid 1px blue!important;
     position: relative;
 }
 
@@ -246,8 +245,9 @@ tr.pallet_tr:hover > td:after {
     top: 0;
     left: 0;
     width: 100%;
-    height: 1px;
-    background-color: blue;
+    height: 100%;
+    border-top: solid 1px blue;
+    border-bottom: solid 1px blue;
 }
 
 /* Печать стикера */
