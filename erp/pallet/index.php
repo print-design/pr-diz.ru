@@ -186,7 +186,7 @@ while ($row = $fetcher->Fetch()) {
                         $colour_style = " color: $colour";
                     }
                     ?>
-                    <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;" class="pallet_tr">
+                    <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;" class="pallet_tr" data-pallet-id="<?=$row['id'] ?>">
                         <td class="d-none" style="padding-left: 5px; padding-right: 5px;"><input type="checkbox" id="chk<?=$row['id'] ?>" name="chk<?=$row['id'] ?>" data-id="<?=$row['id'] ?>" class="form-check chkPallet" /></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= date_create_from_format("Y-m-d", $row['date'])->format("d.m.Y") ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['film_brand'] ?></td>
@@ -203,7 +203,7 @@ while ($row = $fetcher->Fetch()) {
                         <td style="padding-left: 5px; padding-right: 5px;" class="d-none"><?= $row['last_name'].' '.$row['first_name'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; font-size: 10px; line-height: 14px; font-weight: 600;<?=$colour_style ?>"><?= mb_strtoupper($status) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; white-space: pre-wrap;"><?= htmlentities($row['comment']) ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px; position: relative;">
+                        <td style="padding-left: 5px; padding-right: 5px; position: relative;" class="td-menu">
                             <a class="black film_menu_trigger" href="javascript: void(0);"><i class="fas fa-ellipsis-h"></i></a>
                             <div class="film_menu">
                                 <div class="command"><a href="<?=APPLICATION ?>/pallet/pallet.php?id=<?=$row['id'] ?>">Просмотреть детали</a></div>
@@ -399,6 +399,18 @@ while ($row = $fetcher->Fetch()) {
                 }
             });
             
+            // Выдвижение правой панели
+            $('tr.pallet_tr').click(function(e) {
+                if($(e.target).hasClass('fa-ellipsis-h')) {
+                    e.preventDefault();
+                }
+                else {
+                    alert($(this).attr('data-pallet-id'));
+                    alert($(e.target).attr('class'));
+                }
+            });
+            
+            // Открытие меню каждой записи (три точки)
             $('.film_menu_trigger').click(function() {
                 var menu = $(this).next('.film_menu');
                 $('.film_menu').not(menu).hide();
