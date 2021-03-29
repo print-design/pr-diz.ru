@@ -187,23 +187,21 @@ while ($row = $fetcher->Fetch()) {
                     }
                     ?>
                     <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;" class="pallet_tr" data-pallet-id="<?=$row['id'] ?>">
-                        <td class="d-none" style="padding-left: 5px; padding-right: 5px;"><input type="checkbox" id="chk<?=$row['id'] ?>" name="chk<?=$row['id'] ?>" data-id="<?=$row['id'] ?>" class="form-check chkPallet" /></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= date_create_from_format("Y-m-d", $row['date'])->format("d.m.Y") ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['film_brand'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['thickness'] ?> мкм</td>
-                        <td style="padding-left: 5px; padding-right: 5px;" class="text-nowrap"><?= round($row['density'], 2) ?> г/м<sup>2</sup></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['width'] ?> мм</td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['net_weight'] ?> кг</td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['length'] ?> м</td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['supplier'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['id_from_supplier'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= "П".$row['id'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['rolls_number'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['cell'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;" class="d-none"><?= $row['last_name'].' '.$row['first_name'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px; font-size: 10px; line-height: 14px; font-weight: 600;<?=$colour_style ?>"><?= mb_strtoupper($status) ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px; white-space: pre-wrap;"><?= htmlentities($row['comment']) ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px; position: relative;" class="td-menu">
+                        <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны"><?= date_create_from_format("Y-m-d", $row['date'])->format("d.m.Y") ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны"><?= $row['film_brand'] ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны"><?= $row['thickness'] ?> мкм</td>
+                        <td style="padding-left: 5px; padding-right: 5px;" class="text-nowrap" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны"><?= round($row['density'], 2) ?> г/м<sup>2</sup></td>
+                        <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны"><?= $row['width'] ?> мм</td>
+                        <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны"><?= $row['net_weight'] ?> кг</td>
+                        <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны"><?= $row['length'] ?> м</td>
+                        <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны"><?= $row['supplier'] ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны"><?= $row['id_from_supplier'] ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны"><?= "П".$row['id'] ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны"><?= $row['rolls_number'] ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны"><?= $row['cell'] ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px; font-size: 10px; line-height: 14px; font-weight: 600;<?=$colour_style ?>" data-target="#rollsModal" data-text="Рулоны"><?= mb_strtoupper($status) ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px; white-space: pre-wrap;" data-target="#rollsModal" data-text="Рулоны"><?= htmlentities($row['comment']) ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px; position: relative;">
                             <a class="black film_menu_trigger" href="javascript: void(0);"><i class="fas fa-ellipsis-h"></i></a>
                             <div class="film_menu">
                                 <div class="command"><a href="<?=APPLICATION ?>/pallet/pallet.php?id=<?=$row['id'] ?>">Просмотреть детали</a></div>
@@ -254,10 +252,11 @@ while ($row = $fetcher->Fetch()) {
         
         $json_thicknesses = json_encode($thicknesses);
         ?>
+        <!-- Фильтр -->
         <div class="modal fixed-left fade" id="filterModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-aside" role="document">
                 <div class="modal-content" style="padding-left: 35px; padding-right: 35px; width: 521px;">
-                    <button type="button" class="close" data-dismiss="modal" style="position: absolute; right: 32px; top: 55px;"><img src="../images/icons//close_modal.png" /></button>
+                    <button type="button" class="close" data-dismiss="modal" style="position: absolute; right: 32px; top: 55px;"><img src="../images/icons/close_modal.png" /></button>
                     <h1 style="margin-top: 53px; margin-bottom: 20px; font-size: 32px; line-height: 48px; font-weight: 600;">Фильтр</h1>
                     <form method="get">
                         <div class="form-group">
@@ -309,6 +308,14 @@ while ($row = $fetcher->Fetch()) {
                         <button type="button" class="btn" data-dismiss="modal" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #EEEEEE;">Отменить</button>
                         <button type="submit" class="btn" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #CECACA;">Применить</button>
                     </form>
+                </div>
+            </div>
+        </div>
+        <!-- Рулоны в паллете -->
+        <div class="modal fixed-left fade" id="rollsModal" tabindex="-1" role='dialog'>
+            <div class="modal-dialog modal-dialog-aside" role='document'>
+                <div class="modal-content" style="padding-left: 35px; padding-right: 35px; width: 521px;">
+                    <button type="button" class="close" data-dismiss='modal' style="position: absolute; right: 32px; top: 55px;"><img src="../images/icons/close_modal.png" /></button>
                 </div>
             </div>
         </div>
@@ -396,17 +403,6 @@ while ($row = $fetcher->Fetch()) {
                 }
                 else {
                     $(this).closest('tr').removeClass('selected');
-                }
-            });
-            
-            // Выдвижение правой панели
-            $('tr.pallet_tr').click(function(e) {
-                if($(e.target).hasClass('fa-ellipsis-h')) {
-                    e.preventDefault();
-                }
-                else {
-                    alert($(this).attr('data-pallet-id'));
-                    alert($(e.target).attr('class'));
                 }
             });
             
