@@ -161,7 +161,7 @@ while ($row = $fetcher->Fetch()) {
                     }
                     
                     $sql = "select p.id, p.date, fb.name film_brand, p.width, p.thickness, p.net_weight, p.length, "
-                            . "s.name supplier, p.id_from_supplier, p.rolls_number, p.cell, u.first_name, u.last_name, "
+                            . "s.name supplier, p.id_from_supplier, (select count(id) from pallet_roll where pallet_id = p.id) rolls_number, p.cell, u.first_name, u.last_name, "
                             . "psh.status_id status_id, p.comment, "
                             . "(select weight from film_brand_variation where film_brand_id=fb.id and thickness=p.thickness limit 1) density "
                             . "from pallet p "
@@ -186,7 +186,7 @@ while ($row = $fetcher->Fetch()) {
                         $colour_style = " color: $colour";
                     }
                     ?>
-                    <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
+                    <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;" class="pallet_tr">
                         <td class="d-none" style="padding-left: 5px; padding-right: 5px;"><input type="checkbox" id="chk<?=$row['id'] ?>" name="chk<?=$row['id'] ?>" data-id="<?=$row['id'] ?>" class="form-check chkPallet" /></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= date_create_from_format("Y-m-d", $row['date'])->format("d.m.Y") ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['film_brand'] ?></td>

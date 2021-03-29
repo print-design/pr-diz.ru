@@ -226,6 +226,30 @@ table tr.selected {
     background-color: rgba(34, 170, 214, 0.2);
 }
 
+table tr.pallet_tr {
+    cursor: pointer;
+}
+
+tr.pallet_tr:hover {
+    border-left: solid 1px blue!important;
+    border-right: solid 1px blue!important;
+}
+
+tr.pallet_tr:hover > td {
+    border-bottom: solid 1px blue!important;
+    position: relative;
+}
+
+tr.pallet_tr:hover > td:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: blue;
+}
+
 /* Печать стикера */
 table.print tr td, table.print tr th {
     font-size: 32px;
