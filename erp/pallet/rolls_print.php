@@ -126,7 +126,7 @@ $sticker_top = 30;
         </div>
         
         <?php
-        $sticker_top += 2000;
+        $sticker_top += 1900;
         ?>
         
         <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px">
@@ -183,7 +183,7 @@ $sticker_top = 30;
         </div>
         
         <?php
-        $sticker_top += 2000;
+        $sticker_top += 1900;
         
         $sql = "select id pallet_roll_id, weight, length, ordinal from pallet_roll where pallet_id = ". filter_input(INPUT_GET, 'id');
         $pallet_rolls = (new Grabber($sql))->result;
@@ -193,7 +193,7 @@ $sticker_top = 30;
         $length = $pallet_roll['length'];
         $ordinal = $pallet_roll['ordinal'];
         ?>
-        <div class="w-100" style="height: 1400px;">
+        <div class="w-100" style="height: 1400px; position: absolute; left: 30px; top: <?=$sticker_top ?>px;">
             <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-left: 50px;">
                 <tbody>
                     <tr>
@@ -246,7 +246,7 @@ $sticker_top = 30;
             </table>
         </div>
         <?php
-        $sticker_top += 2000;
+        $sticker_top += 1900;
         endforeach;
         ?>
     </body>
