@@ -176,6 +176,73 @@ if($row = $fetcher->Fetch()) {
                 </tbody>
             </table>
         </div>
+        
+        <?php
+        $sql = "select id pallet_roll_id, weight, length, ordinal from pallet_roll where pallet_id = ". filter_input(INPUT_GET, 'id');
+        $pallet_rolls = (new Grabber($sql))->result;
+        foreach ($pallet_rolls as $pallet_roll):
+        $pallet_roll_id = $pallet_roll['pallet_roll_id'];
+        $weight = $pallet_roll['weight'];
+        $length = $pallet_roll['length'];
+        $ordinal = $pallet_roll['ordinal'];
+        ?>
+        <div style="height: 250px; text-align: center; padding-top: 10px; font-size: 100px;"></div>
+        
+        <div class="w-100" style="height: 1400px;">
+            <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-left: 50px;">
+                <tbody>
+                    <tr>
+                        <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
+                        <td class="text-center text-nowrap">Рулон <span class="font-weight-bold"><?="П".$id."Р".$pallet_roll_id ?></span> от <?=$date ?></td>
+                    </tr>
+                    <tr>
+                        <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
+                        <td>Ширина<br /><strong><?=$width ?> мм</strong></td>
+                        <td rowspan="6" class="qr" style="height: 20%;">
+                            <?php
+                            //include '../qr/qrlib.php';
+                            $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
+                            $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/pallet/roll.php?id='.$pallet_roll_id;
+                            $current_date_time = date("dmYHis");
+                            $filename = "../temp/$current_date_time.png";
+                            QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
+                            echo "<img src='$filename' />";
+                            
+                            // Удаление всех файлов, кроме текущего (чтобы диск не переполнился).
+                            $files = scandir("../temp/");
+                            foreach ($files as $file) {
+                                if($file != "$current_date_time.png" && !is_dir($file)) {
+                                    unlink("../temp/$file");
+                                }
+                            }
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>ID от поставщика<br /><strong><?=$id_from_supplier ?></strong></td>
+                        <td>Толщина, уд.вес<br /><strong><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Кладовщик<br /><strong><?=$storekeeper ?></strong></td>
+                        <td>Длина<br /><strong><?=$length ?> м</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Марка пленки<br /><strong><?=$film_brand ?></strong></td>
+                        <td>Масса нетто<br /><strong><?=$weight ?> кг</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Статус<br /><strong><?=$status ?></strong></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="white-space: normal;">Комментарий<br /><strong><?= $comment ?></strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <?php
+        endforeach;
+        ?>
     </body>
     <script>
         let shareData = {
