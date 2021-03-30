@@ -44,6 +44,9 @@ $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $ud_ves = $row[0];
 }
+
+// Вертикальное положение стикера
+$sticker_top = 30;
 ?>
 <!DOCTYPE html>
 <html>
@@ -63,7 +66,7 @@ if($row = $fetcher->Fetch()) {
         </style>
     </head>
     <body class="print">
-        <div class="w-100" style="height: 1400px;">
+        <div class="w-100" style="height: 1400px; position: absolute; left: 30px; top: <?=$sticker_top ?>px;">
             <div style="margin-bottom: 20px; margin-top: 30px;">
                 <a href="<?=APPLICATION ?>/pallet/new.php"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                 <div style="display: inline; margin-left: 300px; font-size: 30px;">
@@ -122,9 +125,11 @@ if($row = $fetcher->Fetch()) {
             </table>
         </div>
         
-        <div style="height: 250px; text-align: center; padding-top: 10px; font-size: 100px;"></div>
+        <?php
+        $sticker_top += 2000;
+        ?>
         
-        <div class="w-100" style="height: 1400px;">
+        <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px">
             <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-left: 50px;">
                 <tbody>
                     <tr>
@@ -178,6 +183,8 @@ if($row = $fetcher->Fetch()) {
         </div>
         
         <?php
+        $sticker_top += 2000;
+        
         $sql = "select id pallet_roll_id, weight, length, ordinal from pallet_roll where pallet_id = ". filter_input(INPUT_GET, 'id');
         $pallet_rolls = (new Grabber($sql))->result;
         foreach ($pallet_rolls as $pallet_roll):
@@ -186,8 +193,6 @@ if($row = $fetcher->Fetch()) {
         $length = $pallet_roll['length'];
         $ordinal = $pallet_roll['ordinal'];
         ?>
-        <div style="height: 250px; text-align: center; padding-top: 10px; font-size: 100px;"></div>
-        
         <div class="w-100" style="height: 1400px;">
             <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-left: 50px;">
                 <tbody>
@@ -241,6 +246,7 @@ if($row = $fetcher->Fetch()) {
             </table>
         </div>
         <?php
+        $sticker_top += 2000;
         endforeach;
         ?>
     </body>
