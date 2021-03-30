@@ -243,7 +243,7 @@ if(null === $comment) $comment = $row['comment'];
                 <div class="form-inline" style="margin-top: 30px;">
                     <button type="submit" id="change-status-submit" name="change-status-submit" class="btn btn-dark" style="padding-left: 80px; padding-right: 80px; margin-right: 62px; padding-top: 14px; padding-bottom: 14px;">Сохранить</button>
                     <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
-                    <a href="roll_print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="padding-top: 5px; padding-bottom: 5px; padding-left: 50px; padding-right: 50px;">Распечатать<br />стикер</a>
+                    <a href="rolls_print.php?id=<?=$pallet_id ?>" class="btn btn-outline-dark" style="padding-top: 5px; padding-bottom: 5px; padding-left: 50px; padding-right: 50px;">Распечатать<br />стикер</a>
                     <?php endif; ?>
                 </div>
             </form>
