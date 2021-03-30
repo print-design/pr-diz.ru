@@ -1,0 +1,260 @@
+<?php
+include '../include/topscripts.php';
+
+// Авторизация
+if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
+    header('Location: '.APPLICATION.'/unauthorized.php');
+}
+
+// Если не задано значение id, перенаправляем на список
+$id = filter_input(INPUT_GET, 'id');
+if(empty($id)) {
+    header('Location: '.APPLICATION.'/pallet/');
+}
+
+// Получение данных
+$sql = "select p.date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.id_from_supplier, p.film_brand_id, p.width, p.thickness, pr.length, "
+        . "pr.weight, pr.pallet_id, pr.ordinal, p.cell, "
+        . "(select psh.status_id from pallet_status_history psh where psh.pallet_id = p.id order by psh.id desc limit 0, 1) status_id, "
+        . "p.comment "
+        . "from pallet p "
+        . "inner join user u on p.storekeeper_id = u.id "
+        . "inner join pallet_roll pr on pr.pallet_id = p.id "
+        . "where pr.id=$id";
+
+$row = (new Fetcher($sql))->Fetch();
+$date = $row['date'];
+$storekeeper_id = $row['storekeeper_id'];
+$storekeeper = $row['last_name'].' '.$row['first_name'];
+
+$supplier_id = filter_input(INPUT_POST, 'supplier_id');
+if(null === $supplier_id) $supplier_id = $row['supplier_id'];
+
+$id_from_supplier = filter_input(INPUT_POST, 'id_from_supplier');
+if(null === $id_from_supplier) $id_from_supplier = $row['id_from_supplier'];
+
+$film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
+if(null === $film_brand_id) $film_brand_id = $row['film_brand_id'];
+
+$width = filter_input(INPUT_POST, 'width');
+if(null === $width) $width = $row['width'];
+
+$thickness = filter_input(INPUT_POST, 'thickness');
+if(null === $thickness) $thickness = $row['thickness'];
+
+$length = filter_input(INPUT_POST, 'length');
+if(null === $length) $length = $row['length'];
+
+$weight = filter_input(INPUT_POST, 'weight');
+if(null === $weight) $net_weight = $row['weight'];
+
+$pallet_id = filter_input(INPUT_POST, 'pallet_id');
+if(null === $pallet_id) $pallet_id = $row['pallet_id'];
+
+$ordinal = filter_input(INPUT_POST, 'ordinal');
+if(null === $ordinal) $ordinal = $row['ordinal'];
+
+$cell = filter_input(INPUT_POST, 'cell');
+if(null === $cell) $cell = $row['cell'];
+
+$status_id = filter_input(INPUT_POST, 'status_id');
+if(null === $status_id) $status_id = $row['status_id'];
+
+$comment = filter_input(INPUT_POST, 'comment');
+if(null === $comment) $comment = $row['comment'];
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <?php
+        include '../include/head.php';
+        ?>
+    </head>
+    <body>
+        <?php
+        include '../include/header.php';
+        ?>
+        <div class="container-fluid" style="padding-left: 40px;">
+            <?php
+            if(!empty($error_message)) {
+                echo "<div class='alert alert-danger>$error_message</div>";
+            }
+            ?>
+            <div class="backlink" style="margin-bottom: 56px;">
+                <a href="<?=APPLICATION ?>/pallet/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+            </div>
+            <h1 style="font-size: 24px; line-height: 32px; fon24pxt-weight: 600; margin-bottom: 20px;">Информация о рулоне № <?="П".$pallet_id."Р".$ordinal ?> от <?= (DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></h1>
+            <h2 style="font-size: 24px; line-height: 32px; font-weight: 600; margin-bottom: 20px;">ID <?=$id_from_supplier ?></h2>
+            <form method="post">
+                <div style="width: 423px;">
+                    <input type="hidden" id="id" name="id" value="<?=$id ?>" />
+                    <input type="hidden" id="date" name="date" value="<?= $date ?>" />
+                    <input type="hidden" id="storekeeper_id" name="storekeeper_id" value="<?= $storekeeper_id ?>" />
+                    <input type="hidden" id="scroll" name="scroll" />
+                    <div class="form-group">
+                        <label for="storekeeper">Принят кладовщиком</label>
+                        <p id="storekeeper"><?=$storekeeper ?></p>
+                    </div>
+                    <div class="form-group">
+                        <?php
+                        $supplier_id_disabled = " disabled='disabled'";
+                        ?>
+                        <label for="supplier_id">Поставщик</label>
+                        <select id="supplier_id" name="supplier_id" class="form-control"<?=$supplier_id_disabled ?>>
+                            <option value="">Выберите поставщика</option>
+                            <?php
+                            $suppliers = (new Grabber("select id, name from supplier order by name"))->result;
+                            foreach ($suppliers as $supplier) {
+                                $id = $supplier['id'];
+                                $name = $supplier['name'];
+                                $selected = '';
+                                if($supplier_id == $supplier['id']) $selected = " selected='selected'";
+                                echo "<option value='$id'$selected>$name</option>";
+                            }
+                            ?>
+                        </select>
+                        <div class="invalid-feedback">Поставщик обязательно</div>
+                    </div>
+                    <div class="form-group">
+                        <?php
+                        $id_from_supplier_disabled = " disabled='disabled'";
+                        ?>
+                        <label for="id_from_supplier">ID рулона от поставщика</label>
+                        <input type="text" id="id_from_supplier" name="id_from_supplier" value="<?= $id_from_supplier ?>" class="form-control" placeholder="Введите ID"<?=$id_from_supplier_disabled ?> />
+                        <div class="invalid-feedback">ID паллета от поставщика обязательно</div>
+                    </div>
+                    <div class="form-group">
+                        <?php
+                        $film_brand_id_disabled = " disabled='disabled'";
+                        ?>
+                        <label for="film_brand_id">Марка пленки</label>
+                        <select id="film_brand_id" name="film_brand_id" class="form-control"<?=$film_brand_id_disabled ?>>
+                            <option value="">Выберите марку</option>
+                            <?php
+                            $film_brands = (new Grabber("select id, name from film_brand where supplier_id = $supplier_id"))->result;
+                            foreach ($film_brands as $film_brand) {
+                                $id = $film_brand['id'];
+                                $name = $film_brand['name'];
+                                $selected = '';
+                                if($film_brand_id == $film_brand['id']) $selected = " selected='selected'";
+                                echo "<option value='$id'$selected>$name</option>";
+                            }
+                            ?>
+                        </select>
+                        <div class="invalid-feedback">Марка пленки обязательно</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 form-group">
+                            <?php
+                            $width_disabled = " disabled='disabled'";
+                            ?>
+                            <label for="width">Ширина, мм</label>
+                            <input type="text" id="width" name="width" value="<?= $width ?>" class="form-control int-only" placeholder="Введите ширину"<?=$width_disabled ?> />
+                            <div class="invalid-feedback">От 50 до 1600</div>
+                        </div>
+                        <div class="col-6 form-group">
+                            <?php
+                            $thickness_disabled = " disabled='disabled'";
+                            ?>
+                            <label for="thickness">Толщина, мкм</label>
+                            <select id="thickness" name="thickness" class="form-control"<?=$thickness_disabled ?>>
+                                <option value="">Выберите толщину</option>
+                                <?php
+                                $film_brand_variations = (new Grabber("select thickness, weight from film_brand_variation where film_brand_id = $film_brand_id order by thickness"))->result;
+                                foreach ($film_brand_variations as $film_brand_variation) {
+                                    $weight = $film_brand_variation['weight'];
+                                    $selected = '';
+                                    if($thickness == $film_brand_variation['thickness']) $selected = " selected='selected'";
+                                    echo "<option value='$thickness'$selected>$thickness мкм $weight г/м<sup>2</sup></option>";
+                                }
+                                ?>
+                            </select>
+                            <div class="invalid-feedback">Толщина обязательно</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 form-group">
+                            <?php
+                            $length_disabled = " disabled='disabled'";
+                            ?>
+                            <label for="length">Длина, м</label>
+                            <input type="text" id="length" name="length" value="<?= $length ?>" class="form-control int-only" placeholder="Введите длину"<?=$length_disabled ?>" />
+                            <div class="invalid-feedback">Длина обязательно</div>
+                        </div>
+                        <div class="col-6 form-group">
+                            <?php
+                            $net_weight_disabled = " disabled='disabled'";
+                            ?>
+                            <label for="net_weight">Масса нетто, кг</label>
+                            <input type="text" id="net_weight" name="net_weight" value="<?= $net_weight ?>" class="form-control int-only" placeholder="Введите массу нетто"<?=$net_weight_disabled ?> />
+                            <div class="invalid-feedback"><?= empty($invalid_message) ? "Масса нетто обязательно" : $invalid_message ?></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 form-group"></div>
+                        <div class="col-6 form-group">
+                            <?php
+                            $cell_disabled = " disabled='disabled'";
+                            ?>
+                            <label for="cell">Ячейка на складе</label>
+                            <input type="text" id="cell" name="cell" value="<?= $cell ?>" class="form-control" placeholder="Введите ячейку"<?=$cell_disabled ?>" />
+                            <div class="invalid-feedback">Ячейка на складе обязательно</div>
+                        </div>
+                    </div>
+                    <div class="form-group d-none">
+                        <?php
+                        $manager_disabled = " disabled='disabled'";
+                        ?>
+                        <label for="manager_id">Менеджер</label>
+                        <select id="manager_id" name="manager_id" class="form-control"<?=$manager_disabled ?>>
+                            <option value="">Выберите менеджера</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <?php
+                        $status_id_disabled = " disabled='disabled'";
+                        ?>
+                        <label for="status_id">Статус</label>
+                        <select id="status_id" name="status_id" class="form-control" required="required"<?=$status_id_disabled ?>>
+                            <?php
+                            $statuses = (new Grabber("select s.id, s.name from roll_status s order by s.name"))->result;
+                            foreach ($statuses as $status) {
+                                if(!(empty($status_id) && $status['id'] == $utilized_status_id)) { // Если статуса нет, то нельзя сразу поставить "Сработанный"
+                                    $id = $status['id'];
+                                    $name = $status['name'];
+                                    $selected = '';
+                                    if(empty($status_id)) $status_id = $free_status_id; // По умолчанию ставим статус "Свободный"
+                                    if($status_id == $status['id']) $selected = " selected='selected'";
+                                    echo "<option value='$id'$selected>$name</option>";
+                                }
+                            }
+                            ?>
+                        </select>
+                        <div class="invalid-feedback">Статус обязательно</div>
+                    </div>
+                    <div class="form-group">
+                        <?php
+                        $comment_disabled = " disabled='disabled'";
+                        ?>
+                        <label for="comment">Комментарий</label>
+                        <textarea id="comment" name="comment" rows="4" class="form-control"<?=$comment_disabled ?>><?= htmlentities($comment) ?></textarea>
+                    </div>
+                </div>
+                <div class="form-inline" style="margin-top: 30px;">
+                    <button type="submit" id="change-status-submit" name="change-status-submit" class="btn btn-dark" style="padding-left: 80px; padding-right: 80px; margin-right: 62px; padding-top: 14px; padding-bottom: 14px;">Сохранить</button>
+                    <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
+                    <a href="roll_print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="padding-top: 5px; padding-bottom: 5px; padding-left: 50px; padding-right: 50px;">Распечатать<br />стикер</a>
+                    <?php endif; ?>
+                </div>
+            </form>
+        </div>
+        <?php
+        include '../include/footer.php';
+        ?>
+        <script>
+            if($('.is-invalid').first() != null) {
+                $('.is-invalid').first().focus();
+            }
+        </script>
+    </body>
+</html>
