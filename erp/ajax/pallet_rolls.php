@@ -38,31 +38,31 @@ if(!empty($pallet_id)) {
 <table style="margin-top: 50px; font-size: 14px;">
     <tbody>
     <tr>
-        <td style="text-align: right; padding-right: 20px; padding-bottom: 10px;"><input type="checkbox" /></td>
-        <td style="padding-right: 20px; padding-bottom: 10px;">Рулон <?=$row['ordinal'] ?></td>
-        <td style="padding-right: 20px; padding-bottom: 10px;"><a href="roll.php?id=<?=$row['id'] ?>" <i class="fas fa-ellipsis-h"></i></td>
+        <td style="text-align: right; padding-bottom: 10px; width: 20%;"><input type="checkbox" /></td>
+        <td style="padding-bottom: 10px; width: 40%;">Рулон <?=$row['ordinal'] ?></td>
+        <td style="padding-bottom: 10px; width: 17%;"><a href="roll.php?id=<?=$row['id'] ?>" <i class="fas fa-ellipsis-h"></i></td>
         <td></td>
     </tr>
     <tr>
-        <td style="padding-right: 20px; padding-bottom: 10px;">Ширина</td>
-        <td style="padding-right: 20px; padding-bottom: 10px;"><?=$row['width'] ?> мм</td>
-        <td style="padding-right: 20px; padding-bottom: 10px;">Толщина</td>
+        <td style="padding-bottom: 10px;">Ширина</td>
+        <td style="padding-bottom: 10px;"><?=$row['width'] ?> мм</td>
+        <td style="padding-bottom: 10px;">Толщина</td>
         <td><?=$row['thickness'] ?> мкм</td>
     </tr>
     <tr>
-        <td style="padding-right: 20px; padding-bottom: 10px;">Масса</td>
-        <td style="padding-right: 20px; padding-bottom: 10px;"><?=$row['weight'] ?> кг</td>
-        <td style="padding-right: 20px; padding-bottom: 10px;">Длина</td>
+        <td style="padding-bottom: 10px;">Масса</td>
+        <td style="padding-bottom: 10px;"><?=$row['weight'] ?> кг</td>
+        <td style="padding-bottom: 10px;">Длина</td>
         <td><?=$row['length'] ?> м</td>
     </tr>
     <tr>
-        <td style="padding-right: 20px; padding-bottom: 10px;">ID</td>
-        <td style="padding-right: 20px; padding-bottom: 10px;"><?="П".$row['pallet_id']."Р".$row['ordinal'] ?></td>
-        <td style="padding-right: 20px; padding-bottom: 10px;">Статус</td>
+        <td style="padding-bottom: 10px;">ID</td>
+        <td style="padding-bottom: 10px;"><?="П".$row['pallet_id']."Р".$row['ordinal'] ?></td>
+        <td style="padding-bottom: 10px;">Статус</td>
         <td style="font-size: 10px;<?=$colour_style ?>"><?=mb_strtoupper($status) ?></td>
     </tr>
     <tr>
-        <td style="padding-right: 20px; padding-bottom: 10px;">Комментарий</td>
+        <td style="padding-bottom: 10px; padding-right: 10px;">Комментарий</td>
         <td colspan="3" style="padding-bottom: 10px;"><?=$row['comment'] ?></td>
     </tr>
     </tbody>
