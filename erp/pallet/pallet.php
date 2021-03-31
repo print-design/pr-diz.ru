@@ -237,6 +237,28 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     }
 }
 
+if(null !== filter_input(INPUT_POST, 'pdf-submit')) {
+    $url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/pallet/pdf.php?id='.$_GET['id'];
+    $path = '../temp/'.date("Y-m-d")."-pallet-$id.pdf";
+    
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_REFERER, $url);
+    $data = curl_exec($ch);
+    curl_close($ch);
+    $result = file_put_contents($path, $data);
+
+    if (!$result) {
+        $error_message = "Ошибка при загрузке PDF-файла";
+    }
+    
+    ?>
+<script>
+    alert('PDF');
+</script>
+<?php
+}
+
 // Получение данных
 $sql = "select p.date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.id_from_supplier, p.film_brand_id, p.width, p.thickness, p.length, "
         . "p.net_weight, p.rolls_number, p.cell, "
@@ -505,6 +527,7 @@ $utilized_status_id = 2;
                     <button type="submit" id="change-status-submit" name="change-status-submit" class="btn btn-dark" style="padding-left: 80px; padding-right: 80px; margin-right: 62px; padding-top: 14px; padding-bottom: 14px;">Сохранить</button>
                     <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
                     <a href="print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="padding-top: 5px; padding-bottom: 5px; padding-left: 50px; padding-right: 50px;">Распечатать<br />стикер</a>
+                    <button type="submit" id="pdf-submit" name="pdf-submit" class="btn btn-outline-dark ml-5" style="padding-top: 14px; padding-bottom: 14px;">PDF</button>
                     <?php endif; ?>
                 </div>
             </form>
