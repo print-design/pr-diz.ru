@@ -377,6 +377,17 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         include '../include/footer.php';
         ?>
         <script>
+            var create_pallet_submit_clicked = false;
+            
+            $('#create-pallet-submit').click(function(e) {
+                if(create_pallet_submit_clicked) {
+                    return false;
+                }
+                else {
+                    create_pallet_submit_clicked = true;
+                }
+            });
+            
             $('#supplier_id').change(function(){
                 if($(this).val() == "") {
                     $('#film_brand_id').html("<option id=''>Выберите марку</option>");

@@ -362,6 +362,17 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
         include '../include/footer.php';
         ?>
         <script>
+            var create_roll_submit_clicked = false;
+            
+            $('#create-roll-submit').click(function(e) {
+                if(create_roll_submit_clicked) {
+                    return false;
+                }
+                else {
+                    create_roll_submit_clicked = true;
+                }
+            });
+            
             $('#supplier_id').change(function(){
                 if($(this).val() == "") {
                     $('#film_brand_id').html("<option id=''>Выберите марку</option>");
