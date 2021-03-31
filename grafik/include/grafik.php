@@ -956,7 +956,7 @@ class Grafik {
                 echo '</form>';
             }
             else {
-                echo (isset($edition['name']) ? htmlentities($edition['name']) : '');
+                echo (isset($edition['edition']) ? htmlentities($edition['edition']) : '');
             }
             echo "</td>";
         }
