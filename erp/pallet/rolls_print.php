@@ -46,7 +46,7 @@ if($row = $fetcher->Fetch()) {
 }
 
 // Вертикальное положение стикера
-$sticker_top = 30;
+$sticker_top = 0;
 ?>
 <!DOCTYPE html>
 <html>
@@ -126,7 +126,7 @@ $sticker_top = 30;
         </div>
         
         <?php
-        $sticker_top = 1930;
+        $sticker_top = 1850;
         ?>
         
         <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px">
@@ -193,27 +193,27 @@ $sticker_top = 30;
         
         switch ($ordinal) {
             case 1:
-                $sticker_top = 2830;
+                $sticker_top = 3530;
                 break;
             
             case 2:
-                $sticker_top = 5730;
+                $sticker_top = 5300;
                 break;
                 
             case 3:
-                $sticker_top = 7630;
+                $sticker_top = 7000;
                 break;
             
             case 4:
-                $sticker_top = 9530;
+                $sticker_top = 8700;
                 break;
                 
             case 5:
-                $sticker_top = 11430;
+                $sticker_top = 10450;
                 break;
                 
             case 6:
-                $sticker_top = 13330;
+                $sticker_top = 12200;
                 break;
 
             default:
