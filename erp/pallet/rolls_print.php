@@ -191,7 +191,7 @@ $sticker_top = 30;
         $length = $pallet_roll['length'];
         $ordinal = $pallet_roll['ordinal'];
         
-        switch ($pallet_roll_id) {
+        switch ($ordinal) {
             case 1:
                 $sticker_top = 2830;
                 break;
@@ -225,7 +225,7 @@ $sticker_top = 30;
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
-                        <td class="text-center text-nowrap">Рулон <span class="font-weight-bold"><?="П".$id."Р".$pallet_roll_id ?></span> от <?=$date ?></td>
+                        <td class="text-center text-nowrap">Рулон <span class="font-weight-bold"><?="П".$id."Р".$ordinal ?></span> от <?=$date ?></td>
                     </tr>
                     <tr>
                         <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
