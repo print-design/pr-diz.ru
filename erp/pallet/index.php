@@ -314,7 +314,7 @@ while ($row = $fetcher->Fetch()) {
         <!-- Рулоны в паллете -->
         <div class="modal fixed-left fade" id="rollsModal" tabindex="-1" role='dialog'>
             <div class="modal-dialog modal-dialog-aside" role='document'>                
-                <div class="modal-content" style="padding-left: 35px; padding-right: 35px; width: 521px;"></div>
+                <div class="modal-content" style="padding-left: 35px; padding-right: 35px; width: 521px; overflow-y: auto;"></div>
             </div>
         </div>
         <?php
