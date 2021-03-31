@@ -193,7 +193,7 @@ $sticker_top = 30;
         
         switch ($pallet_roll_id) {
             case 1:
-                $sticker_top = 3830;
+                $sticker_top = 2830;
                 break;
             
             case 2:
@@ -273,7 +273,6 @@ $sticker_top = 30;
             </table>
         </div>
         <?php
-        $sticker_top += 1900;
         endforeach;
         ?>
     </body>
