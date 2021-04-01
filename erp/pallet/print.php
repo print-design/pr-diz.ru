@@ -72,8 +72,8 @@ $sticker_top = 0;
                 <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
             </div>
         </div>
-        <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px;"><h1>PALLET 1</h1>
-            <table class="table table-bordered print w-100" style="writing-mode: vertical-rl;">
+        <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px;">
+            <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-top: 30px;">
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
@@ -129,8 +129,8 @@ $sticker_top = 0;
         $sticker_top = 1600;
         ?>
         
-        <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px"> <h1>PALLET 2</h1>
-            <table class="table table-bordered print w-100 d-none" style="writing-mode: vertical-rl;">
+        <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px">
+            <table class="table table-bordered print w-100" style="writing-mode: vertical-rl;">
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
@@ -220,8 +220,8 @@ $sticker_top = 0;
                 break;
         }
         ?>
-        <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px;"><h2>ROLL <?=$ordinal ?></h2>
-            <table class="table table-bordered print w-100 d-none" style="writing-mode: vertical-rl; margin-top: 50px;">
+        <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px;">
+            <table class="table table-bordered print w-100" style="writing-mode: vertical-rl;">
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
