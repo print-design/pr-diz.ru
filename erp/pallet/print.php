@@ -193,27 +193,27 @@ $sticker_top = 0;
         
         switch ($ordinal) {
             case 1:
-                $sticker_top = 3530;
+                $sticker_top = 3100;
                 break;
             
             case 2:
-                $sticker_top = 5300;
+                $sticker_top = 4700;
                 break;
                 
             case 3:
-                $sticker_top = 7000;
+                $sticker_top = 6200;
                 break;
             
             case 4:
-                $sticker_top = 8700;
+                $sticker_top = 7800;
                 break;
                 
             case 5:
-                $sticker_top = 10450;
+                $sticker_top = 9300;
                 break;
                 
             case 6:
-                $sticker_top = 12200;
+                $sticker_top = 10900;
                 break;
 
             default:
