@@ -505,8 +505,6 @@ $utilized_status_id = 2;
                     <button type="submit" id="change-status-submit" name="change-status-submit" class="btn btn-dark" style="padding-left: 80px; padding-right: 80px; margin-right: 62px; padding-top: 14px; padding-bottom: 14px;">Сохранить</button>
                     <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
                     <a href="print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="padding-top: 5px; padding-bottom: 5px; padding-left: 50px; padding-right: 50px;">Распечатать<br />стикер</a>
-                    <a href="pdf.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark ml-5" style="padding-top: 14px; padding-bottom: 14px;">PDF</a>
-                    <a href="javascript: void(0);" onclick="javascript: window.open('<?=$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/pallet/pdf.php?id='.$_GET['id'] ?>');" class="btn btn-outline-dark ml-5" style="padding-top: 14px; padding-bottom: 14px;">PDF1</a>
                     <?php endif; ?>
                 </div>
             </form>
