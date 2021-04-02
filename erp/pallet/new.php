@@ -377,6 +377,8 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         include '../include/footer.php';
         ?>
         <script>
+            //------------------------------------
+            // Защита от двойного нажатия
             var create_pallet_submit_clicked = false;
             
             $('#create-pallet-submit').click(function(e) {
@@ -387,6 +389,15 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     create_pallet_submit_clicked = true;
                 }
             });
+            
+            $(document).keydown(function(){
+                create_pallet_submit_clicked = false;
+            });
+            
+            $('select').change(function(){
+                create_pallet_submit_clicked = false;
+            });
+            //---------------------------------------
             
             $('#supplier_id').change(function(){
                 if($(this).val() == "") {

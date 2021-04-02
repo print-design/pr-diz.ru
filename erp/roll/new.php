@@ -362,6 +362,8 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
         include '../include/footer.php';
         ?>
         <script>
+            //------------------------------------
+            // Защита от двойного нажатия
             var create_roll_submit_clicked = false;
             
             $('#create-roll-submit').click(function(e) {
@@ -372,6 +374,15 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                     create_roll_submit_clicked = true;
                 }
             });
+            
+            $(document).keydown(function(){
+                create_roll_submit_clicked = false;
+            });
+            
+            $('select').change(function(){
+                create_roll_submit_clicked = false;
+            });
+            //---------------------------------------
             
             $('#supplier_id').change(function(){
                 if($(this).val() == "") {
