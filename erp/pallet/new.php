@@ -312,7 +312,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         while (filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") != null):
                         ?>
                         <div class='mt-1'><?=$roll_number ?> рулон</div>
-                        <input type='hidden' id='ordinal_roll<?=$roll_number ?>' name='ordinal_roll<?=$roll_number ?>' value='<?=$roll_number ?>' />";
+                        <input type='hidden' id='ordinal_roll<?=$roll_number ?>' name='ordinal_roll<?=$roll_number ?>' value='<?=$roll_number ?>' />
                         <div class='row'>
                             <div class='col-6 form-group'>
                                 <label for='weight_roll<?=$roll_number ?>'>Масса Нетто</label>
@@ -470,11 +470,11 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         form_row += "<div class='row'>";
                         form_row += "<div class='col-6 form-group'>";
                         form_row += "<label for='weight_roll" + i + "'>Масса Нетто</label>";
-                        form_row += "<input type='number' min='1' id='weight_roll" + i + "' name='weight_roll" + i + "' class='form-control' placeholder='Масса Нетто рулона' required='required' />";
+                        form_row += "<input type='text' id='weight_roll" + i + "' name='weight_roll" + i + "' class='form-control int-only' placeholder='Масса Нетто рулона' required='required' />";
                         form_row += "</div>";
                         form_row += "<div class='col-6 form-group'>";
                         form_row += "<label for='length_roll" + i + "'>Длина</label>";
-                        form_row += "<input type='number' min='1' id='length_roll" + i + "' name='length_roll" + i + "' class='form-control' placeholder='Длина рулона' required='required' />";
+                        form_row += "<input type='text' id='length_roll" + i + "' name='length_roll" + i + "' class='form-control int-only' placeholder='Длина рулона' required='required' />";
                         form_row += "</div>";
                         form_row += "</div>";
                         
@@ -482,16 +482,16 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     }
                     
                     $('.int-only').keypress(function(e) {
-        if(/\D/.test(String.fromCharCode(e.charCode))) {
-            return false;
-        }
-    });
-    
-    $('.int-only').change(function(e) {
-        var val = $(this).val();
-        val = val.replace(/[^\d]/g, '');
-        $(this).val(val);
-    });
+                        if(/\D/.test(String.fromCharCode(e.charCode))) {
+                            return false;
+                        }
+                    });
+                    
+                    $('.int-only').change(function(e) {
+                        var val = $(this).val();
+                        val = val.replace(/[^\d]/g, '');
+                        $(this).val(val);
+                    });
                 }
             });
         </script>
