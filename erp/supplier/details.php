@@ -99,18 +99,10 @@ if(null !== filter_input(INPUT_POST, 'delete_variation_submit')) {
 // Обработка отправки формы удаления поставщика
 if(null !== filter_input(INPUT_POST, 'delete-brand-button')) {
     $id = filter_input(INPUT_POST, 'id');
-    $error_message = (new Executer("delete from film_brand_variation where film_brand_id in (select id from film_brand where supplier_id = $id)"))->error;
-    
+    $error_message = (new Executer("delete from supplier where id = $id"))->error;
+
     if(empty($error_message)) {
-        $error_message = (new Executer("delete from film_brand where supplier_id = $id"))->error;
-        
-        if(empty($error_message)) {
-            $error_message = (new Executer("delete from supplier where id = $id"))->error;
-            
-            if(empty($error_message)) {
-                header('Location: '.APPLICATION.'/supplier/');
-            }
-        }
+        header('Location: '.APPLICATION.'/supplier/');
     }
 }
 
