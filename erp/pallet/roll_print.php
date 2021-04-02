@@ -78,7 +78,7 @@ $sticker_top = 0;
             </div>
         </div>
         <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px;">
-            <table class="table table-bordered print w-100" style="writing-mode: vertical-rl;">
+            <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-top: 30px;">
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
