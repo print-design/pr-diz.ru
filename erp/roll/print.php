@@ -43,6 +43,9 @@ $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $ud_ves = $row[0];
 }
+
+// Вертикальное положение стикера
+$sticker_top = 0;
 ?>
 <!DOCTYPE html>
 <html>
@@ -52,8 +55,8 @@ if($row = $fetcher->Fetch()) {
         ?>
         <style>
             table.print tr td {
-                font-size: 48px;
-                line-height: 52px;
+                font-size: 42px;
+                line-height: 48px;
                 vertical-align: top;
                 white-space: pre-wrap;
                 padding: 0;
@@ -62,14 +65,14 @@ if($row = $fetcher->Fetch()) {
         </style>
     </head>
     <body class="print">
-        <div class="w-100" style="height: 1400px;">
-            <div style="margin-bottom: 20px; margin-top: 30px;">
-                <a href="<?=APPLICATION ?>/roll/new.php"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
-                <div style="display: inline; margin-left: 300px; font-size: 30px;">
-                    <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
-                </div>
+        <div style="position: absolute; top: 0; left: 0; z-index: 2000;">
+            <a href="<?=APPLICATION ?>/roll/new.php"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+            <div style="display: inline; margin-left: 300px; font-size: 30px;">
+                <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
             </div>
-            <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-left: 50px;">
+        </div>
+        <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px;">
+            <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-top: 30px;">
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
@@ -99,16 +102,16 @@ if($row = $fetcher->Fetch()) {
                         </td>
                     </tr>
                     <tr>
-                        <td>ID от поставщика<br /><strong><?=$id_from_supplier ?></strong></td>
-                        <td>Толщина, уд.вес<br /><strong><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></strong></td>
+                        <td class="text-nowrap pb-5">ID от поставщика<br /><span class="text-nowrap font-weight-bold"><?=$id_from_supplier ?></span></td>
+                        <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></span></td>
                     </tr>
                     <tr>
                         <td>Кладовщик<br /><strong><?=$storekeeper ?></strong></td>
                         <td>Длина<br /><strong><?=$length ?> м</strong></td>
                     </tr>
                     <tr>
-                        <td>Марка пленки<br /><strong><?=$film_brand ?></strong></td>
-                        <td>Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
+                        <td class="text-nowrap pb-5">Марка пленки<br /><strong><?=$film_brand ?></strong></td>
+                        <td class="text-nowrap pb-5">Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
                     </tr>
                     <tr>
                         <td>Статус<br /><strong><?=$status ?></strong></td>
@@ -121,10 +124,12 @@ if($row = $fetcher->Fetch()) {
             </table>
         </div>
         
-        <div style="height: 250px; text-align: center; padding-top: 10px; font-size: 100px;"></div>
+        <?php
+        $sticker_top = 1600;
+        ?>
         
-        <div class="w-100" style="height: 1400px;">
-            <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-left: 50px;">
+        <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px;">
+            <table class="table table-bordered print w-100" style="writing-mode: vertical-rl;">
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
@@ -154,8 +159,8 @@ if($row = $fetcher->Fetch()) {
                         </td>
                     </tr>
                     <tr>
-                        <td>ID от поставщика<br /><strong><?=$id_from_supplier ?></strong></td>
-                        <td>Толщина, уд.вес<br /><strong><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></strong></td>
+                        <td class="text-nowrap pb-5">ID от поставщика<br /><span class="text-nowrap font-weight-bold"><?=$id_from_supplier ?></span></td>
+                        <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></span></td>
                     </tr>
                     <tr>
                         <td>Кладовщик<br /><strong><?=$storekeeper ?></strong></td>

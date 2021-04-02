@@ -129,7 +129,7 @@ $sticker_top = 0;
         $sticker_top = 1600;
         ?>
         
-        <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px">
+        <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px;">
             <table class="table table-bordered print w-100" style="writing-mode: vertical-rl;">
                 <tbody>
                     <tr>
