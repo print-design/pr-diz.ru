@@ -91,14 +91,6 @@ $sticker_top = 0;
                             $filename = "../temp/$current_date_time.png";
                             QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
                             echo "<img src='$filename' />";
-
-                            // Удаление всех файлов, кроме текущего (чтобы диск не переполнился).
-                            $files = scandir("../temp/");
-                            foreach ($files as $file) {
-                                if($file != "$current_date_time.png" && !is_dir($file)) {
-                                    unlink("../temp/$file");
-                                }
-                            }
                             ?>
                         </td>
                     </tr>
@@ -148,14 +140,6 @@ $sticker_top = 0;
                             $filename = "../temp/$current_date_time.png";
                             QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
                             echo "<img src='$filename' />";
-                            
-                            // Удаление всех файлов, кроме текущего (чтобы диск не переполнился).
-                            $files = scandir("../temp/");
-                            foreach ($files as $file) {
-                                if($file != "$current_date_time.png" && !is_dir($file)) {
-                                    unlink("../temp/$file");
-                                }
-                            }
                             ?>
                         </td>
                     </tr>
@@ -236,17 +220,9 @@ $sticker_top = 0;
                             $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
                             $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/pallet/roll.php?id='.$pallet_roll_id;
                             $current_date_time = date("dmYHis");
-                            $filename = "../temp/$current_date_time.png";
+                            $filename = "../temp/".$ordinal."_".$current_date_time.".png";
                             QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
                             echo "<img src='$filename' />";
-                            
-                            // Удаление всех файлов, кроме текущего (чтобы диск не переполнился).
-                            $files = scandir("../temp/");
-                            foreach ($files as $file) {
-                                if($file != "$current_date_time.png" && !is_dir($file)) {
-                                    unlink("../temp/$file");
-                                }
-                            }
                             ?>
                         </td>
                     </tr>
@@ -274,6 +250,21 @@ $sticker_top = 0;
         </div>
         <?php
         endforeach;
+        
+        // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
+        $files = scandir("../temp/");
+        foreach ($files as $file) {
+            if($file != "$current_date_time.png" &&
+                    $file != "1_"."$current_date_time.png" &&
+                    $file != "2_"."$current_date_time.png" &&
+                    $file != "3_"."$current_date_time.png" &&
+                    $file != "4_"."$current_date_time.png" &&
+                    $file != "5_"."$current_date_time.png" &&
+                    $file != "6_"."$current_date_time.png" &&
+                    !is_dir($file)) {
+                unlink("../temp/$file");
+            }
+        }
         ?>
     </body>
     <script>
