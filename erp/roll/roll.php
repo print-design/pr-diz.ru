@@ -219,7 +219,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
         
         if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/roll/');
+            header('Location: '.APPLICATION.'/roll/?id='.$id);
         }
     }
 }
