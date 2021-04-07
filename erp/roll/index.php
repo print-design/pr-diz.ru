@@ -144,12 +144,6 @@ while ($row = $fetcher->Fetch()) {
                         $where .= " and r.width <= $width_to";
                     }
                     
-                    $id = filter_input(INPUT_GET, 'id');
-                    $id = preg_replace("/[^0-9]/", "", $id);
-                    if(!empty($id)) {
-                        $where .= " and r.id='$id'";
-                    }
-                    
                     if(!empty($where)) {
                         $where = "where $where";
                     }
@@ -311,13 +305,6 @@ while ($row = $fetcher->Fetch()) {
                                 </td>
                             </tr>
                         </table>
-                        <h2 style="font-size: 24px; line-height: 32px; font-weight: 600; margin-top: 30px; margin-bottom: 18px;">ID рулона</h2>
-                        <div class="input-group" style="width: 50%; margin-bottom: 30px;">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text">Р</div>
-                            </div>
-                            <input type="text" id="id" name="id" class="form-control int-only" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-                        </div>
                         <a href="<?=APPLICATION ?>/roll/" type="button" class="btn" name="filter_clear" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #E4E1ED;"><img src="../images/icons/white-times.svg" />&nbsp;&nbsp;Очистить</a>
                         <button type="button" class="btn" data-dismiss="modal" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #EEEEEE;">Отменить</button>
                         <button type="submit" class="btn" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #CECACA;">Применить</button>
