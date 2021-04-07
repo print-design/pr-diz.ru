@@ -175,19 +175,19 @@ if(null === $comment) $comment = $row['comment'];
                     <div class="row">
                         <div class="col-6 form-group">
                             <?php
-                            $length_disabled = " disabled='disabled'";
-                            ?>
-                            <label for="length">Длина, м</label>
-                            <input type="text" id="length" name="length" value="<?= $length ?>" class="form-control int-only" placeholder="Введите длину"<?=$length_disabled ?>" />
-                            <div class="invalid-feedback">Длина обязательно</div>
-                        </div>
-                        <div class="col-6 form-group">
-                            <?php
                             $net_weight_disabled = " disabled='disabled'";
                             ?>
                             <label for="net_weight">Масса нетто, кг</label>
                             <input type="text" id="net_weight" name="net_weight" value="<?= $net_weight ?>" class="form-control int-only" placeholder="Введите массу нетто"<?=$net_weight_disabled ?> />
                             <div class="invalid-feedback"><?= empty($invalid_message) ? "Масса нетто обязательно" : $invalid_message ?></div>
+                        </div>
+                        <div class="col-6 form-group">
+                            <?php
+                            $length_disabled = " disabled='disabled'";
+                            ?>
+                            <label for="length">Длина, м</label>
+                            <input type="text" id="length" name="length" value="<?= $length ?>" class="form-control int-only" placeholder="Введите длину"<?=$length_disabled ?>" />
+                            <div class="invalid-feedback">Длина обязательно</div>
                         </div>
                     </div>
                     <div class="row">
