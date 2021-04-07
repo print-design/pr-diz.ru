@@ -12,7 +12,7 @@ $sql = "select p.date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_i
         . "p.film_brand_id, fb.name film_brand, p.width, p.thickness, p.length, "
         . "p.net_weight, p.rolls_number, p.cell, "
         . "(select ps.name from pallet_status_history psh left join pallet_status ps on psh.status_id = ps.id where psh.pallet_id = p.id order by psh.id desc limit 0, 1) status, "
-        . "p.comment, pr.id pallet_roll_id, pr.weight pallet_roll_weight, pr.length pallet_roll_length, pr.ordinal pallet_roll_ordinal "
+        . "p.comment, pr.id pallet_roll_id, pr.pallet_id pallet_roll_pallet_id, pr.weight pallet_roll_weight, pr.length pallet_roll_length, pr.ordinal pallet_roll_ordinal "
         . "from pallet p "
         . "inner join pallet_roll pr on pr.pallet_id = p.id "
         . "left join user u on p.storekeeper_id = u.id "
@@ -39,6 +39,7 @@ $status = $row['status'];
 $comment = $row['comment'];
 $pallet_roll_id = $row['pallet_roll_id'];
 $weight = $row['pallet_roll_weight'];
+$pallet_id = $row['pallet_roll_pallet_id'];
 $length = $row['pallet_roll_length'];
 $ordinal = $row['pallet_roll_ordinal'];
 
@@ -82,7 +83,7 @@ $sticker_top = 0;
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
-                        <td class="text-center text-nowrap">Рулон <span class="font-weight-bold"><?="П".$id."Р".$ordinal ?></span> от <?=$date ?></td>
+                        <td class="text-center text-nowrap">Рулон <span class="font-weight-bold"><?="П".$pallet_id."Р".$ordinal ?></span> от <?=$date ?></td>
                     </tr>
                     <tr>
                         <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
