@@ -385,17 +385,6 @@ $utilized_status_id = 2;
                     <div class="row">
                         <div class="col-6 form-group">
                             <?php
-                            $net_weight_disabled = '';
-                            if(!IsInRole(array('dev'))) {
-                                $net_weight_disabled = " disabled='disabled'";
-                            }
-                            ?>
-                            <label for="net_weight">Масса нетто, кг</label>
-                            <input type="text" id="net_weight" name="net_weight" value="<?= $net_weight ?>" class="form-control int-only<?=$net_weight_valid ?>" placeholder="Введите массу нетто"<?=$net_weight_disabled ?> />
-                            <div class="invalid-feedback"><?= empty($invalid_message) ? "Масса нетто обязательно" : $invalid_message ?></div>
-                        </div>
-                        <div class="col-6 form-group">
-                            <?php
                             $length_disabled = "";
                             if(!IsInRole(array('dev'))) {
                                 $length_disabled = " disabled='disabled'";
@@ -404,6 +393,17 @@ $utilized_status_id = 2;
                             <label for="length">Длина, м</label>
                             <input type="text" id="length" name="length" value="<?= $length ?>" class="form-control int-only<?=$length_valid ?>" placeholder="Введите длину"<?=$length_disabled ?>" />
                             <div class="invalid-feedback">Длина обязательно</div>
+                        </div>
+                        <div class="col-6 form-group">
+                            <?php
+                            $net_weight_disabled = '';
+                            if(!IsInRole(array('dev'))) {
+                                $net_weight_disabled = " disabled='disabled'";
+                            }
+                            ?>
+                            <label for="net_weight">Масса нетто, кг</label>
+                            <input type="text" id="net_weight" name="net_weight" value="<?= $net_weight ?>" class="form-control int-only<?=$net_weight_valid ?>" placeholder="Введите массу нетто"<?=$net_weight_disabled ?> />
+                            <div class="invalid-feedback"><?= empty($invalid_message) ? "Масса нетто обязательно" : $invalid_message ?></div>
                         </div>
                     </div>
                     <div class="row">
