@@ -469,7 +469,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         form_row += "<input type='hidden' id='ordinal_roll" + i + "' name='ordinal_roll" + i + "' value='" + i + "' />";
                         form_row += "<div class='row'>";
                         form_row += "<div class='col-6 form-group'>";
-                        form_row += "<label for='weight_roll" + i + "'>Масса Нетто</label>";
+                        form_row += "<label for='weight_roll" + i + "'>Масса нетто, кг</label>";
                         form_row += "<input type='text' id='weight_roll" + i + "' name='weight_roll" + i + "' class='form-control int-only' placeholder='Масса Нетто рулона' required='required' />";
                         form_row += "</div>";
                         form_row += "<div class='col-6 form-group'>";
