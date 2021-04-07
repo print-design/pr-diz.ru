@@ -81,14 +81,16 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         $ud_ves = $row[0];
     }
     
-    $weight_result = floatval($ud_ves) * floatval($length) * floatval($width) / 1000.0 / 1000.0;
-    $weight_result_high = $weight_result + ($weight_result * 15.0 / 100.0);
-    $weight_result_low = $weight_result - ($weight_result * 15.0 / 100.0);
-    
-    if($net_weight < $weight_result_low || $net_weight > $weight_result_high) {
-        $net_weight_valid = ISINVALID;
-        $form_valid = false;
-        $invalid_message = "Неверное значение";
+    if(empty($length_valid) && empty($net_weight_valid)) {
+        $weight_result = floatval($ud_ves) * floatval($length) * floatval($width) / 1000.0 / 1000.0;
+        $weight_result_high = $weight_result + ($weight_result * 15.0 / 100.0);
+        $weight_result_low = $weight_result - ($weight_result * 15.0 / 100.0);
+        
+        if($net_weight < $weight_result_low || $net_weight > $weight_result_high) {
+            $net_weight_valid = ISINVALID;
+            $form_valid = false;
+            $invalid_message = "Неверное значение";
+        }
     }
     
     $rolls_number = filter_input(INPUT_POST, 'rolls_number');
@@ -101,6 +103,44 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
     if(empty($cell)) {
         $cell_valid = ISINVALID;
         $form_valid = false;
+    }
+    
+    // Валидация роликов
+    $rolls_valid_data = array();
+    $roll_number = 1;
+    while (filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") !== null) {
+        $roll_valid_data = array();
+        $roll_valid_data['length_valid'] = '';
+        $roll_valid_data['length_message'] = 'Длина обязательно';
+        $roll_valid_data['weight_valid'] = '';
+        $roll_valid_data['weight_message'] = 'Масса нетто обязательно';
+        
+        $roll_length = filter_input(INPUT_POST, "length_roll$roll_number");
+        if(empty($roll_length)) {
+            $roll_valid_data['length_valid'] = ISINVALID;
+            $form_valid = false;
+        }
+        
+        $roll_weight = filter_input(INPUT_POST, "weight_roll$roll_number");
+        if(empty($roll_weight)) {
+            $roll_valid_data['weight_valid'] = ISINVALID;
+            $form_valid = false;
+        }
+        
+        if(empty($roll_valid_data['length_valid']) && empty($roll_valid_data['weight_valid'])) {
+            $roll_weight_result = floatval($ud_ves) * floatval($roll_length) * floatval($width) / 1000.0 / 1000.0;
+            $roll_weight_result_high = $roll_weight_result + ($roll_weight_result * 15.0 / 100.0);
+            $roll_weight_result_low = $roll_weight_result - ($roll_weight_result * 15.0 / 100.0);
+            
+            if($roll_weight < $roll_weight_result_low || $roll_weight > $roll_weight_result_high) {
+                $roll_valid_data['weight_valid'] = ISINVALID;
+                $form_valid = false;
+                $roll_valid_data['weight_message'] = "Неверное значение";
+            }
+        }
+
+        $rolls_valid_data[$roll_number] = $roll_valid_data;
+        $roll_number++;
     }
     
     // Выбор менеджера пока не обязательный.
@@ -309,18 +349,20 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     <div id="rolls_info">
                         <?php
                         $roll_number = 1;
-                        while (filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") != null):
+                        while (filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") !== null && key_exists($roll_number, $rolls_valid_data)):
                         ?>
                         <div class='mt-1'><?=$roll_number ?> рулон</div>
                         <input type='hidden' id='ordinal_roll<?=$roll_number ?>' name='ordinal_roll<?=$roll_number ?>' value='<?=$roll_number ?>' />
                         <div class='row'>
                             <div class='col-6 form-group'>
                                 <label for='length_roll<?=$roll_number ?>'>Длина</label>
-                                <input type='text' id='length_roll<?=$roll_number ?>' name='length_roll<?=$roll_number ?>' class='form-control' placeholder='Длина рулона' value="<?= filter_input(INPUT_POST, "length_roll$roll_number") ?>" required='required' />
+                                <input type='text' id='length_roll<?=$roll_number ?>' name='length_roll<?=$roll_number ?>' class='form-control int-only<?=$rolls_valid_data[$roll_number]['length_valid'] ?>' placeholder='Длина рулона' value="<?= filter_input(INPUT_POST, "length_roll$roll_number") ?>" required='required' />
+                                <div class="invalid-feedback"><?=$rolls_valid_data[$roll_number]['length_message'] ?></div>
                             </div>
                             <div class='col-6 form-group'>
                                 <label for='weight_roll<?=$roll_number ?>'>Масса нетто, кг</label>
-                                <input type='text' id='weight_roll<?=$roll_number ?>' name='weight_roll<?=$roll_number ?>' class='form-control' placeholder='Масса Нетто рулона' value="<?= filter_input(INPUT_POST, "weight_roll$roll_number") ?>" required='required' />
+                                <input type='text' id='weight_roll<?=$roll_number ?>' name='weight_roll<?=$roll_number ?>' class='form-control int-only<?=$rolls_valid_data[$roll_number]['weight_valid'] ?>' placeholder='Масса нетто рулона' value="<?= filter_input(INPUT_POST, "weight_roll$roll_number") ?>" required='required' />
+                                <div class="invalid-feedback"><?=$rolls_valid_data[$roll_number]['weight_message'] ?></div>
                             </div>
                         </div>
                         <?php
