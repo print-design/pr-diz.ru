@@ -109,7 +109,6 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
     // Валидация роликов
     $rolls_valid_data = array();
     $roll_number = 1;
-    $rolls_length = 0;
     $rolls_weight = 0;
     while (filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") !== null) {
         $roll_valid_data = array();
@@ -142,24 +141,12 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
             }
         }
         
-        // Прибавляем длину ролика к сумме длин роликов
-        $rolls_length += intval($roll_length);
-        
         // Прибавляем вес ролика к сумме весов роликов
         $rolls_weight += intval($roll_weight);
 
         // Добавляем данные о валидации ролика в массив данных о валидации роликов
         $rolls_valid_data[$roll_number] = $roll_valid_data;
         $roll_number++;
-    }
-    
-    // Длина паллета должна быть равна сумме длин роликов
-    $rolls_length_high = $rolls_length + ($rolls_length * 5.0 / 100.0);
-    $rolls_length_low = $rolls_length - ($rolls_length * 5.0 / 100.0);
-    if($length > $rolls_length_high || $length < $rolls_length_low) {
-        $length_valid = ISINVALID;
-        $form_valid = false;
-        $length_message = "Не равно сумме роликов";
     }
     
     // Масса паллета должна быть равна сумме масс роликов
