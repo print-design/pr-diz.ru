@@ -22,7 +22,8 @@ $rolls_number_valid = '';
 $cell_valid = '';
 $status_id_valid = '';
 
-$invalid_message = '';
+$length_message = '';
+$net_weight_message = '';
 
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
@@ -89,7 +90,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         if($net_weight < $weight_result_low || $net_weight > $weight_result_high) {
             $net_weight_valid = ISINVALID;
             $form_valid = false;
-            $invalid_message = "Неверное значение";
+            $net_weight_message = "Неверное значение";
         }
     }
     
@@ -108,6 +109,8 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
     // Валидация роликов
     $rolls_valid_data = array();
     $roll_number = 1;
+    $rolls_length = 0;
+    $rolls_weight = 0;
     while (filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") !== null) {
         $roll_valid_data = array();
         $roll_valid_data['length_valid'] = '';
@@ -138,9 +141,34 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                 $roll_valid_data['weight_message'] = "Неверное значение";
             }
         }
+        
+        // Прибавляем длину ролика к сумме длин роликов
+        $rolls_length += intval($roll_length);
+        
+        // Прибавляем вес ролика к сумме весов роликов
+        $rolls_weight += intval($roll_weight);
 
+        // Добавляем данные о валидации ролика в массив данных о валидации роликов
         $rolls_valid_data[$roll_number] = $roll_valid_data;
         $roll_number++;
+    }
+    
+    // Длина паллета должна быть равна сумме длин роликов
+    $rolls_length_high = $rolls_length + ($rolls_length * 5.0 / 100.0);
+    $rolls_length_low = $rolls_length - ($rolls_length * 5.0 / 100.0);
+    if($length > $rolls_length_high || $length < $rolls_length_low) {
+        $length_valid = ISINVALID;
+        $form_valid = false;
+        $length_message = "Не равно сумме роликов";
+    }
+    
+    // Масса паллета должна быть равна сумме масс роликов
+    $rolls_weight_high = $rolls_weight + ($rolls_weight * 5.0 / 100.0);
+    $rolls_weight_low = $rolls_weight - ($rolls_weight * 5.0 / 100.0);
+    if($net_weight > $rolls_weight_high || $net_weight < $rolls_weight_low) {
+        $net_weight_valid = ISINVALID;
+        $form_valid = false;
+        $net_weight_message = "Не равно сумме роликов";
     }
     
     // Выбор менеджера пока не обязательный.
@@ -317,12 +345,12 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         <div class="col-6 form-group">
                             <label for="length">Длина, м</label>
                             <input type="text" id="length" name="length" value="<?= filter_input(INPUT_POST, 'length') ?>" class="form-control int-only<?=$length_valid ?>" placeholder="Введите длину" required="required" />
-                            <div class="invalid-feedback">Длина обязательно</div>
+                            <div class="invalid-feedback"><?= empty($length_message) ? "Длина обязательно" : $length_message ?></div>
                         </div>
                         <div class="col-6 form-group">
                             <label for="net_weight">Масса нетто, кг</label>
                             <input type="text" id="net_weight" name="net_weight" value="<?= filter_input(INPUT_POST, 'net_weight') ?>" class="form-control int-only<?=$net_weight_valid ?>" placeholder="Введите массу нетто" required="required" />
-                            <div class="invalid-feedback"><?= empty($invalid_message) ? "Масса нетто обязательно" : $invalid_message ?></div>
+                            <div class="invalid-feedback"><?= empty($net_weight_message) ? "Масса нетто обязательно" : $net_weight_message ?></div>
                         </div>
                     </div>
                     <div class="row">
@@ -355,7 +383,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         <input type='hidden' id='ordinal_roll<?=$roll_number ?>' name='ordinal_roll<?=$roll_number ?>' value='<?=$roll_number ?>' />
                         <div class='row'>
                             <div class='col-6 form-group'>
-                                <label for='length_roll<?=$roll_number ?>'>Длина</label>
+                                <label for='length_roll<?=$roll_number ?>'>Длина, м</label>
                                 <input type='text' id='length_roll<?=$roll_number ?>' name='length_roll<?=$roll_number ?>' class='form-control int-only<?=$rolls_valid_data[$roll_number]['length_valid'] ?>' placeholder='Длина рулона' value="<?= filter_input(INPUT_POST, "length_roll$roll_number") ?>" required='required' />
                                 <div class="invalid-feedback"><?=$rolls_valid_data[$roll_number]['length_message'] ?></div>
                             </div>
@@ -511,7 +539,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         form_row += "<input type='hidden' id='ordinal_roll" + i + "' name='ordinal_roll" + i + "' value='" + i + "' />";
                         form_row += "<div class='row'>";
                         form_row += "<div class='col-6 form-group'>";
-                        form_row += "<label for='length_roll" + i + "'>Длина</label>";
+                        form_row += "<label for='length_roll" + i + "'>Длина, м</label>";
                         form_row += "<input type='text' id='length_roll" + i + "' name='length_roll" + i + "' class='form-control int-only' placeholder='Длина рулона' required='required' />";
                         form_row += "</div>";
                         form_row += "<div class='col-6 form-group'>";
