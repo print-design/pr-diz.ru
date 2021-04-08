@@ -97,7 +97,10 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     
     // Проверяем правильность веса, для всех ролей
     // Определяем имеющуюся длину и ширину
-    $sql = "select film_brand_id, thickness, length, width, net_weight from pallet where id=$id";
+    $sql = "select p.film_brand_id, p.thickness, p.width, "
+            . "(select sum(length) from pallet_roll where pallet_id = p.id) length, "
+            . "(select sum(weight) from pallet_roll where pallet_id = p.id) net_weight "
+            . "from pallet p where p.id=$id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $old_film_brand_id = $row['film_brand_id'];
@@ -238,8 +241,11 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
 }
 
 // Получение данных
-$sql = "select p.date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.id_from_supplier, p.film_brand_id, p.width, p.thickness, p.length, "
-        . "p.net_weight, p.rolls_number, p.cell, "
+$sql = "select p.date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.id_from_supplier, p.film_brand_id, p.width, p.thickness, "
+        . "(select sum(length) from pallet_roll where pallet_id = p.id) length, "
+        . "(select sum(weight) from pallet_roll where pallet_id = p.id) net_weight, "
+        . "(select count(id) from pallet_roll where pallet_id = p.id) rolls_number, "
+        . "p.cell, "
         . "(select psh.status_id from pallet_status_history psh where psh.pallet_id = p.id order by psh.id desc limit 0, 1) status_id, "
         . "p.comment "
         . "from pallet p inner join user u on p.storekeeper_id = u.id "

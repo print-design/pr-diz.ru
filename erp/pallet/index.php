@@ -20,7 +20,7 @@ if(null !== filter_input(INPUT_POST, 'delete-pallet-submit')) {
 $utilized_status_id = 2;
 
 // Получение общей массы паллетов
-$row = (new Fetcher("select sum(p.net_weight) total_weight from pallet p left join (select * from pallet_status_history where id in (select max(id) from pallet_status_history group by pallet_id)) psh on psh.pallet_id = p.id where psh.status_id is null or psh.status_id <> $utilized_status_id"))->Fetch();
+$row = (new Fetcher("select sum(pr.weight) total_weight from pallet p inner join pallet_roll pr on pr.pallet_id = p.id left join (select * from pallet_status_history where id in (select max(id) from pallet_status_history group by pallet_id)) psh on psh.pallet_id = p.id where psh.status_id is null or psh.status_id <> $utilized_status_id"))->Fetch();
 $total_weight = $row['total_weight'];
 
 // Получение всех статусов
@@ -160,7 +160,9 @@ while ($row = $fetcher->Fetch()) {
                         $pager_total_count = $row[0];
                     }
                     
-                    $sql = "select p.id, p.date, fb.name film_brand, p.width, p.thickness, p.net_weight, p.length, "
+                    $sql = "select p.id, p.date, fb.name film_brand, p.width, p.thickness, "
+                            . "(select sum(weight) from pallet_roll where pallet_id = p.id) net_weight, "
+                            . "(select sum(length) from pallet_roll where pallet_id = p.id) length, "
                             . "s.name supplier, p.id_from_supplier, (select count(id) from pallet_roll where pallet_id = p.id) rolls_number, p.cell, u.first_name, u.last_name, "
                             . "psh.status_id status_id, p.comment, "
                             . "(select weight from film_brand_variation where film_brand_id=fb.id and thickness=p.thickness limit 1) density "

@@ -9,8 +9,11 @@ if(empty($id)) {
 
 // Получение данных
 $sql = "select p.date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, s.name supplier, p.id_from_supplier, "
-        . "p.film_brand_id, fb.name film_brand, p.width, p.thickness, p.length, "
-        . "p.net_weight, p.rolls_number, p.cell, "
+        . "p.film_brand_id, fb.name film_brand, p.width, p.thickness, "
+        . "(select sum(length) from pallet_roll where pallet_id = p.id) length, "
+        . "(select sum(weight) from pallet_roll where pallet_id = p.id) net_weight, "
+        . "(select count(id) from pallet_roll where pallet_id = p.id) rolls_number, "
+        . "p.cell, "
         . "(select ps.name from pallet_status_history psh left join pallet_status ps on psh.status_id = ps.id where psh.pallet_id = p.id order by psh.id desc limit 0, 1) status, "
         . "p.comment "
         . "from pallet p "
