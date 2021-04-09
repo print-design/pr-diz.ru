@@ -7,12 +7,24 @@ if(empty($id)) {
     header('Location: '.APPLICATION.'/pallet/');
 }
 
+// СТАТУС "СВОБОДНЫЙ" ДЛЯ ПАЛЛЕТА
+$free_status_id = 1;
+
+// СТАТУС "СРАБОТАННЫЙ" ДЛЯ ПАЛЛЕТА
+$utilized_status_id = 2;
+
+// СТАТУС "СВОБОДНЫЙ" ДЛЯ РУЛОНА
+$free_roll_status_id = 1;
+
+// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
+$utilized_roll_status_id = 2;
+
 // Получение данных
 $sql = "select p.date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, s.name supplier, p.id_from_supplier, "
         . "p.film_brand_id, fb.name film_brand, p.width, p.thickness, "
-        . "(select sum(length) from pallet_roll where pallet_id = p.id) length, "
-        . "(select sum(weight) from pallet_roll where pallet_id = p.id) net_weight, "
-        . "(select count(id) from pallet_roll where pallet_id = p.id) rolls_number, "
+        . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) length, "
+        . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) net_weight, "
+        . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) rolls_number, "
         . "p.cell, "
         . "(select ps.name from pallet_status_history psh left join pallet_status ps on psh.status_id = ps.id where psh.pallet_id = p.id order by psh.id desc limit 0, 1) status, "
         . "p.comment "
@@ -170,13 +182,18 @@ $sticker_top = 0;
         </div>
         
         <?php
-        $sql = "select id pallet_roll_id, weight, length, ordinal from pallet_roll where pallet_id = ". filter_input(INPUT_GET, 'id');
+        $sql = "select pr.id pallet_roll_id, pr.weight, pr.length, pr.ordinal, ifnull(prsh.status_id, $free_roll_status_id) status_id, "
+                . "(select name from roll_status where id = ifnull(prsh.status_id, $free_roll_status_id)) status "
+                . "from pallet_roll pr left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+                . "where pr.pallet_id = ". filter_input(INPUT_GET, 'id')." and (prsh.status_id is null or prsh.status_id <> $utilized_roll_status_id)";
         $pallet_rolls = (new Grabber($sql))->result;
         foreach ($pallet_rolls as $pallet_roll):
         $pallet_roll_id = $pallet_roll['pallet_roll_id'];
         $weight = $pallet_roll['weight'];
         $length = $pallet_roll['length'];
         $ordinal = $pallet_roll['ordinal'];
+        $status_id = $pallet_roll['status_id'];
+        $status = $pallet_roll['status'];
         
         switch ($ordinal) {
             case 1:
