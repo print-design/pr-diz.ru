@@ -15,14 +15,14 @@ if(!empty($pallet_id)) {
     }
 
     // Получение объекта
-    $sql = "select p.width, p.thickness, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, psh.status_id status_id "
+    $sql = "select p.width, p.thickness, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, IFNULL(prsh.status_id, 1) status_id "
             . "from pallet_roll pr "
             . "inner join pallet p on pr.pallet_id = p.id "
-            . "left join (select * from pallet_status_history where id in (select max(id) from pallet_status_history group by pallet_id)) psh on psh.pallet_id = p.id "
+            . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
             . "where pr.pallet_id = $pallet_id order by ordinal";
     $fetcher = new Fetcher($sql);
     while ($row = $fetcher->Fetch()):
-        
+
     $status = '';
     if(!empty($statuses[$row['status_id']]['name'])) {
         $status = $statuses[$row['status_id']]['name'];
