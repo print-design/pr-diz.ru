@@ -24,10 +24,10 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         
         $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values ($id, $status_id, $user_id)";
         $error_message = (new Executer($sql))->error;
-        
-        if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/pallet/');
-        }
+    }
+    
+    if(empty($error_message)) {
+        header('Location: '.APPLICATION.'/pallet/');
     }
 }
 
