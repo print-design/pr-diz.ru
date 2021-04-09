@@ -1,6 +1,12 @@
 <?php
 include '../include/topscripts.php';
 
+// СТАТУС "СВОБОДНЫЙ" ДЛЯ РУЛОНА
+$free_status_id = 1;
+
+// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
+$utilized_status_id = 2;
+
 $pallet_id = filter_input(INPUT_GET, 'id');
 if(!empty($pallet_id)) {
     // Получение всех статусов
@@ -15,7 +21,7 @@ if(!empty($pallet_id)) {
     }
 
     // Получение объекта
-    $sql = "select p.width, p.thickness, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, IFNULL(prsh.status_id, 1) status_id "
+    $sql = "select p.width, p.thickness, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, IFNULL(prsh.status_id, $free_status_id) status_id "
             . "from pallet_roll pr "
             . "inner join pallet p on pr.pallet_id = p.id "
             . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "

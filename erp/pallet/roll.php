@@ -1,6 +1,12 @@
 <?php
 include '../include/topscripts.php';
 
+// СТАТУС "СВОБОДНЫЙ" ДЛЯ РУЛОНА
+$free_status_id = 1;
+
+// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
+$utilized_status_id = 2;
+
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
@@ -34,7 +40,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
 // Получение данных
 $sql = "select p.date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.id_from_supplier, p.film_brand_id, p.width, p.thickness, pr.length, "
         . "pr.weight, pr.pallet_id, pr.ordinal, p.cell, "
-        . "(select ifnull(prsh.status_id, 1) from pallet_roll_status_history prsh where prsh.pallet_roll_id = pr.id order by prsh.id desc limit 0, 1) status_id, "
+        . "(select ifnull(prsh.status_id, $free_status_id) from pallet_roll_status_history prsh where prsh.pallet_roll_id = pr.id order by prsh.id desc limit 0, 1) status_id, "
         . "p.comment "
         . "from pallet p "
         . "inner join user u on p.storekeeper_id = u.id "

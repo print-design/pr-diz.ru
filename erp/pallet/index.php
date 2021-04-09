@@ -16,11 +16,21 @@ if(null !== filter_input(INPUT_POST, 'delete-pallet-submit')) {
     }
 }
 
+// СТАТУС "СВОБОДНЫЙ" ДЛЯ ПАЛЛЕТА
+$free_status_id = 1;
+
 // СТАТУС "СРАБОТАННЫЙ" ДЛЯ ПАЛЛЕТА
 $utilized_status_id = 2;
 
+// СТАТУС "СВОБОДНЫЙ" ДЛЯ РУЛОНА
+$free_roll_status_id = 1;
+
+// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
+$utilized_roll_status_id = 2;
+
 // Получение общей массы паллетов
-$row = (new Fetcher("select sum(pr.weight) total_weight from pallet p inner join pallet_roll pr on pr.pallet_id = p.id left join (select * from pallet_status_history where id in (select max(id) from pallet_status_history group by pallet_id)) psh on psh.pallet_id = p.id where psh.status_id is null or psh.status_id <> $utilized_status_id"))->Fetch();
+$sql = "select sum(pr.weight) total_weight from pallet_roll pr left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id where prsh.status_id is null or prsh.status_id <> $utilized_status_id";
+$row = (new Fetcher($sql))->Fetch();
 $total_weight = $row['total_weight'];
 
 // Получение всех статусов
@@ -120,7 +130,8 @@ while ($row = $fetcher->Fetch()) {
                 </thead>
                 <tbody>
                     <?php
-                    $where = "(psh.status_id is null or psh.status_id <> $utilized_status_id)";
+                    $where = "p.id in (select pr1.pallet_id from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) "
+                            . "and (psh.status_id is null or psh.status_id <> $utilized_status_id)";
                     
                     $film_brand_name = filter_input(INPUT_GET, 'film_brand_name');
                     if(!empty($film_brand_name)) {
@@ -161,9 +172,11 @@ while ($row = $fetcher->Fetch()) {
                     }
                     
                     $sql = "select p.id, p.date, fb.name film_brand, p.width, p.thickness, "
-                            . "(select sum(weight) from pallet_roll where pallet_id = p.id) net_weight, "
-                            . "(select sum(length) from pallet_roll where pallet_id = p.id) length, "
-                            . "s.name supplier, p.id_from_supplier, (select count(id) from pallet_roll where pallet_id = p.id) rolls_number, p.cell, u.first_name, u.last_name, "
+                            . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) net_weight, "
+                            . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) length, "
+                            . "s.name supplier, p.id_from_supplier, "
+                            . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) rolls_number, "
+                            . "p.cell, u.first_name, u.last_name, "
                             . "psh.status_id status_id, p.comment, "
                             . "(select weight from film_brand_variation where film_brand_id=fb.id and thickness=p.thickness limit 1) density "
                             . "from pallet p "
