@@ -187,6 +187,8 @@ $sticker_top = 0;
                 . "from pallet_roll pr left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
                 . "where pr.pallet_id = ". filter_input(INPUT_GET, 'id')." and (prsh.status_id is null or prsh.status_id <> $utilized_roll_status_id)";
         $pallet_rolls = (new Grabber($sql))->result;
+        $current_roll = 0;
+        
         foreach ($pallet_rolls as $pallet_roll):
         $pallet_roll_id = $pallet_roll['pallet_roll_id'];
         $weight = $pallet_roll['weight'];
@@ -195,7 +197,9 @@ $sticker_top = 0;
         $status_id = $pallet_roll['status_id'];
         $status = $pallet_roll['status'];
         
-        switch ($ordinal) {
+        $current_roll++;
+        
+        switch ($current_roll) {
             case 1:
                 $sticker_top = 3100;
                 break;
