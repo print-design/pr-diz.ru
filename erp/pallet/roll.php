@@ -12,10 +12,29 @@ if(empty($id)) {
     header('Location: '.APPLICATION.'/pallet/');
 }
 
+// Обработка отправки формы
+if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
+    // Получаем имеющийся статус и проверяем, совпадает ли он с новым статусом
+    $sql = "select status_id from pallet_roll_status_history where pallet_roll_id=$id order by id desc limit 1";
+    $row = (new Fetcher($sql))->Fetch();
+    $status_id = filter_input(INPUT_POST, 'status_id');
+    
+    if((!$row || $row['status_id'] != $status_id) && !empty($status_id)) {
+        $user_id = GetUserId();
+        
+        $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values ($id, $status_id, $user_id)";
+        $error_message = (new Executer($sql))->error;
+        
+        if(empty($error_message)) {
+            header('Location: '.APPLICATION.'/pallet/');
+        }
+    }
+}
+
 // Получение данных
 $sql = "select p.date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.id_from_supplier, p.film_brand_id, p.width, p.thickness, pr.length, "
         . "pr.weight, pr.pallet_id, pr.ordinal, p.cell, "
-        . "(select psh.status_id from pallet_status_history psh where psh.pallet_id = p.id order by psh.id desc limit 0, 1) status_id, "
+        . "(select ifnull(prsh.status_id, 1) from pallet_roll_status_history prsh where prsh.pallet_roll_id = pr.id order by prsh.id desc limit 0, 1) status_id, "
         . "p.comment "
         . "from pallet p "
         . "inner join user u on p.storekeeper_id = u.id "
@@ -212,7 +231,10 @@ if(null === $comment) $comment = $row['comment'];
                     </div>
                     <div class="form-group">
                         <?php
-                        $status_id_disabled = " disabled='disabled'";
+                        $status_id_disabled = "";
+                        if(!IsInRole(array('technologist', 'storekeeper'))) {
+                            $status_id_disabled = " disabled='disabled'";
+                        }
                         ?>
                         <label for="status_id">Статус</label>
                         <select id="status_id" name="status_id" class="form-control" required="required"<?=$status_id_disabled ?>>
