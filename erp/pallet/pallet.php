@@ -79,7 +79,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
     }
     
-    if(IsInRole(array('technologist', 'storekeeper'))) {
+    if(IsInRole(array('dev'))) {
         $length = filter_input(INPUT_POST, 'length');
         if(empty($length)) {
             $length_valid = ISINVALID;
@@ -87,7 +87,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
     }
     
-    if(IsInRole(array('technologist', 'storekeeper'))) {
+    if(IsInRole(array('dev'))) {
         $net_weight = filter_input(INPUT_POST, 'net_weight');
         if(empty($net_weight)) {
             $net_weight_valid = ISINVALID;
@@ -143,7 +143,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         $invalid_message = "Неверное значение";
     }
     
-    if(IsInRole(array('technologist', 'storekeeper'))) {
+    if(IsInRole(array('dev'))) {
         $rolls_number = filter_input(INPUT_POST, 'rolls_number');
         if(empty($rolls_number)) {
             $rolls_number_valid = ISINVALID;
@@ -159,13 +159,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
     }
     
-    // Выбор менеджера пока не обязательный.
-    $manager_id = filter_input(INPUT_POST, 'manager_id');
-    if(empty($manager_id)) {
-        $manager_id = "NULL";
-    }
-    
-    if(IsInRole(array('technologist', 'storekeeper'))) {
+    if(IsInRole(array('dev'))) {
         $status_id = filter_input(INPUT_POST, 'status_id');
         if(empty($status_id)) {
             if(empty($cell)) {
@@ -180,18 +174,6 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id');
     
     if($form_valid) {
-        // Получаем имеющийся статус данные и проверяем, совпадают ли он с новым статусом
-        $sql = "select status_id from pallet_status_history where pallet_id=$id order by id desc limit 1";
-        $row = (new Fetcher($sql))->Fetch();
-        $status_id = filter_input(INPUT_POST, 'status_id');
-        
-        if((!$row || $row['status_id'] != $status_id) && !empty($status_id)) {
-            $user_id = GetUserId();
-            
-            $sql = "insert into pallet_status_history (pallet_id, status_id, user_id) values ($id, $status_id, $user_id)";
-            $error_message = (new Executer($sql))->error;
-        }
-        
         if(empty($error_message)) {
             $sql = "update pallet set ";
             if(IsInRole(array('dev'))) {
@@ -214,15 +196,15 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
                 $sql .= "thickness = $thickness, ";
             }
             
-            if(IsInRole(array('technologist', 'storekeeper'))) {
+            if(IsInRole(array('dev'))) {
                 $sql .= "length = $length, ";
             }
             
-            if(IsInRole(array('technologist', 'storekeeper'))) {
+            if(IsInRole(array('dev'))) {
                 $sql .= "net_weight = $net_weight, ";
             }
             
-            if(IsInRole(array('technologist', 'storekeeper'))) {
+            if(IsInRole(array('dev'))) {
                 $sql .= "rolls_number = $rolls_number, ";
             }
             
@@ -407,10 +389,7 @@ $utilized_status_id = 2;
                     <div class="row">
                         <div class="col-6 form-group">
                             <?php
-                            $length_disabled = "";
-                            if(!IsInRole(array('technologist', 'storekeeper'))) {
-                                $length_disabled = " disabled='disabled'";
-                            }
+                            $length_disabled = " disabled='disabled'";
                             ?>
                             <label for="length">Длина, м</label>
                             <input type="text" id="length" name="length" value="<?= $length ?>" class="form-control int-only<?=$length_valid ?>" placeholder="Введите длину"<?=$length_disabled ?>" />
@@ -418,10 +397,7 @@ $utilized_status_id = 2;
                         </div>
                         <div class="col-6 form-group">
                             <?php
-                            $net_weight_disabled = '';
-                            if(!IsInRole(array('technologist', 'storekeeper'))) {
-                                $net_weight_disabled = " disabled='disabled'";
-                            }
+                            $net_weight_disabled = " disabled='disabled'";
                             ?>
                             <label for="net_weight">Масса нетто, кг</label>
                             <input type="text" id="net_weight" name="net_weight" value="<?= $net_weight ?>" class="form-control int-only<?=$net_weight_valid ?>" placeholder="Введите массу нетто"<?=$net_weight_disabled ?> />
@@ -432,10 +408,7 @@ $utilized_status_id = 2;
                         <div class="col-6 form-group">
                             <label for="rolls_number">Количество рулонов</label>
                             <?php
-                            $rolls_number_disabled = '';
-                            if(!IsInRole(array('technologist', 'storekeeper'))) {
-                                $rolls_number_disabled = " disabled='disabled'";
-                            }
+                            $rolls_number_disabled = " disabled='disabled'";
                             ?>
                             <select id="rolls_number" name="rolls_number" class="form-control<?=$rolls_number_valid ?>"<?=$rolls_number_disabled ?>>
                                 <option value="">Выберите количество</option>
@@ -461,22 +434,9 @@ $utilized_status_id = 2;
                             <div class="invalid-feedback">Ячейка на складе обязательно</div>
                         </div>
                     </div>
-                    <div class="form-group d-none">
-                        <?php
-                        $manager_disabled = " disabled='disabled'";
-                        ?>
-                        <label for="manager_id">Менеджер</label>
-                        <select id="manager_id" name="manager_id" class="form-control"<?=$manager_disabled ?>>
-                            <option value="">Выберите менеджера</option>
-                        </select>
-                        <div class="invalid-feedback">Менеджер обязательно</div>
-                    </div>
                     <div class="form-group">
                         <?php
-                        $status_id_disabled = "";
-                        if(!IsInRole(array('technologist', 'storekeeper'))) {
-                            $status_id_disabled = " disabled='disabled'";
-                        }
+                        $status_id_disabled = " disabled='disabled'";
                         ?>
                         <label for="status_id">Статус</label>
                         <select id="status_id" name="status_id" class="form-control<?=$status_id_valid ?>" required="required"<?=$status_id_disabled ?>>
