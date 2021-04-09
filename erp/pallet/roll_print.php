@@ -1,6 +1,12 @@
 <?php
 include '../include/topscripts.php';
 
+// СТАТУС "СВОБОДНЫЙ" ДЛЯ РУЛОНА
+$free_status_id = 1;
+
+// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
+$utilized_status_id = 2;
+
 // Если не задано значение id, перенаправляем на список
 $id = filter_input(INPUT_GET, 'id');
 if(empty($id)) {
@@ -11,10 +17,11 @@ if(empty($id)) {
 $sql = "select p.date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, s.name supplier, p.id_from_supplier, "
         . "p.film_brand_id, fb.name film_brand, p.width, p.thickness, p.length, "
         . "p.net_weight, p.rolls_number, p.cell, "
-        . "(select ps.name from pallet_status_history psh left join pallet_status ps on psh.status_id = ps.id where psh.pallet_id = p.id order by psh.id desc limit 0, 1) status, "
+        . "(select name from roll_status where id = ifnull(prsh.status_id, $free_status_id)) status, "
         . "p.comment, pr.id pallet_roll_id, pr.pallet_id pallet_roll_pallet_id, pr.weight pallet_roll_weight, pr.length pallet_roll_length, pr.ordinal pallet_roll_ordinal "
         . "from pallet p "
         . "inner join pallet_roll pr on pr.pallet_id = p.id "
+        . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
         . "left join user u on p.storekeeper_id = u.id "
         . "left join supplier s on p.supplier_id = s.id "
         . "left join film_brand fb on p.film_brand_id = fb.id "
