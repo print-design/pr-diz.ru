@@ -21,13 +21,36 @@ if(!empty($pallet_id)) {
     }
 
     // Получение объекта
-    $sql = "select p.width, p.thickness, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, IFNULL(prsh.status_id, $free_status_id) status_id "
+    $sql = "select 0 utilized,  p.width, p.thickness, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, IFNULL(prsh.status_id, $free_status_id) status_id "
             . "from pallet_roll pr "
             . "inner join pallet p on pr.pallet_id = p.id "
             . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-            . "where pr.pallet_id = $pallet_id order by ordinal";
+            . "where pr.pallet_id = $pallet_id and (prsh.status_id is null or prsh.status_id <> $utilized_status_id) "
+            . "union "
+            . "select 1 utilized,  p.width, p.thickness, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, IFNULL(prsh.status_id, $free_status_id) status_id "
+            . "from pallet_roll pr "
+            . "inner join pallet p on pr.pallet_id = p.id "
+            . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+            . "where pr.pallet_id = $pallet_id and prsh.status_id = $utilized_status_id "
+            . "order by utilized, ordinal";
     $fetcher = new Fetcher($sql);
+    
+    $inutilized = true;
+    $utilized = false;
+    $utilized_style = '';
+    
     while ($row = $fetcher->Fetch()):
+        
+    if($row['utilized'] == 1) {
+        $utilized = true;
+    }
+    if($inutilized && $utilized) {
+        echo "<hr style='width: 100%; margin-top: 50px; 100px;' />";
+    }
+    if($utilized) {
+        $inutilized = false;
+        $utilized_style = " background-color: #EEEEEE;";
+    }
 
     $status = '';
     if(!empty($statuses[$row['status_id']]['name'])) {
@@ -41,7 +64,7 @@ if(!empty($pallet_id)) {
     }
     ?>
 <button type="button" class="close" data-dismiss='modal' style="position: absolute; right: 10px; top: 10px; z-index: 2000;"><img src="../images/icons/close_modal.png" /></button>
-<table style="margin-top: 50px; font-size: 14px;">
+<table style="margin-top: 50px; font-size: 14px;<?=$utilized_style ?>">
     <tbody>
     <tr>
         <td style="text-align: right; padding-bottom: 10px; width: 20%;"><input type="checkbox" /></td>
