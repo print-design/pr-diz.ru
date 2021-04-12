@@ -88,7 +88,6 @@ $utilized_status_roll_id = 2;
                         <th style="padding-left: 5px; padding-right: 5px; width: 10%;">Поставщик</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">ID от поставщика</th>
                         <th style="padding-left: 5px; padding-right: 5px;">ID пленки</th>
-                        <th style="padding-left: 5px; padding-right: 5px;">Кол-во рулонов</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Статус</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 15%;">Комментарий</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 2%;"></th>
@@ -96,158 +95,59 @@ $utilized_status_roll_id = 2;
                 </thead>
                 <tbody>
                     <?php
-                    $where_pallet = "psh.status_id = $utilized_status_pallet_id";
-                    $where_roll = "rsh.status_id = $utilized_status_roll_id";
-                    
-                    if(!empty(filter_input(INPUT_GET, 'chkPallet')) && filter_input(INPUT_GET, 'chkPallet') == 'on' && empty(filter_input(INPUT_GET, 'chkRoll'))) {
-                        if(!empty($where_roll)) {
-                            $where_roll .= " and ";
-                        }
-                        $where_roll .= "false";
-                    }
-                    
-                    if(!empty(filter_input(INPUT_GET, 'chkRoll')) && filter_input(INPUT_GET, 'chkRoll') == 'on' && empty(filter_input(INPUT_GET, 'chkPallet'))) {
-                        if(!empty($where_pallet)) {
-                            $where_pallet .= " and ";
-                        }
-                        $where_pallet .= "false";
-                    }
-                    
-                    $film_brand_id = filter_input(INPUT_GET, 'film_brand_id');
-                    if(!empty($film_brand_id)) {
-                        if(!empty($where_pallet)) {
-                            $where_pallet .= " and ";
-                        }
-                        $where_pallet .= "p.film_brand_id = $film_brand_id";
-                        
-                        if(!empty($where_roll)) {
-                            $where_roll .= " and ";
-                        }
-                        $where_roll .= "r.film_brand_id = $film_brand_id";
-                    }
-                    
-                    $thickness_from = filter_input(INPUT_GET, 'thickness_from');
-                    if(!empty($thickness_from)) {
-                        if(!empty($where_pallet)) {
-                            $where_pallet .= " and ";
-                        }
-                        $where_pallet .= "p.thickness >= $thickness_from";
-                        
-                        if(!empty($where_roll)) {
-                            $where_roll .= " and ";
-                        }
-                        $where_roll .= "r.thickness >= $thickness_from";
-                    }
-                    
-                    $thickness_to = filter_input(INPUT_GET, 'thickness_to');
-                    if(!empty($thickness_to)) {
-                        if(!empty($where_pallet)) {
-                            $where_pallet .= " and ";
-                        }
-                        $where_pallet .= "p.thickness <= $thickness_to";
-                        
-                        if(!empty($where_roll)) {
-                            $where_roll .= " and ";
-                        }
-                        $where_roll .= "r.thickness <= $thickness_to";
-                    }
-                    
-                    $width_from = filter_input(INPUT_GET, 'width_from');
-                    if(!empty($width_from)){
-                        if(!empty($where_pallet)) {
-                            $where_pallet .= " and ";
-                        }
-                        $where_pallet .= "p.width >= $width_from";
-                        
-                        if(!empty($where_roll)) {
-                            $where_roll .= " and ";
-                        }
-                        $where_roll .= "r.width >= $width_from";
-                    }
-                    
-                    $width_to = filter_input(INPUT_GET, 'width_to');
-                    if(!empty($width_to)) {
-                        if(!empty($where_pallet)) {
-                            $where_pallet .= " and ";
-                        }
-                        $where_pallet .= "p.width <= $width_to";
-                        
-                        if(!empty($where_roll)) {
-                            $where_roll .= " and ";
-                        }
-                        $where_roll .= "r.width <= $width_to";
-                    }
-                    
-                    $sql = "select distinct id, name, colour from pallet_status";
-                    $grabber = (new Grabber($sql));
-                    $error_message = $grabber->error;
-                    $pallet_statuses = $grabber->result;
-                    
                     $sql = "select distinct id, name, colour from roll_status";
                     $grabber = (new Grabber($sql));
                     $error_message = $grabber->error;
                     $roll_statuses = $grabber->result;
-                    
-                    $pallet_statuses1 = array();
-                    foreach ($pallet_statuses as $status) {
-                        $pallet_statuses1[$status['id']] = $status;
-                    }
                     
                     $roll_statuses1 = array();
                     foreach ($roll_statuses as $status) {
                         $roll_statuses1[$status['id']] = $status;
                     }
                     
-                    if(!empty($where_pallet)) {
-                        $where_pallet = " where $where_pallet";
-                    }
-                    
-                    if(!empty($where_roll)) {
-                        $where_roll = " where $where_roll";
-                    }
-                    
                     $sql = "select (select count(p.id) total_count "
-                            . "from pallet p "
+                            . "from pallet_roll pr "
+                            . "left join pallet p on pr.pallet_id = p.id "
                             . "left join film_brand fb on p.film_brand_id = fb.id "
                             . "left join supplier s on p.supplier_id = s.id "
-                            . "left join user u on p.storekeeper_id = u.id "
-                            . "left join (select * from pallet_status_history where id in (select max(id) from pallet_status_history group by pallet_id)) psh on psh.pallet_id = p.id "
-                            . "$where_pallet)"
+                            . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = p.id "
+                            . "where prsh.status_id = $utilized_status_roll_id)"
                             . "+"
                             . "(select count(r.id) total_count "
                             . "from roll r "
                             . "left join film_brand fb on r.film_brand_id = fb.id "
                             . "left join supplier s on r.supplier_id = s.id "
-                            . "left join user u on r.storekeeper_id = u.id "
                             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                            . "$where_roll)";
+                            . "where rsh.status_id = $utilized_status_roll_id)";
                     
                     $fetcher = new Fetcher($sql);
                     if($row = $fetcher->Fetch()) {
                         $pager_total_count = $row[0];
                     }
                     
-                    $sql = "select 'pallet' type, p.id id, psh.date timestamp, DATE_FORMAT(psh.date, '%d.%m.%Y') date, fb.name film_brand, p.width width, p.thickness thickness, p.net_weight net_weight, p.length length, "
-                            . "s.name supplier, p.id_from_supplier id_from_supplier, p.rolls_number rolls_number, u.first_name first_name, u.last_name last_name, "
-                            . "psh.status_id status_id, p.comment comment, "
+                    $sql = "select 'pallet_roll' type, pr.id id, pr.pallet_id pallet_id, pr.ordinal ordinal, prsh.date timestamp, DATE_FORMAT(prsh.date, '%d.%m.%Y') date, fb.name film_brand, "
+                            . "p.width width, p.thickness thickness, pr.weight net_weight, pr.length length, "
+                            . "s.name supplier, p.id_from_supplier id_from_supplier, "
+                            . "prsh.status_id status_id, p.comment comment, "
                             . "(select weight from film_brand_variation where film_brand_id=fb.id and thickness=p.thickness limit 1) density "
-                            . "from pallet p "
+                            . "from pallet_roll pr "
+                            . "inner join pallet p on pr.pallet_id = p.id "
                             . "left join film_brand fb on p.film_brand_id = fb.id "
                             . "left join supplier s on p.supplier_id = s.id "
-                            . "left join user u on p.storekeeper_id = u.id "
-                            . "left join (select * from pallet_status_history where id in (select max(id) from pallet_status_history group by pallet_id)) psh on psh.pallet_id = p.id "
-                            . "$where_pallet "
+                            . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+                            . "where prsh.status_id = $utilized_status_roll_id "
                             . "union "
-                            . "select 'roll' type, r.id id, rsh.date timestamp, DATE_FORMAT(rsh.date, '%d.%m.%Y') date, fb.name film_brand, r.width width, r.thickness thickness, r.net_weight net_weight, r.length length, "
-                            . "s.name supplier, r.id_from_supplier id_from_supplier, '-' rolls_number, u.first_name first_name, u.last_name last_name, "
+                            . "select 'roll' type, r.id id, 0 pallet_id, 0 ordinal, rsh.date timestamp, DATE_FORMAT(rsh.date, '%d.%m.%Y') date, fb.name film_brand, "
+                            . "r.width width, r.thickness thickness, r.net_weight net_weight, r.length length, "
+                            . "s.name supplier, r.id_from_supplier id_from_supplier, "
                             . "rsh.status_id status_id, r.comment comment, "
                             . "(select weight from film_brand_variation where film_brand_id=fb.id and thickness=r.thickness limit 1) density "
                             . "from roll r "
                             . "left join film_brand fb on r.film_brand_id = fb.id "
                             . "left join supplier s on r.supplier_id = s.id "
-                            . "left join user u on r.storekeeper_id = u.id "
                             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                            . "$where_roll order by timestamp desc limit $pager_skip, $pager_take";
+                            . "where rsh.status_id = $utilized_status_roll_id "
+                            . "order by timestamp desc limit $pager_skip, $pager_take";
                     
                     $fetcher = new Fetcher($sql);
                     
@@ -256,25 +156,13 @@ $utilized_status_roll_id = 2;
                     $status = '';
                     $colour_style = '';
                     
-                    if($row['type'] == 'pallet') {
-                        if(!empty($pallet_statuses1[$row['status_id']]['name'])) {
-                            $status = $pallet_statuses1[$row['status_id']]['name'];
-                        }
-                        
-                        if(!empty($pallet_statuses1[$row['status_id']]['colour'])) {
-                            $colour = $pallet_statuses1[$row['status_id']]['colour'];
-                            $colour_style = " color: $colour";
-                        }
+                    if(!empty($roll_statuses1[$row['status_id']]['name'])) {
+                        $status = $roll_statuses1[$row['status_id']]['name'];
                     }
-                    elseif ($row['type'] == 'roll') {
-                        if(!empty($roll_statuses1[$row['status_id']]['name'])) {
-                            $status = $roll_statuses1[$row['status_id']]['name'];
-                        }
-                        
-                        if(!empty($roll_statuses1[$row['status_id']]['colour'])) {
-                            $colour = $roll_statuses1[$row['status_id']]['colour'];
-                            $colour_style = " color: $colour";
-                        }
+                    
+                    if(!empty($roll_statuses1[$row['status_id']]['colour'])) {
+                        $colour = $roll_statuses1[$row['status_id']]['colour'];
+                        $colour_style = " color: $colour";
                     }
                     ?>
                     <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
@@ -288,14 +176,14 @@ $utilized_status_roll_id = 2;
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['length'] ?> м</td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['supplier'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['id_from_supplier'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?=($row['type'] == 'pallet' ? 'П' : 'Р').$row['id'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?=$row['rolls_number'] ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px;"><?=($row['type'] == 'pallet_roll' ? 'П'.$row['pallet_id'].'Р'.$row['ordinal'] : 'Р'.$row['id']) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; font-size: 10px; line-height: 14px; font-weight: 600;<?=$colour_style ?>"><?= mb_strtoupper($status) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; white-space: pre-wrap"><?= $row['comment'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; position: relative;">
                             <a class="black film_menu_trigger" href="javascript: void(0);"><i class="fas fa-ellipsis-h"></i></a>
                             <div class="film_menu">
-                                <div class="command"><a href="<?=APPLICATION ?>/<?=$row['type'] ?>/<?=$row['type'] ?>.php?id=<?=$row['id'] ?>">Просмотреть детали</a></div>
+                                <div class="command"><a href="<?=($row['type'] == 'pallet_roll' ? APPLICATION.'/roll/roll.php?id='.$row['id'] : APPLICATION.'/pallet/roll.php?id='.$row['id']) ?>">Просмотреть детали</a></div>
+<!--                                <div class="command"><a href="<?=APPLICATION ?>/<?=$row['type'] ?>/<?=$row['type'] ?>.php?id=<?=$row['id'] ?>">Просмотреть детали</a></div>-->
                                 <?php
                                 if(IsInRole(array('technologist', 'dev'))):
                                 ?>
