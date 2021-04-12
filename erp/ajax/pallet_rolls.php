@@ -45,11 +45,11 @@ if(!empty($pallet_id)) {
         $utilized = true;
     }
     if($inutilized && $utilized) {
-        echo "<hr style='width: 100%; margin-top: 50px; 100px;' />";
+        echo "<div style='margin-top: 150px;'></div>";
     }
     if($utilized) {
         $inutilized = false;
-        $utilized_style = " background-color: #EEEEEE;";
+        $utilized_style = " background-color: #EEEEEE; border-top: solid 4px #FFFFFF;";
     }
 
     $status = '';
@@ -60,11 +60,11 @@ if(!empty($pallet_id)) {
     $colour_style = '';
     if(!empty($statuses[$row['status_id']]['colour'])) {
         $colour = $statuses[$row['status_id']]['colour'];
-        $colour_style = " color: $colour;";
+        $colour_style = "color: $colour";
     }
     ?>
-<button type="button" class="close" data-dismiss='modal' style="position: absolute; right: 10px; top: 10px; z-index: 2000;"><img src="../images/icons/close_modal.png" /></button>
-<table style="margin-top: 50px; font-size: 14px;<?=$utilized_style ?>">
+<div style="padding: 10px;<?=$utilized_style ?>">
+<table style="margin-top: 25px; margin-bottom: 25px; font-size: 14px;">
     <tbody>
     <tr>
         <td style="text-align: right; padding-bottom: 10px; width: 20%;"><input type="checkbox" /></td>
@@ -96,7 +96,9 @@ if(!empty($pallet_id)) {
     </tr>
     </tbody>
 </table>
+</div>
     <?php
     endwhile;
 }
 ?>
+<button type="button" class="close" data-dismiss='modal' style="position: absolute; right: 10px; top: 10px; z-index: 2000;"><img src="../images/icons/close_modal.png" /></button>
