@@ -15,9 +15,9 @@ if(null !== filter_input(INPUT_POST, 'delete-film-submit')) {
     $sql = '';
     
     switch ($type) {
-        case 'pallet':
-            $sql_history = "delete from pallet_status_history where pallet_id = $id";
-            $sql = "delete from pallet where id = $id";
+        case 'pallet_roll':
+            $sql_history = "delete from pallet_roll_status_history where pallet_roll_id = $id";
+            $sql = "delete from pallet_roll where id = $id";
             break;
         case 'roll':
             $sql_history = "delete from roll_status_history where roll_id = $id";
@@ -29,6 +29,9 @@ if(null !== filter_input(INPUT_POST, 'delete-film-submit')) {
         $error_message = (new Executer($sql_history))->error;
         
         if(empty($error_message)) {
+            $error_message = (new Executer($sql))->error;
+            
+            $sql_empty_pallet = "delete from pallet where id not in (select distinct pallet_id from pallet_roll)";
             $error_message = (new Executer($sql))->error;
         }
     }
@@ -183,7 +186,6 @@ $utilized_status_roll_id = 2;
                             <a class="black film_menu_trigger" href="javascript: void(0);"><i class="fas fa-ellipsis-h"></i></a>
                             <div class="film_menu">
                                 <div class="command"><a href="<?=($row['type'] == 'pallet_roll' ? APPLICATION.'/pallet/roll.php?id='.$row['id'] : APPLICATION.'/roll/roll.php?id='.$row['id']) ?>">Просмотреть детали</a></div>
-<!--                                <div class="command"><a href="<?=APPLICATION ?>/<?=$row['type'] ?>/<?=$row['type'] ?>.php?id=<?=$row['id'] ?>">Просмотреть детали</a></div>-->
                                 <?php
                                 if(IsInRole(array('technologist', 'dev'))):
                                 ?>
