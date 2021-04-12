@@ -45,7 +45,7 @@ if(!empty($pallet_id)) {
         $utilized = true;
     }
     if($inutilized && $utilized) {
-        echo "<div style='margin-top: 150px;'></div>";
+        echo "<div style='margin-top: 50px; margin-bottom: 20px; font-weight: bold;'>СРАБОТАНО</div>";
     }
     if($utilized) {
         $inutilized = false;
