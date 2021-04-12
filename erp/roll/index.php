@@ -101,7 +101,7 @@ while ($row = $fetcher->Fetch()) {
             <table class="table" id="content_table">
                 <thead>
                     <tr style="border-top: 1px solid #dee2e6; border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
-                        <th class="d-none" style="padding-left: 5px; padding-right: 5px;"></th>
+                        <th style="padding-left: 5px; padding-right: 5px;"><input type="checkbox" class="form-check chkRolls" /></th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 8%;">Дата<br />создания</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 16%;">Марка пленки</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Толщина</th>
@@ -193,7 +193,7 @@ while ($row = $fetcher->Fetch()) {
                     }
                     ?>
                     <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
-                        <td class="d-none" style="padding-left: 5px; padding-right: 5px;"><input type="checkbox" id="chk<?=$row['id'] ?>" name="chk<?=$row['id'] ?>" data-id="<?=$row['id'] ?>" class="form-check chkRoll" /></td>
+                        <td style="padding-left: 5px; padding-right: 5px;"><input type="checkbox" id="chk<?=$row['id'] ?>" name="chk<?=$row['id'] ?>" data-id="<?=$row['id'] ?>" class="form-check chkRoll" /></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= date_create_from_format("Y-m-d", $row['date'])->format("d.m.Y") ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['film_brand'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['thickness'] ?> мкм</td>
@@ -396,21 +396,34 @@ while ($row = $fetcher->Fetch()) {
             });
             
             $('.chkRoll').change(function(){
+                $('.chkRolls').prop('checked', false);
+                
                 if($(this).is(':checked')) {
-                    $('.chkRoll').not($(this)).prop('checked', false);
+                    /*$('.chkRoll').not($(this)).prop('checked', false);
                     $('#btn-cut-request').removeClass('disabled');
                     $('#btn-cut-request').attr('href', 'cut_request.php?id=' + $(this).attr('data-id'));
                     $('#btn-print-request').removeClass('disabled');
                     $('#btn-print-request').attr('href', 'print_request.php?id=' + $(this).attr('data-id'));
-                    $('tr.selected').removeClass('selected');
+                    $('tr.selected').removeClass('selected');*/
                     $(this).closest('tr').addClass('selected');
                 }
                 else {
-                    $('#btn-cut-request').addClass('disabled');
+                    /*$('#btn-cut-request').addClass('disabled');
                     $('#btn-cut-request').removeAttr('href');
                     $('#btn-print-request').addClass('disabled');
-                    $('#btn-print-request').removeAttr('href');
+                    $('#btn-print-request').removeAttr('href');*/
                     $(this).closest('tr').removeClass('selected');
+                }
+            });
+            
+            $('.chkRolls').change(function(){
+                if($(this).is(':checked')) {
+                    $('.chkRoll').prop('checked', true);
+                    $('.chkRoll').closest('tr').addClass('selected');
+                }
+                else {
+                    $('.chkRoll').prop('checked', false);
+                    $('.chkRoll').closest('tr').removeClass('selected');
                 }
             });
             
