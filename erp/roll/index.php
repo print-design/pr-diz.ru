@@ -59,6 +59,9 @@ while ($row = $fetcher->Fetch()) {
                         <tr>
                             <td><h1 style="font-size: 32px; line-height: 48px; font-weight: 600;">Рулоны</h1></td>
                             <td style="padding-left: 20px; padding-right: 20px; font-weight: bold;">(<?= number_format($total_weight, 0, ',', ' ') ?> кг)</td>
+                            <td style="padding-left: 35px;">
+                                <button class="btn btn-outline-dark disabled" id="group-actions" style="padding-left: 40px; padding-right: 60px; padding-bottom: 8px; padding-top: 9px;"><i class="fa fa-list"></i>&nbsp;&nbsp;&nbsp;Групповые действия</button>
+                            </td>
                             <td class="d-none" style="padding-left: 35px; padding-right: 10px;">
                                 <a class="btn btn-dark disabled" id="btn-cut-request" style="padding-left: 40px; padding-right: 60px; padding-bottom: 8px; padding-top: 9px;">
                                     <div style="float: left; padding-top: 8px; padding-right: 30px; font-size: 12px;"><i class="fas fa-plus"></i></div>
@@ -396,6 +399,7 @@ while ($row = $fetcher->Fetch()) {
             });
             
             $('.chkRoll').change(function(){
+                //alert($('.chkRoll:checked').length);
                 $('.chkRolls').prop('checked', false);
                 
                 if($(this).is(':checked')) {
@@ -414,6 +418,13 @@ while ($row = $fetcher->Fetch()) {
                     $('#btn-print-request').removeAttr('href');*/
                     $(this).closest('tr').removeClass('selected');
                 }
+                
+                if($('.chkRoll:checked').length == 0) {
+                    $('#group-actions').addClass('disabled');
+                }
+                else {
+                    $('#group-actions').removeClass('disabled');
+                }
             });
             
             $('.chkRolls').change(function(){
@@ -424,6 +435,13 @@ while ($row = $fetcher->Fetch()) {
                 else {
                     $('.chkRoll').prop('checked', false);
                     $('.chkRoll').closest('tr').removeClass('selected');
+                }
+                
+                if($('.chkRoll:checked').length == 0) {
+                    $('#group-actions').addClass('disabled');
+                }
+                else {
+                    $('#group-actions').removeClass('disabled');
                 }
             });
             
