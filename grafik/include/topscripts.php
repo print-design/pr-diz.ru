@@ -213,13 +213,13 @@ if($login_submit !== null){
         
         foreach ($users_result as $row) {
             $user_id = $row['id'];
-            setcookie(USER_ID, $user_id, 0, "/");
+            setcookie(USER_ID, $user_id, time() + 60 * 60 * 24 * 100, "/");
             
             $username = $row['username'];
-            setcookie(USERNAME, $username, 0, "/");
+            setcookie(USERNAME, $username, time() + 60 * 60 * 24 * 100, "/");
             
             $fio = $row['fio'];
-            setcookie(FIO, $fio, 0, "/");
+            setcookie(FIO, $fio, time() + 60 * 60 * 24 * 100, "/");
         }
         
         if($user_id == '' || $username == '') {
@@ -234,7 +234,7 @@ if($login_submit !== null){
                 $roles[$role_i++] = $role_row['name'];
             }
             
-            setcookie(ROLES, serialize($roles), 0, '/');
+            setcookie(ROLES, serialize($roles), time() + 60 * 60 * 24 * 100, '/');
             header("Refresh:0");
         }
     }
@@ -242,10 +242,10 @@ if($login_submit !== null){
 
 $logout_submit = filter_input(INPUT_POST, 'logout_submit');
 if($logout_submit !== null) {
-    setcookie(USER_ID, '', 0, "/");
-    setcookie(USERNAME, '', 0, "/");
-    setcookie(FIO, '', 0, "/");
-    setcookie(ROLES, '', 0, "/");
+    setcookie(USER_ID, '', time() + 60 * 60 * 24 * 100, "/");
+    setcookie(USERNAME, '', time() + 60 * 60 * 24 * 100, "/");
+    setcookie(FIO, '', time() + 60 * 60 * 24 * 100, "/");
+    setcookie(ROLES, '', time() + 60 * 60 * 24 * 100, "/");
     header("Refresh:0");
     header('Location: '.APPLICATION.'/');
 }
