@@ -48,6 +48,10 @@
                     else {
                         $('.clipboard').val(data);
                         $('.clipboard_paste').prop("disabled", false);
+                        
+                        $('.btn_clipboard_paste').attr('data-clipboard', data);
+                        $('.btn_clipboard_paste').prop("disabled", false);
+                        
                         alert.slideDown(300, function(){
                             $(this).slideUp(1000);
                         });
@@ -234,6 +238,11 @@
                     alert('Ошибка при смене менеджера');
         });
     });
+    
+    // Вставка тиража
+    $('.btn_clipboard_paste').click(function(){
+        alert($(this).attr('data-clipboard'));
+    })
     
     // Сдвиг нескольких смен
     $('.show_move_form').click(function(){

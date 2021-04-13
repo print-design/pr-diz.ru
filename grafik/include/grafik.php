@@ -788,6 +788,7 @@ class Grafik {
                         echo "<input type='hidden' id='workshift_id' name='workshift_id' value='".$row['id']."' />";
                     }
                     echo "<button id='paste_edition_submit' name='paste_edition_submit' class='btn btn-outline-dark btn-sm clipboard_paste' data-toggle='tooltip' title='Вставить тираж'$disabled><i class='fas fa-paste'></i></button>";
+                    echo "<button type='button' class='btn btn-outline-dark btn-sm btn_clipboard_paste' data-toggle='tooltip' title='Вставить тираж'$disabled><i class='fas fa-paste'></i></button>";
                     echo "</form>";
                     
                     echo '</td>';
