@@ -241,8 +241,16 @@
     
     // Вставка тиража
     $('.btn_clipboard_paste').click(function(){
-        alert($(this).attr('data-clipboard'));
-    })
+        $.ajax({ url: "../ajax/clipboard_paste.php?clipboard=" + $(this).attr('data-clipboard'), context: $(this) })
+                .done(function(data){
+                    alert(data)
+                })
+                .fail(function(data){
+                    alert("FAIL");
+                });
+        //alert($(this).attr('data-clipboard'));
+        //alert($(this).closest('tr').html());
+    });
     
     // Сдвиг нескольких смен
     $('.show_move_form').click(function(){
