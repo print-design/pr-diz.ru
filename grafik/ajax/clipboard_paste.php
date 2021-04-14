@@ -56,8 +56,14 @@ $insert_id = $executer->insert_id;
 
 // Информация о машине
 $user1Name = '';
-if(in_array($machineId, [5, 1])) {
+if(in_array($machineId, [1, 2, 3, 4, 5])) {
     $user1Name = "Печатник";
+}
+if(in_array($machineId, [6, 13])) {
+    $user1Name = "Ламинаторщик";
+}
+if(in_array($machineId, [7, 9, 10, 11, 12, 14])) {
+    $user1Name = "Резчик";
 }
 
 $user2Name = '';
@@ -66,61 +72,85 @@ if(in_array($machineId, [1])) {
 }
 
 $userRole = 0;
-if(in_array($machineId, [5])) {
-    $userRole = 9;
-}
 if(in_array($machineId, [1])) {
     $userRole = 3;
 }
+if(in_array($machineId, [2])) {
+    $userRole = 6;
+}
+if(in_array($machineId, [3])) {
+    $userRole = 7;
+}
+if(in_array($machineId, [4])) {
+    $userRole = 8;
+}
+if(in_array($machineId, [5])) {
+    $userRole = 9;
+}
+if(in_array($machineId, [6, 13])) {
+    $userRole = 4;
+}
+if(in_array($machineId, [7, 9, 10, 11, 12, 14])) {
+    $userRole = 5;
+}
    
 $hasEdition = false;
-if(in_array($machineId, [5])) {
+if(in_array($machineId, [1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14])) {
     $hasEdition = true;
 }
 
 $hasOrganization = false;
-if(in_array($machineId, [5])) {
+if(in_array($machineId, [1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14])) {
     $hasOrganization = true;
 }
 
 $hasLength = false;
-if(in_array($machineId, [5])) {
+if(in_array($machineId, [1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14])) {
     $hasLength = true;
 }
 
 $hasStatus = false;
-if(in_array($machineId, [5])) {
+if(in_array($machineId, [1, 2, 3, 4, 5])) {
     $hasStatus = true;
 }
 
 $hasRoller = false;
-if(in_array($machineId, [5])) {
+if(in_array($machineId, [1, 2, 3, 4, 5])) {
     $hasRoller = true;
 }
 
 $hasLamination = false;
-if(in_array($machineId, [5])) {
+if(in_array($machineId, [1, 2, 3, 4, 5, 6, 13])) {
     $hasLamination = true;
 }
 
 $hasColoring = false;
-if(in_array($machineId, [5])) {
+if(in_array($machineId, [1, 2, 3, 4, 5])) {
     $hasColoring = true;
 }
 
 $coloring = 0;
-if(in_array($machineId, [5])) {
+if(in_array($machineId, [2, 3, 5])) {
     $coloring = 6;
+}
+if(in_array($machineId, [1, 4])) {
+    $coloring = 8;
 }
 
 $hasManager = false;
-if(in_array($machineId, [5])) {
+if(in_array($machineId, [1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14])) {
     $hasManager = true;
 }
 
 $hasComment = false;
+if(in_array($machineId, [6, 7, 9, 10, 11, 12, 13, 14])) {
+    $hasComment = true;
+}
 
 $isCutter = false;
+if(in_array($machineId, [7, 9, 10, 11, 12, 14])) {
+    $isCutter = true;
+}
 
 // Получаем данные об этой смене и её тиражах
 $date = "";
