@@ -15,8 +15,7 @@ if(empty($id)) {
 
 // Получение данных
 $sql = "select p.date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, s.name supplier, p.id_from_supplier, "
-        . "p.film_brand_id, fb.name film_brand, p.width, p.thickness, p.length, "
-        . "p.net_weight, p.rolls_number, p.cell, "
+        . "p.film_brand_id, fb.name film_brand, p.width, p.thickness, p.cell, "
         . "(select name from roll_status where id = ifnull(prsh.status_id, $free_status_id)) status, "
         . "p.comment, pr.id pallet_roll_id, pr.pallet_id pallet_roll_pallet_id, pr.weight pallet_roll_weight, pr.length pallet_roll_length, pr.ordinal pallet_roll_ordinal "
         . "from pallet p "
@@ -38,9 +37,6 @@ $film_brand_id = $row['film_brand_id'];
 $film_brand = $row['film_brand'];
 $width = $row['width'];
 $thickness = $row['thickness'];
-//$length = $row['length'];
-$net_weight = $row['net_weight'];
-$rolls_number = $row['rolls_number'];
 $cell = $row['cell'];
 $status = $row['status'];
 $comment = $row['comment'];
