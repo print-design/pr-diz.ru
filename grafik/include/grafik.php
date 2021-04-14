@@ -850,7 +850,7 @@ class Grafik {
 </table>
 <?php
     }
-    
+
     private function ShowEdition($edition, $top) {
         $date = $edition['date'];
         $shift = $edition['shift'];
