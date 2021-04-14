@@ -50,7 +50,118 @@ if($direction_post !== null && $position_post !== null) {
 
 $sql = "insert into edition (name, organization, length, status_id, lamination_id, coloring, roller_id, manager_id, comment, workshift_id, position) "
         . "values ($name, $organization, $length, $status_id, $lamination_id, $coloring, $roller_id, $manager_id, $comment, $workshift_id, $position)";
-$error_message = (new Executer($sql))->error;
+$executer = new Executer($sql);
+$error_message = $executer->error;
+$insert_id = $executer->insert_id;
+
+// Информация о машине
+$user1Name = '';
+if(in_array($machineId, [5, 1])) {
+    $user1Name = "Печатник";
+}
+
+$user2Name = '';
+if(in_array($machineId, [1])) {
+    $user2Name = "Помощник";
+}
+
+$userRole = 0;
+if(in_array($machineId, [5])) {
+    $userRole = 9;
+}
+if(in_array($machineId, [1])) {
+    $userRole = 3;
+}
+   
+$hasEdition = false;
+if(in_array($machineId, [5])) {
+    $hasEdition = true;
+}
+
+$hasOrganization = false;
+if(in_array($machineId, [5])) {
+    $hasOrganization = true;
+}
+
+$hasLength = false;
+if(in_array($machineId, [5])) {
+    $hasLength = true;
+}
+
+$hasStatus = false;
+if(in_array($machineId, [5])) {
+    $hasStatus = true;
+}
+
+$hasRoller = false;
+if(in_array($machineId, [5])) {
+    $hasRoller = true;
+}
+
+$hasLamination = false;
+if(in_array($machineId, [5])) {
+    $hasLamination = true;
+}
+
+$hasColoring = false;
+if(in_array($machineId, [5])) {
+    $hasColoring = true;
+}
+
+$coloring = 0;
+if(in_array($machineId, [5])) {
+    $coloring = 6;
+}
+
+$hasManager = false;
+if(in_array($machineId, [5])) {
+    $hasManager = true;
+}
+
+$hasComment = false;
+
+$isCutter = false;
+
+// Получаем данные об этой смене и её тиражах
+$date = "";
+$shift = "";
+
+$sql = "select ws.date, ws.shift, ws.user1_id, ws.user2_id, e.id edition_id, "
+        . "(select count(e1.id) from edition e1 inner join workshift ws1 on e1.workshift_id=ws1.id where ws1.date = ws.date and ws1.shift = 'day') day_rowspan, "
+        . "(select count(e1.id) from edition e1 inner join workshift ws1 on e1.workshift_id=ws1.id where ws1.date = ws.date and ws1.shift = 'night') night_rowspan "
+        . "from workshift ws "
+        . "inner join edition e on e.workshift_id=ws.id where ws.id=$workshift_id order by e.position";
+$fetcher = new Fetcher($sql);
+$position = 0;
+$index = 1;
+$top = 'nottop';
+$rowspan = 0;
+$my_rowspan = 0;
+
+while ($row = $fetcher->Fetch()) {
+    if($row['edition_id'] == $insert_id) {
+        $date = $row['date'];
+        $shift = $row['shift'];
+        $day_rowspan = $row['day_rowspan'];
+        $night_rowspan = $row['night_rowspan'];
+        if($day_rowspan == 0) {
+            $day_rowspan = 1;
+        }
+        if($night_rowspan == 0) {
+            $night_rowspan = 1;
+        }
+        $rowspan = intval($day_rowspan) + intval($night_rowspan);
+        $my_rowspan = $shift == 'day' ? $day_rowspan : $night_rowspan;
+
+        $position = $index;
+    }
+    
+    $index++;
+}
+
+if($position == 1) {
+    $top = 'top';
+}
 
 if(empty($error_message)) {
     include '../include/show_row.php';
