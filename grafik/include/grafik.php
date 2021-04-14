@@ -858,7 +858,26 @@ class Grafik {
         $machine_id = $edition['machine_id'];
         $workshift_id = $edition['workshift_id'];
         
-        if(IsInRole('admin')) {
+        $is_admin = IsInRole('admin');
+        
+        $hasOrganization = $this->hasOrganization;
+        $hasEdition = $this->hasEdition;
+        $hasLength = $this->hasLength;
+        $hasStatus = $this->hasStatus;
+        $statuses = $this->statuses;
+        $hasRoller = $this->hasRoller;
+        $rollers = $this->rollers;
+        $hasLamination = $this->hasLamination;
+        $laminations = $this->laminations;
+        $hasColoring = $this->hasColoring;
+        $coloring = $this->coloring;
+        $hasManager = $this->hasManager;
+        $managers = $this->managers;
+        $hasComment = $this->hasComment;
+        
+        include 'table_row.php';
+        
+        /*if($is_admin) {
             // Кнопки добавления тиража
             echo "<td class='$top $shift'>";
             
@@ -928,7 +947,7 @@ class Grafik {
         // Заказчик
         if($this->hasOrganization) {
             echo "<td class='$top $shift'>";
-            if(IsInRole('admin')) {
+            if($is_admin) {
                 echo '<form method="post">';
                 echo '<input type="hidden" id="scroll" name="scroll" />';
                 echo "<input type='hidden' id='id' name='id' value='".$edition['id']."' />";
@@ -947,7 +966,7 @@ class Grafik {
         // Наименование заказа
         if($this->hasEdition){
             echo "<td class='$top $shift'>";
-            if(IsInRole('admin')) {
+            if($is_admin) {
                 echo '<form method="post">';
                 echo '<input type="hidden" id="scroll" name="scroll" />';
                 echo "<input type='hidden' id='id' name='id' value='".$edition['id']."' />";
@@ -966,7 +985,7 @@ class Grafik {
         // Метраж
         if($this->hasLength) {
             echo "<td class='$top $shift'>";
-            if(IsInRole('admin')) {
+            if($is_admin) {
                 echo '<form method="post">';
                 echo '<input type="hidden" id="scroll" name="scroll" />';
                 echo "<input type='hidden' id='id' name='id' value='".$edition['id']."' />";
@@ -988,7 +1007,7 @@ class Grafik {
         };
         
         // Статус
-        if(IsInRole('admin')) {
+        if($is_admin) {
             if($this->hasStatus) {
                 echo "<td class='$top $shift'>";
                 echo "<form method='post'>";
@@ -1013,7 +1032,7 @@ class Grafik {
         // Вал
         if($this->hasRoller) {
             echo "<td class='$top $shift'>";
-            if(IsInRole('admin')) {
+            if($is_admin) {
                 echo "<form method='post'>";
                 echo '<input type="hidden" id="scroll" name="scroll" />';
                 echo "<input type='hidden' id='id' name='id' value='".$edition['id']."' />";
@@ -1039,7 +1058,7 @@ class Grafik {
         // Ламинация
         if($this->hasLamination) {
             echo "<td class='$top $shift'>";
-            if(IsInRole('admin')) {
+            if($is_admin) {
                 echo "<form method='post'>";
                 echo '<input type="hidden" id="scroll" name="scroll" />';
                 echo "<input type='hidden' id='id' name='id' value='".$edition['id']."' />";
@@ -1065,7 +1084,7 @@ class Grafik {
         // Красочность
         if($this->hasColoring) {
             echo "<td class='$top $shift'>";
-            if(IsInRole('admin')) {
+            if($is_admin) {
                 echo '<form method="post">';
                 echo '<input type="hidden" id="scroll" name="scroll" />';
                 echo "<input type='hidden' id='id' name='id' value='".$edition['id']."' />";
@@ -1084,7 +1103,7 @@ class Grafik {
         // Менеджер
         if($this->hasManager) {
             echo "<td class='$top $shift'>";
-            if(IsInRole('admin')) {
+            if($is_admin) {
                 echo "<form method='post'>";
                 echo '<input type="hidden" id="scroll" name="scroll" />';
                 echo "<input type='hidden' id='id' name='id' value='".$edition['id']."' />";
@@ -1110,7 +1129,7 @@ class Grafik {
         // Комментарий
         if($this->hasComment) {
             echo "<td class='$top $shift'>";
-            if(IsInRole('admin')) {
+            if($is_admin) {
                 echo '<form method="post">';
                 echo '<input type="hidden" id="scroll" name="scroll" />';
                 echo "<input type='hidden' id='id' name='id' value='".$edition['id']."' />";
@@ -1127,7 +1146,7 @@ class Grafik {
         }
         
         // Копирование тиража
-        if(IsInRole('admin')):
+        if($is_admin):
         ?>
         <td class='<?=$top ?> <?=$shift ?>'>
         <button class='btn btn-outline-dark btn-sm clipboard_copy' data='<?=$edition['id'] ?>' title='Копировать тираж' data-toggle='tooltip'><i class='fas fa-copy'></i><div class='alert alert-info clipboard_alert'>Скопировано</div></button>
@@ -1136,7 +1155,7 @@ class Grafik {
         endif;
         
         // Сдвиг нескольких тиражей
-        if(IsInRole('admin')):
+        if($is_admin):
         ?>
         <td class='<?=$top ?> <?=$shift ?>'>
             <button class="btn btn-outline-dark btn-sm show_move_form" title="Сдвинуть несколько тиражей" data-toggle='tooltip' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-position='<?=$position ?>' data-machine_id='<?=$machine_id ?>' data-workshift_id='<?=$workshift_id ?>'><i class="fas fa-table"></i></button>
@@ -1145,7 +1164,7 @@ class Grafik {
         endif;
         
         // Удаление тиража
-        if(IsInRole('admin')):
+        if($is_admin):
         ?>
         <td class='<?=$top ?> <?=$shift ?>'>
         <form method='post'>
@@ -1155,7 +1174,7 @@ class Grafik {
         </form>
         </td>
         <?php
-        endif;
+        endif;*/
     }
     
     function Print() {
