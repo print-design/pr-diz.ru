@@ -241,15 +241,15 @@
     
     // Вставка тиража
     $('.btn_clipboard_paste').click(function(){
-        $.ajax({ url: "../ajax/clipboard_paste.php?clipboard=" + $(this).attr('data-clipboard'), context: $(this) })
+        var tr = $(this).closest('tr');
+        tr.html("<td>ОЖИДАНИЕ...</td>");
+        $.ajax({ url: "../ajax/clipboard_paste.php?clipboard=" + $(this).attr('data-clipboard') + "&date=" + $(this).attr('data-date') + "&shift=" + $(this).attr('data-shift') + "&machine_id=" + $(this).attr('data-machine'), context: $(this) })
                 .done(function(data){
-                    alert(data)
+                    tr.html(data);
                 })
                 .fail(function(data){
                     alert("FAIL");
                 });
-        //alert($(this).attr('data-clipboard'));
-        //alert($(this).closest('tr').html());
     });
     
     // Сдвиг нескольких смен

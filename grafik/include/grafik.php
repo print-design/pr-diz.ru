@@ -618,7 +618,8 @@ class Grafik {
         }
         
         foreach ($dateshifts as $dateshift) {
-            $key = $dateshift['date']->format('Y-m-d').$dateshift['shift'];
+            $formatted_date = $dateshift['date']->format('Y-m-d');
+            $key = $formatted_date.$dateshift['shift'];
             $row = array();
             if(isset($all[$key])) $row = $all[$key];
             
@@ -788,7 +789,7 @@ class Grafik {
                         echo "<input type='hidden' id='workshift_id' name='workshift_id' value='".$row['id']."' />";
                     }
                     echo "<button id='paste_edition_submit' name='paste_edition_submit' class='btn btn-outline-dark btn-sm clipboard_paste' data-toggle='tooltip' title='Вставить тираж'$disabled><i class='fas fa-paste'></i></button>";
-                    echo "<button type='button' class='btn btn-outline-dark btn-sm btn_clipboard_paste' data-toggle='tooltip' title='Вставить тираж'$disabled><i class='fas fa-paste'></i></button>";
+                    echo "<button type='button' class='btn btn-outline-dark btn-sm btn_clipboard_paste' data-date='$formatted_date' data-shift='$shift' data-toggle='tooltip' data-machine='$this->machineId' title='Вставить тираж'$disabled><i class='fas fa-paste'></i></button>";
                     echo "</form>";
                     
                     echo '</td>';
