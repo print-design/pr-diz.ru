@@ -53,7 +53,7 @@ $sql = "insert into edition (name, organization, length, status_id, lamination_i
 $error_message = (new Executer($sql))->error;
 
 if(empty($error_message)) {
-    include '../include/table_row.php';
+    include '../include/show_edition.php';
 }
 else {
     echo $error_message;
