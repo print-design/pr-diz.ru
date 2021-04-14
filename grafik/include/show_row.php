@@ -10,6 +10,8 @@ if($position == 1) {
     echo "<td class='$top $shift' rowspan='$my_rowspan'>".($shift == 'day' ? 'День' : 'Ночь')."</td>";
 }
 
+echo "<td class='$top $shift'>$user1Name</td>";
+
 // Работник №1
             /*if($this->user1Name != '') {
                 echo "<td class='$top $shift' rowspan='$my_rowspan' title='".$this->user1Name."'>";

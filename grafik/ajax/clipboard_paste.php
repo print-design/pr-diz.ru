@@ -189,7 +189,7 @@ while ($row = $fetcher->Fetch()) {
     $index++;
 }
 
-if($position == 1) {
+if($position == 1 && $shift = 'day') {
     $top = 'top';
 }
 
