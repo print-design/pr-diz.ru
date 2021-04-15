@@ -161,19 +161,19 @@
                     field.val('70773');
         });
     }
-        
-    $('textarea#comment.editable').focusout(function(){
-        var comment = $(this).val();
-        var id = $(this).parent().prev('#id').val();
-        $(this).val('000');
-        $.ajax({ url: "../ajax/edition.php?comment=" + encodeURI(comment) + "&id=" + id, context: $(this) })
+    
+    function EditComment(area) {
+        var comment = area.val();
+        var id = area.attr('data-id');
+        area.val('000');
+        $.ajax({ url: "../ajax/edition.php?comment=" + encodeURI(comment) + "&id=" + id, context: area })
                 .done(function(data) {
-                    $(this).val(data);
+                    area.val(data);
         })
                 .fail(function() {
-                    $(this).val('70773');
+                    area.val('70773');
         });
-    });
+    }
         
     $('select[id=user1_id],select[id=user2_id]').change(function(){
         if(this.value == '+') {

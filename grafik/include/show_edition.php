@@ -231,15 +231,8 @@ if($is_admin) {
 <td class='<?=$top ?> <?=$shift ?>'>
     <?php
     if($is_admin) {
-        ?>
-    <form method="post">
-        <input type="hidden" id="scroll" name="scroll" />
-        <input type='hidden' id='id' name='id' value='<?=$edition['id'] ?>' />
-        <div class="input-group">
-            <textarea rows="5" cols="30" wrap="hard" id="comment" name="comment" class="editable"><?=(isset($edition['comment']) ? htmlentities($edition['comment']) : '') ?></textarea>
-            <div class="input-group-append d-none"><button type="submit" class="btn btn-outline-dark"><span class="font-awesome">&#xf0c7;</span></button></div>
-        </div>
-    </form>
+    ?>
+    <textarea rows="5" cols="30" wrap="hard" data-id='<?=$edition['id'] ?>' onfocusout="EditComment($(this))" class="editable"><?=(isset($edition['comment']) ? htmlentities($edition['comment']) : '') ?></textarea>
         <?php
     }
     else {
