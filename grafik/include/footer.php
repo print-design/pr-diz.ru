@@ -238,7 +238,7 @@
     
     // Вставка тиража
     function PasteEdition(button) {
-        $.ajax({ url: "../ajax/clipboard_paste.php?clipboard=" + button.attr('data-clipboard') + "&machine_id=" + button.attr('data-machine') + "&date=" + button.attr('data-date') + "&shift=" + button.attr('data-shift') + "&workshift_id=" + button.attr('data-workshift'), context: $(this) })
+        $.ajax({ url: "../ajax/clipboard_paste.php?clipboard=" + button.attr('data-clipboard') + "&machine_id=" + button.attr('data-machine') + "&date=" + button.attr('data-date') + "&shift=" + button.attr('data-shift') + "&workshift_id=" + button.attr('data-workshift') + "&direction=" + button.attr('data-direction') + "&position=" + button.attr('data-position'), context: $(this) })
                 .done(function(){
                     $('#waiting').html("<img src='../images/waiting.gif' />");
             

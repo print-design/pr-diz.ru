@@ -784,6 +784,9 @@ class Grafik {
         
         $is_admin = IsInRole('admin');
         
+        $from = $this->dateFrom->format("Y-m-d");
+        $to = $this->dateTo->format("Y-m-d");
+        
         $hasOrganization = $this->hasOrganization;
         $hasEdition = $this->hasEdition;
         $hasLength = $this->hasLength;
