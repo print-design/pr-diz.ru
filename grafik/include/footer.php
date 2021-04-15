@@ -243,11 +243,12 @@
     $('.btn_clipboard_paste').click(function(){
         $.ajax({ url: "../ajax/clipboard_paste.php?clipboard=" + $(this).attr('data-clipboard') + "&machine_id=" + $(this).attr('data-machine') + "&from=" + $(this).attr('data-from') + "&to=" + $(this).attr('data-to'), context: $(this) })
                 .done(function(){
-                    $('#maincontent').html("<img src='../images/waiting.gif' />");
+                    $('#waiting').html("<img src='../images/waiting.gif' />");
             
                     $.ajax({ url: "../ajax/draw.php?machine_id=" + $(this).attr('data-machine') + "&from=" + $(this).attr('data-from') + "&to=" + $(this).attr('data-to'), context: $(this) })
                             .done(function(data){
                                 $('#maincontent').html(data);
+                                $('#waiting').html('');
                             })
                             .fail(function(){
                                 alert('Ошибка при перерисовки страницы');
