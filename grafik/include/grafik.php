@@ -713,17 +713,7 @@ class Grafik {
                     }
                     
                     // Вставка тиража
-                    $clipboard = '';
                     $disabled = " disabled='disabled'";
-                    
-                    $paste_edition_submit = filter_input(INPUT_POST, 'paste_edition_submit');
-                    if($paste_edition_submit !== null) {
-                        $clipboard = filter_input(INPUT_POST, 'clipboard');
-                        if($clipboard != '') {
-                            $disabled = '';
-                        }
-                    }
-                    
                     echo "<button type='button' class='btn btn-outline-dark btn-sm btn_clipboard_paste' data-toggle='tooltip' data-machine='$this->machineId' data-from='".$this->dateFrom->format("Y-m-d")."' data-to='".$this->dateTo->format("Y-m-d")."' data-date='$formatted_date' data-shift='".$dateshift['shift']."' data-workshift='".(empty($row['id']) ? '' : $row['id'])."' onclick='javascript: PasteEdition($(this))' title='Вставить тираж'$disabled><i class='fas fa-paste'></i></button>";
                     
                     echo '</td>';

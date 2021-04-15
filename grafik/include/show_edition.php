@@ -45,7 +45,8 @@ if($is_admin) {
         <input type='hidden' id='machine_id' name='machine_id' value='<?=$machine_id ?>' />
         <input type='hidden' id='position' name='position' value='<?=$position ?>' />
         <input type='hidden' id='direction' name='direction' value='up' />
-        <button id='paste_edition_submit' name='paste_edition_submit' class='btn btn-outline-dark btn-sm mb-1 clipboard_paste' data-toggle='tooltip' title='Вставить тираж выше'$disabled><i class='fas fa-paste'></i><i class='fas fa-long-arrow-alt-up'></i></button>
+        <button id='paste_edition_submit' name='paste_edition_submit' class='btn btn-outline-dark btn-sm mb-1 clipboard_paste' data-toggle='tooltip' title='Вставить тираж выше'<?=$disabled ?>><i class='fas fa-paste'></i><i class='fas fa-long-arrow-alt-up'></i></button>
+        <button type="button" class='btn btn-outline-dark btn-sm mb-1 btn_clipboard_paste' data-toggle='tooltip' title='Вставить тираж выше'<?=$disabled ?>><i class='fas fa-paste'></i><i class='fas fa-long-arrow-alt-up'></i></button>
     </form>
     <form method='post'>
         <input type="hidden" id="scroll" name="scroll" />
@@ -56,7 +57,8 @@ if($is_admin) {
         <input type='hidden' id='machine_id' name='machine_id' value='<?=$machine_id ?>' />
         <input type='hidden' id='position' name='position' value='<?=$position ?>' />
         <input type='hidden' id='direction' name='direction' value='down' />
-        <button id='paste_edition_submit' name='paste_edition_submit' class='btn btn-outline-dark btn-sm clipboard_paste' data-toggle='tooltip' title='Вставить тираж ниже'$disabled><i class='fas fa-paste'></i><i class='fas fa-long-arrow-alt-down'></i></button>
+        <button id='paste_edition_submit' name='paste_edition_submit' class='btn btn-outline-dark btn-sm clipboard_paste' data-toggle='tooltip' title='Вставить тираж ниже'<?=$disabled ?>><i class='fas fa-paste'></i><i class='fas fa-long-arrow-alt-down'></i></button>
+        <button type="button" class='btn btn-outline-dark btn-sm btn_clipboard_paste' data-toggle='tooltip' title='Вставить тираж ниже'<?=$disabled ?>><i class='fas fa-paste'></i><i class='fas fa-long-arrow-alt-down'></i></button>
     </form>
 </td>
     <?php
