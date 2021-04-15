@@ -47,14 +47,7 @@ if($is_admin) {
         ?>
 <td class='<?=$top ?> <?=$shift ?>'>
         <?php if($is_admin): ?>
-    <form method="post">
-        <input type="hidden" id="scroll" name="scroll" />
-        <input type='hidden' id='id' name='id' value='<?=$edition['id'] ?>' />
-        <div class="input-group">
-            <input type="text" id="organization" name="organization" value="<?=(isset($edition['organization']) ? htmlentities($edition['organization']) : '') ?>" class="editable organizations" style="width:140px;" />
-            <div class="input-group-append d-none"><button type="submit" class="btn btn-outline-dark"><i class="fas fa-save"></i></button></div>
-        </div>
-    </form>
+    <input type="text" value="<?=(isset($edition['organization']) ? htmlentities($edition['organization']) : '') ?>" onfocusout='javascript: EditOrganization($(this))' class="editable organizations" data-id='<?=$edition['id'] ?>' style="width:140px;" />
         <?php
         else:
             echo (isset($edition['organization']) ? htmlentities($edition['organization']) : '');
@@ -71,14 +64,7 @@ if($is_admin) {
         <?php
         if($is_admin) {
             ?>
-    <form method="post">
-        <input type="hidden" id="scroll" name="scroll" />
-        <input type='hidden' id='id' name='id' value='<?=$edition['id'] ?>' />
-        <div class="input-group">
-            <input type="text" id="edition" name="edition" value="<?=(isset($edition['edition']) ? htmlentities($edition['edition']) : '') ?>" class="editable editions" style="width:140px;" />
-            <div class="input-group-append d-none"><button type="submit" class="btn btn-outline-dark"><i class="fas fa-save"></i></button></div>
-        </div>
-    </form>
+    <input type="text" value="<?=(isset($edition['edition']) ? htmlentities($edition['edition']) : '') ?>" onfocusout="javascript: EditEdition($(this))" class="editable editions" data-id='<?=$edition['id'] ?>' style="width:140px;" />
         <?php
         }
         else {

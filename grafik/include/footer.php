@@ -106,35 +106,35 @@
     });
     
     // Автоматическое сохранение значений полей
-    $('input#edition.editable').focusout(function(){
-        var edition = $(this).val();
-        var id = $(this).parent().prev('#id').val();
-        $(this).val('000');
-        $.ajax({ url: "../ajax/edition.php?edition=" + edition + "&id=" + id, context: $(this) })
+    function EditOrganization(button) {
+        var organization = button.val();
+        var id = button.attr('data-id');
+        button.val('000');
+        $.ajax({ url: "../ajax/edition.php?organization=" + organization + "&id=" + id, context: button })
                 .done(function(data) {
-                    $(this).val(data);
-            editions.push(data);
-            editions = [...new Set(editions)].sort();
-        })
-                .fail(function() {
-                    $(this).val('70773');
-        });
-    });
-        
-    $('input#organization.editable').focusout(function(){
-        var organization = $(this).val();
-        var id = $(this).parent().prev('#id').val();
-        $(this).val('000');
-        $.ajax({ url: "../ajax/edition.php?organization=" + organization + "&id=" + id, context: $(this) })
-                .done(function(data) {
-                    $(this).val(data);
+                    button.val(data);
             organizations.push(data);
             organizations = [...new Set(organizations)].sort();
         })
                 .fail(function() {
-                    $(this).val('70773');
+                    button.val('70773');
         });
-    });
+    }
+    
+    function EditEdition(button) {
+        var edition = button.val();
+        var id = button.attr('data-id');
+        button.val('000');
+        $.ajax({ url: "../ajax/edition.php?edition=" + edition + "&id=" + id, context: button })
+                .done(function(data) {
+                    button.val(data);
+            editions.push(data);
+            editions = [...new Set(editions)].sort();
+        })
+                .fail(function() {
+                    button.val('70773');
+        });
+    }
         
     $('input#length.editable').focusout(function(){
         var length = $(this).val();
