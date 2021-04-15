@@ -789,7 +789,7 @@ class Grafik {
                         echo "<input type='hidden' id='workshift_id' name='workshift_id' value='".$row['id']."' />";
                     }
                     echo "<button id='paste_edition_submit' name='paste_edition_submit' class='btn btn-outline-dark btn-sm clipboard_paste' data-toggle='tooltip' title='Вставить тираж'$disabled><i class='fas fa-paste'></i></button>";
-                    echo "<button type='button' class='btn btn-outline-dark btn-sm btn_clipboard_paste' data-date='$formatted_date' data-shift='$shift' data-toggle='tooltip' data-machine='$this->machineId' title='Вставить тираж'$disabled><i class='fas fa-paste'></i></button>";
+                    echo "<button type='button' class='btn btn-outline-dark btn-sm btn_clipboard_paste' data-toggle='tooltip' data-machine='$this->machineId' data-from='".$this->dateFrom->format("Y-m-d")."' data-to='".$this->dateTo->format("Y-m-d")."' title='Вставить тираж'$disabled><i class='fas fa-paste'></i></button>";
                     echo "</form>";
                     
                     echo '</td>';

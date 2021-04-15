@@ -1,7 +1,7 @@
 <?php
 include '../include/topscripts.php';
 
-$error_message = '';
+/*$error_message = '';
 $clipboard = filter_input(INPUT_GET, 'clipboard');
 $date = filter_input(INPUT_GET, 'date');
 $shift = filter_input(INPUT_GET, 'shift');
@@ -198,5 +198,7 @@ if(empty($error_message)) {
 }
 else {
     echo $error_message;
-}
+}*/
+
+echo filter_input(INPUT_GET, 'clipboard').' --- '.filter_input(INPUT_GET, 'machine_id')." --- ". filter_input(INPUT_GET, 'from')." --- ". filter_input(INPUT_GET, 'to')." --- OK";
 ?>

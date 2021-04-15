@@ -38,7 +38,7 @@ $error_message = $grafik->error_message;
         <?php
         include '../include/header.php';
         ?>
-        <div class="container-fluid">
+        <div class="container-fluid" id="maincontent">
             <?php
             if(isset($error_message) && $error_message != '') {
                 echo "<div class='alert alert-danger'>$error_message</div>";

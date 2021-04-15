@@ -241,11 +241,9 @@
     
     // Вставка тиража
     $('.btn_clipboard_paste').click(function(){
-        var tr = $(this).closest('tr');
-        tr.html("<td>ОЖИДАНИЕ...</td>");
-        $.ajax({ url: "../ajax/clipboard_paste.php?clipboard=" + $(this).attr('data-clipboard') + "&date=" + $(this).attr('data-date') + "&shift=" + $(this).attr('data-shift') + "&machine_id=" + $(this).attr('data-machine'), context: $(this) })
+        $.ajax({ url: "../ajax/clipboard_paste.php?clipboard=" + $(this).attr('data-clipboard') + "&machine_id=" + $(this).attr('data-machine') + "&from=" + $(this).attr('data-from') + "&to=" + $(this).attr('data-to'), context: $(this) })
                 .done(function(data){
-                    tr.html(data);
+                    $('#maincontent').html(data);
                 })
                 .fail(function(data){
                     alert("FAIL");
