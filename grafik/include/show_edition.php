@@ -320,7 +320,7 @@ if($is_admin) {
     if($is_admin):
         ?>
 <td class='<?=$top ?> <?=$shift ?>'>
-    <button class='btn btn-outline-dark btn-sm clipboard_copy' data='<?=$edition['id'] ?>' title='Копировать тираж' data-toggle='tooltip'><i class='fas fa-copy'></i><div class='alert alert-info clipboard_alert'>Скопировано</div></button>
+    <button class='btn btn-outline-dark btn-sm clipboard_copy' data='<?=$edition['id'] ?>' title='Копировать тираж' data-toggle='tooltip' onclick="javascript: CopyEdition(<?=$edition['id'] ?>, $(this));"><i class='fas fa-copy'></i><div class='alert alert-info clipboard_alert'>Скопировано</div></button>
 </td>
     <?php
     endif;

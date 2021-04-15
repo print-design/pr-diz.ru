@@ -37,9 +37,9 @@
     });
     
     // Работа с буфером обмена
-    $('.clipboard_copy').click(function(){
-        var alert = $(this).children('.clipboard_alert');
-        var edition = $(this).attr('data');
+    function CopyEdition(edition, button) {
+        var alert = button.children('.clipboard_alert');
+        
         $.ajax("../ajax/clipboard.php?edition=" + edition)
                 .done(function(data){
                     if(data == '') {
@@ -60,7 +60,7 @@
                 .fail(function(){
                     alert('Ошибка при копировании тиража в буфер обмена.');
         });
-    });
+    }
     
     // Подтверждение удаления
     $('button.confirmable').click(function(){
