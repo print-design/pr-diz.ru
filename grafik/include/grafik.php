@@ -182,62 +182,6 @@ class Grafik {
             $this->error_message = (new Executer("insert into edition (workshift_id, position) values ($workshift_id, $position)"))->error;
         }
         
-        // Вставка тиража
-        $clipboard = '';
-        $disabled = " disabled='disabled'";
-                
-        $paste_edition_submit = filter_input(INPUT_POST, 'paste_edition_submit');
-        if($paste_edition_submit !== null) {
-            $clipboard = filter_input(INPUT_POST, 'clipboard');
-            $row = json_decode($clipboard, true);
-            
-            $name = $row['name'] == null ? 'NULL' : "'".addslashes($row['name'])."'";
-            $organization = $row['organization'] == null ? 'NULL' : "'".addslashes($row['organization'])."'";
-            $length = $row['length'] == null ? 'NULL' : "'".$row['length']."'";
-            $status_id = $row['status_id'] == null ? 'NULL' : "'".$row['status_id']."'";
-            $lamination_id = $row['lamination_id'] == null ? 'NULL' : "'".$row['lamination_id']."'";
-            $coloring = $row['coloring'] == null ? 'NULL' : "'".$row['coloring']."'";
-            $roller_id = $row['roller_id'] == null ? 'NULL' : "'".$row['roller_id']."'";
-            $manager_id = $row['manager_id'] == null ? 'NULL' : "'".$row['manager_id']."'";
-            $comment = $row['comment'] == null ? 'NULL' : "'".addslashes($row['comment'])."'";
-            $user1_id = $row['user1_id'] == null ? 'NULL' : "'".$row['user1_id']."'";
-            $user2_id = $row['user2_id'] == null ? 'NULL' : "'".$row['user2_id']."'";
-            $date = filter_input(INPUT_POST, 'date');
-            $shift = filter_input(INPUT_POST, 'shift');
-            $position = 1;
-            
-            $workshift_id = filter_input(INPUT_POST, 'workshift_id');
-            if($workshift_id == null) {
-                $sql = "insert into workshift (date, machine_id, shift, user1_id, user2_id) values ('$date', $this->machineId, '$shift', $user1_id, $user2_id)";
-                $ws_executer = new Executer($sql);
-                $this->error_message = $ws_executer->error;
-                $workshift_id = $ws_executer->insert_id;
-                
-                if($workshift_id > 0) {
-                    $this->error_message = (new Executer($sql))->error;
-                }
-            }
-            
-            $direction_post = filter_input(INPUT_POST, 'direction');
-            $position_post = filter_input(INPUT_POST, 'position');
-            if($direction_post !== null && $position_post !== null) {
-                if($direction_post == 'up') {
-                    $this->error_message = (new Executer("update edition e inner join workshift ws on e.workshift_id = ws.id set e.position = e.position - 1 where ws.date = '$date' and ws.shift = '$shift' and ws.machine_id = '$this->machineId' and position < $position_post"))->error;
-                    $position = intval($position_post) - 1;
-                }
-                
-                if($direction_post == 'down') {
-                    $this->error_message = (new Executer("update edition e inner join workshift ws on e.workshift_id = ws.id set e.position = e.position + 1 where ws.date = '$date' and ws.shift = '$shift' and ws.machine_id = '$this->machineId' and position > $position_post"))->error;
-                    $position = intval($position_post) + 1;
-                }
-            }
-            
-            $sql = "insert into edition (name, organization, length, status_id, lamination_id, coloring, roller_id, manager_id, comment, workshift_id, position) "
-                    . "values ($name, $organization, $length, $status_id, $lamination_id, $coloring, $roller_id, $manager_id, $comment, $workshift_id, $position)";
-            
-            $this->error_message = (new Executer($sql))->error;
-        }
-        
         // Заказчик
         $organization = filter_input(INPUT_POST, 'organization');
         if($organization !== null) {
@@ -780,16 +724,7 @@ class Grafik {
                         }
                     }
                     
-                    echo "<form method='post'>";
-                    echo '<input type="hidden" id="scroll" name="scroll" />';
-                    echo "<input type='hidden' class='clipboard' id='clipboard' name='clipboard' value='$clipboard'>";
-                    echo '<input type="hidden" id="date" name="date" value="'.$dateshift['date']->format('Y-m-d').'" />';
-                    echo '<input type="hidden" id="shift" name="shift" value="'.$dateshift['shift'].'" />';
-                    if(isset($row['id'])) {
-                        echo "<input type='hidden' id='workshift_id' name='workshift_id' value='".$row['id']."' />";
-                    }
-                    echo "<button type='button' class='btn btn-outline-dark btn-sm btn_clipboard_paste' data-toggle='tooltip' data-machine='$this->machineId' data-from='".$this->dateFrom->format("Y-m-d")."' data-to='".$this->dateTo->format("Y-m-d")."' onclick='javascript: PasteEdition($(this))' title='Вставить тираж'$disabled><i class='fas fa-paste'></i></button>";
-                    echo "</form>";
+                    echo "<button type='button' class='btn btn-outline-dark btn-sm btn_clipboard_paste' data-toggle='tooltip' data-machine='$this->machineId' data-from='".$this->dateFrom->format("Y-m-d")."' data-to='".$this->dateTo->format("Y-m-d")."' data-date='$formatted_date' data-shift='".$dateshift['shift']."' data-workshift='".(empty($row['id']) ? '' : $row['id'])."' onclick='javascript: PasteEdition($(this))' title='Вставить тираж'$disabled><i class='fas fa-paste'></i></button>";
                     
                     echo '</td>';
                 }
