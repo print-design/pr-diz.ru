@@ -156,23 +156,18 @@ if($is_admin) {
     <?php
     if($is_admin) {
         ?>
-    <form method='post'>
-        <input type="hidden" id="scroll" name="scroll" />
-        <input type='hidden' id='id' name='id' value='<?=$edition['id'] ?>' />
-        <select id='lamination_id' name='lamination_id' style='width:55px;'>
-            <optgroup>
-                <option value="">...</option>
-                <?php
-                foreach ($laminations as $value) {
-                    $selected = '';
-                    if(isset($edition['lamination_id']) && $edition['lamination_id'] == $value['id']) $selected = " selected = 'selected'";
-                    echo "<option$selected value='".$value['id']."'>".$value['name']."</option>";
-                }
-                ?>
-            </optgroup>
-        </select>
-        <div class="input-group-append d-none"><button type="submit" class="btn btn-outline-dark"><i class="fas fa-save"></i></button></div>
-    </form>
+    <select data-id='<?=$edition['id'] ?>' onfocusout="javascript: EditLamination($(this))" style='width:55px;'>
+        <optgroup>
+            <option value="">...</option>
+            <?php
+            foreach ($laminations as $value) {
+                $selected = '';
+                if(isset($edition['lamination_id']) && $edition['lamination_id'] == $value['id']) $selected = " selected = 'selected'";
+                echo "<option$selected value='".$value['id']."'>".$value['name']."</option>";
+            }
+            ?>
+        </optgroup>
+    </select>
         <?php
     }
     else {
@@ -189,14 +184,8 @@ if($is_admin) {
 <td class='<?=$top ?> <?=$shift ?>'>
         <?php
         if($is_admin) {
-            ?>
-    <form method="post">
-        <input type="hidden" id="scroll" name="scroll" /><input type='hidden' id='id' name='id' value='<?=$edition['id'] ?>' />
-        <div class="input-group">
-            <input type="number" min="0" max="<?=$coloring ?>" pattern="\d*" id="coloring" name="coloring" value="<?=(isset($edition['coloring']) ? $edition['coloring'] : '') ?>" class="editable" style="width:35px;" />
-            <div class="input-group-append d-none"><button type="submit" class="btn btn-outline-dark"><i class="fas fa-save"></i></button></div>
-        </div>
-    </form>
+        ?>
+    <input type="number" min="0" max="<?=$coloring ?>" pattern="\d*" value="<?=(isset($edition['coloring']) ? $edition['coloring'] : '') ?>" data-id='<?=$edition['id'] ?>' onfocusout="EditColoring($(this))" class="editable" style="width:35px;" />
         <?php
         }
         else {
@@ -214,23 +203,19 @@ if($is_admin) {
     <?php
         if($is_admin) {
         ?>
-    <form method='post'>
-        <input type="hidden" id="scroll" name="scroll" />
-        <input type='hidden' id='id' name='id' value='<?=$edition['id'] ?>' />
-        <select id='manager_id' name='manager_id' style='width:120px;'>
-            <optgroup>
-                <option value="">...</option>
-                <?php
-                foreach ($managers as $value) {
-                    $selected = '';
-                    if(isset($edition['manager_id']) && $edition['manager_id'] == $value['id']) $selected = " selected = 'selected'";
-                    echo "<option$selected value='".$value['id']."'>".$value['fio']."</option>";
-                }
-                ?>
-            </optgroup>
-        </select>
-        <div class="input-group-append d-none"><button type="submit" class="btn btn-outline-dark"><i class="fas fa-save"></i></button></div>
-    </form><?php
+    <select data-id='<?=$edition['id'] ?>' onfocusout="javascript: EditManager($(this))" style='width:120px;'>
+        <optgroup>
+            <option value="">...</option>
+            <?php
+            foreach ($managers as $value) {
+                $selected = '';
+                if(isset($edition['manager_id']) && $edition['manager_id'] == $value['id']) $selected = " selected = 'selected'";
+                echo "<option$selected value='".$value['id']."'>".$value['fio']."</option>";
+            }
+            ?>
+        </optgroup>
+    </select>    
+        <?php
         }
         else {
             echo (isset($edition['manager']) ? $edition['manager'] : '');

@@ -149,18 +149,18 @@
         });
     }
         
-    $('input#coloring.editable').focusout(function(){
-        var coloring = $(this).val();
-        var id = $(this).parent().prev('#id').val();
-        $(this).val('000');
-        $.ajax({ url: "../ajax/edition.php?coloring=" + coloring + "&id=" + id, context: $(this) })
+    function EditColoring(field) {
+        var coloring = field.val();
+        var id = field.attr('data-id');
+        field.val('000');
+        $.ajax({ url: "../ajax/edition.php?coloring=" + coloring + "&id=" + id, context: field })
                 .done(function(data) {
-                    $(this).val(data);
+                    field.val(data);
         })
                 .fail(function() {
-                    $(this).val('70773');
+                    field.val('70773');
         });
-    });
+    }
         
     $('textarea#comment.editable').focusout(function(){
         var comment = $(this).val();
@@ -210,31 +210,31 @@
         });
     }
         
-    $('select[id=lamination_id]').focusout(function(){
-        var lamination_id = $(this).val();
-        var id = $(this).prev('#id').val();
-        $(this).val('');
-        $.ajax({ url: "../ajax/edition.php?lamination_id=" + lamination_id + "&id=" + id, context: $(this) })
+    function EditLamination(select) {
+        var lamination_id = select.val();
+        var id = select.attr('data-id');
+        select.val('');
+        $.ajax({ url: "../ajax/edition.php?lamination_id=" + lamination_id + "&id=" + id, context: select })
                 .done(function(data){
-                    $(this).val(data);
+                    select.val(data);
         })
                 .fail(function(){
                     alert('Ошибка при смене ламинации');
         });
-    });
-        
-    $('select[id=manager_id]').focusout(function(){
-        var manager_id = $(this).val();
-        var id = $(this).prev('#id').val();
+    }
+    
+    function EditManager(select) {
+        var manager_id = select.val();
+        var id = select.attr('data-id');
         $(this).val('');
-        $.ajax({ url: "../ajax/edition.php?manager_id=" + manager_id + "&id=" + id, context: $(this) })
+        $.ajax({ url: "../ajax/edition.php?manager_id=" + manager_id + "&id=" + id, context: select })
                 .done(function(data){
-                    $(this).val(data);
+                    select.val(data);
         })
                 .fail(function(){
                     alert('Ошибка при смене менеджера');
         });
-    });
+    }
     
     // Вставка тиража
     function PasteEdition(button) {
