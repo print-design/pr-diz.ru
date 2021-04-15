@@ -82,14 +82,7 @@ if($is_admin) {
     <?php
     if($is_admin) {
         ?>
-    <form method="post">
-        <input type="hidden" id="scroll" name="scroll" />
-        <input type='hidden' id='id' name='id' value='<?=$edition['id'] ?>' />
-        <div class="input-group">
-            <input type="number" min="0" pattern="\d*" id="length" name="length" value="<?=(isset($edition['length']) ? $edition['length'] : '') ?>" class="editable" style="width:65px;" />
-            <div class="input-group-append d-none"><button type="submit" class="btn btn-outline-dark"><i class="fas fa-save"></i></button></div>
-        </div>
-    </form>
+    <input type="number" min="0" pattern="\d*" value="<?=(isset($edition['length']) ? $edition['length'] : '') ?>" onfocusout="javascript: EditLength($(this))" data-id='<?=$edition['id'] ?>' class="editable" style="width:65px;" />
         <?php
     }
     else {
@@ -110,23 +103,18 @@ if($is_admin) {
         if($hasStatus) {
             ?>
 <td class='<?=$top ?> <?=$shift ?>'>
-    <form method='post'>
-        <input type="hidden" id="scroll" name="scroll" />
-        <input type='hidden' id='id' name='id' value='<?=$edition['id'] ?>' />
-        <select id='status_id' name='status_id' style='width:85px;'>
-            <optgroup>
-                <option value="">...</option>
-                <?php
-                foreach ($statuses as $value) {
-                    $selected = '';
-                    if(isset($edition['status_id']) && $edition['status_id'] == $value['id']) $selected = " selected = 'selected'";
-                    echo "<option$selected value='".$value['id']."'>".$value['name']."</option>";
-                }
-                ?>
-            </optgroup>
-        </select>
-        <div class="input-group-append d-none"><button type="submit" class="btn btn-outline-dark"><i class="fas fa-save"></i></button></div>
-    </form>
+    <select data-id='<?=$edition['id'] ?>' onfocusout="javascript: EditStatus($(this))" style='width:85px;'>
+        <optgroup>
+            <option value="">...</option>
+            <?php
+            foreach ($statuses as $value) {
+                $selected = '';
+                if(isset($edition['status_id']) && $edition['status_id'] == $value['id']) $selected = " selected = 'selected'";
+                echo "<option$selected value='".$value['id']."'>".$value['name']."</option>";
+            }
+            ?>
+        </optgroup>
+    </select>
 </td>
         <?php
         }       
@@ -139,23 +127,18 @@ if($is_admin) {
     <?php
     if($is_admin) {
         ?>
-    <form method='post'>
-        <input type="hidden" id="scroll" name="scroll" />
-        <input type='hidden' id='id' name='id' value='<?=$edition['id'] ?>' />
-        <select id='roller_id' name='roller_id'>
-            <optgroup>
-                <option value="">...</option>
-                <?php
-                foreach ($rollers as $value) {
-                    $selected = '';
-                    if(isset($edition['roller_id']) && $edition['roller_id'] == $value['id']) $selected = " selected = 'selected'";
-                    echo "<option$selected value='".$value['id']."'>".$value['name']."</option>";
-                }
-                ?>
-            </optgroup>
-        </select>
-        <div class="input-group-append d-none"><button type="submit" class="btn btn-outline-dark"><i class="fas fa-save"></i></button></div>
-    </form>
+    <select data-id='<?=$edition['id'] ?>' onfocusout="javascript: EditRoller($(this))">
+        <optgroup>
+            <option value="">...</option>
+            <?php
+            foreach ($rollers as $value) {
+                $selected = '';
+                if(isset($edition['roller_id']) && $edition['roller_id'] == $value['id']) $selected = " selected = 'selected'";
+                echo "<option$selected value='".$value['id']."'>".$value['name']."</option>";
+            }
+            ?>
+        </optgroup>
+    </select>
         <?php
     }
     else {

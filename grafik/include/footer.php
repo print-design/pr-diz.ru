@@ -106,48 +106,48 @@
     });
     
     // Автоматическое сохранение значений полей
-    function EditOrganization(button) {
-        var organization = button.val();
-        var id = button.attr('data-id');
-        button.val('000');
-        $.ajax({ url: "../ajax/edition.php?organization=" + organization + "&id=" + id, context: button })
+    function EditOrganization(field) {
+        var organization = field.val();
+        var id = field.attr('data-id');
+        field.val('000');
+        $.ajax({ url: "../ajax/edition.php?organization=" + organization + "&id=" + id, context: field })
                 .done(function(data) {
-                    button.val(data);
+                    field.val(data);
             organizations.push(data);
             organizations = [...new Set(organizations)].sort();
         })
                 .fail(function() {
-                    button.val('70773');
+                    field.val('70773');
         });
     }
     
-    function EditEdition(button) {
-        var edition = button.val();
-        var id = button.attr('data-id');
-        button.val('000');
-        $.ajax({ url: "../ajax/edition.php?edition=" + edition + "&id=" + id, context: button })
+    function EditEdition(field) {
+        var edition = field.val();
+        var id = field.attr('data-id');
+        field.val('000');
+        $.ajax({ url: "../ajax/edition.php?edition=" + edition + "&id=" + id, context: field })
                 .done(function(data) {
-                    button.val(data);
+                    field.val(data);
             editions.push(data);
             editions = [...new Set(editions)].sort();
         })
                 .fail(function() {
-                    button.val('70773');
+                    field.val('70773');
         });
     }
-        
-    $('input#length.editable').focusout(function(){
-        var length = $(this).val();
-        var id = $(this).parent().prev('#id').val();
-        $(this).val('000');
-        $.ajax({ url: "../ajax/edition.php?length=" + length + "&id=" + id, context: $(this) })
+    
+    function EditLength(field) {
+        var length = field.val();
+        var id = field.attr('data-id');
+        field.val('000');
+        $.ajax({ url: "../ajax/edition.php?length=" + length + "&id=" + id, context: field })
                 .done(function(data) {
-                    $(this).val(data);
+                    field.val(data);
         })
                 .fail(function() {
-                    $(this).val('70773');
+                    field.val('70773');
         });
-    });
+    }
         
     $('input#coloring.editable').focusout(function(){
         var coloring = $(this).val();
@@ -184,31 +184,31 @@
         this.form.submit();
     });
         
-    $('select[id=status_id]').focusout(function(){
-        var status_id = $(this).val();
-        var id = $(this).prev('#id').val();
-        $(this).val('');
-        $.ajax({ url: "../ajax/edition.php?status_id=" + status_id + "&id=" + id, context: $(this) })
+    function EditStatus(select) {
+        var status_id = select.val();
+        var id = select.attr('data-id');
+        select.val('');
+        $.ajax({ url: "../ajax/edition.php?status_id=" + status_id + "&id=" + id, context: select })
                 .done(function(data) {
-                    $(this).val(data);
+                    select.val(data);
         })
                 .fail(function() {
                     alert('Ошибка при смене статуса');
         });
-    });
+    }
         
-    $('select[id=roller_id]').focusout(function(){
-        var roller_id = $(this).val();
-        var id = $(this).prev('#id').val();
-        $(this).val('');
-        $.ajax({ url: "../ajax/edition.php?roller_id=" + roller_id + "&id=" + id, context: $(this) })
+    function EditRoller(select) {
+        var roller_id = select.val();
+        var id = select.attr('data-id');
+        select.val('');
+        $.ajax({ url: "../ajax/edition.php?roller_id=" + roller_id + "&id=" + id, context: select })
                 .done(function(data) {
-                    $(this).val(data);
+                    select.val(data);
         })
                 .fail(function() {
                     alert('Ошибка при смене вала');
         });
-    });
+    }
         
     $('select[id=lamination_id]').focusout(function(){
         var lamination_id = $(this).val();
