@@ -46,9 +46,6 @@
                         alert('Ошибка при копировании тиража в буфер обмена');
                     }
                     else {
-                        $('.clipboard').val(data);
-                        $('.clipboard_paste').prop("disabled", false);
-                        
                         $('.btn_clipboard_paste').attr('data-clipboard', data);
                         $('.btn_clipboard_paste').prop("disabled", false);
                         
@@ -240,12 +237,12 @@
     });
     
     // Вставка тиража
-    $('.btn_clipboard_paste').click(function(){
+    function PasteEdition(button) {
         $.ajax({ url: "../ajax/clipboard_paste.php?clipboard=" + $(this).attr('data-clipboard') + "&machine_id=" + $(this).attr('data-machine') + "&from=" + $(this).attr('data-from') + "&to=" + $(this).attr('data-to'), context: $(this) })
                 .done(function(){
                     $('#waiting').html("<img src='../images/waiting.gif' />");
             
-                    $.ajax({ url: "../ajax/draw.php?machine_id=" + $(this).attr('data-machine') + "&from=" + $(this).attr('data-from') + "&to=" + $(this).attr('data-to'), context: $(this) })
+                    $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
                             .done(function(data){
                                 $('#maincontent').html(data);
                                 $('#waiting').html('');
@@ -257,7 +254,7 @@
                 .fail(function(){
                     alert("Ошибка при совершении операции");
                 });
-    });
+    }
     
     // Сдвиг нескольких смен
     $('.show_move_form').click(function(){
