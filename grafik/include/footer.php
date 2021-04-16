@@ -323,6 +323,27 @@
         $('#move_shifts_form').modal('show');
     }
     
+    function MoveEditions(button) {
+        var direction = button.attr('data-direction');
+        var move_shifts_machine_id = $('#move_shifts_machine_id').val();
+        var move_shifts_from = $('#move_shifts_from').val();
+        var move_shifts_shift_from = $('#move_shifts_shift_from').val();
+        var move_shifts_to = $('#move_shifts_to').val();
+        var move_shifts_shift_to = $('#move_shifts_shift_to').val();
+        var move_shifts_days = $('#move_shifts_days').val();
+        var move_shifts_half = $('#move_shifts_half').is(':checked');
+        
+        var info = direction + ' -- ' + 
+                move_shifts_machine_id + ' -- ' + 
+                move_shifts_from + ' -- ' + 
+                move_shifts_shift_from + ' -- ' + 
+                move_shifts_to + ' -- ' + 
+                move_shifts_shift_to + ' -- ' + 
+                move_shifts_days + ' -- ' + 
+                move_shifts_half;
+        alert(info);
+    }
+    
     // Прокрутка на прежнее место после отправки формы
     $(window).on("scroll", function(){
         $('input[name="scroll"]').val($(window).scrollTop());

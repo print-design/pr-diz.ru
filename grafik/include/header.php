@@ -146,7 +146,7 @@
                     <div class="form-group form-inline">
                         <label for="from">от&nbsp;</label>
                         <input type="date" id="move_shifts_from" name="move_shifts_from" class="form-control" />
-                        <select id="move_shifts_shift" name="move_shifts_shift" class="form-control ml-1">
+                        <select id="move_shifts_shift_from" name="move_shifts_shift_from" class="form-control ml-1">
                             <option value="day">день</option>
                             <option value="night">ночь</option>
                         </select>
@@ -160,11 +160,11 @@
                         </select>
                     </div>
                     <div class="form-group form-inline">
-                        <label for="days">на&nbsp;</label>
-                        <input type="number" id="days" name="days" min="0" max="99" class="form-control" required="required" />
+                        <label for="move_shifts_days">на&nbsp;</label>
+                        <input type="number" id="move_shifts_days" name="move_shifts_days" min="0" max="99" class="form-control" value="0" required="required" />
                         <label>&nbsp;дней&nbsp;</label>
-                        <input type="checkbox" id="half" name="half" />
-                        <label class="form-check-label" for="half">&nbsp;с половиной</label>
+                        <input type="checkbox" id="move_shifts_half" name="move_shifts_half" />
+                        <label class="form-check-label" for="move_shifts_half">&nbsp;с половиной</label>
                     </div>
                     <input type="hidden" id="scroll" name="scroll" />
                 </div>
@@ -172,6 +172,10 @@
                 <div class="modal-footer">
                     <button type="submit" id="move_shifts_back_submit" name="move_shifts_back_submit" class="btn">Назад&nbsp;<i class="fas fa-arrow-up"></i></button>
                     <button type="submit" id="move_shifts_forth_submit" name="move_shifts_forth_submit" class="btn ml-1">Вперёд&nbsp;<i class="fas fa-arrow-down"></i></button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-direction="up" class="btn" onclick="javascript: MoveEditions($(this))" data-dismiss="modal">Назад&nbsp;<i class="fas fa-arrow-up"></i></button>
+                    <button type="button" data-direction="down" class="btn ml-1" onclick="javascript: MoveEditions($(this))" data-dismiss="modal">Вперёд&nbsp;<i class="fas fa-arrow-down"></i></button>
                 </div>
             </form>
         </div>
