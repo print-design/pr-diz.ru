@@ -236,9 +236,29 @@
         });
     }
     
+    // Создание тиража
+    function CreateEdition(button) {
+        $.ajax({ url: "../ajax/create_edition.php?workshift_id=" + button.attr('data-workshift') + "&date=" + button.attr('data-date') + "&shift=" + button.attr('data-shift') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to') + "&position=" + button.attr('data-position') + "&direction=" + button.attr('data-direction'), context: button })
+                .done(function(){
+                    $('#waiting').html("<img src='../images/waiting.gif' />");
+            
+                    $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
+                            .done(function(data){
+                                $('#maincontent').html(data);
+                                $('#waiting').html('');
+                            })
+                            .fail(function(){
+                                alert('Ошибка при перерисовки страницы');
+                            });
+                })
+                .fail(function(){
+                    alert('Ошибка при совершении операции');
+                });
+    }
+    
     // Вставка тиража
     function PasteEdition(button) {
-        $.ajax({ url: "../ajax/clipboard_paste.php?clipboard=" + button.attr('data-clipboard') + "&machine_id=" + button.attr('data-machine') + "&date=" + button.attr('data-date') + "&shift=" + button.attr('data-shift') + "&workshift_id=" + button.attr('data-workshift') + "&direction=" + button.attr('data-direction') + "&position=" + button.attr('data-position'), context: $(this) })
+        $.ajax({ url: "../ajax/clipboard_paste.php?clipboard=" + button.attr('data-clipboard') + "&machine_id=" + button.attr('data-machine') + "&date=" + button.attr('data-date') + "&shift=" + button.attr('data-shift') + "&workshift_id=" + button.attr('data-workshift') + "&direction=" + button.attr('data-direction') + "&position=" + button.attr('data-position'), context: button })
                 .done(function(){
                     $('#waiting').html("<img src='../images/waiting.gif' />");
             

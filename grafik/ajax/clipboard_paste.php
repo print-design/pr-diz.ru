@@ -38,14 +38,14 @@ if(empty($workshift_id)) {
 }
 
 
-if(!empty($direction_get) && !empty($position_get)) {
+if($direction_get !== null && $position_get !== null) {
     if($direction_get == 'up') {
-        $error_message = (new Executer("update edition e inner join workshift ws on e.workshift_id = ws.id set e.position = e.position - 1 where ws.date = '$date' and ws.shift = '$shift' and ws.machine_id = '$machineId' and position < $position_get"))->error;
+        $error_message = (new Executer("update edition set position = position - 1 where workshift_id = $workshift_id and position < $position_get"))->error;
         $position = intval($position_get) - 1;
     }
     
     if($direction_get == 'down') {
-        $error_message = (new Executer("update edition e inner join workshift ws on e.workshift_id = ws.id set e.position = e.position + 1 where ws.date = '$date' and ws.shift = '$shift' and ws.machine_id = '$machineId' and position > $position_get"))->error;
+        $error_message = (new Executer("update edition set position = position + 1 where workshift_id = $workshift_id and position > $position_get"))->error;
         $position = intval($position_get) + 1;
     }
 }
@@ -55,6 +55,4 @@ $sql = "insert into edition (name, organization, length, status_id, lamination_i
 $executer = new Executer($sql);
 $error_message = $executer->error;
 $insert_id = $executer->insert_id;
-
-//echo $clipboard.' --- '.$machineId.' --- '.$date.' --- '.$shift.' --- '.$workshift_id;
 ?>

@@ -157,31 +157,6 @@ class Grafik {
             }
         }
         
-        // Создание тиража
-        $create_shift_submit = filter_input(INPUT_POST, 'create_edition_submit');
-        if($create_shift_submit !== null) {
-            $workshift_id = filter_input(INPUT_POST, 'workshift_id');
-            $date = filter_input(INPUT_POST, 'date');
-            $shift = filter_input(INPUT_POST, 'shift');
-            $position = 1;
-            
-            $direction_post = filter_input(INPUT_POST, 'direction');
-            $position_post = filter_input(INPUT_POST, 'position');
-            if($direction_post !== null && $position_post !== null) {
-                if($direction_post == 'up') {
-                    $this->error_message = (new Executer("update edition e inner join workshift ws on e.workshift_id = ws.id set e.position = e.position - 1 where ws.date = '$date' and ws.shift = '$shift' and ws.machine_id = '$this->machineId' and position < $position_post"))->error;
-                    $position = intval($position_post) - 1;
-                }
-                
-                if($direction_post == 'down') {
-                    $this->error_message = (new Executer("update edition e inner join workshift ws on e.workshift_id = ws.id set e.position = e.position + 1 where ws.date = '$date' and ws.shift = '$shift' and ws.machine_id = '$this->machineId' and position > $position_post"))->error;
-                    $position = intval($position_post) + 1;
-                }
-            }
-            
-            $this->error_message = (new Executer("insert into edition (workshift_id, position) values ($workshift_id, $position)"))->error;
-        }
-        
         // Сдвиг нескольких тиражей назад
         if(null !== filter_input(INPUT_POST, 'move_shifts_back_submit')) {
             $from = filter_input(INPUT_POST, 'move_shifts_from');

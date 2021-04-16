@@ -3,24 +3,8 @@ if($is_admin) {
     // Кнопки добавления тиража
     ?>
 <td class='<?=$top ?> <?=$shift ?>'>
-    <form method='post'>
-        <input type="hidden" id="scroll" name="scroll" />
-        <input type='hidden' id='workshift_id' name='workshift_id' value='<?=$workshift_id ?>' />
-        <input type='hidden' id='date' name='date' value='<?=$date ?>' />
-        <input type='hidden' id='shift' name='shift' value='<?=$shift ?>' />
-        <input type='hidden' id='position' name='position' value='<?=$position ?>' />
-        <input type='hidden' id='direction' name='direction' value='up' />
-        <button type='submit' id='create_edition_submit' name='create_edition_submit' class='btn btn-outline-dark btn-sm mb-1' data-toggle='tooltip' title='Добавить тираж выше'><i class='fas fa-plus'></i><i class='fas fa-long-arrow-alt-up'></i></button>
-    </form>
-    <form method='post'>
-        <input type="hidden" id="scroll" name="scroll" />
-        <input type='hidden' id='workshift_id' name='workshift_id' value='<?=$workshift_id ?>' />
-        <input type='hidden' id='date' name='date' value='<?=$date ?>' />
-        <input type='hidden' id='shift' name='shift' value='<?=$shift ?>' />
-        <input type='hidden' id='position' name='position' value='<?=$position ?>' />
-        <input type='hidden' id='direction' name='direction' value='down' />
-        <button type='submit' id='create_edition_submit' name='create_edition_submit' class='btn btn-outline-dark btn-sm' data-toggle='tooltip' title='Добавить тираж ниже'><i class='fas fa-plus'></i><i class='fas fa-long-arrow-alt-down'></i></button>
-    </form>
+    <button type='button' class='btn btn-outline-dark btn-sm' style='display: block;' data-workshift='<?=$workshift_id ?>' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-machine='<?=$machine_id ?>' data-from='<?=$from ?>' data-to='<?=$to ?>' data-position='<?=$position ?>' data-direction='up' onclick='javascript: CreateEdition($(this));' data-toggle='tooltip' title='Добавить тираж выше'><i class='fas fa-plus'></i><i class='fas fa-long-arrow-alt-up'></i></button>
+    <button type='button' class='btn btn-outline-dark btn-sm' style='display: block;' data-workshift='<?=$workshift_id ?>' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-machine='<?=$machine_id ?>' data-from='<?=$from ?>' data-to='<?=$to ?>' data-position='<?=$position ?>' data-direction='down' onclick="javascript: CreateEdition($(this));" data-toggle='tooltip' title='Добавить тираж ниже'><i class='fas fa-plus'></i><i class='fas fa-long-arrow-alt-down'></i></button>
 </td>
     <?php
     // Кнопки вставки тиража
@@ -36,7 +20,7 @@ if($is_admin) {
     }
     ?>
 <td class='<?=$top ?> <?=$shift ?>'>
-    <button type="button" class='btn btn-outline-dark btn-sm mb-1 btn_clipboard_paste' style='display: block;' data-toggle='tooltip' data-machine='<?=$machine_id ?>' data-from='<?=$from ?>' data-to='<?=$to ?>' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-workshift='<?=$workshift_id ?>' data-direction='up' data-position='<?=$position ?>' onclick="javascript: PasteEdition($(this))" title='Вставить тираж выше'<?=$disabled ?>><i class='fas fa-paste'></i><i class='fas fa-long-arrow-alt-up'></i></button>
+    <button type="button" class='btn btn-outline-dark btn-sm btn_clipboard_paste' style='display: block;' data-toggle='tooltip' data-machine='<?=$machine_id ?>' data-from='<?=$from ?>' data-to='<?=$to ?>' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-workshift='<?=$workshift_id ?>' data-direction='up' data-position='<?=$position ?>' onclick="javascript: PasteEdition($(this))" title='Вставить тираж выше'<?=$disabled ?>><i class='fas fa-paste'></i><i class='fas fa-long-arrow-alt-up'></i></button>
     <button type="button" class='btn btn-outline-dark btn-sm btn_clipboard_paste' style="display: block;" data-toggle='tooltip' data-machine='<?=$machine_id ?>' data-from='<?=$from ?>' data-to='<?=$to ?>' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-workshift='<?=$workshift_id ?>' data-direction='down' data-position='<?=$position ?>' onclick="javascript: PasteEdition($(this))" title='Вставить тираж ниже'<?=$disabled ?>><i class='fas fa-paste'></i><i class='fas fa-long-arrow-alt-down'></i></button>
 </td>
     <?php
