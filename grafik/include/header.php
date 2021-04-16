@@ -170,8 +170,8 @@
                 </div>
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" data-direction="up" data-machine="" data-from="<?=$date_from->format('Y-m-d') ?>" data-to="<?=$date_to->format('Y-m-d') ?>" class="btn" onclick="javascript: MoveShifts($(this))" data-dismiss="modal">Назад&nbsp;<i class="fas fa-arrow-up"></i></button>
-                    <button type="button" data-direction="down" data-machine="" data-from="<?=$date_from->format('Y-m-d') ?>" data-to="<?=$date_to->format('Y-m-d') ?>" class="btn ml-1" onclick="javascript: MoveShifts($(this))" data-dismiss="modal">Вперёд&nbsp;<i class="fas fa-arrow-down"></i></button>
+                    <button type="button" id="move-shift-up-button" data-direction="up" class="btn" onclick="javascript: MoveShifts($(this))" data-dismiss="modal">Назад&nbsp;<i class="fas fa-arrow-up"></i></button>
+                    <button type="button" id="move-shift-down-button" data-direction="down" class="btn ml-1" onclick="javascript: MoveShifts($(this))" data-dismiss="modal">Вперёд&nbsp;<i class="fas fa-arrow-down"></i></button>
                 </div>
             </form>
         </div>

@@ -319,7 +319,16 @@
     function ShowMoveForm(button) {
         $('#move_shifts_from').val(button.attr('data-date'));
         $('#move_shifts_shift').val(button.attr('data-shift'));
-        $('#move_shifts_machine_id').val(button.attr('data-machine_id'));
+        $('#move_shifts_machine_id').val(button.attr('data-machine'));
+        
+        $('#move-shift-up-button').attr('data-machine', button.attr('data-machine'));
+        $('#move-shift-up-button').attr('data-from', button.attr('data-from'));
+        $('#move-shift-up-button').attr('data-to', button.attr('data-to'));
+        
+        $('#move-shift-down-button').attr('data-machine', button.attr('data-machine'));
+        $('#move-shift-down-button').attr('data-from', button.attr('data-from'));
+        $('#move-shift-down-button').attr('data-to', button.attr('data-to'));
+        
         $('#move_shifts_form').modal('show');
     }
     
