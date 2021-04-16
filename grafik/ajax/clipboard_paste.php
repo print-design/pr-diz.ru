@@ -27,14 +27,10 @@ $user2_id = $row['user2_id'] == null ? 'NULL' : "'".$row['user2_id']."'";
 $position = 1;
 
 if(empty($workshift_id)) {
-    $sql = "insert into workshift (date, machine_id, shift, user1_id, user2_id) values ('$date', $machineId, '$shift', $user1_id, $user2_id)";
+    $sql = "insert into workshift (date, machine_id, shift, user1_id, user2_id) values ('$date', $machineId, '$shift', $user1_id, $user2_id)";    echo $sql;
     $ws_executer = new Executer($sql);
     $error_message = $ws_executer->error;
     $workshift_id = $ws_executer->insert_id;
-    
-    if($workshift_id > 0) {
-        $error_message = (new Executer($sql))->error;
-    }
 }
 
 
