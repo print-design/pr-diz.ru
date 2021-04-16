@@ -342,6 +342,11 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     </div>
                     <div class="row">
                         <div class="col-6 form-group">
+                            <label for="cell">Ячейка на складе</label>
+                            <input type="text" id="cell" name="cell" value="<?= filter_input(INPUT_POST, 'cell') ?>" class="form-control" placeholder="Введите ячейку" required="required" />
+                            <div class="invalid-feedback">Ячейка на складе обязательно</div>
+                        </div>
+                        <div class="col-6 form-group">
                             <label for="rolls_number">Количество рулонов</label>
                             <select id="rolls_number" name="rolls_number" class="form-control" required="required">
                                 <option value="">Выберите количество</option>
@@ -354,11 +359,6 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                                 ?>
                             </select>
                             <div class="invalid-feedback">Количество рулонов обязательно</div>
-                        </div>
-                        <div class="col-6 form-group">
-                            <label for="cell">Ячейка на складе</label>
-                            <input type="text" id="cell" name="cell" value="<?= filter_input(INPUT_POST, 'cell') ?>" class="form-control" placeholder="Введите ячейку" required="required" />
-                            <div class="invalid-feedback">Ячейка на складе обязательно</div>
                         </div>
                     </div>
                     <div id="rolls_info">

@@ -407,7 +407,6 @@ $utilized_status_id = 2;
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6 form-group"></div>
                         <div class="col-6 form-group">
                             <?php
                             $cell_disabled = "";
@@ -419,6 +418,7 @@ $utilized_status_id = 2;
                             <input type="text" id="cell" name="cell" value="<?= $cell ?>" class="form-control<?=$cell_valid ?>" placeholder="Введите ячейку"<?=$cell_disabled ?>" />
                             <div class="invalid-feedback">Ячейка на складе обязательно</div>
                         </div>
+                        <div class="col-6 form-group"></div>
                     </div>
                     <div class="form-group d-none">
                         <?php

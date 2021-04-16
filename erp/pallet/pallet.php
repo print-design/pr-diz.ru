@@ -412,6 +412,17 @@ if(null === $comment) $comment = $row['comment'];
                     </div>
                     <div class="row">
                         <div class="col-6 form-group">
+                            <?php
+                            $cell_disabled = "";
+                            if(!IsInRole(array('technologist', 'storekeeper'))) {
+                                $cell_disabled = " disabled='disabled'";
+                            }
+                            ?>
+                            <label for="cell">Ячейка на складе</label>
+                            <input type="text" id="cell" name="cell" value="<?= $cell ?>" class="form-control<?=$cell_valid ?>" placeholder="Введите ячейку"<?=$cell_disabled ?> />
+                            <div class="invalid-feedback">Ячейка на складе обязательно</div>
+                        </div>
+                        <div class="col-6 form-group">
                             <label for="rolls_number">Количество рулонов</label>
                             <?php
                             $rolls_number_disabled = " disabled='disabled'";
@@ -427,17 +438,6 @@ if(null === $comment) $comment = $row['comment'];
                                 ?>
                             </select>
                             <div class="invalid-feedback">Количество рулонов обязательно</div>
-                        </div>
-                        <div class="col-6 form-group">
-                            <?php
-                            $cell_disabled = "";
-                            if(!IsInRole(array('technologist', 'storekeeper'))) {
-                                $cell_disabled = " disabled='disabled'";
-                            }
-                            ?>
-                            <label for="cell">Ячейка на складе</label>
-                            <input type="text" id="cell" name="cell" value="<?= $cell ?>" class="form-control<?=$cell_valid ?>" placeholder="Введите ячейку"<?=$cell_disabled ?> />
-                            <div class="invalid-feedback">Ячейка на складе обязательно</div>
                         </div>
                     </div>
                     <div class="form-group">

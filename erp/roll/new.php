@@ -306,12 +306,12 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6 form-group"></div>
                         <div class="col-6 form-group">
                             <label for="cell">Ячейка на складе</label>
                             <input type="text" id="cell" name="cell" value="<?= filter_input(INPUT_POST, 'cell') ?>" class="form-control" placeholder="Введите ячейку" required="required" />
                             <div class="invalid-feedback">Ячейка на складе обязательно</div>
                         </div>
+                        <div class="col-6 form-group"></div>
                     </div>
                     <div class="form-group d-none">
                         <label for="manager_id">Менеджер</label>
