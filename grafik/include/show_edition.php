@@ -240,7 +240,7 @@ if($is_admin) {
     if($is_admin):
         ?>
 <td class='<?=$top ?> <?=$shift ?>'>
-    <button class="btn btn-outline-dark btn-sm show_move_form" title="Сдвинуть несколько тиражей" data-toggle='tooltip' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-position='<?=$position ?>' data-machine_id='<?=$machine_id ?>' data-workshift_id='<?=$workshift_id ?>'><i class="fas fa-table"></i></button>
+    <button class="btn btn-outline-dark btn-sm" onclick="javascript: ShowMoveForm($(this))" title="Сдвинуть несколько тиражей" data-toggle='tooltip' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-position='<?=$position ?>' data-machine_id='<?=$machine_id ?>' data-workshift_id='<?=$workshift_id ?>'><i class="fas fa-table"></i></button>
 </td>
     <?php
     endif;
