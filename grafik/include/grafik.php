@@ -272,13 +272,6 @@ class Grafik {
                 }
             }
         }
-        
-        // Удаление смены
-        $delete_shift_submit = filter_input(INPUT_POST, 'delete_shift_submit');
-        if($delete_shift_submit !== null) {
-            $id = filter_input(INPUT_POST, 'id');
-            $this->error_message = (new Executer("delete from workshift where id=$id"))->error;
-        }
     }
 
     function ShowPage() {
@@ -645,11 +638,7 @@ class Grafik {
                     echo "<td class='$top $shift'></td>";
                     echo "<td class='$top $shift'>";
                     if(isset($row['id'])) {
-                        echo "<form method='post'>";
-                        echo '<input type="hidden" id="scroll" name="scroll" />';
-                        echo "<input type='hidden' id='id' name='id' value='".$row['id']."' />";
-                        echo "<button type='submit' id='delete_shift_submit' name='delete_shift_submit' class='btn btn-outline-dark btn-sm confirmable' data-toggle='tooltip' title='Удалить смену'><i class='fas fa-trash-alt'></i></button>";
-                        echo "</form>";
+                        echo "<button type='button' class='btn btn-outline-dark btn-sm' data-id='".$row['id']."' data-machine='$this->machineId' data-from='".$this->dateFrom->format("Y-m-d")."' data-to='".$this->dateTo->format("Y-m-d")."' onclick='javascript: if(confirm(\"Действительно удалить?\")){ DeleteShift($(this)); }' data-toggle='tooltip' title='Удалить смену'><i class='fas fa-trash-alt'></i></button>";
                     }
                     echo "</td>";
                 }

@@ -248,7 +248,7 @@
                                 $('#waiting').html('');
                             })
                             .fail(function(){
-                                alert('Ошибка при перерисовки страницы');
+                                alert('Ошибка при перерисовке страницы');
                             });
                 })
                 .fail(function(){
@@ -268,7 +268,7 @@
                                 $('#waiting').html('');
                             })
                             .fail(function(){
-                                alert('Ошибка при перерисовки страницы');
+                                alert('Ошибка при перерисовке страницы');
                             });
                 })
                 .fail(function(){
@@ -288,7 +288,26 @@
                                 $('#waiting').html('');
                             })
                             .fail(function(){
-                                alert('Ошибка при перерисовки страницы');
+                                alert('Ошибка при перерисовке страницы');
+                            });
+                })
+                .fail(function(){
+                    alert("Ошибка при совершении операции");
+                });
+    }
+    
+    function DeleteShift(button) {
+        $.ajax({ url: "../ajax/delete_shift.php?id=" + button.attr('data-id'), context: button })
+                .done(function(){
+                    $('#waiting').html("<img src='../images/waiting.gif' />");
+            
+                    $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
+                            .done(function(data){
+                                $('#maincontent').html(data);
+                                $('#waiting').html('');
+                            })
+                            .fail(function(){
+                                alert('Ошибка при перерисовке страницы');
                             });
                 })
                 .fail(function(){

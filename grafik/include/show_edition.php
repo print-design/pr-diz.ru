@@ -249,7 +249,7 @@ if($is_admin) {
     if($is_admin):
         ?>
 <td class='<?=$top ?> <?=$shift ?>'>
-    <button type='button' class='btn btn-outline-dark btn-sm' data-id="<?=$edition['id'] ?>" data-machine="<?=$machine_id ?>" data-from="<?=$from ?>" data-to="<?=$to ?>" onclick="javascript: if(confirm('Действительно удалить?')) { DeleteEdition($(this)) };" title='Удалить тираж' data-toggle="tooltip"><i class='fas fa-trash-alt'></i></button>
+    <button type='button' class='btn btn-outline-dark btn-sm' data-id="<?=$edition['id'] ?>" data-machine="<?=$machine_id ?>" data-from="<?=$from ?>" data-to="<?=$to ?>" onclick="javascript: if(confirm('Действительно удалить?')) { DeleteEdition($(this)); }" title='Удалить тираж' data-toggle="tooltip"><i class='fas fa-trash-alt'></i></button>
 </td>
     <?php
     endif;
