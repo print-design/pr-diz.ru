@@ -144,16 +144,16 @@
                 <div class="modal-body">
                     <input type="hidden" id="move_shifts_machine_id" name="move_shifts_machine_id" />
                     <div class="form-group form-inline">
-                        <label for="from">от&nbsp;</label>
-                        <input type="date" id="move_shifts_from" name="move_shifts_from" class="form-control" />
+                        <label for="move_shifts_date_from">от&nbsp;</label>
+                        <input type="date" id="move_shifts_date_from" name="move_shifts_date_from" class="form-control" />
                         <select id="move_shifts_shift_from" name="move_shifts_shift_from" class="form-control ml-1">
                             <option value="day">день</option>
                             <option value="night">ночь</option>
                         </select>
                     </div>
                     <div class="form-group form-inline">
-                        <label for="to">до&nbsp;</label>
-                        <input type="date" id="move_shifts_to" name="move_shifts_to" class="form-control" />
+                        <label for="move_shifts_date_to">до&nbsp;</label>
+                        <input type="date" id="move_shifts_date_to" name="move_shifts_date_to" class="form-control" />
                         <select id="move_shifts_shift_to" name="move_shifts_shift_to" class="form-control ml-1">
                             <option value="day">день</option>
                             <option value="night">ночь</option>
@@ -170,8 +170,8 @@
                 </div>
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" id="move-shift-up-button" data-direction="up" class="btn" onclick="javascript: MoveShifts($(this))" data-dismiss="modal">Назад&nbsp;<i class="fas fa-arrow-up"></i></button>
-                    <button type="button" id="move-shift-down-button" data-direction="down" class="btn ml-1" onclick="javascript: MoveShifts($(this))" data-dismiss="modal">Вперёд&nbsp;<i class="fas fa-arrow-down"></i></button>
+                    <button type="button" id="move-shift-up-button" class="btn" onclick="javascript: MoveShiftsUp($(this))" data-dismiss="modal">Назад&nbsp;<i class="fas fa-arrow-up"></i></button>
+                    <button type="button" id="move-shift-down-button" class="btn ml-1" onclick="javascript: MoveShiftsDown($(this))" data-dismiss="modal">Вперёд&nbsp;<i class="fas fa-arrow-down"></i></button>
                 </div>
             </form>
         </div>

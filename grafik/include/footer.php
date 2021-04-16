@@ -317,8 +317,8 @@
     
     // Сдвиг нескольких смен
     function ShowMoveForm(button) {
-        $('#move_shifts_from').val(button.attr('data-date'));
-        $('#move_shifts_shift').val(button.attr('data-shift'));
+        $('#move_shifts_date_from').val(button.attr('data-date'));
+        $('#move_shifts_shift_from').val(button.attr('data-shift'));
         $('#move_shifts_machine_id').val(button.attr('data-machine'));
         
         $('#move-shift-up-button').attr('data-machine', button.attr('data-machine'));
@@ -332,18 +332,18 @@
         $('#move_shifts_form').modal('show');
     }
     
-    function MoveShifts(button) {
+    function MoveShiftsDown(button) {
         var direction = button.attr('data-direction');
         var machine_id = $('#move_shifts_machine_id').val();
-        var from = $('#move_shifts_from').val();
+        var from = $('#move_shifts_date_from').val();
         var shift_from = $('#move_shifts_shift_from').val();
-        var to = $('#move_shifts_to').val();
+        var to = $('#move_shifts_date_to').val();
         var shift_to = $('#move_shifts_shift_to').val();
         var days = $('#move_shifts_days').val();
         var half = $('#move_shifts_half').is(':checked');
         
-        $.ajax({ url: "../ajax/move_shifts.php?direction=" + direction + "&machine_id=" + machine_id + "&from=" + from + "&shift_from=" + shift_from + "&to=" + to + "&shift_to=" + shift_to + "&days=" + days + "&half=" + half, context: button })
-                .done(function(data){ alert(data);
+        $.ajax({ url: "../ajax/move_shifts_down.php?machine_id=" + machine_id + "&from=" + from + "&shift_from=" + shift_from + "&to=" + to + "&shift_to=" + shift_to + "&days=" + days + "&half=" + half, context: button })
+                .done(function(){
                     $('#waiting').html("<img src='../images/waiting.gif' />");
             
                     $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
