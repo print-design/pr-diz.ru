@@ -598,18 +598,12 @@ class Grafik {
                     
                     if(isset($row['id'])) {
                         // Создание тиража
-                        echo "<form method='post'>";
-                        echo "<input type='hidden' id='scroll' name='scroll' />";
-                        echo '<input type="hidden" id="date" name="date" value="'.$dateshift['date']->format('Y-m-d').'" />';
-                        echo '<input type="hidden" id="shift" name="shift" value="'.$dateshift['shift'].'" />';
-                        echo "<input type='hidden' id='workshift_id' name='workshift_id' value='".$row['id']."' />";
-                        echo "<button id='create_edition_submit' name='create_edition_submit' class='btn btn-outline-dark btn-sm mb-1' data-toggle='tooltip' title='Добавить тираж'><i class='fas fa-plus'></i></button>";
-                        echo '</form>';
+                        echo "<button type='button' class='btn btn-outline-dark btn-sm' style='display: block;' data-toggle='tooltip' data-machine='$this->machineId' data-from='".$this->dateFrom->format("Y-m-d")."' data-to='".$this->dateTo->format("Y-m-d")."' data-date='$formatted_date' data-shift='".$dateshift['shift']."' data-workshift='".(empty($row['id']) ? '' : $row['id'])."' onclick='javascript: CreateEdition($(this))' title='Добавить тираж'><i class='fas fa-plus'></i></button>";
                     }
                     
                     // Вставка тиража
                     $disabled = " disabled='disabled'";
-                    echo "<button type='button' class='btn btn-outline-dark btn-sm btn_clipboard_paste' data-toggle='tooltip' data-machine='$this->machineId' data-from='".$this->dateFrom->format("Y-m-d")."' data-to='".$this->dateTo->format("Y-m-d")."' data-date='$formatted_date' data-shift='".$dateshift['shift']."' data-workshift='".(empty($row['id']) ? '' : $row['id'])."' onclick='javascript: PasteEdition($(this))' title='Вставить тираж'$disabled><i class='fas fa-paste'></i></button>";
+                    echo "<button type='button' class='btn btn-outline-dark btn-sm btn_clipboard_paste' style='display: block;' data-toggle='tooltip' data-machine='$this->machineId' data-from='".$this->dateFrom->format("Y-m-d")."' data-to='".$this->dateTo->format("Y-m-d")."' data-date='$formatted_date' data-shift='".$dateshift['shift']."' data-workshift='".(empty($row['id']) ? '' : $row['id'])."' onclick='javascript: PasteEdition($(this))' title='Вставить тираж'$disabled><i class='fas fa-paste'></i></button>";
                     
                     echo '</td>';
                 }
