@@ -276,6 +276,26 @@
                 });
     }
     
+    // Удаление тиража
+    function DeleteEdition(button) {
+        $.ajax({ url: "../ajax/delete_edition.php?id=" + button.attr('data-id'), context: button })
+                .done(function(){
+                    $('#waiting').html("<img src='../images/waiting.gif' />");
+            
+                    $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
+                            .done(function(data){
+                                $('#maincontent').html(data);
+                                $('#waiting').html('');
+                            })
+                            .fail(function(){
+                                alert('Ошибка при перерисовки страницы');
+                            });
+                })
+                .fail(function(){
+                    alert("Ошибка при совершении операции");
+                });
+    }
+    
     // Сдвиг нескольких смен
     $('.show_move_form').click(function(){
         $('#move_shifts_from').val($(this).attr('data-date'));

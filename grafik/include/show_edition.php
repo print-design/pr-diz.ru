@@ -249,11 +249,7 @@ if($is_admin) {
     if($is_admin):
         ?>
 <td class='<?=$top ?> <?=$shift ?>'>
-    <form method='post'>
-        <input type="hidden" id="scroll" name="scroll" />
-        <input type='hidden' id='id' name='id' value='<?=$edition['id'] ?>' />
-        <button type='submit' id='delete_edition_submit' name='delete_edition_submit' class='btn btn-outline-dark btn-sm confirmable' title='Удалить тираж' data-toggle="tooltip"><i class='fas fa-trash-alt'></i></button>
-    </form>
+    <button type='button' class='btn btn-outline-dark btn-sm' data-id="<?=$edition['id'] ?>" data-machine="<?=$machine_id ?>" data-from="<?=$from ?>" data-to="<?=$to ?>" onclick="javascript: if(confirm('Действительно удалить?')) { DeleteEdition($(this)) };" title='Удалить тираж' data-toggle="tooltip"><i class='fas fa-trash-alt'></i></button>
 </td>
     <?php
     endif;

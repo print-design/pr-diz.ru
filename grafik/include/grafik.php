@@ -273,13 +273,6 @@ class Grafik {
             }
         }
         
-        // Удаление тиража
-        $delete_edition_submit = filter_input(INPUT_POST, 'delete_edition_submit');
-        if($delete_edition_submit !== null) {
-            $id = filter_input(INPUT_POST, 'id');
-            $this->error_message = (new Executer("delete from edition where id=$id"))->error;
-        }
-        
         // Удаление смены
         $delete_shift_submit = filter_input(INPUT_POST, 'delete_shift_submit');
         if($delete_shift_submit !== null) {
