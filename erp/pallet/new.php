@@ -330,14 +330,14 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     </div>
                     <div class="row">
                         <div class="col-6 form-group">
-                            <label for="length">Длина, м</label>
-                            <input type="text" id="length" name="length" value="<?= filter_input(INPUT_POST, 'length') ?>" class="form-control int-only<?=$length_valid ?>" placeholder="Введите длину" required="required" />
-                            <div class="invalid-feedback"><?= empty($length_message) ? "Длина обязательно" : $length_message ?></div>
-                        </div>
-                        <div class="col-6 form-group">
                             <label for="net_weight">Масса нетто, кг</label>
                             <input type="text" id="net_weight" name="net_weight" value="<?= filter_input(INPUT_POST, 'net_weight') ?>" class="form-control int-only<?=$net_weight_valid ?>" placeholder="Введите массу нетто" required="required" />
                             <div class="invalid-feedback"><?= empty($net_weight_message) ? "Масса нетто обязательно" : $net_weight_message ?></div>
+                        </div>
+                        <div class="col-6 form-group">
+                            <label for="length">Длина, м</label>
+                            <input type="text" id="length" name="length" value="<?= filter_input(INPUT_POST, 'length') ?>" class="form-control int-only<?=$length_valid ?>" placeholder="Введите длину" required="required" />
+                            <div class="invalid-feedback"><?= empty($length_message) ? "Длина обязательно" : $length_message ?></div>
                         </div>
                     </div>
                     <div class="row">
@@ -526,12 +526,12 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         form_row += "<input type='hidden' id='ordinal_roll" + i + "' name='ordinal_roll" + i + "' value='" + i + "' />";
                         form_row += "<div class='row'>";
                         form_row += "<div class='col-6 form-group'>";
-                        form_row += "<label for='length_roll" + i + "'>Длина, м</label>";
-                        form_row += "<input type='text' id='length_roll" + i + "' name='length_roll" + i + "' class='form-control int-only' placeholder='Длина рулона' required='required' />";
-                        form_row += "</div>";
-                        form_row += "<div class='col-6 form-group'>";
                         form_row += "<label for='weight_roll" + i + "'>Масса нетто, кг</label>";
                         form_row += "<input type='text' id='weight_roll" + i + "' name='weight_roll" + i + "' class='form-control int-only' placeholder='Масса Нетто рулона' required='required' />";
+                        form_row += "</div>";
+                        form_row += "<div class='col-6 form-group'>";
+                        form_row += "<label for='length_roll" + i + "'>Длина, м</label>";
+                        form_row += "<input type='text' id='length_roll" + i + "' name='length_roll" + i + "' class='form-control int-only' placeholder='Длина рулона' required='required' />";
                         form_row += "</div>";
                         form_row += "</div>";
                         
