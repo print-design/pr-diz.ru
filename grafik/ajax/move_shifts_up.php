@@ -23,7 +23,7 @@ if(!empty($to)) {
     }
     if($shift_from == 'day') {
         if($half == 'on') {
-            $sql = "update workshift set date = if(shift = 'day', date_add(date, interval -$days_1 day), date_add(date, interval -$days day)), shift = if(shift = 'day', 'night', 'day') where machine_id = $this->machineId and date >= '$from'$where_to";
+            $sql = "update workshift set date = if(shift = 'day', date_add(date, interval -$days_1 day), date_add(date, interval -$days day)), shift = if(shift = 'day', 'night', 'day') where machine_id = $machine_id and date >= '$from'$where_to";
             $error_message = (new Executer($sql))->error;
             /*if(!empty($error_message)) {
                 echo $sql;
