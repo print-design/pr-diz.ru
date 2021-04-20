@@ -177,8 +177,8 @@
     
     function CancelCreateUser(button) {
         button.parent().parent().addClass('d-none');
-        button.parent().parent().parent().prev().removeClass('d-none');
-        button.parent().parent().parent().prev().val(button.attr('data-user1'));
+        button.parent().parent().prev().removeClass('d-none');
+        button.parent().parent().prev().val(button.attr('data-user1'));
     }
     
     function EditUser1(select) {
@@ -187,24 +187,25 @@
             select.addClass('d-none');
         }
         else {
+            $('#waiting').html("<img src='../images/waiting.gif' />");
             var user1_id = select.val();
             var id = select.attr('data-id');
             var date = select.attr('data-date');
             var shift = select.attr('data-shift');
             $.ajax({ url: "../ajax/edit_user1.php?user1_id=" + user1_id + "&id=" + id + "&date=" + date + "&shift=" + shift + "&machine_id=" + select.attr('data-machine') })
                     .done(function() {
-                        $('#waiting').html("<img src='../images/waiting.gif' />");
-
                         $.ajax({ url: "../ajax/draw.php?machine_id=" + select.attr('data-machine') + "&from=" + select.attr('data-from') + "&to=" + select.attr('data-to'), context: select })
                             .done(function(data){
-                                $('#maincontent').html(data);
                                 $('#waiting').html('');
+                                $('#maincontent').html(data);
                             })
                             .fail(function(){
+                                $('#waiting').html('');
                                 alert('Ошибка при перерисовке страницы');
                             });
             })
                     .fail(function() {
+                        $('#waiting').html('');
                         alert('Ошибка при выборе работника 1');
             });
         }
@@ -216,27 +217,41 @@
             select.addClass('d-none');
         }
         else {
+            $('#waiting').html("<img src='../images/waiting.gif' />");
             var user2_id = select.val();
             var id = select.attr('data-id');
             var date = select.attr('data-date');
             var shift = select.attr('data-shift');
             $.ajax({ url: "../ajax/edit_user2.php?user2_id=" + user2_id + "&id=" + id + "&date=" + date + "&shift=" + shift + "&machine_id=" + select.attr('data-machine') })
                     .done(function() {
-                        $('#waiting').html("<img src='../images/waiting.gif' />");
-
                         $.ajax({ url: "../ajax/draw.php?machine_id=" + select.attr('data-machine') + "&from=" + select.attr('data-from') + "&to=" + select.attr('data-to'), context: select })
                             .done(function(data){
-                                $('#maincontent').html(data);
                                 $('#waiting').html('');
+                                $('#maincontent').html(data);
                             })
                             .fail(function(){
+                                $('#waiting').html('');
                                 alert('Ошибка при перерисовке страницы');
                             });
             })
                     .fail(function() {
+                        $('#waiting').html('');
                         alert('Ошибка при выборе работника 1');
             });
         }
+    }
+    
+    function CreateUser1(button) {
+        $('#waiting').html("<img src='../images/waiting.gif' />");
+        $.ajax({ url: "../ajax/create_user1.php", context: button })
+                .done(function(data) {
+                    $('#waiting').html('');
+                    alert(data);
+                })
+                .fail(function() {
+                    $('#waiting').html('');
+                    alert("Ошибка при создании пользователя");
+                });
     }
     
     function EditStatus(select) {
@@ -293,79 +308,83 @@
     
     // Создание тиража
     function CreateEdition(button) {
+        $('#waiting').html("<img src='../images/waiting.gif' />");
         $.ajax({ url: "../ajax/create_edition.php?workshift_id=" + button.attr('data-workshift') + "&date=" + button.attr('data-date') + "&shift=" + button.attr('data-shift') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to') + "&position=" + button.attr('data-position') + "&direction=" + button.attr('data-direction'), context: button })
                 .done(function(){
-                    $('#waiting').html("<img src='../images/waiting.gif' />");
-            
                     $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
                             .done(function(data){
-                                $('#maincontent').html(data);
                                 $('#waiting').html('');
+                                $('#maincontent').html(data);
                             })
                             .fail(function(){
+                                $('#waiting').html('');
                                 alert('Ошибка при перерисовке страницы');
                             });
                 })
                 .fail(function(){
+                    $('#waiting').html('');
                     alert('Ошибка при совершении операции');
                 });
     }
     
     // Вставка тиража
     function PasteEdition(button) {
+        $('#waiting').html("<img src='../images/waiting.gif' />");
         $.ajax({ url: "../ajax/clipboard_paste.php?clipboard=" + button.attr('data-clipboard') + "&machine_id=" + button.attr('data-machine') + "&date=" + button.attr('data-date') + "&shift=" + button.attr('data-shift') + "&workshift_id=" + button.attr('data-workshift') + "&direction=" + button.attr('data-direction') + "&position=" + button.attr('data-position'), context: button })
                 .done(function(){
-                    $('#waiting').html("<img src='../images/waiting.gif' />");
-            
                     $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
                             .done(function(data){
-                                $('#maincontent').html(data);
                                 $('#waiting').html('');
+                                $('#maincontent').html(data);
                             })
                             .fail(function(){
+                                $('#waiting').html('');
                                 alert('Ошибка при перерисовке страницы');
                             });
                 })
                 .fail(function(){
+                    $('#waiting').html('');
                     alert("Ошибка при совершении операции");
                 });
     }
     
     // Удаление тиража
     function DeleteEdition(button) {
+        $('#waiting').html("<img src='../images/waiting.gif' />");
         $.ajax({ url: "../ajax/delete_edition.php?id=" + button.attr('data-id'), context: button })
                 .done(function(){
-                    $('#waiting').html("<img src='../images/waiting.gif' />");
-            
                     $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
                             .done(function(data){
-                                $('#maincontent').html(data);
                                 $('#waiting').html('');
+                                $('#maincontent').html(data);
                             })
                             .fail(function(){
+                                $('#waiting').html('');
                                 alert('Ошибка при перерисовке страницы');
                             });
                 })
                 .fail(function(){
+                    $('#waiting').html('');
                     alert("Ошибка при совершении операции");
                 });
     }
     
     function DeleteShift(button) {
+        $('#waiting').html("<img src='../images/waiting.gif' />");
         $.ajax({ url: "../ajax/delete_shift.php?id=" + button.attr('data-id'), context: button })
                 .done(function(){
-                    $('#waiting').html("<img src='../images/waiting.gif' />");
-            
                     $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
                             .done(function(data){
-                                $('#maincontent').html(data);
                                 $('#waiting').html('');
+                                $('#maincontent').html(data);
                             })
                             .fail(function(){
+                                $('#waiting').html('');
                                 alert('Ошибка при перерисовке страницы');
                             });
                 })
                 .fail(function(){
+                    $('#waiting').html('');
                     alert("Ошибка при совершении операции");
                 });
     }
@@ -388,6 +407,7 @@
     }
     
     function MoveShiftsUp(button) {
+        $('#waiting').html("<img src='../images/waiting.gif' />");
         var machine_id = $('#move_shifts_machine_id').val();
         var from = $('#move_shifts_date_from').val();
         var shift_from = $('#move_shifts_shift_from').val();
@@ -398,23 +418,24 @@
         
         $.ajax({ url: "../ajax/move_shifts_up.php?machine_id=" + machine_id + "&from=" + from + "&shift_from=" + shift_from + "&to=" + to + "&shift_to=" + shift_to + "&days=" + days + "&half=" + half, context: button })
                 .done(function(){
-                    $('#waiting').html("<img src='../images/waiting.gif' />");
-            
                     $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
                             .done(function(data){
-                                $('#maincontent').html(data);
                                 $('#waiting').html('');
+                                $('#maincontent').html(data);
                             })
                             .fail(function(){
+                                $('#waiting').html('');
                                 alert('Ошибка при перерисовке страницы');
                             });
                 })
                 .fail(function(){
+                    $('#waiting').html('');
                     alert("Ошибка при совершении операции");
                 });
     }
     
     function MoveShiftsDown(button) {
+        $('#waiting').html("<img src='../images/waiting.gif' />");
         var machine_id = $('#move_shifts_machine_id').val();
         var from = $('#move_shifts_date_from').val();
         var shift_from = $('#move_shifts_shift_from').val();
@@ -425,18 +446,18 @@
         
         $.ajax({ url: "../ajax/move_shifts_down.php?machine_id=" + machine_id + "&from=" + from + "&shift_from=" + shift_from + "&to=" + to + "&shift_to=" + shift_to + "&days=" + days + "&half=" + half, context: button })
                 .done(function(){
-                    $('#waiting').html("<img src='../images/waiting.gif' />");
-            
                     $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
                             .done(function(data){
-                                $('#maincontent').html(data);
                                 $('#waiting').html('');
+                                $('#maincontent').html(data);
                             })
                             .fail(function(){
+                                $('#waiting').html('');
                                 alert('Ошибка при перерисовке страницы');
                             });
                 })
                 .fail(function(){
+                    $('#waiting').html('');
                     alert("Ошибка при совершении операции");
                 });
     }
