@@ -357,7 +357,7 @@ class Grafik {
                     
                     echo '<div class="input-group d-none">';
                     echo '<input type="text" id="user1" name="user1" value="" class="editable" />';
-                    echo '<div class="input-group-append"><button type="button" class="btn btn-outline-dark" onclick="javascript: CreateUser1($(this));" data-id="'.(isset($row['id']) ? $row['id'] : '').'" data-date="'.$dateshift['date']->format('Y-m-d').'" data-shift="'.$dateshift['shift'].' data-machine="'.$this->machineId.'"><i class="fas fa-save"></i></button></div>';
+                    echo '<div class="input-group-append"><button type="button" class="btn btn-outline-dark" onclick="javascript: CreateUser1($(this));" data-id="'.(isset($row['id']) ? $row['id'] : '').'" role_id="'.$this->userRole.'" data-date="'.$dateshift['date']->format('Y-m-d').'" data-shift="'.$dateshift['shift'].'" data-machine="'.$this->machineId.'" data-from="'.$this->dateFrom->format('Y-m-d').'" data-to="'.$this->dateTo->format('Y-m-d').'"><i class="fas fa-save"></i></button></div>';
                     echo '<div class="input-group-append"><button type="button" class="btn btn-outline-dark" data-user1="'.(isset($row['u1_id']) ? $row['u1_id'] : '').'" onclick="javascript: CancelCreateUser($(this));"><i class="fas fa-window-close"></i></button></div>';
                     echo '</div>';
                 }
