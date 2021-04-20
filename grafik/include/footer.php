@@ -175,16 +175,24 @@
         });
     }
     
-    function CancelCreateUser(button) {
+    function CancelCreateUser1(button) {
         button.parent().parent().addClass('d-none');
         button.parent().parent().prev().removeClass('d-none');
         button.parent().parent().prev().val(button.attr('data-user1'));
         button.parent().prev().prev().val('');
     }
     
+    function CancelCreateUser2(button) {
+        button.parent().parent().addClass('d-none');
+        button.parent().parent().prev().removeClass('d-none');
+        button.parent().parent().prev().val(button.attr('data-user2'));
+        button.parent().prev().prev().val('');
+    }
+    
     function EditUser1(select) {
         if(select.val() == '+') {
             select.next().removeClass('d-none');
+            select.next().find('input').focus();
             select.addClass('d-none');
         }
         else {
@@ -215,6 +223,7 @@
     function EditUser2(select) {
         if(select.val() == '+') {
             select.next().removeClass('d-none');
+            select.next().find('input').focus();
             select.addClass('d-none');
         }
         else {
@@ -251,6 +260,32 @@
         var shift = button.attr('data-shift');
         var machine_id = button.attr('data-machine');
         $.ajax({ url: "../ajax/create_user1.php?user1=" + user1 + "&id=" + id + "&role_id=" + role_id + "&date=" + date + "&shift=" + shift + "&machine_id=" + machine_id, context: button })
+                .done(function() {
+                    $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
+                            .done(function(data){
+                                $('#waiting').html('');
+                                $('#maincontent').html(data);
+                            })
+                            .fail(function(){
+                                $('#waiting').html('');
+                                alert('Ошибка при перерисовке страницы');
+                            });
+                })
+                .fail(function() {
+                    $('#waiting').html('');
+                    alert("Ошибка при создании пользователя");
+                });
+    }
+    
+    function CreateUser2(button) {
+        $('#waiting').html("<img src='../images/waiting.gif' />");
+        var user2 = button.parent().prev().val();
+        var id = button.attr('data-id');
+        var role_id = button.attr('role_id');
+        var date = button.attr('data-date');
+        var shift = button.attr('data-shift');
+        var machine_id = button.attr('data-machine');
+        $.ajax({ url: "../ajax/create_user2.php?user2=" + user2 + "&id=" + id + "&role_id=" + role_id + "&date=" + date + "&shift=" + shift + "&machine_id=" + machine_id, context: button })
                 .done(function() {
                     $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
                             .done(function(data){
