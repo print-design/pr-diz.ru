@@ -22,7 +22,6 @@ $grafik->hasColoring = true;
 $grafik->coloring = 6;
 $grafik->hasManager = true;
 
-$grafik->ProcessForms();
 $error_message = $grafik->error_message;
 ?>
 <!DOCTYPE html>

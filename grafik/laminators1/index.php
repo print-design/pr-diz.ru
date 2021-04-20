@@ -19,7 +19,6 @@ $grafik->hasLamination = true;
 $grafik->hasManager = true;
 $grafik->hasComment = true;
 
-$grafik->ProcessForms();
 $error_message = $grafik->error_message;
 ?>
 <!DOCTYPE html>

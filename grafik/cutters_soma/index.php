@@ -19,7 +19,6 @@ $grafik->hasManager = true;
 $grafik->hasComment = true;
 $grafik->isCutter = true;
 
-$grafik->ProcessForms();
 $error_message = $grafik->error_message;
 ?>
 <!DOCTYPE html>
