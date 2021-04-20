@@ -219,7 +219,7 @@ while ($row = $fetcher->Fetch()) {
                         <td style="padding-left: 5px; padding-right: 5px; position: relative;">
                             <a class="black film_menu_trigger" href="javascript: void(0);"><i class="fas fa-ellipsis-h"></i></a>
                             <div class="film_menu">
-                                <div class="command"><a href="<?=APPLICATION ?>/pallet/pallet.php?id=<?=$row['id'] ?>">Просмотреть детали</a></div>
+                                <div class="command"><a href="<?=APPLICATION ?>/pallet/pallet.php<?= BuildQuery('id', $row['id']) ?>">Просмотреть детали</a></div>
                                 <?php
                                 if(IsInRole(array('technologist', 'dev'))):
                                 ?>
@@ -439,7 +439,6 @@ while ($row = $fetcher->Fetch()) {
                             .done(function(data) {
                                 $('#rollsModal .modal-dialog .modal-content').html(data);
                             });
-                    //$('#rollsModal .modal-dialog .modal-content').html(pallet_id);
                 }
             });
         </script>
