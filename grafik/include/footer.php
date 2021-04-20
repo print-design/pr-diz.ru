@@ -187,10 +187,11 @@
             select.addClass('d-none');
         }
         else {
+            var user1_id = select.val();
             var id = select.attr('data-id');
             var date = select.attr('data-date');
             var shift = select.attr('data-shift');
-            $.ajax({ url: "../ajax/edit_user1.php?id=" + id + "&date=" + date + "&shift=" + shift })
+            $.ajax({ url: "../ajax/edit_user1.php?user1_id=" + user1_id + "&id=" + id + "&date=" + date + "&shift=" + shift + "&machine_id=" + select.attr('data-machine') })
                     .done(function() {
                         $('#waiting').html("<img src='../images/waiting.gif' />");
                 
