@@ -192,9 +192,38 @@
             var date = select.attr('data-date');
             var shift = select.attr('data-shift');
             $.ajax({ url: "../ajax/edit_user1.php?user1_id=" + user1_id + "&id=" + id + "&date=" + date + "&shift=" + shift + "&machine_id=" + select.attr('data-machine') })
-                    .done(function() { // alert(data);
+                    .done(function() {
                         $('#waiting').html("<img src='../images/waiting.gif' />");
-                
+
+                        $.ajax({ url: "../ajax/draw.php?machine_id=" + select.attr('data-machine') + "&from=" + select.attr('data-from') + "&to=" + select.attr('data-to'), context: select })
+                            .done(function(data){
+                                $('#maincontent').html(data);
+                                $('#waiting').html('');
+                            })
+                            .fail(function(){
+                                alert('Ошибка при перерисовке страницы');
+                            });
+            })
+                    .fail(function() {
+                        alert('Ошибка при выборе работника 1');
+            });
+        }
+    }
+    
+    function EditUser2(select) {
+        if(select.val() == '+') {
+            select.next().removeClass('d-none');
+            select.addClass('d-none');
+        }
+        else {
+            var user2_id = select.val();
+            var id = select.attr('data-id');
+            var date = select.attr('data-date');
+            var shift = select.attr('data-shift');
+            $.ajax({ url: "../ajax/edit_user2.php?user2_id=" + user2_id + "&id=" + id + "&date=" + date + "&shift=" + shift + "&machine_id=" + select.attr('data-machine') })
+                    .done(function() {
+                        $('#waiting').html("<img src='../images/waiting.gif' />");
+
                         $.ajax({ url: "../ajax/draw.php?machine_id=" + select.attr('data-machine') + "&from=" + select.attr('data-from') + "&to=" + select.attr('data-to'), context: select })
                             .done(function(data){
                                 $('#maincontent').html(data);

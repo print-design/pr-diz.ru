@@ -73,30 +73,6 @@ class Grafik {
             }
         }
         
-        // Выбор работника 2
-        $user2_id = filter_input(INPUT_POST, 'user2_id');
-        if($user2_id !== null) {
-            if($user2_id == '') $user2_id = "NULL";
-            $sql = '';
-            $id = filter_input(INPUT_POST, 'id');
-            
-            if($id != null) {
-                $this->error_message = (new Executer("update workshift set user2_id=$user2_id where id=$id"))->error;
-            }
-            else {
-                $date = filter_input(INPUT_POST, 'date');
-                $shift = filter_input(INPUT_POST, 'shift');
-                $sql = "insert into workshift (date, machine_id, shift, user2_id) values ('$date', $this->machineId, '$shift', $user2_id)";
-                $ws_executer = new Executer($sql);
-                $this->error_message = $ws_executer->error;
-                $workshift_id = $ws_executer->insert_id;
-                
-                if($workshift_id > 0) {
-                    $this->error_message = (new Executer("insert into edition (workshift_id) values ($workshift_id)"))->error;
-                }
-            }
-        }
-        
         // Создание нового работника 2
         $user2 = filter_input(INPUT_POST, 'user2');
         if($user2 !== null) {
@@ -403,14 +379,7 @@ class Grafik {
             if($this->user2Name != '') {
                 echo "<td class='$top $shift' rowspan='$my_rowspan' title='".$this->user2Name."'>";
                 if(IsInRole('admin')) {
-                    echo "<form method='post'>";
-                    echo '<input type="hidden" id="scroll" name="scroll" />';
-                    if(isset($row['id'])) {
-                        echo '<input type="hidden" id="id" name="id" value="'.$row['id'].'" />';
-                    }
-                    echo '<input type="hidden" id="date" name="date" value="'.$dateshift['date']->format('Y-m-d').'" />';
-                    echo '<input type="hidden" id="shift" name="shift" value="'.$dateshift['shift'].'" />';
-                    echo "<select id='user2_id' name='user2_id' style='width:100px;'>";
+                    echo "<select id='user2_id' name='user2_id' style='width:100px;' onchange='javascript: EditUser2($(this))' data-id='".(isset($row['id']) ? $row['id'] : '')."' data-date='".$dateshift['date']->format('Y-m-d')."' data-shift='".$dateshift['shift']."' data-machine='".$this->machineId."' data-from='".$this->dateFrom->format('Y-m-d')."' data-to='".$this->dateTo->format('Y-m-d')."'>";
                     echo '<optgroup>';
                     echo '<option value="">...</option>';
                     foreach ($this->users2 as $value) {
@@ -423,7 +392,6 @@ class Grafik {
                     echo "<option value='+'>(добавить)</option>";
                     echo '</optgroup>';
                     echo '</select>';
-                    echo '</form>';
                             
                     echo '<form method="post" class="d-none">';
                     echo '<input type="hidden" id="scroll" name="scroll" />';
