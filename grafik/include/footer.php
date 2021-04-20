@@ -174,16 +174,41 @@
                     area.val('70773');
         });
     }
-        
-    $('select[id=user1_id],select[id=user2_id]').change(function(){
-        if(this.value == '+') {
-            $(this).parent().next().removeClass('d-none');
-            $(this).parent().addClass('d-none');
-            return;
+    
+    function CancelCreateUser(button) {
+        button.parent().parent().addClass('d-none');
+        button.parent().parent().parent().prev().removeClass('d-none');
+        button.parent().parent().parent().prev().val(button.attr('data-user1'));
+    }
+    
+    function EditUser1(select) {
+        if(select.val() == '+') {
+            select.next().removeClass('d-none');
+            select.addClass('d-none');
         }
-        this.form.submit();
-    });
-        
+        else {
+            var id = select.attr('data-id');
+            var date = select.attr('data-date');
+            var shift = select.attr('data-shift');
+            $.ajax({ url: "../ajax/edit_user1.php?id=" + id + "&date=" + date + "&shift=" + shift })
+                    .done(function() {
+                        $('#waiting').html("<img src='../images/waiting.gif' />");
+                
+                        $.ajax({ url: "../ajax/draw.php?machine_id=" + select.attr('data-machine') + "&from=" + select.attr('data-from') + "&to=" + select.attr('data-to'), context: select })
+                            .done(function(data){
+                                $('#maincontent').html(data);
+                                $('#waiting').html('');
+                            })
+                            .fail(function(){
+                                alert('Ошибка при перерисовке страницы');
+                            });
+            })
+                    .fail(function() {
+                        alert('Ошибка при выборе работника 1');
+            });
+        }
+    }
+    
     function EditStatus(select) {
         var status_id = select.val();
         var id = select.attr('data-id');
