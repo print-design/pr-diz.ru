@@ -192,7 +192,7 @@
             var date = select.attr('data-date');
             var shift = select.attr('data-shift');
             $.ajax({ url: "../ajax/edit_user1.php?user1_id=" + user1_id + "&id=" + id + "&date=" + date + "&shift=" + shift + "&machine_id=" + select.attr('data-machine') })
-                    .done(function() {
+                    .done(function() { // alert(data);
                         $('#waiting').html("<img src='../images/waiting.gif' />");
                 
                         $.ajax({ url: "../ajax/draw.php?machine_id=" + select.attr('data-machine') + "&from=" + select.attr('data-from') + "&to=" + select.attr('data-to'), context: select })

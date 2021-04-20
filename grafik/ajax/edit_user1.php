@@ -1,4 +1,4 @@
-<?php
+<?php print_r($_GET);
 include '../include/topscripts.php';
 
 $user1_id = filter_input(INPUT_GET, 'user1_id');
@@ -7,7 +7,7 @@ if($user1_id !== null) {
     $sql = '';
     $id = filter_input(INPUT_GET, 'id');
 
-    if($id !== null) {
+    if(!empty($id)) {
         $error_message = (new Executer("update workshift set user1_id=$user1_id where id=$id"))->error;
     }
     else {
