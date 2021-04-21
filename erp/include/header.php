@@ -23,7 +23,7 @@ function Initials() {
 ?>
 <div class="container-fluid header">
     <nav class="navbar navbar-expand-sm">
-        <ul class="navbar-nav mr-auto">
+        <ul class="navbar-nav">
             <?php
             $pallets_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/pallet')) == APPLICATION.'/pallet' ? ' disabled' : '';
             $rolls_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/roll')) == APPLICATION.'/roll' ? ' disabled' : '';
@@ -51,7 +51,7 @@ function Initials() {
             if(IsInRole(array('technologist', 'dev'))):
             ?>
             <li class="nav-item">
-                <a class="nav-link<?=$utilized_status ?>" href="<?=APPLICATION ?>/utilized/">Сработанная пленка</a>
+                <a class="nav-link<?=$utilized_status ?> text-nowrap" href="<?=APPLICATION ?>/utilized/">Сработанная пленка</a>
             </li>
             <?php
             endif;
@@ -65,6 +65,29 @@ function Initials() {
             ?>
         </ul>
         <?php
+        if(LoggedIn()):
+        $find_class = "";
+        $append_class = "";
+        $submit_class = " d-none";
+        if(filter_input(INPUT_GET, "find") != '') {
+            $find_class = " w-100";
+            $append_class = " d-none";
+            $submit_class = "";
+        }
+        ?>
+        <form class="form-inline ml-auto mr-3<?=$find_class ?>" method="get" id="find-form">
+            <div class="input-group<?=$find_class ?>" id="find-group">
+                <input type="text" class="form-control" id="find" name="find" placeholder="Поиск по складу" value="<?= filter_input(INPUT_GET, "find") ?>" />
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-outline-dark form-control<?=$append_class ?>" id="find-append"><i class="fas fa-search"></i></button>
+                    <button type="submit" class="btn btn-outline-dark form-control<?=$submit_class ?>" id="find-submit">Найти</button>
+                </div>
+            </div>
+        </form>
+        <?php
+        else:
+            echo "<div class='ml-auto'></div>";
+        endif;
         if(IsInRole('cutter')) {
             echo 'Автовыход через&nbsp;';
             echo '<div id="autologout">';
@@ -84,9 +107,6 @@ function Initials() {
             <?php
             endif;
             ?>
-            <li class="nav-item1">
-                <a class="nav-link" href="<?=APPLICATION ?>/search.php"><i class="fas fa-search"></i></a>
-            </li>
             <li class="nav-item dropdown" id="nav-user" style="padding-left: 7px;">
                 <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><?= Initials() ?></a>
                 <div class="dropdown-menu" id="user-dropdown">

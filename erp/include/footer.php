@@ -63,6 +63,27 @@
         return false;
     });
     
+    // Поиск
+    $('input#find').focusin(function() {
+        $('#find-group').addClass('w-100', { duration: 300 });
+        $('#find-form').addClass('w-100', { duration: 300 });
+        $('#find-append').addClass('d-none');
+        $('#find-submit').removeClass('d-none');
+    });
+    
+    $("#find-append").click(function() {
+        $('input#find').focus();
+    });
+    
+    $('input#find').focusout(function() {
+        if($('input#find').val().length == 0) {
+            $('#find-group').removeClass('w-100');
+            $('#find-form').removeClass('w-100');
+            $('#find-append').removeClass('d-none');
+            $('#find-submit').addClass('d-none');
+        }
+    });
+    
     <?php if(IsInRole('cutter')): ?>
         function AutoLogout(end) {
             var beforeLogout = end - (new Date());
