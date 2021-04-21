@@ -144,6 +144,11 @@ while ($row = $fetcher->Fetch()) {
                         $where .= " and r.width <= $width_to";
                     }
                     
+                    $find = filter_input(INPUT_GET, 'find');
+                    if(!empty($find)) {
+                        $where .= " and (cell='$find' or comment like '%$find%')";
+                    }
+                    
                     if(!empty($where)) {
                         $where = "where $where";
                     }

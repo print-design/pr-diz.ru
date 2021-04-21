@@ -89,7 +89,7 @@ function Initials() {
                 <div class="position-absolute pl-2 pr-2 pt-1 <?=$string_class ?>" style="top: 3px; left: 5px; bottom: 3px; background-color: gray; color: white;">
                     <?= filter_input(INPUT_GET, "find") ?>
                     &nbsp;&nbsp;
-                    <a href="<?=$_SERVER['HTTP_REFERER'] ?>"><i class="fas fa-window-close" style="color: white;"></i></a>
+                    <a href="<?=parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH) ?>"><i class="fas fa-window-close" style="color: white;"></i></a>
                 </div>
             </div>
         </form>
