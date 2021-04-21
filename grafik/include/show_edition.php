@@ -1,13 +1,13 @@
 <?php
 if($is_admin) {
-    // Кнопки добавления тиража
+    // Кнопки добавления нового тиража
     ?>
 <td class='<?=$top ?> <?=$shift ?>'>
     <button type='button' class='btn btn-outline-dark btn-sm' style='display: block;' data-workshift='<?=$workshift_id ?>' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-machine='<?=$machine_id ?>' data-from='<?=$from ?>' data-to='<?=$to ?>' data-position='<?=$position ?>' data-direction='up' onclick='javascript: CreateEdition($(this));' data-toggle='tooltip' title='Добавить тираж выше'><i class='fas fa-plus'></i><i class='fas fa-long-arrow-alt-up'></i></button>
     <button type='button' class='btn btn-outline-dark btn-sm' style='display: block;' data-workshift='<?=$workshift_id ?>' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-machine='<?=$machine_id ?>' data-from='<?=$from ?>' data-to='<?=$to ?>' data-position='<?=$position ?>' data-direction='down' onclick="javascript: CreateEdition($(this));" data-toggle='tooltip' title='Добавить тираж ниже'><i class='fas fa-plus'></i><i class='fas fa-long-arrow-alt-down'></i></button>
 </td>
     <?php
-    // Кнопки вставки тиража
+    // Кнопки вставки скопированного тиража
     $clipboard = '';
     $disabled = " disabled='disabled'";
     
