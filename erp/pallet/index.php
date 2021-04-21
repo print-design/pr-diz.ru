@@ -201,7 +201,7 @@ while ($row = $fetcher->Fetch()) {
                         $colour_style = " color: $colour";
                     }
                     ?>
-                    <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;" class="pallet_tr" data-pallet-id="<?=$row['id'] ?>">
+                    <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;" class="pallet_tr" data-pallet-id="<?=$row['id'] ?>" data-get="<?= rawurlencode(BuildQueryRemove("id")) ?>">
                         <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= date_create_from_format("Y-m-d", $row['date'])->format("d.m.Y") ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= $row['film_brand'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= $row['thickness'] ?> мкм</td>
@@ -432,10 +432,11 @@ while ($row = $fetcher->Fetch()) {
             });
             
             // Заполнение списка рулонов
-            $('tr.pallet_tr').click(function(e){
-                var pallet_id = $(e.target).attr('data-pallet-id');
+            $('tr.pallet_tr').click(function(){
+                var pallet_id = $(this).attr('data-pallet-id');
+                var getstring = $(this).attr('data-get');
                 if(pallet_id != null) {
-                    $.ajax({ url: "../ajax/pallet_rolls.php?id=" + pallet_id })
+                    $.ajax({ url: "../ajax/pallet_rolls.php?id=" + pallet_id + "&getstring=" + getstring })
                             .done(function(data) {
                                 $('#rollsModal .modal-dialog .modal-content').html(data);
                             });

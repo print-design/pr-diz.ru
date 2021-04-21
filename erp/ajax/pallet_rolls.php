@@ -8,6 +8,14 @@ $free_status_id = 1;
 $utilized_status_id = 2;
 
 $pallet_id = filter_input(INPUT_GET, 'id');
+$getstring = filter_input(INPUT_GET, 'getstring');
+$decoded = rawurldecode($getstring);
+$previous_params_string = "?";
+
+if(!empty($decoded)) {
+    $previous_params_string = $getstring."&";
+}
+
 if(!empty($pallet_id)) {
     // Получение всех статусов
     $fetcher = (new Fetcher("select id, name, colour from roll_status"));
@@ -69,7 +77,7 @@ if(!empty($pallet_id)) {
     <tr>
         <td style="text-align: right; padding-bottom: 10px; width: 20%;"><input type="checkbox" /></td>
         <td style="padding-bottom: 10px; width: 40%;">Рулон <?=$row['ordinal'] ?></td>
-        <td style="padding-bottom: 10px; width: 17%;"><a href="roll.php?id=<?=$row['id'] ?>"><i class="fas fa-ellipsis-h"></i></a></td>
+        <td style="padding-bottom: 10px; width: 17%;"><a href="roll.php<?=$previous_params_string ?>id=<?=$row['id'] ?>"><i class="fas fa-ellipsis-h"></i></a></td>
         <td></td>
     </tr>
     <tr>

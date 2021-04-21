@@ -33,7 +33,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     }
     
     if(empty($error_message)) {
-        header('Location: '.APPLICATION.'/pallet/');
+        header('Location: '.APPLICATION.'/pallet/'. BuildQueryRemove('id'));
     }
 }
 
@@ -106,7 +106,7 @@ if(null === $comment) $comment = $row['comment'];
             }
             ?>
             <div class="backlink" style="margin-bottom: 56px;">
-                <a href="<?=APPLICATION ?>/pallet/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                <a href="<?=APPLICATION ?>/pallet/<?= BuildQueryRemove('id') ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
             </div>
             <h1 style="font-size: 24px; line-height: 32px; fon24pxt-weight: 600; margin-bottom: 20px;">Информация о рулоне № <?="П".$pallet_id."Р".$ordinal ?> от <?= (DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></h1>
             <h2 style="font-size: 24px; line-height: 32px; font-weight: 600; margin-bottom: 20px;">ID <?=$id_from_supplier ?></h2>
