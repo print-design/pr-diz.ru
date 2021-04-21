@@ -69,18 +69,27 @@ function Initials() {
         $find_class = "";
         $append_class = "";
         $submit_class = " d-none";
+        $string_class = " d-none";
+        $placeholder = "Поиск по складу";
         if(filter_input(INPUT_GET, "find") != '') {
             $find_class = " w-100";
             $append_class = " d-none";
             $submit_class = "";
+            $string_class = "";
+            $placeholder = "";
         }
         ?>
         <form class="form-inline ml-auto mr-3<?=$find_class ?>" method="get" id="find-form">
             <div class="input-group<?=$find_class ?>" id="find-group">
-                <input type="text" class="form-control" id="find" name="find" placeholder="Поиск по складу" value="<?= filter_input(INPUT_GET, "find") ?>" />
+                <input type="text" class="form-control" id="find" name="find" placeholder="<?=$placeholder ?>" />
                 <div class="input-group-append">
-                    <button type="button" class="btn btn-outline-dark form-control<?=$append_class ?>" id="find-append"><i class="fas fa-search"></i></button>
-                    <button type="submit" class="btn btn-outline-dark form-control<?=$submit_class ?>" id="find-submit">Найти</button>
+                    <button type="button" class="btn btn-outline-dark form-control<?=$append_class ?>" id="find-append" style="border-top-right-radius: 5px; border-bottom-right-radius: 5px;"><i class="fas fa-search"></i></button>
+                    <button type="submit" class="btn btn-outline-dark form-control<?=$submit_class ?>" id="find-submit" style="border-top-right-radius: 5px; border-bottom-right-radius: 5px;">Найти</button>
+                </div>
+                <div class="position-absolute pl-2 pr-2 pt-1 <?=$string_class ?>" style="top: 3px; left: 5px; bottom: 3px; background-color: gray; color: white;">
+                    <?= filter_input(INPUT_GET, "find") ?>
+                    &nbsp;&nbsp;
+                    <a href="<?=$_SERVER['HTTP_REFERER'] ?>"><i class="fas fa-window-close" style="color: white;"></i></a>
                 </div>
             </div>
         </form>
