@@ -1,7 +1,6 @@
 <?php
 include '../include/topscripts.php';
 
-$direction = filter_input(INPUT_GET, 'direction');
 $machine_id = filter_input(INPUT_GET, 'machine_id');
 $from = filter_input(INPUT_GET, 'from');
 $shift_from = filter_input(INPUT_GET, 'shift_from');
