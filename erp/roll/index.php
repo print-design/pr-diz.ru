@@ -145,8 +145,9 @@ while ($row = $fetcher->Fetch()) {
                     }
                     
                     $find = filter_input(INPUT_GET, 'find');
+                    $findtrim = $find;
                     if(!empty($find)) {
-                        $where .= " and (cell='$find' or comment like '%$find%')";
+                        $where .= " and (r.id='$find' or r.id='$findtrim' or r.cell='$find' or r.comment like '%$find%')";
                     }
                     
                     if(!empty($where)) {
