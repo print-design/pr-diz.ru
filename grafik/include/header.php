@@ -5,19 +5,19 @@
         </a>
         <ul class="navbar-nav mr-auto">
             <?php
-            $comiflex_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/comiflex/index.php' ? ' disabled' : '';
-            $zbs1_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/zbs1/index.php' ? ' disabled' : '';
-            $zbs2_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/zbs2/index.php' ? ' disabled' : '';
-            $zbs3_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/zbs3/index.php' ? ' disabled' : '';
-            $atlas_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/atlas/index.php' ? ' disabled' : '';
-            $laminators1_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/laminators1/index.php' ? ' disabled' : '';
-            $laminators2_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/laminators2/index.php' ? ' disabled' : '';
-            $cutters1_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/cutters1/index.php' ? ' disabled' : '';
-            $cutters2_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/cutters2/index.php' ? ' disabled' : '';
-            $cutters3_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/cutters3/index.php' ? ' disabled' : '';
-            $cutters4_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/cutters4/index.php' ? ' disabled' : '';
-            $cutters_atlas_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/cutters_atlas/index.php' ? ' disabled' : '';
-            $cutters_soma_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/cutters_soma/index.php' ? ' disabled' : '';
+            $comiflex_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/machines/comiflex.php' ? ' disabled' : '';
+            $zbs1_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/machines/zbs1.php' ? ' disabled' : '';
+            $zbs2_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/machines/zbs2.php' ? ' disabled' : '';
+            $zbs3_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/machines/zbs3.php' ? ' disabled' : '';
+            $atlas_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/machines/atlas.php' ? ' disabled' : '';
+            $laminators1_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/machines/laminators1.php' ? ' disabled' : '';
+            $laminators2_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/machines/laminators2.php' ? ' disabled' : '';
+            $cutters1_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/machines/cutters1.php' ? ' disabled' : '';
+            $cutters2_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/machines/cutters2.php' ? ' disabled' : '';
+            $cutters3_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/machines/cutters3.php' ? ' disabled' : '';
+            $cutters4_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/machines/cutters4.php' ? ' disabled' : '';
+            $cutters_atlas_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/machines/cutters_atlas.php' ? ' disabled' : '';
+            $cutters_soma_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/machines/cutters_soma.php' ? ' disabled' : '';
             $machine_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/machine/index.php' ? ' disabled' : '';
             $lamination_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/lamination/index.php' ? ' disabled' : '';
             $user_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/user/index.php' ? ' disabled' : '';
@@ -40,43 +40,43 @@
             if(LoggedIn()):
             ?>
             <li class="nav-item">
-                <a class="nav-link<?=$comiflex_status ?>" href="<?=APPLICATION ?>/comiflex/<?=$query_string ?>">Comiflex</a>
+                <a class="nav-link<?=$comiflex_status ?>" href="<?=APPLICATION ?>/machines/comiflex.php<?=$query_string ?>">Comiflex</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$zbs1_status ?>" href="<?=APPLICATION ?>/zbs1/<?=$query_string ?>">ZBS-1</a>
+                <a class="nav-link<?=$zbs1_status ?>" href="<?=APPLICATION ?>/machines/zbs1.php<?=$query_string ?>">ZBS-1</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$zbs2_status ?>" href="<?=APPLICATION ?>/zbs2/<?=$query_string ?>">ZBS-2</a>
+                <a class="nav-link<?=$zbs2_status ?>" href="<?=APPLICATION ?>/machines/zbs2.php<?=$query_string ?>">ZBS-2</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$zbs3_status ?>" href="<?=APPLICATION ?>/zbs3/<?=$query_string ?>">ZBS-3</a>
+                <a class="nav-link<?=$zbs3_status ?>" href="<?=APPLICATION ?>/machines/zbs3.php<?=$query_string ?>">ZBS-3</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$atlas_status ?>" href="<?=APPLICATION ?>/atlas/<?=$query_string ?>">Атлас</a>
+                <a class="nav-link<?=$atlas_status ?>" href="<?=APPLICATION ?>/machines/atlas.php<?=$query_string ?>">Атлас</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$laminators1_status ?>" href="<?=APPLICATION ?>/laminators1/<?=$query_string ?>">Ламинатор 1</a>
+                <a class="nav-link<?=$laminators1_status ?>" href="<?=APPLICATION ?>/machines/laminators1.php<?=$query_string ?>">Ламинатор 1</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$laminators2_status ?>" href="<?=APPLICATION ?>/laminators2/<?=$query_string ?>">Ламинатор 2</a>
+                <a class="nav-link<?=$laminators2_status ?>" href="<?=APPLICATION ?>/machines/laminators2.php<?=$query_string ?>">Ламинатор 2</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$cutters1_status ?>" href="<?=APPLICATION ?>/cutters1/<?=$query_string ?>">Резка 1</a>
+                <a class="nav-link<?=$cutters1_status ?>" href="<?=APPLICATION ?>/machines/cutters1.php<?=$query_string ?>">Резка 1</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$cutters2_status ?>" href="<?=APPLICATION ?>/cutters2/<?=$query_string ?>">Резка 2</a>
+                <a class="nav-link<?=$cutters2_status ?>" href="<?=APPLICATION ?>/machines/cutters2.php<?=$query_string ?>">Резка 2</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$cutters3_status ?>" href="<?=APPLICATION ?>/cutters3/<?=$query_string ?>">Резка 3</a>
+                <a class="nav-link<?=$cutters3_status ?>" href="<?=APPLICATION ?>/machines/cutters3.php<?=$query_string ?>">Резка 3</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$cutters4_status ?>" href="<?=APPLICATION ?>/cutters4/<?=$query_string ?>">Резка 4</a>
+                <a class="nav-link<?=$cutters4_status ?>" href="<?=APPLICATION ?>/machines/cutters4.php<?=$query_string ?>">Резка 4</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$cutters_atlas_status ?>" href="<?=APPLICATION ?>/cutters_atlas/<?=$query_string ?>">Резка &laquo;Атлас&raquo;</a>
+                <a class="nav-link<?=$cutters_atlas_status ?>" href="<?=APPLICATION ?>/machines/cutters_atlas.php<?=$query_string ?>">Резка &laquo;Атлас&raquo;</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$cutters_soma_status ?>" href="<?=APPLICATION ?>/cutters_soma/<?=$query_string ?>">Резка &laquo;Сома&raquo;</a>
+                <a class="nav-link<?=$cutters_soma_status ?>" href="<?=APPLICATION ?>/machines/cutters_soma.php<?=$query_string ?>">Резка &laquo;Сома&raquo;</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link<?=$personal_status ?>" href="<?=APPLICATION ?>/personal/">Мои настройки</a>
