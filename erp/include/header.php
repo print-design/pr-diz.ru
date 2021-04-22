@@ -66,25 +66,25 @@ function Initials() {
         </ul>
         <?php
         if(LoggedIn()):
-        $find_class = "";
+        $find_class = " d-none";
+        $group_class = "";
         $append_class = "";
-        $submit_class = " d-none";
         $string_class = " d-none";
         $placeholder = "Поиск по складу";
         if(filter_input(INPUT_GET, "find") != '') {
             $find_class = " w-100";
+            $group_class = " w-100";
             $append_class = " d-none";
-            $submit_class = "";
             $string_class = "";
             $placeholder = "";
         }
         ?>
+        <button type="button" class="btn btn-light ml-auto<?=$append_class ?>" id="find-append" style="border-top-right-radius: 5px; border-bottom-right-radius: 5px;"><i class="fas fa-search"></i></button>
         <form class="form-inline ml-auto mr-3<?=$find_class ?>" method="get" id="find-form">
-            <div class="input-group<?=$find_class ?>" id="find-group">
+            <div class="input-group<?=$group_class ?>" id="find-group">
                 <input type="text" class="form-control" id="find" name="find" placeholder="<?=$placeholder ?>" />
                 <div class="input-group-append">
-                    <button type="button" class="btn btn-outline-dark form-control<?=$append_class ?>" id="find-append" style="border-top-right-radius: 5px; border-bottom-right-radius: 5px;"><i class="fas fa-search"></i></button>
-                    <button type="submit" class="btn btn-outline-dark form-control<?=$submit_class ?>" id="find-submit" style="border-top-right-radius: 5px; border-bottom-right-radius: 5px;">Найти</button>
+                    <button type="submit" class="btn btn-outline-dark form-control" id="find-submit" style="border-top-right-radius: 5px; border-bottom-right-radius: 5px;">Найти</button>
                 </div>
                 <div class="position-absolute pl-2 pr-2 pt-1 <?=$string_class ?>" style="top: 3px; left: 5px; bottom: 3px; background-color: gray; color: white;">
                     <?= filter_input(INPUT_GET, "find") ?>

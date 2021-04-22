@@ -67,11 +67,11 @@
     $('input#find').focusin(function() {
         $('#find-group').addClass('w-100', { duration: 300 });
         $('#find-form').addClass('w-100', { duration: 300 });
-        $('#find-append').addClass('d-none');
-        $('#find-submit').removeClass('d-none');
     });
     
     $("#find-append").click(function() {
+        $('#find-form').removeClass('d-none');
+        $("#find-append").addClass('d-none');
         $('input#find').focus();
     });
     
@@ -93,7 +93,7 @@
             $('#find-group').removeClass('w-100');
             $('#find-form').removeClass('w-100');
             $('#find-append').removeClass('d-none');
-            $('#find-submit').addClass('d-none');
+            $('#find-form').addClass('d-none');
         }
     });
     
