@@ -463,6 +463,7 @@ $utilized_status_id = 2;
                         ?>
                         <label for="comment">Комментарий</label>
                         <textarea id="comment" name="comment" rows="4" class="form-control no-latin"<?=$comment_disabled ?>><?= htmlentities($comment) ?></textarea>
+                        <div class="invalid-feedback"></div>
                     </div>
                 </div>
                 <div class="form-inline" style="margin-top: 30px;">

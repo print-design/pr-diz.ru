@@ -423,6 +423,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     <div class="form-group">
                         <label for="comment">Комментарий</label>
                         <textarea id="comment" name="comment" rows="4" class="form-control no-latin"><?= htmlentities(filter_input(INPUT_POST, 'comment')) ?></textarea>
+                        <div class="invalid-feedback"></div>
                     </div>
                 </div>
                 <div class="form-inline" style="margin-top: 30px;">

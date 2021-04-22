@@ -37,7 +37,12 @@
     
     $('.no-latin').keypress(function(e) {
         if(/[a-zA-Z]/.test(String.fromCharCode(e.charCode))) {
+            $(this).next('.invalid-feedback').text('Переключите раскладку');
+            $(this).next('.invalid-feedback').show();
             return false;
+        }
+        else {
+            $(this).next('.invalid-feedback').hide();
         }
     });
     
