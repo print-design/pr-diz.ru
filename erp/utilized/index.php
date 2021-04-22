@@ -120,7 +120,7 @@ $utilized_status_roll_id = 2;
                     }
                     $findpallet = '';
                     $findroll = '';
-                    $findtrimsubstrings = mb_split('Р', $findtrim);
+                    $findtrimsubstrings = mb_split("\D", $findtrim);
                     
                     if(count($findtrimsubstrings) == 2 && mb_strlen($findtrimsubstrings[0]) > 0 && mb_strlen($findtrimsubstrings[1]) > 0) {
                         $findpallet = $findtrimsubstrings[0];
