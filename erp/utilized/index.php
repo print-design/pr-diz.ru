@@ -111,20 +111,40 @@ $utilized_status_roll_id = 2;
                         $roll_statuses1[$status['id']] = $status;
                     }
                     
+                    $wherefindpallet = '';
+                    $wherefindroll = '';
+                    $find = filter_input(INPUT_GET, 'find');
+                    $findtrim = $find;
+                    if(mb_strlen($find) > 1) {
+                        $findtrim = mb_substr($find, 1);
+                    }
+                    $findpallet = '';
+                    $findroll = '';
+                    $findtrimsubstrings = mb_split('Р', $findtrim);
+                    
+                    if(count($findtrimsubstrings) == 2 && mb_strlen($findtrimsubstrings[0]) > 0 && mb_strlen($findtrimsubstrings[1]) > 0) {
+                        $findpallet = $findtrimsubstrings[0];
+                        $findroll = $findtrimsubstrings[1];
+                    }
+                    if(!empty($find)) {
+                        $wherefindpallet = " and (p.comment like '%$find%' or (p.id='$findpallet' and pr.ordinal='$findroll'))";
+                        $wherefindroll = " and (r.id='$find' or r.id='$findtrim' or r.cell='$find' or r.comment like '%$find%')";
+                    }
+                    
                     $sql = "select (select count(p.id) total_count "
                             . "from pallet_roll pr "
                             . "left join pallet p on pr.pallet_id = p.id "
                             . "left join film_brand fb on p.film_brand_id = fb.id "
                             . "left join supplier s on p.supplier_id = s.id "
                             . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = p.id "
-                            . "where prsh.status_id = $utilized_status_roll_id)"
+                            . "where prsh.status_id = $utilized_status_roll_id$wherefindpallet)"
                             . "+"
                             . "(select count(r.id) total_count "
                             . "from roll r "
                             . "left join film_brand fb on r.film_brand_id = fb.id "
                             . "left join supplier s on r.supplier_id = s.id "
                             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                            . "where rsh.status_id = $utilized_status_roll_id)";
+                            . "where rsh.status_id = $utilized_status_roll_id$wherefindroll)";
                     
                     $fetcher = new Fetcher($sql);
                     if($row = $fetcher->Fetch()) {
@@ -141,7 +161,7 @@ $utilized_status_roll_id = 2;
                             . "left join film_brand fb on p.film_brand_id = fb.id "
                             . "left join supplier s on p.supplier_id = s.id "
                             . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                            . "where prsh.status_id = $utilized_status_roll_id "
+                            . "where prsh.status_id = $utilized_status_roll_id$wherefindpallet "
                             . "union "
                             . "select 'roll' type, r.id id, 0 pallet_id, 0 ordinal, rsh.date timestamp, DATE_FORMAT(rsh.date, '%d.%m.%Y') date, fb.name film_brand, "
                             . "r.width width, r.thickness thickness, r.net_weight net_weight, r.length length, "
@@ -152,7 +172,7 @@ $utilized_status_roll_id = 2;
                             . "left join film_brand fb on r.film_brand_id = fb.id "
                             . "left join supplier s on r.supplier_id = s.id "
                             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                            . "where rsh.status_id = $utilized_status_roll_id "
+                            . "where rsh.status_id = $utilized_status_roll_id$wherefindroll "
                             . "order by timestamp desc limit $pager_skip, $pager_take";
                     
                     $fetcher = new Fetcher($sql);

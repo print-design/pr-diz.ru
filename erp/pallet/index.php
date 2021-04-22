@@ -154,6 +154,15 @@ while ($row = $fetcher->Fetch()) {
                         $where .= " and p.width <= $width_to";
                     }
                     
+                    $find = filter_input(INPUT_GET, 'find');
+                    $findtrim = $find;
+                    if(mb_strlen($find) > 1) {
+                        $findtrim = mb_substr($find, 1);
+                    }
+                    if(!empty($find)) {
+                        $where .= " and (p.id='$find' or p.id='$findtrim' or p.cell='$find' or p.comment like '%$find%')";
+                    }
+                    
                     if(!empty($where)) {
                         $where = "where $where";
                     }
