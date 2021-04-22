@@ -35,6 +35,18 @@
         $(this).val(val);
     });
     
+    $('.no-latin').keypress(function(e) {
+        if(/[a-zA-Z]/.test(String.fromCharCode(e.charCode))) {
+            return false;
+        }
+    });
+    
+    $('.no-latin').change(function() {
+        var val = $(this).val();
+        val = val.replace('[a-zA-Z]', '');
+        $(this).val(val);
+    });
+    
     $('input[type="text"]').prop('autocomplete', 'off');
     
     $('form').prop('autocomplete', 'off');

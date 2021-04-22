@@ -419,7 +419,7 @@ if(null === $comment) $comment = $row['comment'];
                             }
                             ?>
                             <label for="cell">Ячейка на складе</label>
-                            <input type="text" id="cell" name="cell" value="<?= $cell ?>" class="form-control<?=$cell_valid ?>" placeholder="Введите ячейку"<?=$cell_disabled ?> />
+                            <input type="text" id="cell" name="cell" value="<?= $cell ?>" class="form-control no-latin<?=$cell_valid ?>" placeholder="Введите ячейку"<?=$cell_disabled ?> />
                             <div class="invalid-feedback">Ячейка на складе обязательно</div>
                         </div>
                         <div class="col-6 form-group">
@@ -470,7 +470,7 @@ if(null === $comment) $comment = $row['comment'];
                         }
                         ?>
                         <label for="comment">Комментарий</label>
-                        <textarea id="comment" name="comment" rows="4" class="form-control"<?=$comment_disabled ?>><?= htmlentities($comment) ?></textarea>
+                        <textarea id="comment" name="comment" rows="4" class="form-control no-latin"<?=$comment_disabled ?>><?= htmlentities($comment) ?></textarea>
                     </div>
                 </div>
                 <div class="form-inline" style="margin-top: 30px;">

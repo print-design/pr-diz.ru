@@ -308,7 +308,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                     <div class="row">
                         <div class="col-6 form-group">
                             <label for="cell">Ячейка на складе</label>
-                            <input type="text" id="cell" name="cell" value="<?= filter_input(INPUT_POST, 'cell') ?>" class="form-control" placeholder="Введите ячейку" required="required" />
+                            <input type="text" id="cell" name="cell" value="<?= filter_input(INPUT_POST, 'cell') ?>" class="form-control no-latin<?=$cell_valid ?>" placeholder="Введите ячейку" required="required" />
                             <div class="invalid-feedback">Ячейка на складе обязательно</div>
                         </div>
                         <div class="col-6 form-group"></div>
@@ -350,7 +350,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                     </div>
                     <div class="form-group">
                         <label for="comment">Комментарий</label>
-                        <textarea id="comment" name="comment" rows="4" class="form-control"><?= htmlentities(filter_input(INPUT_POST, 'comment')) ?></textarea>
+                        <textarea id="comment" name="comment" rows="4" class="form-control no-latin"><?= htmlentities(filter_input(INPUT_POST, 'comment')) ?></textarea>
                     </div>
                 </div>
                 <div class="form-inline" style="margin-top: 30px;">

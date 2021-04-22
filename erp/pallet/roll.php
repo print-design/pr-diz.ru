@@ -221,7 +221,7 @@ if(null === $comment) $comment = $row['comment'];
                             $cell_disabled = " disabled='disabled'";
                             ?>
                             <label for="cell">Ячейка на складе</label>
-                            <input type="text" id="cell" name="cell" value="<?= $cell ?>" class="form-control" placeholder="Введите ячейку"<?=$cell_disabled ?>" />
+                            <input type="text" id="cell" name="cell" value="<?= $cell ?>" class="form-control no-latin" placeholder="Введите ячейку"<?=$cell_disabled ?>" />
                             <div class="invalid-feedback">Ячейка на складе обязательно</div>
                         </div>
                         <div class="col-6 form-group"></div>
@@ -265,7 +265,7 @@ if(null === $comment) $comment = $row['comment'];
                         $comment_disabled = " disabled='disabled'";
                         ?>
                         <label for="comment">Комментарий</label>
-                        <textarea id="comment" name="comment" rows="4" class="form-control"<?=$comment_disabled ?>><?= htmlentities($comment) ?></textarea>
+                        <textarea id="comment" name="comment" rows="4" class="form-control no-latin"<?=$comment_disabled ?>><?= htmlentities($comment) ?></textarea>
                     </div>
                 </div>
                 <div class="form-inline" style="margin-top: 30px;">
