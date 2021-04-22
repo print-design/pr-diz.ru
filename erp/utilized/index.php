@@ -208,7 +208,7 @@ $utilized_status_roll_id = 2;
                         <td style="padding-left: 5px; padding-right: 5px; position: relative;">
                             <a class="black film_menu_trigger" href="javascript: void(0);"><i class="fas fa-ellipsis-h"></i></a>
                             <div class="film_menu">
-                                <div class="command"><a href="<?=($row['type'] == 'pallet_roll' ? APPLICATION.'/pallet/roll.php?id='.$row['id'] : APPLICATION.'/roll/roll.php?id='.$row['id']) ?>">Просмотреть детали</a></div>
+                                <div class="command"><a href="<?=($row['type'] == 'pallet_roll' ? APPLICATION.'/pallet/roll.php'. BuildQuery('id', $row['id']) : APPLICATION.'/roll/roll.php'. BuildQuery('id', $row['id'])) ?>">Просмотреть детали</a></div>
                                 <?php
                                 if(IsInRole(array('technologist', 'dev'))):
                                 ?>
