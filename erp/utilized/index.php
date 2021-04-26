@@ -58,6 +58,7 @@ $utilized_status_roll_id = 2;
         <?php
         include '../include/header.php';
         include '../include/pager_top.php';
+        $rowcounter = 0;
         ?>
         <div class="container-fluid">
             <?php
@@ -178,7 +179,8 @@ $utilized_status_roll_id = 2;
                     $fetcher = new Fetcher($sql);
                     
                     while ($row = $fetcher->Fetch()):
-
+                        
+                    $rowcounter++;
                     $status = '';
                     $colour_style = '';
                     
@@ -232,6 +234,10 @@ $utilized_status_roll_id = 2;
                 </tbody>
             </table>
             <?php
+            if($rowcounter == 0) {
+                echo '<p>Ничего не найдено.</p>';
+            }
+            
             include '../include/pager_bottom.php';
             ?>
         </div>

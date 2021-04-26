@@ -56,6 +56,7 @@ while ($row = $fetcher->Fetch()) {
         <?php
         include '../include/header.php';
         include '../include/pager_top.php';
+        $rowcounter = 0;
         ?>
         <div class="container-fluid">
             <?php
@@ -198,13 +199,15 @@ while ($row = $fetcher->Fetch()) {
                     $fetcher = new Fetcher($sql);
                     
                     while ($row = $fetcher->Fetch()):
-
+                        
+                    $rowcounter++;
                     $status = '';
+                    $colour_style = '';
+                    
                     if(!empty($statuses[$row['status_id']]['name'])) {
                         $status = $statuses[$row['status_id']]['name'];
                     }
-
-                    $colour_style = '';
+                    
                     if(!empty($statuses[$row['status_id']]['colour'])) {
                         $colour = $statuses[$row['status_id']]['colour'];
                         $colour_style = " color: $colour";
@@ -251,6 +254,10 @@ while ($row = $fetcher->Fetch()) {
                 </tbody>
             </table>
             <?php
+            if($rowcounter == 0) {
+                echo '<p>Ничего не найдено.</p>';
+            }
+            
             include '../include/pager_bottom.php';
             ?>
         </div>
