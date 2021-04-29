@@ -97,7 +97,7 @@ if(null === $comment) $comment = $row['comment'];
     </head>
     <body>
         <?php
-        include '../include/header.php';
+        include '../include/header_sklad.php';
         ?>
         <div class="container-fluid" style="padding-left: 40px;">
             <?php

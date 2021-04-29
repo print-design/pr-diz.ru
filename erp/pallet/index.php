@@ -54,7 +54,7 @@ while ($row = $fetcher->Fetch()) {
     </head>
     <body>
         <?php
-        include '../include/header.php';
+        include '../include/header_sklad.php';
         include '../include/pager_top.php';
         $rowcounter = 0;
         ?>

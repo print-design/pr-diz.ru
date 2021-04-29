@@ -2,21 +2,6 @@ body {
     padding-left: 60px;
 }
 
-/* Левая панель */
-#left_bar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    background-color: white;
-    width: 60px;
-    text-align: center;
-    padding-top: 25px;
-    box-shadow: 0px 0px 20px rgb(0 0 0 / 15%);
-    z-index: 200;
-}
-
-/* Основная часть */
 a:not(.btn):link, a:not(.btn):visited {
     color: #228AD6;
     text-decoration: none;
@@ -41,12 +26,39 @@ a.black:active, a.black:hover, .black a:active, .black a:hover {
     white-space: pre-line;
 }
 
+/* Левая панель */
+#left_bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: white;
+    width: 60px;
+    text-align: center;
+    padding-top: 25px;
+    box-shadow: 0px 0px 20px rgb(0 0 0 / 15%);
+    z-index: 200;
+}
+
+.left_bar_item {
+    display: block;
+    margin-bottom: 40px;
+}
+
+.left_bar_item.logo {
+    margin-bottom: 60px;
+}
+
+/* Шапка */
 .header {
     position: fixed;
     height: 80px;
     background-color: white;
     box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.15);
     z-index: 100;
+    left: 0;
+    padding-left: 100px;
+    padding-right: 15px;
 }
 
 .header a:link, .header a:visited {
@@ -109,11 +121,6 @@ li#nav-user {
 
 li#nav-user a.dropdown-toggle::after {
     display: none;
-}
-
-.container-fluid.header {
-    padding-left: 45px;
-    padding-right: 15px;
 }
 
 .btn.disabled, .btn:disabled {

@@ -282,7 +282,7 @@ $utilized_status_id = 2;
     </head>
     <body>
         <?php
-        include '../include/header.php';
+        include '../include/header_sklad.php';
         ?>
         <div class="container-fluid" style="padding-left: 40px;">
             <?php

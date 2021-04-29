@@ -51,6 +51,28 @@ function IsInRole($role) {
     return false;
 }
 
+function Initials() {
+    $last_name = filter_input(INPUT_COOKIE, LAST_NAME);
+    $first_name = filter_input(INPUT_COOKIE, FIRST_NAME);
+    $result = '';
+    
+    if(mb_strlen($last_name) > 1) {
+        $result .= mb_substr($last_name, 0, 1);
+    }
+    else {
+        $result .= $last_name;
+    }
+    
+    if(mb_strlen($first_name) > 1) {
+        $result .= mb_substr($first_name, 0, 1);
+    }
+    else {
+        $result .= $first_name;
+    }
+    
+    return $result;
+}
+
 function BuildQuery($key, $value) {
     $result = '';
     $get_params = $_GET;
