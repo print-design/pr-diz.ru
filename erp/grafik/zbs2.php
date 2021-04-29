@@ -9,13 +9,12 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
 
 $date_from = null;
 $date_to = null;
-GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'ti'), $date_from, $date_to);
+GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);
 
-$grafik = new GrafikReadonly($date_from, $date_to, 1);
-$grafik->name = 'Comiflex';
-$grafik->user1Name = 'Печатник';
-$grafik->user2Name = 'Помощник';
-$grafik->userRole = 3;
+$grafik = new GrafikReadonly($date_from, $date_to, 3);
+$grafik->name = 'ZBS-2';
+$grafik->user1Name = "Печатник";
+$grafik->userRole = 7;
 
 $grafik->hasEdition = true;
 $grafik->hasOrganization = true;
@@ -24,7 +23,7 @@ $grafik->hasStatus = true;
 $grafik->hasRoller = true;
 $grafik->hasLamination = true;
 $grafik->hasColoring = true;
-$grafik->coloring = 8;
+$grafik->coloring = 6;
 $grafik->hasManager = true;
 
 $error_message = $grafik->error_message;
@@ -32,6 +31,7 @@ $error_message = $grafik->error_message;
 <!DOCTYPE html>
 <html>
     <head>
+        <title>График - ZBS-2</title>
         <?php
         include '../include/head.php';
         ?>
@@ -43,14 +43,14 @@ $error_message = $grafik->error_message;
         <div style="position: fixed; top: 100px; left: 100px; z-index: 1000;" id="waiting"></div>
         <div class="container-fluid" id="maincontent">
             <?php
-            if(!empty($error_message)) {
-               echo "<div class='alert alert-danger'>$error_message</div>";
+            if(isset($error_message) && $error_message != '') {
+                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             $grafik->ShowPage();
             ?>
         </div>
         <?php
-        include '../include/footer.php';
+            include '../include/footer.php';
         ?>
     </body>
 </html>

@@ -1,5 +1,7 @@
 <?php
-class Grafik {
+include 'database_grafik.php';
+
+class GrafikReadonly {
     public function __construct(DateTime $from, DateTime $to, $machine_id) {
         $this->dateFrom = $from;
         $this->dateTo = $to;
@@ -39,58 +41,7 @@ class Grafik {
     function ShowPage() {
         ?>
 <div class="d-flex justify-content-between mb-2">
-    <div class="p-1">
-        <h1><?= $this->name ?></h1>
-    </div>
-    <div class="p-1">
-        <?php if(IsInRole('admin')): ?>
-        <div class="d-flex justify-content-end mb-auto">
-            <div class="p-1">
-                <form class="form-inline">
-                    <div class="form-group">
-                        <label for="from">от&nbsp;</label>
-                        <input type="date" id="from" name="from" class="form-control" value="<?= filter_input(INPUT_GET, 'from') ?>"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="to">&nbsp;до&nbsp;</label>
-                        <input type="date" id="to" name="to" class="form-control" value="<?= filter_input(INPUT_GET, 'to') ?>"/>
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" class="form-control btn btn-light">Показать&nbsp;<i class="fas fa-desktop"></i></button>
-                    </div>
-                </form>
-            </div>
-            <div class="p-1 ml-1">
-                <form class="form-inline" action="<?=APPLICATION ?>/print.php" target="_blank" method="post">
-                    <input type="hidden" id="from" name="from" value="<?= $this->dateFrom->format('Y-m-d') ?>" class="print_from" />
-                    <input type="hidden" id="machine" name="machine" value="<?= $this->machineId ?>"/>
-                    <input type="hidden" id="name" name="name" value="<?= $this->name ?>"/>
-                    <input type="hidden" id="user1Name" name="user1Name" value="<?= $this->user1Name ?>"/>
-                    <input type="hidden" id="user2Name" name="user2Name" value="<?= $this->user2Name ?>"/>
-                    <input type="hidden" id="userRole" name="userRole" value="<?= $this->userRole ?>"/>
-                    <input type="hidden" id="hasEdition" name="hasEdition" value="<?= $this->hasEdition ?>"/>
-                    <input type="hidden" id="hasOrganization" name="hasOrganization" value="<?= $this->hasOrganization ?>"/>
-                    <input type="hidden" id="hasLength" name="hasLength" value="<?= $this->hasLength ?>"/>
-                    <input type="hidden" id="hasStatus" name="hasStatus" value="<?= $this->hasStatus ?>"/>
-                    <input type="hidden" id="hasRoller" name="hasRoller" value="<?= $this->hasRoller ?>"/>
-                    <input type="hidden" id="hasLamination" name="hasLamination" value="<?= $this->hasLamination ?>"/>
-                    <input type="hidden" id="hasColoring" name="hasColoring" value="<?= $this->hasColoring ?>"/>
-                    <input type="hidden" id="hasManager" name="hasManager" value="<?= $this->hasManager ?>"/>
-                    <input type="hidden" id="hasComment" name="hasComment" value="<?= $this->hasComment ?>"/>
-                    <button type="submit" class="form-control btn btn-light" id="print_submit" name="print_submit">Печать&nbsp;<i class="fas fa-print"></i></button>
-                </form>
-            </div>
-            <div class="p-1 ml-1">
-                <form action="<?=APPLICATION ?>/csv.php" method="post">
-                    <input type="hidden" id="from" name="from" value="<?= $this->dateFrom->format('Y-m-d') ?>"/>
-                    <input type="hidden" id="to" name="to" value="<?= $this->dateTo->format('Y-m-d') ?>"/>
-                    <input type="hidden" id="machine" name="machine" value="<?= $this->machineId ?>"/>
-                    <button type="submit" class="form-control btn btn-light" id="export_submit" name="export_submit">Экспорт&nbsp;<i class="fas fa-file-csv"></i></button>
-                </form>
-            </div>
-        </div>
-        <?php endif; ?>
-    </div>
+    <h1><?= $this->name ?></h1>
 </div>
 <table class="table table-bordered typography">
     <thead id="grafik-thead">
@@ -124,50 +75,15 @@ class Grafik {
     </thead>
     <tbody id="grafik-tbody">
         <?php
-        // Список работников №1
-        if(IsInRole('admin') && $this->user1Name != '') {
-            $this->users1 = (new Grabber('select id, first_name, last_name from user where quit = 0 and role_id = '. $this->userRole.' order by last_name, first_name'))->result;
-        }
-        
-        // Список работников №2
-        if(IsInRole('admin') && $this->user2Name != '') {
-            $this->users2 = (new Grabber('select id, first_name, last_name from user where quit = 0 and role_id = '. $this->userRole.' order by last_name, first_name'))->result;
-        }
-        
-        // Список статусов
-        if(IsInRole('admin')) {
-            $this->statuses = (new Grabber("select id, name from edition_status order by name"))->result;
-        }
-        
-        // Список валов
-        if(IsInRole('admin')) {
-            $machine_id = $this->machineId;
-            $this->rollers = (new Grabber("select id, name from roller where machine_id=$machine_id order by position, name"))->result;
-        }
-        
-        // Список ламинаций
-        if(IsInRole('admin')) {
-            $sql = "select id, name from lamination where common = 1 order by sort";
-            if($this->isCutter) {
-                $sql = "select id, name from lamination where cutter = 1 order by sort";
-            }
-            $this->laminations = (new Grabber($sql))->result;
-        }
-                    
-        // Список менеджеров
-        if(IsInRole('admin')) {
-            $this->managers = (new Grabber("select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where ur.role_id = 2 order by u.fio"))->result;
-        }
-        
         // Список рабочих смен
         $all = array();
-        $sql = "select ws.id, ws.date date, date_format(ws.date, '%d.%m.%Y') fdate, ws.shift, ws.machine_id, u1.id u1_id, u1.first_name u1_first_name, u1.last_name u1_last_name, u2.id u2_id, u2.first_name u2_first_name, u2.last_name u2_last_name, "
+        $sql = "select ws.id, ws.date date, date_format(ws.date, '%d.%m.%Y') fdate, ws.shift, ws.machine_id, u1.id u1_id, u1.fio u1_fio, u2.id u2_id, u2.fio u2_fio, "
                 . "(select count(id) from edition where workshift_id=ws.id) editions_count "
                 . "from workshift ws "
                 . "left join user u1 on ws.user1_id = u1.id "
                 . "left join user u2 on ws.user2_id = u2.id "
                 . "where ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."' and ws.machine_id = ". $this->machineId;
-        $fetcher = new Fetcher($sql);
+        $fetcher = new FetcherGrafik($sql);
         
         while ($item = $fetcher->Fetch()) {
             $all[$item['date'].$item['shift']] = $item;
@@ -179,7 +95,7 @@ class Grafik {
                 . "e.status_id, s.name status, "
                 . "e.roller_id, r.name roller, "
                 . "e.lamination_id, lam.name lamination, "
-                . "e.manager_id, concat(m.last_name, ' ', m.first_name) manager "
+                . "e.manager_id, m.fio manager "
                 . "from edition e "
                 . "left join edition_status s on e.status_id = s.id "
                 . "left join roller r on e.roller_id = r.id "
@@ -188,7 +104,7 @@ class Grafik {
                 . "inner join workshift ws on e.workshift_id = ws.id "
                 . "where ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."' and ws.machine_id = ". $this->machineId." order by e.position";
         
-        $fetcher = new Fetcher($sql);
+        $fetcher = new FetcherGrafik($sql);
         
         while ($item = $fetcher->Fetch()) {
             if(!array_key_exists($item['date'], $all_editions) || !array_key_exists($item['shift'], $all_editions[$item['date']])) $all_editions[$item['date']][$item['shift']] = [];
@@ -266,108 +182,29 @@ class Grafik {
             // Работник №1
             if($this->user1Name != '') {
                 echo "<td class='$top $shift' rowspan='$my_rowspan' title='".$this->user1Name."'>";
-                if(IsInRole('admin')) {
-                    echo "<select id='user1_id' name='user1_id' style='width:100px;' onchange='javascript: EditUser1($(this))' data-id='".(isset($row['id']) ? $row['id'] : '')."' data-date='".$dateshift['date']->format('Y-m-d')."' data-shift='".$dateshift['shift']."' data-machine='".$this->machineId."' data-from='".$this->dateFrom->format('Y-m-d')."' data-to='".$this->dateTo->format('Y-m-d')."'>";
-                    echo '<optgroup>';
-                    echo '<option value="">...</option>';
-                    foreach ($this->users1 as $value) {
-                        $selected = '';
-                        if(isset($row['u1_id']) && $row['u1_id'] == $value['id']) $selected = " selected = 'selected'";
-                        echo "<option$selected value='".$value['id']."'>".$value['fio']."</option>";
-                    }
-                    echo '</optgroup>';
-                    echo "<optgroup label='______________'>";
-                    echo "<option value='+'>(добавить)</option>";
-                    echo '</optgroup>';
-                    echo '</select>';
-                    
-                    echo '<div class="input-group d-none">';
-                    echo '<input type="text" id="user1" name="user1" value="" class="editable" />';
-                    echo '<div class="input-group-append"><button type="button" class="btn btn-outline-dark" onclick="javascript: CreateUser1($(this));" data-id="'.(isset($row['id']) ? $row['id'] : '').'" role_id="'.$this->userRole.'" data-date="'.$dateshift['date']->format('Y-m-d').'" data-shift="'.$dateshift['shift'].'" data-machine="'.$this->machineId.'" data-from="'.$this->dateFrom->format('Y-m-d').'" data-to="'.$this->dateTo->format('Y-m-d').'"><i class="fas fa-save"></i></button></div>';
-                    echo '<div class="input-group-append"><button type="button" class="btn btn-outline-dark" data-user1="'.(isset($row['u1_id']) ? $row['u1_id'] : '').'" onclick="javascript: CancelCreateUser1($(this));"><i class="fas fa-window-close"></i></button></div>';
-                    echo '</div>';
-                }
-                else {
-                    echo (isset($row['u1_fio']) ? $row['u1_fio'] : '');
-                }
+                echo (isset($row['u1_fio']) ? $row['u1_fio'] : '');
                 echo '</td>';
             }
             
             // Работник №2
             if($this->user2Name != '') {
                 echo "<td class='$top $shift' rowspan='$my_rowspan' title='".$this->user2Name."'>";
-                if(IsInRole('admin')) {
-                    echo "<select id='user2_id' name='user2_id' style='width:100px;' onchange='javascript: EditUser2($(this))' data-id='".(isset($row['id']) ? $row['id'] : '')."' data-date='".$dateshift['date']->format('Y-m-d')."' data-shift='".$dateshift['shift']."' data-machine='".$this->machineId."' data-from='".$this->dateFrom->format('Y-m-d')."' data-to='".$this->dateTo->format('Y-m-d')."'>";
-                    echo '<optgroup>';
-                    echo '<option value="">...</option>';
-                    foreach ($this->users2 as $value) {
-                        $selected = '';
-                        if(isset($row['u2_id']) && $row['u2_id'] == $value['id']) $selected = " selected = 'selected'";
-                        echo "<option$selected value='".$value['id']."'>".$value['fio']."</option>";
-                    }
-                    echo '</optgroup>';
-                    echo "<optgroup label='______________'>";
-                    echo "<option value='+'>(добавить)</option>";
-                    echo '</optgroup>';
-                    echo '</select>';
-                            
-                    echo '<div class="input-group d-none">';
-                    echo '<input type="text" id="user2" name="user2" value="" class="editable" />';
-                    echo '<div class="input-group-append"><button type="button" class="btn btn-outline-dark" onclick="javascript: CreateUser2($(this));" data-id="'.(isset($row['id']) ? $row['id'] : '').'" role_id="'.$this->userRole.'" data-date="'.$dateshift['date']->format('Y-m-d').'" data-shift="'.$dateshift['shift'].'" data-machine="'.$this->machineId.'" data-from="'.$this->dateFrom->format('Y-m-d').'" data-to="'.$this->dateTo->format('Y-m-d').'"><i class="fas fa-save"></i></button></div>';
-                    echo '<div class="input-group-append"><button type="button" class="btn btn-outline-dark" data-user2="'.(isset($row['u2_id']) ? $row['u2_id'] : '').'" onclick="javascript: CancelCreateUser2($(this));"><i class="fas fa-window-close"></i></button></div>';
-                    echo '</div>';
-                }
-                else {
-                    echo (isset($row['u2_fio']) ? $row['u2_fio'] : '');
-                }
+                echo (isset($row['u2_fio']) ? $row['u2_fio'] : '');
                 echo '</td>';
-            }
-            
-            // Создание и вставка тиража
-            if(IsInRole('admin')) {
-                if(count($editions) == 0) {
-                    echo "<td class='$top $shift align-bottom' rowspan='$my_rowspan'>";
-                    
-                    if(isset($row['id'])) {
-                        // Создание тиража
-                        echo "<button type='button' class='btn btn-outline-dark btn-sm' style='display: block;' data-toggle='tooltip' data-machine='$this->machineId' data-from='".$this->dateFrom->format("Y-m-d")."' data-to='".$this->dateTo->format("Y-m-d")."' data-date='$formatted_date' data-shift='".$dateshift['shift']."' data-workshift='".(empty($row['id']) ? '' : $row['id'])."' onclick='javascript: CreateEdition($(this))' title='Добавить тираж'><i class='fas fa-plus'></i></button>";
-                    }
-                    
-                    // Вставка тиража
-                    $disabled = " disabled='disabled'";
-                    echo "<button type='button' class='btn btn-outline-dark btn-sm btn_clipboard_paste' style='display: block;' data-toggle='tooltip' data-machine='$this->machineId' data-from='".$this->dateFrom->format("Y-m-d")."' data-to='".$this->dateTo->format("Y-m-d")."' data-date='$formatted_date' data-shift='".$dateshift['shift']."' data-workshift='".(empty($row['id']) ? '' : $row['id'])."' onclick='javascript: PasteEdition($(this))' title='Вставить тираж'$disabled><i class='fas fa-paste'></i></button>";
-                    
-                    echo '</td>';
-                }
             }
             
             // Смены
             $edition = null;
             
             if(count($editions) == 0) {
-                if(IsInRole('admin')) {
-                    echo "<td class='$top $shift'></td>"; // Кнопки вставки тиража, доступны внутри тиража
-                }
                 if($this->hasOrganization) echo "<td class='$top $shift'></td>";
                 if($this->hasEdition) echo "<td class='$top $shift'></td>";
                 if($this->hasLength) echo "<td class='$top $shift'></td>";
-                if(IsInRole('admin')) {
-                    if($this->hasStatus) echo "<td class='$top $shift'></td>";
-                }
                 if($this->hasRoller) echo "<td class='$top $shift'></td>";
                 if($this->hasLamination) echo "<td class='$top $shift'></td>";
                 if($this->hasColoring) echo "<td class='$top $shift'></td>";
                 if($this->hasManager) echo "<td class='$top $shift'></td>";
                 if($this->hasComment) echo "<td class='$top $shift'></td>";
-                if(IsInRole('admin')) {
-                    echo "<td class='$top $shift'></td>";
-                    echo "<td class='$top $shift'></td>";
-                    echo "<td class='$top $shift'>";
-                    if(isset($row['id'])) {
-                        echo "<button type='button' class='btn btn-outline-dark btn-sm' data-id='".$row['id']."' data-machine='$this->machineId' data-from='".$this->dateFrom->format("Y-m-d")."' data-to='".$this->dateTo->format("Y-m-d")."' onclick='javascript: if(confirm(\"Действительно удалить?\")){ DeleteShift($(this)); }' data-toggle='tooltip' title='Удалить смену'><i class='fas fa-trash-alt'></i></button>";
-                    }
-                    echo "</td>";
-                }
             }
             else {
                 $edition = array_shift($editions);
@@ -433,7 +270,7 @@ class Grafik {
                 . "left join user u1 on ws.user1_id = u1.id "
                 . "left join user u2 on ws.user2_id = u2.id "
                 . "where ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."' and ws.machine_id = ". $this->machineId;
-        $fetcher = new Fetcher($sql);
+        $fetcher = new FetcherGrafik($sql);
         
         while ($item = $fetcher->Fetch()) {
             $all[$item['date'].$item['shift']] = $item;
@@ -454,7 +291,7 @@ class Grafik {
                 . "inner join workshift ws on e.workshift_id = ws.id "
                 . "where ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."' and ws.machine_id = ". $this->machineId." order by e.position";
         
-        $fetcher = new Fetcher($sql);
+        $fetcher = new FetcherGrafik($sql);
         
         while ($item = $fetcher->Fetch()) {
             if(!array_key_exists($item['date'], $all_editions) || !array_key_exists($item['shift'], $all_editions[$item['date']])) $all_editions[$item['date']][$item['shift']] = [];
