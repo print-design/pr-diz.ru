@@ -126,12 +126,12 @@ class Grafik {
         <?php
         // Список работников №1
         if(IsInRole('admin') && $this->user1Name != '') {
-            $this->users1 = (new Grabber('select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where quit = 0 and ur.role_id = '. $this->userRole.' order by u.fio'))->result;
+            $this->users1 = (new Grabber('select id, first_name, last_name from user where quit = 0 and role_id = '. $this->userRole.' order by last_name, first_name'))->result;
         }
         
         // Список работников №2
         if(IsInRole('admin') && $this->user2Name != '') {
-            $this->users2 = (new Grabber('select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where quit = 0 and ur.role_id = '. $this->userRole.' order by u.fio'))->result;
+            $this->users2 = (new Grabber('select id, first_name, last_name from user where quit = 0 and role_id = '. $this->userRole.' order by last_name, first_name'))->result;
         }
         
         // Список статусов
@@ -161,7 +161,7 @@ class Grafik {
         
         // Список рабочих смен
         $all = array();
-        $sql = "select ws.id, ws.date date, date_format(ws.date, '%d.%m.%Y') fdate, ws.shift, ws.machine_id, u1.id u1_id, u1.fio u1_fio, u2.id u2_id, u2.fio u2_fio, "
+        $sql = "select ws.id, ws.date date, date_format(ws.date, '%d.%m.%Y') fdate, ws.shift, ws.machine_id, u1.id u1_id, u1.first_name u1_first_name, u1.last_name u1_last_name, u2.id u2_id, u2.first_name u2_first_name, u2.last_name u2_last_name, "
                 . "(select count(id) from edition where workshift_id=ws.id) editions_count "
                 . "from workshift ws "
                 . "left join user u1 on ws.user1_id = u1.id "
@@ -179,7 +179,7 @@ class Grafik {
                 . "e.status_id, s.name status, "
                 . "e.roller_id, r.name roller, "
                 . "e.lamination_id, lam.name lamination, "
-                . "e.manager_id, m.fio manager "
+                . "e.manager_id, concat(m.last_name, ' ', m.first_name) manager "
                 . "from edition e "
                 . "left join edition_status s on e.status_id = s.id "
                 . "left join roller r on e.roller_id = r.id "
