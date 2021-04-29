@@ -40,6 +40,7 @@ while ($row = $fetcher->Fetch()) {
         <?php
         include '../include/head.php';
         ?>
+        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
     </head>
     <body>
         <?php
@@ -330,6 +331,7 @@ while ($row = $fetcher->Fetch()) {
         <?php
         include '../include/footer.php';
         ?>
+        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
             var thicknesses = JSON.parse('<?=$json_thicknesses ?>');
             
