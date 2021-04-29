@@ -2,7 +2,7 @@
 include 'left_bar.php';
 ?>
 <div class="container-fluid header">
-    <nav class="navbar navbar-expand-sm">
+    <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
             <?php
             $pallets_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/pallet')) == APPLICATION.'/pallet' ? ' disabled' : '';
