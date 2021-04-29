@@ -99,6 +99,81 @@ function BuildQueryRemove($key) {
     return $result;
 }
 
+function GetDateFromDateTo($getDateFrom, $getDateTo, &$dateFrom, &$dateTo) {
+    $dateFrom = null;
+    $dateTo = null;
+    
+    $diff7Days = new DateInterval('P7D');
+    $diff14Days = new DateInterval('P14D');
+    $diff1Day = new DateInterval('P1D');
+    
+    if($getDateFrom !== null && $getDateFrom !== '') {
+        $dateFrom = DateTime::createFromFormat("Y-m-d", $getDateFrom);
+    }
+    
+    if($getDateTo !== null && $getDateTo !== '') {
+        $dateTo = DateTime::createFromFormat("Y-m-d", $getDateTo);
+        //$date_to->add($diff1Day);
+    }
+    
+    if($dateFrom !== null && $dateTo == null) {
+        $dateTo = clone $dateFrom;
+        $dateTo->add($diff14Days);
+        //$date_to->add($diff1Day);
+    }
+    
+    if($dateFrom == null && $dateTo !== null) {
+        $dateFrom = clone $dateTo;
+        $dateFrom->sub($diff14Days);
+        //$date_from->sub($diff1Day);
+    }
+    
+    if($dateFrom !== null && $dateTo !== null && $dateFrom >= $dateTo) {
+        $dateTo = clone $dateFrom;
+        //$date_to->add($diff14Days);
+        //$date_to->add($diff1Day);
+    }
+    
+    if($dateFrom == null && $dateTo == null) {
+        $dateFrom = new DateTime();
+        $dateTo = clone $dateFrom;
+        $dateTo->add($diff14Days);
+        //$date_to->add($diff1Day);
+    }
+}
+
+function DownloadSendHeaders($filename) {
+    // disable caching
+    $now = gmdate("D, d M Y H:i:s");
+    header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
+    header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
+    header("Last-Modified: {$now} GMT");
+
+    // force download
+    header("Content-Type: application/force-download");
+    header("Content-Type: application/octet-stream");
+    header("Content-Type: application/download");
+
+    // disposition / encoding on response body
+    header("Content-Disposition: attachment;filename={$filename}");
+    header("Content-Transfer-Encoding: binary");
+}
+
+function Array2Csv(array &$array, $titles) {
+    if (count($array) == 0) {
+            return null;
+    }
+    ob_start();
+    $df = fopen("php://output", 'w');
+    fputs($df, chr(0xEF) . chr(0xBB) . chr(0xBF)); // Это для правильной кодировки
+    fputcsv($df, $titles, ';');
+    foreach ($array as $row) {
+        fputcsv($df, $row, ';');
+    }
+    fclose($df);
+    return ob_get_clean();
+}
+
 // Классы
 class Executer {
     public $error = '';
