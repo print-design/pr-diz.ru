@@ -21,6 +21,9 @@ function Initials() {
     return $result;
 }
 ?>
+<div id="left_bar">
+    <a href="<?=APPLICATION ?>/"><img src="<?=APPLICATION ?>/images/logo.svg" /></a>
+</div>
 <div class="container-fluid header">
     <nav class="navbar navbar-expand-sm">
         <ul class="navbar-nav">

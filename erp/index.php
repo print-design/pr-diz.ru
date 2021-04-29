@@ -25,7 +25,7 @@ and open the template in the editor.
             }
             ?>
             <h1>Принт-дизайн</h1>
-            <h2>Склад</h2>
+            <h2>Управление ресурсами предприятия</h2>
         </div>
         <?php
         include 'include/footer.php';
