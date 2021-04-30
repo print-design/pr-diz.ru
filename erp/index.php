@@ -17,6 +17,7 @@ and open the template in the editor.
         <?php
         include 'include/header.php';
         ?>
+        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
         <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
@@ -29,5 +30,6 @@ and open the template in the editor.
         <?php
         include 'include/footer.php';
         ?>
+        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
     </body>
 </html>
