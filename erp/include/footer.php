@@ -116,7 +116,7 @@
     
     // Всплывающая подсказка
     $(function() {
-        $("a[class='left_bar_item']").tooltip({
+        $("a.left_bar_item").tooltip({
             position: {
                 my: "left center",
                 at: "right+10 center"
