@@ -138,8 +138,10 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
             
             if($roll_weight < $roll_weight_result_low || $roll_weight > $roll_weight_result_high) {
                 $roll_valid_data['weight_valid'] = ISINVALID;
+                $roll_valid_data['length_valid'] = ISINVALID;
                 $form_valid = false;
                 $roll_valid_data['weight_message'] = "Неверное значение";
+                $roll_valid_data['length_message'] = "Неверное значение";
             }
         }
         
@@ -372,14 +374,14 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         <input type='hidden' id='ordinal_roll<?=$roll_number ?>' name='ordinal_roll<?=$roll_number ?>' value='<?=$roll_number ?>' />
                         <div class='row'>
                             <div class='col-6 form-group'>
-                                <label for='length_roll<?=$roll_number ?>'>Длина, м</label>
-                                <input type='text' id='length_roll<?=$roll_number ?>' name='length_roll<?=$roll_number ?>' class='form-control int-only<?=$rolls_valid_data[$roll_number]['length_valid'] ?>' placeholder='Длина рулона' value="<?= filter_input(INPUT_POST, "length_roll$roll_number") ?>" required='required' />
-                                <div class="invalid-feedback"><?=$rolls_valid_data[$roll_number]['length_message'] ?></div>
-                            </div>
-                            <div class='col-6 form-group'>
                                 <label for='weight_roll<?=$roll_number ?>'>Масса нетто, кг</label>
                                 <input type='text' id='weight_roll<?=$roll_number ?>' name='weight_roll<?=$roll_number ?>' class='form-control int-only<?=$rolls_valid_data[$roll_number]['weight_valid'] ?>' placeholder='Масса нетто рулона' value="<?= filter_input(INPUT_POST, "weight_roll$roll_number") ?>" required='required' />
                                 <div class="invalid-feedback"><?=$rolls_valid_data[$roll_number]['weight_message'] ?></div>
+                            </div>
+                            <div class='col-6 form-group'>
+                                <label for='length_roll<?=$roll_number ?>'>Длина, м</label>
+                                <input type='text' id='length_roll<?=$roll_number ?>' name='length_roll<?=$roll_number ?>' class='form-control int-only<?=$rolls_valid_data[$roll_number]['length_valid'] ?>' placeholder='Длина рулона' value="<?= filter_input(INPUT_POST, "length_roll$roll_number") ?>" required='required' />
+                                <div class="invalid-feedback"><?=$rolls_valid_data[$roll_number]['length_message'] ?></div>
                             </div>
                         </div>
                         <?php
