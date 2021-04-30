@@ -28,6 +28,7 @@ $cell_valid = '';
 $status_id_valid = '';
 
 $invalid_message = '';
+$length_invalid_message = '';
 
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
@@ -135,8 +136,10 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         
     if($net_weight < $weight_result_low || $net_weight > $weight_result_high) {
         $net_weight_valid = ISINVALID;
+        $length_valid = ISINVALID;
         $form_valid = false;
         $invalid_message = "Неверное значение";
+        $length_invalid_message = "Неверное значение";
     }
     
     if(IsInRole(array('technologist', 'storekeeper'))) {
@@ -403,7 +406,7 @@ $utilized_status_id = 2;
                             ?>
                             <label for="length">Длина, м</label>
                             <input type="text" id="length" name="length" value="<?= $length ?>" class="form-control int-only<?=$length_valid ?>" placeholder="Введите длину"<?=$length_disabled ?>" />
-                            <div class="invalid-feedback">Длина обязательно</div>
+                            <div class="invalid-feedback"><?= empty($length_invalid_message) ? "Длина обязательно" : $length_invalid_message ?></div>
                         </div>
                     </div>
                     <div class="row">

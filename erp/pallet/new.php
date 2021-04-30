@@ -89,8 +89,10 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         
         if($net_weight < $weight_result_low || $net_weight > $weight_result_high) {
             $net_weight_valid = ISINVALID;
+            $length_valid = ISINVALID;
             $form_valid = false;
             $net_weight_message = "Неверное значение";
+            $length_message = "Неверное значение";
         }
     }
     

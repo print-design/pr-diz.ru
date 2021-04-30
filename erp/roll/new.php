@@ -24,6 +24,7 @@ $diameter_valid = '';
 
 $invalid_diameter_message = '';
 $invalid_message = '';
+$length_invalid_message = '';
 
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
@@ -118,8 +119,10 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
     
     if($net_weight < $weight_result_low || $net_weight > $weight_result_high) {
         $net_weight_valid = ISINVALID;
+        $length_valid = ISINVALID;
         $form_valid = false;
         $invalid_message = "Неверное значение";
+        $length_invalid_message = "Неверное значение";
     }
     
     $cell = filter_input(INPUT_POST, 'cell');
@@ -302,7 +305,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                             <label for="length">Длина, м</label>
                             <input type="text" id="length" name="length" value="<?= filter_input(INPUT_POST, 'length') ?>" class="form-control int-only<?=$length_valid ?>" placeholder="Введите длину" required="required" />
                             <input type="hidden" id="length_hidden" name="length_hidden" />
-                            <div class="invalid-feedback">Длина обязательно</div>
+                            <div class="invalid-feedback"><?= empty($length_invalid_message) ? "Длина обязательно" : $length_invalid_message ?></div>
                         </div>
                     </div>
                     <div class="row">
