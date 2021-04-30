@@ -37,6 +37,7 @@ $error_message = $grafik->error_message;
         <?php
         include '../include/header_grafik.php';
         ?>
+        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
         <div style="position: fixed; top: 100px; left: 100px; z-index: 1000;" id="waiting"></div>
         <div class="container-fluid" id="maincontent">
             <?php
@@ -49,5 +50,6 @@ $error_message = $grafik->error_message;
         <?php
             include '../include/footer.php';
         ?>
+        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
     </body>
 </html>
