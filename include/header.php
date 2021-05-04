@@ -1,16 +1,18 @@
-<div class="container-fluid">
-    <nav class="navbar navbar-expand-sm">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="<?=APPLICATION ?>/grafik/">График</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="<?=APPLICATION ?>/crm/">CRM</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="<?=APPLICATION ?>/erp/">Склад</a>
-            </li>
-        </ul>
+<?php
+include 'left_bar.php';
+?>
+<div class="container-fluid header">
+    <nav class="navbar navbar-expand-sm justify-content-end">
+        <?php
+        if(file_exists('find.php')) {
+            include 'find.php';
+        }
+        else {
+            echo "<div class='ml-auto'></div>";
+        }
+        
+        include 'header_right.php';
+        ?>
     </nav>
 </div>
-<hr />
+<div id="topmost"></div>

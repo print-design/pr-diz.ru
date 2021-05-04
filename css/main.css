@@ -1,6 +1,5 @@
-html {
-    overflow: -moz-scrollbars-vertical; 
-    overflow-y: scroll;
+body {
+    padding-left: 60px;
 }
 
 a:not(.btn):link, a:not(.btn):visited {
@@ -27,12 +26,39 @@ a.black:active, a.black:hover, .black a:active, .black a:hover {
     white-space: pre-line;
 }
 
+/* Левая панель */
+#left_bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: white;
+    width: 60px;
+    text-align: center;
+    padding-top: 25px;
+    box-shadow: 0px 0px 20px rgb(0 0 0 / 15%);
+    z-index: 200;
+}
+
+.left_bar_item {
+    display: block;
+    margin-bottom: 40px;
+}
+
+.left_bar_item.logo {
+    margin-bottom: 60px;
+}
+
+/* Шапка */
 .header {
     position: fixed;
     height: 80px;
     background-color: white;
     box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.15);
     z-index: 100;
+    left: 0;
+    padding-left: 100px;
+    padding-right: 15px;
 }
 
 .header a:link, .header a:visited {
@@ -95,11 +121,6 @@ li#nav-user {
 
 li#nav-user a.dropdown-toggle::after {
     display: none;
-}
-
-.container-fluid.header {
-    padding-left: 45px;
-    padding-right: 15px;
 }
 
 .btn.disabled, .btn:disabled {
@@ -231,9 +252,34 @@ table tr.selected {
     background-color: rgba(34, 170, 214, 0.2);
 }
 
-#content_table tr td, #content_table tr th {
-    word-wrap: break-word;
-    word-break: break-all;
+table tr.pallet_tr {
+    cursor: pointer;
+}
+
+tr.pallet_tr:hover {
+    border-left: solid 1px blue!important;
+    border-right: solid 1px blue!important;
+}
+
+tr.pallet_tr:hover > td {
+    border-bottom: solid 1px blue;
+    position: relative;
+}
+
+tr.pallet_tr:hover > td:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: blue;
+}
+
+/* Печать стикера */
+table.print tr td, table.print tr th {
+    font-size: 32px;
+    line-height: 34px;
 }
 
 /*Элементы страниц*/
@@ -285,4 +331,107 @@ select.form-control {
 .film_menu .command {
     padding-top: 3px;
     padding-bottom: 3px;
+}
+
+/* Фильтр, выплывающий сбоку */
+.modal .modal-dialog-aside{ 
+	width: 521px; max-width:80%; height: 100%; margin:0;transform: translate(0); transition: transform .2s;
+}
+.modal .modal-dialog-aside .modal-content{  height: inherit; border:0; border-radius: 0;}
+.modal .modal-dialog-aside .modal-content .modal-body{ overflow-y: auto }
+.modal.fixed-left .modal-dialog-aside{ margin-left:auto;  transform: translateX(100%); }
+.modal.fixed-right .modal-dialog-aside{ margin-right:auto; transform: translateX(-100%); }
+.modal.show .modal-dialog-aside{ transform: translateX(0);  }
+
+.modal.fade {
+        padding-right: 0!important;
+        overflow: hidden;
+}
+
+.modal-open {
+    overflow: auto; 
+}
+
+/* Таблицы график */
+.table {
+    transform-style: preserve-3d;
+}
+
+.table th, .table td {
+    padding: 5px;
+}
+
+table.typography {
+    font-size: smaller;
+}
+
+table.typography tbody tr td {
+    background-color: white;
+}
+
+table.typography tbody tr td.top {
+    border-top: solid 2px darkgray;
+}
+
+table.print tr td.top {
+    border-top: solid 2px darkgray;
+}
+
+table.typography tbody tr td.night {
+    background-color: #F2F2F2;
+}
+
+thead#grafik-thead {
+    background-color: lightcyan;
+}
+
+table.in-cell {
+    margin: 0;
+}
+
+table.in-cell tr td {
+    border: 0;
+    padding: 0;
+    vertical-align: middle;
+    padding: 0;
+}
+
+/* Буфер обмена - График */
+.clipboard_copy {
+    position: relative;
+}
+
+.clipboard_alert {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    z-index: 100;
+    display: none;
+}
+
+/* Элементы управления - График */
+textarea#editable {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+}
+
+/* Всплывающая подсказка jquery-ui */
+.ui-tooltip {
+    background: #666!important;
+    color: white!important;
+}
+.ui-tooltip-content {
+    position: relative;
+}
+.ui-tooltip-content::after {
+    content: '';
+    position: absolute;
+    border-style: solid;
+    display: block;
+    width: 0;
+    
+    top: 3px;
+    left: -18px;
+    border-color: transparent #666;
+    border-width: 10px 10px 10px 0;
 }

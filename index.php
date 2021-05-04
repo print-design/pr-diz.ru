@@ -2,6 +2,11 @@
 include 'include/topscripts.php';
 ?>
 <!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
 <html>
     <head>
         <?php
@@ -12,11 +17,19 @@ include 'include/topscripts.php';
         <?php
         include 'include/header.php';
         ?>
+        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
         <div class="container-fluid">
+            <?php
+            if(!empty($error_message)) {
+               echo "<div class='alert alert-danger'>$error_message</div>";
+            }
+            ?>
             <h1>Принт-дизайн</h1>
+            <h2>Управление ресурсами предприятия</h2>
         </div>
         <?php
         include 'include/footer.php';
         ?>
+        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
     </body>
 </html>
