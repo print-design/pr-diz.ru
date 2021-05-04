@@ -26,7 +26,14 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <h1 style="font-size: 32px; line-height: 48px; font-weight: 600;">Расчеты</h1>
+            <div class="d-flex justify-content-between mb-auto">
+                <div class="p-1">
+                    <h1 style="font-size: 32px; line-height: 48px; font-weight: 600;">Расчеты</h1>
+                </div>
+                <div class="p-1">
+                    <a href="new.php" class="btn btn-outline-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
+                </div>
+            </div>
             <?php
             if($rowcounter == 0) {
                 echo '<p>Ничего не найдено.</p>';
