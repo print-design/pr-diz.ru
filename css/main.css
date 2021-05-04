@@ -42,11 +42,17 @@ a.black:active, a.black:hover, .black a:active, .black a:hover {
 
 .left_bar_item {
     display: block;
-    margin-bottom: 40px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+
+.left_bar_item.active {
+    border-left: solid 3px #EC3A7A;
 }
 
 .left_bar_item.logo {
-    margin-bottom: 60px;
+    padding-top: 0;
+    padding-bottom: 40px;
 }
 
 /* Шапка */

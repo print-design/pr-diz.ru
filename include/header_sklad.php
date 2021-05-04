@@ -7,7 +7,6 @@ include 'left_bar.php';
             <?php
             $pallets_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/pallet')) == APPLICATION.'/pallet' ? ' disabled' : '';
             $rolls_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/roll')) == APPLICATION.'/roll' ? ' disabled' : '';
-            $cut_requests_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/cut_request')) == APPLICATION.'/cut_request' ? ' disabled' : '';
             $utilized_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/utilized')) == APPLICATION.'/utilized' ? ' disabled' : '';
             $user_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/user/index.php' ? ' disabled' : '';
             $personal_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/personal/index.php' ? ' disabled' : '';
@@ -18,13 +17,6 @@ include 'left_bar.php';
             </li>
             <li class='nav-item'>
                 <a class="nav-link<?=$rolls_status ?>" href="<?=APPLICATION ?>/roll/">Рулоны</a>
-            </li>
-            <?php
-            endif;
-            if(IsInRole(array('technologist', 'dev', 'cutter'))):
-            ?>
-            <li class="nav-item d-none">
-                <a class="nav-link<?=$cut_requests_status ?>" href="<?=APPLICATION ?>/cut_request/">Заявки</a>
             </li>
             <?php
             endif;
