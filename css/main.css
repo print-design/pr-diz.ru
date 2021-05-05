@@ -441,3 +441,9 @@ textarea#editable {
     border-color: transparent #666;
     border-width: 10px 10px 10px 0;
 }
+
+/* Заказы */
+#calculation {
+    border: solid 2px lightgray;
+    padding: 30px;
+}

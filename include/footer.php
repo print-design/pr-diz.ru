@@ -2,6 +2,7 @@
 
 <script src='<?=APPLICATION ?>/js/jquery-3.5.1.min.js'></script>
 <script src='<?=APPLICATION ?>/js/bootstrap.min.js'></script>
+<script src="<?=APPLICATION ?>/js/popper.min.js"></script>
 <script src="<?=APPLICATION ?>/js/jquery.maskedinput.js"></script>
 
 <script>
@@ -69,6 +70,15 @@
     
     $.mask.definitions['~'] = "[+-]";
     $("#phone").mask("+7 (999) 999-99-99");
+    
+    // При щелчке в поле телефона, устанавливаем курсор в самое начало ввода телефонного номера.
+    $("#phone").click(function(){
+        var maskposition = $(this).val().indexOf("_");
+        if(Number.isInteger(maskposition)) {
+            $(this).prop("selectionStart", maskposition);
+            $(this).prop("selectionEnd", maskposition);
+        }
+    });
     
     // Подтверждение удаления
     $('button.confirmable').click(function() {

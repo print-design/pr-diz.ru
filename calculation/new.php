@@ -16,7 +16,7 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
     </head>
     <body>
         <?php
-        include '../include/header_sklad.php';
+        include '../include/header_zakaz.php';
         ?>
         <div class="container-fluid">
             <?php
@@ -25,9 +25,11 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
             }
             ?>
             <div class="row">
+                <!-- Левая половина -->
                 <div class="col-6">
                     <h1 style="font-size: 32px; line-height: 48px; font-weight: 600;">Новый расчет</h1>
                     <form method="post">
+                        <!-- Заказчик -->
                         <div class="row">
                             <div class="col-8">
                                 <div class="form-group">
@@ -41,10 +43,12 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
                                 <button type="button" class="btn btn-outline-dark w-100"><i class="fas fa-plus"></i>&nbsp;Создать нового</button>
                             </div>
                         </div>
+                        <!-- Название заказа -->
                         <div class="form-group">
                             <input type="text" id="name" name="name" class="form-control" placeholder="Название заказа" required="required" />
                             <div class="invalid-feedback">Название заказа обязательно</div>
                         </div>
+                        <!-- Тип работы -->
                         <div class="form-group">
                             <select id="work_type_id" name="work_type_id" class="form-control" required="required">
                                 <option value="">Тип работы...</option>
@@ -60,6 +64,7 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
                                 ?>
                             </select>
                         </div>
+                        <!-- Основная плёнка -->
                         <div id="main_film_title" class="d-none">
                             <p class="font-weight-bold">Основная пленка</p>
                         </div>
@@ -92,6 +97,7 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
                         <div id="show_lamination_1">
                             <button type="button" class="btn btn-light" onclick="javascript: ShowLamination1();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                         </div>
+                        <!-- Ламинация 1 -->
                         <div id="form_lamination_1" class="d-none">
                             <p class="font-weight-bold">Ламинация 1</p>
                             <div class="row">
@@ -123,6 +129,7 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
                             <div id="show_lamination_2">
                                 <button type="button" class="btn btn-light" onclick="javascript: ShowLamination2();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                             </div>
+                            <!-- Ламинация 2 -->
                             <div id="form_lamination_2">
                                 <p class="font-weight-bold">Ламинация 2</p>
                                 <div class="row">
@@ -161,8 +168,34 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
                                 </div>
                             </div>
                         </div>
-                        <button type="button" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark">Рассчитать</button>
+                        <button type="button" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark" onclick="javascript: Calculate();">Рассчитать</button>
                     </form>
+                </div>
+                <!-- Правая половина -->
+                <div class="col-3">
+                    <!-- Расчёт -->
+                    <div id="calculation" class="d-none">
+                        <h1>Расчет</h1>
+                        <input type="text" id="extra_charge" name="extra_charge" class="form-control" placeholder="Наценка" />
+                        
+                        <div class="mt-3 mb-1">Себестоимость</div>
+                        <div class="font-weight-bold mt-1 mb-1" style="font-size: large;">1 200 000 руб.</div>
+                        <div class="mt-3 mb-1">Отгрузочная стоимость</div>
+                        <div class="font-weight-bold mt-1 mb-3" style="font-size: large;">800 000 руб.</div>
+                        
+                        <button type="button" class="btn btn-light" id="show_costs" onclick="javascript: ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать расходы</button>
+                        <div id="costs" class="d-none">
+                            <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
+                            
+                            <div class="mt-3 mb-1">Отходы</div>
+                            <div class="font-weight-bold mt-1 mb-1" style="font-size: large;">200 280 руб.&nbsp;&nbsp;&nbsp;24,5 кг.</div>
+                            <div class="mt-3 mb-1">Клей</div>
+                            <div class="font-weight-bold mt-1 mb-3" style="font-size: large;">800 000 руб.</div>
+                        </div>
+                        
+                        <button type="button" class="btn btn-outline-dark w-75 mt-3">Сделать КП</button>
+                        <button type="button" class="btn btn-dark w-75 mt-3">Отправить в работу</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -171,6 +204,22 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
         ?>
         <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
+            // Маска % для поля "наценка"
+            $("#extra_charge").mask("99%");
+            
+            // Фильтрация ввода в поле "наценка"
+            $('#extra_charge').keypress(function(e) {
+                if(/\D/.test(String.fromCharCode(e.charCode))) {
+                    return false;
+                }
+            });
+            
+            $('#extra_charge').change(function(e) {
+                var val = $(this).val();
+                val = val.replace(/[^\d\%]/g, '');
+                $(this).val(val);
+            });
+            
             // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин
             $('#brand_name').change(function(){
                 if($(this).val() == "") {
@@ -247,6 +296,24 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
                 $('#form_lamination_2').addClass('d-none');
                 $('#show_lamination_2').removeClass('d-none');
                 $('#hide_lamination_1').removeClass('d-none');
+            }
+            
+            // Расчёт
+            function Calculate() {
+                // Проверка полей формы
+                $("#calculation").removeClass("d-none");
+            }
+            
+            // Показ расходов
+            function ShowCosts() {
+                $("#costs").removeClass("d-none");
+                $("#show_costs").addClass("d-none");
+            }
+            
+            // Скрытие расходов
+            function HideCosts() {
+                $("#costs").addClass("d-none");
+                $("#show_costs").removeClass("d-none");
             }
         </script>
     </body>
