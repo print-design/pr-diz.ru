@@ -34,6 +34,21 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
                     <a href="new.php" class="btn btn-outline-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
                 </div>
             </div>
+            <table class="table" id="content_table">
+                <thead>
+                    <tr>
+                        <th>ID<a href="?sort=id">&nbsp;<i class="fas fa-arrow-down"></i></a></th>
+                        <th>Дата<a href="?sort=date">&nbsp;<i class="fas fa-arrow-down"></i></a></th>
+                        <th>Заказчик<a href="?sort=customer">&nbsp;<i class="fas fa-arrow-down"></i></a></th>
+                        <th>Имя заказа<a href="?sort=order">&nbsp;<i class="fas fa-arrow-down"></i></a></th>
+                        <th>Объем кг.<a href="?sort=weight">&nbsp;<i class="fas fa-arrow-down"></i></a></th>
+                        <th>Тип работы<a href="?sort=work_type">&nbsp;<i class="fas fa-arrow-down"></i></a></th>
+                        <th>Менеджер<a href="?sort=manager">&nbsp;<i class="fas fa-arrow-down"></i></a></th>
+                        <th>Статус<a href="?sort=status">&nbsp;<i class="fas fa-arrow-down"></i></a></th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
             <?php
             if($rowcounter == 0) {
                 echo '<p>Ничего не найдено.</p>';
