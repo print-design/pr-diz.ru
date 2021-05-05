@@ -6,7 +6,7 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Обработка отправки формы
+// Создание заказчика
 $customer_id = null;
 
 if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
@@ -20,6 +20,13 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $customer_id = $executer->insert_id;
+    }
+}
+
+// Сохранение в базу расчёта
+if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
+    if(empty($error_message)) {
+        header('Location: '.APPLICATION.'/calculation/');
     }
 }
 ?>
@@ -227,8 +234,11 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
                             <div class="font-weight-bold mt-1 mb-3" style="font-size: large;">800 000 руб.</div>
                         </div>
                         
-                        <button type="button" class="btn btn-outline-dark w-75 mt-3">Сделать КП</button>
-                        <button type="button" class="btn btn-dark w-75 mt-3">Отправить в работу</button>
+                        <form method="post">
+                            <input type="hidden" id="create_calculation_submit" name="create_calculation_submit" />
+                            <button type="submit" id="calculation_status_id" name="calculation_status_id" value="2" class="btn btn-outline-dark w-75 mt-3">Сделать КП</button>
+                            <button type="submit" id="calculation_status_id" name="calculation_status_id" value="6" class="btn btn-dark w-75 mt-3">Отправить в работу</button>
+                        </form>
                     </div>
                 </div>
             </div>
