@@ -443,7 +443,7 @@ textarea#editable {
 }
 
 /* Заказы */
-#calculation {
+#calculation, #new_customer {
     border: solid 2px lightgray;
     padding: 30px;
 }

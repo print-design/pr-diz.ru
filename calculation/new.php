@@ -27,6 +27,9 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
             <div class="row">
                 <!-- Левая половина -->
                 <div class="col-6">
+                    <div class="backlink">
+                        <a href="<?=APPLICATION ?>/calculation/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                    </div>
                     <h1 style="font-size: 32px; line-height: 48px; font-weight: 600;">Новый расчет</h1>
                     <form method="post">
                         <!-- Заказчик -->
@@ -40,7 +43,7 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
                                 </div>
                             </div>
                             <div class="col-4">
-                                <button type="button" class="btn btn-outline-dark w-100"><i class="fas fa-plus"></i>&nbsp;Создать нового</button>
+                                <button type="button" class="btn btn-outline-dark w-100" data-toggle="modal" data-target="#new_customer"><i class="fas fa-plus"></i>&nbsp;Создать нового</button>
                             </div>
                         </div>
                         <!-- Название заказа -->
@@ -196,6 +199,41 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
                         <button type="button" class="btn btn-outline-dark w-75 mt-3">Сделать КП</button>
                         <button type="button" class="btn btn-dark w-75 mt-3">Отправить в работу</button>
                     </div>
+                </div>
+            </div>
+        </div>
+        <!-- Форма добавления заказчика -->
+        <div id="new_customer" class="modal fade show">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post">
+                        <div class="modal-header">
+                            <i class="fas fa-user"></i>&nbsp;&nbsp;Новый заказчик
+                            <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="text" id="name" name="name" class="form-control" placeholder="Название компании" required="required" />
+                                <div class="invalid-feedback">Название компании обязательно</div>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="person" name="person" class="form-control" placeholder="Имя представителя" required="required" />
+                                <div class="invalid-feedback">Имя представителя обязательно</div>
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" id="phone" name="phone" class="form-control" placeholder="Номер телефона" required="required" />
+                                <div class="invalid-feedback">Номер телефона обязательно</div>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" id="email" name="email" class="form-control" placeholder="E-Mail" required="required" />
+                                <div class="invalid-feedback">E-Mail обязательно</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-dark mt-3" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-dark mt-3">Complete</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
