@@ -5,6 +5,23 @@ include '../include/topscripts.php';
 if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
+
+// Обработка отправки формы
+$customer_id = null;
+
+if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
+    if(!empty(filter_input(INPUT_POST, 'name'))) {
+        $name = addslashes(filter_input(INPUT_POST, 'name'));
+        $person = addslashes(filter_input(INPUT_POST, 'person'));
+        $phone = filter_input(INPUT_POST, 'phone');
+        $email = filter_input(INPUT_POST, 'email');
+        
+        $sql = "insert into customer (name, person, phone, email) values ('$name', '$person', '$phone', '$email')";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+        $customer_id = $executer->insert_id;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -38,6 +55,20 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
                                 <div class="form-group">
                                     <select id="customer_id" name="customer_id" class="form-control" required="required">
                                         <option value="">Заказчик...</option>
+                                        <?php
+                                        $sql = "select id, name from customer order by name";
+                                        $fetcher = new Fetcher($sql);
+                                        
+                                        while ($row = $fetcher->Fetch()):
+                                        $selected = '';
+                                        if($row['id'] == $customer_id) {
+                                            $selected = " selected='selected'";
+                                        }
+                                        ?>
+                                        <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
+                                        <?php
+                                        endwhile;
+                                        ?>
                                     </select>
                                     <div class="invalid-feedback">Заказчик обязательно</div>
                                 </div>
@@ -231,7 +262,7 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-dark mt-3" data-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-dark mt-3">Complete</button>
+                            <button type="submit" id="create_customer_submit" name="create_customer_submit" class="btn btn-dark mt-3">Complete</button>
                         </div>
                     </form>
                 </div>
