@@ -10,8 +10,8 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
 $customer_id = null;
 
 if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
-    if(!empty(filter_input(INPUT_POST, 'name'))) {
-        $name = addslashes(filter_input(INPUT_POST, 'name'));
+    if(!empty(filter_input(INPUT_POST, 'customer_name'))) {
+        $name = addslashes(filter_input(INPUT_POST, 'customer_name'));
         $person = addslashes(filter_input(INPUT_POST, 'person'));
         $phone = filter_input(INPUT_POST, 'phone');
         $email = filter_input(INPUT_POST, 'email');
@@ -106,7 +106,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                                         
                                         while ($row = $fetcher->Fetch()):
                                         $selected = '';
-                                        $customer_id = filter_input(INPUT_POST, 'customer_id');
                                         if($row['id'] == $customer_id) {
                                             $selected = " selected='selected'";
                                         }
@@ -211,7 +210,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <select id="lamination1_brand_name" name="lamination1_brand_name" class="form-control" required="required">
+                                        <select id="lamination1_brand_name" name="lamination1_brand_name" class="form-control">
                                             <option value="">Марка пленки...</option>
                                                 <?php
                                                 foreach ($brand_names as $row):
@@ -230,7 +229,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                                 </div>
                                 <div class="col-5">
                                     <div class="form-group">
-                                        <select id="lamination1_thickness" name="lamination1_thickness" class="form-control" required="required">
+                                        <select id="lamination1_thickness" name="lamination1_thickness" class="form-control">
                                             <option value="">Толщина...</option>
                                             <?php
                                             if(null !== filter_input(INPUT_POST, 'lamination1_brand_name')) {
@@ -266,7 +265,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
-                                            <select id="lamination2_brand_name" name="lamination2_brand_name" class="form-control" required="required">
+                                            <select id="lamination2_brand_name" name="lamination2_brand_name" class="form-control">
                                                 <option value="">Марка пленки...</option>
                                                     <?php
                                                     foreach ($brand_names as $row):
@@ -285,7 +284,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                                     </div>
                                     <div class="col-5">
                                         <div class="form-group">
-                                            <select id="lamination2_thickness" name="lamination2_thickness" class="form-control" required="required">
+                                            <select id="lamination2_thickness" name="lamination2_thickness" class="form-control">
                                                 <option value="">Толщина...</option>
                                                 <?php
                                                 if(null !== filter_input(INPUT_POST, 'lamination2_brand_name')) {
@@ -361,7 +360,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <input type="text" id="name" name="name" class="form-control" placeholder="Название компании" required="required" />
+                                <input type="text" id="customer_name" name="customer_name" class="form-control" placeholder="Название компании" required="required" />
                                 <div class="invalid-feedback">Название компании обязательно</div>
                             </div>
                             <div class="form-group">
@@ -474,6 +473,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $('#form_lamination_1').removeClass('d-none');
                 $('#show_lamination_1').addClass('d-none');
                 $('#main_film_title').removeClass('d-none');
+                $('#lamination1_brand_name').attr('required', 'required');
+                $('#lamination1_thickness').attr('required', 'required');
                 HideLamination2();
             }
             
@@ -482,6 +483,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $('#form_lamination_1').addClass('d-none');
                 $('#show_lamination_1').removeClass('d-none');
                 $('#main_film_title').addClass('d-none');
+                $('#lamination1_brand_name').removeAttr('required');
+                $('#lamination1_thickness').removeAttr('required');
                 HideLamination2();
             }
             
@@ -490,6 +493,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $('#form_lamination_2').removeClass('d-none');
                 $('#show_lamination_2').addClass('d-none');
                 $('#hide_lamination_1').addClass('d-none');
+                $('#lamination2_brand_name').attr('required', 'required');
+                $('#lamination2_thickness').attr('required', 'required');
             }
             
             // Скрытие марки плёнки и толщины для ламинации 2
@@ -497,6 +502,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $('#form_lamination_2').addClass('d-none');
                 $('#show_lamination_2').removeClass('d-none');
                 $('#hide_lamination_1').removeClass('d-none');
+                $('#lamination2_brand_name').removeAttr('required');
+                $('#lamination2_thickness').removeAttr('required');
             }
             
             // Расчёт
