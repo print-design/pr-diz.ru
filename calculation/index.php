@@ -16,6 +16,15 @@ while ($row = $fetcher->Fetch()) {
     $status['colour'] = $row['colour'];
     $statuses[$row['id']] = $status;
 }
+
+function OrderLink($param) {
+    if(array_key_exists('order', $_REQUEST) && $_REQUEST['order'] == $param) {
+        echo "<strong><i class='fas fa-arrow-down'></i></strong>";
+    }
+    else {
+        echo "<a href='?order=$param'><i class='fas fa-arrow-down'></i></a>";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -48,14 +57,14 @@ while ($row = $fetcher->Fetch()) {
             <table class="table" id="content_table">
                 <thead>
                     <tr>
-                        <th>ID<a href="?sort=id">&nbsp;<i class="fas fa-arrow-down"></i></a></th>
-                        <th>Дата<a href="?sort=date">&nbsp;<i class="fas fa-arrow-down"></i></a></th>
-                        <th>Заказчик<a href="?sort=customer">&nbsp;<i class="fas fa-arrow-down"></i></a></th>
-                        <th>Имя заказа<a href="?sort=order">&nbsp;<i class="fas fa-arrow-down"></i></a></th>
-                        <th>Объем кг.<a href="?sort=weight">&nbsp;<i class="fas fa-arrow-down"></i></a></th>
-                        <th>Тип работы<a href="?sort=work_type">&nbsp;<i class="fas fa-arrow-down"></i></a></th>
-                        <th>Менеджер<a href="?sort=manager">&nbsp;<i class="fas fa-arrow-down"></i></a></th>
-                        <th>Статус<a href="?sort=status">&nbsp;<i class="fas fa-arrow-down"></i></a></th>
+                        <th>ID&nbsp;<?= OrderLink('id') ?></th>
+                        <th>Дата&nbsp;<?= OrderLink('date') ?></th>
+                        <th>Заказчик&nbsp;<?= OrderLink('customer') ?></th>
+                        <th>Имя заказа&nbsp;<?= OrderLink('name') ?></th>
+                        <th>Объем кг.&nbsp;<?= OrderLink('weight') ?></th>
+                        <th>Тип работы&nbsp;<?= OrderLink('work_type') ?></th>
+                        <th>Менеджер&nbsp;<?= OrderLink('manager') ?></th>
+                        <th>Статус&nbsp;<?= OrderLink('status') ?></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -68,12 +77,50 @@ while ($row = $fetcher->Fetch()) {
                         $pager_total_count = $row[0];
                     }
                     
-                    $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.weight, wt.name work_type, u.last_name, u.first_name, c.status_id, c.status_id "
+                    $orderby = "order by c.id desc";
+                    
+                    if(array_key_exists('order', $_REQUEST)) {
+                        switch ($_REQUEST['order']) {
+                            case 'id':
+                                $orderby = "order by c.customer_id desc, c.id asc";
+                                break;
+                            
+                            case 'date':
+                                $orderby = "order by c.date desc";
+                                break;
+                            
+                            case 'customer':
+                                $orderby = "order by cus.name asc";
+                                break;
+                            
+                            case 'name':
+                                $orderby = "order by c.name asc";
+                                break;
+                            
+                            case 'weight':
+                                $orderby = "order by c.weight desc";
+                                break;
+                            
+                            case 'work_type':
+                                $orderby = "order by wt.name";
+                                break;
+                            
+                            case 'manager':
+                                $orderby = "order by u.last_name asc, u.first_name asc";
+                                break;
+                            
+                            case 'status':
+                                $orderby = "order by c.status_id";
+                                break;
+                        }
+                    }
+                    
+                    $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.weight, wt.name work_type, u.last_name, u.first_name, c.status_id "
                             . "from calculation c "
                             . "inner join customer cus on c.customer_id = cus.id "
                             . "inner join work_type wt on c.work_type_id = wt.id "
                             . "inner join user u on c.manager_id = u.id "
-                            . "order by c.date desc";
+                            . "$orderby limit $pager_skip, $pager_take";
                     $fetcher = new Fetcher($sql);
                     
                     while ($row = $fetcher->Fetch()):
