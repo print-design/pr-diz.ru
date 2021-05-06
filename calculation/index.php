@@ -5,6 +5,17 @@ include '../include/topscripts.php';
 if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
+
+// Получение всех статусов
+$fetcher = (new Fetcher("select id, name, colour from calculation_status"));
+$statuses = array();
+
+while ($row = $fetcher->Fetch()) {
+    $status = array();
+    $status['name'] = $row['name'];
+    $status['colour'] = $row['colour'];
+    $statuses[$row['id']] = $status;
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -48,6 +59,53 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
                         <th></th>
                     </tr>
                 </thead>
+                <tbody>
+                    <?php
+                    $sql = "select count(id) from calculation";
+                    $fetcher = new Fetcher($sql);
+                    
+                    if($row = $fetcher->Fetch()) {
+                        $pager_total_count = $row[0];
+                    }
+                    
+                    $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.weight, wt.name work_type, u.last_name, u.first_name, c.status_id, c.status_id "
+                            . "from calculation c "
+                            . "inner join customer cus on c.customer_id = cus.id "
+                            . "inner join work_type wt on c.work_type_id = wt.id "
+                            . "inner join user u on c.manager_id = u.id "
+                            . "order by c.date desc";
+                    $fetcher = new Fetcher($sql);
+                    
+                    while ($row = $fetcher->Fetch()):
+                        
+                    $rowcounter++;
+                    $status = '';
+                    $colour_style = '';
+                    
+                    if(!empty($statuses[$row['status_id']]['name'])) {
+                        $status = $statuses[$row['status_id']]['name'];
+                    }
+                    
+                    if(!empty($statuses[$row['status_id']]['colour'])) {
+                        $colour = $statuses[$row['status_id']]['colour'];
+                        $colour_style = " color: $colour";
+                    }
+                    ?>
+                    <tr>
+                        <td><?=$row['customer_id'].'-'.$row['id'] ?></td>
+                        <td><?=$row['date'] ?></td>
+                        <td><?=$row['customer'] ?></td>
+                        <td><?= htmlentities($row['name']) ?></td>
+                        <td><?=$row['weight'] ?></td>
+                        <td><?=$row['work_type'] ?></td>
+                        <td><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
+                        <td><i class="fas fa-circle" style="color: <?=$colour ?>;"></i>&nbsp;&nbsp;<?=$status ?></td>
+                        <td><i class="fas fa-ellipsis-h"></i></td>
+                    </tr>
+                    <?php
+                    endwhile;
+                    ?>
+                </tbody>
             </table>
             <?php
             if($rowcounter == 0) {
