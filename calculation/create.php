@@ -69,6 +69,14 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $work_type_id = filter_input(INPUT_POST, 'work_type_id');
         $brand_name = addslashes(filter_input(INPUT_POST, 'brand_name'));
         $thickness = filter_input(INPUT_POST, 'thickness');
+        
+        $lamination1_brand_name = addslashes(filter_input(INPUT_POST, 'lamination1_brand_name'));
+        $lamination1_thickness = filter_input(INPUT_POST, 'lamination1_thickness');
+        if(empty($lamination1_thickness)) $lamination1_thickness = "NULL";
+        $lamination2_brand_name = addslashes(filter_input(INPUT_POST, 'lamination2_brand_name'));
+        $lamination2_thickness = filter_input(INPUT_POST, 'lamination2_thickness');
+        if(empty($lamination2_thickness)) $lamination2_thickness = "NULL";
+        
         $width = filter_input(INPUT_POST, 'width');
         $weight = filter_input(INPUT_POST, 'weight');
         $diameter = filter_input(INPUT_POST, 'diameter');
@@ -76,7 +84,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $manager_id = GetUserId();
         $status_id = 1; // Статус "Расчёт"
         
-        $sql = "insert into calculation (date, customer_id, name, weight, work_type_id, manager_id, status_id) values('$date', $customer_id, '$name', $weight, $work_type_id, $manager_id, $status_id)";
+        $sql = "insert into calculation (date, customer_id, name, work_type_id, brand_name, thickness, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, weight, diameter, manager_id, status_id) values('$date', $customer_id, '$name', $work_type_id, '$brand_name', $thickness, '$lamination1_brand_name', $lamination1_thickness, '$lamination2_brand_name', $lamination2_thickness, $width, $weight, $diameter, $manager_id, $status_id)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $insert_id = $executer->insert_id;
