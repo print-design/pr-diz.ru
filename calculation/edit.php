@@ -176,6 +176,48 @@ $status_id = $row['status_id'];
             <div class="backlink">
                 <a href="<?=APPLICATION ?>/calculation/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
             </div>
+            <div class="row">
+                <!-- Левая половина -->
+                <div class="col-6">
+                    <form method="post">
+                        <h1 style="font-size: 32px; line-height: 48px; font-weight: 600;"><?= htmlentities($name) ?></h1>
+                        <h2 style="font-size: 26px;">№<?=$id ?> от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></h2>
+                        <!-- Заказчик -->
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="form-group">
+                                    <select id="customer_id" name="customer_id" class="form-control<?=$customer_id_valid ?>" required="required">
+                                        <option value="">Заказчик...</option>
+                                        <?php
+                                        $sql = "select id, name from customer order by name";
+                                        $fetcher = new Fetcher($sql);
+                                        
+                                        while ($row = $fetcher->Fetch()):
+                                        $selected = '';
+                                        if($row['id'] == $customer_id) {
+                                            $selected = " selected='selected'";
+                                        }
+                                        ?>
+                                        <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
+                                        <?php
+                                        endwhile;
+                                        ?>
+                                    </select>
+                                    <div class="invalid-feedback">Заказчик обязательно</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <button type="button" class="btn btn-outline-dark w-100" data-toggle="modal" data-target="#new_customer"><i class="fas fa-plus"></i>&nbsp;Создать нового</button>
+                            </div>
+                        </div>
+                        <!-- Название заказа -->
+                        <div class="form-group">
+                            <input type="text" id="name" name="name" class="form-control<?=$name_valid ?>" placeholder="Название заказа" value="<?= htmlentities($name) ?>" required="required" autocomplete="off" />
+                            <div class="invalid-feedback">Название заказа обязательно</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
         <?php
         include '../include/footer.php';

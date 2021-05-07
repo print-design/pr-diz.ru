@@ -30,8 +30,6 @@ include 'left_bar.php';
 <div id="topmost"></div>
 <?php
 // Создание заказчика
-$customer_id = null;
-
 if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
     if(!empty(filter_input(INPUT_POST, 'customer_name'))) {
         $name = addslashes(filter_input(INPUT_POST, 'customer_name'));
