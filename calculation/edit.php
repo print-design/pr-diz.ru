@@ -69,13 +69,19 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $work_type_id = filter_input(INPUT_POST, 'work_type_id');
         $brand_name = addslashes(filter_input(INPUT_POST, 'brand_name'));
         $thickness = filter_input(INPUT_POST, 'thickness');
+        
+        $lamination1_brand_name = addslashes(filter_input(INPUT_POST, 'lamination1_brand_name'));
+        $lamination1_thickness = filter_input(INPUT_POST, 'lamination1_thickness');
+        if(empty($lamination1_thickness)) $lamination1_thickness = "NULL";
+        $lamination2_brand_name = addslashes(filter_input(INPUT_POST, 'lamination2_brand_name'));
+        $lamination2_thickness = filter_input(INPUT_POST, 'lamination2_thickness');
+        if(empty($lamination2_thickness)) $lamination2_thickness = "NULL";
+        
         $width = filter_input(INPUT_POST, 'width');
         $weight = filter_input(INPUT_POST, 'weight');
         $diameter = filter_input(INPUT_POST, 'diameter');
         
-        $manager_id = GetUserId();
-        
-        $sql = "update calculation set customer_id=$customer_id, name='$name', work_type_id=$work_type_id, weight=$weight, manager_id=$manager_id, status_id=$status_id where id=$id";
+        $sql = "update calculation set customer_id=$customer_id, name='$name', work_type_id=$work_type_id, brand_name='$brand_name', thickness=$thickness, lamination1_brand_name='$lamination1_brand_name', lamination1_thickness=$lamination1_thickness, lamination2_brand_name='$lamination2_brand_name', lamination2_thickness=$lamination2_thickness, weight=$weight, diameter=$diameter where id=$id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
@@ -86,6 +92,68 @@ $id = filter_input(INPUT_POST, 'id');
 if(empty($id)) {
     $id = filter_input(INPUT_GET, 'id');
 }
+
+$sql = "select date, customer_id, name, work_type_id, brand_name, thickness, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, weight, diameter, status_id from calculation where id=$id";
+$row = (new Fetcher($sql))->Fetch();
+
+$date = $row['date'];
+
+$customer_id = filter_input(INPUT_POST, 'customer_id');
+if(null === $customer_id) {
+    $customer_id = $row['customer_id'];
+}
+
+$name = filter_input(INPUT_POST, 'name');
+if(null === $name) {
+    $name = $row['name'];
+}
+
+$work_type_id = filter_input(INPUT_POST, 'work_type_id');
+if(null === $work_type_id) {
+    $work_type_id = $row['work_type_id'];
+}
+
+$brand_name = filter_input(INPUT_POST, 'brand_name');
+if(null === $brand_name) {
+    $brand_name = $row['brand_name'];
+}
+
+$thickness = filter_input(INPUT_POST, 'thickness');
+if(null === $thickness) {
+    $thickness = $row['thickness'];
+}
+
+$lamination1_brand_name = filter_input(INPUT_POST, 'lamination1_brand_name');
+if(null === $lamination1_brand_name) {
+    $lamination1_brand_name = $row['lamination1_brand_name'];
+}
+
+$lamination1_thickness = filter_input(INPUT_POST, 'lamination1_thickness');
+if(null === $lamination1_thickness) {
+    $lamination1_thickness = $row['lamination1_thickness'];
+}
+
+$lamination2_brand_name = filter_input(INPUT_POST, 'lamination2_brand_name');
+if(null === $lamination2_brand_name) {
+    $lamination2_brand_name = $row['lamination2_brand_name'];
+}
+
+$lamination2_thickness = filter_input(INPUT_POST, 'lamination2_thickness');
+if(null === $lamination2_thickness) {
+    $lamination2_thickness = $row['lamination2_thickness'];
+}
+
+$weight = filter_input(INPUT_POST, 'weight');
+if(null === $weight) {
+    $weight = $row['weight'];
+}
+
+$diameter = filter_input(INPUT_POST, 'diameter');
+if(null === $diameter) {
+    $diameter = $row['diameter'];
+}
+
+$status_id = $row['status_id'];
 ?>
 <!DOCTYPE html>
 <html>

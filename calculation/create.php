@@ -116,10 +116,10 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             <div class="backlink">
                 <a href="<?=APPLICATION ?>/calculation/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
             </div>
-            <form method="post">
-                <div class="row">
-                    <!-- Левая половина -->
-                    <div class="col-6">
+            <div class="row">
+                <!-- Левая половина -->
+                <div class="col-6">
+                    <form method="post">
                         <h1 style="font-size: 32px; line-height: 48px; font-weight: 600;">Новый расчет</h1>
                         <!-- Заказчик -->
                         <div class="row">
@@ -366,32 +366,32 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                             </div>
                         </div>
                         <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark">Рассчитать</button>
-                    </div>
-                    <!-- Правая половина -->
-                    <div class="col-3">
-                        <!-- Расчёт -->
-                        <div id="calculation" class="d-none">
-                            <h1>Расчет</h1>
-                            <input type="text" id="extra_charge" name="extra_charge" class="form-control" placeholder="Наценка" />
-                            <div class="mt-3 mb-1">Себестоимость</div>
-                            <div class="font-weight-bold mt-1 mb-1" style="font-size: large;">1 200 000 руб.</div>
-                            <div class="mt-3 mb-1">Отгрузочная стоимость</div>
+                    </form>
+                </div>
+                <!-- Правая половина -->
+                <div class="col-3">
+                    <!-- Расчёт -->
+                    <div id="calculation" class="d-none">
+                        <h1>Расчет</h1>
+                        <input type="text" id="extra_charge" name="extra_charge" class="form-control" placeholder="Наценка" />
+                        <div class="mt-3 mb-1">Себестоимость</div>
+                        <div class="font-weight-bold mt-1 mb-1" style="font-size: large;">1 200 000 руб.</div>
+                        <div class="mt-3 mb-1">Отгрузочная стоимость</div>
+                        <div class="font-weight-bold mt-1 mb-3" style="font-size: large;">800 000 руб.</div>
+                        <button type="button" class="btn btn-light" id="show_costs" onclick="javascript: ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать расходы</button>
+                        <div id="costs" class="d-none">
+                            <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
+                            <div class="mt-3 mb-1">Отходы</div>
+                            <div class="font-weight-bold mt-1 mb-1" style="font-size: large;">200 280 руб.&nbsp;&nbsp;&nbsp;24,5 кг.</div>
+                            <div class="mt-3 mb-1">Клей</div>
                             <div class="font-weight-bold mt-1 mb-3" style="font-size: large;">800 000 руб.</div>
-                            <button type="button" class="btn btn-light" id="show_costs" onclick="javascript: ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать расходы</button>
-                            <div id="costs" class="d-none">
-                                <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
-                                <div class="mt-3 mb-1">Отходы</div>
-                                <div class="font-weight-bold mt-1 mb-1" style="font-size: large;">200 280 руб.&nbsp;&nbsp;&nbsp;24,5 кг.</div>
-                                <div class="mt-3 mb-1">Клей</div>
-                                <div class="font-weight-bold mt-1 mb-3" style="font-size: large;">800 000 руб.</div>
-                            </div>
-                            <input type="hidden" id="create_calculation_submit1" name="create_calculation_submit1" />
-                            <button type="submit" id="status_id" name="status_id" value="2" class="btn btn-outline-dark w-75 mt-3">Сделать КП</button>
-                            <button type="submit" id="status_id" name="status_id" value="6" class="btn btn-dark w-75 mt-3">Отправить в работу</button>
                         </div>
+                        <input type="hidden" id="create_calculation_submit1" name="create_calculation_submit1" />
+                        <button type="submit" id="status_id" name="status_id" value="2" class="btn btn-outline-dark w-75 mt-3">Сделать КП</button>
+                        <button type="submit" id="status_id" name="status_id" value="6" class="btn btn-dark w-75 mt-3">Отправить в работу</button>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
         <?php
         include '../include/footer.php';
