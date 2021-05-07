@@ -82,7 +82,7 @@ function OrderLink($param) {
                     if(array_key_exists('order', $_REQUEST)) {
                         switch ($_REQUEST['order']) {
                             case 'id':
-                                $orderby = "order by c.customer_id desc, c.id asc";
+                                $orderby = "order by c.customer_id desc, c.id desc";
                                 break;
                             
                             case 'date':
