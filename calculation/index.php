@@ -109,7 +109,7 @@ function OrderLink($param) {
                             ?>
                         </select>
                     </form>
-                    <a href="new.php" class="btn btn-outline-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
+                    <a href="create.php" class="btn btn-outline-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
                 </div>
             </div>
             <table class="table table-hover" id="content_table">
@@ -234,7 +234,7 @@ function OrderLink($param) {
                         <td><?=$row['work_type'] ?></td>
                         <td><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
                         <td><i class="fas fa-circle" style="color: <?=$colour ?>;"></i>&nbsp;&nbsp;<?=$status ?></td>
-                        <td><i class="fas fa-ellipsis-h"></i></td>
+                        <td><a href="calculation.php<?= BuildQuery("id", $row['id']) ?>"><i class="fas fa-ellipsis-h"></i></a></td>
                     </tr>
                     <?php
                     endwhile;
