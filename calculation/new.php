@@ -31,6 +31,11 @@ $error_message = '';
 $customer_id_valid = '';
 $name_valid = '';
 $work_type_valid = '';
+$brand_name_valid = '';
+$thickness_valid = '';
+$width_valid = '';
+$weight_valid = '';
+$diameter_valid = '';
 
 // Сохранение в базу расчёта
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
@@ -49,12 +54,42 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $form_valid = false;
     }
     
+    if(empty(filter_input(INPUT_POST, 'brand_name'))) {
+        $brand_name_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(empty(filter_input(INPUT_POST, 'thickness'))) {
+        $thickness_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(empty(filter_input(INPUT_POST, 'width'))) {
+        $width_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(empty(filter_input(INPUT_POST, 'weight'))) {
+        $weight_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(empty(filter_input(INPUT_POST, 'diameter'))) {
+        $diameter_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
     if($form_valid) {
         $date = date('Y-m-d');
         $customer_id = filter_input(INPUT_POST, 'customer_id');
         $name = addslashes(filter_input(INPUT_POST, 'name'));
-        $weight = 24.5; // ВРЕМЕННОЕ ЗНАЧЕНИЕ
         $work_type_id = filter_input(INPUT_POST, 'work_type_id');
+        $brand_name = addslashes(filter_input(INPUT_POST, 'brand_name'));
+        $thickness = filter_input(INPUT_POST, 'thickness');
+        $width = filter_input(INPUT_POST, 'width');
+        $weight = filter_input(INPUT_POST, 'weight');
+        $diameter = filter_input(INPUT_POST, 'diameter');
+        
         $manager_id = GetUserId();
         $status_id = filter_input(INPUT_POST, 'status_id');
         
@@ -314,7 +349,24 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <div class="col-8">
+                            <!-- Ширина -->
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <input type="text" id="width" name="width" class="form-control int-only" placeholder="Ширина, мм" value="<?= filter_input(INPUT_POST, 'width') ?>" required="required" />
+                                    <div class="invalid-feedback">Ширина обязательно</div>
+                                </div>
+                            </div>
+                            <!-- Вес нетто -->
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <input type="text" id="weight" name="weight" class="form-control float-only" placeholder="Вес нетто, кг" value="<?= filter_input(INPUT_POST, 'weight') ?>" required="required" />
+                                    <div class="invalid-feedback">Вес нетто обязательно</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!-- Диаметр намотки -->
+                            <div class="col-6">
                                 <div class="form-group">
                                     <input type="text" id="diameter" name="diameter" class="form-control int-only" placeholder="Диаметр намотки" value="<?= filter_input(INPUT_POST, 'diameter') ?>" required="required" />
                                     <div class="invalid-feedback">Диаметр намотки обязательно</div>
