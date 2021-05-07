@@ -128,13 +128,36 @@ function OrderLink($param) {
                 </thead>
                 <tbody>
                     <?php
-                    $sql = "select count(id) from calculation";
+                    // Фильтр
+                    $where = '';
+                    
+                    $status = filter_input(INPUT_GET, 'status');
+                    if(!empty($status)) {
+                        if(empty($where)) $where = " where c.status_id=$status";
+                        else $where .= " and c.status_id=$status";
+                    }
+                    
+                    $work_type = filter_input(INPUT_GET, 'work_type');
+                    if(!empty($work_type)) {
+                        if(empty($where)) $where = " where c.work_type_id=$work_type";
+                        else $where .= " and c.work_type_id=$work_type";
+                    }
+                    
+                    $manager = filter_input(INPUT_GET, 'manager');
+                    if(!empty($manager)) {
+                        if(empty($where)) $where = " where c.manager_id=$manager";
+                        else $where .= " and c.manager_id=$manager";
+                    }
+
+                    // Общее количество расчётов для установления количества страниц в постраничном выводе
+                    $sql = "select count(c.id) from calculation c$where";
                     $fetcher = new Fetcher($sql);
                     
                     if($row = $fetcher->Fetch()) {
                         $pager_total_count = $row[0];
                     }
                     
+                    // Сортировка
                     $orderby = "order by c.id desc";
                     
                     if(array_key_exists('order', $_REQUEST)) {
@@ -177,7 +200,7 @@ function OrderLink($param) {
                             . "from calculation c "
                             . "inner join customer cus on c.customer_id = cus.id "
                             . "inner join work_type wt on c.work_type_id = wt.id "
-                            . "inner join user u on c.manager_id = u.id "
+                            . "inner join user u on c.manager_id = u.id$where "
                             . "$orderby limit $pager_skip, $pager_take";
                     $fetcher = new Fetcher($sql);
                     
