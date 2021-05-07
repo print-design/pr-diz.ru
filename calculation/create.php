@@ -6,23 +6,6 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Создание заказчика
-$customer_id = null;
-
-if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
-    if(!empty(filter_input(INPUT_POST, 'customer_name'))) {
-        $name = addslashes(filter_input(INPUT_POST, 'customer_name'));
-        $person = addslashes(filter_input(INPUT_POST, 'person'));
-        $phone = filter_input(INPUT_POST, 'phone');
-        $email = filter_input(INPUT_POST, 'email');
-        
-        $sql = "insert into customer (name, person, phone, email) values ('$name', '$person', '$phone', '$email')";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
-        $customer_id = $executer->insert_id;
-    }
-}
-
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -91,14 +74,15 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $diameter = filter_input(INPUT_POST, 'diameter');
         
         $manager_id = GetUserId();
-        $status_id = filter_input(INPUT_POST, 'status_id');
+        $status_id = 1; // Статус "Расчёт"
         
         $sql = "insert into calculation (date, customer_id, name, weight, work_type_id, manager_id, status_id) values('$date', $customer_id, '$name', $weight, $work_type_id, $manager_id, $status_id)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
+        $insert_id = $executer->insert_id;
         
         if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/calculation/');
+            header('Location: '.APPLICATION.'/calculation/edit.php'. BuildQuery('id', $insert_id));
         }
     }
 }
@@ -159,7 +143,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                         </div>
                         <!-- Название заказа -->
                         <div class="form-group">
-                            <input type="text" id="name" name="name" class="form-control<?=$name_valid ?>" placeholder="Название заказа" value="<?= filter_input(INPUT_POST, 'name') ?>" required="required" />
+                            <input type="text" id="name" name="name" class="form-control<?=$name_valid ?>" placeholder="Название заказа" value="<?= filter_input(INPUT_POST, 'name') ?>" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Название заказа обязательно</div>
                         </div>
                         <!-- Тип работы -->
@@ -373,7 +357,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                                 </div>
                             </div>
                         </div>
-                        <button type="button" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark" onclick="javascript: Calculate();">Рассчитать</button>
+                        <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark">Рассчитать</button>
                     </div>
                     <!-- Правая половина -->
                     <div class="col-3">
@@ -393,48 +377,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                                 <div class="mt-3 mb-1">Клей</div>
                                 <div class="font-weight-bold mt-1 mb-3" style="font-size: large;">800 000 руб.</div>
                             </div>
-                            <input type="hidden" id="create_calculation_submit" name="create_calculation_submit" />
+                            <input type="hidden" id="create_calculation_submit1" name="create_calculation_submit1" />
                             <button type="submit" id="status_id" name="status_id" value="2" class="btn btn-outline-dark w-75 mt-3">Сделать КП</button>
                             <button type="submit" id="status_id" name="status_id" value="6" class="btn btn-dark w-75 mt-3">Отправить в работу</button>
                         </div>
                     </div>
                 </div>
             </form>
-        </div>
-        <!-- Форма добавления заказчика -->
-        <div id="new_customer" class="modal fade show">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form method="post">
-                        <div class="modal-header">
-                            <i class="fas fa-user"></i>&nbsp;&nbsp;Новый заказчик
-                            <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <input type="text" id="customer_name" name="customer_name" class="form-control" placeholder="Название компании" required="required" />
-                                <div class="invalid-feedback">Название компании обязательно</div>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" id="person" name="person" class="form-control" placeholder="Имя представителя" required="required" />
-                                <div class="invalid-feedback">Имя представителя обязательно</div>
-                            </div>
-                            <div class="form-group">
-                                <input type="tel" id="phone" name="phone" class="form-control" placeholder="Номер телефона" required="required" />
-                                <div class="invalid-feedback">Номер телефона обязательно</div>
-                            </div>
-                            <div class="form-group">
-                                <input type="email" id="email" name="email" class="form-control" placeholder="E-Mail" required="required" />
-                                <div class="invalid-feedback">E-Mail обязательно</div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-dark mt-3" data-dismiss="modal">Cancel</button>
-                            <button type="submit" id="create_customer_submit" name="create_customer_submit" class="btn btn-dark mt-3">Complete</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
         </div>
         <?php
         include '../include/footer.php';
