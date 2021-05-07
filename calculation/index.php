@@ -22,7 +22,7 @@ function OrderLink($param) {
         echo "<strong><i class='fas fa-arrow-down'></i></strong>";
     }
     else {
-        echo "<a href='?order=$param'><i class='fas fa-arrow-down'></i></a>";
+        echo "<a href='". BuildQuery('order', $param)."'><i class='fas fa-arrow-down'></i></a>";
     }
 }
 ?>
@@ -51,6 +51,64 @@ function OrderLink($param) {
                     <h1 style="font-size: 32px; line-height: 48px; font-weight: 600;">Расчеты</h1>
                 </div>
                 <div class="p-1">
+                    <?php $order = filter_input(INPUT_GET, 'order'); ?>
+                    <form class="form-inline d-inline" method="get">
+                        <?php if(null !== $order): ?>
+                        <input type="hidden" name="order" value="<?= $order ?>" />
+                        <?php endif; ?>
+                        <select name="status" class="form-control" onchange="javascript: this.form.submit();">
+                            <option value="">Статус...</option>
+                            <?php
+                            $sql = "select distinct cs.id, cs.name from calculation c inner join calculation_status cs on c.status_id = cs.id order by cs.name";
+                            $fetcher = new Fetcher($sql);
+                            
+                            while ($row = $fetcher->Fetch()):
+                            ?>
+                            <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'status') ? " selected='selected'" : "") ?>><?=$row['name'] ?></option>
+                            <?php
+                            endwhile;
+                            ?>
+                        </select>
+                        <select name="work_type" class="form-control" onchange="javascript: this.form.submit();">
+                            <option value="">Тип работы...</option>
+                            <?php
+                            $sql = "select distinct wt.id, wt.name from calculation c inner join work_type wt on c.work_type_id = wt.id order by wt.name";
+                            $fetcher = new Fetcher($sql);
+                            
+                            while ($row = $fetcher->Fetch()):
+                            ?>
+                            <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'work_type') ? " selected='selected'" : "") ?>><?=$row['name'] ?></option>
+                            <?php
+                            endwhile;
+                            ?>
+                        </select>
+                        <select name="manager" class="form-control" onchange="javascript: this.form.submit();">
+                            <option value="">Менеджер...</option>
+                            <?php
+                            $sql = "select distinct u.id, u.last_name, u.first_name from calculation c inner join user u on c.manager_id = u.id order by u.last_name";
+                            $fetcher = new Fetcher($sql);
+                            
+                            while ($row = $fetcher->Fetch()):
+                            ?>
+                            <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'manager') ? " selected='selected'" : "") ?>><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></option>
+                            <?php
+                            endwhile;
+                            ?>
+                        </select>
+                        <select name="customer" class="form-control" onchange="javascript: this.form.submit();">
+                            <option value="">Заказчик...</option>
+                            <?php
+                            $sql = "select distinct cus.id, cus.name from calculation c inner join customer cus on c.customer_id = cus.id order by cus.name";
+                            $fetcher = new Fetcher($sql);
+                            
+                            while ($row = $fetcher->Fetch()):
+                            ?>
+                            <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'customer') ? " selected='selected'" : "") ?>><?=$row['name'] ?></option>
+                            <?php
+                            endwhile;
+                            ?>
+                        </select>
+                    </form>
                     <a href="new.php" class="btn btn-outline-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
                 </div>
             </div>
