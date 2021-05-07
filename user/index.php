@@ -44,7 +44,7 @@ if(null !== filter_input(INPUT_POST, 'delete_user_submit')) {
                     </a>
                 </div>
             </div>
-            <table class="table">
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>ФИО</th>

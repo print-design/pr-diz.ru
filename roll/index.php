@@ -99,7 +99,7 @@ while ($row = $fetcher->Fetch()) {
                     </div>
                 </div>
             </div>
-            <table class="table" id="content_table">
+            <table class="table table-hover" id="content_table">
                 <thead>
                     <tr style="border-top: 1px solid #dee2e6; border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
                         <th class="d-none" style="padding-left: 5px; padding-right: 5px;"></th>

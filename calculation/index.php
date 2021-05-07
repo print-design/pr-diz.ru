@@ -112,7 +112,7 @@ function OrderLink($param) {
                     <a href="new.php" class="btn btn-outline-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
                 </div>
             </div>
-            <table class="table" id="content_table">
+            <table class="table table-hover" id="content_table">
                 <thead>
                     <tr>
                         <th>ID&nbsp;<?= OrderLink('id') ?></th>
@@ -147,6 +147,12 @@ function OrderLink($param) {
                     if(!empty($manager)) {
                         if(empty($where)) $where = " where c.manager_id=$manager";
                         else $where .= " and c.manager_id=$manager";
+                    }
+                    
+                    $customer = filter_input(INPUT_GET, 'customer');
+                    if(!empty($customer)) {
+                        if(empty($where)) $where = " where c.customer_id=$customer";
+                        else $where .= " and c.customer_id=$customer";
                     }
 
                     // Общее количество расчётов для установления количества страниц в постраничном выводе
