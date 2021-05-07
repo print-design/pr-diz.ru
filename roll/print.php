@@ -125,7 +125,7 @@ $sticker_top = 0;
         </div>
         
         <?php
-        $sticker_top = 1600;
+        $sticker_top = 1700;
         ?>
         
         <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px;">

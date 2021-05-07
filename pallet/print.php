@@ -133,7 +133,7 @@ $sticker_top = 0;
         </div>
         
         <?php
-        $sticker_top = 1600;
+        $sticker_top = 1700;
         ?>
         
         <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px;">
@@ -201,27 +201,27 @@ $sticker_top = 0;
         
         switch ($current_roll) {
             case 1:
-                $sticker_top = 3100;
+                $sticker_top = 3300;
                 break;
             
             case 2:
-                $sticker_top = 4700;
+                $sticker_top = 4950;
                 break;
                 
             case 3:
-                $sticker_top = 6200;
+                $sticker_top = 6600;
                 break;
             
             case 4:
-                $sticker_top = 7800;
+                $sticker_top = 8200;
                 break;
                 
             case 5:
-                $sticker_top = 9300;
+                $sticker_top = 9900;
                 break;
                 
             case 6:
-                $sticker_top = 10900;
+                $sticker_top = 11500;
                 break;
 
             default:
