@@ -365,6 +365,9 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                                     <div class="invalid-feedback">Диаметр намотки обязательно</div>
                                 </div>
                             </div>
+                            <div class="col-6">
+                                Примерно 2020 метров
+                            </div>
                         </div>
                         <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark">Рассчитать</button>
                     </form>

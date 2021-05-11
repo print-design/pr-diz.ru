@@ -6,8 +6,42 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Смена статуса
+if(null !== filter_input(INPUT_POST, 'change_status_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $status_id = filter_input(INPUT_POST, 'status_id');
+    $sql = "update calculation set status_id=$status_id where id=$id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    if(empty($error_message)) {
+        header('Location: '.APPLICATION.'/calculation/calculation.php'. BuildQuery('id', $id));
+    }
+}
+
 // Получение объекта
-$sql = "";
+$id = filter_input(INPUT_POST, 'id');
+if(empty($id)) {
+    $id = filter_input(INPUT_GET, 'id');
+}
+
+$sql = "select date, customer_id, name, work_type_id, brand_name, thickness, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, weight, diameter, status_id from calculation where id=$id";
+$row = (new Fetcher($sql))->Fetch();
+
+$date = $row['date'];
+$customer_id = $row['customer_id'];
+$name = $row['name'];
+$work_type_id = $row['work_type_id'];
+$brand_name = $row['brand_name'];
+$thickness = $row['thickness'];
+$lamination1_brand_name = $row['lamination1_brand_name'];
+$lamination1_thickness = $row['lamination1_thickness'];
+$lamination2_brand_name = $row['lamination2_brand_name'];
+$lamination2_thickness = $row['lamination2_thickness'];
+$width = $row['width'];
+$weight = $row['weight'];
+$diameter = $row['diameter'];
+$status_id = $row['status_id'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -29,6 +63,13 @@ $sql = "";
             ?>
             <div class="backlink">
                 <a href="<?=APPLICATION ?>/calculation/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+            </div>
+            <div class="row">
+                <!-- Левая половина -->
+                <div class="col-6" id="left_side">
+                    <h1 style="font-size: 32px; line-height: 48px; font-weight: 600;"><?= htmlentities($name) ?></h1>
+                    <h2 style="font-size: 26px;">№<?=$id ?> от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></h2>
+                </div>
             </div>
         </div>
         <?php

@@ -435,6 +435,9 @@ $status_id = $row['status_id'];
                                     <div class="invalid-feedback">Диаметр намотки обязательно</div>
                                 </div>
                             </div>
+                            <div class="col-6">
+                                Примерно 2020 метров
+                            </div>
                         </div>
                         <button type="submit" id="edit_calculation_submit" name="edit_calculation_submit" class="btn btn-dark d-none">Рассчитать</button>
                     </form>
