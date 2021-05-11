@@ -292,7 +292,7 @@ $status_id = $row['status_id'];
                             </div>
                         </div>
                         <div id="show_lamination_1">
-                            <button type="button" class="btn btn-light" onclick="javascript: ShowLamination1();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
+                            <button type="button" class="btn btn-light" onclick="javascript: ShowLamination1(); $('#calculation').hide();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                         </div>
                         <!-- Ламинация 1 -->
                         <div id="form_lamination_1" class="d-none">
@@ -340,11 +340,11 @@ $status_id = $row['status_id'];
                                     </div>
                                 </div>
                                 <div class="col-1" id="hide_lamination_1">
-                                    <button type="button" class="btn btn-light" onclick="javascript: HideLamination1();"><i class="fas fa-trash-alt"></i></button>
+                                    <button type="button" class="btn btn-light" onclick="javascript: HideLamination1(); $('#calculation').hide();"><i class="fas fa-trash-alt"></i></button>
                                 </div>
                             </div>
                             <div id="show_lamination_2">
-                                <button type="button" class="btn btn-light" onclick="javascript: ShowLamination2();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
+                                <button type="button" class="btn btn-light" onclick="javascript: ShowLamination2(); $('#calculation').hide();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                             </div>
                             <!-- Ламинация 2 -->
                             <div id="form_lamination_2">
@@ -392,7 +392,7 @@ $status_id = $row['status_id'];
                                         </div>
                                     </div>
                                     <div class="col-1" id="hide_lamination_2">
-                                        <button type="button" class="btn" onclick="javascript: HideLamination2();"><i class="fas fa-trash-alt"></i></button>
+                                        <button type="button" class="btn" onclick="javascript: HideLamination2(); $('#calculation').hide();"><i class="fas fa-trash-alt"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -426,6 +426,28 @@ $status_id = $row['status_id'];
                     </form>
                 </div>
                 <!-- Правая половина -->
+                <div class="col-3">
+                    <!-- Расчёт -->
+                    <div id="calculation">
+                        <h1>Расчет</h1>
+                        <input type="text" id="extra_charge" name="extra_charge" class="form-control" placeholder="Наценка" />
+                        <div class="mt-3 mb-1">Себестоимость</div>
+                        <div class="font-weight-bold mt-1 mb-1" style="font-size: large;">1 200 000 руб.</div>
+                        <div class="mt-3 mb-1">Отгрузочная стоимость</div>
+                        <div class="font-weight-bold mt-1 mb-3" style="font-size: large;">800 000 руб.</div>
+                        <button type="button" class="btn btn-light" id="show_costs" onclick="javascript: ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать расходы</button>
+                        <div id="costs" class="d-none">
+                            <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
+                            <div class="mt-3 mb-1">Отходы</div>
+                            <div class="font-weight-bold mt-1 mb-1" style="font-size: large;">200 280 руб.&nbsp;&nbsp;&nbsp;24,5 кг.</div>
+                            <div class="mt-3 mb-1">Клей</div>
+                            <div class="font-weight-bold mt-1 mb-3" style="font-size: large;">800 000 руб.</div>
+                        </div>
+                        <input type="hidden" id="create_calculation_submit1" name="create_calculation_submit1" />
+                        <button type="submit" id="status_id" name="status_id" value="2" class="btn btn-outline-dark w-75 mt-3">Сделать КП</button>
+                        <button type="submit" id="status_id" name="status_id" value="6" class="btn btn-dark w-75 mt-3">Отправить в работу</button>
+                    </div>
+                </div>
             </div>
         </div>
         <?php
@@ -435,12 +457,24 @@ $status_id = $row['status_id'];
         <script src="<?=APPLICATION ?>/js/select2.min.js"></script>
         <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
         <script>
-            $(document).ready(function() {
-                $('.js-select2').select2({
-                    placeholder: "Заказчик...",
-                    maximumSelectionLength: 2,
-                    language: "ru"
-                });
+            // Список с  поиском
+            $('.js-select2').select2({
+                placeholder: "Заказчик...",
+                maximumSelectionLength: 2,
+                language: "ru"
+            });
+            
+            // Скрытие расчёта при изменении значения полей
+            $('input').change(function () {
+                $('#calculation').hide();
+            });
+            
+            $('select').change(function () {
+                $('#calculation').hide();
+            });
+            
+            $('input').keypress(function () {
+                $('#calculation').hide();
             });
             
             // Если у объекта имеется ламинация 1, показываем ламинацию 1
@@ -553,6 +587,18 @@ $status_id = $row['status_id'];
                 $('#hide_lamination_1').removeClass('d-none');
                 $('#lamination2_brand_name').removeAttr('required');
                 $('#lamination2_thickness').removeAttr('required');
+            }
+            
+            // Показ расходов
+            function ShowCosts() {
+                $("#costs").removeClass("d-none");
+                $("#show_costs").addClass("d-none");
+            }
+            
+            // Скрытие расходов
+            function HideCosts() {
+                $("#costs").addClass("d-none");
+                $("#show_costs").removeClass("d-none");
             }
         </script>
     </body>
