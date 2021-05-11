@@ -22,7 +22,7 @@
     // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин
     $('#brand_name').change(function(){
         if($(this).val() == "") {
-            $('#thickness').html("<option id=''>Толщина...</option>");
+            $('#thickness').html("<option value=''>Толщина...</option>");
         }
         else {
             $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
@@ -38,7 +38,7 @@
     // Обработка выбора типа плёнки ламинации1: перерисовка списка толщин
     $('#lamination1_brand_name').change(function(){
         if($(this).val() == "") {
-            $('#lamination1_thickness').html("<option id=''>Толщина...</option>");
+            $('#lamination1_thickness').html("<option value=''>Толщина...</option>");
         }
         else {
             $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
@@ -54,7 +54,7 @@
     // Обработка выбора типа плёнки ламинации2: перерисовка списка толщин
     $('#lamination2_brand_name').change(function(){
         if($(this).val() == "") {
-            $('#lamination2_thickness').html("<option id=''>Толщина...</option>");
+            $('#lamination2_thickness').html("<option value=''>Толщина...</option>");
         }
         else {
             $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
