@@ -6,35 +6,6 @@
         language: "ru"
     });
     
-    // Скрытие расчёта при изменении значения полей
-    $('input').change(function () {
-        $('#calculation').hide();
-    });
-    
-    $('select').change(function () {
-        $('#calculation').hide();
-    });
-    
-    $('input').keypress(function () {
-        $('#calculation').hide();
-    });
-    
-    // Маска % для поля "наценка"
-    $("#extra_charge").mask("99%");
-            
-    // Фильтрация ввода в поле "наценка"
-    $('#extra_charge').keypress(function(e) {
-        if(/\D/.test(String.fromCharCode(e.charCode))) {
-            return false;
-        }
-    });
-            
-    $('#extra_charge').change(function(e) {
-        var val = $(this).val();
-        val = val.replace(/[^\d\%]/g, '');
-        $(this).val(val);
-    });
-    
     // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин
     $('#brand_name').change(function(){
         if($(this).val() == "") {

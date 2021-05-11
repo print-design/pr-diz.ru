@@ -184,7 +184,7 @@ $status_id = $row['status_id'];
             </div>
             <div class="row">
                 <!-- Левая половина -->
-                <div class="col-6">
+                <div class="col-6" id="left_side">
                     <form method="post">
                         <h1 style="font-size: 32px; line-height: 48px; font-weight: 600;"><?= htmlentities($name) ?></h1>
                         <h2 style="font-size: 26px;">№<?=$id ?> от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></h2>
@@ -522,11 +522,13 @@ $status_id = $row['status_id'];
                 $('#main_film_title').removeClass('d-none');
                 $('#lamination1_brand_name').attr('required', 'required');
                 $('#lamination1_thickness').attr('required', 'required');
-                HideLamination2();
             }
             
             // Скрытие марки плёнки и толщины для ламинации 1
             function HideLamination1() {
+                $('#lamination1_thickness').html("<option value=''>Толщина...</option>");
+                $('#lamination1_brand_name').val('');
+                
                 $('#form_lamination_1').addClass('d-none');
                 $('#show_lamination_1').removeClass('d-none');
                 $('#main_film_title').addClass('d-none');
@@ -546,6 +548,9 @@ $status_id = $row['status_id'];
             
             // Скрытие марки плёнки и толщины для ламинации 2
             function HideLamination2() {
+                $('#lamination2_thickness').html("<option value=''>Толщина...</option>");
+                $('#lamination2_brand_name').val('');
+                
                 $('#form_lamination_2').addClass('d-none');
                 $('#show_lamination_2').removeClass('d-none');
                 $('#hide_lamination_1').removeClass('d-none');
@@ -564,6 +569,35 @@ $status_id = $row['status_id'];
                 $("#costs").addClass("d-none");
                 $("#show_costs").removeClass("d-none");
             }
+            
+            // Скрытие расчёта при изменении значения полей
+            $("input[id!='extra_charge']").change(function () {
+                $('#calculation').hide();
+            });
+            
+            $('select').change(function () {
+                $('#calculation').hide();
+            });
+            
+            $("input[id!='extra_charge']").keypress(function () {
+                $('#calculation').hide();
+            });
+    
+            // Маска % для поля "наценка"
+            $("#extra_charge").mask("99%");
+            
+            // Фильтрация ввода в поле "наценка"
+            $('#extra_charge').keypress(function(e) {
+                if(/\D/.test(String.fromCharCode(e.charCode))) {
+                    return false;
+                }
+            });
+            
+            $('#extra_charge').change(function(e) {
+                var val = $(this).val();
+                val = val.replace(/[^\d\%]/g, '');
+                $(this).val(val);
+            });
         </script>
         <?php
         include './scripts.php';
