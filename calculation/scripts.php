@@ -61,11 +61,13 @@
         $('#main_film_title').removeClass('d-none');
         $('#lamination1_brand_name').attr('required', 'required');
         $('#lamination1_thickness').attr('required', 'required');
-        HideLamination2();
     }
             
     // Скрытие марки плёнки и толщины для ламинации 1
     function HideLamination1() {
+        $('#lamination1_brand_name').val('');
+        $('#lamination1_brand_name').change();
+        
         $('#form_lamination_1').addClass('d-none');
         $('#show_lamination_1').removeClass('d-none');
         $('#main_film_title').addClass('d-none');
@@ -85,6 +87,9 @@
             
     // Скрытие марки плёнки и толщины для ламинации 2
     function HideLamination2() {
+        $('#lamination2_brand_name').val('');
+        $('#lamination2_brand_name').change();
+        
         $('#form_lamination_2').addClass('d-none');
         $('#show_lamination_2').removeClass('d-none');
         $('#hide_lamination_1').removeClass('d-none');

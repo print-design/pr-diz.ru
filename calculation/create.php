@@ -377,6 +377,9 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script src="<?=APPLICATION ?>/js/select2.min.js"></script>
         <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
+        <?php
+        include './scripts.php';
+        ?>
         <script>
             // Если форма возвращается назад, как не прошедшая валидацию, и в ней была ламинация 1, показываем ламинацию 1
             <?php if(null !== filter_input(INPUT_POST, 'lamination1_brand_name')): ?>
@@ -388,8 +391,5 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             ShowLamination2();
             <?php endif; ?>
         </script>
-        <?php
-        include './scripts.php';
-        ?>
     </body>
 </html>
