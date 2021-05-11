@@ -215,6 +215,12 @@ $status_id = $row['status_id'];
                             <input type="text" id="name" name="name" class="form-control<?=$name_valid ?>" placeholder="Название заказа" value="<?= htmlentities($name) ?>" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Название заказа обязательно</div>
                         </div>
+                        <!-- Тип работы -->
+                        <div class="form-group">
+                            <select id="work_type_id" name="work_type_id" class="form-control" required="required">
+                                <option value="">Тип работы...</option>
+                            </select>
+                        </div>
                     </form>
                 </div>
             </div>
