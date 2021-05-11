@@ -21,7 +21,7 @@ $weight_valid = '';
 $diameter_valid = '';
 
 // Сохранение в базу расчёта
-if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
+if(null !== filter_input(INPUT_POST, 'edit_calculation_submit')) {
     if(empty(filter_input(INPUT_POST, "customer_id"))) {
         $customer_id_valid = ISINVALID;
         $form_valid = false;
@@ -81,7 +81,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $weight = filter_input(INPUT_POST, 'weight');
         $diameter = filter_input(INPUT_POST, 'diameter');
         
-        $sql = "update calculation set customer_id=$customer_id, name='$name', work_type_id=$work_type_id, brand_name='$brand_name', thickness=$thickness, lamination1_brand_name='$lamination1_brand_name', lamination1_thickness=$lamination1_thickness, lamination2_brand_name='$lamination2_brand_name', lamination2_thickness=$lamination2_thickness, weight=$weight, diameter=$diameter where id=$id";
+        $sql = "update calculation set customer_id=$customer_id, name='$name', work_type_id=$work_type_id, brand_name='$brand_name', thickness=$thickness, lamination1_brand_name='$lamination1_brand_name', lamination1_thickness=$lamination1_thickness, lamination2_brand_name='$lamination2_brand_name', lamination2_thickness=$lamination2_thickness, width=$width, weight=$weight, diameter=$diameter where id=$id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
@@ -186,6 +186,7 @@ $status_id = $row['status_id'];
                 <!-- Левая половина -->
                 <div class="col-6" id="left_side">
                     <form method="post">
+                        <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                         <h1 style="font-size: 32px; line-height: 48px; font-weight: 600;"><?= htmlentities($name) ?></h1>
                         <h2 style="font-size: 26px;">№<?=$id ?> от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></h2>
                         <!-- Заказчик -->
@@ -200,7 +201,7 @@ $status_id = $row['status_id'];
                                         
                                         while ($row = $fetcher->Fetch()):
                                         $selected = '';
-                                        if($row['id'] == $customer_id) {
+                                        if(isset($customer_id) && $row['id'] == $customer_id) {
                                             $selected = " selected='selected'";
                                         }
                                         ?>
@@ -292,7 +293,7 @@ $status_id = $row['status_id'];
                             </div>
                         </div>
                         <div id="show_lamination_1">
-                            <button type="button" class="btn btn-light" onclick="javascript: ShowLamination1(); $('#calculation').hide();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
+                            <button type="button" class="btn btn-light" onclick="javascript: ShowLamination1();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                         </div>
                         <!-- Ламинация 1 -->
                         <div id="form_lamination_1" class="d-none">
@@ -340,14 +341,14 @@ $status_id = $row['status_id'];
                                     </div>
                                 </div>
                                 <div class="col-1" id="hide_lamination_1">
-                                    <button type="button" class="btn btn-light" onclick="javascript: HideLamination1(); $('#calculation').hide();"><i class="fas fa-trash-alt"></i></button>
+                                    <button type="button" class="btn btn-light" onclick="javascript: HideLamination1();"><i class="fas fa-trash-alt"></i></button>
                                 </div>
                             </div>
                             <div id="show_lamination_2">
-                                <button type="button" class="btn btn-light" onclick="javascript: ShowLamination2(); $('#calculation').hide();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
+                                <button type="button" class="btn btn-light" onclick="javascript: ShowLamination2();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                             </div>
                             <!-- Ламинация 2 -->
-                            <div id="form_lamination_2">
+                            <div id="form_lamination_2" class="d-none">
                                 <p class="font-weight-bold">Ламинация 2</p>
                                 <div class="row">
                                     <div class="col-6">
@@ -392,7 +393,7 @@ $status_id = $row['status_id'];
                                         </div>
                                     </div>
                                     <div class="col-1" id="hide_lamination_2">
-                                        <button type="button" class="btn" onclick="javascript: HideLamination2(); $('#calculation').hide();"><i class="fas fa-trash-alt"></i></button>
+                                        <button type="button" class="btn" onclick="javascript: HideLamination2();"><i class="fas fa-trash-alt"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -401,7 +402,7 @@ $status_id = $row['status_id'];
                             <!-- Ширина -->
                             <div class="col-6">
                                 <div class="form-group">
-                                    <input type="text" id="width" class="form-control int-only" placeholder="Ширина, мм" value="<?=$width ?>" required="required" />
+                                    <input type="text" id="width" name="width" class="form-control int-only" placeholder="Ширина, мм" value="<?=$width ?>" required="required" />
                                     <div class="invalid-feedback">Ширина обязательно</div>
                                 </div>
                             </div>
@@ -422,7 +423,7 @@ $status_id = $row['status_id'];
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" id="edit_calculation_submit" name="edit_calculation_submit" class="btn btn-dark">Рассчитать</button>
+                        <button type="submit" id="edit_calculation_submit" name="edit_calculation_submit" class="btn btn-dark d-none">Рассчитать</button>
                     </form>
                 </div>
                 <!-- Правая половина -->
@@ -482,18 +483,29 @@ $status_id = $row['status_id'];
                 $("#show_costs").removeClass("d-none");
             }
             
+            // Скрытие расчёта
+            function HideCalculation() {
+                $("#calculation").hide();
+                $("#edit_calculation_submit").removeClass("d-none");
+            }
+            
             // Скрытие расчёта при изменении значения полей
             $("input[id!='extra_charge']").change(function () {
-                $('#calculation').hide();
+                HideCalculation();
             });
             
             $('select').change(function () {
-                $('#calculation').hide();
+                HideCalculation();
             });
             
-            $("input[id!='extra_charge']").keypress(function () {
-                $('#calculation').hide();
+            $("input[id!='extra_charge']").keydown(function () {
+                HideCalculation();
             });
+            
+            // Скрытие расчёта при создании нового заказчика
+            <?php if(null !== filter_input(INPUT_POST, 'create_customer_submit')): ?>
+                HideCalculation();
+            <?php endif; ?>
     
             // Маска % для поля "наценка"
             $("#extra_charge").mask("99%");

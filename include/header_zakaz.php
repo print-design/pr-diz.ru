@@ -32,12 +32,12 @@ include 'left_bar.php';
 // Создание заказчика
 if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
     if(!empty(filter_input(INPUT_POST, 'customer_name'))) {
-        $name = addslashes(filter_input(INPUT_POST, 'customer_name'));
-        $person = addslashes(filter_input(INPUT_POST, 'person'));
-        $phone = filter_input(INPUT_POST, 'phone');
-        $email = filter_input(INPUT_POST, 'email');
+        $customer_name = addslashes(filter_input(INPUT_POST, 'customer_name'));
+        $customer_person = addslashes(filter_input(INPUT_POST, 'customer_person'));
+        $customer_phone = filter_input(INPUT_POST, 'customer_phone');
+        $customer_email = filter_input(INPUT_POST, 'customer_email');
         
-        $sql = "insert into customer (name, person, phone, email) values ('$name', '$person', '$phone', '$email')";
+        $sql = "insert into customer (name, person, phone, email) values ('$customer_name', '$customer_person', '$customer_phone', '$customer_email')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $customer_id = $executer->insert_id;
@@ -60,15 +60,15 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
                         <div class="invalid-feedback">Название компании обязательно</div>
                     </div>
                     <div class="form-group">
-                        <input type="text" id="person" name="person" class="form-control" placeholder="Имя представителя" required="required" />
+                        <input type="text" id="customer_person" name="customer_person" class="form-control" placeholder="Имя представителя" required="required" />
                         <div class="invalid-feedback">Имя представителя обязательно</div>
                     </div>
                     <div class="form-group">
-                        <input type="tel" id="phone" name="phone" class="form-control" placeholder="Номер телефона" required="required" />
+                        <input type="tel" id="customer_phone" name="customer_phone" class="form-control" placeholder="Номер телефона" required="required" />
                         <div class="invalid-feedback">Номер телефона обязательно</div>
                     </div>
                     <div class="form-group">
-                        <input type="email" id="email" name="email" class="form-control" placeholder="E-Mail" required="required" />
+                        <input type="email" id="customer_email" name="customer_email" class="form-control" placeholder="E-Mail" required="required" />
                         <div class="invalid-feedback">E-Mail обязательно</div>
                     </div>
                 </div>

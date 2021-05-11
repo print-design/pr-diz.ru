@@ -6,6 +6,19 @@
         language: "ru"
     });
     
+    // Маска телефона заказчика
+    $.mask.definitions['~'] = "[+-]";
+    $("#customer_phone").mask("+7 (999) 999-99-99");
+    
+    // При щелчке в поле телефона, устанавливаем курсор в самое начало ввода телефонного номера.
+    $("#customer_phone").click(function(){
+        var maskposition = $(this).val().indexOf("_");
+        if(Number.isInteger(maskposition)) {
+            $(this).prop("selectionStart", maskposition);
+            $(this).prop("selectionEnd", maskposition);
+        }
+    });
+    
     // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин
     $('#brand_name').change(function(){
         if($(this).val() == "") {

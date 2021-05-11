@@ -288,7 +288,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                                 <button type="button" class="btn btn-light" onclick="javascript: ShowLamination2();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                             </div>
                             <!-- Ламинация 2 -->
-                            <div id="form_lamination_2">
+                            <div id="form_lamination_2" class="d-none">
                                 <p class="font-weight-bold">Ламинация 2</p>
                                 <div class="row">
                                     <div class="col-6">
