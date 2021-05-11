@@ -369,29 +369,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                         <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark">Рассчитать</button>
                     </form>
                 </div>
-                <!-- Правая половина -->
-                <div class="col-3">
-                    <!-- Расчёт -->
-                    <div id="calculation" class="d-none">
-                        <h1>Расчет</h1>
-                        <input type="text" id="extra_charge" name="extra_charge" class="form-control" placeholder="Наценка" />
-                        <div class="mt-3 mb-1">Себестоимость</div>
-                        <div class="font-weight-bold mt-1 mb-1" style="font-size: large;">1 200 000 руб.</div>
-                        <div class="mt-3 mb-1">Отгрузочная стоимость</div>
-                        <div class="font-weight-bold mt-1 mb-3" style="font-size: large;">800 000 руб.</div>
-                        <button type="button" class="btn btn-light" id="show_costs" onclick="javascript: ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать расходы</button>
-                        <div id="costs" class="d-none">
-                            <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
-                            <div class="mt-3 mb-1">Отходы</div>
-                            <div class="font-weight-bold mt-1 mb-1" style="font-size: large;">200 280 руб.&nbsp;&nbsp;&nbsp;24,5 кг.</div>
-                            <div class="mt-3 mb-1">Клей</div>
-                            <div class="font-weight-bold mt-1 mb-3" style="font-size: large;">800 000 руб.</div>
-                        </div>
-                        <input type="hidden" id="create_calculation_submit1" name="create_calculation_submit1" />
-                        <button type="submit" id="status_id" name="status_id" value="2" class="btn btn-outline-dark w-75 mt-3">Сделать КП</button>
-                        <button type="submit" id="status_id" name="status_id" value="6" class="btn btn-dark w-75 mt-3">Отправить в работу</button>
-                    </div>
-                </div>
             </div>
         </div>
         <?php
@@ -401,13 +378,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         <script src="<?=APPLICATION ?>/js/select2.min.js"></script>
         <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
         <script>
-            // Список с поиском
-            $('.js-select2').select2({
-                placeholder: "Заказчик...",
-                maximumSelectionLength: 2,
-                language: "ru"
-            });
-            
             // Если форма возвращается назад, как не прошедшая валидацию, и в ней была ламинация 1, показываем ламинацию 1
             <?php if(null !== filter_input(INPUT_POST, 'lamination1_brand_name')): ?>
             ShowLamination1();
@@ -417,131 +387,9 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             <?php if(null !== filter_input(INPUT_POST, 'lamination2_brand_name')): ?>
             ShowLamination2();
             <?php endif; ?>
-                
-            // Если форма возвращается назад, как не прошедшая валидацию, показываем расчёт
-            <?php if(null !== filter_input(INPUT_POST, 'create_calculation_submit')): ?>
-            Calculate();
-            <?php endif; ?>
-
-            // Маска % для поля "наценка"
-            $("#extra_charge").mask("99%");
-            
-            // Фильтрация ввода в поле "наценка"
-            $('#extra_charge').keypress(function(e) {
-                if(/\D/.test(String.fromCharCode(e.charCode))) {
-                    return false;
-                }
-            });
-            
-            $('#extra_charge').change(function(e) {
-                var val = $(this).val();
-                val = val.replace(/[^\d\%]/g, '');
-                $(this).val(val);
-            });
-            
-            // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин
-            $('#brand_name').change(function(){
-                if($(this).val() == "") {
-                    $('#thickness').html("<option id=''>Толщина...</option>");
-                }
-                else {
-                    $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
-                            .done(function(data) {
-                                $('#thickness').html(data);
-                            })
-                            .fail(function() {
-                                alert('Ошибка при выборе марки пленки');
-                            });
-                }
-            });
-            
-            // Обработка выбора типа плёнки ламинации1: перерисовка списка толщин
-            $('#lamination1_brand_name').change(function(){
-                if($(this).val() == "") {
-                    $('#lamination1_thickness').html("<option id=''>Толщина...</option>");
-                }
-                else {
-                    $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
-                            .done(function(data) {
-                                $('#lamination1_thickness').html(data);
-                            })
-                            .fail(function() {
-                                alert('Ошибка при выборе марки пленки');
-                            });
-                }
-            });
-            
-            // Обработка выбора типа плёнки ламинации2: перерисовка списка толщин
-            $('#lamination2_brand_name').change(function(){
-                if($(this).val() == "") {
-                    $('#lamination2_thickness').html("<option id=''>Толщина...</option>");
-                }
-                else {
-                    $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
-                            .done(function(data) {
-                                $('#lamination2_thickness').html(data);
-                            })
-                            .fail(function() {
-                                alert('Ошибка при выборе марки пленки');
-                            });
-                }
-            });
-            
-            // Показ марки плёнки и толщины для ламинации 1
-            function ShowLamination1() {
-                $('#form_lamination_1').removeClass('d-none');
-                $('#show_lamination_1').addClass('d-none');
-                $('#main_film_title').removeClass('d-none');
-                $('#lamination1_brand_name').attr('required', 'required');
-                $('#lamination1_thickness').attr('required', 'required');
-                HideLamination2();
-            }
-            
-            // Скрытие марки плёнки и толщины для ламинации 1
-            function HideLamination1() {
-                $('#form_lamination_1').addClass('d-none');
-                $('#show_lamination_1').removeClass('d-none');
-                $('#main_film_title').addClass('d-none');
-                $('#lamination1_brand_name').removeAttr('required');
-                $('#lamination1_thickness').removeAttr('required');
-                HideLamination2();
-            }
-            
-            // Показ марки плёнки и толщины для ламинации 2
-            function ShowLamination2() {
-                $('#form_lamination_2').removeClass('d-none');
-                $('#show_lamination_2').addClass('d-none');
-                $('#hide_lamination_1').addClass('d-none');
-                $('#lamination2_brand_name').attr('required', 'required');
-                $('#lamination2_thickness').attr('required', 'required');
-            }
-            
-            // Скрытие марки плёнки и толщины для ламинации 2
-            function HideLamination2() {
-                $('#form_lamination_2').addClass('d-none');
-                $('#show_lamination_2').removeClass('d-none');
-                $('#hide_lamination_1').removeClass('d-none');
-                $('#lamination2_brand_name').removeAttr('required');
-                $('#lamination2_thickness').removeAttr('required');
-            }
-            
-            // Расчёт
-            function Calculate() {
-                // Проверка полей формы
-                $("#calculation").removeClass("d-none");
-            }
-            
-            // Показ расходов
-            function ShowCosts() {
-                $("#costs").removeClass("d-none");
-                $("#show_costs").addClass("d-none");
-            }
-            
-            // Скрытие расходов
-            function HideCosts() {
-                $("#costs").addClass("d-none");
-                $("#show_costs").removeClass("d-none");
-            }
         </script>
+        <?php
+        include './scripts.php';
+        ?>
     </body>
 </html>

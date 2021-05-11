@@ -457,26 +457,6 @@ $status_id = $row['status_id'];
         <script src="<?=APPLICATION ?>/js/select2.min.js"></script>
         <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
         <script>
-            // Список с  поиском
-            $('.js-select2').select2({
-                placeholder: "Заказчик...",
-                maximumSelectionLength: 2,
-                language: "ru"
-            });
-            
-            // Скрытие расчёта при изменении значения полей
-            $('input').change(function () {
-                $('#calculation').hide();
-            });
-            
-            $('select').change(function () {
-                $('#calculation').hide();
-            });
-            
-            $('input').keypress(function () {
-                $('#calculation').hide();
-            });
-            
             // Если у объекта имеется ламинация 1, показываем ламинацию 1
             <?php if(!empty($lamination1_brand_name)): ?>
             ShowLamination1();
@@ -486,22 +466,6 @@ $status_id = $row['status_id'];
             <?php if(!empty($lamination2_brand_name)): ?>
             ShowLamination2();
             <?php endif; ?>
-            
-            // Маска % для поля "наценка"
-            $("#extra_charge").mask("99%");
-            
-            // Фильтрация ввода в поле "наценка"
-            $('#extra_charge').keypress(function(e) {
-                if(/\D/.test(String.fromCharCode(e.charCode))) {
-                    return false;
-                }
-            });
-            
-            $('#extra_charge').change(function(e) {
-                var val = $(this).val();
-                val = val.replace(/[^\d\%]/g, '');
-                $(this).val(val);
-            });
             
             // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин
             $('#brand_name').change(function(){
@@ -601,5 +565,8 @@ $status_id = $row['status_id'];
                 $("#show_costs").removeClass("d-none");
             }
         </script>
+        <?php
+        include './scripts.php';
+        ?>
     </body>
 </html>
