@@ -87,6 +87,19 @@ if(null !== filter_input(INPUT_POST, 'edit_calculation_submit')) {
     }
 }
 
+// Смена статуса
+if(null !== filter_input(INPUT_POST, 'change_status_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $status_id = filter_input(INPUT_POST, 'status_id');
+    $sql = "update calculation set status_id=$status_id where id=$id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    if(empty($error_message)) {
+        header('Location: '.APPLICATION.'/calculation/calculation.php'. BuildQuery('id', $id));
+    }
+}
+
 // Получение объекта
 $id = filter_input(INPUT_POST, 'id');
 if(empty($id)) {
@@ -444,9 +457,12 @@ $status_id = $row['status_id'];
                             <div class="mt-3 mb-1">Клей</div>
                             <div class="font-weight-bold mt-1 mb-3" style="font-size: large;">800 000 руб.</div>
                         </div>
-                        <input type="hidden" id="create_calculation_submit1" name="create_calculation_submit1" />
-                        <button type="submit" id="status_id" name="status_id" value="2" class="btn btn-outline-dark w-75 mt-3">Сделать КП</button>
-                        <button type="submit" id="status_id" name="status_id" value="6" class="btn btn-dark w-75 mt-3">Отправить в работу</button>
+                        <form method="post">
+                            <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                            <input type="hidden" id="change_status_submit" name="change_status_submit" />
+                            <button type="submit" id="status_id" name="status_id" value="2" class="btn btn-outline-dark w-75 mt-3">Сделать КП</button>
+                            <button type="submit" id="status_id" name="status_id" value="6" class="btn btn-dark w-75 mt-3">Отправить в работу</button>
+                        </form>
                     </div>
                 </div>
             </div>
