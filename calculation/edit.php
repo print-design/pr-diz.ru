@@ -93,7 +93,7 @@ if(empty($id)) {
     $id = filter_input(INPUT_GET, 'id');
 }
 
-$sql = "select date, customer_id, name, work_type_id, brand_name, thickness, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, weight, diameter, status_id from calculation where id=$id";
+$sql = "select date, customer_id, name, work_type_id, brand_name, thickness, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, weight, diameter, status_id from calculation where id=$id";
 $row = (new Fetcher($sql))->Fetch();
 
 $date = $row['date'];
@@ -143,6 +143,11 @@ if(null === $lamination2_thickness) {
     $lamination2_thickness = $row['lamination2_thickness'];
 }
 
+$width = filter_input(INPUT_POST, 'width');
+if(null === $width) {
+    $width = $row['width'];
+}
+
 $weight = filter_input(INPUT_POST, 'weight');
 if(null === $weight) {
     $weight = $row['weight'];
@@ -162,6 +167,7 @@ $status_id = $row['status_id'];
         include '../include/head.php';
         ?>
         <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
+        <link href="<?=APPLICATION ?>/css/select2.min.css" rel="stylesheet"/>
     </head>
     <body>
         <?php
@@ -186,7 +192,7 @@ $status_id = $row['status_id'];
                         <div class="row">
                             <div class="col-8">
                                 <div class="form-group">
-                                    <select id="customer_id" name="customer_id" class="form-control<?=$customer_id_valid ?>" required="required">
+                                    <select id="customer_id" name="customer_id" class="form-control js-select2<?=$customer_id_valid ?>" required="required">
                                         <option value="">Заказчик...</option>
                                         <?php
                                         $sql = "select id, name from customer order by name";
@@ -219,15 +225,335 @@ $status_id = $row['status_id'];
                         <div class="form-group">
                             <select id="work_type_id" name="work_type_id" class="form-control" required="required">
                                 <option value="">Тип работы...</option>
+                                <?php
+                                $sql = "select id, name from work_type";
+                                $fetcher = new Fetcher($sql);
+                                
+                                while ($row = $fetcher->Fetch()):
+                                $selected = '';
+                                if($row['id'] == $work_type_id) {
+                                    $selected = " selected='selected'";
+                                }
+                                ?>
+                                <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
+                                <?php
+                                endwhile;
+                                ?>
                             </select>
                         </div>
+                        <!-- Основная плёнка -->
+                        <div id="main_film_title" class="d-none">
+                            <p class="font-weight-bold">Основная пленка</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <select id="brand_name" name="brand_name" class="form-control" required="required">
+                                        <option value="">Марка пленки...</option>
+                                        <?php
+                                        $sql = "select distinct name from film_brand order by name";
+                                        $brand_names = (new Grabber($sql))->result;
+                                        
+                                        foreach ($brand_names as $row):
+                                        $selected = '';
+                                        if($row['name'] == $brand_name) {
+                                            $selected = " selected='selected'";
+                                        }
+                                        ?>
+                                        <option value="<?=$row['name'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
+                                        <?php
+                                        endforeach;
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <select id="thickness" name="thickness" class="form-control" required="required">
+                                        <option value="">Толщина...</option>
+                                        <?php
+                                        if(!empty($brand_name)) {
+                                            $sql = "select distinct fbv.thickness, fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name='$brand_name' order by thickness";
+                                            $thicknesses = (new Grabber($sql))->result;
+                                            
+                                            foreach ($thicknesses as $row):
+                                            $selected = '';
+                                            if($row['thickness'] == $thickness) {
+                                                $selected = " selected='selected'";
+                                            }
+                                        ?>
+                                        <option value="<?=$row['thickness'] ?>"<?=$selected ?>><?=$row['thickness'] ?> мкм <?=$row['weight'] ?> г/м<sup>2</sup></option>
+                                        <?php
+                                            endforeach;
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="show_lamination_1">
+                            <button type="button" class="btn btn-light" onclick="javascript: ShowLamination1();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
+                        </div>
+                        <!-- Ламинация 1 -->
+                        <div id="form_lamination_1" class="d-none">
+                            <p class="font-weight-bold">Ламинация 1</p>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <select id="lamination1_brand_name" name="lamination1_brand_name" class="form-control">
+                                            <option value="">Марка пленки...</option>
+                                                <?php
+                                                foreach ($brand_names as $row):
+                                                $selected = '';
+                                                if($row['name'] == $lamination1_brand_name) {
+                                                    $selected = " selected='selected'";
+                                                }
+                                                ?>
+                                            <option value="<?=$row['name'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
+                                                <?php
+                                                endforeach;
+                                                ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-5">
+                                    <div class="form-group">
+                                        <select id="lamination1_thickness" name="lamination1_thickness" class="form-control">
+                                            <option value="">Толщина...</option>
+                                            <?php
+                                            if(!empty($lamination1_brand_name)) {
+                                                $sql = "select distinct fbv.thickness, fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name='$lamination1_brand_name' order by thickness";
+                                                $thicknesses = (new Grabber($sql))->result;
+                                                
+                                                foreach ($thicknesses as $row):
+                                                $selected = '';
+                                                if($row['thickness'] == $lamination1_thickness) {
+                                                    $selected = " selected='selected'";
+                                                }
+                                            ?>
+                                            <option value="<?=$row['thickness'] ?>"<?=$selected ?>><?=$row['thickness'] ?> мкм <?=$row['weight'] ?> г/м<sup>2</sup></option>
+                                            <?php
+                                                endforeach;
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-1" id="hide_lamination_1">
+                                    <button type="button" class="btn btn-light" onclick="javascript: HideLamination1();"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                            <div id="show_lamination_2">
+                                <button type="button" class="btn btn-light" onclick="javascript: ShowLamination2();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
+                            </div>
+                            <!-- Ламинация 2 -->
+                            <div id="form_lamination_2">
+                                <p class="font-weight-bold">Ламинация 2</p>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <select id="lamination2_brand_name" name="lamination2_brand_name" class="form-control">
+                                                <option value="">Марка пленки...</option>
+                                                    <?php
+                                                    foreach ($brand_names as $row):
+                                                    $selected = '';
+                                                    if($row['name'] == $lamination2_brand_name) {
+                                                        $selected = " selected='selected'";
+                                                    }
+                                                    ?>
+                                                <option value="<?=$row['name'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
+                                                    <?php
+                                                    endforeach;
+                                                    ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="form-group">
+                                            <select id="lamination2_thickness" name="lamination2_thickness" class="form-control">
+                                                <option value="">Толщина...</option>
+                                                <?php
+                                                if(!empty($lamination2_brand_name)) {
+                                                    $sql = "select distinct fbv.thickness, fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name='$lamination2_brand_name' order by thickness";
+                                                    $thicknesses = (new Grabber($sql))->result;
+                                                    
+                                                    foreach ($thicknesses as $row):
+                                                    $selected = "";
+                                                    if($row['thickness'] == $lamination2_thickness) {
+                                                        $selected = " selected='selected'";
+                                                    }
+                                                ?>
+                                                <option value="<?=$row['thickness'] ?>"<?=$selected ?>><?=$row['thickness'] ?> мкм <?=$row['weight'] ?> г/м<sup>2</sup></option>
+                                                <?php
+                                                    endforeach;
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-1" id="hide_lamination_2">
+                                        <button type="button" class="btn" onclick="javascript: HideLamination2();"><i class="fas fa-trash-alt"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <!-- Ширина -->
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <input type="text" id="width" class="form-control int-only" placeholder="Ширина, мм" value="<?=$width ?>" required="required" />
+                                    <div class="invalid-feedback">Ширина обязательно</div>
+                                </div>
+                            </div>
+                            <!-- Вес нетто -->
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <input type="text" id="weight" name="weight" class="form-control float-only" placeholder="Вес нетто, кг" value="<?=$weight ?>" required="required" />
+                                    <div class="invalid-feedback">Вес нетто обязательно</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!-- Диаметр намотки -->
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <input type="text" id="diameter" name="diameter" class="form-control int-only" placeholder="Диаметр намотки" value="<?=$diameter ?>" required="required" />
+                                    <div class="invalid-feedback">Диаметр намотки обязательно</div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" id="edit_calculation_submit" name="edit_calculation_submit" class="btn btn-dark">Рассчитать</button>
                     </form>
                 </div>
+                <!-- Правая половина -->
             </div>
         </div>
         <?php
         include '../include/footer.php';
         ?>
         <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
+        <script src="<?=APPLICATION ?>/js/select2.min.js"></script>
+        <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('.js-select2').select2({
+                    placeholder: "Заказчик...",
+                    maximumSelectionLength: 2,
+                    language: "ru"
+                });
+            });
+            
+            // Если у объекта имеется ламинация 1, показываем ламинацию 1
+            <?php if(!empty($lamination1_brand_name)): ?>
+            ShowLamination1();
+            <?php endif; ?>
+                
+            // Если у объекта имеется ламинация 2, показываем ламинацию 2
+            <?php if(!empty($lamination2_brand_name)): ?>
+            ShowLamination2();
+            <?php endif; ?>
+            
+            // Маска % для поля "наценка"
+            $("#extra_charge").mask("99%");
+            
+            // Фильтрация ввода в поле "наценка"
+            $('#extra_charge').keypress(function(e) {
+                if(/\D/.test(String.fromCharCode(e.charCode))) {
+                    return false;
+                }
+            });
+            
+            $('#extra_charge').change(function(e) {
+                var val = $(this).val();
+                val = val.replace(/[^\d\%]/g, '');
+                $(this).val(val);
+            });
+            
+            // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин
+            $('#brand_name').change(function(){
+                if($(this).val() == "") {
+                    $('#thickness').html("<option id=''>Толщина...</option>");
+                }
+                else {
+                    $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
+                            .done(function(data) {
+                                $('#thickness').html(data);
+                            })
+                            .fail(function() {
+                                alert('Ошибка при выборе марки пленки');
+                            });
+                }
+            });
+            
+            // Обработка выбора типа плёнки ламинации1: перерисовка списка толщин
+            $('#lamination1_brand_name').change(function(){
+                if($(this).val() == "") {
+                    $('#lamination1_thickness').html("<option id=''>Толщина...</option>");
+                }
+                else {
+                    $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
+                            .done(function(data) {
+                                $('#lamination1_thickness').html(data);
+                            })
+                            .fail(function() {
+                                alert('Ошибка при выборе марки пленки');
+                            });
+                }
+            });
+            
+            // Обработка выбора типа плёнки ламинации2: перерисовка списка толщин
+            $('#lamination2_brand_name').change(function(){
+                if($(this).val() == "") {
+                    $('#lamination2_thickness').html("<option id=''>Толщина...</option>");
+                }
+                else {
+                    $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
+                            .done(function(data) {
+                                $('#lamination2_thickness').html(data);
+                            })
+                            .fail(function() {
+                                alert('Ошибка при выборе марки пленки');
+                            });
+                }
+            });
+            
+            // Показ марки плёнки и толщины для ламинации 1
+            function ShowLamination1() {
+                $('#form_lamination_1').removeClass('d-none');
+                $('#show_lamination_1').addClass('d-none');
+                $('#main_film_title').removeClass('d-none');
+                $('#lamination1_brand_name').attr('required', 'required');
+                $('#lamination1_thickness').attr('required', 'required');
+                HideLamination2();
+            }
+            
+            // Скрытие марки плёнки и толщины для ламинации 1
+            function HideLamination1() {
+                $('#form_lamination_1').addClass('d-none');
+                $('#show_lamination_1').removeClass('d-none');
+                $('#main_film_title').addClass('d-none');
+                $('#lamination1_brand_name').removeAttr('required');
+                $('#lamination1_thickness').removeAttr('required');
+                HideLamination2();
+            }
+            
+            // Показ марки плёнки и толщины для ламинации 2
+            function ShowLamination2() {
+                $('#form_lamination_2').removeClass('d-none');
+                $('#show_lamination_2').addClass('d-none');
+                $('#hide_lamination_1').addClass('d-none');
+                $('#lamination2_brand_name').attr('required', 'required');
+                $('#lamination2_thickness').attr('required', 'required');
+            }
+            
+            // Скрытие марки плёнки и толщины для ламинации 2
+            function HideLamination2() {
+                $('#form_lamination_2').addClass('d-none');
+                $('#show_lamination_2').removeClass('d-none');
+                $('#hide_lamination_1').removeClass('d-none');
+                $('#lamination2_brand_name').removeAttr('required');
+                $('#lamination2_thickness').removeAttr('required');
+            }
+        </script>
     </body>
 </html>

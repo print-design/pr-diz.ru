@@ -401,6 +401,14 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         <script src="<?=APPLICATION ?>/js/select2.min.js"></script>
         <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
         <script>
+            $(document).ready(function() {
+                $('.js-select2').select2({
+                    placeholder: "Заказчик...",
+                    maximumSelectionLength: 2,
+                    language: "ru"
+                });
+            });
+            
             // Если форма возвращается назад, как не прошедшая валидацию, и в ней была ламинация 1, показываем ламинацию 1
             <?php if(null !== filter_input(INPUT_POST, 'lamination1_brand_name')): ?>
             ShowLamination1();
@@ -415,14 +423,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             <?php if(null !== filter_input(INPUT_POST, 'create_calculation_submit')): ?>
             Calculate();
             <?php endif; ?>
-                
-            $(document).ready(function() {
-                $('.js-select2').select2({
-                    placeholder: "Заказчик...",
-                    maximumSelectionLength: 2,
-                    language: "ru"
-                });
-            });
 
             // Маска % для поля "наценка"
             $("#extra_charge").mask("99%");
