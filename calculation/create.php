@@ -102,6 +102,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         include '../include/head.php';
         ?>
         <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
+        <link href="<?=APPLICATION ?>/css/select2.min.css" rel="stylesheet"/>
     </head>
     <body>
         <?php
@@ -125,7 +126,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                         <div class="row">
                             <div class="col-8">
                                 <div class="form-group">
-                                    <select id="customer_id" name="customer_id" class="form-control<?=$customer_id_valid ?>" required="required">
+                                    <select id="customer_id" name="customer_id" class="form-control js-select2<?=$customer_id_valid ?>" required="required">
                                         <option value="">Заказчик...</option>
                                         <?php
                                         $sql = "select id, name from customer order by name";
@@ -133,7 +134,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                                         
                                         while ($row = $fetcher->Fetch()):
                                         $selected = '';
-                                        if($row['id'] == $customer_id) {
+                                        if(isset($customer_id) && $row['id'] == $customer_id) {
                                             $selected = " selected='selected'";
                                         }
                                         ?>
@@ -397,6 +398,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         include '../include/footer.php';
         ?>
         <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
+        <script src="<?=APPLICATION ?>/js/select2.min.js"></script>
+        <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
         <script>
             // Если форма возвращается назад, как не прошедшая валидацию, и в ней была ламинация 1, показываем ламинацию 1
             <?php if(null !== filter_input(INPUT_POST, 'lamination1_brand_name')): ?>
@@ -412,6 +415,14 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             <?php if(null !== filter_input(INPUT_POST, 'create_calculation_submit')): ?>
             Calculate();
             <?php endif; ?>
+                
+            $(document).ready(function() {
+                $('.js-select2').select2({
+                    placeholder: "Заказчик...",
+                    maximumSelectionLength: 2,
+                    language: "ru"
+                });
+            });
 
             // Маска % для поля "наценка"
             $("#extra_charge").mask("99%");
