@@ -25,7 +25,10 @@ if(empty($id)) {
     $id = filter_input(INPUT_GET, 'id');
 }
 
-$sql = "select date, customer_id, name, work_type_id, brand_name, thickness, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, weight, diameter, status_id from calculation where id=$id";
+$sql = "select c.date, c.customer_id, c.name, c.work_type_id, c.brand_name, c.thickness, c.lamination1_brand_name, c.lamination1_thickness, c.lamination2_brand_name, c.lamination2_thickness, c.width, c.weight, c.diameter, c.status_id, "
+        . "cs.name status, cs.colour, cs.colour2, cs.image "
+        . "from calculation c inner join calculation_status cs on c.status_id = cs.id "
+        . "where c.id=$id";
 $row = (new Fetcher($sql))->Fetch();
 
 $date = $row['date'];
@@ -42,6 +45,11 @@ $width = $row['width'];
 $weight = $row['weight'];
 $diameter = $row['diameter'];
 $status_id = $row['status_id'];
+
+$status = $row['status'];
+$colour = $row['colour'];
+$colour2 = $row['colour2'];
+$image = $row['image'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -69,6 +77,9 @@ $status_id = $row['status_id'];
                 <div class="col-6" id="left_side">
                     <h1 style="font-size: 32px; line-height: 48px; font-weight: 600;"><?= htmlentities($name) ?></h1>
                     <h2 style="font-size: 26px;">№<?=$id ?> от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></h2>
+                    <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; background-color: <?=$colour2 ?>; border: solid 2px <?=$colour ?>; color: <?=$colour ?>">
+                        <?=$image ?>&nbsp;&nbsp;&nbsp;<?=$status ?>
+                    </div>
                 </div>
             </div>
         </div>
