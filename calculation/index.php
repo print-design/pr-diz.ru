@@ -33,6 +33,7 @@ function OrderLink($param) {
         include '../include/head.php';
         ?>
         <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
+        <link href="<?=APPLICATION ?>/css/select2.min.css" rel="stylesheet"/>
     </head>
     <body>
         <?php
@@ -95,7 +96,7 @@ function OrderLink($param) {
                             endwhile;
                             ?>
                         </select>
-                        <select name="customer" class="form-control" onchange="javascript: this.form.submit();">
+                        <select id="customer" name="customer" class="form-control" onchange="javascript: this.form.submit();">
                             <option value="">Заказчик...</option>
                             <?php
                             $sql = "select distinct cus.id, cus.name from calculation c inner join customer cus on c.customer_id = cus.id order by cus.name";
@@ -253,5 +254,16 @@ function OrderLink($param) {
         include '../include/footer.php';
         ?>
         <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
+        <script src="<?=APPLICATION ?>/js/select2.min.js"></script>
+        <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
+        <script>
+            // Список с  поиском
+            $('#customer').select2({
+                placeholder: "Заказчик...",
+                maximumSelectionLength: 2,
+                allowClear: true,
+                language: "ru"
+            });
+        </script>
     </body>
 </html>
