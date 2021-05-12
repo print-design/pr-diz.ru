@@ -117,7 +117,16 @@ $work_type = $row['work_type'];
                         <form method="post">
                             <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                             <input type="hidden" id="change_status_submit" name="change_status_submit" />
-                            <button type="submit" id="status_id" name="status_id" value="3" class="btn btn-outline-dark w-75 mt-3">Ждет одобрения</button>
+                            <?php if($status_id == 1): ?>
+                            <button type="submit" id="status_id" name="status_id" value="2" class="btn btn-outline-dark w-75 mt-3">Отправить КП</button>
+                            <?php elseif($status_id == 2): ?>
+                            <button type="submit" id="status_id" name="status_id" value="3" class="btn btn-outline-dark w-75 mt-3">Отправить в работу</button>
+                            <?php elseif($status_id == 3): ?>
+                            <button type="submit" id="status_id" name="status_id" value="4" class="btn btn-outline-dark w-75 mt-3">Одобрить</button>
+                            <button type="submit" id="status_id" name="status_id" value="5" class="btn btn-dark w-75 mt-3">Отказать</button>
+                            <?php elseif ($status_id == 4): ?>
+                            <button type="submit" id="status_id" name="status_id" value="3" class="btn btn-outline-dark w-75 mt-3">Составить тех. карту</button>
+                            <?php endif; ?>
                         </form>
                     </div>
                 </div>

@@ -464,7 +464,6 @@ $status_id = $row['status_id'];
                             <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                             <input type="hidden" id="change_status_submit" name="change_status_submit" />
                             <button type="submit" id="status_id" name="status_id" value="2" class="btn btn-outline-dark w-75 mt-3">Сделать КП</button>
-                            <button type="submit" id="status_id" name="status_id" value="6" class="btn btn-dark w-75 mt-3">Отправить в работу</button>
                         </form>
                     </div>
                 </div>
