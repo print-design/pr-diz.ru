@@ -90,7 +90,7 @@ $work_type = $row['work_type'];
                         <tr><th class="pr-5">Тип работы</th><td><?=$work_type ?></td></tr>
                         <tr><th class="pr-5">Марка пленки</th><td><?=$brand_name ?></td></tr>
                         <tr><th class="pr-5">Толщина</th><td><?= number_format($thickness, 0, ",", " ") ?> мкм</td></tr>
-                        <tr><th class="pr-5">Ширина</th><td><?= number_format($width, 0, ",", " ") ?></td> мм</tr>
+                        <tr><th class="pr-5">Ширина</th><td><?= number_format($width, 0, ",", " ") ?> мм</td></tr>
                         <tr><th class="pr-5">Вес нетто</th><td><?= number_format($weight, 0, ",", " ") ?></td></tr>
                         <tr><th class="pr-5">Диаметр намотки</th><td><?= number_format($diameter, 0, ",", " ") ?> мм &nbsp;&nbsp;&nbsp;Примерно 2020 метров</td></tr>
                     </table>
