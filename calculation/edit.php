@@ -489,7 +489,7 @@ $status_id = $row['status_id'];
             <?php if(!empty($lamination2_brand_name)): ?>
             ShowLamination2();
             <?php endif; ?>
-            
+                
             // Показ расходов
             function ShowCosts() {
                 $("#costs").removeClass("d-none");
