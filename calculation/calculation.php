@@ -125,7 +125,7 @@ $work_type = $row['work_type'];
                             <button type="submit" id="status_id" name="status_id" value="4" class="btn btn-outline-dark w-75 mt-3">Одобрить</button>
                             <button type="submit" id="status_id" name="status_id" value="5" class="btn btn-dark w-75 mt-3">Отклонить</button>
                             <?php elseif ($status_id == 4): ?>
-                            <button type="submit" id="status_id" name="status_id" value="3" class="btn btn-outline-dark w-75 mt-3">Составить тех. карту</button>
+                            <button type="submit" id="status_id" name="status_id" value="6" class="btn btn-outline-dark w-75 mt-3">Составить тех. карту</button>
                             <?php endif; ?>
                         </form>
                     </div>
