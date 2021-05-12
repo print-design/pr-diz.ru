@@ -94,6 +94,10 @@ $work_type = $row['work_type'];
                         <tr><th class="pr-5">Вес нетто</th><td><?= number_format($weight, 0, ",", " ") ?></td></tr>
                         <tr><th class="pr-5">Диаметр намотки</th><td><?= number_format($diameter, 0, ",", " ") ?> мм &nbsp;&nbsp;&nbsp;Примерно 2020 метров</td></tr>
                     </table>
+                    <?php if($status_id == 3): ?>
+                    <button type="submit" id="status_id" name="status_id" value="5" class="btn btn-dark mt-5 mr-2 pl-5 pr-5">Отклонить</button>
+                    <button type="submit" id="status_id" name="status_id" value="4" class="btn btn-outline-dark mt-5 mr-2 pl-5 pr-5">Одобрить</button>
+                    <?php endif; ?>
                 </div>
                 <!-- Правая половина -->
                 <div class="col-3">
@@ -121,9 +125,6 @@ $work_type = $row['work_type'];
                             <button type="submit" id="status_id" name="status_id" value="2" class="btn btn-outline-dark w-75 mt-3">Отправить КП</button>
                             <?php elseif($status_id == 2): ?>
                             <button type="submit" id="status_id" name="status_id" value="3" class="btn btn-outline-dark w-75 mt-3">Отправить в работу</button>
-                            <?php elseif($status_id == 3): ?>
-                            <button type="submit" id="status_id" name="status_id" value="4" class="btn btn-outline-dark w-75 mt-3">Одобрить</button>
-                            <button type="submit" id="status_id" name="status_id" value="5" class="btn btn-dark w-75 mt-3">Отклонить</button>
                             <?php elseif ($status_id == 4): ?>
                             <button type="submit" id="status_id" name="status_id" value="6" class="btn btn-outline-dark w-75 mt-3">Составить тех. карту</button>
                             <?php endif; ?>
