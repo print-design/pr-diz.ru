@@ -297,6 +297,7 @@ if(null === $comment) $comment = $row['comment'];
         <?php
         include '../include/header_sklad.php';
         ?>
+        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
         <div class="container-fluid" style="padding-left: 40px;">
             <?php
             if(!empty($error_message)) {
@@ -488,6 +489,7 @@ if(null === $comment) $comment = $row['comment'];
         <?php
         include '../include/footer.php';
         ?>
+        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
             if($('.is-invalid').first() != null) {
                 $('.is-invalid').first().focus();

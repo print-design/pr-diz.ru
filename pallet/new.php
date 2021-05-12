@@ -219,6 +219,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         <?php
         include '../include/head.php';
         ?>
+        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
     </head>
     <body>
         <?php
@@ -438,6 +439,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         <?php
         include '../include/footer.php';
         ?>
+        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
             //------------------------------------
             // Защита от двойного нажатия
