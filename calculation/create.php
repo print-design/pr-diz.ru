@@ -90,10 +90,112 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $insert_id = $executer->insert_id;
         
         if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/calculation/edit.php'. BuildQuery('id', $insert_id));
+            header('Location: '.APPLICATION.'/calculation/create.php'.BuildQuery('id', $insert_id));
         }
     }
 }
+
+// Смена статуса
+if(null !== filter_input(INPUT_POST, 'change_status_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $status_id = filter_input(INPUT_POST, 'status_id');
+    $sql = "update calculation set status_id=$status_id where id=$id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    if(empty($error_message)) {
+        header('Location: '.APPLICATION.'/calculation/calculation.php'. BuildQuery('id', $id));
+    }
+}
+
+// Получение объекта
+$id = filter_input(INPUT_POST, 'id');
+if(empty($id)) {
+    $id = filter_input(INPUT_GET, 'id');
+}
+
+if(!empty($id)) {
+    $sql = "select date, customer_id, name, work_type_id, brand_name, thickness, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, weight, diameter, status_id from calculation where id=$id";
+    $row = (new Fetcher($sql))->Fetch();
+}
+
+if(isset($row['date'])) $date = $row['date'];
+else $date = null;
+
+$customer_id = filter_input(INPUT_POST, 'customer_id');
+if(null === $customer_id) {
+    if(isset($row['customer_id'])) $customer_id = $row['customer_id'];
+    else $customer_id = null;
+}
+
+$name = filter_input(INPUT_POST, 'name');
+if(null === $name) {
+    if(isset($row['name'])) $name = $row['name'];
+    else $name = null;
+}
+
+$work_type_id = filter_input(INPUT_POST, 'work_type_id');
+if(null === $work_type_id) {
+    if(isset($row['work_type_id'])) $work_type_id = $row['work_type_id'];
+    else $work_type_id = null;
+}
+
+$brand_name = filter_input(INPUT_POST, 'brand_name');
+if(null === $brand_name) {
+    if(isset($row['brand_name'])) $brand_name = $row['brand_name'];
+    else $brand_name = null;
+}
+
+$thickness = filter_input(INPUT_POST, 'thickness');
+if(null === $thickness) {
+    if(isset($row['thickness'])) $thickness = $row['thickness'];
+    else $thickness = null;
+}
+
+$lamination1_brand_name = filter_input(INPUT_POST, 'lamination1_brand_name');
+if(null === $lamination1_brand_name) {
+    if(isset($row['lamination1_brand_name'])) $lamination1_brand_name = $row['lamination1_brand_name'];
+    else $lamination1_brand_name = null;
+}
+
+$lamination1_thickness = filter_input(INPUT_POST, 'lamination1_thickness');
+if(null === $lamination1_thickness) {
+    if(isset($row['lamination1_thickness'])) $lamination1_thickness = $row['lamination1_thickness'];
+    else $lamination1_thickness = null;
+}
+
+$lamination2_brand_name = filter_input(INPUT_POST, 'lamination2_brand_name');
+if(null === $lamination2_brand_name) {
+    if(isset($row['lamination2_brand_name'])) $lamination2_brand_name = $row['lamination2_brand_name'];
+    else $lamination2_brand_name = null;
+}
+
+$lamination2_thickness = filter_input(INPUT_POST, 'lamination2_thickness');
+if(null === $lamination2_thickness) {
+    if(isset($row['lamination2_thickness'])) $lamination2_thickness = $row['lamination2_thickness'];
+    else $lamination2_thickness = null;
+}
+
+$width = filter_input(INPUT_POST, 'width');
+if(null === $width) {
+    if(isset($row['width'])) $width = $row['width'];
+    else $width = null;
+}
+
+$weight = filter_input(INPUT_POST, 'weight');
+if(null === $weight) {
+    if(isset($row['weight'])) $weight = $row['weight'];
+    else $width = null;
+}
+
+$diameter = filter_input(INPUT_POST, 'diameter');
+if(null === $diameter) {
+    if(isset($row['diameter'])) $diameter = $row['diameter'];
+    else $diameter = null;
+}
+
+if(isset($row['status_id'])) $status_id = $row['status_id'];
+else $status_id = null;
 ?>
 <!DOCTYPE html>
 <html>
@@ -119,9 +221,15 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             </div>
             <div class="row">
                 <!-- Левая половина -->
-                <div class="col-6">
+                <div class="col-6" id="left_side">
                     <form method="post">
+                        <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                        <?php if(null === filter_input(INPUT_GET, 'id')): ?>
                         <h1 style="font-size: 32px; line-height: 48px; font-weight: 600;">Новый расчет</h1>
+                        <?php else: ?>
+                        <h1 style="font-size: 32px; line-height: 48px; font-weight: 600;"><?= htmlentities($name) ?></h1>
+                        <h2 style="font-size: 26px;">№<?=$id ?> от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></h2>
+                        <?php endif; ?>
                         <!-- Заказчик -->
                         <div class="row">
                             <div class="col-8">
@@ -134,7 +242,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                                         
                                         while ($row = $fetcher->Fetch()):
                                         $selected = '';
-                                        if(isset($customer_id) && $row['id'] == $customer_id) {
+                                        if($row['id'] == $customer_id) {
                                             $selected = " selected='selected'";
                                         }
                                         ?>
@@ -152,7 +260,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                         </div>
                         <!-- Название заказа -->
                         <div class="form-group">
-                            <input type="text" id="name" name="name" class="form-control<?=$name_valid ?>" placeholder="Название заказа" value="<?= filter_input(INPUT_POST, 'name') ?>" required="required" autocomplete="off" />
+                            <input type="text" id="name" name="name" class="form-control<?=$name_valid ?>" placeholder="Название заказа" value="<?= htmlentities($name) ?>" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Название заказа обязательно</div>
                         </div>
                         <!-- Тип работы -->
@@ -165,7 +273,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                                 
                                 while ($row = $fetcher->Fetch()):
                                 $selected = '';
-                                $work_type_id = filter_input(INPUT_POST, 'work_type_id');
                                 if($row['id'] == $work_type_id) {
                                     $selected = " selected='selected'";
                                 }
@@ -191,7 +298,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                                         
                                         foreach ($brand_names as $row):
                                         $selected = '';
-                                        $brand_name = filter_input(INPUT_POST, 'brand_name');
                                         if($row['name'] == $brand_name) {
                                             $selected = " selected='selected'";
                                         }
@@ -208,14 +314,12 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                                     <select id="thickness" name="thickness" class="form-control" required="required">
                                         <option value="">Толщина...</option>
                                         <?php
-                                        if(null !== filter_input(INPUT_POST, 'brand_name')) {
-                                            $brand_name = filter_input(INPUT_POST, 'brand_name');
+                                        if(!empty($brand_name)) {
                                             $sql = "select distinct fbv.thickness, fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name='$brand_name' order by thickness";
                                             $thicknesses = (new Grabber($sql))->result;
                                             
                                             foreach ($thicknesses as $row):
                                             $selected = '';
-                                            $thickness = filter_input(INPUT_POST, 'thickness');
                                             if($row['thickness'] == $thickness) {
                                                 $selected = " selected='selected'";
                                             }
@@ -243,7 +347,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                                                 <?php
                                                 foreach ($brand_names as $row):
                                                 $selected = '';
-                                                $lamination1_brand_name = filter_input(INPUT_POST, 'lamination1_brand_name');
                                                 if($row['name'] == $lamination1_brand_name) {
                                                     $selected = " selected='selected'";
                                                 }
@@ -260,15 +363,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                                         <select id="lamination1_thickness" name="lamination1_thickness" class="form-control">
                                             <option value="">Толщина...</option>
                                             <?php
-                                            if(null !== filter_input(INPUT_POST, 'lamination1_brand_name')) {
-                                                $lamination1_brand_name = filter_input(INPUT_POST, 'lamination1_brand_name');
+                                            if(!empty($lamination1_brand_name)) {
                                                 $sql = "select distinct fbv.thickness, fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name='$lamination1_brand_name' order by thickness";
                                                 $thicknesses = (new Grabber($sql))->result;
                                                 
                                                 foreach ($thicknesses as $row):
                                                 $selected = '';
-                                                $thickness = filter_input(INPUT_POST, 'lamination1_thickness');
-                                                if($row['thickness'] == $thickness) {
+                                                if($row['thickness'] == $lamination1_thickness) {
                                                     $selected = " selected='selected'";
                                                 }
                                             ?>
@@ -298,7 +399,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                                                     <?php
                                                     foreach ($brand_names as $row):
                                                     $selected = '';
-                                                    $lamination2_brand_name = filter_input(INPUT_POST, 'lamination2_brand_name');
                                                     if($row['name'] == $lamination2_brand_name) {
                                                         $selected = " selected='selected'";
                                                     }
@@ -315,15 +415,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                                             <select id="lamination2_thickness" name="lamination2_thickness" class="form-control">
                                                 <option value="">Толщина...</option>
                                                 <?php
-                                                if(null !== filter_input(INPUT_POST, 'lamination2_brand_name')) {
-                                                    $lamination2_brand_name = filter_input(INPUT_POST, 'lamination2_brand_name');
+                                                if(!empty($lamination2_brand_name)) {
                                                     $sql = "select distinct fbv.thickness, fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name='$lamination2_brand_name' order by thickness";
                                                     $thicknesses = (new Grabber($sql))->result;
                                                     
                                                     foreach ($thicknesses as $row):
                                                     $selected = "";
-                                                    $thickness = filter_input(INPUT_POST, 'lamination2_thickness');
-                                                    if($row['thickness'] == $thickness) {
+                                                    if($row['thickness'] == $lamination2_thickness) {
                                                         $selected = " selected='selected'";
                                                     }
                                                 ?>
@@ -345,14 +443,14 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                             <!-- Ширина -->
                             <div class="col-6">
                                 <div class="form-group">
-                                    <input type="text" id="width" name="width" class="form-control int-only" placeholder="Ширина, мм" value="<?= filter_input(INPUT_POST, 'width') ?>" required="required" />
+                                    <input type="text" id="width" name="width" class="form-control int-only" placeholder="Ширина, мм" value="<?=$width ?>" required="required" />
                                     <div class="invalid-feedback">Ширина обязательно</div>
                                 </div>
                             </div>
                             <!-- Вес нетто -->
                             <div class="col-6">
                                 <div class="form-group">
-                                    <input type="text" id="weight" name="weight" class="form-control float-only" placeholder="Вес нетто, кг" value="<?= filter_input(INPUT_POST, 'weight') ?>" required="required" />
+                                    <input type="text" id="weight" name="weight" class="form-control float-only" placeholder="Вес нетто, кг" value="<?=$weight ?>" required="required" />
                                     <div class="invalid-feedback">Вес нетто обязательно</div>
                                 </div>
                             </div>
@@ -361,7 +459,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                             <!-- Диаметр намотки -->
                             <div class="col-6">
                                 <div class="form-group">
-                                    <input type="text" id="diameter" name="diameter" class="form-control int-only" placeholder="Диаметр намотки" value="<?= filter_input(INPUT_POST, 'diameter') ?>" required="required" />
+                                    <input type="text" id="diameter" name="diameter" class="form-control int-only" placeholder="Диаметр намотки" value="<?=$diameter ?>" required="required" />
                                     <div class="invalid-feedback">Диаметр намотки обязательно</div>
                                 </div>
                             </div>
@@ -369,8 +467,33 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                                 Примерно 2020 метров
                             </div>
                         </div>
-                        <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark">Рассчитать</button>
+                        <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark d-none">Рассчитать</button>
                     </form>
+                </div>
+                <!-- Правая половина -->
+                <div class="col-3">
+                    <!-- Расчёт -->
+                    <div id="calculation">
+                        <h1>Расчет</h1>
+                        <input type="text" id="extra_charge" name="extra_charge" class="form-control" placeholder="Наценка" />
+                        <div class="mt-3 mb-1">Себестоимость</div>
+                        <div class="font-weight-bold mt-1 mb-1" style="font-size: large;">1 200 000 руб.</div>
+                        <div class="mt-3 mb-1">Отгрузочная стоимость</div>
+                        <div class="font-weight-bold mt-1 mb-3" style="font-size: large;">800 000 руб.</div>
+                        <button type="button" class="btn btn-light" id="show_costs" onclick="javascript: ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать расходы</button>
+                        <div id="costs" class="d-none">
+                            <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
+                            <div class="mt-3 mb-1">Отходы</div>
+                            <div class="font-weight-bold mt-1 mb-1" style="font-size: large;">200 280 руб.&nbsp;&nbsp;&nbsp;24,5 кг.</div>
+                            <div class="mt-3 mb-1">Клей</div>
+                            <div class="font-weight-bold mt-1 mb-3" style="font-size: large;">800 000 руб.</div>
+                        </div>
+                        <form method="post">
+                            <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                            <input type="hidden" id="change_status_submit" name="change_status_submit" />
+                            <button type="submit" id="status_id" name="status_id" value="2" class="btn btn-outline-dark w-75 mt-3">Сделать КП</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -384,15 +507,72 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         include './scripts.php';
         ?>
         <script>
-            // Если форма возвращается назад, как не прошедшая валидацию, и в ней была ламинация 1, показываем ламинацию 1
-            <?php if(null !== filter_input(INPUT_POST, 'lamination1_brand_name')): ?>
+            // Если у объекта имеется ламинация 1, показываем ламинацию 1
+            <?php if(!empty($lamination1_brand_name)): ?>
             ShowLamination1();
             <?php endif; ?>
                 
-            // Если форма возвращается назад, как не прошедшая валидацию, и в ней была ламинация 2, показываем ламинацию 2
-            <?php if(null !== filter_input(INPUT_POST, 'lamination2_brand_name')): ?>
+            // Если у объекта имеется ламинация 2, показываем ламинацию 2
+            <?php if(!empty($lamination2_brand_name)): ?>
             ShowLamination2();
             <?php endif; ?>
+                
+            // Показ расходов
+            function ShowCosts() {
+                $("#costs").removeClass("d-none");
+                $("#show_costs").addClass("d-none");
+            }
+            
+            // Скрытие расходов
+            function HideCosts() {
+                $("#costs").addClass("d-none");
+                $("#show_costs").removeClass("d-none");
+            }
+            
+            // Скрытие расчёта
+            function HideCalculation() {
+                $("#calculation").hide();
+                $("#create_calculation_submit").removeClass("d-none");
+            }
+            
+            // Скрытие расчёта при изменении значения полей
+            $("input[id!='extra_charge']").change(function () {
+                HideCalculation();
+            });
+            
+            $('select').change(function () {
+                HideCalculation();
+            });
+            
+            $("input[id!='extra_charge']").keydown(function () {
+                HideCalculation();
+            });
+            
+            // Скрытие расчёта при создании нового заказчика
+            <?php if(null !== filter_input(INPUT_POST, 'create_customer_submit')): ?>
+                HideCalculation();
+            <?php endif; ?>
+                
+            // Скрытие расчёта при создании нового расчёта
+            <?php if(null === filter_input(INPUT_GET, 'id')): ?>
+                HideCalculation();
+            <?php endif; ?>
+    
+            // Маска % для поля "наценка"
+            $("#extra_charge").mask("99%");
+            
+            // Фильтрация ввода в поле "наценка"
+            $('#extra_charge').keypress(function(e) {
+                if(/\D/.test(String.fromCharCode(e.charCode))) {
+                    return false;
+                }
+            });
+            
+            $('#extra_charge').change(function(e) {
+                var val = $(this).val();
+                val = val.replace(/[^\d\%]/g, '');
+                $(this).val(val);
+            });
         </script>
     </body>
 </html>
