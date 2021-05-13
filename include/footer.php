@@ -6,11 +6,6 @@
 <script src="<?=APPLICATION ?>/js/jquery.maskedinput.js"></script>
 
 <script>
-    // Отключение автозаполнения форм
-    $(':input').live('focus',function(){
-        $(this).attr('autocomplete', 'off');
-    });
-
     // Фильтрация ввода
     $('.int-only').keypress(function(e) {
         if(/\D/.test(String.fromCharCode(e.charCode))) {

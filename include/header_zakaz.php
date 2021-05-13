@@ -49,26 +49,26 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
 <div id="new_customer" class="modal fade show">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post" autocomplete="proizvolnaya!_stroka">
+            <form method="post">
                 <div class="modal-header">
                     <i class="fas fa-user"></i>&nbsp;&nbsp;Новый заказчик
                     <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <input type="text" id="customer_name" name="customer_name" class="form-control" placeholder="Название компании" required="required" autocomplete="proizvolnaya!_stroka" />
+                        <input type="text" id="customer_name" name="customer_name" class="form-control" placeholder="Название компании" required="required" onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" onmouseup="javascript: $(this).attr('id', 'customer_name'); $(this).attr('name', 'customer_name'); $(this).attr('placeholder', 'Название компании');" />
                         <div class="invalid-feedback">Название компании обязательно</div>
                     </div>
                     <div class="form-group">
-                        <input type="text" id="customer_person" name="customer_person" class="form-control" placeholder="Имя представителя" required="required" autocomplete="proizvolnaya!_stroka" />
+                        <input type="text" id="customer_person" name="customer_person" class="form-control" placeholder="Имя представителя" required="required" onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" onmouseup="javascript: $(this).attr('id', 'customer_person'); $(this).attr('name', 'customer_person'); $(this).attr('placeholder', 'Имя представителя');" />
                         <div class="invalid-feedback">Имя представителя обязательно</div>
                     </div>
                     <div class="form-group">
-                        <input type="tel" id="customer_phone" name="customer_phone" class="form-control" placeholder="Номер телефона" required="required" autocomplete="proizvolnaya!_stroka" />
+                        <input type="tel" id="customer_phone" name="customer_phone" class="form-control" placeholder="Номер телефона" required="required" onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" onmouseup="javascript: $(this).attr('id', 'customer_phone'); $(this).attr('name', 'customer_phone'); $(this).attr('placeholder', 'Номер телефона');" />
                         <div class="invalid-feedback">Номер телефона обязательно</div>
                     </div>
                     <div class="form-group">
-                        <input type="email" id="customer_email" name="customer_email" class="form-control" placeholder="E-Mail" required="required" autocomplete="proizvolnaya!_stroka" />
+                        <input type="email" id="customer_email" name="customer_email" class="form-control" placeholder="E-Mail" required="required" onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" onmouseup="javascript: $(this).attr('id', 'customer_email'); $(this).attr('name', 'customer_email'); $(this).attr('placeholder', 'E-Mail');" />
                         <div class="invalid-feedback">E-Mail обязательно</div>
                     </div>
                 </div>
