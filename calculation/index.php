@@ -51,7 +51,7 @@ function OrderLink($param) {
                 <div class="p-1">
                     <h1 style="font-size: 32px; line-height: 48px; font-weight: 600;">Расчеты</h1>
                 </div>
-                <div class="p-1">
+                <div class="p-1 text-nowrap">
                     <?php $order = filter_input(INPUT_GET, 'order'); ?>
                     <form class="form-inline d-inline" method="get">
                         <?php if(null !== $order): ?>
