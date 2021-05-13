@@ -104,7 +104,7 @@ $work_type = $row['work_type'];
                     <?php endif; ?>
                 </div>
                 <!-- Правая половина -->
-                <div class="col-3">
+                <div class="col-6 col-lg-3">
                     <!-- Расчёт -->
                     <div id="calculation">
                         <h1>Расчет</h1>
@@ -126,11 +126,11 @@ $work_type = $row['work_type'];
                             <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                             <input type="hidden" id="change_status_submit" name="change_status_submit" />
                             <?php if($status_id == 1): ?>
-                            <button type="submit" id="status_id" name="status_id" value="2" class="btn btn-outline-dark w-75 mt-3">Отправить КП</button>
+                            <button type="submit" id="status_id" name="status_id" value="2" class="btn btn-outline-dark mt-3">Отправить КП</button>
                             <?php elseif($status_id == 2): ?>
-                            <button type="submit" id="status_id" name="status_id" value="3" class="btn btn-outline-dark w-75 mt-3">Отправить в работу</button>
+                            <button type="submit" id="status_id" name="status_id" value="3" class="btn btn-outline-dark mt-3">Отправить в работу</button>
                             <?php elseif ($status_id == 4): ?>
-                            <button type="submit" id="status_id" name="status_id" value="6" class="btn btn-outline-dark w-75 mt-3">Составить тех. карту</button>
+                            <button type="submit" id="status_id" name="status_id" value="6" class="btn btn-outline-dark mt-3">Составить тех. карту</button>
                             <?php endif; ?>
                         </form>
                     </div>

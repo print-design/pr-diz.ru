@@ -228,7 +228,7 @@ function OrderLink($param) {
                     ?>
                     <tr>
                         <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['id'] ?></td>
-                        <td class="text-nowrap"><?=$row['date'] ?></td>
+                        <td class="text-nowrap"><?= DateTime::createFromFormat('Y-m-d', $row['date'])->format('d.m.Y') ?></td>
                         <td><?=$row['customer'] ?></td>
                         <td><?= htmlentities($row['name']) ?></td>
                         <td><?=$row['weight'] ?></td>

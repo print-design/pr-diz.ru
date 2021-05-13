@@ -471,7 +471,7 @@ else $status_id = null;
                     </form>
                 </div>
                 <!-- Правая половина -->
-                <div class="col-3">
+                <div class="col-6 col-lg-3">
                     <!-- Расчёт -->
                     <div id="calculation">
                         <h1>Расчет</h1>
@@ -491,7 +491,7 @@ else $status_id = null;
                         <form method="post">
                             <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                             <input type="hidden" id="change_status_submit" name="change_status_submit" />
-                            <button type="submit" id="status_id" name="status_id" value="2" class="btn btn-outline-dark w-75 mt-3">Сделать КП</button>
+                            <button type="submit" id="status_id" name="status_id" value="2" class="btn btn-outline-dark mt-3">Сделать КП</button>
                         </form>
                     </div>
                 </div>
