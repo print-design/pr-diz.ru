@@ -98,8 +98,8 @@ $work_type = $row['work_type'];
                     <form method="post">
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                         <input type="hidden" id="change_status_submit" name="change_status_submit" />
-                        <button type="submit" id="status_id" name="status_id" value="5" class="btn btn-dark mt-5 mr-2 pl-5 pr-5">Отклонить</button>
-                        <button type="submit" id="status_id" name="status_id" value="4" class="btn btn-outline-dark mt-5 mr-2 pl-5 pr-5">Одобрить</button>
+                        <button type="submit" id="status_id" name="status_id" value="5" class="btn btn-outline-dark mt-5 mr-2 pl-5 pr-5">Отклонить</button>
+                        <button type="submit" id="status_id" name="status_id" value="4" class="btn btn-dark mt-5 mr-2 pl-5 pr-5">Одобрить</button>
                     </form>
                     <?php endif; ?>
                 </div>
