@@ -559,7 +559,7 @@ else $status_id = null;
             <?php endif; ?>
     
             // Маска % для поля "наценка"
-            $("#extra_charge").mask("99%");
+            $("#extra_charge").mask("999%", { autoclear: false });
             
             // Фильтрация ввода в поле "наценка"
             $('#extra_charge').keypress(function(e) {
