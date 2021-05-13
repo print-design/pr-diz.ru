@@ -141,13 +141,12 @@ if(null !== filter_input(INPUT_POST, 'supplier_create_submit')) {
                         <input type="text" id="weight" name="weight" class="form-control float-only" placeholder="Удельный вес" style="width: 129px; margin-right: 13px;" />
                         <button type="button" class="btn btn-link" id="add-brand-link">Добавить</button>
                     </div>
-                    <button type="button" class="btn btn-outline-dark" id="add-brand-button" style="padding-left: 40px; padding-right: 62px;">
-                        <div style="float:left; padding-top: 8px; padding-right: 30px; font-size: 12px;"><i class="fas fa-plus"></i></div>
-                        &nbsp;Добавить марку<br/>пленки
+                    <button type="button" class="btn btn-outline-dark" id="add-brand-button">
+                        <i class="fas fa-plus"></i>&nbsp;Добавить марку пленки
                     </button>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-dark" id="supplier_create_submit" name="supplier_create_submit" style="padding-left: 58px; padding-right: 62px; padding-top: 14px; padding-bottom: 14px;">Создать поставщика</button>
+                    <button type="submit" class="btn btn-dark" id="supplier_create_submit" name="supplier_create_submit">Создать поставщика</button>
                 </div>
             </form>
         </div>

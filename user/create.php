@@ -167,7 +167,7 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
                         </div>
                     </div>
                     <div class="form-group" style="padding-top: 24px;">
-                        <button type="submit" class="btn btn-dark" id="user_create_submit" name="user_create_submit" style="width: 200px; padding-top: 14px; padding-bottom: 14px;">Создать</button>
+                        <button type="submit" class="btn btn-dark" id="user_create_submit" name="user_create_submit">Создать</button>
                     </div>
                 </form>
             </div>
