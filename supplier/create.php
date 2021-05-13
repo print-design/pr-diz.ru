@@ -98,6 +98,7 @@ if(null !== filter_input(INPUT_POST, 'supplier_create_submit')) {
         <?php
         include '../include/head.php';
         ?>
+        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
     </head>
     <body>
         <?php
@@ -153,6 +154,7 @@ if(null !== filter_input(INPUT_POST, 'supplier_create_submit')) {
         <?php
         include '../include/footer.php';
         ?>
+        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
             $('#add-brand-form').hide();
             $('#variations-table').hide();

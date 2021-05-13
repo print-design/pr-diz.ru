@@ -18,6 +18,7 @@ if(null !== filter_input(INPUT_POST, 'delete_user_submit')) {
         <?php
         include '../include/head.php';
         ?>
+        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
     </head>
     <body>
         <?php
@@ -39,7 +40,7 @@ if(null !== filter_input(INPUT_POST, 'delete_user_submit')) {
                     </div>
                 </div>
                 <div class="p-1">
-                    <a href="create.php" title="Добавить пользователя" class="btn btn-outline-dark" style="padding-top: 14px; padding-bottom: 14px; padding-left: 30px; padding-right: 30px;">
+                    <a href="create.php" title="Добавить пользователя" class="btn btn-outline-dark">
                         <i class="fas fa-plus" style="font-size: 12px;"></i>&nbsp;&nbsp;Добавить сотрудника
                     </a>
                 </div>
@@ -93,5 +94,6 @@ if(null !== filter_input(INPUT_POST, 'delete_user_submit')) {
         <?php
         include '../include/footer.php';
         ?>
+        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
     </body>
 </html>

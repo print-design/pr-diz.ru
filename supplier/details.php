@@ -116,6 +116,7 @@ $name = htmlentities($row['name']);
         <?php
         include '../include/head.php';
         ?>
+        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
     </head>
     <body>
         <?php
@@ -246,6 +247,7 @@ $name = htmlentities($row['name']);
         <?php
         include '../include/footer.php';
         ?>
+        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
             $('#add-brand-form').hide();
             

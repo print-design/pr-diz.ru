@@ -127,8 +127,22 @@ li#nav-user a.dropdown-toggle::after {
     display: none;
 }
 
+.btn {
+    height: 40px;
+    line-height: 26px;
+}
+
 .btn.disabled, .btn:disabled {
     opacity: .25;
+}
+
+.btn:not(.btn-link) {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.btn-dark {
+    background-color: #121232;
 }
 
 /*Заголовки*/
@@ -153,16 +167,6 @@ li#nav-user a.dropdown-toggle::after {
     line-height: 48px;
     font-weight: 600;
     padding-left: 25px;
-}
-
-.btn:not(.btn-link) {
-    font-size: 14px;
-    line-height: 16px;
-    font-weight: 600;
-}
-
-.btn-dark {
-    background-color: #121232;
 }
 
 /*Второе меню*/
