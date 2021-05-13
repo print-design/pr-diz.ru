@@ -6,6 +6,11 @@
 <script src="<?=APPLICATION ?>/js/jquery.maskedinput.js"></script>
 
 <script>
+    // Отключение автозаполнения форм
+    $(':input').live('focus',function(){
+        $(this).attr('autocomplete', 'off');
+    });
+
     // Фильтрация ввода
     $('.int-only').keypress(function(e) {
         if(/\D/.test(String.fromCharCode(e.charCode))) {
@@ -53,9 +58,9 @@
         $(this).val(val);
     });
     
-    $('input[type="text"]').prop('autocomplete', 'off');
+    //$('input[type="text"]').attr('autocomplete', 'proizvolnaya_stroka');
     
-    $('form').prop('autocomplete', 'off');
+    //$('form').attr('autocomplete', 'proizvolnaya_stroka');
     
     $('textarea').css('resize', 'none');
     
@@ -133,6 +138,10 @@
             }
         });
     });
+    
+    // Отключение всех автозаполнений
+    $('form').attr('autocomplete', 'off');
+    $('input').attr('autocomplete', 'off');
     
     // Автологаут резчика
     <?php if(IsInRole('cutter')): ?>
