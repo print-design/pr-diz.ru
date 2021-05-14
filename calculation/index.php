@@ -57,7 +57,7 @@ function OrderLink($param) {
                         <?php if(null !== $order): ?>
                         <input type="hidden" name="order" value="<?= $order ?>" />
                         <?php endif; ?>
-                        <select name="status" class="form-control" onchange="javascript: this.form.submit();">
+                        <select id="status" name="status" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Статус...</option>
                             <?php
                             $sql = "select distinct cs.id, cs.name from calculation c inner join calculation_status cs on c.status_id = cs.id order by cs.name";
@@ -70,7 +70,7 @@ function OrderLink($param) {
                             endwhile;
                             ?>
                         </select>
-                        <select name="work_type" class="form-control" onchange="javascript: this.form.submit();">
+                        <select id="work_type" name="work_type" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Тип работы...</option>
                             <?php
                             $sql = "select distinct wt.id, wt.name from calculation c inner join work_type wt on c.work_type_id = wt.id order by wt.name";
@@ -83,7 +83,7 @@ function OrderLink($param) {
                             endwhile;
                             ?>
                         </select>
-                        <select name="manager" class="form-control" onchange="javascript: this.form.submit();">
+                        <select id="manager" name="manager" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Менеджер...</option>
                             <?php
                             $sql = "select distinct u.id, u.last_name, u.first_name from calculation c inner join user u on c.manager_id = u.id order by u.last_name";
@@ -96,7 +96,7 @@ function OrderLink($param) {
                             endwhile;
                             ?>
                         </select>
-                        <select id="customer" name="customer" class="form-control js-select2" multiple="multiple" onchange="javascript: this.form.submit();">
+                        <select id="customer" name="customer" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Заказчик...</option>
                             <?php
                             $sql = "select distinct cus.id, cus.name from calculation c inner join customer cus on c.customer_id = cus.id order by cus.name";
@@ -258,6 +258,24 @@ function OrderLink($param) {
         <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
         <script>
             // Список с  поиском
+            $('#status').select2({
+                placeholder: "Статус...",
+                maximumSelectionLength: 1,
+                language: "ru"
+            });
+            
+            $('#work_type').select2({
+                placeholder: "Тип работы...",
+                maximumSelectionLength: 1,
+                language: "ru"
+            });
+            
+            $('#manager').select2({
+                placeholder: "Менеджер...",
+                maximumSelectionLength: 1,
+                language: "ru"
+            });
+            
             $('#customer').select2({
                 placeholder: "Заказчик...",
                 maximumSelectionLength: 1,
