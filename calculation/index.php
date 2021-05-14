@@ -49,7 +49,7 @@ function OrderLink($param) {
             ?>
             <div class="d-flex justify-content-between mb-auto">
                 <div class="p-1">
-                    <h1 style="font-size: 32px; line-height: 48px; font-weight: 600;">Расчеты</h1>
+                    <h1 style="font-size: 32px; font-weight: 600;">Расчеты</h1>
                 </div>
                 <div class="p-1 text-nowrap">
                     <?php $order = filter_input(INPUT_GET, 'order'); ?>

@@ -58,7 +58,7 @@ while ($row = $fetcher->Fetch()) {
                 <div class="p-1">
                     <table>
                         <tr>
-                            <td><h1 style="font-size: 32px; line-height: 48px; font-weight: 600;">Рулоны</h1></td>
+                            <td><h1 style="font-size: 32px; font-weight: 600;">Рулоны</h1></td>
                             <td style="padding-left: 20px; padding-right: 20px; font-weight: bold;">(<?= number_format($total_weight, 0, ',', ' ') ?> кг)</td>
                             <td class="d-none" style="padding-left: 35px; padding-right: 10px;">
                                 <a class="btn btn-dark disabled" id="btn-cut-request" style="padding-left: 40px; padding-right: 60px; padding-bottom: 8px; padding-top: 9px;">
@@ -274,7 +274,7 @@ while ($row = $fetcher->Fetch()) {
             <div class="modal-dialog modal-dialog-aside" role="document">
                 <div class="modal-content" style="padding-left: 35px; padding-right: 35px; width: 521px;">
                     <button type="button" class="close" data-dismiss="modal" style="position: absolute; right: 32px; top: 55px;"><img src="../images/icons//close_modal.png" /></button>
-                    <h1 style="margin-top: 53px; margin-bottom: 20px; font-size: 32px; line-height: 48px; font-weight: 600;">Фильтр</h1>
+                    <h1 style="margin-top: 53px; margin-bottom: 20px; font-size: 32px; font-weight: 600;">Фильтр</h1>
                     <form method="get">
                         <div class="form-group">
                             <select id="film_brand_name" name="film_brand_name" class="form-control" style="margin-top: 30px; margin-bottom: 30px;">

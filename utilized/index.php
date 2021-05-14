@@ -70,7 +70,7 @@ $utilized_status_roll_id = 2;
                 <div class="p-1">
                     <table>
                         <tr>
-                            <td><h1 style="font-size: 32px; line-height: 48px; font-weight: 600;">Сработанная пленка</h1></td>
+                            <td><h1 style="font-size: 32px; font-weight: 600;">Сработанная пленка</h1></td>
                         </tr>
                     </table>
                 </div>
@@ -245,7 +245,7 @@ $utilized_status_roll_id = 2;
             <div class="modal-dialog">
                 <div class="modal-content" style="width: 535px; padding-left: 35px; padding-right: 35px;">
                     <button type="button" class="close" data-dismiss="modal" style="position: absolute; right: 32px; top: 55px;">&times;</button>
-                    <h1 style="margin-top: 53px; margin-bottom: 20px; font-size: 32px; line-height: 48px; font-weight: 600;">Фильтр</h1>
+                    <h1 style="margin-top: 53px; margin-bottom: 20px; font-size: 32px; font-weight: 600;">Фильтр</h1>
                     <form method="get">
                         <div class="form-group form-check">
                             <input type="checkbox" class="form-check-input" id="chkPallet" name="chkPallet"<?= filter_input(INPUT_GET, 'chkPallet') == 'on' ? " checked='checked'" : "" ?> />
