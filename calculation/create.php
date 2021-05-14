@@ -507,6 +507,28 @@ else $status_id = null;
         include './scripts.php';
         ?>
         <script>
+            //------------------------------------------------------------------
+            // Защита от двойного нажатия
+            var create_calculation_submit_clicked = false;
+            
+            $('#create_calculation_submit').click(function () {
+                if(create_calculation_submit_clicked) {
+                    return false;
+                }
+                else {
+                    create_calculation_submit_clicked = true;
+                }
+            });
+            
+            $(document).keydown(function () {
+                create_calculation_submit_clicked = false;
+            });
+            
+            $('select').change(function () {
+                create_calculation_submit_clicked = false;
+            });
+            //------------------------------------------------------------------
+            
             // Если у объекта имеется ламинация 1, показываем ламинацию 1
             <?php if(!empty($lamination1_brand_name)): ?>
             ShowLamination1();
