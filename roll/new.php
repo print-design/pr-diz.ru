@@ -367,6 +367,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
         include '../include/footer.php';
         ?>
         <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
+        <script src="<?=APPLICATION ?>/js/calculation.js"></script>
         <script>
             $('#supplier_id').change(function(){
                 if($(this).val() == "") {
@@ -436,8 +437,34 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
             }
             ?>
             
-            // Расчёт по радиусу
+            // Расчёт длины и массы по радиусу
             function CalculateByRadius() {
+                $('#length').removeClass('is-invalid');
+                $('#net_weight').removeClass('is-invalid');
+                
+                $('#length').val('');
+                $('#net_weight').val('');
+                
+                film_brand_id = $('#film_brand_id').val();
+                spool = $('#shpulya').val();
+                thickness = $('#thickness').val();
+                radius = $('#diameter').val();
+                width = $('#width').val();
+                
+                if(!isNaN(spool) && !isNaN(thickness) && !isNaN(radius) && !isNaN(width) 
+                        && spool != '' && thickness != '' && radius != '' && width != '') {
+                    density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
+                    
+                    result = GetFilmLengthWeightBySpoolThicknessRadiusWidth(spool, thickness, radius, width, density);
+                    
+                    $('#length').val(result.length.toFixed(2));
+                    $('#length_hidden').val(result.length.toFixed(2));
+                    $('#net_weight').val(result.weight.toFixed(2));
+                    $('#net_weight_hidden').val(result.weight.toFixed(2));
+                }
+            }
+    
+            /*function CalculateByRadius1() {
                 $('#length').removeClass('is-invalid');
                 $('#net_weight').removeClass('is-invalid');
                 
@@ -476,7 +503,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                         //Масса нетто(4)  = (Длинна (3) * Удельный вес (5) * ширину (6))/1000/1000
                     }
                 }
-            }
+            }*/
             
             $('#shpulya').change(CalculateByRadius);
             
