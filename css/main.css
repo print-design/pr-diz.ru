@@ -198,11 +198,6 @@ li#nav-user a.dropdown-toggle::after {
     text-decoration: none;
 }
 
-.nav2 a {
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
 .nav2 a.active {
     border-bottom: solid 1px blue;
     padding-bottom: 10px;

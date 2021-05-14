@@ -86,7 +86,7 @@ while ($row = $fetcher->Fetch()) {
                 </div>
                 <div class="p-1">
                     <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
-                    <a href="new.php" class="btn btn-outline-dark"><i class="fas fa-plus" style="font-size: 10px; margin-right: 18px;"></i>Новый паллет</a>
+                    <a href="new.php" class="btn btn-outline-dark"><i class="fas fa-plus"></i>&nbsp;Новый паллет</a>
                     <?php endif; ?>
                     <div style="display: inline-block; position: relative; margin-right: 55px; margin-left: 80px;">
                         <a href="javascript: void(0);"><img src="../images/icons/filter1.svg" data-toggle="modal" data-target="#filterModal" data-text="Фильтр" /></a>
