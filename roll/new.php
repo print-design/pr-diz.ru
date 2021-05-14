@@ -359,7 +359,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                     </div>
                 </div>
                 <div class="form-inline" style="margin-top: 30px;">
-                    <button type="submit" id="create-roll-submit" name="create-roll-submit" class="btn btn-dark" style="padding-left: 80px; padding-right: 80px; margin-right: 62px; padding-top: 14px; padding-bottom: 14px;">РАСПЕЧАТАТЬ СТИКЕР</button>
+                    <button type="submit" id="create-roll-submit" name="create-roll-submit" class="btn btn-dark">РАСПЕЧАТАТЬ СТИКЕР</button>
                 </div>
             </form>
         </div>
@@ -368,28 +368,6 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
         ?>
         <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
-            //------------------------------------
-            // Защита от двойного нажатия
-            var create_roll_submit_clicked = false;
-            
-            $('#create-roll-submit').click(function(e) {
-                if(create_roll_submit_clicked) {
-                    return false;
-                }
-                else {
-                    create_roll_submit_clicked = true;
-                }
-            });
-            
-            $(document).keydown(function(){
-                create_roll_submit_clicked = false;
-            });
-            
-            $('select').change(function(){
-                create_roll_submit_clicked = false;
-            });
-            //---------------------------------------
-            
             $('#supplier_id').change(function(){
                 if($(this).val() == "") {
                     $('#film_brand_id').html("<option id=''>Выберите марку</option>");

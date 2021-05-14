@@ -432,7 +432,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     </div>
                 </div>
                 <div class="form-inline" style="margin-top: 30px;">
-                    <button type="submit" id="create-pallet-submit" name="create-pallet-submit" class="btn btn-dark" style="padding-left: 80px; padding-right: 80px; margin-right: 62px; padding-top: 14px; padding-bottom: 14px;">РАСПЕЧАТАТЬ СТИКЕР</button>
+                    <button type="submit" id="create-pallet-submit" name="create-pallet-submit" class="btn btn-dark">РАСПЕЧАТАТЬ СТИКЕР</button>
                 </div>
             </form>
         </div>
@@ -441,28 +441,6 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         ?>
         <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
-            //------------------------------------
-            // Защита от двойного нажатия
-            var create_pallet_submit_clicked = false;
-            
-            $('#create-pallet-submit').click(function(e) {
-                if(create_pallet_submit_clicked) {
-                    return false;
-                }
-                else {
-                    create_pallet_submit_clicked = true;
-                }
-            });
-            
-            $(document).keydown(function(){
-                create_pallet_submit_clicked = false;
-            });
-            
-            $('select').change(function(){
-                create_pallet_submit_clicked = false;
-            });
-            //---------------------------------------
-            
             $('#supplier_id').change(function(){
                 if($(this).val() == "") {
                     $('#film_brand_id').html("<option id=''>Выберите марку</option>");

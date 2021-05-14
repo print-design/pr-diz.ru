@@ -130,9 +130,25 @@
         });
     });
     
-    // Отключение всех автозаполнений
-    $('form').attr('autocomplete', 'off');
-    $('input').attr('autocomplete', 'off');
+    // Защита от двойного нажатия
+    var submit_clicked = false;
+    
+    $('button[type=submit]').click(function () {
+        if(submit_clicked) {
+            return false;
+        }
+        else {
+            submit_clicked = true;
+        }
+    });
+    
+    $(document).keydown(function () {
+        submit_clicked = false;
+    });
+    
+    $('select').change(function () {
+        submit_clicked = false;
+    });
     
     // Автологаут резчика
     <?php if(IsInRole('cutter')): ?>
