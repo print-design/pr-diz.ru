@@ -164,9 +164,8 @@ $name = htmlentities($row['name']);
                         <button type="submit" class="btn btn-link" id="film_brand_create_submit" name="film_brand_create_submit" style="padding-left: 10px; padding-right: 0;"><i class="fas fa-plus" style="font-size: 10px;"></i>&nbsp;Добавить</button>
                         <button class="btn btn-link" id="add-brand-cancel" style="padding-left: 10px; padding-right: 0;"><i class="fas fa-undo" style="font-size: 10px;"></i>&nbsp;Отмена</button>
                     </form>
-                    <button class="btn btn-outline-dark" id="add-brand-button" style="padding-left: 32px; padding-right: 68px; padding-top: 8px; padding-bottom: 9px;">
-                        <div style="float:left; padding-top: 6px; padding-right: 30px; font-size: 12px;"><i class="fas fa-plus"></i></div>
-                        &nbsp;Добавить марку<br/>пленки
+                    <button class="btn btn-outline-dark" id="add-brand-button">
+                        <i class="fas fa-plus"></i>&nbsp;Добавить марку пленки
                     </button>
                 </div>
                 <?php
