@@ -464,47 +464,6 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                 }
             }
     
-            /*function CalculateByRadius1() {
-                $('#length').removeClass('is-invalid');
-                $('#net_weight').removeClass('is-invalid');
-                
-                $('#length').val('');
-                $('#net_weight').val('');
-                
-                film_brand_id = $('#film_brand_id').val();
-                shpulya = $('#shpulya').val();
-                thickness = $('#thickness').val();
-                radiusotvala = $('#diameter').val();
-                width = $('#width').val();
-                
-                if(!isNaN(shpulya) && !isNaN(thickness) && !isNaN(radiusotvala) && !isNaN(width) 
-                        && shpulya != '' && thickness != '' && radiusotvala != '' && width != '') {
-                    var ud_ves = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
-                    
-                    if(shpulya == 76) {
-                        var length = (0.15 * radiusotvala * radiusotvala + 11.3961 * radiusotvala - 176.4427) * 20 / thickness;
-                        $('#length').val(length.toFixed(2));
-                        $('#length_hidden').val(length.toFixed(2));
-                        
-                        var net_weight = (length * ud_ves * width) / 1000 / 1000;
-                        $('#net_weight').val(net_weight.toFixed(2));
-                        $('#net_weight_hidden').val(net_weight.toFixed(2));
-                        //Масса нетто(4)  = (Длинна (3) * Удельный вес (5) * ширину (6))/1000/1000
-                    }
-                    
-                    if(shpulya == 152) {
-                        var length = (0.1524 * radiusotvala * radiusotvala + 23.1245 * radiusotvala - 228.5017) * 20 / thickness;
-                        $('#length').val(length.toFixed(2));
-                        $('#length_hidden').val(length.toFixed(2));
-                        
-                        var net_weight = (length * ud_ves * width) / 1000 / 1000;
-                        $('#net_weight').val(net_weight.toFixed(2));
-                        $('#net_weight_hidden').val(net_weight.toFixed(2));
-                        //Масса нетто(4)  = (Длинна (3) * Удельный вес (5) * ширину (6))/1000/1000
-                    }
-                }
-            }*/
-            
             $('#shpulya').change(CalculateByRadius);
             
             $('#diameter').keypress(CalculateByRadius);
