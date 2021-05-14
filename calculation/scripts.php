@@ -2,7 +2,7 @@
     // Список с  поиском
     $('#customer_id').select2({
         placeholder: "Заказчик...",
-        maximumSelectionLength: 2,
+        maximumSelectionLength: 1,
         language: "ru"
     });
     

@@ -53,10 +53,6 @@
         $(this).val(val);
     });
     
-    //$('input[type="text"]').attr('autocomplete', 'proizvolnaya_stroka');
-    
-    //$('form').attr('autocomplete', 'proizvolnaya_stroka');
-    
     $('textarea').css('resize', 'none');
     
     // Валидация

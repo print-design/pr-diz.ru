@@ -96,7 +96,7 @@ function OrderLink($param) {
                             endwhile;
                             ?>
                         </select>
-                        <select id="customer" name="customer" class="form-control" onchange="javascript: this.form.submit();">
+                        <select id="customer" name="customer" class="form-control js-select2" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Заказчик...</option>
                             <?php
                             $sql = "select distinct cus.id, cus.name from calculation c inner join customer cus on c.customer_id = cus.id order by cus.name";
@@ -260,8 +260,7 @@ function OrderLink($param) {
             // Список с  поиском
             $('#customer').select2({
                 placeholder: "Заказчик...",
-                maximumSelectionLength: 2,
-                allowClear: true,
+                maximumSelectionLength: 1,
                 language: "ru"
             });
         </script>

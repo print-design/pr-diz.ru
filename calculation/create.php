@@ -234,7 +234,7 @@ else $status_id = null;
                         <div class="row">
                             <div class="col-8">
                                 <div class="form-group">
-                                    <select id="customer_id" name="customer_id" class="form-control js-select2<?=$customer_id_valid ?>" required="required">
+                                    <select id="customer_id" name="customer_id" class="form-control<?=$customer_id_valid ?>" multiple="multiple" required="required">
                                         <option value="">Заказчик...</option>
                                         <?php
                                         $sql = "select id, name from customer order by name";
