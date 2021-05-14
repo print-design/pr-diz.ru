@@ -30,7 +30,7 @@ if(null !== filter_input(INPUT_POST, 'delete_supplier_submit')) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <div class="d-flex justify-content-between mb-2 nav2">
+            <div class="d-flex justify-content-between mb-auto nav2">
                 <div class="p-1 row">
                     <div class="col-6">
                         <a href="<?=APPLICATION ?>/user/">Сотрудники</a>

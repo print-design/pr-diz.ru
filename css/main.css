@@ -171,11 +171,11 @@ li#nav-user a.dropdown-toggle::after {
 
 /*Второе меню*/
 .nav2 {
-    font-size: 14px;
+    /*font-size: 14px;
     line-height: 18px;
     font-weight: 400;
     margin-top: 20px;
-    margin-bottom: 20px!important;
+    margin-bottom: 20px!important;*/
 }
 
 .nav2 a:link, .nav2 a:visited {
