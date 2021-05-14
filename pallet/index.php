@@ -68,19 +68,8 @@ while ($row = $fetcher->Fetch()) {
                 <div class="p-1">
                     <table>
                         <tr>
-                            <td><h1 style="font-size: 32px; line-height: 48px; font-weight: 600;">Паллеты</h1></td>
+                            <td><h1 style="font-size: 32px; font-weight: 600;">Паллеты</h1></td>
                             <td style="padding-left: 20px; padding-right: 20px; font-weight: bold;">(<?= number_format($total_weight, 0, ',', ' ') ?> кг)</td>
-                            <td class="d-none" style='padding-left: 35px; padding-right: 30px;'>
-                                <a class="btn btn-dark disabled" id="btn-cut-request" style="padding-left: 40px; padding-right: 60px; padding-bottom: 8px; padding-top: 9px;">
-                                    <div style="float:left; padding-top: 8px; padding-right: 30px; font-size: 12px;"><i class="fas fa-plus"></i></div>
-                                    &nbsp;Заявка на<br/>раскрой
-                                </a>
-                            </td>
-                            <td class="d-none">
-                                <a class="btn btn-outline-dark disabled" id="btn-reserve-request" style="padding-left: 42px; padding-right: 42px; padding-bottom: 8px; padding-top: 9px;">
-                                    Заявка на<br/>резервирование
-                                </a>
-                            </td>
                         </tr>
                     </table>
                 </div>

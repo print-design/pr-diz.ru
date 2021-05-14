@@ -68,11 +68,7 @@ $utilized_status_roll_id = 2;
             ?>
             <div class="d-flex justify-content-between mb-auto">
                 <div class="p-1">
-                    <table>
-                        <tr>
-                            <td><h1 style="font-size: 32px; font-weight: 600;">Сработанная пленка</h1></td>
-                        </tr>
-                    </table>
+                    <h1 style="font-size: 32px; font-weight: 600;">Сработанная пленка</h1>
                 </div>
                 <div class="p-1">
                     <a class="btn btn-dark disabled" id="btn-print-request" style="visibility: hidden;">

@@ -162,13 +162,6 @@ li#nav-user a.dropdown-toggle::after {
     margin-bottom: 28px;
 }
 
-.list-page h1 {
-    font-size: 32px;
-    line-height: 48px;
-    font-weight: 600;
-    padding-left: 25px;
-}
-
 /*Второе меню*/
 .nav2 {
     /*font-size: 14px;
