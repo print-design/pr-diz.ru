@@ -225,9 +225,9 @@ else $status_id = null;
                     <form method="post">
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                         <?php if(null === filter_input(INPUT_GET, 'id')): ?>
-                        <h1 style="font-size: 32px; line-height: 48px; font-weight: 600;">Новый расчет</h1>
+                        <h1 style="font-size: 32px; font-weight: 600;">Новый расчет</h1>
                         <?php else: ?>
-                        <h1 style="font-size: 32px; line-height: 48px; font-weight: 600;"><?= htmlentities($name) ?></h1>
+                        <h1 style="font-size: 32px; font-weight: 600;"><?= htmlentities($name) ?></h1>
                         <h2 style="font-size: 26px;">№<?=$id ?> от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></h2>
                         <?php endif; ?>
                         <!-- Заказчик -->

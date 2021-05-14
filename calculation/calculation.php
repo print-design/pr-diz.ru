@@ -80,7 +80,7 @@ $work_type = $row['work_type'];
             <div class="row">
                 <!-- Левая половина -->
                 <div class="col-6" id="left_side">
-                    <h1 style="font-size: 32px; line-height: 48px; font-weight: 600;"><?= htmlentities($name) ?></h1>
+                    <h1 style="font-size: 32px; font-weight: 600;"><?= htmlentities($name) ?></h1>
                     <h2 style="font-size: 26px;">№<?=$id ?> от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></h2>
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; background-color: <?=$colour2 ?>; border: solid 2px <?=$colour ?>; color: <?=$colour ?>">
                         <?=$image ?>&nbsp;&nbsp;&nbsp;<?=$status ?>

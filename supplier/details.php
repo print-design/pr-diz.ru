@@ -143,8 +143,8 @@ $name = htmlentities($row['name']);
                 <div class="backlink">
                     <a href="<?=APPLICATION ?>/supplier/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                 </div>
-                <h1 style="font-size: 24px; line-height: 32px; font-weight: 600;"><?=$name ?></h1>
-                <h2 style="font-size: 18px; line-height: 24px; font-weight: 600;">Пленки поставщика</h2>
+                <h1 style="font-size: 24px; font-weight: 600;"><?=$name ?></h1>
+                <h2 style="font-size: 18px; font-weight: 600;">Пленки поставщика</h2>
                 <div style="margin-top: 10px; margin-bottom: 30px;">
                     <form method="post" class="form-inline" id="add-brand-form">
                         <input type="hidden" id="supplier_id" name="supplier_id" value="<?= filter_input(INPUT_GET, 'id') ?>"/>

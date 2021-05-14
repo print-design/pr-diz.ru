@@ -106,11 +106,11 @@ if(null === $comment) $comment = $row['comment'];
                 echo "<div class='alert alert-danger>$error_message</div>";
             }
             ?>
-            <div class="backlink" style="margin-bottom: 56px;">
+            <div class="backlink">
                 <a href="<?=APPLICATION ?>/pallet/<?= BuildQueryRemove('id') ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
             </div>
-            <h1 style="font-size: 24px; line-height: 32px; fon24pxt-weight: 600; margin-bottom: 20px;">Информация о рулоне № <?="П".$pallet_id."Р".$ordinal ?> от <?= (DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></h1>
-            <h2 style="font-size: 24px; line-height: 32px; font-weight: 600; margin-bottom: 20px;">ID <?=$id_from_supplier ?></h2>
+            <h1 style="font-size: 24px; fon24pxt-weight: 600; margin-bottom: 20px;">Информация о рулоне № <?="П".$pallet_id."Р".$ordinal ?> от <?= (DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></h1>
+            <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 20px;">ID <?=$id_from_supplier ?></h2>
             <form method="post">
                 <div style="width: 423px;">
                     <input type="hidden" id="id" name="id" value="<?=$id ?>" />
