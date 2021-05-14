@@ -437,7 +437,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
             }
             ?>
             
-            // Расчёт длины и массы по радиусу
+            // Расчёт длины и массы плёнки по шпуле, толщине, радиусу, ширине, удельному весу
             function CalculateByRadius() {
                 $('#length').removeClass('is-invalid');
                 $('#net_weight').removeClass('is-invalid');
@@ -464,6 +464,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                 }
             }
     
+            // Рассчитываем ширину и массу плёнки при изменении значений каждого поля, участвующего в вычислении
             $('#shpulya').change(CalculateByRadius);
             
             $('#diameter').keypress(CalculateByRadius);
