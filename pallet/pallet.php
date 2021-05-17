@@ -489,7 +489,6 @@ if(null === $comment) $comment = $row['comment'];
         <?php
         include '../include/footer.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
             if($('.is-invalid').first() != null) {
                 $('.is-invalid').first().focus();

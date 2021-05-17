@@ -439,7 +439,6 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         <?php
         include '../include/footer.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
             $('#supplier_id').change(function(){
                 if($(this).val() == "") {

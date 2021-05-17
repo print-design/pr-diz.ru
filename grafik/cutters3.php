@@ -48,8 +48,7 @@ $error_message = $grafik->error_message;
             ?>
         </div>
         <?php
-            include '../include/footer.php';
+        include '../include/footer.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
     </body>
 </html>

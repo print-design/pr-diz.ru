@@ -50,6 +50,5 @@ $error_message = $grafik->error_message;
         <?php
         include '../include/footer.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
     </body>
 </html>

@@ -140,7 +140,6 @@ $work_type = $row['work_type'];
         <?php
         include '../include/footer.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
             // Показ расходов
             function ShowCosts() {

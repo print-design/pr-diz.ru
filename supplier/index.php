@@ -93,6 +93,5 @@ if(null !== filter_input(INPUT_POST, 'delete_supplier_submit')) {
         <?php
         include '../include/footer.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
     </body>
 </html>

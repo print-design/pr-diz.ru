@@ -319,7 +319,6 @@ while ($row = $fetcher->Fetch()) {
         <?php
         include '../include/footer.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
             var thicknesses = JSON.parse('<?=$json_thicknesses ?>');
             

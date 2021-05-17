@@ -93,6 +93,5 @@ if(empty($name)) {
         <?php
         include '../include/footer.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
     </body>
 </html>

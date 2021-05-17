@@ -253,7 +253,6 @@ function OrderLink($param) {
         <?php
         include '../include/footer.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script src="<?=APPLICATION ?>/js/select2.min.js"></script>
         <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
         <script>

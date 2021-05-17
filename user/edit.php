@@ -214,6 +214,5 @@ if(empty($role_id)) {
         <?php
         include '../include/footer.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
     </body>
 </html>

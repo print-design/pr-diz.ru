@@ -172,6 +172,5 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
         <?php
         include '../include/footer.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
     </body>
 </html>

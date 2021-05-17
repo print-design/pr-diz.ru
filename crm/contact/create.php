@@ -190,7 +190,6 @@ $conn->close();
         <?php
         include '../include/footer.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
             $( function() {
                 $.datepicker.regional['ru'] = {
