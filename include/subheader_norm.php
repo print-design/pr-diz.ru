@@ -10,12 +10,12 @@ $raport_class = substr(filter_input(INPUT_POST, 'PHP_SELF'), 0, strlen(APPLICATI
 <div class="d-flex justify-content-start">
     <div class="p-1">
         <div class="text-nowrap nav2">
-            <a href="<?=APPLICATION ?>/norm/form.php" class="mr-3<?=$form_class ?>">Стоимость форм</a>
-            <a href="<?=APPLICATION ?>/norm/paint.php" class="mr-3<?=$paint_class ?>">Стоимость краски</a>
-            <a href="<?=APPLICATION ?>/norm/glue.php" class="mr-3<?=$glue_class ?>">Стоимость клея</a>
-            <a href="<?=APPLICATION ?>/norm/machine.php" class="mr-3<?=$machine_class ?>">Нормы работы оборудования</a>
-            <a href="<?=APPLICATION ?>/norm/fitting.php" class="mr-3<?=$fitting_class ?>">Приладка</a>
-            <a href="<?=APPLICATION ?>/norm/raport.php" class="mr-3<?=$raport_class ?>">Рапорт</a>
+            <a href="<?=APPLICATION ?>/norm/form.php" class="mr-4<?=$form_class ?>">Стоимость форм</a>
+            <a href="<?=APPLICATION ?>/norm/paint.php" class="mr-4<?=$paint_class ?>">Стоимость краски</a>
+            <a href="<?=APPLICATION ?>/norm/glue.php" class="mr-4<?=$glue_class ?>">Стоимость клея</a>
+            <a href="<?=APPLICATION ?>/norm/machine.php" class="mr-4<?=$machine_class ?>">Нормы работы оборудования</a>
+            <a href="<?=APPLICATION ?>/norm/fitting.php" class="mr-4<?=$fitting_class ?>">Приладка</a>
+            <a href="<?=APPLICATION ?>/norm/raport.php" class="mr-4<?=$raport_class ?>">Рапорт</a>
         </div>
     </div>
 </div>

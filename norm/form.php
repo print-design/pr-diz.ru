@@ -123,22 +123,22 @@ if($row = $fetcher->Fetch()) {
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
                         <div class="form-group">
-                            <label for="flint" style="font-size: large;">Flint</label>
+                            <label for="flint" style="font-size: large;">Flint (руб)</label>
                             <input type="text" class="form-control float-only" id="flint" name="flint" value="<?=$flint ?>" placeholder="Стоимость, м2" required="required" />
                             <div class="invalid-feedback">Flint обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="kodak" style="font-size: large;">Kodak</label>
+                            <label for="kodak" style="font-size: large;">Kodak (руб)</label>
                             <input type="text" class="form-control float-only" id="kodak" name="kodak" value="<?=$kodak ?>" placeholder="Стоимость, м2" required="required" />
                             <div class="invalid-feedback">Kodak обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="overmeasure" style="font-size: large;">Припуски</label>
+                            <label for="overmeasure" style="font-size: large;">Припуски (мм)</label>
                             <input type="text" class="form-control float-only" id="overmeasure" name="overmeasure" value="<?=$overmeasure ?>" placeholder="Припуски, мм" required="required" />
                             <div class="invalid-feedback">Припуски обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="scotch" style="font-size: large;">Скотч</label>
+                            <label for="scotch" style="font-size: large;">Скотч (мм)</label>
                             <input type="text" class="form-control float-only" id="scotch" name="scotch" value="<?=$scotch ?>" placeholder="Скотч, мм" required="required" />
                             <div class="invalid-feedback">Скотч обязательно</div>
                         </div>
