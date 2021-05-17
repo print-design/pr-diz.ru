@@ -6,8 +6,8 @@ $machine_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLIC
 $fitting_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/norm/fitting.php')) == APPLICATION.'/norm/fitting.php' ? " active" : "";
 ?>
 <hr />
-<div class="d-flex justify-content-start nav2">
-    <div class="text-nowrap">
+<div class="d-flex justify-content-start">
+    <div class="text-nowrap nav2">
         <a href="<?=APPLICATION ?>/norm/form.php" class="mr-3<?=$form_class ?>">Стоимость форм</a>
         <a href="<?=APPLICATION ?>/norm/paint.php" class="mr-3<?=$paint_class ?>">Стоимость краски</a>
         <a href="<?=APPLICATION ?>/norm/glue.php" class="mr-3<?=$glue_class ?>">Стоимость клея</a>

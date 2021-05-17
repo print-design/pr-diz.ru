@@ -62,7 +62,7 @@ a.black:active, a.black:hover, .black a:active, .black a:hover {
     box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.15);
     z-index: 100;
     left: 0;
-    padding-left: 100px;
+    padding-left: 80px;
     padding-right: 15px;
 }
 
@@ -71,18 +71,8 @@ a.black:active, a.black:hover, .black a:active, .black a:hover {
     text-decoration: none;
 }
 
-.header a.admin:link, .header a.admin:visited {
-    color: #228AD6;
-    text-decoration: none;
-}
-
 .header a:active, .header a:hover {
     color: gray;
-    text-decoration: underline;
-}
-
-.header a.admin:active, .header a.admin:hover {
-    color: darkblue;
     text-decoration: underline;
 }
 
@@ -93,17 +83,20 @@ a.black:active, a.black:hover, .black a:active, .black a:hover {
 .navbar {
     margin-left: 0;
     padding-left: 0;
+    padding-bottom: 0;
     font-size: 14px;
     line-height: 18px;
 }
 
 .nav-link {
-    padding-left: 2px!important;
-    margin-right: 25px;
+    padding-left: 0!important;
+    padding-right: 0!important;
+    padding-bottom: 16px!important;
+    margin-right: 30px;
 }
 
 .nav-link.disabled {
-    border-bottom: solid 1px blue;
+    border-bottom: solid 2px #EC3A7A;
 }
 
 .nav-link#navbardrop {
@@ -164,11 +157,14 @@ li#nav-user a.dropdown-toggle::after {
 
 /*Второе меню*/
 .nav2 {
-    /*font-size: 14px;
-    line-height: 18px;
+    font-size: 14px;
+    line-height: 12px;
     font-weight: 400;
-    margin-top: 20px;
-    margin-bottom: 20px!important;*/
+    padding-top: 10px;
+}
+
+.nav2 a {
+    padding-bottom: 16px;
 }
 
 .nav2 a:link, .nav2 a:visited {
@@ -177,23 +173,22 @@ li#nav-user a.dropdown-toggle::after {
 }
 
 .nav2 a.active:link, .nav2 a.active:visited {
-    color: #228AD6;
+    color: #333333;
     text-decoration: none;
 }
 
 .nav2 a:active, .nav2 a:hover {
-    color: gray;
+    color: #333333;
     text-decoration: underline;
 }
 
 .nav2 a.active:active, .nav2 a.active:hover {
-    color: darkblue;
+    color: #333333;
     text-decoration: none;
 }
 
 .nav2 a.active {
-    border-bottom: solid 1px blue;
-    padding-bottom: 10px;
+    border-bottom: solid 2px #191919;
 }
 
 /*Таблица*/

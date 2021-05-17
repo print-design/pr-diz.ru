@@ -97,13 +97,12 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <div class="d-flex justify-content-between mb-2 nav2">
-                <div class="p-1 row">
+            <div class="d-flex justify-content-start">
+                <div class="p-1">
                     <?php
                     include '../include/subheader_admin.php';
                     ?>
                 </div>
-                <div class="p-1"></div>
             </div>
             <div class="backlink">
                 <a href="<?=APPLICATION ?>/user/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
