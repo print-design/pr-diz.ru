@@ -23,13 +23,13 @@ if(null !== filter_input(INPUT_POST, 'delete_supplier_submit')) {
         <?php
         include '../include/header.php';
         ?>
-        <div class="container-fluid list-page">
+        <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <div class="d-flex justify-content-between mb-2">
+            <div class="d-flex justify-content-between mb-auto">
                 <div class="p-1">
                     <?php
                     include '../include/subheader_admin.php';
