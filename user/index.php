@@ -32,12 +32,9 @@ if(null !== filter_input(INPUT_POST, 'delete_user_submit')) {
             ?>
             <div class="d-flex justify-content-between mb-auto nav2">
                 <div class="p-1 row">
-                    <div class="col-6">
-                        <a class="active" href="<?=APPLICATION ?>/user/">Сотрудники</a>
-                    </div>
-                    <div class="col-6">
-                        <a href="<?=APPLICATION ?>/supplier/">Поставщики</a>    
-                    </div>
+                    <?php
+                    include '../include/subheader_admin.php';
+                    ?>
                 </div>
                 <div class="p-1">
                     <a href="create.php" title="Добавить пользователя" class="btn btn-outline-dark">

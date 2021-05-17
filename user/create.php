@@ -100,12 +100,9 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
             ?>
             <div class="d-flex justify-content-between mb-2 nav2">
                 <div class="p-1 row">
-                    <div class="col-6">
-                        <a class="active" href="<?=APPLICATION ?>/user/">Сотрудники</a>
-                    </div>
-                    <div class="col-6">
-                        <a href="<?=APPLICATION ?>/supplier/">Поставщики</a>    
-                    </div>
+                    <?php
+                    include '../include/subheader_admin.php';
+                    ?>
                 </div>
                 <div class="p-1"></div>
             </div>
