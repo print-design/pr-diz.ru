@@ -202,8 +202,8 @@ table.table tr th {
     font-size: 12px;
     line-height: 16px;
     padding-left: 25px;
-    padding-top: 6px;
-    padding-bottom: 18px;
+    padding-top: 12px;
+    padding-bottom: 12px;
 }
 
 table.table tr td {

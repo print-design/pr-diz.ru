@@ -6,14 +6,16 @@ $machine_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLIC
 $fitting_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/norm/fitting.php')) == APPLICATION.'/norm/fitting.php' ? " active" : "";
 $raport_class = substr(filter_input(INPUT_POST, 'PHP_SELF'), 0, strlen(APPLICATION.'/norm/raport.php')) == APPLICATION.'/norm/raport.php' ? " active" : "";
 ?>
-<hr />
+<hr class="pb-0 mb-0" />
 <div class="d-flex justify-content-start">
-    <div class="text-nowrap nav2">
-        <a href="<?=APPLICATION ?>/norm/form.php" class="mr-3<?=$form_class ?>">Стоимость форм</a>
-        <a href="<?=APPLICATION ?>/norm/paint.php" class="mr-3<?=$paint_class ?>">Стоимость краски</a>
-        <a href="<?=APPLICATION ?>/norm/glue.php" class="mr-3<?=$glue_class ?>">Стоимость клея</a>
-        <a href="<?=APPLICATION ?>/norm/machine.php" class="mr-3<?=$machine_class ?>">Нормы работы оборудования</a>
-        <a href="<?=APPLICATION ?>/norm/fitting.php" class="mr-3<?=$fitting_class ?>">Приладка</a>
-        <a href="<?=APPLICATION ?>/norm/raport.php" class="mr-3<?=$raport_class ?>">Рапорт</a>
+    <div class="p-1">
+        <div class="text-nowrap nav2">
+            <a href="<?=APPLICATION ?>/norm/form.php" class="mr-3<?=$form_class ?>">Стоимость форм</a>
+            <a href="<?=APPLICATION ?>/norm/paint.php" class="mr-3<?=$paint_class ?>">Стоимость краски</a>
+            <a href="<?=APPLICATION ?>/norm/glue.php" class="mr-3<?=$glue_class ?>">Стоимость клея</a>
+            <a href="<?=APPLICATION ?>/norm/machine.php" class="mr-3<?=$machine_class ?>">Нормы работы оборудования</a>
+            <a href="<?=APPLICATION ?>/norm/fitting.php" class="mr-3<?=$fitting_class ?>">Приладка</a>
+            <a href="<?=APPLICATION ?>/norm/raport.php" class="mr-3<?=$raport_class ?>">Рапорт</a>
+        </div>
     </div>
 </div>
