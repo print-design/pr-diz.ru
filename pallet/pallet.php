@@ -297,7 +297,6 @@ if(null === $comment) $comment = $row['comment'];
         <?php
         include '../include/header_sklad.php';
         ?>
-        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
         <div class="container-fluid" style="padding-left: 40px;">
             <?php
             if(!empty($error_message)) {

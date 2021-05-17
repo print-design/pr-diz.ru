@@ -17,7 +17,6 @@ and open the template in the editor.
         <?php
         include 'include/header.php';
         ?>
-        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
         <div class="container-fluid">
             <?php
             if(!empty($error_message)) {

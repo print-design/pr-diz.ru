@@ -52,7 +52,6 @@ $utilized_status_roll_id = 2;
         <?php
         include '../include/head.php';
         ?>
-        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
     </head>
     <body>
         <?php

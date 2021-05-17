@@ -94,7 +94,6 @@ if(null === $comment) $comment = $row['comment'];
         <?php
         include '../include/head.php';
         ?>
-        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
     </head>
     <body>
         <?php
