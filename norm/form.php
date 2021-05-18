@@ -16,8 +16,6 @@ $kodak_valid = '';
 $overmeasure_valid = '';
 $scotch_valid = '';
 
-
-
 // Сохранение введённых значений
 if(null !== filter_input(INPUT_POST, 'norm_form_submit')) {
     if(empty(filter_input(INPUT_POST, 'flint'))) {
