@@ -5,6 +5,21 @@ include '../include/topscripts.php';
 if(!IsInRole(array('technologist', 'dev'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
+
+// Валидация формы
+define('ISINVALID', ' is-invalid');
+$form_valid = true;
+$error_message = '';
+
+$seuro_valid = "";
+$meuro_valid = "";
+$ueuro_valid = "";
+$keuro_valid = "";
+$whiteeuro_valid = "";
+$pantoneuro_valid = "";
+$lacquereuro_valid = "";
+$paint_solvent_valid = "";
+$solvent_valid = "";
 ?>
 <!DOCTYPE html>
 <html>

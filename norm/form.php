@@ -16,22 +16,7 @@ $kodak_valid = '';
 $overmeasure_valid = '';
 $scotch_valid = '';
 
-// Старый объект
-$old_flint = "";
-$old_kodak = "";
-$old_overmeasure = "";
-$old_scotch = "";
 
-$sql = "select flint, kodak, overmeasure, scotch from norm_form order by date desc limit 1";
-$fetcher = new Fetcher($sql);
-$error_message = $fetcher->error;
-
-if($row = $fetcher->Fetch()) {
-    $old_flint = $row['flint'];
-    $old_kodak = $row['kodak'];
-    $old_overmeasure = $row['overmeasure'];
-    $old_scotch = $row['scotch'];
-}
 
 // Сохранение введённых значений
 if(null !== filter_input(INPUT_POST, 'norm_form_submit')) {
@@ -56,6 +41,24 @@ if(null !== filter_input(INPUT_POST, 'norm_form_submit')) {
     }
     
     if($form_valid) {
+        // Старый объект
+        $old_flint = "";
+        $old_kodak = "";
+        $old_overmeasure = "";
+        $old_scotch = "";
+        
+        $sql = "select flint, kodak, overmeasure, scotch from norm_form order by date desc limit 1";
+        $fetcher = new Fetcher($sql);
+        $error_message = $fetcher->error;
+        
+        if($row = $fetcher->Fetch()) {
+            $old_flint = $row['flint'];
+            $old_kodak = $row['kodak'];
+            $old_overmeasure = $row['overmeasure'];
+            $old_scotch = $row['scotch'];
+        }
+
+        // Новый объект
         $new_flint = filter_input(INPUT_POST, 'flint');
         $new_kodak = filter_input(INPUT_POST, 'kodak');
         $new_overmeasure = filter_input(INPUT_POST, 'overmeasure');
