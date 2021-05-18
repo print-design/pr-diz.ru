@@ -4,7 +4,7 @@ $paint_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICAT
 $glue_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/norm/glue.php')) == APPLICATION.'/norm/glue.php' ? " active" : "";
 $machine_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/norm/machine.php')) == APPLICATION.'/norm/machine.php' ? " active" : "";
 $fitting_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/norm/fitting.php')) == APPLICATION.'/norm/fitting.php' ? " active" : "";
-$raport_class = substr(filter_input(INPUT_POST, 'PHP_SELF'), 0, strlen(APPLICATION.'/norm/raport.php')) == APPLICATION.'/norm/raport.php' ? " active" : "";
+$raport_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/norm/raport.php')) == APPLICATION.'/norm/raport.php' ? " active" : "";
 ?>
 <hr class="pb-0 mb-0" />
 <div class="d-flex justify-content-start">

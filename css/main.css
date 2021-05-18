@@ -230,11 +230,6 @@ table.table.film-table tr td {
     padding-left: 12px;
 }
 
-table.table tr td button {
-    padding: 0;
-    margin: 0;
-}
-
 table tr.selected {
     background-color: rgba(34, 170, 214, 0.2);
 }
