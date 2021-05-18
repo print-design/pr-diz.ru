@@ -123,12 +123,12 @@ if($row = $fetcher->Fetch()) {
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
                         <div class="form-group">
-                            <label for="flint" style="font-size: large;">Flint (руб)</label>
+                            <label for="flint" style="font-size: large;">Flint (руб/м<sup>2</sup>)</label>
                             <input type="text" class="form-control float-only" id="flint" name="flint" value="<?=$flint ?>" placeholder="Стоимость, м2" required="required" />
                             <div class="invalid-feedback">Flint обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="kodak" style="font-size: large;">Kodak (руб)</label>
+                            <label for="kodak" style="font-size: large;">Kodak (руб/м<sup>2</sup>)</label>
                             <input type="text" class="form-control float-only" id="kodak" name="kodak" value="<?=$kodak ?>" placeholder="Стоимость, м2" required="required" />
                             <div class="invalid-feedback">Kodak обязательно</div>
                         </div>
