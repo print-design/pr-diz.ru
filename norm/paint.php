@@ -189,14 +189,14 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell w-50 pr-3">
                                 <div class="form-group">
-                                    <label for="seuro" style="font-size: large;">С Евро (руб/кг)</label>
+                                    <label for="seuro">С Евро (руб/кг)</label>
                                     <input type="text" class="form-control float-only" id="seuro" name="seuro" value="<?=$seuro ?>" placeholder="Стоимость, кг" required="required" />
                                     <div class="invalid-feedback">С Евро обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell w-50 pl-3">
                                 <div class="form-group">
-                                    <label for="pantoneuro" style="font-size: large;">Пантоны Евро (руб/кг)</label>
+                                    <label for="pantoneuro">Пантоны Евро (руб/кг)</label>
                                     <input type="text" class="form-control float-only" id="pantoneuro" name="pantoneuro" value="<?=$pantoneuro ?>" placeholder="Стоимость, кг" required="required" />
                                     <div class="invalid-feedback">Пантоны Евро обязательно</div>
                                 </div>
@@ -205,14 +205,14 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="meuro" style="font-size: large;">М Евро (руб/кг)</label>
+                                    <label for="meuro">М Евро (руб/кг)</label>
                                     <input type="text" class="form-control float-only" id="meuro" name="meuro" value="<?=$meuro ?>" placeholder="Стоимость, кг" required="required" />
                                     <div class="invalid-feedback">М Евро обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
-                                    <label for="lacquereuro" style="font-size: large;">Лак Евро (руб/кг)</label>
+                                    <label for="lacquereuro">Лак Евро (руб/кг)</label>
                                     <input type="text" class="form-control float-only" id="lacquereuro" name="lacquereuro" value="<?=$lacquereuro ?>" placeholder="Стоимость, кг" required="required" />
                                     <div class="invalid-feedback">Лак Евро обязательно</div>
                                 </div>
@@ -221,14 +221,14 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="ueuro" style="font-size: large;">У Евро (руб/кг)</label>
+                                    <label for="ueuro">У Евро (руб/кг)</label>
                                     <input type="text" class="form-control float-only" id="ueuro" name="ueuro" value="<?=$ueuro ?>" placeholder="Стоимость, кг" required="required" />
                                     <div class="invalid-feedback">У Евро обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
-                                    <label for="paint_solvent" style="font-size: large;">Соотношение краски и растворителя (в процентах)</label>
+                                    <label for="paint_solvent">Соотношение краски и растворителя (в процентах)</label>
                                     <input type="text" class="form-control float-only" id="paint_solvent" name="paint_solvent" value="<?=$paint_solvent ?>" placeholder="В процентах" required="required" />
                                     <div class="invalid-feedback">Соотношение краски и растворителя обязательно</div>
                                 </div>
@@ -237,14 +237,14 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="keuro" style="font-size: large;">К Евро (руб/кг)</label>
+                                    <label for="keuro">К Евро (руб/кг)</label>
                                     <input type="text" class="form-control float-only" id="keuro" name="keuro" value="<?=$keuro ?>" placeholder="Стоимость, кг" required="required" />
                                     <div class="invalid-feedback">К Евро обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
-                                    <label for="solvent" style="font-size: large;">Стоимость растворителя ЕВРО (руб/кг)</label>
+                                    <label for="solvent">Стоимость растворителя ЕВРО (руб/кг)</label>
                                     <input type="text" class="form-control float-only" id="solvent" name="solvent" value="<?=$solvent ?>" placeholder="Стоимость, кг" required="required" />
                                     <div class="invalid-feedback">Стоимость растворителя ЕВРО обязательно</div>
                                 </div>
@@ -253,7 +253,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="whiteeuro" style="font-size: large;">Белая Евро (руб/кг)</label>
+                                    <label for="whiteeuro">Белая Евро (руб/кг)</label>
                                     <input type="text" class="form-control float-only" id="whiteeuro" name="whiteeuro" value="<?=$whiteeuro ?>" placeholder="Стоимость, кг" required="required" />
                                     <div class="invalid-feedback">Белая Евро обязательно</div>
                                 </div>

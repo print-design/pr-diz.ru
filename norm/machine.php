@@ -135,27 +135,27 @@ if($row = $fetcher->Fetch()) {
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
                         <div class="form-group">
-                            <label for="lamination" style="font-size: large;">Стоимость работы ламинации (руб/час)</label>
+                            <label for="lamination">Стоимость работы ламинации (руб/час)</label>
                             <input type="text" class="form-control float-only" id="lamination" name="lamination" value="<?=$lamination ?>" placeholder="Стоимость, час" required="required" />
                             <div class="invalid-feedback">Стоимость работы ламинации обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="lam_speed" style="font-size: large;">Скорость работы ламинатора (м/мин)</label>
+                            <label for="lam_speed">Скорость работы ламинатора (м/мин)</label>
                             <input type="text" class="form-control float-only" id="lam_speed" name="lam_speed" value="<?=$lam_speed ?>" placeholder="Скорость, м/мин" required="required" />
                             <div class="invalid-feedback">Скорость работы ламинатора обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="zbs6" style="font-size: large;">Стоимость работы печатной машины ZBS 6 цветов (руб/час)</label>
+                            <label for="zbs6">Стоимость работы печатной машины ZBS 6 цветов (руб/час)</label>
                             <input type="text" class="form-control float-only" id="zbs6" name="zbs6" value="<?=$zbs6 ?>" placeholder="Стоимость, час" required="required" />
                             <div class="invalid-feedback">Стоимость работы печатной машины ZBS 6 цветов обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="zbs8" style="font-size: large;">Стоимость работы печатной машины ZBS 8 цветов (руб/час)</label>
+                            <label for="zbs8">Стоимость работы печатной машины ZBS 8 цветов (руб/час)</label>
                             <input type="text" class="form-control float-only" id="zbs8" name="zbs8" value="<?=$zbs8 ?>" placeholder="Стоимость, час" required="required" />
                             <div class="invalid-feedback">Стоимость работы печатной машины ZBS 8 цветов обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="comiflex" style="font-size: large;">Стоимость работы печатной машины Comiflex (руб/час)</label>
+                            <label for="comiflex">Стоимость работы печатной машины Comiflex (руб/час)</label>
                             <input type="text" class="form-control float-only" id="comiflex" name="comiflex" value="<?=$comiflex ?>" placeholder="Стоимость, час" required="required" />
                             <div class="invalid-feedback">Стоимость работы печатной машины Comiflex обязательно</div>
                         </div>

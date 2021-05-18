@@ -113,17 +113,17 @@ if($row = $fetcher->Fetch()) {
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
                         <div class="form-group">
-                            <label for="glueeuro" style="font-size: large;">Стоимость клея ЕВРО (руб/кг)</label>
+                            <label for="glueeuro">Стоимость клея ЕВРО (руб/кг)</label>
                             <input type="text" class="form-control float-only" id="glueeuro" name="glueeuro" value="<?=$glueeuro ?>" placeholder="Стоимость, кг" required="required" />
                             <div class="invalid-feedback">Стоимость клея ЕВРО обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="solventeuro" style="font-size: large;">Стоимость растворителя для клея ЕВРО (руб/кг)</label>
+                            <label for="solventeuro">Стоимость растворителя для клея ЕВРО (руб/кг)</label>
                             <input type="text" class="form-control float-only" id="solventeuro" name="solventeuro" value="<?=$solventeuro ?>" placeholder="Стоимость, кг" required="required" />
                             <div class="invalid-feedback">Стоимость растворителя для клея ЕВРО обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="glue_solvent" style="font-size: large;">Соотношение клея и растворителя (в процентах)</label>
+                            <label for="glue_solvent">Соотношение клея и растворителя (в процентах)</label>
                             <input type="text" class="form-control float-only" id="glue_solvent" name="glue_solvent" value="<?=$glue_solvent ?>" placeholder="В процентах" required="required" />
                             <div class="invalid-feedback">Соотношение клея и растворителя обязательно</div>
                         </div>
