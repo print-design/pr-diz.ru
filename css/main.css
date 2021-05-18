@@ -99,10 +99,6 @@ a.black:active, a.black:hover, .black a:active, .black a:hover {
     border-bottom: solid 2px #EC3A7A;
 }
 
-.nav-link#navbardrop {
-    padding-right: 5px!important;
-}
-
 li#nav-user {
     background-color: #E6E7EB;
     width: 36px;

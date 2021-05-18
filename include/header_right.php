@@ -18,7 +18,7 @@ if(!empty(filter_input(INPUT_COOKIE, USERNAME))):
     <?php
     endif;
     ?>
-    <li class="nav-item dropdown" id="nav-user" style="padding-left: 7px;">
+    <li class="nav-item dropdown" id="nav-user" style="padding-left: 10px;">
         <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><?= Initials() ?></a>
         <div class="dropdown-menu" id="user-dropdown">
             <a href="<?=APPLICATION ?>/personal/" class="btn btn-link dropdown-item"><i class="fas fa-user"></i>&nbsp;Мои настройки</a>
