@@ -139,7 +139,9 @@ $solvent = "";
 
 $sql = "select seuro, meuro, ueuro, keuro, whiteeuro, pantoneuro, lacquereuro, paint_solvent, solvent from norm_paint order by date desc limit 1";
 $fetcher = new Fetcher($sql);
-$error_message = $fetcher->error;
+if(empty($error_message)) {
+    $error_message = $fetcher->error;
+}
 
 if($row = $fetcher->Fetch()) {
     $seuro = $row["seuro"];
