@@ -39,10 +39,6 @@ if(null !== filter_input(INPUT_POST, 'raport_create_submit')) {
         $sql = "insert into raport (machine_id, value) values ($machine_id, $value)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
-        
-        if(empty($error_message)) {
-            header("Location: ".$_SERVER['PHP_SELF']);
-        }
     }
 }
 
@@ -52,10 +48,6 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
     $sql = "delete from raport where id=$id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
-    
-    if(empty($error_message)) {
-        header("Location: ".$_SERVER['PHP_SELF']);
-    }
 }
 ?>
 <!DOCTYPE html>
