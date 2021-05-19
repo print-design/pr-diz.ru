@@ -98,7 +98,7 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                                 <form method="post">
                                     <input type="hidden" name="id" value="<?=$row['id'] ?>" />
                                     <input type="hidden" name="scroll" />
-                                    <button type="submit" id="raport_delete_submit" name="raport_delete_submit" class="btn btn-outline-dark fas fa-trash-alt confirmable"></button>
+                                    <button type="submit" id="raport_delete_submit" name="raport_delete_submit" class="btn btn-link fas fa-trash-alt confirmable"></button>
                                 </form>
                             </td>
                         </tr>
@@ -140,7 +140,7 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                                 <form method="post">
                                     <input type="hidden" name="id" value="<?=$row['id'] ?>" />
                                     <input type="hidden" name="scroll" />
-                                    <button type="submit" id="raport_delete_submit" name="raport_delete_submit" class="btn btn-outline-dark fas fa-trash-alt confirmable"></button>
+                                    <button type="submit" id="raport_delete_submit" name="raport_delete_submit" class="btn btn-link fas fa-trash-alt confirmable"></button>
                                 </form>
                             </td>
                         </tr>
@@ -182,7 +182,7 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                                 <form method="post">
                                     <input type="hidden" name="id" value="<?=$row['id'] ?>" />
                                     <input type="hidden" name="scroll" />
-                                    <button type="submit" id="raport_delete_submit" name="raport_delete_submit" class="btn btn-outline-dark fas fa-trash-alt confirmable"></button>
+                                    <button type="submit" id="raport_delete_submit" name="raport_delete_submit" class="btn btn-link fas fa-trash-alt confirmable"></button>
                                 </form>
                             </td>
                         </tr>
@@ -224,7 +224,7 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                                 <form method="post">
                                     <input type="hidden" name="id" value="<?=$row['id'] ?>" />
                                     <input type="hidden" name="scroll" />
-                                    <button type="submit" id="raport_delete_submit" name="raport_delete_submit" class="btn btn-outline-dark fas fa-trash-alt confirmable"></button>
+                                    <button type="submit" id="raport_delete_submit" name="raport_delete_submit" class="btn btn-link fas fa-trash-alt confirmable"></button>
                                 </form>
                             </td>
                         </tr>
