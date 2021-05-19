@@ -54,6 +54,29 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
     $executer = new Executer($sql);
     $error_message = $executer->error;
 }
+
+// Получение списка объектов
+$sql = "select id, machine_id, value from raport order by value";
+$grabber = new Grabber($sql);
+$error_message = $grabber->error;
+$result = $grabber->result;
+$raports = array();
+
+if(empty($error_message)) {
+    foreach ($result as $row) {
+        $raport = array("id" => $row['id'], "value" => $row['value']);
+        
+        if(array_key_exists($row['machine_id'], $raports)) {
+            $raports_of_machine = $raports[$row['machine_id']];
+        }
+        else {
+            $raports_of_machine = array();
+        }
+        
+        array_push($raports_of_machine, $raport);
+        $raports[$row['machine_id']] = $raports_of_machine;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -93,9 +116,9 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                     </div>
                     <table class="w-100 table table-hover">
                         <?php
-                        $sql = "select id, value from raport where machine_id=$machine_id order by value";
-                        $fetcher = new Fetcher($sql);
-                        while ($row = $fetcher->Fetch()):
+                        if(array_key_exists($machine_id, $raports)):
+                        $raports_of_machine = $raports[$machine_id];
+                        foreach ($raports_of_machine as $row):
                         ?>
                         <tr>
                             <td style="font-size: large;"><?= floatval($row['value']) ?></td>
@@ -108,7 +131,8 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                             </td>
                         </tr>
                         <?php
-                        endwhile;
+                        endforeach;
+                        endif;
                         ?>
                         <tr>
                             <td colspan="2" class="pt-3">
@@ -135,9 +159,9 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                     </div>
                     <table class="w-100 table table-hover">
                         <?php
-                        $sql = "select id, value from raport where machine_id=$machine_id order by value";
-                        $fetcher = new Fetcher($sql);
-                        while ($row = $fetcher->Fetch()):
+                        if(array_key_exists($machine_id, $raports)):
+                        $raports_of_machine = $raports[$machine_id];
+                        foreach ($raports_of_machine as $row):
                         ?>
                         <tr>
                             <td style="font-size: large;"><?= floatval($row['value']) ?></td>
@@ -150,7 +174,8 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                             </td>
                         </tr>
                         <?php
-                        endwhile;
+                        endforeach;
+                        endif;
                         ?>
                         <tr>
                             <td colspan="2">
@@ -177,9 +202,9 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                     </div>
                     <table class="w-100 table table-hover">
                         <?php
-                        $sql = "select id, value from raport where machine_id=$machine_id order by value";
-                        $fetcher = new Fetcher($sql);
-                        while ($row = $fetcher->Fetch()):
+                        if(array_key_exists($machine_id, $raports)):
+                        $raports_of_machine = $raports[$machine_id];
+                        foreach ($raports_of_machine as $row):
                         ?>
                         <tr>
                             <td style="font-size: large;"><?= floatval($row['value']) ?></td>
@@ -192,7 +217,8 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                             </td>
                         </tr>
                         <?php
-                        endwhile;
+                        endforeach;
+                        endif;
                         ?>
                         <tr>
                             <td colspan="2">
@@ -219,9 +245,9 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                     </div>
                     <table class="w-100 table table-hover">
                         <?php
-                        $sql = "select id, value from raport where machine_id=$machine_id order by value";
-                        $fetcher = new Fetcher($sql);
-                        while ($row = $fetcher->Fetch()):
+                        if(array_key_exists($machine_id, $raports)):
+                        $raports_of_machine = $raports[$machine_id];
+                        foreach ($raports_of_machine as $row):
                         ?>
                         <tr>
                             <td style="font-size: large;"><?= floatval($row['value']) ?></td>
@@ -234,7 +260,8 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                             </td>
                         </tr>
                         <?php
-                        endwhile;
+                        endforeach;
+                        endif;
                         ?>
                         <tr>
                             <td colspan="2">
