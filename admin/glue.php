@@ -97,6 +97,12 @@ if($row = $fetcher->Fetch()) {
             if(!empty($error_message)) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
+            
+            if(null !== filter_input(INPUT_POST, 'norm_glue_submit') && empty($error_message)):
+            ?>
+            <div class="alert alert-success">Данные сохранены</div>
+            <?php
+            endif;
             ?>
             <div class="d-flex justify-content-start">
                 <div class="p-1">
@@ -114,17 +120,17 @@ if($row = $fetcher->Fetch()) {
                     <form method="post">
                         <div class="form-group">
                             <label for="glueeuro">Стоимость клея ЕВРО (руб/кг)</label>
-                            <input type="text" class="form-control float-only" id="glueeuro" name="glueeuro" value="<?=$glueeuro ?>" placeholder="Стоимость, кг" required="required" />
+                            <input type="text" class="form-control float-only" id="glueeuro" name="glueeuro" value="<?= floatval($glueeuro) ?>" placeholder="Стоимость, кг" required="required" />
                             <div class="invalid-feedback">Стоимость клея ЕВРО обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="solventeuro">Стоимость растворителя для клея ЕВРО (руб/кг)</label>
-                            <input type="text" class="form-control float-only" id="solventeuro" name="solventeuro" value="<?=$solventeuro ?>" placeholder="Стоимость, кг" required="required" />
+                            <input type="text" class="form-control float-only" id="solventeuro" name="solventeuro" value="<?= floatval($solventeuro) ?>" placeholder="Стоимость, кг" required="required" />
                             <div class="invalid-feedback">Стоимость растворителя для клея ЕВРО обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="glue_solvent">Соотношение клея и растворителя (в процентах)</label>
-                            <input type="text" class="form-control float-only" id="glue_solvent" name="glue_solvent" value="<?=$glue_solvent ?>" placeholder="В процентах" required="required" />
+                            <input type="text" class="form-control float-only" id="glue_solvent" name="glue_solvent" value="<?= floatval($glue_solvent) ?>" placeholder="В процентах" required="required" />
                             <div class="invalid-feedback">Соотношение клея и растворителя обязательно</div>
                         </div>
                         <button type="submit" id="norm_glue_submit" name="norm_glue_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
