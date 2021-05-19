@@ -142,27 +142,27 @@ if($row = $fetcher->Fetch()) {
                     <form method="post">
                         <div class="form-group">
                             <label for="lamination">Стоимость работы ламинации (руб/час)</label>
-                            <input type="text" class="form-control float-only" id="lamination" name="lamination" value="<?= floatval($lamination) ?>" placeholder="Стоимость, час" required="required" />
+                            <input type="text" class="form-control float-only" id="lamination" name="lamination" value="<?= empty($lamination) ? "" : floatval($lamination) ?>" placeholder="Стоимость, час" required="required" />
                             <div class="invalid-feedback">Стоимость работы ламинации обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="lam_speed">Скорость работы ламинатора (м/мин)</label>
-                            <input type="text" class="form-control float-only" id="lam_speed" name="lam_speed" value="<?= floatval($lam_speed) ?>" placeholder="Скорость, м/мин" required="required" />
+                            <input type="text" class="form-control float-only" id="lam_speed" name="lam_speed" value="<?= empty($lam_speed) ? "" : floatval($lam_speed) ?>" placeholder="Скорость, м/мин" required="required" />
                             <div class="invalid-feedback">Скорость работы ламинатора обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="zbs6">Стоимость работы печатной машины ZBS 6 цветов (руб/час)</label>
-                            <input type="text" class="form-control float-only" id="zbs6" name="zbs6" value="<?= floatval($zbs6) ?>" placeholder="Стоимость, час" required="required" />
+                            <input type="text" class="form-control float-only" id="zbs6" name="zbs6" value="<?= empty($zbs6) ? "" : floatval($zbs6) ?>" placeholder="Стоимость, час" required="required" />
                             <div class="invalid-feedback">Стоимость работы печатной машины ZBS 6 цветов обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="zbs8">Стоимость работы печатной машины ZBS 8 цветов (руб/час)</label>
-                            <input type="text" class="form-control float-only" id="zbs8" name="zbs8" value="<?= floatval($zbs8) ?>" placeholder="Стоимость, час" required="required" />
+                            <input type="text" class="form-control float-only" id="zbs8" name="zbs8" value="<?= empty($zbs8) ? "" : floatval($zbs8) ?>" placeholder="Стоимость, час" required="required" />
                             <div class="invalid-feedback">Стоимость работы печатной машины ZBS 8 цветов обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="comiflex">Стоимость работы печатной машины Comiflex (руб/час)</label>
-                            <input type="text" class="form-control float-only" id="comiflex" name="comiflex" value="<?= floatval($comiflex) ?>" placeholder="Стоимость, час" required="required" />
+                            <input type="text" class="form-control float-only" id="comiflex" name="comiflex" value="<?= empty($comiflex) ? "" : floatval($comiflex) ?>" placeholder="Стоимость, час" required="required" />
                             <div class="invalid-feedback">Стоимость работы печатной машины Comiflex обязательно</div>
                         </div>
                         <button type="submit" id="norm_machine_submit" name="norm_machine_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>

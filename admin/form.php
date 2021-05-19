@@ -131,22 +131,22 @@ if($row = $fetcher->Fetch()) {
                     <form method="post">
                         <div class="form-group">
                             <label for="flint">Flint (руб/м<sup>2</sup>)</label>
-                            <input type="text" class="form-control float-only" id="flint" name="flint" value="<?= floatval($flint) ?>" placeholder="Стоимость, м2" required="required" />
+                            <input type="text" class="form-control float-only" id="flint" name="flint" value="<?= empty($flint) ? "" : floatval($flint) ?>" placeholder="Стоимость, м2" required="required" />
                             <div class="invalid-feedback">Flint обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="kodak">Kodak (руб/м<sup>2</sup>)</label>
-                            <input type="text" class="form-control float-only" id="kodak" name="kodak" value="<?= floatval($kodak) ?>" placeholder="Стоимость, м2" required="required" />
+                            <input type="text" class="form-control float-only" id="kodak" name="kodak" value="<?= empty($kodak) ? "" : floatval($kodak) ?>" placeholder="Стоимость, м2" required="required" />
                             <div class="invalid-feedback">Kodak обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="overmeasure">Припуски (мм)</label>
-                            <input type="text" class="form-control float-only" id="overmeasure" name="overmeasure" value="<?= floatval($overmeasure) ?>" placeholder="Припуски, мм" required="required" />
+                            <input type="text" class="form-control float-only" id="overmeasure" name="overmeasure" value="<?= empty($overmeasure) ? "" : floatval($overmeasure) ?>" placeholder="Припуски, мм" required="required" />
                             <div class="invalid-feedback">Припуски обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="scotch">Скотч (мм)</label>
-                            <input type="text" class="form-control float-only" id="scotch" name="scotch" value="<?= floatval($scotch) ?>" placeholder="Скотч, мм" required="required" />
+                            <input type="text" class="form-control float-only" id="scotch" name="scotch" value="<?= empty($scotch) ? "" : floatval($scotch) ?>" placeholder="Скотч, мм" required="required" />
                             <div class="invalid-feedback">Скотч обязательно</div>
                         </div>
                         <button type="submit" id="norm_form_submit" name="norm_form_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>

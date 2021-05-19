@@ -189,14 +189,14 @@ if($row = $fetcher->Fetch()) {
                                 <div class="d-table-cell pr-3">
                                     <div class="form-group">
                                         <label for="zbs6_time">ZBS 6 цвет (руб/час)</label>
-                                        <input type="text" class="form-control float-only" id="zbs6_time" name="zbs6_time" value="<?= floatval($zbs6_time) ?>" placeholder="Стоимость, час" required="required" />
+                                        <input type="text" class="form-control float-only" id="zbs6_time" name="zbs6_time" value="<?= empty($zbs6_time) ? "" : floatval($zbs6_time) ?>" placeholder="Стоимость, час" required="required" />
                                         <div class="invalid-feedback">ZBS 6 цвет обязательно</div>
                                     </div>
                                 </div>
                                 <div class="d-table-cell pl-3">
                                     <div class="form-group">
                                         <label for="zbs6_length">ZBS 6 цвет (руб/м)</label>
-                                        <input type="text" class="form-control float-only" id="zbs6_length" name="zbs6_length" value="<?= floatval($zbs6_length) ?>" placeholder="Стоимость, м" required="required" />
+                                        <input type="text" class="form-control float-only" id="zbs6_length" name="zbs6_length" value="<?= empty($zbs6_length) ? "" : floatval($zbs6_length) ?>" placeholder="Стоимость, м" required="required" />
                                         <div class="invalid-feedback">ZBS 6 цвет обязательно</div>
                                     </div>
                                 </div>
@@ -205,14 +205,14 @@ if($row = $fetcher->Fetch()) {
                                 <div class="d-table-cell pr-3">
                                     <div class="form-group">
                                         <label for="zbs8_time">ZBS 8 цвет (руб/час)</label>
-                                        <input type="text" class="form-control float-only" id="zbs8_time" name="zbs8_time" value="<?= floatval($zbs8_time) ?>" placeholder="Стоимость, час" required="required" />
+                                        <input type="text" class="form-control float-only" id="zbs8_time" name="zbs8_time" value="<?= empty($zbs8_time) ? "" : floatval($zbs8_time) ?>" placeholder="Стоимость, час" required="required" />
                                         <div class="invalid-feedback">ZBS 8 цвет обязательно</div>
                                     </div>
                                 </div>
                                 <div class="d-table-cell pl-3">
                                     <div class="form-group">
                                         <label for="zbs8_length">ZBS 8 цвет (руб/м)</label>
-                                        <input type="text" class="form-control float-only" id="zbs8_length" name="zbs8_length" value="<?= floatval($zbs8_length) ?>" placeholder="Стоимость, м" required="required" />
+                                        <input type="text" class="form-control float-only" id="zbs8_length" name="zbs8_length" value="<?= empty($zbs8_length) ? "" : floatval($zbs8_length) ?>" placeholder="Стоимость, м" required="required" />
                                         <div class="invalid-feedback">ZBS 8 цвет обязательно</div>
                                     </div>
                                 </div>
@@ -221,14 +221,14 @@ if($row = $fetcher->Fetch()) {
                                 <div class="d-table-cell pr-3">
                                     <div class="form-group">
                                         <label for="comiflex_time">Comiflex (руб/час)</label>
-                                        <input type="text" class="form-control float-only" id="comiflex_time" name="comiflex_time" value="<?= floatval($comiflex_time) ?>" placeholder="Стоимость, час" required="required" />
+                                        <input type="text" class="form-control float-only" id="comiflex_time" name="comiflex_time" value="<?= empty($comiflex_time) ? "" : floatval($comiflex_time) ?>" placeholder="Стоимость, час" required="required" />
                                         <div class="invalid-feedback">Comiflex обязательно</div>
                                     </div>
                                 </div>
                                 <div class="d-table-cell pl-3">
                                     <div class="form-group">
                                         <label for="comiflex_length">Comiflex (руб/м)</label>
-                                        <input type="text" class="form-control float-only" id="comiflex_length" name="comiflex_length" value="<?= floatval($comiflex_length) ?>" placeholder="Стоимость, м" required="required" />
+                                        <input type="text" class="form-control float-only" id="comiflex_length" name="comiflex_length" value="<?= empty($comiflex_length) ? "" : floatval($comiflex_length) ?>" placeholder="Стоимость, м" required="required" />
                                         <div class="invalid-feedback">Comiflex обязательно</div>
                                     </div>
                                 </div>
@@ -237,14 +237,14 @@ if($row = $fetcher->Fetch()) {
                                 <div class="d-table-cell pr-3">
                                     <div class="form-group">
                                         <label for="lamination_time">Ламинация (руб/час)</label>
-                                        <input type="text" class="form-control float-only" id="lamination_time" name="lamination_time" value="<?= floatval($lamination_time) ?>" placeholder="Стоимость, час" required="required" />
+                                        <input type="text" class="form-control float-only" id="lamination_time" name="lamination_time" value="<?= empty($lamination_time) ? "" : floatval($lamination_time) ?>" placeholder="Стоимость, час" required="required" />
                                         <div class="invalid-feedback">Ламинация обязательно</div>
                                     </div>
                                 </div>
                                 <div class="d-table-cell pl-3">
                                     <div class="form-group">
                                         <label for="lamination_length">Ламинация (руб/м)</label>
-                                        <input type="text" class="form-control float-only" id="lamination_length" name="lamination_length" value="<?= floatval($lamination_length) ?>" placeholder="Стоимость, м" required="required" />
+                                        <input type="text" class="form-control float-only" id="lamination_length" name="lamination_length" value="<?= empty($lamination_length) ? "" : floatval($lamination_length) ?>" placeholder="Стоимость, м" required="required" />
                                         <div class="invalid-feedback">Ламинация обязательно</div>
                                     </div>
                                 </div>
