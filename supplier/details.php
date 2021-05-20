@@ -134,9 +134,10 @@ $name = htmlentities($row['name']);
                     ?>
                 </div>
             </div>
+            <hr />
             <div class="supplier-page">
                 <div class="backlink">
-                    <a href="<?=APPLICATION ?>/supplier/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                    <a href="<?=APPLICATION ?>/supplier/">Назад</a>
                 </div>
                 <h1 style="font-size: 24px; font-weight: 600;"><?=$name ?></h1>
                 <h2 style="font-size: 18px; font-weight: 600;">Пленки поставщика</h2>

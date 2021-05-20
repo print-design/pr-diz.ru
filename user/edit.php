@@ -145,7 +145,7 @@ if(empty($role_id)) {
             <div class="row">
                 <div class="col-12 col-md-6">
                     <div class="backlink">
-                        <a href="<?=APPLICATION ?>/user/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <a href="<?=APPLICATION ?>/user/">Назад</a>
                     </div>
                     <h1>Редактирование сотрудника</h1>
                     <form method="post">

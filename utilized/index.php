@@ -214,7 +214,7 @@ $utilized_status_roll_id = 2;
                                         <input type="hidden" id="id" name="id" value="<?=$row['id'] ?>" />
                                         <input type="hidden" id="scroll" name="scroll" />
                                         <input type="hidden" id="type" name="type" value="<?=$row['type'] ?>" />
-                                        <button type="submit" class="btn btn-link confirmable" id="delete-film-submit" name="delete-film-submit" style="font-size: 14px;">Удалить</button>
+                                        <button type="submit" class="btn btn-link p-0 m-0 h-25 confirmable" id="delete-film-submit" name="delete-film-submit" style="font-size: 14px;">Удалить</button>
                                     </form>
                                 </div>
                                 <?php

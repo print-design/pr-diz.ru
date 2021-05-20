@@ -116,8 +116,9 @@ if(null !== filter_input(INPUT_POST, 'supplier_create_submit')) {
                     ?>
                 </div>
             </div>
+            <hr />
             <div class="backlink">
-                <a href="<?=APPLICATION ?>/supplier/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                <a href="<?=APPLICATION ?>/supplier/">Назад</a>
             </div>
             <h1>Добавление поставщика</h1>
             <form method="post">

@@ -185,7 +185,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
             }
             ?>
             <div class="backlink">
-                <a href="<?=APPLICATION ?>/roll/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                <a href="<?=APPLICATION ?>/roll/">Назад</a>
             </div>
             <h1 style="font-size: 32px; font-weight: 600; margin-bottom: 20px;">Новый рулон</h1>
             <form method="post">

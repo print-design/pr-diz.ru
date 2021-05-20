@@ -71,7 +71,7 @@ if(empty($name)) {
             <div class="row">
                 <div class="col-12 col-md-6">
                     <div class="backlink">
-                        <a href="<?=APPLICATION ?>/supplier/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <a href="<?=APPLICATION ?>/supplier/">Назад</a>
                     </div>
                     <h1>Редактирование поставщика</h1>
                     <form method="post">

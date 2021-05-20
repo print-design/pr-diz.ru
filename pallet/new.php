@@ -231,7 +231,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
             }
             ?>
             <div class="backlink">
-                <a href="<?=APPLICATION ?>/pallet/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                <a href="<?=APPLICATION ?>/pallet/">Назад</a>
             </div>
             <h1 style="font-size: 32px; font-weight: 600; margin-bottom: 20px;">Новый паллет</h1>
             <form method="post">

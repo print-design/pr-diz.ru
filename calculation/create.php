@@ -206,7 +206,7 @@ else $status_id = null;
             }
             ?>
             <div class="backlink">
-                <a href="<?=APPLICATION ?>/calculation/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                <a href="<?=APPLICATION ?>/calculation/">Назад</a>
             </div>
             <div class="row">
                 <!-- Левая половина -->
