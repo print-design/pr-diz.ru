@@ -1,4 +1,7 @@
+@import '../fonts/SFPro/stylesheet.css';
+
 body {
+    font-family: 'SF Pro Display';
     padding-left: 60px;
 }
 
