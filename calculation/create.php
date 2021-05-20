@@ -284,10 +284,10 @@ else $status_id = null;
                         </div>
                         <!-- Основная плёнка -->
                         <div id="film_title">
-                            <p class="font-weight-bold">Пленка</p>
+                            <p><span class="font-weight-bold">Пленка</span>&nbsp;&nbsp;<span style="color: gray;">(325 руб) <i class="fas fa-info-circle" title="325 руб" data-placement="top"></i></span></p>
                         </div>
                         <div id="main_film_title" class="d-none">
-                            <p class="font-weight-bold">Основная пленка</p>
+                            <p><span class="font-weight-bold">Основная пленка</span>&nbsp;&nbsp;<span style="color: gray;">(325 руб   34кг   600мм) <i class="fas fa-info-circle" title="325 руб   34кг   600мм" data-placement="top"></i></span></p>
                         </div>
                         <div class="row">
                             <div class="col-6">
@@ -340,7 +340,7 @@ else $status_id = null;
                         </div>
                         <!-- Ламинация 1 -->
                         <div id="form_lamination_1" class="d-none">
-                            <p class="font-weight-bold">Ламинация 1</p>
+                            <p><span class="font-weight-bold">Ламинация 1</span>&nbsp;&nbsp;<span style="color: gray;">(325 руб   34кг   600мм) <i class="fas fa-info-circle" title="325 руб   34кг   600мм" data-placement="top"></i></span></p>
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group">
@@ -392,7 +392,7 @@ else $status_id = null;
                             </div>
                             <!-- Ламинация 2 -->
                             <div id="form_lamination_2" class="d-none">
-                                <p class="font-weight-bold">Ламинация 2</p>
+                                <p><span class="font-weight-bold">Ламинация 2</span>&nbsp;&nbsp;<span style="color: gray;">(325 руб   34кг   600мм) <i class="fas fa-info-circle" title="325 руб   34кг   600мм" data-placement="top"></i></span></p>
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
@@ -498,6 +498,16 @@ else $status_id = null;
                 placeholder: "Заказчик...",
                 maximumSelectionLength: 1,
                 language: "ru"
+            });
+            
+            // Всплывающая подсказка
+            $(function() {
+                $("i.fa-info-circle").tooltip({
+                    position: {
+                        my: "left center",
+                        at: "right+10 center"
+                    }
+                });
             });
     
             // Маска телефона заказчика
