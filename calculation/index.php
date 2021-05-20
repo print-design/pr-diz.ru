@@ -19,7 +19,7 @@ while ($row = $fetcher->Fetch()) {
 
 function OrderLink($param) {
     if(array_key_exists('order', $_REQUEST) && $_REQUEST['order'] == $param) {
-        echo "<strong><i class='fas fa-arrow-down' style='color: black; font-size: x-small;'></i></strong>";
+        echo "<strong><i class='fas fa-arrow-down' style='color: black; font-size: small;'></i></strong>";
     }
     else {
         echo "<a class='gray' href='". BuildQuery('order', $param)."' style='font-size: x-small;'><i class='fas fa-arrow-down'></i></a>";
@@ -110,7 +110,7 @@ function OrderLink($param) {
                             ?>
                         </select>
                     </form>
-                    <a href="create.php" class="btn btn-outline-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
+                    <a href="create.php" class="btn btn-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
                 </div>
             </div>
             <table class="table table-hover" id="content_table">

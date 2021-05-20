@@ -5,12 +5,12 @@ body {
     padding-left: 60px;
 }
 
-a:link, a:visited {
+a:not(.btn):link, a:not(.btn):visited {
     color: #EC3A7A;
     text-decoration: none;
 }
 
-a:active, a:hover {
+a:not(.btn):active, a:not(.btn):hover {
     color: red;
     text-decoration: underline;
 }
@@ -154,7 +154,26 @@ li#nav-user a.dropdown-toggle::after {
 }
 
 .btn-dark {
-    background-color: #121232;
+    background-color: #EC3A7A;
+    border-color: #EC3A7A;
+    border-radius: 8px;
+}
+
+.btn-dark:hover {
+    background-color: red;
+    border-color: red;
+}
+
+.btn-outline-dark {
+    color: #EC3A7A;
+    background-color: white;
+    border-color: #EC3A7A;
+    border-radius: 8px;
+}
+
+.btn-outline-dark:hover {
+    background-color: #EC3A7A;
+    border-color: #EC3A7A;
 }
 
 /*Заголовки*/
