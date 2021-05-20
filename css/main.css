@@ -25,6 +25,16 @@ a:active, a:hover {
     text-decoration: underline;
 }
 
+a.gray:link, a.gray:visited {
+    color: #A7A7A7;
+    text-decoration: none;
+}
+
+a.gray:active, a.gray:hover {
+    color: gray;
+    text-decoration: underline;
+}
+
 a.black:link, a.black:visited, .black a:link, .black a:visited {
     color: black;
     text-decoration: none;

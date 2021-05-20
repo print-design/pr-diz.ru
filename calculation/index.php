@@ -22,7 +22,7 @@ function OrderLink($param) {
         echo "<strong><i class='fas fa-arrow-down'></i></strong>";
     }
     else {
-        echo "<a href='". BuildQuery('order', $param)."'><i class='fas fa-arrow-down'></i></a>";
+        echo "<a class='gray' href='". BuildQuery('order', $param)."'><i class='fas fa-arrow-down'></i></a>";
     }
 }
 ?>
@@ -48,7 +48,8 @@ function OrderLink($param) {
             ?>
             <div class="d-flex justify-content-between mb-auto">
                 <div class="p-1">
-                    <h1 style="font-size: 32px; font-weight: 600;">Расчеты</h1>
+                    <h1 style="font-size: 32px; font-weight: 600;" class="d-inline">Расчеты</h1>
+                    <div class="d-inline ml-3" style="color: gray; font-size: x-large;">203</div>
                 </div>
                 <div class="p-1 text-nowrap">
                     <?php $order = filter_input(INPUT_GET, 'order'); ?>
@@ -115,14 +116,14 @@ function OrderLink($param) {
             <table class="table table-hover" id="content_table">
                 <thead>
                     <tr>
-                        <th>ID&nbsp;<?= OrderLink('id') ?></th>
-                        <th>Дата&nbsp;<?= OrderLink('date') ?></th>
-                        <th>Заказчик&nbsp;<?= OrderLink('customer') ?></th>
-                        <th>Имя заказа&nbsp;<?= OrderLink('name') ?></th>
-                        <th>Объем кг.&nbsp;<?= OrderLink('weight') ?></th>
-                        <th>Тип работы&nbsp;<?= OrderLink('work_type') ?></th>
-                        <th>Менеджер&nbsp;<?= OrderLink('manager') ?></th>
-                        <th>Статус&nbsp;<?= OrderLink('status') ?></th>
+                        <th>ID&nbsp;&nbsp;<?= OrderLink('id') ?></th>
+                        <th>Дата&nbsp;&nbsp;<?= OrderLink('date') ?></th>
+                        <th>Заказчик&nbsp;&nbsp;<?= OrderLink('customer') ?></th>
+                        <th>Имя заказа&nbsp;&nbsp;<?= OrderLink('name') ?></th>
+                        <th>Объем, кг&nbsp;&nbsp;<?= OrderLink('weight') ?></th>
+                        <th>Тип работы&nbsp;&nbsp;<?= OrderLink('work_type') ?></th>
+                        <th>Менеджер&nbsp;&nbsp;<?= OrderLink('manager') ?></th>
+                        <th>Статус&nbsp;&nbsp;<?= OrderLink('status') ?></th>
                         <th></th>
                     </tr>
                 </thead>
