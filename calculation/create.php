@@ -465,18 +465,73 @@ else $status_id = null;
                     <!-- Расчёт -->
                     <div id="calculation">
                         <h1>Расчет</h1>
-                        <input type="text" id="extra_charge" name="extra_charge" class="form-control" placeholder="Наценка" />
-                        <div class="mt-3 mb-1">Себестоимость</div>
-                        <div class="font-weight-bold mt-1 mb-1" style="font-size: large;">1 200 000 руб.</div>
-                        <div class="mt-3 mb-1">Отгрузочная стоимость</div>
-                        <div class="font-weight-bold mt-1 mb-3" style="font-size: large;">800 000 руб.</div>
+                        <div class="d-table w-100">
+                            <div class="d-table-row">
+                                <div class="d-table-cell pb-2 pt-2">
+                                    <div style="font-size: x-small;">Наценка</div>
+                                    10%
+                                </div>
+                                <div class="d-table-cell pb-2 pt-2 pl-3" style="color: gray; border: solid 1px gray; border-radius: 10px;">
+                                    <div style="font-size: x-small;">Курс евро</div>
+                                    93
+                                </div>
+                            </div>
+                            <div class="d-table-row">
+                                <div class="d-table-cell pb-2 pt-2">
+                                    Себестоимость
+                                    <div class="font-weight-bold" style="font-size: large;">1 200 000 руб.</div>
+                                </div>
+                                <div class="d-table-cell pb-2 pt-2 pl-3">
+                                    За 1 кг
+                                    <div class="font-weight-bold" style="font-size: large;">765 руб.</div>
+                                </div>
+                            </div>
+                            <div class="d-table-row">
+                                <div class="d-table-cell pb-2 pt-2">
+                                    Отгрузочная стоимость
+                                    <div class="font-weight-bold" style="font-size: large;">800 000 руб.</div>
+                                </div>
+                                <div class="d-table-cell pb-2 pt-2 pl-3">
+                                    За 1 кг
+                                    <div class="font-weight-bold" style="font-size: large;">978 руб.</div>
+                                </div>
+                            </div>
+                        </div>
                         <button type="button" class="btn btn-light" id="show_costs" onclick="javascript: ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать расходы</button>
                         <div id="costs" class="d-none">
                             <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
-                            <div class="mt-3 mb-1">Отходы</div>
-                            <div class="font-weight-bold mt-1 mb-1" style="font-size: large;">200 280 руб.&nbsp;&nbsp;&nbsp;24,5 кг.</div>
-                            <div class="mt-3 mb-1">Клей</div>
-                            <div class="font-weight-bold mt-1 mb-3" style="font-size: large;">800 000 руб.</div>
+                            <div class="d-table w-100">
+                                <div class="d-table-row">
+                                    <div class="d-table-cell pb-2 pt-2">
+                                        Отходы
+                                        <div class="font-weight-bold" style="font-size: large;">1 280 руб.</div>
+                                    </div>
+                                    <div class="d-table-cell pb-2 pt-2 pl-3">
+                                        <br />
+                                        <div class="font-weight-bold" style="font-size: large;">4,5 кг.</div>
+                                    </div>
+                                </div>
+                                <div class="d-table-row">
+                                    <div class="d-table-cell pb-2 pt-2">
+                                        Клей
+                                        <div class="font-weight-bold" style="font-size: large;">800 000 руб.</div>
+                                    </div>
+                                    <div class="d-table-cell pb-2 pt-2 pl-3">
+                                        <br />
+                                        <div class="font-weight-bold" style="font-size: large;">1,0 кг.</div>
+                                    </div>
+                                </div>
+                                <div class="d-table-row">
+                                    <div class="d-table-cell pb-2 pt-2">
+                                        Работа ламинатора
+                                        <div class="font-weight-bold">230 руб.</div>
+                                    </div>
+                                    <div class="d-table-cell pb-2 pt-2 pl-3">
+                                        <br />
+                                        <div class="font-weight-bold" style="font-size: large;">1,5 ч.</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <form method="post">
                             <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
@@ -672,22 +727,6 @@ else $status_id = null;
             <?php if(null === filter_input(INPUT_GET, 'id')): ?>
                 HideCalculation();
             <?php endif; ?>
-    
-            // Маска % для поля "наценка"
-            $("#extra_charge").mask("999%", { autoclear: false });
-            
-            // Фильтрация ввода в поле "наценка"
-            $('#extra_charge').keypress(function(e) {
-                if(/\D/.test(String.fromCharCode(e.charCode))) {
-                    return false;
-                }
-            });
-            
-            $('#extra_charge').change(function(e) {
-                var val = $(this).val();
-                val = val.replace(/[^\d\%]/g, '');
-                $(this).val(val);
-            });
         </script>
     </body>
 </html>
