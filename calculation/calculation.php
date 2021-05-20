@@ -25,7 +25,7 @@ if(empty($id)) {
     $id = filter_input(INPUT_GET, 'id');
 }
 
-$sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.brand_name, c.thickness, c.lamination1_brand_name, c.lamination1_thickness, c.lamination2_brand_name, c.lamination2_thickness, c.width, c.weight, c.diameter, c.status_id, "
+$sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.brand_name, c.thickness, c.lamination1_brand_name, c.lamination1_thickness, c.lamination2_brand_name, c.lamination2_thickness, c.width, c.weight, c.streamscount, c.status_id, "
         . "cs.name status, cs.colour, cs.colour2, cs.image, cu.name customer, wt.name work_type "
         . "from calculation c "
         . "inner join calculation_status cs on c.status_id = cs.id "
@@ -44,9 +44,9 @@ $lamination1_brand_name = $row['lamination1_brand_name'];
 $lamination1_thickness = $row['lamination1_thickness'];
 $lamination2_brand_name = $row['lamination2_brand_name'];
 $lamination2_thickness = $row['lamination2_thickness'];
-$width = $row['width'];
 $weight = $row['weight'];
-$diameter = $row['diameter'];
+$width = $row['width'];
+$streamscount = $row['streamscount'];
 $status_id = $row['status_id'];
 
 $status = $row['status'];
@@ -89,9 +89,19 @@ $work_type = $row['work_type'];
                         <tr><th class="pr-5">Тип работы</th><td><?=$work_type ?></td></tr>
                         <tr><th class="pr-5">Марка пленки</th><td><?=$brand_name ?></td></tr>
                         <tr><th class="pr-5">Толщина</th><td><?= number_format($thickness, 0, ",", " ") ?> мкм</td></tr>
-                        <tr><th class="pr-5">Ширина</th><td><?= number_format($width, 0, ",", " ") ?> мм</td></tr>
                         <tr><th class="pr-5">Вес нетто</th><td><?= number_format($weight, 0, ",", " ") ?></td></tr>
-                        <tr><th class="pr-5">Диаметр намотки</th><td><?= number_format($diameter, 0, ",", " ") ?> мм &nbsp;&nbsp;&nbsp;Примерно 2020 метров</td></tr>
+                        <?php
+                        if(!empty($width)):
+                        ?>
+                        <tr><th class="pr-5">Ширина</th><td><?= number_format($width, 0, ",", " ") ?> мм</td></tr>
+                        <?php
+                        endif;
+                        if(!empty($streamscount)):
+                        ?>
+                        <tr><th class="pr-5">Количество ручьев</th><td><?= number_format($streamscount, 0, ",", " ") ?></td></tr>
+                        <?php
+                        endif;
+                        ?>
                     </table>
                     <?php if($status_id == 3): ?>
                     <form method="post">

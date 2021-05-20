@@ -65,9 +65,11 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $lamination2_thickness = filter_input(INPUT_POST, 'lamination2_thickness');
         if(empty($lamination2_thickness)) $lamination2_thickness = "NULL";
         
-        $width = filter_input(INPUT_POST, 'width');
         $weight = filter_input(INPUT_POST, 'weight');
+        $width = filter_input(INPUT_POST, 'width');
+        if(empty($width)) $width = "NULL";
         $streamscount = filter_input(INPUT_POST, 'streamscount');
+        if(empty($streamscount)) $streamscount = "NULL";
         
         $manager_id = GetUserId();
         $status_id = 1; // Статус "Расчёт"
@@ -103,7 +105,7 @@ if(empty($id)) {
 }
 
 if(!empty($id)) {
-    $sql = "select date, customer_id, name, work_type_id, brand_name, thickness, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, weight, streamscount, status_id from calculation where id=$id";
+    $sql = "select date, customer_id, name, work_type_id, brand_name, thickness, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, weight, width, streamscount, status_id from calculation where id=$id";
     $row = (new Fetcher($sql))->Fetch();
 }
 
@@ -164,21 +166,21 @@ if(null === $lamination2_thickness) {
     else $lamination2_thickness = null;
 }
 
-$width = filter_input(INPUT_POST, 'width');
-if(null === $width) {
-    if(isset($row['width'])) $width = $row['width'];
-    else $width = null;
-}
-
 $weight = filter_input(INPUT_POST, 'weight');
 if(null === $weight) {
     if(isset($row['weight'])) $weight = $row['weight'];
     else $width = null;
 }
 
+$width = filter_input(INPUT_POST, 'width');
+if(null === $width) {
+    if(isset($row['width'])) $width = $row['width'];
+    else $width = null;
+}
+
 $streamscount = filter_input(INPUT_POST, 'streamscount');
 if(null === $streamscount) {
-    if(isset($row['streamscount'])) $diameter = $row['streamscount'];
+    if(isset($row['streamscount'])) $streamscount = $row['streamscount'];
     else $streamscount = null;
 }
 
