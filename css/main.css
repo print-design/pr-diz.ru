@@ -159,9 +159,10 @@ li#nav-user a.dropdown-toggle::after {
     border-radius: 8px;
 }
 
-.btn-dark:hover {
-    background-color: red;
-    border-color: red;
+.btn-dark:hover, .btn-dark:active {
+    color: #EC3A7A;
+    background-color: white;
+    border-color: #EC3A7A;
 }
 
 .btn-outline-dark {
@@ -171,7 +172,7 @@ li#nav-user a.dropdown-toggle::after {
     border-radius: 8px;
 }
 
-.btn-outline-dark:hover {
+.btn-outline-dark:hover, .btn-outline-dark:active {
     background-color: #EC3A7A;
     border-color: #EC3A7A;
 }
@@ -467,7 +468,7 @@ textarea#editable {
     
     top: 3px;
     left: -18px;
-    border-color: transparent #666;
+    border-color: transparent #666!important;
     border-width: 10px 10px 10px 0;
 }
 
