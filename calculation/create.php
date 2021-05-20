@@ -16,9 +16,7 @@ $name_valid = '';
 $work_type_valid = '';
 $brand_name_valid = '';
 $thickness_valid = '';
-$width_valid = '';
 $weight_valid = '';
-$diameter_valid = '';
 
 // Сохранение в базу расчёта
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
@@ -47,18 +45,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'width'))) {
-        $width_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
     if(empty(filter_input(INPUT_POST, 'weight'))) {
         $weight_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
-    if(empty(filter_input(INPUT_POST, 'diameter'))) {
-        $diameter_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -79,12 +67,12 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         $width = filter_input(INPUT_POST, 'width');
         $weight = filter_input(INPUT_POST, 'weight');
-        $diameter = filter_input(INPUT_POST, 'diameter');
+        $streamscount = filter_input(INPUT_POST, 'streamscount');
         
         $manager_id = GetUserId();
         $status_id = 1; // Статус "Расчёт"
         
-        $sql = "insert into calculation (date, customer_id, name, work_type_id, brand_name, thickness, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, weight, diameter, manager_id, status_id) values('$date', $customer_id, '$name', $work_type_id, '$brand_name', $thickness, '$lamination1_brand_name', $lamination1_thickness, '$lamination2_brand_name', $lamination2_thickness, $width, $weight, $diameter, $manager_id, $status_id)";
+        $sql = "insert into calculation (date, customer_id, name, work_type_id, brand_name, thickness, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, weight, streamscount, manager_id, status_id) values('$date', $customer_id, '$name', $work_type_id, '$brand_name', $thickness, '$lamination1_brand_name', $lamination1_thickness, '$lamination2_brand_name', $lamination2_thickness, $width, $weight, $streamscount, $manager_id, $status_id)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $insert_id = $executer->insert_id;
@@ -115,7 +103,7 @@ if(empty($id)) {
 }
 
 if(!empty($id)) {
-    $sql = "select date, customer_id, name, work_type_id, brand_name, thickness, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, weight, diameter, status_id from calculation where id=$id";
+    $sql = "select date, customer_id, name, work_type_id, brand_name, thickness, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, weight, streamscount, status_id from calculation where id=$id";
     $row = (new Fetcher($sql))->Fetch();
 }
 
@@ -188,10 +176,10 @@ if(null === $weight) {
     else $width = null;
 }
 
-$diameter = filter_input(INPUT_POST, 'diameter');
-if(null === $diameter) {
-    if(isset($row['diameter'])) $diameter = $row['diameter'];
-    else $diameter = null;
+$streamscount = filter_input(INPUT_POST, 'streamscount');
+if(null === $streamscount) {
+    if(isset($row['streamscount'])) $diameter = $row['streamscount'];
+    else $streamscount = null;
 }
 
 if(isset($row['status_id'])) $status_id = $row['status_id'];
@@ -282,7 +270,20 @@ else $status_id = null;
                                 ?>
                             </select>
                         </div>
+                        <!-- Вес нетто -->
+                        <div class="row mt-3">
+                            <!-- Вес нетто -->
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <input type="text" id="weight" name="weight" class="form-control float-only" placeholder="Вес нетто, кг" value="<?=$weight ?>" required="required" />
+                                    <div class="invalid-feedback">Вес нетто обязательно</div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- Основная плёнка -->
+                        <div id="film_title">
+                            <p class="font-weight-bold">Пленка</p>
+                        </div>
                         <div id="main_film_title" class="d-none">
                             <p class="font-weight-bold">Основная пленка</p>
                         </div>
@@ -438,35 +439,23 @@ else $status_id = null;
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-3">
-                            <!-- Ширина -->
+                        <div class="row mt-3 d-none" id="lam-only">
+                            <!-- Обрезная ширина -->
                             <div class="col-6">
                                 <div class="form-group">
-                                    <input type="text" id="width" name="width" class="form-control int-only" placeholder="Ширина, мм" value="<?=$width ?>" required="required" />
-                                    <div class="invalid-feedback">Ширина обязательно</div>
+                                    <input type="text" id="width" name="width" class="form-control int-only" placeholder="Обрезная ширина, мм" value="<?=$width ?>" />
+                                    <div class="invalid-feedback">Обрезная ширина обязательно</div>
                                 </div>
                             </div>
-                            <!-- Вес нетто -->
+                            <!-- Количество ручьёв -->
                             <div class="col-6">
                                 <div class="form-group">
-                                    <input type="text" id="weight" name="weight" class="form-control float-only" placeholder="Вес нетто, кг" value="<?=$weight ?>" required="required" />
-                                    <div class="invalid-feedback">Вес нетто обязательно</div>
+                                    <input type="text" id="streamscount" name="streamscount" class="form-control int-only" placeholder="Количество ручьев" value="<?=$streamscount ?>" />
+                                    <div class="invalid-feedback">Количество ручьев обязательно</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <!-- Диаметр намотки -->
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <input type="text" id="diameter" name="diameter" class="form-control int-only" placeholder="Диаметр намотки" value="<?=$diameter ?>" required="required" />
-                                    <div class="invalid-feedback">Диаметр намотки обязательно</div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                Примерно 2020 метров
-                            </div>
-                        </div>
-                        <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark d-none">Рассчитать</button>
+                        <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark mt-3 d-none">Рассчитать</button>
                     </form>
                 </div>
                 <!-- Правая половина -->
@@ -501,10 +490,27 @@ else $status_id = null;
         ?>
         <script src="<?=APPLICATION ?>/js/select2.min.js"></script>
         <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
-        <?php
-        include './scripts.php';
-        ?>
         <script>
+            // Список с  поиском
+            $('#customer_id').select2({
+                placeholder: "Заказчик...",
+                maximumSelectionLength: 1,
+                language: "ru"
+            });
+    
+            // Маска телефона заказчика
+            $.mask.definitions['~'] = "[+-]";
+            $("#customer_phone").mask("+7 (999) 999-99-99");
+    
+            // При щелчке в поле телефона, устанавливаем курсор в самое начало ввода телефонного номера.
+            $("#customer_phone").click(function(){
+                var maskposition = $(this).val().indexOf("_");
+                if(Number.isInteger(maskposition)) {
+                    $(this).prop("selectionStart", maskposition);
+                    $(this).prop("selectionEnd", maskposition);
+                }
+            });
+    
             // Если у объекта имеется ламинация 1, показываем ламинацию 1
             <?php if(!empty($lamination1_brand_name)): ?>
             ShowLamination1();
@@ -514,6 +520,105 @@ else $status_id = null;
             <?php if(!empty($lamination2_brand_name)): ?>
             ShowLamination2();
             <?php endif; ?>
+                
+            // Показ марки плёнки и толщины для ламинации 1
+            function ShowLamination1() {
+                $('#form_lamination_1').removeClass('d-none');
+                $('#show_lamination_1').addClass('d-none');
+                $('#main_film_title').removeClass('d-none');
+                $('#film_title').addClass('d-none');
+                $('#lamination1_brand_name').attr('required', 'required');
+                $('#lamination1_thickness').attr('required', 'required');
+                $('#lam-only').removeClass('d-none');
+                $('#width').attr('required', 'required');
+                $('#streamscount').attr('required', 'required');
+            }
+            
+            // Скрытие марки плёнки и толщины для ламинации 1
+            function HideLamination1() {
+                $('#lamination1_brand_name').val('');
+                $('#lamination1_brand_name').change();
+                
+                $('#form_lamination_1').addClass('d-none');
+                $('#show_lamination_1').removeClass('d-none');
+                $('#main_film_title').addClass('d-none');
+                $('#film_title').removeClass('d-none');
+                $('#lamination1_brand_name').removeAttr('required');
+                $('#lamination1_thickness').removeAttr('required');
+                $('#lam-only').addClass('d-none');
+                $('#width').removeAttr('required');
+                $('#streamscount').removeAttr('required');
+                HideLamination2();
+            }
+            
+            // Показ марки плёнки и толщины для ламинации 2
+            function ShowLamination2() {
+                $('#form_lamination_2').removeClass('d-none');
+                $('#show_lamination_2').addClass('d-none');
+                $('#hide_lamination_1').addClass('d-none');
+                $('#lamination2_brand_name').attr('required', 'required');
+                $('#lamination2_thickness').attr('required', 'required');
+            }
+            
+            // Скрытие марки плёнки и толщины для ламинации 2
+            function HideLamination2() {
+                $('#lamination2_brand_name').val('');
+                $('#lamination2_brand_name').change();
+                
+                $('#form_lamination_2').addClass('d-none');
+                $('#show_lamination_2').removeClass('d-none');
+                $('#hide_lamination_1').removeClass('d-none');
+                $('#lamination2_brand_name').removeAttr('required');
+                $('#lamination2_thickness').removeAttr('required');
+            }
+            
+            // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин
+            $('#brand_name').change(function(){
+                if($(this).val() == "") {
+                    $('#thickness').html("<option value=''>Толщина...</option>");
+                }
+                else {
+                    $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
+                            .done(function(data) {
+                                $('#thickness').html(data);
+                    })
+                            .fail(function() {
+                                alert('Ошибка при выборе марки пленки');
+                    });
+                }
+            });
+            
+            // Обработка выбора типа плёнки ламинации1: перерисовка списка толщин
+            $('#lamination1_brand_name').change(function(){
+                if($(this).val() == "") {
+                    $('#lamination1_thickness').html("<option value=''>Толщина...</option>");
+                }
+                else {
+                    $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
+                            .done(function(data) {
+                                $('#lamination1_thickness').html(data);
+                    })
+                            .fail(function() {
+                                alert('Ошибка при выборе марки пленки');
+                    });
+                }
+            });
+            
+            // Обработка выбора типа плёнки ламинации2: перерисовка списка толщин
+            $('#lamination2_brand_name').change(function(){
+                if($(this).val() == "") {
+                    $('#lamination2_thickness').html("<option value=''>Толщина...</option>");
+                }
+                else {
+                    $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
+                            .done(function(data) {
+                                $('#lamination2_thickness').html(data);
+                    })
+                            .fail(function() {
+                                alert('Ошибка при выборе марки пленки');
+                    });
+                }
+            });
                 
             // Показ расходов
             function ShowCosts() {
