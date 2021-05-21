@@ -61,29 +61,24 @@ if(null !== filter_input(INPUT_POST, 'delete_user_submit')) {
                     $fetcher = new Fetcher($sql);
                     $error_message = $fetcher->error;
                     
-                    while ($row = $fetcher->Fetch()) {
-                        echo "<tr>"
-                                ."<td>".$row['first_name'].' '.$row['last_name']."</td>"
-                                ."<td>".$row['role']."</td>"
-                                ."<td>".$row['username']."</td>"
-                                ."<td>".$row['email']."</td>"
-                                ."<td>".$row['phone']."</td>";
-                        /*echo "<td class='text-right'>";
-                        if(filter_input(INPUT_COOKIE, USER_ID) != $row['id']) {
-                            echo "<a href='".APPLICATION."/user/edit.php?id=".$row['id']."'><i class='fas fa-pencil-alt'></i></a>";
-                        }
-                        echo '</td>';*/
-                        echo "<td class='text-right'>";
-                        if(filter_input(INPUT_COOKIE, USER_ID) != $row['id']) {
-                            echo "<form method='post'>";
-                            echo "<input type='hidden' id='id' name='id' value='".$row['id']."' />";
-                            echo "<button type='submit' class='btn btn-link confirmable' id='delete_user_submit' name='delete_user_submit'><img src='../images/icons/trash.svg' /></button>";
-                            echo '</form>';
-                        }
-                        echo '</td>';
-                        echo "</tr>";
-                    }
+                    while ($row = $fetcher->Fetch()):
                     ?>
+                    <tr>
+                        <td><?=$row['first_name'].' '.$row['last_name'] ?></td>
+                        <td><?=$row['role'] ?></td>
+                        <td><?=$row['username'] ?></td>
+                        <td><?=$row['email'] ?></td>
+                        <td><?=$row['phone'] ?></td>
+                        <td class='text-right'>
+                            <?php if(filter_input(INPUT_COOKIE, USER_ID) != $row['id']): ?>
+                            <form method='post'>
+                                <input type='hidden' id='id' name='id' value='<?=$row['id'] ?>' />
+                                <button type='submit' class='btn btn-link confirmable' id='delete_user_submit' name='delete_user_submit'><i class="fas fa-trash-alt"></i></button>
+                            </form>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endwhile; ?>
                 </tbody>
             </table>
         </div>
