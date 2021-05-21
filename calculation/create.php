@@ -89,7 +89,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
 if(null !== filter_input(INPUT_POST, 'change_status_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $status_id = filter_input(INPUT_POST, 'status_id');
-    $sql = "update calculation set status_id=$status_id where id=$id";
+    $extracharge = filter_input(INPUT_POST, 'extracharge');
+    $sql = "update calculation set status_id=$status_id, extracharge=$extracharge where id=$id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     
@@ -508,29 +509,11 @@ else $extracharge = 0;
                 }
             });
             
-            // Маска, фильтрация и установка значения для поля "наценка"
-            $("#extracharge").mask("999%", { autoclear: false });
-            
-            $('#extracharge').keypress(function(e) {
-                if(/\D/.test(String.fromCharCode(e.charCode))) {
-                    return false;
-                }
-            });
-            
-            $('#extracharge').change(function() {
-                var val = $(this).val();
-                val = val.replace(/[^\d\%]/g, '');
-                $(this).val(val);
-            });
-            
+            // Автовыделение при щелчке для поля "наценка"
             $('#extracharge').click(function() {
                 $(this).prop("selectionStart", 0);
                 $(this).prop("selectionEnd", $(this).val().length);
             });
-            
-            <?php if(isset($extracharge)): ?>
-            $('#extracharge').val('<?=$extracharge ?>%');
-            <?php endif; ?>
     
             // Если у объекта имеется ламинация 1, показываем ламинацию 1
             <?php if(!empty($lamination1_brand_name)): ?>

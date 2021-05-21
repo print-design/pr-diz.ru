@@ -10,7 +10,8 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
 if(null !== filter_input(INPUT_POST, 'change_status_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $status_id = filter_input(INPUT_POST, 'status_id');
-    $sql = "update calculation set status_id=$status_id where id=$id";
+    $extracharge = filter_input(INPUT_POST, 'extracharge');
+    $sql = "update calculation set status_id=$status_id, extracharge=$extracharge where id=$id";    echo $sql;
     $executer = new Executer($sql);
     $error_message = $executer->error;
     
@@ -126,6 +127,12 @@ $work_type = $row['work_type'];
         include '../include/footer.php';
         ?>
         <script>
+            // Автовыделение при щелчке для поля "наценка"
+            $('#extracharge').click(function() {
+                $(this).prop("selectionStart", 0);
+                $(this).prop("selectionEnd", $(this).val().length);
+            });
+            
             // Показ расходов
             function ShowCosts() {
                 $("#costs").removeClass("d-none");
