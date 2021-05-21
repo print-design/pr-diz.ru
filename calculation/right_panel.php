@@ -3,19 +3,23 @@
     <form method="post">
         <div class="d-table w-100">
             <div class="d-table-row">
-                <div class="d-table-cell pl-2 pb-2 pt-2 w-50" style="border: solid 1px lightgray; border-radius: 10px;">
-                    <div style="font-size: x-small;">Наценка</div>
-                    <?php
-                    $extracharge_disabled = " disabled='disabled'";
-                    if($status_id == 1) {
-                        $extracharge_disabled = "";
-                    }
-                    ?>
-                    <input type="text" id="extracharge" name="extracharge" class="form-c1ontrol mt-1" style="width: 50px;" value="<?=$extracharge ?>"<?=$extracharge_disabled ?> /> %
+                <div class="d-table-cell w-50">
+                    <div class="p-2 w-75" style="border: solid 1px lightgray; border-radius: 10px; height: 80px;">
+                        <div style="font-size: x-small;">Наценка</div>
+                            <?php
+                            $extracharge_disabled = " disabled='disabled'";
+                            if($status_id == 1) {
+                                $extracharge_disabled = "";
+                            }
+                            ?>
+                        <input type="text" id="extracharge" name="extracharge" class="form-c1ontrol mt-1" style="width: 50px;" value="<?=$extracharge ?>"<?=$extracharge_disabled ?> /> %
+                    </div>
                 </div>
-                <div class="d-table-cell pb-2 pt-2 pl-3 w-50" style="color: gray; border: solid 1px gray; border-radius: 10px;">
-                    <div style="font-size: x-small;">Курс евро</div>
-                    93
+                <div class="d-table-cell w-50">
+                    <div class="p-2 w-75" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 80px;">
+                        <div style="font-size: x-small;">Курс евро</div>
+                        93
+                    </div>
                 </div>
             </div>
             <div class="d-table-row">
@@ -47,11 +51,11 @@
             <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
             <div class="d-table w-100">
                 <div class="d-table-row">
-                    <div class="d-table-cell pb-2 pt-2">
+                    <div class="d-table-cell pb-2 pt-2 w-50">
                         Отходы
                         <div class="font-weight-bold" style="font-size: large;">1 280 руб.</div>
                     </div>
-                    <div class="d-table-cell pb-2 pt-2 pl-3">
+                    <div class="d-table-cell pb-2 pt-2 pl-3 w-50">
                         <br />
                         <div class="font-weight-bold" style="font-size: large;">4,5 кг.</div>
                     </div>
