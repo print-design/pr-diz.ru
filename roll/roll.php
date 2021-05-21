@@ -467,13 +467,17 @@ $utilized_status_id = 2;
                         <label for="comment">Комментарий</label>
                         <textarea id="comment" name="comment" rows="4" class="form-control no-latin"<?=$comment_disabled ?>><?= htmlentities($comment) ?></textarea>
                         <div class="invalid-feedback"></div>
+                    </div>                
+                    <div class="d-flex justify-content-between mt-4">
+                        <div class="p-0">
+                            <button type="submit" id="change-status-submit" name="change-status-submit" class="btn btn-dark" style="width: 175px;">Сохранить</button>
+                        </div>
+                        <div class="p-0">
+                            <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
+                            <a href="print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="width: 175px;">Распечатать стикер</a>
+                            <?php endif; ?>
+                        </div>
                     </div>
-                </div>
-                <div class="form-inline" style="margin-top: 30px;">
-                    <button type="submit" id="change-status-submit" name="change-status-submit" class="btn btn-dark" style="padding-left: 80px; padding-right: 80px; margin-right: 62px; padding-top: 14px; padding-bottom: 14px;">Сохранить</button>
-                    <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
-                    <a href="print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="padding-top: 5px; padding-bottom: 5px; padding-left: 50px; padding-right: 50px;">Распечатать<br />стикер</a>
-                    <?php endif; ?>
                 </div>
             </form>
         </div>

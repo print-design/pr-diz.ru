@@ -356,9 +356,11 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                         <textarea id="comment" name="comment" rows="4" class="form-control no-latin"><?= htmlentities(filter_input(INPUT_POST, 'comment')) ?></textarea>
                         <div class="invalid-feedback"></div>
                     </div>
-                </div>
-                <div class="form-inline" style="margin-top: 30px;">
-                    <button type="submit" id="create-roll-submit" name="create-roll-submit" class="btn btn-dark">РАСПЕЧАТАТЬ СТИКЕР</button>
+                    <div class="d-flex justify-content-start mt-4">
+                        <div class="p-0">
+                            <button type="submit" id="create-roll-submit" name="create-roll-submit" class="btn btn-dark">Распечатать стикер</button>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
