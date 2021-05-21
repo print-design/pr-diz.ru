@@ -15,6 +15,10 @@ a:not(.btn):active, a:not(.btn):hover {
     text-decoration: underline;
 }
 
+.btn-light {
+    color: #EC3A7A;
+}
+
 .btn-link, .btn-link:visited {
     color: #EC3A7A;
     text-decoration: none;
@@ -178,20 +182,18 @@ li#nav-user a.dropdown-toggle::after {
 }
 
 /*Заголовки*/
-.form-page h1 {
-    font-size: 24px;
-    line-height: 32px;
-    font-weight: 600;
-    margin-top: 10px;
-    margin-bottom: 32px;
+h1 {
+    font-size: 36px;
+    line-height: 44px;
+    font-weight: bold;
+    color: #191919;
 }
 
-.form-page h2 {
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 24px;
-    margin-top: 10px;
-    margin-bottom: 28px;
+h2 {
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 40px;
+    color: #191919;
 }
 
 /*Второе меню*/

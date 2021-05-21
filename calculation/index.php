@@ -235,7 +235,7 @@ function OrderLink($param) {
                         <td><?=$row['work_type'] ?></td>
                         <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
                         <td><i class="fas fa-circle" style="color: <?=$colour ?>;"></i>&nbsp;&nbsp;<?=$status ?></td>
-                        <td><a href="calculation.php<?= BuildQuery("id", $row['id']) ?>"><i class="fas fa-ellipsis-h"></i></a></td>
+                        <td><a href="calculation.php<?= BuildQuery("id", $row['id']) ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a></td>
                     </tr>
                     <?php
                     endwhile;

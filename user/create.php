@@ -91,7 +91,7 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
         <?php
         include '../include/header.php';
         ?>
-        <div class="container-fluid form-page">
+        <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
                echo "<div class='alert alert-danger'>$error_message</div>";
