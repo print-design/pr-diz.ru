@@ -105,7 +105,7 @@ if(empty($id)) {
 }
 
 if(!empty($id)) {
-    $sql = "select date, customer_id, name, work_type_id, brand_name, thickness, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, weight, width, streamscount, status_id from calculation where id=$id";
+    $sql = "select date, customer_id, name, work_type_id, brand_name, thickness, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, weight, width, streamscount, status_id, extracharge from calculation where id=$id";
     $row = (new Fetcher($sql))->Fetch();
 }
 
@@ -186,6 +186,9 @@ if(null === $streamscount) {
 
 if(isset($row['status_id'])) $status_id = $row['status_id'];
 else $status_id = null;
+
+if(isset($row['extracharge'])) $extracharge = $row['extracharge'];
+else $extracharge = 0;
 ?>
 <!DOCTYPE html>
 <html>
@@ -504,6 +507,30 @@ else $status_id = null;
                     $(this).prop("selectionEnd", maskposition);
                 }
             });
+            
+            // Маска, фильтрация и установка значения для поля "наценка"
+            $("#extracharge").mask("999%", { autoclear: false });
+            
+            $('#extracharge').keypress(function(e) {
+                if(/\D/.test(String.fromCharCode(e.charCode))) {
+                    return false;
+                }
+            });
+            
+            $('#extracharge').change(function() {
+                var val = $(this).val();
+                val = val.replace(/[^\d\%]/g, '');
+                $(this).val(val);
+            });
+            
+            $('#extracharge').click(function() {
+                $(this).prop("selectionStart", 0);
+                $(this).prop("selectionEnd", $(this).val().length);
+            });
+            
+            <?php if(isset($extracharge)): ?>
+            $('#extracharge').val('<?=$extracharge ?>%');
+            <?php endif; ?>
     
             // Если у объекта имеется ламинация 1, показываем ламинацию 1
             <?php if(!empty($lamination1_brand_name)): ?>
@@ -633,7 +660,7 @@ else $status_id = null;
             }
             
             // Скрытие расчёта при изменении значения полей
-            $("input[id!='extra_charge']").change(function () {
+            $("input[id!=extracharge]").change(function () {
                 HideCalculation();
             });
             
@@ -641,7 +668,7 @@ else $status_id = null;
                 HideCalculation();
             });
             
-            $("input[id!='extra_charge']").keydown(function () {
+            $("input[id!=extracharge]").keydown(function () {
                 HideCalculation();
             });
             

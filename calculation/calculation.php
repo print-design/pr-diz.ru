@@ -25,7 +25,7 @@ if(empty($id)) {
     $id = filter_input(INPUT_GET, 'id');
 }
 
-$sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.brand_name, c.thickness, c.lamination1_brand_name, c.lamination1_thickness, c.lamination2_brand_name, c.lamination2_thickness, c.width, c.weight, c.streamscount, c.status_id, "
+$sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.brand_name, c.thickness, c.lamination1_brand_name, c.lamination1_thickness, c.lamination2_brand_name, c.lamination2_thickness, c.width, c.weight, c.streamscount, c.status_id, c.extracharge, "
         . "cs.name status, cs.colour, cs.colour2, cs.image, cu.name customer, wt.name work_type "
         . "from calculation c "
         . "inner join calculation_status cs on c.status_id = cs.id "
@@ -48,6 +48,7 @@ $weight = $row['weight'];
 $width = $row['width'];
 $streamscount = $row['streamscount'];
 $status_id = $row['status_id'];
+$extracharge = $row['extracharge'];
 
 $status = $row['status'];
 $colour = $row['colour'];

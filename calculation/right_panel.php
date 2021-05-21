@@ -2,11 +2,11 @@
     <h1>Расчет</h1>
     <div class="d-table w-100">
         <div class="d-table-row">
-            <div class="d-table-cell pb-2 pt-2">
+            <div class="d-table-cell pl-2 pb-2 pt-2 w-50" style="border: solid 1px lightgray; border-radius: 10px;">
                 <div style="font-size: x-small;">Наценка</div>
-                10%
+                <input type="text" id="extracharge" name="extracharge" class="form-c1ontrol mt-1" style="width: 100px;" />
             </div>
-            <div class="d-table-cell pb-2 pt-2 pl-3" style="color: gray; border: solid 1px gray; border-radius: 10px;">
+            <div class="d-table-cell pb-2 pt-2 pl-3 w-50" style="color: gray; border: solid 1px gray; border-radius: 10px;">
                 <div style="font-size: x-small;">Курс евро</div>
                 93
             </div>
