@@ -497,6 +497,9 @@ else $status_id = null;
                                 </div>
                             </div>
                         </div>
+                        <?php
+                        if(!empty($lamination1_brand_name) || !empty($lamination2_brand_name)):
+                        ?>
                         <button type="button" class="btn btn-light" id="show_costs" onclick="javascript: ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать расходы</button>
                         <div id="costs" class="d-none">
                             <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
@@ -533,6 +536,9 @@ else $status_id = null;
                                 </div>
                             </div>
                         </div>
+                        <?php
+                        endif;
+                        ?>
                         <form method="post">
                             <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                             <input type="hidden" id="change_status_submit" name="change_status_submit" />
