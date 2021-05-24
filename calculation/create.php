@@ -80,12 +80,14 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         if(empty($streams_count)) $streams_count = "NULL";
         $raport = filter_input(INPUT_POST, 'raport');
         if(empty($raport)) $raport = "NULL";
+        $paints_count = filter_input(INPUT_POST, 'paints_count');
+        if(empty($paints_count)) $paints_count = "NULL";
         
         $manager_id = GetUserId();
         $status_id = 1; // Статус "Расчёт"
         
-        $sql = "insert into calculation (date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_type_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, quantity, streams_count, length, stream_width, raport, manager_id, status_id) "
-                . "values('$date', $customer_id, '$name', $work_type_id, '$brand_name', $thickness, '$unit', $machine_type_id, '$lamination1_brand_name', $lamination1_thickness, '$lamination2_brand_name', $lamination2_thickness, $width, $quantity, $streams_count, $length, $stream_width, $raport, $manager_id, $status_id)";
+        $sql = "insert into calculation (date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_type_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id) "
+                . "values('$date', $customer_id, '$name', $work_type_id, '$brand_name', $thickness, '$unit', $machine_type_id, '$lamination1_brand_name', $lamination1_thickness, '$lamination2_brand_name', $lamination2_thickness, $width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $insert_id = $executer->insert_id;
@@ -224,6 +226,12 @@ $raport = filter_input(INPUT_POST, 'raport');
 if(null === $raport) {
     if(isset($row['raport'])) $raport = $row['raport'];
     else $raport = null;
+}
+
+$paints_count = filter_input(INPUT_POST, 'paints_count');
+if(null === $paints_count) {
+    if(isset($row['paints_count'])) $paints_count = $row['paints_count'];
+    else $paints_count = null;
 }
 
 if(isset($row['status_id'])) $status_id = $row['status_id'];
@@ -560,6 +568,22 @@ else $extracharge = 0;
                                     </select>
                                 </div>
                             </div>
+                        </div>
+                        <div class="form-group mt-3">
+                            <select id="paints_count" name="paints_count" class="form-control work-type-lam-only d-none">
+                                <option value="">Количество красок...</option>
+                                <?php
+                                for($i = 1; $i <= 8; $i++):
+                                $selected = "";
+                                if($paints_count == $i) {
+                                    $selected = " selected='selected'";
+                                }
+                                ?>
+                                <option<?=$selected ?>><?=$i ?></option>
+                                <?php
+                                endfor;
+                                ?>
+                            </select>
                         </div>
                         <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark mt-3 d-none">Рассчитать</button>
                     </form>
