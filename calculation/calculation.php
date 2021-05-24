@@ -26,7 +26,7 @@ if(empty($id)) {
     $id = filter_input(INPUT_GET, 'id');
 }
 
-$sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.brand_name, c.thickness, c.lamination1_brand_name, c.lamination1_thickness, c.lamination2_brand_name, c.lamination2_thickness, c.width, c.weight, c.streamscount, c.status_id, c.extracharge, "
+$sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.brand_name, c.thickness, c.lamination1_brand_name, c.lamination1_thickness, c.lamination2_brand_name, c.lamination2_thickness, c.width, c.quantity, c.streamscount, c.status_id, c.extracharge, "
         . "cs.name status, cs.colour, cs.colour2, cs.image, cu.name customer, wt.name work_type "
         . "from calculation c "
         . "inner join calculation_status cs on c.status_id = cs.id "
@@ -45,7 +45,7 @@ $lamination1_brand_name = $row['lamination1_brand_name'];
 $lamination1_thickness = $row['lamination1_thickness'];
 $lamination2_brand_name = $row['lamination2_brand_name'];
 $lamination2_thickness = $row['lamination2_thickness'];
-$weight = $row['weight'];
+$quantity = $row['quantity'];
 $width = $row['width'];
 $streamscount = $row['streamscount'];
 $status_id = $row['status_id'];
@@ -91,7 +91,7 @@ $work_type = $row['work_type'];
                         <tr><th class="pr-5">Тип работы</th><td><?=$work_type ?></td></tr>
                         <tr><th class="pr-5">Марка пленки</th><td><?=$brand_name ?></td></tr>
                         <tr><th class="pr-5">Толщина</th><td><?= number_format($thickness, 0, ",", " ") ?> мкм</td></tr>
-                        <tr><th class="pr-5">Вес нетто</th><td><?= number_format($weight, 0, ",", " ") ?></td></tr>
+                        <tr><th class="pr-5">Вес нетто</th><td><?= number_format($quantity, 0, ",", " ") ?></td></tr>
                         <?php
                         if(!empty($width)):
                         ?>

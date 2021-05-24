@@ -120,7 +120,7 @@ function OrderLink($param) {
                         <th>Дата&nbsp;&nbsp;<?= OrderLink('date') ?></th>
                         <th>Заказчик&nbsp;&nbsp;<?= OrderLink('customer') ?></th>
                         <th>Имя заказа&nbsp;&nbsp;<?= OrderLink('name') ?></th>
-                        <th>Объем, кг&nbsp;&nbsp;<?= OrderLink('weight') ?></th>
+                        <th>Объем, кг&nbsp;&nbsp;<?= OrderLink('quantity') ?></th>
                         <th>Тип работы&nbsp;&nbsp;<?= OrderLink('work_type') ?></th>
                         <th>Менеджер&nbsp;&nbsp;<?= OrderLink('manager') ?></th>
                         <th>Статус&nbsp;&nbsp;<?= OrderLink('status') ?></th>
@@ -185,8 +185,8 @@ function OrderLink($param) {
                                 $orderby = "order by c.name asc";
                                 break;
                             
-                            case 'weight':
-                                $orderby = "order by c.weight desc";
+                            case 'quantity':
+                                $orderby = "order by c.quantity desc";
                                 break;
                             
                             case 'work_type':
@@ -203,7 +203,7 @@ function OrderLink($param) {
                         }
                     }
                     
-                    $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.weight, wt.name work_type, u.last_name, u.first_name, c.status_id "
+                    $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.quantity, wt.name work_type, u.last_name, u.first_name, c.status_id "
                             . "from calculation c "
                             . "inner join customer cus on c.customer_id = cus.id "
                             . "inner join work_type wt on c.work_type_id = wt.id "
@@ -231,7 +231,7 @@ function OrderLink($param) {
                         <td class="text-nowrap"><?= DateTime::createFromFormat('Y-m-d', $row['date'])->format('d.m.Y') ?></td>
                         <td><?=$row['customer'] ?></td>
                         <td><?= htmlentities($row['name']) ?></td>
-                        <td><?=$row['weight'] ?></td>
+                        <td><?=$row['quantity'] ?></td>
                         <td><?=$row['work_type'] ?></td>
                         <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
                         <td><i class="fas fa-circle" style="color: <?=$colour ?>;"></i>&nbsp;&nbsp;<?=$status ?></td>

@@ -16,7 +16,7 @@ $name_valid = '';
 $work_type_valid = '';
 $brand_name_valid = '';
 $thickness_valid = '';
-$weight_valid = '';
+$quantity_valid = '';
 
 // Сохранение в базу расчёта
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
@@ -45,8 +45,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'weight'))) {
-        $weight_valid = ISINVALID;
+    if(empty(filter_input(INPUT_POST, 'quantity'))) {
+        $quantity_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -58,6 +58,10 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $brand_name = addslashes(filter_input(INPUT_POST, 'brand_name'));
         $thickness = filter_input(INPUT_POST, 'thickness');
         
+        $unit = filter_input(INPUT_POST, 'unit');
+        $machine_type_id = filter_input(INPUT_POST, 'machine_type_id');
+        if(empty($machine_type_id)) $machine_type_id = "NULL";
+        
         $lamination1_brand_name = addslashes(filter_input(INPUT_POST, 'lamination1_brand_name'));
         $lamination1_thickness = filter_input(INPUT_POST, 'lamination1_thickness');
         if(empty($lamination1_thickness)) $lamination1_thickness = "NULL";
@@ -65,7 +69,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $lamination2_thickness = filter_input(INPUT_POST, 'lamination2_thickness');
         if(empty($lamination2_thickness)) $lamination2_thickness = "NULL";
         
-        $weight = filter_input(INPUT_POST, 'weight');
+        $quantity = filter_input(INPUT_POST, 'quantity');
         $width = filter_input(INPUT_POST, 'width');
         if(empty($width)) $width = "NULL";
         $streamscount = filter_input(INPUT_POST, 'streamscount');
@@ -74,7 +78,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $manager_id = GetUserId();
         $status_id = 1; // Статус "Расчёт"
         
-        $sql = "insert into calculation (date, customer_id, name, work_type_id, brand_name, thickness, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, weight, streamscount, manager_id, status_id) values('$date', $customer_id, '$name', $work_type_id, '$brand_name', $thickness, '$lamination1_brand_name', $lamination1_thickness, '$lamination2_brand_name', $lamination2_thickness, $width, $weight, $streamscount, $manager_id, $status_id)";
+        $sql = "insert into calculation (date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_type_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, quantity, streamscount, manager_id, status_id) values('$date', $customer_id, '$name', $work_type_id, '$brand_name', $thickness, '$unit', $machine_type_id, '$lamination1_brand_name', $lamination1_thickness, '$lamination2_brand_name', $lamination2_thickness, $width, $quantity, $streamscount, $manager_id, $status_id)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $insert_id = $executer->insert_id;
@@ -106,7 +110,7 @@ if(empty($id)) {
 }
 
 if(!empty($id)) {
-    $sql = "select date, customer_id, name, work_type_id, brand_name, thickness, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, weight, width, streamscount, status_id, extracharge from calculation where id=$id";
+    $sql = "select date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_type_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, quantity, width, streamscount, status_id, extracharge from calculation where id=$id";
     $row = (new Fetcher($sql))->Fetch();
 }
 
@@ -143,6 +147,18 @@ if(null === $thickness) {
     else $thickness = null;
 }
 
+$unit = filter_input(INPUT_POST, "unit");
+if(null === $unit) {
+    if(isset($row['unit'])) $unit = $row['unit'];
+    else $unit = null;
+}
+
+$machine_type_id = filter_input(INPUT_POST, 'machine_type_id');
+if(null === $machine_type_id) {
+    if(isset($row['machine_type_id'])) $machine_type_id = $row['machine_type_id'];
+    else $machine_type_id = null;
+}
+
 $lamination1_brand_name = filter_input(INPUT_POST, 'lamination1_brand_name');
 if(null === $lamination1_brand_name) {
     if(isset($row['lamination1_brand_name'])) $lamination1_brand_name = $row['lamination1_brand_name'];
@@ -167,9 +183,9 @@ if(null === $lamination2_thickness) {
     else $lamination2_thickness = null;
 }
 
-$weight = filter_input(INPUT_POST, 'weight');
-if(null === $weight) {
-    if(isset($row['weight'])) $weight = $row['weight'];
+$quantity = filter_input(INPUT_POST, 'quantity');
+if(null === $quantity) {
+    if(isset($row['quantity'])) $quantity = $row['quantity'];
     else $width = null;
 }
 
@@ -276,13 +292,48 @@ else $extracharge = 0;
                                 ?>
                             </select>
                         </div>
-                        <!-- Вес нетто -->
+                        <!-- Единица заказа -->
+                        <?php
+                        $kg_checked = ($unit == "kg" || empty($unit)) ? " checked='checked'" : "";
+                        $thing_checked = $unit == "thing" ? " checked='checked'" : "";
+                        ?>
+                        <div class="form-check-inline only_work_type_film_with_print d-none">
+                            <label class="form-check-label">
+                                <input type="radio" class="form-check-input" name="unit" value="kg"<?=$kg_checked ?> />Килограммы
+                            </label>
+                        </div>
+                        <div class="form-check-inline only_work_type_film_with_print d-none">
+                            <label class="form-check-inline only_work_type_film_with_print">
+                                <input type="radio" class="form-check-input" name="unit" value="thing"<?=$thing_checked ?> />Штуки
+                            </label>
+                        </div>
+                        <!-- Печатная машина -->
+                        <div class="form-group only_work_type_film_with_print d-none">
+                            <select id="machine_type_id" name="machine_type_id" class="form-control only_work_type_film_with_print d-none">
+                                <option value="">Печтная машина...</option>
+                                <?php
+                                $sql = "select id, name from machine_type";
+                                $fetcher = new Fetcher($sql);
+                                
+                                while ($row = $fetcher->Fetch()):
+                                $selected = '';
+                                if($row['id'] == $machine_type_id) {
+                                    $selected = " selected='selected'";
+                                }
+                                ?>
+                                <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
+                                <?php
+                                endwhile;
+                                ?>
+                            </select>
+                        </div>
+                        <!-- Объем заказа -->
                         <div class="row mt-3">
-                            <!-- Вес нетто -->
+                            <!-- Объем заказа -->
                             <div class="col-6">
                                 <div class="form-group">
-                                    <input type="text" id="weight" name="weight" class="form-control float-only" placeholder="Вес нетто, кг" value="<?=$weight ?>" required="required" />
-                                    <div class="invalid-feedback">Вес нетто обязательно</div>
+                                    <input type="text" id="quantity" name="quantity" class="form-control float-only" placeholder="Объем заказа, кг" value="<?=$quantity ?>" required="required" />
+                                    <div class="invalid-feedback">Объем заказа обязательно</div>
                                 </div>
                             </div>
                         </div>
@@ -513,6 +564,51 @@ else $extracharge = 0;
             $('#extracharge').click(function() {
                 $(this).prop("selectionStart", 0);
                 $(this).prop("selectionEnd", $(this).val().length);
+            });
+            
+            // При смене типа работы: если тип работы "плёнка с печатью", показываем поля, предназначенные только для плёнки с печатью
+            $('#work_type_id').change(function() {
+                if($(this).val() == 2) {
+                    ShowOnlyWorkTypeFilmWithPrint();
+                }
+                else {
+                    HideOnlyWorkTypeFilmWithPrint();
+                }
+            });
+            
+            // Если тип работы "Плёнка с печатью", то показываем поля, предназначенные только для пленки с печатью
+            <?php if($work_type_id == 2): ?>
+            ShowOnlyWorkTypeFilmWithPrint();
+            <?php endif; ?>
+                
+            function ShowOnlyWorkTypeFilmWithPrint() {
+                $('.only_work_type_film_with_print').removeClass('d-none');
+                $('input.only_work_type_film_with_print').attr('required', 'required');
+                $('select.only_work_type_film_with_print').attr('required', 'required');
+            }
+            
+            function HideOnlyWorkTypeFilmWithPrint() {
+                $('.only_work_type_film_with_print').addClass('d-none');
+                $('input.only_work_type_film_with_print').removeAttr('required');
+                $('select.only_work_type_film_with_print').removeAttr('required');
+            }
+            
+            // Если единица объёма - кг, то в поле "Объём" пишем "Объём, кг", иначе "Объем, шт"
+            if($('input[value=kg]').is(':checked')) {
+                $('#quantity').attr('placeholder', 'Объем заказа, кг');
+            }
+            
+            if($('input[value=thing]').is(':checked')) {
+                $('#quantity').attr('placeholder', 'Объем заказа, шт');
+            }
+                
+            $('input[name=unit]').click(function(){
+                if($(this).val() == 'kg') {
+                    $('#quantity').attr('placeholder', 'Объем заказа, кг');
+                }
+                else {
+                    $('#quantity').attr('placeholder', 'Объем заказа, шт');
+                }
             });
     
             // Если у объекта имеется ламинация 1, показываем ламинацию 1
