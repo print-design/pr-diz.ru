@@ -72,13 +72,20 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $quantity = filter_input(INPUT_POST, 'quantity');
         $width = filter_input(INPUT_POST, 'width');
         if(empty($width)) $width = "NULL";
-        $streamscount = filter_input(INPUT_POST, 'streamscount');
-        if(empty($streamscount)) $streamscount = "NULL";
+        $length = filter_input(INPUT_POST, 'length');
+        if(empty($length)) $length = "NULL";
+        $stream_width = filter_input(INPUT_POST, 'stream_width');
+        if(empty($stream_width)) $stream_width = "NULL";
+        $streams_count = filter_input(INPUT_POST, 'streams_count');
+        if(empty($streams_count)) $streams_count = "NULL";
+        $raport = filter_input(INPUT_POST, 'raport');
+        if(empty($raport)) $raport = "NULL";
         
         $manager_id = GetUserId();
         $status_id = 1; // Статус "Расчёт"
         
-        $sql = "insert into calculation (date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_type_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, quantity, streamscount, manager_id, status_id) values('$date', $customer_id, '$name', $work_type_id, '$brand_name', $thickness, '$unit', $machine_type_id, '$lamination1_brand_name', $lamination1_thickness, '$lamination2_brand_name', $lamination2_thickness, $width, $quantity, $streamscount, $manager_id, $status_id)";
+        $sql = "insert into calculation (date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_type_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, quantity, streams_count, length, stream_width, raport, manager_id, status_id) "
+                . "values('$date', $customer_id, '$name', $work_type_id, '$brand_name', $thickness, '$unit', $machine_type_id, '$lamination1_brand_name', $lamination1_thickness, '$lamination2_brand_name', $lamination2_thickness, $width, $quantity, $streams_count, $length, $stream_width, $raport, $manager_id, $status_id)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $insert_id = $executer->insert_id;
@@ -110,7 +117,7 @@ if(empty($id)) {
 }
 
 if(!empty($id)) {
-    $sql = "select date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_type_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, quantity, width, streamscount, status_id, extracharge from calculation where id=$id";
+    $sql = "select date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_type_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, quantity, width, streams_count, status_id, extracharge from calculation where id=$id";
     $row = (new Fetcher($sql))->Fetch();
 }
 
@@ -195,10 +202,28 @@ if(null === $width) {
     else $width = null;
 }
 
-$streamscount = filter_input(INPUT_POST, 'streamscount');
-if(null === $streamscount) {
-    if(isset($row['streamscount'])) $streamscount = $row['streamscount'];
-    else $streamscount = null;
+$streams_count = filter_input(INPUT_POST, 'streams_count');
+if(null === $streams_count) {
+    if(isset($row['streams_count'])) $streams_count = $row['streams_count'];
+    else $streams_count = null;
+}
+
+$length = filter_input(INPUT_POST, 'length');
+if(null === $length) {
+    if(isset($row['length'])) $length = $row['length'];
+    else $length = null;
+}
+
+$stream_width = filter_input(INPUT_POST, 'stream_width');
+if(null === $stream_width) {
+    if(isset($row['stream_width'])) $stream_width = $row['stream_width'];
+    else $stream_width = null;
+}
+
+$raport = filter_input(INPUT_POST, 'raport');
+if(null === $raport) {
+    if(isset($row['raport'])) $raport = $row['raport'];
+    else $raport = null;
 }
 
 if(isset($row['status_id'])) $status_id = $row['status_id'];
@@ -498,16 +523,40 @@ else $extracharge = 0;
                         </div>
                         <div class="row mt-3">
                             <!-- Обрезная ширина -->
-                            <div class="col-6 lam-only d-none">
+                            <div class="col-6 lam-only lam-only-work-type-no-lam d-none">
                                 <div class="form-group">
-                                    <input type="text" id="width" name="width" class="form-control int-only" placeholder="Обрезная ширина, мм" value="<?=$width ?>" />
+                                    <input type="text" id="width" name="width" class="form-control int-only lam-only lam-only-work-type-no-lam d-none" placeholder="Обрезная ширина, мм" value="<?=$width ?>" />
                                     <div class="invalid-feedback">Обрезная ширина обязательно</div>
+                                </div>
+                            </div>
+                            <!-- Длина от метки до метки -->
+                            <div class="col-6 work-type-lam-only d-none">
+                                <div class="form-group">
+                                    <input type="text" id="length" name="length" class="form-control float-only work-type-lam-only d-none" placeholder="Длина от метки до метки" value="<?=$length ?>" />
+                                    <div class="invalid-feedback">Длина от метки до метки обязательно</div>
+                                </div>
+                            </div>
+                            <!-- Ширина ручья -->
+                            <div class="col-6 work-type-lam-only d-none">
+                                <div class="form-group">
+                                    <input type="text" id="stream_width" name="stream_width" class="form-control work-type-lam-only d-none" placeholder="Ширина ручья" value="<?=$stream_width ?>" />
+                                    <div class="invalid-feedback">Ширина ручья обязательно</div>
+                                </div>
+                            </div>
+                            <!-- Рапорт -->
+                            <div class="col-6 work-type-lam-only d-none">
+                                <div class="form-group">
+                                    <select id="raport" name="raport" class="form-control work-type-lam-only d-none">
+                                        <option value="">Рапорт</option>
+                                        <option>1.111</option>
+                                        <option>2.222</option>
+                                    </select>
                                 </div>
                             </div>
                             <!-- Количество ручьёв -->
                             <div class="col-6 lam-only lam-only-work-type-no-lam work-type-lam-only d-none">
                                 <div class="form-group">
-                                    <input type="text" id="streamscount" name="streamscount" class="form-control int-only" placeholder="Количество ручьев" value="<?=$streamscount ?>" />
+                                    <input type="text" id="streams_count" name="streams_count" class="form-control int-only lam-only lam-only-work-type-no-lam work-type-lam-only d-none" placeholder="Количество ручьев" value="<?=$streams_count ?>" />
                                     <div class="invalid-feedback">Количество ручьев обязательно</div>
                                 </div>
                             </div>
@@ -648,7 +697,7 @@ else $extracharge = 0;
                 $('#lamination1_thickness').attr('required', 'required');
                 $('.lam-only').removeClass('d-none');
                 $('#width').attr('required', 'required');
-                $('#streamscount').attr('required', 'required');
+                $('#streams_count').attr('required', 'required');
             }
             
             // Скрытие марки плёнки и толщины для ламинации 1
@@ -664,7 +713,7 @@ else $extracharge = 0;
                 $('#lamination1_thickness').removeAttr('required');
                 $('.lam-only').addClass('d-none');
                 $('#width').removeAttr('required');
-                $('#streamscount').removeAttr('required');
+                $('#streams_count').removeAttr('required');
                 HideLamination2();
             }
             
