@@ -332,7 +332,7 @@ else $extracharge = 0;
                             <!-- Объем заказа -->
                             <div class="col-6">
                                 <div class="form-group">
-                                    <input type="text" id="quantity" name="quantity" class="form-control float-only" placeholder="Объем заказа, кг" value="<?=$quantity ?>" required="required" />
+                                    <input type="text" id="quantity" name="quantity" class="form-control int-only" placeholder="Объем заказа, кг" value="<?=$quantity ?>" required="required" />
                                     <div class="invalid-feedback">Объем заказа обязательно</div>
                                 </div>
                             </div>
