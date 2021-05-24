@@ -119,7 +119,8 @@ if(empty($id)) {
 }
 
 if(!empty($id)) {
-    $sql = "select date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_type_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, quantity, width, streams_count, status_id, extracharge from calculation where id=$id";
+    $sql = "select date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_type_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, "
+            . "quantity, width, streams_count, length, stream_width, raport, paints_count, status_id, extracharge from calculation where id=$id";
     $row = (new Fetcher($sql))->Fetch();
 }
 
@@ -563,8 +564,20 @@ else $extracharge = 0;
                                 <div class="form-group">
                                     <select id="raport" name="raport" class="form-control work-type-lam-only d-none">
                                         <option value="">Рапорт...</option>
-                                        <option>1.111</option>
-                                        <option>2.222</option>
+                                        <?php
+                                        $selected = "";
+                                        if($raport == 1.111) {
+                                            $selected = " selected='selected'";
+                                        }
+                                        ?>
+                                        <option<?=$selected ?>>1.111</option>
+                                        <?php
+                                        $selected = "";
+                                        if($raport == 2.222) {
+                                            $selected = " selected='selected'";
+                                        }
+                                        ?>
+                                        <option<?=$selected ?>>2.222</option>
                                     </select>
                                 </div>
                             </div>
@@ -657,6 +670,8 @@ else $extracharge = 0;
             function WorkTypeFilmWithPrint() {
                 // Скрываем поля только с ламинацией
                 $('.lam-only').addClass('d-none');
+                $('input.lam-only').removeAttr('required');
+                $('select.lam-only').removeAttr('required');
                 
                 // Показываем поля для плёнки с печатью
                 $('.work-type-lam-only').removeClass('d-none');
@@ -679,6 +694,8 @@ else $extracharge = 0;
                 // Показываем поля только с ламинацией
                 <?php if(!empty($lamination1_brand_name)): ?>
                 $('.lam-only').removeClass('d-none');
+                $('input.lam-only').attr('required', 'required');
+                $('select.lam-only').attr('required', 'required');
                 <?php endif; ?>
             }
             
@@ -719,8 +736,8 @@ else $extracharge = 0;
                 $('#lamination1_brand_name').attr('required', 'required');
                 $('#lamination1_thickness').attr('required', 'required');
                 $('.lam-only').removeClass('d-none');
-                $('#width').attr('required', 'required');
-                $('#streams_count').attr('required', 'required');
+                $('input.lam-only').attr('required', 'required');
+                $('select.lam-only').attr('required', 'required');
             }
             
             // Скрытие марки плёнки и толщины для ламинации 1
@@ -735,8 +752,8 @@ else $extracharge = 0;
                 $('#lamination1_brand_name').removeAttr('required');
                 $('#lamination1_thickness').removeAttr('required');
                 $('.lam-only').addClass('d-none');
-                $('#width').removeAttr('required');
-                $('#streams_count').removeAttr('required');
+                $('input.lam-only').removeAttr('required');
+                $('select.lam-only').removeAttr('required');
                 HideLamination2();
             }
             
