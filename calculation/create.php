@@ -543,21 +543,21 @@ else $extracharge = 0;
                                     <div class="invalid-feedback">Ширина ручья обязательно</div>
                                 </div>
                             </div>
-                            <!-- Рапорт -->
-                            <div class="col-6 work-type-lam-only d-none">
-                                <div class="form-group">
-                                    <select id="raport" name="raport" class="form-control work-type-lam-only d-none">
-                                        <option value="">Рапорт</option>
-                                        <option>1.111</option>
-                                        <option>2.222</option>
-                                    </select>
-                                </div>
-                            </div>
                             <!-- Количество ручьёв -->
                             <div class="col-6 lam-only lam-only-work-type-no-lam work-type-lam-only d-none">
                                 <div class="form-group">
                                     <input type="text" id="streams_count" name="streams_count" class="form-control int-only lam-only lam-only-work-type-no-lam work-type-lam-only d-none" placeholder="Количество ручьев" value="<?=$streams_count ?>" />
                                     <div class="invalid-feedback">Количество ручьев обязательно</div>
+                                </div>
+                            </div>
+                            <!-- Рапорт -->
+                            <div class="col-6 work-type-lam-only d-none">
+                                <div class="form-group">
+                                    <select id="raport" name="raport" class="form-control work-type-lam-only d-none">
+                                        <option value="">Рапорт...</option>
+                                        <option>1.111</option>
+                                        <option>2.222</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -631,6 +631,9 @@ else $extracharge = 0;
             <?php endif; ?>
                 
             function WorkTypeFilmWithPrint() {
+                // Скрываем поля только с ламинацией
+                $('.lam-only').addClass('d-none');
+                
                 // Показываем поля для плёнки с печатью
                 $('.work-type-lam-only').removeClass('d-none');
                 $('input.work-type-lam-only').attr('required', 'required');
@@ -649,13 +652,9 @@ else $extracharge = 0;
                 // Восстанавливаем зависимость полей от ламинации
                 $('.lam-only-work-type-no-lam').addClass('lam-only');
                 
-                // Скрываем или показываем ламинацию
+                // Показываем поля только с ламинацией
                 <?php if(!empty($lamination1_brand_name)): ?>
-                ShowLamination1();
-                <?php endif; ?>
-                
-                <?php if(!empty($lamination2_brand_name)): ?>
-                ShowLamination2();
+                $('.lam-only').removeClass('d-none');
                 <?php endif; ?>
             }
             

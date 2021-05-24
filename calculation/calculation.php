@@ -26,7 +26,7 @@ if(empty($id)) {
     $id = filter_input(INPUT_GET, 'id');
 }
 
-$sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.brand_name, c.thickness, c.lamination1_brand_name, c.lamination1_thickness, c.lamination2_brand_name, c.lamination2_thickness, c.width, c.quantity, c.streamscount, c.status_id, c.extracharge, "
+$sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.brand_name, c.thickness, c.lamination1_brand_name, c.lamination1_thickness, c.lamination2_brand_name, c.lamination2_thickness, c.width, c.quantity, c.streams_count, c.status_id, c.extracharge, "
         . "cs.name status, cs.colour, cs.colour2, cs.image, cu.name customer, wt.name work_type "
         . "from calculation c "
         . "inner join calculation_status cs on c.status_id = cs.id "
@@ -47,7 +47,7 @@ $lamination2_brand_name = $row['lamination2_brand_name'];
 $lamination2_thickness = $row['lamination2_thickness'];
 $quantity = $row['quantity'];
 $width = $row['width'];
-$streamscount = $row['streamscount'];
+$streams_count = $row['streams_count'];
 $status_id = $row['status_id'];
 $extracharge = $row['extracharge'];
 
@@ -98,9 +98,9 @@ $work_type = $row['work_type'];
                         <tr><th class="pr-5">Ширина</th><td><?= number_format($width, 0, ",", " ") ?> мм</td></tr>
                         <?php
                         endif;
-                        if(!empty($streamscount)):
+                        if(!empty($streams_count)):
                         ?>
-                        <tr><th class="pr-5">Количество ручьев</th><td><?= number_format($streamscount, 0, ",", " ") ?></td></tr>
+                        <tr><th class="pr-5">Количество ручьев</th><td><?= number_format($streams_count, 0, ",", " ") ?></td></tr>
                         <?php
                         endif;
                         ?>
