@@ -604,16 +604,17 @@ else $extracharge = 0;
                         for($i=1; $i<=8; $i++):
                         ?>
                         <div class="row paint_block_<?=$i ?> paint_block d-none">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <select id="paint_<?=$i ?>" name="paint_<?=$i ?>" class="form-control paint">
-                                        <option value="">Цвет...</option>
-                                        <option value="cmyk">CMYK...</option>
-                                        <option value="panton">Пантон...</option>
-                                        <option value="white">Белый...</option>
-                                        <option value="lacquer">Лак...</option>
-                                    </select>
-                                </div>
+                            <div class="form-group col-12" id="paint_group_<?=$i ?>">
+                                <select id="paint_<?=$i ?>" name="paint_<?=$i ?>" class="form-control paint" data-id="<?=$i ?>">
+                                    <option value="">Цвет...</option>
+                                    <option value="cmyk">CMYK...</option>
+                                    <option value="panton">Пантон...</option>
+                                    <option value="white">Белый...</option>
+                                    <option value="lacquer">Лак...</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-3 d-none" id="color_group_<?=$i ?>">
+                                <input type="text" id="color_<?=$i ?>" name="color_<?=$i ?>" class="form-control color" />
                             </div>
                         </div>
                         <?php
@@ -862,7 +863,36 @@ else $extracharge = 0;
                     }
                 }
             });
+            
+            // Обработка выбора краски
+            $('.paint').change(function(){
+                paint = $(this).val();
+                var data_id = $(this).attr('data-id');
                 
+                $('#paint_group_' + data_id).removeClass('col-12');
+                $('#paint_group_' + data_id).removeClass('col-6');
+                $('#paint_group_' + data_id).removeClass('col-3');
+                
+                $('#color_group_' + data_id).addClass('d-none');
+                
+                if(paint == 'lacquer')  {
+                    $('#paint_group_' + data_id).addClass('col-6');
+                }
+                else if(paint == 'white') {
+                    $('#paint_group_' + data_id).addClass('col-6');
+                }
+                else if(paint == 'cmyk') {
+                    $('#paint_group_' + data_id).addClass('col-3');
+                }
+                else if(paint == 'panton') {
+                    $('#paint_group_' + data_id).addClass('col-3');
+                    $('#color_group_' + data_id).removeClass('d-none');
+                }
+                else {
+                    $('#paint_group_' + data_id).addClass('col-12');
+                }
+            });
+
             // Показ расходов
             function ShowCosts() {
                 $("#costs").removeClass("d-none");
