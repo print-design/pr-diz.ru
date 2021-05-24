@@ -297,19 +297,19 @@ else $extracharge = 0;
                         $kg_checked = ($unit == "kg" || empty($unit)) ? " checked='checked'" : "";
                         $thing_checked = $unit == "thing" ? " checked='checked'" : "";
                         ?>
-                        <div class="form-check-inline only_work_type_film_with_print d-none">
+                        <div class="form-check-inline work-type-lam-only d-none">
                             <label class="form-check-label">
                                 <input type="radio" class="form-check-input" name="unit" value="kg"<?=$kg_checked ?> />Килограммы
                             </label>
                         </div>
-                        <div class="form-check-inline only_work_type_film_with_print d-none">
-                            <label class="form-check-inline only_work_type_film_with_print">
+                        <div class="form-check-inline work-type-lam-only d-none">
+                            <label class="form-check-inline work-type-lam-only">
                                 <input type="radio" class="form-check-input" name="unit" value="thing"<?=$thing_checked ?> />Штуки
                             </label>
                         </div>
                         <!-- Печатная машина -->
-                        <div class="form-group only_work_type_film_with_print d-none">
-                            <select id="machine_type_id" name="machine_type_id" class="form-control only_work_type_film_with_print d-none">
+                        <div class="form-group work-type-lam-only d-none">
+                            <select id="machine_type_id" name="machine_type_id" class="form-control work-type-lam-only d-none">
                                 <option value="">Печтная машина...</option>
                                 <?php
                                 $sql = "select id, name from machine_type";
@@ -491,21 +491,21 @@ else $extracharge = 0;
                                         </div>
                                     </div>
                                     <div class="col-1" id="hide_lamination_2">
-                                        <button type="button" class="btn" onclick="javascript: HideLamination2();"><i class="fas fa-trash-alt"></i></button>
+                                        <button type="button" class="btn btn-light" onclick="javascript: HideLamination2();"><i class="fas fa-trash-alt"></i></button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-3 d-none" id="lam-only">
+                        <div class="row mt-3">
                             <!-- Обрезная ширина -->
-                            <div class="col-6">
+                            <div class="col-6 lam-only d-none">
                                 <div class="form-group">
                                     <input type="text" id="width" name="width" class="form-control int-only" placeholder="Обрезная ширина, мм" value="<?=$width ?>" />
                                     <div class="invalid-feedback">Обрезная ширина обязательно</div>
                                 </div>
                             </div>
                             <!-- Количество ручьёв -->
-                            <div class="col-6">
+                            <div class="col-6 lam-only lam-only-work-type-no-lam work-type-lam-only d-none">
                                 <div class="form-group">
                                     <input type="text" id="streamscount" name="streamscount" class="form-control int-only" placeholder="Количество ручьев" value="<?=$streamscount ?>" />
                                     <div class="invalid-feedback">Количество ручьев обязательно</div>
@@ -569,28 +569,45 @@ else $extracharge = 0;
             // При смене типа работы: если тип работы "плёнка с печатью", показываем поля, предназначенные только для плёнки с печатью
             $('#work_type_id').change(function() {
                 if($(this).val() == 2) {
-                    ShowOnlyWorkTypeFilmWithPrint();
+                    WorkTypeFilmWithPrint();
                 }
                 else {
-                    HideOnlyWorkTypeFilmWithPrint();
+                    WorkTypeFilmWithoutPrint();
                 }
             });
             
             // Если тип работы "Плёнка с печатью", то показываем поля, предназначенные только для пленки с печатью
             <?php if($work_type_id == 2): ?>
-            ShowOnlyWorkTypeFilmWithPrint();
+            WorkTypeFilmWithPrint();
             <?php endif; ?>
                 
-            function ShowOnlyWorkTypeFilmWithPrint() {
-                $('.only_work_type_film_with_print').removeClass('d-none');
-                $('input.only_work_type_film_with_print').attr('required', 'required');
-                $('select.only_work_type_film_with_print').attr('required', 'required');
+            function WorkTypeFilmWithPrint() {
+                // Показываем поля для плёнки с печатью
+                $('.work-type-lam-only').removeClass('d-none');
+                $('input.work-type-lam-only').attr('required', 'required');
+                $('select.work-type-lam-only').attr('required', 'required');
+                
+                // Делаем поля, зависимые от ламинации, независимыми
+                $('.lam-only-work-type-no-lam').removeClass('lam-only');
             }
             
-            function HideOnlyWorkTypeFilmWithPrint() {
-                $('.only_work_type_film_with_print').addClass('d-none');
-                $('input.only_work_type_film_with_print').removeAttr('required');
-                $('select.only_work_type_film_with_print').removeAttr('required');
+            function WorkTypeFilmWithoutPrint() {
+                // Скрываем поля для плёнки с печатью
+                $('.work-type-lam-only').addClass('d-none');
+                $('input.work-type-lam-only').removeAttr('required');
+                $('select.work-type-lam-only').removeAttr('required');
+                
+                // Восстанавливаем зависимость полей от ламинации
+                $('.lam-only-work-type-no-lam').addClass('lam-only');
+                
+                // Скрываем или показываем ламинацию
+                <?php if(!empty($lamination1_brand_name)): ?>
+                ShowLamination1();
+                <?php endif; ?>
+                
+                <?php if(!empty($lamination2_brand_name)): ?>
+                ShowLamination2();
+                <?php endif; ?>
             }
             
             // Если единица объёма - кг, то в поле "Объём" пишем "Объём, кг", иначе "Объем, шт"
@@ -629,7 +646,7 @@ else $extracharge = 0;
                 $('#film_title').addClass('d-none');
                 $('#lamination1_brand_name').attr('required', 'required');
                 $('#lamination1_thickness').attr('required', 'required');
-                $('#lam-only').removeClass('d-none');
+                $('.lam-only').removeClass('d-none');
                 $('#width').attr('required', 'required');
                 $('#streamscount').attr('required', 'required');
             }
@@ -645,7 +662,7 @@ else $extracharge = 0;
                 $('#film_title').removeClass('d-none');
                 $('#lamination1_brand_name').removeAttr('required');
                 $('#lamination1_thickness').removeAttr('required');
-                $('#lam-only').addClass('d-none');
+                $('.lam-only').addClass('d-none');
                 $('#width').removeAttr('required');
                 $('#streamscount').removeAttr('required');
                 HideLamination2();
