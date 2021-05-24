@@ -582,6 +582,7 @@ else $extracharge = 0;
                                 </div>
                             </div>
                         </div>
+                        <!-- Количество красок -->
                         <div class="form-group mt-3">
                             <select id="paints_count" name="paints_count" class="form-control work-type-lam-only d-none">
                                 <option value="">Количество красок...</option>
@@ -598,6 +599,26 @@ else $extracharge = 0;
                                 ?>
                             </select>
                         </div>
+                        <!-- Каждая краска -->
+                        <?php
+                        for($i=1; $i<=8; $i++):
+                        ?>
+                        <div class="row paint_block_<?=$i ?> paint_block d-none">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <select id="paint_<?=$i ?>" name="paint_<?=$i ?>" class="form-control paint">
+                                        <option value="">Цвет...</option>
+                                        <option value="cmyk">CMYK...</option>
+                                        <option value="panton">Пантон...</option>
+                                        <option value="white">Белый...</option>
+                                        <option value="lacquer">Лак...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                        endfor;
+                        ?>
                         <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark mt-3 d-none">Рассчитать</button>
                     </form>
                 </div>
@@ -823,6 +844,22 @@ else $extracharge = 0;
                             .fail(function() {
                                 alert('Ошибка при выборе марки пленки');
                     });
+                }
+            });
+            
+            // Обработка выбора количества красок
+            $('#paints_count').change(function(){
+                var count = $(this).val();
+                $('.paint_block').addClass('d-none');
+                $('.paint').removeAttr('required');
+                
+                if(count != '') {
+                    iCount = parseInt(count);
+                    
+                    for(var i=1; i<=iCount; i++) {
+                        $('.paint_block_' + i).removeClass('d-none');
+                        $('.paint_' + i).attr('required');
+                    }
                 }
             });
                 
