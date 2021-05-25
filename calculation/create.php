@@ -1052,10 +1052,6 @@ if(null === $paint_8) {
                 }
             });
             
-            $(document).ready(function(){
-                $(".paint").change();
-            });
-            
             // Обработка выбора компонента цвета
             $(".cmyk").change(function(){
                 cmyk = $(this).val();
@@ -1081,6 +1077,13 @@ if(null === $paint_8) {
                 var data_id = $(this).attr('data-id');
                 
                 $("#form_" + data_cmyk + "_" + data_id).val(form);
+            });
+            
+            // При полной загрузке страницы запускаем обработку выбора из всех списков, чтобы настроились видимость и размеры всех элементов
+            $(document).ready(function(){
+                $(".paint").change();
+                $(".cmyk").change();
+                $(".form_select").change();
             });
             
             // Маска % для поля "процент"
