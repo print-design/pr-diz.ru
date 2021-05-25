@@ -603,7 +603,7 @@ else $extracharge = 0;
                         <?php
                         for($i=1; $i<=8; $i++):
                         ?>
-                        <div class="row paint_block_<?=$i ?> paint_block d-none">
+                        <div class="row paint_block d-none" id="paint_block_<?=$i ?>">
                             <div class="form-group col-12" id="paint_group_<?=$i ?>">
                                 <select id="paint_<?=$i ?>" name="paint_<?=$i ?>" class="form-control paint" data-id="<?=$i ?>">
                                     <option value="">Цвет...</option>
@@ -903,8 +903,8 @@ else $extracharge = 0;
                     iCount = parseInt(count);
                     
                     for(var i=1; i<=iCount; i++) {
-                        $('.paint_block_' + i).removeClass('d-none');
-                        $('.paint_' + i).attr('required');
+                        $('#paint_block_' + i).removeClass('d-none');
+                        $('#paint_' + i).attr('required', 'required');
                     }
                 }
             });
@@ -918,11 +918,14 @@ else $extracharge = 0;
                 $('#paint_group_' + data_id).removeClass('col-12');
                 $('#paint_group_' + data_id).removeClass('col-6');
                 $('#paint_group_' + data_id).removeClass('col-3');
+                $('.paint').removeAttr('required');
                 
                 $('#color_group_' + data_id).addClass('d-none');
+                $('.color').removeAttr('required');
                 
                 $('#percent_group_' + data_id).addClass('d-none');
                 $('#percent_group_cmyk_' + data_id).addClass('d-none');
+                $('.percent').removeAttr('required');
                 
                 $('#form_group_' + data_id).removeClass('col-6');
                 $('#form_group_' + data_id).removeClass('col-3');
@@ -954,6 +957,10 @@ else $extracharge = 0;
                     $('#percent_cyan_' + data_id).attr('type', 'text');
                     $(".form_select_" + data_id).addClass('d-none');
                     $('#form_select_cyan_' + data_id).removeClass('d-none');
+                    
+                    // Устанавливаем значения атрибутов "обязательное поле" для поля процента для значения CYAN
+                    $('.percent_' + data_id).removeAttr('required');
+                    $('#percent_cyan_' + data_id).attr('required', 'required');
                 }
                 else if(paint == 'panton') {
                     $('#paint_group_' + data_id).addClass('col-3');
@@ -961,6 +968,9 @@ else $extracharge = 0;
                     $('#percent_group_' + data_id).removeClass('d-none');
                     $('#form_group_' + data_id).addClass('col-3');
                     $('#form_group_' + data_id).removeClass('d-none');
+                    
+                    $('#color_' + data_id).attr('required', 'required');
+                    $('#percent_' + data_id).attr('required', 'required');
                 }
                 else {
                     $('#paint_group_' + data_id).addClass('col-12');
@@ -979,6 +989,10 @@ else $extracharge = 0;
                 // Делаем видимым список форм для этого значения CMYK
                 $(".form_select_" + data_id).addClass('d-none');
                 $("#form_select_" + cmyk + "_" + data_id).removeClass('d-none');
+                
+                // Устанавливаем атрибут "обязательное поле" для этого значения CMYK
+                $(".percent_" + data_id).removeAttr('required');
+                $("#percent_" + cmyk + "_" + data_id).attr('required', 'required');
             });
             
             // Обработка выбора формы
