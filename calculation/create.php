@@ -95,10 +95,62 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $paint_7 = filter_input(INPUT_POST, 'paint_7');
         $paint_8 = filter_input(INPUT_POST, 'paint_8');
         
+        $color_1 = filter_input(INPUT_POST, 'color_1');
+        $color_2 = filter_input(INPUT_POST, 'color_2');
+        $color_3 = filter_input(INPUT_POST, 'color_3');
+        $color_4 = filter_input(INPUT_POST, 'color_4');
+        $color_5 = filter_input(INPUT_POST, 'color_5');
+        $color_6 = filter_input(INPUT_POST, 'color_6');
+        $color_7 = filter_input(INPUT_POST, 'color_7');
+        $color_8 = filter_input(INPUT_POST, 'color_8');
+        
+        $cmyk_1 = filter_input(INPUT_POST, 'cmyk_1');
+        $cmyk_2 = filter_input(INPUT_POST, 'cmyk_2');
+        $cmyk_3 = filter_input(INPUT_POST, 'cmyk_3');
+        $cmyk_4 = filter_input(INPUT_POST, 'cmyk_4');
+        $cmyk_5 = filter_input(INPUT_POST, 'cmyk_5');
+        $cmyk_6 = filter_input(INPUT_POST, 'cmyk_6');
+        $cmyk_7 = filter_input(INPUT_POST, 'cmyk_7');
+        $cmyk_8 = filter_input(INPUT_POST, 'cmyk_8');
+        
+        $percent_1 = str_ireplace("%", "", filter_input(INPUT_POST, 'percent_1'));
+        if(empty($percent_1)) $percent_1 = "NULL";
+        $percent_2 = str_ireplace("%", "", filter_input(INPUT_POST, 'percent_2'));
+        if(empty($percent_2)) $percent_2 = "NULL";
+        $percent_3 = str_ireplace("%", "", filter_input(INPUT_POST, 'percent_3'));
+        if(empty($percent_3)) $percent_3 = "NULL";
+        $percent_4 = str_ireplace("%", "", filter_input(INPUT_POST, 'percent_4'));
+        if(empty($percent_4)) $percent_4 = "NULL";
+        $percent_5 = str_ireplace("%", "", filter_input(INPUT_POST, 'percent_5'));
+        if(empty($percent_5)) $percent_5 = "NULL";
+        $percent_6 = str_ireplace("%", "", filter_input(INPUT_POST, 'percent_6'));
+        if(empty($percent_6)) $percent_6 = "NULL";
+        $percent_7 = str_ireplace("%", "", filter_input(INPUT_POST, 'percent_7'));
+        if(empty($percent_7)) $percent_7 = "NULL";
+        $percent_8 = str_ireplace("%", "", filter_input(INPUT_POST, 'percent_8'));
+        if(empty($percent_8)) $percent_8 = "NULL";
+        
+        $form_1 = filter_input(INPUT_POST, 'form_1');
+        $form_2 = filter_input(INPUT_POST, 'form_2');
+        $form_3 = filter_input(INPUT_POST, 'form_3');
+        $form_4 = filter_input(INPUT_POST, 'form_4');
+        $form_5 = filter_input(INPUT_POST, 'form_5');
+        $form_6 = filter_input(INPUT_POST, 'form_6');
+        $form_7 = filter_input(INPUT_POST, 'form_7');
+        $form_8 = filter_input(INPUT_POST, 'form_8');
+        
         $sql = "insert into calculation (date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_type_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, "
-                . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8) "
+                . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
+                . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
+                . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
+                . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
+                . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
                 . "values('$date', $customer_id, '$name', $work_type_id, '$brand_name', $thickness, '$unit', $machine_type_id, '$lamination1_brand_name', $lamination1_thickness, '$lamination2_brand_name', $lamination2_thickness, $width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, "
-                . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8')";
+                . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
+                . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
+                . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
+                . "'$percent_1', '$percent_2', '$percent_3', '$percent_4', '$percent_5', '$percent_6', '$percent_7', '$percent_8', "
+                . "'$form_1', '$form_2', '$form_3', '$form_4', '$form_5', '$form_6', '$form_7', '$form_8')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $insert_id = $executer->insert_id;
@@ -132,7 +184,11 @@ if(empty($id)) {
 if(!empty($id)) {
     $sql = "select date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_type_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, "
             . "quantity, width, streams_count, length, stream_width, raport, paints_count, status_id, extracharge, "
-            . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8 "
+            . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
+            . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
+            . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
+            . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
+            . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8 "
             . "from calculation where id=$id";
     $row = (new Fetcher($sql))->Fetch();
 }
@@ -254,52 +310,41 @@ else $status_id = null;
 if(isset($row['extracharge'])) $extracharge = $row['extracharge'];
 else $extracharge = 0;
 
-$paint_1 = filter_input(INPUT_POST, 'paint_1');
-if(null === $paint_1) {
-    if(isset($row['paint_1'])) $paint_1 = $row['paint_1'];
-    else $paint_1 = null;
-}
-
-$paint_2 = filter_input(INPUT_POST, 'paint_2');
-if(null === $paint_2) {
-    if(isset($row['paint_2'])) $paint_2 = $row['paint_2'];
-    else $paint_2 = null;
-}
-
-$paint_3 = filter_input(INPUT_POST, 'paint_3');
-if(null === $paint_3) {
-    if(isset($row['paint_3'])) $paint_3 = $row['paint_3'];
-    else $paint_3 = null;
-}
-
-$paint_4 = filter_input(INPUT_POST, 'paint_4');
-if(null === $paint_4) {
-    if(isset($row['paint_4'])) $paint_4 = $row['paint_4'];
-    else $paint_4 = null;
-}
-
-$paint_5 = filter_input(INPUT_POST, 'paint_5');
-if(null === $paint_5) {
-    if(isset($row['paint_5'])) $paint_5 = $row['paint_5'];
-    else $paint_5 = null;
-}
-
-$paint_6 = filter_input(INPUT_POST, 'paint_6');
-if(null === $paint_6) {
-    if(isset($row['paint_6'])) $paint_6 = $row['paint_6'];
-    else $paint_6 = null;
-}
-
-$paint_7 = filter_input(INPUT_POST, 'paint_7');
-if(null === $paint_7) {
-    if(isset($row['paint_7'])) $paint_7 = $row['paint_7'];
-    else $paint_7 = null;
-}
-
-$paint_8 = filter_input(INPUT_POST, 'paint_8');
-if(null === $paint_8) {
-    if(isset($row['paint_8'])) $paint_8 = $row['paint_8'];
-    else $paint_8 = null;
+for ($i=1; $i<=8; $i++) {
+    $paint_var = "paint_$i";
+    $$paint_var = filter_input(INPUT_POST, "paint_$i");
+    if(null === $$paint_var) {
+        if(isset($row["paint_$i"])) $$paint_var = $row["paint_$i"];
+        else $$paint_var = null;
+    }
+    
+    $color_var = "color_$i";
+    $$color_var = filter_input(INPUT_POST, "color_$i");
+    if(null === $$color_var) {
+        if(isset($row["color_$i"])) $$color_var = $row["color_$i"];
+        else $$color_var = null;
+    }
+    
+    $cmyk_var = "cmyk_$i";
+    $$cmyk_var = filter_input(INPUT_POST, "cmyk_$i");
+    if(null === $$cmyk_var) {
+        if(isset($row["cmyk_$i"])) $$cmyk_var = $row["cmyk_$i"];
+        else $$cmyk_var = null;
+    }
+    
+    $percent_var = "percent_$i";
+    $$percent_var = filter_input(INPUT_POST, "percent_$i");
+    if(null === $$percent_var) {
+        if(isset($row["percent_$i"])) $$percent_var = $row["percent_$i"];
+        else $$percent_var = null;
+    }
+    
+    $form_var = "form_$i";
+    $$form_var = filter_input(INPUT_POST, "form_$i");
+    if(null === $$form_var) {
+        if(isset($row["form_$i"])) $$form_var = $row["form_$i"];
+        else $$form_var = null;
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -717,18 +762,33 @@ if(null === $paint_8) {
                                 </select>
                             </div>
                             <div class="form-group<?=$color_class ?>" id="color_group_<?=$i ?>">
-                                <input type="text" id="color_<?=$i ?>" name="color_<?=$i ?>" class="form-control color" placeholder="Цвет..." />
+                                <?php $color_var = "color_$i"; ?>
+                                <input type="text" id="color_<?=$i ?>" name="color_<?=$i ?>" class="form-control color" placeholder="Цвет..." value="<?=$$color_var ?>" />
                             </div>
                             <div class="form-group<?=$cmyk_class ?>" id="cmyk_group_<?=$i ?>">
-                                <select id="cmyk_<?=$i ?>" name="<?=$i ?>" class="form-control cmyk" data-id="<?=$i ?>">
-                                    <option value="cyan">Cyan</option>
-                                    <option value="magenda">Magenda</option>
-                                    <option value="yellow">Yellow</option>
-                                    <option value="kontur">Kontur</option>
+                                <select id="cmyk_<?=$i ?>" name="cmyk_<?=$i ?>" class="form-control cmyk" data-id="<?=$i ?>">
+                                    <?php
+                                    $cyan_selected = "";
+                                    $magenda_selected = "";
+                                    $yellow_selected = "";
+                                    $kontur_selected = "";
+                                    
+                                    $cmyk_var = "cmyk_$i";
+                                    $cmyk_selected_var = $$cmyk_var."_selected";
+                                    $$cmyk_selected_var = " selected='selected'";
+                                    ?>
+                                    <option value="cyan"<?=$cyan_selected ?>>Cyan</option>
+                                    <option value="magenda"<?=$magenda_selected ?>>Magenda</option>
+                                    <option value="yellow"<?=$yellow_selected ?>>Yellow</option>
+                                    <option value="kontur"<?=$kontur_selected ?>>Kontur</option>
                                 </select>
                             </div>
                             <div class="form-group<?=$percent_class ?>" id="percent_group_<?=$i ?>">
-                                <input type="text" id="percent_<?=$i ?>" name="percent_<?=$i ?>" class="form-control percent" />
+                                <?php
+                                $percent_var = "percent_$i";
+                                $percent_value = empty($$percent_var) ? "" : $$percent_var;
+                                ?>
+                                <input type="text" id="percent_<?=$i ?>" name="percent_<?=$i ?>" class="form-control percent" value="<?=$percent_value ?>" />
                             </div>
                             <div class="form-group<?=$percent_cmyk_class ?>" id="percent_group_cmyk_<?=$i ?>">
                                 <input type="text" id="percent_cyan_<?=$i ?>" name="percent_cyan_<?=$i ?>" class="form-control percent percent_<?=$i ?>" />
@@ -738,8 +798,16 @@ if(null === $paint_8) {
                             </div>
                             <div class="form-group<?=$form_class ?>" id="form_group_<?=$i ?>">
                                 <select id="form_<?=$i ?>" name="form_<?=$i ?>" class="form-control form">
-                                    <option value="flint">Флинт</option>
-                                    <option value="kodak">Кодак</option>
+                                    <?php
+                                    $flint_selected = "";
+                                    $kodak_selected = "";
+                                    
+                                    $form_var = "form_$i";
+                                    $form_selected_var = $$form_var."_selected";
+                                    $$form_selected_var = " selected='selected'";
+                                    ?>
+                                    <option value="flint"<?=$flint_selected ?>>Флинт</option>
+                                    <option value="kodak"<?=$kodak_selected ?>>Кодак</option>
                                 </select>
                             </div>
                             <div class="form-group col-3<?=$form_cmyk_class ?>" id="form_group_cmyk_<?=$i ?>">
@@ -1127,6 +1195,8 @@ if(null === $paint_8) {
                 val = val.replace(/[^\d\%]/g, '');
                 $(this).val(val);
             });
+            
+            $('.percent').change();
             
             // Автовыделение при щелчке для поля "наценка"
             $('.percent').click(function() {
