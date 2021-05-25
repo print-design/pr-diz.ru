@@ -86,58 +86,24 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $manager_id = GetUserId();
         $status_id = 1; // Статус "Расчёт"
         
-        $paint_1 = filter_input(INPUT_POST, 'paint_1');
-        $paint_2 = filter_input(INPUT_POST, 'paint_2');
-        $paint_3 = filter_input(INPUT_POST, 'paint_3');
-        $paint_4 = filter_input(INPUT_POST, 'paint_4');
-        $paint_5 = filter_input(INPUT_POST, 'paint_5');
-        $paint_6 = filter_input(INPUT_POST, 'paint_6');
-        $paint_7 = filter_input(INPUT_POST, 'paint_7');
-        $paint_8 = filter_input(INPUT_POST, 'paint_8');
-        
-        $color_1 = filter_input(INPUT_POST, 'color_1');
-        $color_2 = filter_input(INPUT_POST, 'color_2');
-        $color_3 = filter_input(INPUT_POST, 'color_3');
-        $color_4 = filter_input(INPUT_POST, 'color_4');
-        $color_5 = filter_input(INPUT_POST, 'color_5');
-        $color_6 = filter_input(INPUT_POST, 'color_6');
-        $color_7 = filter_input(INPUT_POST, 'color_7');
-        $color_8 = filter_input(INPUT_POST, 'color_8');
-        
-        $cmyk_1 = filter_input(INPUT_POST, 'cmyk_1');
-        $cmyk_2 = filter_input(INPUT_POST, 'cmyk_2');
-        $cmyk_3 = filter_input(INPUT_POST, 'cmyk_3');
-        $cmyk_4 = filter_input(INPUT_POST, 'cmyk_4');
-        $cmyk_5 = filter_input(INPUT_POST, 'cmyk_5');
-        $cmyk_6 = filter_input(INPUT_POST, 'cmyk_6');
-        $cmyk_7 = filter_input(INPUT_POST, 'cmyk_7');
-        $cmyk_8 = filter_input(INPUT_POST, 'cmyk_8');
-        
-        $percent_1 = str_ireplace("%", "", filter_input(INPUT_POST, 'percent_1'));
-        if(empty($percent_1)) $percent_1 = "NULL";
-        $percent_2 = str_ireplace("%", "", filter_input(INPUT_POST, 'percent_2'));
-        if(empty($percent_2)) $percent_2 = "NULL";
-        $percent_3 = str_ireplace("%", "", filter_input(INPUT_POST, 'percent_3'));
-        if(empty($percent_3)) $percent_3 = "NULL";
-        $percent_4 = str_ireplace("%", "", filter_input(INPUT_POST, 'percent_4'));
-        if(empty($percent_4)) $percent_4 = "NULL";
-        $percent_5 = str_ireplace("%", "", filter_input(INPUT_POST, 'percent_5'));
-        if(empty($percent_5)) $percent_5 = "NULL";
-        $percent_6 = str_ireplace("%", "", filter_input(INPUT_POST, 'percent_6'));
-        if(empty($percent_6)) $percent_6 = "NULL";
-        $percent_7 = str_ireplace("%", "", filter_input(INPUT_POST, 'percent_7'));
-        if(empty($percent_7)) $percent_7 = "NULL";
-        $percent_8 = str_ireplace("%", "", filter_input(INPUT_POST, 'percent_8'));
-        if(empty($percent_8)) $percent_8 = "NULL";
-        
-        $form_1 = filter_input(INPUT_POST, 'form_1');
-        $form_2 = filter_input(INPUT_POST, 'form_2');
-        $form_3 = filter_input(INPUT_POST, 'form_3');
-        $form_4 = filter_input(INPUT_POST, 'form_4');
-        $form_5 = filter_input(INPUT_POST, 'form_5');
-        $form_6 = filter_input(INPUT_POST, 'form_6');
-        $form_7 = filter_input(INPUT_POST, 'form_7');
-        $form_8 = filter_input(INPUT_POST, 'form_8');
+        // Данные о цвете
+        for($i=1; $i<=8; $i++) {
+            $paint_var = "paint_$i";
+            $$paint_var = filter_input(INPUT_POST, "paint_$i");
+            
+            $color_var = "color_$i";
+            $$color_var = filter_input(INPUT_POST, "color_$i");
+            
+            $cmyk_var = "cmyk_$i";
+            $$cmyk_var = filter_input(INPUT_POST, "cmyk_$i");
+            
+            $percent_var = "percent_$i";
+            $$percent_var = filter_input(INPUT_POST, "percent_$i");
+            if(empty($$percent_var)) $$percent_var = "NULL";
+            
+            $form_var = "form_$i";
+            $$form_var = filter_input(INPUT_POST, "form_$i");
+        }
         
         $sql = "insert into calculation (date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_type_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, "
                 . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
@@ -310,6 +276,7 @@ else $status_id = null;
 if(isset($row['extracharge'])) $extracharge = $row['extracharge'];
 else $extracharge = 0;
 
+// Данные о цветах
 for ($i=1; $i<=8; $i++) {
     $paint_var = "paint_$i";
     $$paint_var = filter_input(INPUT_POST, "paint_$i");
@@ -450,7 +417,7 @@ for ($i=1; $i<=8; $i++) {
                         <!-- Печатная машина -->
                         <div class="form-group work-type-lam-only d-none">
                             <select id="machine_type_id" name="machine_type_id" class="form-control work-type-lam-only d-none">
-                                <option value="">Печтная машина...</option>
+                                <option value="">Печатная машина...</option>
                                 <?php
                                 $sql = "select id, name from machine_type";
                                 $fetcher = new Fetcher($sql);
