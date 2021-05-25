@@ -640,26 +640,26 @@ else $extracharge = 0;
                                 </select>
                             </div>
                             <div class="form-group col-3 d-none" id="form_group_cmyk_<?=$i ?>">
-                                <select id="form_cyan_<?=$i ?>" name="form_cyan_<?=$i ?>" class="form-control form_cyan">
+                                <select id="form_select_cyan_<?=$i ?>" name="form_cyan_<?=$i ?>" class="form-control form_select form_select_<?=$i ?>" data-cmyk="cyan" data-id="<?=$i ?>">
                                     <option value="flint">Флинт</option>
                                     <option value="kodak">Кодак</option>
                                 </select>
-                                <select id="form_magenda_<?=$i ?>" name="form_magenda_<?=$i ?>" class="form-control form_magenda">
+                                <select id="form_select_magenda_<?=$i ?>" name="form_magenda_<?=$i ?>" class="form-control form_select form_select_<?=$i ?> d-none" data-cmyk="magenda" data-id="<?=$i ?>">
                                     <option value="flint">Флинт</option>
                                     <option value="kodak">Кодак</option>
                                 </select>
-                                <select id="form_yellow_<?=$i ?>" name="form_yellow_<?=$i ?>" class="form-control form_yellow">
+                                <select id="form_select_yellow_<?=$i ?>" name="form_yellow_<?=$i ?>" class="form-control form_select form_select_<?=$i ?> d-none" data-cmyk="yellow" data-id="<?=$i ?>">
                                     <option value="flint">Флинт</option>
                                     <option value="kodak">Кодак</option>
                                 </select>
-                                <select id="form_kontur_<?=$i ?>" name="form_kontur_<?=$i ?>" class="form-control form_kontur">
+                                <select id="form_select_kontur_<?=$i ?>" name="form_kontur_<?=$i ?>" class="form-control form_select form_select_<?=$i ?> d-none" data-cmyk="kontur" data-id="<?=$i ?>">
                                     <option value="flint">Флинт</option>
                                     <option value="kodak">Кодак</option>
                                 </select>
-                                <input type="hidden" id="form_cyan_<?=$i ?>" name="form_cyan_<?=$i ?>" class="percent" />
-                                <input type="hidden" id="form_magenda_<?=$i ?>" name="form_magenda_<?=$i ?>" class="percent" />
-                                <input type="hidden" id="form_yellow_<?=$i ?>" name="form_yellow_<?=$i ?>" class="percent" />
-                                <input type="hidden" id="form_kontur_<?=$i ?>" name="form_kontur_<?=$i ?>" class="percent" />
+                                <input type="hidden" id="form_cyan_<?=$i ?>" name="form_cyan_<?=$i ?>" value="flint" />
+                                <input type="hidden" id="form_magenda_<?=$i ?>" name="form_magenda_<?=$i ?>" value="flint" />
+                                <input type="hidden" id="form_yellow_<?=$i ?>" name="form_yellow_<?=$i ?>" value="flint" />
+                                <input type="hidden" id="form_kontur_<?=$i ?>" name="form_kontur_<?=$i ?>" value="flint" />
                             </div>
                         </div>
                         <?php
@@ -914,6 +914,7 @@ else $extracharge = 0;
                 paint = $(this).val();
                 var data_id = $(this).attr('data-id');
                 
+                // Устанавливаем видимость всех элементов по умолчанию, как если бы выбрали пустое значение
                 $('#paint_group_' + data_id).removeClass('col-12');
                 $('#paint_group_' + data_id).removeClass('col-6');
                 $('#paint_group_' + data_id).removeClass('col-3');
@@ -930,6 +931,7 @@ else $extracharge = 0;
                 
                 $('#cmyk_group_' + data_id).addClass('d-none');
                 
+                // Затем, в зависимости от выбранного значения, устанавливаем видимость нужного элемента для этого значения
                 if(paint == 'lacquer')  {
                     $('#paint_group_' + data_id).addClass('col-6');
                     $('#form_group_' + data_id).addClass('col-6');
@@ -943,13 +945,15 @@ else $extracharge = 0;
                 else if(paint == 'cmyk') {
                     $('#paint_group_' + data_id).addClass('col-3');
                     $('#cmyk_group_' + data_id).removeClass('d-none');
-                    $('#cmyk_' + data_id).val('cyan');
                     $('#percent_group_cmyk_' + data_id).removeClass('d-none');
-                    $('#percent_cyan_' + data_id).attr('type', 'text');
-                    $('#percent_magenda_' + data_id).attr('type', 'hidden');
-                    $('#percent_yellow_' + data_id).attr('type', 'hidden');
-                    $('#percent_kontur_' + data_id).attr('type', 'hidden');
                     $('#form_group_cmyk_' + data_id).removeClass('d-none');
+                    
+                    // Устанавливаем по умолчанию видимым значение CYAN, и делаем видимыми поля процента и формы для CYAN
+                    $('#cmyk_' + data_id).val('cyan');
+                    $(".percent_" + data_id).attr('type', 'hidden');
+                    $('#percent_cyan_' + data_id).attr('type', 'text');
+                    $(".form_select_" + data_id).addClass('d-none');
+                    $('#form_select_cyan_' + data_id).removeClass('d-none');
                 }
                 else if(paint == 'panton') {
                     $('#paint_group_' + data_id).addClass('col-3');
@@ -968,8 +972,22 @@ else $extracharge = 0;
                 cmyk = $(this).val();
                 var data_id = $(this).attr('data-id');
                 
+                // Делаем видимой поле процента для этого значения CMYK
                 $(".percent_" + data_id).attr('type', 'hidden');
                 $("#percent_" + cmyk + "_" + data_id).attr('type', 'text');
+                
+                // Делаем видимым список форм для этого значения CMYK
+                $(".form_select_" + data_id).addClass('d-none');
+                $("#form_select_" + cmyk + "_" + data_id).removeClass('d-none');
+            });
+            
+            // Обработка выбора формы
+            $(".form_select").change(function(){
+                form = $(this).val();
+                var data_cmyk = $(this).attr('data-cmyk');
+                var data_id = $(this).attr('data-id');
+                
+                $("#form_" + data_cmyk + "_" + data_id).val(form);
             });
             
             // Маска % для поля "процент"
