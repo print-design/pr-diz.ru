@@ -86,8 +86,19 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $manager_id = GetUserId();
         $status_id = 1; // Статус "Расчёт"
         
-        $sql = "insert into calculation (date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_type_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id) "
-                . "values('$date', $customer_id, '$name', $work_type_id, '$brand_name', $thickness, '$unit', $machine_type_id, '$lamination1_brand_name', $lamination1_thickness, '$lamination2_brand_name', $lamination2_thickness, $width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id)";
+        $paint_1 = filter_input(INPUT_POST, 'paint_1');
+        $paint_2 = filter_input(INPUT_POST, 'paint_2');
+        $paint_3 = filter_input(INPUT_POST, 'paint_3');
+        $paint_4 = filter_input(INPUT_POST, 'paint_4');
+        $paint_5 = filter_input(INPUT_POST, 'paint_5');
+        $paint_6 = filter_input(INPUT_POST, 'paint_6');
+        $paint_7 = filter_input(INPUT_POST, 'paint_7');
+        $paint_8 = filter_input(INPUT_POST, 'paint_8');
+        
+        $sql = "insert into calculation (date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_type_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, "
+                . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8) "
+                . "values('$date', $customer_id, '$name', $work_type_id, '$brand_name', $thickness, '$unit', $machine_type_id, '$lamination1_brand_name', $lamination1_thickness, '$lamination2_brand_name', $lamination2_thickness, $width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, "
+                . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $insert_id = $executer->insert_id;
@@ -240,6 +251,54 @@ else $status_id = null;
 
 if(isset($row['extracharge'])) $extracharge = $row['extracharge'];
 else $extracharge = 0;
+
+$paint_1 = filter_input(INPUT_POST, 'paint_1');
+if(null === $paint_1) {
+    if(isset($row['paint_1'])) $paint_1 = $row['paint_1'];
+    else $paint_1 = null;
+}
+
+$paint_2 = filter_input(INPUT_POST, 'paint_2');
+if(null === $paint_2) {
+    if(isset($row['paint_2'])) $paint_2 = $row['paint_2'];
+    else $paint_2 = null;
+}
+
+$paint_3 = filter_input(INPUT_POST, 'paint_3');
+if(null === $paint_3) {
+    if(isset($row['paint_3'])) $paint_3 = $row['paint_3'];
+    else $paint_3 = null;
+}
+
+$paint_4 = filter_input(INPUT_POST, 'paint_4');
+if(null === $paint_4) {
+    if(isset($row['paint_4'])) $paint_4 = $row['paint_4'];
+    else $paint_4 = null;
+}
+
+$paint_5 = filter_input(INPUT_POST, 'paint_5');
+if(null === $paint_5) {
+    if(isset($row['paint_5'])) $paint_1 = $row['paint_5'];
+    else $paint_5 = null;
+}
+
+$paint_6 = filter_input(INPUT_POST, 'paint_6');
+if(null === $paint_6) {
+    if(isset($row['paint_6'])) $paint_6 = $row['paint_6'];
+    else $paint_6 = null;
+}
+
+$paint_7 = filter_input(INPUT_POST, 'paint_7');
+if(null === $paint_7) {
+    if(isset($row['paint_7'])) $paint_1 = $row['paint_7'];
+    else $paint_7 = null;
+}
+
+$paint_8 = filter_input(INPUT_POST, 'paint_8');
+if(null === $paint_8) {
+    if(isset($row['paint_8'])) $paint_1 = $row['paint_8'];
+    else $paint_8 = null;
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -918,7 +977,6 @@ else $extracharge = 0;
                 $('#paint_group_' + data_id).removeClass('col-12');
                 $('#paint_group_' + data_id).removeClass('col-6');
                 $('#paint_group_' + data_id).removeClass('col-3');
-                $('.paint').removeAttr('required');
                 
                 $('#color_group_' + data_id).addClass('d-none');
                 $('.color').removeAttr('required');
