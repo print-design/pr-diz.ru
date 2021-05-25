@@ -844,10 +844,16 @@ for ($i=1; $i<=8; $i++) {
                                 <input type="text" id="percent_<?=$i ?>" name="percent_<?=$i ?>" class="form-control percent" value="<?=$percent_value ?>" />
                             </div>
                             <div class="form-group<?=$percent_cmyk_class ?>" id="percent_group_cmyk_<?=$i ?>">
-                                <input type="text" id="percent_cyan_<?=$i ?>" name="percent_cyan_<?=$i ?>" class="form-control percent percent_<?=$i ?>" />
-                                <input type="hidden" id="percent_magenta_<?=$i ?>" name="percent_magenta_<?=$i ?>" class="form-control percent percent_<?=$i ?>" />
-                                <input type="hidden" id="percent_yellow_<?=$i ?>" name="percent_yellow_<?=$i ?>" class="form-control percent percent_<?=$i ?>" />
-                                <input type="hidden" id="percent_kontur_<?=$i ?>" name="percent_kontur_<?=$i ?>" class="form-control percent percent_<?=$i ?>" />
+                                <?php
+                                $percent_cyan_var = "percent_cyan_$i";
+                                $percent_magenta_var = "percent_magenta_$i";
+                                $percent_yellow_var = "percent_yellow_$i";
+                                $percent_kontur_var = "percent_kontur_$i";
+                                ?>
+                                <input type="text" id="percent_cyan_<?=$i ?>" name="percent_cyan_<?=$i ?>" class="form-control percent percent_<?=$i ?>" value="<?=$$percent_cyan_var ?>" />
+                                <input type="hidden" id="percent_magenta_<?=$i ?>" name="percent_magenta_<?=$i ?>" class="form-control percent percent_<?=$i ?>" value="<?=$$percent_magenta_var ?>" />
+                                <input type="hidden" id="percent_yellow_<?=$i ?>" name="percent_yellow_<?=$i ?>" class="form-control percent percent_<?=$i ?>" value="<?=$$percent_yellow_var ?>" />
+                                <input type="hidden" id="percent_kontur_<?=$i ?>" name="percent_kontur_<?=$i ?>" class="form-control percent percent_<?=$i ?>" value="<?=$$percent_kontur_var ?>" />
                             </div>
                             <div class="form-group<?=$form_class ?>" id="form_group_<?=$i ?>">
                                 <select id="form_<?=$i ?>" name="form_<?=$i ?>" class="form-control form">
