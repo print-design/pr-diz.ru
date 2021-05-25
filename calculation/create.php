@@ -670,7 +670,35 @@ if(null === $paint_8) {
                         }
                         ?>
                         <div class="row paint_block<?=$block_class ?>" id="paint_block_<?=$i ?>">
-                            <div class="form-group col-12" id="paint_group_<?=$i ?>">
+                            <?php
+                            $paint_class = " col-12";
+                            $cmyk_class = " d-none";
+                            $color_class = " d-none";
+                            $percent_class = " d-none";
+                            $percent_cmyk_class = " d-none";
+                            $form_class = " d-none";
+                            $form_cmyk_class = " d-none";
+                            
+                            $paint_var_name = "paint_$i";
+                            
+                            if($$paint_var_name == "white" || $$paint_var_name == "lacquer") {
+                                $paint_class = " col-6";
+                                $form_class = " col-6";
+                            }
+                            else if($$paint_var_name == "panton") {
+                                $paint_class = " col-3";
+                                $color_class = " col-3";
+                                $percent_class = " col-3";
+                                $form_class = " col-3";
+                            }
+                            else if($$paint_var_name == "cmyk") {
+                                $paint_class = " col-3";
+                                $cmyk_class = " col-3";
+                                $percent_cmyk_class = " col-3";
+                                $form_cmyk_class = " col-3";
+                            }
+                            ?>
+                            <div class="form-group<?=$paint_class ?>" id="paint_group_<?=$i ?>">
                                 <select id="paint_<?=$i ?>" name="paint_<?=$i ?>" class="form-control paint" data-id="<?=$i ?>">
                                     <option value="">Цвет...</option>
                                     <?php
@@ -679,8 +707,7 @@ if(null === $paint_8) {
                                     $white_selected = "";
                                     $lacquer_selected = "";
                                     
-                                    $var_name = "paint_$i";
-                                    $selected_var_name = $$var_name."_selected";
+                                    $selected_var_name = $$paint_var_name."_selected";
                                     $$selected_var_name = " selected='selected'";
                                     ?>
                                     <option value="cmyk"<?=$cmyk_selected ?>>CMYK</option>
@@ -689,10 +716,10 @@ if(null === $paint_8) {
                                     <option value="lacquer"<?=$lacquer_selected ?>>Лак</option>
                                 </select>
                             </div>
-                            <div class="form-group col-3 d-none" id="color_group_<?=$i ?>">
+                            <div class="form-group<?=$color_class ?>" id="color_group_<?=$i ?>">
                                 <input type="text" id="color_<?=$i ?>" name="color_<?=$i ?>" class="form-control color" placeholder="Цвет..." />
                             </div>
-                            <div class="form-group col-3 d-none" id="cmyk_group_<?=$i ?>">
+                            <div class="form-group<?=$cmyk_class ?>" id="cmyk_group_<?=$i ?>">
                                 <select id="cmyk_<?=$i ?>" name="<?=$i ?>" class="form-control cmyk" data-id="<?=$i ?>">
                                     <option value="cyan">Cyan</option>
                                     <option value="magenda">Magenda</option>
@@ -700,22 +727,22 @@ if(null === $paint_8) {
                                     <option value="kontur">Kontur</option>
                                 </select>
                             </div>
-                            <div class="form-group col-3 d-none" id="percent_group_<?=$i ?>">
+                            <div class="form-group<?=$percent_class ?>" id="percent_group_<?=$i ?>">
                                 <input type="text" id="percent_<?=$i ?>" name="percent_<?=$i ?>" class="form-control percent" />
                             </div>
-                            <div class="form-group col-3 d-none" id="percent_group_cmyk_<?=$i ?>">
+                            <div class="form-group<?=$percent_cmyk_class ?>" id="percent_group_cmyk_<?=$i ?>">
                                 <input type="text" id="percent_cyan_<?=$i ?>" name="percent_cyan_<?=$i ?>" class="form-control percent percent_<?=$i ?>" />
                                 <input type="hidden" id="percent_magenda_<?=$i ?>" name="percent_magenda_<?=$i ?>" class="form-control percent percent_<?=$i ?>" />
                                 <input type="hidden" id="percent_yellow_<?=$i ?>" name="percent_yellow_<?=$i ?>" class="form-control percent percent_<?=$i ?>" />
                                 <input type="hidden" id="percent_kontur_<?=$i ?>" name="percent_kontur_<?=$i ?>" class="form-control percent percent_<?=$i ?>" />
                             </div>
-                            <div class="form-group d-none" id="form_group_<?=$i ?>">
+                            <div class="form-group<?=$form_class ?>" id="form_group_<?=$i ?>">
                                 <select id="form_<?=$i ?>" name="form_<?=$i ?>" class="form-control form">
                                     <option value="flint">Флинт</option>
                                     <option value="kodak">Кодак</option>
                                 </select>
                             </div>
-                            <div class="form-group col-3 d-none" id="form_group_cmyk_<?=$i ?>">
+                            <div class="form-group col-3<?=$form_cmyk_class ?>" id="form_group_cmyk_<?=$i ?>">
                                 <select id="form_select_cyan_<?=$i ?>" name="form_cyan_<?=$i ?>" class="form-control form_select form_select_<?=$i ?>" data-cmyk="cyan" data-id="<?=$i ?>">
                                     <option value="flint">Флинт</option>
                                     <option value="kodak">Кодак</option>
@@ -1007,6 +1034,7 @@ if(null === $paint_8) {
                 $('#form_group_' + data_id).addClass('d-none');
                 $('#form_group_cmyk_' + data_id).addClass('d-none');
                 
+                $('#cmyk_group_' + data_id).removeClass('col-3');
                 $('#cmyk_group_' + data_id).addClass('d-none');
                 
                 // Затем, в зависимости от выбранного значения, устанавливаем видимость нужного элемента для этого значения
@@ -1022,8 +1050,11 @@ if(null === $paint_8) {
                 }
                 else if(paint == 'cmyk') {
                     $('#paint_group_' + data_id).addClass('col-3');
+                    $('#cmyk_group_' + data_id).addClass('col-3');
                     $('#cmyk_group_' + data_id).removeClass('d-none');
+                    $('#percent_group_cmyk_' + data_id).addClass('col-3');
                     $('#percent_group_cmyk_' + data_id).removeClass('d-none');
+                    $('#form_group_cmyk_' + data_id).addClass('col-3');
                     $('#form_group_cmyk_' + data_id).removeClass('d-none');
                     
                     // Устанавливаем по умолчанию видимым значение CYAN, и делаем видимыми поля процента и формы для CYAN
@@ -1040,9 +1071,11 @@ if(null === $paint_8) {
                 else if(paint == 'panton') {
                     $('#paint_group_' + data_id).addClass('col-3');
                     $('#color_group_' + data_id).removeClass('d-none');
+                    $('#color_group_' + data_id).addClass('col-3');
                     $('#percent_group_' + data_id).removeClass('d-none');
-                    $('#form_group_' + data_id).addClass('col-3');
+                    $('#percent_group_' + data_id).addClass('col-3');
                     $('#form_group_' + data_id).removeClass('d-none');
+                    $('#form_group_' + data_id).addClass('col-3');
                     
                     $('#color_' + data_id).attr('required', 'required');
                     $('#percent_' + data_id).attr('required', 'required');
@@ -1077,13 +1110,6 @@ if(null === $paint_8) {
                 var data_id = $(this).attr('data-id');
                 
                 $("#form_" + data_cmyk + "_" + data_id).val(form);
-            });
-            
-            // При полной загрузке страницы запускаем обработку выбора из всех списков, чтобы настроились видимость и размеры всех элементов
-            $(document).ready(function(){
-                $(".paint").change();
-                $(".cmyk").change();
-                $(".form_select").change();
             });
             
             // Маска % для поля "процент"
