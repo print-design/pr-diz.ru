@@ -607,14 +607,23 @@ else $extracharge = 0;
                             <div class="form-group col-12" id="paint_group_<?=$i ?>">
                                 <select id="paint_<?=$i ?>" name="paint_<?=$i ?>" class="form-control paint" data-id="<?=$i ?>">
                                     <option value="">Цвет...</option>
-                                    <option value="cmyk">CMYK...</option>
-                                    <option value="panton">Пантон...</option>
-                                    <option value="white">Белый...</option>
-                                    <option value="lacquer">Лак...</option>
+                                    <option value="cmyk">CMYK</option>
+                                    <option value="panton">Пантон</option>
+                                    <option value="white">Белый</option>
+                                    <option value="lacquer">Лак</option>
                                 </select>
                             </div>
                             <div class="form-group col-3 d-none" id="color_group_<?=$i ?>">
-                                <input type="text" id="color_<?=$i ?>" name="color_<?=$i ?>" class="form-control color" />
+                                <input type="text" id="color_<?=$i ?>" name="color_<?=$i ?>" class="form-control color" placeholder="Цвет..." />
+                            </div>
+                            <div class="form-group col-3 d-none" id="percent_group_<?=$i ?>">
+                                <input type="text" id="percent_<?=$i ?>" name="percent_<?=$i ?>" class="form-control percent" placeholder="Процент..." />
+                            </div>
+                            <div class="form-group d-none" id="form_group_<?=$i ?>">
+                                <select id="form_<?=$i ?>" name="form_<?=$i ?>" class="form-control form">
+                                    <option value="flint">Флинт</option>
+                                    <option value="kodak">Кодак</option>
+                                </select>
                             </div>
                         </div>
                         <?php
@@ -873,24 +882,54 @@ else $extracharge = 0;
                 $('#paint_group_' + data_id).removeClass('col-6');
                 $('#paint_group_' + data_id).removeClass('col-3');
                 
+                $('#form_group_' + data_id).removeClass('col-6');
+                $('#form_group_' + data_id).removeClass('col-3');
+                
                 $('#color_group_' + data_id).addClass('d-none');
+                $('#percent_group_' + data_id).addClass('d-none');
+                $('#form_group_' + data_id).addClass('d-none');
                 
                 if(paint == 'lacquer')  {
                     $('#paint_group_' + data_id).addClass('col-6');
+                    $('#form_group_' + data_id).addClass('col-6');
+                    $('#form_group_' + data_id).removeClass('d-none');
                 }
                 else if(paint == 'white') {
                     $('#paint_group_' + data_id).addClass('col-6');
+                    $('#form_group_' + data_id).addClass('col-6');
+                    $('#form_group_' + data_id).removeClass('d-none');
                 }
                 else if(paint == 'cmyk') {
                     $('#paint_group_' + data_id).addClass('col-3');
+                    $('#form_group_' + data_id).addClass('col-3');
+                    $('#form_group_' + data_id).removeClass('d-none');
                 }
                 else if(paint == 'panton') {
                     $('#paint_group_' + data_id).addClass('col-3');
                     $('#color_group_' + data_id).removeClass('d-none');
+                    $('#percent_group_' + data_id).removeClass('d-none');
+                    $('#form_group_' + data_id).addClass('col-3');
+                    $('#form_group_' + data_id).removeClass('d-none');
                 }
                 else {
                     $('#paint_group_' + data_id).addClass('col-12');
                 }
+            });
+            
+            // Маска % для поля "процент"
+            $(".percent").mask("99%");
+            
+            // Фильтрация ввода в поле "наценка"
+            $('.percent').keypress(function(e) {
+                if(/\D/.test(String.fromCharCode(e.charCode))) {
+                    return false;
+                }
+            });
+            
+            $('.percent').change(function(e) {
+                var val = $(this).val();
+                val = val.replace(/[^\d\%]/g, '');
+                $(this).val(val);
             });
 
             // Показ расходов
