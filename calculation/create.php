@@ -131,7 +131,9 @@ if(empty($id)) {
 
 if(!empty($id)) {
     $sql = "select date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_type_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, "
-            . "quantity, width, streams_count, length, stream_width, raport, paints_count, status_id, extracharge from calculation where id=$id";
+            . "quantity, width, streams_count, length, stream_width, raport, paints_count, status_id, extracharge, "
+            . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8 "
+            . "from calculation where id=$id";
     $row = (new Fetcher($sql))->Fetch();
 }
 
@@ -278,7 +280,7 @@ if(null === $paint_4) {
 
 $paint_5 = filter_input(INPUT_POST, 'paint_5');
 if(null === $paint_5) {
-    if(isset($row['paint_5'])) $paint_1 = $row['paint_5'];
+    if(isset($row['paint_5'])) $paint_5 = $row['paint_5'];
     else $paint_5 = null;
 }
 
@@ -290,13 +292,13 @@ if(null === $paint_6) {
 
 $paint_7 = filter_input(INPUT_POST, 'paint_7');
 if(null === $paint_7) {
-    if(isset($row['paint_7'])) $paint_1 = $row['paint_7'];
+    if(isset($row['paint_7'])) $paint_7 = $row['paint_7'];
     else $paint_7 = null;
 }
 
 $paint_8 = filter_input(INPUT_POST, 'paint_8');
 if(null === $paint_8) {
-    if(isset($row['paint_8'])) $paint_1 = $row['paint_8'];
+    if(isset($row['paint_8'])) $paint_8 = $row['paint_8'];
     else $paint_8 = null;
 }
 ?>
@@ -661,15 +663,30 @@ if(null === $paint_8) {
                         <!-- Каждая краска -->
                         <?php
                         for($i=1; $i<=8; $i++):
+                        $block_class = " d-none";
+
+                        if(!empty($paints_count) && is_numeric($paints_count) && $i <= $paints_count) {
+                            $block_class = "";
+                        }
                         ?>
-                        <div class="row paint_block d-none" id="paint_block_<?=$i ?>">
+                        <div class="row paint_block<?=$block_class ?>" id="paint_block_<?=$i ?>">
                             <div class="form-group col-12" id="paint_group_<?=$i ?>">
                                 <select id="paint_<?=$i ?>" name="paint_<?=$i ?>" class="form-control paint" data-id="<?=$i ?>">
                                     <option value="">Цвет...</option>
-                                    <option value="cmyk">CMYK</option>
-                                    <option value="panton">Пантон</option>
-                                    <option value="white">Белый</option>
-                                    <option value="lacquer">Лак</option>
+                                    <?php
+                                    $cmyk_selected = "";
+                                    $panton_selected = "";
+                                    $white_selected = "";
+                                    $lacquer_selected = "";
+                                    
+                                    $var_name = "paint_$i";
+                                    $selected_var_name = $$var_name."_selected";
+                                    $$selected_var_name = " selected='selected'";
+                                    ?>
+                                    <option value="cmyk"<?=$cmyk_selected ?>>CMYK</option>
+                                    <option value="panton"<?=$panton_selected ?>>Пантон</option>
+                                    <option value="white"<?=$white_selected ?>>Белый</option>
+                                    <option value="lacquer"<?=$lacquer_selected ?>>Лак</option>
                                 </select>
                             </div>
                             <div class="form-group col-3 d-none" id="color_group_<?=$i ?>">
@@ -1033,6 +1050,10 @@ if(null === $paint_8) {
                 else {
                     $('#paint_group_' + data_id).addClass('col-12');
                 }
+            });
+            
+            $(document).ready(function(){
+                $(".paint").change();
             });
             
             // Обработка выбора компонента цвета
