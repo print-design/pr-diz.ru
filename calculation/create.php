@@ -912,10 +912,10 @@ for ($i=1; $i<=8; $i++) {
                                     <option value="flint"<?=$flint_kontur_selected ?>>Флинт</option>
                                     <option value="kodak"<?=$kodak_kontur_selected ?>>Кодак</option>
                                 </select>
-                                <input type="hidden" id="form_cyan_<?=$i ?>" name="form_cyan_<?=$i ?>" value="flint" />
-                                <input type="hidden" id="form_magenta_<?=$i ?>" name="form_magenta_<?=$i ?>" value="flint" />
-                                <input type="hidden" id="form_yellow_<?=$i ?>" name="form_yellow_<?=$i ?>" value="flint" />
-                                <input type="hidden" id="form_kontur_<?=$i ?>" name="form_kontur_<?=$i ?>" value="flint" />
+                                <input type="hidden" id="form_cyan_<?=$i ?>" name="form_cyan_<?=$i ?>" value="<?=$$form_cyan_var ?>" />
+                                <input type="hidden" id="form_magenta_<?=$i ?>" name="form_magenta_<?=$i ?>" value="<?=$$form_magenta_var ?>" />
+                                <input type="hidden" id="form_yellow_<?=$i ?>" name="form_yellow_<?=$i ?>" value="<?=$$form_yellow_var ?>" />
+                                <input type="hidden" id="form_kontur_<?=$i ?>" name="form_kontur_<?=$i ?>" value="<?=$$form_kontur_var ?>" />
                             </div>
                         </div>
                         <?php
