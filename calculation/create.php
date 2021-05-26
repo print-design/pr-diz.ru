@@ -772,9 +772,11 @@ for ($i=1; $i<=8; $i++) {
                         <?php
                         for($i=1; $i<=8; $i++):
                         $block_class = " d-none";
+                        $paint_required = "";
 
                         if(!empty($paints_count) && is_numeric($paints_count) && $i <= $paints_count) {
                             $block_class = "";
+                            $paint_required = " required='required'";
                         }
                         ?>
                         <div class="row paint_block<?=$block_class ?>" id="paint_block_<?=$i ?>">
@@ -807,7 +809,7 @@ for ($i=1; $i<=8; $i++) {
                             }
                             ?>
                             <div class="form-group<?=$paint_class ?>" id="paint_group_<?=$i ?>">
-                                <select id="paint_<?=$i ?>" name="paint_<?=$i ?>" class="form-control paint" data-id="<?=$i ?>">
+                                <select id="paint_<?=$i ?>" name="paint_<?=$i ?>" class="form-control paint" data-id="<?=$i ?>"<?=$paint_required ?>>
                                     <option value="">Цвет...</option>
                                     <?php
                                     $cmyk_selected = "";
@@ -1196,11 +1198,9 @@ for ($i=1; $i<=8; $i++) {
                 $('#paint_group_' + data_id).removeClass('col-3');
                 
                 $('#color_group_' + data_id).addClass('d-none');
-                $('.color').removeAttr('required');
                 
                 $('#percent_group_' + data_id).addClass('d-none');
                 $('#percent_group_cmyk_' + data_id).addClass('d-none');
-                $('.percent').removeAttr('required');
                 
                 $('#form_group_' + data_id).removeClass('col-6');
                 $('#form_group_' + data_id).removeClass('col-3');
@@ -1236,10 +1236,6 @@ for ($i=1; $i<=8; $i++) {
                     $('#percent_cyan_' + data_id).attr('type', 'text');
                     $(".form_select_" + data_id).addClass('d-none');
                     $('#form_select_cyan_' + data_id).removeClass('d-none');
-                    
-                    // Устанавливаем значения атрибутов "обязательное поле" для поля процента для значения CYAN
-                    $('.percent_' + data_id).removeAttr('required');
-                    $('#percent_cyan_' + data_id).attr('required', 'required');
                 }
                 else if(paint == 'panton') {
                     $('#paint_group_' + data_id).addClass('col-3');
@@ -1249,9 +1245,6 @@ for ($i=1; $i<=8; $i++) {
                     $('#percent_group_' + data_id).addClass('col-3');
                     $('#form_group_' + data_id).removeClass('d-none');
                     $('#form_group_' + data_id).addClass('col-3');
-                    
-                    $('#color_' + data_id).attr('required', 'required');
-                    $('#percent_' + data_id).attr('required', 'required');
                 }
                 else {
                     $('#paint_group_' + data_id).addClass('col-12');
@@ -1270,10 +1263,6 @@ for ($i=1; $i<=8; $i++) {
                 // Делаем видимым список форм для этого значения CMYK
                 $(".form_select_" + data_id).addClass('d-none');
                 $("#form_select_" + cmyk + "_" + data_id).removeClass('d-none');
-                
-                // Устанавливаем атрибут "обязательное поле" для этого значения CMYK
-                $(".percent_" + data_id).removeAttr('required');
-                $("#percent_" + cmyk + "_" + data_id).attr('required', 'required');
             });
             
             // Обработка выбора формы
