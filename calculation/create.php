@@ -68,14 +68,14 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     for($i=1; $i<=8; $i++) {
         if(!empty($paints_count) && is_numeric($paints_count) && $i <= $paints_count) {
             $paint_var = "paint_".$i;
-            $$paint_var = filter_input(INPUT_POST, 'paint_'.$i); echo $$paint_var;
+            $$paint_var = filter_input(INPUT_POST, 'paint_'.$i);
             
             $color_var = "color_".$i;
-            $$color_var = filter_input(INPUT_POST, 'color_'.$i); echo $$color_var;
+            $$color_var = filter_input(INPUT_POST, 'color_'.$i);
             
             $percent_var = "percent_".$i;
             $$percent_var = filter_input(INPUT_POST, 'percent_'.$i);
-            $$percent_var = str_ireplace("%", "", $$percent_var); echo $$percent_var;
+            $$percent_var = str_ireplace("%", "", $$percent_var);
             
             if($$paint_var == 'panton' && empty($$color_var)) {
                 $color_valid_var = 'color_'.$i.'_valid';
