@@ -18,6 +18,18 @@ $brand_name_valid = '';
 $thickness_valid = '';
 $quantity_valid = '';
 
+// Переменные для валидации процентов краски и названия цвета
+for($i=1; $i<=8; $i++) {
+    $color_valid_var = 'color_'.$i.'_valid';
+    $$color_valid_var = '';
+    
+    $percent_valid_var = 'percent_'.$i.'_valid';
+    $$percent_valid_var = '';
+    
+    $cmyk_valid_var = 'cmyk_'.$i.'_valid';
+    $$cmyk_valid_var = '';
+}
+
 // Сохранение в базу расчёта
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     if(empty(filter_input(INPUT_POST, "customer_id"))) {
@@ -48,6 +60,40 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     if(empty(filter_input(INPUT_POST, 'quantity'))) {
         $quantity_valid = ISINVALID;
         $form_valid = false;
+    }
+    
+    // Проверка валидности процентов краски и названия цвета
+    $paints_count = filter_input(INPUT_POST, 'paints_count');
+    
+    for($i=1; $i<=8; $i++) {
+        if(!empty($paints_count) && is_numeric($paints_count) && $i <= $paints_count) {
+            $paint_var = "paint_".$i;
+            $$paint_var = filter_input(INPUT_POST, 'paint_'.$i); echo $$paint_var;
+            
+            $color_var = "color_".$i;
+            $$color_var = filter_input(INPUT_POST, 'color_'.$i); echo $$color_var;
+            
+            $percent_var = "percent_".$i;
+            $$percent_var = filter_input(INPUT_POST, 'percent_'.$i);
+            $$percent_var = str_ireplace("%", "", $$percent_var); echo $$percent_var;
+            
+            if($$paint_var = 'panton' && empty($$color_var)) {
+                $color_valid_var = 'color_'.$i.'_valid';
+                $$color_valid_var = ISINVALID;
+                $form_valid = false;
+            }
+            
+            if($$paint_var = 'panton' && empty($$percent_var)) {
+                $percent_valid_var = 'percent_'.$i.'_valid';
+                $$percent_valid_var = ISINVALID;
+                $form_valid = false;
+            }
+            
+            $cmyk_valid_var = 'cmyk_'.$i.'_valid';
+            $$cmyk_valid_var = ISINVALID;
+            
+            $form_valid = false;
+        }
     }
     
     if($form_valid) {
@@ -99,6 +145,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             
             $percent_var = "percent_$i";
             $$percent_var = filter_input(INPUT_POST, "percent_$i");
+            $$percent_var = str_ireplace("%", "", $$percent_var);
             if(empty($$percent_var)) $$percent_var = "NULL";
             
             $form_var = "form_$i";
@@ -436,6 +483,7 @@ for ($i=1; $i<=8; $i++) {
                 <div class="col-6" id="left_side">
                     <form method="post">
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                        <input type="hidden" id="scroll" name="scroll" />
                         <?php if(null === filter_input(INPUT_GET, 'id')): ?>
                         <h1 style="font-size: 32px; font-weight: 600;">Новый расчет</h1>
                         <?php else: ?>
@@ -827,23 +875,33 @@ for ($i=1; $i<=8; $i++) {
                                 </select>
                             </div>
                             <div class="form-group<?=$color_class ?>" id="color_group_<?=$i ?>">
-                                <?php $color_var = "color_$i"; ?>
-                                <input type="text" id="color_<?=$i ?>" name="color_<?=$i ?>" class="form-control color" placeholder="Цвет..." value="<?=$$color_var ?>" />
+                                <?php
+                                $color_var = "color_$i"; 
+                                $color_var_valid = 'color_'.$i.'_valid'; 
+                                ?>
+                                <input type="text" id="color_<?=$i ?>" name="color_<?=$i ?>" class="form-control color<?=$$color_var_valid ?>" placeholder="Цвет..." value="<?=$$color_var?>" />
+                                <div class="invalid-feedback">Цвет обязательно</div>
                             </div>
                             <div class="form-group<?=$cmyk_class ?>" id="cmyk_group_<?=$i ?>">
-                                <select id="cmyk_<?=$i ?>" name="cmyk_<?=$i ?>" class="form-control cmyk" data-id="<?=$i ?>">
+                                <?php
+                                $cmyk_var_valid = 'cmyk_'.$i.'_valid';
+                                ?>
+                                <select id="cmyk_<?=$i ?>" name="cmyk_<?=$i ?>" class="form-control cmyk<?=$$cmyk_var_valid ?>" data-id="<?=$i ?>">
                                     <option value="cyan">Cyan</option>
                                     <option value="magenta">Magenta</option>
                                     <option value="yellow">Yellow</option>
                                     <option value="kontur">Kontur</option>
                                 </select>
+                                <div class="invalid-feedback">Для каждого компонента укажите процент и форму</div>
                             </div>
                             <div class="form-group<?=$percent_class ?>" id="percent_group_<?=$i ?>">
                                 <?php
                                 $percent_var = "percent_$i";
                                 $percent_value = empty($$percent_var) ? "" : $$percent_var;
+                                $percent_var_valid = 'percent_'.$i.'_valid';
                                 ?>
-                                <input type="text" id="percent_<?=$i ?>" name="percent_<?=$i ?>" class="form-control percent" value="<?=$percent_value ?>" />
+                                <input type="text" id="percent_<?=$i ?>" name="percent_<?=$i ?>" class="form-control percent<?=$$percent_var_valid ?>" value="<?=$percent_value ?>" />
+                                <div class="invalid-feedback">Процент обязательно</div>
                             </div>
                             <div class="form-group<?=$percent_cmyk_class ?>" id="percent_group_cmyk_<?=$i ?>">
                                 <?php
@@ -1336,6 +1394,11 @@ for ($i=1; $i<=8; $i++) {
                 
             // Скрытие расчёта при создании нового расчёта
             <?php if(null === filter_input(INPUT_GET, 'id')): ?>
+                HideCalculation();
+            <?php endif; ?>
+                
+            // Скрытие расчёта при невалидной форме
+            <?php if(!$form_valid): ?>
                 HideCalculation();
             <?php endif; ?>
         </script>
