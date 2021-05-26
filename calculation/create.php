@@ -18,16 +18,16 @@ $brand_name_valid = '';
 $thickness_valid = '';
 $quantity_valid = '';
 
-// Переменные для валидации процентов краски и названия цвета
+// Переменные для валидации цвета, CMYK и процента
 for($i=1; $i<=8; $i++) {
     $color_valid_var = 'color_'.$i.'_valid';
     $$color_valid_var = '';
     
-    $percent_valid_var = 'percent_'.$i.'_valid';
-    $$percent_valid_var = '';
-    
     $cmyk_valid_var = 'cmyk_'.$i.'_valid';
     $$cmyk_valid_var = '';
+    
+    $percent_valid_var = 'percent_'.$i.'_valid';
+    $$percent_valid_var = '';
 }
 
 // Сохранение в базу расчёта
@@ -62,7 +62,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $form_valid = false;
     }
     
-    // Проверка валидности процентов краски и названия цвета
+    // Проверка валидности цвета, CMYK и процента
     $paints_count = filter_input(INPUT_POST, 'paints_count');
     
     for($i=1; $i<=8; $i++) {
@@ -73,9 +73,17 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $color_var = "color_".$i;
             $$color_var = filter_input(INPUT_POST, 'color_'.$i);
             
+            $cmyk_var = "cmyk_".$i;
+            $$cmyk_var = filter_input(INPUT_POST, 'cmyk_'.$i);
+            
             $percent_var = "percent_".$i;
             $$percent_var = filter_input(INPUT_POST, 'percent_'.$i);
-            $$percent_var = str_ireplace("%", "", $$percent_var);
+            
+            if(empty($$percent_var)) {
+                $percent_valid_var = 'percent_'.$i.'_valid';
+                $$percent_valid_var = ISINVALID;
+                $form_valid = false;
+            }
             
             if($$paint_var == 'panton' && empty($$color_var)) {
                 $color_valid_var = 'color_'.$i.'_valid';
@@ -83,25 +91,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $form_valid = false;
             }
             
-            if($$paint_var == 'panton' && empty($$percent_var)) {
-                $percent_valid_var = 'percent_'.$i.'_valid';
-                $$percent_valid_var = ISINVALID;
-                $form_valid = false;
-            }
-            
-            $percent_cyan_var = "percent_cyan_$i";
-            $$percent_cyan_var = filter_input(INPUT_POST, "percent_cyan_$i");
-            
-            $percent_magenta_var = "percent_magenta_$i";
-            $$percent_magenta_var = filter_input(INPUT_POST, "percent_magenta_$i");
-            
-            $percent_yellow_var = "percent_yellow_$i";
-            $$percent_yellow_var = filter_input(INPUT_POST, "percent_yellow_$i");
-            
-            $percent_kontur_var = "percent_kontur_$i";
-            $$percent_kontur_var = filter_input(INPUT_POST, "percent_kontur_$i");
-            
-            if($$paint_var == 'cmyk' && (empty($$percent_cyan_var) || empty($$percent_magenta_var) || empty($$percent_yellow_var) || empty($$percent_kontur_var))) {
+            if($$paint_var == 'cmyk' && empty($$cmyk_var)) {
                 $cmyk_valid_var = 'cmyk_'.$i.'_valid';
                 $$cmyk_valid_var = ISINVALID;
                 $form_valid = false;
@@ -152,41 +142,17 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             
             $color_var = "color_$i";
             $$color_var = filter_input(INPUT_POST, "color_$i");
+            if(empty($$color_var)) $$color_var = "NULL";
             
             $cmyk_var = "cmyk_$i";
             $$cmyk_var = filter_input(INPUT_POST, "cmyk_$i");
             
             $percent_var = "percent_$i";
             $$percent_var = filter_input(INPUT_POST, "percent_$i");
-            $$percent_var = str_ireplace("%", "", $$percent_var);
             if(empty($$percent_var)) $$percent_var = "NULL";
             
             $form_var = "form_$i";
             $$form_var = filter_input(INPUT_POST, "form_$i");
-            
-            $percent_cyan_var = "percent_cyan_$i";
-            $$percent_cyan_var = filter_input(INPUT_POST, "percent_cyan_$i");
-            
-            $percent_magenta_var = "percent_magenta_$i";
-            $$percent_magenta_var = filter_input(INPUT_POST, "percent_magenta_$i");
-            
-            $percent_yellow_var = "percent_yellow_$i";
-            $$percent_yellow_var = filter_input(INPUT_POST, "percent_yellow_$i");
-            
-            $percent_kontur_var = "percent_kontur_$i";
-            $$percent_kontur_var = filter_input(INPUT_POST, "percent_kontur_$i");
-            
-            $form_cyan_var = "form_cyan_$i";
-            $$form_cyan_var = filter_input(INPUT_POST, "form_cyan_$i");
-            
-            $form_magenta_var = "form_magenta_$i";
-            $$form_magenta_var = filter_input(INPUT_POST, "form_magenta_$i");
-            
-            $form_yellow_var = "form_yellow_$i";
-            $$form_yellow_var = filter_input(INPUT_POST, "form_yellow_$i");
-            
-            $form_kontur_var = "form_kontur_$i";
-            $$form_kontur_var = filter_input(INPUT_POST, "form_kontur_$i");
         }
         
         $sql = "insert into calculation (date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_type_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, "
@@ -194,29 +160,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                 . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
                 . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
-                . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8, "
-                . "percent_cyan_1, percent_cyan_2, percent_cyan_3, percent_cyan_4, percent_cyan_5, percent_cyan_6, percent_cyan_7, percent_cyan_8, "
-                . "percent_magenta_1, percent_magenta_2, percent_magenta_3, percent_magenta_4, percent_magenta_5, percent_magenta_6, percent_magenta_7, percent_magenta_8, "
-                . "percent_yellow_1, percent_yellow_2, percent_yellow_3, percent_yellow_4, percent_yellow_5, percent_yellow_6, percent_yellow_7, percent_yellow_8, "
-                . "percent_kontur_1, percent_kontur_2, percent_kontur_3, percent_kontur_4, percent_kontur_5, percent_kontur_6, percent_kontur_7, percent_kontur_8, "
-                . "form_cyan_1, form_cyan_2, form_cyan_3, form_cyan_4, form_cyan_5, form_cyan_6, form_cyan_7, form_cyan_8, "
-                . "form_magenta_1, form_magenta_2, form_magenta_3, form_magenta_4, form_magenta_5, form_magenta_6, form_magenta_7, form_magenta_8, "
-                . "form_yellow_1, form_yellow_2, form_yellow_3, form_yellow_4, form_yellow_5, form_yellow_6, form_yellow_7, form_yellow_8, "
-                . "form_kontur_1, form_kontur_2, form_kontur_3, form_kontur_4, form_kontur_5, form_kontur_6, form_kontur_7, form_kontur_8) "
+                . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
                 . "values('$date', $customer_id, '$name', $work_type_id, '$brand_name', $thickness, '$unit', $machine_type_id, '$lamination1_brand_name', $lamination1_thickness, '$lamination2_brand_name', $lamination2_thickness, $width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, "
                 . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
                 . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                 . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
                 . "'$percent_1', '$percent_2', '$percent_3', '$percent_4', '$percent_5', '$percent_6', '$percent_7', '$percent_8', "
-                . "'$form_1', '$form_2', '$form_3', '$form_4', '$form_5', '$form_6', '$form_7', '$form_8', "
-                . "'$percent_cyan_1', '$percent_cyan_2', '$percent_cyan_3', '$percent_cyan_4', '$percent_cyan_5', '$percent_cyan_6', '$percent_cyan_7', '$percent_cyan_8', "
-                . "'$percent_magenta_1', '$percent_magenta_2', '$percent_magenta_3', '$percent_magenta_4', '$percent_magenta_5', '$percent_magenta_6', '$percent_magenta_7', '$percent_magenta_8', "
-                . "'$percent_yellow_1', '$percent_yellow_2', '$percent_yellow_3', '$percent_yellow_4', '$percent_yellow_5', '$percent_yellow_6', '$percent_yellow_7', '$percent_yellow_8', "
-                . "'$percent_kontur_1', '$percent_kontur_2', '$percent_kontur_3', '$percent_kontur_4', '$percent_kontur_5', '$percent_kontur_6', '$percent_kontur_7', '$percent_kontur_8', "
-                . "'$form_cyan_1', '$form_cyan_2', '$form_cyan_3', '$form_cyan_4', '$form_cyan_5', '$form_cyan_6', '$form_cyan_7', '$form_cyan_8', "
-                . "'$form_magenta_1', '$form_magenta_2', '$form_magenta_3', '$form_magenta_4', '$form_magenta_5', '$form_magenta_6', '$form_magenta_7', '$form_magenta_8', "
-                . "'$form_yellow_1', '$form_yellow_2', '$form_yellow_3', '$form_yellow_4', '$form_yellow_5', '$form_yellow_6', '$form_yellow_7', '$form_yellow_8', "
-                . "'$form_kontur_1', '$form_kontur_2', '$form_kontur_3', '$form_kontur_4', '$form_kontur_5', '$form_kontur_6', '$form_kontur_7', '$form_kontur_8')";
+                . "'$form_1', '$form_2', '$form_3', '$form_4', '$form_5', '$form_6', '$form_7', '$form_8')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $insert_id = $executer->insert_id;
@@ -254,15 +204,7 @@ if(!empty($id)) {
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
             . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
             . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
-            . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8, "
-            . "percent_cyan_1, percent_cyan_2, percent_cyan_3, percent_cyan_4, percent_cyan_5, percent_cyan_6, percent_cyan_7, percent_cyan_8, "
-            . "percent_magenta_1, percent_magenta_2, percent_magenta_3, percent_magenta_4, percent_magenta_5, percent_magenta_6, percent_magenta_7, percent_magenta_8, "
-            . "percent_yellow_1, percent_yellow_2, percent_yellow_3, percent_yellow_4, percent_yellow_5, percent_yellow_6, percent_yellow_7, percent_yellow_8, "
-            . "percent_kontur_1, percent_kontur_2, percent_kontur_3, percent_kontur_4, percent_kontur_5, percent_kontur_6, percent_kontur_7, percent_kontur_8, "
-            . "form_cyan_1, form_cyan_2, form_cyan_3, form_cyan_4, form_cyan_5, form_cyan_6, form_cyan_7, form_cyan_8, "
-            . "form_magenta_1, form_magenta_2, form_magenta_3, form_magenta_4, form_magenta_5, form_magenta_6, form_magenta_7, form_magenta_8, "
-            . "form_yellow_1, form_yellow_2, form_yellow_3, form_yellow_4, form_yellow_5, form_yellow_6, form_yellow_7, form_yellow_8, "
-            . "form_kontur_1, form_kontur_2, form_kontur_3, form_kontur_4, form_kontur_5, form_kontur_6, form_kontur_7, form_kontur_8 "
+            . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8 "
             . "from calculation where id=$id";
     $row = (new Fetcher($sql))->Fetch();
 }
@@ -419,54 +361,6 @@ for ($i=1; $i<=8; $i++) {
     if(null === $$form_var) {
         if(isset($row["form_$i"])) $$form_var = $row["form_$i"];
         else $$form_var = null;
-    }
-    
-    $percent_cyan_var = "percent_cyan_$i";
-    $$percent_cyan_var = filter_input(INPUT_POST, "percent_cyan_$i");
-    if(null === $$percent_cyan_var) {
-        if(isset($row["percent_cyan_$i"])) $$percent_cyan_var = $row["percent_cyan_$i"];
-    }
-    
-    $percent_magenta_var = "percent_magenta_$i";
-    $$percent_magenta_var = filter_input(INPUT_POST, "percent_magenta_$i");
-    if(null === $$percent_magenta_var) {
-        if(isset($row["percent_magenta_$i"])) $$percent_magenta_var = $row["percent_magenta_$i"];
-    }
-
-    $percent_yellow_var = "percent_yellow_$i";
-    $$percent_yellow_var = filter_input(INPUT_POST, "percent_yellow_$i");
-    if(null === $$percent_yellow_var) {
-        if(isset($row["percent_yellow_$i"])) $$percent_yellow_var = $row["percent_yellow_$i"];
-    }
-
-    $percent_kontur_var = "percent_kontur_$i";
-    $$percent_kontur_var = filter_input(INPUT_POST, "percent_kontur_$i");
-    if(null === $$percent_kontur_var) {
-        if(isset($row["percent_kontur_$i"])) $$percent_kontur_var = $row["percent_kontur_$i"];
-    }
-
-    $form_cyan_var = "form_cyan_$i";
-    $$form_cyan_var = filter_input(INPUT_POST, "form_cyan_$i");
-    if(null === $$form_cyan_var) {
-        if(isset($row["form_cyan_$i"])) $$form_cyan_var = $row["form_cyan_$i"];
-    }
-
-    $form_magenta_var = "form_magenta_$i";
-    $$form_magenta_var = filter_input(INPUT_POST, "form_magenta_$i");
-    if(null === $$form_magenta_var) {
-        if(isset($row["form_magenta_$i"])) $$form_magenta_var = $row["form_magenta_$i"];
-    }
-    
-    $form_yellow_var = "form_yellow_$i";
-    $$form_yellow_var = filter_input(INPUT_POST, "form_yellow_$i");
-    if(null === $$form_yellow_var) {
-        if(isset($row["form_yellow_$i"])) $$form_yellow_var = $row["form_yellow_$i"];
-    }
-    
-    $form_kontur_var = "form_kontur_$i";
-    $$form_kontur_var = filter_input(INPUT_POST, "form_kontur_$i");
-    if(null === $$form_kontur_var) {
-        if(isset($row["form_kontur_$i"])) $$form_kontur_var = $row["form_kontur_$i"];
     }
 }
 ?>
@@ -846,15 +740,14 @@ for ($i=1; $i<=8; $i++) {
                             $cmyk_class = " d-none";
                             $color_class = " d-none";
                             $percent_class = " d-none";
-                            $percent_cmyk_class = " d-none";
                             $form_class = " d-none";
-                            $form_cmyk_class = " d-none";
                             
                             $paint_var_name = "paint_$i";
                             
                             if($$paint_var_name == "white" || $$paint_var_name == "lacquer") {
                                 $paint_class = " col-6";
-                                $form_class = " col-6";
+                                $percent_class = " col-3";
+                                $form_class = " col-3";
                             }
                             else if($$paint_var_name == "panton") {
                                 $paint_class = " col-3";
@@ -886,47 +779,51 @@ for ($i=1; $i<=8; $i++) {
                                     <option value="white"<?=$white_selected ?>>Белый</option>
                                     <option value="lacquer"<?=$lacquer_selected ?>>Лак</option>
                                 </select>
+                                <div class="invalid-feedback">Цвет обязательно</div>
                             </div>
                             <div class="form-group<?=$color_class ?>" id="color_group_<?=$i ?>">
                                 <?php
                                 $color_var = "color_$i"; 
                                 $color_var_valid = 'color_'.$i.'_valid'; 
                                 ?>
-                                <input type="text" id="color_<?=$i ?>" name="color_<?=$i ?>" class="form-control color<?=$$color_var_valid ?>" placeholder="Цвет..." value="<?=$$color_var?>" />
-                                <div class="invalid-feedback">Цвет обязательно</div>
+                                <input type="text" id="color_<?=$i ?>" name="color_<?=$i ?>" class="form-control int-only color<?=$$color_var_valid ?>" placeholder="Код цвета..." value="<?=$$color_var?>" />
+                                <div class="invalid-feedback">Код цвета обязательно</div>
                             </div>
                             <div class="form-group<?=$cmyk_class ?>" id="cmyk_group_<?=$i ?>">
                                 <?php
+                                $cmyk_var = "cmyk_$i";
                                 $cmyk_var_valid = 'cmyk_'.$i.'_valid';
                                 ?>
                                 <select id="cmyk_<?=$i ?>" name="cmyk_<?=$i ?>" class="form-control cmyk<?=$$cmyk_var_valid ?>" data-id="<?=$i ?>">
-                                    <option value="cyan">Cyan</option>
-                                    <option value="magenta">Magenta</option>
-                                    <option value="yellow">Yellow</option>
-                                    <option value="kontur">Kontur</option>
+                                    <option value="">CMYK...</option>
+                                    <?php
+                                    $cyan_selected = "";
+                                    $magenta_selected = "";
+                                    $yellow_selected = "";
+                                    $kontur_selected = "";
+                                    
+                                    $cmyk_var_selected = $$cmyk_var.'_selected';
+                                    $$cmyk_var_selected = " selected='selected'";
+                                    ?>
+                                    <option value="cyan"<?=$cyan_selected ?>>Cyan</option>
+                                    <option value="magenta"<?=$magenta_selected ?>>Magenta</option>
+                                    <option value="yellow"<?=$yellow_selected ?>>Yellow</option>
+                                    <option value="kontur"<?=$kontur_selected ?>>Kontur</option>
                                 </select>
-                                <div class="invalid-feedback">Для каждого компонента укажите процент и форму</div>
+                                <div class="invalid-feedback">Выберите компонент цвета</div>
                             </div>
                             <div class="form-group<?=$percent_class ?>" id="percent_group_<?=$i ?>">
                                 <?php
                                 $percent_var = "percent_$i";
-                                $percent_value = empty($$percent_var) ? "" : $$percent_var;
                                 $percent_var_valid = 'percent_'.$i.'_valid';
                                 ?>
-                                <input type="text" id="percent_<?=$i ?>" name="percent_<?=$i ?>" class="form-control percent<?=$$percent_var_valid ?>" value="<?=$percent_value ?>" />
+                                <div class="input-group">
+                                    <input type="text" id="percent_<?=$i ?>" name="percent_<?=$i ?>" class="form-control int-only percent<?=$$percent_var_valid ?>" style="width: 80px;" value="<?=$percent_value ?>" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
                                 <div class="invalid-feedback">Процент обязательно</div>
-                            </div>
-                            <div class="form-group<?=$percent_cmyk_class ?>" id="percent_group_cmyk_<?=$i ?>">
-                                <?php
-                                $percent_cyan_var = "percent_cyan_$i";
-                                $percent_magenta_var = "percent_magenta_$i";
-                                $percent_yellow_var = "percent_yellow_$i";
-                                $percent_kontur_var = "percent_kontur_$i";
-                                ?>
-                                <input type="text" id="percent_cyan_<?=$i ?>" name="percent_cyan_<?=$i ?>" class="form-control percent percent_<?=$i ?>" value="<?=$$percent_cyan_var ?>" />
-                                <input type="hidden" id="percent_magenta_<?=$i ?>" name="percent_magenta_<?=$i ?>" class="form-control percent percent_<?=$i ?>" value="<?=$$percent_magenta_var ?>" />
-                                <input type="hidden" id="percent_yellow_<?=$i ?>" name="percent_yellow_<?=$i ?>" class="form-control percent percent_<?=$i ?>" value="<?=$$percent_yellow_var ?>" />
-                                <input type="hidden" id="percent_kontur_<?=$i ?>" name="percent_kontur_<?=$i ?>" class="form-control percent percent_<?=$i ?>" value="<?=$$percent_kontur_var ?>" />
                             </div>
                             <div class="form-group<?=$form_class ?>" id="form_group_<?=$i ?>">
                                 <select id="form_<?=$i ?>" name="form_<?=$i ?>" class="form-control form">
@@ -941,60 +838,6 @@ for ($i=1; $i<=8; $i++) {
                                     <option value="flint"<?=$flint_selected ?>>Флинт</option>
                                     <option value="kodak"<?=$kodak_selected ?>>Кодак</option>
                                 </select>
-                            </div>
-                            <div class="form-group col-3<?=$form_cmyk_class ?>" id="form_group_cmyk_<?=$i ?>">
-                                <select id="form_select_cyan_<?=$i ?>" name="form_select_cyan_<?=$i ?>" class="form-control form_select form_select_<?=$i ?>" data-cmyk="cyan" data-id="<?=$i ?>">
-                                    <?php
-                                    $flint_cyan_selected = "";
-                                    $kodak_cyan_selected = "";
-                                    
-                                    $form_cyan_var = "form_cyan_$i";
-                                    $form_cyan_selected_var = $$form_cyan_var."_cyan_selected";
-                                    $$form_cyan_selected_var = " selected='selected'";
-                                    ?>
-                                    <option value="flint"<?=$flint_cyan_selected ?>>Флинт</option>
-                                    <option value="kodak"<?=$kodak_cyan_selected ?>>Кодак</option>
-                                </select>
-                                <select id="form_select_magenta_<?=$i ?>" name="form_select_magenta_<?=$i ?>" class="form-control form_select form_select_<?=$i ?> d-none" data-cmyk="magenta" data-id="<?=$i ?>">
-                                    <?php
-                                    $flint_magenta_selected = "";
-                                    $kodak_magenta_selected = "";
-                                    
-                                    $form_magenta_var = "form_magenta_$i";
-                                    $form_magenta_selected_var = $$form_magenta_var."_magenta_selected";
-                                    $$form_magenta_selected_var = " selected='selected'";
-                                    ?>
-                                    <option value="flint"<?=$flint_magenta_selected ?>>Флинт</option>
-                                    <option value="kodak"<?=$kodak_magenta_selected ?>>Кодак</option>
-                                </select>
-                                <select id="form_select_yellow_<?=$i ?>" name="form_select_yellow_<?=$i ?>" class="form-control form_select form_select_<?=$i ?> d-none" data-cmyk="yellow" data-id="<?=$i ?>">
-                                    <?php
-                                    $flint_yellow_selected = "";
-                                    $kodak_yellow_selected = "";
-                                    
-                                    $form_yellow_var = "form_yellow_$i";
-                                    $form_yellow_selected_var = $$form_yellow_var."_yellow_selected";
-                                    $$form_yellow_selected_var = " selected='selected'";
-                                    ?>
-                                    <option value="flint"<?=$flint_yellow_selected ?>>Флинт</option>
-                                    <option value="kodak"<?=$kodak_yellow_selected ?>>Кодак</option>
-                                </select>
-                                <select id="form_select_kontur_<?=$i ?>" name="form_select_kontur_<?=$i ?>" class="form-control form_select form_select_<?=$i ?> d-none" data-cmyk="kontur" data-id="<?=$i ?>">
-                                    <?php
-                                    $flint_kontur_selected = "";
-                                    $kodak_kontur_selected = "";
-                                    
-                                    $form_kontur_var = "form_kontur_$i";
-                                    $form_kontur_selected_var = $$form_kontur_var."_kontur_selected";
-                                    $$form_kontur_selected_var = " selected='selected'";
-                                    ?>
-                                    <option value="flint"<?=$flint_kontur_selected ?>>Флинт</option>
-                                    <option value="kodak"<?=$kodak_kontur_selected ?>>Кодак</option>
-                                </select>
-                                <input type="hidden" id="form_cyan_<?=$i ?>" name="form_cyan_<?=$i ?>" value="<?=$$form_cyan_var ?>" />
-                                <input type="hidden" id="form_magenta_<?=$i ?>" name="form_magenta_<?=$i ?>" value="<?=$$form_magenta_var ?>" />
-                                <input type="hidden" id="form_yellow_<?=$i ?>" name="form_yellow_<?=$i ?>" value="<?=$$form_yellow_var ?>" />
-                                <input type="hidden" id="form_kontur_<?=$i ?>" name="form_kontur_<?=$i ?>" value="<?=$$form_kontur_var ?>" />
                             </div>
                         </div>
                         <?php
@@ -1345,30 +1188,6 @@ for ($i=1; $i<=8; $i++) {
                 $("#form_" + data_cmyk + "_" + data_id).val(form);
             });
             
-            // Маска % для поля "процент"
-            $(".percent").mask("99%", { autoclear: false });
-            
-            // Фильтрация ввода в поле "наценка"
-            $('.percent').keypress(function(e) {
-                if(/\D/.test(e.key)) {
-                    return false;
-                }
-            });
-            
-            $('.percent').change(function(e) {
-                var val = $(this).val();
-                val = val.replace(/[^\d\%]/g, '');
-                $(this).val(val);
-            });
-            
-            $('.percent').change();
-            
-            // Автовыделение при щелчке для поля "наценка"
-            $('.percent').click(function() {
-                $(this).prop("selectionStart", 0);
-                $(this).prop("selectionEnd", $(this).val().length);
-            });
-
             // Показ расходов
             function ShowCosts() {
                 $("#costs").removeClass("d-none");
