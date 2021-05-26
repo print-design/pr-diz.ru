@@ -12,7 +12,7 @@
                                 $extracharge_disabled = "";
                             }
                             ?>
-                        <input type="text" id="extracharge" name="extracharge" class="form-c1ontrol mt-1" style="width: 50px;" value="<?=$extracharge ?>"<?=$extracharge_disabled ?> /> %
+                        <input type="text" id="extracharge" name="extracharge" class="int-only mt-1" style="width: 50px;" value="<?=$extracharge ?>"<?=$extracharge_disabled ?> /> %
                     </div>
                 </div>
                 <div class="d-table-cell w-50">
@@ -22,29 +22,47 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="mt-3">
+            <h2>Себестоимость</h2>
+        </div>
+        <div class="d-table w-100">
             <div class="d-table-row">
-                <div class="d-table-cell pb-2 pt-2">
-                    Себестоимость
-                    <div class="font-weight-bold" style="font-size: large;">1 200 000 руб.</div>
+                <div class="d-table-cell pb-2 pt-2 w-50">
+                    <div style="font-size: small;">Себестоимость</div>
+                    <div class="font-weight-bold" style="font-size: large;">1&nbsp;&nbsp;200&nbsp;&nbsp;000&nbsp;&nbsp;<i class="fas fa-ruble-sign" style="font-size: medium;"></i></div>
                 </div>
                 <div class="d-table-cell pb-2 pt-2 pl-3">
-                    За 1 кг
-                    <div class="font-weight-bold" style="font-size: large;">765 руб.</div>
+                    <div style="font-size: small;">Себестоимость, 1 кг</div>
+                    <div class="font-weight-bold" style="font-size: large;">765&nbsp;&nbsp;<i class="fas fa-ruble-sign" style="font-size: medium;"></i></div>
                 </div>
             </div>
+            <?php if($work_type_id == 2): ?>
             <div class="d-table-row">
                 <div class="d-table-cell pb-2 pt-2">
-                    Отгрузочная стоимость
-                    <div class="font-weight-bold" style="font-size: large;">800 000 руб.</div>
+                    <div style="font-size: small;">Себестоимость форм</div>
+                    <div class="font-weight-bold" style="font-size: large;">800&nbsp;&nbsp;000&nbsp;&nbsp;<i class="fas fa-ruble-sign" style="font-size: medium;"></i></div>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
+        <div class="mt-3">
+            <h2>Отгрузочная стоимость</h2>
+        </div>
+        <div class="d-table w-100">
+            <div class="d-table-row">
+                <div class="d-table-cell pb-2 pt-2 w-50">
+                    <div style="font-size: small;">Отгрузочная стоимость</div>
+                    <div class="font-weight-bold" style="font-size: large;">800&nbsp;&nbsp;000&nbsp;&nbsp;<i class="fas fa-ruble-sign" style="font-size: medium;"></i></div>
                 </div>
                 <div class="d-table-cell pb-2 pt-2 pl-3">
-                    За 1 кг
-                    <div class="font-weight-bold" style="font-size: large;">978 руб.</div>
+                    <div style="font-size: small;">Отгрузочная стоимость, 1 кг</div>
+                    <div class="font-weight-bold" style="font-size: large;">978&nbsp;&nbsp;<i class="fas fa-ruble-sign" style="font-size: medium;"></i></div>
                 </div>
             </div>
         </div>
         <?php
-        if(!empty($lamination1_brand_name) || !empty($lamination2_brand_name)):
+        if(!empty($lamination1_brand_name) || !empty($lamination2_brand_name) || $work_type_id == 2):
         ?>
         <button type="button" class="btn btn-light" id="show_costs" onclick="javascript: ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать расходы</button>
         <div id="costs" class="d-none">
@@ -52,27 +70,60 @@
             <div class="d-table w-100">
                 <div class="d-table-row">
                     <div class="d-table-cell pb-2 pt-2 w-50">
-                        Отходы
-                        <div class="font-weight-bold" style="font-size: large;">1 280 руб.</div>
+                        <div style="font-size: small;">Отходы</div>
+                        <div class="font-weight-bold" style="font-size: large;">1&nbsp;&nbsp;280&nbsp;&nbsp;<i class="fas fa-ruble-sign" style="font-size: medium;"></i></div>
                     </div>
                     <div class="d-table-cell pb-2 pt-2 pl-3 w-50">
                         <br />
                         <div class="font-weight-bold" style="font-size: large;">4,5 кг.</div>
                     </div>
                 </div>
+                <?php if($work_type_id == 2): ?>
                 <div class="d-table-row">
                     <div class="d-table-cell pb-2 pt-2">
-                        Клей
-                        <div class="font-weight-bold" style="font-size: large;">800 000 руб.</div>
+                        <div style="font-size: small;">Краска</div>
+                        <div class="font-weight-bold" style="font-size: large;">17&nbsp;&nbsp;500&nbsp;&nbsp;<i class="fas fa-ruble-sign" style="font-size: medium;"></i></div>
+                    </div>
+                    <div class="d-table-cell pb-2 pt-2 pl-3">
+                        <br />
+                        <div class="font-weight-bold" style="font-size: large;">17,5 кг.</div>
+                    </div>
+                </div>
+                <?php
+                endif;
+                if(!empty($lamination1_brand_name) || !empty($lamination2_brand_name)):
+                ?>
+                <div class="d-table-row">
+                    <div class="d-table-cell pb-2 pt-2">
+                        <div style="font-size: small;">Клей</div>
+                        <div class="font-weight-bold" style="font-size: large;">800&nbsp;&nbsp;000&nbsp;&nbsp;<i class="fas fa-ruble-sign" style="font-size: medium;"></i></div>
                     </div>
                     <div class="d-table-cell pb-2 pt-2 pl-3">
                         <br />
                         <div class="font-weight-bold" style="font-size: large;">1,0 кг.</div>
                     </div>
                 </div>
+                <?php
+                endif;
+                if($work_type_id == 2):
+                ?>
                 <div class="d-table-row">
                     <div class="d-table-cell pb-2 pt-2">
-                        Работа ламинатора
+                        <div style="font-size: small;">Печать тиража</div>
+                        <div class="font-weight-bold" style="font-size: large;">470&nbsp;&nbsp;500&nbsp;&nbsp;<i class="fas fa-ruble-sign" style="font-size: medium;"></i></div>
+                    </div>
+                    <div class="d-table-cell pb-2 pt-2 pl-3">
+                        <br />
+                        <div class="font-weight-bold" style="font-size: large;">6 часов 30 минут</div>
+                    </div>
+                </div>
+                <?php
+                endif;
+                if(!empty($lamination1_brand_name) || !empty($lamination2_brand_name)):
+                ?>
+                <div class="d-table-row">
+                    <div class="d-table-cell pb-2 pt-2">
+                        <div style="font-size: small;">Работа ламинатора</div>
                         <div class="font-weight-bold">230 руб.</div>
                     </div>
                     <div class="d-table-cell pb-2 pt-2 pl-3">
@@ -80,6 +131,7 @@
                         <div class="font-weight-bold" style="font-size: large;">1,5 ч.</div>
                     </div>
                 </div>
+                <?php endif; ?>
             </div>
         </div>
         <?php

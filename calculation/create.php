@@ -717,14 +717,14 @@ for ($i=1; $i<=8; $i++) {
                             <!-- Ширина ручья -->
                             <div class="col-6 work-type-lam-only d-none">
                                 <div class="form-group">
-                                    <input type="text" id="stream_width" name="stream_width" class="form-control work-type-lam-only d-none" placeholder="Ширина ручья" value="<?=$stream_width ?>" />
+                                    <input type="text" id="stream_width" name="stream_width" class="form-control float-only work-type-lam-only d-none" placeholder="Ширина ручья" value="<?=$stream_width ?>" />
                                     <div class="invalid-feedback">Ширина ручья обязательно</div>
                                 </div>
                             </div>
                             <!-- Количество ручьёв -->
                             <div class="col-6 lam-only lam-only-work-type-no-lam work-type-lam-only d-none">
                                 <div class="form-group">
-                                    <input type="text" id="streams_count" name="streams_count" class="form-control int-only lam-only lam-only-work-type-no-lam work-type-lam-only d-none" placeholder="Количество ручьев" value="<?=$streams_count ?>" />
+                                    <input type="text" id="streams_count" name="streams_count" class="form-control lam-only lam-only-work-type-no-lam work-type-lam-only d-none" placeholder="Количество ручьев" value="<?=$streams_count ?>" />
                                     <div class="invalid-feedback">Количество ручьев обязательно</div>
                                 </div>
                             </div>
@@ -979,6 +979,20 @@ for ($i=1; $i<=8; $i++) {
             $('#extracharge').click(function() {
                 $(this).prop("selectionStart", 0);
                 $(this).prop("selectionEnd", $(this).val().length);
+            });
+            
+            // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
+            $('#streams_count').keypress(function(e) {
+                if(/\D/.test(e.key)) {
+                    return false;
+                }
+                
+                var newvalue = $(e.target).val() + e.key;
+                var iNewValue = parseInt(newvalue);
+                
+                if(iNewValue == null || iNewValue < 1 || iNewValue > 50) {
+                    return false;
+                }
             });
             
             // При смене типа работы: если тип работы "плёнка с печатью", показываем поля, предназначенные только для плёнки с печатью
@@ -1276,7 +1290,7 @@ for ($i=1; $i<=8; $i++) {
             
             // Фильтрация ввода в поле "наценка"
             $('.percent').keypress(function(e) {
-                if(/\D/.test(String.fromCharCode(e.charCode))) {
+                if(/\D/.test(e.key)) {
                     return false;
                 }
             });

@@ -9,7 +9,7 @@
 <script>
     // Фильтрация ввода
     $('.int-only').keypress(function(e) {
-        if(/\D/.test(String.fromCharCode(e.charCode))) {
+        if(/\D/.test(e.key)) {
             return false;
         }
     });
@@ -21,11 +21,11 @@
     });
     
     $('.float-only').keypress(function(e) {
-        if(!/[\.\,\d]/.test(String.fromCharCode(e.charCode))) {
+        if(!/[\.\,\d]/.test(e.key)) {
             return false;
         }
         
-        if(/[\.\,]/.test(String.fromCharCode(e.charCode)) && ($(e.target).val().includes('.') || $(e.target).val().includes(','))) {
+        if(/[\.\,]/.test(e.key) && ($(e.target).val().includes('.') || $(e.target).val().includes(','))) {
             return false;
         }
     });
@@ -38,7 +38,7 @@
     });
     
     $('.no-latin').keypress(function(e) {
-        if(/[a-zA-Z]/.test(String.fromCharCode(e.charCode))) {
+        if(/[a-zA-Z]/.test(e.key)) {
             $(this).next('.invalid-feedback').text('Переключите раскладку');
             $(this).next('.invalid-feedback').show();
             return false;
