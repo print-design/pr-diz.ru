@@ -77,22 +77,35 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $$percent_var = filter_input(INPUT_POST, 'percent_'.$i);
             $$percent_var = str_ireplace("%", "", $$percent_var); echo $$percent_var;
             
-            if($$paint_var = 'panton' && empty($$color_var)) {
+            if($$paint_var == 'panton' && empty($$color_var)) {
                 $color_valid_var = 'color_'.$i.'_valid';
                 $$color_valid_var = ISINVALID;
                 $form_valid = false;
             }
             
-            if($$paint_var = 'panton' && empty($$percent_var)) {
+            if($$paint_var == 'panton' && empty($$percent_var)) {
                 $percent_valid_var = 'percent_'.$i.'_valid';
                 $$percent_valid_var = ISINVALID;
                 $form_valid = false;
             }
             
-            $cmyk_valid_var = 'cmyk_'.$i.'_valid';
-            $$cmyk_valid_var = ISINVALID;
+            $percent_cyan_var = "percent_cyan_$i";
+            $$percent_cyan_var = filter_input(INPUT_POST, "percent_cyan_$i");
             
-            $form_valid = false;
+            $percent_magenta_var = "percent_magenta_$i";
+            $$percent_magenta_var = filter_input(INPUT_POST, "percent_magenta_$i");
+            
+            $percent_yellow_var = "percent_yellow_$i";
+            $$percent_yellow_var = filter_input(INPUT_POST, "percent_yellow_$i");
+            
+            $percent_kontur_var = "percent_kontur_$i";
+            $$percent_kontur_var = filter_input(INPUT_POST, "percent_kontur_$i");
+            
+            if($$paint_var == 'cmyk' && (empty($$percent_cyan_var) || empty($$percent_magenta_var) || empty($$percent_yellow_var) || empty($$percent_kontur_var))) {
+                $cmyk_valid_var = 'cmyk_'.$i.'_valid';
+                $$cmyk_valid_var = ISINVALID;
+                $form_valid = false;
+            }
         }
     }
     
