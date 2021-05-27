@@ -404,11 +404,10 @@ for ($i=1; $i<=8; $i++) {
                         <?php endif; ?>
                         <!-- Заказчик -->
                         <div class="row">
-                            <!--div class="col-8"-->
-                                <div class="col-8 form-group">
-                                    <label for="customer_id" class="hideable">Заказчик</label>
-                                    <select id="customer_id" name="customer_id" class="form-control<?=$customer_id_valid ?>" multiple="multiple" required="required">
-                                        <option value="">Заказчик...</option>
+                            <div class="col-8 form-group">
+                                <label for="customer_id" class="hideable">Заказчик</label>
+                                <select id="customer_id" name="customer_id" class="form-control<?=$customer_id_valid ?>" multiple="multiple" required="required">
+                                    <option value="">Заказчик...</option>
                                         <?php
                                         $sql = "select id, name from customer order by name";
                                         $fetcher = new Fetcher($sql);
@@ -419,14 +418,13 @@ for ($i=1; $i<=8; $i++) {
                                             $selected = " selected='selected'";
                                         }
                                         ?>
-                                        <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
+                                    <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
                                         <?php
                                         endwhile;
                                         ?>
-                                    </select>
-                                    <div class="invalid-feedback">Заказчик обязательно</div>
-                                </div>
-                            <!--/div-->
+                                </select>
+                                <div class="invalid-feedback">Заказчик обязательно</div>
+                            </div>
                             <div class="col-4 form-group d-flex flex-column justify-content-end">
                                 <button type="button" class="btn btn-outline-dark w-100" data-toggle="modal" data-target="#new_customer"><i class="fas fa-plus"></i>&nbsp;Создать нового</button>
                             </div>
@@ -513,7 +511,7 @@ for ($i=1; $i<=8; $i++) {
                             <p><span class="font-weight-bold">Основная пленка</span>&nbsp;&nbsp;<span style="color: gray;">(325 руб   34кг   600мм) <i class="fas fa-info-circle" title="325 руб   34кг   600мм" data-placement="top"></i></span></p>
                         </div>
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-6 d-flex flex-column justify-content-end">
                                 <div class="form-group">
                                     <label for="brand_name" class="hideable">Марка пленки</label>
                                     <select id="brand_name" name="brand_name" class="form-control" required="required">
@@ -535,7 +533,7 @@ for ($i=1; $i<=8; $i++) {
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-6 d-flex flex-column justify-content-end">
                                 <div class="form-group">
                                     <label for="thickness" class="hideable">Толщина</label>
                                     <select id="thickness" name="thickness" class="form-control" required="required">
@@ -567,7 +565,7 @@ for ($i=1; $i<=8; $i++) {
                         <div id="form_lamination_1" class="d-none">
                             <p><span class="font-weight-bold">Ламинация 1</span>&nbsp;&nbsp;<span style="color: gray;">(325 руб   34кг   600мм) <i class="fas fa-info-circle" title="325 руб   34кг   600мм" data-placement="top"></i></span></p>
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-6 d-flex flex-column justify-content-end">
                                     <div class="form-group">
                                         <label for="lamination1_brand_name" class="hideable">Марка пленки</label>
                                         <select id="lamination1_brand_name" name="lamination1_brand_name" class="form-control">
@@ -586,7 +584,7 @@ for ($i=1; $i<=8; $i++) {
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-5">
+                                <div class="col-5 d-flex flex-column justify-content-end">
                                     <div class="form-group">
                                         <label for="lamination1_thickness" class="hideable">Толщина</label>
                                         <select id="lamination1_thickness" name="lamination1_thickness" class="form-control">
@@ -610,7 +608,7 @@ for ($i=1; $i<=8; $i++) {
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-1" id="hide_lamination_1">
+                                <div class="col-1 d-flex flex-column justify-content-end" id="hide_lamination_1">
                                     <button type="button" class="btn btn-light" onclick="javascript: HideLamination1();"><i class="fas fa-trash-alt"></i></button>
                                 </div>
                             </div>
@@ -621,7 +619,7 @@ for ($i=1; $i<=8; $i++) {
                             <div id="form_lamination_2" class="d-none">
                                 <p><span class="font-weight-bold">Ламинация 2</span>&nbsp;&nbsp;<span style="color: gray;">(325 руб   34кг   600мм) <i class="fas fa-info-circle" title="325 руб   34кг   600мм" data-placement="top"></i></span></p>
                                 <div class="row">
-                                    <div class="col-6">
+                                    <div class="col-6 d-flex flex-column justify-content-end">
                                         <div class="form-group">
                                             <label for="lamination2_brand_name" class="hideable">Марка пленки</label>
                                             <select id="lamination2_brand_name" name="lamination2_brand_name" class="form-control">
@@ -640,7 +638,7 @@ for ($i=1; $i<=8; $i++) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-5">
+                                    <div class="col-5 d-flex flex-column justify-content-end">
                                         <div class="form-group">
                                             <label for="lamination2_thickness" class="hideable">Толщина</label>
                                             <select id="lamination2_thickness" name="lamination2_thickness" class="form-control">
@@ -664,7 +662,7 @@ for ($i=1; $i<=8; $i++) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-1" id="hide_lamination_2">
+                                    <div class="col-1 d-flex flex-column justify-content-end" id="hide_lamination_2">
                                         <button type="button" class="btn btn-light" onclick="javascript: HideLamination2();"><i class="fas fa-trash-alt"></i></button>
                                     </div>
                                 </div>
@@ -672,7 +670,7 @@ for ($i=1; $i<=8; $i++) {
                         </div>
                         <div class="row mt-3">
                             <!-- Обрезная ширина -->
-                            <div class="col-6 lam-only lam-only-work-type-no-lam d-none">
+                            <div class="col-6 d-flex flex-column justify-content-end lam-only lam-only-work-type-no-lam d-none">
                                 <div class="form-group">
                                     <label for="width" class="hideable">Обрезная ширина</label>
                                     <input type="text" id="width" name="width" class="form-control int-only lam-only lam-only-work-type-no-lam d-none" placeholder="Обрезная ширина, мм" value="<?=$width ?>" />
@@ -680,7 +678,7 @@ for ($i=1; $i<=8; $i++) {
                                 </div>
                             </div>
                             <!-- Длина от метки до метки -->
-                            <div class="col-6 work-type-lam-only d-none">
+                            <div class="col-6 d-flex flex-column justify-content-end work-type-lam-only d-none">
                                 <div class="form-group">
                                     <label for="length" class="hideable">Длина от метки до метки</label>
                                     <input type="text" id="length" name="length" class="form-control float-only work-type-lam-only d-none" placeholder="Длина от метки до метки" value="<?=$length ?>" />
@@ -688,7 +686,7 @@ for ($i=1; $i<=8; $i++) {
                                 </div>
                             </div>
                             <!-- Ширина ручья -->
-                            <div class="col-6 work-type-lam-only d-none">
+                            <div class="col-6 d-flex flex-column justify-content-end work-type-lam-only d-none">
                                 <div class="form-group">
                                     <label for="stream_width" class="hideable">Ширина ручья</label>
                                     <input type="text" id="stream_width" name="stream_width" class="form-control float-only work-type-lam-only d-none" placeholder="Ширина ручья" value="<?=$stream_width ?>" />
@@ -696,7 +694,7 @@ for ($i=1; $i<=8; $i++) {
                                 </div>
                             </div>
                             <!-- Количество ручьёв -->
-                            <div class="col-6 lam-only lam-only-work-type-no-lam work-type-lam-only d-none">
+                            <div class="col-6 d-flex flex-column justify-content-end lam-only lam-only-work-type-no-lam work-type-lam-only d-none">
                                 <div class="form-group">
                                     <label for="streams_count" class="hideable">Количество ручьев</label>
                                     <input type="text" id="streams_count" name="streams_count" class="form-control lam-only lam-only-work-type-no-lam work-type-lam-only d-none" placeholder="Количество ручьев" value="<?=$streams_count ?>" />
@@ -704,9 +702,9 @@ for ($i=1; $i<=8; $i++) {
                                 </div>
                             </div>
                             <!-- Рапорт -->
-                            <div class="col-6 work-type-lam-only d-none">
+                            <div class="col-6 d-flex flex-column justify-content-end work-type-lam-only d-none">
                                 <div class="form-group">
-                                    <label for="raport" class="hideable">Работ</label>
+                                    <label for="raport" class="hideable">Рапорт</label>
                                     <select id="raport" name="raport" class="form-control work-type-lam-only d-none">
                                         <option value="">Рапорт...</option>
                                         <?php
@@ -784,7 +782,7 @@ for ($i=1; $i<=8; $i++) {
                                 $form_class = " col-3";
                             }
                             ?>
-                            <div class="form-group<?=$paint_class ?>" id="paint_group_<?=$i ?>">
+                            <div class="form-group<?=$paint_class ?> d-flex flex-column justify-content-end" id="paint_group_<?=$i ?>">
                                 <label for="paint_<?=$i ?>" class="hideable">Цвет</label>
                                 <select id="paint_<?=$i ?>" name="paint_<?=$i ?>" class="form-control paint" data-id="<?=$i ?>"<?=$paint_required ?>>
                                     <option value="">Цвет...</option>
@@ -804,7 +802,7 @@ for ($i=1; $i<=8; $i++) {
                                 </select>
                                 <div class="invalid-feedback">Цвет обязательно</div>
                             </div>
-                            <div class="form-group<?=$color_class ?>" id="color_group_<?=$i ?>">
+                            <div class="form-group<?=$color_class ?> d-flex flex-column justify-content-end" id="color_group_<?=$i ?>">
                                 <?php
                                 $color_var = "color_$i"; 
                                 $color_var_valid = 'color_'.$i.'_valid'; 
@@ -813,7 +811,7 @@ for ($i=1; $i<=8; $i++) {
                                 <input type="text" id="color_<?=$i ?>" name="color_<?=$i ?>" class="form-control int-only color<?=$$color_var_valid ?>" placeholder="Код цвета..." value="<?=$$color_var?>" />
                                 <div class="invalid-feedback">Код цвета обязательно</div>
                             </div>
-                            <div class="form-group<?=$cmyk_class ?>" id="cmyk_group_<?=$i ?>">
+                            <div class="form-group<?=$cmyk_class ?> d-flex flex-column justify-content-end" id="cmyk_group_<?=$i ?>">
                                 <?php
                                 $cmyk_var = "cmyk_$i";
                                 $cmyk_var_valid = 'cmyk_'.$i.'_valid';
@@ -837,7 +835,7 @@ for ($i=1; $i<=8; $i++) {
                                 </select>
                                 <div class="invalid-feedback">Выберите компонент цвета</div>
                             </div>
-                            <div class="form-group<?=$percent_class ?>" id="percent_group_<?=$i ?>">
+                            <div class="form-group<?=$percent_class ?> d-flex flex-column justify-content-end" id="percent_group_<?=$i ?>">
                                 <?php
                                 $percent_var = "percent_$i";
                                 $percent_var_valid = 'percent_'.$i.'_valid';
@@ -851,7 +849,7 @@ for ($i=1; $i<=8; $i++) {
                                     <div class="invalid-feedback">Процент обязательно</div>
                                 </div>
                             </div>
-                            <div class="form-group<?=$form_class ?>" id="form_group_<?=$i ?>">
+                            <div class="form-group<?=$form_class ?> d-flex flex-column justify-content-end" id="form_group_<?=$i ?>">
                                 <label for="form_<?=$i ?>" class="hideable">Форма</label>
                                 <select id="form_<?=$i ?>" name="form_<?=$i ?>" class="form-control form">
                                     <?php
@@ -964,11 +962,13 @@ for ($i=1; $i<=8; $i++) {
             function WorkTypeFilmWithPrint() {
                 // Скрываем поля только с ламинацией
                 $('.lam-only').addClass('d-none');
+                $('.lam-only').removeClass('d-flex');
                 $('input.lam-only').removeAttr('required');
                 $('select.lam-only').removeAttr('required');
                 
                 // Показываем поля для плёнки с печатью
                 $('.work-type-lam-only').removeClass('d-none');
+                $('.work-type-lam-only').addClass('d-flex');
                 $('input.work-type-lam-only').attr('required', 'required');
                 $('select.work-type-lam-only').attr('required', 'required');
                 
@@ -979,6 +979,7 @@ for ($i=1; $i<=8; $i++) {
             function WorkTypeFilmWithoutPrint() {
                 // Скрываем поля для плёнки с печатью
                 $('.work-type-lam-only').addClass('d-none');
+                $('.work-type-lam-only').removeClass('d-flex');
                 $('input.work-type-lam-only').removeAttr('required');
                 $('select.work-type-lam-only').removeAttr('required');
                 
@@ -988,6 +989,7 @@ for ($i=1; $i<=8; $i++) {
                 // Показываем поля только с ламинацией
                 <?php if(!empty($lamination1_brand_name)): ?>
                 $('.lam-only').removeClass('d-none');
+                $('.lam-only').addClass('d-flex');
                 $('input.lam-only').attr('required', 'required');
                 $('select.lam-only').attr('required', 'required');
                 <?php endif; ?>
@@ -1030,6 +1032,7 @@ for ($i=1; $i<=8; $i++) {
                 $('#lamination1_brand_name').attr('required', 'required');
                 $('#lamination1_thickness').attr('required', 'required');
                 $('.lam-only').removeClass('d-none');
+                $('.lam-only').addClass('d-flex');
                 $('input.lam-only').attr('required', 'required');
                 $('select.lam-only').attr('required', 'required');
             }
@@ -1046,6 +1049,7 @@ for ($i=1; $i<=8; $i++) {
                 $('#lamination1_brand_name').removeAttr('required');
                 $('#lamination1_thickness').removeAttr('required');
                 $('.lam-only').addClass('d-none');
+                $('.lam-only').removeClass('d-flex');
                 $('input.lam-only').removeAttr('required');
                 $('select.lam-only').removeAttr('required');
                 HideLamination2();
