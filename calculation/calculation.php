@@ -163,7 +163,39 @@ $machine_type = $row['machine_type']
                                 <tr><th class="font-weight-bold">Печатная машина</th><td><?=$machine_type ?></td></tr>
                                     <?php
                                     endif;
-                                    if(!empty($brand_name) && !empty($thickness)):
+                                    if(!empty($width)):
+                                    ?>
+                                <tr><th class="font-weight-bold">Обрезная ширина</th><td><?= number_format($width, 0, ",", " ") ?></td></tr>
+                                    <?php
+                                    endif;
+                                    if(!empty($length)):
+                                    ?>
+                                <tr><th class="font-weight-bold">Длина от метки до метки</th><td><?= number_format($length, 2, ",", " ") ?></td></tr>
+                                    <?php
+                                    endif;
+                                    if(!empty($streams_count)):
+                                    ?>
+                                <tr><th class="font-weight-bold">Количество ручьев</th><td><?= number_format($streams_count, 0, ",", " ") ?></td></tr>
+                                    <?php
+                                    endif;
+                                    if(!empty($stream_width)):
+                                    ?>
+                                <tr><th class="font-weight-bold">Ширина ручья</th><td><?= number_format($stream_width, 2, ",", " ") ?></td></tr>
+                                    <?php
+                                    endif;
+                                    if(!empty($raport)):
+                                    ?>
+                                <tr><th class="font-weight-bold">Рапорт</th><td><?= number_format($raport, 3, ",", " ") ?></td></tr>
+                                    <?php
+                                    endif;
+                                    ?>
+                            </table>
+                        </div>
+                        <div class="col-6 w-50">
+                            <table class="table table-striped">
+                                <?php
+                                
+                                if(!empty($brand_name) && !empty($thickness)):
                                     ?>
                                 <tr>
                                     <th class="font-weight-bold">Пленка</th>
@@ -196,37 +228,6 @@ $machine_type = $row['machine_type']
                                 </tr>
                                     <?php
                                     endif;
-                                    ?>
-                            </table>
-                        </div>
-                        <div class="col-6 w-50">
-                            <table class="table table-striped">
-                                <?php
-                                if(!empty($width)):
-                                ?>
-                                <tr><th class="font-weight-bold">Обрезная ширина</th><td><?= number_format($width, 0, ",", " ") ?></td></tr>
-                                <?php
-                                endif;
-                                if(!empty($length)):
-                                ?>
-                                <tr><th class="font-weight-bold">Длина от метки до метки</th><td><?= number_format($length, 2, ",", " ") ?></td></tr>
-                                <?php
-                                endif;
-                                if(!empty($streams_count)):
-                                ?>
-                                <tr><th class="font-weight-bold">Количество ручьев</th><td><?= number_format($streams_count, 0, ",", " ") ?></td></tr>
-                                <?php
-                                endif;
-                                if(!empty($stream_width)):
-                                ?>
-                                <tr><th class="font-weight-bold">Ширина ручья</th><td><?= number_format($stream_width, 2, ",", " ") ?></td></tr>
-                                <?php
-                                endif;
-                                if(!empty($raport)):
-                                ?>
-                                <tr><th class="font-weight-bold">Рапорт</th><td><?= number_format($raport, 3, ",", " ") ?></td></tr>
-                                <?php
-                                endif;
                                 if(!empty($paints_count)):
                                 ?>
                                 <tr><th class="font-weight-bold">Количество красок</th><td><?=$paints_count ?></td></tr>
