@@ -910,6 +910,20 @@ for ($i=1; $i<=8; $i++) {
                 }
             });
             
+            // В поле "процент" ограничиваем значения: целые числа от 1 до 100
+            $('.percent').keypress(function(e) {
+                if(/\D/.test(e.key)) {
+                    return false;
+                }
+                
+                var newvalue = $(e.target).val() + e.key;
+                var iNewValue = parseInt(newvalue);
+                
+                if(iNewValue == null || iNewValue < 1 || iNewValue > 100) {
+                    return false;
+                }
+            });
+            
             // При смене типа работы: если тип работы "плёнка с печатью", показываем поля, предназначенные только для плёнки с печатью
             $('#work_type_id').change(function() {
                 if($(this).val() == 2) {
