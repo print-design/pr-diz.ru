@@ -1111,81 +1111,56 @@ for ($i=1; $i<=8; $i++) {
                 $('#paint_group_' + data_id).removeClass('col-6');
                 $('#paint_group_' + data_id).removeClass('col-3');
                 
+                $('#color_group_' + data_id).removeClass('col-3');
                 $('#color_group_' + data_id).addClass('d-none');
-                
-                $('#percent_group_' + data_id).addClass('d-none');
-                $('#percent_group_cmyk_' + data_id).addClass('d-none');
-                
-                $('#form_group_' + data_id).removeClass('col-6');
-                $('#form_group_' + data_id).removeClass('col-3');
-                $('#form_group_' + data_id).addClass('d-none');
-                $('#form_group_cmyk_' + data_id).addClass('d-none');
                 
                 $('#cmyk_group_' + data_id).removeClass('col-3');
                 $('#cmyk_group_' + data_id).addClass('d-none');
                 
+                $('#percent_group_' + data_id).removeClass('col-3');
+                $('#percent_group_' + data_id).addClass('d-none');
+                
+                $('#form_group_' + data_id).removeClass('col-3');
+                $('#form_group_' + data_id).addClass('d-none');
+                
+                
+                
                 // Затем, в зависимости от выбранного значения, устанавливаем видимость нужного элемента для этого значения
                 if(paint == 'lacquer')  {
                     $('#paint_group_' + data_id).addClass('col-6');
-                    $('#form_group_' + data_id).addClass('col-6');
+                    $('#percent_group_' + data_id).addClass('col-3');
+                    $('#percent_group_' + data_id).removeClass('d-none');
+                    $('#form_group_' + data_id).addClass('col-3');
                     $('#form_group_' + data_id).removeClass('d-none');
                 }
                 else if(paint == 'white') {
                     $('#paint_group_' + data_id).addClass('col-6');
-                    $('#form_group_' + data_id).addClass('col-6');
+                    $('#percent_group_' + data_id).addClass('col-3');
+                    $('#percent_group_' + data_id).removeClass('d-none');
+                    $('#form_group_' + data_id).addClass('col-3');
                     $('#form_group_' + data_id).removeClass('d-none');
                 }
                 else if(paint == 'cmyk') {
                     $('#paint_group_' + data_id).addClass('col-3');
                     $('#cmyk_group_' + data_id).addClass('col-3');
                     $('#cmyk_group_' + data_id).removeClass('d-none');
-                    $('#percent_group_cmyk_' + data_id).addClass('col-3');
-                    $('#percent_group_cmyk_' + data_id).removeClass('d-none');
-                    $('#form_group_cmyk_' + data_id).addClass('col-3');
-                    $('#form_group_cmyk_' + data_id).removeClass('d-none');
-                    
-                    // Устанавливаем по умолчанию видимым значение CYAN, и делаем видимыми поля процента и формы для CYAN
-                    $('#cmyk_' + data_id).val('cyan');
-                    $(".percent_" + data_id).attr('type', 'hidden');
-                    $('#percent_cyan_' + data_id).attr('type', 'text');
-                    $(".form_select_" + data_id).addClass('d-none');
-                    $('#form_select_cyan_' + data_id).removeClass('d-none');
+                    $('#percent_group_' + data_id).addClass('col-3');
+                    $('#percent_group_' + data_id).removeClass('d-none');
+                    $('#form_group_' + data_id).addClass('col-3');
+                    $('#form_group_' + data_id).removeClass('d-none');
                 }
                 else if(paint == 'panton') {
                     $('#paint_group_' + data_id).addClass('col-3');
-                    $('#color_group_' + data_id).removeClass('d-none');
                     $('#color_group_' + data_id).addClass('col-3');
-                    $('#percent_group_' + data_id).removeClass('d-none');
+                    $('#color_group_' + data_id).removeClass('d-none');
                     $('#percent_group_' + data_id).addClass('col-3');
-                    $('#form_group_' + data_id).removeClass('d-none');
+                    $('#percent_group_' + data_id).removeClass('d-none');
                     $('#form_group_' + data_id).addClass('col-3');
+                    $('#form_group_' + data_id).removeClass('d-none');
                 }
                 else {
                     $('#paint_group_' + data_id).addClass('col-12');
                 }
-            });
-            
-            // Обработка выбора компонента цвета
-            $(".cmyk").change(function(){
-                cmyk = $(this).val();
-                var data_id = $(this).attr('data-id');
-                
-                // Делаем видимой поле процента для этого значения CMYK
-                $(".percent_" + data_id).attr('type', 'hidden');
-                $("#percent_" + cmyk + "_" + data_id).attr('type', 'text');
-                
-                // Делаем видимым список форм для этого значения CMYK
-                $(".form_select_" + data_id).addClass('d-none');
-                $("#form_select_" + cmyk + "_" + data_id).removeClass('d-none');
-            });
-            
-            // Обработка выбора формы
-            $(".form_select").change(function(){
-                form = $(this).val();
-                var data_cmyk = $(this).attr('data-cmyk');
-                var data_id = $(this).attr('data-id');
-                
-                $("#form_" + data_cmyk + "_" + data_id).val(form);
             });
             
             // Показ расходов
