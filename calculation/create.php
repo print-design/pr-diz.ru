@@ -461,18 +461,21 @@ for ($i=1; $i<=8; $i++) {
                         $kg_checked = ($unit == "kg" || empty($unit)) ? " checked='checked'" : "";
                         $thing_checked = $unit == "thing" ? " checked='checked'" : "";
                         ?>
-                        <div class="form-check-inline work-type-lam-only d-none">
-                            <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="unit" value="kg"<?=$kg_checked ?> />Килограммы
-                            </label>
-                        </div>
-                        <div class="form-check-inline work-type-lam-only d-none">
-                            <label class="form-check-inline work-type-lam-only">
-                                <input type="radio" class="form-check-input" name="unit" value="thing"<?=$thing_checked ?> />Штуки
-                            </label>
+                        <div class="work-type-lam-only justify-content-start mt-3 mb-3 d-none">
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="unit" value="kg"<?=$kg_checked ?> />Килограммы
+                                </label>
+                            </div>
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="unit" value="thing"<?=$thing_checked ?> />Штуки
+                                </label>
+                            </div>
                         </div>
                         <!-- Печатная машина -->
-                        <div class="form-group work-type-lam-only d-none">
+                        <div class="work-type-lam-only d-none">
+                        <div class="form-group w-100">
                             <label for="machine_type_id" class="hideable">Печатная машина</label>
                             <select id="machine_type_id" name="machine_type_id" class="form-control work-type-lam-only d-none">
                                 <option value="">Печатная машина...</option>
@@ -492,6 +495,7 @@ for ($i=1; $i<=8; $i++) {
                                 ?>
                             </select>
                         </div>
+                            </div>
                         <!-- Объем заказа -->
                         <div class="row mt-3">
                             <!-- Объем заказа -->
@@ -756,7 +760,7 @@ for ($i=1; $i<=8; $i++) {
                         ?>
                         <div class="row paint_block<?=$block_class ?>" id="paint_block_<?=$i ?>">
                             <?php
-                            $paint_class = " col-12";
+                            $paint_class = " col-12 d-flex";
                             $cmyk_class = " d-none";
                             $color_class = " d-none";
                             $percent_class = " d-none";
@@ -765,24 +769,24 @@ for ($i=1; $i<=8; $i++) {
                             $paint_var_name = "paint_$i";
                             
                             if($$paint_var_name == "white" || $$paint_var_name == "lacquer") {
-                                $paint_class = " col-6";
-                                $percent_class = " col-3";
-                                $form_class = " col-3";
+                                $paint_class = " col-6 d-flex";
+                                $percent_class = " col-3 d-flex";
+                                $form_class = " col-3 d-flex";
                             }
                             else if($$paint_var_name == "panton") {
-                                $paint_class = " col-3";
-                                $color_class = " col-3";
-                                $percent_class = " col-3";
-                                $form_class = " col-3";
+                                $paint_class = " col-3 d-flex";
+                                $color_class = " col-3 d-flex";
+                                $percent_class = " col-3 d-flex";
+                                $form_class = " col-3 d-flex";
                             }
                             else if($$paint_var_name == "cmyk") {
-                                $paint_class = " col-3";
-                                $cmyk_class = " col-3";
-                                $percent_class = " col-3";
-                                $form_class = " col-3";
+                                $paint_class = " col-3 d-flex";
+                                $cmyk_class = " col-3 d-flex";
+                                $percent_class = " col-3 d-flex";
+                                $form_class = " col-3 d-flex";
                             }
                             ?>
-                            <div class="form-group<?=$paint_class ?> d-flex flex-column justify-content-end" id="paint_group_<?=$i ?>">
+                            <div class="form-group<?=$paint_class ?> flex-column justify-content-end" id="paint_group_<?=$i ?>">
                                 <label for="paint_<?=$i ?>" class="hideable">Цвет</label>
                                 <select id="paint_<?=$i ?>" name="paint_<?=$i ?>" class="form-control paint" data-id="<?=$i ?>"<?=$paint_required ?>>
                                     <option value="">Цвет...</option>
@@ -802,7 +806,7 @@ for ($i=1; $i<=8; $i++) {
                                 </select>
                                 <div class="invalid-feedback">Цвет обязательно</div>
                             </div>
-                            <div class="form-group<?=$color_class ?> d-flex flex-column justify-content-end" id="color_group_<?=$i ?>">
+                            <div class="form-group<?=$color_class ?> flex-column justify-content-end" id="color_group_<?=$i ?>">
                                 <?php
                                 $color_var = "color_$i"; 
                                 $color_var_valid = 'color_'.$i.'_valid'; 
@@ -811,7 +815,7 @@ for ($i=1; $i<=8; $i++) {
                                 <input type="text" id="color_<?=$i ?>" name="color_<?=$i ?>" class="form-control int-only color<?=$$color_var_valid ?>" placeholder="Код цвета..." value="<?=$$color_var?>" />
                                 <div class="invalid-feedback">Код цвета обязательно</div>
                             </div>
-                            <div class="form-group<?=$cmyk_class ?> d-flex flex-column justify-content-end" id="cmyk_group_<?=$i ?>">
+                            <div class="form-group<?=$cmyk_class ?> flex-column justify-content-end" id="cmyk_group_<?=$i ?>">
                                 <?php
                                 $cmyk_var = "cmyk_$i";
                                 $cmyk_var_valid = 'cmyk_'.$i.'_valid';
@@ -835,7 +839,7 @@ for ($i=1; $i<=8; $i++) {
                                 </select>
                                 <div class="invalid-feedback">Выберите компонент цвета</div>
                             </div>
-                            <div class="form-group<?=$percent_class ?> d-flex flex-column justify-content-end" id="percent_group_<?=$i ?>">
+                            <div class="form-group<?=$percent_class ?> flex-column justify-content-end" id="percent_group_<?=$i ?>">
                                 <?php
                                 $percent_var = "percent_$i";
                                 $percent_var_valid = 'percent_'.$i.'_valid';
@@ -849,7 +853,7 @@ for ($i=1; $i<=8; $i++) {
                                     <div class="invalid-feedback">Процент обязательно</div>
                                 </div>
                             </div>
-                            <div class="form-group<?=$form_class ?> d-flex flex-column justify-content-end" id="form_group_<?=$i ?>">
+                            <div class="form-group<?=$form_class ?> flex-column justify-content-end" id="form_group_<?=$i ?>">
                                 <label for="form_<?=$i ?>" class="hideable">Форма</label>
                                 <select id="form_<?=$i ?>" name="form_<?=$i ?>" class="form-control form">
                                     <?php
@@ -957,6 +961,8 @@ for ($i=1; $i<=8; $i++) {
             // Если тип работы "Плёнка с печатью", то показываем поля, предназначенные только для пленки с печатью
             <?php if($work_type_id == 2): ?>
             WorkTypeFilmWithPrint();
+            <?php else: ?>
+            WorkTypeFilmWithoutPrint();
             <?php endif; ?>
                 
             function WorkTypeFilmWithPrint() {
