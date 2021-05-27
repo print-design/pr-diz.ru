@@ -613,7 +613,9 @@ for ($i=1; $i<=8; $i++) {
                                     </div>
                                 </div>
                                 <div class="col-1 d-flex flex-column justify-content-end" id="hide_lamination_1">
-                                    <button type="button" class="btn btn-light" onclick="javascript: HideLamination1();"><i class="fas fa-trash-alt"></i></button>
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-light" onclick="javascript: HideLamination1();"><i class="fas fa-trash-alt"></i></button>
+                                    </div>
                                 </div>
                             </div>
                             <div id="show_lamination_2">
@@ -667,7 +669,9 @@ for ($i=1; $i<=8; $i++) {
                                         </div>
                                     </div>
                                     <div class="col-1 d-flex flex-column justify-content-end" id="hide_lamination_2">
-                                        <button type="button" class="btn btn-light" onclick="javascript: HideLamination2();"><i class="fas fa-trash-alt"></i></button>
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-light" onclick="javascript: HideLamination2();"><i class="fas fa-trash-alt"></i></button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

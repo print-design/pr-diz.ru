@@ -35,9 +35,10 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
         $customer_name = addslashes(filter_input(INPUT_POST, 'customer_name'));
         $customer_person = addslashes(filter_input(INPUT_POST, 'customer_person'));
         $customer_phone = filter_input(INPUT_POST, 'customer_phone');
+        $customer_extension = filter_input(INPUT_POST, 'customer_extension');
         $customer_email = filter_input(INPUT_POST, 'customer_email');
         
-        $sql = "insert into customer (name, person, phone, email) values ('$customer_name', '$customer_person', '$customer_phone', '$customer_email')";
+        $sql = "insert into customer (name, person, phone, extension, email) values ('$customer_name', '$customer_person', '$customer_phone', '$customer_extension', '$customer_email')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $customer_id = $executer->insert_id;
@@ -63,9 +64,18 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
                         <input type="text" id="customer_person" name="customer_person" class="form-control" placeholder="Имя представителя" required="required" onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" onmouseup="javascript: $(this).attr('id', 'customer_person'); $(this).attr('name', 'customer_person'); $(this).attr('placeholder', 'Имя представителя');" />
                         <div class="invalid-feedback">Имя представителя обязательно</div>
                     </div>
-                    <div class="form-group">
-                        <input type="tel" id="customer_phone" name="customer_phone" class="form-control" placeholder="Номер телефона" required="required" onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" onmouseup="javascript: $(this).attr('id', 'customer_phone'); $(this).attr('name', 'customer_phone'); $(this).attr('placeholder', 'Номер телефона');" />
-                        <div class="invalid-feedback">Номер телефона обязательно</div>
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="form-group">
+                                <input type="tel" id="customer_phone" name="customer_phone" class="form-control" placeholder="Номер телефона" required="required" onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" onmouseup="javascript: $(this).attr('id', 'customer_phone'); $(this).attr('name', 'customer_phone'); $(this).attr('placeholder', 'Номер телефона');" />
+                                <div class="invalid-feedback">Номер телефона обязательно</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <input type="tel" id="customer_extension" name="customer_extension" class="form-control" placeholder="Добавочный" onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" onmouseup="javascript: $(this).attr('id', 'customer_extension'); $(this).attr('name', 'customer_extension'); $(this).attr('placeholder', 'Добавочный');" />
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <input type="email" id="customer_email" name="customer_email" class="form-control" placeholder="E-Mail" required="required" onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" onmouseup="javascript: $(this).attr('id', 'customer_email'); $(this).attr('name', 'customer_email'); $(this).attr('placeholder', 'E-Mail');" />
