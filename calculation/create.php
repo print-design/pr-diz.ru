@@ -182,7 +182,12 @@ if(null !== filter_input(INPUT_POST, 'change_status_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $status_id = filter_input(INPUT_POST, 'status_id');
     $extracharge = filter_input(INPUT_POST, 'extracharge');
-    $sql = "update calculation set status_id=$status_id, extracharge=$extracharge where id=$id";
+    if(empty($extracharge)) {
+        $sql = "update calculation set status_id=$status_id where id=$id";
+    }
+    else {
+        $sql = "update calculation set status_id=$status_id, extracharge=$extracharge where id=$id";
+    }
     $executer = new Executer($sql);
     $error_message = $executer->error;
     
@@ -758,8 +763,8 @@ for ($i=1; $i<=8; $i++) {
                             else if($$paint_var_name == "cmyk") {
                                 $paint_class = " col-3";
                                 $cmyk_class = " col-3";
-                                $percent_cmyk_class = " col-3";
-                                $form_cmyk_class = " col-3";
+                                $percent_class = " col-3";
+                                $form_class = " col-3";
                             }
                             ?>
                             <div class="form-group<?=$paint_class ?>" id="paint_group_<?=$i ?>">
@@ -818,12 +823,12 @@ for ($i=1; $i<=8; $i++) {
                                 $percent_var_valid = 'percent_'.$i.'_valid';
                                 ?>
                                 <div class="input-group">
-                                    <input type="text" id="percent_<?=$i ?>" name="percent_<?=$i ?>" class="form-control int-only percent<?=$$percent_var_valid ?>" style="width: 80px;" value="<?=$percent_value ?>" />
+                                    <input type="text" id="percent_<?=$i ?>" name="percent_<?=$i ?>" class="form-control int-only percent<?=$$percent_var_valid ?>" style="width: 80px;" value="<?=$$percent_var ?>" />
                                     <div class="input-group-append">
                                         <span class="input-group-text">%</span>
                                     </div>
+                                    <div class="invalid-feedback">Процент обязательно</div>
                                 </div>
-                                <div class="invalid-feedback">Процент обязательно</div>
                             </div>
                             <div class="form-group<?=$form_class ?>" id="form_group_<?=$i ?>">
                                 <select id="form_<?=$i ?>" name="form_<?=$i ?>" class="form-control form">
@@ -889,12 +894,6 @@ for ($i=1; $i<=8; $i++) {
                     $(this).prop("selectionStart", maskposition);
                     $(this).prop("selectionEnd", maskposition);
                 }
-            });
-            
-            // Автовыделение при щелчке для поля "наценка"
-            $('#extracharge').click(function() {
-                $(this).prop("selectionStart", 0);
-                $(this).prop("selectionEnd", $(this).val().length);
             });
             
             // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
@@ -1186,7 +1185,7 @@ for ($i=1; $i<=8; $i++) {
                 HideCalculation();
             });
             
-            $('select:not(.cmyk)').change(function () {
+            $('select').change(function () {
                 HideCalculation();
             });
             

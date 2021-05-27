@@ -151,6 +151,14 @@
         submit_clicked = false;
     });
     
+    $('input').keydown(function() {
+        submit_clicked = false;
+    });
+    
+    $('input').change(function() {
+        submit_clicked = false;
+    });
+    
     // Автологаут резчика
     <?php if(IsInRole('cutter')): ?>
         function AutoLogout(end) {
