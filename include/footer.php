@@ -77,6 +77,36 @@
         }
     });
     
+    // При изменении значения в поле формы, показываем заголовок поля
+    $('input').change(function(e) {
+        if($(e.target).prev().is('label.hideable')) {
+            if($(e.target).val() == '') {
+                $(e.target).prev().hide();
+            }
+            else {
+                $(e.target).prev().show();
+            }
+        }
+    });
+    
+    $('select').change(function(e) {
+        if($(e.target).prev().is('label.hideable')) {
+            if($(e.target).val() == '') {
+                $(e.target).prev().hide();
+            }
+            else {
+                $(e.target).prev().show();
+            }
+        }
+    });
+    
+    // Делаем видимыми все заголовки непустых полей
+    $('label.hideable').each(function(e) {
+        if($(this).next().val() != '') {
+            $(this).show();
+        }
+    });
+    
     // Подтверждение удаления
     $('button.confirmable').click(function() {
         return confirm("Действительно удалить?");

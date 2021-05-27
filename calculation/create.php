@@ -404,8 +404,9 @@ for ($i=1; $i<=8; $i++) {
                         <?php endif; ?>
                         <!-- Заказчик -->
                         <div class="row">
-                            <div class="col-8">
-                                <div class="form-group">
+                            <!--div class="col-8"-->
+                                <div class="col-8 form-group">
+                                    <label for="customer_id" class="hideable">Заказчик</label>
                                     <select id="customer_id" name="customer_id" class="form-control<?=$customer_id_valid ?>" multiple="multiple" required="required">
                                         <option value="">Заказчик...</option>
                                         <?php
@@ -425,8 +426,8 @@ for ($i=1; $i<=8; $i++) {
                                     </select>
                                     <div class="invalid-feedback">Заказчик обязательно</div>
                                 </div>
-                            </div>
-                            <div class="col-4">
+                            <!--/div-->
+                            <div class="col-4 form-group d-flex flex-column justify-content-end">
                                 <button type="button" class="btn btn-outline-dark w-100" data-toggle="modal" data-target="#new_customer"><i class="fas fa-plus"></i>&nbsp;Создать нового</button>
                             </div>
                         </div>

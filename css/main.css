@@ -53,6 +53,10 @@ a.black:active, a.black:hover, .black a:active, .black a:hover {
     white-space: pre-line;
 }
 
+label.hideable {
+    display: none;
+}
+
 /* Левая панель */
 #left_bar {
     position: fixed;
