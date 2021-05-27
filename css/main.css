@@ -103,6 +103,16 @@ a.black:active, a.black:hover, .black a:active, .black a:hover {
     text-decoration: underline;
 }
 
+.header .btn-link, .header .btn-link:visited {
+    color: #333333;
+    text-decoration: none;
+}
+
+.header .btn-link:active, .btn-link:hover {
+    color: gray;
+    text-decoration: underline;
+}
+
 #topmost {
     height: 55px;
 }
