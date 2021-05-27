@@ -232,6 +232,10 @@ $machine_type = $row['machine_type']
                                 <tr><th class="font-weight-bold">Количество красок</th><td><?=$paints_count ?></td></tr>
                                 <?php
                                 endif;
+                                ?>
+                            </table>
+                            <table class="table table-striped">
+                                <?php
                                 for($i=1; $i<=$paints_count; $i++):
                                 $paint_var = "paint_$i";
                                 $color_var = "color_$i";
@@ -240,12 +244,32 @@ $machine_type = $row['machine_type']
                                 $form_var = "form_$i";
                                 ?>
                                 <tr>
-                                    <th class="font-weight-bold"><?=$i.". ".$$paint_var ?></th>
+                                    <th class="font-weight-bold">
+                                        <?php
+                                        echo $i.". ";
+                                        
+                                        switch ($$paint_var) {
+                                        case 'cmyk':
+                                            echo "CMYK";
+                                            break;
+                                        case 'panton':
+                                            echo 'Пантон';
+                                            break;
+                                        case 'lacquer':
+                                            echo 'Лак';
+                                            break;
+                                        case  'white':
+                                            echo 'Белый';
+                                            break;
+                                        }
+                                        ?>
+                                    </th>
                                     <td>
-                                        <?= ($$paint_var == "cmyk" ? $$cmyk_var.", " : "") ?>
-                                        <?= ($$paint_var == "panton" ? $$color_var.", " : "") ?>
-                                        <span class="text-nowrap"><?=$$percent_var ?>%</span>, <?=$$form_var ?>
+                                        <?php if($$paint_var == "cmyk") echo $$cmyk_var ?>
+                                        <?php if($$paint_var == "panton") echo $$color_var ?>
                                     </td>
+                                    <td><?=$$percent_var ?>%</td>
+                                    <td><?=$$form_var ?></td>
                                 </tr>
                                 <?php
                                 endfor;

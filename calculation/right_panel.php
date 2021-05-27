@@ -33,7 +33,7 @@
                     <div class="font-weight-bold" style="font-size: large;">1&nbsp;&nbsp;200&nbsp;&nbsp;000&nbsp;&nbsp;<i class="fas fa-ruble-sign" style="font-size: medium;"></i></div>
                 </div>
                 <div class="d-table-cell pb-2 pt-2 pl-3">
-                    <div style="font-size: small;">Себестоимость, 1 кг</div>
+                    <div style="font-size: small;">Себестоимость, 1 <span class="unit_name"><?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
                     <div class="font-weight-bold" style="font-size: large;">765&nbsp;&nbsp;<i class="fas fa-ruble-sign" style="font-size: medium;"></i></div>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                     <div class="font-weight-bold" style="font-size: large;">800&nbsp;&nbsp;000&nbsp;&nbsp;<i class="fas fa-ruble-sign" style="font-size: medium;"></i></div>
                 </div>
                 <div class="d-table-cell pb-2 pt-2 pl-3">
-                    <div style="font-size: small;">Отгрузочная стоимость, 1 кг</div>
+                    <div style="font-size: small;">Отгрузочная стоимость, 1 <span class="unit_name"><?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?> кг</span></div>
                     <div class="font-weight-bold" style="font-size: large;">978&nbsp;&nbsp;<i class="fas fa-ruble-sign" style="font-size: medium;"></i></div>
                 </div>
             </div>
@@ -75,7 +75,7 @@
                     </div>
                     <div class="d-table-cell pb-2 pt-2 pl-3 w-50">
                         <br />
-                        <div class="font-weight-bold" style="font-size: large;">4,5 кг.</div>
+                        <div class="font-weight-bold" style="font-size: large;">4,5 кг</div>
                     </div>
                 </div>
                 <?php if($work_type_id == 2): ?>
@@ -86,7 +86,7 @@
                     </div>
                     <div class="d-table-cell pb-2 pt-2 pl-3">
                         <br />
-                        <div class="font-weight-bold" style="font-size: large;">17,5 кг.</div>
+                        <div class="font-weight-bold" style="font-size: large;">17,5 кг</div>
                     </div>
                 </div>
                 <?php
@@ -100,7 +100,7 @@
                     </div>
                     <div class="d-table-cell pb-2 pt-2 pl-3">
                         <br />
-                        <div class="font-weight-bold" style="font-size: large;">1,0 кг.</div>
+                        <div class="font-weight-bold" style="font-size: large;">1,0 кг</div>
                     </div>
                 </div>
                 <?php
@@ -128,7 +128,7 @@
                     </div>
                     <div class="d-table-cell pb-2 pt-2 pl-3">
                         <br />
-                        <div class="font-weight-bold" style="font-size: large;">1,5 ч.</div>
+                        <div class="font-weight-bold" style="font-size: large;">1,5 ч</div>
                     </div>
                 </div>
                 <?php endif; ?>
