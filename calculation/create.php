@@ -433,11 +433,13 @@ for ($i=1; $i<=8; $i++) {
                         </div>
                         <!-- Название заказа -->
                         <div class="form-group">
+                            <label for="name" class="hideable">Название заказа</label>
                             <input type="text" id="name" name="name" class="form-control<?=$name_valid ?>" placeholder="Название заказа" value="<?= htmlentities($name) ?>" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Название заказа обязательно</div>
                         </div>
                         <!-- Тип работы -->
                         <div class="form-group">
+                            <label for="work_type_id" class="hideable">Тип работы</label>
                             <select id="work_type_id" name="work_type_id" class="form-control" required="required">
                                 <option value="">Тип работы...</option>
                                 <?php
@@ -473,6 +475,7 @@ for ($i=1; $i<=8; $i++) {
                         </div>
                         <!-- Печатная машина -->
                         <div class="form-group work-type-lam-only d-none">
+                            <label for="machine_type_id" class="hideable">Печатная машина</label>
                             <select id="machine_type_id" name="machine_type_id" class="form-control work-type-lam-only d-none">
                                 <option value="">Печатная машина...</option>
                                 <?php
@@ -496,6 +499,7 @@ for ($i=1; $i<=8; $i++) {
                             <!-- Объем заказа -->
                             <div class="col-6">
                                 <div class="form-group">
+                                    <label for="quantity" class="hideable">Объем заказа</label>
                                     <input type="text" id="quantity" name="quantity" class="form-control int-only" placeholder="Объем заказа, кг" value="<?=$quantity ?>" required="required" />
                                     <div class="invalid-feedback">Объем заказа обязательно</div>
                                 </div>
@@ -511,6 +515,7 @@ for ($i=1; $i<=8; $i++) {
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
+                                    <label for="brand_name" class="hideable">Марка пленки</label>
                                     <select id="brand_name" name="brand_name" class="form-control" required="required">
                                         <option value="">Марка пленки...</option>
                                         <?php
@@ -532,6 +537,7 @@ for ($i=1; $i<=8; $i++) {
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
+                                    <label for="thickness" class="hideable">Толщина</label>
                                     <select id="thickness" name="thickness" class="form-control" required="required">
                                         <option value="">Толщина...</option>
                                         <?php
@@ -563,6 +569,7 @@ for ($i=1; $i<=8; $i++) {
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group">
+                                        <label for="lamination1_brand_name" class="hideable">Марка пленки</label>
                                         <select id="lamination1_brand_name" name="lamination1_brand_name" class="form-control">
                                             <option value="">Марка пленки...</option>
                                                 <?php
@@ -581,6 +588,7 @@ for ($i=1; $i<=8; $i++) {
                                 </div>
                                 <div class="col-5">
                                     <div class="form-group">
+                                        <label for="lamination1_thickness" class="hideable">Толщина</label>
                                         <select id="lamination1_thickness" name="lamination1_thickness" class="form-control">
                                             <option value="">Толщина...</option>
                                             <?php
@@ -615,6 +623,7 @@ for ($i=1; $i<=8; $i++) {
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
+                                            <label for="lamination2_brand_name" class="hideable">Марка пленки</label>
                                             <select id="lamination2_brand_name" name="lamination2_brand_name" class="form-control">
                                                 <option value="">Марка пленки...</option>
                                                     <?php
@@ -633,6 +642,7 @@ for ($i=1; $i<=8; $i++) {
                                     </div>
                                     <div class="col-5">
                                         <div class="form-group">
+                                            <label for="lamination2_thickness" class="hideable">Толщина</label>
                                             <select id="lamination2_thickness" name="lamination2_thickness" class="form-control">
                                                 <option value="">Толщина...</option>
                                                 <?php
@@ -664,6 +674,7 @@ for ($i=1; $i<=8; $i++) {
                             <!-- Обрезная ширина -->
                             <div class="col-6 lam-only lam-only-work-type-no-lam d-none">
                                 <div class="form-group">
+                                    <label for="width" class="hideable">Обрезная ширина</label>
                                     <input type="text" id="width" name="width" class="form-control int-only lam-only lam-only-work-type-no-lam d-none" placeholder="Обрезная ширина, мм" value="<?=$width ?>" />
                                     <div class="invalid-feedback">Обрезная ширина обязательно</div>
                                 </div>
@@ -671,6 +682,7 @@ for ($i=1; $i<=8; $i++) {
                             <!-- Длина от метки до метки -->
                             <div class="col-6 work-type-lam-only d-none">
                                 <div class="form-group">
+                                    <label for="length" class="hideable">Длина от метки до метки</label>
                                     <input type="text" id="length" name="length" class="form-control float-only work-type-lam-only d-none" placeholder="Длина от метки до метки" value="<?=$length ?>" />
                                     <div class="invalid-feedback">Длина от метки до метки обязательно</div>
                                 </div>
@@ -678,6 +690,7 @@ for ($i=1; $i<=8; $i++) {
                             <!-- Ширина ручья -->
                             <div class="col-6 work-type-lam-only d-none">
                                 <div class="form-group">
+                                    <label for="stream_width" class="hideable">Ширина ручья</label>
                                     <input type="text" id="stream_width" name="stream_width" class="form-control float-only work-type-lam-only d-none" placeholder="Ширина ручья" value="<?=$stream_width ?>" />
                                     <div class="invalid-feedback">Ширина ручья обязательно</div>
                                 </div>
@@ -685,6 +698,7 @@ for ($i=1; $i<=8; $i++) {
                             <!-- Количество ручьёв -->
                             <div class="col-6 lam-only lam-only-work-type-no-lam work-type-lam-only d-none">
                                 <div class="form-group">
+                                    <label for="streams_count" class="hideable">Количество ручьев</label>
                                     <input type="text" id="streams_count" name="streams_count" class="form-control lam-only lam-only-work-type-no-lam work-type-lam-only d-none" placeholder="Количество ручьев" value="<?=$streams_count ?>" />
                                     <div class="invalid-feedback">Количество ручьев обязательно</div>
                                 </div>
@@ -692,6 +706,7 @@ for ($i=1; $i<=8; $i++) {
                             <!-- Рапорт -->
                             <div class="col-6 work-type-lam-only d-none">
                                 <div class="form-group">
+                                    <label for="raport" class="hideable">Работ</label>
                                     <select id="raport" name="raport" class="form-control work-type-lam-only d-none">
                                         <option value="">Рапорт...</option>
                                         <?php
@@ -714,6 +729,7 @@ for ($i=1; $i<=8; $i++) {
                         </div>
                         <!-- Количество красок -->
                         <div class="form-group mt-3">
+                            <label for="paints_count" class="hideable">Количество красок</label>
                             <select id="paints_count" name="paints_count" class="form-control work-type-lam-only d-none">
                                 <option value="">Количество красок...</option>
                                 <?php
@@ -769,6 +785,7 @@ for ($i=1; $i<=8; $i++) {
                             }
                             ?>
                             <div class="form-group<?=$paint_class ?>" id="paint_group_<?=$i ?>">
+                                <label for="paint_<?=$i ?>" class="hideable">Цвет</label>
                                 <select id="paint_<?=$i ?>" name="paint_<?=$i ?>" class="form-control paint" data-id="<?=$i ?>"<?=$paint_required ?>>
                                     <option value="">Цвет...</option>
                                     <?php
@@ -792,6 +809,7 @@ for ($i=1; $i<=8; $i++) {
                                 $color_var = "color_$i"; 
                                 $color_var_valid = 'color_'.$i.'_valid'; 
                                 ?>
+                                <label for="color_<?=$i ?>" class="hideable">Код цвета</label>
                                 <input type="text" id="color_<?=$i ?>" name="color_<?=$i ?>" class="form-control int-only color<?=$$color_var_valid ?>" placeholder="Код цвета..." value="<?=$$color_var?>" />
                                 <div class="invalid-feedback">Код цвета обязательно</div>
                             </div>
@@ -800,6 +818,7 @@ for ($i=1; $i<=8; $i++) {
                                 $cmyk_var = "cmyk_$i";
                                 $cmyk_var_valid = 'cmyk_'.$i.'_valid';
                                 ?>
+                                <label for="cmyk_<?=$i ?>" class="hideable">CMYK</label>
                                 <select id="cmyk_<?=$i ?>" name="cmyk_<?=$i ?>" class="form-control cmyk<?=$$cmyk_var_valid ?>" data-id="<?=$i ?>">
                                     <option value="">CMYK...</option>
                                     <?php
@@ -823,6 +842,7 @@ for ($i=1; $i<=8; $i++) {
                                 $percent_var = "percent_$i";
                                 $percent_var_valid = 'percent_'.$i.'_valid';
                                 ?>
+                                <label for="percent_<?=$i ?>" class="hideable">Процент<br /></label>
                                 <div class="input-group">
                                     <input type="text" id="percent_<?=$i ?>" name="percent_<?=$i ?>" class="form-control int-only percent<?=$$percent_var_valid ?>" style="width: 80px;" value="<?=$$percent_var ?>" />
                                     <div class="input-group-append">
@@ -832,6 +852,7 @@ for ($i=1; $i<=8; $i++) {
                                 </div>
                             </div>
                             <div class="form-group<?=$form_class ?>" id="form_group_<?=$i ?>">
+                                <label for="form_<?=$i ?>" class="hideable">Форма</label>
                                 <select id="form_<?=$i ?>" name="form_<?=$i ?>" class="form-control form">
                                     <?php
                                     $flint_selected = "";

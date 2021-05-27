@@ -87,6 +87,15 @@
                 $(e.target).prev().show();
             }
         }
+        
+        if($(e.target).parent().is('.input-group') && $(e.target).parent().prev().is('label.hideable')) {
+            if($(e.target).val() == '') {
+                $(e.target).parent().prev().hide();
+            }
+            else {
+                $(e.target).parent().prev().show();
+            }
+        }
     });
     
     $('select').change(function(e) {
@@ -98,11 +107,24 @@
                 $(e.target).prev().show();
             }
         }
+        
+        if($(e.target).parent().is('.input-group') && $(e.target).parent().prev().is('label.hideable')) {
+            if($(e.target).val() == '') {
+                $(e.target).parent().prev().hide();
+            }
+            else {
+                $(e.target).parent().prev().show();
+            }
+        }
     });
     
     // Делаем видимыми все заголовки непустых полей
-    $('label.hideable').each(function(e) {
+    $('label.hideable').each(function() {
         if($(this).next().val() != '') {
+            $(this).show();
+        }
+        
+        if($(this).next().is('.input-group') && $(this).next().children().first().val() != '') {
             $(this).show();
         }
     });
