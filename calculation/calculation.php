@@ -59,7 +59,7 @@ $customer_id = $row['customer_id'];
 $name = $row['name'];
 $work_type_id = $row['work_type_id'];
 $quantity = $row['quantity'];
-$unit = $row['unit'] == 'kg' ? "кг" : "шт";
+$unit = $row['unit'];
 $brand_name = $row['brand_name'];
 $thickness = $row['thickness'];
 $weight = $row['weight'];

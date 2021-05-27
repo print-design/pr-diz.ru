@@ -56,7 +56,7 @@
                     <div class="font-weight-bold" style="font-size: large;">800&nbsp;&nbsp;000&nbsp;&nbsp;<i class="fas fa-ruble-sign" style="font-size: medium;"></i></div>
                 </div>
                 <div class="d-table-cell pb-2 pt-2 pl-3">
-                    <div style="font-size: small;">Отгрузочная стоимость, 1 <span class="unit_name"><?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?> кг</span></div>
+                    <div style="font-size: small;">Отгрузочная стоимость, 1 <span class="unit_name"><?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
                     <div class="font-weight-bold" style="font-size: large;">978&nbsp;&nbsp;<i class="fas fa-ruble-sign" style="font-size: medium;"></i></div>
                 </div>
             </div>
