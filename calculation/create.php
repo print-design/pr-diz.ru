@@ -1153,19 +1153,26 @@ for ($i=1; $i<=8; $i++) {
                 
                 // Устанавливаем видимость всех элементов по умолчанию, как если бы выбрали пустое значение
                 $('#paint_group_' + data_id).removeClass('col-12');
+                $('#paint_group_' + data_id).removeClass('d-flex');
                 $('#paint_group_' + data_id).removeClass('col-6');
+                $('#paint_group_' + data_id).removeClass('d-flex');
                 $('#paint_group_' + data_id).removeClass('col-3');
+                $('#paint_group_' + data_id).removeClass('d-flex');
                 
                 $('#color_group_' + data_id).removeClass('col-3');
+                $('#color_group_' + data_id).removeClass('d-flex');
                 $('#color_group_' + data_id).addClass('d-none');
                 
                 $('#cmyk_group_' + data_id).removeClass('col-3');
+                $('#cmyk_group_' + data_id).removeClass('d-flex');
                 $('#cmyk_group_' + data_id).addClass('d-none');
                 
                 $('#percent_group_' + data_id).removeClass('col-3');
+                $('#percent_group_' + data_id).removeClass('d-flex');
                 $('#percent_group_' + data_id).addClass('d-none');
                 
                 $('#form_group_' + data_id).removeClass('col-3');
+                $('#form_group_' + data_id).removeClass('d-flex');
                 $('#form_group_' + data_id).addClass('d-none');
                 
                 
@@ -1173,38 +1180,53 @@ for ($i=1; $i<=8; $i++) {
                 // Затем, в зависимости от выбранного значения, устанавливаем видимость нужного элемента для этого значения
                 if(paint == 'lacquer')  {
                     $('#paint_group_' + data_id).addClass('col-6');
+                    $('#paint_group_' + data_id).addClass('d-flex');
                     $('#percent_group_' + data_id).addClass('col-3');
+                    $('#percent_group_' + data_id).addClass('d-flex');
                     $('#percent_group_' + data_id).removeClass('d-none');
                     $('#form_group_' + data_id).addClass('col-3');
+                    $('#form_group_' + data_id).addClass('d-flex');
                     $('#form_group_' + data_id).removeClass('d-none');
                 }
                 else if(paint == 'white') {
                     $('#paint_group_' + data_id).addClass('col-6');
+                    $('#paint_group_' + data_id).addClass('d-flex');
                     $('#percent_group_' + data_id).addClass('col-3');
+                    $('#percent_group_' + data_id).addClass('d-flex');
                     $('#percent_group_' + data_id).removeClass('d-none');
                     $('#form_group_' + data_id).addClass('col-3');
+                    $('#form_group_' + data_id).addClass('d-flex');
                     $('#form_group_' + data_id).removeClass('d-none');
                 }
                 else if(paint == 'cmyk') {
                     $('#paint_group_' + data_id).addClass('col-3');
+                    $('#paint_group_' + data_id).addClass('d-flex');
                     $('#cmyk_group_' + data_id).addClass('col-3');
+                    $('#cmyk_group_' + data_id).addClass('d-flex');
                     $('#cmyk_group_' + data_id).removeClass('d-none');
                     $('#percent_group_' + data_id).addClass('col-3');
+                    $('#percent_group_' + data_id).addClass('d-flex');
                     $('#percent_group_' + data_id).removeClass('d-none');
                     $('#form_group_' + data_id).addClass('col-3');
+                    $('#form_group_' + data_id).addClass('d-flex');
                     $('#form_group_' + data_id).removeClass('d-none');
                 }
                 else if(paint == 'panton') {
                     $('#paint_group_' + data_id).addClass('col-3');
+                    $('#paint_group_' + data_id).addClass('d-flex');
                     $('#color_group_' + data_id).addClass('col-3');
+                    $('#color_group_' + data_id).addClass('d-flex');
                     $('#color_group_' + data_id).removeClass('d-none');
                     $('#percent_group_' + data_id).addClass('col-3');
+                    $('#percent_group_' + data_id).addClass('d-flex');
                     $('#percent_group_' + data_id).removeClass('d-none');
                     $('#form_group_' + data_id).addClass('col-3');
+                    $('#form_group_' + data_id).addClass('d-flex');
                     $('#form_group_' + data_id).removeClass('d-none');
                 }
                 else {
                     $('#paint_group_' + data_id).addClass('col-12');
+                    $('#paint_group_' + data_id).addClass('d-flex');
                 }
             });
             
