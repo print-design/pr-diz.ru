@@ -681,7 +681,14 @@ for ($i=1; $i<=8; $i++) {
                             <div class="col-6 lam-only lam-only-work-type-no-lam d-none">
                                 <div class="form-group">
                                     <label for="width">Обрезная ширина</label>
-                                    <input type="text" id="width" name="width" class="form-control int-only lam-only lam-only-work-type-no-lam d-none" placeholder="Обрезная ширина, мм" value="<?=$width ?>" />
+                                    <input type="text" 
+                                           id="width" 
+                                           name="width" 
+                                           class="form-control int-only lam-only lam-only-work-type-no-lam d-none" 
+                                           placeholder="Обрезная ширина, мм" 
+                                           value="<?=$width ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Обрезная ширина, мм')" />
                                     <div class="invalid-feedback">Обрезная ширина обязательно</div>
                                 </div>
                             </div>
@@ -689,7 +696,14 @@ for ($i=1; $i<=8; $i++) {
                             <div class="col-6 work-type-lam-only d-none">
                                 <div class="form-group">
                                     <label for="length">Длина от метки до метки</label>
-                                    <input type="text" id="length" name="length" class="form-control float-only work-type-lam-only d-none" placeholder="Длина от метки до метки" value="<?=$length ?>" />
+                                    <input type="text" 
+                                           id="length" 
+                                           name="length" 
+                                           class="form-control float-only work-type-lam-only d-none" 
+                                           placeholder="Длина от метки до метки" 
+                                           value="<?=$length ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки');" />
                                     <div class="invalid-feedback">Длина от метки до метки обязательно</div>
                                 </div>
                             </div>
@@ -697,7 +711,14 @@ for ($i=1; $i<=8; $i++) {
                             <div class="col-6 work-type-lam-only d-none">
                                 <div class="form-group">
                                     <label for="stream_width">Ширина ручья</label>
-                                    <input type="text" id="stream_width" name="stream_width" class="form-control float-only work-type-lam-only d-none" placeholder="Ширина ручья" value="<?=$stream_width ?>" />
+                                    <input type="text" 
+                                           id="stream_width" 
+                                           name="stream_width" 
+                                           class="form-control float-only work-type-lam-only d-none" 
+                                           placeholder="Ширина ручья" 
+                                           value="<?=$stream_width ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья');" />
                                     <div class="invalid-feedback">Ширина ручья обязательно</div>
                                 </div>
                             </div>
@@ -705,7 +726,14 @@ for ($i=1; $i<=8; $i++) {
                             <div class="col-6 lam-only lam-only-work-type-no-lam work-type-lam-only d-none">
                                 <div class="form-group">
                                     <label for="streams_count">Количество ручьев</label>
-                                    <input type="text" id="streams_count" name="streams_count" class="form-control lam-only lam-only-work-type-no-lam work-type-lam-only d-none" placeholder="Количество ручьев" value="<?=$streams_count ?>" />
+                                    <input type="text" 
+                                           id="streams_count" 
+                                           name="streams_count" 
+                                           class="form-control lam-only lam-only-work-type-no-lam work-type-lam-only d-none" 
+                                           placeholder="Количество ручьев" 
+                                           value="<?=$streams_count ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'streams_count'); $(this).attr('name', 'streams_count'); $(this).attr('placeholder', 'Количество ручьев');" />
                                     <div class="invalid-feedback">Количество ручьев обязательно</div>
                                 </div>
                             </div>
