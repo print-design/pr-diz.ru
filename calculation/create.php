@@ -432,7 +432,16 @@ for ($i=1; $i<=8; $i++) {
                         <!-- Название заказа -->
                         <div class="form-group">
                             <label for="name">Название заказа</label>
-                            <input type="text" id="name" name="name" class="form-control<?=$name_valid ?>" placeholder="Название заказа" value="<?= htmlentities($name) ?>" required="required" autocomplete="off" />
+                            <input type="text" 
+                                   id="name" 
+                                   name="name" 
+                                   class="form-control<?=$name_valid ?>" 
+                                   placeholder="Название заказа" 
+                                   value="<?= htmlentities($name) ?>" 
+                                   required="required" 
+                                   autocomplete="off" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onmouseup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название заказа');" />
                             <div class="invalid-feedback">Название заказа обязательно</div>
                         </div>
                         <!-- Тип работы -->
@@ -502,7 +511,15 @@ for ($i=1; $i<=8; $i++) {
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="quantity" id="label_quantity">Объем заказа, кг</label>
-                                    <input type="text" id="quantity" name="quantity" class="form-control int-only" placeholder="Объем заказа" value="<?=$quantity ?>" required="required" />
+                                    <input type="text" 
+                                           id="quantity" 
+                                           name="quantity" 
+                                           class="form-control int-only" 
+                                           placeholder="Объем заказа" 
+                                           value="<?=$quantity ?>" 
+                                           required="required" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" />
                                     <div class="invalid-feedback">Объем заказа обязательно</div>
                                 </div>
                             </div>
