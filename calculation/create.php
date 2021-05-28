@@ -550,7 +550,7 @@ for ($i=1; $i<=8; $i++) {
                                 <div class="form-group">
                                     <label for="brand_name">Марка пленки</label>
                                     <select id="brand_name" name="brand_name" class="form-control" required="required">
-                                        <option value="">Марка пленки...</option>
+                                        <option value="" hidden="hidden" selected="selected">Марка пленки...</option>
                                         <?php
                                         $sql = "select distinct name from film_brand order by name";
                                         $brand_names = (new Grabber($sql))->result;
@@ -572,7 +572,7 @@ for ($i=1; $i<=8; $i++) {
                                 <div class="form-group">
                                     <label for="thickness">Толщина</label>
                                     <select id="thickness" name="thickness" class="form-control" required="required">
-                                        <option value="">Толщина...</option>
+                                        <option value="" hidden="hidden" selected="selected">Толщина...</option>
                                         <?php
                                         if(!empty($brand_name)) {
                                             $sql = "select distinct fbv.thickness, fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name='$brand_name' order by thickness";
@@ -604,7 +604,7 @@ for ($i=1; $i<=8; $i++) {
                                     <div class="form-group">
                                         <label for="lamination1_brand_name">Марка пленки</label>
                                         <select id="lamination1_brand_name" name="lamination1_brand_name" class="form-control">
-                                            <option value="">Марка пленки...</option>
+                                            <option value="" hidden="hidden" selected="selected">Марка пленки...</option>
                                                 <?php
                                                 foreach ($brand_names as $row):
                                                 $selected = '';
@@ -623,7 +623,7 @@ for ($i=1; $i<=8; $i++) {
                                     <div class="form-group">
                                         <label for="lamination1_thickness">Толщина</label>
                                         <select id="lamination1_thickness" name="lamination1_thickness" class="form-control">
-                                            <option value="">Толщина...</option>
+                                            <option value="" hidden="hidden" selected="selected">Толщина...</option>
                                             <?php
                                             if(!empty($lamination1_brand_name)) {
                                                 $sql = "select distinct fbv.thickness, fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name='$lamination1_brand_name' order by thickness";
@@ -660,7 +660,7 @@ for ($i=1; $i<=8; $i++) {
                                         <div class="form-group">
                                             <label for="lamination2_brand_name">Марка пленки</label>
                                             <select id="lamination2_brand_name" name="lamination2_brand_name" class="form-control">
-                                                <option value="">Марка пленки...</option>
+                                                <option value="" hidden="hidden" selected="selected">Марка пленки...</option>
                                                     <?php
                                                     foreach ($brand_names as $row):
                                                     $selected = '';
@@ -679,7 +679,7 @@ for ($i=1; $i<=8; $i++) {
                                         <div class="form-group">
                                             <label for="lamination2_thickness">Толщина</label>
                                             <select id="lamination2_thickness" name="lamination2_thickness" class="form-control">
-                                                <option value="">Толщина...</option>
+                                                <option value="" hidden="hidden" selected="selected">Толщина...</option>
                                                 <?php
                                                 if(!empty($lamination2_brand_name)) {
                                                     $sql = "select distinct fbv.thickness, fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name='$lamination2_brand_name' order by thickness";
@@ -773,7 +773,7 @@ for ($i=1; $i<=8; $i++) {
                                 <div class="form-group">
                                     <label for="raport">Рапорт</label>
                                     <select id="raport" name="raport" class="form-control print-only d-none">
-                                        <option value="">Рапорт...</option>
+                                        <option value="" hidden="hidden" selected="selected">Рапорт...</option>
                                         <?php
                                         $selected = "";
                                         if($raport == 1.111) {
@@ -797,7 +797,7 @@ for ($i=1; $i<=8; $i++) {
                             <div class="form-group">
                                 <label for="paints_count">Количество красок</label>
                                 <select id="paints_count" name="paints_count" class="form-control print-only d-none">
-                                    <option value="">Количество красок...</option>
+                                    <option value="" hidden="hidden" selected="selected">Количество красок...</option>
                                         <?php
                                         for($i = 1; $i <= 8; $i++):
                                             $selected = "";
@@ -853,7 +853,7 @@ for ($i=1; $i<=8; $i++) {
                                 <div class="form-group<?=$paint_class ?>" id="paint_group_<?=$i ?>">
                                     <label for="paint_<?=$i ?>">Цвет</label>
                                     <select id="paint_<?=$i ?>" name="paint_<?=$i ?>" class="form-control paint" data-id="<?=$i ?>"<?=$paint_required ?>>
-                                        <option value="">Цвет...</option>
+                                        <option value="" hidden="hidden" selected="selected">Цвет...</option>
                                         <?php
                                         $cmyk_selected = "";
                                         $panton_selected = "";
@@ -893,7 +893,7 @@ for ($i=1; $i<=8; $i++) {
                                     ?>
                                     <label for="cmyk_<?=$i ?>">CMYK</label>
                                     <select id="cmyk_<?=$i ?>" name="cmyk_<?=$i ?>" class="form-control cmyk<?=$$cmyk_var_valid ?>" data-id="<?=$i ?>">
-                                        <option value="">CMYK...</option>
+                                        <option value="" hidden="hidden" selected="selected">CMYK...</option>
                                         <?php
                                         $cyan_selected = "";
                                         $magenta_selected = "";

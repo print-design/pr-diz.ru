@@ -5,7 +5,7 @@ include '../include/topscripts.php';
 $film_brand_id = filter_input(INPUT_GET, 'film_brand_id');
 
 if(!empty($film_brand_id)) {
-    echo "<option value=''>Выберите толщину</option>";
+    echo "<option value='' hidden='hidden' selected='selected'>Выберите толщину</option>";
     $grabber = (new Grabber("select thickness, weight from film_brand_variation where film_brand_id = $film_brand_id order by thickness"))->result;
     
     foreach ($grabber as $row) {
@@ -33,7 +33,7 @@ if(!empty($film_brand_name)) {
 $brand_name = addslashes(filter_input(INPUT_GET, 'brand_name'));
 
 if(!empty($brand_name)) {
-    echo "<option value=''>Толщина...</option>";
+    echo "<option value='' hidden='hidden' selected='selected'>Толщина...</option>";
     $grabber = (new Grabber("select distinct fbv.thickness, fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name='$brand_name' order by thickness"))->result;
     
     foreach ($grabber as $row) {

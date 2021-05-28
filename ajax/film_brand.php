@@ -6,7 +6,7 @@ if(!empty($supplier_id)) {
     $fetcher = (new Fetcher("select name from supplier where id=$supplier_id"));
     $row = $fetcher->Fetch();
     $supplier_name = $row['name'];
-    echo "<option value=''>Выберите марку от $supplier_name</option>";
+    echo "<option value='' hidden='hidden' selected='selected'>Выберите марку от $supplier_name</option>";
     
     $film_brands = (new Grabber("select id, name from film_brand where supplier_id=$supplier_id order by name"))->result;
     
