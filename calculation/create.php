@@ -1030,58 +1030,50 @@ for ($i=1; $i<=8; $i++) {
             
             // При смене типа работы: если тип работы "плёнка с печатью", показываем поля, предназначенные только для плёнки с печатью
             $('#work_type_id').change(function() {
-                if($(this).val() == 2) {
-                    WorkTypeFilmWithPrint();
-                }
-                else {
-                    WorkTypeFilmWithoutPrint();
-                }
+                SetFieldsVisibility($(this).val());
             });
             
-            // Если тип работы "Плёнка с печатью", то показываем поля, предназначенные только для пленки с печатью
-            <?php if($work_type_id == 2): ?>
-            WorkTypeFilmWithPrint();
-            <?php else: ?>
-            WorkTypeFilmWithoutPrint();
-            <?php endif; ?>
-
-            function WorkTypeFilmWithPrint() { 
-                // Скрываем поля "только без печати"
-                $('.no-print-only').addClass('d-none');
-                $('.no-print-only').removeAttr('required');
+            // Показываем или скрываем поля в зависимости от работы с печатью / без печати и наличия / отсутствия ламинации
+            function SetFieldsVisibility(work_type_id) {
+                if (work_type_id == 2) {
+                    // Скрываем поля "только без печати"
+                    $('.no-print-only').addClass('d-none');
+                    $('.no-print-only').removeAttr('required');
                     
-                // Показываем поля "только с печатью"
-                $('.print-only').removeClass('d-none');
-                $('.print-only').attr('required', 'required');
+                    // Показываем поля "только с печатью"
+                    $('.print-only').removeClass('d-none');
+                    $('.print-only').attr('required', 'required');
                 
-                // Показываем поля "с печатью и без печати"
-                $('.print-no-print').removeClass('d-none');
-                $('.print-no-print').attr('required', 'required');
-            }
-            
-            function WorkTypeFilmWithoutPrint() {
-                // Скрываем поля "только с печатью"
-                $('.print-only').addClass('d-none');
-                $('.print-only').removeAttr('required');
+                    // Показываем поля "с печатью и без печати"
+                    $('.print-no-print').removeClass('d-none');
+                    $('.print-no-print').attr('required', 'required');
+                }
+                else {
+                    // Скрываем поля "только с печатью"
+                    $('.print-only').addClass('d-none');
+                    $('.print-only').removeAttr('required');
                     
-                // Показываем поля "только без печати"
-                $('.no-print-only').removeClass('d-none');
-                $('.no-print-only').attr('required', 'required');
+                    // Показываем поля "только без печати"
+                    $('.no-print-only').removeClass('d-none');
+                    $('.no-print-only').attr('required', 'required');
                 
-                // Показываем поля "с печатью и без печати"
-                $('.print-no-print').removeClass('d-none');
-                $('.print-no-print').attr('required', 'required');
+                    // Показываем поля "с печатью и без печати"
+                    $('.print-no-print').removeClass('d-none');
+                    $('.print-no-print').attr('required', 'required');
                 
-                // Скрываем поля "только с ламинацией"
-                $('.lam-only').addClass('d-none');
-                $('.lam-only').removeAttr('required');
+                    // Скрываем поля "только с ламинацией"
+                    $('.lam-only').addClass('d-none');
+                    $('.lam-only').removeAttr('required');
                 
-                // Если видима ламинация, то показываем поля "только с ламинацией"
-                if($('#form_lamination_1').is(':visible')) {
-                    $('.lam-only').removeClass('d-none');
-                    $('.lam-only').attr('required', 'required');
+                    // Если видима ламинация, то показываем поля "только с ламинацией"
+                    if($('#form_lamination_1').is(':visible')) {
+                        $('.lam-only').not('.print-only').removeClass('d-none');
+                        $('.lam-only').not('.print-only').attr('required', 'required');
+                    }
                 }
             }
+            
+            SetFieldsVisibility($('#work_type_id').val());
             
             // Если единица объёма - кг, то в поле "Объём" пишем "Объём, кг", иначе "Объем, шт"
             if($('input[value=kg]').is(':checked')) {
@@ -1100,16 +1092,6 @@ for ($i=1; $i<=8; $i++) {
                     $('#label_quantity').text('Объем заказа, шт');
                 }
             });
-    
-            // Если у объекта имеется ламинация 1, показываем ламинацию 1
-            <?php if(!empty($lamination1_brand_name)): ?>
-            ShowLamination1();
-            <?php endif; ?>
-                
-            // Если у объекта имеется ламинация 2, показываем ламинацию 2
-            <?php if(!empty($lamination2_brand_name)): ?>
-            ShowLamination2();
-            <?php endif; ?>
                 
             // Показ марки плёнки и толщины для ламинации 1
             function ShowLamination1() {
@@ -1119,9 +1101,7 @@ for ($i=1; $i<=8; $i++) {
                 $('#film_title').addClass('d-none');
                 $('#lamination1_brand_name').attr('required', 'required');
                 $('#lamination1_thickness').attr('required', 'required');
-                $('.lam-only').removeClass('d-none');
-                $('input.lam-only').attr('required', 'required');
-                $('select.lam-only').attr('required', 'required');
+                SetFieldsVisibility($('#work_type_id').val());
             }
             
             // Скрытие марки плёнки и толщины для ламинации 1
@@ -1135,9 +1115,7 @@ for ($i=1; $i<=8; $i++) {
                 $('#film_title').removeClass('d-none');
                 $('#lamination1_brand_name').removeAttr('required');
                 $('#lamination1_thickness').removeAttr('required');
-                $('.lam-only').addClass('d-none');
-                $('input.lam-only').removeAttr('required');
-                $('select.lam-only').removeAttr('required');
+                SetFieldsVisibility($('#work_type_id').val());
                 HideLamination2();
             }
             
@@ -1249,8 +1227,6 @@ for ($i=1; $i<=8; $i++) {
                 
                 $('#form_group_' + data_id).removeClass('col-3');
                 $('#form_group_' + data_id).addClass('d-none');
-                
-                
                 
                 // Затем, в зависимости от выбранного значения, устанавливаем видимость нужного элемента для этого значения
                 if(paint == 'lacquer')  {
