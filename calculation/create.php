@@ -1262,6 +1262,11 @@ for ($i=1; $i<=8; $i++) {
                 $('#form_group_' + data_id).removeClass('col-3');
                 $('#form_group_' + data_id).addClass('d-none');
                 
+                // Снимаем атрибут required с кода цвета, CMYK и процента
+                $('#color_' + data_id).removeAttr('required');
+                $('#cmyk_' + data_id).removeAttr('required');
+                $('#percent_' + data_id).removeAttr('required');
+                
                 // Затем, в зависимости от выбранного значения, устанавливаем видимость нужного элемента для этого значения
                 if(paint == 'lacquer')  {
                     $('#paint_group_' + data_id).addClass('col-6');
@@ -1269,6 +1274,8 @@ for ($i=1; $i<=8; $i++) {
                     $('#percent_group_' + data_id).removeClass('d-none');
                     $('#form_group_' + data_id).addClass('col-3');
                     $('#form_group_' + data_id).removeClass('d-none');
+                    
+                    $('#percent_' + data_id).attr('required', 'required');
                 }
                 else if(paint == 'white') {
                     $('#paint_group_' + data_id).addClass('col-6');
@@ -1276,6 +1283,8 @@ for ($i=1; $i<=8; $i++) {
                     $('#percent_group_' + data_id).removeClass('d-none');
                     $('#form_group_' + data_id).addClass('col-3');
                     $('#form_group_' + data_id).removeClass('d-none');
+                    
+                    $('#percent_' + data_id).attr('required', 'required');
                 }
                 else if(paint == 'cmyk') {
                     $('#paint_group_' + data_id).addClass('col-3');
@@ -1285,6 +1294,9 @@ for ($i=1; $i<=8; $i++) {
                     $('#percent_group_' + data_id).removeClass('d-none');
                     $('#form_group_' + data_id).addClass('col-3');
                     $('#form_group_' + data_id).removeClass('d-none');
+                    
+                    $('#percent_' + data_id).attr('required', 'required');
+                    $('#cmyk_' + data_id).attr('required', 'required');
                 }
                 else if(paint == 'panton') {
                     $('#paint_group_' + data_id).addClass('col-3');
@@ -1294,6 +1306,9 @@ for ($i=1; $i<=8; $i++) {
                     $('#percent_group_' + data_id).removeClass('d-none');
                     $('#form_group_' + data_id).addClass('col-3');
                     $('#form_group_' + data_id).removeClass('d-none');
+                    
+                    $('#percent_' + data_id).attr('required', 'required');
+                    $('#color_' + data_id).attr('required', 'required');
                 }
                 else {
                     $('#paint_group_' + data_id).addClass('col-12');
