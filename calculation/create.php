@@ -462,7 +462,7 @@ for ($i=1; $i<=8; $i++) {
                         <div class="form-group">
                             <label for="work_type_id">Тип работы</label>
                             <select id="work_type_id" name="work_type_id" class="form-control" required="required">
-                                <option value="">Тип работы...</option>
+                                <option value="" hidden="hidden" selected="selected">Тип работы...</option>
                                 <?php
                                 $sql = "select id, name from work_type";
                                 $fetcher = new Fetcher($sql);
@@ -484,7 +484,7 @@ for ($i=1; $i<=8; $i++) {
                         $kg_checked = ($unit == "kg" || empty($unit)) ? " checked='checked'" : "";
                         $thing_checked = $unit == "thing" ? " checked='checked'" : "";
                         ?>
-                        <div class="work-type-lam-only justify-content-start mt-2 mb-1 d-none">
+                        <div class="print-only justify-content-start mt-2 mb-1 d-none">
                             <div class="form-check-inline">
                                 <label class="form-check-label">
                                     <input type="radio" class="form-check-input" name="unit" value="kg"<?=$kg_checked ?> />Килограммы
@@ -497,10 +497,10 @@ for ($i=1; $i<=8; $i++) {
                             </div>
                         </div>
                         <!-- Печатная машина -->
-                        <div class="work-type-lam-only d-none">
+                        <div class="print-only d-none">
                         <div class="form-group w-100">
                             <label for="machine_type_id">Печатная машина</label>
-                            <select id="machine_type_id" name="machine_type_id" class="form-control work-type-lam-only d-none">
+                            <select id="machine_type_id" name="machine_type_id" class="form-control print-only d-none">
                                 <option value="">Печатная машина...</option>
                                 <?php
                                 $sql = "select id, name from machine_type";
@@ -643,7 +643,7 @@ for ($i=1; $i<=8; $i++) {
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-1" id="hide_lamination_1">
+                                <div class="col-1 d-flex flex-column justify-content-end" id="hide_lamination_1">
                                     <div class="form-group">
                                         <button type="button" class="btn btn-light" onclick="javascript: HideLamination1();"><i class="fas fa-trash-alt"></i></button>
                                     </div>
@@ -699,7 +699,7 @@ for ($i=1; $i<=8; $i++) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-1" id="hide_lamination_2">
+                                    <div class="col-1 d-flex flex-column justify-content-end" id="hide_lamination_2">
                                         <div class="form-group">
                                             <button type="button" class="btn btn-light" onclick="javascript: HideLamination2();"><i class="fas fa-trash-alt"></i></button>
                                         </div>
@@ -709,13 +709,13 @@ for ($i=1; $i<=8; $i++) {
                         </div>
                         <div class="row mt-3">
                             <!-- Обрезная ширина -->
-                            <div class="col-6 lam-only lam-only-work-type-no-lam d-none">
+                            <div class="col-6 lam-only no-print-only d-none">
                                 <div class="form-group">
                                     <label for="width">Обрезная ширина</label>
                                     <input type="text" 
                                            id="width" 
                                            name="width" 
-                                           class="form-control int-only lam-only lam-only-work-type-no-lam d-none" 
+                                           class="form-control int-only lam-only no-print-only d-none" 
                                            placeholder="Обрезная ширина, мм" 
                                            value="<?=$width ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -724,13 +724,13 @@ for ($i=1; $i<=8; $i++) {
                                 </div>
                             </div>
                             <!-- Длина от метки до метки -->
-                            <div class="col-6 work-type-lam-only d-none">
+                            <div class="col-6 print-only d-none">
                                 <div class="form-group">
                                     <label for="length">Длина от метки до метки</label>
                                     <input type="text" 
                                            id="length" 
                                            name="length" 
-                                           class="form-control float-only work-type-lam-only d-none" 
+                                           class="form-control float-only print-only d-none" 
                                            placeholder="Длина от метки до метки" 
                                            value="<?=$length ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -739,13 +739,13 @@ for ($i=1; $i<=8; $i++) {
                                 </div>
                             </div>
                             <!-- Ширина ручья -->
-                            <div class="col-6 work-type-lam-only d-none">
+                            <div class="col-6 print-only d-none">
                                 <div class="form-group">
                                     <label for="stream_width">Ширина ручья</label>
                                     <input type="text" 
                                            id="stream_width" 
                                            name="stream_width" 
-                                           class="form-control float-only work-type-lam-only d-none" 
+                                           class="form-control float-only print-only d-none" 
                                            placeholder="Ширина ручья" 
                                            value="<?=$stream_width ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -754,13 +754,13 @@ for ($i=1; $i<=8; $i++) {
                                 </div>
                             </div>
                             <!-- Количество ручьёв -->
-                            <div class="col-6 lam-only lam-only-work-type-no-lam work-type-lam-only d-none">
+                            <div class="col-6 lam-only print-no-print d-none">
                                 <div class="form-group">
                                     <label for="streams_count">Количество ручьев</label>
                                     <input type="text" 
                                            id="streams_count" 
                                            name="streams_count" 
-                                           class="form-control lam-only lam-only-work-type-no-lam work-type-lam-only d-none" 
+                                           class="form-control lam-only print-no-print d-none" 
                                            placeholder="Количество ручьев" 
                                            value="<?=$streams_count ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -769,10 +769,10 @@ for ($i=1; $i<=8; $i++) {
                                 </div>
                             </div>
                             <!-- Рапорт -->
-                            <div class="col-6 work-type-lam-only d-none">
+                            <div class="col-6 print-only d-none">
                                 <div class="form-group">
                                     <label for="raport">Рапорт</label>
-                                    <select id="raport" name="raport" class="form-control work-type-lam-only d-none">
+                                    <select id="raport" name="raport" class="form-control print-only d-none">
                                         <option value="">Рапорт...</option>
                                         <?php
                                         $selected = "";
@@ -793,10 +793,10 @@ for ($i=1; $i<=8; $i++) {
                             </div>
                         </div>
                         <!-- Количество красок -->
-                        <div class="work-type-lam-only d-none">
+                        <div class="print-only d-none">
                             <div class="form-group">
                                 <label for="paints_count">Количество красок</label>
-                                <select id="paints_count" name="paints_count" class="form-control work-type-lam-only d-none">
+                                <select id="paints_count" name="paints_count" class="form-control print-only d-none">
                                     <option value="">Количество красок...</option>
                                         <?php
                                         for($i = 1; $i <= 8; $i++):
@@ -811,147 +811,147 @@ for ($i=1; $i<=8; $i++) {
                                         ?>
                                 </select>
                             </div>
-                        </div>
-                        <!-- Каждая краска -->
-                        <?php
-                        for($i=1; $i<=8; $i++):
-                        $block_class = " d-none";
-                        $paint_required = "";
-
-                        if(!empty($paints_count) && is_numeric($paints_count) && $i <= $paints_count) {
-                            $block_class = "";
-                            $paint_required = " required='required'";
-                        }
-                        ?>
-                        <div class="row paint_block<?=$block_class ?>" id="paint_block_<?=$i ?>">
+                            <!-- Каждая краска -->
                             <?php
-                            $paint_class = " col-12";
-                            $cmyk_class = " d-none";
-                            $color_class = " d-none";
-                            $percent_class = " d-none";
-                            $form_class = " d-none";
-                            
-                            $paint_var_name = "paint_$i";
-                            
-                            if($$paint_var_name == "white" || $$paint_var_name == "lacquer") {
-                                $paint_class = " col-6";
-                                $percent_class = " col-3";
-                                $form_class = " col-3";
-                            }
-                            else if($$paint_var_name == "panton") {
-                                $paint_class = " col-3";
-                                $color_class = " col-3";
-                                $percent_class = " col-3";
-                                $form_class = " col-3";
-                            }
-                            else if($$paint_var_name == "cmyk") {
-                                $paint_class = " col-3";
-                                $cmyk_class = " col-3";
-                                $percent_class = " col-3";
-                                $form_class = " col-3";
+                            for($i=1; $i<=8; $i++):
+                            $block_class = " d-none";
+                            $paint_required = "";
+
+                            if(!empty($paints_count) && is_numeric($paints_count) && $i <= $paints_count) {
+                                $block_class = "";
+                                $paint_required = " required='required'";
                             }
                             ?>
-                            <div class="form-group<?=$paint_class ?>" id="paint_group_<?=$i ?>">
-                                <label for="paint_<?=$i ?>">Цвет</label>
-                                <select id="paint_<?=$i ?>" name="paint_<?=$i ?>" class="form-control paint" data-id="<?=$i ?>"<?=$paint_required ?>>
-                                    <option value="">Цвет...</option>
-                                    <?php
-                                    $cmyk_selected = "";
-                                    $panton_selected = "";
-                                    $white_selected = "";
-                                    $lacquer_selected = "";
+                            <div class="row paint_block<?=$block_class ?>" id="paint_block_<?=$i ?>">
+                                <?php
+                                $paint_class = " col-12";
+                                $cmyk_class = " d-none";
+                                $color_class = " d-none";
+                                $percent_class = " d-none";
+                                $form_class = " d-none";
+                            
+                                $paint_var_name = "paint_$i";
+                            
+                                if($$paint_var_name == "white" || $$paint_var_name == "lacquer") {
+                                    $paint_class = " col-6";
+                                    $percent_class = " col-3";
+                                    $form_class = " col-3";
+                                }
+                                else if($$paint_var_name == "panton") {
+                                    $paint_class = " col-3";
+                                    $color_class = " col-3";
+                                    $percent_class = " col-3";
+                                    $form_class = " col-3";
+                                }
+                                else if($$paint_var_name == "cmyk") {
+                                    $paint_class = " col-3";
+                                    $cmyk_class = " col-3";
+                                    $percent_class = " col-3";
+                                    $form_class = " col-3";
+                                }
+                                ?>
+                                <div class="form-group<?=$paint_class ?>" id="paint_group_<?=$i ?>">
+                                    <label for="paint_<?=$i ?>">Цвет</label>
+                                    <select id="paint_<?=$i ?>" name="paint_<?=$i ?>" class="form-control paint" data-id="<?=$i ?>"<?=$paint_required ?>>
+                                        <option value="">Цвет...</option>
+                                        <?php
+                                        $cmyk_selected = "";
+                                        $panton_selected = "";
+                                        $white_selected = "";
+                                        $lacquer_selected = "";
                                     
-                                    $selected_var_name = $$paint_var_name."_selected";
-                                    $$selected_var_name = " selected='selected'";
-                                    ?>
-                                    <option value="cmyk"<?=$cmyk_selected ?>>CMYK</option>
-                                    <option value="panton"<?=$panton_selected ?>>Пантон</option>
-                                    <option value="white"<?=$white_selected ?>>Белый</option>
-                                    <option value="lacquer"<?=$lacquer_selected ?>>Лак</option>
-                                </select>
-                                <div class="invalid-feedback">Цвет обязательно</div>
-                            </div>
-                            <div class="form-group<?=$color_class ?>" id="color_group_<?=$i ?>">
-                                <?php
-                                $color_var = "color_$i"; 
-                                $color_var_valid = 'color_'.$i.'_valid'; 
-                                ?>
-                                <label for="color_<?=$i ?>">Код цвета</label>
-                                <input type="text" 
-                                       id="color_<?=$i ?>" 
-                                       name="color_<?=$i ?>" 
-                                       class="form-control int-only color<?=$$color_var_valid ?>" 
-                                       placeholder="Код цвета..." 
-                                       value="<?=$$color_var?>" 
-                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Код цвета...');" />
-                                <div class="invalid-feedback">Код цвета обязательно</div>
-                            </div>
-                            <div class="form-group<?=$cmyk_class ?>" id="cmyk_group_<?=$i ?>">
-                                <?php
-                                $cmyk_var = "cmyk_$i";
-                                $cmyk_var_valid = 'cmyk_'.$i.'_valid';
-                                ?>
-                                <label for="cmyk_<?=$i ?>">CMYK</label>
-                                <select id="cmyk_<?=$i ?>" name="cmyk_<?=$i ?>" class="form-control cmyk<?=$$cmyk_var_valid ?>" data-id="<?=$i ?>">
-                                    <option value="">CMYK...</option>
+                                        $selected_var_name = $$paint_var_name."_selected";
+                                        $$selected_var_name = " selected='selected'";
+                                        ?>
+                                        <option value="cmyk"<?=$cmyk_selected ?>>CMYK</option>
+                                        <option value="panton"<?=$panton_selected ?>>Пантон</option>
+                                        <option value="white"<?=$white_selected ?>>Белый</option>
+                                        <option value="lacquer"<?=$lacquer_selected ?>>Лак</option>
+                                    </select>
+                                    <div class="invalid-feedback">Цвет обязательно</div>
+                                </div>
+                                <div class="form-group<?=$color_class ?>" id="color_group_<?=$i ?>">
                                     <?php
-                                    $cyan_selected = "";
-                                    $magenta_selected = "";
-                                    $yellow_selected = "";
-                                    $kontur_selected = "";
-                                    
-                                    $cmyk_var_selected = $$cmyk_var.'_selected';
-                                    $$cmyk_var_selected = " selected='selected'";
+                                    $color_var = "color_$i"; 
+                                    $color_var_valid = 'color_'.$i.'_valid'; 
                                     ?>
-                                    <option value="cyan"<?=$cyan_selected ?>>Cyan</option>
-                                    <option value="magenta"<?=$magenta_selected ?>>Magenta</option>
-                                    <option value="yellow"<?=$yellow_selected ?>>Yellow</option>
-                                    <option value="kontur"<?=$kontur_selected ?>>Kontur</option>
-                                </select>
-                                <div class="invalid-feedback">Выберите компонент цвета</div>
-                            </div>
-                            <div class="form-group<?=$percent_class ?>" id="percent_group_<?=$i ?>">
-                                <?php
-                                $percent_var = "percent_$i";
-                                $percent_var_valid = 'percent_'.$i.'_valid';
-                                ?>
-                                <label for="percent_<?=$i ?>">Процент<br /></label>
-                                <div class="input-group">
+                                    <label for="color_<?=$i ?>">Код цвета</label>
                                     <input type="text" 
-                                           id="percent_<?=$i ?>" 
-                                           name="percent_<?=$i ?>" 
-                                           class="form-control int-only percent<?=$$percent_var_valid ?>" 
-                                           style="width: 80px;" 
-                                           value="<?=$$percent_var ?>" 
-                                           placeholder="Процент..." 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'percent_<?=$i ?>'); $(this).attr('name', 'percent_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" />
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">%</span>
+                                        id="color_<?=$i ?>" 
+                                        name="color_<?=$i ?>" 
+                                        class="form-control int-only color<?=$$color_var_valid ?>" 
+                                        placeholder="Код цвета..." 
+                                        value="<?=$$color_var?>" 
+                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                        onmouseup="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Код цвета...');" />
+                                    <div class="invalid-feedback">Код цвета обязательно</div>
+                                </div>
+                                <div class="form-group<?=$cmyk_class ?>" id="cmyk_group_<?=$i ?>">
+                                    <?php
+                                    $cmyk_var = "cmyk_$i";
+                                    $cmyk_var_valid = 'cmyk_'.$i.'_valid';
+                                    ?>
+                                    <label for="cmyk_<?=$i ?>">CMYK</label>
+                                    <select id="cmyk_<?=$i ?>" name="cmyk_<?=$i ?>" class="form-control cmyk<?=$$cmyk_var_valid ?>" data-id="<?=$i ?>">
+                                        <option value="">CMYK...</option>
+                                        <?php
+                                        $cyan_selected = "";
+                                        $magenta_selected = "";
+                                        $yellow_selected = "";
+                                        $kontur_selected = "";
+                                    
+                                        $cmyk_var_selected = $$cmyk_var.'_selected';
+                                        $$cmyk_var_selected = " selected='selected'";
+                                        ?>
+                                        <option value="cyan"<?=$cyan_selected ?>>Cyan</option>
+                                        <option value="magenta"<?=$magenta_selected ?>>Magenta</option>
+                                        <option value="yellow"<?=$yellow_selected ?>>Yellow</option>
+                                        <option value="kontur"<?=$kontur_selected ?>>Kontur</option>
+                                    </select>
+                                    <div class="invalid-feedback">Выберите компонент цвета</div>
+                                </div>
+                                <div class="form-group<?=$percent_class ?>" id="percent_group_<?=$i ?>">
+                                    <?php
+                                    $percent_var = "percent_$i";
+                                    $percent_var_valid = 'percent_'.$i.'_valid';
+                                    ?>
+                                    <label for="percent_<?=$i ?>">Процент<br /></label>
+                                    <div class="input-group">
+                                        <input type="text" 
+                                            id="percent_<?=$i ?>" 
+                                            name="percent_<?=$i ?>" 
+                                            class="form-control int-only percent<?=$$percent_var_valid ?>" 
+                                            style="width: 80px;" 
+                                            value="<?=$$percent_var ?>" 
+                                            placeholder="Процент..." 
+                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                            onmouseup="javascript: $(this).attr('id', 'percent_<?=$i ?>'); $(this).attr('name', 'percent_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                        <div class="invalid-feedback">Процент обязательно</div>
                                     </div>
-                                    <div class="invalid-feedback">Процент обязательно</div>
+                                </div>
+                                <div class="form-group<?=$form_class ?>" id="form_group_<?=$i ?>">
+                                    <label for="form_<?=$i ?>">Форма</label>
+                                    <select id="form_<?=$i ?>" name="form_<?=$i ?>" class="form-control form">
+                                        <?php
+                                        $flint_selected = "";
+                                        $kodak_selected = "";
+                                    
+                                        $form_var = "form_$i";
+                                        $form_selected_var = $$form_var."_selected";
+                                        $$form_selected_var = " selected='selected'";
+                                        ?>
+                                        <option value="flint"<?=$flint_selected ?>>Флинт</option>
+                                        <option value="kodak"<?=$kodak_selected ?>>Кодак</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div class="form-group<?=$form_class ?>" id="form_group_<?=$i ?>">
-                                <label for="form_<?=$i ?>">Форма</label>
-                                <select id="form_<?=$i ?>" name="form_<?=$i ?>" class="form-control form">
-                                    <?php
-                                    $flint_selected = "";
-                                    $kodak_selected = "";
-                                    
-                                    $form_var = "form_$i";
-                                    $form_selected_var = $$form_var."_selected";
-                                    $$form_selected_var = " selected='selected'";
-                                    ?>
-                                    <option value="flint"<?=$flint_selected ?>>Флинт</option>
-                                    <option value="kodak"<?=$kodak_selected ?>>Кодак</option>
-                                </select>
-                            </div>
+                            <?php
+                            endfor;
+                            ?>
                         </div>
-                        <?php
-                        endfor;
-                        ?>
                         <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark mt-3 d-none">Рассчитать</button>
                     </form>
                 </div>
@@ -1044,43 +1044,43 @@ for ($i=1; $i<=8; $i++) {
             <?php else: ?>
             WorkTypeFilmWithoutPrint();
             <?php endif; ?>
+
+            function WorkTypeFilmWithPrint() { 
+                // Скрываем поля "только без печати"
+                $('.no-print-only').addClass('d-none');
+                $('.no-print-only').removeAttr('required');
+                    
+                // Показываем поля "только с печатью"
+                $('.print-only').removeClass('d-none');
+                $('.print-only').attr('required', 'required');
                 
-            function WorkTypeFilmWithPrint() {
-                // Скрываем поля только с ламинацией
-                $('.lam-only').addClass('d-none');
-                $('input.lam-only').removeAttr('required');
-                $('select.lam-only').removeAttr('required');
-                
-                // Показываем поля для плёнки с печатью
-                $('.work-type-lam-only').removeClass('d-none');
-                $('input.work-type-lam-only').attr('required', 'required');
-                $('select.work-type-lam-only').attr('required', 'required');
-                
-                // Делаем поля, зависимые от ламинации, независимыми
-                $('.lam-only-work-type-no-lam').removeClass('lam-only');
-                
-                // Показываем краски
-                $('#paints_count').change();
+                // Показываем поля "с печатью и без печати"
+                $('.print-no-print').removeClass('d-none');
+                $('.print-no-print').attr('required', 'required');
             }
             
             function WorkTypeFilmWithoutPrint() {
-                // Скрываем поля для плёнки с печатью
-                $('.work-type-lam-only').addClass('d-none');
-                $('input.work-type-lam-only').removeAttr('required');
-                $('select.work-type-lam-only').removeAttr('required');
-                
-                // Восстанавливаем зависимость полей от ламинации
-                $('.lam-only-work-type-no-lam').addClass('lam-only');
-                
-                // Показываем поля только с ламинацией
-                <?php if(!empty($lamination1_brand_name)): ?>
-                $('.lam-only').removeClass('d-none');
-                $('input.lam-only').attr('required', 'required');
-                $('select.lam-only').attr('required', 'required');
-                <?php endif; ?>
+                // Скрываем поля "только с печатью"
+                $('.print-only').addClass('d-none');
+                $('.print-only').removeAttr('required');
                     
-                // Скрываем краски
-                $('.paint_block').addClass('d-none');
+                // Показываем поля "только без печати"
+                $('.no-print-only').removeClass('d-none');
+                $('.no-print-only').attr('required', 'required');
+                
+                // Показываем поля "с печатью и без печати"
+                $('.print-no-print').removeClass('d-none');
+                $('.print-no-print').attr('required', 'required');
+                
+                // Скрываем поля "только с ламинацией"
+                $('.lam-only').addClass('d-none');
+                $('.lam-only').removeAttr('required');
+                
+                // Если видима ламинация, то показываем поля "только с ламинацией"
+                if($('#form_lamination_1').is(':visible')) {
+                    $('.lam-only').removeClass('d-none');
+                    $('.lam-only').attr('required', 'required');
+                }
             }
             
             // Если единица объёма - кг, то в поле "Объём" пишем "Объём, кг", иначе "Объем, шт"
@@ -1146,6 +1146,7 @@ for ($i=1; $i<=8; $i++) {
                 $('#form_lamination_2').removeClass('d-none');
                 $('#show_lamination_2').addClass('d-none');
                 $('#hide_lamination_1').addClass('d-none');
+                $('#hide_lamination_1').removeClass('d-flex');
                 $('#lamination2_brand_name').attr('required', 'required');
                 $('#lamination2_thickness').attr('required', 'required');
             }
@@ -1158,6 +1159,7 @@ for ($i=1; $i<=8; $i++) {
                 $('#form_lamination_2').addClass('d-none');
                 $('#show_lamination_2').removeClass('d-none');
                 $('#hide_lamination_1').removeClass('d-none');
+                $('#hide_lamination_1').addClass('d-flex');
                 $('#lamination2_brand_name').removeAttr('required');
                 $('#lamination2_thickness').removeAttr('required');
             }
