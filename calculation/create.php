@@ -1006,7 +1006,12 @@ for ($i=1; $i<=8; $i++) {
                     return false;
                 }
                 
-                var newvalue = $(e.target).val() + e.key;
+                var text = $(e.target).val();
+                var selStart = $(e.target).prop('selectionStart');
+                var selEnd = $(e.target).prop('selectionEnd');
+                var textStart = text.substring(0, selStart);
+                var textEnd = text.substring(selEnd);
+                var newvalue = textStart + e.key + textEnd;
                 var iNewValue = parseInt(newvalue);
                 
                 if(iNewValue == null || iNewValue < 1 || iNewValue > 50) {
@@ -1020,7 +1025,12 @@ for ($i=1; $i<=8; $i++) {
                     return false;
                 }
                 
-                var newvalue = $(e.target).val() + e.key;
+                var text = $(e.target).val();
+                var selStart = $(e.target).prop('selectionStart');
+                var selEnd = $(e.target).prop('selectionEnd');
+                var textStart = text.substring(0, selStart);
+                var textEnd = text.substring(selEnd);
+                var newvalue = textStart + e.key + textEnd;
                 var iNewValue = parseInt(newvalue);
                 
                 if(iNewValue == null || iNewValue < 1 || iNewValue > 100) {
