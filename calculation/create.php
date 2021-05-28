@@ -501,8 +501,8 @@ for ($i=1; $i<=8; $i++) {
                             <!-- Объем заказа -->
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="quantity">Объем заказа</label>
-                                    <input type="text" id="quantity" name="quantity" class="form-control int-only" placeholder="Объем заказа, кг" value="<?=$quantity ?>" required="required" />
+                                    <label for="quantity" id="label_quantity">Объем заказа, кг</label>
+                                    <input type="text" id="quantity" name="quantity" class="form-control int-only" placeholder="Объем заказа" value="<?=$quantity ?>" required="required" />
                                     <div class="invalid-feedback">Объем заказа обязательно</div>
                                 </div>
                             </div>
@@ -1033,19 +1033,19 @@ for ($i=1; $i<=8; $i++) {
             
             // Если единица объёма - кг, то в поле "Объём" пишем "Объём, кг", иначе "Объем, шт"
             if($('input[value=kg]').is(':checked')) {
-                $('#quantity').attr('placeholder', 'Объем заказа, кг');
+                $('#label_quantity').text('Объем заказа, кг');
             }
             
             if($('input[value=thing]').is(':checked')) {
-                $('#quantity').attr('placeholder', 'Объем заказа, шт');
+                $('#label_quantity').text('Объем заказа, шт');
             }
                 
             $('input[name=unit]').click(function(){
                 if($(this).val() == 'kg') {
-                    $('#quantity').attr('placeholder', 'Объем заказа, кг');
+                    $('#label_quantity').text('Объем заказа, кг');
                 }
                 else {
-                    $('#quantity').attr('placeholder', 'Объем заказа, шт');
+                    $('#label_quantity').text('Объем заказа, шт');
                 }
             });
     
