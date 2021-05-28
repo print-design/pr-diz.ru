@@ -203,7 +203,8 @@ function OrderLink($param) {
                         }
                     }
                     
-                    $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.quantity, wt.name work_type, u.last_name, u.first_name, c.status_id "
+                    $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.quantity, wt.name work_type, u.last_name, u.first_name, c.status_id, "
+                            . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                             . "from calculation c "
                             . "inner join customer cus on c.customer_id = cus.id "
                             . "inner join work_type wt on c.work_type_id = wt.id "
@@ -227,7 +228,7 @@ function OrderLink($param) {
                     }
                     ?>
                     <tr>
-                        <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['id'] ?></td>
+                        <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['num_for_customer'] ?></td>
                         <td class="text-nowrap"><?= DateTime::createFromFormat('Y-m-d', $row['date'])->format('d.m.Y') ?></td>
                         <td><?=$row['customer'] ?></td>
                         <td><?= htmlentities($row['name']) ?></td>
