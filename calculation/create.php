@@ -863,7 +863,14 @@ for ($i=1; $i<=8; $i++) {
                                 $color_var_valid = 'color_'.$i.'_valid'; 
                                 ?>
                                 <label for="color_<?=$i ?>">Код цвета</label>
-                                <input type="text" id="color_<?=$i ?>" name="color_<?=$i ?>" class="form-control int-only color<?=$$color_var_valid ?>" placeholder="Код цвета..." value="<?=$$color_var?>" />
+                                <input type="text" 
+                                       id="color_<?=$i ?>" 
+                                       name="color_<?=$i ?>" 
+                                       class="form-control int-only color<?=$$color_var_valid ?>" 
+                                       placeholder="Код цвета..." 
+                                       value="<?=$$color_var?>" 
+                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onmouseup="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Код цвета...');" />
                                 <div class="invalid-feedback">Код цвета обязательно</div>
                             </div>
                             <div class="form-group<?=$cmyk_class ?>" id="cmyk_group_<?=$i ?>">
@@ -897,7 +904,15 @@ for ($i=1; $i<=8; $i++) {
                                 ?>
                                 <label for="percent_<?=$i ?>">Процент<br /></label>
                                 <div class="input-group">
-                                    <input type="text" id="percent_<?=$i ?>" name="percent_<?=$i ?>" class="form-control int-only percent<?=$$percent_var_valid ?>" style="width: 80px;" value="<?=$$percent_var ?>" />
+                                    <input type="text" 
+                                           id="percent_<?=$i ?>" 
+                                           name="percent_<?=$i ?>" 
+                                           class="form-control int-only percent<?=$$percent_var_valid ?>" 
+                                           style="width: 80px;" 
+                                           value="<?=$$percent_var ?>" 
+                                           placeholder="Процент..." 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'percent_<?=$i ?>'); $(this).attr('name', 'percent_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" />
                                     <div class="input-group-append">
                                         <span class="input-group-text">%</span>
                                     </div>
