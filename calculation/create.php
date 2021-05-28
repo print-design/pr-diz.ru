@@ -1058,6 +1058,9 @@ for ($i=1; $i<=8; $i++) {
                 
                 // Делаем поля, зависимые от ламинации, независимыми
                 $('.lam-only-work-type-no-lam').removeClass('lam-only');
+                
+                // Показываем краски
+                $('#paints_count').change();
             }
             
             function WorkTypeFilmWithoutPrint() {
@@ -1075,6 +1078,9 @@ for ($i=1; $i<=8; $i++) {
                 $('input.lam-only').attr('required', 'required');
                 $('select.lam-only').attr('required', 'required');
                 <?php endif; ?>
+                    
+                // Скрываем краски
+                $('.paint_block').addClass('d-none');
             }
             
             // Если единица объёма - кг, то в поле "Объём" пишем "Объём, кг", иначе "Объем, шт"
