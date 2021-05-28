@@ -376,6 +376,20 @@ for ($i=1; $i<=8; $i++) {
         include '../include/head.php';
         ?>
         <link href="<?=APPLICATION ?>/css/select2.min.css" rel="stylesheet"/>
+        <style>
+            .form-group {
+                margin-bottom: .2rem;
+            }
+            
+            p {
+                margin-bottom: 0;
+                margin-top: .3rem;
+            }
+            
+            label {
+                margin-bottom: .2rem;
+            }
+        </style>
     </head>
     <body>
         <?php
@@ -470,7 +484,7 @@ for ($i=1; $i<=8; $i++) {
                         $kg_checked = ($unit == "kg" || empty($unit)) ? " checked='checked'" : "";
                         $thing_checked = $unit == "thing" ? " checked='checked'" : "";
                         ?>
-                        <div class="work-type-lam-only justify-content-start mt-3 mb-3 d-none">
+                        <div class="work-type-lam-only justify-content-start mt-2 mb-1 d-none">
                             <div class="form-check-inline">
                                 <label class="form-check-label">
                                     <input type="radio" class="form-check-input" name="unit" value="kg"<?=$kg_checked ?> />Килограммы
@@ -506,7 +520,7 @@ for ($i=1; $i<=8; $i++) {
                         </div>
                             </div>
                         <!-- Объем заказа -->
-                        <div class="row mt-3">
+                        <div class="row">
                             <!-- Объем заказа -->
                             <div class="col-6">
                                 <div class="form-group">
