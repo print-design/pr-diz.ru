@@ -155,7 +155,7 @@ $machine_type = $row['machine_type']
                                     <?php
                                     if(!empty($quantity) && !empty($unit)):
                                     ?>
-                                <tr><th class="font-weight-bold">Объем заказа</th><td><?=$quantity ?> <?=$unit ?></td></tr>
+                                <tr><th class="font-weight-bold">Объем заказа</th><td><?=$quantity ?> <?=$unit == 'kg' ? "кг" : "шт" ?></td></tr>
                                     <?php
                                     endif;
                                     if(!empty($machine_type)):
