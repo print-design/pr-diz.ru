@@ -55,7 +55,8 @@
     });
     
     // Ограничение значений для полей с целочисленными значениями (проценты и т. д.)
-    function LimitIntValue(textbox, e, max) {
+    // Обработка изменения нажатия клавиш
+    function KeyDownLimitIntValue(textbox, e, max) {
         if(e.which != 8 && e.which != 46 && e.which != 37 && e.which != 39) {
             if(/\D/.test(String.fromCharCode(e.which))) {
                 return false;
@@ -75,6 +76,19 @@
         }
         
         return true;
+    }
+    
+    // Ограничение значений для полей с целочисленными значениями (проценты и т. д.)
+    // Обработка изменения текста
+    function ChangeLimitIntValue(textbox, max) {
+        val = textbox.val().replace(/[^\d]/g, '');
+        iVal = parseInt(val);
+        
+        if(iVal == null || iVal < 1 || iVal > max) {
+            alert('Только целое значение от 1 до ' + max);
+            textbox.val('');
+            textbox.focus();
+        }
     }
     
     // Запрет на изменение размеров всех многострочных текстовых полей вручную

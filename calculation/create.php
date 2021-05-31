@@ -787,7 +787,7 @@ for ($i=1; $i<=8; $i++) {
                                     <input type="text" 
                                            id="streams_count" 
                                            name="streams_count" 
-                                           class="form-control lam-only print-no-print d-none" 
+                                           class="form-control int-only lam-only print-no-print d-none" 
                                            placeholder="Количество ручьев" 
                                            value="<?=$streams_count ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -1038,16 +1038,24 @@ for ($i=1; $i<=8; $i++) {
             
             // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
             $('#streams_count').keydown(function(e) {
-                if(!LimitIntValue($(e.target), e, 50)) {
+                if(!KeyDownLimitIntValue($(e.target), e, 50)) {
                     return false;
                 }
+            });
+    
+            $("#streams_count").change(function(){
+                ChangeLimitIntValue($(this), 50);
             });
             
             // В поле "процент" ограничиваем значения: целые числа от 1 до 100
             $('.percent').keydown(function(e) {
-                if(!LimitIntValue($(e.target), e, 100)) {
+                if(!KeyDownLimitIntValue($(e.target), e, 100)) {
                     return false;
                 }
+            });
+    
+            $(".percent").change(function(){
+                ChangeLimitIntValue($(this), 50);
             });
             
             // При смене типа работы: если тип работы "плёнка с печатью", показываем поля, предназначенные только для плёнки с печатью
