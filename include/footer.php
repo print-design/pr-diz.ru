@@ -54,6 +54,30 @@
         $(this).val(val);
     });
     
+    // Ограничение значений для полей с целочисленными значениями (проценты и т. д.)
+    function LimitIntValue(textbox, e, max) {
+        if(e.which != 8 && e.which != 46 && e.which != 37 && e.which != 39) {
+            if(/\D/.test(String.fromCharCode(e.which))) {
+                return false;
+            }
+            
+            var text = textbox.val();
+            var selStart = textbox.prop('selectionStart');
+            var selEnd = textbox.prop('selectionEnd');
+            var textStart = text.substring(0, selStart);
+            var textEnd = text.substring(selEnd);
+            var newvalue = textStart + e.key + textEnd;
+            var iNewValue = parseInt(newvalue);
+            
+            if(iNewValue == null || iNewValue < 1 || iNewValue > max) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    // Запрет на изменение размеров всех многострочных текстовых полей вручную
     $('textarea').css('resize', 'none');
     
     // Валидация
