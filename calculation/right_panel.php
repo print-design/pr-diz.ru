@@ -1,7 +1,7 @@
 <?php
 $calculation_class = "";
                         
-if(isset($create_calculation_submit_class) || empty($create_calculation_submit_class)) {
+if(isset($create_calculation_submit_class) && empty($create_calculation_submit_class)) {
     $calculation_class = " class='d-none'";    
 }
 ?>
