@@ -982,7 +982,15 @@ for ($i=1; $i<=8; $i++) {
                             endfor;
                             ?>
                         </div>
-                        <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark mt-3 d-none">Рассчитать</button>
+                        <?php
+                        // Если показываем рассчёт, то не показываем кнопку отправки.
+                        // И наоборот.
+                        $create_calculation_submit_class = " d-none";
+                        if(!empty($calculation_class)) {
+                            $create_calculation_submit_class = "";
+                        }
+                        ?>
+                        <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark mt-3<?=$create_calculation_submit_class ?>">Рассчитать</button>
                     </form>
                 </div>
                 <!-- Правая половина -->
@@ -1327,7 +1335,7 @@ for ($i=1; $i<=8; $i++) {
             
             // Скрытие расчёта
             function HideCalculation() {
-                $("#calculation").hide();
+                $("#calculation").addClass("d-none");
                 $("#create_calculation_submit").removeClass("d-none");
             }
             
@@ -1343,21 +1351,6 @@ for ($i=1; $i<=8; $i++) {
             $("input[id!=extracharge]").keydown(function () {
                 HideCalculation();
             });
-            
-            // Скрытие расчёта при создании нового заказчика
-            <?php if(null !== filter_input(INPUT_POST, 'create_customer_submit')): ?>
-                HideCalculation();
-            <?php endif; ?>
-                
-            // Скрытие расчёта при создании нового расчёта
-            <?php if(null === filter_input(INPUT_GET, 'id')): ?>
-                HideCalculation();
-            <?php endif; ?>
-                
-            // Скрытие расчёта при невалидной форме
-            <?php if(!$form_valid): ?>
-                HideCalculation();
-            <?php endif; ?>
         </script>
     </body>
 </html>
