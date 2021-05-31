@@ -47,7 +47,7 @@ function OrderLink($param) {
             }
             ?>
             <div class="d-flex justify-content-between mb-auto">
-                <div class="p-1">
+                <div class="p-1 text-nowrap">
                     <h1 style="font-size: 32px; font-weight: 600;" class="d-inline">Расчеты</h1>
                     <div class="d-inline ml-3" style="color: gray; font-size: x-large;">203</div>
                 </div>
