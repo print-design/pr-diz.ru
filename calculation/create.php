@@ -504,7 +504,7 @@ for ($i=1; $i<=8; $i++) {
                         <div class="form-group w-100">
                             <label for="machine_type_id">Печатная машина</label>
                             <select id="machine_type_id" name="machine_type_id" class="form-control print-only d-none">
-                                <option value="">Печатная машина...</option>
+                                <option value="" hidden="hidden" selected="selected">Печатная машина...</option>
                                 <?php
                                 $sql = "select id, name from machine_type";
                                 $fetcher = new Fetcher($sql);
