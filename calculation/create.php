@@ -603,7 +603,13 @@ for ($i=1; $i<=8; $i++) {
                             <button type="button" class="btn btn-light" onclick="javascript: ShowLamination1();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                         </div>
                         <!-- Ламинация 1 -->
-                        <div id="form_lamination_1" class="d-none">
+                        <?php
+                        $lamination1_class = "d-none";
+                        if(!empty($lamination1_brand_name)) {
+                            $lamination1_class = "d-block";
+                        }
+                        ?>
+                        <div id="form_lamination_1" class="<?=$lamination1_class ?>">
                             <p><span class="font-weight-bold">Ламинация 1</span>&nbsp;&nbsp;<span style="color: gray;">(325 руб   34кг   600мм) <i class="fas fa-info-circle" title="325 руб   34кг   600мм" data-placement="top"></i></span></p>
                             <div class="row">
                                 <div class="col-6">
@@ -659,7 +665,13 @@ for ($i=1; $i<=8; $i++) {
                                 <button type="button" class="btn btn-light" onclick="javascript: ShowLamination2();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                             </div>
                             <!-- Ламинация 2 -->
-                            <div id="form_lamination_2" class="d-none">
+                            <?php
+                            $lamination2_class = "d-none";
+                            if(!empty($lamination2_brand_name)) {
+                                $lamination2_class = "d-block";
+                            }
+                            ?>
+                            <div id="form_lamination_2" class="<?=$lamination2_class ?>">
                                 <p><span class="font-weight-bold">Ламинация 2</span>&nbsp;&nbsp;<span style="color: gray;">(325 руб   34кг   600мм) <i class="fas fa-info-circle" title="325 руб   34кг   600мм" data-placement="top"></i></span></p>
                                 <div class="row">
                                     <div class="col-6">
