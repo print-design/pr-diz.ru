@@ -1042,15 +1042,7 @@ for ($i=1; $i<=8; $i++) {
                     return false;
                 }
                 
-                var text = $(e.target).val();
-                var selStart = $(e.target).prop('selectionStart');
-                var selEnd = $(e.target).prop('selectionEnd');
-                var textStart = text.substring(0, selStart);
-                var textEnd = text.substring(selEnd);
-                var newvalue = textStart + e.key + textEnd;
-                var iNewValue = parseInt(newvalue);
-                
-                if(iNewValue == null || iNewValue < 1 || iNewValue > 50) {
+                if(!LimitIntValue($(e.target), e.key, 50)) {
                     return false;
                 }
             });
@@ -1061,18 +1053,26 @@ for ($i=1; $i<=8; $i++) {
                     return false;
                 }
                 
-                var text = $(e.target).val();
-                var selStart = $(e.target).prop('selectionStart');
-                var selEnd = $(e.target).prop('selectionEnd');
-                var textStart = text.substring(0, selStart);
-                var textEnd = text.substring(selEnd);
-                var newvalue = textStart + e.key + textEnd;
-                var iNewValue = parseInt(newvalue);
-                
-                if(iNewValue == null || iNewValue < 1 || iNewValue > 100) {
+                if(!LimitIntValue($(e.target), e.key, 100)) {
                     return false;
                 }
             });
+            
+            function LimitIntValue(textbox, key, max) {
+                var text = textbox.val();
+                var selStart = textbox.prop('selectionStart');
+                var selEnd = textbox.prop('selectionEnd');
+                var textStart = text.substring(0, selStart);
+                var textEnd = text.substring(selEnd);
+                var newvalue = textStart + key + textEnd;
+                var iNewValue = parseInt(newvalue);
+                
+                if(iNewValue == null || iNewValue < 1 || iNewValue > max) {
+                    return false;
+                }
+                
+                return true;
+            }
             
             // При смене типа работы: если тип работы "плёнка с печатью", показываем поля, предназначенные только для плёнки с печатью
             $('#work_type_id').change(function() {
