@@ -1037,7 +1037,7 @@ for ($i=1; $i<=8; $i++) {
             });
             
             // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
-            $('#streams_count').keypress(function(e) {
+            $('#streams_count').keydown(function(e) {
                 if(/\D/.test(e.key)) {
                     return false;
                 }
@@ -1048,7 +1048,7 @@ for ($i=1; $i<=8; $i++) {
             });
             
             // В поле "процент" ограничиваем значения: целые числа от 1 до 100
-            $('.percent').keypress(function(e) {
+            $('.percent').keydown(function(e) {
                 if(/\D/.test(e.key)) {
                     return false;
                 }
