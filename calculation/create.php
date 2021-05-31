@@ -1051,8 +1051,8 @@ for ($i=1; $i<=8; $i++) {
             });
             
             function LimitIntValue(textbox, e, max) {
-                if(e.which != 8) {
-                    if(/\D/.test(e.key)) {
+                if(e.which != 8 && e.which != 37 && e.which != 39) {
+                    if(/\D/.test(String.fromCharCode(e.which))) {
                         return false;
                     }
                     
