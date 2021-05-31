@@ -201,7 +201,7 @@ $machine_type = $row['machine_type']
                                     <th class="font-weight-bold">Пленка</th>
                                     <td>
                                         <p><?=$brand_name ?></p>
-                                        <p><?= number_format($thickness, 0, ",", " ") ?> мкм&nbsp;&ndash;&nbsp;<?=$weight ?> г/м<sup>2</sup></p>
+                                        <p><?= number_format($thickness, 0, ",", " ") ?> мкм&nbsp;&ndash;&nbsp;<?= number_format($weight, 2, ",", " ") ?> г/м<sup>2</sup></p>
                                     </td>
                                 </tr>
                                     <?php
@@ -212,7 +212,7 @@ $machine_type = $row['machine_type']
                                     <th class="font-weight-bold">Ламинация 1</th>
                                     <td>
                                         <p><?=$lamination1_brand_name ?></p>
-                                        <p><?= number_format($lamination1_thickness, 0, ",", " ") ?> мкм&nbsp;&ndash;&nbsp;<?=$lamination1_weight ?> г/м<sup>2</sup></p>
+                                        <p><?= number_format($lamination1_thickness, 0, ",", " ") ?> мкм&nbsp;&ndash;&nbsp;<?= number_format($lamination1_weight, 2, ",", " ") ?> г/м<sup>2</sup></p>
                                     </td>
                                 </tr>
                                     <?php
@@ -223,7 +223,7 @@ $machine_type = $row['machine_type']
                                     <th class="font-weight-bold">Ламинация 2</th>
                                     <td>
                                         <p><?=$lamination2_brand_name ?></p>
-                                        <p><?= number_format($lamination2_thickness, 0, ",", " ") ?> мкм&nbsp;&ndash;&nbsp;<?=$lamination2_weight ?> г/м<sup>2</sup></p>
+                                        <p><?= number_format($lamination2_thickness, 0, ",", " ") ?> мкм&nbsp;&ndash;&nbsp;<?= number_format($lamination2_weight, 2, ",", " ") ?> г/м<sup>2</sup></p>
                                     </td>
                                 </tr>
                                     <?php
