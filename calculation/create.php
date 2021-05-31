@@ -1067,7 +1067,7 @@ for ($i=1; $i<=8; $i++) {
                     if(iNewValue == null || iNewValue < 1 || iNewValue > max) {
                         return false;
                     }
-            }
+                }
                 
                 return true;
             }
