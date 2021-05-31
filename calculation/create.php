@@ -603,13 +603,7 @@ for ($i=1; $i<=8; $i++) {
                             <button type="button" class="btn btn-light" onclick="javascript: ShowLamination1();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                         </div>
                         <!-- Ламинация 1 -->
-                        <?php
-                        $lamination1_class = "d-none";
-                        if(!empty($lamination1_brand_name)) {
-                            $lamination1_class = "d-block";
-                        }
-                        ?>
-                        <div id="form_lamination_1" class="<?=$lamination1_class ?>">
+                        <div id="form_lamination_1" class="d-none">
                             <p><span class="font-weight-bold">Ламинация 1</span>&nbsp;&nbsp;<span style="color: gray;">(325 руб   34кг   600мм) <i class="fas fa-info-circle" title="325 руб   34кг   600мм" data-placement="top"></i></span></p>
                             <div class="row">
                                 <div class="col-6">
@@ -655,7 +649,13 @@ for ($i=1; $i<=8; $i++) {
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-1 d-flex flex-column justify-content-end" id="hide_lamination_1">
+                                <?php
+                                $hide_lamination1_class = "d-flex";
+                                if(!empty($lamination2_brand_name)) {
+                                    $hide_lamination1_class = "d-none";
+                                }
+                                ?>
+                                <div class="col-1 <?=$hide_lamination1_class ?> flex-column justify-content-end" id="hide_lamination_1">
                                     <div class="form-group">
                                         <button type="button" class="btn btn-light" onclick="javascript: HideLamination1();"><i class="fas fa-trash-alt"></i></button>
                                     </div>
@@ -665,13 +665,7 @@ for ($i=1; $i<=8; $i++) {
                                 <button type="button" class="btn btn-light" onclick="javascript: ShowLamination2();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                             </div>
                             <!-- Ламинация 2 -->
-                            <?php
-                            $lamination2_class = "d-none";
-                            if(!empty($lamination2_brand_name)) {
-                                $lamination2_class = "d-block";
-                            }
-                            ?>
-                            <div id="form_lamination_2" class="<?=$lamination2_class ?>">
+                            <div id="form_lamination_2" class="d-none">
                                 <p><span class="font-weight-bold">Ламинация 2</span>&nbsp;&nbsp;<span style="color: gray;">(325 руб   34кг   600мм) <i class="fas fa-info-circle" title="325 руб   34кг   600мм" data-placement="top"></i></span></p>
                                 <div class="row">
                                     <div class="col-6">
@@ -1134,6 +1128,10 @@ for ($i=1; $i<=8; $i++) {
                 SetFieldsVisibility($('#work_type_id').val());
             }
             
+            <?php if(!empty($lamination1_brand_name)): ?>
+                ShowLamination1();
+            <?php endif; ?>
+            
             // Скрытие марки плёнки и толщины для ламинации 1
             function HideLamination1() {
                 $('#lamination1_brand_name').val('');
@@ -1158,6 +1156,10 @@ for ($i=1; $i<=8; $i++) {
                 $('#lamination2_brand_name').attr('required', 'required');
                 $('#lamination2_thickness').attr('required', 'required');
             }
+            
+            <?php if(!empty($lamination2_brand_name)): ?>
+                ShowLamination2();
+            <?php endif; ?>
             
             // Скрытие марки плёнки и толщины для ламинации 2
             function HideLamination2() {
