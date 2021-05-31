@@ -1038,38 +1038,36 @@ for ($i=1; $i<=8; $i++) {
             
             // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
             $('#streams_count').keydown(function(e) {
-                if(/\D/.test(e.key)) {
-                    return false;
-                }
-                
-                if(!LimitIntValue($(e.target), e.key, 50)) {
+                if(!LimitIntValue($(e.target), e, 50)) {
                     return false;
                 }
             });
             
             // В поле "процент" ограничиваем значения: целые числа от 1 до 100
             $('.percent').keydown(function(e) {
-                if(/\D/.test(e.key)) {
-                    return false;
-                }
-                
-                if(!LimitIntValue($(e.target), e.key, 100)) {
+                if(!LimitIntValue($(e.target), e, 100)) {
                     return false;
                 }
             });
             
-            function LimitIntValue(textbox, key, max) {
-                var text = textbox.val();
-                var selStart = textbox.prop('selectionStart');
-                var selEnd = textbox.prop('selectionEnd');
-                var textStart = text.substring(0, selStart);
-                var textEnd = text.substring(selEnd);
-                var newvalue = textStart + key + textEnd;
-                var iNewValue = parseInt(newvalue);
-                
-                if(iNewValue == null || iNewValue < 1 || iNewValue > max) {
-                    return false;
-                }
+            function LimitIntValue(textbox, e, max) {
+                if(e.which != 8) {
+                    if(/\D/.test(e.key)) {
+                        return false;
+                    }
+                    
+                    var text = textbox.val();
+                    var selStart = textbox.prop('selectionStart');
+                    var selEnd = textbox.prop('selectionEnd');
+                    var textStart = text.substring(0, selStart);
+                    var textEnd = text.substring(selEnd);
+                    var newvalue = textStart + e.key + textEnd;
+                    var iNewValue = parseInt(newvalue);
+                    
+                    if(iNewValue == null || iNewValue < 1 || iNewValue > max) {
+                        return false;
+                    }
+            }
                 
                 return true;
             }
