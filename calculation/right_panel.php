@@ -1,3 +1,10 @@
+<?php
+$calculation_class = "";
+                        
+if(isset($create_calculation_submit_class) || empty($create_calculation_submit_class)) {
+    $calculation_class = " class='d-none'";    
+}
+?>
 <div id="calculation"<?=$calculation_class ?>>
     <h1>Расчет</h1>
     <form method="post">

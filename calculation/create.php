@@ -989,16 +989,11 @@ for ($i=1; $i<=8; $i++) {
                         // 3. При невалидной форме
                         // Если показываем рассчёт, то не показываем кнопку отправки.
                         // И наоборот.
-                        $calculation_class = "";
+                        $create_calculation_submit_class = " d-none";
                         
                         if(null !== filter_input(INPUT_POST, 'create_customer_submit') || 
                                 null === filter_input(INPUT_GET, 'id') ||
                                 !$form_valid) {
-                            $calculation_class = " class='d-none'";    
-                        }
-                        
-                        $create_calculation_submit_class = " d-none";
-                        if(!empty($calculation_class)) {
                             $create_calculation_submit_class = "";
                         }
                         ?>
