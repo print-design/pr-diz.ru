@@ -1,16 +1,3 @@
-<?php
-// Расчёт скрываем:
-// 1. При создании нового заказчика
-// 2. При создании нового расчёта
-// 3. При невалидной форме
-$calculation_class = "";
-
-if(null !== filter_input(INPUT_POST, 'create_customer_submit') || 
-        null === filter_input(INPUT_GET, 'id') ||
-        !$form_valid) {
-    $calculation_class = " class='d-none'";
-}
-?>
 <div id="calculation"<?=$calculation_class ?>>
     <h1>Расчет</h1>
     <form method="post">
