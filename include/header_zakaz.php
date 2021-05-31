@@ -132,8 +132,8 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-dark mt-3" data-dismiss="modal">Cancel</button>
-                    <button type="submit" id="create_customer_submit" name="create_customer_submit" class="btn btn-dark mt-3">Complete</button>
+                    <button type="button" class="btn btn-outline-dark mt-3" data-dismiss="modal">Отмена</button>
+                    <button type="submit" id="create_customer_submit" name="create_customer_submit" class="btn btn-dark mt-3">Создать</button>
                 </div>
             </form>
         </div>
