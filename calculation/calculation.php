@@ -43,6 +43,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
         . "wt.name work_type, "
         . "mt.name machine_type,"
+        . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) weight, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_weight "
@@ -109,7 +110,9 @@ $customer_person = $row['customer_person'];
 
 $work_type = $row['work_type'];
 
-$machine_type = $row['machine_type']
+$machine_type = $row['machine_type'];
+
+$num_for_customer = $row['num_for_customer'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -117,6 +120,14 @@ $machine_type = $row['machine_type']
         <?php
         include '../include/head.php';
         ?>
+        <style>
+            table.calculation-table tr th, table.calculation-table tr td {
+                padding-top: 5px;
+                padding-right: 5px;
+                padding-bottom: 5px;
+                vertical-align: top;
+            }
+        </style>
     </head>
     <body>
         <?php
@@ -135,149 +146,149 @@ $machine_type = $row['machine_type']
                 <!-- Левая половина -->
                 <div class="col-6" id="left_side">
                     <h1 style="font-size: 32px; font-weight: 600;"><?= htmlentities($name) ?></h1>
-                    <h2 style="font-size: 26px;">№<?=$id ?> от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></h2>
+                    <h2 style="font-size: 26px;">№<?=$customer_id."-".$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></h2>
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; background-color: <?=$colour2 ?>; border: solid 2px <?=$colour ?>; color: <?=$colour ?>">
                         <?=$image ?>&nbsp;&nbsp;&nbsp;<?=$status ?>
                     </div>
-                    <div class="row">
-                        <div class="row-6 w-50">
-                            <table class="table table-striped">
-                                <tr>
-                                    <th class="font-weight-bold">Заказчик</th>
-                                    <td>
-                                        <p><?=$customer ?></p>
-                                        <p><?=$customer_phone ?><?= empty($customer_extension) ? '' : ", доб. $customer_extension" ?></p>
-                                        <p><?=$customer_email ?></p>
-                                        <p><?=$customer_person ?></p>
-                                    </td>
-                                </tr>
-                                <tr><th class="font-weight-bold">Тип работы</th><td><?=$work_type ?></td></tr>
+                    <table class="w-100 calculation-table">
+                        <tr>
+                            <th>Заказчик</th>
+                            <td><?=$customer ?></td>
+                        </tr>
+                        <tr><th>Тип работы</th><td><?=$work_type ?></td></tr>
+                            <?php
+                            if(!empty($quantity) && !empty($unit)):
+                            ?>
+                        <tr><th>Объем заказа</th><td><?=$quantity ?> <?=$unit == 'kg' ? "кг" : "шт" ?></td></tr>
+                            <?php
+                            endif;
+                            if(!empty($machine_type)):
+                            ?>
+                        <tr><th>Печатная машина</th><td><?=$machine_type ?></td></tr>
+                            <?php
+                            endif;
+                            if(!empty($width)):
+                            ?>
+                        <tr><th>Обрезная ширина</th><td><?= number_format($width, 0, ",", " ") ?></td></tr>
+                            <?php
+                            endif;
+                            if(!empty($length)):
+                            ?>
+                        <tr><th>Длина от метки до метки</th><td><?= number_format($length, 2, ",", " ") ?></td></tr>
+                            <?php
+                            endif;
+                            if(!empty($stream_width)):
+                            ?>
+                        <tr><th>Ширина ручья</th><td><?= number_format($stream_width, 2, ",", " ") ?></td></tr>
+                            <?php
+                            endif;
+                            if(!empty($raport)):
+                            ?>
+                        <tr><th>Рапорт</th><td><?= number_format($raport, 3, ",", " ") ?></td></tr>
+                            <?php
+                            endif;
+                            if(!empty($streams_count)):
+                            ?>
+                        <tr><th>Количество ручьев</th><td><?= number_format($streams_count, 0, ",", " ") ?></td></tr>
+                            <?php
+                            endif;
+                            if(!empty($brand_name) && !empty($thickness)):
+                            ?>
+                        <tr>
+                            <th>Пленка</th>
+                            <td>
+                                <table class="w-100">
+                                    <tr>
+                                        <td><?=$brand_name ?></td>
+                                        <td><?= number_format($thickness, 0, ",", " ") ?> мкм&nbsp;&ndash;&nbsp;<?= number_format($weight, 2, ",", " ") ?> г/м<sup>2</sup></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                            <?php
+                            endif;
+                            if(!empty($lamination1_brand_name) && !empty($lamination1_thickness)):
+                            ?>
+                        <tr>
+                            <th>Ламинация</th>
+                            <td>
+                                <table class="w-100">
+                                    <tr>
+                                        <td><?=$lamination1_brand_name ?></td>
+                                        <td><?= number_format($lamination1_thickness, 0, ",", " ") ?> мкм&nbsp;&ndash;&nbsp;<?= number_format($lamination1_weight, 2, ",", " ") ?> г/м<sup>2</sup></td>
+                                    </tr>
                                     <?php
-                                    if(!empty($quantity) && !empty($unit)):
-                                    ?>
-                                <tr><th class="font-weight-bold">Объем заказа</th><td><?=$quantity ?> <?=$unit == 'kg' ? "кг" : "шт" ?></td></tr>
-                                    <?php
-                                    endif;
-                                    if(!empty($machine_type)):
-                                    ?>
-                                <tr><th class="font-weight-bold">Печатная машина</th><td><?=$machine_type ?></td></tr>
-                                    <?php
-                                    endif;
-                                    if(!empty($width)):
-                                    ?>
-                                <tr><th class="font-weight-bold">Обрезная ширина</th><td><?= number_format($width, 0, ",", " ") ?></td></tr>
-                                    <?php
-                                    endif;
-                                    if(!empty($length)):
-                                    ?>
-                                <tr><th class="font-weight-bold">Длина от метки до метки</th><td><?= number_format($length, 2, ",", " ") ?></td></tr>
-                                    <?php
-                                    endif;
-                                    if(!empty($streams_count)):
-                                    ?>
-                                <tr><th class="font-weight-bold">Количество ручьев</th><td><?= number_format($streams_count, 0, ",", " ") ?></td></tr>
-                                    <?php
-                                    endif;
-                                    if(!empty($stream_width)):
-                                    ?>
-                                <tr><th class="font-weight-bold">Ширина ручья</th><td><?= number_format($stream_width, 2, ",", " ") ?></td></tr>
-                                    <?php
-                                    endif;
-                                    if(!empty($raport)):
-                                    ?>
-                                <tr><th class="font-weight-bold">Рапорт</th><td><?= number_format($raport, 3, ",", " ") ?></td></tr>
-                                    <?php
-                                    endif;
-                                    ?>
-                            </table>
-                        </div>
-                        <div class="col-6 w-50">
-                            <table class="table table-striped">
-                                <?php
-                                
-                                if(!empty($brand_name) && !empty($thickness)):
-                                    ?>
-                                <tr>
-                                    <th class="font-weight-bold">Пленка</th>
-                                    <td>
-                                        <p><?=$brand_name ?></p>
-                                        <p><?= number_format($thickness, 0, ",", " ") ?> мкм&nbsp;&ndash;&nbsp;<?= number_format($weight, 2, ",", " ") ?> г/м<sup>2</sup></p>
-                                    </td>
-                                </tr>
-                                    <?php
-                                    endif;
-                                    if(!empty($lamination1_brand_name) && !empty($lamination1_thickness)):
-                                    ?>
-                                <tr>
-                                    <th class="font-weight-bold">Ламинация 1</th>
-                                    <td>
-                                        <p><?=$lamination1_brand_name ?></p>
-                                        <p><?= number_format($lamination1_thickness, 0, ",", " ") ?> мкм&nbsp;&ndash;&nbsp;<?= number_format($lamination1_weight, 2, ",", " ") ?> г/м<sup>2</sup></p>
-                                    </td>
-                                </tr>
-                                    <?php
-                                    endif;
                                     if(!empty($lamination2_brand_name) && !empty($lamination2_thickness)):
                                     ?>
-                                <tr>
-                                    <th class="font-weight-bold">Ламинация 2</th>
-                                    <td>
-                                        <p><?=$lamination2_brand_name ?></p>
-                                        <p><?= number_format($lamination2_thickness, 0, ",", " ") ?> мкм&nbsp;&ndash;&nbsp;<?= number_format($lamination2_weight, 2, ",", " ") ?> г/м<sup>2</sup></p>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td><?=$lamination2_brand_name ?></td>
+                                        <td><?= number_format($lamination2_thickness, 0, ",", " ") ?> мкм&nbsp;&ndash;&nbsp;<?= number_format($lamination2_weight, 2, ",", " ") ?> г/м<sup>2</sup></td>
+                                    </tr>
                                     <?php
                                     endif;
-                                if(!empty($paints_count)):
-                                ?>
-                                <tr><th class="font-weight-bold">Количество красок</th><td><?=$paints_count ?></td></tr>
-                                <?php
-                                endif;
-                                ?>
-                            </table>
-                            <table class="table table-striped">
-                                <?php
-                                for($i=1; $i<=$paints_count; $i++):
-                                $paint_var = "paint_$i";
-                                $color_var = "color_$i";
-                                $cmyk_var = "cmyk_$i";
-                                $percent_var = "percent_$i";
-                                $form_var = "form_$i";
-                                ?>
-                                <tr>
-                                    <th class="font-weight-bold">
+                                    ?>
+                                </table>
+                            </td>
+                        </tr>
+                            <?php
+                            endif;
+                            if(!empty($paints_count)):
+                            ?>
+                        <tr>
+                            <th>Краски</th>
+                            <td>
+                                <table class="w-100">
+                                    <?php
+                                    for($i=1; $i<=$paints_count; $i++):
+                                    $paint_var = "paint_$i";
+                                    $color_var = "color_$i";
+                                    $cmyk_var = "cmyk_$i";
+                                    $percent_var = "percent_$i";
+                                    $form_var = "form_$i";
+                                    ?>
+                                    <tr>
+                                        <td><?=$i ?></td>
+                                        <td>
+                                            <?php
+                                            switch ($$paint_var) {
+                                                case 'cmyk':
+                                                    echo "CMYK";
+                                                    break;
+                                                case 'panton':
+                                                    echo 'Пантон';
+                                                    break;
+                                                case 'lacquer':
+                                                    echo 'Лак';
+                                                    break;
+                                                case  'white':
+                                                    echo 'Белый';
+                                                    break;
+                                            }
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <?php
+                                            if($$paint_var == "cmyk") {
+                                                echo $$cmyk_var;
+                                            }
+                                            elseif($$paint_var == "panton") {
+                                                echo $$color_var;
+                                            }
+                                            ?>
+                                        </td>
+                                        <td><?=$$percent_var ?>%</td>
+                                        <td><?=$$form_var ?></td>
+                                    </tr>
                                         <?php
-                                        echo $i.". ";
-                                        
-                                        switch ($$paint_var) {
-                                        case 'cmyk':
-                                            echo "CMYK";
-                                            break;
-                                        case 'panton':
-                                            echo 'Пантон';
-                                            break;
-                                        case 'lacquer':
-                                            echo 'Лак';
-                                            break;
-                                        case  'white':
-                                            echo 'Белый';
-                                            break;
-                                        }
+                                        endfor;
                                         ?>
-                                    </th>
-                                    <td>
-                                        <?php if($$paint_var == "cmyk") echo $$cmyk_var ?>
-                                        <?php if($$paint_var == "panton") echo $$color_var ?>
-                                    </td>
-                                    <td><?=$$percent_var ?>%</td>
-                                    <td><?=$$form_var ?></td>
-                                </tr>
-                                <?php
-                                endfor;
-                                ?>
-                            </table>
-                        </div>
-                    </div>
+                                </table>
+                            </td>
+                        </tr>
+                            <?php
+                            endif;
+                            ?>
+                    </table>
                     <?php if($status_id == 3): ?>
                     <form method="post">
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
