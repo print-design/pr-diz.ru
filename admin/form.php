@@ -6,6 +6,9 @@ if(!IsInRole(array('technologist', 'dev'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Печатная машина
+$machine_id = filter_input(INPUT_GET, 'machine_id');
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -38,6 +41,8 @@ if(null !== filter_input(INPUT_POST, 'norm_form_submit')) {
         $form_valid = false;
     }
     
+    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    
     if($form_valid) {
         // Старый объект
         $old_flint = "";
@@ -45,7 +50,7 @@ if(null !== filter_input(INPUT_POST, 'norm_form_submit')) {
         $old_overmeasure = "";
         $old_scotch = "";
         
-        $sql = "select flint, kodak, overmeasure, scotch from norm_form order by date desc limit 1";
+        $sql = "select flint, kodak, overmeasure, scotch from norm_form where machine_id = $machine_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -63,7 +68,7 @@ if(null !== filter_input(INPUT_POST, 'norm_form_submit')) {
         $new_scotch = filter_input(INPUT_POST, 'scotch');
         
         if($old_flint != $new_flint || $old_kodak != $new_kodak || $old_overmeasure != $new_overmeasure || $old_scotch != $new_scotch) {
-            $sql = "insert into norm_form (flint, kodak, overmeasure, scotch) values ($new_flint, $new_kodak, $new_overmeasure, $new_scotch)";
+            $sql = "insert into norm_form (machine_id, flint, kodak, overmeasure, scotch) values ($machine_id, $new_flint, $new_kodak, $new_overmeasure, $new_scotch)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -79,7 +84,7 @@ $kodak = "";
 $overmeasure = "";
 $scotch = "";
 
-$sql = "select flint, kodak, overmeasure, scotch from norm_form order by date desc limit 1";
+$sql = "select flint, kodak, overmeasure, scotch from norm_form where machine_id = $machine_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -129,6 +134,7 @@ if($row = $fetcher->Fetch()) {
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
+                        <input type="hidden" id="machine_id" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
                         <div class="form-group">
                             <label for="flint">Flint (руб/м<sup>2</sup>)</label>
                             <input type="text" class="form-control float-only" id="flint" name="flint" value="<?= empty($flint) ? "" : floatval($flint) ?>" placeholder="Стоимость, м2" required="required" />

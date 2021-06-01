@@ -1,4 +1,27 @@
 <?php
+if(empty(filter_input(INPUT_GET, 'machine_id'))) {
+    header('Location: '.APPLICATION);
+}
+?>
+<hr class="pb-0 mb-0" />
+<div class="d-flex justify-content-start">
+    <div class="p-1">
+        <div class="text-nowrap nav2">
+            <?php
+            $sql = "select id, name from machine";
+            $fetcher = new Fetcher($sql);
+            
+            while ($row = $fetcher->Fetch()):
+            $machine_id_class = $row['id'] == filter_input(INPUT_GET, 'machine_id') ? " active" : "";
+            ?>
+            <a href="<?= BuildQuery('machine_id', $row['id']) ?>" class="mr-4<?=$machine_id_class ?>"><?=$row['name'] ?></a>
+            <?php
+            endwhile;
+            ?>
+        </div>
+    </div>
+</div>
+<?php
 $form_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/form.php')) == APPLICATION.'/admin/form.php' ? " active" : "";
 $paint_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/paint.php')) == APPLICATION.'/admin/paint.php' ? " active" : "";
 $glue_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/glue.php')) == APPLICATION.'/admin/glue.php' ? " active" : "";
@@ -11,13 +34,13 @@ $extracharge_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(AP
 <div class="d-flex justify-content-start">
     <div class="p-1">
         <div class="text-nowrap nav2">
-            <a href="<?=APPLICATION ?>/admin/form.php" class="mr-4<?=$form_class ?>">Стоимость форм</a>
-            <a href="<?=APPLICATION ?>/admin/paint.php" class="mr-4<?=$paint_class ?>">Стоимость краски</a>
-            <a href="<?=APPLICATION ?>/admin/glue.php" class="mr-4<?=$glue_class ?>">Стоимость клея</a>
-            <a href="<?=APPLICATION ?>/admin/machine.php" class="mr-4<?=$machine_class ?>">Нормы работы оборудования</a>
-            <a href="<?=APPLICATION ?>/admin/fitting.php" class="mr-4<?=$fitting_class ?>">Приладка</a>
-            <a href="<?=APPLICATION ?>/admin/raport.php" class="mr-4<?=$raport_class ?>">Рапорт</a>
-            <a href="<?=APPLICATION ?>/admin/extracharge.php" class="mr-4<?=$extracharge_class ?>">Наценка</a>
+            <a href="<?=APPLICATION ?>/admin/form.php<?= BuildQuery('machine_id', filter_input(INPUT_GET, 'machine_id')) ?>" class="mr-4<?=$form_class ?>">Стоимость форм</a>
+            <a href="<?=APPLICATION ?>/admin/paint.php<?= BuildQuery('machine_id', filter_input(INPUT_GET, 'machine_id')) ?>" class="mr-4<?=$paint_class ?>">Стоимость краски</a>
+            <a href="<?=APPLICATION ?>/admin/glue.php<?= BuildQuery('machine_id', filter_input(INPUT_GET, 'machine_id')) ?>" class="mr-4<?=$glue_class ?>">Стоимость клея</a>
+            <a href="<?=APPLICATION ?>/admin/machine.php<?= BuildQuery('machine_id', filter_input(INPUT_GET, 'machine_id')) ?>" class="mr-4<?=$machine_class ?>">Нормы работы оборудования</a>
+            <a href="<?=APPLICATION ?>/admin/fitting.php<?= BuildQuery('machine_id', filter_input(INPUT_GET, 'machine_id')) ?>" class="mr-4<?=$fitting_class ?>">Приладка</a>
+            <a href="<?=APPLICATION ?>/admin/raport.php<?= BuildQuery('machine_id', filter_input(INPUT_GET, 'machine_id')) ?>" class="mr-4<?=$raport_class ?>">Рапорт</a>
+            <a href="<?=APPLICATION ?>/admin/extracharge.php<?= BuildQuery('machine_id', filter_input(INPUT_GET, 'machine_id')) ?>" class="mr-4<?=$extracharge_class ?>">Наценка</a>
         </div>
     </div>
 </div>
