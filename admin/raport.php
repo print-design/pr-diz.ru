@@ -78,7 +78,7 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
             <hr />
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
-                    <table class="table">
+                    <table class="table table-hover">
                         <tr>
                             <th class="font-weight-bold" style="border-top: 0;">Наименование</th>
                             <th class="font-weight-bold" style="border-top: 0;">Шаг</th>

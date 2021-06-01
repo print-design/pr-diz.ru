@@ -6,6 +6,9 @@ if(!IsInRole(array('technologist', 'dev'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Печатная машина
+$machine_id = filter_input(INPUT_GET, 'machine_id');
+
 // Список типов наценки
 $sql = "select id, name from extracharge_type";
 $grabber = new Grabber($sql);
@@ -23,9 +26,10 @@ if(null !== filter_input(INPUT_POST, 'create_extracharge_submit')) {
     $from_weight = filter_input(INPUT_POST, 'from_weight');
     $to_weight = filter_input(INPUT_POST, 'to_weight');
     $value = filter_input(INPUT_POST, 'value');
+    $machine_id = filter_input(INPUT_POST, 'machine_id');
     
     if(!empty($from_weight) && !empty($to_weight) && !empty($value)) {
-        $sql = "insert into extracharge (extracharge_type_id, from_weight, to_weight, value) values ($extracharge_type_id, $from_weight, $to_weight, $value)";
+        $sql = "insert into extracharge (machine_id, extracharge_type_id, from_weight, to_weight, value) values ($machine_id, $extracharge_type_id, $from_weight, $to_weight, $value)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
@@ -40,7 +44,7 @@ if(null !== filter_input(INPUT_POST, 'delete_extracharge_submit')) {
 }
 
 // Получение списка объектов
-$sql = "select id, extracharge_type_id, from_weight, to_weight, value from extracharge order by from_weight, to_weight";
+$sql = "select id, extracharge_type_id, from_weight, to_weight, value from extracharge where machine_id = $machine_id order by from_weight, to_weight";
 $grabber = new Grabber($sql);
 $error_message = $grabber->error;
 $result = $grabber->result;
@@ -98,8 +102,8 @@ if(empty($error_message)) {
                     <h2><?=$extracharge_types[$extracharge_type_id] ?></h2>
                     <table class="table table-hover">
                         <tr>
-                            <th class="pl-0" style="font-size: large;">Масса тиража</th>
-                            <th class="pl-0" style="font-size: large; font-weight: bold;">Наценка</th>
+                            <th class="pl-0 font-weight-bold">Масса тиража</th>
+                            <th class="pl-0 font-weight-bold">Наценка</th>
                             <th class="text-right"></th>
                         </td>
                         <?php
@@ -110,7 +114,7 @@ if(empty($error_message)) {
                         <tr>
                             <td class="pl-0"><?= floatval($row['from_weight']).' кг &ndash; '.floatval($row['to_weight']).' кг' ?></td>
                             <td class="pl-0"><?= floatval($row['value']).'%' ?></td>
-                            <td>
+                            <td class="text-right">
                                 <form method="post">
                                     <input type="hidden" name="scroll" />
                                     <input type="hidden" name="id" value="<?=$row['id'] ?>" />
@@ -126,6 +130,7 @@ if(empty($error_message)) {
                     <button type="button" class="btn btn-light mb-4 show-btn"><i class="fas fa-plus"></i>&nbsp;&nbsp;Добавить</button>
                     <form method="post" class="form-inline d-none add-form">
                         <input type="hidden" name="scroll" />
+                        <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                         <input type="hidden" name="extracharge_type_id" value="<?=$extracharge_type_id ?>" />
                         <input type="text" name="from_weight" class="form-control float-only mr-2 w-25" placeholder="От, кг" required="required" />
                         &ndash;
@@ -145,8 +150,8 @@ if(empty($error_message)) {
                     <h2><?=$extracharge_types[$extracharge_type_id] ?></h2>
                     <table class="table table-hover">
                         <tr>
-                            <th class="pl-0" style="font-size: large;">Масса тиража</th>
-                            <th class="pl-0" style="font-size: large; font-weight: bold;">Наценка</th>
+                            <th class="pl-0 font-weight-bold">Масса тиража</th>
+                            <th class="pl-0 font-weight-bold">Наценка</th>
                             <th class="text-right"></th>
                         </td>
                         <?php
@@ -157,7 +162,7 @@ if(empty($error_message)) {
                         <tr>
                             <td class="pl-0"><?= floatval($row['from_weight']).' кг &ndash; '.floatval($row['to_weight']).' кг' ?></td>
                             <td class="pl-0"><?= floatval($row['value']).'%' ?></td>
-                            <td>
+                            <td class="text-right">
                                 <form method="post">
                                     <input type="hidden" name="scroll" />
                                     <input type="hidden" name="id" value="<?=$row['id'] ?>" />
@@ -173,6 +178,7 @@ if(empty($error_message)) {
                     <button type="button" class="btn btn-light mb-4 show-btn"><i class="fas fa-plus"></i>&nbsp;&nbsp;Добавить</button>
                     <form method="post" class="form-inline d-none add-form">
                         <input type="hidden" name="scroll" />
+                        <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                         <input type="hidden" name="extracharge_type_id" value="<?=$extracharge_type_id ?>" />
                         <input type="text" name="from_weight" class="form-control float-only mr-2 w-25" placeholder="От, кг" required="required" />
                         &ndash;
@@ -192,8 +198,8 @@ if(empty($error_message)) {
                     <h2><?=$extracharge_types[$extracharge_type_id] ?></h2>
                     <table class="table table-hover">
                         <tr>
-                            <th class="pl-0" style="font-size: large;">Масса тиража</th>
-                            <th class="pl-0" style="font-size: large; font-weight: bold;">Наценка</th>
+                            <th class="pl-0 font-weight-bold">Масса тиража</th>
+                            <th class="pl-0 font-weight-bold">Наценка</th>
                             <th class="text-right"></th>
                         </td>
                         <?php
@@ -204,7 +210,7 @@ if(empty($error_message)) {
                         <tr>
                             <td class="pl-0"><?= floatval($row['from_weight']).' кг &ndash; '.floatval($row['to_weight']).' кг' ?></td>
                             <td class="pl-0"><?= floatval($row['value']).'%' ?></td>
-                            <td>
+                            <td class="text-right">
                                 <form method="post">
                                     <input type="hidden" name="scroll" />
                                     <input type="hidden" name="id" value="<?=$row['id'] ?>" />
@@ -220,6 +226,7 @@ if(empty($error_message)) {
                     <button type="button" class="btn btn-light mb-4 show-btn"><i class="fas fa-plus"></i>&nbsp;&nbsp;Добавить</button>
                     <form method="post" class="form-inline d-none add-form">
                         <input type="hidden" name="scroll" />
+                        <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                         <input type="hidden" name="extracharge_type_id" value="<?=$extracharge_type_id ?>" />
                         <input type="text" name="from_weight" class="form-control float-only mr-2 w-25" placeholder="От, кг" required="required" />
                         &ndash;
@@ -239,8 +246,8 @@ if(empty($error_message)) {
                     <h2><?=$extracharge_types[$extracharge_type_id] ?></h2>
                     <table class="table table-hover">
                         <tr>
-                            <th class="pl-0" style="font-size: large;">Масса тиража</th>
-                            <th class="pl-0" style="font-size: large; font-weight: bold;">Наценка</th>
+                            <th class="pl-0 font-weight-bold">Масса тиража</th>
+                            <th class="pl-0 font-weight-bold">Наценка</th>
                             <th class="text-right"></th>
                         </td>
                         <?php
@@ -251,7 +258,7 @@ if(empty($error_message)) {
                         <tr>
                             <td class="pl-0"><?= floatval($row['from_weight']).' кг &ndash; '.floatval($row['to_weight']).' кг' ?></td>
                             <td class="pl-0"><?= floatval($row['value']).'%' ?></td>
-                            <td>
+                            <td class="text-right">
                                 <form method="post">
                                     <input type="hidden" name="scroll" />
                                     <input type="hidden" name="id" value="<?=$row['id'] ?>" />
@@ -267,6 +274,7 @@ if(empty($error_message)) {
                     <button type="button" class="btn btn-light mb-4 show-btn"><i class="fas fa-plus"></i>&nbsp;&nbsp;Добавить</button>
                     <form method="post" class="form-inline d-none add-form">
                         <input type="hidden" name="scroll" />
+                        <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                         <input type="hidden" name="extracharge_type_id" value="<?=$extracharge_type_id ?>" />
                         <input type="text" name="from_weight" class="form-control float-only mr-2 w-25" placeholder="От, кг" required="required" />
                         &ndash;
