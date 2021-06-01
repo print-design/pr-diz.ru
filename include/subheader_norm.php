@@ -2,6 +2,8 @@
 if(empty(filter_input(INPUT_GET, 'machine_id'))) {
     header('Location: '.APPLICATION);
 }
+
+const MACHINE_LAMINATOR = 5;
 ?>
 <hr class="pb-0 mb-0" />
 <div class="d-flex justify-content-start">
@@ -34,13 +36,30 @@ $extracharge_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(AP
 <div class="d-flex justify-content-start">
     <div class="p-1">
         <div class="text-nowrap nav2">
-            <a href="<?=APPLICATION ?>/admin/form.php<?= BuildQuery('machine_id', filter_input(INPUT_GET, 'machine_id')) ?>" class="mr-4<?=$form_class ?>">Стоимость форм</a>
-            <a href="<?=APPLICATION ?>/admin/paint.php<?= BuildQuery('machine_id', filter_input(INPUT_GET, 'machine_id')) ?>" class="mr-4<?=$paint_class ?>">Стоимость краски</a>
-            <a href="<?=APPLICATION ?>/admin/glue.php<?= BuildQuery('machine_id', filter_input(INPUT_GET, 'machine_id')) ?>" class="mr-4<?=$glue_class ?>">Стоимость клея</a>
-            <a href="<?=APPLICATION ?>/admin/machine.php<?= BuildQuery('machine_id', filter_input(INPUT_GET, 'machine_id')) ?>" class="mr-4<?=$machine_class ?>">Нормы работы оборудования</a>
-            <a href="<?=APPLICATION ?>/admin/fitting.php<?= BuildQuery('machine_id', filter_input(INPUT_GET, 'machine_id')) ?>" class="mr-4<?=$fitting_class ?>">Приладка</a>
-            <a href="<?=APPLICATION ?>/admin/raport.php<?= BuildQuery('machine_id', filter_input(INPUT_GET, 'machine_id')) ?>" class="mr-4<?=$raport_class ?>">Рапорт</a>
-            <a href="<?=APPLICATION ?>/admin/extracharge.php<?= BuildQuery('machine_id', filter_input(INPUT_GET, 'machine_id')) ?>" class="mr-4<?=$extracharge_class ?>">Наценка</a>
+            <?php
+            $machine_id = filter_input(INPUT_GET, 'machine_id');
+            if($machine_id != MACHINE_LAMINATOR):
+            ?>
+            <a href="<?=APPLICATION ?>/admin/form.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$form_class ?>">Стоимость форм</a>
+            <a href="<?=APPLICATION ?>/admin/paint.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$paint_class ?>">Стоимость краски</a>
+            <?php
+            endif;
+            if($machine_id == MACHINE_LAMINATOR):
+            ?>
+            <a href="<?=APPLICATION ?>/admin/glue.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$glue_class ?>">Стоимость клея</a>
+            <?php
+            endif;
+            ?>
+            <a href="<?=APPLICATION ?>/admin/machine.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$machine_class ?>">Нормы работы оборудования</a>
+            <a href="<?=APPLICATION ?>/admin/fitting.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$fitting_class ?>">Приладка</a>
+            <?php
+            if($machine_id != MACHINE_LAMINATOR):
+            ?>
+            <a href="<?=APPLICATION ?>/admin/raport.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$raport_class ?>">Рапорт</a>
+            <a href="<?=APPLICATION ?>/admin/extracharge.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$extracharge_class ?>">Наценка</a>
+            <?php
+            endif;
+            ?>
         </div>
     </div>
 </div>

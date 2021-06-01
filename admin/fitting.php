@@ -16,8 +16,6 @@ $error_message = '';
 
 $time_valid = '';
 $length_valid = '';
-$lamination_time_valid = '';
-$lamination_length_valid = '';
 
 // Сохранение введённых значений
 if(null !== filter_input(INPUT_POST, 'norm_fitting_submit')) {
@@ -31,44 +29,28 @@ if(null !== filter_input(INPUT_POST, 'norm_fitting_submit')) {
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'lamination_time'))) {
-        $lamination_time_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
-    if(empty(filter_input(INPUT_POST, 'lamination_length'))) {
-        $lamination_length_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
     $machine_id = filter_input(INPUT_POST, 'machine_id');
     
     if($form_valid) {
         // Старый объект
         $old_time = '';
         $old_length = '';
-        $old_lamination_time = '';
-        $old_lamination_length = '';
         
-        $sql = "select time, length, lamination_time, lamination_length from norm_fitting where machine_id = $machine_id order by date desc limit 1";
+        $sql = "select time, length from norm_fitting where machine_id = $machine_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
             $old_time = $row['time'];
             $old_length = $row['length'];
-            $old_lamination_time = $row['lamination_time'];
-            $old_lamination_length = $row['lamination_length'];
         }
         
         // Новый объект
         $new_time = filter_input(INPUT_POST, 'time');
         $new_length = filter_input(INPUT_POST, 'length');
-        $new_lamination_time = filter_input(INPUT_POST, 'lamination_time');
-        $new_lamination_length = filter_input(INPUT_POST, 'lamination_length');
         
-        if($old_time != $new_time || $old_length != $new_length || $old_lamination_time != $new_lamination_time || $old_lamination_length != $new_lamination_length) {
-            $sql = "insert into norm_fitting (machine_id, time, length, lamination_time, lamination_length) values ($machine_id, $new_time, $new_length, $new_lamination_time, $new_lamination_length)";
+        if($old_time != $new_time || $old_length != $new_length) {
+            $sql = "insert into norm_fitting (machine_id, time, length) values ($machine_id, $new_time, $new_length)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -81,10 +63,8 @@ if(null !== filter_input(INPUT_POST, 'norm_fitting_submit')) {
 // Получение объекта
 $time = '';
 $length = '';
-$lamination_time = '';
-$lamination_length = '';
 
-$sql = "select time, length, lamination_time, lamination_length from norm_fitting where machine_id = $machine_id order by date desc limit 1";
+$sql = "select time, length from norm_fitting where machine_id = $machine_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -93,8 +73,6 @@ if(empty($error_message)) {
 if($row = $fetcher->Fetch()) {
     $time = $row['time'];
     $length = $row['length'];
-    $lamination_time = $row['lamination_time'];
-    $lamination_length = $row['lamination_length'];
 }
 ?>
 <!DOCTYPE html>
@@ -135,27 +113,15 @@ if($row = $fetcher->Fetch()) {
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
                         <input type="hidden" id="machine_id" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
-                        <h2>Время</h2>
                         <div class="form-group">
-                            <label for="time">Машина (руб/час)</label>
+                            <label for="time">Время (руб/час)</label>
                             <input type="text" class="form-control float-only" id="time" name="time" value="<?= empty($time) ? "" : floatval($time) ?>" placeholder="Стоимость, час" required="required" />
-                            <div class="invalid-feedback">Машина обязательно</div>
+                            <div class="invalid-feedback">Время обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="lamination_time">Ламинация (руб/час)</label>
-                            <input type="text" class="form-control float-only" id="lamination_time" name="lamination_time" value="<?= empty($lamination_time) ? "" : floatval($lamination_time) ?>" placeholder="Стоимость, час" required="required" />
-                            <div class="invalid-feedback">Ламинация обязательно</div>
-                        </div>
-                        <h2>Метраж</h2>
-                        <div class="form-group">
-                            <label for="length">Машина (руб/м)</label>
+                            <label for="length">Метраж (руб/м)</label>
                             <input type="text" class="form-control float-only" id="length" name="length" value="<?= empty($length) ? "" : floatval($length) ?>" placeholder="Стоимость, м" required="required" />
-                            <div class="invalid-feedback">Машина обязательно</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="lamination_length">Ламинация (руб/м)</label>
-                            <input type="text" class="form-control float-only" id="lamination_length" name="lamination_length" value="<?= empty($lamination_length) ? "" : floatval($lamination_length) ?>" placeholder="Стоимость, м" required="required" />
-                            <div class="invalid-feedback">Ламинация обязательно</div>
+                            <div class="invalid-feedback">Метраж обязательно</div>
                         </div>
                         <button type="submit" id="norm_fitting_submit" name="norm_fitting_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
                     </form>
