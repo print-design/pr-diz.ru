@@ -6,6 +6,9 @@ if(!IsInRole(array('technologist', 'dev'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Печатная форма
+$machine_id = filter_input(INPUT_GET, 'machine_id');
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -32,13 +35,15 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
         $form_valid = false;
     }
     
+    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    
     if($form_valid) {
         // Старый объект
         $old_glueeuro = '';
         $old_solventeuro = '';
         $old_glue_solvent = '';
         
-        $sql = "select glueeuro, solventeuro, glue_solvent from norm_glue order by date desc limit 1";
+        $sql = "select glueeuro, solventeuro, glue_solvent from norm_glue where machine_id = $machine_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -54,7 +59,7 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
         $new_glue_solvent = filter_input(INPUT_POST, 'glue_solvent');
         
         if($old_glueeuro != $new_glueeuro || $old_solventeuro != $new_solventeuro || $old_glue_solvent != $new_glue_solvent) {
-            $sql = "insert into norm_glue (glueeuro, solventeuro, glue_solvent) values ($new_glueeuro, $new_solventeuro, $new_glue_solvent)";
+            $sql = "insert into norm_glue (machine_id, glueeuro, solventeuro, glue_solvent) values ($machine_id, $new_glueeuro, $new_solventeuro, $new_glue_solvent)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -69,7 +74,7 @@ $glueeuro = '';
 $solventeuro = '';
 $glue_solvent = '';
 
-$sql = "select glueeuro, solventeuro, glue_solvent from norm_glue order by date desc limit 1";
+$sql = "select glueeuro, solventeuro, glue_solvent from norm_glue where machine_id = $machine_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -118,6 +123,7 @@ if($row = $fetcher->Fetch()) {
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
+                        <input type="hidden" id="machine_id" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
                         <div class="form-group">
                             <label for="glueeuro">Стоимость клея ЕВРО (руб/кг)</label>
                             <input type="text" class="form-control float-only" id="glueeuro" name="glueeuro" value="<?= empty($glueeuro) ? "" : floatval($glueeuro) ?>" placeholder="Стоимость, кг" required="required" />
