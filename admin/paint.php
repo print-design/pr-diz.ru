@@ -6,6 +6,9 @@ if(!IsInRole(array('technologist', 'dev'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Печатная машина
+$machine_id = filter_input(INPUT_GET, 'machine_id');
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -68,6 +71,8 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
         $form_valid = false;
     }
     
+    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    
     if($form_valid) {
         // Старый объект
         $old_seuro = "";
@@ -80,7 +85,7 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
         $old_paint_solvent = "";
         $old_solvent = "";
         
-        $sql = "select seuro, meuro, ueuro, keuro, whiteeuro, pantoneuro, lacquereuro, paint_solvent, solvent from norm_paint order by date desc limit 1";
+        $sql = "select seuro, meuro, ueuro, keuro, whiteeuro, pantoneuro, lacquereuro, paint_solvent, solvent from norm_paint where machine_id = $machine_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -116,7 +121,7 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
                 $old_lacquereuro != $new_lacquereuro ||
                 $old_paint_solvent != $new_paint_solvent ||
                 $old_solvent != $new_solvent) {
-            $sql = "insert into norm_paint (seuro, meuro, ueuro, keuro, whiteeuro, pantoneuro, lacquereuro, paint_solvent, solvent) values ($new_seuro, $new_meuro, $new_ueuro, $new_keuro, $new_whiteeuro, $new_pantoneuro, $new_lacquereuro, $new_paint_solvent, $new_solvent)";
+            $sql = "insert into norm_paint (machine_id, seuro, meuro, ueuro, keuro, whiteeuro, pantoneuro, lacquereuro, paint_solvent, solvent) values ($machine_id, $new_seuro, $new_meuro, $new_ueuro, $new_keuro, $new_whiteeuro, $new_pantoneuro, $new_lacquereuro, $new_paint_solvent, $new_solvent)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -137,7 +142,7 @@ $lacquereuro = "";
 $paint_solvent = "";
 $solvent = "";
 
-$sql = "select seuro, meuro, ueuro, keuro, whiteeuro, pantoneuro, lacquereuro, paint_solvent, solvent from norm_paint order by date desc limit 1";
+$sql = "select seuro, meuro, ueuro, keuro, whiteeuro, pantoneuro, lacquereuro, paint_solvent, solvent from norm_paint where machine_id = $machine_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -190,6 +195,7 @@ if($row = $fetcher->Fetch()) {
             ?>
             <hr />
             <form method="post">
+                <input type="hidden" id="machine_id" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
                 <div class="row">
                     <div class="col-12 col-md-8 col-lg-4 d-table">
                         <div class="d-table-row">
