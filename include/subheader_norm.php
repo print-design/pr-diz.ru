@@ -43,11 +43,15 @@ $extracharge_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(AP
             <a href="<?=APPLICATION ?>/admin/form.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$form_class ?>">Стоимость форм</a>
             <a href="<?=APPLICATION ?>/admin/paint.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$paint_class ?>">Стоимость краски</a>
             <?php
+            elseif(!empty($form_class) || !empty($paint_class)):
+                header("Location: ".APPLICATION."/admin/glue.php".BuildQuery("machine_id", $machine_id));
             endif;
             if($machine_id == MACHINE_LAMINATOR):
             ?>
             <a href="<?=APPLICATION ?>/admin/glue.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$glue_class ?>">Стоимость клея</a>
             <?php
+            elseif(!empty($glue_class)):
+                header("Location: ".APPLICATION."/admin/form.php".BuildQuery("machine_id", $machine_id));
             endif;
             ?>
             <a href="<?=APPLICATION ?>/admin/machine.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$machine_class ?>">Нормы работы оборудования</a>
@@ -58,6 +62,8 @@ $extracharge_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(AP
             <a href="<?=APPLICATION ?>/admin/raport.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$raport_class ?>">Рапорт</a>
             <a href="<?=APPLICATION ?>/admin/extracharge.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$extracharge_class ?>">Наценка</a>
             <?php
+            elseif(!empty($raport_class) || !empty($extracharge_class)):
+                header("Location: ".APPLICATION."/admin/glue.php".BuildQuery("machine_id", $machine_id));
             endif;
             ?>
         </div>
