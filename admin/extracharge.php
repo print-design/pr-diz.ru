@@ -6,8 +6,16 @@ if(!IsInRole(array('technologist', 'dev'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Печатная машина
+// Машина
 $machine_id = filter_input(INPUT_GET, 'machine_id');
+
+// Номер ламинатора
+const MACHINE_LAMINATOR = 5;
+
+// Страница не предназначена для ламинатора
+if($machine_id == MACHINE_LAMINATOR) {
+    header("Location: ".APPLICATION."/admin/glue.php".BuildQuery("machine_id", $machine_id));
+}
 
 // Список типов наценки
 $sql = "select id, name from extracharge_type";

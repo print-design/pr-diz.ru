@@ -6,8 +6,16 @@ if(!IsInRole(array('technologist', 'dev'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Печатная форма
+// Машина
 $machine_id = filter_input(INPUT_GET, 'machine_id');
+
+// Номер ламинатора
+const MACHINE_LAMINATOR = 5;
+
+// Страница предназначена только для ламинатора
+if($machine_id != MACHINE_LAMINATOR) {
+    header("Location: ".APPLICATION."/admin/form.php".BuildQuery("machine_id", $machine_id));
+}
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
