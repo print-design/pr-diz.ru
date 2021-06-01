@@ -6,20 +6,13 @@ if(!IsInRole(array('technologist', 'dev'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Список всех машин
-$sql = "select id, name from machine";
-$grabber = new Grabber($sql);
-$error_message = $grabber->error;
-
-$machines = array();
-
-foreach ($grabber->result as $row) {
-    $machines[$row['id']] = $row['name'];
-}
+// Печатная машина
+$machine_id = filter_input(INPUT_GET, 'machine_id');
 
 // Добавление рапорта
 if(null !== filter_input(INPUT_POST, 'raport_create_submit')) {
     $machine_id = filter_input(INPUT_POST, 'machine_id');
+    $name = filter_input(INPUT_POST, 'name');
     $value = filter_input(INPUT_POST, 'value');
     
     if(!empty($value)) {
@@ -37,7 +30,7 @@ if(null !== filter_input(INPUT_POST, 'raport_create_submit')) {
         }
         
         if(empty($error_message)) {
-            $sql = "insert into raport (machine_id, value) values ($machine_id, $value)";
+            $sql = "insert into raport (machine_id, name, value) values ($machine_id, '$name', $value)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -53,29 +46,6 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
     $sql = "delete from raport where id=$id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
-}
-
-// Получение списка объектов
-$sql = "select id, machine_id, value from raport order by value";
-$grabber = new Grabber($sql);
-$error_message = $grabber->error;
-$result = $grabber->result;
-$raports = array();
-
-if(empty($error_message)) {
-    foreach ($result as $row) {
-        $raport = array("id" => $row['id'], "value" => $row['value']);
-        
-        if(array_key_exists($row['machine_id'], $raports)) {
-            $raports_of_machine = $raports[$row['machine_id']];
-        }
-        else {
-            $raports_of_machine = array();
-        }
-        
-        array_push($raports_of_machine, $raport);
-        $raports[$row['machine_id']] = $raports_of_machine;
-    }
 }
 ?>
 <!DOCTYPE html>
@@ -107,21 +77,22 @@ if(empty($error_message)) {
             ?>
             <hr />
             <div class="row">
-                <div class="col-12 col-md-6 col-lg-3">
-                    <?php
-                    $machine_id = 1;
-                    ?>
-                    <div class="pl-4">
-                        <h2><?=$machines[$machine_id] ?></h2>
-                    </div>
-                    <table class="w-100 table table-hover">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <table class="table">
+                        <tr>
+                            <th class="font-weight-bold" style="border-top: 0;">Наименование</th>
+                            <th class="font-weight-bold" style="border-top: 0;">Шаг</th>
+                            <th style="border-top: 0;"></th>
+                        </tr>
                         <?php
-                        if(array_key_exists($machine_id, $raports)):
-                        $raports_of_machine = $raports[$machine_id];
+                        $sql = "select id, name, value from raport where machine_id = $machine_id order by value";
+                        $grabber = new Grabber($sql);
+                        $raports_of_machine = $grabber->result;
                         foreach ($raports_of_machine as $row):
                         ?>
                         <tr>
-                            <td style="font-size: large;"><?= floatval($row['value']) ?></td>
+                            <td><?=$row['name'] ?></td>
+                            <td><?= floatval($row['value']) ?></td>
                             <td class="text-right">
                                 <form method="post">
                                     <input type="hidden" name="id" value="<?=$row['id'] ?>" />
@@ -132,152 +103,16 @@ if(empty($error_message)) {
                         </tr>
                         <?php
                         endforeach;
-                        endif;
                         ?>
-                        <tr>
-                            <td colspan="2" class="pt-3">
-                                <form method="post" class="form-inline">
-                                    <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
-                                    <input type="hidden" name="scroll" />
-                                    <div class="input-group">
-                                        <input type="text" class="form-control float-only" name="value" placeholder="Новый рапорт..." required="required" />
-                                        <div class="input-group-append">
-                                            <button type="submit" name="raport_create_submit" class="btn btn-outline-dark fas fa-plus"></button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </td>
-                        </tr>
                     </table>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3">
-                    <?php
-                    $machine_id = 2;
-                    ?>
-                    <div class="pl-4">
-                        <h2><?=$machines[$machine_id] ?></h2>
-                    </div>
-                    <table class="w-100 table table-hover">
-                        <?php
-                        if(array_key_exists($machine_id, $raports)):
-                        $raports_of_machine = $raports[$machine_id];
-                        foreach ($raports_of_machine as $row):
-                        ?>
-                        <tr>
-                            <td style="font-size: large;"><?= floatval($row['value']) ?></td>
-                            <td class="text-right">
-                                <form method="post">
-                                    <input type="hidden" name="id" value="<?=$row['id'] ?>" />
-                                    <input type="hidden" name="scroll" />
-                                    <button type="submit" id="raport_delete_submit" name="raport_delete_submit" class="btn btn-link fas fa-trash-alt confirmable"></button>
-                                </form>
-                            </td>
-                        </tr>
-                        <?php
-                        endforeach;
-                        endif;
-                        ?>
-                        <tr>
-                            <td colspan="2">
-                                <form method="post" class="form-inline">
-                                    <input type="hidden" name="machine_id" value="2" />
-                                    <input type="hidden" name="scroll" />
-                                    <div class="input-group">
-                                        <input type="text" class="form-control float-only" name="value" placeholder="Новый рапорт..." required="required" />
-                                        <div class="input-group-append">
-                                            <button type="submit" name="raport_create_submit" class="btn btn-outline-dark fas fa-plus"></button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3">
-                    <?php
-                    $machine_id = 3;
-                    ?>
-                    <div class="pl-4">
-                        <h2><?=$machines[$machine_id] ?></h2>
-                    </div>
-                    <table class="w-100 table table-hover">
-                        <?php
-                        if(array_key_exists($machine_id, $raports)):
-                        $raports_of_machine = $raports[$machine_id];
-                        foreach ($raports_of_machine as $row):
-                        ?>
-                        <tr>
-                            <td style="font-size: large;"><?= floatval($row['value']) ?></td>
-                            <td class="text-right">
-                                <form method="post">
-                                    <input type="hidden" name="id" value="<?=$row['id'] ?>" />
-                                    <input type="hidden" name="scroll" />
-                                    <button type="submit" id="raport_delete_submit" name="raport_delete_submit" class="btn btn-link fas fa-trash-alt confirmable"></button>
-                                </form>
-                            </td>
-                        </tr>
-                        <?php
-                        endforeach;
-                        endif;
-                        ?>
-                        <tr>
-                            <td colspan="2">
-                                <form method="post" class="form-inline">
-                                    <input type="hidden" name="machine_id" value="3" />
-                                    <div class="input-group">
-                                        <input type="text" class="form-control float-only" name="value" placeholder="Новый рапорт..." required="required" />
-                                        <input type="hidden" name="scroll" />
-                                        <div class="input-group-append">
-                                            <button type="submit" name="raport_create_submit" class="btn btn-outline-dark fas fa-plus"></button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3">
-                    <?php
-                    $machine_id = 4;
-                    ?>
-                    <div class="pl-4">
-                        <h2><?=$machines[$machine_id] ?></h2>
-                    </div>
-                    <table class="w-100 table table-hover">
-                        <?php
-                        if(array_key_exists($machine_id, $raports)):
-                        $raports_of_machine = $raports[$machine_id];
-                        foreach ($raports_of_machine as $row):
-                        ?>
-                        <tr>
-                            <td style="font-size: large;"><?= floatval($row['value']) ?></td>
-                            <td class="text-right">
-                                <form method="post">
-                                    <input type="hidden" name="id" value="<?=$row['id'] ?>" />
-                                    <input type="hidden" name="scroll" />
-                                    <button type="submit" id="raport_delete_submit" name="raport_delete_submit" class="btn btn-link fas fa-trash-alt confirmable"></button>
-                                </form>
-                            </td>
-                        </tr>
-                        <?php
-                        endforeach;
-                        endif;
-                        ?>
-                        <tr>
-                            <td colspan="2">
-                                <form method="post" class="form-inline">
-                                    <input type="hidden" name="machine_id" value="4" />
-                                    <div class="input-group">
-                                        <input type="text" class="form-control float-only" name="value" placeholder="Новый рапорт..." required="required" />
-                                        <input type="hidden" name="scroll" />
-                                        <div class="input-group-append">
-                                            <button type="submit" name="raport_create_submit" class="btn btn-outline-dark fas fa-plus"></button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </td>
-                        </tr>
-                    </table>
+                    <h2>Новый рапорт</h2>
+                    <form method="post" class="form-inline">
+                        <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
+                        <input type="hidden" name="scroll" />
+                        <input type="text" class="form-control mr-2" name="name" placeholder="Наименование..." />
+                        <input type="text" class="form-control mr-2 float-only" name="value" placeholder="Шаг..." required="required" />
+                        <button type="submit" name="raport_create_submit" class="btn btn-outline-dark fas fa-plus"></button>
+                    </form>
                 </div>
             </div>
         </div>
