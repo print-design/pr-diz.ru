@@ -115,14 +115,14 @@ if($row = $fetcher->Fetch()) {
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
-                        <input type="hidden" id="machine_id" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
+                        <input type="hidden" id="machine_id" name="machine_id" value="<?= $machine_id ?>" />
                         <div class="form-group">
-                            <label for="time">Время (руб/час)</label>
+                            <label for="time">Время приладки<?= $machine_id == MACHINE_LAMINATOR ? "" : " 1 краски" ?> (руб/час)</label>
                             <input type="text" class="form-control float-only" id="time" name="time" value="<?= empty($time) ? "" : floatval($time) ?>" placeholder="Стоимость, час" required="required" />
                             <div class="invalid-feedback">Время обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="length">Метраж (руб/м)</label>
+                            <label for="length">Метраж приладки<?= $machine_id == MACHINE_LAMINATOR ? "" : " 1 краски" ?> (руб/м)</label>
                             <input type="text" class="form-control float-only" id="length" name="length" value="<?= empty($length) ? "" : floatval($length) ?>" placeholder="Стоимость, м" required="required" />
                             <div class="invalid-feedback">Метраж обязательно</div>
                         </div>
