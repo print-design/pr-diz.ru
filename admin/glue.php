@@ -22,19 +22,19 @@ define('ISINVALID', ' is-invalid');
 $form_valid = true;
 $error_message = '';
 
-$glueeuro_valid = '';
-$solventeuro_valid = '';
+$glue_valid = '';
+$solvent_valid = '';
 $glue_solvent_valid = '';
 
 // Сохранение введённых значений
 if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
-    if(empty(filter_input(INPUT_POST, 'glueeuro'))) {
-        $glueeuro_valid = ISINVALID;
+    if(empty(filter_input(INPUT_POST, 'glue')) || empty(filter_input(INPUT_POST, 'glue_currency'))) {
+        $glue_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'solventeuro'))) {
-        $solventeuro_valid = ISINVALID;
+    if(empty(filter_input(INPUT_POST, 'solvent')) || empty(filter_input(INPUT_POST, 'solvent_currency'))) {
+        $solvent_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -47,27 +47,37 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
     
     if($form_valid) {
         // Старый объект
-        $old_glueeuro = '';
-        $old_solventeuro = '';
+        $old_glue = '';
+        $old_glue_currency = '';
+        $old_solvent = '';
+        $old_solvent_currency = '';
         $old_glue_solvent = '';
         
-        $sql = "select glueeuro, solventeuro, glue_solvent from norm_glue where machine_id = $machine_id order by date desc limit 1";
+        $sql = "select glue, glue_currency, solvent, solvent_currency, glue_solvent from norm_glue where machine_id = $machine_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
-            $old_glueeuro = $row['glueeuro'];
-            $old_solventeuro = $row['solventeuro'];
+            $old_glue = $row['glue'];
+            $old_glue_currency = $row['glue_currency'];
+            $old_solvent = $row['solvent'];
+            $old_solvent_currency = $row['solvent_currency'];
             $old_glue_solvent = $row['glue_solvent'];
         }
         
         // Новый объект
-        $new_glueeuro = filter_input(INPUT_POST, 'glueeuro');
-        $new_solventeuro = filter_input(INPUT_POST, 'solventeuro');
+        $new_glue = filter_input(INPUT_POST, 'glue');
+        $new_glue_currency = filter_input(INPUT_POST, 'glue_currency');
+        $new_solvent = filter_input(INPUT_POST, 'solvent');
+        $new_solvent_currency = filter_input(INPUT_POST, 'solvent_currency');
         $new_glue_solvent = filter_input(INPUT_POST, 'glue_solvent');
         
-        if($old_glueeuro != $new_glueeuro || $old_solventeuro != $new_solventeuro || $old_glue_solvent != $new_glue_solvent) {
-            $sql = "insert into norm_glue (machine_id, glueeuro, solventeuro, glue_solvent) values ($machine_id, $new_glueeuro, $new_solventeuro, $new_glue_solvent)";
+        if($old_glue != $new_glue || 
+                $old_glue_currency != $new_glue_currency || 
+                $old_solvent != $new_solvent || 
+                $old_solvent_currency != $new_solvent_currency || 
+                $old_glue_solvent != $new_glue_solvent) {
+            $sql = "insert into norm_glue (machine_id, glue, glue_currency, solvent, solvent_currency, glue_solvent) values ($machine_id, $new_glue, '$new_glue_currency', $new_solvent, '$new_solvent_currency', $new_glue_solvent)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -78,19 +88,23 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
 }
 
 // Получение объекта
-$glueeuro = '';
-$solventeuro = '';
+$glue = '';
+$glue_currency = '';
+$solvent = '';
+$solvent_currency = '';
 $glue_solvent = '';
 
-$sql = "select glueeuro, solventeuro, glue_solvent from norm_glue where machine_id = $machine_id order by date desc limit 1";
+$sql = "select glue, glue_currency, solvent, solvent_currency, glue_solvent from norm_glue where machine_id = $machine_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
 }
 
 if($row = $fetcher->Fetch()) {
-    $glueeuro = $row['glueeuro'];
-    $solventeuro = $row['solventeuro'];
+    $glue = $row['glue'];
+    $solvent = $row['solvent'];
+    $glue_currency = $row['glue_currency'];
+    $solvent_currency = $row['solvent_currency'];
     $glue_solvent = $row['glue_solvent'];
 }
 ?>
@@ -133,13 +147,55 @@ if($row = $fetcher->Fetch()) {
                     <form method="post">
                         <input type="hidden" id="machine_id" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
                         <div class="form-group">
-                            <label for="glueeuro">Стоимость клея ЕВРО (руб/кг)</label>
-                            <input type="text" class="form-control float-only" id="glueeuro" name="glueeuro" value="<?= empty($glueeuro) ? "" : floatval($glueeuro) ?>" placeholder="Стоимость, руб/кг" required="required" />
+                            <label for="glue">Стоимость клея (за кг)</label>
+                            <div class="input-group">
+                                <input type="text" 
+                                       class="form-control float-only" 
+                                       id="glue" 
+                                       name="glue" 
+                                       value="<?= empty($glue) ? "" : floatval($glue) ?>" 
+                                       placeholder="Стоимость, за кг" 
+                                       required="required" 
+                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onmouseup="javascript: $(this).attr('id', 'glue'); $(this).attr('name', 'glue'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                       onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onkeyup="javascript: $(this).attr('id', 'glue'); $(this).attr('name', 'glue'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                       onfocusout="javascript: $(this).attr('id', 'glue'); $(this).attr('name', 'glue'); $(this).attr('placeholder', 'Стоимость, за кг');" />
+                                <div class="input-group-append">
+                                    <select id="glue_currency" name="glue_currency" required="required">
+                                        <option value="" hidden="">...</option>
+                                        <option value="rub"<?=$glue_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
+                                        <option value="usd"<?=$glue_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
+                                        <option value="euro"<?=$glue_currency == "euro" ? " selected='selected'" : "" ?>>Евро</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="invalid-feedback">Стоимость клея обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="solventeuro">Стоимость растворителя для клея ЕВРО (руб/кг)</label>
-                            <input type="text" class="form-control float-only" id="solventeuro" name="solventeuro" value="<?= empty($solventeuro) ? "" : floatval($solventeuro) ?>" placeholder="Стоимость, руб/кг" required="required" />
+                            <label for="solvent">Стоимость растворителя для клея (за кг)</label>
+                            <div class="input-group">
+                                <input type="text" 
+                                       class="form-control float-only" 
+                                       id="solvent" 
+                                       name="solvent" 
+                                       value="<?= empty($solvent) ? "" : floatval($solvent) ?>" 
+                                       placeholder="Стоимость, за кг" 
+                                       required="required" 
+                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onmouseup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                       onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onkeyup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                       onfocusout="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" />
+                                <div class="input-group-append">
+                                    <select id="solvent_currency" name="solvent_currency" required="required">
+                                        <option value="" hidden="">...</option>
+                                        <option value="rub"<?=$solvent_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
+                                        <option value="usd"<?=$solvent_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
+                                        <option value="euro"<?=$solvent_currency == "euro" ? " selected='selected'" : "" ?>>Евро</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="invalid-feedback">Стоимость растворителя для клея обязательно</div>
                         </div>
                         <div class="form-group">

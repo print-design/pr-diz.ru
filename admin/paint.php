@@ -257,7 +257,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell w-50 pr-3">
                                 <div class="form-group">
-                                    <label for="seuro">C Евро (за кг)</label>
+                                    <label for="c">C (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
@@ -280,12 +280,12 @@ if($row = $fetcher->Fetch()) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback">C Евро обязательно</div>
+                                    <div class="invalid-feedback">C обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell w-50 pl-3">
                                 <div class="form-group">
-                                    <label for="pantoneuro">Пантоны Евро (за кг)</label>
+                                    <label for="panton">Пантоны (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
@@ -308,14 +308,14 @@ if($row = $fetcher->Fetch()) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback">Пантоны Евро обязательно</div>
+                                    <div class="invalid-feedback">Пантоны обязательно</div>
                                 </div>
                             </div>
                         </div>
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="meuro">M Евро (за кг)</label>
+                                    <label for="m">M (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
@@ -338,12 +338,12 @@ if($row = $fetcher->Fetch()) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback">M Евро обязательно</div>
+                                    <div class="invalid-feedback">M обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
-                                    <label for="lacquereuro">Лак Евро (за кг)</label>
+                                    <label for="lacquer">Лак (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
@@ -366,14 +366,14 @@ if($row = $fetcher->Fetch()) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback">Лак Евро обязательно</div>
+                                    <div class="invalid-feedback">Лак обязательно</div>
                                 </div>
                             </div>
                         </div>
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="ueuro">Y Евро (за кг)</label>
+                                    <label for="y">Y (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
@@ -396,7 +396,7 @@ if($row = $fetcher->Fetch()) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback">Y Евро обязательно</div>
+                                    <div class="invalid-feedback">Y обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell pl-3">
@@ -424,7 +424,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="keuro">K Евро (за кг)</label>
+                                    <label for="k">K (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
@@ -482,7 +482,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="whiteeuro">Белая Евро (за кг)</label>
+                                    <label for="white">Белая (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
@@ -505,7 +505,7 @@ if($row = $fetcher->Fetch()) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback">Белая Евро обязательно</div>
+                                    <div class="invalid-feedback">Белая обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell pl-3 align-bottom"></div>
