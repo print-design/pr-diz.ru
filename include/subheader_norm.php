@@ -1,7 +1,7 @@
 <?php
-if(empty(filter_input(INPUT_GET, 'machine_id'))) {
+/*if(empty(filter_input(INPUT_GET, 'machine_id'))) {
     header('Location: '.APPLICATION);
-}
+}*/
 ?>
 <hr class="pb-0 mb-0" />
 <div class="d-flex justify-content-start">
@@ -17,7 +17,10 @@ if(empty(filter_input(INPUT_GET, 'machine_id'))) {
             <a href="<?= BuildQuery('machine_id', $row['id']) ?>" class="mr-4<?=$machine_id_class ?>"><?=$row['name'] ?></a>
             <?php
             endwhile;
+            
+            $currency_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/currency.php')) == APPLICATION.'/admin/currency.php' ? " active" : "";
             ?>
+            <a href="currency.php" class="mr-4<?=$currency_class ?>">Курсы валют</a>
         </div>
     </div>
 </div>
