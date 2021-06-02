@@ -22,50 +22,50 @@ define('ISINVALID', ' is-invalid');
 $form_valid = true;
 $error_message = '';
 
-$seuro_valid = "";
-$meuro_valid = "";
-$ueuro_valid = "";
-$keuro_valid = "";
-$whiteeuro_valid = "";
-$pantoneuro_valid = "";
-$lacquereuro_valid = "";
+$c_valid = "";
+$m_valid = "";
+$y_valid = "";
+$k_valid = "";
+$white_valid = "";
+$panton_valid = "";
+$lacquer_valid = "";
 $paint_solvent_valid = "";
 $solvent_valid = "";
 
 // Сохранение введённых значений
 if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
-    if(empty(filter_input(INPUT_POST, 'seuro'))) {
-        $seuro_valid = ISINVALID;
+    if(empty(filter_input(INPUT_POST, 'c'))) {
+        $c_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'meuro'))) {
-        $meuro_valid = ISINVALID;
+    if(empty(filter_input(INPUT_POST, 'm'))) {
+        $m_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'ueuro'))) {
-        $ueuro_valid = ISINVALID;
+    if(empty(filter_input(INPUT_POST, 'y'))) {
+        $y_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'keuro'))) {
-        $keuro_valid = ISINVALID;
+    if(empty(filter_input(INPUT_POST, 'k'))) {
+        $k_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'whiteeuro'))) {
-        $whiteeuro_valid = ISINVALID;
+    if(empty(filter_input(INPUT_POST, 'white'))) {
+        $white_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'pantoneuro'))) {
-        $pantoneuro_valid = ISINVALID;
+    if(empty(filter_input(INPUT_POST, 'panton'))) {
+        $panton_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'lacquereuro'))) {
-        $lacquereuro_valid = ISINVALID;
+    if(empty(filter_input(INPUT_POST, 'lacquer'))) {
+        $lacquer_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -83,53 +83,53 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
     
     if($form_valid) {
         // Старый объект
-        $old_seuro = "";
-        $old_meuro = "";
-        $old_ueuro = "";
-        $old_keuro = "";
-        $old_whiteeuro = "";
-        $old_pantoneuro = "";
-        $old_lacquereuro = "";
+        $old_c = "";
+        $old_m = "";
+        $old_y = "";
+        $old_k = "";
+        $old_white = "";
+        $old_panton = "";
+        $old_lacquer = "";
         $old_paint_solvent = "";
         $old_solvent = "";
         
-        $sql = "select seuro, meuro, ueuro, keuro, whiteeuro, pantoneuro, lacquereuro, paint_solvent, solvent from norm_paint where machine_id = $machine_id order by date desc limit 1";
+        $sql = "select c, m, y, k, white, panton, lacquer, paint_solvent, solvent from norm_paint where machine_id = $machine_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
-            $old_seuro = $row["seuro"];
-            $old_meuro = $row["meuro"];
-            $old_ueuro = $row["ueuro"];
-            $old_keuro = $row["keuro"];
-            $old_whiteeuro = $row["whiteeuro"];
-            $old_pantoneuro = $row["pantoneuro"];
-            $old_lacquereuro = $row["lacquereuro"];
+            $old_c = $row["c"];
+            $old_m = $row["m"];
+            $old_y = $row["y"];
+            $old_k = $row["k"];
+            $old_white = $row["white"];
+            $old_panton = $row["panton"];
+            $old_lacquer = $row["lacquer"];
             $old_paint_solvent = $row["paint_solvent"];
             $old_solvent = $row["solvent"];
         }
         
         // Новый объект
-        $new_seuro = filter_input(INPUT_POST, "seuro");
-        $new_meuro = filter_input(INPUT_POST, "meuro");
-        $new_ueuro = filter_input(INPUT_POST, "ueuro");
-        $new_keuro = filter_input(INPUT_POST, "keuro");
-        $new_whiteeuro = filter_input(INPUT_POST, "whiteeuro");
-        $new_pantoneuro = filter_input(INPUT_POST, "pantoneuro");
-        $new_lacquereuro = filter_input(INPUT_POST, "lacquereuro");
+        $new_c = filter_input(INPUT_POST, "c");
+        $new_m = filter_input(INPUT_POST, "m");
+        $new_y = filter_input(INPUT_POST, "y");
+        $new_k = filter_input(INPUT_POST, "k");
+        $new_white = filter_input(INPUT_POST, "white");
+        $new_panton = filter_input(INPUT_POST, "panton");
+        $new_lacquer = filter_input(INPUT_POST, "lacquer");
         $new_paint_solvent = filter_input(INPUT_POST, "paint_solvent");
         $new_solvent = filter_input(INPUT_POST, "solvent");
         
-        if($old_seuro != $new_seuro ||
-                $old_meuro != $new_meuro ||
-                $old_ueuro != $new_ueuro ||
-                $old_keuro != $new_keuro ||
-                $old_whiteeuro != $new_whiteeuro ||
-                $old_pantoneuro != $new_pantoneuro ||
-                $old_lacquereuro != $new_lacquereuro ||
+        if($old_c != $new_c ||
+                $old_m != $new_m ||
+                $old_y != $new_y ||
+                $old_k != $new_k ||
+                $old_white != $new_white ||
+                $old_panton != $new_panton ||
+                $old_lacquer != $new_lacquer ||
                 $old_paint_solvent != $new_paint_solvent ||
                 $old_solvent != $new_solvent) {
-            $sql = "insert into norm_paint (machine_id, seuro, meuro, ueuro, keuro, whiteeuro, pantoneuro, lacquereuro, paint_solvent, solvent) values ($machine_id, $new_seuro, $new_meuro, $new_ueuro, $new_keuro, $new_whiteeuro, $new_pantoneuro, $new_lacquereuro, $new_paint_solvent, $new_solvent)";
+            $sql = "insert into norm_paint (machine_id, c, m, y, k, white, panton, lacquer, paint_solvent, solvent) values ($machine_id, $new_c, $new_m, $new_y, $new_k, $new_white, $new_panton, $new_lacquer, $new_paint_solvent, $new_solvent)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -140,30 +140,30 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
 }
 
 // Получение объекта
-$seuro = "";
-$meuro = "";
-$ueuro = "";
-$keuro = "";
-$whiteeuro = "";
-$pantoneuro = "";
-$lacquereuro = "";
+$c = "";
+$m = "";
+$y = "";
+$k = "";
+$white = "";
+$panton = "";
+$lacquer = "";
 $paint_solvent = "";
 $solvent = "";
 
-$sql = "select seuro, meuro, ueuro, keuro, whiteeuro, pantoneuro, lacquereuro, paint_solvent, solvent from norm_paint where machine_id = $machine_id order by date desc limit 1";
+$sql = "select c, m, y, k, white, panton, lacquer, paint_solvent, solvent from norm_paint where machine_id = $machine_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
 }
 
 if($row = $fetcher->Fetch()) {
-    $seuro = $row["seuro"];
-    $meuro = $row["meuro"];
-    $ueuro = $row["ueuro"];
-    $keuro = $row["keuro"];
-    $whiteeuro = $row["whiteeuro"];
-    $pantoneuro = $row["pantoneuro"];
-    $lacquereuro = $row["lacquereuro"];
+    $c = $row["c"];
+    $m = $row["m"];
+    $y = $row["y"];
+    $k = $row["k"];
+    $white = $row["white"];
+    $panton = $row["panton"];
+    $lacquer = $row["lacquer"];
     $paint_solvent = $row["paint_solvent"];
     $solvent = $row["solvent"];
 }
@@ -214,7 +214,7 @@ if($row = $fetcher->Fetch()) {
                                            class="form-control float-only" 
                                            id="c" 
                                            name="c" 
-                                           value="<?= empty($seuro) ? "" : floatval($seuro) ?>" 
+                                           value="<?= empty($c) ? "" : floatval($c) ?>" 
                                            placeholder="Стоимость, евро/кг" 
                                            required="required" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -232,7 +232,7 @@ if($row = $fetcher->Fetch()) {
                                            class="form-control float-only" 
                                            id="panton" 
                                            name="panton" 
-                                           value="<?= empty($pantoneuro) ? "" : floatval($pantoneuro) ?>" 
+                                           value="<?= empty($panton) ? "" : floatval($panton) ?>" 
                                            placeholder="Стоимость, евро/кг" 
                                            required="required" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -252,7 +252,7 @@ if($row = $fetcher->Fetch()) {
                                            class="form-control float-only" 
                                            id="m" 
                                            name="m" 
-                                           value="<?= empty($meuro) ? "" : floatval($meuro) ?>" 
+                                           value="<?= empty($m) ? "" : floatval($m) ?>" 
                                            placeholder="Стоимость, евро/кг" 
                                            required="required" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -270,7 +270,7 @@ if($row = $fetcher->Fetch()) {
                                            class="form-control float-only" 
                                            id="lacquer" 
                                            name="lacquer" 
-                                           value="<?= empty($lacquereuro) ? "" : floatval($lacquereuro) ?>" 
+                                           value="<?= empty($lacquer) ? "" : floatval($lacquer) ?>" 
                                            placeholder="Стоимость, евро/кг" 
                                            required="required" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -290,7 +290,7 @@ if($row = $fetcher->Fetch()) {
                                            class="form-control float-only" 
                                            id="y" 
                                            name="y" 
-                                           value="<?= empty($ueuro) ? "" : floatval($ueuro) ?>" 
+                                           value="<?= empty($y) ? "" : floatval($y) ?>" 
                                            placeholder="Стоимость, евро/кг" 
                                            required="required" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -331,7 +331,7 @@ if($row = $fetcher->Fetch()) {
                                            class="form-control float-only" 
                                            id="k" 
                                            name="k" 
-                                           value="<?= empty($keuro) ? "" : floatval($keuro) ?>" 
+                                           value="<?= empty($k) ? "" : floatval($k) ?>" 
                                            placeholder="Стоимость, евро/кг" 
                                            required="required" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -369,7 +369,7 @@ if($row = $fetcher->Fetch()) {
                                            class="form-control float-only" 
                                            id="white" 
                                            name="white" 
-                                           value="<?= empty($whiteeuro) ? "" : floatval($whiteeuro) ?>" 
+                                           value="<?= empty($white) ? "" : floatval($white) ?>" 
                                            placeholder="Стоимость, евро/кг" 
                                            required="required" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
