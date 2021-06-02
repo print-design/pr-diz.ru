@@ -209,15 +209,15 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell w-50 pr-3">
                                 <div class="form-group">
-                                    <label for="seuro">С Евро (руб/кг)</label>
-                                    <input type="text" class="form-control float-only" id="seuro" name="seuro" value="<?= empty($seuro) ? "" : floatval($seuro) ?>" placeholder="Стоимость, кг" required="required" />
-                                    <div class="invalid-feedback">С Евро обязательно</div>
+                                    <label for="seuro">C Евро (руб/кг)</label>
+                                    <input type="text" class="form-control float-only" id="seuro" name="seuro" value="<?= empty($seuro) ? "" : floatval($seuro) ?>" placeholder="Стоимость, руб/кг" required="required" />
+                                    <div class="invalid-feedback">C Евро обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell w-50 pl-3">
                                 <div class="form-group">
                                     <label for="pantoneuro">Пантоны Евро (руб/кг)</label>
-                                    <input type="text" class="form-control float-only" id="pantoneuro" name="pantoneuro" value="<?= empty($pantoneuro) ? "" : floatval($pantoneuro) ?>" placeholder="Стоимость, кг" required="required" />
+                                    <input type="text" class="form-control float-only" id="pantoneuro" name="pantoneuro" value="<?= empty($pantoneuro) ? "" : floatval($pantoneuro) ?>" placeholder="Стоимость, руб/кг" required="required" />
                                     <div class="invalid-feedback">Пантоны Евро обязательно</div>
                                 </div>
                             </div>
@@ -225,15 +225,15 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="meuro">М Евро (руб/кг)</label>
-                                    <input type="text" class="form-control float-only" id="meuro" name="meuro" value="<?= empty($meuro) ? "" : floatval($meuro) ?>" placeholder="Стоимость, кг" required="required" />
-                                    <div class="invalid-feedback">М Евро обязательно</div>
+                                    <label for="meuro">M Евро (руб/кг)</label>
+                                    <input type="text" class="form-control float-only" id="meuro" name="meuro" value="<?= empty($meuro) ? "" : floatval($meuro) ?>" placeholder="Стоимость, руб/кг" required="required" />
+                                    <div class="invalid-feedback">M Евро обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
                                     <label for="lacquereuro">Лак Евро (руб/кг)</label>
-                                    <input type="text" class="form-control float-only" id="lacquereuro" name="lacquereuro" value="<?= empty($lacquereuro) ? "" : floatval($lacquereuro) ?>" placeholder="Стоимость, кг" required="required" />
+                                    <input type="text" class="form-control float-only" id="lacquereuro" name="lacquereuro" value="<?= empty($lacquereuro) ? "" : floatval($lacquereuro) ?>" placeholder="Стоимость, руб/кг" required="required" />
                                     <div class="invalid-feedback">Лак Евро обязательно</div>
                                 </div>
                             </div>
@@ -241,15 +241,18 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="ueuro">У Евро (руб/кг)</label>
-                                    <input type="text" class="form-control float-only" id="ueuro" name="ueuro" value="<?= empty($ueuro) ? "" : floatval($ueuro) ?>" placeholder="Стоимость, кг" required="required" />
-                                    <div class="invalid-feedback">У Евро обязательно</div>
+                                    <label for="ueuro">Y Евро (руб/кг)</label>
+                                    <input type="text" class="form-control float-only" id="ueuro" name="ueuro" value="<?= empty($ueuro) ? "" : floatval($ueuro) ?>" placeholder="Стоимость, руб/кг" required="required" />
+                                    <div class="invalid-feedback">Y Евро обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
                                     <label for="paint_solvent">Соотношение краски и растворителя (в процентах)</label>
-                                    <input type="text" class="form-control float-only" id="paint_solvent" name="paint_solvent" value="<?= empty($paint_solvent) ? "" : floatval($paint_solvent) ?>" placeholder="В процентах" required="required" />
+                                    <div class="input-group">
+                                        <input type="text" class="form-control float-only" id="paint_solvent" name="paint_solvent" value="<?= empty($paint_solvent) ? "" : floatval($paint_solvent) ?>" placeholder="В процентах" required="required" />
+                                        <div class="input-group-append"><span class="input-group-text">%</span></div>
+                                    </div>
                                     <div class="invalid-feedback">Соотношение краски и растворителя обязательно</div>
                                 </div>
                             </div>
@@ -257,15 +260,15 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="keuro">К Евро (руб/кг)</label>
-                                    <input type="text" class="form-control float-only" id="keuro" name="keuro" value="<?= empty($keuro) ? "" : floatval($keuro) ?>" placeholder="Стоимость, кг" required="required" />
-                                    <div class="invalid-feedback">К Евро обязательно</div>
+                                    <label for="keuro">K Евро (руб/кг)</label>
+                                    <input type="text" class="form-control float-only" id="keuro" name="keuro" value="<?= empty($keuro) ? "" : floatval($keuro) ?>" placeholder="Стоимость, руб/кг" required="required" />
+                                    <div class="invalid-feedback">K Евро обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
                                     <label for="solvent">Стоимость растворителя ЕВРО (руб/кг)</label>
-                                    <input type="text" class="form-control float-only" id="solvent" name="solvent" value="<?= empty($solvent) ? "" : floatval($solvent) ?>" placeholder="Стоимость, кг" required="required" />
+                                    <input type="text" class="form-control float-only" id="solvent" name="solvent" value="<?= empty($solvent) ? "" : floatval($solvent) ?>" placeholder="Стоимость, руб/кг" required="required" />
                                     <div class="invalid-feedback">Стоимость растворителя ЕВРО обязательно</div>
                                 </div>
                             </div>
@@ -274,7 +277,7 @@ if($row = $fetcher->Fetch()) {
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
                                     <label for="whiteeuro">Белая Евро (руб/кг)</label>
-                                    <input type="text" class="form-control float-only" id="whiteeuro" name="whiteeuro" value="<?= empty($whiteeuro) ? "" : floatval($whiteeuro) ?>" placeholder="Стоимость, кг" required="required" />
+                                    <input type="text" class="form-control float-only" id="whiteeuro" name="whiteeuro" value="<?= empty($whiteeuro) ? "" : floatval($whiteeuro) ?>" placeholder="Стоимость, руб/кг" required="required" />
                                     <div class="invalid-feedback">Белая Евро обязательно</div>
                                 </div>
                             </div>

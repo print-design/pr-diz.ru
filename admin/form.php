@@ -145,12 +145,12 @@ if($row = $fetcher->Fetch()) {
                         <input type="hidden" id="machine_id" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
                         <div class="form-group">
                             <label for="flint">Flint (руб/м<sup>2</sup>)</label>
-                            <input type="text" class="form-control float-only" id="flint" name="flint" value="<?= empty($flint) ? "" : floatval($flint) ?>" placeholder="Стоимость, м2" required="required" />
+                            <input type="text" class="form-control float-only" id="flint" name="flint" value="<?= empty($flint) ? "" : floatval($flint) ?>" placeholder="Стоимость, руб/м2" required="required" />
                             <div class="invalid-feedback">Flint обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="kodak">Kodak (руб/м<sup>2</sup>)</label>
-                            <input type="text" class="form-control float-only" id="kodak" name="kodak" value="<?= empty($kodak) ? "" : floatval($kodak) ?>" placeholder="Стоимость, м2" required="required" />
+                            <input type="text" class="form-control float-only" id="kodak" name="kodak" value="<?= empty($kodak) ? "" : floatval($kodak) ?>" placeholder="Стоимость, руб/м2" required="required" />
                             <div class="invalid-feedback">Kodak обязательно</div>
                         </div>
                         <div class="form-group">
