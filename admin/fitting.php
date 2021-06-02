@@ -118,12 +118,34 @@ if($row = $fetcher->Fetch()) {
                         <input type="hidden" id="machine_id" name="machine_id" value="<?= $machine_id ?>" />
                         <div class="form-group">
                             <label for="time">Время приладки<?= $machine_id == MACHINE_LAMINATOR ? "" : " 1 краски" ?> (руб/час)</label>
-                            <input type="text" class="form-control float-only" id="time" name="time" value="<?= empty($time) ? "" : floatval($time) ?>" placeholder="Стоимость, час" required="required" />
+                            <input type="text" 
+                                   class="form-control float-only" 
+                                   id="time" 
+                                   name="time" 
+                                   value="<?= empty($time) ? "" : floatval($time) ?>" 
+                                   placeholder="Стоимость, руб/час" 
+                                   required="required" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onmouseup="javascript: $(this).attr('id', 'time'); $(this).attr('name', 'time'); $(this).attr('placeholder', 'Стоимость, руб/час');" 
+                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onkeyup="javascript: $(this).attr('id', 'time'); $(this).attr('name', 'time'); $(this).attr('placeholder', 'Стоимость, руб/час');" 
+                                   onfocusout="javascript: $(this).attr('id', 'time'); $(this).attr('name', 'time'); $(this).attr('placeholder', 'Стоимость, руб/час');" />
                             <div class="invalid-feedback">Время обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="length">Метраж приладки<?= $machine_id == MACHINE_LAMINATOR ? "" : " 1 краски" ?> (руб/м)</label>
-                            <input type="text" class="form-control float-only" id="length" name="length" value="<?= empty($length) ? "" : floatval($length) ?>" placeholder="Стоимость, м" required="required" />
+                            <input type="text" 
+                                   class="form-control float-only" 
+                                   id="length" 
+                                   name="length" 
+                                   value="<?= empty($length) ? "" : floatval($length) ?>" 
+                                   placeholder="Стоимость, руб/м" 
+                                   required="required" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Стоимость, руб/м');" 
+                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onkeyup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Стоимость, руб/м');" 
+                                   onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Стоимость, руб/м');" />
                             <div class="invalid-feedback">Метраж обязательно</div>
                         </div>
                         <button type="submit" id="norm_fitting_submit" name="norm_fitting_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
