@@ -210,14 +210,36 @@ if($row = $fetcher->Fetch()) {
                             <div class="d-table-cell w-50 pr-3">
                                 <div class="form-group">
                                     <label for="seuro">C Евро (евро/кг)</label>
-                                    <input type="text" class="form-control float-only" id="seuro" name="seuro" value="<?= empty($seuro) ? "" : floatval($seuro) ?>" placeholder="Стоимость, евро/кг" required="required" />
+                                    <input type="text" 
+                                           class="form-control float-only" 
+                                           id="c" 
+                                           name="c" 
+                                           value="<?= empty($seuro) ? "" : floatval($seuro) ?>" 
+                                           placeholder="Стоимость, евро/кг" 
+                                           required="required" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'c'); $(this).attr('name', 'c'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeyup="javascript: $(this).attr('id', 'c'); $(this).attr('name', 'c'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                           onfocusout="javascript: $(this).attr('id', 'c'); $(this).attr('name', 'c'); $(this).attr('placeholder', 'Стоимость, евро/кг');" />
                                     <div class="invalid-feedback">C Евро обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell w-50 pl-3">
                                 <div class="form-group">
                                     <label for="pantoneuro">Пантоны Евро (евро/кг)</label>
-                                    <input type="text" class="form-control float-only" id="pantoneuro" name="pantoneuro" value="<?= empty($pantoneuro) ? "" : floatval($pantoneuro) ?>" placeholder="Стоимость, евро/кг" required="required" />
+                                    <input type="text" 
+                                           class="form-control float-only" 
+                                           id="panton" 
+                                           name="panton" 
+                                           value="<?= empty($pantoneuro) ? "" : floatval($pantoneuro) ?>" 
+                                           placeholder="Стоимость, евро/кг" 
+                                           required="required" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'panton'); $(this).attr('name', 'panton'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeyup="javascript: $(this).attr('id', 'panton'); $(this).attr('name', 'panton'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                           onfocusout="javascript: $(this).attr('id', 'panton'); $(this).attr('name', 'panton'); $(this).attr('placeholder', 'Стоимость, евро/кг');" />
                                     <div class="invalid-feedback">Пантоны Евро обязательно</div>
                                 </div>
                             </div>
@@ -226,14 +248,36 @@ if($row = $fetcher->Fetch()) {
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
                                     <label for="meuro">M Евро (евро/кг)</label>
-                                    <input type="text" class="form-control float-only" id="meuro" name="meuro" value="<?= empty($meuro) ? "" : floatval($meuro) ?>" placeholder="Стоимость, евро/кг" required="required" />
+                                    <input type="text" 
+                                           class="form-control float-only" 
+                                           id="m" 
+                                           name="m" 
+                                           value="<?= empty($meuro) ? "" : floatval($meuro) ?>" 
+                                           placeholder="Стоимость, евро/кг" 
+                                           required="required" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'm'); $(this).attr('name', 'm'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeyup="javascript: $(this).attr('id', 'm'); $(this).attr('name', 'm'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                           onfocusout="javascript: $(this).attr('id', 'm'); $(this).attr('name', 'm'); $(this).attr('placeholder', 'Стоимость, евро/кг');" />
                                     <div class="invalid-feedback">M Евро обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
                                     <label for="lacquereuro">Лак Евро (евро/кг)</label>
-                                    <input type="text" class="form-control float-only" id="lacquereuro" name="lacquereuro" value="<?= empty($lacquereuro) ? "" : floatval($lacquereuro) ?>" placeholder="Стоимость, евро/кг" required="required" />
+                                    <input type="text" 
+                                           class="form-control float-only" 
+                                           id="lacquer" 
+                                           name="lacquer" 
+                                           value="<?= empty($lacquereuro) ? "" : floatval($lacquereuro) ?>" 
+                                           placeholder="Стоимость, евро/кг" 
+                                           required="required" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'lacquer'); $(this).attr('name', 'lacquer'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeyup="javascript: $(this).attr('id', 'lacquer'); $(this).attr('name', 'lacquer'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                           onfocusout="javascript: $(this).attr('id', 'lacquer'); $(this).attr('name', 'lacquer'); $(this).attr('placeholder', 'Стоимость, евро/кг');" />
                                     <div class="invalid-feedback">Лак Евро обязательно</div>
                                 </div>
                             </div>
@@ -242,7 +286,18 @@ if($row = $fetcher->Fetch()) {
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
                                     <label for="ueuro">Y Евро (евро/кг)</label>
-                                    <input type="text" class="form-control float-only" id="ueuro" name="ueuro" value="<?= empty($ueuro) ? "" : floatval($ueuro) ?>" placeholder="Стоимость, евро/кг" required="required" />
+                                    <input type="text" 
+                                           class="form-control float-only" 
+                                           id="y" 
+                                           name="y" 
+                                           value="<?= empty($ueuro) ? "" : floatval($ueuro) ?>" 
+                                           placeholder="Стоимость, евро/кг" 
+                                           required="required" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'y'); $(this).attr('name', 'y'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeyup="javascript: $(this).attr('id', 'y'); $(this).attr('name', 'y'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                           onfocusout="javascript: $(this).attr('id', 'y'); $(this).attr('name', 'y'); $(this).attr('placeholder', 'Стоимость, евро/кг');" />
                                     <div class="invalid-feedback">Y Евро обязательно</div>
                                 </div>
                             </div>
@@ -250,7 +305,18 @@ if($row = $fetcher->Fetch()) {
                                 <div class="form-group">
                                     <label for="paint_solvent">Соотношение краски и растворителя (в процентах)</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control float-only" id="paint_solvent" name="paint_solvent" value="<?= empty($paint_solvent) ? "" : floatval($paint_solvent) ?>" placeholder="В процентах" required="required" />
+                                        <input type="text" 
+                                               class="form-control float-only" 
+                                               id="paint_solvent" 
+                                               name="paint_solvent" 
+                                               value="<?= empty($paint_solvent) ? "" : floatval($paint_solvent) ?>" 
+                                               placeholder="В процентах" 
+                                               required="required" 
+                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onmouseup="javascript: $(this).attr('id', 'paint_solvent'); $(this).attr('name', 'paint_solvent'); $(this).attr('placeholder', 'В процентах');" 
+                                               onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onkeyup="javascript: $(this).attr('id', 'paint_solvent'); $(this).attr('name', 'paint_solvent'); $(this).attr('placeholder', 'В процентах');" 
+                                               onfocusout="javascript: $(this).attr('id', 'paint_solvent'); $(this).attr('name', 'paint_solvent'); $(this).attr('placeholder', 'В процентах');" />
                                         <div class="input-group-append"><span class="input-group-text">%</span></div>
                                     </div>
                                     <div class="invalid-feedback">Соотношение краски и растворителя обязательно</div>
@@ -261,15 +327,37 @@ if($row = $fetcher->Fetch()) {
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
                                     <label for="keuro">K Евро (евро/кг)</label>
-                                    <input type="text" class="form-control float-only" id="keuro" name="keuro" value="<?= empty($keuro) ? "" : floatval($keuro) ?>" placeholder="Стоимость, евро/кг" required="required" />
-                                    <div class="invalid-feedback">K Евро обязательно</div>
+                                    <input type="text" 
+                                           class="form-control float-only" 
+                                           id="k" 
+                                           name="k" 
+                                           value="<?= empty($keuro) ? "" : floatval($keuro) ?>" 
+                                           placeholder="Стоимость, евро/кг" 
+                                           required="required" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'k'); $(this).attr('name', 'k'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeyup="javascript: $(this).attr('id', 'k'); $(this).attr('name', 'k'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                           onfocusout="javascript: $(this).attr('id', 'k'); $(this).attr('name', 'k'); $(this).attr('placeholder', 'Стоимость, евро/кг');" />
+                                    <div class="invalid-feedback">K обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
-                                    <label for="solvent">Стоимость растворителя ЕВРО (евро/кг)</label>
-                                    <input type="text" class="form-control float-only" id="solvent" name="solvent" value="<?= empty($solvent) ? "" : floatval($solvent) ?>" placeholder="Стоимость, евро/кг" required="required" />
-                                    <div class="invalid-feedback">Стоимость растворителя ЕВРО обязательно</div>
+                                    <label for="solvent">Стоимость растворителя (руб/кг)</label>
+                                    <input type="text" 
+                                           class="form-control float-only" 
+                                           id="solvent" 
+                                           name="solvent" 
+                                           value="<?= empty($solvent) ? "" : floatval($solvent) ?>" 
+                                           placeholder="Стоимость, руб/кг" 
+                                           required="required" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, руб/кг');" 
+                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeyup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, руб/кг');" 
+                                           onfocusout="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, руб/кг');" />
+                                    <div class="invalid-feedback">Стоимость растворителя обязательно</div>
                                 </div>
                             </div>
                         </div>
@@ -277,7 +365,18 @@ if($row = $fetcher->Fetch()) {
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
                                     <label for="whiteeuro">Белая Евро (евро/кг)</label>
-                                    <input type="text" class="form-control float-only" id="whiteeuro" name="whiteeuro" value="<?= empty($whiteeuro) ? "" : floatval($whiteeuro) ?>" placeholder="Стоимость, евро/кг" required="required" />
+                                    <input type="text" 
+                                           class="form-control float-only" 
+                                           id="white" 
+                                           name="white" 
+                                           value="<?= empty($whiteeuro) ? "" : floatval($whiteeuro) ?>" 
+                                           placeholder="Стоимость, евро/кг" 
+                                           required="required" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'white'); $(this).attr('name', 'white'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeyup="javascript: $(this).attr('id', 'white'); $(this).attr('name', 'white'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                           onfocusout="javascript: $(this).attr('id', 'white'); $(this).attr('name', 'white'); $(this).attr('placeholder', 'Стоимость, евро/кг');" />
                                     <div class="invalid-feedback">Белая Евро обязательно</div>
                                 </div>
                             </div>
