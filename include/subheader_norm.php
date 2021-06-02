@@ -1,7 +1,7 @@
 <?php
-/*if(empty(filter_input(INPUT_GET, 'machine_id'))) {
+if(empty(filter_input(INPUT_GET, 'machine_id'))) {
     header('Location: '.APPLICATION);
-}*/
+}
 ?>
 <hr class="pb-0 mb-0" />
 <div class="d-flex justify-content-start">
