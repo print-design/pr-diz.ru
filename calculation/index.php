@@ -174,7 +174,7 @@ function OrderLink($param) {
                                 break;
                             
                             case 'date':
-                                $orderby = "order by c.date desc";
+                                $orderby = "order by c.id desc";
                                 break;
                             
                             case 'customer':
