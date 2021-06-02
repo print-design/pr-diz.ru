@@ -228,6 +228,32 @@
         setInterval(AutoLogout, 1000, end_date);
     <?php endif; ?>
         
+    // Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне
+    function AdjustFixedBlock(fixed_block) {
+        windowHeight = $(window).height();
+        blockTop = fixed_block.offset().top;
+        blockHeight = fixed_block.outerHeight();
+        blockMarginTop = parseInt(fixed_block.css('margin-top').replace('px', ''));
+        
+        if(blockHeight + blockMarginTop <= windowHeight) {
+            fixed_block.css('position', 'fixed');
+            fixed_block.css('top', 0);
+            fixed_block.css('bottom', 'auto');
+        }
+        else {
+            if(blockHeight + blockMarginTop <= $(window).scrollTop() + windowHeight) {
+                fixed_block.css('position', 'fixed');
+                fixed_block.css('bottom', 0);
+                fixed_block.css('top', 'auto');
+            }
+            else {
+                fixed_block.css('position', 'absolute');
+                fixed_block.css('top', 0);
+                fixed_block.css('bottom', 'auto');
+            }
+        }
+    };
+        
     // Прокрутка на прежнее место после отправки формы
     $(window).on("scroll", function(){
         $('input[name="scroll"]').val($(window).scrollTop());

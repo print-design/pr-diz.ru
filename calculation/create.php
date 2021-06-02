@@ -393,6 +393,7 @@ for ($i=1; $i<=8; $i++) {
     </head>
     <body>
         <?php
+        include './right_panel.php';
         include '../include/header_zakaz.php';
         ?>
         <div class="container-fluid">
@@ -1000,13 +1001,6 @@ for ($i=1; $i<=8; $i++) {
                         <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark mt-3<?=$create_calculation_submit_class ?>">Рассчитать</button>
                     </form>
                 </div>
-                <!-- Правая половина -->
-                <div class="col-6 col-lg-3">
-                    <!-- Расчёт -->
-                    <?php
-                    include './right_panel.php';
-                    ?>
-                </div>
             </div>
         </div>
         <?php
@@ -1332,12 +1326,14 @@ for ($i=1; $i<=8; $i++) {
             function ShowCosts() {
                 $("#costs").removeClass("d-none");
                 $("#show_costs").addClass("d-none");
+                AdjustFixedBlock($('#calculation'));
             }
             
             // Скрытие расходов
             function HideCosts() {
                 $("#costs").addClass("d-none");
                 $("#show_costs").removeClass("d-none");
+                AdjustFixedBlock($('#calculation'));
             }
             
             // Скрытие расчёта
@@ -1357,6 +1353,13 @@ for ($i=1; $i<=8; $i++) {
             
             $("input[id!=extracharge]").keydown(function () {
                 HideCalculation();
+            });
+            
+            // Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне
+            AdjustFixedBlock($('#calculation'));
+            
+            $(window).on("scroll", function(){
+                AdjustFixedBlock($('#calculation'));
             });
         </script>
     </body>

@@ -131,6 +131,7 @@ $num_for_customer = $row['num_for_customer'];
     </head>
     <body>
         <?php
+        include './right_panel.php';
         include '../include/header_zakaz.php';
         ?>
         <div class="container-fluid">
@@ -298,13 +299,6 @@ $num_for_customer = $row['num_for_customer'];
                     </form>
                     <?php endif; ?>
                 </div>
-                <!-- Правая половина -->
-                <div class="col-6 col-lg-3">
-                    <!-- Расчёт -->
-                    <?php
-                    include './right_panel.php';
-                    ?>
-                </div>
             </div>
         </div>
         <?php
@@ -328,6 +322,13 @@ $num_for_customer = $row['num_for_customer'];
                 $("#costs").addClass("d-none");
                 $("#show_costs").removeClass("d-none");
             }
+            
+            // Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне
+            AdjustFixedBlock($('#calculation'));
+            
+            $(window).on("scroll", function(){
+                AdjustFixedBlock($('#calculation'));
+            });
         </script>
     </body>
 </html>
