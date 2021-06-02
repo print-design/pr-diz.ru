@@ -490,7 +490,14 @@ textarea#editable {
     padding: 30px;
 }
 
-/* Список с поиском */
+/* СПИСОК С ПОИСКОМ */
+/* 1. Высота поля поиска */
 .select2-selection {
     height: 40px!important;
+}
+
+/* Положение сообщения о невалидности */
+.select2-hidden-accessible {
+    top: 60px;
+    left: 120px;
 }
