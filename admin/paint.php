@@ -257,20 +257,20 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell w-50 pr-3">
                                 <div class="form-group">
-                                    <label for="seuro">C Евро (евро/кг)</label>
+                                    <label for="seuro">C Евро (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
                                                id="c" 
                                                name="c" 
                                                value="<?= empty($c) ? "" : floatval($c) ?>" 
-                                               placeholder="Стоимость, евро/кг" 
+                                               placeholder="Стоимость, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'c'); $(this).attr('name', 'c'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                               onmouseup="javascript: $(this).attr('id', 'c'); $(this).attr('name', 'c'); $(this).attr('placeholder', 'Стоимость, за кг');" 
                                                onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onkeyup="javascript: $(this).attr('id', 'c'); $(this).attr('name', 'c'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
-                                               onfocusout="javascript: $(this).attr('id', 'c'); $(this).attr('name', 'c'); $(this).attr('placeholder', 'Стоимость, евро/кг');" />
+                                               onkeyup="javascript: $(this).attr('id', 'c'); $(this).attr('name', 'c'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'c'); $(this).attr('name', 'c'); $(this).attr('placeholder', 'Стоимость, за кг');" />
                                         <div class="input-group-append">
                                             <select id="c_currency" name="c_currency" required="required">
                                                 <option value="" hidden="">...</option>
@@ -285,20 +285,20 @@ if($row = $fetcher->Fetch()) {
                             </div>
                             <div class="d-table-cell w-50 pl-3">
                                 <div class="form-group">
-                                    <label for="pantoneuro">Пантоны Евро (евро/кг)</label>
+                                    <label for="pantoneuro">Пантоны Евро (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
                                                id="panton" 
                                                name="panton" 
                                                value="<?= empty($panton) ? "" : floatval($panton) ?>" 
-                                               placeholder="Стоимость, евро/кг" 
+                                               placeholder="Стоимость, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'panton'); $(this).attr('name', 'panton'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                               onmouseup="javascript: $(this).attr('id', 'panton'); $(this).attr('name', 'panton'); $(this).attr('placeholder', 'Стоимость, за кг');" 
                                                onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onkeyup="javascript: $(this).attr('id', 'panton'); $(this).attr('name', 'panton'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
-                                               onfocusout="javascript: $(this).attr('id', 'panton'); $(this).attr('name', 'panton'); $(this).attr('placeholder', 'Стоимость, евро/кг');" />
+                                               onkeyup="javascript: $(this).attr('id', 'panton'); $(this).attr('name', 'panton'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'panton'); $(this).attr('name', 'panton'); $(this).attr('placeholder', 'Стоимость, за кг');" />
                                         <div class="input-group-append">
                                             <select id="panton_currency" name="panton_currency" required="required">
                                                 <option value="" hidden="">...</option>
@@ -315,20 +315,20 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="meuro">M Евро (евро/кг)</label>
+                                    <label for="meuro">M Евро (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
                                                id="m" 
                                                name="m" 
                                                value="<?= empty($m) ? "" : floatval($m) ?>" 
-                                               placeholder="Стоимость, евро/кг" 
+                                               placeholder="Стоимость, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'm'); $(this).attr('name', 'm'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                               onmouseup="javascript: $(this).attr('id', 'm'); $(this).attr('name', 'm'); $(this).attr('placeholder', 'Стоимость, за кг');" 
                                                onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onkeyup="javascript: $(this).attr('id', 'm'); $(this).attr('name', 'm'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
-                                               onfocusout="javascript: $(this).attr('id', 'm'); $(this).attr('name', 'm'); $(this).attr('placeholder', 'Стоимость, евро/кг');" />
+                                               onkeyup="javascript: $(this).attr('id', 'm'); $(this).attr('name', 'm'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'm'); $(this).attr('name', 'm'); $(this).attr('placeholder', 'Стоимость, за кг');" />
                                         <div class="input-group-append">
                                             <select id="m_currency" name="m_currency" required="required">
                                                 <option value="" hidden="">...</option>
@@ -343,20 +343,20 @@ if($row = $fetcher->Fetch()) {
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
-                                    <label for="lacquereuro">Лак Евро (евро/кг)</label>
+                                    <label for="lacquereuro">Лак Евро (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
                                                id="lacquer" 
                                                name="lacquer" 
                                                value="<?= empty($lacquer) ? "" : floatval($lacquer) ?>" 
-                                               placeholder="Стоимость, евро/кг" 
+                                               placeholder="Стоимость, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'lacquer'); $(this).attr('name', 'lacquer'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                               onmouseup="javascript: $(this).attr('id', 'lacquer'); $(this).attr('name', 'lacquer'); $(this).attr('placeholder', 'Стоимость, за кг');" 
                                                onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onkeyup="javascript: $(this).attr('id', 'lacquer'); $(this).attr('name', 'lacquer'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
-                                               onfocusout="javascript: $(this).attr('id', 'lacquer'); $(this).attr('name', 'lacquer'); $(this).attr('placeholder', 'Стоимость, евро/кг');" />
+                                               onkeyup="javascript: $(this).attr('id', 'lacquer'); $(this).attr('name', 'lacquer'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'lacquer'); $(this).attr('name', 'lacquer'); $(this).attr('placeholder', 'Стоимость, за кг');" />
                                         <div class="input-group-append">
                                             <select id="lacquer_currency" name="lacquer_currency" required="required">
                                                 <option value="" hidden="">...</option>
@@ -373,20 +373,20 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="ueuro">Y Евро (евро/кг)</label>
+                                    <label for="ueuro">Y Евро (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
                                                id="y" 
                                                name="y" 
                                                value="<?= empty($y) ? "" : floatval($y) ?>" 
-                                               placeholder="Стоимость, евро/кг" 
+                                               placeholder="Стоимость, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'y'); $(this).attr('name', 'y'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                               onmouseup="javascript: $(this).attr('id', 'y'); $(this).attr('name', 'y'); $(this).attr('placeholder', 'Стоимость, за кг');" 
                                                onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onkeyup="javascript: $(this).attr('id', 'y'); $(this).attr('name', 'y'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
-                                               onfocusout="javascript: $(this).attr('id', 'y'); $(this).attr('name', 'y'); $(this).attr('placeholder', 'Стоимость, евро/кг');" />
+                                               onkeyup="javascript: $(this).attr('id', 'y'); $(this).attr('name', 'y'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'y'); $(this).attr('name', 'y'); $(this).attr('placeholder', 'Стоимость, за кг');" />
                                         <div class="input-group-append">
                                             <select id="y_currency" name="y_currency" required="required">
                                                 <option value="" hidden="">...</option>
@@ -424,20 +424,20 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="keuro">K Евро (евро/кг)</label>
+                                    <label for="keuro">K Евро (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
                                                id="k" 
                                                name="k" 
                                                value="<?= empty($k) ? "" : floatval($k) ?>" 
-                                               placeholder="Стоимость, евро/кг" 
+                                               placeholder="Стоимость, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'k'); $(this).attr('name', 'k'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                               onmouseup="javascript: $(this).attr('id', 'k'); $(this).attr('name', 'k'); $(this).attr('placeholder', 'Стоимость, за кг');" 
                                                onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onkeyup="javascript: $(this).attr('id', 'k'); $(this).attr('name', 'k'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
-                                               onfocusout="javascript: $(this).attr('id', 'k'); $(this).attr('name', 'k'); $(this).attr('placeholder', 'Стоимость, евро/кг');" />
+                                               onkeyup="javascript: $(this).attr('id', 'k'); $(this).attr('name', 'k'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'k'); $(this).attr('name', 'k'); $(this).attr('placeholder', 'Стоимость, за кг');" />
                                         <div class="input-group-append">
                                             <select id="k_currency" name="k_currency" required="required">
                                                 <option value="" hidden="">...</option>
@@ -452,20 +452,20 @@ if($row = $fetcher->Fetch()) {
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
-                                    <label for="solvent">Стоимость растворителя (руб/кг)</label>
+                                    <label for="solvent">Стоимость растворителя (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
                                                id="solvent" 
                                                name="solvent" 
                                                value="<?= empty($solvent) ? "" : floatval($solvent) ?>" 
-                                               placeholder="Стоимость, руб/кг" 
+                                               placeholder="Стоимость, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, руб/кг');" 
+                                               onmouseup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" 
                                                onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onkeyup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, руб/кг');" 
-                                               onfocusout="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, руб/кг');" />
+                                               onkeyup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" />
                                         <div class="input-group-append">
                                             <select id="solvent_currency" name="solvent_currency" required="required">
                                                 <option value="" hidden="">...</option>
@@ -482,20 +482,20 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="whiteeuro">Белая Евро (евро/кг)</label>
+                                    <label for="whiteeuro">Белая Евро (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
                                                id="white" 
                                                name="white" 
                                                value="<?= empty($white) ? "" : floatval($white) ?>" 
-                                               placeholder="Стоимость, евро/кг" 
+                                               placeholder="Стоимость, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'white'); $(this).attr('name', 'white'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
+                                               onmouseup="javascript: $(this).attr('id', 'white'); $(this).attr('name', 'white'); $(this).attr('placeholder', 'Стоимость, за кг');" 
                                                onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onkeyup="javascript: $(this).attr('id', 'white'); $(this).attr('name', 'white'); $(this).attr('placeholder', 'Стоимость, евро/кг');" 
-                                               onfocusout="javascript: $(this).attr('id', 'white'); $(this).attr('name', 'white'); $(this).attr('placeholder', 'Стоимость, евро/кг');" />
+                                               onkeyup="javascript: $(this).attr('id', 'white'); $(this).attr('name', 'white'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'white'); $(this).attr('name', 'white'); $(this).attr('placeholder', 'Стоимость, за кг');" />
                                         <div class="input-group-append">
                                             <select id="white_currency" name="white_currency" required="required">
                                                 <option value="" hidden="">...</option>
