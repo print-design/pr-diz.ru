@@ -123,8 +123,8 @@ if($row = $fetcher->Fetch()) {
                             <div class="invalid-feedback">Стоимость обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="speed">Скорость работы оборудования (м/мин)</label>
-                            <input type="text" class="form-control float-only" id="speed" name="speed" value="<?= empty($speed) ? "" : floatval($speed) ?>" placeholder="Скорость, м/мин" required="required" />
+                            <label for="speed">Скорость работы оборудования (м/час)</label>
+                            <input type="text" class="form-control float-only" id="speed" name="speed" value="<?= empty($speed) ? "" : floatval($speed) ?>" placeholder="Скорость, м/час" required="required" />
                             <div class="invalid-feedback">Скорость обязательно</div>
                         </div>
                         <button type="submit" id="norm_machine_submit" name="norm_machine_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
