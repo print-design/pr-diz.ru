@@ -486,7 +486,8 @@ textarea#editable {
 
 /* Заказы */
 #calculation, #new_customer {
-    border: solid 2px lightgray;
+    border-radius: 15px;
+    box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
     padding: 30px;
 }
 
