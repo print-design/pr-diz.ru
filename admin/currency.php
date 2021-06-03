@@ -6,6 +6,9 @@ if(!IsInRole(array('technologist', 'dev'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Номер ламинатора
+const MACHINE_LAMINATOR = 5;
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -36,8 +39,8 @@ if(null !== filter_input(INPUT_POST, 'currency_submit')) {
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
-            $old_usd = $row['time'];
-            $old_euro = $row['length'];
+            $old_usd = $row['usd'];
+            $old_euro = $row['euro'];
         }
         
         // Новый объект
@@ -45,7 +48,7 @@ if(null !== filter_input(INPUT_POST, 'currency_submit')) {
         $new_euro = filter_input(INPUT_POST, 'euro');
         
         if($old_usd != $new_usd || $old_euro != $new_euro) {
-            $sql = "insert into currency (machine_id, usd, euro) values ($machine_id, $new_usd, $new_euro)";
+            $sql = "insert into currency (usd, euro) values ($new_usd, $new_euro)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -100,47 +103,73 @@ if($row = $fetcher->Fetch()) {
                     ?>
                 </div>
             </div>
-            <?php
-            include '../include/subheader_norm.php';
-            ?>
+            <hr class="pb-0 mb-0" />
+            <div class="d-flex justify-content-start">
+                <div class="p-1">
+                    <div class="text-nowrap nav2">
+                        <?php
+                        $sql = "select id, name from machine";
+                        $fetcher = new Fetcher($sql);
+                        
+                        while ($row = $fetcher->Fetch()):
+                        if($row['id'] == MACHINE_LAMINATOR):
+                        ?>
+                        <a href="glue.php<?= BuildQuery('machine_id', $row['id']) ?>" class="mr-4"><?=$row['name'] ?></a>
+                        <?php
+                        else:
+                        ?>
+                        <a href="form.php<?= BuildQuery('machine_id', $row['id']) ?>" class="mr-4"><?=$row['name'] ?></a>
+                        <?php
+                        endif;
+                        endwhile;
+                        ?>
+                        <a href="currency.php" class="mr-4 active">Курсы валют</a>
+                    </div>
+                </div>
+            </div>
             <hr />
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
-                        <input type="hidden" id="machine_id" name="machine_id" value="<?= $machine_id ?>" />
                         <div class="form-group">
-                            <label for="time">Время приладки<?= $machine_id == MACHINE_LAMINATOR ? "" : " 1 краски" ?> (руб/час)</label>
-                            <input type="text" 
-                                   class="form-control float-only" 
-                                   id="time" 
-                                   name="time" 
-                                   value="<?= empty($time) ? "" : floatval($time) ?>" 
-                                   placeholder="Стоимость, руб/час" 
-                                   required="required" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'time'); $(this).attr('name', 'time'); $(this).attr('placeholder', 'Стоимость, руб/час');" 
-                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onkeyup="javascript: $(this).attr('id', 'time'); $(this).attr('name', 'time'); $(this).attr('placeholder', 'Стоимость, руб/час');" 
-                                   onfocusout="javascript: $(this).attr('id', 'time'); $(this).attr('name', 'time'); $(this).attr('placeholder', 'Стоимость, руб/час');" />
-                            <div class="invalid-feedback">Время обязательно</div>
+                            <label for="usd">Доллар</label>
+                            <div class="input-group">
+                                <input type="text" 
+                                       class="form-control float-only" 
+                                       id="usd" 
+                                       name="usd" 
+                                       value="<?= empty($usd) ? "" : floatval($usd) ?>" 
+                                       placeholder="Доллар" 
+                                       required="required" 
+                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onmouseup="javascript: $(this).attr('id', 'usd'); $(this).attr('name', 'usd'); $(this).attr('placeholder', 'Доллар');" 
+                                       onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onkeyup="javascript: $(this).attr('id', 'usd'); $(this).attr('name', 'usd'); $(this).attr('placeholder', 'Доллар');" 
+                                       onfocusout="javascript: $(this).attr('id', 'usd'); $(this).attr('name', 'usd'); $(this).attr('placeholder', 'Доллар');" />
+                                <div class="input-group-append"><span class="input-group-text">руб.</span></div>
+                            </div>
+                            <div class="invalid-feedback">Доллар обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="length">Метраж приладки<?= $machine_id == MACHINE_LAMINATOR ? "" : " 1 краски" ?> (руб/м)</label>
-                            <input type="text" 
-                                   class="form-control float-only" 
-                                   id="length" 
-                                   name="length" 
-                                   value="<?= empty($length) ? "" : floatval($length) ?>" 
-                                   placeholder="Стоимость, руб/м" 
-                                   required="required" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Стоимость, руб/м');" 
-                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onkeyup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Стоимость, руб/м');" 
-                                   onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Стоимость, руб/м');" />
-                            <div class="invalid-feedback">Метраж обязательно</div>
+                            <label for="euro">Евро</label>
+                            <div class="input-group">
+                                <input type="text" 
+                                       class="form-control float-only" 
+                                       id="euro" 
+                                       name="euro" 
+                                       value="<?= empty($euro) ? "" : floatval($euro) ?>" 
+                                       placeholder="Евро" 
+                                       required="required" 
+                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onmouseup="javascript: $(this).attr('id', 'euro'); $(this).attr('name', 'euro'); $(this).attr('placeholder', 'Евро');" 
+                                       onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onkeyup="javascript: $(this).attr('id', 'euro'); $(this).attr('name', 'euro'); $(this).attr('placeholder', 'Евро');" 
+                                       onfocusout="javascript: $(this).attr('id', 'euro'); $(this).attr('name', 'euro'); $(this).attr('placeholder', 'Евро');" />
+                                <div class="input-group-append"><span class="input-group-text">руб.</span></div>
+                            </div>
+                            <div class="invalid-feedback">Евро обязательно</div>
                         </div>
-                        <button type="submit" id="norm_fitting_submit" name="norm_fitting_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
+                        <button type="submit" id="norm_fitting_submit" name="currency_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
                     </form>
                 </div>
             </div>

@@ -25,7 +25,13 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
                 <div class="d-table-cell w-50">
                     <div class="p-2 w-75" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 80px;">
                         <div style="font-size: x-small;">Курс евро</div>
-                        93
+                        <?php
+                        $sql = "select euro from currency order by id desc limit 1";
+                        $fetcher = new Fetcher($sql);
+                        if($row = $fetcher->Fetch()) {
+                            echo number_format($row[0], 2, ',', ' ');
+                        }
+                        ?>
                     </div>
                 </div>
             </div>
