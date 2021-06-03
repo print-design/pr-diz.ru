@@ -58,7 +58,7 @@
     // Обработка изменения нажатия клавиш
     function KeyDownLimitIntValue(textbox, e, max) {
         if(e.which != 8 && e.which != 46 && e.which != 37 && e.which != 39) {
-            if(/\D/.test(String.fromCharCode(e.which))) {
+            if(/\D/.test(e.key)) {
                 return false;
             }
             
@@ -86,6 +86,50 @@
         
         if(iVal == null || iVal < 1 || iVal > max) {
             alert('Только целое значение от 1 до ' + max);
+            textbox.val('');
+            textbox.focus();
+        }
+    }
+    
+    // Ограничение значений для полей с числовыми значениями (проценты и т. д.)
+    // Обработка изменения нажатия клавиш
+    function KeyDownLimitFloatValue(textbox, e, max) {
+        if(e.which != 8 && e.which != 46 && e.which != 37 && e.which != 39) {
+            if(!/[\.\,\d]/.test(e.key)) {
+                return false;
+            }
+            
+            if(/[\.\,]/.test(e.key) && (textbox.val().includes('.') || textbox.val().includes(',') || parseFloat(textbox.val()) >= max)) {
+                return false;
+            }
+            
+            var text = textbox.val();
+            var selStart = textbox.prop('selectionStart');
+            var selEnd = textbox.prop('selectionEnd');
+            var textStart = text.substring(0, selStart);
+            var textEnd = text.substring(selEnd);
+            var newvalue = textStart + e.key + textEnd;
+            var fNewValue = parseFloat(newvalue);
+            
+            if(fNewValue == null || fNewValue < 1 || fNewValue > max) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    // Ограничение значений для полей с числовыми значениями (проценты и т. д.)
+    // Обработка изменения текста
+    function ChangeLimitFloatValue(textbox, max) {
+        var val = textbox.val();
+        val = val.replace(',', '.');
+        val = val.replace(/[^\.\d]/g, '');
+        textbox.val(val);
+        var fVal = parseFloat(val);
+        
+        if(fVal == null || fVal < 0 || fVal > max) {
+            alert('Только числовое значение от 0 до ' + max);
             textbox.val('');
             textbox.focus();
         }

@@ -404,7 +404,7 @@ if($row = $fetcher->Fetch()) {
                                     <label for="paint_solvent">Соотношение краски и растворителя (в процентах)</label>
                                     <div class="input-group">
                                         <input type="text" 
-                                               class="form-control float-only" 
+                                               class="form-control" 
                                                id="paint_solvent" 
                                                name="paint_solvent" 
                                                value="<?= empty($paint_solvent) ? "" : floatval($paint_solvent) ?>" 
@@ -523,5 +523,17 @@ if($row = $fetcher->Fetch()) {
         <?php
         include '../include/footer.php';
         ?>
+        <script>
+            // В поле "процент" ограничиваем значения: целые числа от 1 до 100
+            $('#paint_solvent').keydown(function(e) {
+                if(!KeyDownLimitFloatValue($(e.target), e, 100)) {
+                    return false;
+                }
+            });
+    
+            $("#paint_solvent").change(function(){
+                ChangeLimitFloatValue($(this), 100);
+            });
+        </script>
     </body>
 </html>

@@ -202,7 +202,7 @@ if($row = $fetcher->Fetch()) {
                             <label for="glue_solvent">Соотношение клея и растворителя (в процентах)</label>
                             <div class="input-group">
                             <input type="text" 
-                                   class="form-control float-only" 
+                                   class="form-control" 
                                    id="glue_solvent" 
                                    name="glue_solvent" 
                                    value="<?= empty($glue_solvent) ? "" : floatval($glue_solvent) ?>" 
@@ -225,5 +225,17 @@ if($row = $fetcher->Fetch()) {
         <?php
         include '../include/footer.php';
         ?>
+        <script>
+            // В поле "процент" ограничиваем значения: целые числа от 1 до 100
+            $('#glue_solvent').keydown(function(e) {
+                if(!KeyDownLimitFloatValue($(e.target), e, 100)) {
+                    return false;
+                }
+            });
+    
+            $("#glue_solvent").change(function(){
+                ChangeLimitFloatValue($(this), 100);
+            });
+        </script>
     </body>
 </html>
