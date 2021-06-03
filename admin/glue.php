@@ -201,7 +201,18 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="glue_solvent">Соотношение клея и растворителя (в процентах)</label>
                             <div class="input-group">
-                            <input type="text" class="form-control float-only" id="glue_solvent" name="glue_solvent" value="<?= empty($glue_solvent) ? "" : floatval($glue_solvent) ?>" placeholder="В процентах" required="required" />
+                            <input type="text" 
+                                   class="form-control float-only" 
+                                   id="glue_solvent" 
+                                   name="glue_solvent" 
+                                   value="<?= empty($glue_solvent) ? "" : floatval($glue_solvent) ?>" 
+                                   placeholder="В процентах" 
+                                   required="required" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onmouseup="javascript: $(this).attr('id', 'glue_solvent'); $(this).attr('name', 'glue_solvent'); $(this).attr('placeholder', 'В процентах');" 
+                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onkeyup="javascript: $(this).attr('id', 'glue_solvent'); $(this).attr('name', 'glue_solvent'); $(this).attr('placeholder', 'В процентах');" 
+                                   onfocusout="javascript: $(this).attr('id', 'glue_solvent'); $(this).attr('name', 'glue_solvent'); $(this).attr('placeholder', 'В процентах');" />
                             <div class="input-group-append"><span class="input-group-text">%</span></div>
                             </div>
                             <div class="invalid-feedback">Соотношение клея и растворителя обязательно</div>
