@@ -117,35 +117,35 @@ if($row = $fetcher->Fetch()) {
                     <form method="post">
                         <input type="hidden" id="machine_id" name="machine_id" value="<?= $machine_id ?>" />
                         <div class="form-group">
-                            <label for="time">Время приладки<?= $machine_id == MACHINE_LAMINATOR ? "" : " 1 краски" ?> (руб/час)</label>
+                            <label for="time">Время приладки<?= $machine_id == MACHINE_LAMINATOR ? "" : " 1 краски" ?> (мин)</label>
                             <input type="text" 
                                    class="form-control float-only" 
                                    id="time" 
                                    name="time" 
                                    value="<?= empty($time) ? "" : floatval($time) ?>" 
-                                   placeholder="Стоимость, руб/час" 
+                                   placeholder="Время, мин" 
                                    required="required" 
                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'time'); $(this).attr('name', 'time'); $(this).attr('placeholder', 'Стоимость, руб/час');" 
+                                   onmouseup="javascript: $(this).attr('id', 'time'); $(this).attr('name', 'time'); $(this).attr('placeholder', 'Время, мин');" 
                                    onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onkeyup="javascript: $(this).attr('id', 'time'); $(this).attr('name', 'time'); $(this).attr('placeholder', 'Стоимость, руб/час');" 
-                                   onfocusout="javascript: $(this).attr('id', 'time'); $(this).attr('name', 'time'); $(this).attr('placeholder', 'Стоимость, руб/час');" />
+                                   onkeyup="javascript: $(this).attr('id', 'time'); $(this).attr('name', 'time'); $(this).attr('placeholder', 'Время, мин');" 
+                                   onfocusout="javascript: $(this).attr('id', 'time'); $(this).attr('name', 'time'); $(this).attr('placeholder', 'Время, мин');" />
                             <div class="invalid-feedback">Время обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="length">Метраж приладки<?= $machine_id == MACHINE_LAMINATOR ? "" : " 1 краски" ?> (руб/м)</label>
+                            <label for="length">Метраж приладки<?= $machine_id == MACHINE_LAMINATOR ? "" : " 1 краски" ?> (метры)</label>
                             <input type="text" 
                                    class="form-control float-only" 
                                    id="length" 
                                    name="length" 
                                    value="<?= empty($length) ? "" : floatval($length) ?>" 
-                                   placeholder="Стоимость, руб/м" 
+                                   placeholder="Метраж, метры" 
                                    required="required" 
                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Стоимость, руб/м');" 
+                                   onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Метраж, метры');" 
                                    onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onkeyup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Стоимость, руб/м');" 
-                                   onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Стоимость, руб/м');" />
+                                   onkeyup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Метраж, метры');" 
+                                   onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Метраж, метры');" />
                             <div class="invalid-feedback">Метраж обязательно</div>
                         </div>
                         <button type="submit" id="norm_fitting_submit" name="norm_fitting_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
