@@ -23,6 +23,7 @@ $form_valid = true;
 $error_message = '';
 
 $glue_valid = '';
+$glue_expense_valid = '';
 $solvent_valid = '';
 $glue_solvent_valid = '';
 
@@ -30,6 +31,11 @@ $glue_solvent_valid = '';
 if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
     if(empty(filter_input(INPUT_POST, 'glue')) || empty(filter_input(INPUT_POST, 'glue_currency'))) {
         $glue_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(empty(filter_input(INPUT_POST, 'glue_expense'))) {
+        $glue_expense_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -49,17 +55,19 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
         // Старый объект
         $old_glue = '';
         $old_glue_currency = '';
+        $old_glue_expense = '';
         $old_solvent = '';
         $old_solvent_currency = '';
         $old_glue_solvent = '';
         
-        $sql = "select glue, glue_currency, solvent, solvent_currency, glue_solvent from norm_glue where machine_id = $machine_id order by date desc limit 1";
+        $sql = "select glue, glue_currency, glue_expense, solvent, solvent_currency, glue_solvent from norm_glue where machine_id = $machine_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
             $old_glue = $row['glue'];
             $old_glue_currency = $row['glue_currency'];
+            $old_glue_expense = $row['glue_expense'];
             $old_solvent = $row['solvent'];
             $old_solvent_currency = $row['solvent_currency'];
             $old_glue_solvent = $row['glue_solvent'];
@@ -68,16 +76,18 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
         // Новый объект
         $new_glue = filter_input(INPUT_POST, 'glue');
         $new_glue_currency = filter_input(INPUT_POST, 'glue_currency');
+        $new_glue_expense = filter_input(INPUT_POST, 'glue_expense');
         $new_solvent = filter_input(INPUT_POST, 'solvent');
         $new_solvent_currency = filter_input(INPUT_POST, 'solvent_currency');
         $new_glue_solvent = filter_input(INPUT_POST, 'glue_solvent');
         
         if($old_glue != $new_glue || 
                 $old_glue_currency != $new_glue_currency || 
+                $old_glue_expense != $new_glue_expense ||
                 $old_solvent != $new_solvent || 
                 $old_solvent_currency != $new_solvent_currency || 
                 $old_glue_solvent != $new_glue_solvent) {
-            $sql = "insert into norm_glue (machine_id, glue, glue_currency, solvent, solvent_currency, glue_solvent) values ($machine_id, $new_glue, '$new_glue_currency', $new_solvent, '$new_solvent_currency', $new_glue_solvent)";
+            $sql = "insert into norm_glue (machine_id, glue, glue_currency, glue_expense, solvent, solvent_currency, glue_solvent) values ($machine_id, $new_glue, '$new_glue_currency', $new_glue_expense, $new_solvent, '$new_solvent_currency', $new_glue_solvent)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -90,11 +100,12 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
 // Получение объекта
 $glue = '';
 $glue_currency = '';
+$glue_expense = '';
 $solvent = '';
 $solvent_currency = '';
 $glue_solvent = '';
 
-$sql = "select glue, glue_currency, solvent, solvent_currency, glue_solvent from norm_glue where machine_id = $machine_id order by date desc limit 1";
+$sql = "select glue, glue_currency, glue_expense, solvent, solvent_currency, glue_solvent from norm_glue where machine_id = $machine_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -104,6 +115,7 @@ if($row = $fetcher->Fetch()) {
     $glue = $row['glue'];
     $solvent = $row['solvent'];
     $glue_currency = $row['glue_currency'];
+    $glue_expense = $row['glue_expense'];
     $solvent_currency = $row['solvent_currency'];
     $glue_solvent = $row['glue_solvent'];
 }
@@ -170,6 +182,22 @@ if($row = $fetcher->Fetch()) {
                                     </select>
                                 </div>
                             </div>
+                            <div class="invalid-feedback">Стоимость клея обязательно</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="glue">Расход клея, г/м<sup>2</sup></label>
+                            <input type="text" 
+                                   class="form-control float-only" 
+                                   id="glue_expense" 
+                                   name="glue_expense" 
+                                   value="<?= empty($glue_expense) ? "" : floatval($glue_expense) ?>" 
+                                   placeholder="Расход клея, г/м2" 
+                                   required="required" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onmouseup="javascript: $(this).attr('id', 'glue_expense'); $(this).attr('name', 'glue_expense'); $(this).attr('placeholder', 'Расход клея, г/м2');" 
+                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onkeyup="javascript: $(this).attr('id', 'glue_expense'); $(this).attr('name', 'glue_expense'); $(this).attr('placeholder', 'Расход клея, г/м2');" 
+                                   onfocusout="javascript: $(this).attr('id', 'glue_expense'); $(this).attr('name', 'glue_expense'); $(this).attr('placeholder', 'Расход клея, г/м2');" />
                             <div class="invalid-feedback">Стоимость клея обязательно</div>
                         </div>
                         <div class="form-group">
