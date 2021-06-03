@@ -166,7 +166,7 @@ if($row = $fetcher->Fetch()) {
                                         <option value="" hidden="">...</option>
                                         <option value="rub"<?=$glue_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
                                         <option value="usd"<?=$glue_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                        <option value="euro"<?=$glue_currency == "euro" ? " selected='selected'" : "" ?>>Евро</option>
+                                        <option value="euro"<?=$glue_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
                                     </select>
                                 </div>
                             </div>
@@ -192,7 +192,7 @@ if($row = $fetcher->Fetch()) {
                                         <option value="" hidden="">...</option>
                                         <option value="rub"<?=$solvent_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
                                         <option value="usd"<?=$solvent_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                        <option value="euro"<?=$solvent_currency == "euro" ? " selected='selected'" : "" ?>>Евро</option>
+                                        <option value="euro"<?=$solvent_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
                                     </select>
                                 </div>
                             </div>

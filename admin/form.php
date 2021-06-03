@@ -178,7 +178,7 @@ if($row = $fetcher->Fetch()) {
                                         <option value="" hidden="">...</option>
                                         <option value="rub"<?=$flint_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
                                         <option value="usd"<?=$flint_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                        <option value="euro"<?=$flint_currency == "euro" ? " selected='selected'" : "" ?>>Евро</option>
+                                        <option value="euro"<?=$flint_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
                                     </select>
                                 </div>
                             </div>
@@ -204,7 +204,7 @@ if($row = $fetcher->Fetch()) {
                                         <option value="" hidden="">...</option>
                                         <option value="rub"<?=$kodak_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
                                         <option value="usd"<?=$kodak_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                        <option value="euro"<?=$kodak_currency == "euro" ? " selected='selected'" : "" ?>>Евро</option>
+                                        <option value="euro"<?=$kodak_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
                                     </select>
                                 </div>
                             </div>

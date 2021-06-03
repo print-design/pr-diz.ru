@@ -276,7 +276,7 @@ if($row = $fetcher->Fetch()) {
                                                 <option value="" hidden="">...</option>
                                                 <option value="rub"<?=$c_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
                                                 <option value="usd"<?=$c_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                                <option value="euro"<?=$c_currency == "euro" ? " selected='selected'" : "" ?>>Евро</option>
+                                                <option value="euro"<?=$c_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
                                             </select>
                                         </div>
                                     </div>
@@ -304,7 +304,7 @@ if($row = $fetcher->Fetch()) {
                                                 <option value="" hidden="">...</option>
                                                 <option value="rub"<?=$panton_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
                                                 <option value="usd"<?=$panton_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                                <option value="euro"<?=$panton_currency == "euro" ? " selected='selected'" : "" ?>>Евро</option>
+                                                <option value="euro"<?=$panton_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
                                             </select>
                                         </div>
                                     </div>
@@ -334,7 +334,7 @@ if($row = $fetcher->Fetch()) {
                                                 <option value="" hidden="">...</option>
                                                 <option value="rub"<?=$m_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
                                                 <option value="usd"<?=$m_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                                <option value="euro"<?=$m_currency == "euro" ? " selected='selected'" : "" ?>>Евро</option>
+                                                <option value="euro"<?=$m_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
                                             </select>
                                         </div>
                                     </div>
@@ -362,7 +362,7 @@ if($row = $fetcher->Fetch()) {
                                                 <option value="" hidden="">...</option>
                                                 <option value="rub"<?=$lacquer_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
                                                 <option value="usd"<?=$lacquer_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                                <option value="euro"<?=$lacquer_currency == "euro" ? " selected='selected'" : "" ?>>Евро</option>
+                                                <option value="euro"<?=$lacquer_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
                                             </select>
                                         </div>
                                     </div>
@@ -392,7 +392,7 @@ if($row = $fetcher->Fetch()) {
                                                 <option value="" hidden="">...</option>
                                                 <option value="rub"<?=$y_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
                                                 <option value="usd"<?=$y_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                                <option value="euro"<?=$y_currency == "euro" ? " selected='selected'" : "" ?>>Евро</option>
+                                                <option value="euro"<?=$y_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
                                             </select>
                                         </div>
                                     </div>
@@ -443,7 +443,7 @@ if($row = $fetcher->Fetch()) {
                                                 <option value="" hidden="">...</option>
                                                 <option value="rub"<?=$k_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
                                                 <option value="usd"<?=$k_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                                <option value="euro"<?=$k_currency == "euro" ? " selected='selected'" : "" ?>>Евро</option>
+                                                <option value="euro"<?=$k_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
                                             </select>
                                         </div>
                                     </div>
@@ -471,7 +471,7 @@ if($row = $fetcher->Fetch()) {
                                                 <option value="" hidden="">...</option>
                                                 <option value="rub"<?=$solvent_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
                                                 <option value="usd"<?=$solvent_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                                <option value="euro"<?=$solvent_currency == "euro" ? " selected='selected'" : "" ?>>Евро</option>
+                                                <option value="euro"<?=$solvent_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
                                             </select>
                                         </div>
                                     </div>
@@ -501,7 +501,7 @@ if($row = $fetcher->Fetch()) {
                                                 <option value="" hidden="">...</option>
                                                 <option value="rub"<?=$white_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
                                                 <option value="usd"<?=$white_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                                <option value="euro"<?=$white_currency == "euro" ? " selected='selected'" : "" ?>>Евро</option>
+                                                <option value="euro"<?=$white_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
                                             </select>
                                         </div>
                                     </div>
