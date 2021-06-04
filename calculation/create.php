@@ -108,8 +108,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $thickness = filter_input(INPUT_POST, 'thickness');
         
         $unit = filter_input(INPUT_POST, 'unit');
-        $machine_type_id = filter_input(INPUT_POST, 'machine_type_id');
-        if(empty($machine_type_id)) $machine_type_id = "NULL";
+        $machine_id = filter_input(INPUT_POST, 'machine_id');
+        if(empty($machine_id)) $machine_id = "NULL";
         
         $lamination1_brand_name = addslashes(filter_input(INPUT_POST, 'lamination1_brand_name'));
         $lamination1_thickness = filter_input(INPUT_POST, 'lamination1_thickness');
@@ -155,13 +155,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $$form_var = filter_input(INPUT_POST, "form_$i");
         }
         
-        $sql = "insert into calculation (date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_type_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, "
+        $sql = "insert into calculation (date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, "
                 . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
                 . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                 . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
                 . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
                 . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
-                . "values('$date', $customer_id, '$name', $work_type_id, '$brand_name', $thickness, '$unit', $machine_type_id, '$lamination1_brand_name', $lamination1_thickness, '$lamination2_brand_name', $lamination2_thickness, $width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, "
+                . "values('$date', $customer_id, '$name', $work_type_id, '$brand_name', $thickness, '$unit', $machine_id, '$lamination1_brand_name', $lamination1_thickness, '$lamination2_brand_name', $lamination2_thickness, $width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, "
                 . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
                 . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                 . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
@@ -203,7 +203,7 @@ if(empty($id)) {
 }
 
 if(!empty($id)) {
-    $sql = "select date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_type_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, "
+    $sql = "select date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, "
             . "quantity, width, streams_count, length, stream_width, raport, paints_count, status_id, extracharge, "
             . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -253,10 +253,10 @@ if(null === $unit) {
     else $unit = null;
 }
 
-$machine_type_id = filter_input(INPUT_POST, 'machine_type_id');
-if(null === $machine_type_id) {
-    if(isset($row['machine_type_id'])) $machine_type_id = $row['machine_type_id'];
-    else $machine_type_id = null;
+$machine_id = filter_input(INPUT_POST, 'machine_id');
+if(null === $machine_id) {
+    if(isset($row['machine_id'])) $machine_id = $row['machine_id'];
+    else $machine_id = null;
 }
 
 $lamination1_brand_name = filter_input(INPUT_POST, 'lamination1_brand_name');
@@ -517,20 +517,20 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit') ||
                         <!-- Печатная машина -->
                         <div class="print-only d-none">
                         <div class="form-group w-100">
-                            <label for="machine_type_id">Печатная машина</label>
-                            <select id="machine_type_id" name="machine_type_id" class="form-control print-only d-none">
+                            <label for="machine_id">Печатная машина</label>
+                            <select id="machine_id" name="machine_id" class="form-control print-only d-none">
                                 <option value="" hidden="hidden" selected="selected">Печатная машина...</option>
                                 <?php
-                                $sql = "select id, name from machine_type";
+                                $sql = "select id, name, colorfulness from machine where colorfulness > 0";
                                 $fetcher = new Fetcher($sql);
                                 
                                 while ($row = $fetcher->Fetch()):
                                 $selected = '';
-                                if($row['id'] == $machine_type_id) {
+                                if($row['id'] == $machine_id) {
                                     $selected = " selected='selected'";
                                 }
                                 ?>
-                                <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
+                                <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'].' ('.$row['colorfulness'].' красок)' ?></option>
                                 <?php
                                 endwhile;
                                 ?>

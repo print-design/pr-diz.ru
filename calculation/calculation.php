@@ -42,7 +42,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "cs.name status, cs.colour, cs.colour2, cs.image, "
         . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
         . "wt.name work_type, "
-        . "mt.name machine_type,"
+        . "mt.name machine, mt.colorfulness,"
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) weight, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
@@ -51,7 +51,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "left join calculation_status cs on c.status_id = cs.id "
         . "left join customer cu on c.customer_id = cu.id "
         . "left join work_type wt on c.work_type_id = wt.id "
-        . "left join machine_type mt on c.machine_type_id = mt.id "
+        . "left join machine mt on c.machine_id = mt.id "
         . "where c.id=$id";
 $row = (new Fetcher($sql))->Fetch();
 
@@ -110,7 +110,8 @@ $customer_person = $row['customer_person'];
 
 $work_type = $row['work_type'];
 
-$machine_type = $row['machine_type'];
+$machine = $row['machine'];
+$colorfulness = $row['colorfulness'];
 
 $num_for_customer = $row['num_for_customer'];
 ?>
@@ -163,9 +164,9 @@ $num_for_customer = $row['num_for_customer'];
                         <tr><th>Объем заказа</th><td><?=$quantity ?> <?=$unit == 'kg' ? "кг" : "шт" ?></td></tr>
                             <?php
                             endif;
-                            if(!empty($machine_type)):
+                            if(!empty($machine)):
                             ?>
-                        <tr><th>Печатная машина</th><td><?=$machine_type ?></td></tr>
+                        <tr><th>Печатная машина</th><td><?=$machine.' ('.$colorfulness.' красок)' ?></td></tr>
                             <?php
                             endif;
                             if(!empty($width)):
