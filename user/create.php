@@ -113,7 +113,7 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
                 <form method="post">
                     <div class="form-group">
                         <select id="role_id" name="role_id" class="form-control" required="required">
-                            <option value="">ВЫБЕРИТЕ ДОЛЖНОСТЬ</option>
+                            <option value="" hidden="hidden">ВЫБЕРИТЕ ДОЛЖНОСТЬ</option>
                             <?php
                             $roles = (new Grabber('select id, local_name from role order by priority'))->result;
                             foreach ($roles as $role) {
