@@ -23,12 +23,19 @@ $form_valid = true;
 $error_message = '';
 
 $c_valid = "";
+$c_expense_valid = "";
 $m_valid = "";
+$m_expense_valid = "";
 $y_valid = "";
+$y_expense_valid = "";
 $k_valid = "";
+$k_expense_valid = "";
 $white_valid = "";
+$white_expense_valid = "";
 $panton_valid = "";
+$panton_expense_valid = "";
 $lacquer_valid = "";
+$lacquer_expense_valid = "";
 $paint_solvent_valid = "";
 $solvent_valid = "";
 
@@ -39,8 +46,18 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
         $form_valid = false;
     }
     
+    if(empty(filter_input(INPUT_POST, 'c_expense'))) {
+        $c_expense_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
     if(empty(filter_input(INPUT_POST, 'm')) || empty(filter_input(INPUT_POST, 'm_currency'))) {
         $m_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(empty(filter_input(INPUT_POST, 'm_expense'))) {
+        $m_expense_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -49,8 +66,18 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
         $form_valid = false;
     }
     
+    if(empty(filter_input(INPUT_POST, 'y_expense'))) {
+        $y_expense_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
     if(empty(filter_input(INPUT_POST, 'k')) || empty(filter_input(INPUT_POST, 'k_currency'))) {
         $k_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(empty(filter_input(INPUT_POST, 'k_expense'))) {
+        $k_expense_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -59,13 +86,28 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
         $form_valid = false;
     }
     
+    if(empty(filter_input(INPUT_POST, 'white_expense'))) {
+        $white_expense_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
     if(empty(filter_input(INPUT_POST, 'panton')) || empty(filter_input(INPUT_POST, 'panton_currency'))) {
         $panton_valid = ISINVALID;
         $form_valid = false;
     }
     
+    if(empty(filter_input(INPUT_POST, 'panton_expense'))) {
+        $panton_expense_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
     if(empty(filter_input(INPUT_POST, 'lacquer')) || empty(filter_input(INPUT_POST, 'lacquer_currency'))) {
         $lacquer_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(empty(filter_input(INPUT_POST, 'lacquer_expense'))) {
+        $lacquer_expense_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -85,41 +127,55 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
         // Старый объект
         $old_c = "";
         $old_c_currency = "";
+        $old_c_expense = "";
         $old_m = "";
         $old_m_currency = "";
+        $old_m_expense = "";
         $old_y = "";
         $old_y_currency = "";
+        $old_y_expense = "";
         $old_k = "";
         $old_k_currency = "";
+        $old_k_expense = "";
         $old_white = "";
         $old_white_currency = "";
+        $old_white_expense = "";
         $old_panton = "";
         $old_panton_currency = "";
+        $old_panton_expense = "";
         $old_lacquer = "";
         $old_lacquer_currency = "";
+        $old_lacquer_expense = "";
         $old_paint_solvent = "";
         $old_solvent = "";
         $old_solvent_currency = "";
         
-        $sql = "select c, c_currency, m, m_currency, y, y_currency, k, k_currency, white, white_currency, panton, panton_currency, lacquer, lacquer_currency, paint_solvent, solvent, solvent_currency from norm_paint where machine_id = $machine_id order by date desc limit 1";
+        $sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent, solvent_currency from norm_paint where machine_id = $machine_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
             $old_c = $row["c"];
             $old_c_currency = $row["c_currency"];
+            $old_c_expense = $row['c_expense'];
             $old_m = $row["m"];
             $old_m_currency = $row["m_currency"];
+            $old_m_expense = $row['m_expense'];
             $old_y = $row["y"];
             $old_y_currency = $row["y_currency"];
+            $old_y_expense = $row['y_expense'];
             $old_k = $row["k"];
             $old_k_currency = $row["k_currency"];
+            $old_k_expense = $row['k_expense'];
             $old_white = $row["white"];
             $old_white_currency = $row["white_currency"];
+            $old_white_expense = $row['white_expense'];
             $old_panton = $row["panton"];
             $old_panton_currency = $row["panton_currency"];
+            $old_panton_expense = $row['panton_expense'];
             $old_lacquer = $row["lacquer"];
             $old_lacquer_currency = $row["lacquer_currency"];
+            $old_lacquer_expense = $row['lacquer_expense'];
             $old_paint_solvent = $row["paint_solvent"];
             $old_solvent = $row["solvent"];
             $old_solvent_currency = $row["solvent_currency"];
@@ -128,40 +184,54 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
         // Новый объект
         $new_c = filter_input(INPUT_POST, "c");
         $new_c_currency = filter_input(INPUT_POST, "c_currency");
+        $new_c_expense = filter_input(INPUT_POST, 'c_expense');
         $new_m = filter_input(INPUT_POST, "m");
         $new_m_currency = filter_input(INPUT_POST, "m_currency");
+        $new_m_expense = filter_input(INPUT_POST, 'm_expense');
         $new_y = filter_input(INPUT_POST, "y");
         $new_y_currency = filter_input(INPUT_POST, "y_currency");
+        $new_y_expense = filter_input(INPUT_POST, 'y_expense');
         $new_k = filter_input(INPUT_POST, "k");
         $new_k_currency = filter_input(INPUT_POST, "k_currency");
+        $new_k_expense = filter_input(INPUT_POST, 'k_expense');
         $new_white = filter_input(INPUT_POST, "white");
         $new_white_currency = filter_input(INPUT_POST, "white_currency");
+        $new_white_expense = filter_input(INPUT_POST, 'white_expense');
         $new_panton = filter_input(INPUT_POST, "panton");
         $new_panton_currency = filter_input(INPUT_POST, "panton_currency");
+        $new_panton_expense = filter_input(INPUT_POST, 'panton_expense');
         $new_lacquer = filter_input(INPUT_POST, "lacquer");
         $new_lacquer_currency = filter_input(INPUT_POST, "lacquer_currency");
+        $new_lacquer_expense = filter_input(INPUT_POST, 'lacquer_expense');
         $new_paint_solvent = filter_input(INPUT_POST, "paint_solvent");
         $new_solvent = filter_input(INPUT_POST, "solvent");
         $new_solvent_currency = filter_input(INPUT_POST, "solvent_currency");
         
         if($old_c != $new_c ||
-                $old_c_currency != $new_c_currency ||
+                $old_c_currency != $new_c_currency || 
+                $old_c_expense != $new_c_expense ||
                 $old_m != $new_m ||
-                $old_m_currency != $new_m_currency ||
+                $old_m_currency != $new_m_currency || 
+                $old_m_expense != $new_m_expense ||
                 $old_y != $new_y ||
-                $old_y_currency != $new_y_currency ||
+                $old_y_currency != $new_y_currency || 
+                $old_y_expense != $new_y_expense ||
                 $old_k != $new_k ||
-                $old_k_currency != $new_k_currency ||
+                $old_k_currency != $new_k_currency || 
+                $old_k_expense != $new_k_expense ||
                 $old_white != $new_white ||
-                $old_white_currency != $new_white_currency ||
+                $old_white_currency != $new_white_currency || 
+                $old_white_expense != $new_white_expense ||
                 $old_panton != $new_panton ||
-                $old_panton_currency != $new_panton_currency ||
+                $old_panton_currency != $new_panton_currency || 
+                $old_panton_expense != $new_panton_expense ||
                 $old_lacquer != $new_lacquer ||
-                $old_lacquer_currency != $new_lacquer_currency ||
+                $old_lacquer_currency != $new_lacquer_currency || 
+                $old_lacquer_expense != $new_lacquer_expense ||
                 $old_paint_solvent != $new_paint_solvent ||
                 $old_solvent != $new_solvent ||
                 $old_solvent_currency != $new_solvent_currency) {
-            $sql = "insert into norm_paint (machine_id, c, c_currency, m, m_currency, y, y_currency, k, k_currency, white, white_currency, panton, panton_currency, lacquer, lacquer_currency, paint_solvent, solvent, solvent_currency) values ($machine_id, $new_c, '$new_c_currency', $new_m, '$new_m_currency', $new_y, '$new_m_currency', $new_k, '$new_k_currency', $new_white, '$new_white_currency', $new_panton, '$new_panton_currency', $new_lacquer, '$new_lacquer_currency', $new_paint_solvent, $new_solvent, '$new_solvent_currency')";
+            $sql = "insert into norm_paint (machine_id, c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent, solvent_currency) values ($machine_id, $new_c, '$new_c_currency', $new_c_expense, $new_m, '$new_m_currency', $new_m_expense, $new_y, '$new_y_currency', $new_y_expense, $new_k, '$new_k_currency', $new_k_expense, $new_white, '$new_white_currency', $new_white_expense, $new_panton, '$new_panton_currency', $new_panton_expense, $new_lacquer, '$new_lacquer_currency', $new_lacquer_expense, $new_paint_solvent, $new_solvent, '$new_solvent_currency')";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -174,23 +244,30 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
 // Получение объекта
 $c = "";
 $c_currency = "";
+$c_expense = "";
 $m = "";
 $m_currency = "";
+$m_expense = "";
 $y = "";
 $y_currency = "";
+$y_expense = "";
 $k = "";
 $k_currency = "";
+$k_expense = "";
 $white = "";
 $white_currency = "";
+$white_expense = "";
 $panton = "";
 $panton_currency = "";
+$panton_expense = "";
 $lacquer = "";
 $lacquer_currency = "";
+$lacquer_expense = "";
 $paint_solvent = "";
 $solvent = "";
 $solvent_currency = "";
 
-$sql = "select c, c_currency, m, m_currency, y, y_currency, k, k_currency, white, white_currency, panton, panton_currency, lacquer, lacquer_currency, paint_solvent, solvent, solvent_currency from norm_paint where machine_id = $machine_id order by date desc limit 1";
+$sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent, solvent_currency from norm_paint where machine_id = $machine_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -199,18 +276,25 @@ if(empty($error_message)) {
 if($row = $fetcher->Fetch()) {
     $c = $row["c"];
     $c_currency = $row["c_currency"];
+    $c_expense = $row['c_expense'];
     $m = $row["m"];
     $m_currency = $row["m_currency"];
+    $m_expense = $row['m_expense'];
     $y = $row["y"];
     $y_currency = $row["y_currency"];
+    $y_expense = $row['y_expense'];
     $k = $row["k"];
     $k_currency = $row["k_currency"];
+    $k_expense = $row['k_expense'];
     $white = $row["white"];
     $white_currency = $row["white_currency"];
+    $white_expense = $row['white_expense'];
     $panton = $row["panton"];
     $panton_currency = $row["panton_currency"];
+    $panton_expense = $row['panton_expense'];
     $lacquer = $row["lacquer"];
     $lacquer_currency = $row["lacquer_currency"];
+    $lacquer_expense = $row['lacquer_expense'];
     $paint_solvent = $row["paint_solvent"];
     $solvent = $row["solvent"];
     $solvent_currency = $row["solvent_currency"];
@@ -298,7 +382,7 @@ if($row = $fetcher->Fetch()) {
                                            onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onkeyup="javascript: $(this).attr('id', 'c_expense'); $(this).attr('name', 'c_expense'); $(this).attr('placeholder', 'Расход C (г/м2)');" 
                                            onfocusout="javascript: $(this).attr('id', 'c_expense'); $(this).attr('name', 'c_expense'); $(this).attr('placeholder', 'Расход C (г/м2)');" />
-                                    <div class="invalid-feedback">C обязательно</div>
+                                    <div class="invalid-feedback">Расход C обязательно</div>
                                 </div>
                             </div>
                         </div>
@@ -346,7 +430,7 @@ if($row = $fetcher->Fetch()) {
                                            onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onkeyup="javascript: $(this).attr('id', 'm_expense'); $(this).attr('name', 'm_expense'); $(this).attr('placeholder', 'Расход M (г/м2)');" 
                                            onfocusout="javascript: $(this).attr('id', 'm_expense'); $(this).attr('name', 'm_expense'); $(this).attr('placeholder', 'Расход M (г/м2)');" />
-                                    <div class="invalid-feedback">M обязательно</div>
+                                    <div class="invalid-feedback">Расход M обязательно</div>
                                 </div>
                             </div>
                         </div>
@@ -394,7 +478,7 @@ if($row = $fetcher->Fetch()) {
                                            onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onkeyup="javascript: $(this).attr('id', 'y_expense'); $(this).attr('name', 'y_expense'); $(this).attr('placeholder', 'Расход Y (г/м2)');" 
                                            onfocusout="javascript: $(this).attr('id', 'y_expense'); $(this).attr('name', 'y_expense'); $(this).attr('placeholder', 'Расход Y (г/м2)');" />
-                                    <div class="invalid-feedback">Y обязательно</div>
+                                    <div class="invalid-feedback">Расход Y обязательно</div>
                                 </div>
                             </div>
                         </div>
@@ -442,7 +526,7 @@ if($row = $fetcher->Fetch()) {
                                            onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onkeyup="javascript: $(this).attr('id', 'k_expense'); $(this).attr('name', 'k_expense'); $(this).attr('placeholder', 'Расход K (г/м2)');" 
                                            onfocusout="javascript: $(this).attr('id', 'k_expense'); $(this).attr('name', 'k_expense'); $(this).attr('placeholder', 'Расход K (г/м2)');" />
-                                    <div class="invalid-feedback">K обязательно</div>
+                                    <div class="invalid-feedback">Расход K обязательно</div>
                                 </div>
                             </div>
                         </div>
@@ -475,7 +559,24 @@ if($row = $fetcher->Fetch()) {
                                     <div class="invalid-feedback">Пантоны обязательно</div>
                                 </div>
                             </div>
-                            <div class="d-table-cell pl-3"></div>
+                            <div class="d-table-cell pl-3">
+                                <div class="form-group">
+                                    <label for="panton_expense">Расход пантонов (г/м<sup>2</sup>)</label>
+                                    <input type="text" 
+                                           class="form-control float-only" 
+                                           id="panton_expense" 
+                                           name="panton_expense" 
+                                           value="<?= empty($panton_expense) ? "" : floatval($panton_expense) ?>" 
+                                           placeholder="Расход пантонов (г/м2)" 
+                                           required="required" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'panton_expense'); $(this).attr('name', 'panton_expense'); $(this).attr('placeholder', 'Расход пантонов (г/м2)');" 
+                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeyup="javascript: $(this).attr('id', 'panton_expense'); $(this).attr('name', 'panton_expense'); $(this).attr('placeholder', 'Расход пантонов (г/м2)');" 
+                                           onfocusout="javascript: $(this).attr('id', 'panton_expense'); $(this).attr('name', 'panton_expense'); $(this).attr('placeholder', 'Расход пантонов (г/м2)');" />
+                                    <div class="invalid-feedback">Расход пантонов обязательно</div>
+                                </div>
+                            </div>
                         </div>
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
@@ -506,7 +607,24 @@ if($row = $fetcher->Fetch()) {
                                     <div class="invalid-feedback">Белая обязательно</div>
                                 </div>
                             </div>
-                            <div class="d-table-cell pl-3"></div>
+                            <div class="d-table-cell pl-3">
+                                <div class="form-group">
+                                    <label for="white_expense">Расход белой (г/м<sup>2</sup>)</label>
+                                    <input type="text" 
+                                           class="form-control float-only" 
+                                           id="white_expense" 
+                                           name="white_expense" 
+                                           value="<?= empty($white_expense) ? "" : floatval($white_expense) ?>" 
+                                           placeholder="Расход белой (г/м2)" 
+                                           required="required" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'white_expense'); $(this).attr('name', 'white_expense'); $(this).attr('placeholder', 'Расход белой (г/м2)');" 
+                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeyup="javascript: $(this).attr('id', 'white_expense'); $(this).attr('name', 'white_expense'); $(this).attr('placeholder', 'Расход белой (г/м2)');" 
+                                           onfocusout="javascript: $(this).attr('id', 'white_expense'); $(this).attr('name', 'white_expense'); $(this).attr('placeholder', 'Расход белой (г/м2)');" />
+                                    <div class="invalid-feedback">Расход белой обязательно</div>
+                                </div>
+                            </div>
                         </div>
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
@@ -537,7 +655,24 @@ if($row = $fetcher->Fetch()) {
                                     <div class="invalid-feedback">Лак обязательно</div>
                                 </div>
                             </div>
-                            <div class="d-table-cell pl-3"></div>
+                            <div class="d-table-cell pl-3">
+                                <div class="form-group">
+                                    <label for="lacquer_expense">Расход лака (г/м<sup>2</sup>)</label>
+                                    <input type="text" 
+                                           class="form-control float-only" 
+                                           id="lacquer_expense" 
+                                           name="lacquer_expense" 
+                                           value="<?= empty($lacquer_expense) ? "" : floatval($lacquer_expense) ?>" 
+                                           placeholder="Расход лака (г/м2)" 
+                                           required="required" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'lacquer_expense'); $(this).attr('name', 'lacquer_expense'); $(this).attr('placeholder', 'Расход лака (г/м2)');" 
+                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeyup="javascript: $(this).attr('id', 'lacquer_expense'); $(this).attr('name', 'lacquer_expense'); $(this).attr('placeholder', 'Расход лака (г/м2)');" 
+                                           onfocusout="javascript: $(this).attr('id', 'lacquer_expense'); $(this).attr('name', 'lacquer_expense'); $(this).attr('placeholder', 'Расход лака (г/м2)');" />
+                                    <div class="invalid-feedback">Расход лака обязательно</div>
+                                </div>
+                            </div>
                         </div>
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
