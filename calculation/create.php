@@ -816,13 +816,12 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit') ||
                                         <?php
                                         if(!empty($machine_id)) {
                                             $sql = "select value from raport where machine_id = $machine_id order by value";
-                                            $grabber = new Grabber($sql);
-                                            $raports = $grabber->result;
+                                            $fetcher = new Fetcher($sql);
                                             
-                                            foreach ($raports as $raport_item) {
-                                                $raport_value = $raport_item['value'];
+                                            while($row = $fetcher->Fetch()) {
+                                                $raport_value = $row['value'];
                                                 $selected = "";
-                                                if($raport_value = $raport) $selected = " selected='selected'";
+                                                if($raport_value == $raport) $selected = " selected='selected'";
                                                 echo "<option value='$raport_value'$selected>$raport_value</option>";
                                             }
                                         }
