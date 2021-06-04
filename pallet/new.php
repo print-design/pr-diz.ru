@@ -443,7 +443,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         <script>
             $('#supplier_id').change(function(){
                 if($(this).val() == "") {
-                    $('#film_brand_id').html("<option id=''>Выберите марку</option>");
+                    $('#film_brand_id').html("<option value=''>Выберите марку</option>");
                 }
                 else {
                     $.ajax({ url: "../ajax/film_brand.php?supplier_id=" + $(this).val() })
@@ -458,7 +458,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                 
             $('#film_brand_id').change(function(){
                 if($(this).val() == "") {
-                    $('#thickness').html("<option id=''>Выберите толщину</option>");
+                    $('#thickness').html("<option value=''>Выберите толщину</option>");
                 }
                 else {
                     $.ajax({ url: "../ajax/thickness.php?film_brand_id=" + $(this).val() })

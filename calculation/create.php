@@ -814,19 +814,19 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit') ||
                                     <select id="raport" name="raport" class="form-control print-only d-none">
                                         <option value="" hidden="hidden" selected="selected">Рапорт...</option>
                                         <?php
-                                        $selected = "";
-                                        if($raport == 1.111) {
-                                            $selected = " selected='selected'";
+                                        if(!empty($machine_id)) {
+                                            $sql = "select value from raport where machine_id = $machine_id order by value";
+                                            $grabber = new Grabber($sql);
+                                            $raports = $grabber->result;
+                                            
+                                            foreach ($raports as $raport_item) {
+                                                $raport_value = $raport_item['value'];
+                                                $selected = "";
+                                                if($raport_value = $raport) $selected = " selected='selected'";
+                                                echo "<option value='$raport_value'$selected>$raport_value</option>";
+                                            }
                                         }
                                         ?>
-                                        <option<?=$selected ?>>1.111</option>
-                                        <?php
-                                        $selected = "";
-                                        if($raport == 2.222) {
-                                            $selected = " selected='selected'";
-                                        }
-                                        ?>
-                                        <option<?=$selected ?>>2.222</option>
                                     </select>
                                 </div>
                             </div>
@@ -1181,6 +1181,22 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit') ||
                 $('#lamination2_brand_name').removeAttr('required');
                 $('#lamination2_thickness').removeAttr('required');
             }
+            
+            // Обработка выбора машины, заполнение списка рапортов
+            $('#machine_id').change(function(){
+                if($(this).val() == "") {
+                    $('#raport').html("<option value=''>Рапорт...</option>")
+                }
+                else {
+                    $.ajax({ url: "../ajax/raport.php?machine_id=" + $(this).val() })
+                            .done(function(data) {
+                                $('#raport').html(data);
+                            })
+                            .fail(function() {
+                                alert('Ошиибка при выборе машины');
+                            });
+                }
+            });
             
             // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин
             $('#brand_name').change(function(){
