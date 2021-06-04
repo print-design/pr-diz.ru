@@ -242,7 +242,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     <div class="form-group">
                         <label for="supplier_id">Поставщик</label>
                         <select id="supplier_id" name="supplier_id" class="form-control" required="required">
-                            <option value="">Выберите поставщика</option>
+                            <option value="" hidden="hidden">Выберите поставщика</option>
                             <?php
                             $suppliers = (new Grabber("select id, name from supplier order by name"))->result;
                             foreach ($suppliers as $supplier) {

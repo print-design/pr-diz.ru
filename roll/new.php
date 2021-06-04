@@ -196,7 +196,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                     <div class="form-group">
                         <label for="supplier_id">Поставщик</label>
                         <select id="supplier_id" name="supplier_id" class="form-control" required="required">
-                            <option value="">Выберите поставщика</option>
+                            <option value="" hidden="hidden">Выберите поставщика</option>
                             <?php
                             $suppliers = (new Grabber("select id, name from supplier order by name"))->result;
                             foreach ($suppliers as $supplier) {
@@ -283,7 +283,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                                 if($shpulya == 76) $shpulya_selected_76 = " selected='selected'";
                                 if($shpulya == 152) $shpulya_selected_152 = " selected='selected'";
                                 ?>
-                                <option value="">Выберите шпулю</option>
+                                <option value="" hidden="hidden">Выберите шпулю</option>
                                 <option value="76"<?=$shpulya_selected_76 ?>">76</option>
                                 <option value="152"<?=$shpulya_selected_152 ?>">152</option>
                             </select>
