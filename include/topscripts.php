@@ -104,7 +104,8 @@ function GetDateFromDateTo($getDateFrom, $getDateTo, &$dateFrom, &$dateTo) {
     $dateTo = null;
     
     $diff7Days = new DateInterval('P7D');
-    $diff14Days = new DateInterval('P14D');
+    //$diff14Days = new DateInterval('P14D');
+    $diff30Days = new DateInterval('P30D');
     $diff1Day = new DateInterval('P1D');
     
     if($getDateFrom !== null && $getDateFrom !== '') {
@@ -113,32 +114,26 @@ function GetDateFromDateTo($getDateFrom, $getDateTo, &$dateFrom, &$dateTo) {
     
     if($getDateTo !== null && $getDateTo !== '') {
         $dateTo = DateTime::createFromFormat("Y-m-d", $getDateTo);
-        //$date_to->add($diff1Day);
     }
     
     if($dateFrom !== null && $dateTo == null) {
         $dateTo = clone $dateFrom;
-        $dateTo->add($diff14Days);
-        //$date_to->add($diff1Day);
+        $dateTo->add($diff30Days);
     }
     
     if($dateFrom == null && $dateTo !== null) {
         $dateFrom = clone $dateTo;
-        $dateFrom->sub($diff14Days);
-        //$date_from->sub($diff1Day);
+        $dateFrom->sub($diff30Days);
     }
     
     if($dateFrom !== null && $dateTo !== null && $dateFrom >= $dateTo) {
         $dateTo = clone $dateFrom;
-        //$date_to->add($diff14Days);
-        //$date_to->add($diff1Day);
     }
     
     if($dateFrom == null && $dateTo == null) {
         $dateFrom = new DateTime();
         $dateTo = clone $dateFrom;
-        $dateTo->add($diff14Days);
-        //$date_to->add($diff1Day);
+        $dateTo->add($diff30Days);
     }
 }
 
