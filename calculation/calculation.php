@@ -163,7 +163,7 @@ $num_for_customer = $row['num_for_customer'];
                             <?php
                             if(!empty($quantity) && !empty($unit)):
                             ?>
-                        <tr><th>Объем заказа</th><td><?= str_replace(".", ",", floatval($quantity)) ?> <?=$unit == 'kg' ? "кг" : "шт" ?></td></tr>
+                        <tr><th>Объем заказа</th><td><?= rtrim(rtrim(number_format($quantity, 2, ",", " "), "0"), ",") ?> <?=$unit == 'kg' ? "кг" : "шт" ?></td></tr>
                             <?php
                             endif;
                             if(!empty($machine)):
@@ -173,22 +173,22 @@ $num_for_customer = $row['num_for_customer'];
                             endif;
                             if(!empty($width)):
                             ?>
-                        <tr><th>Обрезная ширина</th><td><?= str_replace(".", ",", floatval($width)) ?></td></tr>
+                        <tr><th>Обрезная ширина</th><td><?= rtrim(rtrim(number_format($width, 2, ",", " "), "0"), ",") ?></td></tr>
                             <?php
                             endif;
                             if(!empty($length)):
                             ?>
-                        <tr><th>Длина от метки до метки</th><td><?= str_replace(".", ",", floatval($length)) ?></td></tr>
+                        <tr><th>Длина от метки до метки</th><td><?= rtrim(rtrim(number_format($length, 2, ",", " "), "0"), ",") ?></td></tr>
                             <?php
                             endif;
                             if(!empty($stream_width)):
                             ?>
-                        <tr><th>Ширина ручья</th><td><?= str_replace(".", ",", floatval($stream_width)) ?></td></tr>
+                        <tr><th>Ширина ручья</th><td><?= rtrim(rtrim(number_format($stream_width, 2, ",", " "), "0"), ",") ?></td></tr>
                             <?php
                             endif;
                             if(!empty($raport)):
                             ?>
-                        <tr><th>Рапорт</th><td><?= str_replace(".", ",", floatval($raport)) ?></td></tr>
+                        <tr><th>Рапорт</th><td><?= rtrim(rtrim(number_format($raport, 2, ",", " "), "0"), ",") ?></td></tr>
                             <?php
                             endif;
                             if(!empty($streams_count)):
@@ -204,7 +204,7 @@ $num_for_customer = $row['num_for_customer'];
                                 <table class="w-100">
                                     <tr>
                                         <td><?=$brand_name ?></td>
-                                        <td><?= str_replace(".", ",", floatval($thickness)) ?> мкм&nbsp;&ndash;&nbsp;<?= str_replace(".", ",", floatval($weight)) ?> г/м<sup>2</sup></td>
+                                        <td><?= rtrim(rtrim(number_format($thickness, 2, ",", " "), "0"), ",") ?> мкм&nbsp;&ndash;&nbsp;<?= rtrim(rtrim(number_format($weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></td>
                                     </tr>
                                 </table>
                             </td>
@@ -219,14 +219,14 @@ $num_for_customer = $row['num_for_customer'];
                                 <table class="w-100">
                                     <tr>
                                         <td><?=$lamination1_brand_name ?></td>
-                                        <td><?= str_replace(".", ",", floatval($lamination1_thickness)) ?> мкм&nbsp;&ndash;&nbsp;<?= str_replace(".", ",", floatval($lamination1_weight)) ?> г/м<sup>2</sup></td>
+                                        <td><?= rtrim(rtrim(number_format($lamination1_thickness, 2, ",", " "), "0"), ",") ?> мкм&nbsp;&ndash;&nbsp;<?= rtrim(rtrim(number_format($lamination1_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></td>
                                     </tr>
                                     <?php
                                     if(!empty($lamination2_brand_name) && !empty($lamination2_thickness)):
                                     ?>
                                     <tr>
                                         <td><?=$lamination2_brand_name ?></td>
-                                        <td><?= str_replace(".", ",", floatval($lamination2_thickness)) ?> мкм&nbsp;&ndash;&nbsp;<?= str_replace(".", ",", floatval($lamination2_weight)) ?> г/м<sup>2</sup></td>
+                                        <td><?= rtrim(rtrim(number_format($lamination2_thickness, 2, ",", " "), "0"), ",") ?> мкм&nbsp;&ndash;&nbsp;<?= rtrim(rtrim(number_format($lamination2_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></td>
                                     </tr>
                                     <?php
                                     endif;
