@@ -1212,7 +1212,7 @@ $colorfulnesses = array();
                     $('#paints_count').html(colorfulness_list);
                     
                     // Заполняем список рапортов
-                    $.ajax({ url: "../ajax/machine.php?machine_id=" + $(this).val() })
+                    $.ajax({ url: "../ajax/raport.php?machine_id=" + $(this).val() })
                             .done(function(data) {
                                 $('#raport').html(data);
                             })
