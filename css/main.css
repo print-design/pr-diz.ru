@@ -3,6 +3,7 @@
 body {
     font-family: 'SF Pro Display';
     padding-left: 60px;
+    font-size: 14px;
 }
 
 a:not(.btn):link, a:not(.btn):visited {
