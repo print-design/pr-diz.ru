@@ -505,6 +505,6 @@ textarea#editable {
 
 /* Правая панель расчётов */
 #calculation {
-    left: 55%;
+    right: 15px;
     margin-top: 140px;
 }

@@ -279,13 +279,13 @@
         blockHeight = fixed_block.outerHeight();
         blockMarginTop = parseInt(fixed_block.css('margin-top').replace('px', ''));
         
-        if(blockHeight + blockMarginTop <= windowHeight) {
+        if(blockHeight + blockMarginTop < windowHeight) {
             fixed_block.css('position', 'fixed');
             fixed_block.css('top', 0);
             fixed_block.css('bottom', 'auto');
         }
         else {
-            if(blockHeight + blockMarginTop <= $(window).scrollTop() + windowHeight) {
+            if(blockHeight + blockMarginTop < $(window).scrollTop() + windowHeight) {
                 fixed_block.css('position', 'fixed');
                 fixed_block.css('bottom', 0);
                 fixed_block.css('top', 'auto');
