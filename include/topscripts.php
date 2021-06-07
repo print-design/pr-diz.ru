@@ -104,7 +104,7 @@ function GetDateFromDateTo($getDateFrom, $getDateTo, &$dateFrom, &$dateTo) {
     $dateTo = null;
     
     $diff7Days = new DateInterval('P7D');
-    //$diff14Days = new DateInterval('P14D');
+    $diff14Days = new DateInterval('P14D');
     $diff30Days = new DateInterval('P30D');
     $diff1Day = new DateInterval('P1D');
     
