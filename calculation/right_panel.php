@@ -47,17 +47,19 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
             </div>
         </div>
         <div class="mt-3">
-            <h2>Себестоимость</h2>
+            <h2>Стоимость</h2>
         </div>
         <div class="d-table w-100">
             <div class="d-table-row">
                 <div class="d-table-cell pb-2 pt-2 w-25">
-                    <div style="font-size: small;">Себестоимость</div>
-                    <div class="font-weight-bold" style="font-size: large;">1&nbsp;&nbsp;200&nbsp;&nbsp;000&nbsp;&nbsp;<i class="fas fa-ruble-sign" style="font-size: medium;"></i></div>
+                    <h3>Себестоимость</h3>
+                    <div>Себестоимость</div>
+                    <div class="value">860 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
                 </div>
                 <div class="d-table-cell pb-2 pt-2 pl-3 w-25">
-                    <div style="font-size: small;">Себестоимость, 1 <span class="unit_name"><?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
-                    <div class="font-weight-bold" style="font-size: large;">765&nbsp;&nbsp;<i class="fas fa-ruble-sign" style="font-size: medium;"></i></div>
+                    <h3>Отгрузочная стоимость</h3>
+                    <div>Отгрузочная стоимость</div>
+                    <div class="value">1 200 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
                 </div>
                 <div class="d-table-cell w-25"></div>
                 <div class="d-table-cell w-25"></div>
@@ -65,8 +67,8 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
             <?php if($work_type_id == 2): ?>
             <div class="d-table-row">
                 <div class="d-table-cell pb-2 pt-2 w-25">
-                    <div style="font-size: small;">Себестоимость форм</div>
-                    <div class="font-weight-bold" style="font-size: large;">800&nbsp;&nbsp;000&nbsp;&nbsp;<i class="fas fa-ruble-sign" style="font-size: medium;"></i></div>
+                    <div>Себестоимость форм</div>
+                    <div class="value">800 000 &#8381;</div>
                 </div>
                 <div class="d-table-cell w-25"></div>
                 <div class="d-table-cell w-25"></div>
@@ -75,7 +77,7 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
             <?php endif; ?>
         </div>
         <div class="mt-3">
-            <h2>Отгрузочная стоимость</h2>
+            <h2>Материалы</h2>
         </div>
         <div class="d-table w-100">
             <div class="d-table-row">

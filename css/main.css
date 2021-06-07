@@ -206,6 +206,11 @@ h2 {
     color: #191919;
 }
 
+h3 {
+    font-size: 18px;
+    font-weight: 700;
+}
+
 /*Второе меню*/
 .nav2 {
     font-size: 14px;
@@ -507,4 +512,9 @@ textarea#editable {
 #calculation {
     right: 15px;
     margin-top: 140px;
+}
+
+#calculation .value {
+    font-size: 18px;
+    font-weight: 700;
 }

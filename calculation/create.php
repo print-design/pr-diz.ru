@@ -421,7 +421,7 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit') ||
             </div>
             <div class="row">
                 <!-- Левая половина -->
-                <div class="col-6" id="left_side">
+                <div class="col-4" id="left_side">
                     <form method="post">
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                         <input type="hidden" id="scroll" name="scroll" />
