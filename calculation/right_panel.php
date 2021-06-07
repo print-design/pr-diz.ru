@@ -11,29 +11,37 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
         <div class="d-table w-100">
             <div class="d-table-row">
                 <div class="d-table-cell w-25">
-                    <div class="p-2 w-75" style="border: solid 1px lightgray; border-radius: 10px; height: 80px;">
-                        <div style="font-size: x-small;">Наценка</div>
-                            <?php
-                            $extracharge_disabled = " disabled='disabled'";
-                            if($status_id == 1) {
-                                $extracharge_disabled = "";
-                            }
-                            ?>
-                        <input type="text" id="extracharge" name="extracharge" class="int-only mt-1" style="width: 50px;" value="<?=$extracharge ?>"<?=$extracharge_disabled ?> /> %
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
+                                <div class="text-nowrap" style="font-size: x-small;">Наценка</div>
+                                <?php if($status_id == 1): ?>
+                                <div class="input-group">
+                                    <input type="text" id="extracharge" name="extracharge" class="int-only" style="width: 30px; height: 25px;" value="<?=$extracharge ?>" />
+                                    <div class="input-group-append" style="height: 25px;">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
+                                <?php else: ?>
+                                <span class="text-nowrap"><?=$extracharge ?>%</span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 60px;">
+                                <div class="text-nowrap" style="font-size: x-small;">Курс евро</div>
+                                    <?php
+                                    $sql = "select euro from currency order by id desc limit 1";
+                                    $fetcher = new Fetcher($sql);
+                                    if($row = $fetcher->Fetch()) {
+                                        echo number_format($row[0], 2, ',', ' ');
+                                    }
+                                    ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="d-table-cell w-25">
-                    <div class="p-2 w-75" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 80px;">
-                        <div style="font-size: x-small;">Курс евро</div>
-                        <?php
-                        $sql = "select euro from currency order by id desc limit 1";
-                        $fetcher = new Fetcher($sql);
-                        if($row = $fetcher->Fetch()) {
-                            echo number_format($row[0], 2, ',', ' ');
-                        }
-                        ?>
-                    </div>
-                </div>
+                <div class="d-table-cell w-25"></div>
                 <div class="d-table-cell w-25"></div>
                 <div class="d-table-cell w-25"></div>
             </div>
