@@ -38,7 +38,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
         . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
         . "c.form_1, c.form_2, c.form_3, form_4, form_5, form_6, form_7, form_8, "
-        . "c.status_id, c.extracharge, "
+        . "c.status_id, c.extracharge, c.customers_material, c.no_ski, "
         . "cs.name status, cs.colour, cs.colour2, cs.image, "
         . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
         . "wt.name work_type, "
@@ -96,6 +96,8 @@ for($i=1; $i<=$paints_count; $i++) {
 
 $status_id = $row['status_id'];
 $extracharge = $row['extracharge'];
+$customers_material = $row['customers_material'];
+$no_ski = $row['no_ski'];
 
 $status = $row['status'];
 $colour = $row['colour'];
@@ -290,6 +292,14 @@ $num_for_customer = $row['num_for_customer'];
                             <?php
                             endif;
                             ?>
+                        <tr>
+                            <th>Сырьё заказчика</th>
+                            <td><?=$customers_material == 1 ? "ДА" : "НЕТ" ?></td>
+                        </tr>
+                        <tr>
+                            <th>Печать без лыж</th>
+                            <td><?=$no_ski == 1 ? "ДА" : "НЕТ" ?></td>
+                        </tr>
                     </table>
                     <?php if($status_id == 3): ?>
                     <form method="post">

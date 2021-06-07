@@ -132,6 +132,16 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $paints_count = filter_input(INPUT_POST, 'paints_count');
         if(empty($paints_count)) $paints_count = "NULL";
         
+        $customers_material = 0;
+        if(filter_input(INPUT_POST, 'customers_material') == 'on') {
+            $customers_material = 1;
+        }
+        
+        $no_ski = 0;
+        if(filter_input(INPUT_POST, 'no_ski') == 'on') {
+            $no_ski = 1;
+        }
+        
         $manager_id = GetUserId();
         $status_id = 1; // Статус "Расчёт"
         
@@ -155,13 +165,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $$form_var = filter_input(INPUT_POST, "form_$i");
         }
         
-        $sql = "insert into calculation (date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, "
+        $sql = "insert into calculation (date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, customers_material, no_ski, "
                 . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
                 . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                 . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
                 . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
                 . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
-                . "values('$date', $customer_id, '$name', $work_type_id, '$brand_name', $thickness, '$unit', $machine_id, '$lamination1_brand_name', $lamination1_thickness, '$lamination2_brand_name', $lamination2_thickness, $width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, "
+                . "values('$date', $customer_id, '$name', $work_type_id, '$brand_name', $thickness, '$unit', $machine_id, '$lamination1_brand_name', $lamination1_thickness, '$lamination2_brand_name', $lamination2_thickness, $width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, $customers_material, $no_ski, "
                 . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
                 . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                 . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
@@ -204,7 +214,7 @@ if(empty($id)) {
 
 if(!empty($id)) {
     $sql = "select date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, "
-            . "quantity, width, streams_count, length, stream_width, raport, paints_count, status_id, extracharge, "
+            . "quantity, width, streams_count, length, stream_width, raport, paints_count, status_id, extracharge, customers_material, no_ski, "
             . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
             . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -323,6 +333,15 @@ $paints_count = filter_input(INPUT_POST, 'paints_count');
 if(null === $paints_count) {
     if(isset($row['paints_count'])) $paints_count = $row['paints_count'];
     else $paints_count = null;
+}
+
+if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
+    $customers_material = filter_input(INPUT_POST, 'customers_material') == 'on' ? 1 : 0;
+    $no_ski = filter_input(INPUT_POST, 'no_ski') == 'on' ? 1 : 0;
+}
+else {
+    $customers_material = $row['customers_material'];
+    $no_ski = $row['no_ski'];
 }
 
 if(isset($row['status_id'])) $status_id = $row['status_id'];
@@ -1002,6 +1021,28 @@ $colorfulnesses = array();
                             <?php
                             endfor;
                             ?>
+                        </div>
+                        <div class="row mt-3 mb-2">
+                            <div class="col-3">
+                                <div class="form-check">
+                                    <label class="form-check-label" style="line-height: 25px;">
+                                        <?php
+                                        $checked = $customers_material == 1 ? " checked='checked'" : "";
+                                        ?>
+                                        <input type="checkbox" class="form-check-input" id="customers_material" name="customers_material" value="on"<?=$checked ?>>Сырьё заказчика
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-check">
+                                    <label class="form-check-label" style="line-height: 25px;">
+                                        <?php
+                                        $checked = $no_ski == 1 ? " checked='checked'" : "";
+                                        ?>
+                                        <input type="checkbox" class="form-check-input" id="no_ski" name="no_ski" value="on"<?=$checked ?>>Печать без лыж
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                         <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark mt-3<?=$create_calculation_submit_class ?>">Рассчитать</button>
                     </form>
