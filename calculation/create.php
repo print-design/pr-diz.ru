@@ -382,6 +382,9 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit') ||
         !$form_valid) {
     $create_calculation_submit_class = "";
 }
+
+// Список красочностей каждой машины
+$colorfulnesses = array();
 ?>
 <!DOCTYPE html>
 <html>
@@ -532,6 +535,8 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit') ||
                                 ?>
                                 <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'].' ('.$row['colorfulness'].' красок)' ?></option>
                                 <?php
+                                // Заполняем список красочностей, чтобы при выборе машины установить нужное количество элементов списка
+                                $colorfulnesses[$row['id']] = $row['colorfulness'];
                                 endwhile;
                                 ?>
                             </select>
@@ -835,9 +840,10 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit') ||
                             <div class="form-group">
                                 <label for="paints_count">Количество красок</label>
                                 <select id="paints_count" name="paints_count" class="form-control print-only d-none">
-                                    <option value="" hidden="hidden" selected="selected">Количество красок...</option>
+                                    <option value="" hidden="hidden">Количество красок...</option>
                                         <?php
-                                        for($i = 1; $i <= 8; $i++):
+                                        if(!empty($paints_count) || !empty($machine_id)):
+                                        for($i = 1; $i <= $colorfulnesses[$machine_id]; $i++):
                                             $selected = "";
                                         if($paints_count == $i) {
                                             $selected = " selected='selected'";
@@ -846,6 +852,7 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit') ||
                                     <option<?=$selected ?>><?=$i ?></option>
                                         <?php
                                         endfor;
+                                        endif;
                                         ?>
                                 </select>
                             </div>
@@ -1181,13 +1188,31 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit') ||
                 $('#lamination2_thickness').removeAttr('required');
             }
             
+            // Заполняем список красочностей
+            var colorfulnesses = {};
+            <?php foreach (array_keys($colorfulnesses) as $key): ?>
+                colorfulnesses[<?=$key ?>] = <?=$colorfulnesses[$key] ?>;
+            <?php endforeach; ?>
+            
             // Обработка выбора машины, заполнение списка рапортов
             $('#machine_id').change(function(){
                 if($(this).val() == "") {
                     $('#raport').html("<option value=''>Рапорт...</option>")
                 }
                 else {
-                    $.ajax({ url: "../ajax/raport.php?machine_id=" + $(this).val() })
+                    // Заполняем список количеств цветов
+                    $('.paint_block').addClass('d-none');
+                    $('.paint').removeAttr('required');
+                                
+                    colorfulness = parseInt(colorfulnesses[$(this).val()]);
+                    var colorfulness_list = "<option value='' hidden='hidden'>Количество красок...</option>";
+                    for(var i=1; i<=colorfulness; i++) {
+                        colorfulness_list = colorfulness_list + "<option>" + i + "</option>";
+                    }
+                    $('#paints_count').html(colorfulness_list);
+                    
+                    // Заполняем список рапортов
+                    $.ajax({ url: "../ajax/machine.php?machine_id=" + $(this).val() })
                             .done(function(data) {
                                 $('#raport').html(data);
                             })
