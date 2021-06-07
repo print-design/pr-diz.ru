@@ -340,8 +340,11 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     $no_ski = filter_input(INPUT_POST, 'no_ski') == 'on' ? 1 : 0;
 }
 else {
-    $customers_material = $row['customers_material'];
-    $no_ski = $row['no_ski'];
+    if(isset($row['customers_material'])) $customers_material = $row['customers_material'];
+    else $customers_material = null;
+    
+    if(isset($row['no_ski'])) $no_ski = $row['no_ski'];
+    else $no_ski = null;
 }
 
 if(isset($row['status_id'])) $status_id = $row['status_id'];
