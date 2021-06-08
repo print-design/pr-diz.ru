@@ -76,7 +76,7 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
                     <div>Закупочная стоимость</div>
                     <div class="value mb-2">800 000 &#8381;</div>
                     <div>Минимальная ширина</div>
-                    <div class="value mb-2">800 000 м</div>
+                    <div class="value mb-2">800 000 мм</div>
                     <div>Масса без приладки</div>
                     <div class="value mb-2">7 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">172 000 м</span></div>
                     <div>Масса с приладкой</div>
@@ -88,7 +88,7 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
                     <div>Закупочная стоимость</div>
                     <div class="value mb-2">800 000 &#8381;</div>
                     <div>Минимальная ширина</div>
-                    <div class="value mb-2">800 000 м</div>
+                    <div class="value mb-2">800 000 мм</div>
                     <div>Масса без приладки</div>
                     <div class="value mb-2">7 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">172 000 м</span></div>
                     <div>Масса с приладкой</div>
@@ -101,7 +101,7 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
                     <div>Закупочная стоимость</div>
                     <div class="value mb-2">800 000 &#8381;</div>
                     <div>Минимальная ширина</div>
-                    <div class="value mb-2">800 000 м</div>
+                    <div class="value mb-2">800 000 мм</div>
                     <div>Масса без приладки</div>
                     <div class="value mb-2">7 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">172 000 м</span></div>
                     <div>Масса с приладкой</div>
