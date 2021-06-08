@@ -31,14 +31,17 @@ if(empty($id)) {
     $id = filter_input(INPUT_GET, 'id');
 }
 
-$sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c.unit, c.brand_name, c.thickness, c.lamination1_brand_name, c.lamination1_thickness, c.lamination2_brand_name, c.lamination2_thickness, "
+$sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c.unit, "
+        . "c.brand_name, c.thickness, c.customers_material, "
+        . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_customers_material, "
+        . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_customers_material, "
         . "c.width, c.length, c.stream_width, c.streams_count, c.raport, c.paints_count, "
         . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
         . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
         . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
         . "c.form_1, c.form_2, c.form_3, form_4, form_5, form_6, form_7, form_8, "
-        . "c.status_id, c.extracharge, c.customers_material, c.no_ski, "
+        . "c.status_id, c.extracharge, c.no_ski, "
         . "cs.name status, cs.colour, cs.colour2, cs.image, "
         . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
         . "wt.name work_type, "
@@ -64,12 +67,15 @@ $unit = $row['unit'];
 $brand_name = $row['brand_name'];
 $thickness = $row['thickness'];
 $weight = $row['weight'];
+$customers_material = $row['customers_material'];
 $lamination1_brand_name = $row['lamination1_brand_name'];
 $lamination1_thickness = $row['lamination1_thickness'];
 $lamination1_weight = $row['lamination1_weight'];
+$lamination1_customers_material = $row['lamination1_customers_material'];
 $lamination2_brand_name = $row['lamination2_brand_name'];
 $lamination2_thickness = $row['lamination2_thickness'];
 $lamination2_weight = $row['lamination2_weight'];
+$lamination2_customers_material = $row['lamination2_customers_material'];
 $width = $row['width'];
 $length = $row['length'];
 $stream_width = $row['stream_width'];
@@ -96,7 +102,6 @@ for($i=1; $i<=$paints_count; $i++) {
 
 $status_id = $row['status_id'];
 $extracharge = $row['extracharge'];
-$customers_material = $row['customers_material'];
 $no_ski = $row['no_ski'];
 
 $status = $row['status'];
@@ -205,6 +210,7 @@ $num_for_customer = $row['num_for_customer'];
                                     <tr>
                                         <td><?=$brand_name ?></td>
                                         <td><?= rtrim(rtrim(number_format($thickness, 2, ",", " "), "0"), ",") ?> мкм&nbsp;&ndash;&nbsp;<?= rtrim(rtrim(number_format($weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></td>
+                                        <td class="w-25"><?=$customers_material == 1 ? "Заказчика" : "Наша" ?></td>
                                     </tr>
                                 </table>
                             </td>
@@ -220,6 +226,7 @@ $num_for_customer = $row['num_for_customer'];
                                     <tr>
                                         <td><?=$lamination1_brand_name ?></td>
                                         <td><?= rtrim(rtrim(number_format($lamination1_thickness, 2, ",", " "), "0"), ",") ?> мкм&nbsp;&ndash;&nbsp;<?= rtrim(rtrim(number_format($lamination1_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></td>
+                                        <td class="w-25"><?=$lamination1_customers_material == 1 ? "Заказчика" : "Наша" ?></td>
                                     </tr>
                                     <?php
                                     if(!empty($lamination2_brand_name) && !empty($lamination2_thickness)):
@@ -227,6 +234,7 @@ $num_for_customer = $row['num_for_customer'];
                                     <tr>
                                         <td><?=$lamination2_brand_name ?></td>
                                         <td><?= rtrim(rtrim(number_format($lamination2_thickness, 2, ",", " "), "0"), ",") ?> мкм&nbsp;&ndash;&nbsp;<?= rtrim(rtrim(number_format($lamination2_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></td>
+                                        <td class="w-25"><?=$lamination2_customers_material == 1 ? "Заказчика" : "Наша" ?></td>
                                     </tr>
                                     <?php
                                     endif;
@@ -292,10 +300,6 @@ $num_for_customer = $row['num_for_customer'];
                             <?php
                             endif;
                             ?>
-                        <tr>
-                            <th>Сырьё заказчика</th>
-                            <td><?=$customers_material == 1 ? "ДА" : "НЕТ" ?></td>
-                        </tr>
                         <tr>
                             <th>Печать без лыж</th>
                             <td><?=$no_ski == 1 ? "ДА" : "НЕТ" ?></td>
