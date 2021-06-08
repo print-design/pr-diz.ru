@@ -106,6 +106,10 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $work_type_id = filter_input(INPUT_POST, 'work_type_id');
         $brand_name = addslashes(filter_input(INPUT_POST, 'brand_name'));
         $thickness = filter_input(INPUT_POST, 'thickness');
+        $customers_material = 0;
+        if(filter_input(INPUT_POST, 'customers_material') == 'on') {
+            $customers_material = 1;
+        }
         
         $unit = filter_input(INPUT_POST, 'unit');
         $machine_id = filter_input(INPUT_POST, 'machine_id');
@@ -114,9 +118,18 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $lamination1_brand_name = addslashes(filter_input(INPUT_POST, 'lamination1_brand_name'));
         $lamination1_thickness = filter_input(INPUT_POST, 'lamination1_thickness');
         if(empty($lamination1_thickness)) $lamination1_thickness = "NULL";
+        $lamination1_customers_material = 0;
+        if(filter_input(INPUT_POST, 'lamination1_customers_material') == 'on') {
+            $lamination1_customers_material = 1;
+        }
+        
         $lamination2_brand_name = addslashes(filter_input(INPUT_POST, 'lamination2_brand_name'));
         $lamination2_thickness = filter_input(INPUT_POST, 'lamination2_thickness');
         if(empty($lamination2_thickness)) $lamination2_thickness = "NULL";
+        $lamination2_customers_material = 0;
+        if(filter_input(INPUT_POST, 'lamination2_customers_material') == 'on') {
+            $lamination2_customers_material = 1;
+        }
         
         $quantity = filter_input(INPUT_POST, 'quantity');
         $width = filter_input(INPUT_POST, 'width');
@@ -131,11 +144,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         if(empty($raport)) $raport = "NULL";
         $paints_count = filter_input(INPUT_POST, 'paints_count');
         if(empty($paints_count)) $paints_count = "NULL";
-        
-        $customers_material = 0;
-        if(filter_input(INPUT_POST, 'customers_material') == 'on') {
-            $customers_material = 1;
-        }
         
         $no_ski = 0;
         if(filter_input(INPUT_POST, 'no_ski') == 'on') {
@@ -165,13 +173,21 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $$form_var = filter_input(INPUT_POST, "form_$i");
         }
         
-        $sql = "insert into calculation (date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, customers_material, no_ski, "
+        $sql = "insert into calculation (date, customer_id, name, work_type_id, unit, machine_id, "
+                . "brand_name, thickness, customers_material, "
+                . "lamination1_brand_name, lamination1_thickness, lamination1_customers_material, "
+                . "lamination2_brand_name, lamination2_thickness, lamination2_customers_material, "
+                . "width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, no_ski, "
                 . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
                 . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                 . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
                 . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
                 . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
-                . "values('$date', $customer_id, '$name', $work_type_id, '$brand_name', $thickness, '$unit', $machine_id, '$lamination1_brand_name', $lamination1_thickness, '$lamination2_brand_name', $lamination2_thickness, $width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, $customers_material, $no_ski, "
+                . "values('$date', $customer_id, '$name', $work_type_id, '$unit', $machine_id, "
+                . "'$brand_name', $thickness, $customers_material, "
+                . "'$lamination1_brand_name', $lamination1_thickness, $lamination1_customers_material, "
+                . "'$lamination2_brand_name', $lamination2_thickness, $lamination2_customers_material, "
+                . "$width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, $no_ski, "
                 . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
                 . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                 . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
@@ -213,8 +229,11 @@ if(empty($id)) {
 }
 
 if(!empty($id)) {
-    $sql = "select date, customer_id, name, work_type_id, brand_name, thickness, unit, machine_id, lamination1_brand_name, lamination1_thickness, lamination2_brand_name, lamination2_thickness, "
-            . "quantity, width, streams_count, length, stream_width, raport, paints_count, status_id, extracharge, customers_material, no_ski, "
+    $sql = "select date, customer_id, name, work_type_id, unit, machine_id, "
+            . "brand_name, thickness, customers_material, "
+            . "lamination1_brand_name, lamination1_thickness, lamination1_customers_material, "
+            . "lamination2_brand_name, lamination2_thickness, lamination2_customers_material, "
+            . "quantity, width, streams_count, length, stream_width, raport, paints_count, status_id, extracharge, no_ski, "
             . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
             . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -257,6 +276,14 @@ if(null === $thickness) {
     else $thickness = null;
 }
 
+if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
+    $customers_material = filter_input(INPUT_POST, 'customers_material') == 'on' ? 1 : 0;
+}
+else {
+    if(isset($row['customers_material'])) $customers_material = $row['customers_material'];
+    else $customers_material = null;
+}
+
 $unit = filter_input(INPUT_POST, "unit");
 if(null === $unit) {
     if(isset($row['unit'])) $unit = $row['unit'];
@@ -281,6 +308,14 @@ if(null === $lamination1_thickness) {
     else $lamination1_thickness = null;
 }
 
+if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
+    $lamination1_customers_material = filter_input(INPUT_POST, 'lamination1_customers_material') == 'on' ? 1 : 0;
+}
+else {
+    if(isset($row['lamination1_customers_material'])) $lamination1_customers_material = $row['lamination1_customers_material'];
+    else $lamination1_customers_material = null;
+}
+
 $lamination2_brand_name = filter_input(INPUT_POST, 'lamination2_brand_name');
 if(null === $lamination2_brand_name) {
     if(isset($row['lamination2_brand_name'])) $lamination2_brand_name = $row['lamination2_brand_name'];
@@ -291,6 +326,14 @@ $lamination2_thickness = filter_input(INPUT_POST, 'lamination2_thickness');
 if(null === $lamination2_thickness) {
     if(isset($row['lamination2_thickness'])) $lamination2_thickness = $row['lamination2_thickness'];
     else $lamination2_thickness = null;
+}
+
+if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
+    $lamination2_customers_material = filter_input(INPUT_POST, 'lamination2_customers_material') == 'on' ? 1 : 0;
+}
+else {
+    if(isset($row['lamination2_customers_material'])) $lamination2_customers_material = $row['lamination2_customers_material'];
+    else $lamination2_customers_material = null;
 }
 
 $quantity = filter_input(INPUT_POST, 'quantity');
@@ -336,13 +379,9 @@ if(null === $paints_count) {
 }
 
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
-    $customers_material = filter_input(INPUT_POST, 'customers_material') == 'on' ? 1 : 0;
     $no_ski = filter_input(INPUT_POST, 'no_ski') == 'on' ? 1 : 0;
 }
 else {
-    if(isset($row['customers_material'])) $customers_material = $row['customers_material'];
-    else $customers_material = null;
-    
     if(isset($row['no_ski'])) $no_ski = $row['no_ski'];
     else $no_ski = null;
 }
@@ -641,6 +680,19 @@ $colorfulnesses = array();
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-6"></div>
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <label class="form-check-label text-nowrap" style="line-height: 25px;">
+                                        <?php
+                                        $checked = $customers_material == 1 ? " checked='checked'" : "";
+                                        ?>
+                                        <input type="checkbox" class="form-check-input" id="customers_material" name="customers_material" value="on"<?=$checked ?>>Сырьё заказчика
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                         <div id="show_lamination_1">
                             <button type="button" class="btn btn-light" onclick="javascript: ShowLamination1();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                         </div>
@@ -703,6 +755,19 @@ $colorfulnesses = array();
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-6"></div>
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <label class="form-check-label text-nowrap" style="line-height: 25px;">
+                                            <?php
+                                            $checked = $lamination1_customers_material == 1 ? " checked='checked'" : "";
+                                            ?>
+                                            <input type="checkbox" class="form-check-input" id="lamination1_customers_material" name="lamination1_customers_material" value="on"<?=$checked ?>>Сырьё заказчика
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                             <div id="show_lamination_2">
                                 <button type="button" class="btn btn-light" onclick="javascript: ShowLamination2();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                             </div>
@@ -756,6 +821,19 @@ $colorfulnesses = array();
                                     <div class="col-1 d-flex flex-column justify-content-end" id="hide_lamination_2">
                                         <div class="form-group">
                                             <button type="button" class="btn btn-light" onclick="javascript: HideLamination2();"><i class="fas fa-trash-alt"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6"></div>
+                                    <div class="col-6">
+                                        <div class="form-check">
+                                            <label class="form-check-label text-nowrap" style="line-height: 25px;">
+                                                <?php
+                                                $checked = $lamination2_customers_material == 1 ? " checked='checked'" : "";
+                                                ?>
+                                                <input type="checkbox" class="form-check-input" id="lamination2_customers_material" name="lamination2_customers_material" value="on"<?=$checked ?>>Сырьё заказчика
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -1025,27 +1103,13 @@ $colorfulnesses = array();
                             endfor;
                             ?>
                         </div>
-                        <div class="row mt-3 mb-2">
-                            <div class="col-3">
-                                <div class="form-check">
-                                    <label class="form-check-label" style="line-height: 25px;">
-                                        <?php
-                                        $checked = $customers_material == 1 ? " checked='checked'" : "";
-                                        ?>
-                                        <input type="checkbox" class="form-check-input" id="customers_material" name="customers_material" value="on"<?=$checked ?>>Сырьё заказчика
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-check">
-                                    <label class="form-check-label" style="line-height: 25px;">
-                                        <?php
-                                        $checked = $no_ski == 1 ? " checked='checked'" : "";
-                                        ?>
-                                        <input type="checkbox" class="form-check-input" id="no_ski" name="no_ski" value="on"<?=$checked ?>>Печать без лыж
-                                    </label>
-                                </div>
-                            </div>
+                        <div class="form-check">
+                            <label class="form-check-label text-nowrap" style="line-height: 25px;">
+                                <?php
+                                $checked = $no_ski == 1 ? " checked='checked'" : "";
+                                ?>
+                                <input type="checkbox" class="form-check-input" id="no_ski" name="no_ski" value="on"<?=$checked ?>>Печать без лыж
+                            </label>
                         </div>
                         <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark mt-3<?=$create_calculation_submit_class ?>">Рассчитать</button>
                     </form>
@@ -1194,6 +1258,7 @@ $colorfulnesses = array();
             function HideLamination1() {
                 $('#lamination1_brand_name').val('');
                 $('#lamination1_brand_name').change();
+                $('#lamination1_customers_material').prop("checked", false);
                 
                 $('#form_lamination_1').addClass('d-none');
                 $('#show_lamination_1').removeClass('d-none');
@@ -1223,6 +1288,7 @@ $colorfulnesses = array();
             function HideLamination2() {
                 $('#lamination2_brand_name').val('');
                 $('#lamination2_brand_name').change();
+                $('#lamination2_customers_material').prop("checked", false);
                 
                 $('#form_lamination_2').addClass('d-none');
                 $('#show_lamination_2').removeClass('d-none');
