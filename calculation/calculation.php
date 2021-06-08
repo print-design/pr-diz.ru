@@ -201,6 +201,14 @@ $num_for_customer = $row['num_for_customer'];
                         <tr><th>Количество ручьев</th><td><?= $streams_count ?></td></tr>
                             <?php
                             endif;
+                            if(!empty($machine)):
+                            ?>
+                        <tr>
+                            <th>Печать без лыж</th>
+                            <td><?=$no_ski == 1 ? "ДА" : "НЕТ" ?></td>
+                        </tr>
+                            <?php
+                            endif;
                             if(!empty($brand_name) && !empty($thickness)):
                             ?>
                         <tr>
@@ -300,10 +308,6 @@ $num_for_customer = $row['num_for_customer'];
                             <?php
                             endif;
                             ?>
-                        <tr>
-                            <th>Печать без лыж</th>
-                            <td><?=$no_ski == 1 ? "ДА" : "НЕТ" ?></td>
-                        </tr>
                     </table>
                     <?php if($status_id == 3): ?>
                     <form method="post">

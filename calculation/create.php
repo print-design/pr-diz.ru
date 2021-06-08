@@ -627,10 +627,10 @@ $colorfulnesses = array();
                         </div>
                         <!-- Основная плёнка -->
                         <div id="film_title">
-                            <p><span class="font-weight-bold">Пленка</span>&nbsp;&nbsp;<span style="color: gray;">(325 руб) <i class="fas fa-info-circle" title="325 руб" data-placement="top"></i></span></p>
+                            <p><span class="font-weight-bold">Пленка</span></p>
                         </div>
                         <div id="main_film_title" class="d-none">
-                            <p><span class="font-weight-bold">Основная пленка</span>&nbsp;&nbsp;<span style="color: gray;">(325 руб   34кг   600мм) <i class="fas fa-info-circle" title="325 руб   34кг   600мм" data-placement="top"></i></span></p>
+                            <p><span class="font-weight-bold">Основная пленка</span></p>
                         </div>
                         <div class="row">
                             <div class="col-6">
@@ -698,7 +698,7 @@ $colorfulnesses = array();
                         </div>
                         <!-- Ламинация 1 -->
                         <div id="form_lamination_1" class="d-none">
-                            <p><span class="font-weight-bold">Ламинация 1</span>&nbsp;&nbsp;<span style="color: gray;">(325 руб   34кг   600мм) <i class="fas fa-info-circle" title="325 руб   34кг   600мм" data-placement="top"></i></span></p>
+                            <p><span class="font-weight-bold">Ламинация 1</span></p>
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group">
@@ -773,7 +773,7 @@ $colorfulnesses = array();
                             </div>
                             <!-- Ламинация 2 -->
                             <div id="form_lamination_2" class="d-none">
-                                <p><span class="font-weight-bold">Ламинация 2</span>&nbsp;&nbsp;<span style="color: gray;">(325 руб   34кг   600мм) <i class="fas fa-info-circle" title="325 руб   34кг   600мм" data-placement="top"></i></span></p>
+                                <p><span class="font-weight-bold">Ламинация 2</span></p>
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
@@ -934,6 +934,15 @@ $colorfulnesses = array();
                                     </select>
                                 </div>
                             </div>
+                        </div>
+                        <!-- Печать без лыж -->
+                        <div class="form-check mb-2 print-only d-none">
+                            <label class="form-check-label text-nowrap" style="line-height: 25px;">
+                                <?php
+                                $checked = $no_ski == 1 ? " checked='checked'" : "";
+                                ?>
+                                <input type="checkbox" class="form-check-input" id="no_ski" name="no_ski" value="on"<?=$checked ?>>Печать без лыж
+                            </label>
                         </div>
                         <!-- Количество красок -->
                         <div class="print-only d-none">
@@ -1102,14 +1111,6 @@ $colorfulnesses = array();
                             <?php
                             endfor;
                             ?>
-                        </div>
-                        <div class="form-check">
-                            <label class="form-check-label text-nowrap" style="line-height: 25px;">
-                                <?php
-                                $checked = $no_ski == 1 ? " checked='checked'" : "";
-                                ?>
-                                <input type="checkbox" class="form-check-input" id="no_ski" name="no_ski" value="on"<?=$checked ?>>Печать без лыж
-                            </label>
                         </div>
                         <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark mt-3<?=$create_calculation_submit_class ?>">Рассчитать</button>
                     </form>
