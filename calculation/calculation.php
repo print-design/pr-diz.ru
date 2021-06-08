@@ -153,7 +153,7 @@ $num_for_customer = $row['num_for_customer'];
             </div>
             <div class="row">
                 <!-- Левая половина -->
-                <div class="col-4" id="left_side">
+                <div class="col-5" id="left_side">
                     <h1 style="font-size: 32px; font-weight: 600;"><?= htmlentities($name) ?></h1>
                     <h2 style="font-size: 26px;">№<?=$customer_id."-".$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></h2>
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; background-color: <?=$colour2 ?>; border: solid 2px <?=$colour ?>; color: <?=$colour ?>">
@@ -217,7 +217,7 @@ $num_for_customer = $row['num_for_customer'];
                                 <table class="w-100">
                                     <tr>
                                         <td><?=$brand_name ?></td>
-                                        <td><?= rtrim(rtrim(number_format($thickness, 2, ",", " "), "0"), ",") ?> мкм&nbsp;&ndash;&nbsp;<?= rtrim(rtrim(number_format($weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></td>
+                                        <td><?= rtrim(rtrim(number_format($thickness, 2, ",", " "), "0"), ",") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                                         <td class="w-25"><?=$customers_material == 1 ? "Заказчика" : "Наша" ?></td>
                                     </tr>
                                 </table>
@@ -233,7 +233,7 @@ $num_for_customer = $row['num_for_customer'];
                                 <table class="w-100">
                                     <tr>
                                         <td><?=$lamination1_brand_name ?></td>
-                                        <td><?= rtrim(rtrim(number_format($lamination1_thickness, 2, ",", " "), "0"), ",") ?> мкм&nbsp;&ndash;&nbsp;<?= rtrim(rtrim(number_format($lamination1_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></td>
+                                        <td><?= rtrim(rtrim(number_format($lamination1_thickness, 2, ",", " "), "0"), ",") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                                         <td class="w-25"><?=$lamination1_customers_material == 1 ? "Заказчика" : "Наша" ?></td>
                                     </tr>
                                     <?php
@@ -241,7 +241,7 @@ $num_for_customer = $row['num_for_customer'];
                                     ?>
                                     <tr>
                                         <td><?=$lamination2_brand_name ?></td>
-                                        <td><?= rtrim(rtrim(number_format($lamination2_thickness, 2, ",", " "), "0"), ",") ?> мкм&nbsp;&ndash;&nbsp;<?= rtrim(rtrim(number_format($lamination2_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></td>
+                                        <td><?= rtrim(rtrim(number_format($lamination2_thickness, 2, ",", " "), "0"), ",") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                                         <td class="w-25"><?=$lamination2_customers_material == 1 ? "Заказчика" : "Наша" ?></td>
                                     </tr>
                                     <?php

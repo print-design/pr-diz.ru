@@ -10,7 +10,7 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
     <form method="post">
         <div class="d-table w-100">
             <div class="d-table-row">
-                <div class="d-table-cell w-25">
+                <div class="d-table-cell" style="width: 33%;">
                     <div class="row">
                         <div class="col-6">
                             <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
@@ -28,7 +28,7 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="p-2" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 60px;">
+                            <div class="p-2" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 60px; width: 100px;">
                                 <div class="text-nowrap" style="font-size: x-small;">Курс евро</div>
                                     <?php
                                     $sql = "select euro from currency order by id desc limit 1";
@@ -41,9 +41,7 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
                         </div>
                     </div>
                 </div>
-                <div class="d-table-cell w-25"></div>
-                <div class="d-table-cell w-25"></div>
-                <div class="d-table-cell w-25"></div>
+                <div class="table-cell"></div>
             </div>
         </div>
         <div class="mt-3">
@@ -51,7 +49,7 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
         </div>
         <div class="d-table w-100">
             <div class="d-table-row">
-                <div class="d-table-cell pb-2 pt-2 w-25">
+                <div class="d-table-cell pb-2 pt-2" style="width: 33%;">
                     <h3>Себестоимость</h3>
                     <div>Себестоимость</div>
                     <div class="value mb-2">860 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
@@ -60,13 +58,12 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
                     <div class="value mb-2">800 000 &#8381;</div>
                     <?php endif; ?>
                 </div>
-                <div class="d-table-cell pb-2 pl-3 w-25">
+                <div class="d-table-cell pb-2 pt-2 pl-3" style="width: 33%;">
                     <h3>Отгрузочная стоимость</h3>
                     <div>Отгрузочная стоимость</div>
                     <div class="value">1 200 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
                 </div>
-                <div class="d-table-cell w-25"></div>
-                <div class="d-table-cell w-25"></div>
+                <div class="d-table-cell"></div>
             </div>
         </div>
         <div class="mt-3">
@@ -74,7 +71,7 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
         </div>
         <div class="d-table w-100">
             <div class="d-table-row">
-                <div class="d-table-cell pb-2 pt-2 w-25">
+                <div class="d-table-cell pb-2 pt-2" style="width: 33%;">
                     <h3>Основная пленка</h3>
                     <div>Закупочная стоимость</div>
                     <div class="value mb-2">800 000 &#8381;</div>
@@ -85,7 +82,7 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
                     <div>Масса без приладки</div>
                     <div class="value mb-2">7 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">172 000 м</span></div>
                 </div>
-                <div class="d-table-cell pb-2 pt-2 pl-3 w-25">
+                <div class="d-table-cell pb-2 pt-2 pl-3" style="width: 33%;">
                     <?php if(!empty($lamination1_brand_name)): ?>
                     <h3>Ламинация 1</h3>
                     <div>Закупочная стоимость</div>
@@ -98,7 +95,7 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
                     <div class="value mb-2">7 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">172 000 м</span></div>
                     <?php endif; ?>
                 </div>
-                <div class="d-table-cell w-25">
+                <div class="d-table-cell pb-2 pt-2 pl-3" style="width: 33%;">
                     <?php if(!empty($lamination2_brand_name)): ?>
                     <h3>Ламинация 2</h3>
                     <div>Закупочная стоимость</div>
@@ -111,7 +108,6 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
                     <div class="value mb-2">7 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">172 000 м</span></div>
                     <?php endif; ?>
                 </div>
-                <div class="d-table-cell w-25"></div>
             </div>
         </div>
         <?php
@@ -123,7 +119,7 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
             <h2 class="mt-2">Расходы</h2>
             <div class="d-table w-100">
                 <div class="d-table-row">
-                    <div class="d-table-cell pb-2 pt-2 w-25">
+                    <div class="d-table-cell pb-2 pt-2" style="width: 33%;">
                         <div>Отходы</div>
                         <div class="value mb-2">1 280 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">4,5 кг</span></div>
                         <?php if($work_type_id == 2): ?>
@@ -149,9 +145,7 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
                         <div class="value mb-2">1 500 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">3 часа</span></div>
                         <?php endif; ?>
                     </div>
-                    <div class="d-table-cell pb-2 pt-2 pl-3 w-25"></div>
-                    <div class="d-table-cell w-25"></div>
-                    <div class="d-table-cell w-25"></div>
+                    <div class="d-table-cell"></div>
                 </div>
             </div>
         </div>
@@ -161,7 +155,7 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
         <div style="clear:both"></div>
         <div class="d-table w-100">
             <div class="d-table-row">
-                <div class="d-table-cell w-25">
+                <div class="d-table-cell" style="width: 33%;">
                     <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                     <input type="hidden" id="change_status_submit" name="change_status_submit" />
                         <?php if($status_id == 1): ?>
@@ -172,9 +166,7 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
                     <button type="submit" id="status_id" name="status_id" value="6" class="btn btn-outline-dark w-100 mt-3">Составить тех. карту</button>
                         <?php endif; ?>
                 </div>
-                <div class="d-table-cell w-25"></div>
-                <div class="d-table-cell w-25"></div>
-                <div class="d-table-cell w-25"></div>
+                <div class="d-table-cell"></div>
             </div>
         </div>
     </form>

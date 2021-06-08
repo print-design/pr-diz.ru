@@ -485,7 +485,7 @@ $colorfulnesses = array();
             </div>
             <div class="row">
                 <!-- Левая половина -->
-                <div class="col-4" id="left_side">
+                <div class="col-5" id="left_side">
                     <form method="post">
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                         <input type="hidden" id="scroll" name="scroll" />
@@ -1073,7 +1073,7 @@ $colorfulnesses = array();
                                     $percent_var_valid = 'percent_'.$i.'_valid';
                                     ?>
                                     <label for="percent_<?=$i ?>">Процент<br /></label>
-                                    <div class="input-group">
+                                    <div class="input-group flex-nowrap">
                                         <input type="text" 
                                             id="percent_<?=$i ?>" 
                                             name="percent_<?=$i ?>" 
