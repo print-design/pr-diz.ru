@@ -100,7 +100,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     }
     
     if($form_valid) {
-        $date = date('Y-m-d');
         $customer_id = filter_input(INPUT_POST, 'customer_id');
         $name = addslashes(filter_input(INPUT_POST, 'name'));
         $work_type_id = filter_input(INPUT_POST, 'work_type_id');
@@ -173,7 +172,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $$form_var = filter_input(INPUT_POST, "form_$i");
         }
         
-        $sql = "insert into calculation (date, customer_id, name, work_type_id, unit, machine_id, "
+        $sql = "insert into calculation (customer_id, name, work_type_id, unit, machine_id, "
                 . "brand_name, thickness, customers_material, "
                 . "lamination1_brand_name, lamination1_thickness, lamination1_customers_material, "
                 . "lamination2_brand_name, lamination2_thickness, lamination2_customers_material, "
@@ -183,7 +182,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
                 . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
                 . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
-                . "values('$date', $customer_id, '$name', $work_type_id, '$unit', $machine_id, "
+                . "values($customer_id, '$name', $work_type_id, '$unit', $machine_id, "
                 . "'$brand_name', $thickness, $customers_material, "
                 . "'$lamination1_brand_name', $lamination1_thickness, $lamination1_customers_material, "
                 . "'$lamination2_brand_name', $lamination2_thickness, $lamination2_customers_material, "
@@ -493,7 +492,7 @@ $colorfulnesses = array();
                         <h1>Новый расчет</h1>
                         <?php else: ?>
                         <h1><?= htmlentities($name) ?></h1>
-                        <h2 style="font-size: 26px;">№<?=$id ?> от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></h2>
+                        <h2 style="font-size: 26px;">№<?=$id ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
                         <?php endif; ?>
                         <!-- Заказчик -->
                         <div class="row">

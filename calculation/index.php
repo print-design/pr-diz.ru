@@ -229,7 +229,7 @@ function OrderLink($param) {
                     ?>
                     <tr>
                         <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['num_for_customer'] ?></td>
-                        <td class="text-nowrap"><?= DateTime::createFromFormat('Y-m-d', $row['date'])->format('d.m.Y') ?></td>
+                        <td class="text-nowrap"><?= DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y') ?></td>
                         <td><?=$row['customer'] ?></td>
                         <td><?= htmlentities($row['name']) ?></td>
                         <td><?=$row['quantity'] ?>&nbsp;<?=$row['unit'] == 'kg' ? 'кг' : 'шт' ?></td>
