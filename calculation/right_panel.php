@@ -5,7 +5,7 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
     $calculation_class = " class='d-none'";    
 }
 ?>
-<div id="calculation"<?=$calculation_class ?>>
+<div id="calculation"<?=$calculation_class ?> style="position: absolute; top: 0px; bottom: auto;">
     <h1>Расчет</h1>
     <form method="post">
         <div class="d-table w-100">
