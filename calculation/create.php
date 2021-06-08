@@ -1005,7 +1005,7 @@ $colorfulnesses = array();
                                 }
                                 ?>
                                 <div class="form-group<?=$paint_class ?>" id="paint_group_<?=$i ?>">
-                                    <label for="paint_<?=$i ?>">Цвет</label>
+                                    <label for="paint_<?=$i ?>"><?=$i ?> цвет</label>
                                     <select id="paint_<?=$i ?>" name="paint_<?=$i ?>" class="form-control paint" data-id="<?=$i ?>"<?=$paint_required ?>>
                                         <option value="" hidden="hidden" selected="selected">Цвет...</option>
                                         <?php
