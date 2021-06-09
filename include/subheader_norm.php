@@ -25,7 +25,7 @@ if(empty(filter_input(INPUT_GET, 'machine_id'))) {
     </div>
 </div>
 <?php
-$colorfulness_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/colorfulness.php')) == APPLICATION.'/admin/colorfulness.php' ? " active" : "";
+$colorfulness_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/characteristics.php')) == APPLICATION.'/admin/characteristics.php' ? " active" : "";
 $form_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/form.php')) == APPLICATION.'/admin/form.php' ? " active" : "";
 $paint_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/paint.php')) == APPLICATION.'/admin/paint.php' ? " active" : "";
 $glue_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/glue.php')) == APPLICATION.'/admin/glue.php' ? " active" : "";
@@ -42,7 +42,7 @@ $extracharge_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(AP
             $machine_id = filter_input(INPUT_GET, 'machine_id');
             if($machine_id != MACHINE_LAMINATOR):
             ?>
-            <a href="<?=APPLICATION ?>/admin/colorfulness.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$colorfulness_class ?>">Красочность</a>
+            <a href="<?=APPLICATION ?>/admin/characteristics.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$colorfulness_class ?>">Характеристики</a>
             <a href="<?=APPLICATION ?>/admin/form.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$form_class ?>">Стоимость форм</a>
             <a href="<?=APPLICATION ?>/admin/paint.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$paint_class ?>">Стоимость краски</a>
             <?php
