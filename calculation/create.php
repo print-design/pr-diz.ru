@@ -680,7 +680,11 @@ $colorfulnesses = array();
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-6"></div>
+                            <div class="col-6">
+                                <div id="show_lamination_1">
+                                    <button type="button" class="btn btn-light" onclick="javascript: ShowLamination1();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
+                                </div>
+                            </div>
                             <div class="col-6">
                                 <div class="form-check">
                                     <label class="form-check-label text-nowrap" style="line-height: 25px;">
@@ -691,9 +695,6 @@ $colorfulnesses = array();
                                     </label>
                                 </div>
                             </div>
-                        </div>
-                        <div id="show_lamination_1">
-                            <button type="button" class="btn btn-light" onclick="javascript: ShowLamination1();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                         </div>
                         <!-- Ламинация 1 -->
                         <div id="form_lamination_1" class="d-none">
@@ -755,7 +756,11 @@ $colorfulnesses = array();
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-6"></div>
+                                <div class="col-6">
+                                    <div id="show_lamination_2">
+                                        <button type="button" class="btn btn-light" onclick="javascript: ShowLamination2();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
+                                    </div> 
+                                </div>
                                 <div class="col-6">
                                     <div class="form-check">
                                         <label class="form-check-label text-nowrap" style="line-height: 25px;">
@@ -766,9 +771,6 @@ $colorfulnesses = array();
                                         </label>
                                     </div>
                                 </div>
-                            </div>
-                            <div id="show_lamination_2">
-                                <button type="button" class="btn btn-light" onclick="javascript: ShowLamination2();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                             </div>
                             <!-- Ламинация 2 -->
                             <div id="form_lamination_2" class="d-none">
