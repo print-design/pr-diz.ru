@@ -20,18 +20,6 @@ if($pager_pages_count > 1) {
         </li>
         <?php
         }
-        //***********************************
-        // СТАРЫЙ КОД
-        /*for($i = 1; $i <= $pager_pages_count; $i++) {
-            $pager_get_params[PAGE] = $i;
-            $disabled = "";
-            if($i == $pager_page) $disabled = " disabled";
-            echo "<li class='page-item".$disabled."'><a class='page-link' href='?".http_build_query($pager_get_params)."'>".$i."</a></li>";
-        }*/
-        //***********************************
-        
-        //***********************************
-        // НОВЫЙ КОД
         $max_head_page = LINKS_VISIBLE + 1;
         $min_tail_page = $pager_pages_count - LINKS_VISIBLE;
         
@@ -66,7 +54,24 @@ if($pager_pages_count > 1) {
                 echo "<li class='page-item".$disabled."'><a class='page-link' href='?".http_build_query($pager_get_params)."'>".$i."</a></li>";
             }
         }
-        //***********************************
+        else {
+            $pager_get_params[PAGE] = 1;
+            echo "<li class='page-item'><a class='page-link' href='?". http_build_query($pager_get_params)."'>1</a>";
+            echo "<li class='page-item disabled'><a class='page-link' href='javascript:void(0);'>...</a></li>";
+            
+            $min_page = intval($pager_page - (LINKS_VISIBLE / 2));
+            $max_page = $min_page + LINKS_VISIBLE;
+            for($i = $min_page; $i <= $max_page; $i++) {
+                $pager_get_params[PAGE] = $i;
+                $disabled = "";
+                if($i == $pager_page) $disabled = " disabled";
+                echo "<li class='page-item".$disabled."'><a class='page-link' href='?".http_build_query($pager_get_params)."'>".$i."</a></li>";
+            }
+            
+            echo "<li class='page-item disabled'><a class='page-link' href='javascript:void(0);'>...</a></li>";
+            $pager_get_params[PAGE] = $pager_pages_count;
+            echo "<li class='page-item'><a class='page-link' href='?". http_build_query($pager_get_params)."'>".$pager_pages_count."</a>";
+        }
         if($pager_page < $pager_pages_count) {
             $pager_get_params[PAGE] = $pager_page + 1;
         ?>
