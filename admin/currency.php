@@ -118,7 +118,7 @@ if($row = $fetcher->Fetch()) {
                         <?php
                         else:
                         ?>
-                        <a href="form.php<?= BuildQuery('machine_id', $row['id']) ?>" class="mr-4"><?=$row['name'] ?></a>
+                        <a href="characteristics.php<?= BuildQuery('machine_id', $row['id']) ?>" class="mr-4"><?=$row['name'] ?></a>
                         <?php
                         endif;
                         endwhile;
