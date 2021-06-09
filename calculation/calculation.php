@@ -292,7 +292,7 @@ $num_for_customer = $row['num_for_customer'];
                                                 echo $$cmyk_var;
                                             }
                                             elseif($$paint_var == "panton") {
-                                                echo $$color_var;
+                                                echo 'P'.$$color_var;
                                             }
                                             ?>
                                         </td>
