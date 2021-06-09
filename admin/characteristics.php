@@ -138,19 +138,19 @@ if($row = $fetcher->Fetch()) {
                             <div class="invalid-feedback">Красочность обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="max_width">Максимальная ширина материала</label>
+                            <label for="max_width">Максимальная ширина материала, мм</label>
                             <input type="text" 
                                    class="form-control float-only" 
                                    id="max_width" 
                                    name="max_width" 
                                    value="<?= empty($max_width) || $max_width == 0.0 ? "" : floatval($max_width) ?>" 
-                                   placeholder="Максимальная ширина материала" 
+                                   placeholder="Максимальная ширина материала, мм" 
                                    required="required" 
                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'max_width'); $(this).attr('name', 'max_width'); $(this).attr('placeholder', 'Максимальная ширина материала');" 
+                                   onmouseup="javascript: $(this).attr('id', 'max_width'); $(this).attr('name', 'max_width'); $(this).attr('placeholder', 'Максимальная ширина материала, мм');" 
                                    onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onkeyup="javascript: $(this).attr('id', 'max_width'); $(this).attr('name', 'max_width'); $(this).attr('placeholder', 'Максимальная ширина материала');" 
-                                   onfocusout="javascript: $(this).attr('id', 'max_width'); $(this).attr('name', 'max_width'); $(this).attr('placeholder', 'Максимальная ширина материала');" />
+                                   onkeyup="javascript: $(this).attr('id', 'max_width'); $(this).attr('name', 'max_width'); $(this).attr('placeholder', 'Максимальная ширина материала, мм');" 
+                                   onfocusout="javascript: $(this).attr('id', 'max_width'); $(this).attr('name', 'max_width'); $(this).attr('placeholder', 'Максимальная ширина материала, мм');" />
                             <div class="invalid-feedback">Максимальная ширина материала обязательно</div>
                         </div>
                         <button type="submit" id="characteristics_submit" name="characteristics_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
