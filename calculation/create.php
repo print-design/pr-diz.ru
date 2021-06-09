@@ -656,7 +656,7 @@ $colorfulnesses = array();
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="thickness">Толщина</label>
+                                    <label for="thickness">Толщина, мкм</label>
                                     <select id="thickness" name="thickness" class="form-control" required="required">
                                         <option value="" hidden="hidden" selected="selected">Толщина...</option>
                                         <?php
@@ -721,7 +721,7 @@ $colorfulnesses = array();
                                 </div>
                                 <div class="col-5">
                                     <div class="form-group">
-                                        <label for="lamination1_thickness">Толщина</label>
+                                        <label for="lamination1_thickness">Толщина, мкм</label>
                                         <select id="lamination1_thickness" name="lamination1_thickness" class="form-control">
                                             <option value="" hidden="hidden" selected="selected">Толщина...</option>
                                             <?php
@@ -797,7 +797,7 @@ $colorfulnesses = array();
                                     </div>
                                     <div class="col-5">
                                         <div class="form-group">
-                                            <label for="lamination2_thickness">Толщина</label>
+                                            <label for="lamination2_thickness">Толщина, мкм</label>
                                             <select id="lamination2_thickness" name="lamination2_thickness" class="form-control">
                                                 <option value="" hidden="hidden" selected="selected">Толщина...</option>
                                                 <?php
@@ -862,36 +862,36 @@ $colorfulnesses = array();
                             <!-- Длина от метки до метки -->
                             <div class="col-6 print-only d-none">
                                 <div class="form-group">
-                                    <label for="length">Длина от метки до метки</label>
+                                    <label for="length">Длина от метки до метки, мм</label>
                                     <input type="text" 
                                            id="length" 
                                            name="length" 
                                            class="form-control float-only print-only d-none" 
-                                           placeholder="Длина от метки до метки" 
+                                           placeholder="Длина от метки до метки, мм" 
                                            value="<?=$length ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки');" 
+                                           onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки, мм');" 
                                            onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onkeyup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки');" 
-                                           onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки');" />
+                                           onkeyup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки, мм');" 
+                                           onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки, мм');" />
                                     <div class="invalid-feedback">Длина от метки до метки обязательно</div>
                                 </div>
                             </div>
                             <!-- Ширина ручья -->
                             <div class="col-6 print-only d-none">
                                 <div class="form-group">
-                                    <label for="stream_width">Ширина ручья</label>
+                                    <label for="stream_width">Ширина ручья, мм</label>
                                     <input type="text" 
                                            id="stream_width" 
                                            name="stream_width" 
                                            class="form-control float-only print-only d-none" 
-                                           placeholder="Ширина ручья" 
+                                           placeholder="Ширина ручья, мм" 
                                            value="<?=$stream_width ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья');" 
+                                           onmouseup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" 
                                            onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onkeyup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья');" 
-                                           onfocusout="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья');" />
+                                           onkeyup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" 
+                                           onfocusout="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" />
                                     <div class="invalid-feedback">Ширина ручья обязательно</div>
                                 </div>
                             </div>
