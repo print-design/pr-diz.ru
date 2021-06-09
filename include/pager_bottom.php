@@ -1,4 +1,6 @@
 <?php
+const LINKS_VISIBLE = 5;
+
 $pager_pages_count = ceil($pager_total_count / $pager_take);
 $pager_get_params = filter_input_array(INPUT_GET);
 
@@ -18,12 +20,53 @@ if($pager_pages_count > 1) {
         </li>
         <?php
         }
-        for($i = 1; $i <= $pager_pages_count; $i++) {
+        //***********************************
+        // СТАРЫЙ КОД
+        /*for($i = 1; $i <= $pager_pages_count; $i++) {
             $pager_get_params[PAGE] = $i;
             $disabled = "";
             if($i == $pager_page) $disabled = " disabled";
             echo "<li class='page-item".$disabled."'><a class='page-link' href='?".http_build_query($pager_get_params)."'>".$i."</a></li>";
+        }*/
+        //***********************************
+        
+        //***********************************
+        // НОВЫЙ КОД
+        $max_head_page = LINKS_VISIBLE + 1;
+        $min_tail_page = $pager_pages_count - LINKS_VISIBLE;
+        
+        if($pager_pages_count <= LINKS_VISIBLE + 2) {
+            for($i = 1; $i <= $pager_pages_count; $i++) {
+                $pager_get_params[PAGE] = $i;
+                $disabled = "";
+                if($i == $pager_page) $disabled = " disabled";
+                echo "<li class='page-item".$disabled."'><a class='page-link' href='?".http_build_query($pager_get_params)."'>".$i."</a></li>";
+            }
         }
+        elseif ($pager_page <= $max_head_page) {    
+            for($i = 1; $i <= $max_head_page; $i++) {
+                $pager_get_params[PAGE] = $i;
+                $disabled = "";
+                if($i == $pager_page) $disabled = " disabled";
+                echo "<li class='page-item".$disabled."'><a class='page-link' href='?".http_build_query($pager_get_params)."'>".$i."</a></li>";
+            }
+            
+            echo "<li class='page-item disabled'><a class='page-link' href='javascript:void(0);'>...</a></li>";
+            $pager_get_params[PAGE] = $pager_pages_count;
+            echo "<li class='page-item'><a class='page-link' href='?". http_build_query($pager_get_params)."'>".$pager_pages_count."</a>";
+        }
+        elseif ($pager_page >= $min_tail_page) {
+            $pager_get_params[PAGE] = 1;
+            echo "<li class='page-item'><a class='page-link' href='?". http_build_query($pager_get_params)."'>1</a>";
+            echo "<li class='page-item disabled'><a class='page-link' href='javascript:void(0);'>...</a></li>";
+            for($i = $min_tail_page; $i <= $pager_pages_count; $i++) {
+                $pager_get_params[PAGE] = $i;
+                $disabled = "";
+                if($i == $pager_page) $disabled = " disabled";
+                echo "<li class='page-item".$disabled."'><a class='page-link' href='?".http_build_query($pager_get_params)."'>".$i."</a></li>";
+            }
+        }
+        //***********************************
         if($pager_page < $pager_pages_count) {
             $pager_get_params[PAGE] = $pager_page + 1;
         ?>
