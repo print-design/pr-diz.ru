@@ -127,12 +127,12 @@ $utilized_status_roll_id = 2;
                         $wherefindroll = " and (r.id='$find' or r.id='$findtrim' or r.cell='$find' or r.comment like '%$find%')";
                     }
                     
-                    $sql = "select (select count(p.id) total_count "
+                    $sql = "select (select count(pr.id) total_count "
                             . "from pallet_roll pr "
-                            . "left join pallet p on pr.pallet_id = p.id "
+                            . "inner join pallet p on pr.pallet_id = p.id "
                             . "left join film_brand fb on p.film_brand_id = fb.id "
                             . "left join supplier s on p.supplier_id = s.id "
-                            . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = p.id "
+                            . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
                             . "where prsh.status_id = $utilized_status_roll_id$wherefindpallet)"
                             . "+"
                             . "(select count(r.id) total_count "
