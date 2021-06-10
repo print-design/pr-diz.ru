@@ -201,6 +201,7 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
             $('.user_change_password_open').click(function(){
                 $('#user_change_password_id').val($(this).attr('data-id'));
                 $('#user_change_password_fio').text($(this).attr('data-fio'));
+                $(document).trigger('keydown'); // чтобы обнулить защиту от двойного нажатия
             });
             
             // Удаление данных о пользователе при закрытии формы изменения пароля
