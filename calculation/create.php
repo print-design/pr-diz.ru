@@ -1030,20 +1030,20 @@ $colorfulnesses = array();
                                     $color_var = "color_$i"; 
                                     $color_var_valid = 'color_'.$i.'_valid'; 
                                     ?>
-                                    <label for="color_<?=$i ?>">Код цвета</label>
+                                    <label for="color_<?=$i ?>">Номер пантона</label>
                                     <div class="input-group flex-nowrap">
                                         <div class="input-group-prepend"><span class="input-group-text">P</span></div>
                                         <input type="text" 
                                                id="color_<?=$i ?>" 
                                                name="color_<?=$i ?>" 
                                                class="form-control int-only color<?=$$color_var_valid ?>" 
-                                               placeholder="Код цвета..." 
+                                               placeholder="Номер пантона..." 
                                                value="<?= empty($$color_var) ? "" : $$color_var?>" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Код цвета...');" 
+                                               onmouseup="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" 
                                                onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onkeyup="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Код цвета...');" 
-                                               onfocusout="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Код цвета...');" />
+                                               onkeyup="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" 
+                                               onfocusout="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" />
                                     </div>
                                     <div class="invalid-feedback">Код цвета обязательно</div>
                                 </div>
