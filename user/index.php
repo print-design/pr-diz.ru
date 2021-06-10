@@ -191,10 +191,6 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
         </div>
         <?php
         include '../include/footer.php';
-        echo $error_message."<br />";
-        echo null !== filter_input(INPUT_POST, 'user_change_password_submit');
-        echo !empty($error_message);
-        print_r($_POST);
         ?>
         <script>
             // Заполнение данных о пользователе при открытии формы изменения пароля
