@@ -18,28 +18,61 @@ $form_valid = true;
 $error_message = '';
 
 $user_change_password_old_valid = '';
+$user_change_password_old_message = '';
 $user_change_password_new_valid = '';
+$user_change_password_new_message = '';
 $user_change_password_confirm_valid = '';
+$user_change_password_confirm_message = '';
+
+$user_change_password_confirm_fio = '';
 
 if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
     if(empty(filter_input(INPUT_POST, "user_change_password_old"))) {
         $user_change_password_old_valid = ISINVALID;
+        $user_change_password_old_message = "Текущий пароль обязательно";
         $form_valid = false;
     }
     
     if(empty(filter_input(INPUT_POST, 'user_change_password_new'))) {
         $user_change_password_new_valid = ISINVALID;
+        $user_change_password_new_message = "Новый пароль обязательно";
         $form_valid = false;
     }
     
     if(empty(filter_input(INPUT_POST, 'user_change_password_confirm'))) {
         $user_change_password_confirm_valid = ISINVALID;
+        $user_change_password_confirm_message = "Подтверждение пароля обязательно";
         $form_valid = false;
     }
     
     if(filter_input(INPUT_POST, 'user_change_password_new') != filter_input(INPUT_POST, 'user_change_password_confirm')) {
         $user_change_password_confirm_valid = ISINVALID;
+        $user_change_password_confirm_message = "Пароль и его подтверждение не совпадают";
         $form_valid = false;
+    }
+    
+    // Проверка старого пароля
+    $user_change_password_id = filter_input(INPUT_POST, "user_change_password_id");
+    $user_change_password_old = filter_input(INPUT_POST, "user_change_password_old");
+    $sql = "select count(id) count from user where id=$user_change_password_id and password=password('$user_change_password_old')";
+    $fetcher = new Fetcher($sql);
+    $row = $fetcher->Fetch();
+    if($row['count'] == 0) {
+        $user_change_password_old_valid = ISINVALID;
+        $user_change_password_old_message = "Неправильный текущий пароль";
+        $form_valid = false;
+        
+        $sql = "select last_name, first_name from user where id=$user_change_password_id";
+        $fetcher = new Fetcher($sql);
+        $row = $fetcher->Fetch();
+        $user_change_password_confirm_fio = $row['last_name'].' '.$row['first_name'];
+    }
+    
+    if($form_valid) {
+        $user_change_password_new = filter_input(INPUT_POST, "user_change_password_new");
+        $sql = "update user set password=password('$user_change_password_new') where id=$user_change_password_id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
     }
 }
 ?>
@@ -58,32 +91,32 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="post">
-                        <input type="hidden" id="user_change_password_id" name="user_change_password_id" />
+                        <input type="hidden" id="user_change_password_id" name="user_change_password_id" value="<?= filter_input(INPUT_POST, 'user_change_password_id') ?>" />
                         <div class="modal-header">
                             <div style="font-size: xx-large;">Изменение пароля</div>
-                            <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                            <button type="button" class="close user_change_password_dismiss" data-dismiss="modal"><i class="fas fa-times"></i></button>
                         </div>
                         <div class="modal-body">
-                            <div style="font-size: x-large;">Сотрудник: <span id="user_change_password_fio"></span></div>
+                            <div style="font-size: x-large;">Сотрудник: <span id="user_change_password_fio"><?=$user_change_password_confirm_fio ?></span></div>
                             <div class="form-group">
                                 <label for="user_change_password_old">Текущий пароль</label>
                                 <input type="password" id="user_change_password_old" name="user_change_password_old" class="form-control<?=$user_change_password_old_valid ?>" required="required" />
-                                <div class="invalid-feedback">Текущий пароль обязательно</div>
+                                <div class="invalid-feedback"><?=$user_change_password_old_message ?></div>
                             </div>
                             <div class="form-group">
                                 <label for="user_change_password_new">Новый пароль</label>
                                 <input type="password" id="user_change_password_new" name="user_change_password_new" class="form-control<?=$user_change_password_new_valid ?>" required="required" />
-                                <div class="invalid-feedback">Новый пароль обязательно</div>
+                                <div class="invalid-feedback"><?=$user_change_password_new_message ?></div>
                             </div>
                             <div class="form-group">
                                 <label for="user_change_password_confirm">Новый пароль ещё раз</label>
                                 <input type="password" id="user_change_password_confirm" name="user_change_password_confirm" class="form-control<?=$user_change_password_confirm_valid ?>" required="required" />
-                                <div class="invalid-feedback">Новый пароль и его подтверждение не совпадают</div>
+                                <div class="invalid-feedback"><?=$user_change_password_confirm_message ?></div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary" id="user_change_password_submit" name="user_change_password_submit">Изменить пароль</button>
-                            <button type="button" class="btn" data-dismiss="modal">Отменить</button>
+                            <button type="button" class="btn user_change_password_dismiss" data-dismiss="modal">Отменить</button>
                         </div>
                     </form>
                 </div>
@@ -91,7 +124,7 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
         </div>
         <div class="container-fluid">
             <?php
-            if(null !== filter_input(INPUT_POST, 'user_change_password_submit') && $form_valid) {
+            if(null !== filter_input(INPUT_POST, 'user_change_password_submit') && $form_valid && empty($error_message)) {
                 echo "<div class='alert alert-success'>Пароль изменен успешно</div>";
             }
             if(!empty($error_message)) {
@@ -164,10 +197,17 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
         print_r($_POST);
         ?>
         <script>
-            // Открытие формы изменения пароля при нажатии на "карандаш"
+            // Заполнение данных о пользователе при открытии формы изменения пароля
             $('.user_change_password_open').click(function(){
                 $('#user_change_password_id').val($(this).attr('data-id'));
                 $('#user_change_password_fio').text($(this).attr('data-fio'));
+            });
+            
+            // Удаление данных о пользователе при закрытии формы изменения пароля
+            $('.user_change_password_dismiss').click(function(){
+                $('#user_change_password_id').val('');
+                $('#user_change_password_fio').text('');
+                $('.is-invalid').removeClass('is-invalid');
             });
             
             // Открытие формы изменения пароля, если изменение пароля не было удачным
