@@ -23,6 +23,41 @@ if(null !== filter_input(INPUT_POST, 'delete_user_submit')) {
         <?php
         include '../include/header.php';
         ?>
+        <div id="user_change_password" class="modal fade show">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post">
+                        <input type="hidden" id="user_change_password_id" name="user_change_password_id" />
+                        <div class="modal-header">
+                            <div style="font-size: xx-large;">Изменение пароля</div>
+                            <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div style="font-size: x-large;">Сотрудник: <span id="user_change_password_fio"></span></div>
+                            <div class="form-group">
+                                <label for="user_change_password_old">Текущий пароль</label>
+                                <input type="password" id="user_change_password_old" name="user_change_password_old" class="form-control" required="required" />
+                                <div class="invalid-feedback">Текущий пароль обязательно</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="user_change_password_new">Новый пароль</label>
+                                <input type="password" id="user_change_password_new" name="user_change_password_new" class="form-control" required="required" />
+                                <div class="invalid-feedback">Новый пароль обязательно</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="user_change_password_confirm">Новый пароль ещё раз</label>
+                                <input type="password" id="user_change_password_confirm" name="user_change_password_confirm" class="form-control" required="required" />
+                                <div class="invalid-feedback">Новый пароль и его подтверждение не совпадают</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" id="user_change_password_submit" name="user_change_password_submit">Изменить пароль</button>
+                            <button type="button" class="btn" data-dismiss="modal">Отменить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
@@ -70,7 +105,9 @@ if(null !== filter_input(INPUT_POST, 'delete_user_submit')) {
                         <td><?=$row['email'] ?></td>
                         <td><?=$row['phone'] ?></td>
                         <td class='text-right'>
-                            <a href='javascript: void(0);'><image src='../images/icons/edit.svg' /></a>
+                            <button type="button" class="btn btn-link user_change_password_open" data-id="<?=$row['id'] ?>" data-fio="<?=$row['last_name'].' '.$row['first_name'] ?>" data-toggle="modal" data-target="#user_change_password">
+                                <image src='../images/icons/edit.svg' />
+                            </button>
                         </td>
                         <td class='text-right'>
                             <?php if(filter_input(INPUT_COOKIE, USER_ID) != $row['id']): ?>
@@ -88,5 +125,11 @@ if(null !== filter_input(INPUT_POST, 'delete_user_submit')) {
         <?php
         include '../include/footer.php';
         ?>
+        <script>
+            $('.user_change_password_open').click(function(){
+                $('#user_change_password_id').val($(this).attr('data-id'));
+                $('#user_change_password_fio').text($(this).attr('data-fio'));
+            });
+        </script>
     </body>
 </html>
