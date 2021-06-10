@@ -218,7 +218,7 @@ $num_for_customer = $row['num_for_customer'];
                                     <tr>
                                         <td><?=$brand_name ?></td>
                                         <td><?= rtrim(rtrim(number_format($thickness, 2, ",", " "), "0"), ",") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                                        <td class="w-25"><?=$customers_material == 1 ? "Заказчика" : "Наша" ?></td>
+                                        <td class="w-25"><?=$customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                                     </tr>
                                 </table>
                             </td>
@@ -234,7 +234,7 @@ $num_for_customer = $row['num_for_customer'];
                                     <tr>
                                         <td><?=$lamination1_brand_name ?></td>
                                         <td><?= rtrim(rtrim(number_format($lamination1_thickness, 2, ",", " "), "0"), ",") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                                        <td class="w-25"><?=$lamination1_customers_material == 1 ? "Заказчика" : "Наша" ?></td>
+                                        <td class="w-25"><?=$lamination1_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                                     </tr>
                                     <?php
                                     if(!empty($lamination2_brand_name) && !empty($lamination2_thickness)):
@@ -242,7 +242,7 @@ $num_for_customer = $row['num_for_customer'];
                                     <tr>
                                         <td><?=$lamination2_brand_name ?></td>
                                         <td><?= rtrim(rtrim(number_format($lamination2_thickness, 2, ",", " "), "0"), ",") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                                        <td class="w-25"><?=$lamination2_customers_material == 1 ? "Заказчика" : "Наша" ?></td>
+                                        <td class="w-25"><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                                     </tr>
                                     <?php
                                     endif;
