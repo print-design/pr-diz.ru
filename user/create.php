@@ -129,7 +129,18 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
                     <div class="row">
                         <div class="col-6 form-group">
                             <label for="first_name">Имя</label>
-                            <input type="text" id="first_name" name="first_name" class="form-control<?=$first_name_valid ?>" value="<?= filter_input(INPUT_POST, 'first_name') ?>" required="required"/>
+                            <input type="text" 
+                                   id="first_name" 
+                                   name="first_name" 
+                                   class="form-control<?=$first_name_valid ?>" 
+                                   value="<?= filter_input(INPUT_POST, 'first_name') ?>" 
+                                   required="required" 
+                                   autocomplete="off" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                                   onmouseup="javascript: $(this).attr('id', 'first_name'); $(this).attr('name', 'first_name');" 
+                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                                   onkeyup="javascript: $(this).attr('id', 'first_name'); $(this).attr('name', 'first_name');" 
+                                   onfocusout="javascript: $(this).attr('id', 'first_name'); $(this).attr('name', 'first_name');" />
                             <div class="invalid-feedback">Имя обязательно</div>
                         </div>
                         <div class="col-6 form-group">
@@ -153,7 +164,17 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
                     <div class="row">
                         <div class="col-6 form-group">
                             <label for="username">Логин</label>
-                            <input type="text" id="username" name="username" class="form-control<?=$username_valid ?>" value="<?= filter_input(INPUT_POST, 'username') ?>" required="required"/>
+                            <input type="text" 
+                                   id="username" 
+                                   name="username" 
+                                   class="form-control<?=$username_valid ?>" 
+                                   value="<?= filter_input(INPUT_POST, 'username') ?>" 
+                                   required="required" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                                   onmouseup="javascript: $(this).attr('id', 'username'); $(this).attr('name', 'username');" 
+                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                                   onkeyup="javascript: $(this).attr('id', 'username'); $(this).attr('name', 'username');" 
+                                   onfocusout="javascript: $(this).attr('id', 'username'); $(this).attr('name', 'username');" />
                             <div class="invalid-feedback">Логин обязательно</div>
                         </div>
                         <div class="col-6 form-group">
