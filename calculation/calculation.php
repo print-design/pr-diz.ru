@@ -344,6 +344,17 @@ $num_for_customer = $row['num_for_customer'];
                 AdjustFixedBlock($('#calculation'));
             }
             
+            // Ограницение значений наценки
+            $('#extracharge').keydown(function(e) {
+                if(!KeyDownLimitIntValue($(e.target), e, 999)) {
+                    return false;
+                }
+            });
+            
+            $('#extracharge').change(function(){
+                ChangeLimitIntValue($(this), 999);
+            });
+            
             // Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне
             AdjustFixedBlock($('#calculation'));
             

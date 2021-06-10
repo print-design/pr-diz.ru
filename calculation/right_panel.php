@@ -17,8 +17,8 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
                                 <div class="text-nowrap" style="font-size: x-small;">Наценка</div>
                                 <?php if($status_id == 1): ?>
                                 <div class="input-group">
-                                    <input type="text" id="extracharge" name="extracharge" class="int-only" style="width: 30px; height: 25px;" value="<?=$extracharge ?>" />
-                                    <div class="input-group-append" style="height: 25px;">
+                                    <input type="text" id="extracharge" name="extracharge" style="width: 35px; height: 28px; border: 1px solid #ced4da;" value="<?=$extracharge ?>" />
+                                    <div class="input-group-append" style="height: 28px;">
                                         <span class="input-group-text">%</span>
                                     </div>
                                 </div>

@@ -1496,6 +1496,17 @@ $colorfulnesses = array();
                 $("#create_calculation_submit").removeClass("d-none");
             }
             
+            // Ограницение значений наценки
+            $('#extracharge').keydown(function(e) {
+                if(!KeyDownLimitIntValue($(e.target), e, 999)) {
+                    return false;
+                }
+            });
+            
+            $('#extracharge').change(function(){
+                ChangeLimitIntValue($(this), 999);
+            });
+            
             // Скрытие расчёта при изменении значения полей
             $("input[id!=extracharge]").change(function () {
                 HideCalculation();
