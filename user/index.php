@@ -49,8 +49,8 @@ if(null !== filter_input(INPUT_POST, 'delete_user_submit')) {
                         <th>Логин</th>
                         <th>E-Mail</th>
                         <th>Телефон</th>
-                        <!--th></th-->
-                        <th></th>
+                        <th style="width: 80px;"></th>
+                        <th style="width: 80px;"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -69,6 +69,9 @@ if(null !== filter_input(INPUT_POST, 'delete_user_submit')) {
                         <td><?=$row['username'] ?></td>
                         <td><?=$row['email'] ?></td>
                         <td><?=$row['phone'] ?></td>
+                        <td class='text-right'>
+                            <a href='javascript: void(0);'><image src='../images/icons/edit.svg' /></a>
+                        </td>
                         <td class='text-right'>
                             <?php if(filter_input(INPUT_COOKIE, USER_ID) != $row['id']): ?>
                             <form method='post'>
