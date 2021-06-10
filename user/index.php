@@ -6,10 +6,41 @@ if(!IsInRole(array('technologist', 'dev'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Обработка отправки формы
+// Обработка отправки формы - удаление пользователя
 if(null !== filter_input(INPUT_POST, 'delete_user_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $error_message = (new Executer("delete from user where id=$id"))->error;
+}
+
+// Обработка отправки формы - смена пароля
+define('ISINVALID', ' is-invalid');
+$form_valid = true;
+$error_message = '';
+
+$user_change_password_old_valid = '';
+$user_change_password_new_valid = '';
+$user_change_password_confirm_valid = '';
+
+if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
+    if(empty(filter_input(INPUT_POST, "user_change_password_old"))) {
+        $user_change_password_old_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(empty(filter_input(INPUT_POST, 'user_change_password_new'))) {
+        $user_change_password_new_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(empty(filter_input(INPUT_POST, 'user_change_password_confirm'))) {
+        $user_change_password_confirm_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(filter_input(INPUT_POST, 'user_change_password_new') != filter_input(INPUT_POST, 'user_change_password_confirm')) {
+        $user_change_password_confirm_valid = ISINVALID;
+        $form_valid = false;
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -36,17 +67,17 @@ if(null !== filter_input(INPUT_POST, 'delete_user_submit')) {
                             <div style="font-size: x-large;">Сотрудник: <span id="user_change_password_fio"></span></div>
                             <div class="form-group">
                                 <label for="user_change_password_old">Текущий пароль</label>
-                                <input type="password" id="user_change_password_old" name="user_change_password_old" class="form-control" required="required" />
+                                <input type="password" id="user_change_password_old" name="user_change_password_old" class="form-control<?=$user_change_password_old_valid ?>" required="required" />
                                 <div class="invalid-feedback">Текущий пароль обязательно</div>
                             </div>
                             <div class="form-group">
                                 <label for="user_change_password_new">Новый пароль</label>
-                                <input type="password" id="user_change_password_new" name="user_change_password_new" class="form-control" required="required" />
+                                <input type="password" id="user_change_password_new" name="user_change_password_new" class="form-control<?=$user_change_password_new_valid ?>" required="required" />
                                 <div class="invalid-feedback">Новый пароль обязательно</div>
                             </div>
                             <div class="form-group">
                                 <label for="user_change_password_confirm">Новый пароль ещё раз</label>
-                                <input type="password" id="user_change_password_confirm" name="user_change_password_confirm" class="form-control" required="required" />
+                                <input type="password" id="user_change_password_confirm" name="user_change_password_confirm" class="form-control<?=$user_change_password_confirm_valid ?>" required="required" />
                                 <div class="invalid-feedback">Новый пароль и его подтверждение не совпадают</div>
                             </div>
                         </div>
@@ -60,6 +91,9 @@ if(null !== filter_input(INPUT_POST, 'delete_user_submit')) {
         </div>
         <div class="container-fluid">
             <?php
+            if(null !== filter_input(INPUT_POST, 'user_change_password_submit') && $form_valid) {
+                echo "<div class='alert alert-success'>Пароль изменен успешно</div>";
+            }
             if(!empty($error_message)) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
@@ -124,12 +158,22 @@ if(null !== filter_input(INPUT_POST, 'delete_user_submit')) {
         </div>
         <?php
         include '../include/footer.php';
+        echo $error_message."<br />";
+        echo null !== filter_input(INPUT_POST, 'user_change_password_submit');
+        echo !empty($error_message);
+        print_r($_POST);
         ?>
         <script>
+            // Открытие формы изменения пароля при нажатии на "карандаш"
             $('.user_change_password_open').click(function(){
                 $('#user_change_password_id').val($(this).attr('data-id'));
                 $('#user_change_password_fio').text($(this).attr('data-fio'));
             });
+            
+            // Открытие формы изменения пароля, если изменение пароля не было удачным
+            <?php if(null !== filter_input(INPUT_POST, 'user_change_password_submit') && !$form_valid): ?>
+            $('#user_change_password').modal('show');
+            <?php endif; ?>
         </script>
     </body>
 </html>
