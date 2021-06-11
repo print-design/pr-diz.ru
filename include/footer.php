@@ -17,6 +17,7 @@
     $('.int-only').change(function(e) {
         var val = $(this).val();
         val = val.replace(/[^\d]/g, '');
+        val = parseInt(val);
         $(this).val(val);
     });
     
@@ -34,6 +35,7 @@
         var val = $(this).val();
         val = val.replace(',', '.');
         val = val.replace(/[^\.\d]/g, '');
+        val = parseFloat(val);
         $(this).val(val);
     });
     
