@@ -927,7 +927,7 @@ $colorfulnesses = array();
                                             while($row = $fetcher->Fetch()) {
                                                 $raport_name = $row['name'];
                                                 $raport_value = $row['value'];
-                                                $display_value = empty($raport_name) ? $raport_value : $raport_name;
+                                                $display_value = (empty($raport_name) ? "" : $raport_name." ").$raport_value;
                                                 $selected = "";
                                                 if($raport_value == $raport) $selected = " selected='selected'";
                                                 echo "<option value='$raport_value'$selected>$display_value</option>";

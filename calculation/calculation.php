@@ -81,7 +81,7 @@ $width = $row['width'];
 $length = $row['length'];
 $stream_width = $row['stream_width'];
 $streams_count = $row['streams_count'];
-$raport = empty($row['raport_name']) ? rtrim(rtrim(number_format($row['raport_value'], 3, ",", " "), "0"), ",") : $row['raport_name'];
+$raport = (empty($row['raport_name']) ? "" : $row['raport_name']." ").(rtrim(rtrim(number_format($row['raport_value'], 3, ",", " "), "0"), ","));
 $paints_count = $row['paints_count'];
 
 for($i=1; $i<=$paints_count; $i++) {
