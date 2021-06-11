@@ -114,7 +114,7 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                                 <div class="invalid-feedback"><?=$user_change_password_confirm_message ?></div>
                             </div>
                         </div>
-                        <div class="modal-footer">
+                        <div class="modal-footer" style="justify-content: flex-start;">
                             <button type="submit" class="btn btn-primary" id="user_change_password_submit" name="user_change_password_submit">Изменить пароль</button>
                             <button type="button" class="btn user_change_password_dismiss" data-dismiss="modal">Отменить</button>
                         </div>
