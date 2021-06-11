@@ -3,7 +3,7 @@ include '../include/topscripts.php';
 include '../include/grafik_readonly.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'manager'))) {
+if(!IsInRole(array('technologist', 'storekeeper', 'dev', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
