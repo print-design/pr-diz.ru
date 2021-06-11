@@ -9,8 +9,8 @@ if(!empty($film_brand_id)) {
     $grabber = (new Grabber("select thickness, weight from film_brand_variation where film_brand_id = $film_brand_id order by thickness"))->result;
     
     foreach ($grabber as $row) {
-        $thickness = $row['thickness'];
-        $weight = $row['weight'];
+        $thickness = intval($row['thickness']);
+        $weight = floatval($row['weight']);
         echo "<option value='$thickness'>$thickness мкм $weight г/м<sup>2</sup></option>";
     }
 }
@@ -37,8 +37,8 @@ if(!empty($brand_name)) {
     $grabber = (new Grabber("select distinct fbv.thickness, fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name='$brand_name' order by thickness"))->result;
     
     foreach ($grabber as $row) {
-        $thickness = $row['thickness'];
-        $weight = $row['weight'];
+        $thickness = intval($row['thickness']);
+        $weight = floatval($row['weight']);
         echo "<option value='$thickness'>$thickness мкм $weight г/м<sup>2</sup></option>";
     }
 }

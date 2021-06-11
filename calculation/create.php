@@ -868,7 +868,7 @@ $colorfulnesses = array();
                                            name="length" 
                                            class="form-control float-only print-only d-none" 
                                            placeholder="Длина от метки до метки, мм" 
-                                           value="<?=$length ?>" 
+                                           value="<?= floatval($length) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки, мм');" 
                                            onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -886,7 +886,7 @@ $colorfulnesses = array();
                                            name="stream_width" 
                                            class="form-control float-only print-only d-none" 
                                            placeholder="Ширина ручья, мм" 
-                                           value="<?=$stream_width ?>" 
+                                           value="<?= floatval($stream_width) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" 
                                            onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -926,7 +926,7 @@ $colorfulnesses = array();
                                             
                                             while($row = $fetcher->Fetch()) {
                                                 $raport_name = $row['name'];
-                                                $raport_value = $row['value'];
+                                                $raport_value = floatval($row['value']);
                                                 $display_value = (empty($raport_name) ? "" : $raport_name." ").$raport_value;
                                                 $selected = "";
                                                 if($raport_value == $raport) $selected = " selected='selected'";
