@@ -184,12 +184,12 @@ $num_for_customer = $row['num_for_customer'];
                             endif;
                             if(!empty($length)):
                             ?>
-                        <tr><th>Длина от метки до метки</th><td><?= rtrim(rtrim(number_format($length, 2, ",", " "), "0"), ",") ?></td></tr>
+                        <tr><th>Длина от метки до метки</th><td><?= rtrim(rtrim(number_format($length, 2, ",", ""), "0"), ",") ?></td></tr>
                             <?php
                             endif;
                             if(!empty($stream_width)):
                             ?>
-                        <tr><th>Ширина ручья</th><td><?= rtrim(rtrim(number_format($stream_width, 2, ",", " "), "0"), ",") ?></td></tr>
+                        <tr><th>Ширина ручья</th><td><?= rtrim(rtrim(number_format($stream_width, 2, ",", ""), "0"), ",") ?></td></tr>
                             <?php
                             endif;
                             if(!empty($raport)):
