@@ -130,7 +130,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $lamination2_customers_material = 1;
         }
         
-        $quantity = filter_input(INPUT_POST, 'quantity');
+        $quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity'));
         $width = filter_input(INPUT_POST, 'width');
         if(empty($width)) $width = "NULL";
         $length = filter_input(INPUT_POST, 'length');
@@ -611,9 +611,9 @@ $colorfulnesses = array();
                                     <input type="text" 
                                            id="quantity" 
                                            name="quantity" 
-                                           class="form-control int-only" 
+                                           class="form-control int-only int-format" 
                                            placeholder="Объем заказа" 
-                                           value="<?=$quantity ?>" 
+                                           value="<?= number_format($quantity, 0, ",", " ") ?>" 
                                            required="required" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" 

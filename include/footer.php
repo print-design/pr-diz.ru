@@ -14,10 +14,23 @@
         }
     });
     
+    $('.int-format').keyup(function() {
+        oldv = $(this).val();
+        replv = oldv.replaceAll(/\D/g, '');
+        val = Intl.NumberFormat('ru-RU').format(replv);
+        
+        $(this).val(val);
+    });
+    
     $('.int-only').change(function(e) {
         var val = $(this).val();
         val = val.replace(/[^\d]/g, '');
         val = parseInt(val);
+        
+        if($(this).hasClass('int-format')) {
+            val = Intl.NumberFormat('ru-RU').format(val);
+        }
+        
         $(this).val(val);
     });
     
