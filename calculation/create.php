@@ -1039,7 +1039,7 @@ $colorfulnesses = array();
                                         <input type="text" 
                                                id="color_<?=$i ?>" 
                                                name="color_<?=$i ?>" 
-                                               class="form-control int-only color<?=$$color_var_valid ?>" 
+                                               class="form-control int-only panton color<?=$$color_var_valid ?>" 
                                                placeholder="Номер пантона..." 
                                                value="<?= empty($$color_var) ? "" : $$color_var?>" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -1508,6 +1508,17 @@ $colorfulnesses = array();
             
             $('#extracharge').change(function(){
                 ChangeLimitIntValue($(this), 999);
+            });
+            
+            // Ограничение значений пантона
+            $('input.panton').keydown(function(e) {
+                if(!KeyDownLimitIntValue($(e.target), e, 99999)) {
+                    return false;
+                }
+            });
+            
+            $('input.panton').change(function(){
+                ChangeLimitIntValue($(this), 99999);
             });
             
             // Скрытие расчёта при изменении значения полей

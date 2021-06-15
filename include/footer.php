@@ -29,7 +29,9 @@
         var val = $(this).val();
         val = val.replace(/[^\d]/g, '');
         
-        if(val === '') $(this).val('');
+        if(val === '') {
+            $(this).val('');
+        }
         else {
             val = parseInt(val);
             
@@ -56,7 +58,9 @@
         val = val.replace(',', '.');
         val = val.replace(/[^\.\d]/g, '');
         
-        if(val === '') $(this).val('');
+        if(val === '' || isNaN(val)) {
+            $(this).val('');
+        }
         else {
             val = parseFloat(val);
             $(this).val(val);
@@ -108,15 +112,25 @@
     // Обработка изменения текста
     function ChangeLimitIntValue(textbox, max) {
         val = textbox.val().replace(/[^\d]/g, '');
-        iVal = parseInt(val);
+        textbox.val(val);
         
-        if(iVal == null || iVal == NaN() || iVal < 1 || iVal > max) {
+        if(val === '') {
             alert('Только целое значение от 1 до ' + max);
             textbox.val('');
             textbox.focus();
         }
-        
-        textbox.val(iVal);
+        else {
+            iVal = parseInt(val);
+            
+            if(iVal == null || isNaN(iVal) || iVal < 1 || iVal > max) {
+                alert('Только целое значение от 1 до ' + max);
+                textbox.val('');
+                textbox.focus();
+            }
+            else {
+                textbox.val(iVal);
+            }
+        }
     }
     
     // Ограничение значений для полей с числовыми значениями (проценты и т. д.)
@@ -154,15 +168,24 @@
         val = val.replace(',', '.');
         val = val.replace(/[^\.\d]/g, '');
         textbox.val(val);
-        fVal = parseFloat(val);
         
-        if(fVal == null || fVal == NaN() || fVal < 0 || fVal > max) {
-            alert('Только числовое значение от 0 до ' + max);
+        if(val === '' || isNaN(val)) {
+            alert('Только целое значение от 0 до ' + max);
             textbox.val('');
             textbox.focus();
         }
-        
-        textbox.val(fVal);
+        else {
+            fVal = parseFloat(val);
+            
+            if(fVal == null || isNaN(fVal) || fVal < 0 || fVal > max) {
+                alert('Только числовое значение от 0 до ' + max);
+                textbox.val('');
+                textbox.focus();
+            }
+            else {
+                textbox.val(fVal);
+            }
+        }
     }
     
     // Запрет на изменение размеров всех многострочных текстовых полей вручную
