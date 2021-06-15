@@ -332,12 +332,6 @@ $num_for_customer = $row['num_for_customer'];
         include '../include/footer.php';
         ?>
         <script>
-            // Автовыделение при щелчке для поля "наценка"
-            $('#extracharge').click(function() {
-                $(this).prop("selectionStart", 0);
-                $(this).prop("selectionEnd", $(this).val().length);
-            });
-            
             // Показ расходов
             function ShowCosts() {
                 $("#costs").removeClass("d-none");
