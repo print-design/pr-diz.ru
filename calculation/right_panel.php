@@ -15,7 +15,7 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
                         <div class="col-4">
                             <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
                                 <div class="text-nowrap" style="font-size: x-small;">Наценка</div>
-                                <?php if($status_id == 1): ?>
+                                <?php if($status_id == 1 || $status_id == 2): ?>
                                 <div class="input-group">
                                     <input type="text" id="extracharge" name="extracharge" style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" value="<?=$extracharge ?>" required="required" />
                                     <div class="input-group-append" style="height: 28px;">
