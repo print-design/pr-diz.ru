@@ -256,6 +256,20 @@
         }
     });
     
+    // Редактирование наценки
+    function EditExtracharge(field) {
+        var extracharge = field.val();
+        var id = field.attr('data-id');
+        field.val('000');
+        $.ajax({ url: "../ajax/calculation.php?extracharge=" + extracharge + "&id=" + id, context: field })
+                .done(function(data) {
+                    field.val(data);
+        })
+                .fail(function() {
+                    alert('Ошибка при редактировании наценки.');
+        });
+    }
+    
     // Всплывающая подсказка
     $(function() {
         $("a.left_bar_item").tooltip({

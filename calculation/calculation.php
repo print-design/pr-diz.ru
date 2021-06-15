@@ -361,6 +361,9 @@ $num_for_customer = $row['num_for_customer'];
             
             $('#extracharge').change(function(){
                 ChangeLimitIntValue($(this), 999);
+                
+                // Сохранение значения в базе
+                EditExtracharge($(this));
             });
             
             // Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне

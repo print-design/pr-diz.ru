@@ -1508,6 +1508,9 @@ $colorfulnesses = array();
             
             $('#extracharge').change(function(){
                 ChangeLimitIntValue($(this), 999);
+                
+                // Сохранение значения в базе
+                EditExtracharge($(this));
             });
             
             // Ограничение значения поля "пантон"
