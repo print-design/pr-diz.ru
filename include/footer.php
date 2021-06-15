@@ -114,7 +114,7 @@
         val = textbox.val().replace(/[^\d]/g, '');
         textbox.val(val);
         
-        if(val === '') {
+        if(val === null || val === '' || isNaN(val)) {
             alert('Только целое значение от 1 до ' + max);
             textbox.val('');
             textbox.focus();
@@ -122,7 +122,7 @@
         else {
             iVal = parseInt(val);
             
-            if(iVal == null || isNaN(iVal) || iVal < 1 || iVal > max) {
+            if(iVal < 1 || iVal > max) {
                 alert('Только целое значение от 1 до ' + max);
                 textbox.val('');
                 textbox.focus();
@@ -169,7 +169,7 @@
         val = val.replace(/[^\.\d]/g, '');
         textbox.val(val);
         
-        if(val === '' || isNaN(val)) {
+        if(val === null || val === '' || isNaN(val)) {
             alert('Только целое значение от 0 до ' + max);
             textbox.val('');
             textbox.focus();
@@ -177,7 +177,7 @@
         else {
             fVal = parseFloat(val);
             
-            if(fVal == null || isNaN(fVal) || fVal < 0 || fVal > max) {
+            if(fVal < 0 || fVal > max) {
                 alert('Только числовое значение от 0 до ' + max);
                 textbox.val('');
                 textbox.focus();
