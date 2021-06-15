@@ -10,9 +10,9 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
     <form method="post">
         <div class="d-table w-100">
             <div class="d-table-row">
-                <div class="d-table-cell" style="width: 33%;">
+                <div class="d-table-cell" style="width: 60%;">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-4">
                             <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
                                 <div class="text-nowrap" style="font-size: x-small;">Наценка</div>
                                 <?php if($status_id == 1): ?>
@@ -27,18 +27,24 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
                                 <?php endif; ?>
                             </div>
                         </div>
-                        <div class="col-6">
+                        <?php
+                        $sql = "select euro, usd from currency where date < '$date' order by id desc limit 1";
+                        $fetcher = new Fetcher($sql);
+                        if($row = $fetcher->Fetch()):
+                        ?>
+                        <div class="col-4">
                             <div class="p-2" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 60px; width: 100px;">
                                 <div class="text-nowrap" style="font-size: x-small;">Курс евро</div>
-                                    <?php
-                                    $sql = "select euro from currency where date < '$date' order by id desc limit 1";
-                                    $fetcher = new Fetcher($sql);
-                                    if($row = $fetcher->Fetch()) {
-                                        echo number_format($row[0], 2, ',', ' ');
-                                    }
-                                    ?>
+                                <?=number_format($row['euro'], 2, ',', ' ') ?>
                             </div>
                         </div>
+                        <div class="col-4">
+                            <div class="p-2" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 60px; width: 100px;">
+                                <div class="text-nowrap" style="font-size: x-small;">Курс доллара</div>
+                                <?=number_format($row['usd'], 2, ',', ' ') ?>
+                            </div>
+                        </div>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="table-cell"></div>
