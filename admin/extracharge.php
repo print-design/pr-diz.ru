@@ -6,7 +6,6 @@ if(!IsInRole(array('technologist', 'dev'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-
 // Номер ламинатора
 const MACHINE_LAMINATOR = 5;
 
@@ -153,10 +152,37 @@ if(empty($error_message)) {
                     <form method="post" class="form-inline d-none add-form">
                         <input type="hidden" name="scroll" />
                         <input type="hidden" name="extracharge_type_id" value="<?=$extracharge_type_id ?>" />
-                        <input type="text" name="from_weight" class="form-control float-only mr-2 w-25" placeholder="От, кг" required="required" />
+                        <input type="text" 
+                               name="from_weight" 
+                               class="form-control float-only mr-2 w-25" 
+                               placeholder="От, кг" 
+                               required="required" 
+                               onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onmouseup="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" 
+                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeyup="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" 
+                               onfocusout="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" />
                         &ndash;
-                        <input type="text" name="to_weight" class="form-control float-only ml-2 w-25" placeholder="До, кг" required="required" />
-                        <input type="text" name="value" class="form-control float-only ml-2 w-25" placeholder="Наценка, %" required="required" />
+                        <input type="text" 
+                               name="to_weight" 
+                               class="form-control float-only ml-2 w-25" 
+                               placeholder="До, кг" 
+                               required="required" 
+                               onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onmouseup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
+                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeyup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
+                               onfocusout="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" />
+                        <input type="text" 
+                               name="value" 
+                               class="form-control float-only ml-2 w-25" 
+                               placeholder="Наценка, %" 
+                               required="required" 
+                               onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onmouseup="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" 
+                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeyup="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" 
+                               onfocusout="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" />
                         <div class="form-group ml-2">
                             <button type="submit" name="create_extracharge_submit" class="btn btn-dark fas fa-plus" />
                         </div>
@@ -200,10 +226,37 @@ if(empty($error_message)) {
                     <form method="post" class="form-inline d-none add-form">
                         <input type="hidden" name="scroll" />
                         <input type="hidden" name="extracharge_type_id" value="<?=$extracharge_type_id ?>" />
-                        <input type="text" name="from_weight" class="form-control float-only mr-2 w-25" placeholder="От, кг" required="required" />
+                        <input type="text" 
+                               name="from_weight" 
+                               class="form-control float-only mr-2 w-25" 
+                               placeholder="От, кг" 
+                               required="required" 
+                               onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onmouseup="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" 
+                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeyup="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" 
+                               onfocusout="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" />
                         &ndash;
-                        <input type="text" name="to_weight" class="form-control float-only ml-2 w-25" placeholder="До, кг" required="required" />
-                        <input type="text" name="value" class="form-control float-only ml-2 w-25" placeholder="Наценка, %" required="required" />
+                        <input type="text" 
+                               name="to_weight" 
+                               class="form-control float-only ml-2 w-25" 
+                               placeholder="До, кг" 
+                               required="required" 
+                               onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onmouseup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
+                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeyup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
+                               onfocusout="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" />
+                        <input type="text" 
+                               name="value" 
+                               class="form-control float-only ml-2 w-25" 
+                               placeholder="Наценка, %" 
+                               required="required" 
+                               onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onmouseup="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" 
+                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeyup="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" 
+                               onfocusout="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" />
                         <div class="form-group ml-2">
                             <button type="submit" name="create_extracharge_submit" class="btn btn-dark fas fa-plus" />
                         </div>
@@ -247,10 +300,37 @@ if(empty($error_message)) {
                     <form method="post" class="form-inline d-none add-form">
                         <input type="hidden" name="scroll" />
                         <input type="hidden" name="extracharge_type_id" value="<?=$extracharge_type_id ?>" />
-                        <input type="text" name="from_weight" class="form-control float-only mr-2 w-25" placeholder="От, кг" required="required" />
+                        <input type="text" 
+                               name="from_weight" 
+                               class="form-control float-only mr-2 w-25" 
+                               placeholder="От, кг" 
+                               required="required" 
+                               onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onmouseup="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" 
+                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeyup="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" 
+                               onfocusout="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" />
                         &ndash;
-                        <input type="text" name="to_weight" class="form-control float-only ml-2 w-25" placeholder="До, кг" required="required" />
-                        <input type="text" name="value" class="form-control float-only ml-2 w-25" placeholder="Наценка, %" required="required" />
+                        <input type="text" 
+                               name="to_weight" 
+                               class="form-control float-only ml-2 w-25" 
+                               placeholder="До, кг" 
+                               required="required" 
+                               onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onmouseup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
+                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeyup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
+                               onfocusout="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" />
+                        <input type="text" 
+                               name="value" 
+                               class="form-control float-only ml-2 w-25" 
+                               placeholder="Наценка, %" 
+                               required="required" 
+                               onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onmouseup="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" 
+                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeyup="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" 
+                               onfocusout="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" />
                         <div class="form-group ml-2">
                             <button type="submit" name="create_extracharge_submit" class="btn btn-dark fas fa-plus" />
                         </div>
@@ -294,10 +374,37 @@ if(empty($error_message)) {
                     <form method="post" class="form-inline d-none add-form">
                         <input type="hidden" name="scroll" />
                         <input type="hidden" name="extracharge_type_id" value="<?=$extracharge_type_id ?>" />
-                        <input type="text" name="from_weight" class="form-control float-only mr-2 w-25" placeholder="От, кг" required="required" />
+                        <input type="text" 
+                               name="from_weight" 
+                               class="form-control float-only mr-2 w-25" 
+                               placeholder="От, кг" 
+                               required="required" 
+                               onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onmouseup="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" 
+                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeyup="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" 
+                               onfocusout="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" />
                         &ndash;
-                        <input type="text" name="to_weight" class="form-control float-only ml-2 w-25" placeholder="До, кг" required="required" />
-                        <input type="text" name="value" class="form-control float-only ml-2 w-25" placeholder="Наценка, %" required="required" />
+                        <input type="text" 
+                               name="to_weight" 
+                               class="form-control float-only ml-2 w-25" 
+                               placeholder="До, кг" 
+                               required="required" 
+                               onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onmouseup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
+                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeyup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
+                               onfocusout="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" />
+                        <input type="text" 
+                               name="value" 
+                               class="form-control float-only ml-2 w-25" 
+                               placeholder="Наценка, %" 
+                               required="required" 
+                               onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onmouseup="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" 
+                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeyup="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" 
+                               onfocusout="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" />
                         <div class="form-group ml-2">
                             <button type="submit" name="create_extracharge_submit" class="btn btn-dark fas fa-plus" />
                         </div>
