@@ -224,13 +224,16 @@ $num_for_customer = $row['num_for_customer'];
                                 </table>
                             </td>
                         </tr>
-                            <?php
-                            endif;
-                            if(!empty($lamination1_brand_name) && !empty($lamination1_thickness)):
-                            ?>
+                            <?php endif; ?>
                         <tr>
-                            <th>Ламинация</th>
+                            <?php
+                            $lamination = "нет";
+                            if(!empty($lamination1_brand_name)) $lamination = "1";
+                            if(!empty($lamination2_brand_name)) $lamination = "2";
+                            ?>
+                            <th>Ламинация: <?=$lamination ?></th>
                             <td>
+                                <?php if(!empty($lamination1_brand_name) && !empty($lamination1_thickness)): ?>
                                 <table class="w-100">
                                     <tr>
                                         <td><?=$lamination1_brand_name ?></td>
@@ -249,14 +252,14 @@ $num_for_customer = $row['num_for_customer'];
                                     endif;
                                     ?>
                                 </table>
+                                <?php endif; ?>
                             </td>
                         </tr>
                             <?php
-                            endif;
                             if(!empty($paints_count)):
                             ?>
                         <tr>
-                            <th>Краски</th>
+                            <th>Красочность: <?=$paints_count ?></th>
                             <td>
                                 <table class="w-100">
                                     <?php
