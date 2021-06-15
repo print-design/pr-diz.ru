@@ -17,21 +17,28 @@
     $('.int-format').keyup(function() {
         oldv = $(this).val();
         replv = oldv.replaceAll(/\D/g, '');
-        val = Intl.NumberFormat('ru-RU').format(replv);
         
-        $(this).val(val);
+        if(replv === '') $(this).val('');
+        else {
+            val = Intl.NumberFormat('ru-RU').format(replv);
+            $(this).val(val);
+        }
     });
     
     $('.int-only').change(function(e) {
         var val = $(this).val();
         val = val.replace(/[^\d]/g, '');
-        val = parseInt(val);
         
-        if($(this).hasClass('int-format')) {
-            val = Intl.NumberFormat('ru-RU').format(val);
+        if(val === '') $(this).val('');
+        else {
+            val = parseInt(val);
+            
+            if($(this).hasClass('int-format')) {
+                val = Intl.NumberFormat('ru-RU').format(val);
+            }
+            
+            $(this).val(val);
         }
-        
-        $(this).val(val);
     });
     
     $('.float-only').keypress(function(e) {
@@ -48,8 +55,12 @@
         var val = $(this).val();
         val = val.replace(',', '.');
         val = val.replace(/[^\.\d]/g, '');
-        val = parseFloat(val);
-        $(this).val(val);
+        
+        if(val === '') $(this).val('');
+        else {
+            val = parseFloat(val);
+            $(this).val(val);
+        }
     });
     
     $('.no-latin').keypress(function(e) {
@@ -99,7 +110,7 @@
         val = textbox.val().replace(/[^\d]/g, '');
         iVal = parseInt(val);
         
-        if(iVal == null || iVal < 1 || iVal > max) {
+        if(iVal == null || iVal == NaN() || iVal < 1 || iVal > max) {
             alert('Только целое значение от 1 до ' + max);
             textbox.val('');
             textbox.focus();
@@ -143,9 +154,9 @@
         val = val.replace(',', '.');
         val = val.replace(/[^\.\d]/g, '');
         textbox.val(val);
-        var fVal = parseFloat(val);
+        fVal = parseFloat(val);
         
-        if(fVal == null || fVal < 0 || fVal > max) {
+        if(fVal == null || fVal == NaN() || fVal < 0 || fVal > max) {
             alert('Только числовое значение от 0 до ' + max);
             textbox.val('');
             textbox.focus();
