@@ -259,6 +259,8 @@
     // Редактирование наценки
     function EditExtracharge(field) {
         var extracharge = field.val();
+        if(extracharge === '' || isNaN(extracharge)) return false;
+        
         var id = field.attr('data-id');
         field.val('000');
         $.ajax({ url: "../ajax/calculation.php?extracharge=" + extracharge + "&id=" + id, context: field })
