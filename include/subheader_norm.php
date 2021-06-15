@@ -19,8 +19,10 @@ if(empty(filter_input(INPUT_GET, 'machine_id'))) {
             endwhile;
             
             $currency_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/currency.php')) == APPLICATION.'/admin/currency.php' ? " active" : "";
+            $extracharge_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/extracharge.php')) == APPLICATION.'/admin/extracharge.php' ? " active" : "";
             ?>
             <a href="currency.php" class="mr-4<?=$currency_class ?>">Курсы валют</a>
+            <a href="extracharge.php" class="mr-4<?=$extracharge_class ?>">Наценка</a>
         </div>
     </div>
 </div>
@@ -32,7 +34,6 @@ $glue_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATI
 $machine_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/machine.php')) == APPLICATION.'/admin/machine.php' ? " active" : "";
 $fitting_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/fitting.php')) == APPLICATION.'/admin/fitting.php' ? " active" : "";
 $raport_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/raport.php')) == APPLICATION.'/admin/raport.php' ? " active" : "";
-$extracharge_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/extracharge.php')) == APPLICATION.'/admin/extracharge.php' ? " active" : "";
 ?>
 <hr class="pb-0 mb-0" />
 <div class="d-flex justify-content-start">
@@ -59,7 +60,6 @@ $extracharge_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(AP
             if($machine_id != MACHINE_LAMINATOR):
             ?>
             <a href="<?=APPLICATION ?>/admin/raport.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$raport_class ?>">Рапорт</a>
-            <a href="<?=APPLICATION ?>/admin/extracharge.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$extracharge_class ?>">Наценка</a>
             <?php
             endif;
             ?>

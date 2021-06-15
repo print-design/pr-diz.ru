@@ -124,6 +124,7 @@ if($row = $fetcher->Fetch()) {
                         endwhile;
                         ?>
                         <a href="currency.php" class="mr-4 active">Курсы валют</a>
+                        <a href="extracharge.php" class="mr-4">Наценка</a>
                     </div>
                 </div>
             </div>

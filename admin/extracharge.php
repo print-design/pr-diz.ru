@@ -6,16 +6,9 @@ if(!IsInRole(array('technologist', 'dev'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Машина
-$machine_id = filter_input(INPUT_GET, 'machine_id');
 
 // Номер ламинатора
 const MACHINE_LAMINATOR = 5;
-
-// Страница не предназначена для ламинатора
-if($machine_id == MACHINE_LAMINATOR) {
-    header("Location: ".APPLICATION."/admin/glue.php".BuildQuery("machine_id", $machine_id));
-}
 
 // Список типов наценки
 $sql = "select id, name from extracharge_type";
@@ -34,10 +27,9 @@ if(null !== filter_input(INPUT_POST, 'create_extracharge_submit')) {
     $from_weight = filter_input(INPUT_POST, 'from_weight');
     $to_weight = filter_input(INPUT_POST, 'to_weight');
     $value = filter_input(INPUT_POST, 'value');
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
     
     if(!empty($from_weight) && !empty($to_weight) && !empty($value)) {
-        $sql = "insert into extracharge (machine_id, extracharge_type_id, from_weight, to_weight, value) values ($machine_id, $extracharge_type_id, $from_weight, $to_weight, $value)";
+        $sql = "insert into extracharge (extracharge_type_id, from_weight, to_weight, value) values ($extracharge_type_id, $from_weight, $to_weight, $value)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
@@ -52,7 +44,7 @@ if(null !== filter_input(INPUT_POST, 'delete_extracharge_submit')) {
 }
 
 // Получение списка объектов
-$sql = "select id, extracharge_type_id, from_weight, to_weight, value from extracharge where machine_id = $machine_id order by from_weight, to_weight";
+$sql = "select id, extracharge_type_id, from_weight, to_weight, value from extracharge order by from_weight, to_weight";
 $grabber = new Grabber($sql);
 $error_message = $grabber->error;
 $result = $grabber->result;
@@ -98,9 +90,31 @@ if(empty($error_message)) {
                     ?>
                 </div>
             </div>
-            <?php
-            include '../include/subheader_norm.php';
-            ?>
+            <hr class="pb-0 mb-0" />
+            <div class="d-flex justify-content-start">
+                <div class="p-1">
+                    <div class="text-nowrap nav2">
+                        <?php
+                        $sql = "select id, name from machine";
+                        $fetcher = new Fetcher($sql);
+                        
+                        while ($row = $fetcher->Fetch()):
+                        if($row['id'] == MACHINE_LAMINATOR):
+                        ?>
+                        <a href="glue.php<?= BuildQuery('machine_id', $row['id']) ?>" class="mr-4"><?=$row['name'] ?></a>
+                        <?php
+                        else:
+                        ?>
+                        <a href="characteristics.php<?= BuildQuery('machine_id', $row['id']) ?>" class="mr-4"><?=$row['name'] ?></a>
+                        <?php
+                        endif;
+                        endwhile;
+                        ?>
+                        <a href="currency.php" class="mr-4">Курсы валют</a>
+                        <a href="extracharge.php" class="mr-4 active">Наценка</a>
+                    </div>
+                </div>
+            </div>
             <hr />
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
@@ -138,7 +152,6 @@ if(empty($error_message)) {
                     <button type="button" class="btn btn-light mb-4 show-btn"><i class="fas fa-plus"></i>&nbsp;&nbsp;Добавить</button>
                     <form method="post" class="form-inline d-none add-form">
                         <input type="hidden" name="scroll" />
-                        <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                         <input type="hidden" name="extracharge_type_id" value="<?=$extracharge_type_id ?>" />
                         <input type="text" name="from_weight" class="form-control float-only mr-2 w-25" placeholder="От, кг" required="required" />
                         &ndash;
@@ -186,7 +199,6 @@ if(empty($error_message)) {
                     <button type="button" class="btn btn-light mb-4 show-btn"><i class="fas fa-plus"></i>&nbsp;&nbsp;Добавить</button>
                     <form method="post" class="form-inline d-none add-form">
                         <input type="hidden" name="scroll" />
-                        <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                         <input type="hidden" name="extracharge_type_id" value="<?=$extracharge_type_id ?>" />
                         <input type="text" name="from_weight" class="form-control float-only mr-2 w-25" placeholder="От, кг" required="required" />
                         &ndash;
@@ -234,7 +246,6 @@ if(empty($error_message)) {
                     <button type="button" class="btn btn-light mb-4 show-btn"><i class="fas fa-plus"></i>&nbsp;&nbsp;Добавить</button>
                     <form method="post" class="form-inline d-none add-form">
                         <input type="hidden" name="scroll" />
-                        <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                         <input type="hidden" name="extracharge_type_id" value="<?=$extracharge_type_id ?>" />
                         <input type="text" name="from_weight" class="form-control float-only mr-2 w-25" placeholder="От, кг" required="required" />
                         &ndash;
@@ -282,7 +293,6 @@ if(empty($error_message)) {
                     <button type="button" class="btn btn-light mb-4 show-btn"><i class="fas fa-plus"></i>&nbsp;&nbsp;Добавить</button>
                     <form method="post" class="form-inline d-none add-form">
                         <input type="hidden" name="scroll" />
-                        <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                         <input type="hidden" name="extracharge_type_id" value="<?=$extracharge_type_id ?>" />
                         <input type="text" name="from_weight" class="form-control float-only mr-2 w-25" placeholder="От, кг" required="required" />
                         &ndash;
