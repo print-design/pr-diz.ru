@@ -165,6 +165,10 @@ $num_for_customer = $row['num_for_customer'];
                             <th>Заказчик</th>
                             <td><?=$customer ?></td>
                         </tr>
+                        <tr>
+                            <th>Название заказа</th>
+                            <td><?=$name ?></td>
+                        </tr>
                         <tr><th>Тип работы</th><td><?=$work_type ?></td></tr>
                             <?php
                             if(!empty($quantity) && !empty($unit)):
