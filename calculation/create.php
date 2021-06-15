@@ -151,6 +151,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         $manager_id = GetUserId();
         $status_id = 1; // Статус "Расчёт"
+        $extracharge = 35; // Наценка по умолчанию 35
         
         // Данные о цвете
         for($i=1; $i<=8; $i++) {
@@ -176,7 +177,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "brand_name, thickness, customers_material, "
                 . "lamination1_brand_name, lamination1_thickness, lamination1_customers_material, "
                 . "lamination2_brand_name, lamination2_thickness, lamination2_customers_material, "
-                . "width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, no_ski, "
+                . "width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, extracharge, no_ski, "
                 . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
                 . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                 . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -186,7 +187,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "'$brand_name', $thickness, $customers_material, "
                 . "'$lamination1_brand_name', $lamination1_thickness, $lamination1_customers_material, "
                 . "'$lamination2_brand_name', $lamination2_thickness, $lamination2_customers_material, "
-                . "$width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, $no_ski, "
+                . "$width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, $extracharge, $no_ski, "
                 . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
                 . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                 . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
