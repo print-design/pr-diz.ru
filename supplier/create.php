@@ -125,16 +125,57 @@ if(null !== filter_input(INPUT_POST, 'supplier_create_submit')) {
                 <div class="form-group" style="padding-bottom: 6px;">
                     <div style="width:319px;">
                         <label for="name">Название поставщика</label>
-                        <input type="text" id="name" name="name" class="form-control<?=$name_valid ?>" value="<?= filter_input(INPUT_POST, 'name') ?>" required="required"/>
+                        <input type="text" 
+                               id="name" 
+                               name="name" 
+                               class="form-control<?=$name_valid ?>" 
+                               value="<?= filter_input(INPUT_POST, 'name') ?>" 
+                               placeholder="Название поставщика" 
+                               required="required" 
+                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onmouseup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название поставщика');" 
+                               onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeyup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название поставщика');" 
+                               onfocusout="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название поставщика);"  />
                         <div class="invalid-feedback">Название поставщика обязательно</div>                            
                     </div>
                 </div>
                 <div class="form-group" style="padding-bottom: 14px;">
                     <table class="table film-table" id="variations-table" style="width: 472px;"></table>
                     <div class="form-inline" id="add-brand-form">
-                        <input type="text" id="film_brand" name="film_brand" class="form-control" placeholder="Название" style="width:215px; margin-right: 13px;" />
-                        <input type="text" id="thickness" name="thickness" class="form-control int-only" placeholder="Толщина" style="width: 100px; margin-right: 13px;" />
-                        <input type="text" id="weight" name="weight" class="form-control float-only" placeholder="Удельный вес" style="width: 129px; margin-right: 13px;" />
+                        <input type="text" 
+                               id="film_brand" 
+                               name="film_brand" 
+                               class="form-control" 
+                               placeholder="Марка пленки" 
+                               style="width:215px; margin-right: 13px;" 
+                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onmouseup="javascript: $(this).attr('id', 'film_brand'); $(this).attr('name', 'film_brand'); $(this).attr('placeholder', 'Марка пленки');" 
+                               onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeyup="javascript: $(this).attr('id', 'film_brand'); $(this).attr('name', 'film_brand'); $(this).attr('placeholder', 'Марка пленки');" 
+                               onfocusout="javascript: $(this).attr('id', 'film_brand'); $(this).attr('name', 'film_brand'); $(this).attr('placeholder', 'Марка пленки');"  />
+                        <input type="text" 
+                               id="thickness" 
+                               name="thickness" 
+                               class="form-control int-only" 
+                               placeholder="Толщина" 
+                               style="width: 100px; margin-right: 13px;" 
+                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onmouseup="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" 
+                               onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeyup="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" 
+                               onfocusout="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');"  />
+                        <input type="text" 
+                               id="weight" 
+                               name="weight" 
+                               class="form-control float-only" 
+                               placeholder="Удельный вес" 
+                               style="width: 129px; margin-right: 13px;" 
+                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onmouseup="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" 
+                               onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeyup="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" 
+                               onfocusout="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');"  />
                         <button type="button" class="btn btn-link" id="add-brand-link">Добавить</button>
                     </div>
                     <button type="button" class="btn btn-outline-dark" id="add-brand-button">
