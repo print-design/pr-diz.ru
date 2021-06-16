@@ -146,15 +146,47 @@ $name = htmlentities($row['name']);
                         <input type="hidden" id="supplier_id" name="supplier_id" value="<?= filter_input(INPUT_GET, 'id') ?>"/>
                         <input type="hidden" id="scroll" name="scroll" />
                         <div class="form-group">
-                            <input type="text" class="form-control mr-2" id="name" name="name" required="required" placeholder="Марка пленки"/>
+                            <input type="text" 
+                                   class="form-control mr-2" 
+                                   id="name" 
+                                   name="name" 
+                                   required="required" 
+                                   placeholder="Марка пленки" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onmouseup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Марка пленки');" 
+                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onkeyup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Марка пленки');" 
+                                   onfocusout="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Марка пленки');" />
                             <div class="invalid-feedback">Марка пленки обязательно</div>
                         </div>
                         <div class="form-group">
-                            <input type="text" id="thickness" name="thickness" class="form-control int-only" placeholder="Толщина" style="width: 100px; margin-left: 12px;" required="required" />
+                            <input type="text" 
+                                   id="thickness" 
+                                   name="thickness" 
+                                   class="form-control int-only" 
+                                   placeholder="Толщина" 
+                                   style="width: 100px; margin-left: 12px;" 
+                                   required="required" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onmouseup="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" 
+                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onkeyup="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" 
+                                   onfocusout="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" />
                             <div class="invalid-feedback">Толщина обязательно</div>
                         </div>
                         <div class="form-group">
-                            <input type="text" id="weight" name="weight" class="form-control float-only" placeholder="Удельный вес" style="width: 120px; margin-left: 12px;" required="required" />
+                            <input type="text" 
+                                   id="weight" 
+                                   name="weight" 
+                                   class="form-control float-only" 
+                                   placeholder="Удельный вес" 
+                                   style="width: 120px; margin-left: 12px;" 
+                                   required="required" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onmouseup="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" 
+                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onkeyup="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" 
+                                   onfocusout="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" />
                             <div class="invalid-feedback">Удельный вес обязательно</div>
                         </div>
                         <button type="submit" class="btn btn-link" id="film_brand_create_submit" name="film_brand_create_submit" style="padding-left: 10px; padding-right: 0;"><i class="fas fa-plus" style="font-size: 10px;"></i>&nbsp;Добавить</button>
@@ -182,11 +214,33 @@ $name = htmlentities($row['name']);
                                 <input type="hidden" id="film_brand_id" name="film_brand_id" value="<?=$film_brand['id'] ?>"/>
                                 <input type="hidden" id="scroll" name="scroll" />
                                 <div class="form-group">
-                                    <input type="text" class="form-control int-only mr-2" id="thickness" name="thickness" placeholder="Толщина" required="required" style="width:100px;"/>
+                                    <input type="text" 
+                                           class="form-control int-only mr-2" 
+                                           id="thickness" 
+                                           name="thickness" 
+                                           placeholder="Толщина" 
+                                           required="required" 
+                                           style="width:100px;" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" 
+                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeyup="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" 
+                                           onfocusout="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" />
                                     <div class="invalid-feedback">Толщина обязательно</div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control float-only" id="weight" name="weight" placeholder="Удельный вес" required="required" style="width:120px;"/>
+                                    <input type="text" 
+                                           class="form-control float-only" 
+                                           id="weight" 
+                                           name="weight" 
+                                           placeholder="Удельный вес" 
+                                           required="required" 
+                                           style="width:120px;" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" 
+                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeyup="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" 
+                                           onfocusout="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" />
                                     <div class="invalid-feedback">Удельный вес обязательно</div>
                                 </div>
                                 <button type="submit" class="btn btn-link ml-2" id="film_brand_variation_create_submit" name="film_brand_variation_create_submit" style="padding-left: 0; padding-right: 0;"><i class="fas fa-plus" style="font-size: 8px; vertical-align: top; padding-top: 8px;"></i>&nbsp;Добавить</button>
