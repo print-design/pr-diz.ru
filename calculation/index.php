@@ -49,7 +49,43 @@ function OrderLink($param) {
             <div class="d-flex justify-content-between mb-auto">
                 <div class="p-1 text-nowrap">
                     <h1 style="font-size: 32px; font-weight: 600;" class="d-inline">Расчеты</h1>
-                    <div class="d-inline ml-3" style="color: gray; font-size: x-large;">203</div>
+                    <?php
+                    // Фильтр
+                    $where = '';
+                    
+                    $status = filter_input(INPUT_GET, 'status');
+                    if(!empty($status)) {
+                        if(empty($where)) $where = " where c.status_id=$status";
+                        else $where .= " and c.status_id=$status";
+                    }
+                    
+                    $work_type = filter_input(INPUT_GET, 'work_type');
+                    if(!empty($work_type)) {
+                        if(empty($where)) $where = " where c.work_type_id=$work_type";
+                        else $where .= " and c.work_type_id=$work_type";
+                    }
+                    
+                    $manager = filter_input(INPUT_GET, 'manager');
+                    if(!empty($manager)) {
+                        if(empty($where)) $where = " where c.manager_id=$manager";
+                        else $where .= " and c.manager_id=$manager";
+                    }
+                    
+                    $customer = filter_input(INPUT_GET, 'customer');
+                    if(!empty($customer)) {
+                        if(empty($where)) $where = " where c.customer_id=$customer";
+                        else $where .= " and c.customer_id=$customer";
+                    }
+
+                    // Общее количество расчётов для установления количества страниц в постраничном выводе
+                    $sql = "select count(c.id) from calculation c$where";
+                    $fetcher = new Fetcher($sql);
+                    
+                    if($row = $fetcher->Fetch()) {
+                        $pager_total_count = $row[0];
+                    }
+                    ?>
+                    <div class="d-inline ml-3" style="color: gray; font-size: x-large;"><?=$pager_total_count ?></div>
                 </div>
                 <div class="p-1 text-nowrap">
                     <?php $order = filter_input(INPUT_GET, 'order'); ?>
@@ -129,41 +165,6 @@ function OrderLink($param) {
                 </thead>
                 <tbody>
                     <?php
-                    // Фильтр
-                    $where = '';
-                    
-                    $status = filter_input(INPUT_GET, 'status');
-                    if(!empty($status)) {
-                        if(empty($where)) $where = " where c.status_id=$status";
-                        else $where .= " and c.status_id=$status";
-                    }
-                    
-                    $work_type = filter_input(INPUT_GET, 'work_type');
-                    if(!empty($work_type)) {
-                        if(empty($where)) $where = " where c.work_type_id=$work_type";
-                        else $where .= " and c.work_type_id=$work_type";
-                    }
-                    
-                    $manager = filter_input(INPUT_GET, 'manager');
-                    if(!empty($manager)) {
-                        if(empty($where)) $where = " where c.manager_id=$manager";
-                        else $where .= " and c.manager_id=$manager";
-                    }
-                    
-                    $customer = filter_input(INPUT_GET, 'customer');
-                    if(!empty($customer)) {
-                        if(empty($where)) $where = " where c.customer_id=$customer";
-                        else $where .= " and c.customer_id=$customer";
-                    }
-
-                    // Общее количество расчётов для установления количества страниц в постраничном выводе
-                    $sql = "select count(c.id) from calculation c$where";
-                    $fetcher = new Fetcher($sql);
-                    
-                    if($row = $fetcher->Fetch()) {
-                        $pager_total_count = $row[0];
-                    }
-                    
                     // Сортировка
                     $orderby = "order by c.id desc";
                     
