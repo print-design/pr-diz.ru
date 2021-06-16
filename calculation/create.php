@@ -151,7 +151,9 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         $manager_id = GetUserId();
         $status_id = 1; // Статус "Расчёт"
-        $extracharge = 35; // Наценка по умолчанию 35
+        
+        $extracharge = filter_input(INPUT_POST, 'h_extracharge');
+        if(empty($extracharge)) $extracharge = 35; // Наценка по умолчанию 35
         
         // Данные о цвете
         for($i=1; $i<=8; $i++) {
@@ -488,6 +490,7 @@ $colorfulnesses = array();
                 <div class="col-5" id="left_side">
                     <form method="post">
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                        <input type="hidden" id="h_extracharge" name="h_extracharge" class="extracharge" value="<?=$extracharge ?>" />
                         <input type="hidden" id="scroll" name="scroll" />
                         <?php if(null === filter_input(INPUT_GET, 'id')): ?>
                         <h1>Новый расчет</h1>
