@@ -150,7 +150,7 @@ $num_for_customer = $row['num_for_customer'];
             }
             ?>
             <div class="backlink">
-                <a href="<?=APPLICATION ?>/calculation/">Назад</a>
+                <a href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemove("id") ?>">Назад</a>
             </div>
             <div class="row">
                 <!-- Левая половина -->
