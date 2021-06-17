@@ -18,6 +18,11 @@ $brand_name_valid = '';
 $thickness_valid = '';
 $quantity_valid = '';
 
+$other_brand_name_valid = '';
+$other_price_valid = '';
+$other_thickness_valid = '';
+$other_weight_valid = '';
+
 // Переменные для валидации цвета, CMYK и процента
 for($i=1; $i<=8; $i++) {
     $color_valid_var = 'color_'.$i.'_valid';
@@ -29,6 +34,9 @@ for($i=1; $i<=8; $i++) {
     $percent_valid_var = 'percent_'.$i.'_valid';
     $$percent_valid_var = '';
 }
+
+// Значение марки плёнки "другая"
+const OTHER = "other";
 
 // Сохранение в базу расчёта
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
@@ -60,6 +68,29 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     if(empty(filter_input(INPUT_POST, 'quantity'))) {
         $quantity_valid = ISINVALID;
         $form_valid = false;
+    }
+    
+    // Проверка валидности параметров, введённых вручную при выборе марки плёнки "Другая"
+    if(filter_input(INPUT_POST, 'brand_name') == OTHER) {
+        if(empty(filter_input(INPUT_POST, 'other_brand_name'))) {
+            $other_brand_name_valid = ISINVALID;
+            $form_valid = false;
+        }
+        
+        if(empty(filter_input(INPUT_POST, 'other_price'))) {
+            $other_price_valid = ISINVALID;
+            $form_valid = false;
+        }
+        
+        if(empty(filter_input(INPUT_POST, 'other_thickness'))) {
+            $other_thickness_valid = ISINVALID;
+            $form_valid = false;
+        }
+        
+        if(empty(filter_input(INPUT_POST, 'other_weight'))) {
+            $other_weight_valid = ISINVALID;
+            $form_valid = false;
+        }
     }
     
     // Проверка валидности цвета, CMYK и процента
@@ -105,6 +136,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $work_type_id = filter_input(INPUT_POST, 'work_type_id');
         $brand_name = addslashes(filter_input(INPUT_POST, 'brand_name'));
         $thickness = filter_input(INPUT_POST, 'thickness');
+        $other_brand_name = filter_input(INPUT_POST, 'other_brand_name');
+        $other_price = filter_input(INPUT_POST, 'other_price');
+        if(empty($other_price)) $other_price = "NULL";
+        $other_thickness = filter_input(INPUT_POST, 'other_thickness');
+        if(empty($other_thickness)) $other_thickness = "NULL";
+        $other_weight = filter_input(INPUT_POST, 'other_weight');
+        if(empty($other_weight)) $other_weight = "NULL";
         $customers_material = 0;
         if(filter_input(INPUT_POST, 'customers_material') == 'on') {
             $customers_material = 1;
@@ -176,7 +214,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         $sql = "insert into calculation (customer_id, name, work_type_id, unit, machine_id, "
-                . "brand_name, thickness, customers_material, "
+                . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
                 . "lamination1_brand_name, lamination1_thickness, lamination1_customers_material, "
                 . "lamination2_brand_name, lamination2_thickness, lamination2_customers_material, "
                 . "width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, extracharge, no_ski, "
@@ -186,7 +224,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
                 . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
                 . "values($customer_id, '$name', $work_type_id, '$unit', $machine_id, "
-                . "'$brand_name', $thickness, $customers_material, "
+                . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, "
                 . "'$lamination1_brand_name', $lamination1_thickness, $lamination1_customers_material, "
                 . "'$lamination2_brand_name', $lamination2_thickness, $lamination2_customers_material, "
                 . "$width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, $extracharge, $no_ski, "
@@ -232,7 +270,7 @@ if(empty($id)) {
 
 if(!empty($id)) {
     $sql = "select date, customer_id, name, work_type_id, unit, machine_id, "
-            . "brand_name, thickness, customers_material, "
+            . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
             . "lamination1_brand_name, lamination1_thickness, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_customers_material, "
             . "quantity, width, streams_count, length, stream_width, raport, paints_count, status_id, extracharge, no_ski, "
@@ -276,6 +314,30 @@ $thickness = filter_input(INPUT_POST, 'thickness');
 if(null === $thickness) {
     if(isset($row['thickness'])) $thickness = $row['thickness'];
     else $thickness = null;
+}
+
+$other_brand_name = filter_input(INPUT_POST, 'other_brand_name');
+if(null === $other_brand_name) {
+    if(isset($row['other_brand_name'])) $other_brand_name = $row['other_brand_name'];
+    else $other_brand_name = null;
+}
+
+$other_price = filter_input(INPUT_POST, 'other_price');
+if(null === $other_price) {
+    if(isset($row['other_price'])) $other_price = $row['other_price'];
+    else $other_price = null;
+}
+
+$other_thickness = filter_input(INPUT_POST, 'other_thickness');
+if(null === $other_thickness) {
+    if(isset($row['other_thickness'])) $other_thickness = $row['other_thickness'];
+    else $other_thickness = null;
+}
+
+$other_weight = filter_input(INPUT_POST, 'other_weight');
+if(null === $other_weight) {
+    if(isset($row['other_weight'])) $other_weight = $row['other_weight'];
+    else $other_weight = null;
 }
 
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
@@ -641,20 +703,21 @@ $colorfulnesses = array();
                                     <label for="brand_name">Марка пленки</label>
                                     <select id="brand_name" name="brand_name" class="form-control" required="required">
                                         <option value="" hidden="hidden" selected="selected">Марка пленки...</option>
-                                        <?php
-                                        $sql = "select distinct name from film_brand order by name";
-                                        $brand_names = (new Grabber($sql))->result;
-                                        
-                                        foreach ($brand_names as $row):
-                                        $selected = '';
-                                        if($row['name'] == $brand_name) {
-                                            $selected = " selected='selected'";
-                                        }
-                                        ?>
+                                            <?php
+                                            $sql = "select distinct name from film_brand order by name";
+                                            $brand_names = (new Grabber($sql))->result;
+                                            
+                                            foreach ($brand_names as $row):
+                                            $selected = '';
+                                            if($row['name'] == $brand_name) {
+                                                $selected = " selected='selected'";
+                                            }
+                                            ?>
                                         <option value="<?=$row['name'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
-                                        <?php
-                                        endforeach;
-                                        ?>
+                                            <?php
+                                            endforeach;
+                                            ?>
+                                        <option value="<?=OTHER ?>">Другая</option>
                                     </select>
                                 </div>
                             </div>
@@ -680,6 +743,76 @@ $colorfulnesses = array();
                                         }
                                         ?>
                                     </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row other-only">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="other_brand_name">Название пленки</label>
+                                    <input type="text" 
+                                           id="other_brand_name" 
+                                           name="other_brand_name" 
+                                           class="form-control" 
+                                           placeholder="Название пленки" 
+                                           value="<?=$other_brand_name ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'other_brand_name'); $(this).attr('name', 'other_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
+                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeyup="javascript: $(this).attr('id', 'other_brand_name'); $(this).attr('name', 'other_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
+                                           onfocusout="javascript: $(this).attr('id', 'other_brand_name'); $(this).attr('name', 'other_brand_name'); $(this).attr('placeholder', 'Название пленки')" />
+                                    <div class="invalid-feedback">Название пленки обязательно</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="other_price">Цена</label>
+                                    <input type="text" 
+                                           id="other_price" 
+                                           name="other_price" 
+                                           class="form-control" 
+                                           placeholder="Цена" 
+                                           value="<?=$other_price ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'other_price'); $(this).attr('name', 'other_price'); $(this).attr('placeholder', 'Цена')" 
+                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeyup="javascript: $(this).attr('id', 'other_price'); $(this).attr('name', 'other_price'); $(this).attr('placeholder', 'Цена')" 
+                                           onfocusout="javascript: $(this).attr('id', 'other_price'); $(this).attr('name', 'other_price'); $(this).attr('placeholder', 'Цена')" />
+                                    <div class="invalid-feedback">Цена обязательно</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="other_thickness">Толщина</label>
+                                    <input type="text" 
+                                           id="other_thickness" 
+                                           name="other_thickness" 
+                                           class="form-control" 
+                                           placeholder="Толщина" 
+                                           value="<?=$other_brand_name ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'other_thickness'); $(this).attr('name', 'other_thickness'); $(this).attr('placeholder', 'Толщина')" 
+                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeyup="javascript: $(this).attr('id', 'other_thickness'); $(this).attr('name', 'other_thickness'); $(this).attr('placeholder', 'Толщина')" 
+                                           onfocusout="javascript: $(this).attr('id', 'other_thickness'); $(this).attr('name', 'other_thickness'); $(this).attr('placeholder', 'Толщина')" />
+                                    <div class="invalid-feedback">Толщина обязательно</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="other_weight">Удельный вес</label>
+                                    <input type="text" 
+                                           id="other_weight" 
+                                           name="other_weight" 
+                                           class="form-control" 
+                                           placeholder="Удельный вес" 
+                                           value="<?=$other_price ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'other_weight'); $(this).attr('name', 'other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
+                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeyup="javascript: $(this).attr('id', 'other_weight'); $(this).attr('name', 'other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
+                                           onfocusout="javascript: $(this).attr('id', 'other_weight'); $(this).attr('name', 'other_weight'); $(this).attr('placeholder', 'Удельный вес')" />
+                                    <div class="invalid-feedback">Удельный вес обязательно</div>
                                 </div>
                             </div>
                         </div>
@@ -1343,8 +1476,10 @@ $colorfulnesses = array();
                 }
             });
             
-            // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин
+            // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин и установка видимости полей
             $('#brand_name').change(function(){
+                SetBrandFieldsVisibility($(this).val());
+                
                 if($(this).val() == "") {
                     $('#thickness').html("<option value=''>Толщина...</option>");
                 }
@@ -1358,6 +1493,26 @@ $colorfulnesses = array();
                     });
                 }
             });
+            
+            // Установка видимости полей для ручного ввода при выборе марки плёнки "Другая"
+            function SetBrandFieldsVisibility(value) {
+                if(value == '<?=OTHER ?>') {
+                    $('#thickness').removeAttr('required');
+                    $('#thickness').addClass('d-none');
+                    $('#thickness').prev('label').addClass('d-none');
+                    $('.other-only').removeClass('d-none');
+                    $('.other-only input').attr('required', 'required');
+                }
+                else {
+                    $('#thickness').attr('required', 'required');
+                    $('#thickness').removeClass('d-none');
+                    $('#thickness').prev('label').removeClass('d-none');
+                    $('.other-only').addClass('d-none');
+                    $('.other-only input').removeAttr('required');
+                }
+            }
+            
+            SetBrandFieldsVisibility($('#brand_name').val());
             
             // Обработка выбора типа плёнки ламинации1: перерисовка списка толщин
             $('#lamination1_brand_name').change(function(){
