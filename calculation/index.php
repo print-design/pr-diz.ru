@@ -53,6 +53,12 @@ function OrderLink($param) {
                     // Фильтр
                     $where = '';
                     
+                    $unit = filter_input(INPUT_GET, 'unit');
+                    if(!empty($unit)) {
+                        if(empty($where)) $where = " where c.unit='$unit'";
+                        else $where .= " and c.unit='$unit'";
+                    }
+                    
                     $status = filter_input(INPUT_GET, 'status');
                     if(!empty($status)) {
                         if(empty($where)) $where = " where c.status_id=$status";
@@ -93,6 +99,11 @@ function OrderLink($param) {
                         <?php if(null !== $order): ?>
                         <input type="hidden" name="order" value="<?= $order ?>" />
                         <?php endif; ?>
+                        <select id="unit" name="unit" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Штуки и килограммы...</option>
+                            <option value="thing"<?= filter_input(INPUT_GET, 'unit') == 'thing' ? " selected='selected'" : "" ?>>Штуки</option>
+                            <option value="kg"<?= filter_input(INPUT_GET, 'unit') == 'kg' ? " selected='selected'" : "" ?>>Килограммы</option>
+                        </select>
                         <select id="status" name="status" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Статус...</option>
                             <?php
@@ -259,6 +270,11 @@ function OrderLink($param) {
         <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
         <script>
             // Список с  поиском
+            $('#unit').select2({
+                placeholder: "Штуки и килограммы...",
+                maximumStatusLength: 1,
+                language: "ru"
+            })
             $('#status').select2({
                 placeholder: "Статус...",
                 maximumSelectionLength: 1,
