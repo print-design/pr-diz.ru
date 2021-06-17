@@ -173,6 +173,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $lamination2_brand_name = addslashes(filter_input(INPUT_POST, 'lamination2_brand_name'));
         $lamination2_thickness = filter_input(INPUT_POST, 'lamination2_thickness');
         if(empty($lamination2_thickness)) $lamination2_thickness = "NULL";
+        $lamination2_other_brand_name = filter_input(INPUT_POST, 'lamination2_other_brand_name');
+        $lamination2_other_price = filter_input(INPUT_POST, 'lamination2_other_price');
+        if(empty($lamination2_other_price)) $lamination2_other_price = "NULL";
+        $lamination2_other_thickness = filter_input(INPUT_POST, 'lamination2_other_thickness');
+        if(empty($lamination2_other_thickness)) $lamination2_other_thickness = "NULL";
+        $lamination2_other_weight = filter_input(INPUT_POST, 'lamination2_other_weight');
+        if(empty($lamination2_other_weight)) $lamination2_other_weight = "NULL";
         $lamination2_customers_material = 0;
         if(filter_input(INPUT_POST, 'lamination2_customers_material') == 'on') {
             $lamination2_customers_material = 1;
@@ -226,7 +233,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $sql = "insert into calculation (customer_id, name, work_type_id, unit, machine_id, "
                 . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
                 . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
-                . "lamination2_brand_name, lamination2_thickness, lamination2_customers_material, "
+                . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
                 . "width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, extracharge, no_ski, "
                 . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
                 . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -236,7 +243,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "values($customer_id, '$name', $work_type_id, '$unit', $machine_id, "
                 . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, "
                 . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_other_brand_name', $lamination1_other_price, $lamination1_other_thickness, $lamination1_other_weight, $lamination1_customers_material, "
-                . "'$lamination2_brand_name', $lamination2_thickness, $lamination2_customers_material, "
+                . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_other_brand_name', $lamination2_other_price, $lamination2_other_thickness, $lamination2_other_weight, $lamination2_customers_material, "
                 . "$width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, $extracharge, $no_ski, "
                 . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
                 . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
@@ -282,7 +289,7 @@ if(!empty($id)) {
     $sql = "select date, customer_id, name, work_type_id, unit, machine_id, "
             . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
             . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
-            . "lamination2_brand_name, lamination2_thickness, lamination2_customers_material, "
+            . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
             . "quantity, width, streams_count, length, stream_width, raport, paints_count, status_id, extracharge, no_ski, "
             . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -424,6 +431,30 @@ $lamination2_thickness = filter_input(INPUT_POST, 'lamination2_thickness');
 if(null === $lamination2_thickness) {
     if(isset($row['lamination2_thickness'])) $lamination2_thickness = $row['lamination2_thickness'];
     else $lamination2_thickness = null;
+}
+
+$lamination2_other_brand_name = filter_input(INPUT_POST, 'lamination2_other_brand_name');
+if(null === $lamination2_other_brand_name) {
+    if(isset($row['lamination2_other_brand_name'])) $lamination2_other_brand_name = $row['lamination2_other_brand_name'];
+    else $lamination2_other_brand_name = null;
+}
+
+$lamination2_other_price = filter_input(INPUT_POST, 'lamination2_other_price');
+if(null === $lamination2_other_price) {
+    if(isset($row['lamination2_other_price'])) $lamination2_other_price = $row['lamination2_other_price'];
+    else $lamination2_other_price = null;
+}
+
+$lamination2_other_thickness = filter_input(INPUT_POST, 'lamination2_other_thickness');
+if(null === $lamination2_other_thickness) {
+    if(isset($row['lamination2_other_thickness'])) $lamination2_other_thickness = $row['lamination2_other_thickness'];
+    else $lamination2_other_thickness = null;
+}
+
+$lamination2_other_weight = filter_input(INPUT_POST, 'lamination2_other_weight');
+if(null === $lamination2_other_weight) {
+    if(isset($row['lamination2_other_weight'])) $lamination2_other_weight = $row['lamination2_other_weight'];
+    else $lamination2_other_weight = null;
 }
 
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
@@ -895,12 +926,12 @@ $colorfulnesses = array();
                                                 <?php
                                                 endforeach;
                                                 
-                                                $other_selected = '';
-                                                if(!empty($other_brand_name)) {
-                                                    $other_selected = " selected='selected'";
+                                                $lamination1_other_selected = '';
+                                                if(!empty($lamination1_other_brand_name)) {
+                                                    $lamination1_other_selected = " selected='selected'";
                                                 }
                                                 ?>
-                                            <option value="<?=OTHER ?>"<?=$other_selected ?>>Другая</option>
+                                            <option value="<?=OTHER ?>"<?=$lamination1_other_selected ?>>Другая</option>
                                         </select>
                                     </div>
                                 </div>
@@ -1048,7 +1079,13 @@ $colorfulnesses = array();
                                                 <option value="<?=$row['name'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
                                                     <?php
                                                     endforeach;
+                                                    
+                                                    $lamination2_other_selected = '';
+                                                    if(!empty($lamination2_other_brand_name)) {
+                                                        $lamination2_other_selected = " selected='selected'";
+                                                    }
                                                     ?>
+                                                <option value="<?=OTHER ?>"<?=$lamination2_other_selected ?>>Другая</option>
                                             </select>
                                         </div>
                                     </div>
@@ -1081,6 +1118,78 @@ $colorfulnesses = array();
                                             <button type="button" class="btn btn-light" onclick="javascript: HideLamination2();"><i class="fas fa-trash-alt"></i></button>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row lamination2_other_only">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="lamination2_other_brand_name">Название пленки</label>
+                                            <input type="text" 
+                                                   id="lamination2_other_brand_name" 
+                                                   name="lamination2_other_brand_name" 
+                                                   class="form-control" 
+                                                   placeholder="Название пленки" 
+                                                   value="<?=$lamination2_other_brand_name ?>" 
+                                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_other_brand_name'); $(this).attr('name', 'lamination2_other_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
+                                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_other_brand_name'); $(this).attr('name', 'lamination2_other_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
+                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_other_brand_name'); $(this).attr('name', 'lamination2_other_brand_name'); $(this).attr('placeholder', 'Название пленки')" />
+                                            <div class="invalid-feedback">Название пленки обязательно</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="form-group">
+                                            <label for="lamination2_other_price">Цена</label>
+                                            <input type="text" 
+                                                   id="lamination2_other_price" 
+                                                   name="lamination2_other_price" 
+                                                   class="form-control float-only" 
+                                                   placeholder="Цена" 
+                                                   value="<?=$lamination2_other_price ?>" 
+                                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_other_price'); $(this).attr('name', 'lamination2_other_price'); $(this).attr('placeholder', 'Цена')" 
+                                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_other_price'); $(this).attr('name', 'lamination2_other_price'); $(this).attr('placeholder', 'Цена')" 
+                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_other_price'); $(this).attr('name', 'lamination2_other_price'); $(this).attr('placeholder', 'Цена')" />
+                                            <div class="invalid-feedback">Цена обязательно</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-1"></div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="lamination2_other_thickness">Толщина, мкм</label>
+                                            <input type="text" 
+                                                   id="lamination2_other_thickness" 
+                                                   name="lamination2_other_thickness" 
+                                                   class="form-control int-only" 
+                                                   placeholder="Толщина" 
+                                                   value="<?=$lamination2_other_thickness ?>" 
+                                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_other_thickness'); $(this).attr('name', 'lamination2_other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
+                                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_other_thickness'); $(this).attr('name', 'lamination2_other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
+                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_other_thickness'); $(this).attr('name', 'lamination2_other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" />
+                                            <div class="invalid-feedback">Толщина обязательно</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="form-group">
+                                            <label for="lamination2_other_weight">Удельный вес</label>
+                                            <input type="text" 
+                                                   id="lamination2_other_weight" 
+                                                   name="lamination2_other_weight" 
+                                                   class="form-control float-only" 
+                                                   placeholder="Удельный вес" 
+                                                   value="<?=$lamination2_other_weight ?>" 
+                                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_other_weight'); $(this).attr('name', 'lamination2_other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
+                                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_other_weight'); $(this).attr('name', 'lamination2_other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
+                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_other_weight'); $(this).attr('name', 'lamination2_other_weight'); $(this).attr('placeholder', 'Удельный вес')" />
+                                            <div class="invalid-feedback">Удельный вес обязательно</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-1"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-6"></div>
@@ -1634,8 +1743,13 @@ $colorfulnesses = array();
                 SetBrandFieldsVisibility($('#lamination1_brand_name').val(), $(e.target).is(':checked'), 'lamination1_');
             });
             
+            $('#lamination2_customers_material').change(function(e) {
+                SetBrandFieldsVisibility($('#lamination2_brand_name').val(), $(e.target).is(':checked'), 'lamination2_');
+            });
+            
             SetBrandFieldsVisibility($('#brand_name').val(), $('#customers_material').is(':checked'), '');
             SetBrandFieldsVisibility($('#lamination1_brand_name').val(), $('#lamination1_customers_material').is(':checked'), 'lamination1_');
+            SetBrandFieldsVisibility($('#lamination2_brand_name').val(), $('#lamination2_customers_material').is(':checked'), 'lamination2_');
             
             // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин и установка видимости полей
             $('#brand_name').change(function(){
@@ -1675,6 +1789,8 @@ $colorfulnesses = array();
             
             // Обработка выбора типа плёнки ламинации2: перерисовка списка толщин
             $('#lamination2_brand_name').change(function(){
+                SetBrandFieldsVisibility($(this).val(), $('#lamination2_customers_material').is(':checked'), 'lamination2_');
+                
                 if($(this).val() == "") {
                     $('#lamination2_thickness').html("<option value=''>Толщина...</option>");
                 }
