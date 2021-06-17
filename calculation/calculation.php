@@ -32,7 +32,7 @@ if(empty($id)) {
 }
 
 $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c.unit, "
-        . "c.brand_name, c.thickness, c.customers_material, "
+        . "c.brand_name, c.thickness, other_brand_name, other_price, other_thickness, other_weight, c.customers_material, "
         . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_customers_material, "
         . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_customers_material, "
         . "c.width, c.length, c.stream_width, c.streams_count, c.raport raport_value, c.paints_count, "
@@ -68,6 +68,10 @@ $unit = $row['unit'];
 $brand_name = $row['brand_name'];
 $thickness = $row['thickness'];
 $weight = $row['weight'];
+$other_brand_name = $row['other_brand_name'];
+$other_price = $row['other_price'];
+$other_thickness = $row['other_thickness'];
+$other_weight = $row['other_weight'];
 $customers_material = $row['customers_material'];
 $lamination1_brand_name = $row['lamination1_brand_name'];
 $lamination1_thickness = $row['lamination1_thickness'];
@@ -222,7 +226,20 @@ $num_for_customer = $row['num_for_customer'];
                                 <table class="w-100">
                                     <tr>
                                         <td><?=$brand_name ?></td>
-                                        <td><?= rtrim(rtrim(number_format($thickness, 2, ",", " "), "0"), ",") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                                        <td><?= number_format($thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                                        <td class="w-25"><?=$customers_material == 1 ? "Сырье заказчика" : "" ?></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                            <?php elseif(!empty($other_brand_name)): ?>
+                        <tr>
+                            <th>Пленка</th>
+                            <td>
+                                <table class="w-100">
+                                    <tr>
+                                        <td><?=$other_brand_name ?></td>
+                                        <td><?= number_format($other_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($other_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                                         <td class="w-25"><?=$customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                                     </tr>
                                 </table>

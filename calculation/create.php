@@ -72,7 +72,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $form_valid = false;
         }
         
-        if(empty(filter_input(INPUT_POST, 'other_price'))) {
+        if(filter_input(INPUT_POST, 'customers_material') != 'on' && empty(filter_input(INPUT_POST, 'other_price'))) {
             $other_price_valid = ISINVALID;
             $form_valid = false;
         }
@@ -403,10 +403,13 @@ else {
     else $lamination2_customers_material = null;
 }
 
-$quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity'));
+$quantity = filter_input(INPUT_POST, 'quantity');
 if(null === $quantity) {
     if(isset($row['quantity'])) $quantity = $row['quantity'];
-    else $width = null;
+    else $quantity = null;
+}
+else {
+    $quantity = preg_replace("/\D/", "", $quantity);
 }
 
 $width = filter_input(INPUT_POST, 'width');
