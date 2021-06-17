@@ -158,6 +158,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $lamination1_brand_name = addslashes(filter_input(INPUT_POST, 'lamination1_brand_name'));
         $lamination1_thickness = filter_input(INPUT_POST, 'lamination1_thickness');
         if(empty($lamination1_thickness)) $lamination1_thickness = "NULL";
+        $lamination1_other_brand_name = filter_input(INPUT_POST, 'lamination1_other_brand_name');
+        $lamination1_other_price = filter_input(INPUT_POST, 'lamination1_other_price');
+        if(empty($lamination1_other_price)) $lamination1_other_price = "NULL";
+        $lamination1_other_thickness = filter_input(INPUT_POST, 'lamination1_other_thickness');
+        if(empty($lamination1_other_thickness)) $lamination1_other_thickness = "NULL";
+        $lamination1_other_weight = filter_input(INPUT_POST, 'lamination1_other_weight');
+        if(empty($lamination1_other_weight)) $lamination1_other_weight = "NULL";
         $lamination1_customers_material = 0;
         if(filter_input(INPUT_POST, 'lamination1_customers_material') == 'on') {
             $lamination1_customers_material = 1;
@@ -218,7 +225,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         $sql = "insert into calculation (customer_id, name, work_type_id, unit, machine_id, "
                 . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
-                . "lamination1_brand_name, lamination1_thickness, lamination1_customers_material, "
+                . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
                 . "lamination2_brand_name, lamination2_thickness, lamination2_customers_material, "
                 . "width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, extracharge, no_ski, "
                 . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
@@ -228,7 +235,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
                 . "values($customer_id, '$name', $work_type_id, '$unit', $machine_id, "
                 . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, "
-                . "'$lamination1_brand_name', $lamination1_thickness, $lamination1_customers_material, "
+                . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_other_brand_name', $lamination1_other_price, $lamination1_other_thickness, $lamination1_other_weight, $lamination1_customers_material, "
                 . "'$lamination2_brand_name', $lamination2_thickness, $lamination2_customers_material, "
                 . "$width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, $extracharge, $no_ski, "
                 . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
@@ -274,7 +281,7 @@ if(empty($id)) {
 if(!empty($id)) {
     $sql = "select date, customer_id, name, work_type_id, unit, machine_id, "
             . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
-            . "lamination1_brand_name, lamination1_thickness, lamination1_customers_material, "
+            . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_customers_material, "
             . "quantity, width, streams_count, length, stream_width, raport, paints_count, status_id, extracharge, no_ski, "
             . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
@@ -373,6 +380,30 @@ $lamination1_thickness = filter_input(INPUT_POST, 'lamination1_thickness');
 if(null === $lamination1_thickness) {
     if(isset($row['lamination1_thickness'])) $lamination1_thickness = $row['lamination1_thickness'];
     else $lamination1_thickness = null;
+}
+
+$lamination1_other_brand_name = filter_input(INPUT_POST, 'lamination1_other_brand_name');
+if(null === $lamination1_other_brand_name) {
+    if(isset($row['lamination1_other_brand_name'])) $lamination1_other_brand_name = $row['lamination1_other_brand_name'];
+    else $lamination1_other_brand_name = null;
+}
+
+$lamination1_other_price = filter_input(INPUT_POST, 'lamination1_other_price');
+if(null === $lamination1_other_price) {
+    if(isset($row['lamination1_other_price'])) $lamination1_other_price = $row['lamination1_other_price'];
+    else $lamination1_other_price = null;
+}
+
+$lamination1_other_thickness = filter_input(INPUT_POST, 'lamination1_other_thickness');
+if(null === $lamination1_other_thickness) {
+    if(isset($row['lamination1_other_thickness'])) $lamination1_other_thickness = $row['lamination1_other_thickness'];
+    else $lamination1_other_thickness = null;
+}
+
+$lamination1_other_weight = filter_input(INPUT_POST, 'lamination1_other_weight');
+if(null === $lamination1_other_weight) {
+    if(isset($row['lamination1_other_weight'])) $lamination1_other_weight = $row['lamination1_other_weight'];
+    else $lamination1_other_weight = null;
 }
 
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
@@ -757,7 +788,7 @@ $colorfulnesses = array();
                                 </div>
                             </div>
                         </div>
-                        <div class="row other-only">
+                        <div class="row other_only">
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="other_brand_name">Название пленки</label>
@@ -863,7 +894,13 @@ $colorfulnesses = array();
                                             <option value="<?=$row['name'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
                                                 <?php
                                                 endforeach;
+                                                
+                                                $other_selected = '';
+                                                if(!empty($other_brand_name)) {
+                                                    $other_selected = " selected='selected'";
+                                                }
                                                 ?>
+                                            <option value="<?=OTHER ?>"<?=$other_selected ?>>Другая</option>
                                         </select>
                                     </div>
                                 </div>
@@ -902,6 +939,78 @@ $colorfulnesses = array();
                                         <button type="button" class="btn btn-light" onclick="javascript: HideLamination1();"><i class="fas fa-trash-alt"></i></button>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row lamination1_other_only">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="lamination1_other_brand_name">Название пленки</label>
+                                        <input type="text" 
+                                               id="lamination1_other_brand_name" 
+                                               name="lamination1_other_brand_name" 
+                                               class="form-control" 
+                                               placeholder="Название пленки" 
+                                               value="<?=$lamination1_other_brand_name ?>" 
+                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onmouseup="javascript: $(this).attr('id', 'lamination1_other_brand_name'); $(this).attr('name', 'lamination1_other_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
+                                               onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onkeyup="javascript: $(this).attr('id', 'lamination1_other_brand_name'); $(this).attr('name', 'lamination1_other_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
+                                               onfocusout="javascript: $(this).attr('id', 'lamination1_other_brand_name'); $(this).attr('name', 'lamination1_other_brand_name'); $(this).attr('placeholder', 'Название пленки')" />
+                                        <div class="invalid-feedback">Название пленки обязательно</div>
+                                    </div>
+                                </div>
+                                <div class="col-5">
+                                    <div class="form-group">
+                                        <label for="lamination1_other_price">Цена</label>
+                                        <input type="text" 
+                                               id="lamination1_other_price" 
+                                               name="lamination1_other_price" 
+                                               class="form-control float-only" 
+                                               placeholder="Цена" 
+                                               value="<?=$lamination1_other_price ?>" 
+                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onmouseup="javascript: $(this).attr('id', 'lamination1_other_price'); $(this).attr('name', 'lamination1_other_price'); $(this).attr('placeholder', 'Цена')" 
+                                               onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onkeyup="javascript: $(this).attr('id', 'lamination1_other_price'); $(this).attr('name', 'lamination1_other_price'); $(this).attr('placeholder', 'Цена')" 
+                                               onfocusout="javascript: $(this).attr('id', 'lamination1_other_price'); $(this).attr('name', 'lamination1_other_price'); $(this).attr('placeholder', 'Цена')" />
+                                        <div class="invalid-feedback">Цена обязательно</div>
+                                    </div>
+                                </div>
+                                <div class="col-1"></div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="lamination1_other_thickness">Толщина, мкм</label>
+                                        <input type="text" 
+                                               id="lamination1_other_thickness" 
+                                               name="lamination1_other_thickness" 
+                                               class="form-control int-only" 
+                                               placeholder="Толщина" 
+                                               value="<?=$lamination1_other_thickness ?>" 
+                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onmouseup="javascript: $(this).attr('id', 'lamination1_other_thickness'); $(this).attr('name', 'lamination1_other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
+                                               onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onkeyup="javascript: $(this).attr('id', 'lamination1_other_thickness'); $(this).attr('name', 'lamination1_other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
+                                               onfocusout="javascript: $(this).attr('id', 'lamination1_other_thickness'); $(this).attr('name', 'lamination1_other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" />
+                                        <div class="invalid-feedback">Толщина обязательно</div>
+                                    </div>
+                                </div>
+                                <div class="col-5">
+                                    <div class="form-group">
+                                        <label for="lamination1_other_weight">Удельный вес</label>
+                                        <input type="text" 
+                                               id="lamination1_other_weight" 
+                                               name="lamination1_other_weight" 
+                                               class="form-control float-only" 
+                                               placeholder="Удельный вес" 
+                                               value="<?=$lamination1_other_weight ?>" 
+                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onmouseup="javascript: $(this).attr('id', 'lamination1_other_weight'); $(this).attr('name', 'lamination1_other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
+                                               onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onkeyup="javascript: $(this).attr('id', 'lamination1_other_weight'); $(this).attr('name', 'lamination1_other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
+                                               onfocusout="javascript: $(this).attr('id', 'lamination1_other_weight'); $(this).attr('name', 'lamination1_other_weight'); $(this).attr('placeholder', 'Удельный вес')" />
+                                        <div class="invalid-feedback">Удельный вес обязательно</div>
+                                    </div>
+                                </div>
+                                <div class="col-1"></div>
                             </div>
                             <div class="row">
                                 <div class="col-6">
@@ -1487,9 +1596,50 @@ $colorfulnesses = array();
                 }
             });
             
+            // Установка видимости полей для ручного ввода при выборе марки плёнки "Другая"
+            function SetBrandFieldsVisibility(value, isCustomers, prefix) {
+                if(isCustomers) {
+                    $('#' + prefix + 'other_price').val('');
+                    $('#' + prefix + 'other_price').attr('disabled', 'disabled');
+                }
+                else {
+                    $('#' + prefix + 'other_price').removeAttr('disabled');
+                }
+                
+                if(value == '<?=OTHER ?>') {
+                    $('#' + prefix + 'thickness').removeAttr('required');
+                    $('#' + prefix + 'thickness').addClass('d-none');
+                    $('#' + prefix + 'thickness').prev('label').addClass('d-none');
+                    $('.' + prefix + 'other_only').removeClass('d-none');
+                    $('.' + prefix + 'other_only input').attr('required', 'required');
+                }
+                else {
+                    $('#' + prefix + 'thickness').attr('required', 'required');
+                    $('#' + prefix + 'thickness').removeClass('d-none');
+                    $('#' + prefix + 'thickness').prev('label').removeClass('d-none');
+                    $('.' + prefix + 'other_only').addClass('d-none');
+                    $('.' + prefix + 'other_only input').removeAttr('required');
+                }
+                
+                if($('#' + prefix + 'other_price').attr('disabled') == 'disabled') {
+                    $('#' + prefix + 'other_price').removeAttr('required');
+                }
+            }
+            
+            $('#customers_material').change(function(e) {
+                SetBrandFieldsVisibility($('#brand_name').val(), $(e.target).is(':checked'), '');
+            });
+            
+            $('#lamination1_customers_material').change(function(e) {
+                SetBrandFieldsVisibility($('#lamination1_brand_name').val(), $(e.target).is(':checked'), 'lamination1_');
+            });
+            
+            SetBrandFieldsVisibility($('#brand_name').val(), $('#customers_material').is(':checked'), '');
+            SetBrandFieldsVisibility($('#lamination1_brand_name').val(), $('#lamination1_customers_material').is(':checked'), 'lamination1_');
+            
             // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин и установка видимости полей
             $('#brand_name').change(function(){
-                SetBrandFieldsVisibility($(this).val(), $('#customers_material').is(':checked'));
+                SetBrandFieldsVisibility($(this).val(), $('#customers_material').is(':checked'), '');
                 
                 if($(this).val() == "") {
                     $('#thickness').html("<option value=''>Толщина...</option>");
@@ -1505,44 +1655,10 @@ $colorfulnesses = array();
                 }
             });
             
-            // Установка видимости полей для ручного ввода при выборе марки плёнки "Другая"
-            function SetBrandFieldsVisibility(value, isCustomers) {
-                if(isCustomers) {
-                    $('#other_price').val('');
-                    $('#other_price').attr('disabled', 'disabled');
-                }
-                else {
-                    $('#other_price').removeAttr('disabled');
-                }
-                
-                if(value == '<?=OTHER ?>') {
-                    $('#thickness').removeAttr('required');
-                    $('#thickness').addClass('d-none');
-                    $('#thickness').prev('label').addClass('d-none');
-                    $('.other-only').removeClass('d-none');
-                    $('.other-only input').attr('required', 'required');
-                }
-                else {
-                    $('#thickness').attr('required', 'required');
-                    $('#thickness').removeClass('d-none');
-                    $('#thickness').prev('label').removeClass('d-none');
-                    $('.other-only').addClass('d-none');
-                    $('.other-only input').removeAttr('required');
-                }
-                
-                if($('#other_price').attr('disabled') == 'disabled') {
-                    $('#other_price').removeAttr('required');
-                }
-            }
-            
-            $('#customers_material').change(function(e) {
-                SetBrandFieldsVisibility($('#brand_name').val(), $(e.target).is(':checked'));
-            });
-            
-            SetBrandFieldsVisibility($('#brand_name').val(), $('#customers_material').is(':checked'));
-            
             // Обработка выбора типа плёнки ламинации1: перерисовка списка толщин
             $('#lamination1_brand_name').change(function(){
+                SetBrandFieldsVisibility($(this).val(), $('#lamination1_customers_material').is(':checked'), 'lamination1_');
+                
                 if($(this).val() == "") {
                     $('#lamination1_thickness').html("<option value=''>Толщина...</option>");
                 }
