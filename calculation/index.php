@@ -242,7 +242,7 @@ function OrderLink($param) {
                     <tr>
                         <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['num_for_customer'] ?></td>
                         <td class="text-nowrap"><?= DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y') ?></td>
-                        <td><?=$row['customer'] ?></td>
+                        <td><a href="javascript: void(0);" class="customer" data-toggle="modal" data-target="#customerModal" data-customer-id="<?=$row['customer_id'] ?>"><?=$row['customer'] ?></a></td>
                         <td><?= htmlentities($row['name']) ?></td>
                         <td class="text-right"><?=number_format($row['quantity'], 0, ",", " ") ?>&nbsp;<?=$row['unit'] == 'kg' ? 'кг' : 'шт' ?></td>
                         <td><?=$row['work_type'] ?></td>
@@ -263,6 +263,12 @@ function OrderLink($param) {
             include '../include/pager_bottom.php';
             ?>
         </div>
+        <!-- Информация о заказчике -->
+        <div class="modal fixed-left fade" id="customerModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-aside" role="document">
+                <div class="modal-content" style="padding-left: 32px; padding-right: 32px; padding-bottom: 32px; padding-top: 84px; width: 521px; overflow-y: auto;"></div>
+            </div>
+        </div>
         <?php
         include '../include/footer.php';
         ?>
@@ -275,6 +281,7 @@ function OrderLink($param) {
                 maximumStatusLength: 1,
                 language: "ru"
             })
+            
             $('#status').select2({
                 placeholder: "Статус...",
                 maximumSelectionLength: 1,
@@ -297,6 +304,17 @@ function OrderLink($param) {
                 placeholder: "Заказчик...",
                 maximumSelectionLength: 1,
                 language: "ru"
+            });
+            
+            // Заполнение информации о заказчике
+            $('a.customer').click(function(e) {
+                var customer_id = $(e.target).attr('data-customer-id');
+                if(customer_id != null) {
+                    $.ajax({ url: "../ajax/customer.php?id=" + customer_id })
+                            .done(function(data) {
+                                $('#customerModal .modal-dialog .modal-content').html(data);
+                    });
+                }
             });
         </script>
     </body>
