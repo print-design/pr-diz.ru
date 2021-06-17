@@ -60,18 +60,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'thickness'))) {
-        $thickness_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
     if(empty(filter_input(INPUT_POST, 'quantity'))) {
         $quantity_valid = ISINVALID;
         $form_valid = false;
     }
     
-    // Проверка валидности параметров, введённых вручную при выборе марки плёнки "Другая"
     if(filter_input(INPUT_POST, 'brand_name') == OTHER) {
+        // Проверка валидности параметров, введённых вручную при выборе марки плёнки "Другая"
         if(empty(filter_input(INPUT_POST, 'other_brand_name'))) {
             $other_brand_name_valid = ISINVALID;
             $form_valid = false;
@@ -89,6 +84,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         if(empty(filter_input(INPUT_POST, 'other_weight'))) {
             $other_weight_valid = ISINVALID;
+            $form_valid = false;
+        }
+    }
+    else {
+        // Проверка валидности параметров стандартных плёнок
+        if(empty(filter_input(INPUT_POST, 'thickness'))) {
+            $thickness_valid = ISINVALID;
             $form_valid = false;
         }
     }
@@ -136,6 +138,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $work_type_id = filter_input(INPUT_POST, 'work_type_id');
         $brand_name = addslashes(filter_input(INPUT_POST, 'brand_name'));
         $thickness = filter_input(INPUT_POST, 'thickness');
+        if(empty($thickness)) $thickness = "NULL";
         $other_brand_name = filter_input(INPUT_POST, 'other_brand_name');
         $other_price = filter_input(INPUT_POST, 'other_price');
         if(empty($other_price)) $other_price = "NULL";
@@ -400,7 +403,7 @@ else {
     else $lamination2_customers_material = null;
 }
 
-$quantity = filter_input(INPUT_POST, 'quantity');
+$quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity'));
 if(null === $quantity) {
     if(isset($row['quantity'])) $quantity = $row['quantity'];
     else $width = null;
@@ -716,8 +719,13 @@ $colorfulnesses = array();
                                         <option value="<?=$row['name'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
                                             <?php
                                             endforeach;
+                                            
+                                            $other_selected = '';
+                                            if(!empty($other_brand_name)) {
+                                                $other_selected = " selected='selected'";
+                                            }
                                             ?>
-                                        <option value="<?=OTHER ?>">Другая</option>
+                                        <option value="<?=OTHER ?>"<?=$other_selected ?>>Другая</option>
                                     </select>
                                 </div>
                             </div>
@@ -770,7 +778,7 @@ $colorfulnesses = array();
                                     <input type="text" 
                                            id="other_price" 
                                            name="other_price" 
-                                           class="form-control" 
+                                           class="form-control float-only" 
                                            placeholder="Цена" 
                                            value="<?=$other_price ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -783,18 +791,18 @@ $colorfulnesses = array();
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="other_thickness">Толщина</label>
+                                    <label for="other_thickness">Толщина, мкм</label>
                                     <input type="text" 
                                            id="other_thickness" 
                                            name="other_thickness" 
-                                           class="form-control" 
+                                           class="form-control int-only" 
                                            placeholder="Толщина" 
-                                           value="<?=$other_brand_name ?>" 
+                                           value="<?=$other_thickness ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'other_thickness'); $(this).attr('name', 'other_thickness'); $(this).attr('placeholder', 'Толщина')" 
+                                           onmouseup="javascript: $(this).attr('id', 'other_thickness'); $(this).attr('name', 'other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
                                            onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onkeyup="javascript: $(this).attr('id', 'other_thickness'); $(this).attr('name', 'other_thickness'); $(this).attr('placeholder', 'Толщина')" 
-                                           onfocusout="javascript: $(this).attr('id', 'other_thickness'); $(this).attr('name', 'other_thickness'); $(this).attr('placeholder', 'Толщина')" />
+                                           onkeyup="javascript: $(this).attr('id', 'other_thickness'); $(this).attr('name', 'other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
+                                           onfocusout="javascript: $(this).attr('id', 'other_thickness'); $(this).attr('name', 'other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" />
                                     <div class="invalid-feedback">Толщина обязательно</div>
                                 </div>
                             </div>
@@ -804,9 +812,9 @@ $colorfulnesses = array();
                                     <input type="text" 
                                            id="other_weight" 
                                            name="other_weight" 
-                                           class="form-control" 
+                                           class="form-control float-only" 
                                            placeholder="Удельный вес" 
-                                           value="<?=$other_price ?>" 
+                                           value="<?=$other_weight ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'other_weight'); $(this).attr('name', 'other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
                                            onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -1478,7 +1486,7 @@ $colorfulnesses = array();
             
             // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин и установка видимости полей
             $('#brand_name').change(function(){
-                SetBrandFieldsVisibility($(this).val());
+                SetBrandFieldsVisibility($(this).val(), $('#customers_material').is(':checked'));
                 
                 if($(this).val() == "") {
                     $('#thickness').html("<option value=''>Толщина...</option>");
@@ -1495,7 +1503,15 @@ $colorfulnesses = array();
             });
             
             // Установка видимости полей для ручного ввода при выборе марки плёнки "Другая"
-            function SetBrandFieldsVisibility(value) {
+            function SetBrandFieldsVisibility(value, isCustomers) {
+                if(isCustomers) {
+                    $('#other_price').val('');
+                    $('#other_price').attr('disabled', 'disabled');
+                }
+                else {
+                    $('#other_price').removeAttr('disabled');
+                }
+                
                 if(value == '<?=OTHER ?>') {
                     $('#thickness').removeAttr('required');
                     $('#thickness').addClass('d-none');
@@ -1510,9 +1526,17 @@ $colorfulnesses = array();
                     $('.other-only').addClass('d-none');
                     $('.other-only input').removeAttr('required');
                 }
+                
+                if($('#other_price').attr('disabled') == 'disabled') {
+                    $('#other_price').removeAttr('required');
+                }
             }
             
-            SetBrandFieldsVisibility($('#brand_name').val());
+            $('#customers_material').change(function(e) {
+                SetBrandFieldsVisibility($('#brand_name').val(), $(e.target).is(':checked'));
+            });
+            
+            SetBrandFieldsVisibility($('#brand_name').val(), $('#customers_material').is(':checked'));
             
             // Обработка выбора типа плёнки ламинации1: перерисовка списка толщин
             $('#lamination1_brand_name').change(function(){
