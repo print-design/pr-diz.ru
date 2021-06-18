@@ -1762,7 +1762,8 @@ $colorfulnesses = array();
             
             // Скрытие марки плёнки и толщины для ламинации 1
             function HideLamination1() {
-                $('#lamination1_brand_name').val('');
+                $('#form_lamination_1 select').val('');
+                $('#form_lamination_1 input').val('');
                 $('#lamination1_brand_name').change();
                 $('#lamination1_customers_material').prop("checked", false);
                 
@@ -1773,6 +1774,8 @@ $colorfulnesses = array();
                 
                 $('#form_lamination_1 input').removeAttr('required');
                 $('#form_lamination_1 select').removeAttr('required');
+                $('#form_lamination_1 input').removeAttr('disabled');
+                $('#form_lamination_1 select').removeAttr('disabled');
         
                 SetFieldsVisibility($('#work_type_id').val());
                 HideLamination2();
@@ -1795,7 +1798,8 @@ $colorfulnesses = array();
             
             // Скрытие марки плёнки и толщины для ламинации 2
             function HideLamination2() {
-                $('#lamination2_brand_name').val('');
+                $('#form_lamination_2 select').val('');
+                $('#form_lamination_2 input').val('');
                 $('#lamination2_brand_name').change();
                 $('#lamination2_customers_material').prop("checked", false);
                 
@@ -1804,8 +1808,10 @@ $colorfulnesses = array();
                 $('#hide_lamination_1').removeClass('d-none');
                 $('#hide_lamination_1').addClass('d-flex');
                 
-                $('#form_lamination_1 input').removeAttr('required');
-                $('#form_lamination_1 select').removeAttr('required');
+                $('#form_lamination_2 input').removeAttr('required');
+                $('#form_lamination_2 select').removeAttr('required');
+                $('#form_lamination_2 input').removeAttr('disabled');
+                $('#form_lamination_2 select').removeAttr('disabled');
             }
             
             // Обработка выбора количества красок
