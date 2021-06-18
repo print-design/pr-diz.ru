@@ -286,8 +286,7 @@ function OrderLink($param) {
             $('#status').select2({
                 placeholder: "Статус...",
                 maximumSelectionLength: 1,
-                language: "ru",
-                width: '19rem'
+                language: "ru"
             });
             
             $('#work_type').select2({
