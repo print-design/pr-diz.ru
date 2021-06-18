@@ -1611,65 +1611,6 @@ $colorfulnesses = array();
                     $('#label_quantity').text('Объем заказа, шт');
                 }
             });
-                
-            // Показ марки плёнки и толщины для ламинации 1
-            function ShowLamination1() {
-                $('#form_lamination_1').removeClass('d-none');
-                $('#show_lamination_1').addClass('d-none');
-                $('#main_film_title').removeClass('d-none');
-                $('#film_title').addClass('d-none');
-                $('#lamination1_brand_name').attr('required', 'required');
-                $('#lamination1_thickness').attr('required', 'required');
-                SetFieldsVisibility($('#work_type_id').val());
-            }
-            
-            <?php if(!empty($lamination1_brand_name)): ?>
-                ShowLamination1();
-            <?php endif; ?>
-            
-            // Скрытие марки плёнки и толщины для ламинации 1
-            function HideLamination1() {
-                $('#lamination1_brand_name').val('');
-                $('#lamination1_brand_name').change();
-                $('#lamination1_customers_material').prop("checked", false);
-                
-                $('#form_lamination_1').addClass('d-none');
-                $('#show_lamination_1').removeClass('d-none');
-                $('#main_film_title').addClass('d-none');
-                $('#film_title').removeClass('d-none');
-                $('#lamination1_brand_name').removeAttr('required');
-                $('#lamination1_thickness').removeAttr('required');
-                SetFieldsVisibility($('#work_type_id').val());
-                HideLamination2();
-            }
-            
-            // Показ марки плёнки и толщины для ламинации 2
-            function ShowLamination2() {
-                $('#form_lamination_2').removeClass('d-none');
-                $('#show_lamination_2').addClass('d-none');
-                $('#hide_lamination_1').addClass('d-none');
-                $('#hide_lamination_1').removeClass('d-flex');
-                $('#lamination2_brand_name').attr('required', 'required');
-                $('#lamination2_thickness').attr('required', 'required');
-            }
-            
-            <?php if(!empty($lamination2_brand_name)): ?>
-                ShowLamination2();
-            <?php endif; ?>
-            
-            // Скрытие марки плёнки и толщины для ламинации 2
-            function HideLamination2() {
-                $('#lamination2_brand_name').val('');
-                $('#lamination2_brand_name').change();
-                $('#lamination2_customers_material').prop("checked", false);
-                
-                $('#form_lamination_2').addClass('d-none');
-                $('#show_lamination_2').removeClass('d-none');
-                $('#hide_lamination_1').removeClass('d-none');
-                $('#hide_lamination_1').addClass('d-flex');
-                $('#lamination2_brand_name').removeAttr('required');
-                $('#lamination2_thickness').removeAttr('required');
-            }
             
             // Заполняем список красочностей
             var colorfulnesses = {};
@@ -1748,8 +1689,6 @@ $colorfulnesses = array();
             });
             
             SetBrandFieldsVisibility($('#brand_name').val(), $('#customers_material').is(':checked'), '');
-            SetBrandFieldsVisibility($('#lamination1_brand_name').val(), $('#lamination1_customers_material').is(':checked'), 'lamination1_');
-            SetBrandFieldsVisibility($('#lamination2_brand_name').val(), $('#lamination2_customers_material').is(':checked'), 'lamination2_');
             
             // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин и установка видимости полей
             $('#brand_name').change(function(){
@@ -1804,6 +1743,70 @@ $colorfulnesses = array();
                     });
                 }
             });
+            
+            // Показ марки плёнки и толщины для ламинации 1
+            function ShowLamination1() {
+                $('#form_lamination_1').removeClass('d-none');
+                $('#show_lamination_1').addClass('d-none');
+                $('#main_film_title').removeClass('d-none');
+                $('#film_title').addClass('d-none');
+                $('#lamination1_brand_name').attr('required', 'required');
+                $('#lamination1_thickness').attr('required', 'required');
+                SetFieldsVisibility($('#work_type_id').val());
+                SetBrandFieldsVisibility($('#lamination1_brand_name').val(), $('#lamination1_customers_material').is(':checked'), 'lamination1_');
+            }
+            
+            <?php if(!empty($lamination1_brand_name)): ?>
+                ShowLamination1();
+            <?php endif; ?>
+            
+            // Скрытие марки плёнки и толщины для ламинации 1
+            function HideLamination1() {
+                $('#lamination1_brand_name').val('');
+                $('#lamination1_brand_name').change();
+                $('#lamination1_customers_material').prop("checked", false);
+                
+                $('#form_lamination_1').addClass('d-none');
+                $('#show_lamination_1').removeClass('d-none');
+                $('#main_film_title').addClass('d-none');
+                $('#film_title').removeClass('d-none');
+                
+                $('#form_lamination_1 input').removeAttr('required');
+                $('#form_lamination_1 select').removeAttr('required');
+        
+                SetFieldsVisibility($('#work_type_id').val());
+                HideLamination2();
+            }
+            
+            // Показ марки плёнки и толщины для ламинации 2
+            function ShowLamination2() {
+                $('#form_lamination_2').removeClass('d-none');
+                $('#show_lamination_2').addClass('d-none');
+                $('#hide_lamination_1').addClass('d-none');
+                $('#hide_lamination_1').removeClass('d-flex');
+                $('#lamination2_brand_name').attr('required', 'required');
+                $('#lamination2_thickness').attr('required', 'required');
+                SetBrandFieldsVisibility($('#lamination2_brand_name').val(), $('#lamination2_customers_material').is(':checked'), 'lamination2_');
+            }
+            
+            <?php if(!empty($lamination2_brand_name)): ?>
+                ShowLamination2();
+            <?php endif; ?>
+            
+            // Скрытие марки плёнки и толщины для ламинации 2
+            function HideLamination2() {
+                $('#lamination2_brand_name').val('');
+                $('#lamination2_brand_name').change();
+                $('#lamination2_customers_material').prop("checked", false);
+                
+                $('#form_lamination_2').addClass('d-none');
+                $('#show_lamination_2').removeClass('d-none');
+                $('#hide_lamination_1').removeClass('d-none');
+                $('#hide_lamination_1').addClass('d-flex');
+                
+                $('#form_lamination_1 input').removeAttr('required');
+                $('#form_lamination_1 select').removeAttr('required');
+            }
             
             // Обработка выбора количества красок
             $('#paints_count').change(function(){
