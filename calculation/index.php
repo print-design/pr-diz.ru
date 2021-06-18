@@ -100,9 +100,9 @@ function OrderLink($param) {
                         <input type="hidden" name="order" value="<?= $order ?>" />
                         <?php endif; ?>
                         <select id="unit" name="unit" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
-                            <option value="">Штуки и килограммы...</option>
-                            <option value="thing"<?= filter_input(INPUT_GET, 'unit') == 'thing' ? " selected='selected'" : "" ?>>Штуки</option>
-                            <option value="kg"<?= filter_input(INPUT_GET, 'unit') == 'kg' ? " selected='selected'" : "" ?>>Килограммы</option>
+                            <option value="">Шт/кг...</option>
+                            <option value="thing"<?= filter_input(INPUT_GET, 'unit') == 'thing' ? " selected='selected'" : "" ?>>Шт</option>
+                            <option value="kg"<?= filter_input(INPUT_GET, 'unit') == 'kg' ? " selected='selected'" : "" ?>>Кг</option>
                         </select>
                         <select id="status" name="status" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Статус...</option>
@@ -277,21 +277,24 @@ function OrderLink($param) {
         <script>
             // Список с  поиском
             $('#unit').select2({
-                placeholder: "Штуки и килограммы...",
+                placeholder: "Шт/кг...",
                 maximumStatusLength: 1,
-                language: "ru"
+                language: "ru",
+                width: '4rem'
             })
             
             $('#status').select2({
                 placeholder: "Статус...",
                 maximumSelectionLength: 1,
-                language: "ru"
+                language: "ru",
+                width: '19rem'
             });
             
             $('#work_type').select2({
                 placeholder: "Тип работы...",
                 maximumSelectionLength: 1,
-                language: "ru"
+                language: "ru",
+                width: '10rem'
             });
             
             $('#manager').select2({
