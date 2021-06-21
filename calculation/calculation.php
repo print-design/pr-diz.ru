@@ -373,9 +373,12 @@ $num_for_customer = $row['num_for_customer'];
                     <form method="post">
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                         <input type="hidden" id="change_status_submit" name="change_status_submit" />
-                        <button type="submit" id="status_id" name="status_id" value="5" class="btn btn-outline-dark mt-5 mr-2 pl-5 pr-5">Отклонить</button>
-                        <button type="submit" id="status_id" name="status_id" value="4" class="btn btn-dark mt-5 mr-2 pl-5 pr-5">Одобрить</button>
+                        <button type="submit" id="status_id" name="status_id" value="5" class="btn btn-outline-dark mt-5 mr-2" style="width: 250px;">Отклонить</button>
+                        <button type="submit" id="status_id" name="status_id" value="4" class="btn btn-dark mt-5 mr-2" style="width: 250px;">Одобрить</button>
                     </form>
+                    <?php elseif ($status_id == 6): ?>
+                    <a href="javascript: void(0);" class="btn btn-dark mt-5" style="width: 250px;">Пересчитать</a>
+                    <a href="javascript: void(0);" class="btn btn-outline-dark mt-5 ml-2" style="width: 250px;">Отменить заказ</a>
                     <?php endif; ?>
                 </div>
             </div>
