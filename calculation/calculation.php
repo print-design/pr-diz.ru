@@ -376,10 +376,10 @@ $num_for_customer = $row['num_for_customer'];
                         <button type="submit" id="status_id" name="status_id" value="5" class="btn btn-outline-dark mt-5 mr-2" style="width: 200px;">Отклонить</button>
                         <button type="submit" id="status_id" name="status_id" value="4" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Одобрить</button>
                     </form>
-                    <?php endif; if ($status_id == 1 || $status_id == 2 || $status_id == 4 || $status_id == 5 || $status_id == 6 || $status_id == 7): ?>
+                    <?php endif; if ($status_id == 1 || $status_id == 2 || $status_id == 4 || $status_id == 5 || $status_id == 6 || $status_id == 7 || $status_id == 8): ?>
                     <a href="javascript: void(0);" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Пересчитать</a>
                     <?php endif; if ($status_id == 4 || $status_id == 6): ?>
-                    <a href="javascript: void(0);" class="btn btn-outline-dark mt-5" style="width: 200px;">Отменить заказ</a>
+                    <a href="confirm.php<?= BuildQuery('id', $id) ?>" class="btn btn-outline-dark mt-5" style="width: 200px;">Отменить заказ</a>
                     <?php endif; ?>
                 </div>
             </div>
