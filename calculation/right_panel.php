@@ -167,7 +167,8 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
         <button type="submit" id="status_id" name="status_id" value="3" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Отправить в работу</button>
             <?php elseif ($status_id == 4): ?>
         <button type="submit" id="status_id" name="status_id" value="6" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Составить тех. карту</button>
-            <?php elseif ($status_id == 6): ?>
+            <?php endif; ?>
+            <?php if ($techmaps_count != 0): ?>
         <a href="javascript: void(0);" class="btn btn-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
             <?php endif; ?>
             <?php if($status_id == 6): ?>

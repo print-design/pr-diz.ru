@@ -32,6 +32,7 @@ if(empty($id)) {
 }
 
 $sql = "select c.date, c.customer_id, c.name, c.work_type_id, c.status_id, c.extracharge, "
+        . "(select count(id) from techmap where calculation_id = $id) techmaps_count, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
         . "cs.name status, cs.colour, cs.colour2, cs.image "
         . "from calculation c "
@@ -45,6 +46,7 @@ $name = $row['name'];
 $work_type_id = $row['work_type_id'];
 $status_id = $row['status_id'];
 $extracharge = $row['extracharge'];
+$techmaps_count = $row['techmaps_count'];
 $status = $row['status'];
 $colour = $row['colour'];
 $colour2 = $row['colour2'];
