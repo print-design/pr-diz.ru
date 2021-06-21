@@ -159,28 +159,19 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
         endif;
         ?>
         <div style="clear:both"></div>
-        <!--div class="d-table w-100">
-            <div class="d-table-row">
-                <div class="d-table-cell pr-3"-->
-                    <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-                    <input type="hidden" id="change_status_submit" name="change_status_submit" />
-                        <?php if($status_id == 1): ?>
-                    <button type="submit" id="status_id" name="status_id" value="2" class="btn btn-outline-dark mt-3" style="width: 250px;">Отправить КП</button>
-                        <?php elseif($status_id == 2): ?>
-                    <button type="submit" id="status_id" name="status_id" value="3" class="btn btn-outline-dark mt-3" style="width: 250px;">Отправить в работу</button>
-                        <?php elseif ($status_id == 4): ?>
-                    <button type="submit" id="status_id" name="status_id" value="6" class="btn btn-outline-dark mt-3" style="width: 250px;">Составить тех. карту</button>
-                        <?php elseif ($status_id == 6): ?>
-                    <a href="javascript: void(0);" class="btn btn-dark mt-3" style="width: 250px;">Посмотреть тех. карту</a>
-                        <?php endif; ?>
-                <!--/div>
-                <div class="d-table-cell pr-3"-->
-                    <?php if($status_id == 6): ?>
-                    <button type="submit" id="status_id" name="status_id" value="7" class="btn btn-outline-dark mt-3 ml-2" style="width: 250px;">Завершить</button>
-                    <?php endif; ?>
-                <!--/div>
-                <div class="d-table-cell"></div>
-            </div>
-        </div-->
+        <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+        <input type="hidden" id="change_status_submit" name="change_status_submit" />
+            <?php if($status_id == 1): ?>
+        <button type="submit" id="status_id" name="status_id" value="2" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Отправить КП</button>
+            <?php elseif($status_id == 2): ?>
+        <button type="submit" id="status_id" name="status_id" value="3" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Отправить в работу</button>
+            <?php elseif ($status_id == 4): ?>
+        <button type="submit" id="status_id" name="status_id" value="6" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Составить тех. карту</button>
+            <?php elseif ($status_id == 6): ?>
+        <a href="javascript: void(0);" class="btn btn-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
+            <?php endif; ?>
+            <?php if($status_id == 6): ?>
+        <button type="submit" id="status_id" name="status_id" value="7" class="btn btn-outline-dark mt-3" style="width: 200px;">Завершить</button>
+            <?php endif; ?>
     </form>
 </div>

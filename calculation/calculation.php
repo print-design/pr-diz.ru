@@ -373,12 +373,13 @@ $num_for_customer = $row['num_for_customer'];
                     <form method="post">
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                         <input type="hidden" id="change_status_submit" name="change_status_submit" />
-                        <button type="submit" id="status_id" name="status_id" value="5" class="btn btn-outline-dark mt-5 mr-2" style="width: 250px;">Отклонить</button>
-                        <button type="submit" id="status_id" name="status_id" value="4" class="btn btn-dark mt-5 mr-2" style="width: 250px;">Одобрить</button>
+                        <button type="submit" id="status_id" name="status_id" value="5" class="btn btn-outline-dark mt-5 mr-2" style="width: 200px;">Отклонить</button>
+                        <button type="submit" id="status_id" name="status_id" value="4" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Одобрить</button>
                     </form>
-                    <?php elseif ($status_id == 6): ?>
-                    <a href="javascript: void(0);" class="btn btn-dark mt-5" style="width: 250px;">Пересчитать</a>
-                    <a href="javascript: void(0);" class="btn btn-outline-dark mt-5 ml-2" style="width: 250px;">Отменить заказ</a>
+                    <?php endif; if ($status_id == 1 || $status_id == 2 || $status_id == 4 || $status_id == 5 || $status_id == 6 || $status_id == 7): ?>
+                    <a href="javascript: void(0);" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Пересчитать</a>
+                    <?php endif; if ($status_id == 4 || $status_id == 6): ?>
+                    <a href="javascript: void(0);" class="btn btn-outline-dark mt-5" style="width: 200px;">Отменить заказ</a>
                     <?php endif; ?>
                 </div>
             </div>
