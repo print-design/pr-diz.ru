@@ -161,7 +161,7 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
         <div style="clear:both"></div>
         <div class="d-table w-100">
             <div class="d-table-row">
-                <div class="d-table-cell" style="width: 33%;">
+                <div class="d-table-cell pr-3" style="width: 40%;">
                     <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                     <input type="hidden" id="change_status_submit" name="change_status_submit" />
                         <?php if($status_id == 1): ?>
@@ -170,7 +170,14 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
                     <button type="submit" id="status_id" name="status_id" value="3" class="btn btn-outline-dark w-100 mt-3">Отправить в работу</button>
                         <?php elseif ($status_id == 4): ?>
                     <button type="submit" id="status_id" name="status_id" value="6" class="btn btn-outline-dark w-100 mt-3">Составить тех. карту</button>
+                        <?php elseif ($status_id == 6): ?>
+                    <a href="javascript: void(0);" class="btn btn-dark w-100 mt-3">Посмотреть тех. карту</a>
                         <?php endif; ?>
+                </div>
+                <div class="d-table-cell pr-3" style="width: 40%;">
+                    <?php if($status_id == 6): ?>
+                    <button type="submit" id="status_id" name="status_id" value="7" class="btn btn-outline-dark w-100 mt-3">Завершить</button>
+                    <?php endif; ?>
                 </div>
                 <div class="d-table-cell"></div>
             </div>
