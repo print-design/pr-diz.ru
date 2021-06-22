@@ -169,6 +169,27 @@ $num_for_customer = $row['num_for_customer'];
         include './right_panel.php';
         include '../include/header_zakaz.php';
         ?>
+        <div id="calculation_cancel" class="modal fade show">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post">
+                        <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                        <input type="hidden" id="change_status_submit" name="change_status_submit" />
+                        <div class="modal-header">
+                            <div style="font-size: x-large;">Отклонение заявки</div>
+                            <button type="button" class="close calculation_cancel_dismiss" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            Вы уверены, что хотите отклонить заявку?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-dark" style="width: 120px;" data-dismiss="modal">Отмена</button>
+                            <button type="submit" class="btn btn-dark" style="width: 120px;" name="status_id" value="8">Отклонить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
@@ -393,7 +414,7 @@ $num_for_customer = $row['num_for_customer'];
                     <?php endif; if ($status_id == 1 || $status_id == 2 || $status_id == 4 || $status_id == 5 || $status_id == 6 || $status_id == 7 || $status_id == 8): ?>
                     <a href="javascript: void(0);" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Пересчитать</a>
                     <?php endif; if ($status_id == 4 || $status_id == 6): ?>
-                    <a href="confirm.php<?= BuildQuery('id', $id) ?>" class="btn btn-outline-dark mt-5" style="width: 200px;">Отменить заказ</a>
+                    <button type="button" class="btn btn-outline-dark mt-5" style="width: 200px;" data-toggle="modal" data-target="#calculation_cancel">Отменить заказ</button>
                     <?php endif; ?>
                 </div>
             </div>
