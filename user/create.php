@@ -108,6 +108,7 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
             <div class="backlink">
                 <a href="<?=APPLICATION ?>/user/">Назад</a>
             </div>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemove("id") ?>">Назад</a>
             <div style="width:387px;">
                 <h1>Добавление сотрудника</h1>
                 <form method="post">

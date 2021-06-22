@@ -340,9 +340,10 @@ table.print tr td, table.print tr th {
     margin-top: 20px;
     margin-bottom: 20px;
     padding-left: 48px;
-    padding-top: 10px;
-    padding-right: 10px;
-    padding-bottom: 10px;
+}
+
+.backlink:hover {
+    background-image: url(../images/icons/backlink_hover.svg);
 }
 
 .backlink .fas {

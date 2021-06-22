@@ -120,6 +120,7 @@ if(null !== filter_input(INPUT_POST, 'supplier_create_submit')) {
             <div class="backlink">
                 <a href="<?=APPLICATION ?>/supplier/">Назад</a>
             </div>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemove("id") ?>">Назад</a>
             <h1>Добавление поставщика</h1>
             <form method="post">
                 <div class="form-group" style="padding-bottom: 6px;">

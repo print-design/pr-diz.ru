@@ -72,6 +72,7 @@ if(null !== filter_input(INPUT_POST, 'password_change_submit')) {
                     <div class="backlink">
                         <a href="<?=APPLICATION ?>/personal/">Назад</a>
                     </div>
+                    <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemove("id") ?>">Назад</a>
                     <h1>Смена пароля</h1>
                     <form method="post">
                         <div class="form-group">
