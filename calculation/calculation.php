@@ -183,8 +183,8 @@ $num_for_customer = $row['num_for_customer'];
                             Вы уверены, что хотите отклонить заявку?
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-dark" style="width: 120px;" data-dismiss="modal">Отмена</button>
-                            <button type="submit" class="btn btn-dark" style="width: 120px;" name="status_id" value="8">Отклонить</button>
+                            <button type="button" class="btn btn-outline-dark" style="width: 120px;" data-dismiss="modal">Нет</button>
+                            <button type="submit" class="btn btn-dark" style="width: 120px;" name="status_id" value="8">Да</button>
                         </div>
                     </form>
                 </div>
