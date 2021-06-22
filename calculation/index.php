@@ -167,7 +167,7 @@ function OrderLink($param) {
                         <th>Дата&nbsp;&nbsp;<?= OrderLink('date') ?></th>
                         <th>Заказчик&nbsp;&nbsp;<?= OrderLink('customer') ?></th>
                         <th>Имя заказа&nbsp;&nbsp;<?= OrderLink('name') ?></th>
-                        <th>Объем&nbsp;&nbsp;<?= OrderLink('quantity') ?></th>
+                        <th class="text-center">Объем&nbsp;&nbsp;<?= OrderLink('quantity') ?></th>
                         <th>Тип работы&nbsp;&nbsp;<?= OrderLink('work_type') ?></th>
                         <th>Менеджер&nbsp;&nbsp;<?= OrderLink('manager') ?></th>
                         <th>Статус&nbsp;&nbsp;<?= OrderLink('status') ?></th>
@@ -244,7 +244,7 @@ function OrderLink($param) {
                         <td class="text-nowrap"><?= DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y') ?></td>
                         <td><a href="javascript: void(0);" class="customer" data-toggle="modal" data-target="#customerModal" data-customer-id="<?=$row['customer_id'] ?>"><?=$row['customer'] ?></a></td>
                         <td><?= htmlentities($row['name']) ?></td>
-                        <td class="text-right"><?=number_format($row['quantity'], 0, ",", " ") ?>&nbsp;<?=$row['unit'] == 'kg' ? 'кг' : 'шт' ?></td>
+                        <td class="text-right text-nowrap"><?=number_format($row['quantity'], 0, ",", " ") ?>&nbsp;<?=$row['unit'] == 'kg' ? 'кг' : 'шт' ?></td>
                         <td><?=$row['work_type'] ?></td>
                         <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
                         <td class="text-nowrap"><i class="fas fa-circle" style="color: <?=$colour ?>;"></i>&nbsp;&nbsp;<?=$status ?></td>
