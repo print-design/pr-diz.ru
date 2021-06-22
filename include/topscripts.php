@@ -99,6 +99,20 @@ function BuildQueryRemove($key) {
     return $result;
 }
 
+function BuildQueryAddRemove($key, $value, $remove) {
+    $result = '';
+    $get_params = $_GET;
+    $get_params[$key] = $value;
+    unset($get_params[$remove]);
+    $result = http_build_query($get_params);
+    
+    if(!empty($result)) {
+        $result = "?$result";
+    }
+    
+    return $result;
+}
+
 function GetDateFromDateTo($getDateFrom, $getDateTo, &$dateFrom, &$dateTo) {
     $dateFrom = null;
     $dateTo = null;
