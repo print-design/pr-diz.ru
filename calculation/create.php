@@ -624,7 +624,7 @@ $colorfulnesses = array();
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                         <input type="hidden" id="h_extracharge" name="h_extracharge" class="extracharge" value="<?=$extracharge ?>" />
                         <input type="hidden" id="scroll" name="scroll" />
-                        <?php if(null === filter_input(INPUT_GET, 'id')): ?>
+                        <?php if(null === filter_input(INPUT_GET, 'id') || filter_input(INPUT_GET, 'mode') == 'recalc'): ?>
                         <h1>Новый расчет</h1>
                         <?php else: ?>
                         <h1><?= htmlentities($name) ?></h1>
