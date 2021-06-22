@@ -176,11 +176,11 @@ $num_for_customer = $row['num_for_customer'];
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                         <input type="hidden" id="change_status_submit" name="change_status_submit" />
                         <div class="modal-header">
-                            <div style="font-size: x-large;">Отклонение заявки</div>
+                            <div style="font-size: x-large;">Отмена заказа</div>
                             <button type="button" class="close calculation_cancel_dismiss" data-dismiss="modal"><i class="fas fa-times"></i></button>
                         </div>
                         <div class="modal-body">
-                            Вы уверены, что хотите отклонить заявку?
+                            Вы уверены, что хотите отменить заказ?
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-dark" style="width: 120px;" data-dismiss="modal">Нет</button>
