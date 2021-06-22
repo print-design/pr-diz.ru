@@ -113,7 +113,7 @@ if(empty($phone)) {
                     <div class="backlink">
                         <a href="<?=APPLICATION ?>/personal/">Назад</a>
                     </div>
-                    <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemove("id") ?>">Назад</a>
+                    <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/personal/">Назад</a>
                     <h1>Редактирование личных данных</h1>
                     <form method="post">
                         <div class="row">

@@ -73,7 +73,7 @@ if(empty($name)) {
                     <div class="backlink">
                         <a href="<?=APPLICATION ?>/supplier/">Назад</a>
                     </div>
-                    <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemove("id") ?>">Назад</a>
+                    <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/supplier/">Назад</a>
                     <h1>Редактирование поставщика</h1>
                     <form method="post">
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>"/>

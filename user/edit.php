@@ -147,7 +147,7 @@ if(empty($role_id)) {
                     <div class="backlink">
                         <a href="<?=APPLICATION ?>/user/">Назад</a>
                     </div>
-                    <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemove("id") ?>">Назад</a>
+                    <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/user/">Назад</a>
                     <h1>Редактирование сотрудника</h1>
                     <form method="post">
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>"/>
