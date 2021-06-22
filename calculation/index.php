@@ -22,7 +22,7 @@ function OrderLink($param) {
         echo "<strong><i class='fas fa-arrow-down' style='color: black; font-size: small;'></i></strong>";
     }
     else {
-        echo "<a class='gray' href='". BuildQuery('order', $param)."' style='font-size: x-small;'><i class='fas fa-arrow-down'></i></a>";
+        echo "<a class='gray' href='?order=".$param."' style='font-size: x-small;'><i class='fas fa-arrow-down'></i></a>";
     }
 }
 ?>
