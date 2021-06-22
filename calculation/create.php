@@ -255,7 +255,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $insert_id = $executer->insert_id;
         
         if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/calculation/create.php'.BuildQuery('id', $insert_id));
+            header('Location: '.APPLICATION.'/calculation/create.php?id='.$insert_id);
         }
     }
 }
@@ -1986,6 +1986,11 @@ $colorfulnesses = array();
             $("input[id!=extracharge]").keydown(function () {
                 HideCalculation();
             });
+            
+            // Скрытие расчёта, если имеется параметр mode=recalc
+            <?php if(filter_input(INPUT_GET, 'mode') == 'recalc'): ?>
+                HideCalculation();
+            <?php endif; ?>
             
             // Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне
             AdjustFixedBlock($('#calculation'));
