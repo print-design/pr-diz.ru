@@ -196,9 +196,6 @@ $num_for_customer = $row['num_for_customer'];
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <div class="backlink">
-                <a href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemove("id") ?>">Назад</a>
-            </div>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemove("id") ?>">Назад</a>
             <div class="row">
                 <!-- Левая половина -->

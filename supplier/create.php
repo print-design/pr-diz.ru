@@ -117,9 +117,6 @@ if(null !== filter_input(INPUT_POST, 'supplier_create_submit')) {
                 </div>
             </div>
             <hr />
-            <div class="backlink">
-                <a href="<?=APPLICATION ?>/supplier/">Назад</a>
-            </div>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/supplier/">Назад</a>
             <h1>Добавление поставщика</h1>
             <form method="post">

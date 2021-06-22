@@ -110,9 +110,6 @@ if(empty($phone)) {
             ?>
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <div class="backlink">
-                        <a href="<?=APPLICATION ?>/personal/">Назад</a>
-                    </div>
                     <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/personal/">Назад</a>
                     <h1>Редактирование личных данных</h1>
                     <form method="post">

@@ -184,9 +184,6 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <div class="backlink">
-                <a href="<?=APPLICATION ?>/roll/">Назад</a>
-            </div>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/roll/">Назад</a>
             <h1 style="font-size: 32px; font-weight: 600; margin-bottom: 20px;">Новый рулон</h1>
             <form method="post">

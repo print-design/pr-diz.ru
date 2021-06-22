@@ -105,9 +105,6 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
                 </div>
             </div>
             <hr />
-            <div class="backlink">
-                <a href="<?=APPLICATION ?>/user/">Назад</a>
-            </div>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/user/">Назад</a>
             <div style="width:387px;">
                 <h1>Добавление сотрудника</h1>
