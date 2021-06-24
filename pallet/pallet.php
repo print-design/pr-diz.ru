@@ -215,7 +215,14 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
                 $sql .= "cell = '$cell', ";
             }
             
-            $sql .= "comment = '$comment' where id=$id";
+            // Стирать старый комментарий может только технолог, остальные - только добавлять новый комментарий к старому
+            if(IsInRole(array('dev', 'technologist'))) {
+                $sql .= "comment = '$comment' where id=$id";
+            }
+            else {
+                $sql .= "comment = concat(comment, ' ', '$comment') where id=$id";
+            }
+            
             $error_message = (new Executer($sql))->error;
         }
         
@@ -469,9 +476,17 @@ if(null === $comment) $comment = $row['comment'];
                         if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
                             $comment_disabled = " disabled='disabled'";
                         }
+                        
+                        $comment_value = htmlentities($comment);
+                        if(!IsInRole(array('technologist', 'dev'))) {
+                            $comment_value = "";
+                        }
                         ?>
                         <label for="comment">Комментарий</label>
-                        <textarea id="comment" name="comment" rows="4" class="form-control no-latin"<?=$comment_disabled ?>><?= htmlentities($comment) ?></textarea>
+                        <?php if(!IsInRole(array('technologist', 'dev'))): ?>
+                        <p><?= htmlentities($comment) ?></p>
+                        <?php endif; ?>
+                        <textarea id="comment" name="comment" rows="4" class="form-control no-latin"<?=$comment_disabled ?>><?=$comment_value ?></textarea>
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="d-flex justify-content-between mt-4">
