@@ -364,14 +364,25 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         </div>
                     </div>
                     <?php
-                    $checked = '';
-                    if(filter_input(INPUT_POST, 'equal_rolls') == 'on') {
+                    if(null === filter_input(INPUT_POST, 'equal_rolls')) {
                         $checked = " checked='checked'";
                     }
+                    else {
+                        $checked = '';
+                        
+                        if(filter_input(INPUT_POST, 'equal_rolls') == 'on') {
+                            $checked = " checked='checked'";
+                        }
+                    }
                     ?>
-                    <div class="form-group">
-                        <input type="checkbox" id="equal_rolls" name="equal_rolls"<?=$checked ?> />
-                        <label class="form-check-label" for="equal_rolls">Все ролики примерно одинаковые</label>
+                    <div class="row">
+                        <div class="col-6"></div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <input type="checkbox" id="equal_rolls" name="equal_rolls"<?=$checked ?> />
+                                <label class="form-check-label" for="equal_rolls">Все примерно одинаковые</label>
+                            </div>
+                        </div>
                     </div>
                     <div id="rolls_info">
                         <?php
@@ -564,30 +575,36 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                 else {
                     var net_weight = $('#net_weight').val();
                     var length = $('#length').val();
+                    var rolls_number = $('#rolls_number').val();
                     
-                    if(net_weight == '' || length == '' || isNaN(net_weight) || isNaN(length)) {
-                        alert('Введите вес и длину всего палета');
-                        e.target.checked = false;
+                    if(rolls_number != '') {
+                        var num_val = parseInt(rolls_number);
                         
-                        if(net_weight == '' || isNaN(net_weight)) {
-                            $('#net_weight').focus();
-                        }
-                        else {
-                            $('#length').focus();
-                        }
-                    }
-                    else {
-                        var rolls_number = $('#rolls_number').val();
-                        if(rolls_number != '') {
+                        if(net_weight != ''&& !isNaN(net_weight)) {
                             var num_weight = parseFloat(net_weight);
-                            var num_length = parseFloat(length);
-                            var num_val = parseInt(rolls_number);
-                            
+                                
                             for(var i=1; i<=num_val; i++) {
                                 var result_weight = Math.round(num_weight / num_val);
-                                var result_length = Math.round(num_length / num_val);
                                 $('#weight_roll' + i).val(result_weight);
+                            }
+                        }
+                        else {
+                            for(var i=1; i<=num_val; i++) {
+                                $('#weight_roll' + i).val('');
+                            }
+                        }
+                        
+                        if(length != '' && !isNaN(length)) {
+                            var num_length = parseFloat(length);
+                            
+                            for(var i=1; i<=num_val; i++) {
+                                var result_length = Math.round(num_length / num_val);
                                 $('#length_roll' + i).val(result_length);
+                            }
+                        }
+                        else {
+                            for(var i=1; i<=num_val; i++) {
+                                $('#length_roll' + i).val('');
                             }
                         }
                     }
