@@ -86,12 +86,12 @@ $sticker_top = 0;
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
-                        <td class="text-center text-nowrap">Рулон <span class="font-weight-bold"><?="П".$pallet_id."Р".$ordinal ?></span> от <?=$date ?></td>
+                        <td class="text-center text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="П".$pallet_id."Р".$ordinal ?></span> от <?=(DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></td>
                     </tr>
                     <tr>
                         <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
                         <td>Ширина<br /><strong><?=$width ?> мм</strong></td>
-                        <td rowspan="6" class="qr" style="height: 20%;">
+                        <td rowspan="6" class="qr" style="height: 20%; white-space: normal;">
                             <?php
                             include '../qr/qrlib.php';
                             $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
@@ -99,7 +99,7 @@ $sticker_top = 0;
                             $current_date_time = date("dmYHis");
                             $filename = "../temp/$current_date_time.png";
                             QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
-                            echo "<img src='$filename' />";
+                            echo "<img src='$filename' style='height: 800px; width: 800px;' />";
                             
                             // Удаление всех файлов, кроме текущего (чтобы диск не переполнился).
                             $files = scandir("../temp/");
@@ -109,6 +109,8 @@ $sticker_top = 0;
                                 }
                             }
                             ?>
+                            <br /><br />
+                            <div class="text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="П".$pallet_id."Р".$ordinal ?></span> от <?=(DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></div>
                         </td>
                     </tr>
                     <tr>
