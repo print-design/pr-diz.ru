@@ -364,7 +364,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         </div>
                     </div>
                     <?php
-                    if(null === filter_input(INPUT_POST, 'equal_rolls')) {
+                    if(null === filter_input(INPUT_POST, 'create-pallet-submit')) {
                         $checked = " checked='checked'";
                     }
                     else {
