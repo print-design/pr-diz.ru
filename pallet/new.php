@@ -363,6 +363,16 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                             <div class="invalid-feedback">Количество рулонов обязательно</div>
                         </div>
                     </div>
+                    <?php
+                    $checked = '';
+                    if(filter_input(INPUT_POST, 'equal_rolls') == 'on') {
+                        $checked = " checked='checked'";
+                    }
+                    ?>
+                    <div class="form-group">
+                        <input type="checkbox" id="equal_rolls" name="equal_rolls"<?=$checked ?> />
+                        <label class="form-check-label" for="equal_rolls">Все ролики примерно одинаковые</label>
+                    </div>
                     <div id="rolls_info">
                         <?php
                         $roll_number = 1;
@@ -532,8 +542,70 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         val = val.replace(/[^\d]/g, '');
                         $(this).val(val);
                     });
+                    
+                    $('#equal_rolls').change();
                 }
             });
+            
+            // При установки флажка "Все ролики примерно одинаковые" автоматически устанавливается масса и длина всех роликов.
+            // При снятии этого флажка эти поля очищаются и все массы и длины надо вводить вручную
+            $('#equal_rolls').change(function(e) {
+                if(!e.target.checked) {
+                    var rolls_number = $('#rolls_number').val();
+                    if(rolls_number != '') {
+                        var num_val = parseInt(rolls_number);
+                        
+                        for(var i=1; i<=num_val; i++) {
+                            $('#weight_roll' + i).val('');
+                            $('#length_roll' + i).val('');
+                        }
+                    }
+                }
+                else {
+                    var net_weight = $('#net_weight').val();
+                    var length = $('#length').val();
+                    
+                    if(net_weight == '' || length == '' || isNaN(net_weight) || isNaN(length)) {
+                        alert('Введите вес и длину всего палета');
+                        e.target.checked = false;
+                        
+                        if(net_weight == '' || isNaN(net_weight)) {
+                            $('#net_weight').focus();
+                        }
+                        else {
+                            $('#length').focus();
+                        }
+                    }
+                    else {
+                        var rolls_number = $('#rolls_number').val();
+                        if(rolls_number != '') {
+                            var num_weight = parseFloat(net_weight);
+                            var num_length = parseFloat(length);
+                            var num_val = parseInt(rolls_number);
+                            
+                            for(var i=1; i<=num_val; i++) {
+                                var result_weight = Math.round(num_weight / num_val);
+                                var result_length = Math.round(num_length / num_val);
+                                $('#weight_roll' + i).val(result_weight);
+                                $('#length_roll' + i).val(result_length);
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // При изменении значений веса и длины, эти значения автоматически пересчитываются для всех роликов
+            $('#net_weight').keypress(function() { $('#equal_rolls').change(); });
+            
+            $('#net_weight').keyup(function() { $('#equal_rolls').change(); });
+            
+            $('#net_weight').change(function() { $('#equal_rolls').change(); });
+            
+            $('#length').keypress(function() { $('#equal_rolls').change(); });
+            
+            $('#length').keyup(function() { $('#equal_rolls').change(); });
+            
+            $('#length').change(function() { $('#equal_rolls').change(); });
         </script>
     </body>
 </html>
