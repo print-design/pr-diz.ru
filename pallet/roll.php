@@ -33,7 +33,16 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     }
     
     if(empty($error_message)) {
-        header('Location: '.APPLICATION.'/pallet/'. BuildQueryRemove('id'));
+        // Редактирование данных паллета
+        $pallet_id = filter_input(INPUT_POST, 'pallet_id');
+        $cell = filter_input(INPUT_POST, 'cell');
+        $sql = "update pallet set cell='$cell' where id=$pallet_id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+        
+        if(empty($error_message)) {
+            header('Location: '.APPLICATION.'/pallet/'. BuildQueryRemove('id'));
+        }
     }
 }
 
@@ -113,6 +122,7 @@ if(null === $comment) $comment = $row['comment'];
                     <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                     <input type="hidden" id="date" name="date" value="<?= $date ?>" />
                     <input type="hidden" id="storekeeper_id" name="storekeeper_id" value="<?= $storekeeper_id ?>" />
+                    <input type="hidden" id="pallet_id" name="pallet_id" value="<?= $pallet_id ?>" />
                     <input type="hidden" id="scroll" name="scroll" />
                     <div class="form-group">
                         <label for="storekeeper">Принят кладовщиком</label>
@@ -216,7 +226,10 @@ if(null === $comment) $comment = $row['comment'];
                     <div class="row">
                         <div class="col-6 form-group">
                             <?php
-                            $cell_disabled = " disabled='disabled'";
+                            $cell_disabled = "";
+                            if(!IsInRole(array('technologist', 'storekeeper'))) {
+                                $cell_disabled = " disabled='disabled'";
+                            }
                             ?>
                             <label for="cell">Ячейка на складе</label>
                             <input type="text" id="cell" name="cell" value="<?= $cell ?>" class="form-control no-latin" placeholder="Введите ячейку"<?=$cell_disabled ?>" />
