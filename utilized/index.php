@@ -278,14 +278,6 @@ $utilized_status_roll_id = 2;
                     <button type="button" class="close" data-dismiss="modal" style="position: absolute; right: 32px; top: 55px;"><img src="../images/icons//close_modal.png" /></button>
                     <h1 style="margin-top: 53px; margin-bottom: 20px; font-size: 32px; font-weight: 600;">Фильтр</h1>
                     <form method="get">
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="chkPallet" name="chkPallet"<?= filter_input(INPUT_GET, 'chkPallet') == 'on' ? " checked='checked'" : "" ?> />
-                            <label class="form-check-label" for="chkPallet">Паллет</label>
-                        </div>
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="chkRoll" name="chkRoll"<?= filter_input(INPUT_GET, 'chkRoll') == 'on' ? " checked='checked'" : "" ?> />
-                            <label class="form-check-label" for="chkRoll">Рулон</label>
-                        </div>
                         <div class="form-group">
                             <select id="film_brand_name" name="film_brand_name" class="form-control" style="margin-top: 30px; margin-bottom: 30px;">
                                 <option value="">МАРКА ПЛЕНКИ</option>
@@ -403,26 +395,6 @@ $utilized_status_roll_id = 2;
                             });
                 }
             });
-            
-            /*$('#chkMain').change(function(){
-                if($(this).is(':checked')) {
-                    $('.chkPallet').prop('checked', true);
-                }
-                else {
-                    $('.chkPallet').prop('checked', false);
-                }
-            });
-            
-            $('.chkPallet').change(function(){
-                if($(this).is(':checked')) {
-                    $('.chkPallet').not($(this)).prop('checked', false);
-                    $('tr.selected').removeClass('selected');
-                    $(this).closest('tr').addClass('selected');
-                }
-                else {
-                    $(this).closest('tr').removeClass('selected');
-                }
-            });*/
             
             $('.film_menu_trigger').click(function() {
                 var menu = $(this).next('.film_menu');
