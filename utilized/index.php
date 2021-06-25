@@ -125,6 +125,31 @@ $utilized_status_roll_id = 2;
                     
                     $wherefindroll = "rsh.status_id = $utilized_status_roll_id";
                     
+                    $film_brand_name = filter_input(INPUT_GET, 'film_brand_name');
+                    if(!empty($film_brand_name)) {
+                        $film_brand_name = addslashes($film_brand_name);
+                        $wherefindpallet .= " and fb.name = '$film_brand_name'";
+                        $wherefindroll .= " and fb.name = '$film_brand_name'";
+                    }
+                    
+                    $thickness = filter_input(INPUT_GET, 'thickness');
+                    if(!empty($thickness)) {
+                        $wherefindpallet .= " and p.thickness = ".$thickness;
+                        $wherefindroll .= " and r.thickness = ".$thickness;
+                    }
+                    
+                    $width_from = filter_input(INPUT_GET, 'width_from');
+                    if(!empty($width_from)) {
+                        $wherefindpallet .= " and p.width >= $width_from";
+                        $wherefindroll .= " and r.width >= $width_from";
+                    }
+                    
+                    $width_to = filter_input(INPUT_GET, 'width_to');
+                    if(!empty($width_to)) {
+                        $wherefindpallet .= " and p.width <= $width_to";
+                        $wherefindroll .= " and r.width <= $width_to";
+                    }
+                    
                     $find = filter_input(INPUT_GET, 'find');
                     $findtrim = $find;
                     if(mb_strlen($find) > 1) {
