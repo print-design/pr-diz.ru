@@ -85,9 +85,20 @@ if(null !== filter_input(INPUT_POST, 'film_brand_variation_create_submit')) {
         $form_valid = false;
     }
     
+    $supplier_id = filter_input(INPUT_POST, 'supplier_id');
+    $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
+    
+    // Не допускаем повторного создания одной и той же вариации для одной марки плёнки
+    $sql = "select count(id) from film_brand_variation where film_brand_id=$film_brand_id and thickness=$thickness and weight=$weight";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        if($row[0] != 0) {
+            $error_message = "У одной марки плёнки не должно быть двух одинаковых сочетаний толщины и веса";
+            $form_valid = false;
+        }
+    }
+    
     if($form_valid) {
-        $supplier_id = filter_input(INPUT_POST, 'supplier_id');
-        $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
         $executer = new Executer("insert into film_brand_variation (film_brand_id, thickness, weight) values ($film_brand_id, $thickness, $weight)");
         $error_message = $executer->error;
     }
