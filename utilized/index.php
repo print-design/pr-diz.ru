@@ -104,6 +104,7 @@ $utilized_status_roll_id = 2;
                         <th style="padding-left: 5px; padding-right: 5px; width: 10%;">Поставщик</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">ID от поставщика</th>
                         <th style="padding-left: 5px; padding-right: 5px;">ID пленки</th>
+                        <th style="padding-left: 5px; padding-right: 5px;">№ ячейки</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Статус</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 15%;">Комментарий</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 2%;"></th>
@@ -165,7 +166,7 @@ $utilized_status_roll_id = 2;
                     }
                     
                     if(!empty($find)) {
-                        $wherefindpallet .= " and (p.comment like '%$find%' or (p.id='$findpallet' and pr.ordinal='$findroll'))";
+                        $wherefindpallet .= " and (p.id='$find' or p.id='$findtrim' or p.comment like '%$find%' or (p.id='$findpallet' and pr.ordinal='$findroll'))";
                         $wherefindroll .= " and (r.id='$find' or r.id='$findtrim' or r.cell='$find' or r.comment like '%$find%')";
                     }
                     
@@ -198,7 +199,7 @@ $utilized_status_roll_id = 2;
                     }
                     
                     $sql = "select 'pallet_roll' type, pr.id id, pr.pallet_id pallet_id, pr.ordinal ordinal, prsh.date timestamp, DATE_FORMAT(prsh.date, '%d.%m.%Y') date, fb.name film_brand, "
-                            . "p.width width, p.thickness thickness, pr.weight net_weight, pr.length length, "
+                            . "p.width width, p.thickness thickness, p.cell cell, pr.weight net_weight, pr.length length, "
                             . "s.name supplier, p.id_from_supplier id_from_supplier, "
                             . "prsh.status_id status_id, p.comment comment, "
                             . "(select weight from film_brand_variation where film_brand_id=fb.id and thickness=p.thickness limit 1) density "
@@ -210,7 +211,7 @@ $utilized_status_roll_id = 2;
                             . "$wherefindpallet "
                             . "union "
                             . "select 'roll' type, r.id id, 0 pallet_id, 0 ordinal, rsh.date timestamp, DATE_FORMAT(rsh.date, '%d.%m.%Y') date, fb.name film_brand, "
-                            . "r.width width, r.thickness thickness, r.net_weight net_weight, r.length length, "
+                            . "r.width width, r.thickness thickness, r.cell cell, r.net_weight net_weight, r.length length, "
                             . "s.name supplier, r.id_from_supplier id_from_supplier, "
                             . "rsh.status_id status_id, r.comment comment, "
                             . "(select weight from film_brand_variation where film_brand_id=fb.id and thickness=r.thickness limit 1) density "
@@ -250,6 +251,7 @@ $utilized_status_roll_id = 2;
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['supplier'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['id_from_supplier'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?=($row['type'] == 'pallet_roll' ? 'П'.$row['pallet_id'].'Р'.$row['ordinal'] : 'Р'.$row['id']) ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['cell'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; font-size: 10px; line-height: 14px; font-weight: 600;<?=$colour_style ?>"><?= mb_strtoupper($status) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; white-space: pre-wrap"><?= $row['comment'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; position: relative;">
