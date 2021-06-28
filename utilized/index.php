@@ -166,7 +166,7 @@ $utilized_status_roll_id = 2;
                     }
                     
                     if(!empty($find)) {
-                        $wherefindpallet .= " and (p.id='$find' or p.id='$findtrim' or p.comment like '%$find%' or (p.id='$findpallet' and pr.ordinal='$findroll'))";
+                        $wherefindpallet .= " and (p.id='$find' or p.id='$findtrim' or p.cell='$find' or p.comment like '%$find%' or (p.id='$findpallet' and pr.ordinal='$findroll'))";
                         $wherefindroll .= " and (r.id='$find' or r.id='$findtrim' or r.cell='$find' or r.comment like '%$find%')";
                     }
                     
