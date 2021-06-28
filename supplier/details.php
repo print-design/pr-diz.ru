@@ -116,6 +116,19 @@ if(null !== filter_input(INPUT_POST, 'delete_variation_submit')) {
     $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
     $supplier_id = filter_input(INPUT_POST, 'supplier_id');
     $error_message = (new Executer("delete from film_brand_variation where id=$id"))->error;
+    
+    if(empty($error_message)) {
+        // Если не остаётся ни одной вариации, то удаляем марку
+        $sql = "select count(id) from film_brand_variation where film_brand_id=$film_brand_id";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            if($row[0] == 0) {
+                $sql = "delete from film_brand where id=$film_brand_id";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+            }
+        }
+    }
 }
 
 // Обработка отправки формы удаления поставщика
