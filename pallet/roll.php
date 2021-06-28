@@ -35,8 +35,33 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     if(empty($error_message)) {
         // Редактирование данных паллета
         $pallet_id = filter_input(INPUT_POST, 'pallet_id');
-        $cell = filter_input(INPUT_POST, 'cell');
-        $sql = "update pallet set cell='$cell' where id=$pallet_id";
+        $sql = "";
+        
+        if(!empty(filter_input(INPUT_POST, 'cell'))) {
+            $cell = filter_input(INPUT_POST, 'cell');
+            
+            if(!empty($sql)) {
+                $sql += ", ";
+            }
+            
+            $sql += "cell='$cell'";
+        }
+        if(!empty(filter_input(INPUT_POST, 'comment'))) {
+            $comment = addslashes(filter_input(INPUT_POST, 'comment'));
+            
+            if(!empty($sql)) {
+                $sql += ", ";
+            }
+            
+            if(IsInRole(array('dev', 'technologist', 'storekeeper'))) {
+                $sql += "comment='$comment'";
+            }
+            else {
+                $sql += "comment=concat(comment, ' ', '$comment')";
+            }
+        }
+        
+        $sql = "update pallet set $sql where id=$pallet_id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         
@@ -273,10 +298,21 @@ if(null === $comment) $comment = $row['comment'];
                     </div>
                     <div class="form-group">
                         <?php
-                        $comment_disabled = " disabled='disabled'";
+                        $comment_disabled = "";
+                        if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
+                            $comment_disabled = " disabled='disabled'";
+                        }
+                        
+                        $comment_value = htmlentities($comment);
+                        if(!IsInRole(array('technologist', 'dev', 'storekeeper'))) {
+                            $comment_value = "";
+                        }
                         ?>
                         <label for="comment">Комментарий</label>
-                        <textarea id="comment" name="comment" rows="4" class="form-control no-latin"<?=$comment_disabled ?>><?= htmlentities($comment) ?></textarea>
+                        <?php if(!IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
+                        <p><?= htmlentities($comment) ?></p>
+                        <?php endif; ?>
+                        <textarea id="comment" name="comment" rows="4" class="form-control no-latin"<?=$comment_disabled ?>><?= $comment_value ?></textarea>
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="d-flex justify-content-between mt-4">
