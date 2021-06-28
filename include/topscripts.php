@@ -323,13 +323,13 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
             }
             // ****************************
             
-            setcookie(USER_ID, $user_id, time() + 60 * 60 * 24 * 100, "/");
-            setcookie(USERNAME, $username, time() + 60 * 60 * 24 * 100, "/");
-            setcookie(PASSWORD5, $password5, time() + 60 * 60 * 24 * 100, "/");
-            setcookie(LAST_NAME, $last_name, time() + 60 * 60 * 24 * 100, "/");
-            setcookie(FIRST_NAME, $first_name, time() + 60 * 60 * 24 * 100, "/");
-            setcookie(ROLE, $role, time() + 60 * 60 * 24 * 100, "/");
-            setcookie(LOGIN_TIME, (new DateTime())->getTimestamp(), time() + 60 * 60 * 24 * 100, "/");
+            setcookie(USER_ID, $user_id, time() + 60 * 60 * 24 * 100000, "/");
+            setcookie(USERNAME, $username, time() + 60 * 60 * 24 * 100000, "/");
+            setcookie(PASSWORD5, $password5, time() + 60 * 60 * 24 * 100000, "/");
+            setcookie(LAST_NAME, $last_name, time() + 60 * 60 * 24 * 100000, "/");
+            setcookie(FIRST_NAME, $first_name, time() + 60 * 60 * 24 * 100000, "/");
+            setcookie(ROLE, $role, time() + 60 * 60 * 24 * 100000, "/");
+            setcookie(LOGIN_TIME, (new DateTime())->getTimestamp(), time() + 60 * 60 * 24 * 100000, "/");
             header("Refresh:0");
         }
     }
@@ -360,13 +360,13 @@ if(null !== filter_input(INPUT_POST, 'security_code_submit')) {
             $error_message = (new Executer("update user set code=NULL where id=$user_id"))->error;
             
             if($error_message == '') {
-                setcookie(USER_ID, $user_id, time() + 60 * 60 * 24 * 100, "/");
-                setcookie(USERNAME, $username, time() + 60 * 60 * 24 * 100, "/");
-                setcookie(PASSWORD5, $password5, time() + 60 * 60 * 24 * 100, "/");
-                setcookie(LAST_NAME, $last_name, time() + 60 * 60 * 24 * 100, "/");
-                setcookie(FIRST_NAME, $first_name, time() + 60 * 60 * 24 * 100, "/");
-                setcookie(ROLE, $role, time() + 60 * 60 * 24 * 100, '/');
-                setcookie(LOGIN_TIME, (new DateTime())->getTimestamp(), time() + 60 * 60 * 24 * 100, "/");
+                setcookie(USER_ID, $user_id, time() + 60 * 60 * 24 * 100000, "/");
+                setcookie(USERNAME, $username, time() + 60 * 60 * 24 * 100000, "/");
+                setcookie(PASSWORD5, $password5, time() + 60 * 60 * 24 * 100000, "/");
+                setcookie(LAST_NAME, $last_name, time() + 60 * 60 * 24 * 100000, "/");
+                setcookie(FIRST_NAME, $first_name, time() + 60 * 60 * 24 * 100000, "/");
+                setcookie(ROLE, $role, time() + 60 * 60 * 24 * 100000, '/');
+                setcookie(LOGIN_TIME, (new DateTime())->getTimestamp(), time() + 60 * 60 * 24 * 100000, "/");
                 header("Refresh:0");
             }
         }
@@ -379,13 +379,13 @@ if(null !== filter_input(INPUT_POST, 'security_code_submit')) {
 }
 
 function Logout() {
-    setcookie(USER_ID, '', time() + 60 * 60 * 24 * 100, "/");
-    setcookie(USERNAME, '', time() + 60 * 60 * 24 * 100, "/");
-    setcookie(PASSWORD5, '', time() + 60 * 60 * 24 * 100, "/");
-    setcookie(LAST_NAME, '', time() + 60 * 60 * 24 * 100, "/");
-    setcookie(FIRST_NAME, '', time() + 60 * 60 * 24 * 100, "/");
-    setcookie(LOGIN_TIME, '', time() + 60 * 60 * 24 * 100, "/");
-    setcookie(ROLE, '', time() + 60 * 60 * 24 * 100, "/");
+    setcookie(USER_ID, '', time() + 60 * 60 * 24 * 100000, "/");
+    setcookie(USERNAME, '', time() + 60 * 60 * 24 * 100000, "/");
+    setcookie(PASSWORD5, '', time() + 60 * 60 * 24 * 100000, "/");
+    setcookie(LAST_NAME, '', time() + 60 * 60 * 24 * 100000, "/");
+    setcookie(FIRST_NAME, '', time() + 60 * 60 * 24 * 100000, "/");
+    setcookie(LOGIN_TIME, '', time() + 60 * 60 * 24 * 100000, "/");
+    setcookie(ROLE, '', time() + 60 * 60 * 24 * 100000, "/");
     header("Refresh:0");
     header('Location: '.APPLICATION.'/');
 }
