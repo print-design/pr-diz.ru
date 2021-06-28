@@ -218,7 +218,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
             }
             
             // Стирать старый комментарий может только технолог, остальные - только добавлять новый комментарий к старому
-            if(IsInRole(array('dev', 'technologist'))) {
+            if(IsInRole(array('dev', 'technologist', 'storekeeper'))) {
                 $sql .= "comment = '$comment' where id=$id";
             }
             else {
@@ -470,12 +470,12 @@ $utilized_status_id = 2;
                         }
                         
                         $comment_value = htmlentities($comment);
-                        if(!IsInRole(array('technologist', 'dev'))) {
+                        if(!IsInRole(array('technologist', 'dev', 'storekeeper'))) {
                             $comment_value = "";
                         }
                         ?>
                         <label for="comment">Комментарий</label>
-                        <?php if(!IsInRole(array('technologist', 'dev'))): ?>
+                        <?php if(!IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
                         <p><?= htmlentities($comment) ?></p>
                         <?php endif; ?>
                         <textarea id="comment" name="comment" rows="4" class="form-control no-latin"<?=$comment_disabled ?>><?=$comment_value ?></textarea>
