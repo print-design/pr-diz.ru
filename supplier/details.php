@@ -43,9 +43,20 @@ if(null !== filter_input(INPUT_POST, 'film_brand_create_submit')) {
         $form_valid = false;
     }
     
+    $name = addslashes($name);
+    $supplier_id = filter_input(INPUT_POST, 'supplier_id');
+    
+    // Не допускаем повторного создания такой марки для такого поставщика
+    $sql = "select count(id) from film_brand where name='$name' and supplier_id=$supplier_id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        if($row[0] != 0) {
+            $error_message = "У одного поставщика не должно быть двух плёнок с одинаковым названием";
+            $form_valid = false;
+        }
+    }
+    
     if($form_valid) {
-        $name = addslashes($name);
-        $supplier_id = filter_input(INPUT_POST, 'supplier_id');
         $executer = new Executer("insert into film_brand (name, supplier_id) values ('$name', $supplier_id)");
         $error_message = $executer->error;
         
