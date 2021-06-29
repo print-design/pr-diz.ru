@@ -1,21 +1,16 @@
 <?php
-include 'include/topscripts.php';
+include '../include/topscripts.php';
 
-// Карщика перенаправляем в раздел car
-if(IsInRole(array('electrocarist'))) {
-    header('Location: '.APPLICATION.'/car/');
+// Авторизация
+if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
+    header('Location: '.APPLICATION.'/unauthorized.php');
 }
 ?>
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
     <head>
         <?php
-        include 'include/head.php';
+        include '../include/head.php';
         ?>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
@@ -36,7 +31,7 @@ and open the template in the editor.
     </head>
     <body>
         <?php
-        include 'include/header_mobile.php';
+        include '../include/header_mobile.php';
         ?>
         <div class="container-fluid">
             <?php
@@ -44,11 +39,10 @@ and open the template in the editor.
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <h1>Принт-дизайн</h1>
-            <h2>Управление ресурсами предприятия</h2>
+            <h1>Карщик</h1>
         </div>
         <?php
-        include 'include/footer.php';
+        include '../include/footer.php';
         ?>
     </body>
 </html>

@@ -154,6 +154,10 @@ li#nav-user a.dropdown-toggle::after {
     display: none;
 }
 
+li.no-dropdown-arrow-after a.dropdown-toggle::after {
+    display: none;
+}
+
 .btn {
     height: 40px;
     line-height: 26px;
