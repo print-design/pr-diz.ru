@@ -5,6 +5,60 @@ include '../include/topscripts.php';
 if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
+
+// Обработка отправки формы
+if(null !== filter_input(INPUT_POST, 'car-submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    
+    // Если первый символ р или Р, ищем среди рулонов
+    if(mb_substr($id, 0, 1) == "р" || mb_substr($id, 0, 1) == "Р") {
+        $roll_id = mb_substr($id, 1);
+        $sql = "select id from roll where id=$roll_id limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            header('Location: '.APPLICATION.'/car/roll.php?id='.$row[0]);
+        }
+        else {
+            $error_message = "Объект не найден";
+        }
+    }
+    // Если первый символ п или П
+    elseif(mb_substr($id, 0, 1) == "п" || mb_substr ($id, 0, 1) == "П") {
+        $pallet_trim = mb_substr($id, 1);
+        $substrings = mb_split("\D", $pallet_trim);
+        
+        // Если внутри имеется буква, ищем среди рулонов, которые в паллетах
+        if(count($substrings) == 2) {
+            $pallet_id = $substrings[0];
+            $ordinal = $substrings[1];
+            $sql = "select id from pallet_roll where pallet_id=$pallet_id and ordinal=$ordinal limit 1";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                header('Location: '.APPLICATION.'/car/pallet_roll.php?id='.$row[0]);
+            }
+            else {
+                $error_message = "Объект не найден";
+            }
+        }
+        elseif(count($substrings) == 1) {
+            $pallet_id = $substrings[0];
+            $sql = "select id from pallet where id=$pallet_id limit 1";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) { echo 'Location: '.APPLICATION.'/car/pallet.php?id='.$row[0];
+                header('Location: '.APPLICATION.'/car/pallet.php?id='.$row[0]);
+            }
+            else {
+                $error_message = "Объект не найден";
+            }
+        }
+        else {
+            $error_message = "Объект не найден";
+        }
+    }
+    else {
+        $error_message = "Объект не найден";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>

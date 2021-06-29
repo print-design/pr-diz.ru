@@ -9,13 +9,13 @@
                            name="id"
                            class="form-control"
                            required="required" 
-                           value="<?= filter_input(INPUT_GET, 'id') ?>" 
+                           value="<?= filter_input(INPUT_POST, 'id') ?>" 
                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                            onmouseup="javascript: $(this).attr('id', 'id'); $(this).attr('name', 'id');" 
                            onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                            onkeyup="javascript: $(this).attr('id', 'id'); $(this).attr('name', 'id');" 
                            onfocusout="javascript: $(this).attr('id', 'id'); $(this).attr('name', 'id');" />
-                    <button type="submit" class="btn btn-info ml-1<?= empty(filter_input(INPUT_GET, 'id')) ? " d-none" : "" ?>" id="car-submit" name="car-submit">Найти</button>
+                    <button type="submit" class="btn btn-info ml-1<?= empty(filter_input(INPUT_POST, 'id')) ? " d-none" : "" ?>" id="car-submit" name="car-submit">Найти</button>
                 </div>
             </div>
             <p id="id-valid" class="text-danger d-none">Только цифры и русские буквы</p>
