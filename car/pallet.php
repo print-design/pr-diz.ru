@@ -6,7 +6,6 @@ if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-
 // Если не задано значение id, перенаправляем на Главную
 $id = filter_input(INPUT_GET, 'id');
 if(empty($id)) {
@@ -41,7 +40,6 @@ $utilized_roll_status_id = 2;
             td {
                 height: 2.2rem;
             }
-            
         </style>
     </head>
     <body>
@@ -85,7 +83,7 @@ $utilized_roll_status_id = 2;
             <table class="w-100 characteristics">
                 <tr>
                     <td class="font-weight-bold">Марка пленки</td>
-                    <td><?=$film_brand ?> мм</td>
+                    <td><?=$film_brand ?></td>
                 </tr>
                 <tr>
                     <td class="font-weight-bold">Ширина</td>
@@ -93,7 +91,7 @@ $utilized_roll_status_id = 2;
                 </tr>
                 <tr>
                     <td class="font-weight-bold">Толщина</td>
-                    <td><?=$thickness ?> мм</td>
+                    <td><?=$thickness ?> мкм</td>
                 </tr>
                 <tr>
                     <td class="font-weight-bold">Масса нетто</td>
