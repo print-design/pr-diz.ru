@@ -52,6 +52,7 @@ $utilized_status_roll_id = 2;
         <?php
         include '../include/head.php';
         ?>
+        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
     </head>
     <body>
         <?php
@@ -67,7 +68,11 @@ $utilized_status_roll_id = 2;
             ?>
             <div class="d-flex justify-content-between mb-auto">
                 <div class="p-1">
-                    <h1 style="font-size: 32px; font-weight: 600;">Сработанная пленка</h1>
+                    <table>
+                        <tr>
+                            <td><h1 style="font-size: 32px; line-height: 48px; font-weight: 600;">Сработанная пленка</h1></td>
+                        </tr>
+                    </table>
                 </div>
                 <div class="p-1">
                     <button class="btn btn-outline-dark disabled d-none" data-toggle="modal" data-target="#filterModal" data-text="Фильтр"><img src="../images/icons/filter.svg" style="margin-right: 20px;" />Фильтр</button>
@@ -255,7 +260,7 @@ $utilized_status_roll_id = 2;
                         <td style="padding-left: 5px; padding-right: 5px; font-size: 10px; line-height: 14px; font-weight: 600;<?=$colour_style ?>"><?= mb_strtoupper($status) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; white-space: pre-wrap"><?= $row['comment'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; position: relative;">
-                            <a class="black film_menu_trigger" href="javascript: void(0);"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a>
+                            <a class="black film_menu_trigger" href="javascript: void(0);"><i class="fas fa-ellipsis-h"></i></a>
                             <div class="film_menu">
                                 <div class="command"><a href="<?=($row['type'] == 'pallet_roll' ? APPLICATION.'/pallet/roll.php'. BuildQuery('id', $row['id']) : APPLICATION.'/roll/roll.php'. BuildQuery('id', $row['id'])) ?>">Просмотреть детали</a></div>
                                 <?php
@@ -266,7 +271,7 @@ $utilized_status_roll_id = 2;
                                         <input type="hidden" id="id" name="id" value="<?=$row['id'] ?>" />
                                         <input type="hidden" id="scroll" name="scroll" />
                                         <input type="hidden" id="type" name="type" value="<?=$row['type'] ?>" />
-                                        <button type="submit" class="btn btn-link p-0 m-0 h-25 confirmable" id="delete-film-submit" name="delete-film-submit" style="font-size: 14px;">Удалить</button>
+                                        <button type="submit" class="btn btn-link confirmable" id="delete-film-submit" name="delete-film-submit" style="font-size: 14px;">Удалить</button>
                                     </form>
                                 </div>
                                 <?php
@@ -371,6 +376,7 @@ $utilized_status_roll_id = 2;
         <?php
         include '../include/footer.php';
         ?>
+        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
             var thicknesses = JSON.parse('<?=$json_thicknesses ?>');
             

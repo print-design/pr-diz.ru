@@ -2,53 +2,28 @@
 
 <script src='<?=APPLICATION ?>/js/jquery-3.5.1.min.js'></script>
 <script src='<?=APPLICATION ?>/js/bootstrap.min.js'></script>
-<script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
-<script src="<?=APPLICATION ?>/js/popper.min.js"></script>
 <script src="<?=APPLICATION ?>/js/jquery.maskedinput.js"></script>
 
 <script>
     // Фильтрация ввода
     $('.int-only').keypress(function(e) {
-        if(/\D/.test(e.key)) {
+        if(/\D/.test(String.fromCharCode(e.charCode))) {
             return false;
-        }
-    });
-    
-    $('.int-format').keyup(function() {
-        oldv = $(this).val();
-        replv = oldv.replaceAll(/\D/g, '');
-        
-        if(replv === '') $(this).val('');
-        else {
-            val = Intl.NumberFormat('ru-RU').format(replv);
-            $(this).val(val);
         }
     });
     
     $('.int-only').change(function(e) {
         var val = $(this).val();
         val = val.replace(/[^\d]/g, '');
-        
-        if(val === '') {
-            $(this).val('');
-        }
-        else {
-            val = parseInt(val);
-            
-            if($(this).hasClass('int-format')) {
-                val = Intl.NumberFormat('ru-RU').format(val);
-            }
-            
-            $(this).val(val);
-        }
+        $(this).val(val);
     });
     
     $('.float-only').keypress(function(e) {
-        if(!/[\.\,\d]/.test(e.key)) {
+        if(!/[\.\,\d]/.test(String.fromCharCode(e.charCode))) {
             return false;
         }
         
-        if(/[\.\,]/.test(e.key) && ($(e.target).val().includes('.') || $(e.target).val().includes(','))) {
+        if(/[\.\,]/.test(String.fromCharCode(e.charCode)) && ($(e.target).val().includes('.') || $(e.target).val().includes(','))) {
             return false;
         }
     });
@@ -57,18 +32,11 @@
         var val = $(this).val();
         val = val.replace(',', '.');
         val = val.replace(/[^\.\d]/g, '');
-        
-        if(val === '' || isNaN(val)) {
-            $(this).val('');
-        }
-        else {
-            val = parseFloat(val);
-            $(this).val(val);
-        }
+        $(this).val(val);
     });
     
     $('.no-latin').keypress(function(e) {
-        if(/[a-zA-Z]/.test(e.key)) {
+        if(/[a-zA-Z]/.test(String.fromCharCode(e.charCode))) {
             $(this).next('.invalid-feedback').text('Переключите раскладку');
             $(this).next('.invalid-feedback').show();
             return false;
@@ -84,111 +52,10 @@
         $(this).val(val);
     });
     
-    // Ограничение значений для полей с целочисленными значениями (проценты и т. д.)
-    // Обработка изменения нажатия клавиш
-    function KeyDownLimitIntValue(textbox, e, max) {
-        if(e.which != 8 && e.which != 46 && e.which != 37 && e.which != 39) {
-            if(/\D/.test(e.key)) {
-                return false;
-            }
-            
-            var text = textbox.val();
-            var selStart = textbox.prop('selectionStart');
-            var selEnd = textbox.prop('selectionEnd');
-            var textStart = text.substring(0, selStart);
-            var textEnd = text.substring(selEnd);
-            var newvalue = textStart + e.key + textEnd;
-            var iNewValue = parseInt(newvalue);
-            
-            if(iNewValue == null || iNewValue < 1 || iNewValue > max) {
-                return false;
-            }
-        }
-        
-        return true;
-    }
+    $('input[type="text"]').prop('autocomplete', 'off');
     
-    // Ограничение значений для полей с целочисленными значениями (проценты и т. д.)
-    // Обработка изменения текста
-    function ChangeLimitIntValue(textbox, max) {
-        val = textbox.val().replace(/[^\d]/g, '');
-        textbox.val(val);
-        
-        if(val === null || val === '' || isNaN(val)) {
-            alert('Только целое значение от 1 до ' + max);
-            textbox.val('');
-            textbox.focus();
-        }
-        else {
-            iVal = parseInt(val);
-            
-            if(iVal < 1 || iVal > max) {
-                alert('Только целое значение от 1 до ' + max);
-                textbox.val('');
-                textbox.focus();
-            }
-            else {
-                textbox.val(iVal);
-            }
-        }
-    }
+    $('form').prop('autocomplete', 'off');
     
-    // Ограничение значений для полей с числовыми значениями (проценты и т. д.)
-    // Обработка изменения нажатия клавиш
-    function KeyDownLimitFloatValue(textbox, e, max) {
-        if(e.which != 8 && e.which != 46 && e.which != 37 && e.which != 39) {
-            if(!/[\.\,\d]/.test(e.key)) {
-                return false;
-            }
-            
-            if(/[\.\,]/.test(e.key) && (textbox.val().includes('.') || textbox.val().includes(',') || parseFloat(textbox.val()) >= max)) {
-                return false;
-            }
-            
-            var text = textbox.val();
-            var selStart = textbox.prop('selectionStart');
-            var selEnd = textbox.prop('selectionEnd');
-            var textStart = text.substring(0, selStart);
-            var textEnd = text.substring(selEnd);
-            var newvalue = textStart + e.key + textEnd;
-            var fNewValue = parseFloat(newvalue);
-            
-            if(fNewValue == null || fNewValue < 1 || fNewValue > max) {
-                return false;
-            }
-        }
-        
-        return true;
-    }
-    
-    // Ограничение значений для полей с числовыми значениями (проценты и т. д.)
-    // Обработка изменения текста
-    function ChangeLimitFloatValue(textbox, max) {
-        var val = textbox.val();
-        val = val.replace(',', '.');
-        val = val.replace(/[^\.\d]/g, '');
-        textbox.val(val);
-        
-        if(val === null || val === '' || isNaN(val)) {
-            alert('Только целое значение от 0 до ' + max);
-            textbox.val('');
-            textbox.focus();
-        }
-        else {
-            fVal = parseFloat(val);
-            
-            if(fVal < 0 || fVal > max) {
-                alert('Только числовое значение от 0 до ' + max);
-                textbox.val('');
-                textbox.focus();
-            }
-            else {
-                textbox.val(fVal);
-            }
-        }
-    }
-    
-    // Запрет на изменение размеров всех многострочных текстовых полей вручную
     $('textarea').css('resize', 'none');
     
     // Валидация
@@ -203,18 +70,9 @@
     $.mask.definitions['~'] = "[+-]";
     $("#phone").mask("+7 (999) 999-99-99");
     
-    // При щелчке в поле телефона, устанавливаем курсор в самое начало ввода телефонного номера.
-    $("#phone").click(function(){
-        var maskposition = $(this).val().indexOf("_");
-        if(Number.isInteger(maskposition)) {
-            $(this).prop("selectionStart", maskposition);
-            $(this).prop("selectionEnd", maskposition);
-        }
-    });
-    
     // Подтверждение удаления
     $('button.confirmable').click(function() {
-        return confirm("Действительно удалить?");
+        return confirm('Действительно удалить?');
     });
     
     // Отмена нажатия неактивной кнопки
@@ -256,23 +114,6 @@
         }
     });
     
-    // Редактирование наценки
-    function EditExtracharge(field) {
-        var extracharge = field.val();
-        if(extracharge === '' || isNaN(extracharge)) return false;
-        
-        var id = field.attr('data-id');
-        field.val('000');
-        $.ajax({ url: "../ajax/calculation.php?extracharge=" + extracharge + "&id=" + id, context: field })
-                .done(function(data) {
-                    field.val(data);
-                    $('.extracharge').val(data);
-        })
-                .fail(function() {
-                    alert('Ошибка при редактировании наценки.');
-        });
-    }
-    
     // Всплывающая подсказка
     $(function() {
         $("a.left_bar_item").tooltip({
@@ -281,34 +122,6 @@
                 at: "right+10 center"
             }
         });
-    });
-    
-    // Защита от двойного нажатия
-    var submit_clicked = false;
-    
-    $('button[type=submit]').click(function () {
-        if(submit_clicked) {
-            return false;
-        }
-        else {
-            submit_clicked = true;
-        }
-    });
-    
-    $(document).keydown(function () {
-        submit_clicked = false;
-    });
-    
-    $('select').change(function () {
-        submit_clicked = false;
-    });
-    
-    $('input').keydown(function() {
-        submit_clicked = false;
-    });
-    
-    $('input').change(function() {
-        submit_clicked = false;
     });
     
     // Автологаут резчика
@@ -341,32 +154,6 @@
         
         setInterval(AutoLogout, 1000, end_date);
     <?php endif; ?>
-        
-    // Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне
-    function AdjustFixedBlock(fixed_block) {
-        windowHeight = $(window).height();
-        blockTop = fixed_block.offset().top;
-        blockHeight = fixed_block.outerHeight();
-        blockMarginTop = parseInt(fixed_block.css('margin-top').replace('px', ''));
-        
-        if(blockHeight + blockMarginTop < windowHeight) {
-            fixed_block.css('position', 'fixed');
-            fixed_block.css('top', 0);
-            fixed_block.css('bottom', 'auto');
-        }
-        else {
-            if(blockHeight + blockMarginTop < $(window).scrollTop() + windowHeight) {
-                fixed_block.css('position', 'fixed');
-                fixed_block.css('bottom', 0);
-                fixed_block.css('top', 'auto');
-            }
-            else {
-                fixed_block.css('position', 'absolute');
-                fixed_block.css('top', 0);
-                fixed_block.css('bottom', 'auto');
-            }
-        }
-    };
         
     // Прокрутка на прежнее место после отправки формы
     $(window).on("scroll", function(){

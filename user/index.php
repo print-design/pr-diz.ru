@@ -122,7 +122,7 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                 </div>
             </div>
         </div>
-        <div class="container-fluid">
+        <div class="container-fluid list-page">
             <?php
             if(null !== filter_input(INPUT_POST, 'user_change_password_submit') && $form_valid && empty($error_message)) {
                 echo "<div class='alert alert-success'>Пароль изменен успешно</div>";
@@ -131,19 +131,22 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <div class="d-flex justify-content-between mb-auto">
-                <div class="p-1">
-                    <?php
-                    include '../include/subheader_admin.php';
-                    ?>
+            <div class="d-flex justify-content-between mb-2 nav2">
+                <div class="p-1 row">
+                    <div class="col-6">
+                        <a class="active" href="<?=APPLICATION ?>/user/">Сотрудники</a>
+                    </div>
+                    <div class="col-6">
+                        <a href="<?=APPLICATION ?>/supplier/">Поставщики</a>    
+                    </div>
                 </div>
                 <div class="p-1">
-                    <a href="create.php" title="Добавить пользователя" class="btn btn-outline-dark">
+                    <a href="create.php" title="Добавить пользователя" class="btn btn-outline-dark" style="padding-top: 14px; padding-bottom: 14px; padding-left: 30px; padding-right: 30px;">
                         <i class="fas fa-plus" style="font-size: 12px;"></i>&nbsp;&nbsp;Добавить сотрудника
                     </a>
                 </div>
             </div>
-            <table class="table table-hover">
+            <table class="table">
                 <thead>
                     <tr>
                         <th>ФИО</th>
@@ -180,7 +183,7 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                             <?php if(filter_input(INPUT_COOKIE, USER_ID) != $row['id']): ?>
                             <form method='post'>
                                 <input type='hidden' id='id' name='id' value='<?=$row['id'] ?>' />
-                                <button type='submit' class='btn btn-link confirmable' id='delete_user_submit' name='delete_user_submit'><i class="fas fa-trash-alt"></i></button>
+                                <button type='submit' class='btn btn-link confirmable' id='delete_user_submit' name='delete_user_submit'><img src='../images/icons/trash.svg' /></button>
                             </form>
                             <?php endif; ?>
                         </td>
