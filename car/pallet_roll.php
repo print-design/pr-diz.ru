@@ -41,6 +41,7 @@ if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
             
             include '_find.php';
             ?>
+            <h1>Рулон</h1>
         </div>
         <?php
         include '../include/footer.php';

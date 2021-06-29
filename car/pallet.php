@@ -1,8 +1,13 @@
 <?php
 include '../include/topscripts.php';
 
+// Пекренаправление на страницу карщика при чтении QR-кода
+if(IsInRole(array('electrocarist'))) {
+    header('Location: '.APPLICATION.'/car/roll.php?id='. filter_input(INPUT_GET, 'id'));
+}
+
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
+elseif(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 ?>
@@ -41,6 +46,7 @@ if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
             
             include '_find.php';
             ?>
+            <h1>Паллет</h1>
         </div>
         <?php
         include '../include/footer.php';

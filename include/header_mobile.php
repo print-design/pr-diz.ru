@@ -28,7 +28,7 @@
         <ul class="navbar-nav">
             <?php if(IsInRole(array('electrocarist'))): ?>
             <li class="nav-item">
-                <a class="nav-link" href="javascript: void(0);">Склад</a>
+                <a class="nav-link" href="<?=APPLICATION ?>/car/">Склад</a>
             </li>
             <?php elseif(!empty(filter_input(INPUT_COOKIE, USERNAME))): ?>
             <li class="nav-item dropdown">
