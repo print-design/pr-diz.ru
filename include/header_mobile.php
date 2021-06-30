@@ -24,7 +24,7 @@
         include 'header_right.php';
         ?>
     </nav>
-    <nav class="navbar navbar-expand-sm justify-content-between d-flex d-lg-none">
+    <nav class="navbar navbar-expand-sm justify-content-between d-flex d-lg-none pr-0">
         <ul class="navbar-nav">
             <?php if(IsInRole(array('electrocarist'))): ?>
             <li class="nav-item">
@@ -54,13 +54,7 @@
         <?php if(!empty(filter_input(INPUT_COOKIE, USERNAME))): ?>
         <ul class="navbar-nav">
             <li class="nav-item dropdown no-dropdown-arrow-after">
-                <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown" style="margin-right: 0;"><i class="fa fa-cog" aria-hidden="true""></i></a>
-                <div class="dropdown-menu" style="right: 0; left: auto; position: absolute;">
-                    <a href="<?=APPLICATION ?>/personal/" class="btn btn-link dropdown-item"><i class="fas fa-user"></i>&nbsp;Мои настройки</a>
-                    <form method="post">
-                        <button type="submit" class="btn btn-link dropdown-item" id="logout_submit" name="logout_submit"><i class="fas fa-sign-out-alt"></i>&nbsp;Выход</button>
-                    </form>
-                </div>
+                <a class="nav-link mr-0" href="<?=APPLICATION ?>/car/user.php?link=<?=$_SERVER['REQUEST_URI'] ?>"><i class="fa fa-cog" aria-hidden="true""></i></a>
             </li>
         </ul>
         <?php endif; ?>
