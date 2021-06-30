@@ -51,7 +51,7 @@ if(empty($id)) {
             
             include '_find.php';
             
-            $sql = "select s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, pr.weight, p.cell, "
+            $sql = "select s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, pr.weight, pr.length, p.cell, "
                     . "p.id pallet_id, pr.ordinal "
                     . "from pallet_roll pr "
                     . "inner join pallet p on pr.pallet_id = p.id "
@@ -66,6 +66,7 @@ if(empty($id)) {
                 $width = $row['width'];
                 $thickness = $row['thickness'];
                 $weight = $row['weight'];
+                $length = $row['length'];
                 $cell = $row['cell'];
                 $pallet_id = $row['pallet_id'];
                 $ordinal = $row['ordinal'];
@@ -101,6 +102,10 @@ if(empty($id)) {
                         <tr>
                             <td class="font-weight-bold">Масса нетто</td>
                             <td><?=$weight ?> кг</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Длина</td>
+                            <td><?=$length ?></td>
                         </tr>
                     </table>
                     <p style="font-size: xx-large">Ячейка: <?=$cell ?></p>
