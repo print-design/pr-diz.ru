@@ -16,4 +16,5 @@
     
     $('input#id').keydown(function (e){ return SetSubmitVisibility($(this), e) });
     $('input#id').keyup(function (e){ return SetSubmitVisibility($(this), e) });
+    $('input#id').change(function (e){ return SetSubmitVisibility($(this), e) });
 </script>
