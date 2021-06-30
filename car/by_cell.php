@@ -63,7 +63,15 @@ $utilized_roll_status_id = 2;
                             . "from pallet p "
                             . "inner join supplier s on p.supplier_id=s.id "
                             . "inner join film_brand fb on p.film_brand_id=fb.id "
-                            . "where p.cell='$cell'";
+                            . "where p.cell='$cell' "
+                            . "union "
+                            . "select 'roll' type, r.id, s.name supplier, fb.name film_brand, r.id_from_supplier, r.width, r.thickness, r.cell, r.comment, "
+                            . "r.net_weight weight, "
+                            . "0 rolls_number "
+                            . "from roll r "
+                            . "inner join supplier s on r.supplier_id=s.id "
+                            . "inner join film_brand fb on r.film_brand_id=fb.id "
+                            . "where r.cell='$cell'";
                     $fetcher = new Fetcher($sql);
                     while ($row = $fetcher->Fetch()):
                     $type = $row['type'];
@@ -77,9 +85,9 @@ $utilized_roll_status_id = 2;
                     $rolls_number = $row['rolls_number'];
                     $cell = $row['cell'];
                     $comment = htmlentities($row['comment']);
-                    if($rolls_number > 0):
+                    if(($type == 'pallet' && $rolls_number > 0) || $type == 'roll'):
                     ?>
-                    <h1>Паллет №П<?=$id ?></h1>
+                    <h1><?=$type == 'pallet' ? "Паллет №П$id" : "Рулон №Р$id" ?></h1>
                     <table class="w-100 characteristics">
                         <tr>
                             <td class="font-weight-bold w-50">Поставщик</td>
@@ -112,16 +120,18 @@ $utilized_roll_status_id = 2;
                             <td class="font-weight-bold">Масса нетто</td>
                             <td><?=$weight ?> кг</td>
                         </tr>
+                        <?php if($rolls_number > 0): ?>
                         <tr>
                             <td class="font-weight-bold">Количество рулонов</td>
                             <td><?=$rolls_number ?></td>
                         </tr>
+                        <?php endif; ?>
                         <tr>
                             <td class="font-weight-bold">Комментарий</td>
                             <td><?=$comment ?></td>
                         </tr>
                     </table>
-                    <a href="<?=$type ?>.php?id=<?=$id ?>" class="btn btn-outline-dark w-100 mt-1 mb-3"><?=$type == 'pallet' ? "К паллету" : "К рулону" ?></a>
+                    <a href="<?=$type ?>.php?id=<?=$id ?>" class="btn btn-outline-dark w-100 mt-1 mb-4"><?=$type == 'pallet' ? "К паллету" : "К рулону" ?></a>
                     <?php endif; endwhile; ?>
                 </div>
             </div>
