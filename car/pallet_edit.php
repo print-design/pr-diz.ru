@@ -50,25 +50,9 @@ $utilized_roll_status_id = 2;
         include '../include/head.php';
         ?>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
-            body {
-                padding-left: 0;
-            }
-            
-            .container-fluid {
-                padding-left: 15px;
-            }
-            
-            @media (min-width: 768px) {
-                body {
-                    padding-left: 60px;
-                }
-            }
-            
-            td {
-                height: 1.8rem;
-            }
-        </style>
+        <?php
+        include '_style.php';
+        ?>
     </head>
     <body>
         <div class="container-fluid header">
