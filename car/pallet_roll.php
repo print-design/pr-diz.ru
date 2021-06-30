@@ -35,7 +35,7 @@ if(empty($id)) {
             
             include '_find.php';
             
-            $sql = "select s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, pr.weight, pr.length, p.cell, p.comment, "
+            $sql = "select p.date, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, pr.weight, pr.length, p.cell, p.comment, "
                     . "p.id pallet_id, pr.ordinal "
                     . "from pallet_roll pr "
                     . "inner join pallet p on pr.pallet_id = p.id "
@@ -44,6 +44,7 @@ if(empty($id)) {
                     . "where pr.id=$id";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
+                $date = $row['date'];
                 $supplier = $row['supplier'];
                 $id_from_supplier = $row['id_from_supplier'];
                 $film_brand = $row['film_brand'];

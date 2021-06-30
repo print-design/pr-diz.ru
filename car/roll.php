@@ -38,13 +38,14 @@ $utilized_status_id = 2;
             
             include '_find.php';
             
-            $sql = "select s.name supplier, fb.name film_brand, r.id_from_supplier, r.width, r.thickness, r.net_weight, r.length, r.cell, r.comment "
+            $sql = "select r.date, s.name supplier, fb.name film_brand, r.id_from_supplier, r.width, r.thickness, r.net_weight, r.length, r.cell, r.comment "
                     . "from roll r "
                     . "inner join supplier s on r.supplier_id=s.id "
                     . "inner join film_brand fb on r.film_brand_id=fb.id "
                     . "where r.id=$id";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
+                $date = $row['date'];
                 $supplier = $row['supplier'];
                 $id_from_supplier = $row['id_from_supplier'];
                 $film_brand = $row['film_brand'];
