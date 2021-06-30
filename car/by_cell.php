@@ -86,7 +86,7 @@ $utilized_roll_status_id = 2;
                     <p><?=$comment ?></p>
                     <p><strong>Ячейка</strong> <?=$cell ?></p>
                     
-                    <a href="<?=$type ?>_edit.php?id=<?=$id ?>" class="btn btn-outline-dark w-100 mt-1 mb-4">Сменить ячейку</a>
+                    <a href="<?=$type ?>_edit.php?id=<?=$id ?>&link=<?=$_SERVER['REQUEST_URI'] ?>" class="btn btn-outline-dark w-100 mt-1 mb-4">Сменить ячейку</a>
                     <?php endif; endwhile; ?>
                 </div>
             </div>

@@ -35,7 +35,7 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
         $error_message = $executer->error;
         
         if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/car/pallet.php?id='.$id);
+            header('Location: '.filter_input(INPUT_GET, 'link'));
         }
     }
 }
@@ -59,7 +59,7 @@ $utilized_roll_status_id = 2;
             <nav class="navbar navbar-expand-sm justify-content-start">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=APPLICATION ?>/car/pallet.php?id=<?=$id ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <a class="nav-link" href="<?= filter_input(INPUT_GET, 'link') ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                     </li>
                 </ul>
             </nav>
