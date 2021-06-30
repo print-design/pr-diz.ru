@@ -97,43 +97,17 @@ $utilized_roll_status_id = 2;
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
                     <h1>Паллет №П<?= filter_input(INPUT_GET, 'id') ?></h1>
-                    <table class="w-100 characteristics">
-                        <tr>
-                            <td class="font-weight-bold w-50">Поставщик</td>
-                            <td><?=$supplier ?></td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">ID поставщика</td>
-                            <td><?=$id_from_supplier ?></td>
-                        </tr>
-                    </table>
-                    <h2>Характеристики</h2>
-                    <table class="w-100 characteristics">
-                        <tr>
-                            <td class="font-weight-bold w-50">Марка пленки</td>
-                            <td><?=$film_brand ?></td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">Ширина</td>
-                            <td><?=$width ?> мм</td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">Толщина</td>
-                            <td><?=$thickness ?> мкм</td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">Масса нетто</td>
-                            <td><?=$weight ?> кг</td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">Количество рулонов</td>
-                            <td><?=$rolls_number ?></td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">Комментарий</td>
-                            <td><?=$comment ?></td>
-                        </tr>
-                    </table>
+                    <p>от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></p>
+                    <p><strong>Поставщик</strong> <?=$supplier ?></p>
+                    <p><strong>ID поставщика</strong> <?=$id_from_supplier ?></p>
+                    <p class="mt-3"><strong>Характеристики</strong></p>
+                    <p><strong>Марка пленки</strong> <?=$film_brand ?></p>
+                    <p><strong>Ширина</strong> <?=$width ?> мм</p>
+                    <p><strong>Толщина</strong> <?=$thickness ?> мкм</p>
+                    <p><strong>Масса нетто</strong> <?=$weight ?> кг</p>
+                    <p><strong>Количество рулонов</strong> <?=$rolls_number ?></p>
+                    <p class="mt-3"><strong>Комментарий</strong></p>
+                    <p><?=$comment ?></p>
                     <form method="post" class="mt-3">
                         <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                         <div class="form-group">
@@ -143,7 +117,7 @@ $utilized_roll_status_id = 2;
                                    name="cell" 
                                    value="<?= htmlentities($cell) ?>" 
                                    class="form-control" 
-                                   style="font-size: x-large;"
+                                   style="font-size: 32px;"
                                    required="required" 
                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                                    onmouseup="javascript: $(this).attr('id', 'cell'); $(this).attr('name', 'cell');" 
