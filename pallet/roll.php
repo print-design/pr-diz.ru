@@ -7,8 +7,13 @@ $free_status_id = 1;
 // СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
 $utilized_status_id = 2;
 
+// Пекренаправление на страницу карщика при чтении QR-кода
+if(IsInRole(array('electrocarist'))) {
+    header('Location: '.APPLICATION.'/car/roll.php?id='. filter_input(INPUT_GET, 'id'));
+}
+
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
+elseif(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 

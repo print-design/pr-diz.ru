@@ -123,6 +123,10 @@ li#nav-user a.dropdown-toggle::after {
     display: none;
 }
 
+li.no-dropdown-arrow-after a.dropdown-toggle::after {
+    display: none;
+}
+
 .btn.disabled, .btn:disabled {
     opacity: .25;
 }
