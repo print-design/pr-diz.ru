@@ -85,21 +85,9 @@ if(null !== filter_input(INPUT_POST, 'car-submit')) {
         include '../include/head.php';
         ?>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
-            body {
-                padding-left: 0;
-            }
-            
-            .container-fluid {
-                padding-left: 15px;
-            }
-            
-            @media (min-width: 768px) {
-                body {
-                    padding-left: 60px;
-                }
-            }
-        </style>
+        <?php
+        include '_style.php';
+        ?>
     </head>
     <body>
         <?php
