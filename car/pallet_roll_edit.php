@@ -40,9 +40,16 @@ if(empty($id)) {
         </style>
     </head>
     <body>
-        <?php
-        include '../include/header_mobile.php';
-        ?>
+        <div class="container-fluid header">
+            <nav class="navbar navbar-expand-sm justify-content-start">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?=APPLICATION ?>/car/pallet_roll.php?id=<?=$id ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div id="topmost"></div>
         <div class="container-fluid">
             <?php
             if(!empty($error_message)) {

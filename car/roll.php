@@ -96,7 +96,7 @@ $utilized_status_id = 2;
                 </tr>
             </table>
             <p style="font-size: xx-large">Ячейка: <?=$cell ?></p>
-            <a href="pallet_edit.php?id=<?=$id ?>" class="btn btn-outline-dark w-100">Сменить ячейку</a>
+            <a href="roll_edit.php?id=<?=$id ?>" class="btn btn-outline-dark w-100">Сменить ячейку</a>
         </div>
         <?php
         include '../include/footer.php';
