@@ -17,26 +17,10 @@ and open the template in the editor.
         <?php
         include 'include/head.php';
         ?>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
-            body {
-                padding-left: 0;
-            }
-            
-            .container-fluid {
-                padding-left: 15px;
-            }
-            
-            @media (min-width: 768px) {
-                body {
-                    padding-left: 60px;
-                }
-            }
-        </style>
     </head>
     <body>
         <?php
-        include 'include/header_mobile.php';
+        include 'include/header.php';
         ?>
         <div class="container-fluid">
             <?php
