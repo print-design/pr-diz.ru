@@ -73,14 +73,16 @@ $utilized_status_id = 2;
             
             include '_find.php';
             
-            $sql = "select s.name supplier, fb.name film_brand, r.width, r.thickness, r.net_weight, r.length, r.cell, r.comment "
+            $sql = "select r.date, s.name supplier, fb.name film_brand, r.id_from_supplier, r.width, r.thickness, r.net_weight, r.length, r.cell, r.comment "
                     . "from roll r "
                     . "inner join supplier s on r.supplier_id=s.id "
                     . "inner join film_brand fb on r.film_brand_id=fb.id "
                     . "where r.id=$id";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
+                $date = $row['date'];
                 $supplier = $row['supplier'];
+                $id_from_supplier = $row['id_from_supplier'];
                 $film_brand = $row['film_brand'];
                 $width = $row['width'];
                 $thickness = $row['thickness'];
@@ -93,39 +95,17 @@ $utilized_status_id = 2;
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
                     <h1>Рулон №Р<?= filter_input(INPUT_GET, 'id') ?></h1>
-                    <table class="w-100 characteristics">
-                        <tr>
-                            <td class="font-weight-bold">Поставщик</td>
-                            <td><?=$supplier ?></td>
-                        </tr>
-                    </table>
-                    <h2>Характеристики</h2>
-                    <table class="w-100 characteristics">
-                        <tr>
-                            <td class="font-weight-bold">Марка пленки</td>
-                            <td><?=$film_brand ?></td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">Ширина</td>
-                            <td><?=$width ?> мм</td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">Толщина</td>
-                            <td><?=$thickness ?> мкм</td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">Масса нетто</td>
-                            <td><?=$weight ?> кг</td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">Длина</td>
-                            <td><?=$length ?></td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">Комментарий</td>
-                            <td><?=$comment ?></td>
-                        </tr>
-                    </table>
+                    <p>от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></p>
+                    <p><strong>Поставщик</strong> <?=$supplier ?></p>
+                    <p><strong>ID поставщика</strong> <?=$id_from_supplier ?></p>
+                    <p class="mt-3"><strong>Характеристики</strong></p>
+                    <p><strong>Марка пленки</strong> <?=$film_brand ?></p>
+                    <p><strong>Ширина</strong> <?=$width ?> мм</p>
+                    <p><strong>Толщина</strong> <?=$thickness ?> мкм</p>
+                    <p><strong>Масса нетто</strong> <?=$weight ?> кг</p>
+                    <p><strong>Длина</strong> <?=$length ?> м</p>
+                    <p class="mt-3"><strong>Комментарий</strong></p>
+                    <p><?=$comment ?></p>
                     <form method="post" class="mt-3">
                         <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                         <div class="form-group">
@@ -134,8 +114,8 @@ $utilized_status_id = 2;
                                    id="cell" 
                                    name="cell" 
                                    value="<?= htmlentities($cell) ?>" 
-                                   class="form-control"  
-                                   style="font-size: x-large;"
+                                   class="form-control" 
+                                   style="font-size: 32px;"
                                    required="required" 
                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                                    onmouseup="javascript: $(this).attr('id', 'cell'); $(this).attr('name', 'cell');" 
