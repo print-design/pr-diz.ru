@@ -79,38 +79,42 @@ $utilized_roll_status_id = 2;
                 $cell = $row['cell'];
             }
             ?>
-            <h1>Паллет №П<?= filter_input(INPUT_GET, 'id') ?></h1>
-            <table class="w-100 characteristics">
-                <tr>
-                    <td class="font-weight-bold">Поставщик</td>
-                    <td><?=$supplier ?></td>
-                </tr>
-            </table>
-            <h2>Характеристики</h2>
-            <table class="w-100 characteristics">
-                <tr>
-                    <td class="font-weight-bold">Марка пленки</td>
-                    <td><?=$film_brand ?></td>
-                </tr>
-                <tr>
-                    <td class="font-weight-bold">Ширина</td>
-                    <td><?=$width ?> мм</td>
-                </tr>
-                <tr>
-                    <td class="font-weight-bold">Толщина</td>
-                    <td><?=$thickness ?> мкм</td>
-                </tr>
-                <tr>
-                    <td class="font-weight-bold">Масса нетто</td>
-                    <td><?=$weight ?> кг</td>
-                </tr>
-                <tr>
-                    <td class="font-weight-bold">Количество рулонов</td>
-                    <td><?=$rolls_number ?></td>
-                </tr>
-            </table>
-            <p style="font-size: xx-large">Ячейка: <?=$cell ?></p>
-            <a href="pallet_edit.php?id=<?=$id ?>" class="btn btn-outline-dark w-100">Сменить ячейку</a>
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <h1>Паллет №П<?= filter_input(INPUT_GET, 'id') ?></h1>
+                    <table class="w-100 characteristics">
+                        <tr>
+                            <td class="font-weight-bold">Поставщик</td>
+                            <td><?=$supplier ?></td>
+                        </tr>
+                    </table>
+                    <h2>Характеристики</h2>
+                    <table class="w-100 characteristics">
+                        <tr>
+                            <td class="font-weight-bold">Марка пленки</td>
+                            <td><?=$film_brand ?></td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Ширина</td>
+                            <td><?=$width ?> мм</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Толщина</td>
+                            <td><?=$thickness ?> мкм</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Масса нетто</td>
+                            <td><?=$weight ?> кг</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Количество рулонов</td>
+                            <td><?=$rolls_number ?></td>
+                        </tr>
+                    </table>
+                    <p style="font-size: xx-large">Ячейка: <?=$cell ?></p>
+                    <a href="pallet_edit.php?id=<?=$id ?>" class="btn btn-outline-dark w-100">Сменить ячейку</a>
+                </div>
+            </div>
         </div>
         <?php
         include '../include/footer.php';
