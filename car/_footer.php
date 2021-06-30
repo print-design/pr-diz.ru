@@ -8,22 +8,6 @@
             $('#car-submit').removeClass('d-none');
         }
         
-        /*if(e.which != 8 && e.which != 46 && e.which != 37 && e.which != 39) {
-            if(/[^0-9а-яА-Я]/g.test(e.key)) {
-                input.addClass('is-invalid');
-                $('#id-valid').removeClass('d-none');
-                return false;
-            }
-            else {
-                input.removeClass('is-invalid');
-                $('#id-valid').addClass('d-none');
-            }
-        }
-        else {
-            input.removeClass('is-invalid');
-            $('#id-valid').addClass('d-none');
-        }*/
-        
         return true;
         
         input.val(val.replace(/[^0-9а-яА-Я]/g, ''));

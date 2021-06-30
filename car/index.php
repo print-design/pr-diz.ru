@@ -7,6 +7,24 @@ if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
 }
 
 // Обработка отправки формы
+function FindByCell($id) {
+    $sql = "select (select count(id) from pallet where cell='$id') + (select count(id) from roll where cell='$id')";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        if($row[0] != 0) {
+            header('Location: '.APPLICATION.'/car/by_cell.php?cell='.$id);
+        }
+        else {
+            $error_message = "Объект не найден";
+        }
+    }
+    else {
+        $error_message = "Объект не найден";
+    }
+    
+    return $error_message;
+}
+
 if(null !== filter_input(INPUT_POST, 'car-submit')) {
     $id = trim(filter_input(INPUT_POST, 'id'));
     
@@ -19,7 +37,7 @@ if(null !== filter_input(INPUT_POST, 'car-submit')) {
             header('Location: '.APPLICATION.'/car/roll.php?id='.$row[0]);
         }
         else {
-            $error_message = "Объект не найден";
+            $error_message = FindByCell($id);
         }
     }
     // Если первый символ п или П
@@ -37,7 +55,7 @@ if(null !== filter_input(INPUT_POST, 'car-submit')) {
                 header('Location: '.APPLICATION.'/car/pallet_roll.php?id='.$row[0]);
             }
             else {
-                $error_message = "Объект не найден";
+                $error_message = FindByCell($id);
             }
         }
         elseif(count($substrings) == 1) {
@@ -48,15 +66,15 @@ if(null !== filter_input(INPUT_POST, 'car-submit')) {
                 header('Location: '.APPLICATION.'/car/pallet.php?id='.$row[0]);
             }
             else {
-                $error_message = "Объект не найден";
+                $error_message = FindByCell($id);
             }
         }
         else {
-            $error_message = "Объект не найден";
+            $error_message = FindByCell($id);
         }
     }
     else {
-        $error_message = "Объект не найден";
+        $error_message = FindByCell($id);
     }
 }
 ?>

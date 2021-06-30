@@ -7,7 +7,7 @@
                     <input type="text"
                            id="id"
                            name="id"
-                           class="form-control"
+                           class="form-control no-latin"
                            required="required" 
                            value="<?= filter_input(INPUT_POST, 'id') ?>" 
                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
