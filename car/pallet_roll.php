@@ -51,7 +51,7 @@ if(empty($id)) {
             
             include '_find.php';
             
-            $sql = "select s.name supplier, fb.name film_brand, p.width, p.thickness, pr.weight, p.cell, "
+            $sql = "select s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, pr.weight, p.cell, "
                     . "p.id pallet_id, pr.ordinal "
                     . "from pallet_roll pr "
                     . "inner join pallet p on pr.pallet_id = p.id "
@@ -61,6 +61,7 @@ if(empty($id)) {
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 $supplier = $row['supplier'];
+                $id_from_supplier = $row['id_from_supplier'];
                 $film_brand = $row['film_brand'];
                 $width = $row['width'];
                 $thickness = $row['thickness'];
@@ -75,14 +76,18 @@ if(empty($id)) {
                     <h1>Рулон №П<?=$pallet_id ?>Р<?=$ordinal ?></h1>
                     <table class="w-100 characteristics">
                         <tr>
-                            <td class="font-weight-bold">Поставщик</td>
+                            <td class="font-weight-bold w-50">Поставщик</td>
                             <td><?=$supplier ?></td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">ID поставщика</td>
+                            <td><?=$id_from_supplier ?></td>
                         </tr>
                     </table>
                     <h2>Характеристики</h2>
                     <table class="w-100 characteristics">
                         <tr>
-                            <td class="font-weight-bold">Марка пленки</td>
+                            <td class="font-weight-bold w-50">Марка пленки</td>
                             <td><?=$film_brand ?></td>
                         </tr>
                         <tr>
