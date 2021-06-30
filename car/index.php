@@ -62,7 +62,7 @@ if(null !== filter_input(INPUT_POST, 'car-submit')) {
             $pallet_id = $substrings[0];
             $sql = "select id from pallet where id=$pallet_id limit 1";
             $fetcher = new Fetcher($sql);
-            if($row = $fetcher->Fetch()) { echo 'Location: '.APPLICATION.'/car/pallet.php?id='.$row[0];
+            if($row = $fetcher->Fetch()) {
                 header('Location: '.APPLICATION.'/car/pallet.php?id='.$row[0]);
             }
             else {
