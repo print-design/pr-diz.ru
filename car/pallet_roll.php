@@ -35,7 +35,7 @@ if(empty($id)) {
             }
             
             td {
-                height: 2.2rem;
+                height: 1.8rem;
             }
         </style>
     </head>
@@ -51,7 +51,7 @@ if(empty($id)) {
             
             include '_find.php';
             
-            $sql = "select s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, pr.weight, pr.length, p.cell, "
+            $sql = "select s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, pr.weight, pr.length, p.cell, p.comment, "
                     . "p.id pallet_id, pr.ordinal "
                     . "from pallet_roll pr "
                     . "inner join pallet p on pr.pallet_id = p.id "
@@ -68,6 +68,7 @@ if(empty($id)) {
                 $weight = $row['weight'];
                 $length = $row['length'];
                 $cell = $row['cell'];
+                $comment = htmlentities($row['comment']);
                 $pallet_id = $row['pallet_id'];
                 $ordinal = $row['ordinal'];
             }
@@ -106,6 +107,10 @@ if(empty($id)) {
                         <tr>
                             <td class="font-weight-bold">Длина</td>
                             <td><?=$length ?></td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Комментарий</td>
+                            <td><?=$comment ?></td>
                         </tr>
                     </table>
                     <p style="font-size: xx-large">Ячейка: <?=$cell ?></p>

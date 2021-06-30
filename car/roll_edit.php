@@ -38,7 +38,7 @@ $utilized_status_id = 2;
             }
             
             td {
-                height: 2.2rem;
+                height: 1.8rem;
             }
         </style>
     </head>
@@ -61,7 +61,7 @@ $utilized_status_id = 2;
             
             include '_find.php';
             
-            $sql = "select s.name supplier, fb.name film_brand, r.width, r.thickness, r.net_weight, r.length, r.cell "
+            $sql = "select s.name supplier, fb.name film_brand, r.width, r.thickness, r.net_weight, r.length, r.cell, r.comment "
                     . "from roll r "
                     . "inner join supplier s on r.supplier_id=s.id "
                     . "inner join film_brand fb on r.film_brand_id=fb.id "
@@ -75,6 +75,7 @@ $utilized_status_id = 2;
                 $weight = $row['net_weight'];
                 $length = $row['length'];
                 $cell = $row['cell'];
+                $comment = htmlentities($row['comment']);
             }
             ?>
             <div class="row">
@@ -107,6 +108,10 @@ $utilized_status_id = 2;
                         <tr>
                             <td class="font-weight-bold">Длина</td>
                             <td><?=$length ?></td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Комментарий</td>
+                            <td><?=$comment ?></td>
                         </tr>
                     </table>
                     <p style="font-size: xx-large">Ячейка: <?=$cell ?></p>
