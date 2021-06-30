@@ -36,7 +36,7 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
         $error_message = $executer->error;
         
         if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/car/pallet_roll.php?id='.$id);
+            header('Location: '.filter_input(INPUT_GET, 'link'));
         }
     }
 }
@@ -57,7 +57,7 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
             <nav class="navbar navbar-expand-sm justify-content-start">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=APPLICATION ?>/car/pallet_roll.php?id=<?=$id ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <a class="nav-link" href="<?= filter_input(INPUT_GET, 'link') ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                     </li>
                 </ul>
             </nav>
@@ -71,7 +71,7 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
             
             include '_find.php';
             
-            $sql = "select s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, pr.weight, pr.length, p.cell, p.comment, "
+            $sql = "select p.date, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, pr.weight, pr.length, p.cell, p.comment, "
                     . "p.id pallet_id, pr.ordinal "
                     . "from pallet_roll pr "
                     . "inner join pallet p on pr.pallet_id = p.id "
@@ -80,6 +80,7 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
                     . "where pr.id=$id";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
+                $date = $row['date'];
                 $supplier = $row['supplier'];
                 $id_from_supplier = $row['id_from_supplier'];
                 $film_brand = $row['film_brand'];
@@ -96,43 +97,17 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
                     <h1>Рулон №П<?=$pallet_id ?>Р<?=$ordinal ?></h1>
-                    <table class="w-100 characteristics">
-                        <tr>
-                            <td class="font-weight-bold w-50">Поставщик</td>
-                            <td><?=$supplier ?></td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">ID поставщика</td>
-                            <td><?=$id_from_supplier ?></td>
-                        </tr>
-                    </table>
-                    <h2>Характеристики</h2>
-                    <table class="w-100 characteristics">
-                        <tr>
-                            <td class="font-weight-bold w-50">Марка пленки</td>
-                            <td><?=$film_brand ?></td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">Ширина</td>
-                            <td><?=$width ?> мм</td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">Толщина</td>
-                            <td><?=$thickness ?> мкм</td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">Масса нетто</td>
-                            <td><?=$weight ?> кг</td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">Длина</td>
-                            <td><?=$length ?></td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">Комментарий</td>
-                            <td><?=$comment ?></td>
-                        </tr>
-                    </table>
+                    <p>от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></p>
+                    <p><strong>Поставщик</strong> <?=$supplier ?></p>
+                    <p><strong>ID поставщика</strong> <?=$id_from_supplier ?></p>
+                    <p class="mt-3"><strong>Характеристики</strong></p>
+                    <p><strong>Марка пленки</strong> <?=$film_brand ?></p>
+                    <p><strong>Ширина</strong> <?=$width ?> мм</p>
+                    <p><strong>Толщина</strong> <?=$thickness ?> мкм</p>
+                    <p><strong>Масса нетто</strong> <?=$weight ?> кг</p>
+                    <p><strong>Длина</strong> <?=$length ?> м</p>
+                    <p class="mt-3"><strong>Комментарий</strong></p>
+                    <p><?=$comment ?></p>
                     <form method="post" class="mt-3">
                         <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                         <input type="hidden" id="pallet_id" name="pallet_id" value="<?=$pallet_id ?>" />
@@ -143,7 +118,7 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
                                    name="cell" 
                                    value="<?= htmlentities($cell) ?>" 
                                    class="form-control" 
-                                   style="font-size: x-large;"
+                                   style="font-size: 32px;"
                                    required="required" 
                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                                    onmouseup="javascript: $(this).attr('id', 'cell'); $(this).attr('name', 'cell');" 

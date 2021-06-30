@@ -41,7 +41,7 @@ $utilized_roll_status_id = 2;
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
                     <?php
-                    $sql = "select 'pallet' type, p.id, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, p.cell, p.comment, "
+                    $sql = "select 'pallet' type, p.date, p.id, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, p.cell, p.comment, "
                             . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) weight, "
                             . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) rolls_number "
                             . "from pallet p "
@@ -49,7 +49,7 @@ $utilized_roll_status_id = 2;
                             . "inner join film_brand fb on p.film_brand_id=fb.id "
                             . "where p.cell='$cell' "
                             . "union "
-                            . "select 'roll' type, r.id, s.name supplier, fb.name film_brand, r.id_from_supplier, r.width, r.thickness, r.cell, r.comment, "
+                            . "select 'roll' type, r.date, r.id, s.name supplier, fb.name film_brand, r.id_from_supplier, r.width, r.thickness, r.cell, r.comment, "
                             . "r.net_weight weight, "
                             . "0 rolls_number "
                             . "from roll r "
@@ -59,6 +59,7 @@ $utilized_roll_status_id = 2;
                     $fetcher = new Fetcher($sql);
                     while ($row = $fetcher->Fetch()):
                     $type = $row['type'];
+                    $date = $row['date'];
                     $id = $row['id'];
                     $supplier = $row['supplier'];
                     $id_from_supplier = $row['id_from_supplier'];
@@ -72,50 +73,20 @@ $utilized_roll_status_id = 2;
                     if(($type == 'pallet' && $rolls_number > 0) || $type == 'roll'):
                     ?>
                     <h1><?=$type == 'pallet' ? "Паллет №П$id" : "Рулон №Р$id" ?></h1>
-                    <table class="w-100 characteristics">
-                        <tr>
-                            <td class="font-weight-bold w-50">Поставщик</td>
-                            <td><?=$supplier ?></td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">ID поставщика</td>
-                            <td><?=$id_from_supplier ?></td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">Ячейка</td>
-                            <td><?=$cell ?></td>
-                        </tr>
-                    </table>
-                    <h2>Характеристики</h2>
-                    <table class="w-100 characteristics">
-                        <tr>
-                            <td class="font-weight-bold w-50">Марка пленки</td>
-                            <td><?=$film_brand ?></td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">Ширина</td>
-                            <td><?=$width ?> мм</td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">Толщина</td>
-                            <td><?=$thickness ?> мкм</td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold">Масса нетто</td>
-                            <td><?=$weight ?> кг</td>
-                        </tr>
-                        <?php if($rolls_number > 0): ?>
-                        <tr>
-                            <td class="font-weight-bold">Количество рулонов</td>
-                            <td><?=$rolls_number ?></td>
-                        </tr>
-                        <?php endif; ?>
-                        <tr>
-                            <td class="font-weight-bold">Комментарий</td>
-                            <td><?=$comment ?></td>
-                        </tr>
-                    </table>
-                    <a href="<?=$type ?>.php?id=<?=$id ?>" class="btn btn-outline-dark w-100 mt-1 mb-4"><?=$type == 'pallet' ? "К паллету" : "К рулону" ?></a>
+                    <p>от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></p>
+                    <p><strong>Поставщик</strong> <?=$supplier ?></p>
+                    <p><strong>ID поставщика</strong> <?=$id_from_supplier ?></p>
+                    <p class="mt-3"><strong>Характеристики</strong></p>
+                    <p><strong>Марка пленки</strong> <?=$film_brand ?></p>
+                    <p><strong>Ширина</strong> <?=$width ?> мм</p>
+                    <p><strong>Толщина</strong> <?=$thickness ?> мкм</p>
+                    <p><strong>Масса нетто</strong> <?=$weight ?> кг</p>
+                    <p><strong>Количество рулонов</strong> <?=$rolls_number ?></p>
+                    <p class="mt-3"><strong>Комментарий</strong></p>
+                    <p><?=$comment ?></p>
+                    <p><strong>Ячейка</strong> <?=$cell ?></p>
+                    
+                    <a href="<?=$type ?>_edit.php?id=<?=$id ?>&link=<?=$_SERVER['REQUEST_URI'] ?>" class="btn btn-outline-dark w-100 mt-1 mb-4">Сменить ячейку</a>
                     <?php endif; endwhile; ?>
                 </div>
             </div>

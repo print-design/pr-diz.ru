@@ -1,19 +1,70 @@
 <style>
     body {
         padding-left: 0;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 18px;
     }
 
-    .container-fluid {
-        padding-left: 15px;
-    }
-    
     @media (min-width: 768px) {
         body {
             padding-left: 60px;
         }
     }
+    
+    h1 {
+        font-size: 24px;
+        line-height: 32px;
+        font-weight: 600;
+    }
+    
+    label {
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 16px;
+    }
+    
+    p {
+        height: 26px;
+        margin-bottom: 0;
+    }
 
     td {
         height: 1.8rem;
+    }
+    
+    #topmost {
+        height: 70px;
+    }
+    
+    .btn {
+        height: 48px;
+        font-size: 16px!important;
+        line-height: 30px!important;
+        font-weight: bold!important;
+    }
+    
+    .container-fluid {
+        padding-left: 15px;
+    }
+    
+    .navbar {
+        margin-top: 0;
+        font-size: 18px;
+        line-height: 24px;
+    }
+    
+    .header {
+        height: 60px;
+    }
+    
+    .header a:link, .header a:visited {
+        color: #228AD6;
+        text-decoration: none;
+    }
+    
+    .header a:active, .header a:hover {
+        color: blue;
+        text-decoration: none;
     }
 </style>

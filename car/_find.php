@@ -15,7 +15,7 @@
                            onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                            onkeyup="javascript: $(this).attr('id', 'id'); $(this).attr('name', 'id');" 
                            onfocusout="javascript: $(this).attr('id', 'id'); $(this).attr('name', 'id');" />
-                    <button type="submit" class="btn btn-info ml-1<?= empty(filter_input(INPUT_POST, 'id')) ? " d-none" : "" ?>" id="car-submit" name="car-submit">Найти</button>
+                    <button type="submit" class="btn btn-sm btn-primary ml-1 d-none" id="car-submit" name="car-submit">Найти</button>
                 </div>
             </div>
             <p id="id-valid" class="text-danger d-none">Только цифры и русские буквы</p>
