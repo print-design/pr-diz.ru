@@ -70,7 +70,6 @@ $utilized_roll_status_id = 2;
                     <p><strong>Ширина</strong> <?=$width ?> мм</p>
                     <p><strong>Толщина</strong> <?=$thickness ?> мкм</p>
                     <p><strong>Масса нетто</strong> <?=$weight ?> кг</p>
-                    <p><strong>Длина</strong> <?=$length ?> м</p>
                     <p><strong>Количество рулонов</strong> <?=$rolls_number ?></p>
                     <p class="mt-3"><strong>Комментарий</strong></p>
                     <p><?=$comment ?></p>
