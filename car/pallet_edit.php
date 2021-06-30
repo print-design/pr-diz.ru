@@ -12,6 +12,34 @@ if(empty($id)) {
     header('Location: '.APPLICATION.'/car/');
 }
 
+// Валидация формы
+define('ISINVALID', ' is-invalid');
+$form_valid = true;
+$error_message = '';
+
+$cell_valid = '';
+
+// Обработка формы смены ячейки
+if(null !== filter_input(INPUT_POST, 'cell-submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $cell = addslashes(filter_input(INPUT_POST, 'cell'));
+    
+    if(empty($cell)) {
+        $cell_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if($form_valid) {
+        $sql = "update pallet set cell='$cell' where id=$id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+        
+        if(empty($error_message)) {
+            header('Location: '.APPLICATION.'/car/pallet.php?id='.$id);
+        }
+    }
+}
+
 // СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
 $utilized_roll_status_id = 2;
 ?>
@@ -121,8 +149,27 @@ $utilized_roll_status_id = 2;
                             <td><?=$comment ?></td>
                         </tr>
                     </table>
-                    <p style="font-size: xx-large">Ячейка: <?=$cell ?></p>
-                    <a href="pallet_edit.php?id=<?=$id ?>" class="btn btn-outline-dark w-100">Сменить ячейку</a>
+                    <form method="post" class="mt-3">
+                        <input type="hidden" id="id" name="id" value="<?=$id ?>" />
+                        <div class="form-group">
+                            <label for="cell">Номер ячейки</label>
+                            <input type="text" 
+                                   id="cell" 
+                                   name="cell" 
+                                   value="<?= htmlentities($cell) ?>" 
+                                   class="form-control" 
+                                   style="font-size: x-large;"
+                                   required="required" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                                   onmouseup="javascript: $(this).attr('id', 'cell'); $(this).attr('name', 'cell');" 
+                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                                   onkeyup="javascript: $(this).attr('id', 'cell'); $(this).attr('name', 'cell');" 
+                                   onfocusout="javascript: $(this).attr('id', 'cell'); $(this).attr('name', 'cell');" />
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-dark form-control" id="cell-submit" name="cell-submit">Сменить ячейку</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
