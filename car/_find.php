@@ -21,22 +21,17 @@ elseif(!empty (filter_input(INPUT_POST, 'id'))) {
             <div class="form-group">
                 <label for="id">Введите ID</label>
                 <div class="d-flex">
-                    <div class="input-group">
-                        <input type="text"
-                               id="id"
-                               name="id"
-                               class="form-control no-latin"
-                               required="required" 
-                               value="<?=$find_value ?>" 
-                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
-                               onmouseup="javascript: $(this).attr('id', 'id'); $(this).attr('name', 'id');" 
-                               onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
-                               onkeyup="javascript: $(this).attr('id', 'id'); $(this).attr('name', 'id');" 
-                               onfocusout="javascript: $(this).attr('id', 'id'); $(this).attr('name', 'id');" />
-                        <div class="input-group-append">
-                            <button type="button" class="btn" id="find-clear" style="border: solid 1px #A1A4B1; background-color: white; color: #A1A4B1;"><i class="fas fa-times"></i></button>
-                        </div>
-                    </div>
+                    <input type="text"
+                           id="id"
+                           name="id"
+                           class="form-control no-latin"
+                           required="required" 
+                           value="<?=$find_value ?>" 
+                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                           onmouseup="javascript: $(this).attr('id', 'id'); $(this).attr('name', 'id');" 
+                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                           onkeyup="javascript: $(this).attr('id', 'id'); $(this).attr('name', 'id');" 
+                           onfocusout="javascript: $(this).attr('id', 'id'); $(this).attr('name', 'id');" />
                     <button type="submit" class="btn btn-sm btn-primary ml-1<?=$find_btn_class ?>" id="car-submit" name="car-submit">Найти</button>
                 </div>
             </div>
