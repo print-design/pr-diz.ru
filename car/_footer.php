@@ -2,6 +2,13 @@
     $('input#id').focusin(function (){
         $('#car-submit').removeClass('d-none');
     });
+    
+    $('button#find-clear').click(function(e) {
+        $(e.target).parent().parent().remove('.input-group-append');
+        $(e.target).parent().remove('.input-group-append');
+        $('input#id').val('');
+        $('input#id').focus();
+    });
 
     function SetFindClearVisibility(obj) {
         if(obj.val() == '') {
@@ -15,6 +22,7 @@
                 var btn = $("<button type='button' class='btn' id='find-clear' style='border: solid 1px #A1A4B1; border-left: 0; background-color: white; color: black;'><i class='fas fa-times'></i></button>");
                 btn.click(function(e) {
                     $(e.target).parent().parent().remove('.input-group-append');
+                    $(e.target).parent().remove('.input-group-append');
                     $('input#id').val('');
                     $('input#id').focus();
                 });
