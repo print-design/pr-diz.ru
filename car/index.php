@@ -127,5 +127,8 @@ if(null !== filter_input(INPUT_POST, 'car-submit')) {
         include '../include/footer.php';
         include '_footer.php';
         ?>
+        <script>
+            $('input#id').focus();
+        </script>
     </body>
 </html>
