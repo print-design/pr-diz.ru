@@ -67,4 +67,11 @@
         color: blue;
         text-decoration: none;
     }
+    
+    .object-card {
+        padding: 0.5rem;
+        padding-bottom: 1.5rem;
+        margin-bottom: 0.6rem;
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.15);
+    }
 </style>
