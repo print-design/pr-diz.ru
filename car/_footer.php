@@ -2,4 +2,37 @@
     $('input#id').focusin(function (){
         $('#car-submit').removeClass('d-none');
     });
+
+    function SetFindClearVisibility(obj) {
+        if(obj.val() == '') {
+            if(obj.parent().children('.input-group-append').length > 0) {
+                obj.parent().children().remove('.input-group-append');
+            }
+        }
+        else {
+             if(obj.parent().children('.input-group-append').length == 0) {
+                var app = $("<div class='input-group-append'></div>");
+                var btn = $("<button type='button' class='btn' id='find-clear' style='border: solid 1px #A1A4B1; border-left: 0; background-color: white; color: black;'><i class='fas fa-times'></i></button>");
+                btn.click(function(e) {
+                    $(e.target).parent().parent().remove('.input-group-append');
+                    $('input#id').val('');
+                    $('input#id').focus();
+                });
+                app.append(btn);
+                obj.parent().append(app);
+            }
+        }
+    }
+    
+    $('input#id').keyup(function(e) {
+        SetFindClearVisibility($(e.target));
+    });
+    
+    $('input#id').keypress(function(e) {
+        SetFindClearVisibility($(e.target));
+    });
+    
+    $('input#id').change(function(e) {
+        SetFindClearVisibility($(e.target));
+    });
 </script>
