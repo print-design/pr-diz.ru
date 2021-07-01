@@ -65,7 +65,10 @@ if(null !== filter_input(INPUT_POST, 'car-submit')) {
         if(count($substrings) == 2) {
             $pallet_id = $substrings[0];
             $ordinal = $substrings[1];
-            $sql = "select id from pallet_roll where pallet_id=$pallet_id and ordinal=$ordinal limit 1";
+            $sql = "select pr.id "
+                    . "from pallet_roll pr "
+                    . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+                    . "where pr.pallet_id=$pallet_id and pr.ordinal=$ordinal and (prsh.status_id is null or prsh.status_id <> ".UTILIZED_ROLL_STATUS_ID.") limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 header('Location: '.APPLICATION.'/car/pallet_roll.php?id='.$row[0]);
