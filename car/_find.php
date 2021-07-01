@@ -21,7 +21,7 @@ elseif(!empty (filter_input(INPUT_POST, 'id'))) {
             <div class="form-group">
                 <label for="id">Введите ID</label>
                 <div class="d-flex">
-                    <div class="input-group">
+                    <div class="input-group" id="find-group">
                         <input type="text"
                                id="id"
                                name="id"
@@ -35,7 +35,7 @@ elseif(!empty (filter_input(INPUT_POST, 'id'))) {
                                onfocusout="javascript: $(this).attr('id', 'id'); $(this).attr('name', 'id');" />
                         <?php if(!empty($find_value)): ?>
                         <div class='input-group-append'>
-                            <button type='button' class='btn' id='find-clear' style='border: solid 1px #A1A4B1; border-left: 0; background-color: white; color: black;'><i class='fas fa-times'></i></button>
+                            <button type='button' class='btn' id='find-clear'><i class='fas fa-times'></i></button>
                         </div>
                         <?php endif; ?>
                     </div>
