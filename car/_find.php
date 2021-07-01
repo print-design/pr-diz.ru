@@ -33,6 +33,11 @@ elseif(!empty (filter_input(INPUT_POST, 'id'))) {
                                onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                                onkeyup="javascript: $(this).attr('id', 'id'); $(this).attr('name', 'id');" 
                                onfocusout="javascript: $(this).attr('id', 'id'); $(this).attr('name', 'id');" />
+                        <?php if(!empty($find_value)): ?>
+                        <div class='input-group-append'>
+                            <button type='button' class='btn' id='find-clear' style='border: solid 1px #A1A4B1; border-left: 0; background-color: white; color: black;'><i class='fas fa-times'></i></button>
+                        </div>
+                        <?php endif; ?>
                     </div>
                     <button type="submit" class="btn btn-sm btn-primary ml-1<?=$find_btn_class ?>" id="car-submit" name="car-submit">Найти</button>
                 </div>
