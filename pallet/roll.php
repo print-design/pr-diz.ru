@@ -38,6 +38,8 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     }
     
     if(empty($error_message)) {
+        $id = filter_input(INPUT_POST, 'id');
+        
         // Редактирование данных паллета
         $pallet_id = filter_input(INPUT_POST, 'pallet_id');
         $sql = "";
@@ -46,23 +48,23 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
             $cell = filter_input(INPUT_POST, 'cell');
             
             if(!empty($sql)) {
-                $sql += ", ";
+                $sql .= ", ";
             }
             
-            $sql += "cell='$cell'";
+            $sql .= "cell='$cell'";
         }
         if(!empty(filter_input(INPUT_POST, 'comment'))) {
             $comment = addslashes(filter_input(INPUT_POST, 'comment'));
             
             if(!empty($sql)) {
-                $sql += ", ";
+                $sql .= ", ";
             }
             
             if(IsInRole(array('dev', 'technologist', 'storekeeper'))) {
-                $sql += "comment='$comment'";
+                $sql .= "comment='$comment'";
             }
             else {
-                $sql += "comment=concat(comment, ' ', '$comment')";
+                $sql .= "comment=concat(comment, ' ', '$comment')";
             }
         }
         
@@ -71,7 +73,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         $error_message = $executer->error;
         
         if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/pallet/'. BuildQueryRemove('id'));
+            header('Location: '.APPLICATION.'/pallet/roll.php'.BuildQuery('id', $id));
         }
     }
 }
