@@ -118,7 +118,7 @@ $utilized_roll_status_id = 2;
                                        id="cell" 
                                        name="cell" 
                                        value="<?= htmlentities($cell) ?>" 
-                                       class="form-control" 
+                                       class="form-control no-latin" 
                                        style="font-size: 32px;"
                                        required="required" 
                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
