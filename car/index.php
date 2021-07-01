@@ -6,9 +6,22 @@ if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
+const  UTILIZED_ROLL_STATUS_ID = 2;
+
 // Обработка отправки формы
 function FindByCell($id) {
-    $sql = "select (select count(id) from pallet where cell='$id') + (select count(id) from roll where cell='$id')";
+    $sql = "select (select count(p.id) "
+            . "from pallet p "
+            . "left join (select * from pallet_status_history where id in (select max(id) from pallet_status_history group by pallet_id)) psh on psh.pallet_id = p.id "
+            . "where p.cell='$id' "
+            . "and p.id in (select pr1.pallet_id from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id "
+            . "and (prsh1.status_id is null or prsh1.status_id <> ".UTILIZED_ROLL_STATUS_ID."))and (psh.status_id is null or psh.status_id <> ".UTILIZED_ROLL_STATUS_ID.")) "
+            . "+ "
+            . "(select count(r.id) "
+            . "from roll r "
+            . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+            . "where r.cell='$id' and (rsh.status_id is null or rsh.status_id <> ".UTILIZED_ROLL_STATUS_ID."))";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         if($row[0] != 0) {
@@ -31,7 +44,10 @@ if(null !== filter_input(INPUT_POST, 'car-submit')) {
     // Если первый символ р или Р, ищем среди рулонов
     if(mb_substr($id, 0, 1) == "р" || mb_substr($id, 0, 1) == "Р") {
         $roll_id = mb_substr($id, 1);
-        $sql = "select id from roll where id=$roll_id limit 1";
+        $sql = "select r.id "
+                . "from roll r "
+                . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+                . "where r.id=$roll_id and (rsh.status_id is null or rsh.status_id <> ".UTILIZED_ROLL_STATUS_ID.") limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             header('Location: '.APPLICATION.'/car/roll.php?id='.$row[0]);
@@ -49,7 +65,10 @@ if(null !== filter_input(INPUT_POST, 'car-submit')) {
         if(count($substrings) == 2) {
             $pallet_id = $substrings[0];
             $ordinal = $substrings[1];
-            $sql = "select id from pallet_roll where pallet_id=$pallet_id and ordinal=$ordinal limit 1";
+            $sql = "select pr.id "
+                    . "from pallet_roll pr "
+                    . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+                    . "where pr.pallet_id=$pallet_id and pr.ordinal=$ordinal and (prsh.status_id is null or prsh.status_id <> ".UTILIZED_ROLL_STATUS_ID.") limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 header('Location: '.APPLICATION.'/car/pallet_roll.php?id='.$row[0]);
@@ -60,7 +79,13 @@ if(null !== filter_input(INPUT_POST, 'car-submit')) {
         }
         elseif(count($substrings) == 1) {
             $pallet_id = $substrings[0];
-            $sql = "select id from pallet where id=$pallet_id limit 1";
+            $sql = "select p.id "
+                    . "from pallet p "
+                    . "left join (select * from pallet_status_history where id in (select max(id) from pallet_status_history group by pallet_id)) psh on psh.pallet_id = p.id "
+                    . "where p.id=$pallet_id "
+                    . "and p.id in (select pr1.pallet_id from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> ".UTILIZED_ROLL_STATUS_ID.")) "
+                    . "and (psh.status_id is null or psh.status_id <> ".UTILIZED_ROLL_STATUS_ID.") "
+                    . "limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 header('Location: '.APPLICATION.'/car/pallet.php?id='.$row[0]);
