@@ -72,24 +72,25 @@ $utilized_roll_status_id = 2;
                     $comment = htmlentities($row['comment']);
                     if(($type == 'pallet' && $rolls_number > 0) || $type == 'roll'):
                     ?>
-                    <h1><?=$type == 'pallet' ? "Паллет №П$id" : "Рулон №Р$id" ?></h1>
-                    <p>от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></p>
-                    <p><strong>Поставщик</strong> <?=$supplier ?></p>
-                    <p><strong>ID поставщика</strong> <?=$id_from_supplier ?></p>
-                    <p class="mt-3"><strong>Характеристики</strong></p>
-                    <p><strong>Марка пленки</strong> <?=$film_brand ?></p>
-                    <p><strong>Ширина</strong> <?=$width ?> мм</p>
-                    <p><strong>Толщина</strong> <?=$thickness ?> мкм</p>
-                    <p><strong>Масса нетто</strong> <?=$weight ?> кг</p>
-                    <p><strong>Длина</strong> <?=$length ?> м</p>
-                    <?php if($type == 'pallet'): ?>
-                    <p><strong>Количество рулонов</strong> <?=$rolls_number ?></p>
-                    <?php endif; ?>
-                    <p class="mt-3"><strong>Комментарий</strong></p>
-                    <p><?=$comment ?></p>
-                    <p><strong>Ячейка</strong> <?=$cell ?></p>
-                    
-                    <a href="<?=$type ?>_edit.php?id=<?=$id ?>&link=<?=$_SERVER['REQUEST_URI'] ?>" class="btn btn-outline-dark w-100 mt-1 mb-4">Сменить ячейку</a>
+                    <div class="object-card">
+                        <h1><?=$type == 'pallet' ? "Паллет №П$id" : "Рулон №Р$id" ?></h1>
+                        <p>от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></p>
+                        <p><strong>Поставщик</strong> <?=$supplier ?></p>
+                        <p><strong>ID поставщика</strong> <?=$id_from_supplier ?></p>
+                        <p class="mt-3"><strong>Характеристики</strong></p>
+                        <p><strong>Марка пленки</strong> <?=$film_brand ?></p>
+                        <p><strong>Ширина</strong> <?=$width ?> мм</p>
+                        <p><strong>Толщина</strong> <?=$thickness ?> мкм</p>
+                        <p><strong>Масса нетто</strong> <?=$weight ?> кг</p>
+                        <p><strong>Длина</strong> <?=$length ?> м</p>
+                        <?php if($type == 'pallet'): ?>
+                        <p><strong>Количество рулонов</strong> <?=$rolls_number ?></p>
+                        <?php endif; ?>
+                        <p class="mt-3"><strong>Комментарий</strong></p>
+                        <p><?=$comment ?></p>
+                        <p><strong>Ячейка</strong> <?=$cell ?></p>
+                        <a href="<?=$type ?>_edit.php?id=<?=$id ?>&link=<?=$_SERVER['REQUEST_URI'] ?>" class="btn btn-outline-dark w-100 mt-1 mb-4">Сменить ячейку</a>
+                    </div>
                     <?php endif; endwhile; ?>
                 </div>
             </div>
