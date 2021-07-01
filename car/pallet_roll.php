@@ -29,12 +29,6 @@ if(empty($id)) {
         ?>
         <div class="container-fluid">
             <?php
-            if(!empty($error_message)) {
-               echo "<div class='alert alert-danger'>$error_message</div>";
-            }
-            
-            include '_find.php';
-            
             $sql = "select p.date, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, pr.weight, pr.length, p.cell, p.comment, "
                     . "p.id pallet_id, pr.ordinal "
                     . "from pallet_roll pr "
@@ -56,11 +50,14 @@ if(empty($id)) {
                 $comment = htmlentities($row['comment']);
                 $pallet_id = $row['pallet_id'];
                 $ordinal = $row['ordinal'];
+                $title = "П".$pallet_id."Р".$ordinal;
+                
+                include '_find.php';
             }
             ?>
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
-                    <h1>Рулон №П<?=$pallet_id ?>Р<?=$ordinal ?></h1>
+                    <h1>Рулон №<?=$title ?></h1>
                     <p>от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></p>
                     <p><strong>Поставщик</strong> <?=$supplier ?></p>
                     <p><strong>ID поставщика</strong> <?=$id_from_supplier ?></p>

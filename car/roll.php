@@ -32,12 +32,6 @@ $utilized_status_id = 2;
         ?>
         <div class="container-fluid">
             <?php
-            if(!empty($error_message)) {
-               echo "<div class='alert alert-danger'>$error_message</div>";
-            }
-            
-            include '_find.php';
-            
             $sql = "select r.date, s.name supplier, fb.name film_brand, r.id_from_supplier, r.width, r.thickness, r.net_weight, r.length, r.cell, r.comment "
                     . "from roll r "
                     . "inner join supplier s on r.supplier_id=s.id "
@@ -55,11 +49,14 @@ $utilized_status_id = 2;
                 $length = $row['length'];
                 $cell = $row['cell'];
                 $comment = htmlentities($row['comment']);
+                $title = "Р".filter_input(INPUT_GET, 'id');
+                
+                include '_find.php';
             }
             ?>
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
-                    <h1>Рулон №Р<?= filter_input(INPUT_GET, 'id') ?></h1>
+                    <h1>Рулон №<?=$title ?></h1>
                     <p>от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></p>
                     <p><strong>Поставщик</strong> <?=$supplier ?></p>
                     <p><strong>ID поставщика</strong> <?=$id_from_supplier ?></p>

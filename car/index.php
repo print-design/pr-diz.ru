@@ -95,10 +95,6 @@ if(null !== filter_input(INPUT_POST, 'car-submit')) {
         ?>
         <div class="container-fluid">
             <?php
-            if(!empty($error_message)) {
-               echo "<div class='alert alert-danger'>$error_message</div>";
-            }
-            
             include '_find.php';
             ?>
         </div>
