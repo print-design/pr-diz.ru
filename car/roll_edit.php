@@ -71,8 +71,6 @@ $utilized_status_id = 2;
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             
-            include '_find.php';
-            
             $sql = "select r.date, s.name supplier, fb.name film_brand, r.id_from_supplier, r.width, r.thickness, r.net_weight, r.length, r.cell, r.comment "
                     . "from roll r "
                     . "inner join supplier s on r.supplier_id=s.id "

@@ -69,8 +69,6 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             
-            include '_find.php';
-            
             $sql = "select p.date, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, pr.weight, pr.length, p.cell, p.comment, "
                     . "p.id pallet_id, pr.ordinal "
                     . "from pallet_roll pr "
