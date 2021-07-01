@@ -116,7 +116,7 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
                                        id="cell" 
                                        name="cell" 
                                        value="<?= htmlentities($cell) ?>" 
-                                       class="form-control" 
+                                       class="form-control no-latin" 
                                        style="font-size: 32px;"
                                        required="required" 
                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
