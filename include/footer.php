@@ -100,6 +100,12 @@
         $(this).val(val);
     });
     
+    $('.no-latin').keyup(function() {
+        var val = $(this).val();
+        val = val.replace(/[a-zA-Z]/g, '');
+        $(this).val(val);
+    });
+    
     // Ограничение значений для полей с целочисленными значениями (проценты и т. д.)
     // Обработка изменения нажатия клавиш
     function KeyDownLimitIntValue(textbox, e, max) {
