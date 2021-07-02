@@ -14,6 +14,10 @@ elseif(!empty (filter_input(INPUT_POST, 'id'))) {
     $find_value = filter_input(INPUT_POST, 'id');
     $find_btn_class = '';
 }
+elseif(!empty (filter_input(INPUT_GET, 'id'))) {
+    $find_value = filter_input(INPUT_GET, 'id');
+    $find_btn_class = '';
+}
 ?>
 <div class="row">
     <div class="col-12 col-md-6 col-lg-4">
