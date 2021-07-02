@@ -129,7 +129,7 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
                                        required="required" 
                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                                        onmouseup="javascript: $(this).attr('id', 'cell'); $(this).attr('name', 'cell');" 
-                                       onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
                                        onkeyup="javascript: $(this).attr('id', 'cell'); $(this).attr('name', 'cell');" 
                                        onfocusout="javascript: $(this).attr('id', 'cell'); $(this).attr('name', 'cell');" />
                             </div>
