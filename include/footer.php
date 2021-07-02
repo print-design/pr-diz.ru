@@ -70,6 +70,12 @@
         $(this).val(val);
     });
     
+    $('.no-latin').keyup(function() {
+        var val = $(this).val();
+        val = val.replace(/[a-zA-Z]/g, '');
+        $(this).val(val);
+    });
+    
     $('input[type="text"]').prop('autocomplete', 'off');
     
     $('form').prop('autocomplete', 'off');
