@@ -99,7 +99,26 @@ if(null !== filter_input(INPUT_POST, 'car-submit')) {
         }
     }
     else {
-        $error_message = FindByCell($id);
+        // Ищем среди паллетов и рулонов
+        $sql = "select (select count(p.id) "
+            . "from pallet p "
+            . "left join (select * from pallet_status_history where id in (select max(id) from pallet_status_history group by pallet_id)) psh on psh.pallet_id = p.id "
+            . "where p.id='$id' "
+            . "and p.id in (select pr1.pallet_id from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id "
+            . "and (prsh1.status_id is null or prsh1.status_id <> ".UTILIZED_ROLL_STATUS_ID."))and (psh.status_id is null or psh.status_id <> ".UTILIZED_ROLL_STATUS_ID.")) "
+            . "+ "
+            . "(select count(r.id) "
+            . "from roll r "
+            . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+            . "where r.id='$id' and (rsh.status_id is null or rsh.status_id <> ".UTILIZED_ROLL_STATUS_ID."))";
+        $fetcher = new Fetcher($sql);
+        $row = $fetcher->Fetch();
+        if($row[0] != 0) {
+            header('Location: '.APPLICATION.'/car/by_id.php?id='.$id);
+        }
+        else {
+            $error_message = FindByCell($id);
+        }
     }
 }
 ?>
