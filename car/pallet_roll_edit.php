@@ -86,20 +86,19 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
                     . "inner join film_brand fb on p.film_brand_id=fb.id "
                     . "where pr.id=$id";
             $fetcher = new Fetcher($sql);
-            if($row = $fetcher->Fetch()) {
-                $date = $row['date'];
-                $supplier = $row['supplier'];
-                $id_from_supplier = $row['id_from_supplier'];
-                $film_brand = $row['film_brand'];
-                $width = $row['width'];
-                $thickness = $row['thickness'];
-                $weight = $row['weight'];
-                $length = $row['length'];
-                $cell = $row['cell'];
-                $comment = htmlentities($row['comment']);
-                $pallet_id = $row['pallet_id'];
-                $ordinal = $row['ordinal'];
-            }
+            if($row = $fetcher->Fetch()):
+            $date = $row['date'];
+            $supplier = $row['supplier'];
+            $id_from_supplier = $row['id_from_supplier'];
+            $film_brand = $row['film_brand'];
+            $width = $row['width'];
+            $thickness = $row['thickness'];
+            $weight = $row['weight'];
+            $length = $row['length'];
+            $cell = $row['cell'];
+            $comment = htmlentities($row['comment']);
+            $pallet_id = $row['pallet_id'];
+            $ordinal = $row['ordinal'];
             ?>
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
@@ -141,6 +140,9 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
                     </div>
                 </div>
             </div>
+            <?php else: ?>
+            <div class='alert alert-danger'>Объект не найден</div>
+            <?php endif; ?>
         </div>
         <?php
         include '../include/footer.php';
