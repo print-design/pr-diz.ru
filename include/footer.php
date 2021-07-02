@@ -7,6 +7,22 @@
 <script src="<?=APPLICATION ?>/js/jquery.maskedinput.js"></script>
 
 <script>
+    // Отправка формы по нажатию Enter
+    $('input').keypress(function(e) {
+        if(e.which == 10 || e.which == 13) {
+            $(e.target).focusout();
+         
+               submit_btn = $(e.target.form).find("button[type='submit']");
+                
+                if(submit_btn == null) {
+                    this.form.submit();
+                }
+                else {
+                    submit_btn.click();
+                }
+            }
+    });
+    
     // Фильтрация ввода
     $('.int-only').keypress(function(e) {
         if(/\D/.test(String.fromCharCode(e.charCode))) {
