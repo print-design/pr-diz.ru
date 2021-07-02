@@ -30,7 +30,7 @@ elseif(!empty (filter_input(INPUT_POST, 'id'))) {
                                value="<?=$find_value ?>" 
                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                                onmouseup="javascript: $(this).attr('id', 'id'); $(this).attr('name', 'id');" 
-                               onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
                                onkeyup="javascript: $(this).attr('id', 'id'); $(this).attr('name', 'id');" 
                                onfocusout="javascript: $(this).attr('id', 'id'); $(this).attr('name', 'id');" />
                         <?php if(!empty($find_value)): ?>
