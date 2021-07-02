@@ -36,7 +36,12 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
         $error_message = $executer->error;
         
         if(empty($error_message)) {
-            header('Location: '.filter_input(INPUT_GET, 'link'));
+            if(empty(filter_input(INPUT_GET, 'link'))) {
+                header('Location: '.APPLICATION.'/car/pallet_roll.php?id='.$id);
+            }
+            else {
+                header('Location: '.filter_input(INPUT_GET, 'link'));
+            }
         }
     }
 }
@@ -57,7 +62,11 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
             <nav class="navbar navbar-expand-sm justify-content-start">
                 <ul class="navbar-nav">
                     <li class="nav-item">
+                        <?php if(empty(filter_input(INPUT_GET, 'link'))): ?>
+                        <a class="nav-link" href="<?=APPLICATION ?>/car/pallet_roll.php?id=<?=$id ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <?php else: ?>
                         <a class="nav-link" href="<?= filter_input(INPUT_GET, 'link') ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <?php endif; ?>
                     </li>
                 </ul>
             </nav>

@@ -3,7 +3,7 @@ include '../include/topscripts.php';
 
 // Пекренаправление на страницу карщика при чтении QR-кода
 if(IsInRole(array('electrocarist'))) {
-    header('Location: '.APPLICATION.'/car/pallet.php?id='. filter_input(INPUT_GET, 'id'));
+    header('Location: '.APPLICATION.'/car/pallet_edit.php?id='. filter_input(INPUT_GET, 'id'));
 }
 
 // Авторизация
