@@ -89,7 +89,7 @@ $utilized_roll_status_id = 2;
                         <p class="mt-3"><strong>Комментарий</strong></p>
                         <p><?=$comment ?></p>
                         <p class="mt-1" style="font-size: 32px; line-height: 48px;">Ячейка&nbsp;&nbsp;&nbsp;&nbsp;<?=$cell ?></p>
-                        <a href="<?=$type ?>_edit.php?id=<?=$id ?>&link=<?=$_SERVER['REQUEST_URI'] ?>" class="btn btn-outline-dark w-100 mt-1 mb-4">Сменить ячейку</a>
+                        <a href="<?=$type ?>_edit.php?id=<?=$id ?>&link=<?=$_SERVER['REQUEST_URI'] ?>" class="btn btn-outline-dark w-100 mt-4">Сменить ячейку</a>
                     </div>
                     <?php endif; endwhile; ?>
                 </div>
