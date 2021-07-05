@@ -33,7 +33,7 @@ include 'left_bar.php';
             if(count($period) > 0)
                 $query_string = '?'.http_build_query($period);
             
-            if(IsInRole(array('technologist', 'dev', 'manager'))):
+            if(IsInRole(array('technologist', 'dev', 'manager', 'storekeeper'))):
             ?>
             <li class="nav-item">
                 <a class="nav-link<?=$comiflex_status ?>" href="<?=APPLICATION ?>/grafik/comiflex.php<?=$query_string ?>">Comiflex</a>
