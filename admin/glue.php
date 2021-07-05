@@ -170,7 +170,7 @@ if($row = $fetcher->Fetch()) {
                                        required="required" 
                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                        onmouseup="javascript: $(this).attr('id', 'glue'); $(this).attr('name', 'glue'); $(this).attr('placeholder', 'Стоимость, за кг');" 
-                                       onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                        onkeyup="javascript: $(this).attr('id', 'glue'); $(this).attr('name', 'glue'); $(this).attr('placeholder', 'Стоимость, за кг');" 
                                        onfocusout="javascript: $(this).attr('id', 'glue'); $(this).attr('name', 'glue'); $(this).attr('placeholder', 'Стоимость, за кг');" />
                                 <div class="input-group-append">
@@ -195,7 +195,7 @@ if($row = $fetcher->Fetch()) {
                                    required="required" 
                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                    onmouseup="javascript: $(this).attr('id', 'glue_expense'); $(this).attr('name', 'glue_expense'); $(this).attr('placeholder', 'Расход клея, г/м2');" 
-                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                    onkeyup="javascript: $(this).attr('id', 'glue_expense'); $(this).attr('name', 'glue_expense'); $(this).attr('placeholder', 'Расход клея, г/м2');" 
                                    onfocusout="javascript: $(this).attr('id', 'glue_expense'); $(this).attr('name', 'glue_expense'); $(this).attr('placeholder', 'Расход клея, г/м2');" />
                             <div class="invalid-feedback">Стоимость клея обязательно</div>
@@ -212,7 +212,7 @@ if($row = $fetcher->Fetch()) {
                                        required="required" 
                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                        onmouseup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" 
-                                       onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                        onkeyup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" 
                                        onfocusout="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" />
                                 <div class="input-group-append">
@@ -238,7 +238,7 @@ if($row = $fetcher->Fetch()) {
                                    required="required" 
                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                    onmouseup="javascript: $(this).attr('id', 'glue_solvent'); $(this).attr('name', 'glue_solvent'); $(this).attr('placeholder', 'В процентах');" 
-                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                    onkeyup="javascript: $(this).attr('id', 'glue_solvent'); $(this).attr('name', 'glue_solvent'); $(this).attr('placeholder', 'В процентах');" 
                                    onfocusout="javascript: $(this).attr('id', 'glue_solvent'); $(this).attr('name', 'glue_solvent'); $(this).attr('placeholder', 'В процентах');" />
                             <div class="input-group-append"><span class="input-group-text">%</span></div>

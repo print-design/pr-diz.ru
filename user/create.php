@@ -136,7 +136,7 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
                                    autocomplete="off" 
                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                                    onmouseup="javascript: $(this).attr('id', 'first_name'); $(this).attr('name', 'first_name');" 
-                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
                                    onkeyup="javascript: $(this).attr('id', 'first_name'); $(this).attr('name', 'first_name');" 
                                    onfocusout="javascript: $(this).attr('id', 'first_name'); $(this).attr('name', 'first_name');" />
                             <div class="invalid-feedback">Имя обязательно</div>
@@ -170,7 +170,7 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
                                    required="required" 
                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                                    onmouseup="javascript: $(this).attr('id', 'username'); $(this).attr('name', 'username');" 
-                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
                                    onkeyup="javascript: $(this).attr('id', 'username'); $(this).attr('name', 'username');" 
                                    onfocusout="javascript: $(this).attr('id', 'username'); $(this).attr('name', 'username');" />
                             <div class="invalid-feedback">Логин обязательно</div>

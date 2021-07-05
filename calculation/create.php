@@ -670,7 +670,7 @@ $colorfulnesses = array();
                                    autocomplete="off" 
                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                    onmouseup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название заказа');" 
-                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                    onkeyup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название заказа');" 
                                    onfocusout="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название заказа');" />
                             <div class="invalid-feedback">Название заказа обязательно</div>
@@ -753,7 +753,7 @@ $colorfulnesses = array();
                                            required="required" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" 
-                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="avascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" 
                                            onfocusout="avascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" />
                                     <div class="invalid-feedback">Объем заказа обязательно</div>
@@ -833,7 +833,7 @@ $colorfulnesses = array();
                                            value="<?=$other_brand_name ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'other_brand_name'); $(this).attr('name', 'other_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
-                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="javascript: $(this).attr('id', 'other_brand_name'); $(this).attr('name', 'other_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
                                            onfocusout="javascript: $(this).attr('id', 'other_brand_name'); $(this).attr('name', 'other_brand_name'); $(this).attr('placeholder', 'Название пленки')" />
                                     <div class="invalid-feedback">Название пленки обязательно</div>
@@ -850,7 +850,7 @@ $colorfulnesses = array();
                                            value="<?= empty($other_price) ? '' : floatval($other_price) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'other_price'); $(this).attr('name', 'other_price'); $(this).attr('placeholder', 'Цена')" 
-                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="javascript: $(this).attr('id', 'other_price'); $(this).attr('name', 'other_price'); $(this).attr('placeholder', 'Цена')" 
                                            onfocusout="javascript: $(this).attr('id', 'other_price'); $(this).attr('name', 'other_price'); $(this).attr('placeholder', 'Цена')" />
                                     <div class="invalid-feedback">Цена обязательно</div>
@@ -867,7 +867,7 @@ $colorfulnesses = array();
                                            value="<?= $other_thickness ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'other_thickness'); $(this).attr('name', 'other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
-                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="javascript: $(this).attr('id', 'other_thickness'); $(this).attr('name', 'other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
                                            onfocusout="javascript: $(this).attr('id', 'other_thickness'); $(this).attr('name', 'other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" />
                                     <div class="invalid-feedback">Толщина обязательно</div>
@@ -884,7 +884,7 @@ $colorfulnesses = array();
                                            value="<?= empty($other_weight) ? '' : floatval($other_weight) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'other_weight'); $(this).attr('name', 'other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
-                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="javascript: $(this).attr('id', 'other_weight'); $(this).attr('name', 'other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
                                            onfocusout="javascript: $(this).attr('id', 'other_weight'); $(this).attr('name', 'other_weight'); $(this).attr('placeholder', 'Удельный вес')" />
                                     <div class="invalid-feedback">Удельный вес обязательно</div>
@@ -985,7 +985,7 @@ $colorfulnesses = array();
                                                value="<?=$lamination1_other_brand_name ?>" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                                onmouseup="javascript: $(this).attr('id', 'lamination1_other_brand_name'); $(this).attr('name', 'lamination1_other_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
-                                               onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                                onkeyup="javascript: $(this).attr('id', 'lamination1_other_brand_name'); $(this).attr('name', 'lamination1_other_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
                                                onfocusout="javascript: $(this).attr('id', 'lamination1_other_brand_name'); $(this).attr('name', 'lamination1_other_brand_name'); $(this).attr('placeholder', 'Название пленки')" />
                                         <div class="invalid-feedback">Название пленки обязательно</div>
@@ -1002,7 +1002,7 @@ $colorfulnesses = array();
                                                value="<?= empty($lamination1_other_price) ? '' : floatval($lamination1_other_price) ?>" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                                onmouseup="javascript: $(this).attr('id', 'lamination1_other_price'); $(this).attr('name', 'lamination1_other_price'); $(this).attr('placeholder', 'Цена')" 
-                                               onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                                onkeyup="javascript: $(this).attr('id', 'lamination1_other_price'); $(this).attr('name', 'lamination1_other_price'); $(this).attr('placeholder', 'Цена')" 
                                                onfocusout="javascript: $(this).attr('id', 'lamination1_other_price'); $(this).attr('name', 'lamination1_other_price'); $(this).attr('placeholder', 'Цена')" />
                                         <div class="invalid-feedback">Цена обязательно</div>
@@ -1020,7 +1020,7 @@ $colorfulnesses = array();
                                                value="<?= $lamination1_other_thickness ?>" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                                onmouseup="javascript: $(this).attr('id', 'lamination1_other_thickness'); $(this).attr('name', 'lamination1_other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
-                                               onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                                onkeyup="javascript: $(this).attr('id', 'lamination1_other_thickness'); $(this).attr('name', 'lamination1_other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
                                                onfocusout="javascript: $(this).attr('id', 'lamination1_other_thickness'); $(this).attr('name', 'lamination1_other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" />
                                         <div class="invalid-feedback">Толщина обязательно</div>
@@ -1037,7 +1037,7 @@ $colorfulnesses = array();
                                                value="<?= empty($lamination1_other_weight) ? '' : floatval($lamination1_other_weight) ?>" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                                onmouseup="javascript: $(this).attr('id', 'lamination1_other_weight'); $(this).attr('name', 'lamination1_other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
-                                               onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                                onkeyup="javascript: $(this).attr('id', 'lamination1_other_weight'); $(this).attr('name', 'lamination1_other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
                                                onfocusout="javascript: $(this).attr('id', 'lamination1_other_weight'); $(this).attr('name', 'lamination1_other_weight'); $(this).attr('placeholder', 'Удельный вес')" />
                                         <div class="invalid-feedback">Удельный вес обязательно</div>
@@ -1133,7 +1133,7 @@ $colorfulnesses = array();
                                                    value="<?=$lamination2_other_brand_name ?>" 
                                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                                    onmouseup="javascript: $(this).attr('id', 'lamination2_other_brand_name'); $(this).attr('name', 'lamination2_other_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
-                                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                                    onkeyup="javascript: $(this).attr('id', 'lamination2_other_brand_name'); $(this).attr('name', 'lamination2_other_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
                                                    onfocusout="javascript: $(this).attr('id', 'lamination2_other_brand_name'); $(this).attr('name', 'lamination2_other_brand_name'); $(this).attr('placeholder', 'Название пленки')" />
                                             <div class="invalid-feedback">Название пленки обязательно</div>
@@ -1150,7 +1150,7 @@ $colorfulnesses = array();
                                                    value="<?= empty($lamination2_other_price) ? '' : floatval($lamination2_other_price) ?>" 
                                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                                    onmouseup="javascript: $(this).attr('id', 'lamination2_other_price'); $(this).attr('name', 'lamination2_other_price'); $(this).attr('placeholder', 'Цена')" 
-                                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                                    onkeyup="javascript: $(this).attr('id', 'lamination2_other_price'); $(this).attr('name', 'lamination2_other_price'); $(this).attr('placeholder', 'Цена')" 
                                                    onfocusout="javascript: $(this).attr('id', 'lamination2_other_price'); $(this).attr('name', 'lamination2_other_price'); $(this).attr('placeholder', 'Цена')" />
                                             <div class="invalid-feedback">Цена обязательно</div>
@@ -1168,7 +1168,7 @@ $colorfulnesses = array();
                                                    value="<?= $lamination2_other_thickness ?>" 
                                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                                    onmouseup="javascript: $(this).attr('id', 'lamination2_other_thickness'); $(this).attr('name', 'lamination2_other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
-                                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                                    onkeyup="javascript: $(this).attr('id', 'lamination2_other_thickness'); $(this).attr('name', 'lamination2_other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
                                                    onfocusout="javascript: $(this).attr('id', 'lamination2_other_thickness'); $(this).attr('name', 'lamination2_other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" />
                                             <div class="invalid-feedback">Толщина обязательно</div>
@@ -1185,7 +1185,7 @@ $colorfulnesses = array();
                                                    value="<?= empty($lamination2_other_weight) ? '' : floatval($lamination2_other_weight) ?>" 
                                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                                    onmouseup="javascript: $(this).attr('id', 'lamination2_other_weight'); $(this).attr('name', 'lamination2_other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
-                                                   onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                                    onkeyup="javascript: $(this).attr('id', 'lamination2_other_weight'); $(this).attr('name', 'lamination2_other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
                                                    onfocusout="javascript: $(this).attr('id', 'lamination2_other_weight'); $(this).attr('name', 'lamination2_other_weight'); $(this).attr('placeholder', 'Удельный вес')" />
                                             <div class="invalid-feedback">Удельный вес обязательно</div>
@@ -1221,7 +1221,7 @@ $colorfulnesses = array();
                                            value="<?=$width ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Обрезная ширина, мм')" 
-                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Обрезная ширина, мм')" 
                                            onfocusout="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Обрезная ширина, мм')" />
                                     <div class="invalid-feedback">Обрезная ширина обязательно</div>
@@ -1239,7 +1239,7 @@ $colorfulnesses = array();
                                            value="<?= empty($length) ? "" : floatval($length) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки, мм');" 
-                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки, мм');" 
                                            onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки, мм');" />
                                     <div class="invalid-feedback">Длина от метки до метки обязательно</div>
@@ -1257,7 +1257,7 @@ $colorfulnesses = array();
                                            value="<?= empty($stream_width) ? "" : floatval($stream_width) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" 
-                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" 
                                            onfocusout="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" />
                                     <div class="invalid-feedback">Ширина ручья обязательно</div>
@@ -1275,7 +1275,7 @@ $colorfulnesses = array();
                                            value="<?=$streams_count ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'streams_count'); $(this).attr('name', 'streams_count'); $(this).attr('placeholder', 'Количество ручьев');" 
-                                           onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="javascript: $(this).attr('id', 'streams_count'); $(this).attr('name', 'streams_count'); $(this).attr('placeholder', 'Количество ручьев');" 
                                            onfocusout="javascript: $(this).attr('id', 'streams_count'); $(this).attr('name', 'streams_count'); $(this).attr('placeholder', 'Количество ручьев');" />
                                     <div class="invalid-feedback">Количество ручьев обязательно</div>
@@ -1411,7 +1411,7 @@ $colorfulnesses = array();
                                                value="<?= empty($$color_var) ? "" : $$color_var?>" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                                onmouseup="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" 
-                                               onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                                onkeyup="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" 
                                                onfocusout="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" />
                                     </div>
@@ -1457,7 +1457,7 @@ $colorfulnesses = array();
                                             placeholder="Процент..." 
                                             onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                             onmouseup="javascript: $(this).attr('id', 'percent_<?=$i ?>'); $(this).attr('name', 'percent_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" 
-                                            onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                             onkeyup="javascript: $(this).attr('id', 'percent_<?=$i ?>'); $(this).attr('name', 'percent_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" 
                                             onfocusout="javascript: $(this).attr('id', 'percent_<?=$i ?>'); $(this).attr('name', 'percent_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" />
                                         <div class="input-group-append">

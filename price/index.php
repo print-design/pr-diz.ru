@@ -76,7 +76,7 @@ $error_message = '';
                                    data-thickness="<?=$value['thickness'] ?>"
                                    onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                    onmouseup="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
-                                   onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                    onkeyup="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
                                    onfocusout="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" />
                             <div class="input-group-append">

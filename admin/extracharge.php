@@ -159,7 +159,7 @@ if(empty($error_message)) {
                                required="required" 
                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                onmouseup="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" 
-                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                onkeyup="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" 
                                onfocusout="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" />
                         &ndash;
@@ -170,7 +170,7 @@ if(empty($error_message)) {
                                required="required" 
                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                onmouseup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
-                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                onkeyup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
                                onfocusout="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" />
                         <input type="text" 
@@ -180,7 +180,7 @@ if(empty($error_message)) {
                                required="required" 
                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                onmouseup="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" 
-                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                onkeyup="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" 
                                onfocusout="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" />
                         <div class="form-group ml-2">
@@ -233,7 +233,7 @@ if(empty($error_message)) {
                                required="required" 
                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                onmouseup="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" 
-                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                onkeyup="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" 
                                onfocusout="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" />
                         &ndash;
@@ -244,7 +244,7 @@ if(empty($error_message)) {
                                required="required" 
                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                onmouseup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
-                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                onkeyup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
                                onfocusout="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" />
                         <input type="text" 
@@ -254,7 +254,7 @@ if(empty($error_message)) {
                                required="required" 
                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                onmouseup="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" 
-                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                onkeyup="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" 
                                onfocusout="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" />
                         <div class="form-group ml-2">
@@ -307,7 +307,7 @@ if(empty($error_message)) {
                                required="required" 
                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                onmouseup="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" 
-                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                onkeyup="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" 
                                onfocusout="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" />
                         &ndash;
@@ -318,7 +318,7 @@ if(empty($error_message)) {
                                required="required" 
                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                onmouseup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
-                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                onkeyup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
                                onfocusout="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" />
                         <input type="text" 
@@ -328,7 +328,7 @@ if(empty($error_message)) {
                                required="required" 
                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                onmouseup="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" 
-                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                onkeyup="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" 
                                onfocusout="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" />
                         <div class="form-group ml-2">
@@ -381,7 +381,7 @@ if(empty($error_message)) {
                                required="required" 
                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                onmouseup="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" 
-                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                onkeyup="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" 
                                onfocusout="javascript: $(this).attr('name', 'from_weight'); $(this).attr('placeholder', 'От, кг');" />
                         &ndash;
@@ -392,7 +392,7 @@ if(empty($error_message)) {
                                required="required" 
                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                onmouseup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
-                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                onkeyup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
                                onfocusout="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" />
                         <input type="text" 
@@ -402,7 +402,7 @@ if(empty($error_message)) {
                                required="required" 
                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                onmouseup="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" 
-                               onkeydown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                onkeyup="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" 
                                onfocusout="javascript: $(this).attr('name', 'value'); $(this).attr('placeholder', 'Наценка, %');" />
                         <div class="form-group ml-2">

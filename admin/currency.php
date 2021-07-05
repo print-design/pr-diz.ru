@@ -144,7 +144,7 @@ if($row = $fetcher->Fetch()) {
                                        required="required" 
                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                        onmouseup="javascript: $(this).attr('id', 'usd'); $(this).attr('name', 'usd'); $(this).attr('placeholder', 'Доллар');" 
-                                       onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                        onkeyup="javascript: $(this).attr('id', 'usd'); $(this).attr('name', 'usd'); $(this).attr('placeholder', 'Доллар');" 
                                        onfocusout="javascript: $(this).attr('id', 'usd'); $(this).attr('name', 'usd'); $(this).attr('placeholder', 'Доллар');" />
                                 <div class="input-group-append"><span class="input-group-text">руб.</span></div>
@@ -163,7 +163,7 @@ if($row = $fetcher->Fetch()) {
                                        required="required" 
                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                        onmouseup="javascript: $(this).attr('id', 'euro'); $(this).attr('name', 'euro'); $(this).attr('placeholder', 'Евро');" 
-                                       onkeydown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                        onkeyup="javascript: $(this).attr('id', 'euro'); $(this).attr('name', 'euro'); $(this).attr('placeholder', 'Евро');" 
                                        onfocusout="javascript: $(this).attr('id', 'euro'); $(this).attr('name', 'euro'); $(this).attr('placeholder', 'Евро');" />
                                 <div class="input-group-append"><span class="input-group-text">руб.</span></div>
