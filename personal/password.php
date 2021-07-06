@@ -69,9 +69,7 @@ if(null !== filter_input(INPUT_POST, 'password_change_submit')) {
             ?>
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <div class="backlink">
-                        <a href="<?=APPLICATION ?>/personal/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
-                    </div>
+                    <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/personal/">Назад</a>
                     <h1>Смена пароля</h1>
                     <form method="post">
                         <div class="form-group">

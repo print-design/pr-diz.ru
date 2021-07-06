@@ -91,32 +91,27 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
         <?php
         include '../include/header.php';
         ?>
-        <div class="container-fluid form-page">
+        <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <div class="d-flex justify-content-between mb-2 nav2">
-                <div class="p-1 row">
-                    <div class="col-6">
-                        <a class="active" href="<?=APPLICATION ?>/user/">Сотрудники</a>
-                    </div>
-                    <div class="col-6">
-                        <a href="<?=APPLICATION ?>/supplier/">Поставщики</a>    
-                    </div>
+            <div class="d-flex justify-content-start">
+                <div class="p-1">
+                    <?php
+                    include '../include/subheader_admin.php';
+                    ?>
                 </div>
-                <div class="p-1"></div>
             </div>
-            <div class="backlink">
-                <a href="<?=APPLICATION ?>/user/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
-            </div>
+            <hr />
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/user/">Назад</a>
             <div style="width:387px;">
-                <h1>Добавление сотрудника</h1>
+                <h1 style="font-size: 24px; font-weight: 600;">Добавление сотрудника</h1>
                 <form method="post">
                     <div class="form-group">
                         <select id="role_id" name="role_id" class="form-control" required="required">
-                            <option value="">ВЫБЕРИТЕ ДОЛЖНОСТЬ</option>
+                            <option value="" hidden="hidden">ВЫБЕРИТЕ ДОЛЖНОСТЬ</option>
                             <?php
                             $roles = (new Grabber('select id, local_name from role order by priority'))->result;
                             foreach ($roles as $role) {
@@ -132,7 +127,18 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
                     <div class="row">
                         <div class="col-6 form-group">
                             <label for="first_name">Имя</label>
-                            <input type="text" id="first_name" name="first_name" class="form-control<?=$first_name_valid ?>" value="<?= filter_input(INPUT_POST, 'first_name') ?>" required="required"/>
+                            <input type="text" 
+                                   id="first_name" 
+                                   name="first_name" 
+                                   class="form-control<?=$first_name_valid ?>" 
+                                   value="<?= filter_input(INPUT_POST, 'first_name') ?>" 
+                                   required="required" 
+                                   autocomplete="off" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                                   onmouseup="javascript: $(this).attr('id', 'first_name'); $(this).attr('name', 'first_name');" 
+                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
+                                   onkeyup="javascript: $(this).attr('id', 'first_name'); $(this).attr('name', 'first_name');" 
+                                   onfocusout="javascript: $(this).attr('id', 'first_name'); $(this).attr('name', 'first_name');" />
                             <div class="invalid-feedback">Имя обязательно</div>
                         </div>
                         <div class="col-6 form-group">
@@ -156,7 +162,17 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
                     <div class="row">
                         <div class="col-6 form-group">
                             <label for="username">Логин</label>
-                            <input type="text" id="username" name="username" class="form-control<?=$username_valid ?>" value="<?= filter_input(INPUT_POST, 'username') ?>" required="required"/>
+                            <input type="text" 
+                                   id="username" 
+                                   name="username" 
+                                   class="form-control<?=$username_valid ?>" 
+                                   value="<?= filter_input(INPUT_POST, 'username') ?>" 
+                                   required="required" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                                   onmouseup="javascript: $(this).attr('id', 'username'); $(this).attr('name', 'username');" 
+                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
+                                   onkeyup="javascript: $(this).attr('id', 'username'); $(this).attr('name', 'username');" 
+                                   onfocusout="javascript: $(this).attr('id', 'username'); $(this).attr('name', 'username');" />
                             <div class="invalid-feedback">Логин обязательно</div>
                         </div>
                         <div class="col-6 form-group">
@@ -166,7 +182,7 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
                         </div>
                     </div>
                     <div class="form-group" style="padding-top: 24px;">
-                        <button type="submit" class="btn btn-dark" id="user_create_submit" name="user_create_submit" style="width: 200px; padding-top: 14px; padding-bottom: 14px;">Создать</button>
+                        <button type="submit" class="btn btn-dark" id="user_create_submit" name="user_create_submit">Создать</button>
                     </div>
                 </form>
             </div>

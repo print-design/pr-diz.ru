@@ -23,28 +23,25 @@ if(null !== filter_input(INPUT_POST, 'delete_supplier_submit')) {
         <?php
         include '../include/header.php';
         ?>
-        <div class="container-fluid list-page">
+        <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <div class="d-flex justify-content-between mb-2 nav2">
-                <div class="p-1 row">
-                    <div class="col-6">
-                        <a href="<?=APPLICATION ?>/user/">Сотрудники</a>
-                    </div>
-                    <div class="col-6">
-                        <a class="active" href="<?=APPLICATION ?>/supplier">Поставщики</a>
-                    </div>
+            <div class="d-flex justify-content-between mb-auto">
+                <div class="p-1">
+                    <?php
+                    include '../include/subheader_admin.php';
+                    ?>
                 </div>
                 <div class="p-1">
-                    <a href="create.php" title="Добавить поставщика" class="btn btn-outline-dark" style="padding-top: 14px; padding-bottom: 14px; padding-left: 30px; padding-right: 30px;">
+                    <a href="create.php" title="Добавить поставщика" class="btn btn-outline-dark">
                         <i class="fas fa-plus"></i>&nbsp;Добавить поставщика
                     </a>
                 </div>
             </div>
-            <table class="table">
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>Название поставщика</th>

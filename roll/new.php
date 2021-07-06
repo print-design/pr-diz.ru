@@ -173,7 +173,6 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
         <?php
         include '../include/head.php';
         ?>
-        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
     </head>
     <body>
         <?php
@@ -185,10 +184,8 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <div class="backlink" style="margin-bottom: 56px;">
-                <a href="<?=APPLICATION ?>/roll/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
-            </div>
-            <h1 style="font-size: 32px; line-height: 48px; font-weight: 600; margin-bottom: 20px;">Новый рулон</h1>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/roll/">Назад</a>
+            <h1 style="font-size: 32px; font-weight: 600; margin-bottom: 20px;">Новый рулон</h1>
             <form method="post">
                 <div style="width: 423px;">
                     <input type="hidden" id="date" name="date" value="<?= date("Y-m-d") ?>" />
@@ -197,7 +194,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                     <div class="form-group">
                         <label for="supplier_id">Поставщик</label>
                         <select id="supplier_id" name="supplier_id" class="form-control" required="required">
-                            <option value="">Выберите поставщика</option>
+                            <option value="" hidden="hidden">Выберите поставщика</option>
                             <?php
                             $suppliers = (new Grabber("select id, name from supplier order by name"))->result;
                             foreach ($suppliers as $supplier) {
@@ -284,7 +281,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                                 if($shpulya == 76) $shpulya_selected_76 = " selected='selected'";
                                 if($shpulya == 152) $shpulya_selected_152 = " selected='selected'";
                                 ?>
-                                <option value="">Выберите шпулю</option>
+                                <option value="" hidden="hidden">Выберите шпулю</option>
                                 <option value="76"<?=$shpulya_selected_76 ?>">76</option>
                                 <option value="152"<?=$shpulya_selected_152 ?>">152</option>
                             </select>
@@ -357,42 +354,22 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                         <textarea id="comment" name="comment" rows="4" class="form-control no-latin"><?= htmlentities(filter_input(INPUT_POST, 'comment')) ?></textarea>
                         <div class="invalid-feedback"></div>
                     </div>
-                </div>
-                <div class="form-inline" style="margin-top: 30px;">
-                    <button type="submit" id="create-roll-submit" name="create-roll-submit" class="btn btn-dark" style="padding-left: 80px; padding-right: 80px; margin-right: 62px; padding-top: 14px; padding-bottom: 14px;">РАСПЕЧАТАТЬ СТИКЕР</button>
+                    <div class="d-flex justify-content-start mt-4">
+                        <div class="p-0">
+                            <button type="submit" id="create-roll-submit" name="create-roll-submit" class="btn btn-dark">Распечатать стикер</button>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
         <?php
         include '../include/footer.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
+        <script src="<?=APPLICATION ?>/js/calculation.js"></script>
         <script>
-            //------------------------------------
-            // Защита от двойного нажатия
-            var create_roll_submit_clicked = false;
-            
-            $('#create-roll-submit').click(function(e) {
-                if(create_roll_submit_clicked) {
-                    return false;
-                }
-                else {
-                    create_roll_submit_clicked = true;
-                }
-            });
-            
-            $(document).keydown(function(){
-                create_roll_submit_clicked = false;
-            });
-            
-            $('select').change(function(){
-                create_roll_submit_clicked = false;
-            });
-            //---------------------------------------
-            
             $('#supplier_id').change(function(){
                 if($(this).val() == "") {
-                    $('#film_brand_id').html("<option id=''>Выберите марку</option>");
+                    $('#film_brand_id').html("<option value=''>Выберите марку</option>");
                 }
                 else {
                     $.ajax({ url: "../ajax/film_brand.php?supplier_id=" + $(this).val() })
@@ -407,7 +384,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
             
             $('#film_brand_id').change(function(){
                 if($(this).val() == "") {
-                    $('#thickness').html("<option id=''>Выберите толщину</option>");
+                    $('#thickness').html("<option value=''>Выберите толщину</option>");
                 }
                 else {
                     $.ajax({ url: "../ajax/thickness.php?film_brand_id=" + $(this).val() })
@@ -458,7 +435,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
             }
             ?>
             
-            // Расчёт по радиусу
+            // Расчёт длины и массы плёнки по шпуле, толщине, радиусу, ширине, удельному весу
             function CalculateByRadius() {
                 $('#length').removeClass('is-invalid');
                 $('#net_weight').removeClass('is-invalid');
@@ -467,39 +444,25 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                 $('#net_weight').val('');
                 
                 film_brand_id = $('#film_brand_id').val();
-                shpulya = $('#shpulya').val();
+                spool = $('#shpulya').val();
                 thickness = $('#thickness').val();
-                radiusotvala = $('#diameter').val();
+                radius = $('#diameter').val();
                 width = $('#width').val();
                 
-                if(!isNaN(shpulya) && !isNaN(thickness) && !isNaN(radiusotvala) && !isNaN(width) 
-                        && shpulya != '' && thickness != '' && radiusotvala != '' && width != '') {
-                    var ud_ves = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
+                if(!isNaN(spool) && !isNaN(thickness) && !isNaN(radius) && !isNaN(width) 
+                        && spool != '' && thickness != '' && radius != '' && width != '') {
+                    density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
                     
-                    if(shpulya == 76) {
-                        var length = (0.15 * radiusotvala * radiusotvala + 11.3961 * radiusotvala - 176.4427) * 20 / thickness;
-                        $('#length').val(length.toFixed(2));
-                        $('#length_hidden').val(length.toFixed(2));
-                        
-                        var net_weight = (length * ud_ves * width) / 1000 / 1000;
-                        $('#net_weight').val(net_weight.toFixed(2));
-                        $('#net_weight_hidden').val(net_weight.toFixed(2));
-                        //Масса нетто(4)  = (Длинна (3) * Удельный вес (5) * ширину (6))/1000/1000
-                    }
+                    result = GetFilmLengthWeightBySpoolThicknessRadiusWidth(spool, thickness, radius, width, density);
                     
-                    if(shpulya == 152) {
-                        var length = (0.1524 * radiusotvala * radiusotvala + 23.1245 * radiusotvala - 228.5017) * 20 / thickness;
-                        $('#length').val(length.toFixed(2));
-                        $('#length_hidden').val(length.toFixed(2));
-                        
-                        var net_weight = (length * ud_ves * width) / 1000 / 1000;
-                        $('#net_weight').val(net_weight.toFixed(2));
-                        $('#net_weight_hidden').val(net_weight.toFixed(2));
-                        //Масса нетто(4)  = (Длинна (3) * Удельный вес (5) * ширину (6))/1000/1000
-                    }
+                    $('#length').val(result.length.toFixed(2));
+                    $('#length_hidden').val(result.length.toFixed(2));
+                    $('#net_weight').val(result.weight.toFixed(2));
+                    $('#net_weight_hidden').val(result.weight.toFixed(2));
                 }
             }
-            
+    
+            // Рассчитываем ширину и массу плёнки при изменении значений каждого поля, участвующего в вычислении
             $('#shpulya').change(CalculateByRadius);
             
             $('#diameter').keypress(CalculateByRadius);

@@ -40,7 +40,6 @@ while ($row = $fetcher->Fetch()) {
         <?php
         include '../include/head.php';
         ?>
-        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
     </head>
     <body>
         <?php
@@ -58,26 +57,14 @@ while ($row = $fetcher->Fetch()) {
                 <div class="p-1">
                     <table>
                         <tr>
-                            <td><h1 style="font-size: 32px; line-height: 48px; font-weight: 600;">Рулоны</h1></td>
+                            <td><h1 style="font-size: 32px; font-weight: 600;">Рулоны</h1></td>
                             <td style="padding-left: 20px; padding-right: 20px; font-weight: bold;">(<?= number_format($total_weight, 0, ',', ' ') ?> кг)</td>
-                            <td class="d-none" style="padding-left: 35px; padding-right: 10px;">
-                                <a class="btn btn-dark disabled" id="btn-cut-request" style="padding-left: 40px; padding-right: 60px; padding-bottom: 8px; padding-top: 9px;">
-                                    <div style="float: left; padding-top: 8px; padding-right: 30px; font-size: 12px;"><i class="fas fa-plus"></i></div>
-                                    &nbsp;Заявка на<br />раскрой
-                                </a>
-                            </td>
-                            <td class="d-none" style="padding-left: 15px; padding-right: 30px;">
-                                <a class="btn btn-dark disabled" id="btn-print-request" style="padding-left: 40px; padding-right: 60px; padding-bottom: 8px; padding-top: 9px;">
-                                    <div style="float: left; padding-top: 8px; padding-right: 30px; font-size: 12px;"><i class="fas fa-plus"></i></div>
-                                    &nbsp;Заявка на<br />печать
-                                </a>
-                            </td>
                         </tr>
                     </table>
                 </div>
                 <div class="p-1">
                     <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
-                    <a href="new.php" class="btn btn-outline-dark" style="padding-top: 14px; padding-bottom: 14px; padding-left: 30px; width: 200px; text-align: left;"><i class="fas fa-plus" style="font-size: 10px; margin-right: 18px;"></i>Новый ролик</a>
+                    <a href="new.php" class="btn btn-outline-dark"><i class="fas fa-plus"></i>&nbsp;Новый ролик</a>
                     <?php endif; ?>
                     <button class="btn btn-outline-dark disabled d-none" data-toggle="modal" data-target="#filterModal" data-text="Фильтр"><img src="../images/icons/filter.svg" style="margin-right: 20px;" />Фильтр</button>
                     <div style="display: inline-block; position: relative; margin-right: 55px; margin-left: 80px;">
@@ -216,7 +203,7 @@ while ($row = $fetcher->Fetch()) {
                         <td style="padding-left: 5px; padding-right: 5px; font-size: 10px; line-height: 14px; font-weight: 600;<?=$colour_style ?>"><?= mb_strtoupper($status) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; white-space: pre-wrap;"><?= htmlentities($row['comment']) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; position: relative;">
-                            <a class="black film_menu_trigger" href="javascript: void(0);"><i class="fas fa-ellipsis-h"></i></a>
+                            <a class="black film_menu_trigger" href="javascript: void(0);"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a>
                             <div class="film_menu">
                                 <div class="command"><a href="<?=APPLICATION ?>/roll/roll.php<?= BuildQuery('id', $row['id']) ?>">Просмотреть детали</a></div>
                                 <?php
@@ -226,7 +213,7 @@ while ($row = $fetcher->Fetch()) {
                                     <form method="post">
                                         <input type="hidden" id="id" name="id" value="<?=$row['id'] ?>" />
                                         <input type="hidden" id="scroll" name="scroll" />
-                                        <button type="submit" class="btn btn-link confirmable" id="delete-roll-submit" name="delete-roll-submit" style="font-size: 14px;">Удалить</button>
+                                        <button type="submit" class="btn btn-link p-0 m-0 h-25 confirmable" id="delete-roll-submit" name="delete-roll-submit" style="font-size: 14px;">Удалить</button>
                                     </form>
                                 </div>
                                 <?php
@@ -274,7 +261,7 @@ while ($row = $fetcher->Fetch()) {
             <div class="modal-dialog modal-dialog-aside" role="document">
                 <div class="modal-content" style="padding-left: 35px; padding-right: 35px; width: 521px;">
                     <button type="button" class="close" data-dismiss="modal" style="position: absolute; right: 32px; top: 55px;"><img src="../images/icons//close_modal.png" /></button>
-                    <h1 style="margin-top: 53px; margin-bottom: 20px; font-size: 32px; line-height: 48px; font-weight: 600;">Фильтр</h1>
+                    <h1 style="margin-top: 53px; margin-bottom: 20px; font-size: 32px; font-weight: 600;">Фильтр</h1>
                     <form method="get">
                         <div class="form-group">
                             <select id="film_brand_name" name="film_brand_name" class="form-control" style="margin-top: 30px; margin-bottom: 30px;">
@@ -331,7 +318,6 @@ while ($row = $fetcher->Fetch()) {
         <?php
         include '../include/footer.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
             var thicknesses = JSON.parse('<?=$json_thicknesses ?>');
             

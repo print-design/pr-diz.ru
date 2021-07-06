@@ -103,50 +103,85 @@ if(null !== filter_input(INPUT_POST, 'supplier_create_submit')) {
         <?php
         include '../include/header.php';
         ?>
-        <div class="container-fluid form-page">
+        <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <div class="d-flex justify-content-between mb-2 nav2">
-                <div class="p-1 row">
-                    <div class="col-6">
-                        <a href="<?=APPLICATION ?>/user/">Сотрудники</a>
-                    </div>
-                    <div class="col-6">
-                        <a class="active" href="<?=APPLICATION ?>/supplier/">Поставщики</a>    
-                    </div>
+            <div class="d-flex justify-content-start">
+                <div class="p-1">
+                    <?php
+                    include '../include/subheader_admin.php';
+                    ?>
                 </div>
-                <div class="p-1"></div>
             </div>
-            <div class="backlink">
-                <a href="<?=APPLICATION ?>/supplier/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
-            </div>
+            <hr />
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/supplier/">Назад</a>
             <h1>Добавление поставщика</h1>
             <form method="post">
                 <div class="form-group" style="padding-bottom: 6px;">
                     <div style="width:319px;">
                         <label for="name">Название поставщика</label>
-                        <input type="text" id="name" name="name" class="form-control<?=$name_valid ?>" value="<?= filter_input(INPUT_POST, 'name') ?>" required="required"/>
+                        <input type="text" 
+                               id="name" 
+                               name="name" 
+                               class="form-control<?=$name_valid ?>" 
+                               value="<?= filter_input(INPUT_POST, 'name') ?>" 
+                               placeholder="Название поставщика" 
+                               required="required" 
+                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onmouseup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название поставщика');" 
+                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                               onkeyup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название поставщика');" 
+                               onfocusout="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название поставщика);"  />
                         <div class="invalid-feedback">Название поставщика обязательно</div>                            
                     </div>
                 </div>
                 <div class="form-group" style="padding-bottom: 14px;">
                     <table class="table film-table" id="variations-table" style="width: 472px;"></table>
                     <div class="form-inline" id="add-brand-form">
-                        <input type="text" id="film_brand" name="film_brand" class="form-control" placeholder="Название" style="width:215px; margin-right: 13px;" />
-                        <input type="text" id="thickness" name="thickness" class="form-control int-only" placeholder="Толщина" style="width: 100px; margin-right: 13px;" />
-                        <input type="text" id="weight" name="weight" class="form-control float-only" placeholder="Удельный вес" style="width: 129px; margin-right: 13px;" />
+                        <input type="text" 
+                               id="film_brand" 
+                               name="film_brand" 
+                               class="form-control" 
+                               placeholder="Марка пленки" 
+                               style="width:215px; margin-right: 13px;" 
+                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onmouseup="javascript: $(this).attr('id', 'film_brand'); $(this).attr('name', 'film_brand'); $(this).attr('placeholder', 'Марка пленки');" 
+                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                               onkeyup="javascript: $(this).attr('id', 'film_brand'); $(this).attr('name', 'film_brand'); $(this).attr('placeholder', 'Марка пленки');" 
+                               onfocusout="javascript: $(this).attr('id', 'film_brand'); $(this).attr('name', 'film_brand'); $(this).attr('placeholder', 'Марка пленки');"  />
+                        <input type="text" 
+                               id="thickness" 
+                               name="thickness" 
+                               class="form-control int-only" 
+                               placeholder="Толщина" 
+                               style="width: 100px; margin-right: 13px;" 
+                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onmouseup="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" 
+                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                               onkeyup="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" 
+                               onfocusout="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');"  />
+                        <input type="text" 
+                               id="weight" 
+                               name="weight" 
+                               class="form-control float-only" 
+                               placeholder="Удельный вес" 
+                               style="width: 129px; margin-right: 13px;" 
+                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                               onmouseup="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" 
+                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                               onkeyup="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" 
+                               onfocusout="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');"  />
                         <button type="button" class="btn btn-link" id="add-brand-link">Добавить</button>
                     </div>
-                    <button type="button" class="btn btn-outline-dark" id="add-brand-button" style="padding-left: 40px; padding-right: 62px;">
-                        <div style="float:left; padding-top: 8px; padding-right: 30px; font-size: 12px;"><i class="fas fa-plus"></i></div>
-                        &nbsp;Добавить марку<br/>пленки
+                    <button type="button" class="btn btn-outline-dark" id="add-brand-button">
+                        <i class="fas fa-plus"></i>&nbsp;Добавить марку пленки
                     </button>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-dark" id="supplier_create_submit" name="supplier_create_submit" style="padding-left: 58px; padding-right: 62px; padding-top: 14px; padding-bottom: 14px;">Создать поставщика</button>
+                    <button type="submit" class="btn btn-dark" id="supplier_create_submit" name="supplier_create_submit">Создать поставщика</button>
                 </div>
             </form>
         </div>

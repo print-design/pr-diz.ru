@@ -55,28 +55,22 @@ if(empty($name)) {
         <?php
         include '../include/header.php';
         ?>
-        <div class="container-fluid form-page">
+        <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <div class="d-flex justify-content-between mb-2 nav2">
-                <div class="p-1 row">
-                    <div class="col-6">
-                        <a href="<?=APPLICATION ?>/user/">Сотрудники</a>
-                    </div>
-                    <div class="col-6">
-                        <a class="active" href="<?=APPLICATION ?>/supplier/">Поставщики</a>    
-                    </div>
+            <div class="d-flex justify-content-start">
+                <div class="p-1">
+                    <?php
+                    include '../include/subheader_admin.php';
+                    ?>
                 </div>
-                <div class="p-1"></div>
             </div>
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <div class="backlink">
-                        <a href="<?=APPLICATION ?>/supplier/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
-                    </div>
+                    <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/supplier/">Назад</a>
                     <h1>Редактирование поставщика</h1>
                     <form method="post">
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>"/>

@@ -219,7 +219,6 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         <?php
         include '../include/head.php';
         ?>
-        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
     </head>
     <body>
         <?php
@@ -231,10 +230,8 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <div class="backlink" style="margin-bottom: 56px;">
-                <a href="<?=APPLICATION ?>/pallet/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
-            </div>
-            <h1 style="font-size: 32px; line-height: 48px; font-weight: 600; margin-bottom: 20px;">Новый паллет</h1>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/pallet/">Назад</a>
+            <h1 style="font-size: 32px; font-weight: 600; margin-bottom: 20px;">Новый паллет</h1>
             <form method="post">
                 <div style="width: 423px;">
                     <input type="hidden" id="date" name="date" value="<?= date("Y-m-d") ?>" />
@@ -243,7 +240,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     <div class="form-group">
                         <label for="supplier_id">Поставщик</label>
                         <select id="supplier_id" name="supplier_id" class="form-control" required="required">
-                            <option value="">Выберите поставщика</option>
+                            <option value="" hidden="hidden">Выберите поставщика</option>
                             <?php
                             $suppliers = (new Grabber("select id, name from supplier order by name"))->result;
                             foreach ($suppliers as $supplier) {
@@ -451,42 +448,21 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         <textarea id="comment" name="comment" rows="4" class="form-control no-latin"><?= htmlentities(filter_input(INPUT_POST, 'comment')) ?></textarea>
                         <div class="invalid-feedback"></div>
                     </div>
-                </div>
-                <div class="form-inline" style="margin-top: 30px;">
-                    <button type="submit" id="create-pallet-submit" name="create-pallet-submit" class="btn btn-dark" style="padding-left: 80px; padding-right: 80px; margin-right: 62px; padding-top: 14px; padding-bottom: 14px;">РАСПЕЧАТАТЬ СТИКЕР</button>
+                    <div class="d-flex justify-content-start mt-4">
+                        <div class="p-0">
+                            <button type="submit" id="create-pallet-submit" name="create-pallet-submit" class="btn btn-dark" style="width: 175px;">Распечатать стикер</button>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
         <?php
         include '../include/footer.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
-            //------------------------------------
-            // Защита от двойного нажатия
-            var create_pallet_submit_clicked = false;
-            
-            $('#create-pallet-submit').click(function(e) {
-                if(create_pallet_submit_clicked) {
-                    return false;
-                }
-                else {
-                    create_pallet_submit_clicked = true;
-                }
-            });
-            
-            $(document).keydown(function(){
-                create_pallet_submit_clicked = false;
-            });
-            
-            $('select').change(function(){
-                create_pallet_submit_clicked = false;
-            });
-            //---------------------------------------
-            
             $('#supplier_id').change(function(){
                 if($(this).val() == "") {
-                    $('#film_brand_id').html("<option id=''>Выберите марку</option>");
+                    $('#film_brand_id').html("<option value=''>Выберите марку</option>");
                 }
                 else {
                     $.ajax({ url: "../ajax/film_brand.php?supplier_id=" + $(this).val() })
@@ -501,7 +477,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                 
             $('#film_brand_id').change(function(){
                 if($(this).val() == "") {
-                    $('#thickness').html("<option id=''>Выберите толщину</option>");
+                    $('#thickness').html("<option value=''>Выберите толщину</option>");
                 }
                 else {
                     $.ajax({ url: "../ajax/thickness.php?film_brand_id=" + $(this).val() })

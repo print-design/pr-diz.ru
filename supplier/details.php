@@ -156,51 +156,77 @@ $name = htmlentities($row['name']);
         <?php
         include '../include/header.php';
         ?>
-        <div class="container-fluid form-page">
+        <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <div class="d-flex justify-content-between mb-2 nav2">
-                <div class="p-1 row">
-                    <div class="col-6">
-                        <a href="<?=APPLICATION ?>/user/">Сотрудники</a>
-                    </div>
-                    <div class="col-6">
-                        <a class="active" href="<?=APPLICATION ?>/supplier/">Поставщики</a>    
-                    </div>
+            <div class="d-flex justify-content-start">
+                <div class="p-1">
+                    <?php
+                    include '../include/subheader_admin.php';
+                    ?>
                 </div>
-                <div class="p-1"></div>
             </div>
+            <hr />
             <div class="supplier-page">
-                <div class="backlink">
-                    <a href="<?=APPLICATION ?>/supplier/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
-                </div>
-                <h1 style="font-size: 24px; line-height: 32px; font-weight: 600;"><?=$name ?></h1>
-                <h2 style="font-size: 18px; line-height: 24px; font-weight: 600;">Пленки поставщика</h2>
+                <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/supplier/">Назад</a>
+                <h1 style="font-size: 24px; font-weight: 600;"><?=$name ?></h1>
+                <h2 style="font-size: 18px; font-weight: 600;">Пленки поставщика</h2>
                 <div style="margin-top: 10px; margin-bottom: 30px;">
                     <form method="post" class="form-inline" id="add-brand-form">
                         <input type="hidden" id="supplier_id" name="supplier_id" value="<?= filter_input(INPUT_GET, 'id') ?>"/>
                         <input type="hidden" id="scroll" name="scroll" />
                         <div class="form-group">
-                            <input type="text" class="form-control mr-2" id="name" name="name" required="required" placeholder="Марка пленки"/>
+                            <input type="text" 
+                                   class="form-control mr-2" 
+                                   id="name" 
+                                   name="name" 
+                                   required="required" 
+                                   placeholder="Марка пленки" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onmouseup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Марка пленки');" 
+                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                   onkeyup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Марка пленки');" 
+                                   onfocusout="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Марка пленки');" />
                             <div class="invalid-feedback">Марка пленки обязательно</div>
                         </div>
                         <div class="form-group">
-                            <input type="text" id="thickness" name="thickness" class="form-control int-only" placeholder="Толщина" style="width: 100px; margin-left: 12px;" required="required" />
+                            <input type="text" 
+                                   id="thickness" 
+                                   name="thickness" 
+                                   class="form-control int-only" 
+                                   placeholder="Толщина" 
+                                   style="width: 100px; margin-left: 12px;" 
+                                   required="required" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onmouseup="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" 
+                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                   onkeyup="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" 
+                                   onfocusout="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" />
                             <div class="invalid-feedback">Толщина обязательно</div>
                         </div>
                         <div class="form-group">
-                            <input type="text" id="weight" name="weight" class="form-control float-only" placeholder="Удельный вес" style="width: 120px; margin-left: 12px;" required="required" />
+                            <input type="text" 
+                                   id="weight" 
+                                   name="weight" 
+                                   class="form-control float-only" 
+                                   placeholder="Удельный вес" 
+                                   style="width: 120px; margin-left: 12px;" 
+                                   required="required" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onmouseup="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" 
+                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                   onkeyup="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" 
+                                   onfocusout="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" />
                             <div class="invalid-feedback">Удельный вес обязательно</div>
                         </div>
                         <button type="submit" class="btn btn-link" id="film_brand_create_submit" name="film_brand_create_submit" style="padding-left: 10px; padding-right: 0;"><i class="fas fa-plus" style="font-size: 10px;"></i>&nbsp;Добавить</button>
                         <button class="btn btn-link" id="add-brand-cancel" style="padding-left: 10px; padding-right: 0;"><i class="fas fa-undo" style="font-size: 10px;"></i>&nbsp;Отмена</button>
                     </form>
-                    <button class="btn btn-outline-dark" id="add-brand-button" style="padding-left: 32px; padding-right: 68px; padding-top: 8px; padding-bottom: 9px;">
-                        <div style="float:left; padding-top: 6px; padding-right: 30px; font-size: 12px;"><i class="fas fa-plus"></i></div>
-                        &nbsp;Добавить марку<br/>пленки
+                    <button class="btn btn-outline-dark" id="add-brand-button">
+                        <i class="fas fa-plus"></i>&nbsp;Добавить марку пленки
                     </button>
                 </div>
                 <?php
@@ -221,11 +247,33 @@ $name = htmlentities($row['name']);
                                 <input type="hidden" id="film_brand_id" name="film_brand_id" value="<?=$film_brand['id'] ?>"/>
                                 <input type="hidden" id="scroll" name="scroll" />
                                 <div class="form-group">
-                                    <input type="text" class="form-control int-only mr-2" id="thickness" name="thickness" placeholder="Толщина" required="required" style="width:100px;"/>
+                                    <input type="text" 
+                                           class="form-control int-only mr-2" 
+                                           id="thickness" 
+                                           name="thickness" 
+                                           placeholder="Толщина" 
+                                           required="required" 
+                                           style="width:100px;" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" 
+                                           onfocusout="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" />
                                     <div class="invalid-feedback">Толщина обязательно</div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control float-only" id="weight" name="weight" placeholder="Удельный вес" required="required" style="width:120px;"/>
+                                    <input type="text" 
+                                           class="form-control float-only" 
+                                           id="weight" 
+                                           name="weight" 
+                                           placeholder="Удельный вес" 
+                                           required="required" 
+                                           style="width:120px;" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" 
+                                           onfocusout="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" />
                                     <div class="invalid-feedback">Удельный вес обязательно</div>
                                 </div>
                                 <button type="submit" class="btn btn-link ml-2" id="film_brand_variation_create_submit" name="film_brand_variation_create_submit" style="padding-left: 0; padding-right: 0;"><i class="fas fa-plus" style="font-size: 8px; vertical-align: top; padding-top: 8px;"></i>&nbsp;Добавить</button>
@@ -275,7 +323,7 @@ $name = htmlentities($row['name']);
             </div>
             <form method="post">
                 <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-                <button class="btn btn-outline-danger confirmable" id="delete-brand-button" name="delete-brand-button" style="padding-left: 45px; padding-right: 45px; padding-top: 14px; padding-bottom: 14px;"><img src="<?=APPLICATION ?>/images/icons/trash-red.svg" style="vertical-align: top;" />&nbsp;&nbsp;&nbsp;Удалить поставщика</button>
+                <button class="btn btn-outline-danger confirmable" id="delete-brand-button" name="delete-brand-button"><img src="<?=APPLICATION ?>/images/icons/trash-red.svg" style="vertical-align: top;" />&nbsp;&nbsp;&nbsp;Удалить поставщика</button>
             </form>
         </div>
         <?php
