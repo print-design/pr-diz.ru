@@ -292,7 +292,7 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
         $sql = "select u.id, u.username, u.password, u.last_name, u.first_name, u.email, r.name role, r.twofactor "
                 . "from user u "
                 . "inner join role r on u.role_id=r.id "
-                . "where u.username='$login_username' and u.password=password('$login_password')";
+                . "where u.username='$login_username' and u.password=password('$login_password') and u.active=true";
         
         $users_result = (new Grabber($sql))->result;
         
@@ -399,7 +399,7 @@ if(null !== filter_input(INPUT_POST, 'logout_submit')) {
 if(LoggedIn()) {
     $username = filter_input(INPUT_COOKIE, USERNAME);
     $password5 = filter_input(INPUT_COOKIE, PASSWORD5);
-    $sql = "select count(id) from user where username = '$username' and substring(password, 2, 5) = '$password5'";
+    $sql = "select count(id) from user where username = '$username' and substring(password, 2, 5) = '$password5' and u.active=true";
     $row = (new Fetcher($sql))->Fetch();
     
     if($row[0] == 0) {
