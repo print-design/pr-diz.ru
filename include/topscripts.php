@@ -399,7 +399,7 @@ if(null !== filter_input(INPUT_POST, 'logout_submit')) {
 if(LoggedIn()) {
     $username = filter_input(INPUT_COOKIE, USERNAME);
     $password5 = filter_input(INPUT_COOKIE, PASSWORD5);
-    $sql = "select count(id) from user where username = '$username' and substring(password, 2, 5) = '$password5' and u.active=true";
+    $sql = "select count(id) from user where username = '$username' and substring(password, 2, 5) = '$password5' and active=true";
     $row = (new Fetcher($sql))->Fetch();
     
     if($row[0] == 0) {
