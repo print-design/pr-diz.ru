@@ -206,7 +206,6 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
             
             // Активирование / деактивирование пользователя
             $(".switch input[type='checkbox']").change(function() {
-                //alert($(this).attr('data-id') + ' - ' + $(this).is(':checked'));
                 $.ajax({ url: "../ajax/user.php?id=" + $(this).attr('data-id') + "&active=" + $(this).is(':checked') })
                         .fail(function() {
                             alert('Ошибка при установке / снятии флага активности пользователя');
