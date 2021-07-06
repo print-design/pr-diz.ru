@@ -178,7 +178,7 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                         </td>
                         <td class='text-right switch'>
                             <?php if(filter_input(INPUT_COOKIE, USER_ID) != $row['id']): ?>
-                            <input type="checkbox" />
+                            <input type="checkbox" data-id="<?=$row['id'] ?>" />
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -202,6 +202,11 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                 $('#user_change_password_id').val('');
                 $('#user_change_password_fio').text('');
                 $('.is-invalid').removeClass('is-invalid');
+            });
+            
+            // Активирование / деактивирование пользователя
+            $(".switch input[type='checkbox']").change(function() {
+                alert($(this).attr('data-id') + ' - ' + $(this).is(':checked'));
             });
             
             // Открытие формы изменения пароля, если изменение пароля не было удачным
