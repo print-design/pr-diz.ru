@@ -83,9 +83,9 @@ $sticker_top = 0;
     <body class="print">
         <div style="position: absolute; top: 0; left: 0; z-index: 2000;">
             <a href="<?=APPLICATION ?>/pallet/new.php"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
-            <div style="display: inline; margin-left: 300px; font-size: 30px;">
-                <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
-            </div>
+        </div>
+        <div style="position: absolute; top: 850px; right: 770px; font-size: 150px; z-index: 2000;">
+            <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
         </div>
         <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px;">
             <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-top: 30px;">
