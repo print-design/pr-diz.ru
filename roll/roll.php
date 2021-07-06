@@ -492,7 +492,7 @@ $utilized_status_id = 2;
                         </div>
                         <div class="p-0">
                             <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
-                            <a href="print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="width: 175px;">Распечатать стикер</a>
+                            <a href="print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="width: 175px;">Распечатать бирки</a>
                             <?php endif; ?>
                         </div>
                     </div>
