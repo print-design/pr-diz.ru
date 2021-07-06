@@ -148,7 +148,7 @@ if(null === $comment) $comment = $row['comment'];
             }
             ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/pallet/<?= BuildQueryRemove('id') ?>">Назад</a>
-            <h1 style="font-size: 24px; fon24pxt-weight: 600;">Информация о рулоне № <?="П".$pallet_id."Р".$ordinal ?> от <?= $date ?></h1>
+            <h1 style="font-size: 24px; font-weight: 600;">Информация о рулоне № <?="П".$pallet_id."Р".$ordinal ?> от <?= $date ?></h1>
             <?php if(!empty($row['time']) && $row['time'] != '00:00'): ?>
             <div>Время добавления: <?=$time ?></div>
             <?php endif; ?>
