@@ -237,8 +237,7 @@ var Alert = function ($$$1) {
   function () {
     function Alert(element) {
       this._element = element;
-    } // Getters
-
+    } // Getters,k
 
     var _proto = Alert.prototype;
 
