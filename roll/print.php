@@ -8,7 +8,7 @@ if(empty($id)) {
 }
 
 // Получение данных
-$sql = "select r.date, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, s.name supplier, r.id_from_supplier, "
+$sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, s.name supplier, r.id_from_supplier, "
         . "r.film_brand_id, fb.name film_brand, r.width, r.thickness, r.length, "
         . "r.net_weight, r.cell, "
         . "(select rs.name status from roll_status_history rsh left join roll_status rs on rsh.status_id = rs.id where rsh.roll_id = r.id order by rsh.id desc limit 0, 1) status, "
@@ -76,7 +76,7 @@ $sticker_top = 0;
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-left">ООО &laquo;Принт-дизайн&raquo;</td>
-                        <td class="text-center text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=(DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></td>
+                        <td class="text-center text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></td>
                     </tr>
                     <tr>
                         <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
@@ -135,7 +135,7 @@ $sticker_top = 0;
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
-                        <td class="text-center text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?= (DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></td>
+                        <td class="text-center text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?= $date ?></td>
                     </tr>
                     <tr>
                         <td>Поставщик<br /><strong><?=$supplier ?></strong></td>

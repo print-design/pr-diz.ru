@@ -240,7 +240,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
 }
 
 // Получение данных
-$sql = "select r.date, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, r.id_from_supplier, r.film_brand_id, r.width, r.thickness, r.length, "
+$sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, r.id_from_supplier, r.film_brand_id, r.width, r.thickness, r.length, "
         . "r.net_weight, r.cell, "
         . "(select rsh.status_id from roll_status_history rsh where rsh.roll_id = r.id order by rsh.id desc limit 0, 1) status_id, "
         . "r.comment "
@@ -306,7 +306,7 @@ $utilized_status_id = 2;
             }
             ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/roll/<?= BuildQueryRemove('id') ?>">Назад</a>
-            <h1 style="font-size: 24px; font-weight: 600; margin-bottom: 20px;">Информация о рулоне № <?="Р".$id ?> от <?= (DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></h1>
+            <h1 style="font-size: 24px; font-weight: 600; margin-bottom: 20px;">Информация о рулоне № <?="Р".$id ?> от <?= $date ?></h1>
             <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 20px;">ID <?=$id_from_supplier ?></h2>
             <form method="post">
                 <div style="width: 423px;">

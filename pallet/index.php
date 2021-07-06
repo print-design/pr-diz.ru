@@ -169,7 +169,7 @@ while ($row = $fetcher->Fetch()) {
                         $pager_total_count = $row[0];
                     }
                     
-                    $sql = "select p.id, p.date, fb.name film_brand, p.width, p.thickness, "
+                    $sql = "select p.id, DATE_FORMAT(p.date, '%d.%m.%Y') date, fb.name film_brand, p.width, p.thickness, "
                             . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) net_weight, "
                             . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) length, "
                             . "s.name supplier, p.id_from_supplier, "
@@ -202,7 +202,7 @@ while ($row = $fetcher->Fetch()) {
                     }
                     ?>
                     <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;" class="pallet_tr" data-pallet-id="<?=$row['id'] ?>" data-get="<?= rawurlencode(BuildQueryRemove("id")) ?>">
-                        <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= date_create_from_format("Y-m-d", $row['date'])->format("d.m.Y") ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= $row['date'] /*date_create_from_format("Y-m-d", $row['date'])->format("d.m.Y")*/ ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= $row['film_brand'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= $row['thickness'] ?> мкм</td>
                         <td style="padding-left: 5px; padding-right: 5px;" class="text-nowrap" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= round($row['density'], 2) ?> г/м<sup>2</sup></td>

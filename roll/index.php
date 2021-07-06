@@ -158,7 +158,7 @@ while ($row = $fetcher->Fetch()) {
                         $pager_total_count = $row[0];
                     }
                     
-                    $sql = "select r.id, r.date, fb.name film_brand, r.width, r.thickness, r.net_weight, r.length, "
+                    $sql = "select r.id, DATE_FORMAT(r.date, '%d.%m.%Y') date, fb.name film_brand, r.width, r.thickness, r.net_weight, r.length, "
                             . "s.name supplier, r.id_from_supplier, r.cell, u.first_name, u.last_name, "
                             . "rsh.status_id status_id, r.comment, "
                             . "(select weight from film_brand_variation where film_brand_id=fb.id and thickness=r.thickness limit 1) density "
@@ -188,7 +188,7 @@ while ($row = $fetcher->Fetch()) {
                     ?>
                     <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
                         <td class="d-none" style="padding-left: 5px; padding-right: 5px;"><input type="checkbox" id="chk<?=$row['id'] ?>" name="chk<?=$row['id'] ?>" data-id="<?=$row['id'] ?>" class="form-check chkRoll" /></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= date_create_from_format("Y-m-d", $row['date'])->format("d.m.Y") ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['date'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['film_brand'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['thickness'] ?> мкм</td>
                         <td style="padding-left: 5px; padding-right: 5px;" class="text-nowrap"><?= round($row['density'], 2) ?> г/м<sup>2</sup></td>

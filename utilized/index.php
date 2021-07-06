@@ -241,7 +241,7 @@ $utilized_status_roll_id = 2;
                     ?>
                     <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
                         <td style="padding-left: 5px; padding-right: 5px;" class="d-none"><input type="checkbox" id="chk<?=$row['id'] ?>" name="chk<?=$row['id'] ?>" class="form-check chkFilm" /></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['date'] /*empty($row['date']) ? '' : date_create_from_format('Y-m-d H:M:S', $row['date'])->format("d.m.Y")*/ ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['date'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['film_brand'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['thickness'] ?> мкм</td>
                         <td style="padding-left: 5px; padding-right: 5px;" class="text-nowrap"><?= round($row['density'], 2) ?> г/м<sup>2</sup></td>

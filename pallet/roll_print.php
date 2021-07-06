@@ -14,7 +14,7 @@ if(empty($id)) {
 }
 
 // Получение данных
-$sql = "select p.date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, s.name supplier, p.id_from_supplier, "
+$sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, s.name supplier, p.id_from_supplier, "
         . "p.film_brand_id, fb.name film_brand, p.width, p.thickness, p.cell, "
         . "(select name from roll_status where id = ifnull(prsh.status_id, $free_status_id)) status, "
         . "p.comment, pr.id pallet_roll_id, pr.pallet_id pallet_roll_pallet_id, pr.weight pallet_roll_weight, pr.length pallet_roll_length, pr.ordinal pallet_roll_ordinal "
@@ -86,7 +86,7 @@ $sticker_top = 0;
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
-                        <td class="text-center text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="П".$pallet_id."Р".$ordinal ?></span> от <?=(DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></td>
+                        <td class="text-center text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="П".$pallet_id."Р".$ordinal ?></span> от <?=$date ?></td>
                     </tr>
                     <tr>
                         <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
@@ -110,7 +110,7 @@ $sticker_top = 0;
                             }
                             ?>
                             <br /><br />
-                            <div class="text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="П".$pallet_id."Р".$ordinal ?></span> от <?=(DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></div>
+                            <div class="text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="П".$pallet_id."Р".$ordinal ?></span> от <?=$date ?></div>
                         </td>
                     </tr>
                     <tr>

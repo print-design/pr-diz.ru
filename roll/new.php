@@ -156,7 +156,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
         $user_id = GetUserId();
         
         if(empty($error_message)) {
-            $sql = "insert into roll_status_history (roll_id, date, status_id, user_id) values ($roll_id, '$date', $status_id, $user_id)";
+            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, $status_id, $user_id)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
             
