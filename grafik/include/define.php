@@ -1,10 +1,10 @@
 <?php
-define('APPLICATION', '/grafik');
+define('APPLICATION', '/pr-diz.ru/grafik');
 
 define('DATABASE_HOST', 'localhost');
-define('DATABASE_USER', 'u1228765_default');
-define('DATABASE_PASSWORD', 'Cf8_16_26_38_a6');
-define('DATABASE_NAME', 'u1228765_grafik');
+define('DATABASE_USER', 'root');
+define('DATABASE_PASSWORD', '');
+define('DATABASE_NAME', 'grafik');
 
 define('USER_ID', '543fde_fgeeferlj76_huGTF_eerrFE_er_eeWE');
 define('USERNAME', 'jjjgYY7765_kjnbhg77GGH_ijjhg__weeewZX');
