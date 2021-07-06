@@ -187,7 +187,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         $user_id = GetUserId();
         
         if(empty($error_message)) {
-            $sql = "insert into pallet_status_history (pallet_id, date, status_id, user_id) values ($pallet_id, '$date', $status_id, $user_id)";
+            $sql = "insert into pallet_status_history (pallet_id, status_id, user_id) values ($pallet_id, $status_id, $user_id)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
             
