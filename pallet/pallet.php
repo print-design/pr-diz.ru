@@ -250,7 +250,7 @@ $free_roll_status_id = 1;
 $utilized_roll_status_id = 2;
 
 // Получение данных
-$sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.id_from_supplier, p.film_brand_id, p.width, p.thickness, "
+$sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, DATE_FORMAT(p.date, '%H:%i') time, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.id_from_supplier, p.film_brand_id, p.width, p.thickness, "
         . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) length, "
         . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) net_weight, "
         . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) rolls_number, "
@@ -262,6 +262,7 @@ $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_na
 
 $row = (new Fetcher($sql))->Fetch();
 $date = $row['date'];
+$time = $row['time'];
 $storekeeper_id = $row['storekeeper_id'];
 $storekeeper = $row['last_name'].' '.$row['first_name'];
 
@@ -316,7 +317,10 @@ if(null === $comment) $comment = $row['comment'];
             }
             ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/pallet/<?= BuildQueryRemove('id') ?>">Назад</a>
-            <h1 style="font-size: 24px; fon24pxt-weight: 600; margin-bottom: 20px;">Информация о паллете № <?="П".$id ?> от <?= $date ?></h1>
+            <h1 style="font-size: 24px; font-weight: 600;">Информация о паллете № <?="П".$id ?> от <?= $date ?></h1>
+            <?php if(!empty($row['time']) && $row['time'] != '00:00'): ?>
+            <div>Время добавления: <?=$time ?></div>
+            <?php endif; ?>
             <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 20px;">ID <?=$id_from_supplier ?></h2>
             <form method="post">
                 <div style="width: 423px;">

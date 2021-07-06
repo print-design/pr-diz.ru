@@ -79,7 +79,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
 }
 
 // Получение данных
-$sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.id_from_supplier, p.film_brand_id, p.width, p.thickness, pr.length, "
+$sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, DATE_FORMAT(p.date, '%H:%i') time, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.id_from_supplier, p.film_brand_id, p.width, p.thickness, pr.length, "
         . "pr.weight, pr.pallet_id, pr.ordinal, p.cell, "
         . "(select ifnull(prsh.status_id, $free_status_id) from pallet_roll_status_history prsh where prsh.pallet_roll_id = pr.id order by prsh.id desc limit 0, 1) status_id, "
         . "p.comment "
@@ -90,6 +90,7 @@ $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_na
 
 $row = (new Fetcher($sql))->Fetch();
 $date = $row['date'];
+$time = $row['time'];
 $storekeeper_id = $row['storekeeper_id'];
 $storekeeper = $row['last_name'].' '.$row['first_name'];
 
@@ -147,7 +148,10 @@ if(null === $comment) $comment = $row['comment'];
             }
             ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/pallet/<?= BuildQueryRemove('id') ?>">Назад</a>
-            <h1 style="font-size: 24px; fon24pxt-weight: 600; margin-bottom: 20px;">Информация о рулоне № <?="П".$pallet_id."Р".$ordinal ?> от <?= $date ?></h1>
+            <h1 style="font-size: 24px; font-weight: 600;">Информация о рулоне № <?="П".$pallet_id."Р".$ordinal ?> от <?= $date ?></h1>
+            <?php if(!empty($row['time']) && $row['time'] != '00:00'): ?>
+            <div>Время добавления: <?=$time ?></div>
+            <?php endif; ?>
             <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 20px;">ID <?=$id_from_supplier ?></h2>
             <form method="post">
                 <div style="width: 423px;">
