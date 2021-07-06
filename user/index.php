@@ -151,13 +151,13 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                         <th>Логин</th>
                         <th>E-Mail</th>
                         <th>Телефон</th>
-                        <th style="width: 80px;"></th>
-                        <th style="width: 80px;"></th>
+                        <th style="width: 80px;">Пароль</th>
+                        <th style="width: 80px;">Активный</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    $sql = "select u.id, u.first_name, u.last_name, r.local_name role, u.username, u.email, u.phone "
+                    $sql = "select u.id, u.first_name, u.last_name, r.local_name role, u.username, u.email, u.phone, u.active "
                             . "from user u inner join role r on u.role_id = r.id "
                             . "order by u.first_name asc";
                     $fetcher = new Fetcher($sql);
@@ -178,7 +178,7 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                         </td>
                         <td class='text-right switch'>
                             <?php if(filter_input(INPUT_COOKIE, USER_ID) != $row['id']): ?>
-                            <input type="checkbox" data-id="<?=$row['id'] ?>" />
+                            <input type="checkbox" data-id="<?=$row['id'] ?>"<?=$row['active'] ? " checked='checked'" : "" ?> />
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -206,7 +206,11 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
             
             // Активирование / деактивирование пользователя
             $(".switch input[type='checkbox']").change(function() {
-                alert($(this).attr('data-id') + ' - ' + $(this).is(':checked'));
+                //alert($(this).attr('data-id') + ' - ' + $(this).is(':checked'));
+                $.ajax({ url: "../ajax/user.php?id=" + $(this).attr('data-id') + "&active=" + $(this).is(':checked') })
+                        .fail(function() {
+                            alert('Ошибка при установке / снятии флага активности пользователя');
+                });
             });
             
             // Открытие формы изменения пароля, если изменение пароля не было удачным
