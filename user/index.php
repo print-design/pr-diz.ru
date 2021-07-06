@@ -176,12 +176,9 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                                 <image src='../images/icons/edit.svg' />
                             </button>
                         </td>
-                        <td class='text-right'>
+                        <td class='text-right switch'>
                             <?php if(filter_input(INPUT_COOKIE, USER_ID) != $row['id']): ?>
-                            <form method='post'>
-                                <input type='hidden' id='id' name='id' value='<?=$row['id'] ?>' />
-                                <button type='submit' class='btn btn-link confirmable' id='delete_user_submit' name='delete_user_submit'><i class="fas fa-trash-alt"></i></button>
-                            </form>
+                            <input type="checkbox" />
                             <?php endif; ?>
                         </td>
                     </tr>
