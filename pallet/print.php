@@ -60,7 +60,7 @@ if($row = $fetcher->Fetch()) {
     $ud_ves = $row[0];
 }
 
-// Вертикальное положение стикера
+// Вертикальное положение бирки
 $sticker_top = 0;
 ?>
 <!DOCTYPE html>

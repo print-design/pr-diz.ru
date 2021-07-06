@@ -450,7 +450,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     </div>
                     <div class="d-flex justify-content-start mt-4">
                         <div class="p-0">
-                            <button type="submit" id="create-pallet-submit" name="create-pallet-submit" class="btn btn-dark" style="width: 175px;">Распечатать стикер</button>
+                            <button type="submit" id="create-pallet-submit" name="create-pallet-submit" class="btn btn-dark" style="width: 175px;">Распечатать бирку</button>
                         </div>
                     </div>
                 </div>

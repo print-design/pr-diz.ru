@@ -356,7 +356,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                     </div>
                     <div class="d-flex justify-content-start mt-4">
                         <div class="p-0">
-                            <button type="submit" id="create-roll-submit" name="create-roll-submit" class="btn btn-dark">Распечатать стикер</button>
+                            <button type="submit" id="create-roll-submit" name="create-roll-submit" class="btn btn-dark">Распечатать бирку</button>
                         </div>
                     </div>
                 </div>

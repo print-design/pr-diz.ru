@@ -328,7 +328,7 @@ if(null === $comment) $comment = $row['comment'];
                         </div>
                         <div class="p-0">
                             <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
-                            <a href="roll_print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="width: 175px;">Распечатать стикер</a>
+                            <a href="roll_print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="width: 175px;">Распечатать бирку</a>
                             <?php endif; ?>
                         </div>
                     </div>
