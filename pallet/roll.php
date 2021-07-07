@@ -146,8 +146,15 @@ if(null === $comment) $comment = $row['comment'];
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger>$error_message</div>";
             }
+            
+            // Если плёнка сработанная, то кнопка "Назад" переводит нас в раздел "Сработанная плёнка",
+            // иначе - в раздел "Паллеты".
+            if(isset($status_id) && $status_id == $utilized_status_id):
             ?>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/utilized/<?= BuildQueryRemove('id') ?>">Назад</a>
+            <?php else: ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/pallet/<?= BuildQueryRemove('id') ?>">Назад</a>
+            <?php endif; ?>
             <h1 style="font-size: 24px; font-weight: 600;">Информация о рулоне № <?="П".$pallet_id."Р".$ordinal ?> от <?= $date ?></h1>
             <?php if(!empty($row['time']) && $row['time'] != '00:00'): ?>
             <div>Время добавления: <?=$time ?></div>
