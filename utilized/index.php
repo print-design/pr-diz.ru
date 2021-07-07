@@ -30,10 +30,7 @@ if(null !== filter_input(INPUT_POST, 'delete-film-submit')) {
         
         if(empty($error_message)) {
             $error_message = (new Executer($sql))->error;
-            
-            $sql_empty_pallet_history = "delete from pallet_status_history where pallet_id not in (select distinct pallet_id from pallet_roll)";
-            $error_message = (new Executer($sql_empty_pallet_history))->error;
-            
+                        
             $sql_empty_pallet = "delete from pallet where id not in (select distinct pallet_id from pallet_roll)";
             $error_message = (new Executer($sql_empty_pallet))->error;
         }
