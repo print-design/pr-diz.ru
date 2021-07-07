@@ -305,10 +305,18 @@ $utilized_status_id = 2;
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger>$error_message</div>";
             }
+            
+            // Если плёнка сработанная, то кнопка "Назад" переводит нас в раздел "Сработанная плёнка",
+            // иначе - в раздел "Рулоны".
+            if(isset($status_id) && $status_id == $utilized_status_id):
             ?>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/utilized/<?= BuildQueryRemove('id') ?>">Назад</a>
+            <?php else: ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/roll/<?= BuildQueryRemove('id') ?>">Назад</a>
+            <?php endif; ?>
             <h1 style="font-size: 24px; font-weight: 600;">Информация о рулоне № <?="Р".$id ?> от <?= $date ?></h1>
-            <?php if(!empty($row['time']) && $row['time'] != '00:00'): ?>
+            <h1 style="font-size: 24px; font-weight: 600;">Информация о рулоне № <?="Р".$id ?> от <?= $date ?></h1>
+            <?php if(!empty($time) && $time != '00:00'): ?>
             <div>Время добавления: <?=$time ?></div>
             <?php endif; ?>
             <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 20px;">ID <?=$id_from_supplier ?></h2>
