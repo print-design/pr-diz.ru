@@ -80,7 +80,7 @@ $utilized_status_id = 2;
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             
-            $sql = "select r.date, s.name supplier, fb.name film_brand, r.id_from_supplier, r.width, r.thickness, r.net_weight, r.length, r.cell, r.comment "
+            $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, s.name supplier, fb.name film_brand, r.id_from_supplier, r.width, r.thickness, r.net_weight, r.length, r.cell, r.comment "
                     . "from roll r "
                     . "inner join supplier s on r.supplier_id=s.id "
                     . "inner join film_brand fb on r.film_brand_id=fb.id "
@@ -102,7 +102,7 @@ $utilized_status_id = 2;
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="object-card">
                         <h1>Рулон №Р<?= filter_input(INPUT_GET, 'id') ?></h1>
-                        <p>от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></p>
+                        <p>от <?= $date ?></p>
                         <p><strong>Поставщик</strong> <?=$supplier ?></p>
                         <p><strong>ID поставщика</strong> <?=$id_from_supplier ?></p>
                         <p class="mt-3"><strong>Характеристики</strong></p>

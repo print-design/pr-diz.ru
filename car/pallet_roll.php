@@ -29,7 +29,7 @@ if(empty($id)) {
         ?>
         <div class="container-fluid">
             <?php
-            $sql = "select p.date, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, pr.weight, pr.length, p.cell, p.comment, "
+            $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, pr.weight, pr.length, p.cell, p.comment, "
                     . "p.id pallet_id, pr.ordinal "
                     . "from pallet_roll pr "
                     . "inner join pallet p on pr.pallet_id = p.id "
@@ -59,7 +59,7 @@ if(empty($id)) {
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="object-card">
                         <h1>Рулон №<?=$title ?></h1>
-                        <p>от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></p>
+                        <p>от <?= $date ?></p>
                         <p><strong>Поставщик</strong> <?=$supplier ?></p>
                         <p><strong>ID поставщика</strong> <?=$id_from_supplier ?></p>
                         <p class="mt-3"><strong>Характеристики</strong></p>
