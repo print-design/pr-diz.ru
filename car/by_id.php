@@ -37,7 +37,7 @@ $utilized_roll_status_id = 2;
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
                     <?php
-                    $sql = "select 'pallet' type, p.date, p.id, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, p.cell, p.comment, "
+                    $sql = "select 'pallet' type, DATE_FORMAT(p.date, '%d.%m.%Y') date, p.id, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, p.cell, p.comment, "
                             . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) length, "
                             . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) weight, "
                             . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) rolls_number "
@@ -46,7 +46,7 @@ $utilized_roll_status_id = 2;
                             . "inner join film_brand fb on p.film_brand_id=fb.id "
                             . "where p.id='$id' "
                             . "union "
-                            . "select 'roll' type, r.date, r.id, s.name supplier, fb.name film_brand, r.id_from_supplier, r.width, r.thickness, r.cell, r.comment, "
+                            . "select 'roll' type, DATE_FORMAT(r.date, '%d.%m.%Y') date, r.id, s.name supplier, fb.name film_brand, r.id_from_supplier, r.width, r.thickness, r.cell, r.comment, "
                             . "r.length length, "
                             . "r.net_weight weight, "
                             . "0 rolls_number "
@@ -74,7 +74,7 @@ $utilized_roll_status_id = 2;
                     ?>
                     <div class="object-card">
                         <h1><?=$type == 'pallet' ? "Паллет №П$id" : "Рулон №Р$id" ?></h1>
-                        <p>от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></p>
+                        <p>от <?= $date ?></p>
                         <p><strong>Поставщик</strong> <?=$supplier ?></p>
                         <p><strong>ID поставщика</strong> <?=$id_from_supplier ?></p>
                         <p class="mt-3"><strong>Характеристики</strong></p>
