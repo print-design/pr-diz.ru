@@ -167,13 +167,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
     if(empty($manager_id)) {
         $manager_id = "NULL";
     }
-    
-    // Статус пока не обязательно.
-    $status_id = filter_input(INPUT_POST, 'status_id');
-    if(empty($status_id)) {
-        $status_id = "NULL";
-    }
-    
+
     $comment = addslashes(filter_input(INPUT_POST, 'comment'));
     $date = filter_input(INPUT_POST, 'date');
     $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id');
@@ -187,27 +181,21 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         $user_id = GetUserId();
         
         if(empty($error_message)) {
-            $sql = "insert into pallet_status_history (pallet_id, status_id, user_id) values ($pallet_id, $status_id, $user_id)";
-            $executer = new Executer($sql);
-            $error_message = $executer->error;
+            // Заполнение роликов этого паллета
+            $roll_number = 1;
+            
+            while (filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") !== null && filter_input(INPUT_POST, "ordinal_roll$roll_number") != null) {
+                $weight = filter_input(INPUT_POST, "weight_roll$roll_number");
+                $length = filter_input(INPUT_POST, "length_roll$roll_number");
+                $ordinal = filter_input(INPUT_POST, "ordinal_roll$roll_number");
+                $sql = "insert into pallet_roll (pallet_id, weight, length, ordinal) values ($pallet_id, $weight, $length, $ordinal)";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+                $roll_number++;
+            }
             
             if(empty($error_message)) {
-                // Заполнение роликов этого паллета
-                $roll_number = 1;
-                
-                while (filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") !== null && filter_input(INPUT_POST, "ordinal_roll$roll_number") != null) {
-                    $weight = filter_input(INPUT_POST, "weight_roll$roll_number");
-                    $length = filter_input(INPUT_POST, "length_roll$roll_number");
-                    $ordinal = filter_input(INPUT_POST, "ordinal_roll$roll_number");
-                    $sql = "insert into pallet_roll (pallet_id, weight, length, ordinal) values ($pallet_id, $weight, $length, $ordinal)";
-                    $executer = new Executer($sql);
-                    $error_message = $executer->error;
-                    $roll_number++;
-                }
-              
-                if(empty($error_message)) {
-                    header('Location: '.APPLICATION."/pallet/print.php?id=$pallet_id");
-                }
+                header('Location: '.APPLICATION."/pallet/print.php?id=$pallet_id");
             }
         }
     }
@@ -425,23 +413,6 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                             ?>
                         </select>
                         <div class="invalid-feedback">Менеджер обязательно</div>
-                    </div>
-                    <input type="hidden" id="status_id" name="status_id" value="1" />
-                    <div class="form-group d-none">
-                        <label for="status_id_">Статус</label>
-                        <select id="status_id_" name="status_id_" class="form-control" disabled="true">
-                            <?php
-                            $statuses = (new Grabber("select s.id, s.name from pallet_status s inner join pallet_status_level sl on sl.status_id = s.id order by s.name"))->result;
-                            foreach ($statuses as $status) {
-                                $id = $status['id'];
-                                $name = $status['name'];
-                                $selected = '';
-                                if(filter_input(INPUT_POST, 'status_id') == $status['id']) $selected = " selected='selected'";
-                                echo "<option value='$id'$selected>$name</option>";
-                            }
-                            ?>
-                        </select>
-                        <div class="invalid-feedback">Статус обязательно</div>
                     </div>
                     <div class="form-group">
                         <label for="comment">Комментарий</label>
