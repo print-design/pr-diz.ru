@@ -232,7 +232,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
         
         if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/pallet/'. BuildQueryRemove('id'));
+            header('Location: '.APPLICATION.'/pallet/pallet.php'. BuildQuery('id', $id));
         }
     }
 }
