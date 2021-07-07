@@ -255,7 +255,6 @@ $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, DATE_FORMAT(p.date, '%H:%i'
         . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) net_weight, "
         . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) rolls_number, "
         . "p.cell, "
-        . "(select psh.status_id from pallet_status_history psh where psh.pallet_id = p.id order by psh.id desc limit 0, 1) status_id, "
         . "p.comment "
         . "from pallet p inner join user u on p.storekeeper_id = u.id "
         . "where p.id=$id";
@@ -283,18 +282,21 @@ if(null === $thickness) $thickness = $row['thickness'];
 
 $length = filter_input(INPUT_POST, 'length');
 if(null === $length) $length = $row['length'];
+if(null === $length) $length = 0;
 
 $net_weight = filter_input(INPUT_POST, 'net_weight');
 if(null === $net_weight) $net_weight = $row['net_weight'];
+if(null === $net_weight) $net_weight = 0;
 
 $rolls_number = filter_input(INPUT_POST, 'rolls_number');
 if(null === $rolls_number) $rolls_number = $row['rolls_number'];
+if(null === $rolls_number) $rolls_number = 0;
 
 $cell = filter_input(INPUT_POST, 'cell');
 if(null === $cell) $cell = $row['cell'];
 
-$status_id = filter_input(INPUT_POST, 'status_id');
-if(null === $status_id) $status_id = $row['status_id'];
+$status_id = $free_roll_status_id;
+if($rolls_number == 0) $status_id = $utilized_status_id;
 
 $comment = filter_input(INPUT_POST, 'comment');
 if(null === $comment) $comment = $row['comment'];
@@ -446,7 +448,10 @@ if(null === $comment) $comment = $row['comment'];
                             ?>
                             <select id="rolls_number" name="rolls_number" class="form-control<?=$rolls_number_valid ?>"<?=$rolls_number_disabled ?>>
                                 <option value="">Выберите количество</option>
+                                <?php if($rolls_number == 0): ?>
+                                <option value="0" selected="selected">0</option>
                                 <?php
+                                endif;
                                 for($i=1; $i<7; $i++) {
                                     $selected = '';
                                     if($rolls_number == $i) $selected = " selected='selected'";
