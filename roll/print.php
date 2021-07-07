@@ -46,6 +46,9 @@ if($row = $fetcher->Fetch()) {
 
 // Вертикальное положение бирки
 $sticker_top = 0;
+
+// Текущее время
+$current_date_time = date("dmYHis");
 ?>
 <!DOCTYPE html>
 <html>
@@ -86,19 +89,13 @@ $sticker_top = 0;
                             include '../qr/qrlib.php';
                             $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
                             $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/roll/roll.php?id='.$id;
-                            $current_date_time = date("dmYHis");
                             $filename = "../temp/$current_date_time.png";
-                            QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
-                            echo "<img src='$filename' style='height: 800px; width: 800px;' />";
                             
-                            // Удаление всех файлов, кроме текущего (чтобы диск не переполнился).
-                            $files = scandir("../temp/");
-                            foreach ($files as $file) {
-                                if($file != "$current_date_time.png" && !is_dir($file)) {
-                                    unlink("../temp/$file");
-                                }
-                            }
+                            do {
+                                QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
+                            } while (!file_exists($filename));
                             ?>
+                            <img src='<?=$filename ?>' style='height: 800px; width: 800px;' />
                             <br /><br />
                             <div class="text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></div>
                         </td>
@@ -145,19 +142,13 @@ $sticker_top = 0;
                             //include '../qr/qrlib.php';
                             $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
                             $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/roll/roll.php?id='.$id;
-                            $current_date_time = date("dmYHis");
                             $filename = "../temp/$current_date_time.png";
-                            QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
-                            echo "<img src='$filename' style='height: 800px; width: 800px;' />";
                             
-                            // Удаление всех файлов, кроме текущего (чтобы диск не переполнился).
-                            $files = scandir("../temp/");
-                            foreach ($files as $file) {
-                                if($file != "$current_date_time.png" && !is_dir($file)) {
-                                    unlink("../temp/$file");
-                                }
-                            }
+                            do {
+                                QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
+                            } while (!file_exists($filename));
                             ?>
+                            <img src='<?=$filename ?>' style='height: 800px; width: 800px;' />
                             <br /><br />
                             <div class="text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></div>
                         </td>
@@ -184,6 +175,27 @@ $sticker_top = 0;
                 </tbody>
             </table>
         </div>
+        <?php
+        // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
+        $files = scandir("../temp/");
+        foreach ($files as $file) {
+            $created = filemtime("../temp/".$file);
+            $now = time();
+            $diff = $now - $created;
+            
+            if($diff > 20 &&
+                    $file != "$current_date_time.png" &&
+                    $file != "1_"."$current_date_time.png" &&
+                    $file != "2_"."$current_date_time.png" &&
+                    $file != "3_"."$current_date_time.png" &&
+                    $file != "4_"."$current_date_time.png" &&
+                    $file != "5_"."$current_date_time.png" &&
+                    $file != "6_"."$current_date_time.png" &&
+                    !is_dir($file)) {
+                unlink("../temp/$file");
+            }
+        }
+        ?>
     </body>
     <script>
         let shareData = {

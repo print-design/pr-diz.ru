@@ -76,6 +76,9 @@ if($row = $fetcher->Fetch()) {
 
 // Вертикальное положение бирки
 $sticker_top = 0;
+
+// Текущее время
+$current_date_time = date("dmYHis");
 ?>
 <!DOCTYPE html>
 <html>
@@ -116,11 +119,13 @@ $sticker_top = 0;
                             include '../qr/qrlib.php';
                             $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
                             $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/pallet/pallet.php?id='.$id;
-                            $current_date_time = date("dmYHis");
                             $filename = "../temp/$current_date_time.png";
-                            QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
-                            echo "<img src='$filename' style='height: 800px; width: 800px;' />";
+                            
+                            do {
+                                QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
+                            } while (!file_exists($filename));
                             ?>
+                            <img src='<?=$filename ?>' style='height: 800px; width: 800px;' />
                             <br /><br />
                             <div class="text-nowrap" style="font-size: 60px;">Паллет <span class="font-weight-bold"><?="П".$id ?></span> от <?=$date ?></div>
                         </td>
@@ -167,11 +172,13 @@ $sticker_top = 0;
                             //include '../qr/qrlib.php';
                             $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
                             $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/pallet/pallet.php?id='.$id;
-                            $current_date_time = date("dmYHis");
                             $filename = "../temp/$current_date_time.png";
-                            QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
-                            echo "<img src='$filename' style='height: 800px; width: 800px;' />";
+                            
+                            do {
+                                QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
+                            } while (!file_exists($filename));
                             ?>
+                            <img src='<?=$filename ?>' style='height: 800px; width: 800px;' />
                             <br /><br />
                             <div class="text-nowrap" style="font-size: 60px;">Паллет <span class="font-weight-bold"><?="П".$id ?></span> от <?=$date ?></div>
                         </td>
@@ -261,11 +268,13 @@ $sticker_top = 0;
                             //include '../qr/qrlib.php';
                             $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
                             $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/pallet/roll.php?id='.$pallet_roll_id;
-                            $current_date_time = date("dmYHis");
                             $filename = "../temp/".$ordinal."_".$current_date_time.".png";
-                            QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
-                            echo "<img src='$filename' style='height: 800px; width: 800px;' />";
+                            
+                            do {
+                                QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
+                            } while (!file_exists($filename));
                             ?>
+                            <img src='<?=$filename ?>' style='height: 800px; width: 800px;' />
                             <br /><br />
                             <div class="text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="П".$id."Р".$ordinal ?></span> от <?=$date ?></div>
                         </td>
@@ -298,7 +307,12 @@ $sticker_top = 0;
         // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
         $files = scandir("../temp/");
         foreach ($files as $file) {
-            if($file != "$current_date_time.png" &&
+            $created = filemtime("../temp/".$file);
+            $now = time();
+            $diff = $now - $created;
+            
+            if($diff > 20 &&
+                    $file != "$current_date_time.png" &&
                     $file != "1_"."$current_date_time.png" &&
                     $file != "2_"."$current_date_time.png" &&
                     $file != "3_"."$current_date_time.png" &&
