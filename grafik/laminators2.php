@@ -12,16 +12,6 @@ $date_to = null;
 GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);
 
 $grafik = new GrafikReadonly($date_from, $date_to, 13);
-$grafik->user1Name = 'Ламинаторщик';
-$grafik->userRole = 4;
-
-$grafik->hasEdition = true;
-$grafik->hasOrganization = true;
-$grafik->hasLength = true;
-$grafik->hasLamination = true;
-$grafik->hasManager = true;
-$grafik->hasComment = true;
-
 $error_message = $grafik->error_message;
 ?>
 <!DOCTYPE html>
