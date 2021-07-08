@@ -43,7 +43,7 @@ if($id === null) {
         
 // Получение объекта
 $row = (new Fetcher("select name from machine where id=$id"))->Fetch();
-$name = htmlentities($row['name']);
+$name = $row['name'];
 ?>
 <!DOCTYPE html>
 <html>

@@ -41,7 +41,7 @@ include '../include/restrict_admin.php';
                     
                     foreach ($machines as $row) {
                         echo "<tr>"
-                                ."<td><a href='".APPLICATION."/machine/details.php?id=".$row['id']."'>".htmlentities($row['name'])."</a></td>"
+                                ."<td><a href='".APPLICATION."/machine/details.php?id=".$row['id']."'>".$row['name']."</a></td>"
                                 ."</tr>";
                     }
                     ?>
