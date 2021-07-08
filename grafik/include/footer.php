@@ -36,7 +36,7 @@
         $(this).removeClass('is-invalid');
     });
     
-    // Работа с буфером обмена
+    // Копирование в буфер обмена (старая версия)
     function CopyEdition(edition, button) {
         var alert = button.children('.clipboard_alert');
         
@@ -57,6 +57,22 @@
                 .fail(function(){
                     alert('Ошибка при копировании тиража в буфер обмена.');
         });
+    }
+    
+    // Копирование в буфер обмена (новая версия)
+    function CopyEditionDb(edition, button) {
+        var alert = button.children('.clipboard_alert');
+        
+        $.ajax("../ajax/clipboard_db.php?edition=" + edition)
+                .done(function(){
+                    $('.btn_clipboard_paste').prop("disabled", false);
+            
+                    alert.slideDown(300, function(){
+                        $(this).slideUp(1000);
+                    });
+                }).fail(function(){
+                    alert('Ошибка при копировании тиража в буфер обмена.');
+                });
     }
     
     // Подтверждение удаления
@@ -376,7 +392,7 @@
                 });
     }
     
-    // Вставка тиража
+    // Вставка тиража (старая версия)
     function PasteEdition(button) {
         $('#waiting').html("<img src='../images/waiting2.gif' />");
         $.ajax({ url: "../ajax/clipboard_paste.php?clipboard=" + button.attr('data-clipboard') + "&machine_id=" + button.attr('data-machine') + "&date=" + button.attr('data-date') + "&shift=" + button.attr('data-shift') + "&workshift_id=" + button.attr('data-workshift') + "&direction=" + button.attr('data-direction') + "&position=" + button.attr('data-position'), context: button })
@@ -394,6 +410,27 @@
                 .fail(function(){
                     $('#waiting').html('');
                     alert("Ошибка при совершении операции");
+                });
+    }
+    
+    // Вставка тиража (новая версия)
+    function PasteEditionDb(button) {
+        $('#waiting').html("<img src='../images/waiting2.gif' />");
+        $.ajax({ url: "../ajax/clipboard_paste_db.php?machine_id=" + button.attr('data-machine') + "&date=" + button.attr('data-date') + "&shift=" + button.attr('data-shift') + "&workshift_id=" + button.attr('data-workshift') + "&direction=" + button.attr('data-direction') + "&position=" + button.attr('data-position'), context: button})
+                .done(function(){
+                    $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
+                        .done(function(data){
+                            $('#waiting').html('');
+                            $('#maincontent').html(data);
+                        })
+                        .fail(function(){
+                            $('#waiting').html('');
+                            alert('Ошибка при перерисовке страницы');
+                        });
+                })
+                .fail(function(){
+                    $('#waiting').html('');
+                    alert("Ошибка при перерисовке страницы");
                 });
     }
     

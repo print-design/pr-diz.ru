@@ -59,6 +59,13 @@ class Grafik {
     private $managers = [];
 
     function ShowPage() {
+        // Проверяем, имеется ли что-нибудь в буфере обмена
+        $clipboard_db = false;
+        $sql = "select count(id) from clipboard";
+        $row = (new Fetcher($sql))->Fetch();
+        if($row[0] > 0) {
+            $clipboard_db = true;
+        }
         ?>
 <div class="d-flex justify-content-between mb-2">
     <div class="p-1">
@@ -363,7 +370,10 @@ class Grafik {
                     echo "<td class='$top $shift'>";
                     // Вставка тиража
                     $disabled = " disabled='disabled'";
-                    echo "<button type='button' class='btn btn-outline-dark btn-sm btn_clipboard_paste' style='display: block;' data-toggle='tooltip' data-machine='$this->machineId' data-from='".$this->dateFrom->format("Y-m-d")."' data-to='".$this->dateTo->format("Y-m-d")."' data-date='$formatted_date' data-shift='".$dateshift['shift']."' data-workshift='".(empty($row['id']) ? '' : $row['id'])."' onclick='javascript: PasteEdition($(this))' title='Вставить тираж'$disabled><i class='fas fa-paste'></i></button>";
+                    if($clipboard_db) {
+                        $disabled = '';
+                    }
+                    echo "<button type='button' class='btn btn-outline-dark btn-sm btn_clipboard_paste' style='display: block;' data-toggle='tooltip' data-machine='$this->machineId' data-from='".$this->dateFrom->format("Y-m-d")."' data-to='".$this->dateTo->format("Y-m-d")."' data-date='$formatted_date' data-shift='".$dateshift['shift']."' data-workshift='".(empty($row['id']) ? '' : $row['id'])."' onclick='javascript: PasteEditionDb($(this))' title='Вставить тираж'$disabled><i class='fas fa-paste'></i></button>";
                     echo "</td>"; // Также кнопки "Вставка выше" и "Вставка ниже" доступны внутри тиража
                 }
                 if($this->hasOrganization) echo "<td class='$top $shift'></td>";
@@ -389,7 +399,7 @@ class Grafik {
             }
             else {
                 $edition = array_shift($editions);
-                $this->ShowEdition($edition, $top);
+                $this->ShowEdition($edition, $top, $clipboard_db);
             }
             
             echo '</tr>';
@@ -399,7 +409,7 @@ class Grafik {
             
             while ($edition != null) {
                 echo '<tr>';
-                $this->ShowEdition($edition, 'nottop');
+                $this->ShowEdition($edition, 'nottop', $clipboard_db);
                 echo '</tr>';
                 $edition = array_shift($editions);
             }
@@ -410,7 +420,7 @@ class Grafik {
 <?php
     }
 
-    private function ShowEdition($edition, $top) {
+    private function ShowEdition($edition, $top, $clipboard_db) {
         $date = $edition['date'];
         $shift = $edition['shift'];
         $position = $edition['position'];
