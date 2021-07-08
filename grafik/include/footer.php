@@ -358,7 +358,7 @@
     // Создание тиража
     function CreateEdition(button) {
         $('#waiting').html("<img src='../images/waiting.gif' />");
-        $.ajax({ url: "../ajax/create_edition.php?workshift_id=" + button.attr('data-workshift') + "&date=" + button.attr('data-date') + "&shift=" + button.attr('data-shift') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to') + "&position=" + button.attr('data-position') + "&direction=" + button.attr('data-direction'), context: button })
+        $.ajax({ url: "../ajax/create_edition.php?workshift_id=" + button.attr('data-workshift') + "&machine_id=" + button.attr('data-machine') + "&date=" + button.attr('data-date') + "&shift=" + button.attr('data-shift') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to') + "&position=" + button.attr('data-position') + "&direction=" + button.attr('data-direction'), context: button })
                 .done(function(){
                     $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
                             .done(function(data){
