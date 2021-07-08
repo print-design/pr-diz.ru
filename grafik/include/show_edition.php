@@ -8,19 +8,10 @@ if($is_admin) {
 </td>
     <?php
     // Кнопки вставки скопированного тиража
-    //$clipboard = '';
     $disabled = " disabled='disabled'";
     if($clipboard_db) {
         $disabled = '';
     }
-    
-    /*$paste_edition_submit = filter_input(INPUT_POST, 'paste_edition_submit');
-    if($paste_edition_submit !== null) {
-        $clipboard = filter_input(INPUT_POST, 'clipboard');
-        if($clipboard != '') {
-            $disabled = '';
-        }
-    }*/
     ?>
 <td class='<?=$top ?> <?=$shift ?>'>
     <button type="button" class='btn btn-outline-dark btn-sm btn_clipboard_paste' style='display: block;' data-toggle='tooltip' data-machine='<?=$machine_id ?>' data-from='<?=$from ?>' data-to='<?=$to ?>' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-workshift='<?=$workshift_id ?>' data-direction='up' data-position='<?=$position ?>' onclick="javascript: PasteEditionDb($(this))" title='Вставить тираж выше'<?=$disabled ?>><i class='fas fa-paste'></i><i class='fas fa-long-arrow-alt-up'></i></button>
