@@ -196,7 +196,7 @@
             select.addClass('d-none');
         }
         else {
-            $('#waiting').html("<img src='../images/waiting.gif' />");
+            $('#waiting').html("<img src='../images/waiting2.gif' />");
             var user1_id = select.val();
             var id = select.attr('data-id');
             var date = select.attr('data-date');
@@ -227,7 +227,7 @@
             select.addClass('d-none');
         }
         else {
-            $('#waiting').html("<img src='../images/waiting.gif' />");
+            $('#waiting').html("<img src='../images/waiting2.gif' />");
             var user2_id = select.val();
             var id = select.attr('data-id');
             var date = select.attr('data-date');
@@ -252,7 +252,7 @@
     }
     
     function CreateUser1(button) {
-        $('#waiting').html("<img src='../images/waiting.gif' />");
+        $('#waiting').html("<img src='../images/waiting2.gif' />");
         var user1 = button.parent().prev().val();
         var id = button.attr('data-id');
         var role_id = button.attr('role_id');
@@ -278,7 +278,7 @@
     }
     
     function CreateUser2(button) {
-        $('#waiting').html("<img src='../images/waiting.gif' />");
+        $('#waiting').html("<img src='../images/waiting2.gif' />");
         var user2 = button.parent().prev().val();
         var id = button.attr('data-id');
         var role_id = button.attr('role_id');
@@ -357,7 +357,7 @@
     
     // Создание тиража
     function CreateEdition(button) {
-        $('#waiting').html("<img src='../images/waiting.gif' />");
+        $('#waiting').html("<img src='../images/waiting2.gif' />");
         $.ajax({ url: "../ajax/create_edition.php?workshift_id=" + button.attr('data-workshift') + "&machine_id=" + button.attr('data-machine') + "&date=" + button.attr('data-date') + "&shift=" + button.attr('data-shift') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to') + "&position=" + button.attr('data-position') + "&direction=" + button.attr('data-direction'), context: button })
                 .done(function(){
                     $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
@@ -378,7 +378,7 @@
     
     // Вставка тиража
     function PasteEdition(button) {
-        $('#waiting').html("<img src='../images/waiting.gif' />");
+        $('#waiting').html("<img src='../images/waiting2.gif' />");
         $.ajax({ url: "../ajax/clipboard_paste.php?clipboard=" + button.attr('data-clipboard') + "&machine_id=" + button.attr('data-machine') + "&date=" + button.attr('data-date') + "&shift=" + button.attr('data-shift') + "&workshift_id=" + button.attr('data-workshift') + "&direction=" + button.attr('data-direction') + "&position=" + button.attr('data-position'), context: button })
                 .done(function(){
                     $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
@@ -399,7 +399,7 @@
     
     // Удаление тиража
     function DeleteEdition(button) {
-        $('#waiting').html("<img src='../images/waiting.gif' />");
+        $('#waiting').html("<img src='../images/waiting2.gif' />");
         $.ajax({ url: "../ajax/delete_edition.php?id=" + button.attr('data-id'), context: button })
                 .done(function(){
                     $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
@@ -419,7 +419,7 @@
     }
     
     function DeleteShift(button) {
-        $('#waiting').html("<img src='../images/waiting.gif' />");
+        $('#waiting').html("<img src='../images/waiting2.gif' />");
         $.ajax({ url: "../ajax/delete_shift.php?id=" + button.attr('data-id'), context: button })
                 .done(function(){
                     $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
@@ -456,7 +456,7 @@
     }
     
     function MoveShiftsUp(button) {
-        $('#waiting').html("<img src='../images/waiting.gif' />");
+        $('#waiting').html("<img src='../images/waiting2.gif' />");
         var machine_id = $('#move_shifts_machine_id').val();
         var from = $('#move_shifts_date_from').val();
         var shift_from = $('#move_shifts_shift_from').val();
@@ -484,7 +484,7 @@
     }
     
     function MoveShiftsDown(button) {
-        $('#waiting').html("<img src='../images/waiting.gif' />");
+        $('#waiting').html("<img src='../images/waiting2.gif' />");
         var machine_id = $('#move_shifts_machine_id').val();
         var from = $('#move_shifts_date_from').val();
         var shift_from = $('#move_shifts_shift_from').val();
