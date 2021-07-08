@@ -12,7 +12,6 @@ $date_to = null;
 GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);
 
 $grafik = new GrafikReadonly($date_from, $date_to, 9);
-$grafik->name = 'Резка 2';
 $grafik->user1Name = 'Резчик';
 $grafik->userRole = 5;
 

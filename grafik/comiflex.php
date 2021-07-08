@@ -12,7 +12,6 @@ $date_to = null;
 GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'ti'), $date_from, $date_to);
 
 $grafik = new GrafikReadonly($date_from, $date_to, 1);
-$grafik->name = 'Comiflex';
 $grafik->user1Name = 'Печатник';
 $grafik->user2Name = 'Помощник';
 $grafik->userRole = 3;
