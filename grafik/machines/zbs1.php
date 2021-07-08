@@ -8,7 +8,6 @@ $date_to = null;
 GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);
 
 $grafik = new Grafik($date_from, $date_to, 2);
-$grafik->name = 'ZBS-1';
 $grafik->user1Name = "Печатник";
 $grafik->userRole = 6;
 

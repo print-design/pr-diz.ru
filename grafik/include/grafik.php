@@ -4,6 +4,14 @@ class Grafik {
         $this->dateFrom = $from;
         $this->dateTo = $to;
         $this->machineId = $machine_id;
+        
+        $sql = "select name from machine where id = $machine_id";
+        $fetcher = new Fetcher($sql);
+        $this->error_message = $fetcher->error;
+        
+        if($row = $fetcher->Fetch()) {
+            $this->name = $row['name'];
+        }
     }
     
     private $dateFrom;
