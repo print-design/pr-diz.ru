@@ -422,6 +422,12 @@
                         .done(function(data){
                             $('#waiting').html('');
                             $('#maincontent').html(data);
+                            
+                            window.setTimeout(function(){
+                                if(confirm('Удалить исходный тираж?')) {
+                                    alert('DELETE');
+                                }
+                            }, 500);
                         })
                         .fail(function(){
                             $('#waiting').html('');
