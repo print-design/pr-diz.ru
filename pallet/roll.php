@@ -73,7 +73,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         $error_message = $executer->error;
         
         if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/pallet/roll.php'.BuildQuery('id', $id));
+            header('Location: '.APPLICATION.'/pallet/'. BuildQueryRemove('id'));
         }
     }
 }

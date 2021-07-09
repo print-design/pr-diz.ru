@@ -234,7 +234,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
         
         if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/roll/roll.php'. BuildQuery('id', $id));
+            header('Location: '.APPLICATION.'/roll/'. BuildQueryRemove('id'));
         }
     }
 }
