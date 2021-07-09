@@ -23,7 +23,6 @@ else if($folder == "pallet" || $folder == "roll" || $folder == "utilized") {
 else if($file == "grafik.php") {
     $grafik_class = " active";
 }
-
 ?>
 <div id="left_bar">
     <a href="<?=APPLICATION ?>/" class="left_bar_item logo" title="На главную" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/logo.svg" /></a>
