@@ -42,15 +42,33 @@ if($id === null) {
 }
         
 // Получение объекта
-$row = (new Fetcher("select name from machine where id=$id"))->Fetch();
+$sql = "select m.name, m.user1_name, m.user2_name, m.role_id, m.has_organization, m.has_edition, m.has_length, m.has_status, m.has_roller, m.has_lamination, m.has_coloring, m.coloring, m.has_manager, m.has_comment, m.is_cutter, r.local_name role "
+        . "from machine m "
+        . "left join role r on m.role_id = r.id "
+        . "where m.id=$id";
+$row = (new Fetcher($sql))->Fetch();
 $name = $row['name'];
+$user1_name = $row['user1_name'];
+$user2_name = $row['user2_name'];
+$role_id = $row['role_id'];
+$has_organization = $row['has_organization'];
+$has_edition = $row['has_edition'];
+$has_length = $row['has_length'];
+$has_status = $row['has_status'];
+$has_roller = $row['has_roller'];
+$has_lamination = $row['has_lamination'];
+$has_coloring = $row['has_coloring'];
+$coloring = $row['coloring'];
+$has_manager = $row['has_manager'];
+$has_comment = $row['has_comment'];
+$is_cutter = $row['is_cutter'];
+$role = $row['role'];
 ?>
 <!DOCTYPE html>
 <html>
     <head>
         <?php
         include '../include/head.php';
-        
         ?>
     </head>
     <body>
@@ -77,6 +95,22 @@ $name = $row['name'];
                             </div>
                         </div>
                     </div>
+                    <table class="table table-hover">
+                        <tr><th>Пользователь 1</th><td><?=$user1_name ?></td></tr>
+                        <tr><th>Пользователь 2</th><td><?=$user2_name ?></td></tr>
+                        <tr><th>Роль</th><td><?=$role ?></td></tr>
+                        <tr><th>Есть организация</th><td><?=$has_organization == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
+                        <tr><th>Есть тираж</th><td><?=$has_edition == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
+                        <tr><th>Есть длина</th><td><?=$has_length == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
+                        <tr><th>Есть статус</th><td><?=$has_status == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
+                        <tr><th>Есть вал</th><td><?=$has_roller == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
+                        <tr><th>Есть ламинация</th><td><?=$has_lamination == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
+                        <tr><th>Есть красочность</th><td><?=$has_coloring == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
+                        <tr><th>Красочность</th><td><?=$coloring == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
+                        <tr><th>Есть менеджер</th><td><?=$has_manager == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
+                        <tr><th>Есть комментарий</th><td><?=$has_comment == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
+                        <tr><th>Это резка?</th><td><?=$is_cutter == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
+                    </table>
                     <hr/>
                     <div class="d-flex justify-content-between mb-2">
                         <div class="p-1">

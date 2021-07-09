@@ -29,22 +29,51 @@ include '../include/restrict_admin.php';
                     </a>
                 </div>
             </div>
-            <table class="table table-striped">
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>Наименование</th>
+                        <th>Пользователь 1</th>
+                        <th>Пользователь 2</th>
+                        <th>Роль</th>
+                        <th>Заказчик</th>
+                        <th>Наименование</th>
+                        <th>Длина</th>
+                        <th>Статус</th>
+                        <th>Вал</th>
+                        <th>Ламинация</th>
+                        <th>Красочность</th>
+                        <th>Менеджер</th>
+                        <th>Комментарий</th>
+                        <th>Резка</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    $machines = (new Grabber("select id, name from machine order by name asc"))->result;
-                    
-                    foreach ($machines as $row) {
-                        echo "<tr>"
-                                ."<td><a href='".APPLICATION."/machine/details.php?id=".$row['id']."'>".$row['name']."</a></td>"
-                                ."</tr>";
-                    }
+                    $sql = "select m.id, m.name, m.user1_name, m.user2_name, m.role_id, m.has_organization, m.has_edition, m.has_length, m.has_status, m.has_roller, m.has_lamination, m.has_coloring, m.coloring, m.has_manager, m.has_comment, m.is_cutter, r.local_name role "
+                            . "from machine m "
+                            . "left join role r on m.role_id = r.id "
+                            . "order by m.name asc";
+                    $machines = (new Grabber($sql))->result;
+                    foreach ($machines as $row):
                     ?>
+                    <tr>
+                        <td><a href='<?= APPLICATION."/machine/details.php?id=".$row['id'] ?>'><?=$row['name'] ?></a></td>
+                        <td><?=$row['user1_name'] ?></td>
+                        <td><?=$row['user2_name'] ?></td>
+                        <td><?=$row['role'] ?></td>
+                        <td><?=$row['has_organization'] == true ? '<i class="fas fa-check"></i>' : '' ?></td>
+                        <td><?=$row['has_edition'] == true ? '<i class="fas fa-check"></i>' : '' ?></td>
+                        <td><?=$row['has_length'] == true ? '<i class="fas fa-check"></i>' : '' ?></td>
+                        <td><?=$row['has_status'] == true ? '<i class="fas fa-check"></i>' : '' ?></td>
+                        <td><?=$row['has_roller'] == true ? '<i class="fas fa-check"></i>' : '' ?></td>
+                        <td><?=$row['has_lamination'] == true ? '<i class="fas fa-check"></i>' : '' ?></td>
+                        <td><?=$row['has_coloring'] == true ? '<i class="fas fa-check"></i> ('.$row['coloring'].')' : '' ?></td>
+                        <td><?=$row['has_manager'] == true ? '<i class="fas fa-check"></i>' : '' ?></td>
+                        <td><?=$row['has_comment'] == true ? '<i class="fas fa-check"></i>' : '' ?></td>
+                        <td><?=$row['is_cutter'] == true ? '<i class="fas fa-check"></i>' : '' ?></td>
+                    </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
