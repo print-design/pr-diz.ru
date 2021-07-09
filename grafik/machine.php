@@ -425,14 +425,16 @@ $error_message = $grafik->error_message;
                 $('#waiting').html("<img src='images/waiting2.gif' />");
                 $.ajax({ url: "ajax/clipboard_paste_db.php?machine_id=" + button.attr('data-machine') + "&date=" + button.attr('data-date') + "&shift=" + button.attr('data-shift') + "&workshift_id=" + button.attr('data-workshift') + "&direction=" + button.attr('data-direction') + "&position=" + button.attr('data-position'), context: button})
                         .done(function(data){
-                            source_id = data;
+                            result = JSON.parse(data);
+                            source_id = result.id;
+                            source_name = result.name;
                             $.ajax({ url: "ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
                                     .done(function(data){
                                         $('#waiting').html('');
                                         $('#maincontent').html(data);
                             
                                         setTimeout(function(){
-                                            if(confirm('Удалить исходный тираж?')){
+                                            if(confirm('Удалить исходный тираж "' + source_name + '"?')){
                                                 $.ajax({ url: "ajax/delete_edition.php?id=" + source_id, context: button })
                                                         .done(function(){
                                                             $.ajax({ url: "ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
