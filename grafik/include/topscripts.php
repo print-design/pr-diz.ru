@@ -65,6 +65,7 @@ function GetDateFromDateTo($getDateFrom, $getDateTo, &$dateFrom, &$dateTo) {
     
     if($dateFrom == null && $dateTo == null) {
         $dateFrom = new DateTime();
+        $dateFrom->sub($diff1Day);
         $dateTo = clone $dateFrom;
         $dateTo->add($diff30Days);
     }

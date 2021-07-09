@@ -3,6 +3,11 @@ include 'include/topscripts.php';
 include 'include/restrict_logged_in.php';
 include 'include/grafik.php';
 
+// Если не указан параметр id, переводим на начальную страницу
+if(empty(filter_input(INPUT_GET, 'id'))) {
+    header('Location: '.APPLICATION);
+}
+
 $date_from = null;
 $date_to = null;
 GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);

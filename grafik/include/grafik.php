@@ -76,6 +76,7 @@ class Grafik {
         <div class="d-flex justify-content-end mb-auto">
             <div class="p-1">
                 <form class="form-inline">
+                    <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                     <div class="form-group">
                         <label for="from">от&nbsp;</label>
                         <input type="date" id="from" name="from" class="form-control" value="<?= filter_input(INPUT_GET, 'from') ?>"/>
