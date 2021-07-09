@@ -415,17 +415,35 @@
     
     // Вставка тиража (новая версия)
     function PasteEditionDb(button) {
+        source_id = 0;
+        
         $('#waiting').html("<img src='../images/waiting2.gif' />");
         $.ajax({ url: "../ajax/clipboard_paste_db.php?machine_id=" + button.attr('data-machine') + "&date=" + button.attr('data-date') + "&shift=" + button.attr('data-shift') + "&workshift_id=" + button.attr('data-workshift') + "&direction=" + button.attr('data-direction') + "&position=" + button.attr('data-position'), context: button})
-                .done(function(){
+                .done(function(data){
+                    source_id = data;
                     $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
                         .done(function(data){
                             $('#waiting').html('');
                             $('#maincontent').html(data);
                             
-                            window.setTimeout(function(){
-                                if(confirm('Удалить исходный тираж?')) {
-                                    alert('DELETE');
+                            setTimeout(function(){
+                                if(confirm('Удалить исходный тираж?')){
+                                    $.ajax({ url: "../ajax/delete_edition.php?id=" + source_id, context: button })
+                                            .done(function(){
+                                                $.ajax({ url: "../ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
+                                                        .done(function(data){
+                                                            $('#waiting').html('');
+                                                            $('#maincontent').html(data);
+                                                        })
+                                                        .fail(function(){
+                                                            $('#waiting').html('');
+                                                            alert('Ошибка при перерисовке');
+                                                        });
+                                            })
+                                            .fail(function(){
+                                                $('#waiting').html('');
+                                                alert('Ошибка операции удаления');
+                                            });
                                 }
                             }, 500);
                         })

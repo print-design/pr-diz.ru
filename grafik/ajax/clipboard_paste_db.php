@@ -17,7 +17,7 @@ if(empty($workshift_id)) {
     $workshift_id = $ws_executer->insert_id;
 }
 
-$sql = "select 	name, organization, length, status_id, lamination_id, coloring, roller_id, manager_id, comment from clipboard order by id desc";
+$sql = "select 	name, organization, length, status_id, lamination_id, coloring, roller_id, manager_id, comment, origin_id from clipboard order by id desc";
 $fetcher = new Fetcher($sql);
 $error_message = $fetcher->error;
 
@@ -31,6 +31,7 @@ if($row = $fetcher->Fetch()) {
     $roller_id = $row['roller_id'] == null ? 'NULL' : $row['roller_id'];
     $manager_id = $row['manager_id'] == null ? 'NULL' : $row['manager_id'];
     $comment = addslashes($row['comment']);
+    $origin_id = $row['origin_id'];
     
     $position = 1;
     
@@ -55,6 +56,10 @@ if($row = $fetcher->Fetch()) {
     $sql = "delete from clipboard";
     $executer = new Executer($sql);
     $error_message = $executer->error;
+    
+    if(!empty($origin_id)) {
+        echo $origin_id;
+    }
 }
 
 if(!empty($error_message)) {

@@ -19,9 +19,10 @@ if($edition !== null) {
         $roller_id = empty($row['roller_id']) ? 'NULL' : $row['roller_id'];
         $manager_id = empty($row['manager_id']) ? 'NULL' : $row['manager_id'];
         $comment = addslashes($row['comment']);
+        $origin_id = $edition;
         
-        $sql = "insert into clipboard (name, organization, length, status_id, lamination_id, coloring, roller_id, manager_id, comment) "
-                . "values ('$name', '$organization', $length, $status_id, $lamination_id, $coloring, $roller_id, $manager_id, '$comment')";
+        $sql = "insert into clipboard (name, organization, length, status_id, lamination_id, coloring, roller_id, manager_id, comment, origin_id) "
+                . "values ('$name', '$organization', $length, $status_id, $lamination_id, $coloring, $roller_id, $manager_id, '$comment', $origin_id)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
