@@ -5,7 +5,7 @@ $count = count($substrings);
 $folder = '';
 $file = '';
 
-if($count > 2) {
+if($count > 1) {
     $folder = $substrings[$count - 2];
     $file = $substrings[$count - 1];
 }
