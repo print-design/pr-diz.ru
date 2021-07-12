@@ -1,11 +1,11 @@
 <?php
-if(IsInRole('cutter')) {
+/*if(IsInRole('cutter1')) {
     echo 'Автовыход через&nbsp;';
     echo '<div id="autologout">';
     echo filter_input(INPUT_COOKIE, LOGIN_TIME);
     echo '</div>';
     echo '&nbsp;&nbsp;';
-}
+}*/
 if(!empty(filter_input(INPUT_COOKIE, USERNAME))):
 ?>
 <ul class="navbar-nav">
