@@ -52,7 +52,7 @@ elseif (IsInRole(array('cutter'))) {
                         </div>
                         <?php endif; ?>
                     </div>
-                    <button type="submit" class="btn btn-sm btn-primary ml-1<?=$find_btn_class ?>" id="car-submit" name="car-submit">Найти</button>
+                    <button type="submit" class="btn btn-sm btn-primary ml-1<?=$find_btn_class ?>" id="find-submit" name="find-submit">Найти</button>
                 </div>
             </div>
             <p id="id-valid" class="text-danger d-none">Только цифры и русские буквы</p>
