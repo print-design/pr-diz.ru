@@ -8,8 +8,7 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 
 // Если не задано значение id, перенаправляем на Главную
 $id = filter_input(INPUT_GET, 'id');
-$roll_id = filter_input(INPUT_GET, 'roll_id');
-if(empty($id) || empty($roll_id)) {
+if(empty($id)) {
     header('Location: '.APPLICATION.'/cut/');
 }
 
@@ -47,7 +46,7 @@ $utilized_status_id = 2;
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <?php if(empty(filter_input(INPUT_GET, 'link'))): ?>
-                        <a class="nav-link" href="<?=APPLICATION ?>/cut/pallet_roll.php?id=<?=$roll_id ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <a class="nav-link" href="<?=APPLICATION ?>/cut/roll.php?id=<?=$id ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                         <?php else: ?>
                         <a class="nav-link" href="<?= filter_input(INPUT_GET, 'link') ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                         <?php endif; ?>
@@ -58,14 +57,12 @@ $utilized_status_id = 2;
         <div id="topmost"></div>
         <div class="container-fluid">
             <?php
-            $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, p.cell, p.comment, "
-                    . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_status_id)) length, "
-                    . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_status_id)) weight, "
-                    . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_status_id)) rolls_number "
-                    . "from pallet p "
-                    . "inner join supplier s on p.supplier_id=s.id "
-                    . "inner join film_brand fb on p.film_brand_id=fb.id "
-                    . "where p.id=$id";
+            $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, s.name supplier, fb.name film_brand, r.id_from_supplier, r.width, r.thickness, r.net_weight, r.length, r.cell, r.comment, "
+                    . "(select rsh.status_id from roll_status_history rsh where rsh.roll_id = r.id order by rsh.id desc limit 0, 1) status_id "
+                    . "from roll r "
+                    . "inner join supplier s on r.supplier_id=s.id "
+                    . "inner join film_brand fb on r.film_brand_id=fb.id "
+                    . "where r.id=$id";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 $date = $row['date'];
@@ -74,24 +71,15 @@ $utilized_status_id = 2;
                 $film_brand = $row['film_brand'];
                 $width = $row['width'];
                 $thickness = $row['thickness'];
-                $weight = $row['weight'];
+                $weight = $row['net_weight'];
                 $length = $row['length'];
-                $rolls_number = $row['rolls_number'];
                 $cell = $row['cell'];
                 $comment = htmlentities($row['comment']);
                 $title = "Р".filter_input(INPUT_GET, 'id');
+                $status_id = $row['status_id'];
                 
                 $status = '';
                 $colour_style = '';
-                
-                $status_id = 0;
-                
-                if($rolls_number == 0) {
-                    $status_id = $utilized_status_id;
-                }
-                else {
-                    $status_id = $free_status_id;
-                }
                 
                 if(!empty($statuses[$status_id]['name'])) {
                     $status = $statuses[$status_id]['name'];
@@ -106,7 +94,7 @@ $utilized_status_id = 2;
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="object-card">
-                        <h1 class="text-center">Паллет №<?=$title ?></h1>
+                        <h1 class="text-center">Рулон №<?=$title ?></h1>
                         <p><strong>Поставщик:</strong> <?=$supplier ?></p>
                         <p><strong>ID поставщика:</strong> <?=$id_from_supplier ?></p>
                         <p><strong>Дата поставки:</strong> <?= $date ?></p>
@@ -117,7 +105,6 @@ $utilized_status_id = 2;
                         <p><strong>Толщина:</strong> <?=$thickness ?> мкм</p>
                         <p><strong>Масса нетто:</strong> <?=$weight ?> кг</p>
                         <p><strong>Длина:</strong> <?=$length ?> м</p>
-                        <p><strong>Рулонов в паллете:</strong> <?=$rolls_number ?> шт</p>
                         <p><strong>Комментарий:</strong></p>
                         <p><?=$comment ?></p>
                         <a class="btn btn-dark w-100 mt-4" href="javascript: void(0);">Приступить к раскрою</a>

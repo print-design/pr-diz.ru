@@ -1,9 +1,13 @@
 <?php
 include '../include/topscripts.php';
 
-// Пекренаправление на страницу карщика при чтении QR-кода
+// Пекренаправление на страницу карщика или резчика при чтении QR-кода
 if(IsInRole(array('electrocarist'))) {
     header('Location: '.APPLICATION.'/car/roll_edit.php?id='. filter_input(INPUT_GET, 'id'));
+}
+
+if(IsInRole(array('cutter'))) {
+    header('Location: '.APPLICATION.'/cut/roll_edit.php?id='. filter_input(INPUT_GET, 'id'));
 }
 
 // Авторизация

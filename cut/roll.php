@@ -66,6 +66,7 @@ if(empty($id)) {
                         <p><strong>Длина:</strong> <?=$length ?> м</p>
                         <p><strong>Комментарий:</strong></p>
                         <p><?=$comment ?></p>
+                        <a class="btn btn-outline-dark w-100 mt-4" href="<?=APPLICATION ?>/cut/free_roll.php?id=<?=$id ?>">Подробнее</a>
                     </div>
                 </div>
             </div>
