@@ -11,9 +11,6 @@ $id = filter_input(INPUT_GET, 'id');
 if(empty($id)) {
     header('Location: '.APPLICATION.'/cut/');
 }
-
-// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
-$utilized_status_id = 2;
 ?>
 <!DOCTYPE html>
 <html>
@@ -69,7 +66,6 @@ $utilized_status_id = 2;
                         <p><strong>Длина:</strong> <?=$length ?> м</p>
                         <p><strong>Комментарий:</strong></p>
                         <p><?=$comment ?></p>
-                        <button type="button" class="btn btn-outline-dark w-100 mt-4">Подробнее</button>
                     </div>
                 </div>
             </div>
