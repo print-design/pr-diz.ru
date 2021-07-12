@@ -315,7 +315,6 @@ $utilized_status_id = 2;
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/roll/<?= BuildQueryRemove('id') ?>">Назад</a>
             <?php endif; ?>
             <h1 style="font-size: 24px; font-weight: 600;">Информация о рулоне № <?="Р".$id ?> от <?= $date ?></h1>
-            <h1 style="font-size: 24px; font-weight: 600;">Информация о рулоне № <?="Р".$id ?> от <?= $date ?></h1>
             <?php if(!empty($time) && $time != '00:00'): ?>
             <div>Время добавления: <?=$time ?></div>
             <?php endif; ?>
