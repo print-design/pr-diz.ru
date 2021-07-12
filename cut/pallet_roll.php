@@ -70,7 +70,7 @@ if(empty($id)) {
                         <p><strong>Длина:</strong> <?=$length ?> м</p>
                         <p><strong>Комментарий:</strong></p>
                         <p><?=$comment ?></p>
-                        <button type="button" class="btn btn-outline-dark w-100 mt-4">Подробнее</button>
+                        <a class="btn btn-outline-dark w-100 mt-4" href="<?=APPLICATION ?>/cut/pallet.php?id=<?=$pallet_id ?>">Подробнее</a>
                     </div>
                 </div>
             </div>
