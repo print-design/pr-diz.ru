@@ -533,12 +533,12 @@ textarea#editable {
 /* Переключатель "активен - не активен" */
 .switch input[type="checkbox"] {
     position: relative;
-    width: 80px;
-    height: 40px;
+    width: 60px;
+    height: 30px;
     -webkit-appearance: none;
     outline: none;
     background: #c6c6c6;
-    border-radius: 20px;
+    border-radius: 15px;
     transition: .5s;
     box-shadow: inset 0 0 5px rgba(0,0,0,.2);
 }
@@ -550,9 +550,9 @@ textarea#editable {
 .switch input[type="checkbox"]:before {
     content: '';
     position: absolute;
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
     top: 0;
     left: 0;
     background: #fff;
@@ -562,5 +562,5 @@ textarea#editable {
 }
 
 .switch input:checked[type="checkbox"]:before {
-    left: 40px;
+    left: 30px;
 }
