@@ -32,6 +32,46 @@ function IsInRole($role) {
     return false;
 }
 
+function BuildQuery($key, $value) {
+    $result = '';
+    $get_params = $_GET;
+    $get_params[$key] = $value;
+    $result = http_build_query($get_params);
+    
+    if(!empty($result)) {
+        $result = "?$result";
+    }
+    
+    return $result;
+}
+
+function BuildQueryRemove($key) {
+    $result = '';
+    $get_params = $_GET;
+    unset($get_params[$key]);
+    $result = http_build_query($get_params);
+
+    if(!empty($result)) {
+        $result = "?$result";
+    }
+    
+    return $result;
+}
+
+function BuildQueryAddRemove($key, $value, $remove) {
+    $result = '';
+    $get_params = $_GET;
+    $get_params[$key] = $value;
+    unset($get_params[$remove]);
+    $result = http_build_query($get_params);
+    
+    if(!empty($result)) {
+        $result = "?$result";
+    }
+    
+    return $result;
+}
+
 function GetDateFromDateTo($getDateFrom, $getDateTo, &$dateFrom, &$dateTo) {
     $dateFrom = null;
     $dateTo = null;
@@ -65,6 +105,7 @@ function GetDateFromDateTo($getDateFrom, $getDateTo, &$dateFrom, &$dateTo) {
     
     if($dateFrom == null && $dateTo == null) {
         $dateFrom = new DateTime();
+        $dateFrom->sub($diff1Day);
         $dateTo = clone $dateFrom;
         $dateTo->add($diff30Days);
     }

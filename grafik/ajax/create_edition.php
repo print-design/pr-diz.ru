@@ -11,6 +11,13 @@ $position_get = filter_input(INPUT_GET, 'position');
 
 $position = 1;
 
+if(empty($workshift_id)) {
+    $sql = "insert into workshift (date, machine_id, shift) values ('$date', $machineId, '$shift')";
+    $ws_executer = new Executer($sql);
+    $error_message = $ws_executer->error;
+    $workshift_id = $ws_executer->insert_id;
+}
+
 if($direction_get !== null && $position_get !== null) {
     if($direction_get == 'up') {
         $error_message = (new Executer("update edition set position = position - 1 where workshift_id = $workshift_id and position < $position_get"))->error;
