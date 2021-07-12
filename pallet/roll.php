@@ -13,7 +13,7 @@ if(IsInRole(array('electrocarist'))) {
 }
 
 if(IsInRole(array('cutter'))) {
-    header('Location: '.APPLICATION.'/cut/pallet_roll_edit.php?id='. filter_input(INPUT_GET, 'id'));
+    header('Location: '.APPLICATION.'/cut/pallet_roll.php?id='. filter_input(INPUT_GET, 'id'));
 }
 
 // Авторизация
