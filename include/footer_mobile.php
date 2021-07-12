@@ -1,6 +1,6 @@
 <script>
     $('input#id').focusin(function (){
-        $('#car-submit').removeClass('d-none');
+        $('#find-submit').removeClass('d-none');
     });
     
     $('button#find-clear').click(function(e) {

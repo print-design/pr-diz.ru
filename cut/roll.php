@@ -2,18 +2,15 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
+if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
 // Если не задано значение id, перенаправляем на Главную
 $id = filter_input(INPUT_GET, 'id');
 if(empty($id)) {
-    header('Location: '.APPLICATION.'/car/');
+    header('Location: '.APPLICATION.'/cut/');
 }
-
-// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
-$utilized_status_id = 2;
 ?>
 <!DOCTYPE html>
 <html>
@@ -69,8 +66,7 @@ $utilized_status_id = 2;
                         <p><strong>Длина:</strong> <?=$length ?> м</p>
                         <p><strong>Комментарий:</strong></p>
                         <p><?=$comment ?></p>
-                        <p style="font-size: 32px; line-height: 48px;">Ячейка&nbsp;&nbsp;&nbsp;&nbsp;<?=$cell ?></p>
-                        <a href="roll_edit.php?id=<?=$id ?>&link=<?= urlencode($_SERVER['REQUEST_URI']) ?>" class="btn btn-outline-dark w-100 mt-4">Сменить ячейку</a>
+                        <a class="btn btn-outline-dark w-100 mt-4" href="<?=APPLICATION ?>/cut/free_roll.php?id=<?=$id ?>">Подробнее</a>
                     </div>
                 </div>
             </div>

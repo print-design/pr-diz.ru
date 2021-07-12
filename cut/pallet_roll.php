@@ -2,18 +2,15 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
+if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
 // Если не задано значение id, перенаправляем на Главную
 $id = filter_input(INPUT_GET, 'id');
 if(empty($id)) {
-    header('Location: '.APPLICATION.'/car/');
+    header('Location: '.APPLICATION.'/cut/');
 }
-
-// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
-$utilized_status_id = 2;
 ?>
 <!DOCTYPE html>
 <html>
@@ -32,11 +29,13 @@ $utilized_status_id = 2;
         ?>
         <div class="container-fluid">
             <?php
-            $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, s.name supplier, fb.name film_brand, r.id_from_supplier, r.width, r.thickness, r.net_weight, r.length, r.cell, r.comment "
-                    . "from roll r "
-                    . "inner join supplier s on r.supplier_id=s.id "
-                    . "inner join film_brand fb on r.film_brand_id=fb.id "
-                    . "where r.id=$id";
+            $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, pr.weight, pr.length, p.cell, p.comment, "
+                    . "p.id pallet_id, pr.ordinal "
+                    . "from pallet_roll pr "
+                    . "inner join pallet p on pr.pallet_id = p.id "
+                    . "inner join supplier s on p.supplier_id=s.id "
+                    . "inner join film_brand fb on p.film_brand_id=fb.id "
+                    . "where pr.id=$id";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 $date = $row['date'];
@@ -45,11 +44,13 @@ $utilized_status_id = 2;
                 $film_brand = $row['film_brand'];
                 $width = $row['width'];
                 $thickness = $row['thickness'];
-                $weight = $row['net_weight'];
+                $weight = $row['weight'];
                 $length = $row['length'];
                 $cell = $row['cell'];
                 $comment = htmlentities($row['comment']);
-                $title = "Р".filter_input(INPUT_GET, 'id');
+                $pallet_id = $row['pallet_id'];
+                $ordinal = $row['ordinal'];
+                $title = "П".$pallet_id."Р".$ordinal;
                 
                 include '../include/find_mobile.php';
             }
@@ -69,8 +70,7 @@ $utilized_status_id = 2;
                         <p><strong>Длина:</strong> <?=$length ?> м</p>
                         <p><strong>Комментарий:</strong></p>
                         <p><?=$comment ?></p>
-                        <p style="font-size: 32px; line-height: 48px;">Ячейка&nbsp;&nbsp;&nbsp;&nbsp;<?=$cell ?></p>
-                        <a href="roll_edit.php?id=<?=$id ?>&link=<?= urlencode($_SERVER['REQUEST_URI']) ?>" class="btn btn-outline-dark w-100 mt-4">Сменить ячейку</a>
+                        <a class="btn btn-outline-dark w-100 mt-4" href="<?=APPLICATION ?>/cut/pallet.php?id=<?=$pallet_id ?>&roll_id=<?=$id ?>">Подробнее</a>
                     </div>
                 </div>
             </div>

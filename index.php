@@ -5,6 +5,11 @@ include 'include/topscripts.php';
 if(IsInRole(array('electrocarist'))) {
     header('Location: '.APPLICATION.'/car/');
 }
+
+// Резчика по раскрою перенаправляем в раздел cut
+if(IsInRole(array('cutter'))) {
+    header('Location: '.APPLICATION.'/cut/');
+}
 ?>
 <!DOCTYPE html>
 <!--
@@ -25,7 +30,7 @@ and open the template in the editor.
         <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
-               echo "<div class='alert alert-danger'>$error_message</div>";
+               echo "<div class='alert alert-danger mt-3'>$error_message</div>";
             }
             ?>
             <h1 class="mt-4">Принт-дизайн</h1>
