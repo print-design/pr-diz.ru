@@ -56,7 +56,7 @@ $utilized_status_id = 2;
         ?>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?php
-        include '_style.php';
+        include '../include/style_mobile.php';
         ?>
     </head>
     <body>
@@ -103,17 +103,17 @@ $utilized_status_id = 2;
                     <div class="object-card">
                         <h1>Рулон №Р<?= filter_input(INPUT_GET, 'id') ?></h1>
                         <p>от <?= $date ?></p>
-                        <p><strong>Поставщик</strong> <?=$supplier ?></p>
-                        <p><strong>ID поставщика</strong> <?=$id_from_supplier ?></p>
+                        <p><strong>Поставщик:</strong> <?=$supplier ?></p>
+                        <p><strong>ID поставщика:</strong> <?=$id_from_supplier ?></p>
                         <p class="mt-3"><strong>Характеристики</strong></p>
-                        <p><strong>Марка пленки</strong> <?=$film_brand ?></p>
-                        <p><strong>Ширина</strong> <?=$width ?> мм</p>
-                        <p><strong>Толщина</strong> <?=$thickness ?> мкм</p>
-                        <p><strong>Масса нетто</strong> <?=$weight ?> кг</p>
-                        <p><strong>Длина</strong> <?=$length ?> м</p>
-                        <p class="mt-3"><strong>Комментарий</strong></p>
+                        <p><strong>Марка пленки:</strong> <?=$film_brand ?></p>
+                        <p><strong>Ширина:</strong> <?=$width ?> мм</p>
+                        <p><strong>Толщина:</strong> <?=$thickness ?> мкм</p>
+                        <p><strong>Масса нетто:</strong> <?=$weight ?> кг</p>
+                        <p><strong>Длина:</strong> <?=$length ?> м</p>
+                        <p><strong>Комментарий:</strong></p>
                         <p><?=$comment ?></p>
-                        <form method="post" class="mt-3">
+                        <form method="post" class="mt-2">
                             <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                             <div class="form-group">
                                 <label for="cell">Номер ячейки</label>
@@ -143,7 +143,7 @@ $utilized_status_id = 2;
         </div>
         <?php
         include '../include/footer.php';
-        include '_footer.php';
+        include '../include/footer_mobile.php';
         ?>
     </body>
 </html>

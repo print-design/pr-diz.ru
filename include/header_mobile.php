@@ -30,6 +30,10 @@
             <li class="nav-item">
                 <a class="nav-link" href="<?=APPLICATION ?>/car/">Склад</a>
             </li>
+            <?php elseif(IsInRole(array('cutter'))): ?>
+            <li class="nav-item">
+                <a class="nav-link" href="<?=APPLICATION ?>/cut/">Склад</a>
+            </li>
             <?php elseif(!empty(filter_input(INPUT_COOKIE, USERNAME))): ?>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Меню</a>
@@ -54,7 +58,7 @@
         <?php if(!empty(filter_input(INPUT_COOKIE, USERNAME))): ?>
         <ul class="navbar-nav">
             <li class="nav-item dropdown no-dropdown-arrow-after">
-                <a class="nav-link mr-0" href="<?=APPLICATION ?>/car/user.php?link=<?=$_SERVER['REQUEST_URI'] ?>"><i class="fa fa-cog" aria-hidden="true""></i></a>
+                <a class="nav-link mr-0" href="<?=APPLICATION ?>/user_mobile.php?link=<?=$_SERVER['REQUEST_URI'] ?>"><i class="fa fa-cog" aria-hidden="true""></i></a>
             </li>
         </ul>
         <?php endif; ?>

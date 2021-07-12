@@ -5,6 +5,11 @@ include 'include/topscripts.php';
 if(IsInRole(array('electrocarist'))) {
     header('Location: '.APPLICATION.'/car/');
 }
+
+// Резчика по раскрою перенаправляем в раздел cut
+if(IsInRole(array('cutter'))) {
+    header('Location: '.APPLICATION.'/cut/');
+}
 ?>
 <!DOCTYPE html>
 <!--

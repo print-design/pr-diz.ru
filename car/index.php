@@ -127,7 +127,7 @@ if(null !== filter_input(INPUT_POST, 'car-submit')) {
         ?>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?php
-        include '_style.php';
+        include '../include/style_mobile.php';
         ?>
     </head>
     <body>
@@ -136,12 +136,12 @@ if(null !== filter_input(INPUT_POST, 'car-submit')) {
         ?>
         <div class="container-fluid">
             <?php
-            include '_find.php';
+            include '../include/find_mobile.php';
             ?>
         </div>
         <?php
         include '../include/footer.php';
-        include '_footer.php';
+        include '../include/footer_mobile.php';
         ?>
     </body>
 </html>

@@ -1,8 +1,8 @@
 <?php
-include '../include/topscripts.php';
+include 'include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
+if(!IsInRole(array('technologist', 'dev', 'electrocarist', 'cutter'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 ?>
@@ -10,11 +10,11 @@ if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
 <html>
     <head>
         <?php
-        include '../include/head.php';
+        include 'include/head.php';
         ?>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?php
-        include '_style.php';
+        include 'include/style_mobile.php';
         ?>
     </head>
     <body>
@@ -33,8 +33,16 @@ if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
             if(!empty($error_message)) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
+            
+            $position = "Работник";
+            if(IsInRole('electrocarist')) {
+                $position = "Водитель погрузчика";
+            }
+            elseif(IsInRole('cutter')) {
+                $position = "Резчик раскрой";
+            }
             ?>
-            <p class="mt-4" style="font-size: 18px; line-height: 24px; font-weight: 600;">Водитель погрузчика:</p>
+            <p class="mt-4" style="font-size: 18px; line-height: 24px; font-weight: 600;"><?=$position ?>:</p>
             <?php
             $sql = "select last_name, first_name from user where id=". GetUserId();
             $fetcher = new Fetcher($sql);
@@ -51,7 +59,7 @@ if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
             </form>
         </div>
         <?php
-        include '../include/footer.php';
+        include 'include/footer.php';
         ?>
     </body>
 </html>

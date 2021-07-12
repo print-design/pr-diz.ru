@@ -18,10 +18,19 @@ elseif(!empty (filter_input(INPUT_GET, 'id'))) {
     $find_value = filter_input(INPUT_GET, 'id');
     $find_btn_class = '';
 }
+
+$action = '';
+
+if(IsInRole(array('electrocarist'))) {
+    $action = APPLICATION.'/car/';
+}
+elseif (IsInRole(array('cutter'))) {
+    $action = APPLICATION.'/cut/';
+}
 ?>
 <div class="row">
     <div class="col-12 col-md-6 col-lg-4">
-        <form method="post" action="<?=APPLICATION ?>/car/">
+        <form method="post" action="<?=$action ?>">
             <div class="form-group">
                 <label for="id">Введите ID</label>
                 <div class="d-flex">
