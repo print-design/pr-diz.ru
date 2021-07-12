@@ -5,12 +5,12 @@ include '../include/topscripts.php';
 if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
-
+ 
 // Если не задано значение id, перенаправляем на Главную
 $id = filter_input(INPUT_GET, 'id');
 $pallet = filter_input(INPUT_GET, 'pallet');
 $link = filter_input(INPUT_GET, 'link');
-if(empty($id) || empty($pallet) || empty($link)) {
+if($id === null || $pallet === null || $link === null) {
     header('Location: '.APPLICATION.'/cut/');
 }
 
