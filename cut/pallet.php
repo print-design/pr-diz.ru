@@ -120,7 +120,7 @@ $utilized_status_id = 2;
                         <p><strong>Рулонов в паллете:</strong> <?=$rolls_number ?> шт</p>
                         <p><strong>Комментарий:</strong></p>
                         <p><?=$comment ?></p>
-                        <a class="btn btn-dark w-100 mt-4" href="<?=APPLICATION ?>/cut/cut.php?id=<?=$roll_id ?>&link=<?= urlencode($_SERVER['REQUEST_URI']) ?>">Приступить к раскрою</a>
+                        <a class="btn btn-dark w-100 mt-4" href="<?=APPLICATION ?>/cut/cut.php?id=<?=$roll_id ?>&pallet=1&link=<?= urlencode($_SERVER['REQUEST_URI']) ?>">Приступить к раскрою</a>
                     </div>
                 </div>
             </div>

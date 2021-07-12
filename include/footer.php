@@ -84,13 +84,15 @@
     });
     
     $('.no-latin').keypress(function(e) {
-        if(/[a-zA-Z]/.test(e.key)) {
-            $(this).next('.invalid-feedback').text('Переключите раскладку');
-            $(this).next('.invalid-feedback').show();
-            return false;
-        }
-        else {
-            $(this).next('.invalid-feedback').hide();
+        if(e.which != 10 && e.which != 13) {
+            if(/[a-zA-Z]/.test(e.key)) {
+                $(this).next('.invalid-feedback').text('Переключите раскладку');
+                $(this).next('.invalid-feedback').show();
+                return false;
+            }
+            else {
+                $(this).next('.invalid-feedback').hide();
+            }
         }
     });
     

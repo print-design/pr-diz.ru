@@ -107,7 +107,7 @@ $utilized_status_id = 2;
                         <p><strong>Длина:</strong> <?=$length ?> м</p>
                         <p><strong>Комментарий:</strong></p>
                         <p><?=$comment ?></p>
-                        <a class="btn btn-dark w-100 mt-4" href="<?=APPLICATION ?>/cut/cut.php?id=<?=$id ?>&link=<?= urlencode($_SERVER['REQUEST_URI']) ?>">Приступить к раскрою</a>
+                        <a class="btn btn-dark w-100 mt-4" href="<?=APPLICATION ?>/cut/cut.php?id=<?=$id ?>&pallet=0&link=<?= urlencode($_SERVER['REQUEST_URI']) ?>">Приступить к раскрою</a>
                     </div>
                 </div>
             </div>
