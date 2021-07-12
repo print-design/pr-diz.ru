@@ -71,7 +71,7 @@ if(empty($id)) {
                         <p><strong>Комментарий:</strong></p>
                         <p><?=$comment ?></p>
                         <p style="font-size: 32px; line-height: 48px;">Ячейка&nbsp;&nbsp;&nbsp;&nbsp;<?=$cell ?></p>
-                        <a href="pallet_roll_edit.php?id=<?=$id ?>&link=<?=$_SERVER['REQUEST_URI'] ?>" class="btn btn-outline-dark w-100 mt-4">Сменить ячейку</a>
+                        <a href="pallet_roll_edit.php?id=<?=$id ?>&link=<?= urlencode($_SERVER['REQUEST_URI']) ?>" class="btn btn-outline-dark w-100 mt-4">Сменить ячейку</a>
                     </div>
                 </div>
             </div>

@@ -48,7 +48,7 @@ $utilized_status_id = 2;
                         <?php if(empty(filter_input(INPUT_GET, 'link'))): ?>
                         <a class="nav-link" href="<?=APPLICATION ?>/cut/roll.php?id=<?=$id ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                         <?php else: ?>
-                        <a class="nav-link" href="<?= filter_input(INPUT_GET, 'link') ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <a class="nav-link" href="<?= urldecode(filter_input(INPUT_GET, 'link')) ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                         <?php endif; ?>
                     </li>
                 </ul>
@@ -107,7 +107,7 @@ $utilized_status_id = 2;
                         <p><strong>Длина:</strong> <?=$length ?> м</p>
                         <p><strong>Комментарий:</strong></p>
                         <p><?=$comment ?></p>
-                        <a class="btn btn-dark w-100 mt-4" href="javascript: void(0);">Приступить к раскрою</a>
+                        <a class="btn btn-dark w-100 mt-4" href="<?=APPLICATION ?>/cut/cut.php?id=<?=$id ?>&link=<?= urlencode($_SERVER['REQUEST_URI']) ?>">Приступить к раскрою</a>
                     </div>
                 </div>
             </div>

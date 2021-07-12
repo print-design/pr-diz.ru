@@ -49,7 +49,7 @@ $utilized_status_id = 2;
                         <?php if(empty(filter_input(INPUT_GET, 'link'))): ?>
                         <a class="nav-link" href="<?=APPLICATION ?>/cut/pallet_roll.php?id=<?=$roll_id ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                         <?php else: ?>
-                        <a class="nav-link" href="<?= filter_input(INPUT_GET, 'link') ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <a class="nav-link" href="<?= urldecode(filter_input(INPUT_GET, 'link')) ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                         <?php endif; ?>
                     </li>
                 </ul>
@@ -79,7 +79,7 @@ $utilized_status_id = 2;
                 $rolls_number = $row['rolls_number'];
                 $cell = $row['cell'];
                 $comment = htmlentities($row['comment']);
-                $title = "Р".filter_input(INPUT_GET, 'id');
+                $title = "П".filter_input(INPUT_GET, 'id');
                 
                 $status = '';
                 $colour_style = '';
@@ -120,7 +120,7 @@ $utilized_status_id = 2;
                         <p><strong>Рулонов в паллете:</strong> <?=$rolls_number ?> шт</p>
                         <p><strong>Комментарий:</strong></p>
                         <p><?=$comment ?></p>
-                        <a class="btn btn-dark w-100 mt-4" href="javascript: void(0);">Приступить к раскрою</a>
+                        <a class="btn btn-dark w-100 mt-4" href="<?=APPLICATION ?>/cut/cut.php?id=<?=$roll_id ?>&link=<?= urlencode($_SERVER['REQUEST_URI']) ?>">Приступить к раскрою</a>
                     </div>
                 </div>
             </div>

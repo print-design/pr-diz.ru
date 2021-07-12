@@ -22,7 +22,7 @@ if(!IsInRole(array('technologist', 'dev', 'electrocarist', 'cutter'))) {
             <nav class="navbar navbar-expand-sm justify-content-start">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= filter_input(INPUT_GET, 'link') ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <a class="nav-link" href="<?= urldecode(filter_input(INPUT_GET, 'link')) ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                     </li>
                 </ul>
             </nav>

@@ -39,7 +39,7 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
                 header('Location: '.APPLICATION.'/car/pallet.php?id='.$id);
             }
             else {
-                header('Location: '.filter_input(INPUT_GET, 'link'));
+                header('Location: '.urldecode(filter_input(INPUT_GET, 'link')));
             }
         }
     }
@@ -67,7 +67,7 @@ $utilized_roll_status_id = 2;
                         <?php if(empty(filter_input(INPUT_GET, 'link'))): ?>
                         <a class="nav-link" href="<?=APPLICATION ?>/car/pallet.php?id=<?=$id ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                         <?php else: ?>
-                        <a class="nav-link" href="<?= filter_input(INPUT_GET, 'link') ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <a class="nav-link" href="<?= urldecode(filter_input(INPUT_GET, 'link')) ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                         <?php endif; ?>
                     </li>
                 </ul>
