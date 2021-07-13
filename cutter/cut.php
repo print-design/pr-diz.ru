@@ -7,10 +7,10 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 }
 
 // Если не задано значение supplier_id, film_brand_id, thickness, width, перенаправляем на Главную
-$supplier_id = filter_input(INPUT_GET, 'supplier_id');
-$film_brand_id = filter_input(INPUT_GET, 'film_brand_id');
-$thickness = filter_input(INPUT_GET, 'thickness');
-$width = filter_input(INPUT_GET, 'width');
+$supplier_id = $_REQUEST['supplier_id'];
+$film_brand_id = $_REQUEST['film_brand_id'];
+$thickness = $_REQUEST['thickness'];
+$width = $_REQUEST['width'];
 if(empty($supplier_id) || empty($film_brand_id) || empty($thickness) || empty($width)) {
     header('Location: '.APPLICATION.'/cutter/');
 }
@@ -72,7 +72,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             $streams .= '&stream_'.$i.'='. filter_input(INPUT_POST, 'stream_'.$i);
         }
         
-        $link = APPLICATION.'/cutter/wind.php?streams_count='.$streams_count.$streams;
+        $link = APPLICATION.'/cutter/wind.php?supplier_id='.$supplier_id.'&film_brand_id='.$film_brand_id.'&thickness='.$thickness.'&width='.$width.'&streams_count='.$streams_count.$streams;
         header('Location: '.$link);
     }
 }
@@ -90,10 +90,9 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     </head>
     <body>
         <form method="post" action="material.php" id="back_form">
-            <input type="hidden" name="supplier_id" value="<?=$supplier_id ?>" />
-            <input type="hidden" name="film_brand_id" value="<?=$film_brand_id ?>" />
-            <input type="hidden" name="thickness" value="<?=$thickness ?>" />
-            <input type="hidden" name="width" value="<?=$width ?>" />
+            <?php foreach ($_REQUEST as $key=>$value): ?>
+            <input type="hidden" name="<?=$key ?>" value="<?=$value ?>" />
+            <?php endforeach; ?>
             <div class="container-fluid header">
                 <nav class="navbar navbar-expand-sm justify-content-start">
                     <ul class="navbar-nav">
@@ -109,6 +108,9 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             <h1>Нарезка 1 / <?=date('d.m.Y') ?></h1>
             <p class="mb-3 mt-3" style="font-size: large;">Как режем?</p>
             <form method="post">
+                <?php foreach ($_REQUEST as $key=>$value): ?>
+                <input type="hidden" name="<?=$key ?>" value="<?=$value ?>" />
+                <?php endforeach; ?>
                 <div class="form-group">
                     <label for="streams_count">Кол-во ручьев</label>
                     <input type="text" id="streams_count" name="streams_count" class="form-control w-50<?=$streams_count_valid ?>" value="<?= filter_input(INPUT_POST, 'streams_count') ?>" required="required" />
@@ -120,7 +122,9 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                 $stream_group_display_class = ' d-none';
                 $stream_message = 'stream_'.$i.'_message';
                 
-                if(intval($streams_count) >= intval($i)) {
+                $streams_count = filter_input(INPUT_POST, 'streams_count');
+                
+                if(null !== $streams_count && intval($streams_count) >= intval($i)) {
                     $stream_group_display_class = '';
                 }
                 ?>
@@ -128,7 +132,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     <label for="stream_<?=$i ?>">Ручей <?=$i ?></label>
                     <div class="input-group w-75">
                         <input type="text" id="stream_<?=$i ?>" name="stream_<?=$i ?>" class="form-control<?=$$stream_valid_name ?>" value="<?= filter_input(INPUT_POST, 'stream_'.$i) ?>" />
-                        <div class="input-group-append input-group-text">мм</div>
+                        <div class="input-group-append"><span class="input-group-text">мм</span></div>
                         <div class="invalid-feedback"><?=$$stream_message ?></div>
                     </div>
                 </div>
