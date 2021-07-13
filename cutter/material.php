@@ -43,7 +43,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
-        //
+        header('Location: '.APPLICATION.'/cutter/cut.php?supplier_id='.$supplier_id.'&film_brand_id='.$film_brand_id.'&thickness='.$thickness.'&width='.$width);
     }
 }
 ?>
@@ -138,7 +138,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                         <div class="form-group">
                             <label for="width">Ширина, мм</label>
                             <input type="text" id="width" name="width" value="<?= filter_input(INPUT_POST, 'width') ?>" class="form-control int-only<?=$width_valid ?>" placeholder="Введите ширину" required="required" />
-                            <div class="invalid-feedback">Ширина обязательно</div>
+                            <div class="invalid-feedback">Ширина обязательно, макс. 1600</div>
                         </div>
                         <div class="form-group">
                             <button type="submit" id="next-submit" name="next-submit" class="btn btn-dark form-control" style="margin-top: 100px;">Далее</button>
@@ -152,6 +152,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         include '../include/footer_mobile.php';
         ?>
         <script>
+            // Загрузка списка марок пленки
             $('#supplier_id').change(function(){
                 if($(this).val() == "") {
                     $('#film_brand_id').html("<option value=''>Выберите марку</option>");
@@ -168,6 +169,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                 }
             });
             
+            // Загрузка списка толщин
             $('#film_brand_id').change(function(){
                 if($(this).val() == "") {
                     $('#thickness').html("<option value=''>Выберите толщину</option>");
@@ -181,6 +183,29 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                                 alert('Ошибка при выборе марки пленки');
                             });
                 }
+            });
+            
+            // В поле "Ширина" ограничиваем значения: целые числа от 1 до 50
+            $('#width').keydown(function(e) {
+                if(!KeyDownLimitIntValue($(e.target), e, 1600)) {
+                    $(this).addClass('is-invalid');
+                    
+                    return false;
+                }
+                else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+    
+            $("#width").change(function(){
+                if($(this).val() > 1600) {
+                    $(this).addClass('is-invalid');
+                }
+                else {
+                    $(this).removeClass('is-invalid');
+                }
+                
+                ChangeLimitIntValue($(this), 1600);
             });
         </script>
     </body>
