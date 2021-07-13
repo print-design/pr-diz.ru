@@ -12,6 +12,9 @@ if(empty($streams_count)) {
     header('Location: '.APPLICATION.'/cutter/');
 }
 
+// СТАТУС "СВОБОДНЫЙ"
+$free_status_id = 1;
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -28,8 +31,19 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         $form_valid = false;
     }
     
+    $length = preg_replace("/\D/", "", filter_input(INPUT_POST, 'length'));
+    if($length > 30000) {
+        $length_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
     $radius = filter_input(INPUT_POST, 'radius');
     if(empty($radius)) {
+        $radius_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if($radius > 999) {
         $radius_valid = ISINVALID;
         $form_valid = false;
     }
@@ -38,6 +52,21 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
     $thickness = filter_input(INPUT_POST, 'thickness');
     $width = filter_input(INPUT_POST, 'width');
+    
+    $id_from_supplier = "Из раскроя";
+    $user_id = GetUserId();
+    
+    // Определяем удельный вес
+    $ud_ves = null;
+    $sql = "select weight from film_brand_variation where film_brand_id=$film_brand_id and thickness=$thickness";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $ud_ves = $row[0];
+    }
+    
+    $net_weight = floatval($ud_ves) * floatval($length) * floatval($width) / 1000.0 / 1000.0;
+    $cell = "Цех";
+    $comment = "";
     
     if($form_valid) {
         $sql = "insert into cut (supplier_id, film_brand_id, thickness, width) values($supplier_id, $film_brand_id, $thickness, $width)";
@@ -60,9 +89,27 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             $sql = "insert into cut_wind (cut_id, length, radius) values($cut_id, $length, $radius)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
+            $cut_wind_id = $executer->insert_id;
+            
+            // Создание рулона на каждый ручей
+            for($i=1; $i<19; $i++) {
+                if(key_exists('stream_'.$i, $_POST) && empty($error_message)) {
+                    $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id, cut_wind_id) "
+                            . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$user_id', $cut_wind_id)";
+                    $executer = new Executer($sql);
+                    $error_message = $executer->error;
+                    $roll_id = $executer->insert_id;
+                    
+                    if(empty($error_message)) {
+                        $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, $free_status_id, $user_id)";
+                        $executer = new Executer($sql);
+                        $error_message = $executer->error;
+                    }
+                }
+            }
             
             if(empty($error_message)) {
-                header('Location: '.APPLICATION.'/cutter/next.php?id='.$cut_id);
+                header('Location: '.APPLICATION.'/cutter/print.php?cut_wind_id='.$cut_wind_id);
             }
         }
     }
@@ -127,7 +174,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     <div class="input-group">
                         <input type="text" class="form-control int-only int-format<?=$length_valid ?>" id="length" name="length" value="<?= filter_input(INPUT_POST, 'length') ?>" required="required" />
                         <div class="input-group-append"><span class="input-group-text">м</span></div>
-                        <div class="invalid-feedback">Длина обязательно</div>
+                        <div class="invalid-feedback">Число, макс. 30000</div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -135,11 +182,11 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     <div class="input-group">
                         <input type="text" class="form-control int-only<?=$radius_valid ?>" id="radius" name="radius" value="<?= filter_input(INPUT_POST, 'radius') ?>" required="required" />
                         <div class="input-group-append"><span class="input-group-text">мм</span></div>
-                        <div class="invalid-feedback">Радиус от вала обязательно</div>
+                        <div class="invalid-feedback">Число, макс. 999</div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-dark form-control mt-3" id="next-submit" name="next-submit">След. намотка</button>
+                    <button type="submit" class="btn btn-outline-dark form-control mt-3" id="next-submit" name="next-submit">След. намотка</button>
                 </div>
             </form>
             <?php
