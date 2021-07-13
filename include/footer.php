@@ -336,7 +336,7 @@
     });
     
     // Автологаут резчика
-    <?php if(IsInRole('cutter')): ?>
+    <?php if(IsInRole('cutterOLD')): ?>
         function AutoLogout(end) {
             var beforeLogout = end - (new Date());
             

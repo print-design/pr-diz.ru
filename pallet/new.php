@@ -439,6 +439,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     $.ajax({ url: "../ajax/film_brand.php?supplier_id=" + $(this).val() })
                             .done(function(data) {
                                 $('#film_brand_id').html(data);
+                                $('#film_brand_id').change();
                             })
                             .fail(function() {
                                 alert('Ошибка при выборе поставщика');
