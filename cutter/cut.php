@@ -66,7 +66,14 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
-        //
+        $streams = '';
+        
+        for($i=1; $i<=$streams_count; $i++) {
+            $streams .= '&stream_'.$i.'='. filter_input(INPUT_POST, 'stream_'.$i);
+        }
+        
+        $link = APPLICATION.'/cutter/wind.php?streams_count='.$streams_count.$streams;
+        header('Location: '.$link);
     }
 }
 ?>
