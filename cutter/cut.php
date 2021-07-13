@@ -14,6 +14,32 @@ $width = filter_input(INPUT_GET, 'width');
 if(empty($supplier_id) || empty($film_brand_id) || empty($thickness) || empty($width)) {
     header('Location: '.APPLICATION.'/cutter/');
 }
+
+// Валидация формы
+define('ISINVALID', ' is-invalid');
+$form_valid = true;
+$error_message = '';
+
+$streams_count_valid = '';
+for($i=1; $i<=19; $i++) {
+    $stream_valid = 'stream_'.$i.'_valid';
+    $$stream_valid = '';
+}
+
+// Обработка отправки формы
+if(null !== filter_input(INPUT_POST, 'next-submit')) {
+    $streams_count = filter_input(INPUT_POST, 'streams_count');
+    if(empty($streams_count)) {
+        $streams_count_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if($form_valid) {
+        //
+    }
+}
+
+$streams_count = filter_input(INPUT_POST, 'streams_count');
 ?>
 <!DOCTYPE html>
 <html>
@@ -45,11 +71,100 @@ if(empty($supplier_id) || empty($film_brand_id) || empty($thickness) || empty($w
         <div id="topmost"></div>
         <div class="container-fluid">
             <h1>Нарезка 1 / <?=date('d.m.Y') ?></h1>
-            <p style="font-size: large;">Как режем?</p>
+            <p class="mb-3 mt-3" style="font-size: large;">Как режем?</p>
+            <form method="post">
+                <div class="form-group">
+                    <label for="streams_count">Кол-во ручьев</label>
+                    <input type="text" id="streams_count" name="streams_count" class="form-control w-50<?=$streams_count_valid ?>" value="<?= $streams_count ?>" required="required" />
+                    <div class="invalid-feedback">Число, макс. 19</div>
+                </div>
+                <?php
+                for($i=1; $i<=19; $i++):
+                $stream_valid_name = 'stream_'.$i.'_valid';
+                $stream_group_display_class = ' d-none';
+                
+                if(intval($streams_count) >= intval($i)) {
+                    $stream_group_display_class = '';
+                }
+                ?>
+                <div class="form-group stream_group<?=$stream_group_display_class ?>" id="stream_<?=$i ?>_group">
+                    <label for="stream_<?=$i ?>">Ручей <?=$i ?></label>
+                    <div class="input-group w-75">
+                        <input type="text" id="stream_<?=$i ?>" name="stream_<?=$i ?>" class="form-control<?=$$stream_valid_name ?>" value="<?= filter_input(INPUT_POST, 'stream_'.$i) ?>" />
+                        <div class="input-group-append input-group-text">мм</div>
+                    </div>
+                    <div class="invalid-feedback">Ручей <?=$i ?> обязательно</div>
+                </div>
+                <?php endfor; ?>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-dark form-control mt-4" id="next-submit" name="next-submit">Приступить к раскрою</button>
+                </div>
+            </form>
         </div>
         <?php
         include '../include/footer.php';
         include '../include/footer_mobile.php';
         ?>
+        <script>
+            // В поле "Кол-во ручьев" ограничиваем значения: целые числа от 1 до 19
+            $('#streams_count').keydown(function(e) {
+                if(!KeyDownLimitIntValue($(e.target), e, 19)) {
+                    $(this).addClass('is-invalid');
+                    
+                    return false;
+                }
+                else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+            
+            $('#streams_count').keyup(function() {
+                SetStreams($(this).val());
+            })
+    
+            $("#streams_count").change(function(){
+                if($(this).val() > 19) {
+                    $(this).addClass('is-invalid');
+                }
+                else {
+                    $(this).removeClass('is-invalid');
+                }
+                
+                ChangeLimitIntValue($(this), 19);
+                SetStreams($(this).val());
+            });
+            
+            width = <?=$width ?>
+            
+            // Показ и заполнение каждого ручья
+            function SetStreams(streams_count) {
+                $('.stream_group').addClass('d-none');
+                $('.stream_group .input-group input').removeAttr('required');
+                
+                if(streams_count != '') {
+                    iStreamsCount = parseInt(streams_count);
+                    if(!isNaN(iStreamsCount)) {
+                        stream_width = width / iStreamsCount;
+                        stream_width_round = Math.round(stream_width);
+                        
+                        for(i=1; i<=iStreamsCount; i++) {
+                            $('#stream_' + i + '_group').removeClass('d-none');
+                            $('#stream_' + i + '_group .input-group input').attr('required', 'required');
+                            $('#stream_' + i + '_group .input-group input').val(stream_width_round);
+                        }
+                        
+                        // Исправляем значение последнего ручья, чтобы сумма ручьёв равнялась общей ширине
+                        width_temp = 0;
+                        
+                        for(i=1; i<iStreamsCount; i++) {
+                            width_temp += stream_width_round;
+                        }
+                        
+                        width_last = width - width_temp;
+                        $('#stream_' + iStreamsCount + '_group .input-group input').val(width_last);
+                    }
+                }
+            }
+        </script>
     </body>
 </html>
