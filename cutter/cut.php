@@ -24,6 +24,9 @@ $streams_count_valid = '';
 for($i=1; $i<=19; $i++) {
     $stream_valid = 'stream_'.$i.'_valid';
     $$stream_valid = '';
+    
+    $stream_message = 'stream_'.$i.'_message';
+    $$stream_message = 'Ширина ручья обязательно';
 }
 
 // Обработка отправки формы
@@ -34,12 +37,38 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         $form_valid = false;
     }
     
+    $temp_width = 0;
+    
+    for($i=1; $i<=$streams_count; $i++) {
+        $stream = filter_input(INPUT_POST, 'stream_'.$i);
+        if(empty($stream)) {
+            $stream_valid = 'stream_'.$i.'_valid';
+            $$stream_valid = ISINVALID;
+            $stream_message = 'stream_'.$i.'_message';
+            $$stream_message = 'Ширина ручья обязательно';
+            $form_valid = false;
+        }
+        else {
+            $temp_width += intval($stream);
+        }
+    }
+    
+    if($form_valid) {
+        if($width != $temp_width) {
+            for($i=1; $i<=$streams_count; $i++) {
+                $stream_valid = 'stream_'.$i.'_valid';
+                $$stream_valid = ISINVALID;
+                $stream_message = 'stream_'.$i.'_message';
+                $$stream_message = 'Сумма не равна общей ширине';
+                $form_valid = false;
+            }
+        }
+    }
+    
     if($form_valid) {
         //
     }
 }
-
-$streams_count = filter_input(INPUT_POST, 'streams_count');
 ?>
 <!DOCTYPE html>
 <html>
@@ -75,13 +104,14 @@ $streams_count = filter_input(INPUT_POST, 'streams_count');
             <form method="post">
                 <div class="form-group">
                     <label for="streams_count">Кол-во ручьев</label>
-                    <input type="text" id="streams_count" name="streams_count" class="form-control w-50<?=$streams_count_valid ?>" value="<?= $streams_count ?>" required="required" />
+                    <input type="text" id="streams_count" name="streams_count" class="form-control w-50<?=$streams_count_valid ?>" value="<?= filter_input(INPUT_POST, 'streams_count') ?>" required="required" />
                     <div class="invalid-feedback">Число, макс. 19</div>
                 </div>
                 <?php
                 for($i=1; $i<=19; $i++):
                 $stream_valid_name = 'stream_'.$i.'_valid';
                 $stream_group_display_class = ' d-none';
+                $stream_message = 'stream_'.$i.'_message';
                 
                 if(intval($streams_count) >= intval($i)) {
                     $stream_group_display_class = '';
@@ -92,8 +122,8 @@ $streams_count = filter_input(INPUT_POST, 'streams_count');
                     <div class="input-group w-75">
                         <input type="text" id="stream_<?=$i ?>" name="stream_<?=$i ?>" class="form-control<?=$$stream_valid_name ?>" value="<?= filter_input(INPUT_POST, 'stream_'.$i) ?>" />
                         <div class="input-group-append input-group-text">мм</div>
+                        <div class="invalid-feedback"><?=$$stream_message ?></div>
                     </div>
-                    <div class="invalid-feedback">Ручей <?=$i ?> обязательно</div>
                 </div>
                 <?php endfor; ?>
                 <div class="form-group">
