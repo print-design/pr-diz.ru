@@ -161,7 +161,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             
             $('#streams_count').keyup(function() {
                 SetStreams($(this).val());
-            })
+            });
     
             $("#streams_count").change(function(){
                 if($(this).val() > 19) {

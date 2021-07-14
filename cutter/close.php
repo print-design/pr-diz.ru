@@ -12,6 +12,44 @@ if(empty($cut_id)) {
     header('Location: '.APPLICATION.'/cutter/');
 }
 
+// Валидация формы
+define('ISINVALID', ' is-invalid');
+$form_valid = true;
+$error_message = '';
+
+$sources_count_valid = '';
+for($i=1; $i<=19; $i++) {
+    $source_valid = 'source_'.$i.'_valid';
+    $$source_valid = '';
+    
+    $source_message = 'source_'.$i.'_message';
+    $$source_message = 'ID исходного ролика обязательно';
+}
+
+// Обработка отправки формы
+if(null !== filter_input(INPUT_POST, 'close-submit')) {
+    $sources_count = filter_input(INPUT_POST, 'sources_count');
+    if(empty($sources_count)) {
+        $sources_count_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    for($i=1; $i<$sources_count; $i++) {
+        $source = filter_input(INPUT_POST, 'source_'.$i);
+        if(empty($source)) {
+            $source_valid = 'source_'.$i.'_valid';
+            $$source_valid = ISINVALID;
+            $source_message = 'source_'.$i.'_message';
+            $$source_message = 'ID исходного ролика обязательно';
+            $form_valid = false;
+        }
+    }
+    
+    if($form_valid) {
+        header('Location: '.APPLICATION.'/cutter/close1.php');
+    }
+}
+
 // Получение объекта
 $date = '';
 $sql = "select DATE_FORMAT(c.date, '%d.%m.%Y') date from cut c where c.id=$cut_id";
@@ -44,10 +82,84 @@ if($row = $fetcher->Fetch()) {
         <div id="topmost"></div>
         <div class="container-fluid">
             <h1>Нарезка <?=$cut_id ?> / <?=$date ?></h1>
+            <p class="mb-3 mt-3" style="font-size: large;">Введите ID исходных ролей</p>
+            <form method="post" id="sources_form">
+                <div class="form-group" id="count-group">
+                    <label for="sources_count">Кол-во исходных ролей</label>
+                    <input type="text" id="sources_count" name="sources_count" class="form-control w-50 int-only" value="<?= filter_input(INPUT_POST, 'sources_count') ?>" required="required" />
+                    <div class="invalid-feedback">Число, макс. 19</div>
+                </div>
+                <?php
+                for($i=1; $i<=19; $i++):
+                $source_valid_name = 'source_'.$i.'_valid';
+                $source_group_display_class = ' d-none';
+                $source_message = 'source_'.$i.'_message';
+                
+                $sources_count = filter_input(INPUT_POST, 'sources_count');
+                
+                if(null !== $sources_count && intval($sources_count) >= intval($i)) {
+                    $source_group_display_class = '';
+                }
+                ?>
+                <div class="form-group source_group<?=$source_group_display_class ?>" id="source_<?=$i ?>_group">
+                    <label for="source_<?=$i ?>">ID <?=$i ?>-го исходного роля</label>
+                    <input type="text" id="source_<?=$i ?>" name="source_<?=$i ?>" class="form-control<?=$$source_valid_name ?>" value="<?= filter_input(INPUT_POST, 'stream_'.$i) ?>" />
+                    <div class="invalid-feedback"><?=$$stream_message ?></div>
+                </div>
+                <?php endfor; ?>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-dark form-control mt-4" id="close-submit" name="close-submit">Закрыть заявку</button>
+                </div>
+            </form>
         </div>
         <?php
         include '../include/footer.php';
         include '../include/footer_mobile.php';
         ?>
+        <script>
+            // В поле "Кол-во исходных ролей" ограничиваем значения: целые числа от 1 до 19
+            $('#sources_count').keydown(function(e) {
+                if(!KeyDownLimitIntValue($(e.target), e, 19)) {
+                    $(this).addClass('is-invalid');
+                    
+                    return false;
+                }
+                else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+            
+            $('#sources_count').keyup(function() {
+                SetSources($(this).val());
+            });
+            
+            $('#sources_count').change(function() {
+                if($(this).val() > 19) {
+                    $(this).addClass('is-invalid');
+                }
+                else {
+                    $(this).removeClass('is-invalid');
+                }
+                
+                ChangeLimitIntValue($(this), 19);
+                SetSources($(this).val());
+            });
+            
+            // Показ каждого источника
+            function SetSources(sources_count) {
+                $('.source_group').addClass('d-none');
+                $('.source_group input').removeAttr('required');
+                
+                if(sources_count != '') {
+                    iSourcesCount = parseInt(sources_count);
+                    if(!isNaN(iSourcesCount)) {
+                        for(i=1; i<=iSourcesCount; i++) {
+                            $('#source_' + i + '_group').removeClass('d-none');
+                            $('#source_' + i + '_group input').attr('required', 'required');
+                        }
+                    }
+                }
+            }
+        </script>
     </body>
 </html>
