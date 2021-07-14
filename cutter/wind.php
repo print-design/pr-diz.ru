@@ -193,6 +193,57 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             include '../include/footer.php';
             include '../include/footer_mobile.php';
             ?>
+            <script>
+                // В поле "Длина" ограничиваем значения: целые числа от 1 до 30000
+                $('#length').keydown(function(e) {
+                    if(!KeyDownLimitIntValue($(e.target), e, 30000)) {
+                        $(this).addClass('is-invalid');
+                    
+                        return false;
+                    }
+                    else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+    
+                $("#length").change(function(){
+                    val = $(this).val().replace(' ', '');
+                    iVal = parseInt(val);
+                    
+                    if(iVal > 30000) {
+                        $(this).addClass('is-invalid');
+                    }
+                    else {
+                        $(this).removeClass('is-invalid');
+                    }
+                
+                    ChangeLimitIntValue($(this), 30000);
+                    IntFormat($(this));
+                });
+                
+                // В поле "Радиус" ограничиваем значения: целые числа от 1 до 999
+                $('#radius').keydown(function(e) {
+                    if(!KeyDownLimitIntValue($(e.target), e, 999)) {
+                        $(this).addClass('is-invalid');
+                    
+                        return false;
+                    }
+                    else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+    
+                $("#radius").change(function(){
+                    if($(this).val() > 999) {
+                        $(this).addClass('is-invalid');
+                    }
+                    else {
+                        $(this).removeClass('is-invalid');
+                    }
+                
+                    ChangeLimitIntValue($(this), 999);
+                });
+            </script>
         </div>
     </body>
 </html>
