@@ -45,8 +45,9 @@ if(empty($cut_wind_id)) {
                 . "left join film_brand fb on r.film_brand_id = fb.id "
                 . "where r.cut_wind_id=$cut_wind_id";
         $current_roll = 0;
+        $fetcher = new Fetcher($sql);
 
-        while($row = (new Fetcher($sql))->Fetch()):
+        while($row = $fetcher->Fetch()):
         $id = $row['id'];
         $date = $row['date'];
         $storekeeper_id = $row['storekeeper_id'];
@@ -108,6 +109,52 @@ if(empty($cut_wind_id)) {
             case 8:
                 $sticker_top = 11500;
                 break;
+            
+            // Остальные расстояния надо проверить
+            
+            case 9:
+                $sticker_top = 13150;
+                break;
+            
+            case 10:
+                $sticker_top = 14800;
+                break;
+            
+            case 11:
+                $sticker_top = 16450;
+                break;
+            
+            case 12:
+                $sticker_top = 18100;
+                break;
+            
+            case 13:
+                $sticker_top = 19750;
+                break;
+            
+            case 14:
+                $sticker_top = 21400;
+                break;
+            
+            case 15:
+                $sticker_top = 23050;
+                break;
+            
+            case 16:
+                $sticker_top = 24700;
+                break;
+            
+            case 17:
+                $sticker_top = 26350;
+                break;
+            
+            case 18:
+                $sticker_top = 28000;
+                break;
+            
+            case 19:
+                $sticker_top = 29650;
+                break;
 
             default:
                 break;
@@ -130,7 +177,7 @@ if(empty($cut_wind_id)) {
                             <?php
                             $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
                             $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/roll/roll.php?id='.$id;
-                            $filename = "../temp/$current_date_time.png";
+                            $filename = "../temp/".$current_roll."_".$current_date_time.".png";
                             
                             do {
                                 QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
