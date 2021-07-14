@@ -7,6 +7,17 @@ $cut_wind_id = filter_input(INPUT_GET, 'cut_wind_id');
 if(empty($cut_wind_id)) {
     header('Location: '.APPLICATION.'/cutter/');
 }
+
+// Текущее время
+$current_date_time = date("dmYHis");
+
+// Находим id раскроя
+$cut_id = 0;
+$sql = "select cut_id from cut_wind where id=$cut_wind_id";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $cut_id = $row[0];
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -26,8 +37,8 @@ if(empty($cut_wind_id)) {
         </style>
     </head>
     <body class="print">
-        <div style="position: absolute; top: 0; left: 0; z-index: 2000;">
-            <a href="<?=APPLICATION ?>/roll/new.php"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+        <div style="position: absolute; top: 550px; left: 50px; font-size: 40px; z-index: 2000;">
+            <a class="btn btn-dark" style="font-size: 20px;" href="<?=APPLICATION ?>/cutter/next.php?cut_id=<?=$cut_id ?>">Новая намотка</a>
         </div>
         <div style="position: absolute; top: 850px; right: 770px; font-size: 150px; z-index: 2000;">
             <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
@@ -159,9 +170,6 @@ if(empty($cut_wind_id)) {
             default:
                 break;
         }
-
-        // Текущее время
-        $current_date_time = date("dmYHis");
         ?>
         <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px;">
             <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-top: 30px;">
@@ -228,6 +236,19 @@ if(empty($cut_wind_id)) {
                     $file != "4_"."$current_date_time.png" &&
                     $file != "5_"."$current_date_time.png" &&
                     $file != "6_"."$current_date_time.png" &&
+                    $file != "7_"."$current_date_time.png" &&
+                    $file != "8_"."$current_date_time.png" &&
+                    $file != "9_"."$current_date_time.png" &&
+                    $file != "10_"."$current_date_time.png" &&
+                    $file != "11_"."$current_date_time.png" &&
+                    $file != "12_"."$current_date_time.png" &&
+                    $file != "13_"."$current_date_time.png" &&
+                    $file != "14_"."$current_date_time.png" &&
+                    $file != "15_"."$current_date_time.png" &&
+                    $file != "16_"."$current_date_time.png" &&
+                    $file != "17_"."$current_date_time.png" &&
+                    $file != "18_"."$current_date_time.png" &&
+                    $file != "19_"."$current_date_time.png" &&
                     !is_dir($file)) {
                 unlink("../temp/$file");
             }

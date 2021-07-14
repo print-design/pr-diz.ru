@@ -6,12 +6,9 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Если не задано значение supplier_id, film_brand_id, thickness, width, перенаправляем на Главную
-$supplier_id = $_REQUEST['supplier_id'];
-$film_brand_id = $_REQUEST['film_brand_id'];
-$thickness = $_REQUEST['thickness'];
-$width = $_REQUEST['width'];
-if(empty($supplier_id) || empty($film_brand_id) || empty($thickness) || empty($width)) {
+// Если не задано значение cut_id перенаправляем на Главную
+$cut_id = filter_input(INPUT_GET, 'cut_id');
+if(empty($cut_id)) {
     header('Location: '.APPLICATION.'/cutter/');
 }
 
@@ -66,14 +63,16 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
-        $streams = '';
-        
         for($i=1; $i<=$streams_count; $i++) {
-            $streams .= '&stream_'.$i.'='. filter_input(INPUT_POST, 'stream_'.$i);
+            $width = filter_input(INPUT_POST, 'stream_'.$i);
+            $sql = "insert into cut_stream (cut_id, width) values($cut_id, $width)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
         }
         
-        $link = APPLICATION.'/cutter/wind.php?supplier_id='.$supplier_id.'&film_brand_id='.$film_brand_id.'&thickness='.$thickness.'&width='.$width.'&streams_count='.$streams_count.$streams;
-        header('Location: '.$link);
+        if(empty($error_message)) {
+            header('Location: '.APPLICATION.'/cutter/wind.php?cut_id='.$cut_id);
+        }
     }
 }
 ?>
@@ -89,23 +88,18 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         ?>
     </head>
     <body>
-        <form method="post" action="material.php" id="back_form">
-            <?php foreach ($_REQUEST as $key=>$value): ?>
-            <input type="hidden" name="<?=$key ?>" value="<?=$value ?>" />
-            <?php endforeach; ?>
-            <div class="container-fluid header">
-                <nav class="navbar navbar-expand-sm justify-content-start">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" onclick="javascript: $('form#back_form').submit();"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+        <div class="container-fluid header">
+            <nav class="navbar navbar-expand-sm justify-content-start">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?=APPLICATION ?>/cutter/" onclick="javascript: $('form#back_form').submit();"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                         </li>
                     </ul>
                 </nav>
             </div>
-        </form>
         <div id="topmost"></div>
         <div class="container-fluid">
-            <h1>Нарезка 1 / <?=date('d.m.Y') ?></h1>
+            <h1>Нарезка <?=$cut_id ?> / <?=date('d.m.Y') ?></h1>
             <p class="mb-3 mt-3" style="font-size: large;">Как режем?</p>
             <form method="post">
                 <?php foreach ($_REQUEST as $key=>$value): ?>

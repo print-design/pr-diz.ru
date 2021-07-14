@@ -84,8 +84,6 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         }
         
         if(empty($error_message)) {
-            $length = preg_replace("/\D/", "", filter_input(INPUT_POST, 'length'));
-                    
             $sql = "insert into cut_wind (cut_id, length, radius) values($cut_id, $length, $radius)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
