@@ -141,7 +141,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         </form>
         <div id="topmost"></div>
         <div class="container-fluid">
-            <h1>Нарезка 1 / <?=date('d.m.Y') ?></h1>
+            <h1>Нарезка / <?=date('d.m.Y') ?></h1>
             <p class="mb-3 mt-3" style="font-size: xx-large;">Намотка 1</p>
             <?php
             for($i=1; $i<=19; $i++):

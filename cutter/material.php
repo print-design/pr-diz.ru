@@ -43,14 +43,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
-        $sql = "insert into cut (supplier_id, film_brand_id, thickness, width) values($supplier_id, $film_brand_id, $thickness, $width)";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
-        $cut_id = $executer->insert_id;
-        
-        if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/cutter/cut.php?cut_id='.$cut_id);
-        }
+        header('Location: '.APPLICATION.'/cutter/cut.php?supplier_id='.$supplier_id.'&film_brand_id='.$film_brand_id.'&thickness='.$thickness.'&width='.$width);
     }
 }
 ?>

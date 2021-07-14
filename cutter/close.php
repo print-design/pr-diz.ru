@@ -11,6 +11,14 @@ $cut_id = $_REQUEST['cut_id'];
 if(empty($cut_id)) {
     header('Location: '.APPLICATION.'/cutter/');
 }
+
+// Получение объекта
+$date = '';
+$sql = "select DATE_FORMAT(c.date, '%d.%m.%Y') date from cut c where c.id=$cut_id";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $date = $row['date'];
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,7 +43,7 @@ if(empty($cut_id)) {
         </div>
         <div id="topmost"></div>
         <div class="container-fluid">
-            <h1>CLOSE</h1>
+            <h1>Нарезка <?=$cut_id ?> / <?=$date ?></h1>
         </div>
         <?php
         include '../include/footer.php';

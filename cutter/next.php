@@ -141,7 +141,7 @@ while ($row = $fetcher->Fetch()) {
         </div>
         <div id="topmost"></div>
         <div class="container-fluid">
-            <h1>Нарезка 1 / <?=$date ?></h1>
+            <h1>Нарезка <?=$cut_id ?> / <?=$date ?></h1>
             <p class="mb-3 mt-3" style="font-size: xx-large;">Намотка <?=($winds_count + 1) ?></p>
             <?php
             for($i=1; $i<=19; $i++):
