@@ -34,15 +34,52 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
         $form_valid = false;
     }
     
-    for($i=1; $i<$sources_count; $i++) {
+    // Получаем параметры раскроя
+    $sql = " select fb.name film_brand, c.thickness, c.width "
+            . "from cut c inner join film_brand fb on c.film_brand_id = fb.id "
+            . "where c.id=$cut_id";
+    $fetcher = new Fetcher($sql);
+    $row = $fetcher->Fetch();
+    $film_brand = $row['film_brand'];
+    $thickness = $row['thickness'];
+    $width = $row['width'];
+    
+    for($i=1; $i<=$sources_count; $i++) {
         $source = filter_input(INPUT_POST, 'source_'.$i);
+        $source_valid = 'source_'.$i.'_valid';
+        $source_message = 'source_'.$i.'_message';
+        
         if(empty($source)) {
-            $source_valid = 'source_'.$i.'_valid';
             $$source_valid = ISINVALID;
-            $source_message = 'source_'.$i.'_message';
             $$source_message = 'ID исходного ролика обязательно';
             $form_valid = false;
         }
+        
+        // Проверяем, чтобы номер рулона соответствовал реальному рулону и имел такие же параметры
+        
+        if(mb_substr($source, 0, 1) == "р" || mb_substr($source, 0, 1) == "Р") {
+            // Ищем такой среди свободных роликов
+        }
+        elseif(mb_substr($source, 0, 1) == "п" || mb_substr ($source, 0, 1) == "П") {
+            // Ищем среди роликов в паллетах
+            $pallet_trim = mb_substr($source, 1);
+            $substrings = mb_split("\D", $pallet_trim);
+            
+            if(count($substrings) == 2) {
+                //
+            }
+            else {
+                $$source_valid = ISINVALID;
+                $$source_message = "Нет ролика с таким номером";
+            }
+        }
+        else {
+            $$source_valid = ISINVALID;
+            $$source_message = "Нет ролика с таким номером";
+        }
+        
+        // УДАЛИТЬ
+        $form_valid = false;
     }
     
     if($form_valid) {
@@ -103,8 +140,8 @@ if($row = $fetcher->Fetch()) {
                 ?>
                 <div class="form-group source_group<?=$source_group_display_class ?>" id="source_<?=$i ?>_group">
                     <label for="source_<?=$i ?>">ID <?=$i ?>-го исходного роля</label>
-                    <input type="text" id="source_<?=$i ?>" name="source_<?=$i ?>" class="form-control<?=$$source_valid_name ?>" value="<?= filter_input(INPUT_POST, 'stream_'.$i) ?>" />
-                    <div class="invalid-feedback"><?=$$stream_message ?></div>
+                    <input type="text" id="source_<?=$i ?>" name="source_<?=$i ?>" class="form-control<?=$$source_valid_name ?>" value="<?= filter_input(INPUT_POST, 'source_'.$i) ?>" />
+                    <div class="invalid-feedback"><?=$$source_message ?></div>
                 </div>
                 <?php endfor; ?>
                 <div class="form-group">
