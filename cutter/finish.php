@@ -25,6 +25,8 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
         <div class="container-fluid">
             <h1 class="text-center">Заявка закрыта</h1>
             <p class="text-center" style="font-size: x-large; color: green;">Молодец:)</p>
+            <div style="height: 22rem;"></div>
+            <a href="<?=APPLICATION ?>" class="btn btn-dark form-control">Вернуться в заявки</a>
         </div>
     </body>
 </html>
