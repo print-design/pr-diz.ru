@@ -19,6 +19,25 @@ $free_status_id = 1;
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
 $error_message = '';
+
+$radius_valid = '';
+
+if(null !== filter_input(INPUT_POST, 'close-submit')) {
+    if(null == filter_input(INPUT_POST, 'remains')) {
+        header('Location: '.APPLICATION.'/cutter/finish.php');
+    }
+    else {
+        $radius = filter_input(INPUT_POST, 'radius');
+        if(empty($radius)) {
+            $radius_valid = ISINVALID;
+            $form_valid = false;
+        }
+            
+        if($form_valid) {
+            print_r($_POST);
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -86,7 +105,7 @@ $error_message = '';
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-dark form-control" id="close-submit" style="height: 5rem;" name="close-submit">Распечатать исходный роль<br /> и закрыть заявку</button>
+                    <button type="submit" class="btn btn-dark form-control" style="height: 5rem;" id="close-submit" name="close-submit">Распечатать исходный роль<br /> и закрыть заявку</button>
                 </div>
             </form>
         </div>
@@ -98,9 +117,11 @@ $error_message = '';
             $('#remains').change(function() {
                 if($(this).is(':checked')) {
                     $('.remainder-group').removeClass('d-none');
+                    $('input#radius').attr('required', 'required');
                 }
                 else {
                     $('.remainder-group').addClass('d-none');
+                    $('input#radius').removeAttr('required');
                 }
             });
         </script>

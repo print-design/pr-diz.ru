@@ -175,8 +175,6 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                 SetStreams($(this).val());
             });
             
-            width = <?=$width ?>
-            
             // Показ и заполнение каждого ручья
             function SetStreams(streams_count) {
                 $('.stream_group').addClass('d-none');
@@ -185,24 +183,10 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                 if(streams_count != '') {
                     iStreamsCount = parseInt(streams_count);
                     if(!isNaN(iStreamsCount)) {
-                        stream_width = width / iStreamsCount;
-                        stream_width_round = Math.round(stream_width);
-                        
                         for(i=1; i<=iStreamsCount; i++) {
                             $('#stream_' + i + '_group').removeClass('d-none');
                             $('#stream_' + i + '_group .input-group input').attr('required', 'required');
-                            $('#stream_' + i + '_group .input-group input').val(stream_width_round);
                         }
-                        
-                        // Исправляем значение последнего ручья, чтобы сумма ручьёв равнялась общей ширине
-                        width_temp = 0;
-                        
-                        for(i=1; i<iStreamsCount; i++) {
-                            width_temp += stream_width_round;
-                        }
-                        
-                        width_last = width - width_temp;
-                        $('#stream_' + iStreamsCount + '_group .input-group input').val(width_last);
                     }
                 }
             }
