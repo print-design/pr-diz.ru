@@ -16,11 +16,14 @@ if(null !== filter_input(INPUT_POST, 'delete-roll-submit')) {
     }
 }
 
-// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
+// СТАТУС "СВОБОДНЫЙ"
+$free_status_id = 1;
+
+// СТАТУС "СРАБОТАННЫЙ"
 $utilized_status_id = 2;
 
 // Получение общей массы рулонов
-$row = (new Fetcher("select sum(r.net_weight) total_weight from roll r left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id where rsh.status_id is null or rsh.status_id <> $utilized_status_id"))->Fetch();
+$row = (new Fetcher("select sum(r.net_weight) total_weight from roll r left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id where rsh.status_id is null or rsh.status_id = $free_status_id"))->Fetch();
 $total_weight = $row['total_weight'];
 
 // Получение всех статусов
@@ -109,7 +112,7 @@ while ($row = $fetcher->Fetch()) {
                 </thead>
                 <tbody>
                     <?php
-                    $where = "(rsh.status_id is null or rsh.status_id <> $utilized_status_id)";
+                    $where = "(rsh.status_id is null or rsh.status_id = $free_status_id)";
                     
                     $film_brand_name = filter_input(INPUT_GET, 'film_brand_name');
                     if(!empty($film_brand_name)) {
