@@ -28,5 +28,9 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
             <div style="height: 22rem;"></div>
             <a href="<?=APPLICATION ?>" class="btn btn-dark form-control">Вернуться в заявки</a>
         </div>
+        <?php
+        include '../include/footer.php';
+        include '../include/footer_mobile.php';
+        ?>
     </body>
 </html>

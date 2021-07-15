@@ -24,11 +24,29 @@ $radius_valid = '';
 
 if(null !== filter_input(INPUT_POST, 'close-submit')) {
     if(null == filter_input(INPUT_POST, 'remains')) {
+        // Если не осталось исходного ролика, переходим на последнюю страницу
         header('Location: '.APPLICATION.'/cutter/finish.php');
     }
     else {
+        // Если остался исходный ролик, создаём его, рассчитывая параметры по радиусу от вала и диаметру шпули
         $radius = filter_input(INPUT_POST, 'radius');
         if(empty($radius)) {
+            $radius_valid = ISINVALID;
+            $form_valid = false;
+        }
+        
+        $spool = filter_input(INPUT_POST, 'spool');
+        
+        // Если пустые значения веса и длины, значит они почему-то не посчитались по радиусу от вала
+        // Выдаём сообщение об этом в контроле "радиус от вала"
+        $net_weight = filter_input(INPUT_POST, 'net_weight');
+        if(empty($net_weight)) {
+            $radius_valid = ISINVALID;
+            $form_valid = false;
+        }
+        
+        $length = filter_input(INPUT_POST, 'length');
+        if(empty($length)) {
             $radius_valid = ISINVALID;
             $form_valid = false;
         }
@@ -37,6 +55,19 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
             print_r($_POST);
         }
     }
+}
+
+// Получение объекта
+$film_brand_id = null;
+$thickness = null;
+$width = null;
+
+$sql = "select film_brand_id, thickness, width from cut where id = $cut_id";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $film_brand_id = $row['film_brand_id'];
+    $thickness = $row['thickness'];
+    $width = $row['width'];
 }
 ?>
 <!DOCTYPE html>
@@ -58,6 +89,11 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
         <div class="container-fluid">
             <h1>Закрытие заявки</h1>
             <form method="post">
+                <input type="hidden" id="film_brand_id" name="film_brand_id" value="<?=$film_brand_id ?>" />
+                <input type="hidden" id="thickness" name="thickness" value="<?=$thickness ?>" />
+                <input type="hidden" id="width" name="width" value="<?=$width ?>" />
+                <input type="hidden" id="net_weight" name="net_weight" />
+                <input type="hidden" id="length" name="length" />
                 <?php
                 $checked = " checked='checked'";
                 if(filter_input(INPUT_POST, 'close-submit') !== null && filter_input(INPUT_POST, 'remains') == null) {
@@ -80,7 +116,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
                 <div class="form-group remainder-group<?=$remainder_class ?>">
                     <label for="radius">Введите радиус от вала исходного роля</label>
                     <div class="input-group">
-                        <input type="text" class="form-control int-only" id="radius" name="radius" value="<?= filter_input(INPUT_POST, 'radius') ?>"<?=$remainder_required ?> />
+                        <input type="text" class="form-control int-only<?=$radius_valid ?>" id="radius" name="radius" value="<?= filter_input(INPUT_POST, 'radius') ?>"<?=$remainder_required ?> />
                         <div class="input-group-append"><span class="input-group-text">мм</span></div>
                         <div class="invalid-feedback">Радиус от вала обязательно</div>
                     </div>
@@ -94,12 +130,12 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
                     <div class="d-block">
                         <div class="form-check-inline">
                             <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="spool" value="76"<?=$d76_checked ?> />76 мм
+                                <input type="radio" class="form-check-input" id="spool" name="spool" value="76"<?=$d76_checked ?> />76 мм
                             </label>
                         </div>
                         <div class="form-check-inline">
                             <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="spool" value="152"<?=$d152_checked ?> />152 мм
+                                <input type="radio" class="form-check-input" id="spool" name="spool" value="152"<?=$d152_checked ?> />152 мм
                             </label>
                         </div>
                     </div>
@@ -113,7 +149,9 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
         include '../include/footer.php';
         include '../include/footer_mobile.php';
         ?>
+        <script src="<?=APPLICATION ?>/js/calculation.js"></script>
         <script>
+            // Скрытие/показ элементов формы в зависимости от того, остался ли исходный ролик
             $('#remains').change(function() {
                 if($(this).is(':checked')) {
                     $('.remainder-group').removeClass('d-none');
@@ -124,6 +162,53 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
                     $('input#radius').removeAttr('required');
                 }
             });
+            
+            // Все марки плёнки с их вариациями
+            var films = new Map();
+            
+            <?php
+            $sql = "SELECT fbv.film_brand_id, fbv.thickness, fbv.weight FROM film_brand_variation fbv";
+            $fetcher = new Fetcher($sql);
+            while ($row = $fetcher->Fetch()) {
+                echo "if(films.get(".$row['film_brand_id'].") == undefined) {\n";
+                echo "films.set(".$row['film_brand_id'].", new Map());\n";
+                echo "}\n";
+                echo "films.get(".$row['film_brand_id'].").set(".$row['thickness'].", ".$row['weight'].");\n";
+            }
+            ?>
+            
+            // Расчёт длины и массы плёнки по шпуле, толщине, радиусу, ширине, удельному весу
+            function CalculateByRadius() {
+                $('#length').val('');
+                $('#net_weight').val('');
+                
+                film_brand_id = $('#film_brand_id').val();
+                spool = $('#spool').val();
+                thickness = $('#thickness').val();
+                radius = $('#radius').val();
+                width = $('#width').val();
+                
+                if(!isNaN(spool) && !isNaN(thickness) && !isNaN(radius) && !isNaN(width) 
+                        && spool != '' && thickness != '' && radius != '' && width != '') {
+                    density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
+                    
+                    result = GetFilmLengthWeightBySpoolThicknessRadiusWidth(spool, thickness, radius, width, density);
+                    
+                    $('#length').val(result.length.toFixed(2));
+                    $('#net_weight').val(result.weight.toFixed(2));
+                }
+            }
+            
+            $(document).ready(CalculateByRadius);
+            
+            // Рассчитываем ширину и массу плёнки при изменении значений каждого поля, участвующего в вычислении
+            $('#spool').change(CalculateByRadius);
+            
+            $('#radius').keypress(CalculateByRadius);
+            
+            $('#radius').keyup(CalculateByRadius);
+            
+            $('#radius').change(CalculateByRadius);
         </script>
     </body>
 </html>
