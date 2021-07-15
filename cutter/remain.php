@@ -15,6 +15,21 @@ if(empty($cut_id)) {
 // СТАТУС "СВОБОДНЫЙ"
 $free_status_id = 1;
 
+// Получение объекта
+$supplier_id = null;
+$film_brand_id = null;
+$thickness = null;
+$width = null;
+
+$sql = "select supplier_id, film_brand_id, thickness, width from cut where id = $cut_id";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $supplier_id = $row['supplier_id'];
+    $film_brand_id = $row['film_brand_id'];
+    $thickness = $row['thickness'];
+    $width = $row['width'];
+}
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -50,24 +65,30 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
             $radius_valid = ISINVALID;
             $form_valid = false;
         }
+        
+        $id_from_supplier = "Из раскроя";
+        $cell = "Цех";
+        $comment = "";
+        $user_id = GetUserId();
             
         if($form_valid) {
-            print_r($_POST);
+            $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id) "
+                . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$user_id')";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+            $roll_id = $executer->insert_id;
+            
+            if(empty($error_message)) {
+                $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, $free_status_id, $user_id)";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+                
+                if(empty($error_message)) {
+                    header('Location: '.APPLICATION."/cutter/print_remain.php?id=$roll_id");
+                }
+            }
         }
     }
-}
-
-// Получение объекта
-$film_brand_id = null;
-$thickness = null;
-$width = null;
-
-$sql = "select film_brand_id, thickness, width from cut where id = $cut_id";
-$fetcher = new Fetcher($sql);
-if($row = $fetcher->Fetch()) {
-    $film_brand_id = $row['film_brand_id'];
-    $thickness = $row['thickness'];
-    $width = $row['width'];
 }
 ?>
 <!DOCTYPE html>
