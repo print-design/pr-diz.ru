@@ -131,7 +131,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                 <div class="form-group stream_group<?=$stream_group_display_class ?>" id="stream_<?=$i ?>_group">
                     <label for="stream_<?=$i ?>">Ручей <?=$i ?></label>
                     <div class="input-group w-75">
-                        <input type="text" id="stream_<?=$i ?>" name="stream_<?=$i ?>" class="form-control<?=$$stream_valid_name ?>" value="<?= filter_input(INPUT_POST, 'stream_'.$i) ?>" />
+                        <input type="text" id="stream_<?=$i ?>" name="stream_<?=$i ?>" class="form-control int-only<?=$$stream_valid_name ?>" value="<?= filter_input(INPUT_POST, 'stream_'.$i) ?>" />
                         <div class="input-group-append"><span class="input-group-text">мм</span></div>
                         <div class="invalid-feedback"><?=$$stream_message ?></div>
                     </div>

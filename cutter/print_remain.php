@@ -68,7 +68,7 @@ $current_date_time = date("dmYHis");
         </style>
     </head>
     <body class="print">
-        <div style="position: absolute; top: 550px; left: 50px; font-size: 40px; z-index: 2000;">
+        <div id="new_wind_link" class="d-none" style="position: absolute; top: 550px; left: 50px; font-size: 40px; z-index: 2000;">
             <a class="btn btn-dark" style="font-size: 20px;" href="<?=APPLICATION ?>/cutter/finish.php">Закрыть заявку</a>
         </div>
         <div style="position: absolute; top: 850px; right: 770px; font-size: 150px; z-index: 2000;">
@@ -206,5 +206,9 @@ $current_date_time = date("dmYHis");
         sharelink.addEventListener('click', () => {
             navigator.share(shareData)
         });
+        
+        setTimeout(function() { 
+            document.getElementById('new_wind_link').removeAttribute('class');
+        }, 30000);
     </script>
 </html>
