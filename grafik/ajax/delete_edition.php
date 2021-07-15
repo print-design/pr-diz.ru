@@ -19,7 +19,13 @@ if($row = $fetcher->Fetch()) {
         $count = (new Fetcher("select count(id) from edition where workshift_id = $workshift_id"))->Fetch()[0];
         
         if($count == 0) {
-            $error_message = (new Executer("delete from workshift where id = $workshift_id"))->error;
+            if(filter_input(INPUT_GET, 'keep_workshift') == 1) {
+                $position = 1;
+                $error_message = (new Executer("insert into edition (workshift_id, position) values ($workshift_id, $position)"))->error;
+            }
+            else {
+                $error_message = (new Executer("delete from workshift where id = $workshift_id"))->error;
+            }
         }
     }
 }

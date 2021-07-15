@@ -435,7 +435,7 @@ $error_message = $grafik->error_message;
                             
                                         setTimeout(function(){
                                             if(confirm('Удалить исходный тираж "' + source_name + '"?')){
-                                                $.ajax({ url: "ajax/delete_edition.php?id=" + source_id, context: button })
+                                                $.ajax({ url: "ajax/delete_edition.php?id=" + source_id + "&keep_workshift=1", context: button })
                                                         .done(function(){
                                                             $.ajax({ url: "ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
                                                                     .done(function(data){
