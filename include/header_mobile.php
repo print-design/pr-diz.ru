@@ -32,7 +32,7 @@
             </li>
             <?php elseif(IsInRole(array('cutter'))): ?>
             <li class="nav-item">
-                <a class="nav-link" href="<?=APPLICATION ?>/cut/">Склад</a>
+                <a class="nav-link" href="<?=APPLICATION ?>/cutter/">Склад</a>
             </li>
             <?php elseif(!empty(filter_input(INPUT_COOKIE, USERNAME))): ?>
             <li class="nav-item dropdown">

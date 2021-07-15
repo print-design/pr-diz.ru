@@ -122,6 +122,7 @@
             var textStart = text.substring(0, selStart);
             var textEnd = text.substring(selEnd);
             var newvalue = textStart + e.key + textEnd;
+            newvalue = newvalue.replace(/\D/g, ''); // целое число может быть разбито на разряды
             var iNewValue = parseInt(newvalue);
             
             if(iNewValue == null || iNewValue < 1 || iNewValue > max) {
@@ -209,6 +210,18 @@
             else {
                 textbox.val(fVal);
             }
+        }
+    }
+    
+    // Форматирование целочисленного поля для отображения разрядов
+    function IntFormat(textbox) {
+        oldv = textbox.val();
+        replv = oldv.replaceAll(/\D/g, '');
+        
+        if(replv === '') textbox.val('');
+        else {
+            val = Intl.NumberFormat('ru-RU').format(replv);
+            textbox.val(val);
         }
     }
     
@@ -336,7 +349,7 @@
     });
     
     // Автологаут резчика
-    <?php if(IsInRole('cutter')): ?>
+    <?php if(IsInRole('cutterOLD')): ?>
         function AutoLogout(end) {
             var beforeLogout = end - (new Date());
             
