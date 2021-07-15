@@ -40,7 +40,7 @@ if($row = $fetcher->Fetch()) {
         <div id="new_wind_link" class="d-none" style="position: absolute; top: 550px; left: 50px; font-size: 40px; z-index: 2000;">
             <a class="btn btn-dark" style="font-size: 20px;" href="<?=APPLICATION ?>/cutter/next.php?cut_id=<?=$cut_id ?>">Новая намотка</a>
         </div>
-        <div style="position: absolute; top: 850px; right: 770px; font-size: 150px; z-index: 2000;">
+        <div style="position: absolute; top: 600px; right: 600px; font-size: 150px; z-index: 2000;">
             <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
         </div>
         <?php
