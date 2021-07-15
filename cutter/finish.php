@@ -26,7 +26,7 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
             <h1 class="text-center">Заявка закрыта</h1>
             <p class="text-center" style="font-size: x-large; color: green;">Молодец:)</p>
             <div style="height: 22rem;"></div>
-            <a href="<?=APPLICATION ?>" class="btn btn-dark form-control">Вернуться в заявки</a>
+            <a href="<?=APPLICATION ?>/cutter/" class="btn btn-dark form-control">Вернуться в заявки</a>
         </div>
         <?php
         include '../include/footer.php';
