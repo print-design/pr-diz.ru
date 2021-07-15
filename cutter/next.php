@@ -21,6 +21,7 @@ $form_valid = true;
 $error_message = '';
 
 $length_valid = '';
+$length_message = "Число, макс. 30000";
 $radius_valid = '';
 
 // Обработка отправки формы
@@ -75,6 +76,17 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     $net_weight = floatval($ud_ves) * floatval($length) * floatval($width) / 1000.0 / 1000.0;
     $cell = "Цех";
     $comment = '';
+    
+    // Валидация длины: длина+-20% от (0,15*R*R+11,3961*R-176,4427)/(толщина пленки/20)
+    $normal_length = (0.15 * floatval($radius) * floatval($radius) + 11.3961 * floatval($radius) - 176.4427) / (floatval($thickness) / 20.0);
+    $max_length = $normal_length * 1.2;
+    $min_length = $normal_length * 0.8;
+    
+    if($length > $max_length || $length < $min_length) {
+        $length_valid = ISINVALID;
+        $length_message = "Длина не соответствует радиусу";
+        $form_valid = false;
+    }
        
     if($form_valid) {
         $sql = "insert into cut_wind (cut_id, length, radius) values($cut_id, $length, $radius)";
@@ -82,7 +94,6 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         $error_message = $executer->error;
         $cut_wind_id = $executer->insert_id;
         
-        // Создание рулона на каждый ручей
         // Создание рулона на каждый ручей
         for($i=1; $i<19; $i++) {
             if(key_exists('stream_'.$i, $_POST) && empty($error_message)) {
@@ -170,7 +181,7 @@ while ($row = $fetcher->Fetch()) {
                     <div class="input-group">
                         <input type="text" class="form-control int-only int-format<?=$length_valid ?>" id="length" name="length" value="<?= filter_input(INPUT_POST, 'length') ?>" required="required" />
                         <div class="input-group-append"><span class="input-group-text">м</span></div>
-                        <div class="invalid-feedback">Число, макс. 30000</div>
+                        <div class="invalid-feedback"><?=$length_message ?></div>
                     </div>
                 </div>
                 <div class="form-group">
