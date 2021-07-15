@@ -137,7 +137,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                         </div>
                         <div class="form-group">
                             <label for="width">Ширина, мм</label>
-                            <input type="text" id="width" name="width" value="<?= filter_input(INPUT_POST, 'width') ?>" class="form-control<?=$width_valid ?>" placeholder="Введите ширину" required="required" />
+                            <input type="text" id="width" name="width" value="<?= filter_input(INPUT_POST, 'width') ?>" class="form-control<?=$width_valid ?>" placeholder="Введите ширину" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Число, макс. 1600</div>
                         </div>
                         <div class="form-group">

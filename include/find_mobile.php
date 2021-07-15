@@ -35,17 +35,7 @@ elseif (IsInRole(array('cutter'))) {
                 <label for="id">Введите ID</label>
                 <div class="d-flex">
                     <div class="input-group" id="find-group">
-                        <input type="text"
-                               id="id"
-                               name="id"
-                               class="form-control no-latin"
-                               required="required" 
-                               value="<?=$find_value ?>" 
-                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
-                               onmouseup="javascript: $(this).attr('id', 'id'); $(this).attr('name', 'id');" 
-                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
-                               onkeyup="javascript: $(this).attr('id', 'id'); $(this).attr('name', 'id');" 
-                               onfocusout="javascript: $(this).attr('id', 'id'); $(this).attr('name', 'id');" />
+                        <input type="text" id="id" name="id" class="form-control no-latin" required="required" value="<?=$find_value ?>" autocomplete="off" />
                         <?php if(!empty($find_value)): ?>
                         <div class='input-group-append'>
                             <button type='button' class='btn' id='find-clear'><i class='fas fa-times'></i></button>

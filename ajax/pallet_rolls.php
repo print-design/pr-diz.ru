@@ -4,9 +4,6 @@ include '../include/topscripts.php';
 // СТАТУС "СВОБОДНЫЙ" ДЛЯ РУЛОНА
 $free_status_id = 1;
 
-// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
-$utilized_status_id = 2;
-
 $pallet_id = filter_input(INPUT_GET, 'id');
 $getstring = filter_input(INPUT_GET, 'getstring');
 $decoded = rawurldecode($getstring);
@@ -33,13 +30,13 @@ if(!empty($pallet_id)) {
             . "from pallet_roll pr "
             . "inner join pallet p on pr.pallet_id = p.id "
             . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-            . "where pr.pallet_id = $pallet_id and (prsh.status_id is null or prsh.status_id <> $utilized_status_id) "
+            . "where pr.pallet_id = $pallet_id and (prsh.status_id is null or prsh.status_id = $free_status_id) "
             . "union "
             . "select 1 utilized,  p.width, p.thickness, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, IFNULL(prsh.status_id, $free_status_id) status_id "
             . "from pallet_roll pr "
             . "inner join pallet p on pr.pallet_id = p.id "
             . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-            . "where pr.pallet_id = $pallet_id and prsh.status_id = $utilized_status_id "
+            . "where pr.pallet_id = $pallet_id and prsh.status_id is not null and prsh.status_id <> $free_status_id "
             . "order by utilized, ordinal";
     $fetcher = new Fetcher($sql);
     

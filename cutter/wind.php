@@ -69,8 +69,11 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     $cell = "Цех";
     $comment = "";
     
-    // Валидация длины: длина+-20% от (0,15*R*R+11,3961*R-176,4427)/(толщина пленки/20)
-    $normal_length = (0.15 * floatval($radius) * floatval($radius) + 11.3961 * floatval($radius) - 176.4427) / (floatval($thickness) / 20.0);
+    // Данные, вычисленные по радиусу
+    $normal_length = filter_input(INPUT_POST, 'normal_length');
+    $net_weight = filter_input(INPUT_POST, 'net_weight');
+    
+    // Валидация длины
     $max_length = $normal_length * 1.2;
     $min_length = $normal_length * 0.8;
     
@@ -104,6 +107,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             // Создание рулона на каждый ручей
             for($i=1; $i<19; $i++) {
                 if(key_exists('stream_'.$i, $_POST) && empty($error_message)) {
+                    $width = filter_input(INPUT_POST, 'stream_'.$i);
                     $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id, cut_wind_id) "
                             . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$user_id', $cut_wind_id)";
                     $executer = new Executer($sql);
@@ -165,11 +169,14 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             endfor;
             ?>
             <form method="post" class="mt-3">
-                <input type="hidden" name="supplier_id" value="<?=$_REQUEST['supplier_id'] ?>" />
-                <input type="hidden" name="film_brand_id" value="<?=$_REQUEST['film_brand_id'] ?>" />
-                <input type="hidden" name="thickness" value="<?=$_REQUEST['thickness'] ?>" />
-                <input type="hidden" name="width" value="<?=$_REQUEST['width'] ?>" />
-                <input type="hidden" name="streams_count" value="<?=$_REQUEST['streams_count'] ?>" />
+                <input type="hidden" id="supplier_id" name="supplier_id" value="<?=$_REQUEST['supplier_id'] ?>" />
+                <input type="hidden" id="film_brand_id" name="film_brand_id" value="<?=$_REQUEST['film_brand_id'] ?>" />
+                <input type="hidden" id="thickness" name="thickness" value="<?=$_REQUEST['thickness'] ?>" />
+                <input type="hidden" id="width" name="width" value="<?=$_REQUEST['width'] ?>" />
+                <input type="hidden" id="streams_count" name="streams_count" value="<?=$_REQUEST['streams_count'] ?>" />
+                <input type="hidden" id="spool" name="spool" value="76" />
+                <input type="hidden" id="net_weight" name="net_weight" />
+                <input type="hidden" id="normal_length" name="normal_length" />
                 <?php
                 for($i=1; $i<=19; $i++):
                 if(key_exists('stream_'.$i, $_REQUEST)):
@@ -182,7 +189,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                 <div class="form-group">
                     <label for="length">Длина, м</label>
                     <div class="input-group">
-                        <input type="text" class="form-control int-only int-format<?=$length_valid ?>" id="length" name="length" value="<?= filter_input(INPUT_POST, 'length') ?>" required="required" />
+                        <input type="text" class="form-control int-only int-format<?=$length_valid ?>" id="length" name="length" value="<?= filter_input(INPUT_POST, 'length') ?>" required="required" autocomplete="off" />
                         <div class="input-group-append"><span class="input-group-text">м</span></div>
                         <div class="invalid-feedback"><?=$length_message ?></div>
                     </div>
@@ -190,7 +197,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                 <div class="form-group">
                     <label for="radius">Радиус от вала, мм</label>
                     <div class="input-group">
-                        <input type="text" class="form-control int-only<?=$radius_valid ?>" id="radius" name="radius" value="<?= filter_input(INPUT_POST, 'radius') ?>" required="required" />
+                        <input type="text" class="form-control int-only<?=$radius_valid ?>" id="radius" name="radius" value="<?= filter_input(INPUT_POST, 'radius') ?>" required="required" autocomplete="off" />
                         <div class="input-group-append"><span class="input-group-text">мм</span></div>
                         <div class="invalid-feedback">Число, макс. 999</div>
                     </div>
@@ -203,6 +210,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             include '../include/footer.php';
             include '../include/footer_mobile.php';
             ?>
+            <script src="<?=APPLICATION ?>/js/calculation.js"></script>
             <script>
                 // В поле "Длина" ограничиваем значения: целые числа от 1 до 30000
                 $('#length').keydown(function(e) {
@@ -253,6 +261,51 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                 
                     ChangeLimitIntValue($(this), 999);
                 });
+                
+                // Все марки плёнки с их вариациями
+                var films = new Map();
+            
+                <?php
+                $sql = "SELECT fbv.film_brand_id, fbv.thickness, fbv.weight FROM film_brand_variation fbv";
+                $fetcher = new Fetcher($sql);
+                while ($row = $fetcher->Fetch()) {
+                    echo "if(films.get(".$row['film_brand_id'].") == undefined) {\n";
+                    echo "films.set(".$row['film_brand_id'].", new Map());\n";
+                    echo "}\n";
+                    echo "films.get(".$row['film_brand_id'].").set(".$row['thickness'].", ".$row['weight'].");\n";
+                }
+                ?>
+                
+                // Расчёт длины и массы плёнки по шпуле, толщине, радиусу, ширине, удельному весу
+                function CalculateByRadius() {
+                    $('#normal_length').val('');
+                    $('#net_weight').val('');
+                
+                    film_brand_id = $('#film_brand_id').val();
+                    spool = $('#spool').val();
+                    thickness = $('#thickness').val();
+                    radius = $('#radius').val();
+                    width = $('#width').val();
+                
+                    if(!isNaN(spool) && !isNaN(thickness) && !isNaN(radius) && !isNaN(width) 
+                            && spool != '' && thickness != '' && radius != '' && width != '') {
+                        density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
+                        
+                        result = GetFilmLengthWeightBySpoolThicknessRadiusWidth(spool, thickness, radius, width, density);
+                        
+                        $('#normal_length').val(result.length.toFixed(2));
+                        $('#net_weight').val(result.weight.toFixed(2));
+                    }
+                }
+            
+                $(document).ready(CalculateByRadius);
+            
+                // Рассчитываем ширину и массу плёнки при изменении значений каждого поля, участвующего в вычислении
+                $('#radius').keypress(CalculateByRadius);
+            
+                $('#radius').keyup(CalculateByRadius);
+            
+                $('#radius').change(CalculateByRadius);
             </script>
         </div>
     </body>

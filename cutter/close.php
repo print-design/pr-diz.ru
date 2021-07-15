@@ -207,7 +207,7 @@ if($row = $fetcher->Fetch()) {
             <form method="post" id="sources_form">
                 <div class="form-group" id="count-group">
                     <label for="sources_count">Кол-во исходных ролей</label>
-                    <input type="text" id="sources_count" name="sources_count" class="form-control w-50 int-only" value="<?= filter_input(INPUT_POST, 'sources_count') ?>" required="required" />
+                    <input type="text" id="sources_count" name="sources_count" class="form-control w-50 int-only" value="<?= filter_input(INPUT_POST, 'sources_count') ?>" required="required" autocomplete="off" />
                     <div class="invalid-feedback">Число, макс. 19</div>
                 </div>
                 <?php
@@ -224,7 +224,7 @@ if($row = $fetcher->Fetch()) {
                 ?>
                 <div class="form-group source_group<?=$source_group_display_class ?>" id="source_<?=$i ?>_group">
                     <label for="source_<?=$i ?>">ID <?=$i ?>-го исходного роля</label>
-                    <input type="text" id="source_<?=$i ?>" name="source_<?=$i ?>" class="form-control no-latin<?=$$source_valid_name ?>" value="<?= filter_input(INPUT_POST, 'source_'.$i) ?>" />
+                    <input type="text" id="source_<?=$i ?>" name="source_<?=$i ?>" class="form-control no-latin<?=$$source_valid_name ?>" value="<?= filter_input(INPUT_POST, 'source_'.$i) ?>" autocomplete="off" />
                     <div class="invalid-feedback"><?=$$source_message ?></div>
                 </div>
                 <?php endfor; ?>
