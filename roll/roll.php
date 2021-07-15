@@ -467,7 +467,7 @@ $utilized_status_id = 2;
                         <label for="status_id">Статус</label>
                         <select id="status_id" name="status_id" class="form-control<?=$status_id_valid ?>" required="required"<?=$status_id_disabled ?>>
                             <?php
-                            $statuses = (new Grabber("select s.id, s.name from roll_status s order by s.name"))->result;
+                            $statuses = (new Grabber("select s.id, s.name from roll_status s order by s.ordinal"))->result;
                             foreach ($statuses as $status) {
                                 if(!(empty($status_id) && $status['id'] == $utilized_status_id)) { // Если статуса нет, то нельзя сразу поставить "Сработанный"
                                     $id = $status['id'];
