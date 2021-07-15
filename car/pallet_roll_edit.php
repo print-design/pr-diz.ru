@@ -120,18 +120,7 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
                             <input type="hidden" id="pallet_id" name="pallet_id" value="<?=$pallet_id ?>" />
                             <div class="form-group">
                                 <label for="cell">Номер ячейки</label>
-                                <input type="text" 
-                                       id="cell" 
-                                       name="cell" 
-                                       value="<?= htmlentities($cell) ?>" 
-                                       class="form-control no-latin" 
-                                       style="font-size: 32px;"
-                                       required="required" 
-                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
-                                       onmouseup="javascript: $(this).attr('id', 'cell'); $(this).attr('name', 'cell');" 
-                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'cell'); $(this).attr('name', 'cell');" 
-                                       onfocusout="javascript: $(this).attr('id', 'cell'); $(this).attr('name', 'cell');" />
+                                <input type="text" id="cell" name="cell" value="<?= htmlentities($cell) ?>" class="form-control no-latin" style="font-size: 32px;" required="required" autocomplete="off" />
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-dark form-control" id="cell-submit" name="cell-submit">Сменить ячейку</button>

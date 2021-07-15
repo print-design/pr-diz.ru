@@ -137,7 +137,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
                 <div class="form-group remainder-group<?=$remainder_class ?>">
                     <label for="radius">Введите радиус от вала исходного роля</label>
                     <div class="input-group">
-                        <input type="text" class="form-control int-only<?=$radius_valid ?>" id="radius" name="radius" value="<?= filter_input(INPUT_POST, 'radius') ?>"<?=$remainder_required ?> />
+                        <input type="text" class="form-control int-only<?=$radius_valid ?>" id="radius" name="radius" value="<?= filter_input(INPUT_POST, 'radius') ?>"<?=$remainder_required ?> autocomplete="off" />
                         <div class="input-group-append"><span class="input-group-text">мм</span></div>
                         <div class="invalid-feedback">Радиус от вала обязательно</div>
                     </div>

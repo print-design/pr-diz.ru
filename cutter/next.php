@@ -198,7 +198,7 @@ while ($row = $fetcher->Fetch()) {
                 <div class="form-group">
                     <label for="length">Длина, м</label>
                     <div class="input-group">
-                        <input type="text" class="form-control int-only int-format<?=$length_valid ?>" id="length" name="length" value="<?= filter_input(INPUT_POST, 'length') ?>" required="required" />
+                        <input type="text" class="form-control int-only int-format<?=$length_valid ?>" id="length" name="length" value="<?= filter_input(INPUT_POST, 'length') ?>" required="required" autocomplete="off" />
                         <div class="input-group-append"><span class="input-group-text">м</span></div>
                         <div class="invalid-feedback"><?=$length_message ?></div>
                     </div>
@@ -206,7 +206,7 @@ while ($row = $fetcher->Fetch()) {
                 <div class="form-group">
                     <label for="radius">Радиус от вала, мм</label>
                     <div class="input-group">
-                        <input type="text" class="form-control int-only<?=$radius_valid ?>" id="radius" name="radius" value="<?= filter_input(INPUT_POST, 'radius') ?>" required="required" />
+                        <input type="text" class="form-control int-only<?=$radius_valid ?>" id="radius" name="radius" value="<?= filter_input(INPUT_POST, 'radius') ?>" required="required" autocomplete="off" />
                         <div class="input-group-append"><span class="input-group-text">мм</span></div>
                         <div class="invalid-feedback">Число, макс. 999</div>
                     </div>
