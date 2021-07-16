@@ -30,13 +30,20 @@
         }
     });
     
-    $('.int-format').keyup(function() {
-        oldv = $(this).val();
-        replv = oldv.replaceAll(/\D/g, '');
+    $('.int-only').keyup(function() {
+        var val = $(this).val();
+        val = val.replaceAll(/\D/g, '');
         
-        if(replv === '') $(this).val('');
+        if(val === '') {
+            $(this).val('');
+        }
         else {
-            val = Intl.NumberFormat('ru-RU').format(replv);
+            val = parseInt(val);
+            
+            if($(this).hasClass('int-format')) {
+                val = Intl.NumberFormat('ru-RU').format(replv);
+            }
+            
             $(this).val(val);
         }
     });
