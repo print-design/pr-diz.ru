@@ -34,10 +34,13 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()):
             ?>
-            <a class="btn btn-dark w-100 mt-4" href="<?=APPLICATION ?>/cutter/unclosed.php">Приступить к раскрою</a>
-            <?php else: ?>
-            <a class="btn btn-dark w-100 mt-4" href="<?=APPLICATION ?>/cutter/material.php">Приступить к раскрою</a>
-            <?php endif; ?>
+            <h1>У вас есть незакрытая заявка</h1>
+            <a class="btn btn-dark w-100 mt-4" href="<?=APPLICATION ?>/cutter/continue.php">Посмотреть</a>
+            <?php
+            else:
+                header('Location: '.APPLICATION.'/cutter/');
+            endif;
+            ?>
         </div>
         <?php
         include '../include/footer.php';
