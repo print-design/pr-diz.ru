@@ -26,25 +26,14 @@ $radius_valid = '';
 
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'next-submit')) {
-    $length = filter_input(INPUT_POST, 'length');
-    if(empty($length)) {
-        $length_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
     $length = preg_replace("/\D/", "", filter_input(INPUT_POST, 'length'));
-    if($length > 30000) {
+    if(empty($length) || is_nan($length) || intval($length) > 30000) {
         $length_valid = ISINVALID;
         $form_valid = false;
     }
     
     $radius = filter_input(INPUT_POST, 'radius');
-    if(empty($radius)) {
-        $radius_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
-    if($radius > 999) {
+    if(empty($radius) || is_nan($radius) || intval($radius) > 999) {
         $radius_valid = ISINVALID;
         $form_valid = false;
     }
@@ -213,53 +202,13 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             <script src="<?=APPLICATION ?>/js/calculation.js"></script>
             <script>
                 // В поле "Длина" ограничиваем значения: целые числа от 1 до 30000
-                $('#length').keydown(function(e) {
-                    if(!KeyDownLimitIntValue($(e.target), e, 30000)) {
-                        $(this).addClass('is-invalid');
-                    
-                        return false;
-                    }
-                    else {
-                        $(this).removeClass('is-invalid');
-                    }
-                });
-    
-                $("#length").change(function(){
-                    val = $(this).val().replace(' ', '');
-                    iVal = parseInt(val);
-                    
-                    if(iVal > 30000) {
-                        $(this).addClass('is-invalid');
-                    }
-                    else {
-                        $(this).removeClass('is-invalid');
-                    }
-                
-                    ChangeLimitIntValue($(this), 30000);
-                    IntFormat($(this));
+                $('#length').keyup(function() {
+                    KeyUpLimitIntValue($(this), 30000);
                 });
                 
                 // В поле "Радиус" ограничиваем значения: целые числа от 1 до 999
-                $('#radius').keydown(function(e) {
-                    if(!KeyDownLimitIntValue($(e.target), e, 999)) {
-                        $(this).addClass('is-invalid');
-                    
-                        return false;
-                    }
-                    else {
-                        $(this).removeClass('is-invalid');
-                    }
-                });
-    
-                $("#radius").change(function(){
-                    if($(this).val() > 999) {
-                        $(this).addClass('is-invalid');
-                    }
-                    else {
-                        $(this).removeClass('is-invalid');
-                    }
-                
-                    ChangeLimitIntValue($(this), 999);
+                $('#radius').keyup(function() {
+                    KeyUpLimitIntValue($(this), 999);
                 });
                 
                 // Все марки плёнки с их вариациями

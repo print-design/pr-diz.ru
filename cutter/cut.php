@@ -32,7 +32,7 @@ for($i=1; $i<=19; $i++) {
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'next-submit')) {
     $streams_count = filter_input(INPUT_POST, 'streams_count');
-    if(empty($streams_count)) {
+    if(empty($streams_count) || is_nan($streams_count) || intval($streams_count) > 19) {
         $streams_count_valid = ISINVALID;
         $form_valid = false;
     }
@@ -148,30 +148,8 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         ?>
         <script>
             // В поле "Кол-во ручьев" ограничиваем значения: целые числа от 1 до 19
-            $('#streams_count').keydown(function(e) {
-                if(!KeyDownLimitIntValue($(e.target), e, 19)) {
-                    $(this).addClass('is-invalid');
-                    
-                    return false;
-                }
-                else {
-                    $(this).removeClass('is-invalid');
-                }
-            });
-            
             $('#streams_count').keyup(function() {
-                SetStreams($(this).val());
-            });
-    
-            $("#streams_count").change(function(){
-                if($(this).val() > 19) {
-                    $(this).addClass('is-invalid');
-                }
-                else {
-                    $(this).removeClass('is-invalid');
-                }
-                
-                ChangeLimitIntValue($(this), 19);
+                KeyUpLimitIntValue($(this), 19);
                 SetStreams($(this).val());
             });
             
