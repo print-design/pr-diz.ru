@@ -133,6 +133,19 @@
         return true;
     }
     
+    // Ограничение значений для полей с целочисленными значениями (проценты и т. д.) 
+    // Обработка отпускания клавиши
+    function KeyUpLimitIntValue(textbox, max) {
+        val = textbox.val().replace(/[^\d]/g, '');
+        
+        if(val != null && val != '' && !isNaN(val) && parseInt(val) > max) {
+            textbox.addClass('is-invalid');
+        }
+        else {
+            textbox.removeClass('is-invalid');
+        }
+    }
+    
     // Ограничение значений для полей с целочисленными значениями (проценты и т. д.)
     // Обработка изменения текста
     function ChangeLimitIntValue(textbox, max) {

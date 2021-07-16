@@ -37,7 +37,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     $width = filter_input(INPUT_POST, 'width');
-    if(empty($width)) {
+    if(empty($width) || is_nan($width) || intval($width) > 1600) {
         $width_valid = ISINVALID;
         $form_valid = false;
     }
@@ -137,7 +137,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                         </div>
                         <div class="form-group">
                             <label for="width">Ширина, мм</label>
-                            <input type="text" id="width" name="width" value="<?= filter_input(INPUT_POST, 'width') ?>" class="form-control<?=$width_valid ?>" placeholder="Введите ширину" required="required" autocomplete="off" />
+                            <input type="text" id="width" name="width" value="<?= filter_input(INPUT_POST, 'width') ?>" class="form-control int-only<?=$width_valid ?>" placeholder="Введите ширину" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Число, макс. 1600</div>
                         </div>
                         <div class="form-group">
@@ -185,27 +185,9 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                 }
             });
             
-            // В поле "Ширина" ограничиваем значения: целые числа от 1 до 50
-            $('#width').keydown(function(e) {
-                if(!KeyDownLimitIntValue($(e.target), e, 1600)) {
-                    $(this).addClass('is-invalid');
-                    
-                    return false;
-                }
-                else {
-                    $(this).removeClass('is-invalid');
-                }
-            });
-    
-            $("#width").change(function(){
-                if($(this).val() > 1600) {
-                    $(this).addClass('is-invalid');
-                }
-                else {
-                    $(this).removeClass('is-invalid');
-                }
-                
-                ChangeLimitIntValue($(this), 1600);
+            // В поле "Ширина" ограничиваем значения: целые числа от 1 до 1600
+            $('#width').keyup(function() {
+                KeyUpLimitIntValue($(this), 1600);
             });
         </script>
     </body>
