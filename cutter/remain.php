@@ -45,7 +45,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
     else {
         // Если остался исходный ролик, создаём его, рассчитывая параметры по радиусу от вала и диаметру шпули
         $radius = filter_input(INPUT_POST, 'radius');
-        if(empty($radius)) {
+        if(empty($radius) || is_nan($radius) || intval($radius) > 999) {
             $radius_valid = ISINVALID;
             $form_valid = false;
         }
@@ -172,6 +172,11 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
         ?>
         <script src="<?=APPLICATION ?>/js/calculation.js"></script>
         <script>
+            // В поле "Радиус" ограничиваем значения: целые числа от 1 до 999
+            $('#radius').keyup(function() {
+                KeyUpLimitIntValue($(this), 999);
+            });
+                
             // Скрытие/показ элементов формы в зависимости от того, остался ли исходный ролик
             $('#remains').change(function() {
                 if($(this).is(':checked')) {

@@ -113,7 +113,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                 <?php endforeach; ?>
                 <div class="form-group">
                     <label for="streams_count">Кол-во ручьев</label>
-                    <input type="text" id="streams_count" name="streams_count" class="form-control w-50<?=$streams_count_valid ?>" value="<?= filter_input(INPUT_POST, 'streams_count') ?>" required="required" autocomplete="off" />
+                    <input type="text" id="streams_count" name="streams_count" class="form-control int-only w-50<?=$streams_count_valid ?>" value="<?= filter_input(INPUT_POST, 'streams_count') ?>" required="required" autocomplete="off" />
                     <div class="invalid-feedback">Число, макс. 19</div>
                 </div>
                 <?php
