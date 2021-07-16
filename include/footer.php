@@ -41,7 +41,7 @@
             val = parseInt(val);
             
             if($(this).hasClass('int-format')) {
-                val = Intl.NumberFormat('ru-RU').format(replv);
+                val = Intl.NumberFormat('ru-RU').format(val);
             }
             
             $(this).val(val);
