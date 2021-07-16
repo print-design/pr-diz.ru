@@ -65,7 +65,6 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
         }
         
         // Проверяем, чтобы номер рулона соответствовал реальному рулону и имел такие же параметры
-        
         if(mb_substr($source, 0, 1) == "р" || mb_substr($source, 0, 1) == "Р") {
             // Ищем такой среди свободных роликов
             $roll_id = mb_substr($source, 1);
@@ -88,11 +87,13 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
                 else {
                     $$source_valid = ISINVALID;
                     $$source_message = "Марка/толщина/ширина не совпадают";
+                    $form_valid = false;
                 }
             }
             else {
                 $$source_valid = ISINVALID;
                 $$source_message = "Нет ролика с таким номером";
+                $form_valid = false;
             }
         }
         elseif(mb_substr($source, 0, 1) == "п" || mb_substr ($source, 0, 1) == "П") {
@@ -123,21 +124,25 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
                     else {
                         $$source_valid = ISINVALID;
                         $$source_message = "Марка/толщина/ширина не совпадают";
+                        $form_valid = false;
                     }
                 }
                 else {
                     $$source_valid = ISINVALID;
                     $$source_message = "Нет ролика с таким номером";
+                    $form_valid = false;
                 }
             }
             else {
                 $$source_valid = ISINVALID;
                 $$source_message = "Нет ролика с таким номером";
+                $form_valid = false;
             }
         }
         else {
             $$source_valid = ISINVALID;
             $$source_message = "Нет ролика с таким номером";
+            $form_valid = false;
         }
     }
 
