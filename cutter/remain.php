@@ -176,7 +176,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
             $('#radius').keyup(function() {
                 KeyUpLimitIntValue($(this), 999);
             });
-            
+                
             // Скрытие/показ элементов формы в зависимости от того, остался ли исходный ролик
             $('#remains').change(function() {
                 if($(this).is(':checked')) {
