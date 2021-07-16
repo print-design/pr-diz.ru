@@ -69,7 +69,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
             // Ищем такой среди свободных роликов
             $roll_id = mb_substr($source, 1);
             
-            $sql = "select fb.name film_brand, r.thickness, r.width "
+            $sql = "select fb.name film_brand, r.thickness, r.width, r.length "
                     . "from roll r "
                     . "inner join film_brand fb on r.film_brand_id = fb.id "
                     . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
@@ -82,6 +82,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
                     $cut_source['cut_id'] = $cut_id;
                     $cut_source['is_from_pallet'] = 0;
                     $cut_source['roll_id'] = $roll_id;
+                    $cut_source['length'] = $row['length'];
                     array_push($cut_sources, $cut_source);
                 }
                 else {
@@ -105,7 +106,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
                 $pallet_id = $substrings[0];
                 $ordinal = $substrings[1];
                 
-                $sql = "select pr.id roll_id, fb.name film_brand, p.thickness, p.width "
+                $sql = "select pr.id roll_id, fb.name film_brand, p.thickness, p.width, pr.length "
                         . "from pallet p "
                         . "inner join pallet_roll pr on pr.pallet_id = p.id "
                         . "inner join film_brand fb on p.film_brand_id = fb.id "
@@ -119,6 +120,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
                         $cut_source['cut_id'] = $cut_id;
                         $cut_source['is_from_pallet'] = 1;
                         $cut_source['roll_id'] = $row['roll_id'];
+                        $cut_source['length'] = $row['length'];
                         array_push($cut_sources, $cut_source);
                     }
                     else {
@@ -142,6 +144,34 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
         else {
             $$source_valid = ISINVALID;
             $$source_message = "Нет ролика с таким номером";
+            $form_valid = false;
+        }
+    }
+    
+    // Общая длина исходных роллей
+    $source_sum = 0;
+    
+    foreach ($cut_sources as $cut_source) {
+        $source_sum += $cut_source['length'];
+    }
+    
+    // Общая длина намоток
+    $wind_sum = 0;
+    $sql = "select sum(length) sum from cut_wind where cut_id = $cut_id";
+    $fetcher = new Fetcher($sql);
+    
+    if($row = $fetcher->Fetch()) {
+        $wind_sum = $row['sum'];
+    }
+    
+    if($wind_sum > $source_sum) {
+        for($i=1; $i<=$sources_count; $i++) {
+            $source = filter_input(INPUT_POST, 'source_'.$i);
+            $source_valid = 'source_'.$i.'_valid';
+            $source_message = 'source_'.$i.'_message';
+            
+            $$source_valid = ISINVALID;
+            $$source_message = "Сумма длин намоток больше суммы длин исходных роликов";
             $form_valid = false;
         }
     }
