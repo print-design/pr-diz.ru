@@ -68,6 +68,7 @@ if(!empty($pallet_id)) {
         $colour_style = "color: $colour";
     }
     ?>
+<div style="padding: 10px;<?=$utilized_style ?>">
 <table style="margin-top: 25px; margin-bottom: 25px; font-size: 14px;">
     <tbody>
     <tr>
