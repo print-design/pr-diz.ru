@@ -38,7 +38,7 @@ for($i=1; $i<=19; $i++) {
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'close-submit')) {
     $sources_count = filter_input(INPUT_POST, 'sources_count');
-    if(empty($sources_count)) {
+    if(empty($sources_count) || is_nan($sources_count) || intval($sources_count) > 19) {
         $sources_count_valid = ISINVALID;
         $form_valid = false;
     }
@@ -239,30 +239,8 @@ if($row = $fetcher->Fetch()) {
         ?>
         <script>
             // В поле "Кол-во исходных ролей" ограничиваем значения: целые числа от 1 до 19
-            $('#sources_count').keydown(function(e) {
-                if(!KeyDownLimitIntValue($(e.target), e, 19)) {
-                    $(this).addClass('is-invalid');
-                    
-                    return false;
-                }
-                else {
-                    $(this).removeClass('is-invalid');
-                }
-            });
-            
             $('#sources_count').keyup(function() {
-                SetSources($(this).val());
-            });
-            
-            $('#sources_count').change(function() {
-                if($(this).val() > 19) {
-                    $(this).addClass('is-invalid');
-                }
-                else {
-                    $(this).removeClass('is-invalid');
-                }
-                
-                ChangeLimitIntValue($(this), 19);
+                KeyUpLimitIntValue($(this), 19);
                 SetSources($(this).val());
             });
             
