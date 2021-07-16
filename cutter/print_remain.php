@@ -70,7 +70,7 @@ $current_date_time = date("dmYHis");
     <body class="print">
         <?php
         $class_attr = " class='d-none'";
-        if(isset($_COOKIE['cut_wind_id'.$cut_wind_id]) && $_COOKIE['cut_wind_id'.$cut_wind_id] == 1) {
+        if(isset($_COOKIE['remain_id'.$id]) && $_COOKIE['remain_id'.$id] == 1) {
             $class_attr = "";
         }
         ?>
@@ -215,7 +215,7 @@ $current_date_time = date("dmYHis");
         
         setTimeout(function() { 
             document.getElementById('new_wind_link').removeAttribute('class');
-            document.cookie = '<?='cut_wind_id'.$cut_wind_id ?>=1; Path=/;';
+            document.cookie = '<?='remain_id'.$id ?>=1; Path=/;';
         }, 30000);
     </script>
 </html>
