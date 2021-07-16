@@ -36,7 +36,7 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
             $id = $row['id'];
             $supplier = $row['supplier'];
             $film_brand = $row['film_brand'];
-            $thickness = $row['id'];
+            $thickness = $row['thickness'];
             $width = $row['width'];
             $cut_wind_id = $row['cut_wind_id'];
             $cut_streams_count = $row['cut_streams_count'];
