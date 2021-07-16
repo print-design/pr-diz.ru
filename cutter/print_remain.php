@@ -68,7 +68,13 @@ $current_date_time = date("dmYHis");
         </style>
     </head>
     <body class="print">
-        <div id="new_wind_link" class="d-none" style="position: absolute; top: 550px; left: 50px; font-size: 40px; z-index: 2000;">
+        <?php
+        $class_attr = " class='d-none'";
+        if(isset($_COOKIE['cut_wind_id'.$cut_wind_id]) && $_COOKIE['cut_wind_id'.$cut_wind_id] == 1) {
+            $class_attr = "";
+        }
+        ?>
+        <div id="new_wind_link"<?=$class_attr ?> style="position: absolute; top: 550px; left: 50px; font-size: 40px; z-index: 2000;">
             <a class="btn btn-dark" style="font-size: 20px;" href="<?=APPLICATION ?>/cutter/finish.php">Закрыть заявку</a>
         </div>
         <div style="position: absolute; top: 600px; right: 600px; font-size: 150px; z-index: 2000;">
@@ -209,6 +215,7 @@ $current_date_time = date("dmYHis");
         
         setTimeout(function() { 
             document.getElementById('new_wind_link').removeAttribute('class');
+            document.cookie = '<?='cut_wind_id'.$cut_wind_id ?>=1; Path=/;';
         }, 30000);
     </script>
 </html>
