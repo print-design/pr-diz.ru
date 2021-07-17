@@ -148,31 +148,33 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
         }
     }
     
-    // Общая длина исходных роллей
-    $source_sum = 0;
+    if($form_valid) {
+        // Общая длина исходных роллей
+        $source_sum = 0;
     
-    foreach ($cut_sources as $cut_source) {
-        $source_sum += $cut_source['length'];
-    }
+        foreach ($cut_sources as $cut_source) {
+            $source_sum += $cut_source['length'];
+        }
     
-    // Общая длина намоток
-    $wind_sum = 0;
-    $sql = "select sum(length) sum from cut_wind where cut_id = $cut_id";
-    $fetcher = new Fetcher($sql);
+        // Общая длина намоток
+        $wind_sum = 0;
+        $sql = "select sum(length) sum from cut_wind where cut_id = $cut_id";
+        $fetcher = new Fetcher($sql);
     
-    if($row = $fetcher->Fetch()) {
-        $wind_sum = $row['sum'];
-    }
+        if($row = $fetcher->Fetch()) {
+            $wind_sum = $row['sum'];
+        }
     
-    if($wind_sum > $source_sum) {
-        for($i=1; $i<=$sources_count; $i++) {
-            $source = filter_input(INPUT_POST, 'source_'.$i);
-            $source_valid = 'source_'.$i.'_valid';
-            $source_message = 'source_'.$i.'_message';
+        if($wind_sum > $source_sum) {
+            for($i=1; $i<=$sources_count; $i++) {
+                $source = filter_input(INPUT_POST, 'source_'.$i);
+                $source_valid = 'source_'.$i.'_valid';
+                $source_message = 'source_'.$i.'_message';
             
-            $$source_valid = ISINVALID;
-            $$source_message = "Сумма длин намоток больше суммы длин исходных роликов";
-            $form_valid = false;
+                $$source_valid = ISINVALID;
+                $$source_message = "Сумма длин намоток больше суммы длин исходных роликов";
+                $form_valid = false;
+            }
         }
     }
 

@@ -48,7 +48,7 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
             <p>Ширина: <?=$width ?> мм</p>
             <br />
             <?php
-            $sql = "select length from cut_wind where cut_id";
+            $sql = "select length from cut_wind where cut_id = $id";
             $fetcher = new Fetcher($sql);
             $total_length = 0;
             while($row = $fetcher->Fetch()) {
