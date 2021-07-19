@@ -46,12 +46,12 @@ if(!empty($error_message)) {
                         <div class="invalid-feedback invalid-stream"></div>
                     </div>
                 </div>
-                <?php endfor; ?>
-                <div class="form-group">
-                    <button type="button" class="btn btn-dark form-control mt-4" id="next-submit">Приступить к раскрою</button>
-                </div>
-            </form>
+            <?php endfor; ?>
+        <div class="form-group">
+            <button type="button" class="btn btn-dark form-control mt-4" id="next-submit">Приступить к раскрою</button>
         </div>
+    </form>
+</div>
 <script>
     $('#streams_count').keyup(function() {
         SetStreams($(this).val());
