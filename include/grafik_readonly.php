@@ -6,6 +6,28 @@ class GrafikReadonly {
         $this->dateFrom = $from;
         $this->dateTo = $to;
         $this->machineId = $machine_id;
+        
+        $sql = "select name, user1_name, user2_name, role_id, has_edition, has_organization, has_length, has_status, has_roller, has_lamination, has_coloring, coloring, has_manager, has_comment, is_cutter from machine where id = $machine_id";
+        $fetcher = new FetcherGrafik($sql);
+        $this->error_message = $fetcher->error;
+        
+        if($row = $fetcher->Fetch()) {
+            $this->name = $row['name'];
+            $this->user1Name = $row['user1_name'];
+            $this->user2Name = $row['user2_name'];
+            $this->userRole = $row['role_id'];
+            $this->hasEdition = $row['has_edition'];
+            $this->hasOrganization = $row['has_organization'];
+            $this->hasLength = $row['has_length'];
+            $this->hasStatus = $row['has_status'];
+            $this->hasRoller = $row['has_roller'];
+            $this->hasLamination = $row['has_lamination'];
+            $this->hasColoring = $row['has_coloring'];
+            $this->coloring = $row['coloring'];
+            $this->hasManager = $row['has_manager'];
+            $this->hasComment = $row['has_comment'];
+            $this->isCutter = $row['is_cutter'];
+        }
     }
     
     private $dateFrom;
