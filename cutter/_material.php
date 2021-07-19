@@ -81,13 +81,43 @@ if(!empty($error_message)) {
                 </div>
                 <div class="form-group">
                     <label for="width">Ширина, мм</label>
-                    <input type="text" id="width" name="width" value="<?= filter_input(INPUT_POST, 'width') ?>" class="form-control int-only" placeholder="Введите ширину" required="required" autocomplete="off" />
+                    <input type="text" id="width" name="width" value="<?= filter_input(INPUT_POST, 'width') ?>" class="form-control int-only" data-max="1600" placeholder="Введите ширину" required="required" autocomplete="off" />
                     <div class="invalid-feedback">Число, макс. 1600</div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" id="next-submit" name="next-submit" class="btn btn-dark form-control" style="margin-top: 100px;">Далее</button>
+                    <button type="button" id="next-submit" name="next-submit" class="btn btn-dark form-control" style="margin-top: 100px;">Далее</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<script>
+    $('#next-submit').click(function() {
+        form_valid = true;
+        
+        if($('#supplier_id').val() == '') {
+            $('#supplier_id').addClass('is-invalid');
+            form_valid = false;
+        }
+        
+        if($('#film_brand_id').val() == '') {
+            $('#film_brand_id').addClass('is-invalid');
+            form_valid = false;
+        }
+        
+        if($('#thickness').val() == '') {
+            $('#thickness').addClass('is-invalid');
+            form_valid = false;
+        }
+        
+        if($('#width').val() == '') {
+            $('#width').addClass('is-invalid');
+            form_valid = false;
+        }
+        
+        if($('#width').val() > 1600) {
+            $('#width').addClass('is-invalid');
+            form_valid = false;
+        }
+    });
+</script>

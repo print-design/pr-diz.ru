@@ -16,15 +16,16 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
         <?php
         include '../include/style_mobile.php';
         ?>
-    </head>
-    <body>
-        <div id="workspace"></div>
         <script src='<?=APPLICATION ?>/js/jquery-3.5.1.min.js'></script>
         <script src='<?=APPLICATION ?>/js/bootstrap.min.js'></script>
         <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script src="<?=APPLICATION ?>/js/popper.min.js"></script>
         <script src="<?=APPLICATION ?>/js/jquery.maskedinput.js"></script>
+    </head>
+    <body>
+        <div id="workspace"></div>
         <script>
+            // Открытие страницы через AJAX
             function OpenAjaxPage(link) {
                 $.ajax({ url: link, context: $('#workspace') })
                         .done(function(data) {
@@ -36,7 +37,72 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
                         });
             }
             
+            // Ограничение значений
+            function KeyUpLimitIntValue(textbox, max) {
+                val = textbox.val().replace(/[^\d]/g, '');
+        
+                if(val != null && val != '' && !isNaN(val) && parseInt(val) > max) {
+                    textbox.addClass('is-invalid');
+                }
+                else {
+                    textbox.removeClass('is-invalid');
+                }
+            }
+            
+            // Регистрация обработчиков событий
             function AssignHandlers() {
+                // Валидация
+                $('input').keypress(function(){
+                    $(this).removeClass('is-invalid');
+                });
+    
+                $('select').change(function(){
+                    $(this).removeClass('is-invalid');
+                });
+    
+                // Фильтрация ввода
+                $('.int-only').keypress(function(e) {
+                    if(/\D/.test(e.key)) {
+                        return false;
+                    }
+                });
+    
+                $('.int-only').keyup(function() {
+                    var val = $(this).val();
+                    val = val.replaceAll(/\D/g, '');
+                    
+                    if(val === '') {
+                        $(this).val('');
+                    }
+                    else {
+                        val = parseInt(val);
+                        
+                        if($(this).hasClass('int-format')) {
+                            val = Intl.NumberFormat('ru-RU').format(val);
+                        }
+                        
+                        $(this).val(val);
+                    }
+                });
+                
+                $('.int-only').change(function(e) {
+                    var val = $(this).val();
+                    val = val.replace(/[^\d]/g, '');
+        
+                    if(val === '') {
+                        $(this).val('');
+                    }
+                    else {
+                        val = parseInt(val);
+                        
+                        if($(this).hasClass('int-format')) {
+                            val = Intl.NumberFormat('ru-RU').format(val);
+                        }
+                        
+                        $(this).val(val);
+                    }
+                });
+                
                 // Переходы между страницами
                 $('.goto_index').click(function() {
                     OpenAjaxPage("_index.php");
@@ -79,10 +145,10 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
                     }
                 });
             
-                // В поле "Ширина" ограничиваем значения: целые числа от 1 до 1600
-                //$('#width').keyup(function() {
-                //    KeyUpLimitIntValue($(this), 1600);
-                //});
+                // Ограничения значений
+                $('.int-only').keyup(function() {
+                    KeyUpLimitIntValue($(this), $(this).attr('data-max'));
+                });
             }
             
             <?php
