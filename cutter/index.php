@@ -16,6 +16,16 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
         <?php
         include '../include/style_mobile.php';
         ?>
+        <style>
+            table.print tr td {
+                font-size: 42px;
+                line-height: 48px;
+                vertical-align: top;
+                white-space: pre-wrap;
+                padding: 0;
+                padding-right: 10px;
+            }
+        </style>
         <script src='<?=APPLICATION ?>/js/jquery-3.5.1.min.js'></script>
         <script src='<?=APPLICATION ?>/js/bootstrap.min.js'></script>
         <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>

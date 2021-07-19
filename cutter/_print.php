@@ -6,10 +6,8 @@ $error_message = (new Executer($sql))->error;
 if(!empty($error_message)) {
     exit($error_message);
 }
-?>
-<div class="print">
-    <?php
-    $cut_wind_id = filter_input(INPUT_GET, 'cut_wind_id');
+
+$cut_wind_id = filter_input(INPUT_GET, 'cut_wind_id');
     
     // Текущее время
     $current_date_time = date("dmYHis");
@@ -237,4 +235,8 @@ if(!empty($error_message)) {
             }
         }
         ?>
-    </div>
+<script>
+    /*$(document).ready(function() {
+        $("head meta[name=viewport]:contains(initial-scale=1.0, width=device-width)").remove();
+    });*/
+</script>
