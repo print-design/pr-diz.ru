@@ -11,7 +11,7 @@ if(!empty($error_message)) {
     <nav class="navbar navbar-expand-sm justify-content-start">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link goto_index" href="javascript: void(0);"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                <button class="btn btn-link nav-link goto_index"><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
             </li>
         </ul>
     </nav>
@@ -32,7 +32,7 @@ if(!empty($error_message)) {
                                 $id = $supplier['id'];
                                 $name = $supplier['name'];
                                 $selected = '';
-                                if(filter_input(INPUT_POST, 'supplier_id') == $supplier['id']) $selected = " selected='selected'";
+                                if(filter_input(INPUT_GET, 'supplier_id') == $supplier['id']) $selected = " selected='selected'";
                                 echo "<option value='$id'$selected>$name</option>";
                             }
                             ?>
@@ -44,14 +44,14 @@ if(!empty($error_message)) {
                     <select class="form-control" id="film_brand_id" name="film_brand_id" required="required">
                         <option value="" hidden="hidden">Выберите марку</option>
                             <?php
-                            if(null !== filter_input(INPUT_POST, 'supplier_id')) {
-                                $supplier_id = filter_input(INPUT_POST, 'supplier_id');
+                            if(null !== filter_input(INPUT_GET, 'supplier_id')) {
+                                $supplier_id = filter_input(INPUT_GET, 'supplier_id');
                                 $film_brands = (new Grabber("select id, name from film_brand where supplier_id = $supplier_id"))->result;
                                 foreach ($film_brands as $film_brand) {
                                     $id = $film_brand['id'];
                                     $name = $film_brand['name'];
                                     $selected = '';
-                                    if(filter_input(INPUT_POST, 'film_brand_id') == $film_brand['id']) $selected = " selected='selected'";
+                                    if(filter_input(INPUT_GET, 'film_brand_id') == $film_brand['id']) $selected = " selected='selected'";
                                     echo "<option value='$id'$selected>$name</option>";
                                 }
                             }
@@ -64,14 +64,14 @@ if(!empty($error_message)) {
                     <select class="form-control" id="thickness" name="thickness" required="required">
                         <option value="" hidden="hidden">Выберите толщину</option>
                             <?php
-                            if(null !== filter_input(INPUT_POST, 'film_brand_id')) {
-                                $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
+                            if(null !== filter_input(INPUT_GET, 'film_brand_id')) {
+                                $film_brand_id = filter_input(INPUT_GET, 'film_brand_id');
                                 $film_brand_variations = (new Grabber("select thickness, weight from film_brand_variation where film_brand_id = $film_brand_id order by thickness"))->result;
                                 foreach ($film_brand_variations as $film_brand_variation) {
                                     $thickness = $film_brand_variation['thickness'];
                                     $weight = $film_brand_variation['weight'];
                                     $selected = '';
-                                    if(filter_input(INPUT_POST, 'thickness') == $film_brand_variation['thickness']) $selected = " selected='selected'";
+                                    if(filter_input(INPUT_GET, 'thickness') == $film_brand_variation['thickness']) $selected = " selected='selected'";
                                     echo "<option value='$thickness'$selected>$thickness мкм $weight г/м<sup>2</sup></option>";
                                 }
                             }
@@ -81,11 +81,11 @@ if(!empty($error_message)) {
                 </div>
                 <div class="form-group">
                     <label for="width">Ширина, мм</label>
-                    <input type="text" id="width" name="width" value="<?= filter_input(INPUT_POST, 'width') ?>" class="form-control int-only" data-max="1600" placeholder="Введите ширину" required="required" autocomplete="off" />
+                    <input type="text" id="width" name="width" value="<?= filter_input(INPUT_GET, 'width') ?>" class="form-control int-only" data-max="1600" placeholder="Введите ширину" required="required" autocomplete="off" />
                     <div class="invalid-feedback">Число, макс. 1600</div>
                 </div>
                 <div class="form-group">
-                    <button type="button" id="next-submit" name="next-submit" class="btn btn-dark form-control" style="margin-top: 100px;">Далее</button>
+                    <button type="button" id="next-submit" class="btn btn-dark form-control" style="margin-top: 100px;">Далее</button>
                 </div>
             </form>
         </div>
@@ -97,27 +97,43 @@ if(!empty($error_message)) {
         
         if($('#supplier_id').val() == '') {
             $('#supplier_id').addClass('is-invalid');
+            $('#supplier_id').focus();
             form_valid = false;
         }
         
         if($('#film_brand_id').val() == '') {
             $('#film_brand_id').addClass('is-invalid');
+            $('#film_brand_id').focus();
             form_valid = false;
         }
         
         if($('#thickness').val() == '') {
             $('#thickness').addClass('is-invalid');
+            $('#thickness').focus();
             form_valid = false;
         }
         
         if($('#width').val() == '') {
             $('#width').addClass('is-invalid');
+            $('#width').focus();
+            form_valid = false;
+        }
+        
+        if($('#width').val() < 1) {
+            $('#width').addClass('is-invalid');
+            $('#width').focus();
             form_valid = false;
         }
         
         if($('#width').val() > 1600) {
             $('#width').addClass('is-invalid');
+            $('#width').focus();
             form_valid = false;
+        }
+        
+        if(form_valid) {
+            link = "_cut.php?supplier_id=" + $('#supplier_id').val() + "&film_brand_id=" + $('#film_brand_id').val() + "&thickness=" + $('#thickness').val() + "&width=" + $('#width').val();
+            OpenAjaxPage(link);
         }
     });
 </script>

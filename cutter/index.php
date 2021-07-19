@@ -109,7 +109,17 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
                 });
                 
                 $('.goto_material').click(function() {
-                    OpenAjaxPage("_material.php");
+                    OpenAjaxPage("_material.php?supplier_id=" + $(this).attr('data-supplier_id') + "&film_brand_id=" + $(this).attr('data-film_brand_id') + "&thickness=" + $(this).attr('data-thickness') + "&width=" + $(this).attr('data-width'));
+                });
+                
+                $('.goto_cut').click(function() {
+                    link = "_cut.php?supplier_id=" + $(this).attr('data-supplier_id') + "&film_brand_id=" + $(this).attr('data-film_brand_id') + "&thickness=" + $(this).attr('data-thickness') + "&width=" + $(this).attr('data-width') + "&streams-count=" + $(this).attr('data-streams-count');
+                    for(i=1; i<=19; i++) {
+                        if(!isNaN($(this).attr('data-stream' + i))) {
+                            link += '&stream_' + i + "=" + $(this).attr('data-stream' + i);
+                        }
+                    }
+                    OpenAjaxPage(link);
                 });
                 
                 // Загрузка списка марок пленки

@@ -78,12 +78,13 @@
         height: 60px;
     }
     
-    .header a:link, .header a:visited {
+    .header a:link, .header a:visited, .header .btn-link, .header .btn-link:visited {
         color: #228AD6;
         text-decoration: none;
+        font-size: 18px!important;
     }
     
-    .header a:active, .header a:hover {
+    .header a:active, .header a:hover, .header .btn-link:active, .header .btn-link:hover {
         color: blue;
         text-decoration: none;
     }

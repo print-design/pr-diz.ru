@@ -23,5 +23,5 @@ if(!empty($error_message)) {
 </div>
 <div id="topmost"></div>
 <div class="container-fluid">
-    <button class="btn btn-dark w-100 mt-4 goto_material">Приступить к раскрою</button>
+    <button class="btn btn-dark w-100 mt-4 goto_material" data-supplier_id="" data-film_brand_id="" data-thickness="" data-width="">Приступить к раскрою</button>
 </div>
