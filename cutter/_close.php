@@ -116,16 +116,22 @@ if($row = $fetcher->Fetch()) {
                     .done(function(data) {
                         result = JSON.parse(data);
                 
-                        for(i=1; i<=19; i++) {
-                            if(result['source_' + i] != undefined && result['source_' + i] != '') {
-                                $('#source_' + i).addClass('is-invalid');
-                                $('#invalid-source-' + i).text(result['source_' + i]);
-                                form_valid = false;
+                        if(result.error != undefined && result.error != '') {
+                            form_valid = false;
+                            alert(result.error);
+                        }
+                        else {
+                            for(i=1; i<=19; i++) {
+                                if(result['source_' + i] != undefined && result['source_' + i] != '') {
+                                    $('#source_' + i).addClass('is-invalid');
+                                    $('#invalid-source-' + i).text(result['source_' + i]);
+                                    form_valid = false;
+                                }
                             }
                         }
                         
                         if(form_valid) {
-                            alert('KARRAMBA');
+                            OpenAjaxPage("_remain.php?cut_id=" + $('#close-submit').attr('data-cut-id'));
                         }
                     })
                     .fail(function() {
