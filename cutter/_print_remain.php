@@ -189,17 +189,19 @@ $current_date_time = date("dmYHis");
         ?>
 </div>
 <script>
-    let shareData = {
-        url: '<?=$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] ?>'
-    }
+    $(document).ready(function (){
+        let shareData = {
+            url: '<?=$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] ?>'
+        }
         
-    const sharelink = document.getElementById("sharelink");
-    sharelink.addEventListener('click', () => {
-        navigator.share(shareData)
+        const sharelink = document.getElementById("sharelink");
+        sharelink.addEventListener('click', () => {
+            navigator.share(shareData)
+        });
+        
+        setTimeout(function() { 
+            document.getElementById('new_wind_link').removeAttribute('class');
+            document.cookie = '<?='remain_id'.$id ?>=1; Path=/;';
+        }, 30000);
     });
-        
-    setTimeout(function() { 
-        document.getElementById('new_wind_link').removeAttribute('class');
-        document.cookie = '<?='remain_id'.$id ?>=1; Path=/;';
-    }, 30000);
 </script>

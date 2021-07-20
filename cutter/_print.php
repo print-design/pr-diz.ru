@@ -246,17 +246,19 @@ if(isset($_COOKIE['cut_wind_id_'.$cut_wind_id]) && $_COOKIE['cut_wind_id_'.$cut_
         ?>
 </div>
 <script>
-    let myShareData = {
-        url: '<?=$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] ?>'
-    }
+    $(document).ready(function (){
+        let myShareData = {
+            url: '<?=$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] ?>'
+        }
         
-    const sharelink = document.getElementById("sharelink");
-    sharelink.addEventListener('click', () => {
-        navigator.share(myShareData)
+        const sharelink = document.getElementById("sharelink");
+        sharelink.addEventListener('click', () => {
+            navigator.share(myShareData)
+        });
+        
+        setTimeout(function() { 
+            document.getElementById('new_wind_link').removeAttribute('class');
+            document.cookie = '<?='cut_wind_id_'.$cut_wind_id ?>=1; Path=/;';
+        }, 30000);
     });
-        
-    setTimeout(function() { 
-        document.getElementById('new_wind_link').removeAttribute('class');
-        document.cookie = '<?='cut_wind_id_'.$cut_wind_id ?>=1; Path=/;';
-    }, 30000);
 </script>
