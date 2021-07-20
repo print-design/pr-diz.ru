@@ -137,6 +137,10 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
                     OpenAjaxPage("_next.php?cut_id=" + $(this).attr('data-cut-id'));
                 });
                 
+                $('.goto_finish').click(function() {
+                    OpenAjaxPage("_finish.php");
+                });
+                
                 // Загрузка списка марок пленки
                 $('#supplier_id').change(function(){
                     if($(this).val() == "") {

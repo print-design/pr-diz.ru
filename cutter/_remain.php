@@ -34,6 +34,7 @@ if($row = $fetcher->Fetch()) {
 <div class="container-fluid">
     <h1>Закрытие заявки</h1>
     <form method="post">
+        <input type="hidden" id="supplier_id" name="supplier_id" value="<?=$supplier_id ?>" />
         <input type="hidden" id="film_brand_id" name="film_brand_id" value="<?=$film_brand_id ?>" />
         <input type="hidden" id="thickness" name="thickness" value="<?=$thickness ?>" />
         <input type="hidden" id="width" name="width" value="<?=$width ?>" />
@@ -158,7 +159,7 @@ if($row = $fetcher->Fetch()) {
             }
             
             if(form_valid) {
-                link = "_create_remain.php?radius=" + $('#radius').val() + "&spool=" + $('#spool').val() + "&net_weight=" + $('#net_weight').val() + "&length=" + $('#length').val();
+                link = "_create_remain.php?supplier_id=" + $('#supplier_id').val() + "&film_brand_id=" + $('#film_brand_id').val() + "&width=" + $('#width').val() + "&thickness=" + $('#thickness').val() + "&radius=" + $('#radius').val() + "&spool=" + $('#spool').val() + "&net_weight=" + $('#net_weight').val() + "&length=" + $('#length').val();
             
                 $.ajax({ url: link })
                         .done(function(data) {
@@ -166,7 +167,7 @@ if($row = $fetcher->Fetch()) {
                                 alert(data);
                             }
                             else {
-                                OpenAjaxPage("_print.php?cut_wind_id=" + data);
+                                OpenAjaxPage("_print_remain.php?id=" + data);
                             }
                         })
                         .fail(function() {
