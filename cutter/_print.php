@@ -246,13 +246,13 @@ if(isset($_COOKIE['cut_wind_id_'.$cut_wind_id]) && $_COOKIE['cut_wind_id_'.$cut_
         ?>
 </div>
 <script>
-    let shareData = {
+    let myShareData = {
         url: '<?=$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] ?>'
     }
         
     const sharelink = document.getElementById("sharelink");
     sharelink.addEventListener('click', () => {
-        navigator.share(shareData)
+        navigator.share(myShareData)
     });
         
     setTimeout(function() { 

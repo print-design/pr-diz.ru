@@ -187,7 +187,7 @@ if(!empty($error_message)) {
         }
         
         if(form_valid) {
-            link = "_create_cut.php?supplier_id=" + $(this).attr('data-supplier_id') + "&film_brand_id=" + $(this).attr('data-film_brand_id') + "&thickness=" + $(this).attr('data-thickness') + "&width=" + $(this).attr('data-width') + "&length=" + $('#length').val().replaceAll(/\D/g, '') + "&radius=" + $('#radius').val();
+            link = "_create_cut.php?supplier_id=" + $(this).attr('data-supplier_id') + "&film_brand_id=" + $(this).attr('data-film_brand_id') + "&thickness=" + $(this).attr('data-thickness') + "&width=" + $(this).attr('data-width') + "&length=" + $('#length').val().replaceAll(/\D/g, '') + "&radius=" + $('#radius').val() + "&net_weight=" + $('#net_weight').val();
             for(i=1; i<=19; i++) {
                 for(i=1; i<=19; i++) {
                     if(!isNaN($(this).attr('data-stream' + i))) {
