@@ -151,8 +151,8 @@ if($valid) {
     if($wind_sum > $source_sum) {
         $valid = false;
         
-        for($i=1; $i<=$sources_count; $i++) {
-            $message = "Сумма длин намоток больше суммы длин исходных роликов";
+        foreach ($result as $key => $value) {
+            $result[$key] = "Сумма длин намоток больше суммы длин исходных роликов";
         }
     }
 }
