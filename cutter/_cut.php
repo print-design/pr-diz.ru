@@ -72,7 +72,7 @@ if(!empty($error_message)) {
             form_valid = false;
         }
         
-        if($('#streams_count').val() > 1600) {
+        if($('#streams_count').val() > 19) {
             $('#streams_count').addClass('is-invalid');
             $('#streams_count').focus();
             form_valid = false;

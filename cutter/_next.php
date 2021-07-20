@@ -213,4 +213,9 @@ while ($row = $fetcher->Fetch()) {
                     });
         }
     });
+    
+    // Закрытие заявки
+    $('#close-submit').click(function() {
+        OpenAjaxPage("_close.php?cut_id=" + $(this).attr('data-cut-id'));
+    });
 </script>
