@@ -9,6 +9,9 @@ $free_status_id = 1;
 // Статус "РАСКРОИЛИ"
 $cut_status_id = 3;
 
+// Список исходных роликов
+$cut_sources = array();
+
 // Массив сообщений об ошибке для каждого исходного ролика
 $result = array();
 
@@ -51,7 +54,15 @@ for($i=1; $i<=19; $i++) {
             }
             
             if($row = $fetcher->Fetch()) {
-                if($row['film_brand'] != $film_brand || $row['thickness'] != $thickness || $row['width'] != $width) {
+                if($row['film_brand'] == $film_brand && $row['thickness'] == $thickness && $row['width'] == $width) {
+                    $cut_source = array();
+                    $cut_source['cut_id'] = $cut_id;
+                    $cut_source['is_from_pallet'] = 0;
+                    $cut_source['roll_id'] = $roll_id;
+                    $cut_source['length'] = $row['length'];
+                    array_push($cut_sources, $cut_source);
+                }
+                else {
                     $message = "Марка/толщина/ширина не совпадают";
                 }
             }
@@ -64,7 +75,7 @@ for($i=1; $i<=19; $i++) {
             $pallet_trim = mb_substr($source, 1);
             $substrings = mb_split("\D", $pallet_trim);
             
-            if(count($substrings) == 2) {
+            if(count($substrings) == 2 && !empty($substrings[0]) && !empty($substrings[1])) {
                 $pallet_id = $substrings[0];
                 $ordinal = $substrings[1];
                 
@@ -82,7 +93,15 @@ for($i=1; $i<=19; $i++) {
                 }
                 
                 if($row = $fetcher->Fetch()) {
-                    if($row['film_brand'] != $film_brand || $row['thickness'] != $thickness || $row['width'] != $width) {
+                    if($row['film_brand'] == $film_brand && $row['thickness'] == $thickness && $row['width'] == $width) {
+                        $cut_source = array();
+                        $cut_source['cut_id'] = $cut_id;
+                        $cut_source['is_from_pallet'] = 1;
+                        $cut_source['roll_id'] = $row['roll_id'];
+                        $cut_source['length'] = $row['length'];
+                        array_push($cut_sources, $cut_source);
+                    }
+                    else {
                         $message = "Марка/толщина/ширина не совпадают";
                     }
                 }
@@ -99,6 +118,72 @@ for($i=1; $i<=19; $i++) {
         }
         
         $result['source_'.$i] = $message;
+    }
+}
+
+// Проверка на валидность, идти ли дальше
+$valid = true;
+
+foreach ($result as $key => $value) {
+    if(!empty($value)) {
+        $valid = false;
+    }
+}
+
+// Проверка сумм длин исходных роликов и намоток
+if($valid) {
+    // Общая длина исходных роллей
+    $source_sum = 0;
+    
+    foreach ($cut_sources as $cut_source) {
+        $source_sum += $cut_source['length'];
+    }
+    
+    // Общая длина намоток
+    $wind_sum = 0;
+    $sql = "select sum(length) sum from cut_wind where cut_id = $cut_id";
+    $fetcher = new Fetcher($sql);
+    
+    if($row = $fetcher->Fetch()) {
+        $wind_sum = $row['sum'];
+    }
+    
+    if($wind_sum > $source_sum) {
+        $valid = false;
+        
+        for($i=1; $i<=$sources_count; $i++) {
+            $message = "Сумма длин намоток больше суммы длин исходных роликов";
+        }
+    }
+}
+
+// Меняем статусы исходных роликов
+if($valid) {
+    foreach ($cut_sources as $cut_source) {
+        $user_id = GetUserId();
+        $cut_id = $cut_source['cut_id'];
+        $is_from_pallet = $cut_source['is_from_pallet'];
+        $roll_id = $cut_source['roll_id'];
+        $sql = "insert into cut_source (cut_id, is_from_pallet, roll_id) values ($cut_id, $is_from_pallet, $roll_id)";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+            
+        if(empty($error_message)) {
+            if($is_from_pallet == 0) {
+                $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($roll_id, $cut_status_id, $user_id)";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+            }
+            else {
+                $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values($roll_id, $cut_status_id, $user_id)";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+            }
+            
+            if(!empty($error_message)) {
+                $result['error'] = $error_message;
+            }
+        }
     }
 }
 

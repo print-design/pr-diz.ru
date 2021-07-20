@@ -105,7 +105,7 @@ if($row = $fetcher->Fetch()) {
         }
     
         if(form_valid) {
-            link = "_validate_sources.php?cut_id=" + $(this).attr('data-cut-id');
+            link = "_create_sources.php?cut_id=" + $(this).attr('data-cut-id');
             for(i=1; i<=19; i++) {
                 if(!$('#source_' + i + '_group').hasClass('d-none')) {
                     link += "&source_" + i + "=" + $('#source_' + i).val();
