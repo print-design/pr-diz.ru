@@ -6,51 +6,66 @@ $error_message = (new Executer($sql))->error;
 if(!empty($error_message)) {
     exit($error_message);
 }
+
+// Получение объекта
+$cut_id = filter_input(INPUT_GET, 'cut_id');
+$date = '';
+$supplier_id = null;
+$film_brand_id = null;
+$thickness = null;
+$width = null;
+$winds_count = 0;
+$sql = "select DATE_FORMAT(c.date, '%d.%m.%Y') date, c.supplier_id, c.film_brand_id, c.thickness, c.width, (select count(id) from cut_wind where cut_id = c.id) winds_count from cut c where c.id=$cut_id";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $date = $row['date'];
+    $supplier_id = $row['supplier_id'];
+    $film_brand_id = $row['film_brand_id'];
+    $thickness = $row['thickness'];
+    $width = $row['width'];
+    $winds_count = $row['winds_count'];
+}
+
+$sql = "select width from cut_stream where cut_id=$cut_id order by id";
+$fetcher = new Fetcher($sql);
+$i = 0;
+while ($row = $fetcher->Fetch()) {
+    $stream = 'stream_'.++$i;
+    $$stream = $row['width'];
+}
 ?>
 <div class="container-fluid header">
-    <nav class="navbar navbar-expand-sm justify-content-start">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <?php
-                $data_sources = "";
-                for($i=1; $i<=19; $i++) {
-                    if(!empty(filter_input(INPUT_GET, 'stream_'.$i))) {
-                        $data_sources .= " data-stream".$i."=".filter_input(INPUT_GET, 'stream_'.$i);
-                    }
-                }
-                ?>
-                <button type="button" class="nav-link btn btn-link goto_cut" data-supplier_id="<?= filter_input(INPUT_GET, 'supplier_id') ?>" data-film_brand_id="<?= filter_input(INPUT_GET, 'film_brand_id') ?>" data-thickness="<?= filter_input(INPUT_GET, 'thickness') ?>" data-width="<?= filter_input(INPUT_GET, 'width') ?>" data-streams-count="<?= filter_input(INPUT_GET, 'streams_count') ?>"<?=$data_sources ?>><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
-            </li>
-        </ul>
-    </nav>
+    <nav class="navbar navbar-expand-sm justify-content-start"></nav>
 </div>
 <div id="topmost"></div>
 <div class="container-fluid">
-    <h1>Нарезка / <?=date('d.m.Y') ?></h1>
-    <p class="mb-3 mt-3" style="font-size: xx-large;">Намотка 1</p>
+    <h1>Нарезка <?=$cut_id ?> / <?=$date ?></h1>
+    <p class="mb-3 mt-3" style="font-size: xx-large;">Намотка <?=($winds_count + 1) ?></p>
         <?php
         for($i=1; $i<=19; $i++):
-        if(isset($_GET['stream_'.$i])):
-        ?>
-    <p>Ручей <?=$i ?> - <?=$_GET['stream_'.$i] ?> мм</p>
+            $stream = 'stream_'.$i;
+        if(isset($$stream)):
+            ?>
+    <p>Ручей <?=$i ?> - <?=$$stream ?> мм</p>
         <?php
         endif;
         endfor;
         ?>
     <form method="post" class="mt-3">
-        <input type="hidden" id="supplier_id" name="supplier_id" value="<?=$_GET['supplier_id'] ?>" />
-        <input type="hidden" id="film_brand_id" name="film_brand_id" value="<?=$_GET['film_brand_id'] ?>" />
-        <input type="hidden" id="thickness" name="thickness" value="<?=$_GET['thickness'] ?>" />
-        <input type="hidden" id="width" name="width" value="<?=$_GET['width'] ?>" />
-        <input type="hidden" id="streams_count" name="streams_count" value="<?=$_GET['streams_count'] ?>" />
+        <input type="hidden" id="supplier_id" name="supplier_id" value="<?=$supplier_id ?>" />
+        <input type="hidden" id="film_brand_id" name="film_brand_id" value="<?=$film_brand_id ?>" />
+        <input type="hidden" id="thickness" name="thickness" value="<?=$thickness ?>" />
+        <input type="hidden" id="width" name="width" value="<?=$width ?>" />
         <input type="hidden" id="spool" name="spool" value="76" />
         <input type="hidden" id="net_weight" name="net_weight" />
         <input type="hidden" id="normal_length" name="normal_length" />
+        <input type="hidden" name="cut_id" value="<?=$cut_id ?>" />
             <?php
             for($i=1; $i<=19; $i++):
-            if(key_exists('stream_'.$i, $_GET)):
-            ?>
-        <input type="hidden" name="stream_<?=$i ?>" value="<?=$_GET['stream_'.$i] ?>" />
+                $stream = 'stream_'.$i;
+            if(isset($$stream)):
+                ?>
+        <input type="hidden" name="stream_<?=$i ?>" value="<?=$$stream ?>" />
             <?php
             endif;
             endfor;
@@ -72,17 +87,12 @@ if(!empty($error_message)) {
             </div>
         </div>
         <div class="form-group">
-            <?php
-            $data_sources = "";
-            for($i=1; $i<=19; $i++) {
-                if(!empty(filter_input(INPUT_GET, 'stream_'.$i))) {
-                    $data_sources .= " data-stream".$i."=".filter_input(INPUT_GET, 'stream_'.$i);
-                }
-            }
-            ?>
-            <button type="button" class="btn btn-outline-dark form-control mt-3" id="next-submit" data-supplier_id="<?= filter_input(INPUT_GET, 'supplier_id') ?>" data-film_brand_id="<?= filter_input(INPUT_GET, 'film_brand_id') ?>" data-thickness="<?= filter_input(INPUT_GET, 'thickness') ?>" data-width="<?= filter_input(INPUT_GET, 'width') ?>" data-streams-count="<?= filter_input(INPUT_GET, 'streams_count') ?>"<?=$data_sources ?>>След. намотка</button>
+            <button type="button" class="btn btn-outline-dark form-control mt-3" id="next-submit" data-cut-id="<?=$cut_id ?>">След. намотка</button>
         </div>
-    </form> 
+        <div class="form-group">
+            <button type="button" class="btn btn-dark form-control mt-3" id="close-submit" data-cut-id="<?=$cut_id ?>">Заявка выполнена</button>
+        </div>
+    </form>
 </div>
 <script>
     // Все марки плёнки с их вариациями
@@ -130,7 +140,7 @@ if(!empty($error_message)) {
             
     $('#radius').change(CalculateByRadius);
     
-    // Создание нарезки и первой намотки
+    // Создание намотки
     $('#next-submit').click(function() {
         form_valid = true;
         
@@ -187,14 +197,7 @@ if(!empty($error_message)) {
         }
         
         if(form_valid) {
-            link = "_create_cut.php?supplier_id=" + $(this).attr('data-supplier_id') + "&film_brand_id=" + $(this).attr('data-film_brand_id') + "&thickness=" + $(this).attr('data-thickness') + "&width=" + $(this).attr('data-width') + "&length=" + $('#length').val().replaceAll(/\D/g, '') + "&radius=" + $('#radius').val();
-            for(i=1; i<=19; i++) {
-                for(i=1; i<=19; i++) {
-                    if(!isNaN($(this).attr('data-stream' + i))) {
-                        link += '&stream_' + i + "=" + $(this).attr('data-stream' + i);
-                    }
-                }
-            }
+            link = "_create_wind.php?cut_id=" + $(this).attr('data-cut-id') + "&length=" + $('#length').val().replaceAll(/\D/g, '') + "&radius=" + $('#radius').val() + "&net_weight=" + $('#net_weight').val();
             
             $.ajax({ url: link })
                     .done(function(data) {
