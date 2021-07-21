@@ -157,6 +157,24 @@ if($valid) {
     }
 }
 
+// Проверяем, чтобы не ввели два одинаковых ролика
+if($valid) {
+    $existing_rolls = array();
+    
+    for($i=1; $i<=19; $i++) {
+        $source = filter_input(INPUT_GET, 'source_'.$i);
+        
+        if(!empty($source)) {
+            if(in_array($source, $existing_rolls)) {
+                $result['source_'.$i] = "Ролик введён два раза";
+                $valid = false;
+            }
+            
+            array_push($existing_rolls, $source);
+        }
+    }
+}
+
 // Меняем статусы исходных роликов
 if($valid) {
     foreach ($cut_sources as $cut_source) {
