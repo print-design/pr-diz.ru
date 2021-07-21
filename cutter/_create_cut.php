@@ -53,6 +53,7 @@ $user_id = GetUserId();
 for($i=1; $i<=19; $i++) {
     if(key_exists('stream_'.$i, $_GET)) {
         $width = filter_input(INPUT_GET, 'stream_'.$i);
+        $net_weight = filter_input(INPUT_GET, 'net_weight_'.$i);
     
         $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id, cut_wind_id) "
                 . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$user_id', $cut_wind_id)";

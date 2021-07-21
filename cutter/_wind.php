@@ -50,7 +50,8 @@ if(!empty($error_message)) {
             for($i=1; $i<=19; $i++):
             if(key_exists('stream_'.$i, $_GET)):
             ?>
-        <input type="hidden" name="stream_<?=$i ?>" value="<?=$_GET['stream_'.$i] ?>" />
+        <input type="hidden" id="stream_<?=$i ?>" name="stream_<?=$i ?>" value="<?=$_GET['stream_'.$i] ?>" />
+        <input type="hidden" id="net_weight_<?=$i ?>" name="net_weight_<?=$i ?>" />
             <?php
             endif;
             endfor;
@@ -118,6 +119,21 @@ if(!empty($error_message)) {
                         
             $('#normal_length').val(result.length.toFixed(2));
             $('#net_weight').val(result.weight.toFixed(2));
+        }
+        
+        for(i=1; i<=19; i++) {
+            if($('#stream_' + i).length > 0) {
+                width = $('#stream_' + i).val();
+                
+                if(!isNaN(spool) && !isNaN(thickness) && !isNaN(radius) && !isNaN(width) 
+                        && spool != '' && thickness != '' && radius != '' && width != '') {
+                    density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
+                    
+                    result = GetFilmLengthWeightBySpoolThicknessRadiusWidth(spool, thickness, radius, width, density);
+                    
+                    $('#net_weight_' + i).val(result.weight.toFixed(2));
+                }
+            }
         }
     }
             
@@ -192,6 +208,7 @@ if(!empty($error_message)) {
                 for(i=1; i<=19; i++) {
                     if(!isNaN($(this).attr('data-stream' + i))) {
                         link += '&stream_' + i + "=" + $(this).attr('data-stream' + i);
+                        link += '&net_weight_' + i + "=" + $('#net_weight_' + i).val();
                     }
                 }
             }
