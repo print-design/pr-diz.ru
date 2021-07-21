@@ -76,7 +76,7 @@ if($ud_ves_row = $ud_ves_fetcher->Fetch()) {
         
 $current_roll++;
 ?>
-<table class="table table-bordered compact" style="writing-mode: vertical-rl; margin-top: 30px;">
+<table class="table table-bordered compact" style="writing-mode: vertical-rl;">
     <tbody>
         <tr>
             <td colspan="2" class="font-weight-bold font-italic text-left">ООО &laquo;Принт-дизайн&raquo;</td>
