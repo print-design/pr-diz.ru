@@ -38,18 +38,6 @@ if($row = $fetcher->Fetch()) {
     </head>
     <body class="print">
         <?php
-        $class_attr = " class='d-none'";
-        if(isset($_COOKIE['cut_wind_id'.$cut_wind_id]) && $_COOKIE['cut_wind_id'.$cut_wind_id] == 1) {
-            $class_attr = "";
-        }
-        ?>
-        <div id="new_wind_link"<?=$class_attr ?> style="position: absolute; top: 550px; left: 50px; font-size: 40px; z-index: 2000;">
-            <a class="btn btn-dark" style="font-size: 20px;" href="<?=APPLICATION ?>/cutter/next.php?cut_id=<?=$cut_id ?>">Новая намотка</a>
-        </div>
-        <div style="position: absolute; top: 600px; right: 600px; font-size: 150px; z-index: 2000;">
-            <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
-        </div>
-        <?php
         // Получение данных
         $sql = "select r.id, DATE_FORMAT(r.date, '%d.%m.%Y') date, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, s.name supplier, r.id_from_supplier, "
                 . "r.film_brand_id, fb.name film_brand, r.width, r.thickness, r.length, "
@@ -261,19 +249,4 @@ if($row = $fetcher->Fetch()) {
         }
         ?>
     </body>
-    <script>
-        let shareData = {
-            url: '<?=$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] ?>'
-        }
-        
-        const sharelink = document.getElementById("sharelink");
-        sharelink.addEventListener('click', () => {
-            navigator.share(shareData)
-        });
-        
-        setTimeout(function() { 
-            document.getElementById('new_wind_link').removeAttribute('class');
-            document.cookie = '<?='cut_wind_id'.$cut_wind_id ?>=1; Path=/;';
-        }, 30000);
-    </script>
 </html>

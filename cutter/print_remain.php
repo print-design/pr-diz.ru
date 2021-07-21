@@ -68,18 +68,6 @@ $current_date_time = date("dmYHis");
         </style>
     </head>
     <body class="print">
-        <?php
-        $class_attr = " class='d-none'";
-        if(isset($_COOKIE['remain_id'.$id]) && $_COOKIE['remain_id'.$id] == 1) {
-            $class_attr = "";
-        }
-        ?>
-        <div id="new_wind_link"<?=$class_attr ?> style="position: absolute; top: 550px; left: 50px; font-size: 40px; z-index: 2000;">
-            <a class="btn btn-dark" style="font-size: 20px;" href="<?=APPLICATION ?>/cutter/finish.php">Закрыть заявку</a>
-        </div>
-        <div style="position: absolute; top: 600px; right: 600px; font-size: 150px; z-index: 2000;">
-            <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
-        </div>
         <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px;">
             <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-top: 30px;">
                 <tbody>
@@ -203,19 +191,4 @@ $current_date_time = date("dmYHis");
         }
         ?>
     </body>
-    <script>
-        let shareData = {
-            url: '<?=$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] ?>'
-        }
-        
-        const sharelink = document.getElementById("sharelink");
-        sharelink.addEventListener('click', () => {
-            navigator.share(shareData)
-        });
-        
-        setTimeout(function() { 
-            document.getElementById('new_wind_link').removeAttribute('class');
-            document.cookie = '<?='remain_id'.$id ?>=1; Path=/;';
-        }, 30000);
-    </script>
 </html>
