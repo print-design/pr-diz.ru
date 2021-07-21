@@ -280,6 +280,13 @@ table.table tr td {
     padding-bottom: 10px;
 }
 
+table.table.compact tr td {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
 table.table tr td img {
     vertical-align: top;
     padding: 0;
