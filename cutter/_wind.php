@@ -135,16 +135,6 @@ if(!empty($error_message)) {
                 }
             }
         }
-        
-        <?php
-        for($i=1; $i<=19; $i++):
-        if(isset($_GET['stream_'.$i])):
-        ?>
-        
-        <?php
-        endif;
-        endfor;
-        ?>
     }
             
     $(document).ready(CalculateByRadius);

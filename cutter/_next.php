@@ -65,7 +65,8 @@ while ($row = $fetcher->Fetch()) {
                 $stream = 'stream_'.$i;
             if(isset($$stream)):
                 ?>
-        <input type="hidden" name="stream_<?=$i ?>" value="<?=$$stream ?>" />
+        <input type="hidden" id="stream_<?=$i ?>" name="stream_<?=$i ?>" value="<?=$$stream ?>" />
+        <input type="hidden" id="net_weight_<?=$i ?>" name="net_weight_<?=$i ?>" />
             <?php
             endif;
             endfor;
@@ -128,6 +129,21 @@ while ($row = $fetcher->Fetch()) {
                         
             $('#normal_length').val(result.length.toFixed(2));
             $('#net_weight').val(result.weight.toFixed(2));
+        }
+        
+        for(i=1; i<=19; i++) {
+            if($('#stream_' + i).length > 0) {
+                width = $('#stream_' + i).val();
+                
+                if(!isNaN(spool) && !isNaN(thickness) && !isNaN(radius) && !isNaN(width) 
+                        && spool != '' && thickness != '' && radius != '' && width != '') {
+                    density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
+                    
+                    result = GetFilmLengthWeightBySpoolThicknessRadiusWidth(spool, thickness, radius, width, density);
+                    
+                    $('#net_weight_' + i).val(result.weight.toFixed(2));
+                }
+            }
         }
     }
             
@@ -198,6 +214,14 @@ while ($row = $fetcher->Fetch()) {
         
         if(form_valid) {
             link = "_create_wind.php?cut_id=" + $(this).attr('data-cut-id') + "&length=" + $('#length').val().replaceAll(/\D/g, '') + "&radius=" + $('#radius').val() + "&net_weight=" + $('#net_weight').val();
+            for(i=1; i<=19; i++) {
+                for(i=1; i<=19; i++) {
+                    if($('#stream_' + i).length && $('#net_weight_' + i).length) {
+                        link += '&stream_' + i + "=" + $('#stream_' + i).val();
+                        link += '&net_weight_' + i + "=" + $('#net_weight_' + i).val();
+                    }
+                }
+            }
             
             $.ajax({ url: link })
                     .done(function(data) {
