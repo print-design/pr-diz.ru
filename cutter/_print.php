@@ -248,7 +248,7 @@ if(isset($_COOKIE['cut_wind_id_'.$cut_wind_id]) && $_COOKIE['cut_wind_id_'.$cut_
 <script>
     $(document).ready(function (){
         let myShareData = {
-            url: '<?=$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] ?>'
+            url: '<?=APPLICATION ?>/cutter/print.php?cut_wind_id=<?=$cut_id ?>'
         }
         
         const sharelink = document.getElementById("sharelink");

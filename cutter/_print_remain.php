@@ -191,7 +191,7 @@ $current_date_time = date("dmYHis");
 <script>
     $(document).ready(function (){
         let shareData = {
-            url: '<?=$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] ?>'
+            url: '<?=APPLICATION ?>/cutter/print_remain.php?id=<?=$id ?>'
         }
         
         const sharelink = document.getElementById("sharelink");
