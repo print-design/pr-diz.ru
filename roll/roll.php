@@ -510,7 +510,6 @@ $utilized_status_id = 2;
         <?php
         include '../include/footer.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/calculation.js"></script>
         <script>
             if($('.is-invalid').first() != null) {
                 $('.is-invalid').first().focus();

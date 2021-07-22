@@ -31,7 +31,7 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
         <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script src="<?=APPLICATION ?>/js/popper.min.js"></script>
         <script src="<?=APPLICATION ?>/js/jquery.maskedinput.js"></script>
-        <script src="<?=APPLICATION ?>/js/calculation.js"></script>
+        <script src="<?=APPLICATION ?>/js/calculation.js?version=1"></script>
     </head>
     <body>
         <div id="workspace"></div>

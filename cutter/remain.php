@@ -170,7 +170,6 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
         include '../include/footer.php';
         include '../include/footer_mobile.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/calculation.js"></script>
         <script>
             // В поле "Радиус" ограничиваем значения: целые числа от 1 до 999
             $('#radius').keyup(function() {

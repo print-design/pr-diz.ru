@@ -365,7 +365,6 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
         <?php
         include '../include/footer.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/calculation.js"></script>
         <script>
             $('#supplier_id').change(function(){
                 if($(this).val() == "") {
