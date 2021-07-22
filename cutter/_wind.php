@@ -6,9 +6,11 @@ $error_message = (new Executer($sql))->error;
 if(!empty($error_message)) {
     exit($error_message);
 }
+
+include '_modal.php';
 ?>
 <div class="container-fluid header">
-    <nav class="navbar navbar-expand-sm justify-content-start">
+    <nav class="navbar navbar-expand-sm justify-content-between">
         <ul class="navbar-nav">
             <li class="nav-item">
                 <?php
@@ -20,6 +22,11 @@ if(!empty($error_message)) {
                 }
                 ?>
                 <button type="button" class="nav-link btn btn-link goto_cut" data-supplier_id="<?= filter_input(INPUT_GET, 'supplier_id') ?>" data-film_brand_id="<?= filter_input(INPUT_GET, 'film_brand_id') ?>" data-thickness="<?= filter_input(INPUT_GET, 'thickness') ?>" data-width="<?= filter_input(INPUT_GET, 'width') ?>" data-streams-count="<?= filter_input(INPUT_GET, 'streams_count') ?>"<?=$data_sources ?>><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown no-dropdown-arrow-after">
+                <a class="nav-link mr-0" href="javascript: void(0);" data-toggle="modal" data-target="#infoModal"><img src="<?=APPLICATION ?>/images/icons/info.svg" /></a>
             </li>
         </ul>
     </nav>
