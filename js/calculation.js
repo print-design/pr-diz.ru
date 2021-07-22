@@ -19,3 +19,12 @@ function GetFilmLengthWeightBySpoolThicknessRadiusWidth(spool, thickness, radius
     
     return { length: length, weight: weight };
 }
+
+// ВЫЧИСЛЕНИЕ МАССЫ ПЛЁНКИ ПО ДЛИНЕ, ШИРИНЕ, УДЕЛЬНОМУ ВЕСУ
+// length - длина
+// width - ширина
+// density - удельный вес
+function GetFilmWeightByLengthWidth(length, width, density) {
+    var weight = (length * density * width) / 1000 / 1000;
+    return weight;
+}
