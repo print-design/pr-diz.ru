@@ -6,9 +6,17 @@ $error_message = (new Executer($sql))->error;
 if(!empty($error_message)) {
     exit($error_message);
 }
+
+include '_info.php';
 ?>
 <div class="container-fluid header">
-    <nav class="navbar navbar-expand-sm justify-content-start"></nav>
+    <nav class="navbar navbar-expand-sm justify-content-end">
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown no-dropdown-arrow-after">
+                <a class="nav-link mr-0" href="javascript: void(0);" data-toggle="modal" data-target="#infoModal"><img src="<?=APPLICATION ?>/images/icons/info.svg" /></a>
+            </li>
+        </ul>
+    </nav>
 </div>
 <div id="topmost"></div>
 <div class="container-fluid">

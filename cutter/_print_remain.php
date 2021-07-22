@@ -58,7 +58,7 @@ if(isset($_COOKIE['remain_id'.$id]) && $_COOKIE['remain_id'.$id] == 1) {
     <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
 </div>
 <div id="new_wind_link"<?=$class_attr ?> style="float: right;">
-    <button type="button" class="btn btn-dark goto_finish" style="font-size: 20px;">Закрыть заявку</button>
+    <button type="button" class="btn btn-dark goto_finish" data-id="<?=$id ?>" style="font-size: 20px;">Закрыть заявку</button>
 </div>
 
 <table class="table table-bordered compact" style="writing-mode: vertical-rl;">

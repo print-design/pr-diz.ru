@@ -7,6 +7,8 @@ if(!empty($error_message)) {
     exit($error_message);
 }
 
+include '_info.php';
+
 // Получение объекта
 $cut_id = filter_input(INPUT_GET, 'cut_id');
 $date = '';
@@ -17,10 +19,15 @@ if($row = $fetcher->Fetch()) {
 }
 ?>
 <div class="container-fluid header">
-    <nav class="navbar navbar-expand-sm justify-content-start">
+    <nav class="navbar navbar-expand-sm justify-content-between">
         <ul class="navbar-nav">
             <li class="nav-item">
                 <button type="button" class="nav-link btn btn-link goto_next" data-cut-id="<?= $cut_id ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown no-dropdown-arrow-after">
+                <a class="nav-link mr-0" href="javascript: void(0);" data-toggle="modal" data-target="#infoModal"><img src="<?=APPLICATION ?>/images/icons/info.svg" /></a>
             </li>
         </ul>
     </nav>
