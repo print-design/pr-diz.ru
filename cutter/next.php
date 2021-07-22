@@ -211,7 +211,6 @@ while ($row = $fetcher->Fetch()) {
             include '../include/footer.php';
             include '../include/footer_mobile.php';
             ?>
-            <script src="<?=APPLICATION ?>/js/calculation.js"></script>
             <script>
                 // В поле "Длина" ограничиваем значения: целые числа от 1 до 30000
                 $('#length').keyup(function() {
