@@ -138,7 +138,7 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
                 });
                 
                 $('.goto_finish').click(function() {
-                    OpenAjaxPage("_finish.php");
+                    OpenAjaxPage("_finish.php?id=" + $(this).attr('data-id'));
                 });
                 
                 // Загрузка списка марок пленки

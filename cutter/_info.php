@@ -26,13 +26,32 @@ if(null !== filter_input(INPUT_GET, 'supplier_id')
     }
 }
 
+// Для окна "Заявка закрыта"
+if(null !== filter_input(INPUT_GET, 'id')) {
+    $sql = "select s.name supplier, fb.name film_brand, fbv.weight, c.thickness, c.width "
+            . "from cut c "
+            . "inner join supplier s on c.supplier_id = s.id "
+            . "inner join film_brand fb on c.film_brand_id = fb.id "
+            . "inner join film_brand_variation fbv on fbv.film_brand_id = fb.id "
+            . "where c.id = (select cut_id from cut_wind where id = (select cut_wind_id from roll where id = ". filter_input(INPUT_GET, 'id').")) and fb.id = c.film_brand_id and fbv.thickness = c.thickness";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $supplier = $row['supplier'];
+        $film_brand = $row['film_brand'];
+        $ud_ves = $row['weight'];
+        $thickness = $row['thickness'];
+        $width = $row['width'];
+    }
+}
+
 // Для всех остальных окон
 if(null !== filter_input(INPUT_GET, 'cut_id')) {
     $sql = "select s.name supplier, fb.name film_brand, fbv.weight, c.thickness, c.width "
             . "from cut c "
             . "inner join supplier s on c.supplier_id = s.id "
-            . "inner join film_brand fb on c.film_brand_id = fb.id inner join film_brand_variation fbv on fbv.film_brand_id = fb.id "
-            . "where c.id = ". filter_input(INPUT_GET, 'cut_id');
+            . "inner join film_brand fb on c.film_brand_id = fb.id "
+            . "inner join film_brand_variation fbv on fbv.film_brand_id = fb.id "
+            . "where c.id = ". filter_input(INPUT_GET, 'cut_id')." and fb.id = c.film_brand_id and fbv.thickness = c.thickness";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $supplier = $row['supplier'];
@@ -69,6 +88,38 @@ if(null !== filter_input(INPUT_GET, 'cut_id')) {
                     endif;
                     endfor;
                     
+                    // Для окна "Заявка закрыта"
+                    if(null !== filter_input(INPUT_GET, 'id')):
+                    $sql = "select width from cut_stream where cut_id = (select cut_id from cut_wind where id = (select cut_wind_id from roll where id = ". filter_input(INPUT_GET, 'id')."))";
+                    $fetcher = new Fetcher($sql);
+                    $i = 0;
+                    while ($row = $fetcher->Fetch()):
+                    ?>
+                    <p>Ручей <?=++$i ?> &ndash; <?=$row['width'] ?> мм</p>
+                    <?php
+                    endwhile;
+                    
+                    ?>
+                    <p class="font-weight-bold mt-2" style="font-size: large;">Сколько нарезали?</p>
+                    <?php
+                    $sql = "select length from cut_wind where cut_id = (select cut_id from cut_wind where id = (select cut_wind_id from roll where id = ". filter_input(INPUT_GET, 'id')."))";
+                    $fetcher = new Fetcher($sql);
+                    $i=0;
+                    while ($row = $fetcher->Fetch()):
+                    ?>
+                    <p>Намотка <?=++$i ?> &ndash; <?=$row['length'] ?> метров</p>
+                    <?php
+                    endwhile;
+                    
+                    $sql = "select sum(length) from cut_wind where cut_id = (select cut_id from cut_wind where id = (select cut_wind_id from roll where id = ". filter_input(INPUT_GET, 'id')."))";
+                    $fetcher = new Fetcher($sql);
+                    if($row = $fetcher->Fetch()):
+                    ?>
+                    <p class="font-weight-bold">Всего нарезали: <?=$row[0] ?> метров</p>
+                    <?php
+                    endif;
+                    endif;
+                    
                     // Для всех остальных окон
                     if(null !== filter_input(INPUT_GET, 'cut_id')):
                     $sql = "select width from cut_stream where cut_id = ". filter_input(INPUT_GET, 'cut_id');
@@ -99,7 +150,6 @@ if(null !== filter_input(INPUT_GET, 'cut_id')) {
                     <p class="font-weight-bold">Всего нарезали: <?=$row[0] ?> метров</p>
                     <?php
                     endif;
-                    
                     endif;
                     ?>
                 </div>
