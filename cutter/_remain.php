@@ -133,6 +133,8 @@ if($row = $fetcher->Fetch()) {
     $('#radius').change(CalculateByRadius);
     
     // Создание оставшегося ролика
+    submit = false;
+    
     $('#close-submit').click(function() {
         form_valid = true;
         
@@ -158,7 +160,7 @@ if($row = $fetcher->Fetch()) {
                 form_valid = false;
             }
             
-            if(form_valid) {
+            if(form_valid && !submit) {
                 link = "_create_remain.php?supplier_id=" + $('#supplier_id').val() + "&film_brand_id=" + $('#film_brand_id').val() + "&width=" + $('#width').val() + "&thickness=" + $('#thickness').val() + "&radius=" + $('#radius').val() + "&spool=" + $('#spool').val() + "&net_weight=" + $('#net_weight').val() + "&length=" + $('#length').val();
             
                 $.ajax({ url: link })
@@ -168,6 +170,7 @@ if($row = $fetcher->Fetch()) {
                             }
                             else {
                                 OpenAjaxPage("_print_remain.php?id=" + data);
+                                submit = true;
                             }
                         })
                         .fail(function() {

@@ -92,6 +92,8 @@ if(!empty($error_message)) {
     </div>
 </div>
 <script>
+    submit = false;
+    
     $('#next-submit').click(function() {
         form_valid = true;
         
@@ -131,9 +133,10 @@ if(!empty($error_message)) {
             form_valid = false;
         }
         
-        if(form_valid) {
+        if(form_valid && !submit) {
             link = "_cut.php?supplier_id=" + $('#supplier_id').val() + "&film_brand_id=" + $('#film_brand_id').val() + "&thickness=" + $('#thickness').val() + "&width=" + $('#width').val();
             OpenAjaxPage(link);
+            submit = true;
         }
     });
 </script>
