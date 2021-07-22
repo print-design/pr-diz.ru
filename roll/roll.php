@@ -131,15 +131,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         if(empty($net_weight)) $net_weight = $old_net_weight;
     }
 
-    // Определяем удельный вес
-    $ud_ves = null;
-    $sql = "select weight from film_brand_variation where film_brand_id=$film_brand_id and thickness=$thickness";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        $ud_ves = $row[0];
-    }
-        
-    $weight_result = floatval($ud_ves) * floatval($length) * floatval($width) / 1000.0 / 1000.0;
+    $weight_result = filter_input(INPUT_POST, 'net_weight_normal');
     $weight_result_high = $weight_result + ($weight_result * 15.0 / 100.0);
     $weight_result_low = $weight_result - ($weight_result * 15.0 / 100.0);
         
@@ -328,6 +320,7 @@ $utilized_status_id = 2;
                     <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                     <input type="hidden" id="date" name="date" value="<?= $date ?>" />
                     <input type="hidden" id="storekeeper_id" name="storekeeper_id" value="<?= $storekeeper_id ?>" />
+                    <input type="hidden" id="net_weight_normal" name="net_weight_normal" />
                     <input type="hidden" id="scroll" name="scroll" />
                     <div class="form-group">
                         <label for="storekeeper">Принят кладовщиком</label>
@@ -517,10 +510,43 @@ $utilized_status_id = 2;
         <?php
         include '../include/footer.php';
         ?>
+        <script src="<?=APPLICATION ?>/js/calculation.js"></script>
         <script>
             if($('.is-invalid').first() != null) {
                 $('.is-invalid').first().focus();
             }
+            
+            // Все марки плёнки с их вариациями
+            var films = new Map();
+            
+            <?php
+            $sql = "SELECT fbv.film_brand_id, fbv.thickness, fbv.weight FROM film_brand_variation fbv";
+            $fetcher = new Fetcher($sql);
+            while ($row = $fetcher->Fetch()):
+            ?>
+            if(films.get(<?= $row['film_brand_id'] ?>) == undefined) {
+                films.set(<?= $row['film_brand_id'] ?>, new Map());
+            }
+            films.get(<?= $row['film_brand_id'] ?>).set(<?= $row['thickness'] ?>, <?= $row['weight'] ?>);
+            <?php        
+            endwhile;
+            ?>
+                
+            // Расчёт длины и массы плёнки по шпуле, толщине, радиусу, ширине, удельному весу
+            function CalculateWeight() {
+                film_brand_id = $('#film_brand_id').val();
+                length = $('#length').val();
+                width = $('#width').val();
+                thickness = $('#thickness').val();
+                
+                if(!isNaN(length) && !isNaN(width) && !isNaN(thickness) && length != '' && width != '' && thickness != '') {
+                    density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
+                    weight = GetFilmWeightByLengthWidth(length, width, density);
+                    $('#net_weight_normal').val(weight.toFixed(2));
+                }
+            }
+            
+            $(document).ready(CalculateWeight);
         </script>
     </body>
 </html>
