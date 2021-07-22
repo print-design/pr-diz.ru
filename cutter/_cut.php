@@ -57,6 +57,8 @@ if(!empty($error_message)) {
         SetStreams($(this).val());
     });
     
+    submit = false;
+    
     $('#next-submit').click(function() {
         form_valid = true;
         
@@ -113,7 +115,7 @@ if(!empty($error_message)) {
             <?php endfor; ?>
         }
         
-        if(form_valid) {
+        if(form_valid && !submit) {
             link = "_wind.php?supplier_id=<?= filter_input(INPUT_GET, 'supplier_id') ?>&film_brand_id=<?= filter_input(INPUT_GET, 'film_brand_id') ?>&thickness=<?= filter_input(INPUT_GET, 'thickness') ?>&width=<?= filter_input(INPUT_GET, 'width') ?>&streams_count=" + $('#streams_count').val();
             <?php for($i=1; $i<=19; $i++): ?>
                 if(!$('#stream_' + <?=$i ?> + '_group').hasClass('d-none')) {
@@ -121,6 +123,7 @@ if(!empty($error_message)) {
                 }
             <?php endfor; ?>
             OpenAjaxPage(link);
+            submit = true;
         }
     });
     

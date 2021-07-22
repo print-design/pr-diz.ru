@@ -72,6 +72,8 @@ if($row = $fetcher->Fetch()) {
     }
     
     // Закрытие заявки
+    submit = false;
+    
     $('#close-submit').click(function() {
         form_valid = true;
         
@@ -104,7 +106,7 @@ if($row = $fetcher->Fetch()) {
             }
         }
     
-        if(form_valid) {
+        if(form_valid && !submit) {
             link = "_create_sources.php?cut_id=" + $(this).attr('data-cut-id');
             for(i=1; i<=19; i++) {
                 if(!$('#source_' + i + '_group').hasClass('d-none')) {
@@ -132,6 +134,7 @@ if($row = $fetcher->Fetch()) {
                         
                         if(form_valid) {
                             OpenAjaxPage("_remain.php?cut_id=" + $('#close-submit').attr('data-cut-id'));
+                            submit = true;
                         }
                     })
                     .fail(function() {

@@ -157,6 +157,8 @@ while ($row = $fetcher->Fetch()) {
     $('#radius').change(CalculateByRadius);
     
     // Создание намотки
+    submit = false;
+    
     $('#next-submit').click(function() {
         form_valid = true;
         
@@ -212,7 +214,7 @@ while ($row = $fetcher->Fetch()) {
             }
         }
         
-        if(form_valid) {
+        if(form_valid && !submit) {
             link = "_create_wind.php?cut_id=" + $(this).attr('data-cut-id') + "&length=" + $('#length').val().replaceAll(/\D/g, '') + "&radius=" + $('#radius').val() + "&net_weight=" + $('#net_weight').val();
             for(i=1; i<=19; i++) {
                 for(i=1; i<=19; i++) {
@@ -230,6 +232,7 @@ while ($row = $fetcher->Fetch()) {
                         }
                         else {
                             OpenAjaxPage("_print.php?cut_wind_id=" + data);
+                            submit = true;
                         }
                     })
                     .fail(function() {
