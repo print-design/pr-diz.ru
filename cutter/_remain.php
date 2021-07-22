@@ -147,7 +147,7 @@ if($row = $fetcher->Fetch()) {
         form_valid = true;
         
         if(!$('#remains').is(':checked')) {
-            OpenAjaxPage("_finish.php");
+            OpenAjaxPage("_finish.php?cut_id=<?=$cut_id ?>");
         }
         else {
             if($('#radius').val() == '') {
@@ -177,7 +177,7 @@ if($row = $fetcher->Fetch()) {
                                 alert(data);
                             }
                             else {
-                                OpenAjaxPage("_print_remain.php?id=" + data);
+                                OpenAjaxPage("_print_remain.php?id=" + data + "&cut_id=<?=$cut_id ?>");
                                 submit = true;
                             }
                         })

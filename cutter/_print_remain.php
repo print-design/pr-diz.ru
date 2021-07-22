@@ -8,6 +8,7 @@ if(!empty($error_message)) {
 }
 
 $id = filter_input(INPUT_GET, 'id');
+$cut_id = filter_input(INPUT_GET, 'cut_id');
 
 // Получение данных
 $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, s.name supplier, r.id_from_supplier, "
@@ -58,7 +59,7 @@ if(isset($_COOKIE['remain_id'.$id]) && $_COOKIE['remain_id'.$id] == 1) {
     <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
 </div>
 <div id="new_wind_link"<?=$class_attr ?> style="float: right;">
-    <button type="button" class="btn btn-dark goto_finish" data-id="<?=$id ?>" style="font-size: 20px;">Закрыть заявку</button>
+    <button type="button" class="btn btn-dark goto_finish" data-cut-id="<?=$cut_id ?>" style="font-size: 20px;">Закрыть заявку</button>
 </div>
 
 <table class="table table-bordered compact" style="writing-mode: vertical-rl;">
