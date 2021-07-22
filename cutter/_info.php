@@ -46,7 +46,7 @@ if(null !== filter_input(INPUT_GET, 'cut_id')) {
 ?>
 <div class="modal fade" id="infoModal">
     <div class="modal-dialog" style="width: 100%; height: 100%; margin: 0;">
-        <div class="modal-content" style="border: 0; border-radius: 0; height: 100%;">
+        <div class="modal-content" style="border: 0; border-radius: 0; height: 100%; overflow: auto;">
             <form method="post">
                 <!-- Modal Header -->
                 <div class="modal-header">
