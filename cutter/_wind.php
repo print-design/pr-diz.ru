@@ -7,7 +7,7 @@ if(!empty($error_message)) {
     exit($error_message);
 }
 
-include '_modal.php';
+include '_info.php';
 ?>
 <div class="container-fluid header">
     <nav class="navbar navbar-expand-sm justify-content-between">
