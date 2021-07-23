@@ -4,12 +4,12 @@ $request_uri = mb_substr($_SERVER['REQUEST_URI'], mb_strlen(APPLICATION.'/cutter
 $user_id = GetUserId();
 $sql = "update user set request_uri='$request_uri' where id=$user_id";
 $error_message = (new Executer($sql))->error;
-if(!empty($error_message)) {
+if(empty($error_message)) {
     $sql = "insert into history (user, request_uri) values($user_id, '$request_uri')";
-    $error_message = (new Executer($sql))->error;
-    if(!empty($error_message)) {
-        exit($error_message);
-    }
+    $error_message = (new Executer($sql))->error;    
+}
+if(!empty($error_message)) {
+    exit($error_message);
 }
 ?>
 <div class="container-fluid header">
