@@ -16,7 +16,6 @@ if(!empty($error_message)) {
         </ul>
         <ul class="navbar-nav">
             <li class="nav-item dropdown no-dropdown-arrow-after">
-                <!--a class="nav-link mr-0" href="../user_mobile.php?link=<?= APPLICATION.'/cutter/' ?>"><i class="fa fa-cog" aria-hidden="true""></i></a-->
                 <a class="nav-link mr-0 goto_logout" href="javascript: void(0);"><i class="fa fa-cog" aria-hidden="true""></i></a>
             </li>
         </ul>
