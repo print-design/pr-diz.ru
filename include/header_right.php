@@ -1,5 +1,5 @@
 <?php
-/*if(IsInRole('cutter1')) {
+/*if(IsInRole('cutter')) {
     echo 'Автовыход через&nbsp;';
     echo '<div id="autologout">';
     echo filter_input(INPUT_COOKIE, LOGIN_TIME);
