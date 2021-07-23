@@ -28,5 +28,26 @@ if(!empty($error_message)) {
 </div>
 <div id="topmost"></div>
 <div class="container-fluid">
-    <button class="btn btn-dark w-100 mt-4 goto_material" data-supplier_id="" data-film_brand_id="" data-thickness="" data-width="">Приступить к раскрою</button>
+    <button id="mat-submit" class="btn btn-dark w-100 mt-4">Приступить к раскрою</button>
 </div>
+<script>
+    function Submit() {
+        OpenAjaxPage('_material.php?supplier_id=&film_brand_id=&thickness=&width=');
+        submit = true;
+    }
+    
+    $('#mat-submit').click(function() {
+        $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
+                .done(function(data) {
+                    if(data == "OK") {
+                        Submit();  
+                    }
+                    else {
+                        OpenAjaxPage(data);
+                    }
+                })
+                .fail(function() {
+                    alert('Ошибка при переходе на страницу.');
+                });
+    });
+</script>

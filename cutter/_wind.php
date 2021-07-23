@@ -161,7 +161,7 @@ include '_info.php';
     // Создание нарезки и первой намотки
     submit = false;
     
-    $('#next-submit').click(function() {
+    function Submit() {
         form_valid = true;
         
         if($('#length').val() == '') {
@@ -217,11 +217,11 @@ include '_info.php';
         }
         
         if(form_valid && !submit) {
-            link = "_create_cut.php?supplier_id=" + $(this).attr('data-supplier_id') + "&film_brand_id=" + $(this).attr('data-film_brand_id') + "&thickness=" + $(this).attr('data-thickness') + "&width=" + $(this).attr('data-width') + "&length=" + $('#length').val().replaceAll(/\D/g, '') + "&radius=" + $('#radius').val() + "&net_weight=" + $('#net_weight').val();
+            link = "_create_cut.php?supplier_id=" + $('#next-submit').attr('data-supplier_id') + "&film_brand_id=" + $('#next-submit').attr('data-film_brand_id') + "&thickness=" + $('#next-submit').attr('data-thickness') + "&width=" + $('#next-submit').attr('data-width') + "&length=" + $('#length').val().replaceAll(/\D/g, '') + "&radius=" + $('#radius').val() + "&net_weight=" + $('#net_weight').val();
             for(i=1; i<=19; i++) {
                 for(i=1; i<=19; i++) {
-                    if(!isNaN($(this).attr('data-stream' + i))) {
-                        link += '&stream_' + i + "=" + $(this).attr('data-stream' + i);
+                    if(!isNaN($('#next-submit').attr('data-stream' + i))) {
+                        link += '&stream_' + i + "=" + $('#next-submit').attr('data-stream' + i);
                         link += '&net_weight_' + i + "=" + $('#net_weight_' + i).val();
                     }
                 }
@@ -241,5 +241,20 @@ include '_info.php';
                         alert('Ошибка при переходе на страницу.');
                     });
         }
+    }
+    
+    $('#next-submit').click(function() {
+        $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
+                .done(function(data) {
+                    if(data == "OK") {
+                        Submit();
+                    }
+                    else {
+                        OpenAjaxPage(data);
+                    }
+                })
+                .fail(function() {
+                    alert('Ошибка при переходе на страницу.');
+                });
     });
 </script>

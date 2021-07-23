@@ -64,7 +64,7 @@ if(isset($_COOKIE['remain_id'.$id]) && $_COOKIE['remain_id'.$id] == 1) {
     <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
 </div>
 <div id="new_wind_link"<?=$class_attr ?> style="float: right;">
-    <button type="button" class="btn btn-dark goto_finish" data-cut-id="<?=$cut_id ?>" style="font-size: 20px;">Закрыть заявку</button>
+    <button id="print_submit" type="button" class="btn btn-dark" style="font-size: 20px;">Закрыть заявку</button>
 </div>
 
 <table class="table table-bordered compact" style="writing-mode: vertical-rl;">
@@ -198,5 +198,25 @@ $sticker_top = 1700;
             document.getElementById('new_wind_link').removeAttribute('class');
             document.cookie = '<?='remain_id'.$id ?>=1; Path=/;';
         }, 30000);
+    });
+    
+    function Submit() {
+        OpenAjaxPage("_finish.php?cut_id=<?=$cut_id ?>");
+        submit = true;
+    }
+    
+    $('#print_submit').click(function() {
+        $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
+                .done(function(data) {
+                    if(data == "OK") {
+                        Submit();  
+                    }
+                    else {
+                        OpenAjaxPage(data);
+                    }
+                })
+                .fail(function() {
+                    alert('Ошибка при переходе на страницу.');
+                });
     });
 </script>

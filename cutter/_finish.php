@@ -28,5 +28,26 @@ include '_info.php';
     <h1 class="text-center">Заявка закрыта</h1>
     <p class="text-center" style="font-size: x-large; color: green;">Молодец:)</p>
     <div style="height: 22rem;"></div>
-    <button type="button" class="btn btn-dark form-control goto_index">Вернуться в заявки</button>
+    <button id="index-submit" type="button" class="btn btn-dark form-control">Вернуться в заявки</button>
 </div>
+<script>
+    function Submit() {
+        OpenAjaxPage("_index.php");
+        submit = true;
+    }
+    
+    $('#index-submit').click(function() {
+        $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
+                .done(function(data) {
+                    if(data == "OK") {
+                        Submit();  
+                    }
+                    else {
+                        OpenAjaxPage(data);
+                    }
+                })
+                .fail(function() {
+                    alert('Ошибка при переходе на страницу.');
+                });
+    });
+</script>

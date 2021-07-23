@@ -172,7 +172,7 @@ while ($row = $fetcher->Fetch()) {
     // Создание намотки
     submit = false;
     
-    $('#next-submit').click(function() {
+    function Submit() {
         form_valid = true;
         
         if($('#length').val() == '') {
@@ -228,7 +228,7 @@ while ($row = $fetcher->Fetch()) {
         }
         
         if(form_valid && !submit) {
-            link = "_create_wind.php?cut_id=" + $(this).attr('data-cut-id') + "&length=" + $('#length').val().replaceAll(/\D/g, '') + "&radius=" + $('#radius').val() + "&net_weight=" + $('#net_weight').val();
+            link = "_create_wind.php?cut_id=" + $('#next-submit').attr('data-cut-id') + "&length=" + $('#length').val().replaceAll(/\D/g, '') + "&radius=" + $('#radius').val() + "&net_weight=" + $('#net_weight').val();
             for(i=1; i<=19; i++) {
                 for(i=1; i<=19; i++) {
                     if($('#stream_' + i).length && $('#net_weight_' + i).length) {
@@ -252,6 +252,21 @@ while ($row = $fetcher->Fetch()) {
                         alert('Ошибка при переходе на страницу.');
                     });
         }
+    }
+    
+    $('#next-submit').click(function() {
+        $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
+                .done(function(data) {
+                    if(data == "OK") {
+                        Submit();  
+                    }
+                    else {
+                        OpenAjaxPage(data);
+                    }
+                })
+                .fail(function() {
+                    alert('Ошибка при переходе на страницу.');
+                });
     });
     
     // Закрытие заявки
