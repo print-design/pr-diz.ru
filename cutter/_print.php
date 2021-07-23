@@ -34,7 +34,7 @@ if(isset($_COOKIE['cut_wind_id_'.$cut_wind_id]) && $_COOKIE['cut_wind_id_'.$cut_
     <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
 </div>
 <div id="new_wind_link"<?=$class_attr ?> style="float: right;">
-    <button type="button" class="btn btn-dark goto_next" data-cut-id="<?=$cut_id ?>" style="font-size: 20px;">Новая намотка</button>
+    <button id="print_submit" type="button" class="btn btn-dark" style="font-size: 20px;">Новая намотка</button>
 </div>
 <div style="clear: both;" />
     
@@ -178,5 +178,25 @@ $current_roll++;
             document.getElementById('new_wind_link').removeAttribute('class');
             document.cookie = '<?='cut_wind_id_'.$cut_wind_id ?>=1; Path=/;';
         }, 30000);
+    });
+    
+    function Submit() {
+        OpenAjaxPage("_next.php?cut_id=<?=$cut_id ?>");
+        submit = true;
+    }
+    
+    $('#print_submit').click(function() {
+        $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
+                .done(function(data) {
+                    if(data == "OK") {
+                        Submit();  
+                    }
+                    else {
+                        OpenAjaxPage(data);
+                    }
+                })
+                .fail(function() {
+                    alert('Ошибка при переходе на страницу.');
+                });
     });
 </script>

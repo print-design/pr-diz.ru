@@ -86,7 +86,7 @@ if($row = $fetcher->Fetch()) {
     // Закрытие заявки
     submit = false;
     
-    $('#close-submit').click(function() {
+    function Submit() {
         form_valid = true;
         
         if($('#sources_count').val() == '') {
@@ -119,7 +119,7 @@ if($row = $fetcher->Fetch()) {
         }
     
         if(form_valid && !submit) {
-            link = "_create_sources.php?cut_id=" + $(this).attr('data-cut-id');
+            link = "_create_sources.php?cut_id=" + $('#close-submit').attr('data-cut-id');
             for(i=1; i<=19; i++) {
                 if(!$('#source_' + i + '_group').hasClass('d-none')) {
                     link += "&source_" + i + "=" + $('#source_' + i).val();
@@ -153,5 +153,20 @@ if($row = $fetcher->Fetch()) {
                         alert('Ошибка при переходе на страницу.');
                     });
         }
+    }
+    
+    $('#close-submit').click(function() {
+        $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
+                .done(function(data) {
+                    if(data == "OK") {
+                        Submit();  
+                    }
+                    else {
+                        OpenAjaxPage(data);
+                    }
+                })
+                .fail(function() {
+                    alert('Ошибка при переходе на страницу.');
+                });
     });
 </script>

@@ -148,7 +148,7 @@ if($row = $fetcher->Fetch()) {
     // Создание оставшегося ролика
     submit = false;
     
-    $('#close-submit').click(function() {
+    function Submit() {
         form_valid = true;
         
         if(!$('#remains').is(':checked')) {
@@ -191,5 +191,20 @@ if($row = $fetcher->Fetch()) {
                         });
             }
         }
+    }
+    
+    $('#close-submit').click(function() {
+        $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
+                .done(function(data) {
+                    if(data == "OK") {
+                        Submit();  
+                    }
+                    else {
+                        OpenAjaxPage(data);
+                    }
+                })
+                .fail(function() {
+                    alert('Ошибка при переходе на страницу.');
+                });
     });
 </script>

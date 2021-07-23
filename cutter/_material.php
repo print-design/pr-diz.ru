@@ -100,6 +100,21 @@ if(!empty($error_message)) {
     submit = false;
     
     $('#next-submit').click(function() {
+        $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
+                .done(function(data) {
+                    if(data == "OK") {
+                        Submit($(this));
+                    }
+                    else {
+                        OpenAjaxPage(data);
+                    }
+                })
+                .fail(function() {
+                    alert('Ошибка при переходе на страницу.');
+                });
+    });
+    
+    function Submit() {
         form_valid = true;
         
         if($('#supplier_id').val() == '') {
@@ -143,5 +158,5 @@ if(!empty($error_message)) {
             OpenAjaxPage(link);
             submit = true;
         }
-    });
+    }
 </script>

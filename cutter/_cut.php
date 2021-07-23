@@ -64,7 +64,7 @@ if(!empty($error_message)) {
     
     submit = false;
     
-    $('#next-submit').click(function() {
+    function Submit() {
         form_valid = true;
         
         if($('#streams_count').val() == '') {
@@ -130,6 +130,21 @@ if(!empty($error_message)) {
             OpenAjaxPage(link);
             submit = true;
         }
+    }
+        
+    $('#next-submit').click(function() {
+        $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
+                .done(function(data) {
+                    if(data == "OK") {
+                        Submit();
+                    }
+                    else {
+                        OpenAjaxPage(data);
+                    }
+                })
+                .fail(function() {
+                    alert('Ошибка при переходе на страницу.');
+                });
     });
     
     // Показ и заполнение каждого ручья
