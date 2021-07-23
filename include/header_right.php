@@ -31,13 +31,13 @@ if(!empty(filter_input(INPUT_COOKIE, USERNAME))):
 <?php
 else:
 ?>
-<form class="form-inline my-2 my-lg-0" method="post" autocomplete="off">
+<form class="form-inline my-2 my-lg-0" method="post">
     <div class="form-group">
         <input class="form-control mr-sm-2<?=$login_username_valid ?>" type="text" id="login_username" name="login_username" placeholder="Логин" value="<?=$_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login_username']) ? $_POST['login_username'] : '' ?>" required="required" autocomplete="off" />
         <div class="invalid-feedback">*</div>
     </div>
     <div class="form-group">
-        <input class="form-control mr-sm-2<?=$login_password_valid ?>" type="password" id="login_password" name="login_password" placeholder="Пароль" required="required" autocomplete="off" readonly onclick="this.removeAttribute('readonly');" onfocus="this.removeAttribute('readonly');" />
+        <input class="form-control mr-sm-2<?=$login_password_valid ?>" type="password" id="login_password" name="login_password" placeholder="Пароль" required="required" />
         <div class="invalid-feedback">*</div>
     </div>
     <div class="form-group">
