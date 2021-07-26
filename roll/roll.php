@@ -279,11 +279,14 @@ if(null === $status_id) $status_id = $row['status_id'];
 $comment = filter_input(INPUT_POST, 'comment');
 if(null === $comment) $comment = $row['comment'];
 
-// СТАТУС "СВОБОДНЫЙ" ДЛЯ РУЛОНА
+// СТАТУС "СВОБОДНЫЙ"
 $free_status_id = 1;
 
-// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
+// СТАТУС "СРАБОТАННЫЙ"
 $utilized_status_id = 2;
+
+// СТАТУС "РАСКРОИЛИ"
+$cut_status_id = 3;
 ?>
 <!DOCTYPE html>
 <html>
@@ -307,6 +310,8 @@ $utilized_status_id = 2;
             if(isset($status_id) && $status_id == $utilized_status_id):
             ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/utilized/<?= BuildQueryRemove('id') ?>">Назад</a>
+            <?php elseif(isset($status_id) && $status_id == $cut_status_id): ?>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/cut_source/<?= BuildQueryRemove('id') ?>">Назад</a>
             <?php else: ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/roll/<?= BuildQueryRemove('id') ?>">Назад</a>
             <?php endif; ?>
