@@ -158,7 +158,7 @@ if(!empty($error_message)) {
                 });
     });
     
-    // Переход назад
+    // Возврат на главную страницу
     function Index() {
         OpenAjaxPage("_index.php");
     }
