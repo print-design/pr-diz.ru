@@ -46,7 +46,7 @@ if(!empty($error_message)) {
         endif;
         ?>
     <form method="post">
-        <button type="submit" class="btn btn-outline-danger form-control" id="logout_submit" name="logout_submit">Выйти</button>
+        <button type="button" class="btn btn-outline-danger form-control" id="logout_submit" name="logout_submit">Выйти</button>
     </form>
 </div>
 <script>
@@ -55,16 +55,14 @@ if(!empty($error_message)) {
         $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
                 .done(function(data) {
                     if(data == "OK") {
-                        return true;
+                        $(this).form().submit();
                     }
                     else {
                         OpenAjaxPage(data);
-                        return false;
                     }
                 })
                 .fail(function() {
                     alert('Ошибка при переходе на страницу.');
-                    return false;
                 });
     });
     
