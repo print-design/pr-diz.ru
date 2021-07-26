@@ -13,7 +13,7 @@ if(!empty($error_message)) {
     <nav class="navbar navbar-expand-sm justify-content-start">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <button type="button" class="nav-link btn btn-link goto_material" data-supplier_id="<?= filter_input(INPUT_GET, 'supplier_id') ?>" data-film_brand_id="<?= filter_input(INPUT_GET, 'film_brand_id') ?>" data-thickness="<?= filter_input(INPUT_GET, 'thickness') ?>" data-width="<?= filter_input(INPUT_GET, 'width') ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
+                <button type="button" class="nav-link btn btn-link" id="material-submit" data-supplier_id="<?= filter_input(INPUT_GET, 'supplier_id') ?>" data-film_brand_id="<?= filter_input(INPUT_GET, 'film_brand_id') ?>" data-thickness="<?= filter_input(INPUT_GET, 'thickness') ?>" data-width="<?= filter_input(INPUT_GET, 'width') ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
             </li>
         </ul>
     </nav>
@@ -55,10 +55,28 @@ if(!empty($error_message)) {
     </form>
 </div>
 <script>
+    // Показ или скрытие ручьёв в зависимости от введённого количества ручьёв
     $('#streams_count').keyup(function() {
         SetStreams($(this).val());
     });
     
+    // Показ и заполнение каждого ручья
+    function SetStreams(streams_count) {
+        $('.stream_group').addClass('d-none');
+        $('.stream_group .input-group input').removeAttr('required');
+                
+        if(streams_count != '') {
+            iStreamsCount = parseInt(streams_count);
+            if(!isNaN(iStreamsCount)) {
+                for(i=1; i<=iStreamsCount; i++) {
+                    $('#stream_' + i + '_group').removeClass('d-none');
+                    $('#stream_' + i + '_group .input-group input').attr('required', 'required');
+                }
+            }
+        }
+    }
+    
+    // Переход на страницу печати бирок для первой намотки
     submit = false;
     
     function Submit() {
@@ -144,19 +162,23 @@ if(!empty($error_message)) {
                 });
     });
     
-    // Показ и заполнение каждого ручья
-    function SetStreams(streams_count) {
-        $('.stream_group').addClass('d-none');
-        $('.stream_group .input-group input').removeAttr('required');
-                
-        if(streams_count != '') {
-            iStreamsCount = parseInt(streams_count);
-            if(!isNaN(iStreamsCount)) {
-                for(i=1; i<=iStreamsCount; i++) {
-                    $('#stream_' + i + '_group').removeClass('d-none');
-                    $('#stream_' + i + '_group .input-group input').attr('required', 'required');
-                }
-            }
-        }
+    // Переход на страницу с выбором материала для резки
+    function Material() {
+        OpenAjaxPage("_material.php?supplier_id=" + $('#material-submit').attr('data-supplier_id') + "&film_brand_id=" + $('#material-submit').attr('data-film_brand_id') + "&thickness=" + $('#material-submit').attr('data-thickness') + "&width=" + $('#material-submit').attr('data-width'));
     }
+    
+    $('#material-submit').click(function() {
+        $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
+                .done(function(data) {
+                    if(data == "OK") {
+                        Material();
+                    }
+                    else {
+                        OpenAjaxPage(data);
+                    }
+                })
+                .fail(function() {
+                    alert('Ошибка при переходе на страницу.');
+                });
+    });
 </script>

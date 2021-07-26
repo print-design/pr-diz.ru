@@ -13,7 +13,7 @@ if(!empty($error_message)) {
     <nav class="navbar navbar-expand-sm justify-content-start">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <button class="btn btn-link nav-link goto_index"><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
+                <button class="btn btn-link nav-link" id="index-submit"><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
             </li>
         </ul>
     </nav>
@@ -96,21 +96,7 @@ if(!empty($error_message)) {
 <script>
     submit = false;
     
-    $('#next-submit').click(function() {
-        $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
-                .done(function(data) {
-                    if(data == "OK") {
-                        Submit($(this));
-                    }
-                    else {
-                        OpenAjaxPage(data);
-                    }
-                })
-                .fail(function() {
-                    alert('Ошибка при переходе на страницу.');
-                });
-    });
-    
+    // Переход на страницу создания нарезки
     function Submit() {
         form_valid = true;
         
@@ -156,4 +142,39 @@ if(!empty($error_message)) {
             submit = true;
         }
     }
+    
+    $('#next-submit').click(function() {
+        $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
+                .done(function(data) {
+                    if(data == "OK") {
+                        Submit($(this));
+                    }
+                    else {
+                        OpenAjaxPage(data);
+                    }
+                })
+                .fail(function() {
+                    alert('Ошибка при переходе на страницу.');
+                });
+    });
+    
+    // Переход назад
+    function Index() {
+        OpenAjaxPage("_index.php");
+    }
+    
+    $('#index-submit').click(function() {
+        $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
+                .done(function(data) {
+                    if(data == "OK") {
+                        Index();
+                    }
+                    else {
+                        OpenAjaxPage(data);
+                    }
+                })
+                .fail(function() {
+                    alert('Ошибка при переходе на страницу.');
+                });
+    });
 </script>

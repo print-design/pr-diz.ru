@@ -28,6 +28,7 @@ include '_info.php';
     <button id="index-submit" type="button" class="btn btn-dark form-control">Вернуться в заявки</button>
 </div>
 <script>
+    // Переход на первую страницу
     function Submit() {
         OpenAjaxPage("_index.php");
         submit = true;

@@ -197,6 +197,7 @@ $sticker_top = 1700;
         }, 30000);
     });
     
+    // Переход на последнюю страницу
     function Submit() {
         OpenAjaxPage("_finish.php?cut_id=<?=$cut_id ?>");
         submit = true;
