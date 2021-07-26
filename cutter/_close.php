@@ -4,10 +4,7 @@ $request_uri = mb_substr($_SERVER['REQUEST_URI'], mb_strlen(APPLICATION.'/cutter
 $user_id = GetUserId();
 $sql = "update user set request_uri='$request_uri' where id=$user_id";
 $error_message = (new Executer($sql))->error;
-if(empty($error_message)) {
-    $sql = "insert into history (user, request_uri) values($user_id, '$request_uri')";
-    $error_message = (new Executer($sql))->error;    
-}
+
 if(!empty($error_message)) {
     exit($error_message);
 }
@@ -27,7 +24,7 @@ if($row = $fetcher->Fetch()) {
     <nav class="navbar navbar-expand-sm justify-content-between">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <button type="button" class="nav-link btn btn-link goto_next" data-cut-id="<?= $cut_id ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
+                <button type="button" class="nav-link btn btn-link" id="back-submit" data-cut-id="<?= $cut_id ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
             </li>
         </ul>
         <ul class="navbar-nav">
@@ -159,7 +156,27 @@ if($row = $fetcher->Fetch()) {
         $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
                 .done(function(data) {
                     if(data == "OK") {
-                        Submit();  
+                        Submit();
+                    }
+                    else {
+                        OpenAjaxPage(data);
+                    }
+                })
+                .fail(function() {
+                    alert('Ошибка при переходе на страницу.');
+                });
+    });
+    
+    // Возвращение назад к последней намотке
+    function Back() {
+        OpenAjaxPage("_next.php?cut_id=" + $('#back-submit').attr('data-cut-id'));
+    }
+    
+    $('#back-submit').click(function() {
+        $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
+                .done(function(data) {
+                    if(data == "OK") {
+                        Back();
                     }
                     else {
                         OpenAjaxPage(data);

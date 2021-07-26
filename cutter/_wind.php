@@ -4,10 +4,7 @@ $request_uri = mb_substr($_SERVER['REQUEST_URI'], mb_strlen(APPLICATION.'/cutter
 $user_id = GetUserId();
 $sql = "update user set request_uri='$request_uri' where id=$user_id";
 $error_message = (new Executer($sql))->error;
-if(empty($error_message)) {
-    $sql = "insert into history (user, request_uri) values($user_id, '$request_uri')";
-    $error_message = (new Executer($sql))->error;    
-}
+
 if(!empty($error_message)) {
     exit($error_message);
 }
@@ -26,7 +23,7 @@ include '_info.php';
                     }
                 }
                 ?>
-                <button type="button" class="nav-link btn btn-link goto_cut" data-supplier_id="<?= filter_input(INPUT_GET, 'supplier_id') ?>" data-film_brand_id="<?= filter_input(INPUT_GET, 'film_brand_id') ?>" data-thickness="<?= filter_input(INPUT_GET, 'thickness') ?>" data-width="<?= filter_input(INPUT_GET, 'width') ?>" data-streams-count="<?= filter_input(INPUT_GET, 'streams_count') ?>"<?=$data_sources ?>><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
+                <button type="button" class="nav-link btn btn-link" id="cut-submit" data-supplier_id="<?= filter_input(INPUT_GET, 'supplier_id') ?>" data-film_brand_id="<?= filter_input(INPUT_GET, 'film_brand_id') ?>" data-thickness="<?= filter_input(INPUT_GET, 'thickness') ?>" data-width="<?= filter_input(INPUT_GET, 'width') ?>" data-streams-count="<?= filter_input(INPUT_GET, 'streams_count') ?>"<?=$data_sources ?>><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
             </li>
         </ul>
         <ul class="navbar-nav">
@@ -158,7 +155,7 @@ include '_info.php';
             
     $('#radius').change(CalculateByRadius);
     
-    // Создание нарезки и первой намотки
+    // Переход к странице создания нарезки и первой намотки
     submit = false;
     
     function Submit() {
@@ -248,6 +245,32 @@ include '_info.php';
                 .done(function(data) {
                     if(data == "OK") {
                         Submit();
+                    }
+                    else {
+                        OpenAjaxPage(data);
+                    }
+                })
+                .fail(function() {
+                    alert('Ошибка при переходе на страницу.');
+                });
+    });
+    
+    // Переход назад к странице выбора ручьёв
+    function Cut() {
+        link = "_cut.php?supplier_id=" + $('#cut-submit').attr('data-supplier_id') + "&film_brand_id=" + $('#cut-submit').attr('data-film_brand_id') + "&thickness=" + $('#cut-submit').attr('data-thickness') + "&width=" + $('#cut-submit').attr('data-width') + "&streams-count=" + $('#cut-submit').attr('data-streams-count');
+        for(i=1; i<=19; i++) {
+            if(!isNaN($('#cut-submit').attr('data-stream' + i))) {
+                link += '&stream_' + i + "=" + $('#cut-submit').attr('data-stream' + i);
+            }
+        }
+        OpenAjaxPage(link);
+    }
+    
+    $('#cut-submit').click(function() {
+        $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
+                .done(function(data) {
+                    if(data == "OK") {
+                        Cut();
                     }
                     else {
                         OpenAjaxPage(data);
