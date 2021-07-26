@@ -255,7 +255,7 @@ while ($row = $fetcher->Fetch()) {
         $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
                 .done(function(data) {
                     if(data == "OK") {
-                        Submit();  
+                        Submit();
                     }
                     else {
                         OpenAjaxPage(data);
@@ -267,7 +267,22 @@ while ($row = $fetcher->Fetch()) {
     });
     
     // Закрытие заявки
+    function Close() {
+        OpenAjaxPage("_close.php?cut_id=" + $('#close-submit').attr('data-cut-id'));
+    }
+    
     $('#close-submit').click(function() {
-        OpenAjaxPage("_close.php?cut_id=" + $(this).attr('data-cut-id'));
+        $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
+                .done(function(data) {
+                    if(data == "OK") {
+                        Close();
+                    }
+                    else {
+                        OpenAjaxPage(data);
+                    }
+                })
+                .fail(function() {
+                    alert('Ошибка при переходе на страницу.');
+                });
     });
 </script>

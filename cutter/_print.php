@@ -186,7 +186,7 @@ $current_roll++;
         $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
                 .done(function(data) {
                     if(data == "OK") {
-                        Submit();  
+                        Submit();
                     }
                     else {
                         OpenAjaxPage(data);

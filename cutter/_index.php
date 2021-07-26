@@ -18,7 +18,7 @@ if(!empty($error_message)) {
         </ul>
         <ul class="navbar-nav">
             <li class="nav-item dropdown no-dropdown-arrow-after">
-                <a class="nav-link mr-0 goto_logout" href="javascript: void(0);"><i class="fa fa-cog" aria-hidden="true""></i></a>
+                <a class="nav-link mr-0" id="logout-submit" href="javascript: void(0);"><i class="fa fa-cog" aria-hidden="true""></i></a>
             </li>
         </ul>
     </nav>
@@ -28,6 +28,7 @@ if(!empty($error_message)) {
     <button id="mat-submit" class="btn btn-dark w-100 mt-4">Приступить к раскрою</button>
 </div>
 <script>
+    // Переход на страницу с выбором материала для резки
     function Submit() {
         OpenAjaxPage('_material.php?supplier_id=&film_brand_id=&thickness=&width=');
         submit = true;
@@ -37,7 +38,27 @@ if(!empty($error_message)) {
         $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
                 .done(function(data) {
                     if(data == "OK") {
-                        Submit();  
+                        Submit();
+                    }
+                    else {
+                        OpenAjaxPage(data);
+                    }
+                })
+                .fail(function() {
+                    alert('Ошибка при переходе на страницу.');
+                });
+    });
+    
+    // Переход на страницу для разлогинивания
+    function Logout() {
+        OpenAjaxPage("_logout.php");
+    }
+    
+    $('#logout-submit').click(function() {
+        $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
+                .done(function(data) {
+                    if(data == "OK") {
+                        Logout();
                     }
                     else {
                         OpenAjaxPage(data);
