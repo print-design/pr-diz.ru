@@ -341,7 +341,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                             <select id="rolls_number" name="rolls_number" class="form-control" required="required">
                                 <option value="">Выберите количество</option>
                                 <?php
-                                for($i=1; $i<7; $i++) {
+                                for($i=1; $i<11; $i++) {
                                     $selected = '';
                                     if(filter_input(INPUT_POST, 'rolls_number') == $i) $selected = " selected='selected'";
                                     echo "<option value='$i'$selected>$i</option>";
