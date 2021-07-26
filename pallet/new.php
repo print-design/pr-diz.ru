@@ -244,7 +244,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     </div>
                     <div class="form-group">
                         <label for="id_from_supplier">ID паллета от поставщика</label>
-                        <input type="text" id="id_from_supplier" name="id_from_supplier" value="<?= filter_input(INPUT_POST, 'id_from_supplier') ?>" class="form-control" placeholder="Введите ID" required="required" />
+                        <input type="text" id="id_from_supplier" name="id_from_supplier" value="<?= filter_input(INPUT_POST, 'id_from_supplier') ?>" class="form-control" placeholder="Введите ID" required="required" autocomplete="off" />
                         <div class="invalid-feedback">ID паллета от поставщика обязательно</div>
                     </div>
                     <div class="form-group">
@@ -270,7 +270,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     <div class="row">
                         <div class="col-6 form-group">
                             <label for="width">Ширина, мм</label>
-                            <input type="text" id="width" name="width" value="<?= filter_input(INPUT_POST, 'width') ?>" class="form-control int-only<?=$width_valid ?>" placeholder="Введите ширину" required="required" />
+                            <input type="text" id="width" name="width" value="<?= filter_input(INPUT_POST, 'width') ?>" class="form-control int-only<?=$width_valid ?>" placeholder="Введите ширину" required="required" autocomplete="off" />
                             <div class="invalid-feedback">От 50 до 1600</div>
                         </div>
                         <div class="col-6 form-group">
@@ -315,25 +315,25 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         </div>
                         <div class="col-6 form-group">
                             <label for="diameter">Расчет по радиусу (от вала), мм</label>
-                            <input type="text" id="diameter" name="diameter" class="form-control int-only" />
+                            <input type="text" id="diameter" name="diameter" class="form-control int-only" autocomplete="off" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6 form-group">
                             <label for="net_weight">Масса нетто, кг</label>
-                            <input type="text" id="net_weight" name="net_weight" value="<?= filter_input(INPUT_POST, 'net_weight') ?>" class="form-control int-only<?=$net_weight_valid ?>" placeholder="Введите массу нетто" required="required" />
+                            <input type="text" id="net_weight" name="net_weight" value="<?= filter_input(INPUT_POST, 'net_weight') ?>" class="form-control int-only<?=$net_weight_valid ?>" placeholder="Введите массу нетто" required="required" autocomplete="off" />
                             <div class="invalid-feedback"><?= empty($net_weight_message) ? "Масса нетто обязательно" : $net_weight_message ?></div>
                         </div>
                         <div class="col-6 form-group">
                             <label for="length">Длина, м</label>
-                            <input type="text" id="length" name="length" value="<?= filter_input(INPUT_POST, 'length') ?>" class="form-control int-only<?=$length_valid ?>" placeholder="Введите длину" required="required" />
+                            <input type="text" id="length" name="length" value="<?= filter_input(INPUT_POST, 'length') ?>" class="form-control int-only<?=$length_valid ?>" placeholder="Введите длину" required="required" autocomplete="off" />
                             <div class="invalid-feedback"><?= empty($length_message) ? "Длина обязательно" : $length_message ?></div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6 form-group">
                             <label for="cell">Ячейка на складе</label>
-                            <input type="text" id="cell" name="cell" value="<?= filter_input(INPUT_POST, 'cell') ?>" class="form-control no-latin<?=$cell_valid ?>" placeholder="Введите ячейку" required="required" />
+                            <input type="text" id="cell" name="cell" value="<?= filter_input(INPUT_POST, 'cell') ?>" class="form-control no-latin<?=$cell_valid ?>" placeholder="Введите ячейку" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Ячейка на складе обязательно</div>
                         </div>
                         <div class="col-6 form-group">
@@ -382,12 +382,12 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         <div class='row'>
                             <div class='col-6 form-group'>
                                 <label for='weight_roll<?=$roll_number ?>'>Масса нетто, кг</label>
-                                <input type='text' id='weight_roll<?=$roll_number ?>' name='weight_roll<?=$roll_number ?>' class='form-control int-only<?=$rolls_valid_data[$roll_number]['weight_valid'] ?>' placeholder='Масса нетто рулона' value="<?= filter_input(INPUT_POST, "weight_roll$roll_number") ?>" required='required' />
+                                <input type='text' id='weight_roll<?=$roll_number ?>' name='weight_roll<?=$roll_number ?>' class='form-control int-only<?=$rolls_valid_data[$roll_number]['weight_valid'] ?>' placeholder='Масса нетто рулона' value="<?= filter_input(INPUT_POST, "weight_roll$roll_number") ?>" required='required' autocomplete="off" />
                                 <div class="invalid-feedback"><?=$rolls_valid_data[$roll_number]['weight_message'] ?></div>
                             </div>
                             <div class='col-6 form-group'>
                                 <label for='length_roll<?=$roll_number ?>'>Длина, м</label>
-                                <input type='text' id='length_roll<?=$roll_number ?>' name='length_roll<?=$roll_number ?>' class='form-control int-only<?=$rolls_valid_data[$roll_number]['length_valid'] ?>' placeholder='Длина рулона' value="<?= filter_input(INPUT_POST, "length_roll$roll_number") ?>" required='required' />
+                                <input type='text' id='length_roll<?=$roll_number ?>' name='length_roll<?=$roll_number ?>' class='form-control int-only<?=$rolls_valid_data[$roll_number]['length_valid'] ?>' placeholder='Длина рулона' value="<?= filter_input(INPUT_POST, "length_roll$roll_number") ?>" required='required' autocomplete="off" />
                                 <div class="invalid-feedback"><?=$rolls_valid_data[$roll_number]['length_message'] ?></div>
                             </div>
                         </div>
