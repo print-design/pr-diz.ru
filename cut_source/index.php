@@ -61,7 +61,7 @@ $cut_status_id = 3;
             ?>
             <div class="d-flex justify-content-between mb-auto">
                 <div class="p-1">
-                    <h1 style="font-size: 32px; font-weight: 600;">История</h1>
+                    <h1 style="font-size: 32px; font-weight: 600;">Раскроили</h1>
                 </div>
                 <div class="p-1">
                     <button class="btn btn-outline-dark disabled d-none" data-toggle="modal" data-target="#filterModal" data-text="Фильтр"><img src="../images/icons/filter.svg" style="margin-right: 20px;" />Фильтр</button>

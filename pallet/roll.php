@@ -1,11 +1,14 @@
 <?php
 include '../include/topscripts.php';
 
-// СТАТУС "СВОБОДНЫЙ" ДЛЯ РУЛОНА
+// СТАТУС "СВОБОДНЫЙ"
 $free_status_id = 1;
 
-// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
+// СТАТУС "СРАБОТАННЫЙ"
 $utilized_status_id = 2;
+
+// СТАТУС "РАСКРОИЛИ"
+$cut_status_id = 3;
 
 // Пекренаправление на страницу карщика или резчика при чтении QR-кода
 if(IsInRole(array('electrocarist'))) {
@@ -152,10 +155,13 @@ if(null === $comment) $comment = $row['comment'];
             }
             
             // Если плёнка сработанная, то кнопка "Назад" переводит нас в раздел "Сработанная плёнка",
+            // если плёнка раскроенная, то кнопка "Назад" переводит нас в раздел "Раскроили"
             // иначе - в раздел "Паллеты".
             if(isset($status_id) && $status_id == $utilized_status_id):
             ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/utilized/<?= BuildQueryRemove('id') ?>">Назад</a>
+            <?php elseif (isset($status_id) && $status_id == $cut_status_id): ?>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/cut_source/<?= BuildQueryRemove('id') ?>">Назад</a>
             <?php else: ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/pallet/<?= BuildQueryRemove('id') ?>">Назад</a>
             <?php endif; ?>
