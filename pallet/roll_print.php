@@ -148,6 +148,10 @@ $current_date_time = date("dmYHis");
                     $file != "4_"."$current_date_time.png" &&
                     $file != "5_"."$current_date_time.png" &&
                     $file != "6_"."$current_date_time.png" &&
+                    $file != "7_"."$current_date_time.png" &&
+                    $file != "8_"."$current_date_time.png" &&
+                    $file != "9_"."$current_date_time.png" &&
+                    $file != "10_"."$current_date_time.png" &&
                     !is_dir($file)) {
                 unlink("../temp/$file");
             }

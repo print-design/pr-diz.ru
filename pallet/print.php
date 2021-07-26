@@ -248,6 +248,22 @@ $current_date_time = date("dmYHis");
             case 6:
                 $sticker_top = 11500;
                 break;
+            
+            case 7:
+                $sticker_top = 13150;
+                break;
+            
+            case 8:
+                $sticker_top = 14800;
+                break;
+            
+            case 9:
+                $sticker_top = 16450;
+                break;
+            
+            case 10:
+                $sticker_top = 18100;
+                break;
 
             default:
                 break;
@@ -319,6 +335,10 @@ $current_date_time = date("dmYHis");
                     $file != "4_"."$current_date_time.png" &&
                     $file != "5_"."$current_date_time.png" &&
                     $file != "6_"."$current_date_time.png" &&
+                    $file != "7_"."$current_date_time.png" &&
+                    $file != "8_"."$current_date_time.png" &&
+                    $file != "9_"."$current_date_time.png" &&
+                    $file != "10_"."$current_date_time.png" &&
                     !is_dir($file)) {
                 unlink("../temp/$file");
             }

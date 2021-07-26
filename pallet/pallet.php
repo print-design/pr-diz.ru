@@ -452,7 +452,7 @@ if(null === $comment) $comment = $row['comment'];
                                 <option value="0" selected="selected">0</option>
                                 <?php
                                 endif;
-                                for($i=1; $i<7; $i++) {
+                                for($i=1; $i<11; $i++) {
                                     $selected = '';
                                     if($rolls_number == $i) $selected = " selected='selected'";
                                     echo "<option value='$i'$selected>$i</option>";
