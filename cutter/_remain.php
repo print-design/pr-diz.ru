@@ -171,7 +171,7 @@ if($row = $fetcher->Fetch()) {
             }
             
             if(form_valid && !submit) {
-                link = "_create_remain.php?supplier_id=" + $('#supplier_id').val() + "&film_brand_id=" + $('#film_brand_id').val() + "&width=" + $('#width').val() + "&thickness=" + $('#thickness').val() + "&radius=" + $('#radius').val() + "&spool=" + $('#spool').val() + "&net_weight=" + $('#net_weight').val() + "&length=" + $('#length').val();
+                link = "_create_remain.php?supplier_id=" + $('#supplier_id').val() + "&film_brand_id=" + $('#film_brand_id').val() + "&width=" + $('#width').val() + "&thickness=" + $('#thickness').val() + "&radius=" + $('#radius').val() + "&spool=" + $('#spool').val() + "&net_weight=" + $('#net_weight').val() + "&length=" + $('#length').val() + "&cut_id=<?= filter_input(INPUT_GET, 'cut_id') ?>";
             
                 $.ajax({ url: link })
                         .done(function(data) {
