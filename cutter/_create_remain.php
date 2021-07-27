@@ -12,6 +12,7 @@ $radius = filter_input(INPUT_GET, 'radius');
 $spool = filter_input(INPUT_GET, 'spool');
 $net_weight = filter_input(INPUT_GET, 'net_weight');
 $length = filter_input(INPUT_GET, 'length');
+$cut_id = filter_input(INPUT_GET, 'cut_id');
 
 $id_from_supplier = "Из раскроя";
 $cell = "Цех";
@@ -32,6 +33,14 @@ $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($r
 $executer = new Executer($sql);
 $error_message = $executer->error;
                 
+if(!empty($error_message)) {
+    exit($error_message);
+}
+
+$sql = "update cut set remain = $roll_id where id = $cut_id";
+$executer = new Executer($sql);
+$error_message = $executer->error;
+
 if(!empty($error_message)) {
     exit($error_message);
 }
