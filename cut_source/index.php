@@ -39,6 +39,108 @@ if(null !== filter_input(INPUT_POST, 'delete-film-submit')) {
 
 // СТАТУС "РАСКРОИЛИ" ДЛЯ РУЛОНА
 $cut_status_id = 3;
+
+// Фильтр для данных
+$wherefindpallet = "prsh.status_id = $cut_status_id";
+                    
+$wherefindroll = "rsh.status_id = $cut_status_id";
+                    
+$film_brand_name = filter_input(INPUT_GET, 'film_brand_name');
+if(!empty($film_brand_name)) {
+    $film_brand_name = addslashes($film_brand_name);
+    $wherefindpallet .= " and fb.name = '$film_brand_name'";
+    $wherefindroll .= " and fb.name = '$film_brand_name'";
+}
+                    
+$thickness = filter_input(INPUT_GET, 'thickness');
+if(!empty($thickness)) {
+    $wherefindpallet .= " and p.thickness = ".$thickness;
+    $wherefindroll .= " and r.thickness = ".$thickness;
+}
+                    
+$width_from = filter_input(INPUT_GET, 'width_from');
+if(!empty($width_from)) {
+    $wherefindpallet .= " and p.width >= $width_from";
+    $wherefindroll .= " and r.width >= $width_from";
+}
+                    
+$width_to = filter_input(INPUT_GET, 'width_to');
+if(!empty($width_to)) {
+    $wherefindpallet .= " and p.width <= $width_to";
+    $wherefindroll .= " and r.width <= $width_to";
+}
+                    
+$find = filter_input(INPUT_GET, 'find');
+$findtrim = $find;
+if(mb_strlen($find) > 1) {
+    $findtrim = mb_substr($find, 1);
+}
+$findpallet = '';
+$findroll = '';
+$findtrimsubstrings = mb_split("\D", $findtrim);
+                    
+if(count($findtrimsubstrings) == 2 && mb_strlen($findtrimsubstrings[0]) > 0 && mb_strlen($findtrimsubstrings[1]) > 0) {
+    $findpallet = $findtrimsubstrings[0];
+    $findroll = $findtrimsubstrings[1];
+}
+                    
+if(!empty($find)) {
+    $wherefindpallet .= " and (p.id='$find' or p.id='$findtrim' or p.cell='$find' or p.comment like '%$find%' or (p.id='$findpallet' and pr.ordinal='$findroll'))";
+    $wherefindroll .= " and (r.id='$find' or r.id='$findtrim' or r.cell='$find' or r.comment like '%$find%')";
+}
+                    
+if(!empty($wherefindpallet)) {
+    $wherefindpallet = "where $wherefindpallet";
+}
+                    
+if(!empty($wherefindroll)) {
+    $wherefindroll = "where $wherefindroll";
+}
+
+// Получение общей массы рулонов
+$sql = "select ifnull((select sum(pr.weight) total_weight "
+        . "from pallet_roll pr "
+        . "inner join pallet p on pr.pallet_id = p.id "
+        . "left join film_brand fb on p.film_brand_id = fb.id "
+        . "left join supplier s on p.supplier_id = s.id "
+        . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+        . "$wherefindpallet), 0)"
+        . "+"
+        . "ifnull((select sum(r.net_weight) total_weight "
+        . "from roll r "
+        . "left join film_brand fb on r.film_brand_id = fb.id "
+        . "left join supplier s on r.supplier_id = s.id "
+        . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+        . "$wherefindroll), 0)";
+
+/*$sql = "select (select sum(pr.weight) net_weight "
+        . "from pallet_roll pr "
+        . "inner join pallet p on pr.pallet_id = p.id "
+        . "left join film_brand fb on p.film_brand_id = fb.id "
+        . "left join supplier s on p.supplier_id = s.id "
+        . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+        . "$wherefindpallet)"
+        . "+"
+        . "(select sum(r.net_weight) net_weight "
+        . "from roll r "
+        . "left join film_brand fb on r.film_brand_id = fb.id "
+        . "left join supplier s on r.supplier_id = s.id "
+        . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+        . "$wherefindroll)"; echo $sql;*/
+
+$row = (new Fetcher($sql))->Fetch();
+$total_weight = $row[0];
+
+// Получение всех статусов
+$sql = "select distinct id, name, colour from roll_status";
+$grabber = (new Grabber($sql));
+$error_message = $grabber->error;
+$roll_statuses = $grabber->result;
+                    
+$roll_statuses1 = array();
+foreach ($roll_statuses as $status) {
+    $roll_statuses1[$status['id']] = $status;
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -61,7 +163,12 @@ $cut_status_id = 3;
             ?>
             <div class="d-flex justify-content-between mb-auto">
                 <div class="p-1">
-                    <h1 style="font-size: 32px; font-weight: 600;">Раскроили</h1>
+                    <table>
+                        <tr>
+                            <td><h1 style="font-size: 32px; font-weight: 600;">Раскроили</h1></td>
+                            <td style="padding-left: 20px; padding-right: 20px; font-weight: bold;">(<?= number_format($total_weight, 0, ',', ' ') ?> кг)</td>
+                        </tr>
+                    </table>
                 </div>
                 <div class="p-1">
                     <button class="btn btn-outline-dark disabled d-none" data-toggle="modal" data-target="#filterModal" data-text="Фильтр"><img src="../images/icons/filter.svg" style="margin-right: 20px;" />Фильтр</button>
@@ -106,72 +213,6 @@ $cut_status_id = 3;
                 </thead>
                 <tbody>
                     <?php
-                    $sql = "select distinct id, name, colour from roll_status";
-                    $grabber = (new Grabber($sql));
-                    $error_message = $grabber->error;
-                    $roll_statuses = $grabber->result;
-                    
-                    $roll_statuses1 = array();
-                    foreach ($roll_statuses as $status) {
-                        $roll_statuses1[$status['id']] = $status;
-                    }
-                    
-                    $wherefindpallet = "prsh.status_id = $cut_status_id";
-                    
-                    $wherefindroll = "rsh.status_id = $cut_status_id";
-                    
-                    $film_brand_name = filter_input(INPUT_GET, 'film_brand_name');
-                    if(!empty($film_brand_name)) {
-                        $film_brand_name = addslashes($film_brand_name);
-                        $wherefindpallet .= " and fb.name = '$film_brand_name'";
-                        $wherefindroll .= " and fb.name = '$film_brand_name'";
-                    }
-                    
-                    $thickness = filter_input(INPUT_GET, 'thickness');
-                    if(!empty($thickness)) {
-                        $wherefindpallet .= " and p.thickness = ".$thickness;
-                        $wherefindroll .= " and r.thickness = ".$thickness;
-                    }
-                    
-                    $width_from = filter_input(INPUT_GET, 'width_from');
-                    if(!empty($width_from)) {
-                        $wherefindpallet .= " and p.width >= $width_from";
-                        $wherefindroll .= " and r.width >= $width_from";
-                    }
-                    
-                    $width_to = filter_input(INPUT_GET, 'width_to');
-                    if(!empty($width_to)) {
-                        $wherefindpallet .= " and p.width <= $width_to";
-                        $wherefindroll .= " and r.width <= $width_to";
-                    }
-                    
-                    $find = filter_input(INPUT_GET, 'find');
-                    $findtrim = $find;
-                    if(mb_strlen($find) > 1) {
-                        $findtrim = mb_substr($find, 1);
-                    }
-                    $findpallet = '';
-                    $findroll = '';
-                    $findtrimsubstrings = mb_split("\D", $findtrim);
-                    
-                    if(count($findtrimsubstrings) == 2 && mb_strlen($findtrimsubstrings[0]) > 0 && mb_strlen($findtrimsubstrings[1]) > 0) {
-                        $findpallet = $findtrimsubstrings[0];
-                        $findroll = $findtrimsubstrings[1];
-                    }
-                    
-                    if(!empty($find)) {
-                        $wherefindpallet .= " and (p.id='$find' or p.id='$findtrim' or p.cell='$find' or p.comment like '%$find%' or (p.id='$findpallet' and pr.ordinal='$findroll'))";
-                        $wherefindroll .= " and (r.id='$find' or r.id='$findtrim' or r.cell='$find' or r.comment like '%$find%')";
-                    }
-                    
-                    if(!empty($wherefindpallet)) {
-                        $wherefindpallet = "where $wherefindpallet";
-                    }
-                    
-                    if(!empty($wherefindroll)) {
-                        $wherefindroll = "where $wherefindroll";
-                    }
-                    
                     $sql = "select (select count(pr.id) total_count "
                             . "from pallet_roll pr "
                             . "inner join pallet p on pr.pallet_id = p.id "
