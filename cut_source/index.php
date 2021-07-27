@@ -113,21 +113,6 @@ $sql = "select ifnull((select sum(pr.weight) total_weight "
         . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
         . "$wherefindroll), 0)";
 
-/*$sql = "select (select sum(pr.weight) net_weight "
-        . "from pallet_roll pr "
-        . "inner join pallet p on pr.pallet_id = p.id "
-        . "left join film_brand fb on p.film_brand_id = fb.id "
-        . "left join supplier s on p.supplier_id = s.id "
-        . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-        . "$wherefindpallet)"
-        . "+"
-        . "(select sum(r.net_weight) net_weight "
-        . "from roll r "
-        . "left join film_brand fb on r.film_brand_id = fb.id "
-        . "left join supplier s on r.supplier_id = s.id "
-        . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-        . "$wherefindroll)"; echo $sql;*/
-
 $row = (new Fetcher($sql))->Fetch();
 $total_weight = $row[0];
 
