@@ -17,7 +17,7 @@ $grafik_class = '';
 if($folder == "calculation") {
     $zakaz_class = " active";
 }
-else if($folder == "pallet" || $folder == "roll" || $folder == "utilized") {
+else if($folder == "pallet" || $folder == "roll" || $folder == "cut_source" || $folder == "utilized") {
     $sklad_class = " active";
 }
 else if($file == "grafik.php") {
