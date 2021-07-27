@@ -63,10 +63,6 @@ include 'left_bar.php';
             <li class="nav-item">
                 <a class="nav-link<?=$cut_sources_status ?>" href="<?=APPLICATION ?>/cut_source/">Раскроили</a>
             </li>
-            <?php
-            endif;
-            if(IsInRole(array('technologist', 'dev'))):
-            ?>
             <li class="nav-item">
                 <a class="nav-link<?=$utilized_status ?> text-nowrap" href="<?=APPLICATION ?>/utilized/">Сработанная пленка</a>
             </li>
