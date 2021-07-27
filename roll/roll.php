@@ -495,6 +495,7 @@ $cut_status_id = 3;
                     <div class="form-group">
                         <label>Как резали:</label>
                         <br />
+                        <div style="font-size: 1rem;">
                         <?=$status_date.' в '.$status_time ?><br />
                         <?php
                         $sql = "select cstr.width "
@@ -511,6 +512,7 @@ $cut_status_id = 3;
                         }
                         echo $result;
                         ?>
+                        </div>
                     </div>
                     <?php
                     // Если этот рулон появился в результате нарезки
@@ -519,6 +521,7 @@ $cut_status_id = 3;
                     <div class="form-group">
                         <label>Получился из раскроя:</label>
                         <br />
+                        <div style="font-size: 1rem;">
                         <?php
                         $sql = "select cstr.width, DATE_FORMAT(c.date, '%d.%m.%Y') date, DATE_FORMAT(c.date, '%H:%i') time "
                                 . "from cut_wind cw "
@@ -540,6 +543,7 @@ $cut_status_id = 3;
                         echo "$date в $time<br />";
                         echo $result;
                         ?>
+                        </div>
                     </div>
                     <?php
                     endif;
@@ -554,6 +558,7 @@ $cut_status_id = 3;
                     <div class="form-group">
                         <label>Остаток из раскроя:</label>
                         <br />
+                        <div style="font-size: 1rem;">
                         <?php
                         $result = "";
                         $date = "";
@@ -569,6 +574,7 @@ $cut_status_id = 3;
                         echo "$date в $time<br />";
                         echo $result;
                         ?>
+                        </div>
                     </div>
                     <?php
                     endif;
