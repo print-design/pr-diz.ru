@@ -23,48 +23,46 @@ $free_status_id = 1;
 $utilized_status_id = 2;
 
 // Фильтр для данных
-function Filter() {
-    $result = "";
+$where = "(rsh.status_id is null or rsh.status_id = $free_status_id)";
     
-    $film_brand_name = filter_input(INPUT_GET, 'film_brand_name');
-    if(!empty($film_brand_name)) {
-        $film_brand_name = addslashes($film_brand_name);
-        $result .= " and fb.name = '$film_brand_name'";
-    }
-    
-    $thickness = filter_input(INPUT_GET, 'thickness');
-    if(!empty($thickness)) {
-        $result .= " and r.thickness = ".$thickness;
-    }
-    
-    $width_from = filter_input(INPUT_GET, 'width_from');
-    if(!empty($width_from)) {
-        $result .= " and r.width >= $width_from";
-    }
-    
-    $width_to = filter_input(INPUT_GET, 'width_to');
-    if(!empty($width_to)) {
-        $result .= " and r.width <= $width_to";
-    }
-    
-    $find = filter_input(INPUT_GET, 'find');
-    $findtrim = $find;
-    if(mb_strlen($find) > 1) {
-        $findtrim = mb_substr($find, 1);
-    }
-    if(!empty($find)) {
-        $result .= " and (r.id='$find' or r.id='$findtrim' or r.cell='$find' or r.comment like '%$find%')";
-    }
-    
-    return $result;
+$film_brand_name = filter_input(INPUT_GET, 'film_brand_name');
+if(!empty($film_brand_name)) {
+    $film_brand_name = addslashes($film_brand_name);
+    $where .= " and fb.name = '$film_brand_name'";
 }
-
+    
+$thickness = filter_input(INPUT_GET, 'thickness');
+if(!empty($thickness)) {
+    $where .= " and r.thickness = ".$thickness;
+}
+    
+$width_from = filter_input(INPUT_GET, 'width_from');
+if(!empty($width_from)) {
+    $where .= " and r.width >= $width_from";
+}
+    
+$width_to = filter_input(INPUT_GET, 'width_to');
+if(!empty($width_to)) {
+    $where .= " and r.width <= $width_to";
+}
+    
+$find = filter_input(INPUT_GET, 'find');
+$findtrim = $find;
+if(mb_strlen($find) > 1) {
+    $findtrim = mb_substr($find, 1);
+}
+if(!empty($find)) {
+    $where .= " and (r.id='$find' or r.id='$findtrim' or r.cell='$find' or r.comment like '%$find%')";
+}
+    
 // Получение общей массы рулонов
 $sql = "select sum(r.net_weight) total_weight "
         . "from roll r "
+        . "left join film_brand fb on r.film_brand_id = fb.id "
+        . "left join supplier s on r.supplier_id = s.id "
+        . "left join user u on r.storekeeper_id = u.id "
         . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-        . "inner join film_brand fb on r.film_brand_id = fb.id "
-        . "where rsh.status_id is null or rsh.status_id = $free_status_id". Filter();
+        . "where $where";
 $row = (new Fetcher($sql))->Fetch();
 $total_weight = $row['total_weight'];
 
@@ -154,10 +152,8 @@ while ($row = $fetcher->Fetch()) {
                 </thead>
                 <tbody>
                     <?php
-                    $where = "(rsh.status_id is null or rsh.status_id = $free_status_id)";
-                    
                     if(!empty($where)) {
-                        $where = "where $where". Filter();
+                        $where = "where $where";
                     }
                     
                     $sql = "select count(r.id) "
