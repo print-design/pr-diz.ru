@@ -137,10 +137,8 @@ include '_info.php';
                 if(!isNaN(spool) && !isNaN(thickness) && !isNaN(radius) && !isNaN(width) 
                         && spool != '' && thickness != '' && radius != '' && width != '') {
                     density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
-                    
-                    result = GetFilmLengthWeightBySpoolThicknessRadiusWidth(spool, thickness, radius, width, density);
-                    
-                    $('#net_weight_' + i).val(result.weight.toFixed(2));
+                    weight = GetFilmWeightByLengthWidth(length, width, density);
+                    $('#net_weight_' + i).val(weight.toFixed(2));
                 }
             }
         }
