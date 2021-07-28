@@ -115,7 +115,7 @@ if($row = $fetcher->Fetch()) {
         $('#net_weight').val('');
                 
         film_brand_id = $('#film_brand_id').val();
-        spool = $('#spool').val();
+        spool = $('input[name="spool"]:checked').val();
         thickness = $('#thickness').val();
         radius = $('#radius').val();
         width = $('#width').val();
@@ -134,7 +134,7 @@ if($row = $fetcher->Fetch()) {
     $(document).ready(CalculateByRadius);
             
     // Рассчитываем ширину и массу плёнки при изменении значений каждого поля, участвующего в вычислении
-    $('#spool').change(CalculateByRadius);
+    $('input[name="spool"]').click(CalculateByRadius);
             
     $('#radius').keypress(CalculateByRadius);
             
