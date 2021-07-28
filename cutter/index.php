@@ -188,7 +188,7 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
             $sql = "select request_uri from user where id=".GetUserId();
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()):
-                if(empty($row[0])):
+                if(empty($row[0]) || $row[0] == '_logout.php'):
                     ?>
                         OpenAjaxPage("_index.php");
                     <?php
