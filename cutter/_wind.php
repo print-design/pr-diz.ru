@@ -119,6 +119,7 @@ include '_info.php';
         thickness = $('#thickness').val();
         radius = $('#radius').val();
         width = $('#width').val();
+        length = $('#length').val().replaceAll(/\D/g, '');
                 
         if(!isNaN(spool) && !isNaN(thickness) && !isNaN(radius) && !isNaN(width) 
                 && spool != '' && thickness != '' && radius != '' && width != '') {
@@ -137,10 +138,8 @@ include '_info.php';
                 if(!isNaN(spool) && !isNaN(thickness) && !isNaN(radius) && !isNaN(width) 
                         && spool != '' && thickness != '' && radius != '' && width != '') {
                     density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
-                    
-                    result = GetFilmLengthWeightBySpoolThicknessRadiusWidth(spool, thickness, radius, width, density);
-                    
-                    $('#net_weight_' + i).val(result.weight.toFixed(2));
+                    weight = GetFilmWeightByLengthWidth(length, width, density);
+                    $('#net_weight_' + i).val(weight.toFixed(2));
                 }
             }
         }
@@ -154,6 +153,12 @@ include '_info.php';
     $('#radius').keyup(CalculateByRadius);
             
     $('#radius').change(CalculateByRadius);
+    
+    $('#length').keypress(CalculateByRadius);
+            
+    $('#length').keyup(CalculateByRadius);
+            
+    $('#length').change(CalculateByRadius);
     
     // Переход к странице создания нарезки и первой намотки
     submit = false;
