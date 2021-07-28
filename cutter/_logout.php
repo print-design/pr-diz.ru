@@ -55,7 +55,7 @@ if(!empty($error_message)) {
         $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
                 .done(function(data) {
                     if(data == "OK") {
-                        $(this).form().submit();
+                        Index();
                     }
                     else {
                         OpenAjaxPage(data);
