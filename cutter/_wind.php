@@ -119,6 +119,7 @@ include '_info.php';
         thickness = $('#thickness').val();
         radius = $('#radius').val();
         width = $('#width').val();
+        length = $('#length').val().replaceAll(/\D/g, '');
                 
         if(!isNaN(spool) && !isNaN(thickness) && !isNaN(radius) && !isNaN(width) 
                 && spool != '' && thickness != '' && radius != '' && width != '') {
