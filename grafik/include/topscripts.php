@@ -105,7 +105,7 @@ function GetDateFromDateTo($getDateFrom, $getDateTo, &$dateFrom, &$dateTo) {
     
     if($dateFrom == null && $dateTo == null) {
         $dateFrom = new DateTime();
-        $dateFrom->sub($diff1Day);
+        // $dateFrom->sub($diff1Day); Раскомментировать эту строку, чтобы показывать даты не с сегодняшнего, а со вчерашнего
         $dateTo = clone $dateFrom;
         $dateTo->add($diff30Days);
     }
