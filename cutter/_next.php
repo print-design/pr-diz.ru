@@ -137,7 +137,6 @@ while ($row = $fetcher->Fetch()) {
             density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
                         
             result = GetFilmLengthWeightBySpoolThicknessRadiusWidth(spool, thickness, radius, width, density);
-            weight = GetFilmWeightByLengthWidth()
                         
             $('#normal_length').val(result.length.toFixed(2));
             $('#net_weight').val(result.weight.toFixed(2));
