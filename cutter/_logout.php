@@ -45,17 +45,18 @@ if(!empty($error_message)) {
         <?php
         endif;
         ?>
-    <form method="post">
-        <button type="button" class="btn btn-outline-danger form-control" id="logout_submit" name="logout_submit">Выйти</button>
+    <form method="post" id="form_logout">
+        <input type="hidden" id="logout_submit" name="logout_submit" value="1" />
+        <button type="button" class="btn btn-outline-danger form-control" id="logout_button" name="logout_button">Выйти</button>
     </form>
 </div>
 <script>
     // Выход из системы
-    $('#logout_submit').click(function() {
+    $('#logout_button').click(function() {
         $.ajax({ url: "_check_db_uri.php?uri=<?= urlencode($request_uri) ?>" })
                 .done(function(data) {
                     if(data == "OK") {
-                        Index();
+                        $('#form_logout').submit();
                     }
                     else {
                         OpenAjaxPage(data);
