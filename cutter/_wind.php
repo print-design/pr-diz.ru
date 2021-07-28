@@ -144,7 +144,7 @@ include '_info.php';
             }
         }
     }
-            
+
     $(document).ready(CalculateByRadius);
             
     // Рассчитываем ширину и массу плёнки при изменении значений радиуса
@@ -153,6 +153,12 @@ include '_info.php';
     $('#radius').keyup(CalculateByRadius);
             
     $('#radius').change(CalculateByRadius);
+    
+    $('#length').keypress(CalculateByRadius);
+            
+    $('#length').keyup(CalculateByRadius);
+            
+    $('#length').change(CalculateByRadius);
     
     // Переход к странице создания нарезки и первой намотки
     submit = false;

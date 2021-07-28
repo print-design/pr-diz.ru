@@ -166,6 +166,12 @@ while ($row = $fetcher->Fetch()) {
             
     $('#radius').change(CalculateByRadius);
     
+    $('#length').keypress(CalculateByRadius);
+            
+    $('#length').keyup(CalculateByRadius);
+            
+    $('#length').change(CalculateByRadius);
+    
     // Создание намотки
     submit = false;
     
