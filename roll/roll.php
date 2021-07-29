@@ -6,7 +6,7 @@ if(IsInRole(array('electrocarist'))) {
     header('Location: '.APPLICATION.'/car/roll_edit.php?id='. filter_input(INPUT_GET, 'id'));
 }
 
-if(IsInRole(array('cutter'))) {
+elseif(IsInRole(array('cutter'))) {
     header('Location: '.APPLICATION.'/cut/roll.php?id='. filter_input(INPUT_GET, 'id'));
 }
 
