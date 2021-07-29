@@ -46,7 +46,7 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
         $sql = "select r.id "
                 . "from roll r "
                 . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                . "where r.id=$roll_id and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID.") limit 1";
+                . "where r.id='$roll_id' and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID.") limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             header('Location: '.APPLICATION.'/car/roll.php?id='.$row[0]);
