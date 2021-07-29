@@ -37,7 +37,7 @@ if(empty($id)) {
                     . "inner join film_brand fb on p.film_brand_id=fb.id "
                     . "where pr.id=$id";
             $fetcher = new Fetcher($sql);
-            if($row = $fetcher->Fetch()) {
+            if($row = $fetcher->Fetch()):
                 $date = $row['date'];
                 $supplier = $row['supplier'];
                 $id_from_supplier = $row['id_from_supplier'];
@@ -53,7 +53,6 @@ if(empty($id)) {
                 $title = "П".$pallet_id."Р".$ordinal;
                 
                 include '../include/find_mobile.php';
-            }
             ?>
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
@@ -75,6 +74,9 @@ if(empty($id)) {
                     </div>
                 </div>
             </div>
+            <?php else: ?>
+            <div class='alert alert-danger'>Объект не найден</div>
+            <?php endif; ?>
         </div>
         <?php
         include '../include/footer.php';

@@ -41,7 +41,7 @@ $free_roll_status_id = 1;
                     . "inner join film_brand fb on p.film_brand_id=fb.id "
                     . "where p.id=$id";
             $fetcher = new Fetcher($sql);
-            if($row = $fetcher->Fetch()) {
+            if($row = $fetcher->Fetch()):
                 $date = $row['date'];
                 $supplier = $row['supplier'];
                 $id_from_supplier = $row['id_from_supplier'];
@@ -56,7 +56,6 @@ $free_roll_status_id = 1;
                 $title = "П".filter_input(INPUT_GET, 'id');
                 
                 include '../include/find_mobile.php';
-            }
             ?>
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
@@ -79,6 +78,9 @@ $free_roll_status_id = 1;
                     </div>
                 </div>
             </div>
+            <?php else: ?>
+            <div class='alert alert-danger'>Объект не найден</div>
+            <?php endif; ?>
         </div>
         <?php
         include '../include/footer.php';
