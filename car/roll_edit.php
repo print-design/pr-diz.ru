@@ -46,7 +46,7 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
 }
 
 // СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
-$utilized_status_id = 2;
+$free_status_id = 1;
 ?>
 <!DOCTYPE html>
 <html>
