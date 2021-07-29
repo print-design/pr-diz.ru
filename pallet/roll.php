@@ -88,11 +88,12 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
 // Получение данных
 $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, DATE_FORMAT(p.date, '%H:%i') time, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.id_from_supplier, p.film_brand_id, p.width, p.thickness, pr.length, "
         . "pr.weight, pr.pallet_id, pr.ordinal, p.cell, "
-        . "(select ifnull(prsh.status_id, $free_status_id) from pallet_roll_status_history prsh where prsh.pallet_roll_id = pr.id order by prsh.id desc limit 0, 1) status_id, "
+        . "prsh.status_id status_id, DATE_FORMAT(prsh.date, '%d.%m.%Y') status_date, DATE_FORMAT(prsh.date, '%H.%i') status_time, "
         . "p.comment "
         . "from pallet p "
         . "inner join user u on p.storekeeper_id = u.id "
         . "inner join pallet_roll pr on pr.pallet_id = p.id "
+        . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
         . "where pr.id=$id";
 
 $row = (new Fetcher($sql))->Fetch();
@@ -133,6 +134,9 @@ if(null === $cell) $cell = $row['cell'];
 
 $status_id = filter_input(INPUT_POST, 'status_id');
 if(null === $status_id) $status_id = $row['status_id'];
+
+$status_date = $row['status_date'];
+$status_time = $row['status_time'];
 
 $comment = filter_input(INPUT_POST, 'comment');
 if(null === $comment) $comment = $row['comment'];
@@ -324,6 +328,36 @@ if(null === $comment) $comment = $row['comment'];
                         </select>
                         <div class="invalid-feedback">Статус обязательно</div>
                     </div>
+                    <!-- Отображаем, в каких нарезках данный ролик участвовал -->
+                    <?php
+                    // Если этот рулон был раскроен
+                    if($status_id == $cut_status_id):
+                    ?>
+                    <div class="form-group">
+                        <label>Как резали:</label>
+                        <br />
+                        <div style="font-size: 1rem;">
+                        <?=$status_date.' в '.$status_time ?><br />
+                        <?php
+                        $sql = "select cstr.width "
+                                . "from cut_source cs "
+                                . "inner join cut_stream cstr on cs.cut_id = cstr.cut_id "
+                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id')." and is_from_pallet = 1 order by width";
+                        $fetcher = new Fetcher($sql);
+                        $result = "";
+                        while ($row = $fetcher->Fetch()) {
+                            if($result != "") {
+                                $result .= " - ";
+                            }
+                            $result .= $row[0].' мм';
+                        }
+                        echo $result;
+                        ?>
+                        </div>
+                    </div>
+                    <?php
+                    endif;
+                    ?>
                     <div class="form-group">
                         <?php
                         $comment_disabled = "";
