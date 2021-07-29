@@ -15,10 +15,6 @@ if(IsInRole(array('electrocarist'))) {
     header('Location: '.APPLICATION.'/car/pallet_roll_edit.php?id='. filter_input(INPUT_GET, 'id'));
 }
 
-elseif(IsInRole(array('cutter'))) {
-    header('Location: '.APPLICATION.'/cut/pallet_roll.php?id='. filter_input(INPUT_GET, 'id'));
-}
-
 // Авторизация
 elseif(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
