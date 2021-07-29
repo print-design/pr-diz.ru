@@ -14,7 +14,7 @@ if(filter_input(INPUT_GET, "find") != '') {
 }
 ?>
 <button type="button" class="btn btn-link ml-auto<?=$append_class ?>" id="find-append" style="color: black; height: 35px; line-height: 0;"><i class="fas fa-search"></i></button>
-<form class="form-inline ml-auto mr-3<?=$find_class ?>" method="get" id="find-form" action="<?=APPLICATION.'/utilized/' ?>">
+<form class="form-inline ml-auto mr-3<?=$find_class ?>" method="get" id="find-form" action="<?=APPLICATION.'/cut_source/' ?>">
     <div class="input-group input-group-sm<?=$group_class ?>" id="find-group">
         <input type="text" class="form-control no-latin" id="find" name="find" placeholder="<?=$placeholder ?>" />
         <div class="input-group-append">
