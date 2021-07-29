@@ -26,6 +26,13 @@ if(empty($id)) {
     header('Location: '.APPLICATION.'/pallet/');
 }
 
+// Валидация формы
+define('ISINVALID', ' is-invalid');
+$form_valid = true;
+$error_message = '';
+
+$cell_valid = '';
+
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     $id = filter_input(INPUT_POST, 'id');
@@ -45,35 +52,42 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     if(empty($error_message)) {
         // Редактирование данных паллета
         $pallet_id = filter_input(INPUT_POST, 'pallet_id');
-        $sql = "";
         
         $cell = filter_input(INPUT_POST, 'cell');
-            
-        if(!empty($sql)) {
-            $sql .= ", ";
+        if(empty($cell)) {
+            $cell_valid = ISINVALID;
+            $form_valid = false;
         }
-            
-        $sql .= "cell='$cell'";
-
+        
         $comment = addslashes(filter_input(INPUT_POST, 'comment'));
-            
-        if(!empty($sql)) {
-            $sql .= ", ";
-        }
-            
-        if(IsInRole(array('dev', 'technologist', 'storekeeper'))) {
-            $sql .= "comment='$comment'";
-        }
-        else {
-            $sql .= "comment=concat(comment, ' ', '$comment')";
-        }
         
-        $sql = "update pallet set $sql where id=$pallet_id";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
+        if($form_valid) {
+            $sql = "";
+            
+            if(!empty($sql)) {
+                $sql .= ", ";
+            }
         
-        if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/pallet/'. BuildQueryRemove('id'));
+            $sql .= "cell='$cell'";
+            
+            if(!empty($sql)) {
+                $sql .= ", ";
+            }
+            
+            if(IsInRole(array('dev', 'technologist', 'storekeeper'))) {
+                $sql .= "comment='$comment'";
+            }
+            else {
+                $sql .= "comment=concat(comment, ' ', '$comment')";
+            }
+        
+            $sql = "update pallet set $sql where id=$pallet_id";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        
+            if(empty($error_message)) {
+                header('Location: '.APPLICATION.'/pallet/'. BuildQueryRemove('id'));
+            }
         }
     }
 }
@@ -282,7 +296,7 @@ if(null === $comment) $comment = $row['comment'];
                             }
                             ?>
                             <label for="cell">Ячейка на складе</label>
-                            <input type="text" id="cell" name="cell" value="<?= $cell ?>" class="form-control no-latin" placeholder="Введите ячейку"<?=$cell_disabled ?>" />
+                            <input type="text" id="cell" name="cell" value="<?= $cell ?>" class="form-control no-latin<?=$cell_valid ?>" placeholder="Введите ячейку"<?=$cell_disabled ?>" />
                             <div class="invalid-feedback">Ячейка на складе обязательно</div>
                         </div>
                         <div class="col-6 form-group"></div>
