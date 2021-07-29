@@ -61,7 +61,7 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
         $substrings = mb_split("\D", $pallet_trim);
         
         // Если внутри имеется буква, ищем среди рулонов, которые в паллетах
-        if(count($substrings) == 2) {
+        if(count($substrings) == 2 && mb_strlen($substrings[0]) > 0 && mb_strlen($substrings[1]) > 0) {
             $pallet_id = $substrings[0];
             $ordinal = $substrings[1];
             $sql = "select pr.id "
@@ -78,7 +78,7 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
                 $error_message = FindByCell($id);
             }
         }
-        elseif(count($substrings) == 1) {
+        elseif(count($substrings) == 1 && mb_strlen($substrings[0]) > 0) {
             $pallet_id = $substrings[0];
             $sql = "select p.id "
                     . "from pallet p "
