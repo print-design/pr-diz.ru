@@ -47,28 +47,25 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         $pallet_id = filter_input(INPUT_POST, 'pallet_id');
         $sql = "";
         
-        if(!empty(filter_input(INPUT_POST, 'cell'))) {
-            $cell = filter_input(INPUT_POST, 'cell');
+        $cell = filter_input(INPUT_POST, 'cell');
             
-            if(!empty($sql)) {
-                $sql .= ", ";
-            }
-            
-            $sql .= "cell='$cell'";
+        if(!empty($sql)) {
+            $sql .= ", ";
         }
-        if(!empty(filter_input(INPUT_POST, 'comment'))) {
-            $comment = addslashes(filter_input(INPUT_POST, 'comment'));
             
-            if(!empty($sql)) {
-                $sql .= ", ";
-            }
+        $sql .= "cell='$cell'";
+
+        $comment = addslashes(filter_input(INPUT_POST, 'comment'));
             
-            if(IsInRole(array('dev', 'technologist', 'storekeeper'))) {
-                $sql .= "comment='$comment'";
-            }
-            else {
-                $sql .= "comment=concat(comment, ' ', '$comment')";
-            }
+        if(!empty($sql)) {
+            $sql .= ", ";
+        }
+            
+        if(IsInRole(array('dev', 'technologist', 'storekeeper'))) {
+            $sql .= "comment='$comment'";
+        }
+        else {
+            $sql .= "comment=concat(comment, ' ', '$comment')";
         }
         
         $sql = "update pallet set $sql where id=$pallet_id";
