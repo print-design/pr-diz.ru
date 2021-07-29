@@ -32,8 +32,6 @@ $free_status_id = 1;
         ?>
         <div class="container-fluid">
             <?php
-            include '../include/find_mobile.php';
-            
             $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, pr.weight, pr.length, p.cell, p.comment, "
                     . "p.id pallet_id, pr.ordinal "
                     . "from pallet_roll pr "
@@ -57,7 +55,9 @@ $free_status_id = 1;
                 $comment = htmlentities($row['comment']);
                 $pallet_id = $row['pallet_id'];
                 $ordinal = $row['ordinal'];
+                
                 $title = "П".$pallet_id."Р".$ordinal;
+                include '../include/find_mobile.php';
             ?>
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
@@ -79,7 +79,11 @@ $free_status_id = 1;
                     </div>
                 </div>
             </div>
-            <?php else: ?>
+            <?php
+            else:
+            $title = "П".$pallet_id."Р".$ordinal;
+            include '../include/find_mobile.php';
+            ?>
             <div class='alert alert-danger'>Объект не найден</div>
             <?php endif; ?>
         </div>
