@@ -12,8 +12,8 @@ if(empty($id)) {
     header('Location: '.APPLICATION.'/car/');
 }
 
-// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
-$utilized_roll_status_id = 2;
+// СТАТУС "СВОБОДНЫЙ"
+$free_roll_status_id = 1;
 ?>
 <!DOCTYPE html>
 <html>
@@ -32,16 +32,19 @@ $utilized_roll_status_id = 2;
         ?>
         <div class="container-fluid">
             <?php
+            include '../include/find_mobile.php';
             $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, p.cell, p.comment, "
-                    . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) length, "
-                    . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) weight, "
-                    . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) rolls_number "
+                    . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)) length, "
+                    . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)) weight, "
+                    . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)) rolls_number "
                     . "from pallet p "
                     . "inner join supplier s on p.supplier_id=s.id "
                     . "inner join film_brand fb on p.film_brand_id=fb.id "
                     . "where p.id=$id";
             $fetcher = new Fetcher($sql);
-            if($row = $fetcher->Fetch()) {
+            $row = $fetcher->Fetch();
+            
+            if($row && $row['rolls_number'] != 0):
                 $date = $row['date'];
                 $supplier = $row['supplier'];
                 $id_from_supplier = $row['id_from_supplier'];
@@ -54,9 +57,6 @@ $utilized_roll_status_id = 2;
                 $cell = $row['cell'];
                 $comment = htmlentities($row['comment']);
                 $title = "П".filter_input(INPUT_GET, 'id');
-                
-                include '../include/find_mobile.php';
-            }
             ?>
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
@@ -79,6 +79,9 @@ $utilized_roll_status_id = 2;
                     </div>
                 </div>
             </div>
+            <?php else: ?>
+            <div class='alert alert-danger'>Объект не найден</div>
+            <?php endif; ?>
         </div>
         <?php
         include '../include/footer.php';
