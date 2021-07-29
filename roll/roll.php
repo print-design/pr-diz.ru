@@ -501,7 +501,7 @@ $cut_status_id = 3;
                         $sql = "select cstr.width "
                                 . "from cut_source cs "
                                 . "inner join cut_stream cstr on cs.cut_id = cstr.cut_id "
-                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id')." order by width";
+                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id')." and is_from_pallet = 0 order by width";
                         $fetcher = new Fetcher($sql);
                         $result = "";
                         while ($row = $fetcher->Fetch()) {
