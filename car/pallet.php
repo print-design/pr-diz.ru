@@ -32,7 +32,9 @@ $free_roll_status_id = 1;
         ?>
         <div class="container-fluid">
             <?php
+            $title = "П".filter_input(INPUT_GET, 'id');
             include '../include/find_mobile.php';
+            
             $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, p.cell, p.comment, "
                     . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)) length, "
                     . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)) weight, "
@@ -56,7 +58,6 @@ $free_roll_status_id = 1;
                 $rolls_number = $row['rolls_number'];
                 $cell = $row['cell'];
                 $comment = htmlentities($row['comment']);
-                $title = "П".filter_input(INPUT_GET, 'id');
             ?>
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
