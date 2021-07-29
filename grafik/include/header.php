@@ -160,11 +160,9 @@
                         </select>
                     </div>
                     <div class="form-group form-inline">
-                        <label for="move_shifts_days">на&nbsp;</label>
-                        <input type="number" id="move_shifts_days" name="move_shifts_days" min="0" max="99" class="form-control" value="0" required="required" />
-                        <label>&nbsp;дней&nbsp;</label>
-                        <input type="checkbox" id="move_shifts_half" name="move_shifts_half" />
-                        <label class="form-check-label" for="move_shifts_half">&nbsp;с половиной</label>
+                        <label for="move_shifts_count">на&nbsp;</label>
+                        <input type="number" id="move_shifts_count" name="move_shifts_count" min="1" max="99" class="form-control" value="1" required="required" />
+                        <label>&nbsp;смен&nbsp;</label>
                     </div>
                     <input type="hidden" id="scroll" name="scroll" />
                 </div>
