@@ -12,7 +12,7 @@ if(empty($id)) {
     header('Location: '.APPLICATION.'/car/');
 }
 
-// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
+// СТАТУС "СВОБОДНЫЙ"
 $free_status_id = 1;
 ?>
 <!DOCTYPE html>
@@ -32,11 +32,14 @@ $free_status_id = 1;
         ?>
         <div class="container-fluid">
             <?php
+            include '../include/find_mobile.php';
+            
             $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, s.name supplier, fb.name film_brand, r.id_from_supplier, r.width, r.thickness, r.net_weight, r.length, r.cell, r.comment "
                     . "from roll r "
                     . "inner join supplier s on r.supplier_id=s.id "
                     . "inner join film_brand fb on r.film_brand_id=fb.id "
-                    . "where r.id=$id";
+                    . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+                    . "where r.id=$id and (rsh.status_id is null or rsh.status_id = $free_status_id)";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()):
                 $date = $row['date'];
@@ -49,9 +52,7 @@ $free_status_id = 1;
                 $length = $row['length'];
                 $cell = $row['cell'];
                 $comment = htmlentities($row['comment']);
-                $title = "Р".filter_input(INPUT_GET, 'id');
-                
-                include '../include/find_mobile.php';
+                $title = "Р".filter_input(INPUT_GET, 'id');    
             ?>
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">

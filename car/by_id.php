@@ -12,7 +12,7 @@ if(empty($id)) {
     header('Location: '.APPLICATION.'/car/');
 }
 
-// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
+// СТАТУС "СВОБОДНЫЙ"
 $free_roll_status_id = 1;
 ?>
 <!DOCTYPE html>

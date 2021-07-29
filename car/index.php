@@ -6,7 +6,7 @@ if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
+// СТАТУС "СВОБОДНЫЙ"
 const  FREE_ROLL_STATUS_ID = 1;
 
 // Обработка отправки формы

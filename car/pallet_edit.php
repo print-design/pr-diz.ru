@@ -45,7 +45,7 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
     }
 }
 
-// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
+// СТАТУС "СВОБОДНЫЙ"
 $free_roll_status_id = 1;
 ?>
 <!DOCTYPE html>
@@ -89,7 +89,9 @@ $free_roll_status_id = 1;
                     . "inner join film_brand fb on p.film_brand_id=fb.id "
                     . "where p.id=$id";
             $fetcher = new Fetcher($sql);
-            if($row = $fetcher->Fetch()):
+            $row = $fetcher->Fetch();
+            
+            if($row && $row['rolls_number']):
             $date = $row['date'];
             $supplier = $row['supplier'];
             $id_from_supplier = $row['id_from_supplier'];

@@ -11,6 +11,9 @@ $id = filter_input(INPUT_GET, 'id');
 if(empty($id)) {
     header('Location: '.APPLICATION.'/car/');
 }
+
+// СТАТУС "СВОБОДНЫЙ"
+$free_status_id = 1;
 ?>
 <!DOCTYPE html>
 <html>
@@ -29,14 +32,18 @@ if(empty($id)) {
         ?>
         <div class="container-fluid">
             <?php
+            include '../include/find_mobile.php';
+            
             $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, pr.weight, pr.length, p.cell, p.comment, "
                     . "p.id pallet_id, pr.ordinal "
                     . "from pallet_roll pr "
                     . "inner join pallet p on pr.pallet_id = p.id "
                     . "inner join supplier s on p.supplier_id=s.id "
                     . "inner join film_brand fb on p.film_brand_id=fb.id "
-                    . "where pr.id=$id";
+                    . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+                    . "where pr.id=$id and (prsh.status_id is null or prsh.status_id = $free_status_id)";
             $fetcher = new Fetcher($sql);
+            
             if($row = $fetcher->Fetch()):
                 $date = $row['date'];
                 $supplier = $row['supplier'];
@@ -51,8 +58,6 @@ if(empty($id)) {
                 $pallet_id = $row['pallet_id'];
                 $ordinal = $row['ordinal'];
                 $title = "П".$pallet_id."Р".$ordinal;
-                
-                include '../include/find_mobile.php';
             ?>
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">

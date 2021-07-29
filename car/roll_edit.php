@@ -45,7 +45,7 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
     }
 }
 
-// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
+// СТАТУС "СВОБОДНЫЙ"
 $free_status_id = 1;
 ?>
 <!DOCTYPE html>
@@ -84,7 +84,8 @@ $free_status_id = 1;
                     . "from roll r "
                     . "inner join supplier s on r.supplier_id=s.id "
                     . "inner join film_brand fb on r.film_brand_id=fb.id "
-                    . "where r.id=$id";
+                    . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+                    . "where r.id=$id and (rsh.status_id is null or rsh.status_id = $free_status_id)";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()):
             $date = $row['date'];
