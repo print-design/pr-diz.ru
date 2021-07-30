@@ -17,6 +17,15 @@ if(empty($id)) {
     header('Location: '.APPLICATION.'/roll/');
 }
 
+// СТАТУС "СВОБОДНЫЙ"
+$free_status_id = 1;
+
+// СТАТУС "СРАБОТАННЫЙ"
+$utilized_status_id = 2;
+
+// СТАТУС "РАСКРОИЛИ"
+$cut_status_id = 3;
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -139,7 +148,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         $length_invalid_message = "Неверное значение";
     }
     
-    if(IsInRole(array('technologist', 'storekeeper'))) {
+    if(IsInRole(array('dev', 'technologist', 'storekeeper'))) {
         $cell = filter_input(INPUT_POST, 'cell');
         if(empty($cell)) {
             $cell_valid = ISINVALID;
@@ -147,13 +156,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
     }
     
-    // Выбор менеджера пока не обязательный.
-    $manager_id = filter_input(INPUT_POST, 'manager_id');
-    if(empty($manager_id)) {
-        $manager_id = "NULL";
-    }
-    
-    if(IsInRole(array('technologist', 'storekeeper'))) {
+    if(IsInRole(array('dev', 'technologist', 'storekeeper'))) {
         $status_id = filter_input(INPUT_POST, 'status_id');
         if(empty($status_id)) {
             if(empty($cell)) {
@@ -226,7 +229,15 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
         
         if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/roll/'. BuildQueryRemove('id'));
+            if(isset($status_id) && $status_id == $utilized_status_id) {
+                header('Location: '.APPLICATION.'/utilized/');
+            }
+            elseif(isset($status_id) && $status_id == $cut_status_id) {
+                header('Location: '.APPLICATION.'/cut_source/');
+            }
+            else {
+                header('Location: '.APPLICATION.'/roll/');
+            }
         }
     }
 }
@@ -281,15 +292,6 @@ $comment = filter_input(INPUT_POST, 'comment');
 if(null === $comment) $comment = $row['comment'];
 
 $cut_wind_id = $row['cut_wind_id'];
-
-// СТАТУС "СВОБОДНЫЙ"
-$free_status_id = 1;
-
-// СТАТУС "СРАБОТАННЫЙ"
-$utilized_status_id = 2;
-
-// СТАТУС "РАСКРОИЛИ"
-$cut_status_id = 3;
 ?>
 <!DOCTYPE html>
 <html>
