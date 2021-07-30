@@ -1,15 +1,6 @@
 <?php
 include '../include/topscripts.php';
 
-// СТАТУС "СВОБОДНЫЙ"
-$free_status_id = 1;
-
-// СТАТУС "СРАБОТАННЫЙ"
-$utilized_status_id = 2;
-
-// СТАТУС "РАСКРОИЛИ"
-$cut_status_id = 3;
-
 // Пекренаправление на страницу карщика или резчика при чтении QR-кода
 if(IsInRole(array('electrocarist'))) {
     header('Location: '.APPLICATION.'/car/pallet_roll_edit.php?id='. filter_input(INPUT_GET, 'id'));
@@ -25,6 +16,15 @@ $id = filter_input(INPUT_GET, 'id');
 if(empty($id)) {
     header('Location: '.APPLICATION.'/pallet/');
 }
+
+// СТАТУС "СВОБОДНЫЙ"
+$free_status_id = 1;
+
+// СТАТУС "СРАБОТАННЫЙ"
+$utilized_status_id = 2;
+
+// СТАТУС "РАСКРОИЛИ"
+$cut_status_id = 3;
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -78,7 +78,15 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
             $error_message = $executer->error;
         
             if(empty($error_message)) {
-                header('Location: '.APPLICATION.'/pallet/'. BuildQueryRemove('id'));
+                if(isset($status_id) && $status_id == $utilized_status_id) {
+                    header('Location: '.APPLICATION.'/utilized/');
+                }
+                elseif(isset($status_id) && $status_id == $cut_status_id) {
+                    header('Location: '.APPLICATION.'/cut_source/');
+                }
+                else {
+                    header('Location: '.APPLICATION.'/pallet/');
+                }
             }
         }
     }
