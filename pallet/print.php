@@ -7,30 +7,26 @@ if(empty($id)) {
     header('Location: '.APPLICATION.'/pallet/');
 }
 
-// Получение всех статусов
-$fetcher = (new Fetcher("select id, name, colour from roll_status"));
-$statuses = array();
-
-while ($row = $fetcher->Fetch()) {
-    $status = array();
-    $status['name'] = $row['name'];
-    $status['colour'] = $row['colour'];
-    $statuses[$row['id']] = $status;
-}
-
-// СТАТУС "СВОБОДНЫЙ"
+// СТАТУС "СВОБОДНЫЙ" ДЛЯ ПАЛЛЕТА
 $free_status_id = 1;
 
-// СТАТУС "СРАБОТАННЫЙ"
+// СТАТУС "СРАБОТАННЫЙ" ДЛЯ ПАЛЛЕТА
 $utilized_status_id = 2;
 
+// СТАТУС "СВОБОДНЫЙ" ДЛЯ РУЛОНА
+$free_roll_status_id = 1;
+
+// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
+$utilized_roll_status_id = 2;
+
 // Получение данных
-$sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, s.name supplier, p.id_from_supplier, "
+$sql = "select p.date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, s.name supplier, p.id_from_supplier, "
         . "p.film_brand_id, fb.name film_brand, p.width, p.thickness, "
-        . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_status_id)) length, "
-        . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_status_id)) net_weight, "
-        . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_status_id)) rolls_number, "
+        . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) length, "
+        . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) net_weight, "
+        . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) rolls_number, "
         . "p.cell, "
+        . "(select ps.name from pallet_status_history psh left join pallet_status ps on psh.status_id = ps.id where psh.pallet_id = p.id order by psh.id desc limit 0, 1) status, "
         . "p.comment "
         . "from pallet p "
         . "left join user u on p.storekeeper_id = u.id "
@@ -53,18 +49,8 @@ $length = $row['length'];
 $net_weight = $row['net_weight'];
 $rolls_number = $row['rolls_number'];
 $cell = $row['cell'];
+$status = $row['status'];
 $comment = $row['comment'];
-$status_id = $utilized_status_id;
-
-if($rolls_number > 0) {
-    $status_id = $free_status_id;
-}
-
-$status = '';
-
-if(!empty($statuses[$status_id]['name'])) {
-    $status = $statuses[$status_id]['name'];
-}
 
 // Определяем удельный вес
 $ud_ves = null;
@@ -74,11 +60,8 @@ if($row = $fetcher->Fetch()) {
     $ud_ves = $row[0];
 }
 
-// Вертикальное положение бирки
+// Вертикальное положение стикера
 $sticker_top = 0;
-
-// Текущее время
-$current_date_time = date("dmYHis");
 ?>
 <!DOCTYPE html>
 <html>
@@ -100,16 +83,16 @@ $current_date_time = date("dmYHis");
     <body class="print">
         <div style="position: absolute; top: 0; left: 0; z-index: 2000;">
             <a href="<?=APPLICATION ?>/pallet/new.php"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
-        </div>
-        <div style="position: absolute; top: 850px; right: 770px; font-size: 150px; z-index: 2000;">
-            <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
+            <div style="display: inline; margin-left: 300px; font-size: 30px;">
+                <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
+            </div>
         </div>
         <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px;">
             <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-top: 30px;">
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
-                        <td class="text-center text-nowrap" style="font-size: 60px;">Паллет <span class="font-weight-bold"><?="П".$id ?></span> от <?=$date ?></td>
+                        <td class="text-center text-nowrap" style="font-size: 60px;">Паллет <span class="font-weight-bold"><?="П".$id ?></span> от <?=(DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></td>
                     </tr>
                     <tr>
                         <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
@@ -119,15 +102,13 @@ $current_date_time = date("dmYHis");
                             include '../qr/qrlib.php';
                             $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
                             $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/pallet/pallet.php?id='.$id;
+                            $current_date_time = date("dmYHis");
                             $filename = "../temp/$current_date_time.png";
-                            
-                            do {
-                                QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
-                            } while (!file_exists($filename));
+                            QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
+                            echo "<img src='$filename' style='height: 800px; width: 800px;' />";
                             ?>
-                            <img src='<?=$filename ?>' style='height: 800px; width: 800px;' />
                             <br /><br />
-                            <div class="text-nowrap" style="font-size: 60px;">Паллет <span class="font-weight-bold"><?="П".$id ?></span> от <?=$date ?></div>
+                            <div class="text-nowrap" style="font-size: 60px;">Паллет <span class="font-weight-bold"><?="П".$id ?></span> от <?=(DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></div>
                         </td>
                     </tr>
                     <tr>
@@ -162,7 +143,7 @@ $current_date_time = date("dmYHis");
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
-                        <td class="text-center text-nowrap" style="font-size: 60px;">Паллет <span class="font-weight-bold"><?="П".$id ?></span> от <?=$date ?></td>
+                        <td class="text-center text-nowrap" style="font-size: 60px;">Паллет <span class="font-weight-bold"><?="П".$id ?></span> от <?=(DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></td>
                     </tr>
                     <tr>
                         <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
@@ -172,15 +153,13 @@ $current_date_time = date("dmYHis");
                             //include '../qr/qrlib.php';
                             $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
                             $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/pallet/pallet.php?id='.$id;
+                            $current_date_time = date("dmYHis");
                             $filename = "../temp/$current_date_time.png";
-                            
-                            do {
-                                QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
-                            } while (!file_exists($filename));
+                            QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
+                            echo "<img src='$filename' style='height: 800px; width: 800px;' />";
                             ?>
-                            <img src='<?=$filename ?>' style='height: 800px; width: 800px;' />
                             <br /><br />
-                            <div class="text-nowrap" style="font-size: 60px;">Паллет <span class="font-weight-bold"><?="П".$id ?></span> от <?=$date ?></div>
+                            <div class="text-nowrap" style="font-size: 60px;">Паллет <span class="font-weight-bold"><?="П".$id ?></span> от <?=(DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></div>
                         </td>
                     </tr>
                     <tr>
@@ -207,10 +186,10 @@ $current_date_time = date("dmYHis");
         </div>
         
         <?php
-        $sql = "select pr.id pallet_roll_id, pr.weight, pr.length, pr.ordinal, ifnull(prsh.status_id, $free_status_id) status_id, "
-                . "(select name from roll_status where id = ifnull(prsh.status_id, $free_status_id)) status "
+        $sql = "select pr.id pallet_roll_id, pr.weight, pr.length, pr.ordinal, ifnull(prsh.status_id, $free_roll_status_id) status_id, "
+                . "(select name from roll_status where id = ifnull(prsh.status_id, $free_roll_status_id)) status "
                 . "from pallet_roll pr left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                . "where pr.pallet_id = ". filter_input(INPUT_GET, 'id')." and (prsh.status_id is null or prsh.status_id <> $utilized_status_id)";
+                . "where pr.pallet_id = ". filter_input(INPUT_GET, 'id')." and (prsh.status_id is null or prsh.status_id <> $utilized_roll_status_id)";
         $pallet_rolls = (new Grabber($sql))->result;
         $current_roll = 0;
         
@@ -248,22 +227,6 @@ $current_date_time = date("dmYHis");
             case 6:
                 $sticker_top = 11500;
                 break;
-            
-            case 7:
-                $sticker_top = 13150;
-                break;
-            
-            case 8:
-                $sticker_top = 14800;
-                break;
-            
-            case 9:
-                $sticker_top = 16450;
-                break;
-            
-            case 10:
-                $sticker_top = 18100;
-                break;
 
             default:
                 break;
@@ -274,7 +237,7 @@ $current_date_time = date("dmYHis");
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
-                        <td class="text-center text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="П".$id."Р".$ordinal ?></span> от <?=$date ?></td>
+                        <td class="text-center text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="П".$id."Р".$ordinal ?></span> от <?=(DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></td>
                     </tr>
                     <tr>
                         <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
@@ -284,15 +247,13 @@ $current_date_time = date("dmYHis");
                             //include '../qr/qrlib.php';
                             $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
                             $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/pallet/roll.php?id='.$pallet_roll_id;
+                            $current_date_time = date("dmYHis");
                             $filename = "../temp/".$ordinal."_".$current_date_time.".png";
-                            
-                            do {
-                                QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
-                            } while (!file_exists($filename));
+                            QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
+                            echo "<img src='$filename' style='height: 800px; width: 800px;' />";
                             ?>
-                            <img src='<?=$filename ?>' style='height: 800px; width: 800px;' />
                             <br /><br />
-                            <div class="text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="П".$id."Р".$ordinal ?></span> от <?=$date ?></div>
+                            <div class="text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="П".$id."Р".$ordinal ?></span> от <?=(DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></div>
                         </td>
                     </tr>
                     <tr>
@@ -323,22 +284,13 @@ $current_date_time = date("dmYHis");
         // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
         $files = scandir("../temp/");
         foreach ($files as $file) {
-            $created = filemtime("../temp/".$file);
-            $now = time();
-            $diff = $now - $created;
-            
-            if($diff > 20 &&
-                    $file != "$current_date_time.png" &&
+            if($file != "$current_date_time.png" &&
                     $file != "1_"."$current_date_time.png" &&
                     $file != "2_"."$current_date_time.png" &&
                     $file != "3_"."$current_date_time.png" &&
                     $file != "4_"."$current_date_time.png" &&
                     $file != "5_"."$current_date_time.png" &&
                     $file != "6_"."$current_date_time.png" &&
-                    $file != "7_"."$current_date_time.png" &&
-                    $file != "8_"."$current_date_time.png" &&
-                    $file != "9_"."$current_date_time.png" &&
-                    $file != "10_"."$current_date_time.png" &&
                     !is_dir($file)) {
                 unlink("../temp/$file");
             }

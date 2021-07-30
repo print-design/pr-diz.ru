@@ -148,15 +148,15 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
     $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id');
     
     if($form_valid) {
-        $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id) "
-                . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$storekeeper_id')";
+        $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, date, storekeeper_id) "
+                . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$date', '$storekeeper_id')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $roll_id = $executer->insert_id;
         $user_id = GetUserId();
         
         if(empty($error_message)) {
-            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, $status_id, $user_id)";
+            $sql = "insert into roll_status_history (roll_id, date, status_id, user_id) values ($roll_id, '$date', $status_id, $user_id)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
             
@@ -173,6 +173,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
         <?php
         include '../include/head.php';
         ?>
+        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
     </head>
     <body>
         <?php
@@ -184,8 +185,10 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/roll/">Назад</a>
-            <h1 style="font-size: 32px; font-weight: 600; margin-bottom: 20px;">Новый рулон</h1>
+            <div class="backlink" style="margin-bottom: 56px;">
+                <a href="<?=APPLICATION ?>/roll/"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+            </div>
+            <h1 style="font-size: 32px; line-height: 48px; font-weight: 600; margin-bottom: 20px;">Новый рулон</h1>
             <form method="post">
                 <div style="width: 423px;">
                     <input type="hidden" id="date" name="date" value="<?= date("Y-m-d") ?>" />
@@ -194,7 +197,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                     <div class="form-group">
                         <label for="supplier_id">Поставщик</label>
                         <select id="supplier_id" name="supplier_id" class="form-control" required="required">
-                            <option value="" hidden="hidden">Выберите поставщика</option>
+                            <option value="">Выберите поставщика</option>
                             <?php
                             $suppliers = (new Grabber("select id, name from supplier order by name"))->result;
                             foreach ($suppliers as $supplier) {
@@ -210,7 +213,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                     </div>
                     <div class="form-group">
                         <label for="id_from_supplier">ID рулона от поставщика</label>
-                        <input type="text" id="id_from_supplier" name="id_from_supplier" value="<?= filter_input(INPUT_POST, 'id_from_supplier') ?>" class="form-control" placeholder="Введите ID" required="required" autocomplete="off" />
+                        <input type="text" id="id_from_supplier" name="id_from_supplier" value="<?= filter_input(INPUT_POST, 'id_from_supplier') ?>" class="form-control" placeholder="Введите ID" required="required" />
                         <div class="invalid-feedback">ID рулона от поставщика обязательно</div>
                     </div>
                     <div class="form-group">
@@ -236,7 +239,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                     <div class="row">
                         <div class="col-6 form-group">
                             <label for="width" id="label_width">Ширина, мм</label>
-                            <input type="text" id="width" name="width" value="<?= filter_input(INPUT_POST, 'width') ?>" class="form-control int-only<?=$width_valid ?>" placeholder="Введите ширину" required="required" autocomplete="off" />
+                            <input type="text" id="width" name="width" value="<?= filter_input(INPUT_POST, 'width') ?>" class="form-control int-only<?=$width_valid ?>" placeholder="Введите ширину" required="required" />
                             <div class="invalid-feedback">От 50 до 1600</div>
                         </div>
                         <div class="col-6 form-group">
@@ -281,27 +284,27 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                                 if($shpulya == 76) $shpulya_selected_76 = " selected='selected'";
                                 if($shpulya == 152) $shpulya_selected_152 = " selected='selected'";
                                 ?>
-                                <option value="" hidden="hidden">Выберите шпулю</option>
+                                <option value="">Выберите шпулю</option>
                                 <option value="76"<?=$shpulya_selected_76 ?>">76</option>
                                 <option value="152"<?=$shpulya_selected_152 ?>">152</option>
                             </select>
                         </div>
                         <div class="col-6 form-group">
                             <label for="diameter">Расчет по радиусу (от вала), мм</label>
-                            <input type="text" id="diameter" name="diameter" class="form-control int-only<?=$diameter_valid ?>" value="<?= filter_input(INPUT_POST, 'diameter') ?>" autocomplete="off" />
+                            <input type="text" id="diameter" name="diameter" class="form-control int-only<?=$diameter_valid ?>" value="<?= filter_input(INPUT_POST, 'diameter') ?>" />
                             <div class="invalid-feedback"><?= empty($invalid_diameter_message) ? "Радиус обязательно" : $invalid_diameter_message ?></div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6 form-group">
                             <label for="net_weight">Масса нетто, кг</label>
-                            <input type="text" id="net_weight" name="net_weight" value="<?= filter_input(INPUT_POST, 'net_weight') ?>" class="form-control int-only<?=$net_weight_valid ?>" placeholder="Введите массу нетто" required="required" autocomplete="off" />
+                            <input type="text" id="net_weight" name="net_weight" value="<?= filter_input(INPUT_POST, 'net_weight') ?>" class="form-control int-only<?=$net_weight_valid ?>" placeholder="Введите массу нетто" required="required" />
                             <input type="hidden" id="net_weight_hidden" name="net_weight_hidden" />
                             <div class="invalid-feedback"><?= empty($invalid_message) ? "Масса нетто обязательно" : $invalid_message ?></div>
                         </div>
                         <div class="col-6 form-group">
                             <label for="length">Длина, м</label>
-                            <input type="text" id="length" name="length" value="<?= filter_input(INPUT_POST, 'length') ?>" class="form-control int-only<?=$length_valid ?>" placeholder="Введите длину" required="required" autocomplete="off" />
+                            <input type="text" id="length" name="length" value="<?= filter_input(INPUT_POST, 'length') ?>" class="form-control int-only<?=$length_valid ?>" placeholder="Введите длину" required="required" />
                             <input type="hidden" id="length_hidden" name="length_hidden" />
                             <div class="invalid-feedback"><?= empty($length_invalid_message) ? "Длина обязательно" : $length_invalid_message ?></div>
                         </div>
@@ -309,7 +312,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                     <div class="row">
                         <div class="col-6 form-group">
                             <label for="cell">Ячейка на складе</label>
-                            <input type="text" id="cell" name="cell" value="<?= filter_input(INPUT_POST, 'cell') ?>" class="form-control no-latin<?=$cell_valid ?>" placeholder="Введите ячейку" required="required" autocomplete="off" />
+                            <input type="text" id="cell" name="cell" value="<?= filter_input(INPUT_POST, 'cell') ?>" class="form-control no-latin<?=$cell_valid ?>" placeholder="Введите ячейку" required="required" />
                             <div class="invalid-feedback">Ячейка на складе обязательно</div>
                         </div>
                         <div class="col-6 form-group"></div>
@@ -354,27 +357,47 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                         <textarea id="comment" name="comment" rows="4" class="form-control no-latin"><?= htmlentities(filter_input(INPUT_POST, 'comment')) ?></textarea>
                         <div class="invalid-feedback"></div>
                     </div>
-                    <div class="d-flex justify-content-start mt-4">
-                        <div class="p-0">
-                            <button type="submit" id="create-roll-submit" name="create-roll-submit" class="btn btn-dark">Распечатать бирку</button>
-                        </div>
-                    </div>
+                </div>
+                <div class="form-inline" style="margin-top: 30px;">
+                    <button type="submit" id="create-roll-submit" name="create-roll-submit" class="btn btn-dark" style="padding-left: 80px; padding-right: 80px; margin-right: 62px; padding-top: 14px; padding-bottom: 14px;">РАСПЕЧАТАТЬ СТИКЕР</button>
                 </div>
             </form>
         </div>
         <?php
         include '../include/footer.php';
         ?>
+        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
+            //------------------------------------
+            // Защита от двойного нажатия
+            var create_roll_submit_clicked = false;
+            
+            $('#create-roll-submit').click(function(e) {
+                if(create_roll_submit_clicked) {
+                    return false;
+                }
+                else {
+                    create_roll_submit_clicked = true;
+                }
+            });
+            
+            $(document).keydown(function(){
+                create_roll_submit_clicked = false;
+            });
+            
+            $('select').change(function(){
+                create_roll_submit_clicked = false;
+            });
+            //---------------------------------------
+            
             $('#supplier_id').change(function(){
                 if($(this).val() == "") {
-                    $('#film_brand_id').html("<option value=''>Выберите марку</option>");
+                    $('#film_brand_id').html("<option id=''>Выберите марку</option>");
                 }
                 else {
                     $.ajax({ url: "../ajax/film_brand.php?supplier_id=" + $(this).val() })
                             .done(function(data) {
                                 $('#film_brand_id').html(data);
-                                $('#film_brand_id').change();
                             })
                             .fail(function() {
                                 alert('Ошибка при выборе поставщика');
@@ -384,7 +407,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
             
             $('#film_brand_id').change(function(){
                 if($(this).val() == "") {
-                    $('#thickness').html("<option value=''>Выберите толщину</option>");
+                    $('#thickness').html("<option id=''>Выберите толщину</option>");
                 }
                 else {
                     $.ajax({ url: "../ajax/thickness.php?film_brand_id=" + $(this).val() })
@@ -435,7 +458,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
             }
             ?>
             
-            // Расчёт длины и массы плёнки по шпуле, толщине, радиусу, ширине, удельному весу
+            // Расчёт по радиусу
             function CalculateByRadius() {
                 $('#length').removeClass('is-invalid');
                 $('#net_weight').removeClass('is-invalid');
@@ -444,25 +467,39 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                 $('#net_weight').val('');
                 
                 film_brand_id = $('#film_brand_id').val();
-                spool = $('#shpulya').val();
+                shpulya = $('#shpulya').val();
                 thickness = $('#thickness').val();
-                radius = $('#diameter').val();
+                radiusotvala = $('#diameter').val();
                 width = $('#width').val();
                 
-                if(!isNaN(spool) && !isNaN(thickness) && !isNaN(radius) && !isNaN(width) 
-                        && spool != '' && thickness != '' && radius != '' && width != '') {
-                    density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
+                if(!isNaN(shpulya) && !isNaN(thickness) && !isNaN(radiusotvala) && !isNaN(width) 
+                        && shpulya != '' && thickness != '' && radiusotvala != '' && width != '') {
+                    var ud_ves = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
                     
-                    result = GetFilmLengthWeightBySpoolThicknessRadiusWidth(spool, thickness, radius, width, density);
+                    if(shpulya == 76) {
+                        var length = (0.15 * radiusotvala * radiusotvala + 11.3961 * radiusotvala - 176.4427) * 20 / thickness;
+                        $('#length').val(length.toFixed(2));
+                        $('#length_hidden').val(length.toFixed(2));
+                        
+                        var net_weight = (length * ud_ves * width) / 1000 / 1000;
+                        $('#net_weight').val(net_weight.toFixed(2));
+                        $('#net_weight_hidden').val(net_weight.toFixed(2));
+                        //Масса нетто(4)  = (Длинна (3) * Удельный вес (5) * ширину (6))/1000/1000
+                    }
                     
-                    $('#length').val(result.length.toFixed(2));
-                    $('#length_hidden').val(result.length.toFixed(2));
-                    $('#net_weight').val(result.weight.toFixed(2));
-                    $('#net_weight_hidden').val(result.weight.toFixed(2));
+                    if(shpulya == 152) {
+                        var length = (0.1524 * radiusotvala * radiusotvala + 23.1245 * radiusotvala - 228.5017) * 20 / thickness;
+                        $('#length').val(length.toFixed(2));
+                        $('#length_hidden').val(length.toFixed(2));
+                        
+                        var net_weight = (length * ud_ves * width) / 1000 / 1000;
+                        $('#net_weight').val(net_weight.toFixed(2));
+                        $('#net_weight_hidden').val(net_weight.toFixed(2));
+                        //Масса нетто(4)  = (Длинна (3) * Удельный вес (5) * ширину (6))/1000/1000
+                    }
                 }
             }
-    
-            // Рассчитываем ширину и массу плёнки при изменении значений каждого поля, участвующего в вычислении
+            
             $('#shpulya').change(CalculateByRadius);
             
             $('#diameter').keypress(CalculateByRadius);

@@ -1,15 +1,5 @@
 <?php
 include 'include/topscripts.php';
-
-// Карщика перенаправляем в раздел car
-if(IsInRole(array('electrocarist'))) {
-    header('Location: '.APPLICATION.'/car/');
-}
-
-// Резчика по раскрою перенаправляем в раздел cut
-if(IsInRole(array('cutter'))) {
-    header('Location: '.APPLICATION.'/cutter/');
-}
 ?>
 <!DOCTYPE html>
 <!--
@@ -25,16 +15,17 @@ and open the template in the editor.
     </head>
     <body>
         <?php
+        // put your code here
         include 'include/header.php';
         ?>
         <div class="container-fluid">
             <?php
-            if(!empty($error_message)) {
-               echo "<div class='alert alert-danger mt-3'>$error_message</div>";
+            if(isset($error_message) && $error_message != '') {
+               echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <h1 class="mt-4">Принт-дизайн</h1>
-            <h2>Управление ресурсами предприятия</h2>
+            <h1>Принт-дизайн</h1>
+            <h2>График печати</h2>
         </div>
         <?php
         include 'include/footer.php';

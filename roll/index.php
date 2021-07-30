@@ -16,54 +16,11 @@ if(null !== filter_input(INPUT_POST, 'delete-roll-submit')) {
     }
 }
 
-// СТАТУС "СВОБОДНЫЙ"
-$free_status_id = 1;
-
-// СТАТУС "СРАБОТАННЫЙ"
+// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
 $utilized_status_id = 2;
 
-// Фильтр для данных
-$where = "(rsh.status_id is null or rsh.status_id = $free_status_id)";
-    
-$film_brand_name = filter_input(INPUT_GET, 'film_brand_name');
-if(!empty($film_brand_name)) {
-    $film_brand_name = addslashes($film_brand_name);
-    $where .= " and fb.name = '$film_brand_name'";
-}
-    
-$thickness = filter_input(INPUT_GET, 'thickness');
-if(!empty($thickness)) {
-    $where .= " and r.thickness = ".$thickness;
-}
-    
-$width_from = filter_input(INPUT_GET, 'width_from');
-if(!empty($width_from)) {
-    $where .= " and r.width >= $width_from";
-}
-    
-$width_to = filter_input(INPUT_GET, 'width_to');
-if(!empty($width_to)) {
-    $where .= " and r.width <= $width_to";
-}
-    
-$find = filter_input(INPUT_GET, 'find');
-$findtrim = $find;
-if(mb_strlen($find) > 1) {
-    $findtrim = mb_substr($find, 1);
-}
-if(!empty($find)) {
-    $where .= " and (r.id='$find' or r.id='$findtrim' or r.cell='$find' or r.comment like '%$find%')";
-}
-    
 // Получение общей массы рулонов
-$sql = "select sum(r.net_weight) total_weight "
-        . "from roll r "
-        . "left join film_brand fb on r.film_brand_id = fb.id "
-        . "left join supplier s on r.supplier_id = s.id "
-        . "left join user u on r.storekeeper_id = u.id "
-        . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-        . "where $where";
-$row = (new Fetcher($sql))->Fetch();
+$row = (new Fetcher("select sum(r.net_weight) total_weight from roll r left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id where rsh.status_id is null or rsh.status_id <> $utilized_status_id"))->Fetch();
 $total_weight = $row['total_weight'];
 
 // Получение всех статусов
@@ -83,6 +40,7 @@ while ($row = $fetcher->Fetch()) {
         <?php
         include '../include/head.php';
         ?>
+        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
     </head>
     <body>
         <?php
@@ -100,14 +58,26 @@ while ($row = $fetcher->Fetch()) {
                 <div class="p-1">
                     <table>
                         <tr>
-                            <td><h1 style="font-size: 32px; font-weight: 600;">Рулоны</h1></td>
+                            <td><h1 style="font-size: 32px; line-height: 48px; font-weight: 600;">Рулоны</h1></td>
                             <td style="padding-left: 20px; padding-right: 20px; font-weight: bold;">(<?= number_format($total_weight, 0, ',', ' ') ?> кг)</td>
+                            <td class="d-none" style="padding-left: 35px; padding-right: 10px;">
+                                <a class="btn btn-dark disabled" id="btn-cut-request" style="padding-left: 40px; padding-right: 60px; padding-bottom: 8px; padding-top: 9px;">
+                                    <div style="float: left; padding-top: 8px; padding-right: 30px; font-size: 12px;"><i class="fas fa-plus"></i></div>
+                                    &nbsp;Заявка на<br />раскрой
+                                </a>
+                            </td>
+                            <td class="d-none" style="padding-left: 15px; padding-right: 30px;">
+                                <a class="btn btn-dark disabled" id="btn-print-request" style="padding-left: 40px; padding-right: 60px; padding-bottom: 8px; padding-top: 9px;">
+                                    <div style="float: left; padding-top: 8px; padding-right: 30px; font-size: 12px;"><i class="fas fa-plus"></i></div>
+                                    &nbsp;Заявка на<br />печать
+                                </a>
+                            </td>
                         </tr>
                     </table>
                 </div>
                 <div class="p-1">
                     <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
-                    <a href="new.php" class="btn btn-outline-dark"><i class="fas fa-plus"></i>&nbsp;Новый ролик</a>
+                    <a href="new.php" class="btn btn-outline-dark" style="padding-top: 14px; padding-bottom: 14px; padding-left: 30px; width: 200px; text-align: left;"><i class="fas fa-plus" style="font-size: 10px; margin-right: 18px;"></i>Новый ролик</a>
                     <?php endif; ?>
                     <button class="btn btn-outline-dark disabled d-none" data-toggle="modal" data-target="#filterModal" data-text="Фильтр"><img src="../images/icons/filter.svg" style="margin-right: 20px;" />Фильтр</button>
                     <div style="display: inline-block; position: relative; margin-right: 55px; margin-left: 80px;">
@@ -152,6 +122,38 @@ while ($row = $fetcher->Fetch()) {
                 </thead>
                 <tbody>
                     <?php
+                    $where = "(rsh.status_id is null or rsh.status_id <> $utilized_status_id)";
+                    
+                    $film_brand_name = filter_input(INPUT_GET, 'film_brand_name');
+                    if(!empty($film_brand_name)) {
+                        $film_brand_name = addslashes($film_brand_name);
+                        $where .= " and fb.name = '$film_brand_name'";
+                    }
+                    
+                    $thickness = filter_input(INPUT_GET, 'thickness');
+                    if(!empty($thickness)) {
+                        $where .= " and r.thickness = ".$thickness;
+                    }
+                    
+                    $width_from = filter_input(INPUT_GET, 'width_from');
+                    if(!empty($width_from)) {
+                        $where .= " and r.width >= $width_from";
+                    }
+                    
+                    $width_to = filter_input(INPUT_GET, 'width_to');
+                    if(!empty($width_to)) {
+                        $where .= " and r.width <= $width_to";
+                    }
+                    
+                    $find = filter_input(INPUT_GET, 'find');
+                    $findtrim = $find;
+                    if(mb_strlen($find) > 1) {
+                        $findtrim = mb_substr($find, 1);
+                    }
+                    if(!empty($find)) {
+                        $where .= " and (r.id='$find' or r.id='$findtrim' or r.cell='$find' or r.comment like '%$find%')";
+                    }
+                    
                     if(!empty($where)) {
                         $where = "where $where";
                     }
@@ -169,7 +171,7 @@ while ($row = $fetcher->Fetch()) {
                         $pager_total_count = $row[0];
                     }
                     
-                    $sql = "select r.id, DATE_FORMAT(r.date, '%d.%m.%Y') date, fb.name film_brand, r.width, r.thickness, r.net_weight, r.length, "
+                    $sql = "select r.id, r.date, fb.name film_brand, r.width, r.thickness, r.net_weight, r.length, "
                             . "s.name supplier, r.id_from_supplier, r.cell, u.first_name, u.last_name, "
                             . "rsh.status_id status_id, r.comment, "
                             . "(select weight from film_brand_variation where film_brand_id=fb.id and thickness=r.thickness limit 1) density "
@@ -199,7 +201,7 @@ while ($row = $fetcher->Fetch()) {
                     ?>
                     <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
                         <td class="d-none" style="padding-left: 5px; padding-right: 5px;"><input type="checkbox" id="chk<?=$row['id'] ?>" name="chk<?=$row['id'] ?>" data-id="<?=$row['id'] ?>" class="form-check chkRoll" /></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['date'] ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px;"><?= date_create_from_format("Y-m-d", $row['date'])->format("d.m.Y") ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['film_brand'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['thickness'] ?> мкм</td>
                         <td style="padding-left: 5px; padding-right: 5px;" class="text-nowrap"><?= round($row['density'], 2) ?> г/м<sup>2</sup></td>
@@ -214,7 +216,7 @@ while ($row = $fetcher->Fetch()) {
                         <td style="padding-left: 5px; padding-right: 5px; font-size: 10px; line-height: 14px; font-weight: 600;<?=$colour_style ?>"><?= mb_strtoupper($status) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; white-space: pre-wrap;"><?= htmlentities($row['comment']) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; position: relative;">
-                            <a class="black film_menu_trigger" href="javascript: void(0);"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a>
+                            <a class="black film_menu_trigger" href="javascript: void(0);"><i class="fas fa-ellipsis-h"></i></a>
                             <div class="film_menu">
                                 <div class="command"><a href="<?=APPLICATION ?>/roll/roll.php<?= BuildQuery('id', $row['id']) ?>">Просмотреть детали</a></div>
                                 <?php
@@ -224,7 +226,7 @@ while ($row = $fetcher->Fetch()) {
                                     <form method="post">
                                         <input type="hidden" id="id" name="id" value="<?=$row['id'] ?>" />
                                         <input type="hidden" id="scroll" name="scroll" />
-                                        <button type="submit" class="btn btn-link p-0 m-0 h-25 confirmable" id="delete-roll-submit" name="delete-roll-submit" style="font-size: 14px;">Удалить</button>
+                                        <button type="submit" class="btn btn-link confirmable" id="delete-roll-submit" name="delete-roll-submit" style="font-size: 14px;">Удалить</button>
                                     </form>
                                 </div>
                                 <?php
@@ -272,7 +274,7 @@ while ($row = $fetcher->Fetch()) {
             <div class="modal-dialog modal-dialog-aside" role="document">
                 <div class="modal-content" style="padding-left: 35px; padding-right: 35px; width: 521px;">
                     <button type="button" class="close" data-dismiss="modal" style="position: absolute; right: 32px; top: 55px;"><img src="../images/icons//close_modal.png" /></button>
-                    <h1 style="margin-top: 53px; margin-bottom: 20px; font-size: 32px; font-weight: 600;">Фильтр</h1>
+                    <h1 style="margin-top: 53px; margin-bottom: 20px; font-size: 32px; line-height: 48px; font-weight: 600;">Фильтр</h1>
                     <form method="get">
                         <div class="form-group">
                             <select id="film_brand_name" name="film_brand_name" class="form-control" style="margin-top: 30px; margin-bottom: 30px;">
@@ -329,6 +331,7 @@ while ($row = $fetcher->Fetch()) {
         <?php
         include '../include/footer.php';
         ?>
+        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
             var thicknesses = JSON.parse('<?=$json_thicknesses ?>');
             

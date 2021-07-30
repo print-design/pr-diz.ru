@@ -1,7 +1,7 @@
 <?php
 include '../include/topscripts.php';
 
-// Пекренаправление на страницу карщика или резчика при чтении QR-кода
+// Пекренаправление на страницу карщика при чтении QR-кода
 if(IsInRole(array('electrocarist'))) {
     header('Location: '.APPLICATION.'/car/roll_edit.php?id='. filter_input(INPUT_GET, 'id'));
 }
@@ -126,8 +126,16 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         $net_weight = filter_input(INPUT_POST, 'net_weight');
         if(empty($net_weight)) $net_weight = $old_net_weight;
     }
+
+    // Определяем удельный вес
+    $ud_ves = null;
+    $sql = "select weight from film_brand_variation where film_brand_id=$film_brand_id and thickness=$thickness";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $ud_ves = $row[0];
+    }
         
-    $weight_result = filter_input(INPUT_POST, 'net_weight_normal');
+    $weight_result = floatval($ud_ves) * floatval($length) * floatval($width) / 1000.0 / 1000.0;
     $weight_result_high = $weight_result + ($weight_result * 15.0 / 100.0);
     $weight_result_low = $weight_result - ($weight_result * 15.0 / 100.0);
         
@@ -232,18 +240,15 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
 }
 
 // Получение данных
-$sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, DATE_FORMAT(r.date, '%H:%i') time, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, r.id_from_supplier, r.film_brand_id, r.width, r.thickness, r.length, "
+$sql = "select r.date, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, r.id_from_supplier, r.film_brand_id, r.width, r.thickness, r.length, "
         . "r.net_weight, r.cell, "
-        . "rsh.status_id status_id, DATE_FORMAT(rsh.date, '%d.%m.%Y') status_date, DATE_FORMAT(rsh.date, '%H.%i') status_time, "
-        . "r.comment, r.cut_wind_id "
-        . "from roll r "
-        . "inner join user u on r.storekeeper_id = u.id "
-        . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+        . "(select rsh.status_id from roll_status_history rsh where rsh.roll_id = r.id order by rsh.id desc limit 0, 1) status_id, "
+        . "r.comment "
+        . "from roll r inner join user u on r.storekeeper_id = u.id "
         . "where r.id=$id";
 
 $row = (new Fetcher($sql))->Fetch();
 $date = $row['date'];
-$time = $row['time'];
 $storekeeper_id = $row['storekeeper_id'];
 $storekeeper = $row['last_name'].' '.$row['first_name'];
 
@@ -274,22 +279,14 @@ if(null === $cell) $cell = $row['cell'];
 $status_id = filter_input(INPUT_POST, 'status_id');
 if(null === $status_id) $status_id = $row['status_id'];
 
-$status_date = $row['status_date'];
-$status_time = $row['status_time'];
-
 $comment = filter_input(INPUT_POST, 'comment');
 if(null === $comment) $comment = $row['comment'];
 
-$cut_wind_id = $row['cut_wind_id'];
-
-// СТАТУС "СВОБОДНЫЙ"
+// СТАТУС "СВОБОДНЫЙ" ДЛЯ РУЛОНА
 $free_status_id = 1;
 
-// СТАТУС "СРАБОТАННЫЙ"
+// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
 $utilized_status_id = 2;
-
-// СТАТУС "РАСКРОИЛИ"
-$cut_status_id = 3;
 ?>
 <!DOCTYPE html>
 <html>
@@ -297,6 +294,7 @@ $cut_status_id = 3;
         <?php
         include '../include/head.php';
         ?>
+        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
     </head>
     <body>
         <?php
@@ -307,28 +305,17 @@ $cut_status_id = 3;
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger>$error_message</div>";
             }
-            
-            // Если плёнка сработанная, то кнопка "Назад" переводит нас в раздел "Сработанная плёнка",
-            // иначе - в раздел "Рулоны".
-            if(isset($status_id) && $status_id == $utilized_status_id):
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/utilized/<?= BuildQueryRemove('id') ?>">Назад</a>
-            <?php elseif(isset($status_id) && $status_id == $cut_status_id): ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/cut_source/<?= BuildQueryRemove('id') ?>">Назад</a>
-            <?php else: ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/roll/<?= BuildQueryRemove('id') ?>">Назад</a>
-            <?php endif; ?>
-            <h1 style="font-size: 24px; font-weight: 600;">Информация о рулоне № <?="Р".$id ?> от <?= $date ?></h1>
-            <?php if(!empty($time) && $time != '00:00'): ?>
-            <div>Время добавления: <?=$time ?></div>
-            <?php endif; ?>
-            <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 20px;">ID <?=$id_from_supplier ?></h2>
+            <div class="backlink" style="margin-bottom: 56px;">
+                <a href="<?=APPLICATION ?>/roll/<?= BuildQueryRemove('id') ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+            </div>
+            <h1 style="font-size: 24px; line-height: 32px; fon24pxt-weight: 600; margin-bottom: 20px;">Информация о рулоне № <?="Р".$id ?> от <?= (DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></h1>
+            <h2 style="font-size: 24px; line-height: 32px; font-weight: 600; margin-bottom: 20px;">ID <?=$id_from_supplier ?></h2>
             <form method="post">
                 <div style="width: 423px;">
                     <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                     <input type="hidden" id="date" name="date" value="<?= $date ?>" />
                     <input type="hidden" id="storekeeper_id" name="storekeeper_id" value="<?= $storekeeper_id ?>" />
-                    <input type="hidden" id="net_weight_normal" name="net_weight_normal" />
                     <input type="hidden" id="scroll" name="scroll" />
                     <div class="form-group">
                         <label for="storekeeper">Принят кладовщиком</label>
@@ -468,7 +455,7 @@ $cut_status_id = 3;
                         <label for="status_id">Статус</label>
                         <select id="status_id" name="status_id" class="form-control<?=$status_id_valid ?>" required="required"<?=$status_id_disabled ?>>
                             <?php
-                            $statuses = (new Grabber("select s.id, s.name from roll_status s order by s.ordinal"))->result;
+                            $statuses = (new Grabber("select s.id, s.name from roll_status s order by s.name"))->result;
                             foreach ($statuses as $status) {
                                 if(!(empty($status_id) && $status['id'] == $utilized_status_id)) { // Если статуса нет, то нельзя сразу поставить "Сработанный"
                                     $id = $status['id'];
@@ -483,98 +470,6 @@ $cut_status_id = 3;
                         </select>
                         <div class="invalid-feedback">Статус обязательно</div>
                     </div>
-                    <!-- Отображаем, в каких нарезках данный ролик участвовал -->
-                    <?php
-                    // Если этот рулон был раскроен
-                    if($status_id == $cut_status_id):
-                    ?>
-                    <div class="form-group">
-                        <label>Как резали:</label>
-                        <br />
-                        <div style="font-size: 1rem;">
-                        <?=$status_date.' в '.$status_time ?><br />
-                        <?php
-                        $sql = "select cstr.width "
-                                . "from cut_source cs "
-                                . "inner join cut_stream cstr on cs.cut_id = cstr.cut_id "
-                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id')." and is_from_pallet = 0 order by width";
-                        $fetcher = new Fetcher($sql);
-                        $result = "";
-                        while ($row = $fetcher->Fetch()) {
-                            if($result != "") {
-                                $result .= " - ";
-                            }
-                            $result .= $row[0].' мм';
-                        }
-                        echo $result;
-                        ?>
-                        </div>
-                    </div>
-                    <?php
-                    // Если этот рулон появился в результате нарезки
-                    elseif(!empty($cut_wind_id)):
-                    ?>
-                    <div class="form-group">
-                        <label>Получился из раскроя:</label>
-                        <br />
-                        <div style="font-size: 1rem;">
-                        <?php
-                        $sql = "select cstr.width, DATE_FORMAT(c.date, '%d.%m.%Y') date, DATE_FORMAT(c.date, '%H:%i') time "
-                                . "from cut_wind cw "
-                                . "inner join cut c on cw.cut_id = c.id "
-                                . "inner join cut_stream cstr on cw.cut_id = cstr.cut_id "
-                                . "where cw.id = $cut_wind_id order by width";
-                        $fetcher = new Fetcher($sql);
-                        $result = "";
-                        $date = "";
-                        $time = "";
-                        while ($row = $fetcher->Fetch()) {
-                            if($result != "") {
-                                $result .= " - ";
-                            }
-                            $result .= $row['width'].' мм';
-                            $date = $row['date'];
-                            $time = $row['time'];
-                        }
-                        echo "$date в $time<br />";
-                        echo $result;
-                        ?>
-                        </div>
-                    </div>
-                    <?php
-                    endif;
-                    // Если этот рулон появился в результате нарезки
-                    $sql = "select cs.width, DATE_FORMAT(c.date, '%d.%m.%Y') date, DATE_FORMAT(c.date, '%H:%i') time "
-                            . "from cut c "
-                            . "inner join cut_stream cs on cs.cut_id = c.id "
-                            . "where c.remain = ". filter_input(INPUT_GET, 'id');
-                    $grabber = new Grabber($sql);
-                    if(count($grabber->result) > 0):
-                    ?>
-                    <div class="form-group">
-                        <label>Остаток из раскроя:</label>
-                        <br />
-                        <div style="font-size: 1rem;">
-                        <?php
-                        $result = "";
-                        $date = "";
-                        $time = "";
-                        foreach($grabber->result as $row) {
-                            if($result != "") {
-                                $result .= " - ";
-                            }
-                            $result .= $row['width'].' мм';
-                            $date = $row['date'];
-                            $time = $row['time'];
-                        }
-                        echo "$date в $time<br />";
-                        echo $result;
-                        ?>
-                        </div>
-                    </div>
-                    <?php
-                    endif;
-                    ?>
                     <div class="form-group">
                         <?php
                         $comment_disabled = "";
@@ -594,58 +489,23 @@ $cut_status_id = 3;
                         <textarea id="comment" name="comment" rows="4" class="form-control no-latin"<?=$comment_disabled ?>><?=$comment_value ?></textarea>
                         <div class="invalid-feedback"></div>
                     </div>
-                    <div class="d-flex justify-content-between mt-4">
-                        <div class="p-0">
-                            <button type="submit" id="change-status-submit" name="change-status-submit" class="btn btn-dark" style="width: 175px;">Сохранить</button>
-                        </div>
-                        <div class="p-0">
-                            <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
-                            <a href="print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="width: 175px;">Распечатать бирку</a>
-                            <?php endif; ?>
-                        </div>
-                    </div>
+                </div>
+                <div class="form-inline" style="margin-top: 30px;">
+                    <button type="submit" id="change-status-submit" name="change-status-submit" class="btn btn-dark" style="padding-left: 80px; padding-right: 80px; margin-right: 62px; padding-top: 14px; padding-bottom: 14px;">Сохранить</button>
+                    <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
+                    <a href="print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="padding-top: 5px; padding-bottom: 5px; padding-left: 50px; padding-right: 50px;">Распечатать<br />стикер</a>
+                    <?php endif; ?>
                 </div>
             </form>
         </div>
         <?php
         include '../include/footer.php';
         ?>
+        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
             if($('.is-invalid').first() != null) {
                 $('.is-invalid').first().focus();
             }
-            
-            // Все марки плёнки с их вариациями
-            var films = new Map();
-            
-            <?php
-            $sql = "SELECT fbv.film_brand_id, fbv.thickness, fbv.weight FROM film_brand_variation fbv";
-            $fetcher = new Fetcher($sql);
-            while ($row = $fetcher->Fetch()):
-            ?>
-            if(films.get(<?= $row['film_brand_id'] ?>) == undefined) {
-                films.set(<?= $row['film_brand_id'] ?>, new Map());
-            }
-            films.get(<?= $row['film_brand_id'] ?>).set(<?= $row['thickness'] ?>, <?= $row['weight'] ?>);
-            <?php        
-            endwhile;
-            ?>
-                
-            // Расчёт длины и массы плёнки по шпуле, толщине, радиусу, ширине, удельному весу
-            function CalculateWeight() {
-                film_brand_id = $('#film_brand_id').val();
-                length = $('#length').val();
-                width = $('#width').val();
-                thickness = $('#thickness').val();
-                
-                if(!isNaN(length) && !isNaN(width) && !isNaN(thickness) && length != '' && width != '' && thickness != '') {
-                    density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
-                    weight = GetFilmWeightByLengthWidth(length, width, density);
-                    $('#net_weight_normal').val(weight.toFixed(2));
-                }
-            }
-            
-            $(document).ready(CalculateWeight);
         </script>
     </body>
 </html>

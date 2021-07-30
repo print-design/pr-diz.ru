@@ -17,7 +17,7 @@ $grafik_class = '';
 if($folder == "calculation") {
     $zakaz_class = " active";
 }
-else if($folder == "pallet" || $folder == "roll" || $folder == "cut_source" || $folder == "utilized") {
+else if($folder == "pallet" || $folder == "roll" || $folder == "utilized") {
     $sklad_class = " active";
 }
 else if($file == "grafik.php") {
@@ -29,7 +29,7 @@ else if($file == "grafik.php") {
     <?php
     if(IsInRole(array('technologist', 'dev'))):
     ?>
-    <a href="<?=APPLICATION ?>/calculation/" class="left_bar_item<?=$zakaz_class ?>" title="Заказы"><img src="<?=APPLICATION ?>/images/nav_clock.svg" /></a>
+    <a href="javascript: void(0);" class="left_bar_item<?=$zakaz_class ?>"><img src="<?=APPLICATION ?>/images/nav_clock.svg" /></a>
     <?php
     endif;
     if(IsInRole(array('technologist', 'storekeeper', 'dev', 'manager'))):

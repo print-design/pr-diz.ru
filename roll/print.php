@@ -8,7 +8,7 @@ if(empty($id)) {
 }
 
 // Получение данных
-$sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, s.name supplier, r.id_from_supplier, "
+$sql = "select r.date, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, s.name supplier, r.id_from_supplier, "
         . "r.film_brand_id, fb.name film_brand, r.width, r.thickness, r.length, "
         . "r.net_weight, r.cell, "
         . "(select rs.name status from roll_status_history rsh left join roll_status rs on rsh.status_id = rs.id where rsh.roll_id = r.id order by rsh.id desc limit 0, 1) status, "
@@ -44,11 +44,8 @@ if($row = $fetcher->Fetch()) {
     $ud_ves = $row[0];
 }
 
-// Вертикальное положение бирки
+// Вертикальное положение стикера
 $sticker_top = 0;
-
-// Текущее время
-$current_date_time = date("dmYHis");
 ?>
 <!DOCTYPE html>
 <html>
@@ -70,16 +67,16 @@ $current_date_time = date("dmYHis");
     <body class="print">
         <div style="position: absolute; top: 0; left: 0; z-index: 2000;">
             <a href="<?=APPLICATION ?>/roll/new.php"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
-        </div>
-        <div style="position: absolute; top: 850px; right: 770px; font-size: 150px; z-index: 2000;">
-            <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
+            <div style="display: inline; margin-left: 300px; font-size: 30px;">
+                <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
+            </div>
         </div>
         <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px;">
             <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-top: 30px;">
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-left">ООО &laquo;Принт-дизайн&raquo;</td>
-                        <td class="text-center text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></td>
+                        <td class="text-center text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=(DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></td>
                     </tr>
                     <tr>
                         <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
@@ -89,13 +86,19 @@ $current_date_time = date("dmYHis");
                             include '../qr/qrlib.php';
                             $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
                             $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/roll/roll.php?id='.$id;
+                            $current_date_time = date("dmYHis");
                             $filename = "../temp/$current_date_time.png";
+                            QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
+                            echo "<img src='$filename' style='height: 800px; width: 800px;' />";
                             
-                            do {
-                                QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
-                            } while (!file_exists($filename));
+                            // Удаление всех файлов, кроме текущего (чтобы диск не переполнился).
+                            $files = scandir("../temp/");
+                            foreach ($files as $file) {
+                                if($file != "$current_date_time.png" && !is_dir($file)) {
+                                    unlink("../temp/$file");
+                                }
+                            }
                             ?>
-                            <img src='<?=$filename ?>' style='height: 800px; width: 800px;' />
                             <br /><br />
                             <div class="text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></div>
                         </td>
@@ -132,7 +135,7 @@ $current_date_time = date("dmYHis");
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
-                        <td class="text-center text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?= $date ?></td>
+                        <td class="text-center text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?= (DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></td>
                     </tr>
                     <tr>
                         <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
@@ -142,13 +145,19 @@ $current_date_time = date("dmYHis");
                             //include '../qr/qrlib.php';
                             $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
                             $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/roll/roll.php?id='.$id;
+                            $current_date_time = date("dmYHis");
                             $filename = "../temp/$current_date_time.png";
+                            QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
+                            echo "<img src='$filename' style='height: 800px; width: 800px;' />";
                             
-                            do {
-                                QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
-                            } while (!file_exists($filename));
+                            // Удаление всех файлов, кроме текущего (чтобы диск не переполнился).
+                            $files = scandir("../temp/");
+                            foreach ($files as $file) {
+                                if($file != "$current_date_time.png" && !is_dir($file)) {
+                                    unlink("../temp/$file");
+                                }
+                            }
                             ?>
-                            <img src='<?=$filename ?>' style='height: 800px; width: 800px;' />
                             <br /><br />
                             <div class="text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></div>
                         </td>
@@ -175,27 +184,6 @@ $current_date_time = date("dmYHis");
                 </tbody>
             </table>
         </div>
-        <?php
-        // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
-        $files = scandir("../temp/");
-        foreach ($files as $file) {
-            $created = filemtime("../temp/".$file);
-            $now = time();
-            $diff = $now - $created;
-            
-            if($diff > 20 &&
-                    $file != "$current_date_time.png" &&
-                    $file != "1_"."$current_date_time.png" &&
-                    $file != "2_"."$current_date_time.png" &&
-                    $file != "3_"."$current_date_time.png" &&
-                    $file != "4_"."$current_date_time.png" &&
-                    $file != "5_"."$current_date_time.png" &&
-                    $file != "6_"."$current_date_time.png" &&
-                    !is_dir($file)) {
-                unlink("../temp/$file");
-            }
-        }
-        ?>
     </body>
     <script>
         let shareData = {

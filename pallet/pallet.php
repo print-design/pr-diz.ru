@@ -237,25 +237,31 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     }
 }
 
-// СТАТУС "СВОБОДНЫЙ"
+// СТАТУС "СВОБОДНЫЙ" ДЛЯ ПАЛЛЕТА
 $free_status_id = 1;
 
-// СТАТУС "СРАБОТАННЫЙ"
+// СТАТУС "СРАБОТАННЫЙ" ДЛЯ ПАЛЛЕТА
 $utilized_status_id = 2;
 
+// СТАТУС "СВОБОДНЫЙ" ДЛЯ РУЛОНА
+$free_roll_status_id = 1;
+
+// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
+$utilized_roll_status_id = 2;
+
 // Получение данных
-$sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, DATE_FORMAT(p.date, '%H:%i') time, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.id_from_supplier, p.film_brand_id, p.width, p.thickness, "
-        . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_status_id)) length, "
-        . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_status_id)) net_weight, "
-        . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_status_id)) rolls_number, "
+$sql = "select p.date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.id_from_supplier, p.film_brand_id, p.width, p.thickness, "
+        . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) length, "
+        . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) net_weight, "
+        . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_roll_status_id)) rolls_number, "
         . "p.cell, "
+        . "(select psh.status_id from pallet_status_history psh where psh.pallet_id = p.id order by psh.id desc limit 0, 1) status_id, "
         . "p.comment "
         . "from pallet p inner join user u on p.storekeeper_id = u.id "
         . "where p.id=$id";
 
 $row = (new Fetcher($sql))->Fetch();
 $date = $row['date'];
-$time = $row['time'];
 $storekeeper_id = $row['storekeeper_id'];
 $storekeeper = $row['last_name'].' '.$row['first_name'];
 
@@ -276,21 +282,18 @@ if(null === $thickness) $thickness = $row['thickness'];
 
 $length = filter_input(INPUT_POST, 'length');
 if(null === $length) $length = $row['length'];
-if(null === $length) $length = 0;
 
 $net_weight = filter_input(INPUT_POST, 'net_weight');
 if(null === $net_weight) $net_weight = $row['net_weight'];
-if(null === $net_weight) $net_weight = 0;
 
 $rolls_number = filter_input(INPUT_POST, 'rolls_number');
 if(null === $rolls_number) $rolls_number = $row['rolls_number'];
-if(null === $rolls_number) $rolls_number = 0;
 
 $cell = filter_input(INPUT_POST, 'cell');
 if(null === $cell) $cell = $row['cell'];
 
-$status_id = $free_status_id;
-if($rolls_number == 0) $status_id = $utilized_status_id;
+$status_id = filter_input(INPUT_POST, 'status_id');
+if(null === $status_id) $status_id = $row['status_id'];
 
 $comment = filter_input(INPUT_POST, 'comment');
 if(null === $comment) $comment = $row['comment'];
@@ -306,18 +309,18 @@ if(null === $comment) $comment = $row['comment'];
         <?php
         include '../include/header_sklad.php';
         ?>
+        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
         <div class="container-fluid" style="padding-left: 40px;">
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/pallet/<?= BuildQueryRemove('id') ?>">Назад</a>
-            <h1 style="font-size: 24px; font-weight: 600;">Информация о паллете № <?="П".$id ?> от <?= $date ?></h1>
-            <?php if(!empty($time) && $time != '00:00'): ?>
-            <div>Время добавления: <?=$time ?></div>
-            <?php endif; ?>
-            <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 20px;">ID <?=$id_from_supplier ?></h2>
+            <div class="backlink" style="margin-bottom: 56px;">
+                <a href="<?=APPLICATION ?>/pallet/<?= BuildQueryRemove('id') ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+            </div>
+            <h1 style="font-size: 24px; line-height: 32px; fon24pxt-weight: 600; margin-bottom: 20px;">Информация о паллете № <?="П".$id ?> от <?= (DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></h1>
+            <h2 style="font-size: 24px; line-height: 32px; font-weight: 600; margin-bottom: 20px;">ID <?=$id_from_supplier ?></h2>
             <form method="post">
                 <div style="width: 423px;">
                     <input type="hidden" id="id" name="id" value="<?=$id ?>" />
@@ -442,11 +445,8 @@ if(null === $comment) $comment = $row['comment'];
                             ?>
                             <select id="rolls_number" name="rolls_number" class="form-control<?=$rolls_number_valid ?>"<?=$rolls_number_disabled ?>>
                                 <option value="">Выберите количество</option>
-                                <?php if($rolls_number == 0): ?>
-                                <option value="0" selected="selected">0</option>
                                 <?php
-                                endif;
-                                for($i=1; $i<11; $i++) {
+                                for($i=1; $i<7; $i++) {
                                     $selected = '';
                                     if($rolls_number == $i) $selected = " selected='selected'";
                                     echo "<option value='$i'$selected>$i</option>";
@@ -463,7 +463,7 @@ if(null === $comment) $comment = $row['comment'];
                         <label for="status_id">Статус</label>
                         <select id="status_id" name="status_id" class="form-control<?=$status_id_valid ?>" required="required"<?=$status_id_disabled ?>>
                             <?php
-                            $statuses = (new Grabber("select s.id, s.name from roll_status s order by s.ordinal"))->result;
+                            $statuses = (new Grabber("select s.id, s.name from pallet_status s order by s.name"))->result;
                             foreach ($statuses as $status) {
                                 if(!(empty($status_id) && $status['id'] == $utilized_status_id)) { // Если статуса нет, то нельзя сразу поставить "Сработанный"
                                     $id = $status['id'];
@@ -497,22 +497,19 @@ if(null === $comment) $comment = $row['comment'];
                         <textarea id="comment" name="comment" rows="4" class="form-control no-latin"<?=$comment_disabled ?>><?=$comment_value ?></textarea>
                         <div class="invalid-feedback"></div>
                     </div>
-                    <div class="d-flex justify-content-between mt-4">
-                        <div class="p-0">
-                            <button type="submit" id="change-status-submit" name="change-status-submit" class="btn btn-dark" style="width: 175px;">Сохранить</button>
-                        </div>
-                        <div class="p-0">
-                            <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
-                            <a href="print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="width: 175px;">Распечатать бирку</a>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>                
+                </div>
+                <div class="form-inline" style="margin-top: 30px;">
+                    <button type="submit" id="change-status-submit" name="change-status-submit" class="btn btn-dark" style="padding-left: 80px; padding-right: 80px; margin-right: 62px; padding-top: 14px; padding-bottom: 14px;">Сохранить</button>
+                    <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
+                    <a href="print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="padding-top: 5px; padding-bottom: 5px; padding-left: 50px; padding-right: 50px;">Распечатать<br />стикер</a>
+                    <?php endif; ?>
+                </div>
             </form>
         </div>
         <?php
         include '../include/footer.php';
         ?>
+        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
             if($('.is-invalid').first() != null) {
                 $('.is-invalid').first().focus();

@@ -1,16 +1,13 @@
 <?php
 include '../include/topscripts.php';
 
-// СТАТУС "СВОБОДНЫЙ"
+// СТАТУС "СВОБОДНЫЙ" ДЛЯ РУЛОНА
 $free_status_id = 1;
 
-// СТАТУС "СРАБОТАННЫЙ"
+// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
 $utilized_status_id = 2;
 
-// СТАТУС "РАСКРОИЛИ"
-$cut_status_id = 3;
-
-// Пекренаправление на страницу карщика или резчика при чтении QR-кода
+// Пекренаправление на страницу карщика при чтении QR-кода
 if(IsInRole(array('electrocarist'))) {
     header('Location: '.APPLICATION.'/car/pallet_roll_edit.php?id='. filter_input(INPUT_GET, 'id'));
 }
@@ -26,17 +23,8 @@ if(empty($id)) {
     header('Location: '.APPLICATION.'/pallet/');
 }
 
-// Валидация формы
-define('ISINVALID', ' is-invalid');
-$form_valid = true;
-$error_message = '';
-
-$cell_valid = '';
-
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    
     // Получаем имеющийся статус и проверяем, совпадает ли он с новым статусом
     $sql = "select status_id from pallet_roll_status_history where pallet_roll_id=$id order by id desc limit 1";
     $row = (new Fetcher($sql))->Fetch();
@@ -50,54 +38,58 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     }
     
     if(empty($error_message)) {
+        $id = filter_input(INPUT_POST, 'id');
+        
         // Редактирование данных паллета
         $pallet_id = filter_input(INPUT_POST, 'pallet_id');
+        $sql = "";
         
-        if(IsInRole(array('dev', 'technologist', 'storekeeper'))) {
+        if(!empty(filter_input(INPUT_POST, 'cell'))) {
             $cell = filter_input(INPUT_POST, 'cell');
-            if(empty($cell)) {
-                $cell_valid = ISINVALID;
-                $form_valid = false;
+            
+            if(!empty($sql)) {
+                $sql .= ", ";
             }
+            
+            $sql .= "cell='$cell'";
         }
-        
-        $comment = addslashes(filter_input(INPUT_POST, 'comment'));
-        
-        if($form_valid) {
-            $sql = "";
+        if(!empty(filter_input(INPUT_POST, 'comment'))) {
+            $comment = addslashes(filter_input(INPUT_POST, 'comment'));
+            
+            if(!empty($sql)) {
+                $sql .= ", ";
+            }
             
             if(IsInRole(array('dev', 'technologist', 'storekeeper'))) {
-                $sql .= "cell='$cell', comment='$comment'";
+                $sql .= "comment='$comment'";
             }
             else {
                 $sql .= "comment=concat(comment, ' ', '$comment')";
             }
-
-            $sql = "update pallet set $sql where id=$pallet_id";
-            $executer = new Executer($sql);
-            $error_message = $executer->error;
+        }
         
-            if(empty($error_message)) {
-                header('Location: '.APPLICATION.'/pallet/'. BuildQueryRemove('id'));
-            }
+        $sql = "update pallet set $sql where id=$pallet_id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+        
+        if(empty($error_message)) {
+            header('Location: '.APPLICATION.'/pallet/roll.php'.BuildQuery('id', $id));
         }
     }
 }
 
 // Получение данных
-$sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, DATE_FORMAT(p.date, '%H:%i') time, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.id_from_supplier, p.film_brand_id, p.width, p.thickness, pr.length, "
+$sql = "select p.date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.id_from_supplier, p.film_brand_id, p.width, p.thickness, pr.length, "
         . "pr.weight, pr.pallet_id, pr.ordinal, p.cell, "
-        . "prsh.status_id status_id, DATE_FORMAT(prsh.date, '%d.%m.%Y') status_date, DATE_FORMAT(prsh.date, '%H.%i') status_time, "
+        . "(select ifnull(prsh.status_id, $free_status_id) from pallet_roll_status_history prsh where prsh.pallet_roll_id = pr.id order by prsh.id desc limit 0, 1) status_id, "
         . "p.comment "
         . "from pallet p "
         . "inner join user u on p.storekeeper_id = u.id "
         . "inner join pallet_roll pr on pr.pallet_id = p.id "
-        . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
         . "where pr.id=$id";
 
 $row = (new Fetcher($sql))->Fetch();
 $date = $row['date'];
-$time = $row['time'];
 $storekeeper_id = $row['storekeeper_id'];
 $storekeeper = $row['last_name'].' '.$row['first_name'];
 
@@ -134,9 +126,6 @@ if(null === $cell) $cell = $row['cell'];
 $status_id = filter_input(INPUT_POST, 'status_id');
 if(null === $status_id) $status_id = $row['status_id'];
 
-$status_date = $row['status_date'];
-$status_time = $row['status_time'];
-
 $comment = filter_input(INPUT_POST, 'comment');
 if(null === $comment) $comment = $row['comment'];
 ?>
@@ -146,6 +135,7 @@ if(null === $comment) $comment = $row['comment'];
         <?php
         include '../include/head.php';
         ?>
+        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
     </head>
     <body>
         <?php
@@ -156,23 +146,12 @@ if(null === $comment) $comment = $row['comment'];
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger>$error_message</div>";
             }
-            
-            // Если плёнка сработанная, то кнопка "Назад" переводит нас в раздел "Сработанная плёнка",
-            // если плёнка раскроенная, то кнопка "Назад" переводит нас в раздел "Раскроили"
-            // иначе - в раздел "Паллеты".
-            if(isset($status_id) && $status_id == $utilized_status_id):
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/utilized/<?= BuildQueryRemove('id') ?>">Назад</a>
-            <?php elseif (isset($status_id) && $status_id == $cut_status_id): ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/cut_source/<?= BuildQueryRemove('id') ?>">Назад</a>
-            <?php else: ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/pallet/<?= BuildQueryRemove('id') ?>">Назад</a>
-            <?php endif; ?>
-            <h1 style="font-size: 24px; font-weight: 600;">Информация о рулоне № <?="П".$pallet_id."Р".$ordinal ?> от <?= $date ?></h1>
-            <?php if(!empty($time) && $time != '00:00'): ?>
-            <div>Время добавления: <?=$time ?></div>
-            <?php endif; ?>
-            <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 20px;">ID <?=$id_from_supplier ?></h2>
+            <div class="backlink" style="margin-bottom: 56px;">
+                <a href="<?=APPLICATION ?>/pallet/<?= BuildQueryRemove('id') ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+            </div>
+            <h1 style="font-size: 24px; line-height: 32px; fon24pxt-weight: 600; margin-bottom: 20px;">Информация о рулоне № <?="П".$pallet_id."Р".$ordinal ?> от <?= (DateTime::createFromFormat('Y-m-d', $date))->format('d.m.Y') ?></h1>
+            <h2 style="font-size: 24px; line-height: 32px; font-weight: 600; margin-bottom: 20px;">ID <?=$id_from_supplier ?></h2>
             <form method="post">
                 <div style="width: 423px;">
                     <input type="hidden" id="id" name="id" value="<?=$id ?>" />
@@ -283,27 +262,36 @@ if(null === $comment) $comment = $row['comment'];
                         <div class="col-6 form-group">
                             <?php
                             $cell_disabled = "";
-                            if(!IsInRole(array('dev', 'technologist', 'storekeeper'))) {
+                            if(!IsInRole(array('technologist', 'storekeeper'))) {
                                 $cell_disabled = " disabled='disabled'";
                             }
                             ?>
                             <label for="cell">Ячейка на складе</label>
-                            <input type="text" id="cell" name="cell" value="<?= $cell ?>" class="form-control no-latin<?=$cell_valid ?>" placeholder="Введите ячейку"<?=$cell_disabled ?>" />
+                            <input type="text" id="cell" name="cell" value="<?= $cell ?>" class="form-control no-latin" placeholder="Введите ячейку"<?=$cell_disabled ?>" />
                             <div class="invalid-feedback">Ячейка на складе обязательно</div>
                         </div>
                         <div class="col-6 form-group"></div>
                     </div>
+                    <div class="form-group d-none">
+                        <?php
+                        $manager_disabled = " disabled='disabled'";
+                        ?>
+                        <label for="manager_id">Менеджер</label>
+                        <select id="manager_id" name="manager_id" class="form-control"<?=$manager_disabled ?>>
+                            <option value="">Выберите менеджера</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <?php
                         $status_id_disabled = "";
-                        if(!IsInRole(array('dev', 'technologist', 'storekeeper'))) {
+                        if(!IsInRole(array('technologist', 'storekeeper'))) {
                             $status_id_disabled = " disabled='disabled'";
                         }
                         ?>
                         <label for="status_id">Статус</label>
                         <select id="status_id" name="status_id" class="form-control" required="required"<?=$status_id_disabled ?>>
                             <?php
-                            $statuses = (new Grabber("select s.id, s.name from roll_status s order by s.ordinal"))->result;
+                            $statuses = (new Grabber("select s.id, s.name from roll_status s order by s.name"))->result;
                             foreach ($statuses as $status) {
                                 if(!(empty($status_id) && $status['id'] == $utilized_status_id)) { // Если статуса нет, то нельзя сразу поставить "Сработанный"
                                     $id = $status['id'];
@@ -318,71 +306,38 @@ if(null === $comment) $comment = $row['comment'];
                         </select>
                         <div class="invalid-feedback">Статус обязательно</div>
                     </div>
-                    <!-- Отображаем, в каких нарезках данный ролик участвовал -->
-                    <?php
-                    // Если этот рулон был раскроен
-                    if($status_id == $cut_status_id):
-                    ?>
-                    <div class="form-group">
-                        <label>Как резали:</label>
-                        <br />
-                        <div style="font-size: 1rem;">
-                        <?=$status_date.' в '.$status_time ?><br />
-                        <?php
-                        $sql = "select cstr.width "
-                                . "from cut_source cs "
-                                . "inner join cut_stream cstr on cs.cut_id = cstr.cut_id "
-                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id')." and is_from_pallet = 1 order by width";
-                        $fetcher = new Fetcher($sql);
-                        $result = "";
-                        while ($row = $fetcher->Fetch()) {
-                            if($result != "") {
-                                $result .= " - ";
-                            }
-                            $result .= $row[0].' мм';
-                        }
-                        echo $result;
-                        ?>
-                        </div>
-                    </div>
-                    <?php
-                    endif;
-                    ?>
                     <div class="form-group">
                         <?php
                         $comment_disabled = "";
-                        if(!IsInRole(array('dev', 'technologist', 'storekeeper', 'manager'))) {
+                        if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
                             $comment_disabled = " disabled='disabled'";
                         }
                         
                         $comment_value = htmlentities($comment);
-                        if(!IsInRole(array('dev', 'technologist', 'storekeeper'))) {
+                        if(!IsInRole(array('technologist', 'dev', 'storekeeper'))) {
                             $comment_value = "";
                         }
                         ?>
                         <label for="comment">Комментарий</label>
-                        <?php if(!IsInRole(array('dev', 'technologist', 'storekeeper'))): ?>
+                        <?php if(!IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
                         <p><?= htmlentities($comment) ?></p>
                         <?php endif; ?>
                         <textarea id="comment" name="comment" rows="4" class="form-control no-latin"<?=$comment_disabled ?>><?= $comment_value ?></textarea>
                         <div class="invalid-feedback"></div>
                     </div>
-                    <div class="d-flex justify-content-between mt-4">
-                        <div class="p-0">
-                            <button type="submit" id="change-status-submit" name="change-status-submit" class="btn btn-dark" style="width: 175px;">Сохранить</button>
-                        </div>
-                        <div class="p-0">
-                            <?php if(IsInRole(array('dev', 'technologist', 'storekeeper'))): ?>
-                            <a href="roll_print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="width: 175px;">Распечатать бирку</a>
-                            <?php endif; ?>
-                        </div>
-                    </div>
+                </div>
+                <div class="form-inline" style="margin-top: 30px;">
+                    <button type="submit" id="change-status-submit" name="change-status-submit" class="btn btn-dark" style="padding-left: 80px; padding-right: 80px; margin-right: 62px; padding-top: 14px; padding-bottom: 14px;">Сохранить</button>
+                    <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
+                    <a href="roll_print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="padding-top: 5px; padding-bottom: 5px; padding-left: 50px; padding-right: 50px;">Распечатать<br />стикер</a>
+                    <?php endif; ?>
                 </div>
             </form>
         </div>
         <?php
         include '../include/footer.php';
         ?>
+        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script>
             if($('.is-invalid').first() != null) {
                 $('.is-invalid').first().focus();

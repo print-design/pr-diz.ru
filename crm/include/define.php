@@ -1,11 +1,11 @@
 <?php
-define('HOST', '/pr-diz.ru/');
-define('APPLICATION', '/pr-diz.ru/crm');
+define('HOST', '');
+define('APPLICATION', '/crm');
 
 define('DATABASE_HOST', 'localhost');
-define('DATABASE_USER', 'root');
-define('DATABASE_PASSWORD', '');
-define('DATABASE_NAME', 'crm');
+define('DATABASE_USER', 'u1228765_default');
+define('DATABASE_PASSWORD', 'Cf8_16_26_38_a6');
+define('DATABASE_NAME', 'u1228765_crm');
 
 define('MANAGER_ID', 'iijd__DFjUHg_ffIUHjn_ddfi_rtuhnGFD_oijh');
 define('USERNAME', '3_ffRR0996_ffederKhbfyyf_443iknj_huvg');

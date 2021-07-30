@@ -122,7 +122,7 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                 </div>
             </div>
         </div>
-        <div class="container-fluid">
+        <div class="container-fluid list-page">
             <?php
             if(null !== filter_input(INPUT_POST, 'user_change_password_submit') && $form_valid && empty($error_message)) {
                 echo "<div class='alert alert-success'>Пароль изменен успешно</div>";
@@ -131,19 +131,22 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <div class="d-flex justify-content-between mb-auto">
-                <div class="p-1">
-                    <?php
-                    include '../include/subheader_admin.php';
-                    ?>
+            <div class="d-flex justify-content-between mb-2 nav2">
+                <div class="p-1 row">
+                    <div class="col-6">
+                        <a class="active" href="<?=APPLICATION ?>/user/">Сотрудники</a>
+                    </div>
+                    <div class="col-6">
+                        <a href="<?=APPLICATION ?>/supplier/">Поставщики</a>    
+                    </div>
                 </div>
                 <div class="p-1">
-                    <a href="create.php" title="Добавить пользователя" class="btn btn-outline-dark">
+                    <a href="create.php" title="Добавить пользователя" class="btn btn-outline-dark" style="padding-top: 14px; padding-bottom: 14px; padding-left: 30px; padding-right: 30px;">
                         <i class="fas fa-plus" style="font-size: 12px;"></i>&nbsp;&nbsp;Добавить сотрудника
                     </a>
                 </div>
             </div>
-            <table class="table table-hover">
+            <table class="table">
                 <thead>
                     <tr>
                         <th>ФИО</th>
@@ -151,13 +154,13 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                         <th>Логин</th>
                         <th>E-Mail</th>
                         <th>Телефон</th>
-                        <th style="width: 80px;">Пароль</th>
-                        <th style="width: 80px;">Активный</th>
+                        <th style="width: 80px;"></th>
+                        <th style="width: 80px;"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    $sql = "select u.id, u.first_name, u.last_name, r.local_name role, u.username, u.email, u.phone, u.active "
+                    $sql = "select u.id, u.first_name, u.last_name, r.local_name role, u.username, u.email, u.phone "
                             . "from user u inner join role r on u.role_id = r.id "
                             . "order by u.first_name asc";
                     $fetcher = new Fetcher($sql);
@@ -176,9 +179,12 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                                 <image src='../images/icons/edit.svg' />
                             </button>
                         </td>
-                        <td class='text-right switch'>
+                        <td class='text-right'>
                             <?php if(filter_input(INPUT_COOKIE, USER_ID) != $row['id']): ?>
-                            <input type="checkbox" data-id="<?=$row['id'] ?>"<?=$row['active'] ? " checked='checked'" : "" ?> />
+                            <form method='post'>
+                                <input type='hidden' id='id' name='id' value='<?=$row['id'] ?>' />
+                                <button type='submit' class='btn btn-link confirmable' id='delete_user_submit' name='delete_user_submit'><img src='../images/icons/trash.svg' /></button>
+                            </form>
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -202,14 +208,6 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                 $('#user_change_password_id').val('');
                 $('#user_change_password_fio').text('');
                 $('.is-invalid').removeClass('is-invalid');
-            });
-            
-            // Активирование / деактивирование пользователя
-            $(".switch input[type='checkbox']").change(function() {
-                $.ajax({ url: "../ajax/user.php?id=" + $(this).attr('data-id') + "&active=" + $(this).is(':checked') })
-                        .fail(function() {
-                            alert('Ошибка при установке / снятии флага активности пользователя');
-                });
             });
             
             // Открытие формы изменения пароля, если изменение пароля не было удачным

@@ -40,14 +40,11 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
                 header('Location: '.APPLICATION.'/car/pallet_roll.php?id='.$id);
             }
             else {
-                header('Location: '.urldecode(filter_input(INPUT_GET, 'link')));
+                header('Location: '.filter_input(INPUT_GET, 'link'));
             }
         }
     }
 }
-
-// СТАТУС "СВОБОДНЫЙ"
-$free_status_id = 1;
 ?>
 <!DOCTYPE html>
 <html>
@@ -57,7 +54,7 @@ $free_status_id = 1;
         ?>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?php
-        include '../include/style_mobile.php';
+        include '_style.php';
         ?>
     </head>
     <body>
@@ -68,7 +65,7 @@ $free_status_id = 1;
                         <?php if(empty(filter_input(INPUT_GET, 'link'))): ?>
                         <a class="nav-link" href="<?=APPLICATION ?>/car/pallet_roll.php?id=<?=$id ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                         <?php else: ?>
-                        <a class="nav-link" href="<?= urldecode(filter_input(INPUT_GET, 'link')) ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <a class="nav-link" href="<?= filter_input(INPUT_GET, 'link') ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                         <?php endif; ?>
                     </li>
                 </ul>
@@ -81,14 +78,13 @@ $free_status_id = 1;
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             
-            $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, pr.weight, pr.length, p.cell, p.comment, "
+            $sql = "select p.date, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, pr.weight, pr.length, p.cell, p.comment, "
                     . "p.id pallet_id, pr.ordinal "
                     . "from pallet_roll pr "
                     . "inner join pallet p on pr.pallet_id = p.id "
                     . "inner join supplier s on p.supplier_id=s.id "
                     . "inner join film_brand fb on p.film_brand_id=fb.id "
-                    . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                    . "where pr.id=$id and (prsh.status_id is null or prsh.status_id = $free_status_id)";
+                    . "where pr.id=$id";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()):
             $date = $row['date'];
@@ -108,23 +104,34 @@ $free_status_id = 1;
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="object-card">
                         <h1>Рулон №П<?=$pallet_id ?>Р<?=$ordinal ?></h1>
-                        <p>от <?= $date ?></p>
-                        <p><strong>Поставщик:</strong> <?=$supplier ?></p>
-                        <p><strong>ID поставщика:</strong> <?=$id_from_supplier ?></p>
+                        <p>от <?= DateTime::createFromFormat('Y-m-d', $date)->format('d.m.Y') ?></p>
+                        <p><strong>Поставщик</strong> <?=$supplier ?></p>
+                        <p><strong>ID поставщика</strong> <?=$id_from_supplier ?></p>
                         <p class="mt-3"><strong>Характеристики</strong></p>
-                        <p><strong>Марка пленки:</strong> <?=$film_brand ?></p>
-                        <p><strong>Ширина:</strong> <?=$width ?> мм</p>
-                        <p><strong>Толщина:</strong> <?=$thickness ?> мкм</p>
-                        <p><strong>Масса нетто:</strong> <?=$weight ?> кг</p>
-                        <p><strong>Длина:</strong> <?=$length ?> м</p>
-                        <p><strong>Комментарий:</strong></p>
+                        <p><strong>Марка пленки</strong> <?=$film_brand ?></p>
+                        <p><strong>Ширина</strong> <?=$width ?> мм</p>
+                        <p><strong>Толщина</strong> <?=$thickness ?> мкм</p>
+                        <p><strong>Масса нетто</strong> <?=$weight ?> кг</p>
+                        <p><strong>Длина</strong> <?=$length ?> м</p>
+                        <p class="mt-3"><strong>Комментарий</strong></p>
                         <p><?=$comment ?></p>
-                        <form method="post" class="mt-2">
+                        <form method="post" class="mt-3">
                             <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                             <input type="hidden" id="pallet_id" name="pallet_id" value="<?=$pallet_id ?>" />
                             <div class="form-group">
                                 <label for="cell">Номер ячейки</label>
-                                <input type="text" id="cell" name="cell" value="<?= htmlentities($cell) ?>" class="form-control no-latin" style="font-size: 32px;" required="required" autocomplete="off" />
+                                <input type="text" 
+                                       id="cell" 
+                                       name="cell" 
+                                       value="<?= htmlentities($cell) ?>" 
+                                       class="form-control no-latin" 
+                                       style="font-size: 32px;"
+                                       required="required" 
+                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                                       onmouseup="javascript: $(this).attr('id', 'cell'); $(this).attr('name', 'cell');" 
+                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
+                                       onkeyup="javascript: $(this).attr('id', 'cell'); $(this).attr('name', 'cell');" 
+                                       onfocusout="javascript: $(this).attr('id', 'cell'); $(this).attr('name', 'cell');" />
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-dark form-control" id="cell-submit" name="cell-submit">Сменить ячейку</button>
@@ -139,7 +146,7 @@ $free_status_id = 1;
         </div>
         <?php
         include '../include/footer.php';
-        include '../include/footer_mobile.php';
+        include '_footer.php';
         ?>
     </body>
 </html>
