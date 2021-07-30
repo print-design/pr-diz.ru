@@ -17,7 +17,6 @@ if(empty($id)) {
     header('Location: '.APPLICATION.'/pallet/');
 }
 
-
 // СТАТУС "СВОБОДНЫЙ"
 $free_status_id = 1;
 
