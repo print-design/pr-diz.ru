@@ -1,8 +1,8 @@
 <?php
 define('DATABASE_HOST_GRAFIK', 'localhost');
-define('DATABASE_USER_GRAFIK', 'u1228765_default');
-define('DATABASE_PASSWORD_GRAFIK', 'Cf8_16_26_38_a6');
-define('DATABASE_NAME_GRAFIK', 'u1228765_grafik');
+define('DATABASE_USER_GRAFIK', 'root');
+define('DATABASE_PASSWORD_GRAFIK', '');
+define('DATABASE_NAME_GRAFIK', 'grafik');
 
 class ExecuterGrafik {
     public $error = '';
