@@ -53,10 +53,12 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         // Редактирование данных паллета
         $pallet_id = filter_input(INPUT_POST, 'pallet_id');
         
-        $cell = filter_input(INPUT_POST, 'cell');
-        if(empty($cell)) {
-            $cell_valid = ISINVALID;
-            $form_valid = false;
+        if(IsInRole(array('dev', 'technologist', 'storekeeper'))) {
+            $cell = filter_input(INPUT_POST, 'cell');
+            if(empty($cell)) {
+                $cell_valid = ISINVALID;
+                $form_valid = false;
+            }
         }
         
         $comment = addslashes(filter_input(INPUT_POST, 'comment'));
@@ -64,23 +66,13 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         if($form_valid) {
             $sql = "";
             
-            if(!empty($sql)) {
-                $sql .= ", ";
-            }
-        
-            $sql .= "cell='$cell'";
-            
-            if(!empty($sql)) {
-                $sql .= ", ";
-            }
-            
             if(IsInRole(array('dev', 'technologist', 'storekeeper'))) {
-                $sql .= "comment='$comment'";
+                $sql .= "cell='$cell', comment='$comment'";
             }
             else {
                 $sql .= "comment=concat(comment, ' ', '$comment')";
             }
-        
+
             $sql = "update pallet set $sql where id=$pallet_id";
             $executer = new Executer($sql);
             $error_message = $executer->error;
@@ -291,7 +283,7 @@ if(null === $comment) $comment = $row['comment'];
                         <div class="col-6 form-group">
                             <?php
                             $cell_disabled = "";
-                            if(!IsInRole(array('technologist', 'storekeeper'))) {
+                            if(!IsInRole(array('dev', 'technologist', 'storekeeper'))) {
                                 $cell_disabled = " disabled='disabled'";
                             }
                             ?>
@@ -301,19 +293,10 @@ if(null === $comment) $comment = $row['comment'];
                         </div>
                         <div class="col-6 form-group"></div>
                     </div>
-                    <div class="form-group d-none">
-                        <?php
-                        $manager_disabled = " disabled='disabled'";
-                        ?>
-                        <label for="manager_id">Менеджер</label>
-                        <select id="manager_id" name="manager_id" class="form-control"<?=$manager_disabled ?>>
-                            <option value="">Выберите менеджера</option>
-                        </select>
-                    </div>
                     <div class="form-group">
                         <?php
                         $status_id_disabled = "";
-                        if(!IsInRole(array('technologist', 'storekeeper'))) {
+                        if(!IsInRole(array('dev', 'technologist', 'storekeeper'))) {
                             $status_id_disabled = " disabled='disabled'";
                         }
                         ?>
@@ -368,17 +351,17 @@ if(null === $comment) $comment = $row['comment'];
                     <div class="form-group">
                         <?php
                         $comment_disabled = "";
-                        if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
+                        if(!IsInRole(array('dev', 'technologist', 'storekeeper', 'manager'))) {
                             $comment_disabled = " disabled='disabled'";
                         }
                         
                         $comment_value = htmlentities($comment);
-                        if(!IsInRole(array('technologist', 'dev', 'storekeeper'))) {
+                        if(!IsInRole(array('dev', 'technologist', 'storekeeper'))) {
                             $comment_value = "";
                         }
                         ?>
                         <label for="comment">Комментарий</label>
-                        <?php if(!IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
+                        <?php if(!IsInRole(array('dev', 'technologist', 'storekeeper'))): ?>
                         <p><?= htmlentities($comment) ?></p>
                         <?php endif; ?>
                         <textarea id="comment" name="comment" rows="4" class="form-control no-latin"<?=$comment_disabled ?>><?= $comment_value ?></textarea>
@@ -389,7 +372,7 @@ if(null === $comment) $comment = $row['comment'];
                             <button type="submit" id="change-status-submit" name="change-status-submit" class="btn btn-dark" style="width: 175px;">Сохранить</button>
                         </div>
                         <div class="p-0">
-                            <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
+                            <?php if(IsInRole(array('dev', 'technologist', 'storekeeper'))): ?>
                             <a href="roll_print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="width: 175px;">Распечатать бирку</a>
                             <?php endif; ?>
                         </div>
