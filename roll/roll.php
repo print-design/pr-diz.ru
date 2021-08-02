@@ -499,7 +499,7 @@ $cut_wind_id = $row['cut_wind_id'];
                         $sql = "select cstr.width "
                                 . "from cut_source cs "
                                 . "inner join cut_stream cstr on cs.cut_id = cstr.cut_id "
-                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id')." and is_from_pallet = 0 order by width";
+                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id')." and is_from_pallet = 0";
                         $fetcher = new Fetcher($sql);
                         $result = "";
                         while ($row = $fetcher->Fetch()) {
@@ -525,7 +525,7 @@ $cut_wind_id = $row['cut_wind_id'];
                                 . "from cut_wind cw "
                                 . "inner join cut c on cw.cut_id = c.id "
                                 . "inner join cut_stream cstr on cw.cut_id = cstr.cut_id "
-                                . "where cw.id = $cut_wind_id order by width";
+                                . "where cw.id = $cut_wind_id";
                         $fetcher = new Fetcher($sql);
                         $result = "";
                         $date = "";
