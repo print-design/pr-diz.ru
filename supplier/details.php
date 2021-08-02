@@ -134,7 +134,18 @@ if(null !== filter_input(INPUT_POST, 'delete_variation_submit')) {
 // Обработка отправки формы удаления поставщика
 if(null !== filter_input(INPUT_POST, 'delete-brand-button')) {
     $id = filter_input(INPUT_POST, 'id');
-    $error_message = (new Executer("delete from supplier where id = $id"))->error;
+    
+    // Проверка, присутствует ли он в каком-либо паллете или рулоне
+    $sql = "select (select count(id) from pallet where supplier_id = $id) + (select count(id) from roll where supplier_id = $id)";
+    $fetcher = new Fetcher($sql);
+    $row = $fetcher->Fetch();
+    if(intval($row[0]) > 0) {
+        $error_message = "В базе есть продукты этого поставщика";
+    }
+
+    if(empty($error_message)) {
+        $error_message = (new Executer("delete from supplier where id = $id"))->error;
+    }
 
     if(empty($error_message)) {
         header('Location: '.APPLICATION.'/supplier/');
