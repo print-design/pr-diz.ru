@@ -66,7 +66,7 @@ foreach($editions as $edition) {
     $error_message = $fetcher->error;
     
     if(!empty($error_message)) {
-        exit($error_message);
+        exit($sql." -- ".$error_message);
     }
     
     if($row = $fetcher->Fetch()) {
@@ -81,7 +81,7 @@ foreach($editions as $edition) {
     }
     
     if(!empty($error_message)) {
-        exit($error_message);
+        exit($sql." -- ".$error_message);
     }
     
     // Присваиваеваем тиражу id новой смены
@@ -90,13 +90,13 @@ foreach($editions as $edition) {
     $error_message = $executer->error;
     
     if(!empty($error_message)) {
-        exit($error_message);
+        exit($sql." -- ".$error_message);
     }
     
     // Если в прежней смене не было работников, удаляем смену
     // Если были, создаём пустую смену
     if(empty($edition['user1_id']) || empty($edition['user2_id'])) {
-        $sql = "delete workshift where id = ".$edition['workshift_id'];
+        $sql = "delete from workshift where id = ".$edition['workshift_id'];
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
@@ -107,7 +107,7 @@ foreach($editions as $edition) {
     }
     
     if(!empty($error_message)) {
-        exit($error_message);
+        exit($sql." -- ".$error_message);
     }
 }
 ?>
