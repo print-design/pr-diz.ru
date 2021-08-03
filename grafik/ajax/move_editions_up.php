@@ -63,6 +63,12 @@ foreach($editions as $edition) {
     
     $sql = "select id from workshift where machine_id=$machine_id and date='$new_date' and shift='$new_shift'";
     $fetcher = new Fetcher($sql);
+    $error_message = $fetcher->error;
+    
+    if(!empty($error_message)) {
+        exit($error_message);
+    }
+    
     if($row = $fetcher->Fetch()) {
         $workshift_id = $row[0];
     }
@@ -71,12 +77,21 @@ foreach($editions as $edition) {
         $sql = "insert into workshift (date, machine_id, shift) values ('$new_date', $machine_id, '$new_shift')";
         $executer = new Executer($sql);
         $workshift_id = $executer->insert_id;
+        $error_message = $executer->error;
+    }
+    
+    if(!empty($error_message)) {
+        exit($error_message);
     }
     
     // Присваиваеваем тиражу id новой смены
     $sql = "update edition set workshift_id = $workshift_id where id = ".$edition['id'];
     $executer = new Executer($sql);
     $error_message = $executer->error;
+    
+    if(!empty($error_message)) {
+        exit($error_message);
+    }
     
     // Если в прежней смене не было работников, удаляем смену
     // Если были, создаём пустую смену
@@ -90,6 +105,9 @@ foreach($editions as $edition) {
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
+    
+    if(!empty($error_message)) {
+        exit($error_message);
+    }
 }
 ?>
-OK
