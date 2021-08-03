@@ -87,7 +87,7 @@ if(!empty($error_message)) {
                     <div class="invalid-feedback">Число, макс. 1600</div>
                 </div>
                 <div class="form-group">
-                    <button type="button" id="next-submit" class="btn btn-dark form-control" style="margin-top: 100px;">Далее</button>
+                    <button type="button" id="next-submit" class="btn btn-dark form-control mt-4">Далее</button>
                 </div>
             </form>
         </div>
