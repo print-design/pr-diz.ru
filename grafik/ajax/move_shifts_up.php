@@ -48,5 +48,3 @@ else if($shift_from == 'night') {
 $grabber = new Grabber($sql);
 print_r($grabber->result);
 ?>
-<br /><br />
-OK
