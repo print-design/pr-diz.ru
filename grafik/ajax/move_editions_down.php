@@ -47,7 +47,7 @@ foreach($editions as $edition) {
             $new_shift = 'night';
         }
     }
-    elseif($edition['shift']) {
+    elseif($edition['shift'] == 'night') {
         if($tail == 0) {
             $new_date = date_add(date_create($edition['date']), date_interval_create_from_date_string("$floor days"))->format('Y-m-d');
             $new_shift = 'night';
@@ -79,10 +79,17 @@ foreach($editions as $edition) {
     $error_message = $executer->error;
     
     // Если в прежней смене не было работников, удаляем смену
+    // Если были, создаём пустую смену
     if(empty($edition['user1_id']) || empty($edition['user2_id'])) {
         $sql = "delete workshift where id = ".$edition['workshift_id'];
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
+    else {
+        $sql = "insert into edition (workshift_id, position) values (".$edition['workshift_id'].", 1)";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
 }
 ?>
+OK

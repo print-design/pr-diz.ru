@@ -533,21 +533,26 @@ $error_message = $grafik->error_message;
                 var count = $('#move_shifts_count').val();
         
                 $.ajax({ url: "ajax/move_editions_up.php?machine_id=" + machine_id + "&from=" + from + "&shift_from=" + shift_from + "&to=" + to + "&shift_to=" + shift_to + "&count=" + count })
-                        .done(function(){
-                        $.ajax({ url: "ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
-                                .done(function(data){
-                                    $('#waiting').html('');
-                                    $('#maincontent').html(data);
-                                })
-                                .fail(function(){
-                                    $('#waiting').html('');
-                                    alert('Ошибка при перерисовке страницы');
-                                });
-                    })
-                    .fail(function(){
-                        $('#waiting').html('');
-                        alert("Ошибка при совершении операции");
-                    });
+                        .done(function(data){
+                            if(data != '') {
+                                alert(data);
+                            }
+                            else {
+                                $.ajax({ url: "ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
+                                        .done(function(data){
+                                            $('#waiting').html('');
+                                            $('#maincontent').html(data);
+                                        })
+                                        .fail(function(){
+                                            $('#waiting').html('');
+                                            alert('Ошибка при перерисовке страницы');
+                                        });
+                            }
+                        })
+                        .fail(function(){
+                            $('#waiting').html('');
+                            alert("Ошибка при совершении операции");
+                        });
             }
     
             function MoveShiftsDown(button) {
@@ -560,21 +565,26 @@ $error_message = $grafik->error_message;
                 var count = $('#move_shifts_count').val();
         
                 $.ajax({ url: "ajax/move_editions_down.php?machine_id=" + machine_id + "&from=" + from + "&shift_from=" + shift_from + "&to=" + to + "&shift_to=" + shift_to + "&count=" + count })
-                        .done(function(){
-                        $.ajax({ url: "ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
-                                .done(function(data){
-                                    $('#waiting').html('');
-                                    $('#maincontent').html(data);
-                                })
-                                .fail(function(){
-                                    $('#waiting').html('');
-                                    alert('Ошибка при перерисовке страницы');
-                                });
-                    })
-                    .fail(function(){
-                        $('#waiting').html('');
-                        alert("Ошибка при совершении операции");
-                    });
+                        .done(function(data){
+                            if(data != '') {
+                                alert(data);
+                            }
+                            else {
+                                $.ajax({ url: "ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
+                                        .done(function(data){
+                                            $('#waiting').html('');
+                                            $('#maincontent').html(data);
+                                        })
+                                        .fail(function(){
+                                            $('#waiting').html('');
+                                            alert('Ошибка при перерисовке страницы');
+                                        });
+                            }
+                        })
+                        .fail(function(){
+                            $('#waiting').html('');
+                            alert("Ошибка при совершении операции");
+                        });
             }
         </script>
     </body>
