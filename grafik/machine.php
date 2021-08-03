@@ -535,6 +535,7 @@ $error_message = $grafik->error_message;
                 $.ajax({ url: "ajax/move_editions_up.php?machine_id=" + machine_id + "&from=" + from + "&shift_from=" + shift_from + "&to=" + to + "&shift_to=" + shift_to + "&count=" + count })
                         .done(function(data){
                             if(data != '') {
+                                $('#waiting').html('');
                                 alert(data);
                             }
                             else {
@@ -567,6 +568,7 @@ $error_message = $grafik->error_message;
                 $.ajax({ url: "ajax/move_editions_down.php?machine_id=" + machine_id + "&from=" + from + "&shift_from=" + shift_from + "&to=" + to + "&shift_to=" + shift_to + "&count=" + count })
                         .done(function(data){
                             if(data != '') {
+                                $('#waiting').html('');
                                 alert(data);
                             }
                             else {
