@@ -20,24 +20,32 @@ if(!empty($to)) {
     }
 }
 
+$sql = "select e.id from edition e inner join workshift ws on e.workshift_id = ws.id where machine_id = $machine_id";
+
 if($shift_from == 'day') {
+    $sql .= " and date >= '$from'$where_to";
     //if($half == 'true') {
     //    $sql = "update workshift set date = if(shift = 'day', date_add(date, interval $count day), date_add(date, interval $count_1 day)), shift = if(shift = 'day', 'night', 'day') where machine_id = $machine_id and date >= '$from'$where_to";
-        $error_message = (new Executer($sql))->error;
+    //    $error_message = (new Executer($sql))->error;
     //}
     //else {
-        $sql = "update workshift set date = date_add(date, interval $count day) where machine_id = $machine_id and date >= '$from'$where_to";
-        $error_message = (new Executer($sql))->error;
+    //    $sql = "update workshift set date = date_add(date, interval $count day) where machine_id = $machine_id and date >= '$from'$where_to";
+    //    $error_message = (new Executer($sql))->error;
     //}
 }
 else if($shift_from == 'night') {
+    $sql .= " and (date > '$from' or (date = '$from' and shift = 'night'))$where_to";
     //if($half == 'true') {
     //    $sql = "update workshift set date = if(shift = 'day', date_add(date, interval $count day), date_add(date, interval $count_1 day)), shift = if(shift = 'day', 'night', 'day') where machine_id = $machine_id and (date > '$from' or (date = '$from' and shift = 'night'))$where_to";
     //    $error_message = (new Executer($sql))->error;
     //}
     //else {
-        $sql = "update workshift set date = date_add(date, interval $count day) where machine_id = $machine_id and (date > '$from' or (date = '$from' and shift = 'night'))$where_to";
-        $error_message = (new Executer($sql))->error;
+    //    $sql = "update workshift set date = date_add(date, interval $count day) where machine_id = $machine_id and (date > '$from' or (date = '$from' and shift = 'night'))$where_to";
+    //    $error_message = (new Executer($sql))->error;
     //}
 }
+$grabber = new Grabber($sql);
+print_r($grabber->result);
 ?>
+<br /><br />
+OK
