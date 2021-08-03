@@ -532,7 +532,7 @@ $error_message = $grafik->error_message;
                 var shift_to = $('#move_shifts_shift_to').val();
                 var count = $('#move_shifts_count').val();
         
-                $.ajax({ url: "ajax/move_shifts_up.php?machine_id=" + machine_id + "&from=" + from + "&shift_from=" + shift_from + "&to=" + to + "&shift_to=" + shift_to + "&count=" + count })
+                $.ajax({ url: "ajax/move_editions_up.php?machine_id=" + machine_id + "&from=" + from + "&shift_from=" + shift_from + "&to=" + to + "&shift_to=" + shift_to + "&count=" + count })
                         .done(function(){
                         $.ajax({ url: "ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
                                 .done(function(data){
@@ -559,7 +559,7 @@ $error_message = $grafik->error_message;
                 var shift_to = $('#move_shifts_shift_to').val();
                 var count = $('#move_shifts_count').val();
         
-                $.ajax({ url: "ajax/move_shifts_down.php?machine_id=" + machine_id + "&from=" + from + "&shift_from=" + shift_from + "&to=" + to + "&shift_to=" + shift_to + "&count=" + count })
+                $.ajax({ url: "ajax/move_editions_down.php?machine_id=" + machine_id + "&from=" + from + "&shift_from=" + shift_from + "&to=" + to + "&shift_to=" + shift_to + "&count=" + count })
                         .done(function(){
                         $.ajax({ url: "ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
                                 .done(function(data){

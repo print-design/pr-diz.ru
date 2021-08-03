@@ -30,15 +30,15 @@ else if($shift_from == 'night') {
 }
 
 $grabber = new Grabber($sql);
-$edition_ids = $grabber->result;
+$editions = $grabber->result;
 
-foreach($edition_ids as $edition_id) {
+foreach($editions as $edition) {
     $floor = floor($count / 2);
     $ceil = ceil($count / 2);
     $tail = $count - ($floor * 2);
     
-    if($edition_id['shift'] == 'day') {
-        $new_date = date_add(date_create($edition_id['date']), date_interval_create_from_date_string("$floor days"));
+    if($edition['shift'] == 'day') {
+        $new_date = date_add(date_create($edition['date']), date_interval_create_from_date_string("$floor days"))->format('Y-m-d');
         
         if($tail == 0) {
             $new_shift = 'day';
@@ -47,17 +47,42 @@ foreach($edition_ids as $edition_id) {
             $new_shift = 'night';
         }
     }
-    elseif($edition_id['shift']) {
+    elseif($edition['shift']) {
         if($tail == 0) {
-            $new_date = date_add(date_create($edition_id['date']), date_interval_create_from_date_string("$floor days"));
+            $new_date = date_add(date_create($edition['date']), date_interval_create_from_date_string("$floor days"))->format('Y-m-d');
             $new_shift = 'night';
         }
         else {
-            $new_date = date_add(date_create($edition_id['date']), date_interval_create_from_date_string("$ceil days"));
+            $new_date = date_add(date_create($edition['date']), date_interval_create_from_date_string("$ceil days"))->format('Y-m-d');
             $new_shift = 'day';
         }
     }
     
-    echo "<br />".$edition_id['id']." -- ".$edition_id['workshift_id']." -- ".$edition_id['date']." -- ".$edition_id['shift']." -- ".$edition_id['user1_id']." --- ".$edition_id['user2_id']." --- ".date_format($new_date, 'Y-m-d')." --- ".$new_shift;
+    // Получаем id смены в новой дате. Если смены нет, создаём её;
+    $workshift_id = null;
+    
+    $sql = "select id from workshift where machine_id=$machine_id and date='$new_date' and shift='$new_shift'";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $workshift_id = $row[0];
+    }
+    
+    if($workshift_id == null) {
+        $sql = "insert into workshift (date, machine_id, shift) values ('$new_date', $machine_id, '$new_shift')";
+        $executer = new Executer($sql);
+        $workshift_id = $executer->insert_id;
+    }
+    
+    // Присваиваеваем тиражу id новой смены
+    $sql = "update edition set workshift_id = $workshift_id where id = ".$edition['id'];
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    // Если в прежней смене не было работников, удаляем смену
+    if(empty($edition['user1_id']) || empty($edition['user2_id'])) {
+        $sql = "delete workshift where id = ".$edition['workshift_id'];
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
 }
 ?>
