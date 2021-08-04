@@ -5,7 +5,7 @@
 <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
 <script src="<?=APPLICATION ?>/js/popper.min.js"></script>
 <script src="<?=APPLICATION ?>/js/jquery.maskedinput.js"></script>
-<script src="<?=APPLICATION ?>/js/calculation.js?version=1"></script>
+<script src="<?=APPLICATION ?>/js/calculation.js?version=100"></script>
 
 <script>
     // Отправка формы по нажатию Enter
