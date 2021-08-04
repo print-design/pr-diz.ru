@@ -54,7 +54,9 @@ for($i=1; $i<=19; $i++) {
             }
             
             if($row = $fetcher->Fetch()) {
-                if($row['film_brand'] == $film_brand && $row['thickness'] == $thickness && $row['width'] == $width) {
+                // if($row['film_brand'] == $film_brand && $row['thickness'] == $thickness && $row['width'] == $width) {
+                // Валидацию по ширине временно отключаем
+                if($row['film_brand'] == $film_brand && $row['thickness'] == $thickness) {
                     $cut_source = array();
                     $cut_source['cut_id'] = $cut_id;
                     $cut_source['is_from_pallet'] = 0;
@@ -63,7 +65,9 @@ for($i=1; $i<=19; $i++) {
                     array_push($cut_sources, $cut_source);
                 }
                 else {
-                    $message = "Марка/толщина/ширина не совпадают";
+                    // $message = "Марка/толщина/ширина не совпадают";
+                    // Валидацию по ширине временно отключаем
+                    $message = "Марка/толщина не совпадают";
                 }
             }
             else {
@@ -93,7 +97,9 @@ for($i=1; $i<=19; $i++) {
                 }
                 
                 if($row = $fetcher->Fetch()) {
-                    if($row['film_brand'] == $film_brand && $row['thickness'] == $thickness && $row['width'] == $width) {
+                    // if($row['film_brand'] == $film_brand && $row['thickness'] == $thickness && $row['width'] == $width) {
+                    // Валидацию по ширине временно отключаем
+                    if($row['film_brand'] == $film_brand && $row['thickness'] == $thickness) {
                         $cut_source = array();
                         $cut_source['cut_id'] = $cut_id;
                         $cut_source['is_from_pallet'] = 1;
@@ -102,7 +108,9 @@ for($i=1; $i<=19; $i++) {
                         array_push($cut_sources, $cut_source);
                     }
                     else {
-                        $message = "Марка/толщина/ширина не совпадают";
+                        // $message = "Марка/толщина/ширина не совпадают";
+                        // Валидацию по ширине временно отключаем
+                        $message = "Марка/толщина не совпадают";
                     }
                 }
                 else {
@@ -131,7 +139,8 @@ foreach ($result as $key => $value) {
 }
 
 // Проверка сумм длин исходных роликов и намоток
-if($valid) {
+// (Временно отключаем)
+/*if($valid) {
     // Общая длина исходных роллей
     $source_sum = 0;
     
@@ -155,7 +164,7 @@ if($valid) {
             $result[$key] = "Сумма длин намоток больше суммы длин исходных роликов";
         }
     }
-}
+}*/
 
 // Проверяем, чтобы не ввели два одинаковых ролика
 if($valid) {
