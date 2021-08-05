@@ -145,6 +145,9 @@
                     <input type="hidden" id="move_shifts_machine_id" name="move_shifts_machine_id" />
                     <input type="hidden" id="move_shifts_date_from" name="move_shifts_date_from" />
                     <input type="hidden" id="move_shifts_shift_from" name="move_shifts_shift_from" />
+                    <div class="form-group">
+                        <div id="move_shifts_title"></div>
+                    </div>
                     <div class="form-group form-inline">
                         <label for="move_shifts_count">На сколько смен сдвинуть?&nbsp;</label>
                         <input type="number" id="move_shifts_count" name="move_shifts_count" min="1" max="99" class="form-control" value="1" required="required" />

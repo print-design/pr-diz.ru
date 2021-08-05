@@ -508,6 +508,11 @@ $error_message = $grafik->error_message;
     
             // Сдвиг нескольких смен
             function ShowMoveForm(button) {
+                var local_date = (new Date(button.attr('data-date'))).toLocaleDateString('ru');
+                var local_shift = 'день';
+                if(button.attr('data-shift') == 'night') local_shift = 'ночь';
+                $('#move_shifts_title').text('Начиная со смены: ' + local_date + ', ' + local_shift + '.');
+                
                 $('#move_shifts_date_from').val(button.attr('data-date'));
                 $('#move_shifts_shift_from').val(button.attr('data-shift'));
                 $('#move_shifts_machine_id').val(button.attr('data-machine'));
