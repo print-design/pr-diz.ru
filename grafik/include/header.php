@@ -137,32 +137,17 @@
             <form method="post">
                 <!-- Modal Header -->
                 <div class="modal-header">
-                    <h4 class="modal-title">Перемещение смен</h4>
+                    <h4 class="modal-title">Сдвиг тиражей</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <!-- Modal body -->
                 <div class="modal-body">
                     <input type="hidden" id="move_shifts_machine_id" name="move_shifts_machine_id" />
+                    <input type="hidden" id="move_shifts_date_from" name="move_shifts_date_from" />
+                    <input type="hidden" id="move_shifts_shift_from" name="move_shifts_shift_from" />
                     <div class="form-group form-inline">
-                        <label for="move_shifts_date_from">от&nbsp;</label>
-                        <input type="date" id="move_shifts_date_from" name="move_shifts_date_from" class="form-control" />
-                        <select id="move_shifts_shift_from" name="move_shifts_shift_from" class="form-control ml-1">
-                            <option value="day">день</option>
-                            <option value="night">ночь</option>
-                        </select>
-                    </div>
-                    <div class="form-group form-inline">
-                        <label for="move_shifts_date_to">до&nbsp;</label>
-                        <input type="date" id="move_shifts_date_to" name="move_shifts_date_to" class="form-control" />
-                        <select id="move_shifts_shift_to" name="move_shifts_shift_to" class="form-control ml-1">
-                            <option value="day">день</option>
-                            <option value="night">ночь</option>
-                        </select>
-                    </div>
-                    <div class="form-group form-inline">
-                        <label for="move_shifts_count">на&nbsp;</label>
+                        <label for="move_shifts_count">На сколько смен сдвинуть?&nbsp;</label>
                         <input type="number" id="move_shifts_count" name="move_shifts_count" min="1" max="99" class="form-control" value="1" required="required" />
-                        <label>&nbsp;смен&nbsp;</label>
                     </div>
                     <input type="hidden" id="scroll" name="scroll" />
                 </div>
