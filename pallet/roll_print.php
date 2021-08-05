@@ -4,9 +4,6 @@ include '../include/topscripts.php';
 // СТАТУС "СВОБОДНЫЙ" ДЛЯ РУЛОНА
 $free_status_id = 1;
 
-// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
-$utilized_status_id = 2;
-
 // Если не задано значение id, перенаправляем на список
 $id = filter_input(INPUT_GET, 'id');
 if(empty($id)) {
