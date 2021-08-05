@@ -94,16 +94,23 @@ foreach($editions as $edition) {
     }
     
     // Если в прежней смене не было работников, удаляем смену
-    // Если были, создаём пустую смену
-    if(empty($edition['user1_id']) || empty($edition['user2_id'])) {
+    // Если работники были, а кроме этого тиража других нет, создаём пустой тираж
+    if(empty($edition['user1_id']) && empty($edition['user2_id'])) {
         $sql = "delete from workshift where id = ".$edition['workshift_id'];
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
     else {
-        $sql = "insert into edition (workshift_id, position) values (".$edition['workshift_id'].", 1)";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
+        $sql = "select count(id) from edition where workshift_id = ".$edition['workshift_id'];
+        $fetcher = new Fetcher($sql);
+        $row = $fetcher->Fetch();
+        $editions_count = $row[0];
+        
+        if($editions_count == 0) {
+            $sql = "insert into edition (workshift_id, position) values (".$edition['workshift_id'].", 1)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
     }
     
     if(!empty($error_message)) {
