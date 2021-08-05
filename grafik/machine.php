@@ -508,6 +508,11 @@ $error_message = $grafik->error_message;
     
             // Сдвиг нескольких смен
             function ShowMoveForm(button) {
+                var local_date = (new Date(button.attr('data-date'))).toLocaleDateString('ru');
+                var local_shift = 'день';
+                if(button.attr('data-shift') == 'night') local_shift = 'ночь';
+                $('#move_shifts_title').text('Начиная со смены: ' + local_date + ', ' + local_shift + '.');
+                
                 $('#move_shifts_date_from').val(button.attr('data-date'));
                 $('#move_shifts_shift_from').val(button.attr('data-shift'));
                 $('#move_shifts_machine_id').val(button.attr('data-machine'));
@@ -530,25 +535,30 @@ $error_message = $grafik->error_message;
                 var shift_from = $('#move_shifts_shift_from').val();
                 var to = $('#move_shifts_date_to').val();
                 var shift_to = $('#move_shifts_shift_to').val();
-                var days = $('#move_shifts_days').val();
-                var half = $('#move_shifts_half').is(':checked');
+                var count = $('#move_shifts_count').val();
         
-                $.ajax({ url: "ajax/move_shifts_up.php?machine_id=" + machine_id + "&from=" + from + "&shift_from=" + shift_from + "&to=" + to + "&shift_to=" + shift_to + "&days=" + days + "&half=" + half, context: button })
-                        .done(function(){
-                        $.ajax({ url: "ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
-                                .done(function(data){
-                                    $('#waiting').html('');
-                                    $('#maincontent').html(data);
-                                })
-                                .fail(function(){
-                                    $('#waiting').html('');
-                                    alert('Ошибка при перерисовке страницы');
-                                });
-                    })
-                    .fail(function(){
-                        $('#waiting').html('');
-                        alert("Ошибка при совершении операции");
-                    });
+                $.ajax({ url: "ajax/move_editions_up.php?machine_id=" + machine_id + "&from=" + from + "&shift_from=" + shift_from + "&to=" + to + "&shift_to=" + shift_to + "&count=" + count })
+                        .done(function(data){
+                            if(data != '') {
+                                $('#waiting').html('');
+                                alert(data);
+                            }
+                            else {
+                                $.ajax({ url: "ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
+                                        .done(function(data){
+                                            $('#waiting').html('');
+                                            $('#maincontent').html(data);
+                                        })
+                                        .fail(function(){
+                                            $('#waiting').html('');
+                                            alert('Ошибка при перерисовке страницы');
+                                        });
+                            }
+                        })
+                        .fail(function(){
+                            $('#waiting').html('');
+                            alert("Ошибка при совершении операции");
+                        });
             }
     
             function MoveShiftsDown(button) {
@@ -558,25 +568,30 @@ $error_message = $grafik->error_message;
                 var shift_from = $('#move_shifts_shift_from').val();
                 var to = $('#move_shifts_date_to').val();
                 var shift_to = $('#move_shifts_shift_to').val();
-                var days = $('#move_shifts_days').val();
-                var half = $('#move_shifts_half').is(':checked');
+                var count = $('#move_shifts_count').val();
         
-                $.ajax({ url: "ajax/move_shifts_down.php?machine_id=" + machine_id + "&from=" + from + "&shift_from=" + shift_from + "&to=" + to + "&shift_to=" + shift_to + "&days=" + days + "&half=" + half, context: button })
-                        .done(function(){
-                        $.ajax({ url: "ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
-                                .done(function(data){
-                                    $('#waiting').html('');
-                                    $('#maincontent').html(data);
-                                })
-                                .fail(function(){
-                                    $('#waiting').html('');
-                                    alert('Ошибка при перерисовке страницы');
-                                });
-                    })
-                    .fail(function(){
-                        $('#waiting').html('');
-                        alert("Ошибка при совершении операции");
-                    });
+                $.ajax({ url: "ajax/move_editions_down.php?machine_id=" + machine_id + "&from=" + from + "&shift_from=" + shift_from + "&to=" + to + "&shift_to=" + shift_to + "&count=" + count })
+                        .done(function(data){
+                            if(data != '') {
+                                $('#waiting').html('');
+                                alert(data);
+                            }
+                            else {
+                                $.ajax({ url: "ajax/draw.php?machine_id=" + button.attr('data-machine') + "&from=" + button.attr('data-from') + "&to=" + button.attr('data-to'), context: button })
+                                        .done(function(data){
+                                            $('#waiting').html('');
+                                            $('#maincontent').html(data);
+                                        })
+                                        .fail(function(){
+                                            $('#waiting').html('');
+                                            alert('Ошибка при перерисовке страницы');
+                                        });
+                            }
+                        })
+                        .fail(function(){
+                            $('#waiting').html('');
+                            alert("Ошибка при совершении операции");
+                        });
             }
         </script>
     </body>
