@@ -117,5 +117,23 @@ foreach($editions as $edition) {
     if(!empty($error_message)) {
         exit($sql." -- ".$error_message);
     }
+    
+    // Удаление пустых тиражей в конечной смене
+    $sql = "delete from edition where workshift_id = $workshift_id "
+            . "and (name is null or name = '') "
+            . "and (organization is null or organization = '') "
+            . "and length is null "
+            . "and status_id is null "
+            . "and lamination_id is null "
+            . "and coloring is null "
+            . "and roller_id is null "
+            . "and manager_id is null "
+            . "and (comment is null or comment = '')";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    if(!empty($error_message)) {
+        exit($sql." -- ".$error_message);
+    }
 }
 ?>
