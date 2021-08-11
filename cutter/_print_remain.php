@@ -218,7 +218,3 @@ $sticker_top = 1700;
                 });
     });
 </script>
-<?php
-// Проверка, имеются ли нарезки, у которых нет исходного ролика
-include '_check_unclosed_cut.php';
-?>
