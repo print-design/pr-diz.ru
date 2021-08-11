@@ -10,7 +10,7 @@ if(!empty($error_message)) {
 }
 
 $cut_wind_id = filter_input(INPUT_GET, 'cut_wind_id');
-
+    
 // Текущее время
 $current_date_time = date("dmYHis");
 
