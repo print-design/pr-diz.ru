@@ -10,7 +10,7 @@ if(!empty($error_message)) {
 }
 
 $cut_wind_id = filter_input(INPUT_GET, 'cut_wind_id');
-    
+
 // Текущее время
 $current_date_time = date("dmYHis");
 
@@ -197,3 +197,7 @@ $current_roll++;
                 });
     });
 </script>
+<?php
+// Проверка, имеются ли нарезки, у которых нет исходного ролика
+include '_check_no_unclosed_cut.php';
+?>
