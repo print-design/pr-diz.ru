@@ -69,7 +69,3 @@ if(!empty($error_message)) {
                 });
     });
 </script>
-<?php
-// Проверка, имеются ли нарезки, у которых нет исходного ролика
-include '_check_unclosed_cut.php';
-?>
