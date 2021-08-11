@@ -4,12 +4,15 @@ include '../include/topscripts.php';
 // СТАТУС "СВОБОДНЫЙ"
 $free_status_id = 1;
 
+// Текущий пользователь
+$user_id = GetUserId();
+
 $supplier_id = filter_input(INPUT_GET, 'supplier_id');
 $film_brand_id = filter_input(INPUT_GET, 'film_brand_id');
 $thickness = filter_input(INPUT_GET, 'thickness');
 $width = filter_input(INPUT_GET, 'width');
 
-$sql = "insert into cut (supplier_id, film_brand_id, thickness, width) values($supplier_id, $film_brand_id, $thickness, $width)";
+$sql = "insert into cut (supplier_id, film_brand_id, thickness, width, cutter_id) values($supplier_id, $film_brand_id, $thickness, $width, $user_id)";
 $executer = new Executer($sql);
 $error_message = $executer->error;
 $cut_id = $executer->insert_id;
@@ -48,7 +51,6 @@ if(!empty($error_message)) {
 
 // Создание рулона на каждый ручей
 $id_from_supplier = "Из раскроя";
-$user_id = GetUserId();
     
 for($i=1; $i<=19; $i++) {
     if(key_exists('stream_'.$i, $_GET)) {
