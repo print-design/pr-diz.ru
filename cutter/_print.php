@@ -9,6 +9,9 @@ if(!empty($error_message)) {
     exit($error_message);
 }
 
+// История
+include '_cut_history.php';
+
 $cut_wind_id = filter_input(INPUT_GET, 'cut_wind_id');
     
 // Текущее время
