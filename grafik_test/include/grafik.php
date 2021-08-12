@@ -176,9 +176,9 @@ class Grafik {
             
         $str_date = $dateshift['date']->format('Y-m-d');
             
-        $editions = array();
+        $dateshift['editions'] = array();
         if(array_key_exists($str_date, $all_editions) && array_key_exists($dateshift['shift'], $all_editions[$str_date])) {
-            $editions = $all_editions[$str_date][$dateshift['shift']];
+            $dateshift['editions'] = $all_editions[$str_date][$dateshift['shift']];
         }
             
         $day_editions = array();

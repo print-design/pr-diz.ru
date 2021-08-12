@@ -23,60 +23,46 @@
             $user_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/user/index.php' ? ' disabled' : '';
             $personal_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/personal/index.php' ? ' disabled' : '';
             
-            $query_string = '';
-            $period = array();
-            
-            $from = filter_input(INPUT_GET, 'from');
-            if($from !== null)
-                $period['from'] = $from;
-            
-            $to = filter_input(INPUT_POST, 'to');
-            if($to !== null)
-                $period['to'] = $to;
-            
-            if(count($period) > 0)
-                $query_string = '?'.http_build_query($period);
-            
             if(LoggedIn()):
             ?>
             <li class="nav-item">
-                <a class="nav-link<?=$comiflex_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 1) ?><?=$query_string ?>">Comiflex</a>
+                <a class="nav-link<?=$comiflex_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 1) ?>">Comiflex</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$zbs1_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 2) ?><?=$query_string ?>">ZBS-1</a>
+                <a class="nav-link<?=$zbs1_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 2) ?>">ZBS-1</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$zbs2_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 3) ?><?=$query_string ?>">ZBS-2</a>
+                <a class="nav-link<?=$zbs2_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 3) ?>">ZBS-2</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$zbs3_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 4) ?><?=$query_string ?>">ZBS-3</a>
+                <a class="nav-link<?=$zbs3_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 4) ?>">ZBS-3</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$atlas_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 5) ?><?=$query_string ?>">Атлас</a>
+                <a class="nav-link<?=$atlas_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 5) ?>">Атлас</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$laminators1_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 6) ?><?=$query_string ?>">Ламинатор 1</a>
+                <a class="nav-link<?=$laminators1_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 6) ?>">Ламинатор 1</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$laminators2_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 13) ?><?=$query_string ?>">Ламинатор 2</a>
+                <a class="nav-link<?=$laminators2_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 13) ?>">Ламинатор 2</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$cutters1_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 7) ?><?=$query_string ?>">Резка 1</a>
+                <a class="nav-link<?=$cutters1_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 7) ?>">Резка 1</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$cutters2_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 9) ?><?=$query_string ?>">Резка 2</a>
+                <a class="nav-link<?=$cutters2_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 9) ?>">Резка 2</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$cutters3_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 10) ?><?=$query_string ?>">Резка 3</a>
+                <a class="nav-link<?=$cutters3_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 10) ?>">Резка 3</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$cutters4_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 14) ?><?=$query_string ?>">Резка 4</a>
+                <a class="nav-link<?=$cutters4_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 14) ?>">Резка 4</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$cutters_atlas_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 11) ?><?=$query_string ?>">Резка &laquo;Атлас&raquo;</a>
+                <a class="nav-link<?=$cutters_atlas_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 11) ?>">Резка &laquo;Атлас&raquo;</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$cutters_soma_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 12) ?><?=$query_string ?>">Резка &laquo;Сома&raquo;</a>
+                <a class="nav-link<?=$cutters_soma_status ?>" href="<?=APPLICATION ?>/machine.php<?= BuildQuery('id', 12) ?>">Резка &laquo;Сома&raquo;</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link<?=$personal_status ?>" href="<?=APPLICATION ?>/personal/">Мои настройки</a>
