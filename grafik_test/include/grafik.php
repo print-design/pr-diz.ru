@@ -275,179 +275,22 @@ class Grafik {
         foreach ($period as $date) {
             $dateshift['date'] = $date;
             $dateshift['shift'] = 'day';
+            $dateshift['top'] = 'top';
+            $this->CreateDateShift($dateshift, $all, $all_editions);
             array_push($dateshifts, $dateshift);
             
             $dateshift['date'] = $date;
             $dateshift['shift'] = 'night';
+            $dateshift['top'] = 'nottop';
+            $this->CreateDateShift($dateshift, $all, $all_editions);
             array_push($dateshifts, $dateshift);
         }
         
-        echo '<h1>'. $this->name.'</h1>';
-        echo '<table class="table table-bordered print">';
-        echo '<th></th>';
-        echo '<th>Дата</th>';
-        echo '<th>Смена</th>';
-        if($this->user1Name != '') echo '<th>'.$this->user1Name.'</th>';
-        if($this->user2Name != '') echo '<th>'.$this->user2Name.'</th>';
-        if($this->hasOrganization) echo '<th>Заказчик</th>';
-        if($this->hasEdition) echo '<th>Наименование</th>';
-        if($this->hasLength) echo '<th>Метраж</th>';
-        if($this->hasRoller) echo '<th>Вал</th>';
-        if($this->hasLamination) echo '<th>Ламинация</th>';
-        if($this->hasColoring) echo '<th>Кр-ть</th>';
-        if($this->hasManager) echo '<th>Менеджер</th>'; 
-        if($this->hasComment) echo '<th>Комментарий</th>';
-        
-        foreach ($dateshifts as $dateshift) {
-            $key = $dateshift['date']->format('Y-m-d').$dateshift['shift'];
-            $row = array();
-            if(isset($all[$key])) $row = $all[$key];
-            
-            $str_date = $dateshift['date']->format('Y-m-d');
-            
-            $editions = array();
-            if(array_key_exists($str_date, $all_editions) && array_key_exists($dateshift['shift'], $all_editions[$str_date])) {
-                $editions = $all_editions[$str_date][$dateshift['shift']];
-            }
-            
-            $day_editions = array();
-            if(array_key_exists($str_date, $all_editions) && array_key_exists('day', $all_editions[$str_date])) {
-                $day_editions = $all_editions[$str_date]['day'];
-            }
-            
-            $night_editions = array();
-            if(array_key_exists($str_date, $all_editions) && array_key_exists('night', $all_editions[$str_date])) {
-                $night_editions = $all_editions[$str_date]['night'];
-            }
-            
-            $day_rowspan = count($day_editions);
-            if($day_rowspan == 0) $day_rowspan = 1;
-            $night_rowspan = count($night_editions);
-            if($night_rowspan == 0) $night_rowspan = 1;
-            $rowspan = $day_rowspan + $night_rowspan;
-            $my_rowspan = $dateshift['shift'] == 'day' ? $day_rowspan : $night_rowspan;
-            
-            $top = "nottop";
-            if($dateshift['shift'] == 'day') {
-                $top = "top";
-            }
-            
-            echo '<tr>';
-            if($dateshift['shift'] == 'day') {
-                echo "<td class='$top' rowspan='$rowspan'>".$GLOBALS['weekdays'][$dateshift['date']->format('w')].'</td>';
-                echo "<td class='$top' rowspan='$rowspan'>".$dateshift['date']->format("d.m.Y")."</td>";
-            }
-            echo "<td class='$top' rowspan='$my_rowspan'>".($dateshift['shift'] == 'day' ? 'День' : 'Ночь')."</td>";
-            
-            // Работник №1
-            if($this->user1Name != '') {
-                echo "<td class='$top' rowspan='$my_rowspan' title='".$this->user1Name."'>";
-                echo (isset($row['u1_fio']) ? $row['u1_fio'] : '');
-                echo '</td>';
-            }
-            
-            // Работник №2
-            if($this->user2Name != '') {
-                echo "<td class='$top' rowspan='$my_rowspan' title='".$this->user2Name."'>";
-                echo (isset($row['u2_fio']) ? $row['u2_fio'] : '');
-                echo '</td>';
-            }
-            
-            // Смены
-            $edition = null;
-            
-            if(count($editions) == 0) {
-                if($this->hasOrganization) echo "<td class='$top'></td>";
-                if($this->hasEdition) echo "<td class='$top'></td>";
-                if($this->hasLength) echo "<td class='$top'></td>";
-                if($this->hasRoller) echo "<td class='$top'></td>";
-                if($this->hasLamination) echo "<td class='$top'></td>";
-                if($this->hasColoring) echo "<td class='$top'></td>";
-                if($this->hasManager) echo "<td class='$top'></td>";
-                if($this->hasComment) echo "<td class='$top'></td>";
-            }
-            else {
-                $edition = array_shift($editions);
-                $this->PrintEdition($edition, $top);
-            }
-            
-            echo '</tr>';
-            
-            // Дополнительные смены
-            $edition = array_shift($editions);
-            
-            while ($edition != null) {
-                echo '<tr>';
-                $this->PrintEdition($edition, 'nottop');
-                echo '</tr>';
-                $edition = array_shift($editions);
-            }
-        }
-        
-        echo '</table>';
+        include 'show_print.php';
     }
     
     private function PrintEdition($edition, $top) {
-        // Заказчик
-        if($this->hasOrganization) {
-            echo "<td class='$top'>";
-            echo (isset($edition['organization']) ? htmlentities($edition['organization']) : '');
-            echo "</td>";
-        }
-        
-        // Наименование заказа
-        if($this->hasEdition){
-            echo "<td class='$top'>";
-            echo (isset($edition['name']) ? htmlentities($edition['name']) : '');
-            echo "</td>";
-        }
-        
-        // Метраж
-        if($this->hasLength) {
-            echo "<td class='$top'>";
-            if(isset($edition['status']) && $edition['status'] != null) {
-                echo $edition['status'];
-            }
-            else if (isset ($edition['length'])) {
-                echo $edition['length'];
-            }
-            echo "</td>";
-        };
-        
-        // Вал
-        if($this->hasRoller) {
-            echo "<td class='$top'>";
-            echo (isset($edition['roller']) ? $edition['roller'] : '');
-            echo "</td>";
-        };
-        
-        // Ламинация
-        if($this->hasLamination) {
-            echo "<td class='$top'>";
-            echo (isset($edition['lamination']) ? $edition['lamination'] : '');
-            echo "</td>";
-        }
-        
-        // Красочность
-        if($this->hasColoring) {
-            echo "<td class='$top'>";
-            echo (isset($edition['coloring']) ? $edition['coloring'] : '');
-            echo "</td>";
-        }
-        
-        // Менеджер
-        if($this->hasManager) {
-            echo "<td class='$top'>";
-            echo (isset($edition['manager']) ? $edition['manager'] : '');
-            echo "</td>";
-        }
-        
-        // Комментарий
-        if($this->hasComment) {
-            echo "<td class='$top'>";
-            echo (isset($edition['comment']) ? $edition['comment'] : '');
-            echo "</td>";
-        }
+        include 'show_print_edition.php';
     }
 }
 ?>
