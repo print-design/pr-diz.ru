@@ -67,7 +67,136 @@ class Grafik {
             $clipboard_db = true;
         }
         
+        // Список работников №1
+        if(IsInRole('admin') && $this->user1Name != '') {
+            $this->users1 = (new Grabber('select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where quit = 0 and ur.role_id = '. $this->userRole.' order by u.fio'))->result;
+        }
+        
+        // Список работников №2
+        if(IsInRole('admin') && $this->user2Name != '') {
+            $this->users2 = (new Grabber('select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where quit = 0 and ur.role_id = '. $this->userRole.' order by u.fio'))->result;
+        }
+        
+        // Список статусов
+        if(IsInRole('admin')) {
+            $this->statuses = (new Grabber("select id, name from edition_status order by name"))->result;
+        }
+        
+        // Список валов
+        if(IsInRole('admin')) {
+            $machine_id = $this->machineId;
+            $this->rollers = (new Grabber("select id, name from roller where machine_id=$machine_id order by position, name"))->result;
+        }
+        
+        // Список ламинаций
+        if(IsInRole('admin')) {
+            $sql = "select id, name from lamination where common = 1 order by sort";
+            if($this->isCutter) {
+                $sql = "select id, name from lamination where cutter = 1 order by sort";
+            }
+            $this->laminations = (new Grabber($sql))->result;
+        }
+                    
+        // Список менеджеров
+        if(IsInRole('admin')) {
+            $this->managers = (new Grabber("select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where ur.role_id = 2 order by u.fio"))->result;
+        }
+        
+        // Список рабочих смен
+        $all = array();
+        $sql = "select ws.id, ws.date date, date_format(ws.date, '%d.%m.%Y') fdate, ws.shift, ws.machine_id, u1.id u1_id, u1.fio u1_fio, u2.id u2_id, u2.fio u2_fio, "
+                . "(select count(id) from edition where workshift_id=ws.id) editions_count "
+                . "from workshift ws "
+                . "left join user u1 on ws.user1_id = u1.id "
+                . "left join user u2 on ws.user2_id = u2.id "
+                . "where ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."' and ws.machine_id = ". $this->machineId;
+        $fetcher = new Fetcher($sql);
+        
+        while ($item = $fetcher->Fetch()) {
+            $all[$item['date'].$item['shift']] = $item;
+        }
+        
+        // Список тиражей
+        $all_editions = [];
+        $sql = "select ws.date, ws.shift, ws.machine_id, e.id, e.workshift_id, e.name edition, e.organization, e.length, e.coloring, e.comment, e.position, "
+                . "e.status_id, s.name status, "
+                . "e.roller_id, r.name roller, "
+                . "e.lamination_id, lam.name lamination, "
+                . "e.manager_id, m.fio manager "
+                . "from edition e "
+                . "left join edition_status s on e.status_id = s.id "
+                . "left join roller r on e.roller_id = r.id "
+                . "left join lamination lam on e.lamination_id = lam.id "
+                . "left join user m on e.manager_id = m.id "
+                . "inner join workshift ws on e.workshift_id = ws.id "
+                . "where ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."' and ws.machine_id = ". $this->machineId." order by e.position";
+        
+        $fetcher = new Fetcher($sql);
+        
+        while ($item = $fetcher->Fetch()) {
+            if(!array_key_exists($item['date'], $all_editions) || !array_key_exists($item['shift'], $all_editions[$item['date']])) $all_editions[$item['date']][$item['shift']] = [];
+            array_push($all_editions[$item['date']][$item['shift']], $item);
+        }
+        
+        // Список дат и смен
+        if($this->dateFrom < $this->dateTo) {
+            $date_diff = $this->dateFrom->diff($this->dateTo);
+            $interval = DateInterval::createFromDateString("1 day");
+            $period = new DatePeriod($this->dateFrom, $interval, $date_diff->days);
+        }
+        else {
+            $period = array();
+            array_push($period, $this->dateFrom);
+        }
+        
+        $dateshifts = array();
+        
+        foreach ($period as $date) {
+            $dateshift['date'] = $date;
+            $dateshift['shift'] = 'day';
+            $dateshift['top'] = 'top';
+            $this->CreateDateShift($dateshift, $all, $all_editions);
+            array_push($dateshifts, $dateshift);
+            
+            $dateshift['date'] = $date;
+            $dateshift['shift'] = 'night';
+            $dateshift['top'] = 'nottop';
+            $this->CreateDateShift($dateshift, $all, $all_editions);
+            array_push($dateshifts, $dateshift);
+        }
+        
         include 'show_page.php';
+    }
+    
+    private function CreateDateShift(&$dateshift, $all, $all_editions) {
+        $formatted_date = $dateshift['date']->format('Y-m-d');
+        $key = $formatted_date.$dateshift['shift'];
+        $dateshift['row'] = array();
+        if(isset($all[$key])) $dateshift['row'] = $all[$key];
+            
+        $str_date = $dateshift['date']->format('Y-m-d');
+            
+        $editions = array();
+        if(array_key_exists($str_date, $all_editions) && array_key_exists($dateshift['shift'], $all_editions[$str_date])) {
+            $editions = $all_editions[$str_date][$dateshift['shift']];
+        }
+            
+        $day_editions = array();
+        if(array_key_exists($str_date, $all_editions) && array_key_exists('day', $all_editions[$str_date])) {
+            $day_editions = $all_editions[$str_date]['day'];
+        }
+            
+        $night_editions = array();
+        if(array_key_exists($str_date, $all_editions) && array_key_exists('night', $all_editions[$str_date])) {
+            $night_editions = $all_editions[$str_date]['night'];
+        }
+            
+        $day_rowspan = count($day_editions);
+        if($day_rowspan == 0) $day_rowspan = 1;
+        $night_rowspan = count($night_editions);
+        if($night_rowspan == 0) $night_rowspan = 1;
+        $dateshift['rowspan'] = $day_rowspan + $night_rowspan;
+        $dateshift['my_rowspan'] = $dateshift['shift'] == 'day' ? $day_rowspan : $night_rowspan;
     }
 
     private function ShowEdition($edition, $top, $clipboard_db) {
@@ -101,8 +230,6 @@ class Grafik {
     }
     
     function Print() {
-        echo '<h1>'. $this->name.'</h1>';
-        
         // Список рабочих смен
         $all = array();
         $sql = "select ws.id, ws.date date, date_format(ws.date, '%d.%m.%Y') fdate, ws.shift, u1.id u1_id, u1.fio u1_fio, u2.id u2_id, u2.fio u2_fio, "
@@ -155,6 +282,7 @@ class Grafik {
             array_push($dateshifts, $dateshift);
         }
         
+        echo '<h1>'. $this->name.'</h1>';
         echo '<table class="table table-bordered print">';
         echo '<th></th>';
         echo '<th>Дата</th>';

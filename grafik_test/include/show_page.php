@@ -7,131 +7,33 @@ include 'show_top.php';
             <th></th>
             <th>Дата</th>
             <th>Смена</th>
-            <?php
-            if($this->user1Name != '') echo '<th>'.$this->user1Name.'</th>';
-            if($this->user2Name != '') echo '<th>'.$this->user2Name.'</th>';
-            if(IsInRole('admin')) echo '<th></th>';
-            if(IsInRole('admin')) echo '<th></th>';
-            if($this->hasOrganization) echo '<th>Заказчик</th>';
-            if($this->hasEdition) echo '<th>Наименование</th>';
-            if($this->hasLength) echo '<th>Метраж</th>';
-            if(IsInRole('admin')) {
-                if($this->hasStatus) echo '<th>Статус</th>';
-            }
-            if($this->hasRoller) echo '<th>Вал</th>';
-            if($this->hasLamination) echo '<th>Ламинация</th>';
-            if($this->hasColoring) echo '<th>Кр-ть</th>';
-            if($this->hasManager) echo '<th>Менеджер</th>'; 
-            if($this->hasComment) echo '<th>Комментарий</th>';
-            if(IsInRole('admin')) {
-                echo '<th></th>';
-                echo '<th></th>';
-                echo '<th></th>';
-            }
-            ?>
+            <?php if($this->user1Name != ''): ?> <th><?= $this->user1Name ?></th> <?php endif; ?>
+            <?php if($this->user2Name != ''): ?> <th><?= $this->user2Name ?></th> <?php endif; ?>
+            <?php if(IsInRole('admin')): ?> <th></th> <?php endif; ?>
+            <?php if(IsInRole('admin')): ?> <th></th> <?php endif; ?>
+            <?php if($this->hasOrganization): ?> <th>Заказчик</th> <?php endif; ?>
+            <?php if($this->hasEdition): ?> <th>Наименование</th> <?php endif; ?>
+            <?php if($this->hasLength): ?> <th>Метраж</th> <?php endif; ?>
+            <?php if(IsInRole('admin')): if($this->hasStatus): ?> <th>Статус</th> <?php endif;    endif; ?>
+            <?php if($this->hasRoller): ?> <th>Вал</th> <?php endif; ?>
+            <?php if($this->hasLamination): ?> <th>Ламинация</th> <?php endif; ?>
+            <?php if($this->hasColoring): ?> <th>Кр-ть</th> <?php endif; ?>
+            <?php if($this->hasManager): ?> <th>Менеджер</th> <?php endif; ?>
+            <?php if($this->hasComment): ?> <th>Комментарий</th> <?php endif; ?>
+            <?php if(IsInRole('admin')): ?>
+            <th></th>
+            <th></th>
+            <th></th>
+            <?php endif; ?>
         </tr>
     </thead>
     <tbody id="grafik-tbody">
         <?php
-        // Список работников №1
-        if(IsInRole('admin') && $this->user1Name != '') {
-            $this->users1 = (new Grabber('select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where quit = 0 and ur.role_id = '. $this->userRole.' order by u.fio'))->result;
-        }
-        
-        // Список работников №2
-        if(IsInRole('admin') && $this->user2Name != '') {
-            $this->users2 = (new Grabber('select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where quit = 0 and ur.role_id = '. $this->userRole.' order by u.fio'))->result;
-        }
-        
-        // Список статусов
-        if(IsInRole('admin')) {
-            $this->statuses = (new Grabber("select id, name from edition_status order by name"))->result;
-        }
-        
-        // Список валов
-        if(IsInRole('admin')) {
-            $machine_id = $this->machineId;
-            $this->rollers = (new Grabber("select id, name from roller where machine_id=$machine_id order by position, name"))->result;
-        }
-        
-        // Список ламинаций
-        if(IsInRole('admin')) {
-            $sql = "select id, name from lamination where common = 1 order by sort";
-            if($this->isCutter) {
-                $sql = "select id, name from lamination where cutter = 1 order by sort";
-            }
-            $this->laminations = (new Grabber($sql))->result;
-        }
-                    
-        // Список менеджеров
-        if(IsInRole('admin')) {
-            $this->managers = (new Grabber("select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where ur.role_id = 2 order by u.fio"))->result;
-        }
-        
-        // Список рабочих смен
-        $all = array();
-        $sql = "select ws.id, ws.date date, date_format(ws.date, '%d.%m.%Y') fdate, ws.shift, ws.machine_id, u1.id u1_id, u1.fio u1_fio, u2.id u2_id, u2.fio u2_fio, "
-                . "(select count(id) from edition where workshift_id=ws.id) editions_count "
-                . "from workshift ws "
-                . "left join user u1 on ws.user1_id = u1.id "
-                . "left join user u2 on ws.user2_id = u2.id "
-                . "where ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."' and ws.machine_id = ". $this->machineId;
-        $fetcher = new Fetcher($sql);
-        
-        while ($item = $fetcher->Fetch()) {
-            $all[$item['date'].$item['shift']] = $item;
-        }
-        
-        // Список тиражей
-        $all_editions = [];
-        $sql = "select ws.date, ws.shift, ws.machine_id, e.id, e.workshift_id, e.name edition, e.organization, e.length, e.coloring, e.comment, e.position, "
-                . "e.status_id, s.name status, "
-                . "e.roller_id, r.name roller, "
-                . "e.lamination_id, lam.name lamination, "
-                . "e.manager_id, m.fio manager "
-                . "from edition e "
-                . "left join edition_status s on e.status_id = s.id "
-                . "left join roller r on e.roller_id = r.id "
-                . "left join lamination lam on e.lamination_id = lam.id "
-                . "left join user m on e.manager_id = m.id "
-                . "inner join workshift ws on e.workshift_id = ws.id "
-                . "where ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."' and ws.machine_id = ". $this->machineId." order by e.position";
-        
-        $fetcher = new Fetcher($sql);
-        
-        while ($item = $fetcher->Fetch()) {
-            if(!array_key_exists($item['date'], $all_editions) || !array_key_exists($item['shift'], $all_editions[$item['date']])) $all_editions[$item['date']][$item['shift']] = [];
-            array_push($all_editions[$item['date']][$item['shift']], $item);
-        }
-        
-        // Список дат и смен
-        if($this->dateFrom < $this->dateTo) {
-            $date_diff = $this->dateFrom->diff($this->dateTo);
-            $interval = DateInterval::createFromDateString("1 day");
-            $period = new DatePeriod($this->dateFrom, $interval, $date_diff->days);
-        }
-        else {
-            $period = array();
-            array_push($period, $this->dateFrom);
-        }
-        
-        $dateshifts = array();
-        
-        foreach ($period as $date) {
-            $dateshift['date'] = $date;
-            $dateshift['shift'] = 'day';
-            array_push($dateshifts, $dateshift);
-            
-            $dateshift['date'] = $date;
-            $dateshift['shift'] = 'night';
-            array_push($dateshifts, $dateshift);
-        }
-        
         foreach ($dateshifts as $dateshift) {
             $formatted_date = $dateshift['date']->format('Y-m-d');
             $key = $formatted_date.$dateshift['shift'];
-            $row = array();
-            if(isset($all[$key])) $row = $all[$key];
+            $dateshift['row'] = array();
+            if(isset($all[$key])) $dateshift['row'] = $all[$key];
             
             $str_date = $dateshift['date']->format('Y-m-d');
             
@@ -154,34 +56,26 @@ include 'show_top.php';
             if($day_rowspan == 0) $day_rowspan = 1;
             $night_rowspan = count($night_editions);
             if($night_rowspan == 0) $night_rowspan = 1;
-            $rowspan = $day_rowspan + $night_rowspan;
-            $my_rowspan = $dateshift['shift'] == 'day' ? $day_rowspan : $night_rowspan;
-            
-            $top = "nottop";
-            if($dateshift['shift'] == 'day') {
-                $top = "top";
-            }
-            
-            $date = $dateshift['date'];
-            $shift = $dateshift['shift'];
+            $dateshift['rowspan'] = $day_rowspan + $night_rowspan;
+            $dateshift['my_rowspan'] = $dateshift['shift'] == 'day' ? $day_rowspan : $night_rowspan;
             
             echo '<tr>';
             if($dateshift['shift'] == 'day') {
-                echo "<td class='$top $shift' rowspan='$rowspan'>".$GLOBALS['weekdays'][$dateshift['date']->format('w')].'</td>';
-                echo "<td class='$top $shift' rowspan='$rowspan'>".$dateshift['date']->format('d.m').".".$dateshift['date']->format('Y')."</td>";
+                echo "<td class='".$dateshift['top']." ".$dateshift['shift']."' rowspan='".$dateshift['rowspan']."'>".$GLOBALS['weekdays'][$dateshift['date']->format('w')].'</td>';
+                echo "<td class='".$dateshift['top']." ".$dateshift['shift']."' rowspan='".$dateshift['rowspan']."'>".$dateshift['date']->format('d.m').".".$dateshift['date']->format('Y')."</td>";
             }
-            echo "<td class='$top $shift' rowspan='$my_rowspan'>".($dateshift['shift'] == 'day' ? 'День' : 'Ночь')."</td>";
+            echo "<td class='".$dateshift['top']." ".$dateshift['shift']."' rowspan='".$dateshift['my_rowspan']."'>".($dateshift['shift'] == 'day' ? 'День' : 'Ночь')."</td>";
             
             // Работник №1
             if($this->user1Name != '') {
-                echo "<td class='$top $shift' rowspan='$my_rowspan' title='".$this->user1Name."'>";
+                echo "<td class='".$dateshift['top']." ".$dateshift['shift']."' rowspan='".$dateshift['my_rowspan']."' title='".$this->user1Name."'>";
                 if(IsInRole('admin')) {
-                    echo "<select id='user1_id' name='user1_id' style='width:100px;' onchange='javascript: EditUser1($(this))' data-id='".(isset($row['id']) ? $row['id'] : '')."' data-date='".$dateshift['date']->format('Y-m-d')."' data-shift='".$dateshift['shift']."' data-machine='".$this->machineId."' data-from='".$this->dateFrom->format('Y-m-d')."' data-to='".$this->dateTo->format('Y-m-d')."'>";
+                    echo "<select id='user1_id' name='user1_id' style='width:100px;' onchange='javascript: EditUser1($(this))' data-id='".(isset($dateshift['row']['id']) ? $dateshift['row']['id'] : '')."' data-date='".$dateshift['date']->format('Y-m-d')."' data-shift='".$dateshift['shift']."' data-machine='".$this->machineId."' data-from='".$this->dateFrom->format('Y-m-d')."' data-to='".$this->dateTo->format('Y-m-d')."'>";
                     echo '<optgroup>';
                     echo '<option value="">...</option>';
                     foreach ($this->users1 as $value) {
                         $selected = '';
-                        if(isset($row['u1_id']) && $row['u1_id'] == $value['id']) $selected = " selected = 'selected'";
+                        if(isset($dateshift['row']['u1_id']) && $dateshift['row']['u1_id'] == $value['id']) $selected = " selected = 'selected'";
                         echo "<option$selected value='".$value['id']."'>".$value['fio']."</option>";
                     }
                     echo '</optgroup>';
@@ -192,26 +86,26 @@ include 'show_top.php';
                     
                     echo '<div class="input-group d-none">';
                     echo '<input type="text" id="user1" name="user1" value="" class="editable" />';
-                    echo '<div class="input-group-append"><button type="button" class="btn btn-outline-dark" onclick="javascript: CreateUser1($(this));" data-id="'.(isset($row['id']) ? $row['id'] : '').'" role_id="'.$this->userRole.'" data-date="'.$dateshift['date']->format('Y-m-d').'" data-shift="'.$dateshift['shift'].'" data-machine="'.$this->machineId.'" data-from="'.$this->dateFrom->format('Y-m-d').'" data-to="'.$this->dateTo->format('Y-m-d').'"><i class="fas fa-save"></i></button></div>';
-                    echo '<div class="input-group-append"><button type="button" class="btn btn-outline-dark" data-user1="'.(isset($row['u1_id']) ? $row['u1_id'] : '').'" onclick="javascript: CancelCreateUser1($(this));"><i class="fas fa-window-close"></i></button></div>';
+                    echo '<div class="input-group-append"><button type="button" class="btn btn-outline-dark" onclick="javascript: CreateUser1($(this));" data-id="'.(isset($dateshift['row']['id']) ? $dateshift['row']['id'] : '').'" role_id="'.$this->userRole.'" data-date="'.$dateshift['date']->format('Y-m-d').'" data-shift="'.$dateshift['shift'].'" data-machine="'.$this->machineId.'" data-from="'.$this->dateFrom->format('Y-m-d').'" data-to="'.$this->dateTo->format('Y-m-d').'"><i class="fas fa-save"></i></button></div>';
+                    echo '<div class="input-group-append"><button type="button" class="btn btn-outline-dark" data-user1="'.(isset($dateshift['row']['u1_id']) ? $dateshift['row']['u1_id'] : '').'" onclick="javascript: CancelCreateUser1($(this));"><i class="fas fa-window-close"></i></button></div>';
                     echo '</div>';
                 }
                 else {
-                    echo (isset($row['u1_fio']) ? $row['u1_fio'] : '');
+                    echo (isset($dateshift['row']['u1_fio']) ? $dateshift['row']['u1_fio'] : '');
                 }
                 echo '</td>';
             }
             
             // Работник №2
             if($this->user2Name != '') {
-                echo "<td class='$top $shift' rowspan='$my_rowspan' title='".$this->user2Name."'>";
+                echo "<td class='".$dateshift['top']." ".$dateshift['shift']."' rowspan='".$dateshift['my_rowspan']."' title='".$this->user2Name."'>";
                 if(IsInRole('admin')) {
-                    echo "<select id='user2_id' name='user2_id' style='width:100px;' onchange='javascript: EditUser2($(this))' data-id='".(isset($row['id']) ? $row['id'] : '')."' data-date='".$dateshift['date']->format('Y-m-d')."' data-shift='".$dateshift['shift']."' data-machine='".$this->machineId."' data-from='".$this->dateFrom->format('Y-m-d')."' data-to='".$this->dateTo->format('Y-m-d')."'>";
+                    echo "<select id='user2_id' name='user2_id' style='width:100px;' onchange='javascript: EditUser2($(this))' data-id='".(isset($dateshift['row']['id']) ? $dateshift['row']['id'] : '')."' data-date='".$dateshift['date']->format('Y-m-d')."' data-shift='".$dateshift['shift']."' data-machine='".$this->machineId."' data-from='".$this->dateFrom->format('Y-m-d')."' data-to='".$this->dateTo->format('Y-m-d')."'>";
                     echo '<optgroup>';
                     echo '<option value="">...</option>';
                     foreach ($this->users2 as $value) {
                         $selected = '';
-                        if(isset($row['u2_id']) && $row['u2_id'] == $value['id']) $selected = " selected = 'selected'";
+                        if(isset($dateshift['row']['u2_id']) && $dateshift['row']['u2_id'] == $value['id']) $selected = " selected = 'selected'";
                         echo "<option$selected value='".$value['id']."'>".$value['fio']."</option>";
                     }
                     echo '</optgroup>';
@@ -222,12 +116,12 @@ include 'show_top.php';
                             
                     echo '<div class="input-group d-none">';
                     echo '<input type="text" id="user2" name="user2" value="" class="editable" />';
-                    echo '<div class="input-group-append"><button type="button" class="btn btn-outline-dark" onclick="javascript: CreateUser2($(this));" data-id="'.(isset($row['id']) ? $row['id'] : '').'" role_id="'.$this->userRole.'" data-date="'.$dateshift['date']->format('Y-m-d').'" data-shift="'.$dateshift['shift'].'" data-machine="'.$this->machineId.'" data-from="'.$this->dateFrom->format('Y-m-d').'" data-to="'.$this->dateTo->format('Y-m-d').'"><i class="fas fa-save"></i></button></div>';
-                    echo '<div class="input-group-append"><button type="button" class="btn btn-outline-dark" data-user2="'.(isset($row['u2_id']) ? $row['u2_id'] : '').'" onclick="javascript: CancelCreateUser2($(this));"><i class="fas fa-window-close"></i></button></div>';
+                    echo '<div class="input-group-append"><button type="button" class="btn btn-outline-dark" onclick="javascript: CreateUser2($(this));" data-id="'.(isset($dateshift['row']['id']) ? $dateshift['row']['id'] : '').'" role_id="'.$this->userRole.'" data-date="'.$dateshift['date']->format('Y-m-d').'" data-shift="'.$dateshift['shift'].'" data-machine="'.$this->machineId.'" data-from="'.$this->dateFrom->format('Y-m-d').'" data-to="'.$this->dateTo->format('Y-m-d').'"><i class="fas fa-save"></i></button></div>';
+                    echo '<div class="input-group-append"><button type="button" class="btn btn-outline-dark" data-user2="'.(isset($dateshift['row']['u2_id']) ? $dateshift['row']['u2_id'] : '').'" onclick="javascript: CancelCreateUser2($(this));"><i class="fas fa-window-close"></i></button></div>';
                     echo '</div>';
                 }
                 else {
-                    echo (isset($row['u2_fio']) ? $row['u2_fio'] : '');
+                    echo (isset($dateshift['row']['u2_fio']) ? $dateshift['row']['u2_fio'] : '');
                 }
                 echo '</td>';
             }
@@ -235,9 +129,9 @@ include 'show_top.php';
             // Создание тиража
             if(IsInRole('admin')) {
                 if(count($editions) == 0) {
-                    echo "<td class='$top $shift align-bottom' rowspan='$my_rowspan'>";
+                    echo "<td class='".$dateshift['top']." ".$dateshift['shift']." align-bottom' rowspan='".$dateshift['my_rowspan']."'>";
                     // Создание тиража
-                    echo "<button type='button' class='btn btn-outline-dark btn-sm' style='display: block;' data-toggle='tooltip' data-machine='$this->machineId' data-from='".$this->dateFrom->format("Y-m-d")."' data-to='".$this->dateTo->format("Y-m-d")."' data-date='$formatted_date' data-shift='".$dateshift['shift']."' data-workshift='".(empty($row['id']) ? '' : $row['id'])."' onclick='javascript: CreateEdition($(this))' title='Добавить тираж'><i class='fas fa-plus'></i></button>";
+                    echo "<button type='button' class='btn btn-outline-dark btn-sm' style='display: block;' data-toggle='tooltip' data-machine='$this->machineId' data-from='".$this->dateFrom->format("Y-m-d")."' data-to='".$this->dateTo->format("Y-m-d")."' data-date='$formatted_date' data-shift='".$dateshift['shift']."' data-workshift='".(empty($dateshift['row']['id']) ? '' : $dateshift['row']['id'])."' onclick='javascript: CreateEdition($(this))' title='Добавить тираж'><i class='fas fa-plus'></i></button>";
                     echo '</td>'; // Также кнопки "Создать выше" и "Создать ниже" доступны внутри тиража
                 }
             }
@@ -247,39 +141,39 @@ include 'show_top.php';
             
             if(count($editions) == 0) {
                 if(IsInRole('admin')) {
-                    echo "<td class='$top $shift'>";
+                    echo "<td class='".$dateshift['top']." ".$dateshift['shift']."'>";
                     // Вставка тиража
                     $disabled = " disabled='disabled'";
                     if($clipboard_db) {
                         $disabled = '';
                     }
-                    echo "<button type='button' class='btn btn-outline-dark btn-sm btn_clipboard_paste' style='display: block;' data-toggle='tooltip' data-machine='$this->machineId' data-from='".$this->dateFrom->format("Y-m-d")."' data-to='".$this->dateTo->format("Y-m-d")."' data-date='$formatted_date' data-shift='".$dateshift['shift']."' data-workshift='".(empty($row['id']) ? '' : $row['id'])."' onclick='javascript: PasteEditionDb($(this))' title='Вставить тираж'$disabled><i class='fas fa-paste'></i></button>";
+                    echo "<button type='button' class='btn btn-outline-dark btn-sm btn_clipboard_paste' style='display: block;' data-toggle='tooltip' data-machine='$this->machineId' data-from='".$this->dateFrom->format("Y-m-d")."' data-to='".$this->dateTo->format("Y-m-d")."' data-date='$formatted_date' data-shift='".$dateshift['shift']."' data-workshift='".(empty($dateshift['row']['id']) ? '' : $dateshift['row']['id'])."' onclick='javascript: PasteEditionDb($(this))' title='Вставить тираж'$disabled><i class='fas fa-paste'></i></button>";
                     echo "</td>"; // Также кнопки "Вставка выше" и "Вставка ниже" доступны внутри тиража
                 }
-                if($this->hasOrganization) echo "<td class='$top $shift'></td>";
-                if($this->hasEdition) echo "<td class='$top $shift'></td>";
-                if($this->hasLength) echo "<td class='$top $shift'></td>";
+                if($this->hasOrganization) echo "<td class='".$dateshift['top']." ".$dateshift['shift']."'></td>";
+                if($this->hasEdition) echo "<td class='".$dateshift['top']." ".$dateshift['shift']."'></td>";
+                if($this->hasLength) echo "<td class='".$dateshift['top']." ".$dateshift['shift']."'></td>";
                 if(IsInRole('admin')) {
-                    if($this->hasStatus) echo "<td class='$top $shift'></td>";
+                    if($this->hasStatus) echo "<td class='".$dateshift['top']." ".$dateshift['shift']."'></td>";
                 }
-                if($this->hasRoller) echo "<td class='$top $shift'></td>";
-                if($this->hasLamination) echo "<td class='$top $shift'></td>";
-                if($this->hasColoring) echo "<td class='$top $shift'></td>";
-                if($this->hasManager) echo "<td class='$top $shift'></td>";
-                if($this->hasComment) echo "<td class='$top $shift'></td>";
+                if($this->hasRoller) echo "<td class='".$dateshift['top']." ".$dateshift['shift']."'></td>";
+                if($this->hasLamination) echo "<td class='".$dateshift['top']." ".$dateshift['shift']."'></td>";
+                if($this->hasColoring) echo "<td class='".$dateshift['top']." ".$dateshift['shift']."'></td>";
+                if($this->hasManager) echo "<td class='".$dateshift['top']." ".$dateshift['shift']."'></td>";
+                if($this->hasComment) echo "<td class='".$dateshift['top']." ".$dateshift['shift']."'></td>";
                 if(IsInRole('admin')) {
-                    echo "<td class='$top $shift'></td>";
-                    echo "<td class='$top $shift'></td>";
-                    echo "<td class='$top $shift'>";
-                    if(isset($row['id'])) {
-                        echo "<button type='button' class='btn btn-outline-dark btn-sm' data-id='".$row['id']."' data-machine='$this->machineId' data-from='".$this->dateFrom->format("Y-m-d")."' data-to='".$this->dateTo->format("Y-m-d")."' onclick='javascript: if(confirm(\"Действительно удалить?\")){ DeleteShift($(this)); }' data-toggle='tooltip' title='Удалить смену'><i class='fas fa-trash-alt'></i></button>";
+                    echo "<td class='".$dateshift['top']." ".$dateshift['shift']."'></td>";
+                    echo "<td class='".$dateshift['top']." ".$dateshift['shift']."'></td>";
+                    echo "<td class='".$dateshift['top']." ".$dateshift['shift']."'>";
+                    if(isset($dateshift['row']['id'])) {
+                        echo "<button type='button' class='btn btn-outline-dark btn-sm' data-id='".$dateshift['row']['id']."' data-machine='$this->machineId' data-from='".$this->dateFrom->format("Y-m-d")."' data-to='".$this->dateTo->format("Y-m-d")."' onclick='javascript: if(confirm(\"Действительно удалить?\")){ DeleteShift($(this)); }' data-toggle='tooltip' title='Удалить смену'><i class='fas fa-trash-alt'></i></button>";
                     }
                     echo "</td>";
                 }
             }
             else {
                 $edition = array_shift($editions);
-                $this->ShowEdition($edition, $top, $clipboard_db);
+                $this->ShowEdition($edition, $dateshift['top'], $clipboard_db);
             }
             
             echo '</tr>';
@@ -293,6 +187,82 @@ include 'show_top.php';
                 echo '</tr>';
                 $edition = array_shift($editions);
             }
+        }
+        
+        foreach ($dateshifts as $dateshift) {
+            ?>
+    <tr>
+        <?php if($dateshift['shift'] == 'day'): ?>
+        <td class='<?=$dateshift['top'] ?> <?= $dateshift['shift'] ?>' rowspan='<?= $dateshift['rowspan'] ?>'><?= $GLOBALS['weekdays'][$dateshift['date']->format('w')] ?></td>
+        <td class='<?=$dateshift['top'] ?> <?= $dateshift['shift'] ?>' rowspan='<?= $dateshift['rowspan'] ?>'><?= $dateshift['date']->format('d.m').".".$dateshift['date']->format('Y') ?></td>
+        <?php endif; ?>
+        <td class='<?=$dateshift['top'] ?> <?= $dateshift['shift'] ?>' rowspan='<?= $dateshift['my_rowspan'] ?>'><?= ($dateshift['shift'] == 'day' ? 'День' : 'Ночь') ?></td>
+        
+        <!-- Работник №1 -->
+        <?php if($this->user1Name != ''): ?>
+        <td class='<?=$dateshift['top'] ?> <?=$dateshift['shift'] ?>' rowspan='<?=$dateshift['my_rowspan'] ?>' title='<?=$this->user1Name ?>'>
+            <?php if(IsInRole('admin')): ?>
+            <select id='user1_id' name='user1_id' style='width:100px;' onchange='javascript: EditUser1($(this))' data-id='<?=(isset($dateshift['row']['id']) ? $dateshift['row']['id'] : '') ?>' data-date='<?=$dateshift['date']->format('Y-m-d') ?>' data-shift='<?=$dateshift['shift'] ?>' data-machine='<?=$this->machineId ?>' data-from='<?=$this->dateFrom->format('Y-m-d') ?>' data-to='<?=$this->dateTo->format('Y-m-d') ?>'>
+                <optgroup>
+                    <option value="">...</option>
+                    <?php
+                    foreach ($this->users1 as $value) {
+                        $selected = '';
+                        if(isset($dateshift['row']['u1_id']) && $dateshift['row']['u1_id'] == $value['id']) $selected = " selected = 'selected'";
+                        echo "<option$selected value='".$value['id']."'>".$value['fio']."</option>";
+                    }
+                    ?>
+                </optgroup>
+                <optgroup label='______________'>
+                    <option value='+'>(добавить)</option>
+                </optgroup>
+            </select>
+            
+            <div class="input-group d-none">
+                <input type="text" id="user1" name="user1" value="" class="editable" />
+                <div class="input-group-append"><button type="button" class="btn btn-outline-dark" onclick="javascript: CreateUser1($(this));" data-id="<?=(isset($dateshift['row']['id']) ? $dateshift['row']['id'] : '') ?>" role_id="<?=$this->userRole ?>" data-date="<?=$dateshift['date']->format('Y-m-d') ?>" data-shift="<?=$dateshift['shift'] ?>" data-machine="<?=$this->machineId ?>" data-from="<?=$this->dateFrom->format('Y-m-d') ?>" data-to="<?=$this->dateTo->format('Y-m-d') ?>"><i class="fas fa-save"></i></button></div>
+                <div class="input-group-append"><button type="button" class="btn btn-outline-dark" data-user1="<?=(isset($dateshift['row']['u1_id']) ? $dateshift['row']['u1_id'] : '') ?>" onclick="javascript: CancelCreateUser1($(this));"><i class="fas fa-window-close"></i></button></div>
+            </div>
+            <?php
+            else:
+                echo (isset($dateshift['row']['u1_fio']) ? $dateshift['row']['u1_fio'] : '');
+            endif;
+            ?>
+        </td>
+        <?php endif; ?>
+        
+        <!-- Работник №2 -->
+        <?php if($this->user2Name != ''): ?>
+        <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?>' rowspan='<?=$dateshift['my_rowspan'] ?>' title='<?=$this->user2Name ?>'>
+            <?php if(IsInRole('admin')): ?>
+                <select id='user2_id' name='user2_id' style='width:100px;' onchange='javascript: EditUser2($(this))' data-id='<?=(isset($dateshift['row']['id']) ? $dateshift['row']['id'] : '') ?>' data-date='<?=$dateshift['date']->format('Y-m-d') ?>' data-shift='<?=$dateshift['shift'] ?>' data-machine='<?=$this->machineId ?>' data-from='<?=$this->dateFrom->format('Y-m-d') ?>' data-to='<?=$this->dateTo->format('Y-m-d') ?>'>
+                    <optgroup>
+                    <option value="">...</option>
+                    <?php
+                    foreach ($this->users2 as $value) {
+                        $selected = '';
+                        if(isset($dateshift['row']['u2_id']) && $dateshift['row']['u2_id'] == $value['id']) $selected = " selected = 'selected'";
+                        echo "<option$selected value='".$value['id']."'>".$value['fio']."</option>";
+                    }
+                    ?>
+                    </optgroup>
+                    <optgroup label='______________'>
+                        <option value='+'>(добавить)</option>
+                    </optgroup>
+                </select>
+                            
+                <div class="input-group d-none">
+                <input type="text" id="user2" name="user2" value="" class="editable" />
+                <div class="input-group-append"><button type="button" class="btn btn-outline-dark" onclick="javascript: CreateUser2($(this));" data-id="<?=(isset($dateshift['row']['id']) ? $dateshift['row']['id'] : '') ?>" role_id="<?=$this->userRole ?>" data-date="<?=$dateshift['date']->format('Y-m-d') ?>" data-shift="<?=$dateshift['shift'] ?>" data-machine="<?=$this->machineId ?>" data-from="<?=$this->dateFrom->format('Y-m-d') ?>" data-to="<?=$this->dateTo->format('Y-m-d') ?>"><i class="fas fa-save"></i></button></div>
+                <div class="input-group-append"><button type="button" class="btn btn-outline-dark" data-user2="<?=(isset($dateshift['row']['u2_id']) ? $dateshift['row']['u2_id'] : '') ?>" onclick="javascript: CancelCreateUser2($(this));"><i class="fas fa-window-close"></i></button></div>
+                </div>
+            <?php else: ?>
+            <?php echo (isset($dateshift['row']['u2_fio']) ? $dateshift['row']['u2_fio'] : ''); ?>
+            <?php endif; ?>
+        </td>
+        <?php endif; ?>
+    </tr>
+        <?php
         }
         ?>
     </tbody>
