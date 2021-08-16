@@ -42,28 +42,39 @@ if(!IsInRole(array('technologist', 'dev'))) {
                         <th>Дата</th>
                         <th>Предыдущая</th>
                         <th>Текущая</th>
-                        <th></th>
+                        <th>
+                            Ошибка&nbsp;
+                            <?php if(filter_input(INPUT_GET, 'error') == 1): ?>
+                            <a href="cut.php"><i class="far fa-times-circle"></i></a>
+                            <?php else: ?>
+                            <a href="cut.php?error=1"><i class="fa fa-filter"></i></a>
+                            <?php endif; ?>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    $sql = "select count(id) from cut_history";
+                    $where = "";
+                    if(filter_input(INPUT_GET, 'error') == 1) {
+                        $where = " where ch.valid = 0";
+                    }
+                    $sql = "select count(ch.id) from cut_history ch$where";
                     $fetcher = new Fetcher($sql);
                     
                     if($row = $fetcher->Fetch()) {
                         $pager_total_count = $row[0];
                     }
                     
-                    $sql = "select u.first_name, u.last_name, ch.datetime, ch.page_db, ch.page_real from cut_history ch inner join user u on ch.user_id = u.id order by ch.id desc limit $pager_skip, $pager_take";
+                    $sql = "select u.first_name, u.last_name, ch.datetime, ch.page_db, ch.page_real, ch.valid from cut_history ch inner join user u on ch.user_id = u.id$where order by ch.id desc limit $pager_skip, $pager_take";
                     $fetcher = new Fetcher($sql);
                     while($row = $fetcher->Fetch()) {
                         ?>
                     <tr>
                         <td><?=$row['first_name'].' '.$row['last_name'] ?></td>
-                        <td><?=$row['datetime'] ?></td>
+                        <td class="text-nowrap"><?=$row['datetime'] ?></td>
                         <td><?=$row['page_db'] ?></td>
                         <td><?=$row['page_real'] ?></td>
-                        <td style="background-color: green; color: white; font-weight: bold;">OK</td>
+                        <td style="background-color: <?=$row['valid'] ? "green" : "red" ?>; color: white; font-weight: bold;"><?=$row['valid'] ? "OK" : "Ошибка" ?></td>
                     </tr>
                         <?php
                     }
