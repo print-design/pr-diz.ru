@@ -9,6 +9,9 @@ if(!empty($error_message)) {
     exit($error_message);
 }
 
+// История
+include '_cut_history.php';
+
 include '_info.php';
 
 $cut_id = filter_input(INPUT_GET, 'cut_id');

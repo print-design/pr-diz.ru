@@ -8,6 +8,9 @@ $error_message = (new Executer($sql))->error;
 if(!empty($error_message)) {
     exit($error_message);
 }
+
+// История
+include '_cut_history.php';
 ?>
 <div class="container-fluid header">
     <nav class="navbar navbar-expand-sm justify-content-start">

@@ -9,6 +9,9 @@ if(!empty($error_message)) {
     exit($error_message);
 }
 
+// История
+include '_cut_history.php';
+
 include '_info.php';
 ?>
 <div class="container-fluid header">
