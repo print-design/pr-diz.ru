@@ -11,8 +11,16 @@ if(!empty($error_message)) {
 
 include '_info.php';
 
-// Получение объекта
+// Получение объекта 
 $cut_id = filter_input(INPUT_GET, 'cut_id');
+
+// Если случайно перескочило на закрытую нарезку, то переходим на открытую нарезку
+$sql = "select id from cut where cutter_id = $user_id  and id not in (select cut_id from cut_source)";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $cut_id = $row[0];
+}
+
 $date = '';
 $supplier_id = null;
 $film_brand_id = null;

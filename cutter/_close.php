@@ -13,6 +13,14 @@ include '_info.php';
 
 // Получение объекта
 $cut_id = filter_input(INPUT_GET, 'cut_id');
+
+// Если случайно перескочило на закрытую нарезку, то переходим на открытую нарезку
+$sql = "select id from cut where cutter_id = $user_id  and id not in (select cut_id from cut_source)";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $cut_id = $row[0];
+}
+
 $date = '';
 $sql = "select DATE_FORMAT(c.date, '%d.%m.%Y') date from cut c where c.id=$cut_id";
 $fetcher = new Fetcher($sql);
