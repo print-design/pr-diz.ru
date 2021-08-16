@@ -31,7 +31,7 @@ function IsValid($previous, $current) {
     }
     
     // Если вторым параметром является cut_id, проверяем, чтобы третьим параметром было значение незакрытой резки
-    if(array_count_values($current_substrings) > 2 && $current_substrings[1] == "cut_id") {
+    if(count($current_substrings) > 2 && $current_substrings[1] == "cut_id") {
         $sql = "select count(id) from cut_source where cut_id = ".$current_substrings[2];
         $fetcher = new Fetcher($sql);
         $row = $fetcher->Fetch();
@@ -43,7 +43,7 @@ function IsValid($previous, $current) {
     
     // Если вторым параметром является cut_wind_id, 
     // проверяем, чтобы третьим параметром было значение последней намотки незакрытой нарезки
-    if(array_count_values($current_substrings) > 2 && $current_substrings[1] == "cut_wind_id") {
+    if(count($current_substrings) > 2 && $current_substrings[1] == "cut_wind_id") {
         $sql = "select count(id) from cut_source where cut_id = (select cut_id from cut_wind where id = ".$current_substrings[2].")";
         $fetcher = new Fetcher($sql);
         $row = $fetcher->Fetch();
