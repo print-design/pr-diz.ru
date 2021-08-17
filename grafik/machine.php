@@ -50,6 +50,11 @@ $error_message = $grafik->error_message;
                 $('input[type=hidden].print_from').val($(this).val());
             });
             
+            // Показ кнопок создания тиража: перед текущим или после текущего
+            $('.open_add_edition_buttons').click(function() {
+                $(this).next('.add_edition_buttons').removeClass('d-none');
+            });
+            
             // Копирование в буфер обмена (старая версия)
             function CopyEdition(edition, button) {
                 var alert = button.children('.clipboard_alert');

@@ -2,9 +2,13 @@
 if($is_admin) {
     // Кнопки добавления нового тиража
     ?>
-<td class='<?=$top ?> <?=$shift ?>'>
-    <button type='button' class='btn btn-outline-dark btn-sm' style='display: block;' data-workshift='<?=$workshift_id ?>' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-machine='<?=$machine_id ?>' data-from='<?=$from ?>' data-to='<?=$to ?>' data-position='<?=$position ?>' data-direction='up' onclick='javascript: CreateEdition($(this));' data-toggle='tooltip' title='Добавить тираж выше'><i class='fas fa-plus'></i><i class='fas fa-long-arrow-alt-up'></i></button>
-    <button type='button' class='btn btn-outline-dark btn-sm' style='display: block;' data-workshift='<?=$workshift_id ?>' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-machine='<?=$machine_id ?>' data-from='<?=$from ?>' data-to='<?=$to ?>' data-position='<?=$position ?>' data-direction='down' onclick="javascript: CreateEdition($(this));" data-toggle='tooltip' title='Добавить тираж ниже'><i class='fas fa-plus'></i><i class='fas fa-long-arrow-alt-down'></i></button>
+<td class='<?=$top ?> <?=$shift ?>' style="position: relative;">
+    <button type='button' class='btn btn-outline-dark btn-sm open_add_edition_buttons' style='display: block;' data-toggle='tooltip' title='Добавить тираж' onclick="javascript: $(this).next('.add_edition_buttons').removeClass('d-none');"><i class='fas fa-plus'></i></button>
+    <div class="add_edition_buttons d-none">
+        <button type='button' class='btn btn-outline-dark btn-sm' style='display: inline;' data-workshift='<?=$workshift_id ?>' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-machine='<?=$machine_id ?>' data-from='<?=$from ?>' data-to='<?=$to ?>' data-position='<?=$position ?>' data-direction='up' onclick='javascript: CreateEdition($(this));' data-toggle='tooltip' title='Добавить тираж выше'><i class='fas fa-plus'></i><i class='fas fa-long-arrow-alt-up'></i></button>
+        <button type='button' class='btn btn-outline-dark btn-sm' style='display: inline;' data-workshift='<?=$workshift_id ?>' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-machine='<?=$machine_id ?>' data-from='<?=$from ?>' data-to='<?=$to ?>' data-position='<?=$position ?>' data-direction='down' onclick="javascript: CreateEdition($(this));" data-toggle='tooltip' title='Добавить тираж ниже'><i class='fas fa-plus'></i><i class='fas fa-long-arrow-alt-down'></i></button>
+        <a href="javascript: void(0);" class="add_edition_buttons_close" onclick="javascript: $(this).parent().addClass('d-none');"><i class="fa fa-window-close"></i></a>
+    </div>
 </td>
     <?php
     // Кнопки вставки скопированного тиража
