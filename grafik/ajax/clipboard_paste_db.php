@@ -22,6 +22,7 @@ $fetcher = new Fetcher($sql);
 $error_message = $fetcher->error;
 
 if($row = $fetcher->Fetch()) {
+    // Вставляем тираж в смену
     $name = addslashes($row['name']);
     $organization = addslashes($row['organization']);
     $length = $row['length'] == null ? 'NULL' : $row['length'];
@@ -54,10 +55,26 @@ if($row = $fetcher->Fetch()) {
     $error_message = $executer->error;
     $insert_id = $executer->insert_id;
     
+    // Очищаем буфер обмена
     $sql = "delete from clipboard";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     
+    // Удаление пустых тиражей в конечной смене
+    $sql = "delete from edition where workshift_id = $workshift_id "
+            . "and (name is null or name = '') "
+            . "and (organization is null or organization = '') "
+            . "and length is null "
+            . "and status_id is null "
+            . "and lamination_id is null "
+            . "and coloring is null "
+            . "and roller_id is null "
+            . "and manager_id is null "
+            . "and (comment is null or comment = '')";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    // Возвращаем ID оригинального тиража, чтобы решить вопрос, удалять его или нет
     if(!empty($origin_id)) {
         echo json_encode(array("id" => $origin_id, "name" => $origin_name));
     }
