@@ -3,19 +3,26 @@ include_once 'database.php';
 include_once 'printing.php';
 
 class Test_Grafik {
-    private ArrayObject $PrintingsArr;
+    private $PrintingColumnNames = null;
+    private ArrayObject $Printings;
 
     // .............................................................
     public function __construct() {
-        $this->PrintingsArr = new ArrayObject();
+        $this->PrintingRows = array();
+        $this->Printings = new ArrayObject();
         
         $sql = "select * from printing_table";
         $db = new Database($sql);
+        $firstRow = true;
         
         while ($row = $db->Fetch()) {
+            if($this->PrintingColumnNames == null) {
+                $this->PrintingColumnNames = array_keys($row);
+            }
+            
             $printing = new Printing();
-            $printing->Load($row);
-            $this->PrintingsArr->append($printing);
+            $printing->Load(array_values($row));
+            $this->Printings->append($printing);
         }
     }
     
@@ -23,15 +30,15 @@ class Test_Grafik {
     public function Show() {
 ?>
 <table>
-    <?php if($this->PrintingsArr->count() > 0): ?>
+    <?php if($this->Printings->count() > 0): ?>
     <tr>
-        <?php foreach($this->PrintingsArr->offsetGet(0)->Keys() as $key): ?>
-        <th><?=$key ?></th>
+        <?php foreach($this->PrintingColumnNames as $columnName): ?>
+        <th><?=$columnName ?></th>
         <?php endforeach; ?>
     </tr>
     <?php
     endif;
-    foreach($this->PrintingsArr as $printing) {
+    foreach($this->Printings as $printing) {
         $printing->Show();
     }
     ?>
@@ -40,20 +47,20 @@ class Test_Grafik {
     }   
     // .............................................................
     public function ShowRange($begin, $end) {
-        if($begin < $end && $this->PrintingsArr->offsetExists($begin)) {
+        if($begin < $end && $this->Printings->offsetExists($begin)) {
 ?>
 <table>
-    <?php if($this->PrintingsArr->count() > 0): ?>
+    <?php if($this->Printings->count() > 0): ?>
     <tr>
-        <?php foreach($this->PrintingsArr->offsetGet(0)->Keys() as $key): ?>
-        <th><?=$key ?></th>
+        <?php foreach($this->PrintingColumnNames as $columnName): ?>
+        <th><?=$columnName ?></th>
         <?php endforeach; ?>
     </tr>
     <?php
     endif;
     for ($i=$begin; $i<=$end; $i++) {
-        if($this->PrintingsArr->offsetExists($i)) {
-            $this->PrintingsArr->offsetGet($i)->Show();
+        if($this->Printings->offsetExists($i)) {
+            $this->Printings->offsetGet($i)->Show();
         }
     }
     ?>

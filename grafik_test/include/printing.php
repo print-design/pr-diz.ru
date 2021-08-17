@@ -1,35 +1,28 @@
 <?php
 class Printing {
-    private $fieldsArr;
+    private $fields;
     
     // .....................................................................
     function __construct() {
-        $this->fieldsArr = array();
+        $this->fields = array();
     }
     
     //.....................................................................
     function Load(array $array) {
-        foreach (array_keys($array) as $key) {
-            $this->fieldsArr[$key] = $array[$key];
-        }
+        $this->fields = $array;
     }
     
     //.....................................................................
-    function Append(string $key, string $value) {
-        $this->fieldsArr[$key] = $value;
-    }
-    
-    //.....................................................................
-    function Keys() {
-        return array_keys($this->fieldsArr);
+    function Append(string $value) {
+        array_push($this->fields, $value);
     }
     
     //.....................................................................
     function Show() {
 ?>
 <tr>
-    <?php foreach (array_keys($this->fieldsArr) as $key): ?>
-    <td style="padding-right: 20px;"><?= $this->fieldsArr[$key] ?></td>
+    <?php foreach ($this->fields as $field): ?>
+    <td style="padding-right: 20px;"><?= $field ?></td>
     <?php endforeach; ?>
 </tr>
 <?php
