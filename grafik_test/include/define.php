@@ -1,15 +1,13 @@
 <?php
-define('APPLICATION', '/pr-diz.ru/grafik_test');
-
+// Расположение базы данных
 define('DATABASE_HOST', 'localhost');
+
+// Пользователь базы данных
 define('DATABASE_USER', 'root');
+
+// Пароль пользователя базы данных
 define('DATABASE_PASSWORD', '');
-define('DATABASE_NAME', 'grafik');
 
-define('USER_ID', '543fde_fgeeferlj76_huGTF_eerrFE_er_eeWE');
-define('USERNAME', 'jjjgYY7765_kjnbhg77GGH_ijjhg__weeewZX');
-define('FIO', 'dff_juHHYG_njhq_lkoyGF_yetGBVk_iju_ssh');
-define('ROLES', 'ffe__jjHHHYff_kijUH_uytw_plOKqwvgGGFsd_kiJS');
-
-define('SCROLL', 'rieu_3376gJHyt_uurygYY65ki_876gyGGTj_okki');
+// Название базы данных
+define('DATABASE_NAME', 'grafik_test');
 ?>
