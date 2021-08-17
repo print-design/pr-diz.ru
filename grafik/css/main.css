@@ -62,7 +62,7 @@ table.in-cell tr td {
 .clipboard_alert {
     position: absolute;
     left: 0;
-    top: 100%;
+    bottom: 0;
     z-index: 100;
     display: none;
 }
@@ -71,4 +71,15 @@ table.in-cell tr td {
 textarea#editable {
     white-space: pre-wrap;
     overflow-wrap: break-word;
+}
+
+.add_edition_buttons {
+    border: solid gray 1px;
+    border-radius: 15px;
+    padding: 15px;
+    position: absolute;
+    left: -30px;
+    top: -10px;
+    background-color: white;
+    white-space: nowrap;
 }
