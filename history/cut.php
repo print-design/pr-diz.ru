@@ -72,8 +72,8 @@ if(!IsInRole(array('technologist', 'dev'))) {
                     <tr>
                         <td><?=$row['first_name'].' '.$row['last_name'] ?></td>
                         <td class="text-nowrap"><?=$row['datetime'] ?></td>
-                        <td><?=$row['page_db'] ?></td>
-                        <td><?=$row['page_real'] ?></td>
+                        <td style="word-break: break-all;"><?=$row['page_db'] ?></td>
+                        <td style="word-break: break-all;"><?=$row['page_real'] ?></td>
                         <td style="background-color: <?=$row['valid'] ? "green" : "red" ?>; color: white; font-weight: bold;"><?=$row['valid'] ? "OK" : "Ошибка" ?></td>
                     </tr>
                         <?php
