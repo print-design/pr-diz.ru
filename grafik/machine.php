@@ -89,42 +89,48 @@ $error_message = $grafik->error_message;
                             alert('Ошибка при копировании тиража в буфер обмена.');
                 });
             }
-    
-            // Автозаполнение текстового поля "Заказчик"
-            var organizations = [
-                <?php
-                $orgs = array();
-                $fetcher = new Fetcher("select distinct organization from edition order by organization");
-                while ($row = $fetcher->Fetch()) {
-                    if (count_chars($row['organization']) > 0) {
-                        array_push($orgs, '"'.addslashes($row['organization']).'"');
-                    }
-                }
-        
-                echo implode(",", $orgs);
-                ?>
-            ];
-            $(".organizations").autocomplete({
-                source: organizations
-            });
-        
-            // Автозаполнение текстового поля "Наименование тиража"
-            var editions = [
-                <?php
-                $eds = array();
-                $fetcher = new Fetcher("select distinct name from edition order by name");
-                while ($row = $fetcher->Fetch()) {
-                    if(count_chars($row['name']) > 0) {
-                        array_push($eds, '"'.addslashes($row['name']).'"');
-                    }
-                }
             
-                echo implode(",", $eds);
-                ?>
-            ];
-            $(".editions").autocomplete({
-                source: editions
-            });
+            // Автозаполнение
+            function Autocomplete() {
+                // Автозаполнение текстового поля "Заказчик"
+                var organizations = [
+                    <?php
+                    $orgs = array();
+                    $fetcher = new Fetcher("select distinct organization from edition order by organization");
+                    while ($row = $fetcher->Fetch()) {
+                        if (count_chars($row['organization']) > 0) {
+                            array_push($orgs, '"'.addslashes($row['organization']).'"');
+                        }
+                    }
+        
+                    echo implode(",", $orgs);
+                    ?>
+                ];
+                $(".organizations").autocomplete({
+                    source: organizations
+                });
+        
+                // Автозаполнение текстового поля "Наименование тиража"
+                var editions = [
+                    <?php
+                    $eds = array();
+                    $fetcher = new Fetcher("select distinct name from edition order by name");
+                    while ($row = $fetcher->Fetch()) {
+                        if(count_chars($row['name']) > 0) {
+                            array_push($eds, '"'.addslashes($row['name']).'"');
+                        }
+                    }
+            
+                    echo implode(",", $eds);
+                    ?>
+                ];
+                $(".editions").autocomplete({
+                    source: editions
+                });
+            }
+            
+            // Активация автозаполнения
+            Autocomplete();
     
             // Автоматическое сохранение значений полей
             function EditOrganization(field) {
@@ -228,6 +234,7 @@ $error_message = $grafik->error_message;
                                         .done(function(data){
                                             $('#waiting').html('');
                                             $('#maincontent').html(data);
+                                            Autocomplete();
                                         })
                                         .fail(function(){
                                             $('#waiting').html('');
@@ -259,6 +266,7 @@ $error_message = $grafik->error_message;
                                         .done(function(data){
                                             $('#waiting').html('');
                                             $('#maincontent').html(data);
+                                            Autocomplete();
                                         })
                                         .fail(function(){
                                             $('#waiting').html('');
@@ -286,6 +294,7 @@ $error_message = $grafik->error_message;
                                     .done(function(data){
                                         $('#waiting').html('');
                                         $('#maincontent').html(data);
+                                        Autocomplete();
                                     })
                                     .fail(function(){
                                         $('#waiting').html('');
@@ -312,6 +321,7 @@ $error_message = $grafik->error_message;
                                     .done(function(data){
                                         $('#waiting').html('');
                                         $('#maincontent').html(data);
+                                        Autocomplete();
                                     })
                                     .fail(function(){
                                         $('#waiting').html('');
@@ -385,6 +395,7 @@ $error_message = $grafik->error_message;
                                     .done(function(data){
                                         $('#waiting').html('');
                                         $('#maincontent').html(data);
+                                        Autocomplete();
                                     })
                                     .fail(function(){
                                         $('#waiting').html('');
@@ -406,6 +417,7 @@ $error_message = $grafik->error_message;
                                     .done(function(data){
                                         $('#waiting').html('');
                                         $('#maincontent').html(data);
+                                        Autocomplete();
                                     })
                                     .fail(function(){
                                         $('#waiting').html('');
@@ -432,6 +444,7 @@ $error_message = $grafik->error_message;
                                     .done(function(data){
                                         $('#waiting').html('');
                                         $('#maincontent').html(data);
+                                        Autocomplete();
                             
                                         setTimeout(function(){
                                             if(confirm('Удалить исходный тираж "' + source_name + '"?')){
@@ -441,6 +454,7 @@ $error_message = $grafik->error_message;
                                                                     .done(function(data){
                                                                         $('#waiting').html('');
                                                                         $('#maincontent').html(data);
+                                                                        Autocomplete();
                                                                     })
                                                                     .fail(function(){
                                                                         $('#waiting').html('');
@@ -474,6 +488,7 @@ $error_message = $grafik->error_message;
                                     .done(function(data){
                                         $('#waiting').html('');
                                         $('#maincontent').html(data);
+                                        Autocomplete();
                                     })
                                     .fail(function(){
                                         $('#waiting').html('');
@@ -494,6 +509,7 @@ $error_message = $grafik->error_message;
                                     .done(function(data){
                                         $('#waiting').html('');
                                         $('#maincontent').html(data);
+                                        Autocomplete();
                                     })
                                     .fail(function(){
                                         $('#waiting').html('');
@@ -548,6 +564,7 @@ $error_message = $grafik->error_message;
                                         .done(function(data){
                                             $('#waiting').html('');
                                             $('#maincontent').html(data);
+                                            Autocomplete();
                                         })
                                         .fail(function(){
                                             $('#waiting').html('');
@@ -581,6 +598,7 @@ $error_message = $grafik->error_message;
                                         .done(function(data){
                                             $('#waiting').html('');
                                             $('#maincontent').html(data);
+                                            Autocomplete();
                                         })
                                         .fail(function(){
                                             $('#waiting').html('');
