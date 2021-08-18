@@ -234,6 +234,7 @@ $error_message = $grafik->error_message;
                                         .done(function(data){
                                             $('#waiting').html('');
                                             $('#maincontent').html(data);
+                                            Autocomplete();
                                         })
                                         .fail(function(){
                                             $('#waiting').html('');
@@ -265,6 +266,7 @@ $error_message = $grafik->error_message;
                                         .done(function(data){
                                             $('#waiting').html('');
                                             $('#maincontent').html(data);
+                                            Autocomplete();
                                         })
                                         .fail(function(){
                                             $('#waiting').html('');
@@ -292,6 +294,7 @@ $error_message = $grafik->error_message;
                                     .done(function(data){
                                         $('#waiting').html('');
                                         $('#maincontent').html(data);
+                                        Autocomplete();
                                     })
                                     .fail(function(){
                                         $('#waiting').html('');
@@ -318,6 +321,7 @@ $error_message = $grafik->error_message;
                                     .done(function(data){
                                         $('#waiting').html('');
                                         $('#maincontent').html(data);
+                                        Autocomplete();
                                     })
                                     .fail(function(){
                                         $('#waiting').html('');
@@ -413,6 +417,7 @@ $error_message = $grafik->error_message;
                                     .done(function(data){
                                         $('#waiting').html('');
                                         $('#maincontent').html(data);
+                                        Autocomplete();
                                     })
                                     .fail(function(){
                                         $('#waiting').html('');
@@ -439,6 +444,7 @@ $error_message = $grafik->error_message;
                                     .done(function(data){
                                         $('#waiting').html('');
                                         $('#maincontent').html(data);
+                                        Autocomplete();
                             
                                         setTimeout(function(){
                                             if(confirm('Удалить исходный тираж "' + source_name + '"?')){
@@ -448,6 +454,7 @@ $error_message = $grafik->error_message;
                                                                     .done(function(data){
                                                                         $('#waiting').html('');
                                                                         $('#maincontent').html(data);
+                                                                        Autocomplete();
                                                                     })
                                                                     .fail(function(){
                                                                         $('#waiting').html('');
@@ -481,6 +488,7 @@ $error_message = $grafik->error_message;
                                     .done(function(data){
                                         $('#waiting').html('');
                                         $('#maincontent').html(data);
+                                        Autocomplete();
                                     })
                                     .fail(function(){
                                         $('#waiting').html('');
@@ -501,6 +509,7 @@ $error_message = $grafik->error_message;
                                     .done(function(data){
                                         $('#waiting').html('');
                                         $('#maincontent').html(data);
+                                        Autocomplete();
                                     })
                                     .fail(function(){
                                         $('#waiting').html('');
@@ -555,6 +564,7 @@ $error_message = $grafik->error_message;
                                         .done(function(data){
                                             $('#waiting').html('');
                                             $('#maincontent').html(data);
+                                            Autocomplete();
                                         })
                                         .fail(function(){
                                             $('#waiting').html('');
@@ -588,6 +598,7 @@ $error_message = $grafik->error_message;
                                         .done(function(data){
                                             $('#waiting').html('');
                                             $('#maincontent').html(data);
+                                            Autocomplete();
                                         })
                                         .fail(function(){
                                             $('#waiting').html('');
