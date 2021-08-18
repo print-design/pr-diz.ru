@@ -132,6 +132,12 @@ foreach($editions as $edition) {
     $executer = new Executer($sql);
     $error_message = $executer->error;
     
+    // Удаление конечной смены, если в ней не осталось ни работников, ни тиражей
+    // (то есть, были перенесены только пустые тиражи, которые потом были удалены, потому что пустые)
+    $sql = "delete from workshift where id = $workshift_id and id not in (select workshift_id from edition)";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
     if(!empty($error_message)) {
         exit($sql." -- ".$error_message);
     }
