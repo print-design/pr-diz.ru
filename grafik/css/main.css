@@ -25,6 +25,8 @@ table.typography {
 
 table.typography tbody tr td {
     background-color: white;
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
 
 table.typography tbody tr td.top {
