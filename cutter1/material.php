@@ -68,6 +68,11 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         </div>
         <div id="topmost"></div>
         <div class="container-fluid">
+            <?php
+            if(!empty($error_message)) {
+                echo "<div class='alert alert-danger'>$error_message</div>";
+            }
+            ?>
             <h1>Какой материал режем?</h1>
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">

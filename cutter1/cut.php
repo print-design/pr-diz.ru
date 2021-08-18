@@ -68,7 +68,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
-        $link = "wind.php?supplier_id=$supplier_id&film_brand_id=$film_brand_id&thickness=$thickness&width=$width";
+        $link = "wind.php?supplier_id=$supplier_id&film_brand_id=$film_brand_id&thickness=$thickness&width=$width&streams_count=$streams_count";
         for($i=1; $i<19; $i++) {
             if(!empty(filter_input(INPUT_POST, 'stream_'.$i))) {
                 $link .= '&stream_'.$i.'='.filter_input(INPUT_POST, 'stream_'.$i);
@@ -99,12 +99,17 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         </div>
         <div id="topmost"></div>
         <div class="container-fluid">
+            <?php
+            if(!empty($error_message)) {
+                echo "<div class='alert alert-danger'>$error_message</div>";
+            }
+            ?>
             <h1>Нарезка / <?=date('d.m.Y') ?></h1>
             <p class="mb-3 mt-3" style="font-size: large;">Как режем?</p>
             <form method="post">
                 <div class="form-group">
                     <label for="streams_count">Кол-во ручьев</label>
-                    <input type="text" id="streams_count" name="streams_count" class="form-control int-only w-50<?=$streams_count_valid ?>" data-max="19" value="<?= filter_input(INPUT_POST, 'streams_count') ?>" required="required" autocomplete="off" />
+                    <input type="text" id="streams_count" name="streams_count" class="form-control int-only w-50<?=$streams_count_valid ?>" data-max="19" value="<?= isset($_REQUEST['streams_count']) ? $_REQUEST['streams_count'] : '' ?>" required="required" autocomplete="off" />
                     <div class="invalid-feedback">Число, макс. 19</div>
                 </div>
                     <?php
@@ -113,7 +118,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     $stream_group_display_class = ' d-none';
                     $stream_message = 'stream_'.$i.'_message';
                 
-                    $streams_count = filter_input(INPUT_POST, 'streams_count');
+                    $streams_count = isset($_REQUEST['streams_count']) ? $_REQUEST['streams_count'] : null;
                 
                     if(null !== $streams_count && intval($streams_count) >= intval($i)) {
                         $stream_group_display_class = '';
@@ -122,7 +127,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                 <div class="form-group stream_group<?=$stream_group_display_class ?>" id="stream_<?=$i ?>_group">
                     <label for="stream_<?=$i ?>">Ручей <?=$i ?></label>
                     <div class="input-group w-75">
-                        <input type="text" id="stream_<?=$i ?>" name="stream_<?=$i ?>" class="form-control int-only<?=$$stream_valid_name ?>" value="<?= filter_input(INPUT_POST, 'stream_'.$i) ?>" autocomplete="off" />
+                        <input type="text" id="stream_<?=$i ?>" name="stream_<?=$i ?>" class="form-control int-only<?=$$stream_valid_name ?>" value="<?= isset($_REQUEST['stream_'.$i]) ? $_REQUEST['stream_'.$i] : '' ?>" autocomplete="off" />
                         <div class="input-group-append"><span class="input-group-text">мм</span></div>
                         <div class="invalid-feedback invalid-stream"><?=$$stream_message ?></div>
                     </div>
