@@ -49,7 +49,7 @@ $error_message = $grafik->error_message;
             $('input[type=date]#from').change(function(){
                 $('input[type=hidden].print_from').val($(this).val());
             });
-            
+                        
             // Копирование в буфер обмена (старая версия)
             function CopyEdition(edition, button) {
                 var alert = button.children('.clipboard_alert');

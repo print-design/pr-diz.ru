@@ -36,7 +36,11 @@ if($organization !== null) {
 
 $length = filter_input(INPUT_GET, 'length');
 if($length !== null) {
-    $error_message = (new Executer("update edition set length='$length' where id=$id"))->error;
+    if($length == '') {
+        $length = 'NULL';
+    }
+    
+    $error_message = (new Executer("update edition set length=$length where id=$id"))->error;
     
     if($error_message == '') {
         $fetcher = new Fetcher("select length from edition where id=$id");
@@ -51,7 +55,11 @@ if($length !== null) {
 
 $coloring = filter_input(INPUT_GET, 'coloring');
 if($coloring !== null) {
-    $error_message = (new Executer("update edition set coloring='$coloring' where id=$id"))->error;
+    if($coloring == '') {
+        $coloring = 'NULL'; 
+    }
+    
+    $error_message = (new Executer("update edition set coloring=$coloring where id=$id"))->error;
     
     if($error_message == '') {
         $fetcher = new Fetcher("select coloring from edition where id=$id");
