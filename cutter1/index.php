@@ -47,7 +47,10 @@ include_once '_redirects.php';
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <button id="mat-submit" class="btn btn-dark w-100 mt-4">Приступить к раскрою</button>
+            <a class="btn btn-dark w-100 mt-4" href="material.php">Приступить к раскрою</a>
         </div>
+        <?php
+        include '_footer.php';
+        ?>
     </body>
 </html>

@@ -66,5 +66,8 @@ include_once '_redirects.php';
                 <button type="submit" class="btn btn-outline-danger form-control" id="logout_submit" name="logout_submit">Выйти</button>
             </form>
         </div>
+        <?php
+        include '_footer.php';
+        ?>
     </body>
 </html>
