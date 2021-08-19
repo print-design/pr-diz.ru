@@ -8,7 +8,7 @@ if(IsInRole(array('electrocarist'))) {
 
 // Резчика по раскрою перенаправляем в раздел cut
 if(IsInRole(array('cutter'))) {
-    header('Location: '.APPLICATION.'/cutter1/');
+    header('Location: '.APPLICATION.'/cutter/');
 }
 ?>
 <!DOCTYPE html>
