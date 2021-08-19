@@ -134,11 +134,11 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
                 });
                 
                 $('.goto_next').click(function() {
-                    OpenAjaxPage("_next.php?cut_id=" + $(this).attr('data-cut-id'));
+                    OpenAjaxPage("_next.php");
                 });
                 
                 $('.goto_finish').click(function() {
-                    OpenAjaxPage("_finish.php?cut_id=" + $(this).attr('data-cut-id'));
+                    OpenAjaxPage("_finish.php");
                 });
                 
                 $('.goto_logout').click(function() {

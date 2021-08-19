@@ -238,7 +238,7 @@ include '_info.php';
                             alert(data);
                         }
                         else {
-                            OpenAjaxPage("_print.php?cut_wind_id=" + data);
+                            OpenAjaxPage("_print.php");
                             submit = true;
                         }
                     })

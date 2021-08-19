@@ -1,7 +1,13 @@
 <?php
 include '../include/topscripts.php';
 
-$cut_id = filter_input(INPUT_GET, 'cut_id');
+// Определяем ID незакрытого ролика
+$cut_id = null;
+$sql = "select id from cut where cutter_id = $user_id and id not in (select cut_id from cut_source)";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $cut_id = $row[0];
+}
 
 // Статус "СВОБОДНЫЙ"
 $free_status_id = 1;
