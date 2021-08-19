@@ -89,8 +89,6 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         // Создание намотки
         if(empty($error_message)) {
             $net_weight = filter_input(INPUT_GET, 'net_weight');
-            $cell = "Цех";
-            $comment = "";
             
             $sql = "insert into cut_wind (cut_id, length, radius) values($cut_id, $length, $radius)";
             $executer = new Executer($sql);
@@ -101,6 +99,8 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         // Создание рулона на каждый ручей
         if(empty($error_message)) {
             $id_from_supplier = "Из раскроя";
+            $cell = "Цех";
+            $comment = "";
             
             for($i=1; $i<=19; $i++) {
                 if(key_exists('stream_'.$i, $_POST)) {
