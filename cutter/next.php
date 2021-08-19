@@ -225,69 +225,69 @@ while ($row = $fetcher->Fetch()) {
         ?>
         <script>
             // Все марки плёнки с их вариациями
-    var films = new Map();
+            var films = new Map();
             
-    <?php
-    $sql = "SELECT fbv.film_brand_id, fbv.thickness, fbv.weight FROM film_brand_variation fbv";
-    $fetcher = new Fetcher($sql);
-    while ($row = $fetcher->Fetch()) {
-        echo "if(films.get(".$row['film_brand_id'].") == undefined) {\n";
-        echo "films.set(".$row['film_brand_id'].", new Map());\n";
-        echo "}\n";
-        echo "films.get(".$row['film_brand_id'].").set(".$row['thickness'].", ".$row['weight'].");\n";
-    }
-    ?>
+            <?php
+            $sql = "SELECT fbv.film_brand_id, fbv.thickness, fbv.weight FROM film_brand_variation fbv";
+            $fetcher = new Fetcher($sql);
+            while ($row = $fetcher->Fetch()) {
+                echo "if(films.get(".$row['film_brand_id'].") == undefined) {\n";
+                echo "films.set(".$row['film_brand_id'].", new Map());\n";
+                echo "}\n";
+                echo "films.get(".$row['film_brand_id'].").set(".$row['thickness'].", ".$row['weight'].");\n";
+            }
+            ?>
                 
-    // Расчёт длины и массы плёнки по шпуле, толщине, радиусу, ширине, удельному весу
-    function CalculateByRadius() {
-        $('#normal_length').val('');
-        $('#net_weight').val('');
+            // Расчёт длины и массы плёнки по шпуле, толщине, радиусу, ширине, удельному весу
+            function CalculateByRadius() {
+                $('#normal_length').val('');
+                $('#net_weight').val('');
                 
-        film_brand_id = $('#film_brand_id').val();
-        spool = $('#spool').val();
-        thickness = $('#thickness').val();
-        radius = $('#radius').val();
-        width = $('#width').val();
-        length = $('#length').val().replaceAll(/\D/g, '');
-                
-        if(!isNaN(spool) && !isNaN(thickness) && !isNaN(radius) && !isNaN(width) 
-                && spool != '' && thickness != '' && radius != '' && width != '') {
-            density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
-                        
-            result = GetFilmLengthWeightBySpoolThicknessRadiusWidth(spool, thickness, radius, width, density);
-                        
-            $('#normal_length').val(result.length.toFixed(2));
-            $('#net_weight').val(result.weight.toFixed(2));
-        }
-        
-        for(i=1; i<=19; i++) {
-            if($('#stream_' + i).length > 0) {
-                width = $('#stream_' + i).val();
+                film_brand_id = $('#film_brand_id').val();
+                spool = $('#spool').val();
+                thickness = $('#thickness').val();
+                radius = $('#radius').val();
+                width = $('#width').val();
+                length = $('#length').val().replaceAll(/\D/g, '');
                 
                 if(!isNaN(spool) && !isNaN(thickness) && !isNaN(radius) && !isNaN(width) 
                         && spool != '' && thickness != '' && radius != '' && width != '') {
                     density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
-                    weight = GetFilmWeightByLengthWidth(length, width, density);
-                    $('#net_weight_' + i).val(weight.toFixed(2));
+                        
+                    result = GetFilmLengthWeightBySpoolThicknessRadiusWidth(spool, thickness, radius, width, density);
+                        
+                    $('#normal_length').val(result.length.toFixed(2));
+                    $('#net_weight').val(result.weight.toFixed(2));
+                }
+        
+                for(i=1; i<=19; i++) {
+                    if($('#stream_' + i).length > 0) {
+                        width = $('#stream_' + i).val();
+                
+                        if(!isNaN(spool) && !isNaN(thickness) && !isNaN(radius) && !isNaN(width) 
+                                && spool != '' && thickness != '' && radius != '' && width != '') {
+                            density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
+                            weight = GetFilmWeightByLengthWidth(length, width, density);
+                            $('#net_weight_' + i).val(weight.toFixed(2));
+                        }
+                    }
                 }
             }
-        }
-    }
             
-    $(document).ready(CalculateByRadius);
+            $(document).ready(CalculateByRadius);
             
-    // Рассчитываем ширину и массу плёнки при изменении значений радиуса
-    $('#radius').keypress(CalculateByRadius);
+            // Рассчитываем ширину и массу плёнки при изменении значений радиуса
+            $('#radius').keypress(CalculateByRadius);
             
-    $('#radius').keyup(CalculateByRadius);
+            $('#radius').keyup(CalculateByRadius);
             
-    $('#radius').change(CalculateByRadius);
+            $('#radius').change(CalculateByRadius);
     
-    $('#length').keypress(CalculateByRadius);
+            $('#length').keypress(CalculateByRadius);
             
-    $('#length').keyup(CalculateByRadius);
+            $('#length').keyup(CalculateByRadius);
             
-    $('#length').change(CalculateByRadius);
+            $('#length').change(CalculateByRadius);
         </script>
     </body>
 </html>
