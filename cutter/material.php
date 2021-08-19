@@ -6,7 +6,12 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-include_once '_redirects.php';
+// Текущий пользователь
+$user_id = GetUserId();
+
+// Проверяем, имеются ли незакрытые нарезки
+include '_check_cuts.php';
+CheckCuts($user_id);
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -61,7 +66,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             <nav class="navbar navbar-expand-sm justify-content-start">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <a class="nav-link" href="<?=APPLICATION."/cutter/" ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                     </li>
                 </ul>
             </nav>

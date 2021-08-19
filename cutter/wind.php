@@ -6,7 +6,12 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-include_once '_redirects.php';
+// Текущий пользователь
+$user_id = GetUserId();
+
+// Проверяем, имеются ли незакрытые нарезки
+include '_check_cuts.php';
+CheckCuts($user_id);
 
 // Параметры нарезаемого материала и количество ручьёв
 $supplier_id = filter_input(INPUT_GET, 'supplier_id');
@@ -17,14 +22,11 @@ $streams_count = filter_input(INPUT_GET, 'streams_count');
 
 // Проверяем, чтобы были переданы все параметры материала и количество ручьёв
 if(empty($supplier_id) || empty($film_brand_id) || empty($thickness) || empty($width) || empty($streams_count)) {
-    header("Location: index.php");
+    header("Location: ".APPLICATION."/cutter/");
 }
 
 // СТАТУС "СВОБОДНЫЙ"
 $free_status_id = 1;
-
-// Текущий пользователь
-$user_id = GetUserId();
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');

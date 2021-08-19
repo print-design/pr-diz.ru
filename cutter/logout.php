@@ -6,7 +6,12 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-include_once '_redirects.php';
+// Текущий пользователь
+$user_id = GetUserId();
+
+// Проверяем, имеются ли незакрытые нарезки
+include '_check_cuts.php';
+CheckCuts($user_id);
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,7 +26,7 @@ include_once '_redirects.php';
             <nav class="navbar navbar-expand-sm justify-content-start">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a href="index.php" class="nav-link"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <a href="<?=APPLICATION."/cutter/" ?>" class="nav-link"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                     </li>
                 </ul>
             </nav>

@@ -6,7 +6,12 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-include_once '_redirects.php';
+// Текущий пользователь
+$user_id = GetUserId();
+
+// Проверяем имеются ли незакрытые нарезки
+include '_check_cuts.php';
+CheckCuts($user_id);
 
 // Параметры нарезаемого материала
 $supplier_id = filter_input(INPUT_GET, 'supplier_id');
@@ -16,7 +21,7 @@ $width = filter_input(INPUT_GET, 'width');
 
 // Проверяем, чтобы были переданы все параметры материала
 if(empty($supplier_id) || empty($film_brand_id) || empty($thickness) || empty($width)) {
-    header("Location: index.php");
+    header("Location: ".APPLICATION."/cutter/");
 }
 
 // Валидация формы
