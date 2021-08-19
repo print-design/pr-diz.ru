@@ -1,6 +1,9 @@
 <?php
 include '../include/topscripts.php';
 
+// Текущий пользователь
+$user_id = GetUserId();
+
 // СТАТУС "СВОБОДНЫЙ"
 $free_status_id = 1;
 
@@ -43,7 +46,6 @@ if($row = $fetcher->Fetch()) {
 
 // Создание рулона на каждый ручей
 $id_from_supplier = "Из раскроя";
-$user_id = GetUserId();
 
 for($i=1; $i<=19; $i++) {
     if(key_exists('stream_'.$i, $_GET)) {

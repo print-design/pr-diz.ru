@@ -1,6 +1,9 @@
 <?php
 include '../include/topscripts.php';
 
+// Текущий пользователь
+$user_id = GetUserId();
+
 // Определяем ID незакрытого ролика
 $cut_id = null;
 $sql = "select id from cut where cutter_id = $user_id and id not in (select cut_id from cut_source)";
@@ -193,7 +196,6 @@ if($valid) {
 // Меняем статусы исходных роликов
 if($valid) {
     foreach ($cut_sources as $cut_source) {
-        $user_id = GetUserId();
         $cut_id = $cut_source['cut_id'];
         $is_from_pallet = $cut_source['is_from_pallet'];
         $roll_id = $cut_source['roll_id'];

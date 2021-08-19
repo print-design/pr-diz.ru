@@ -121,10 +121,17 @@ if($row = $fetcher->Fetch()) {
         }
     
         if(form_valid && !submit) {
-            link = "_create_sources.php;
+            link = "_create_sources.php";
             for(i=1; i<=19; i++) {
                 if(!$('#source_' + i + '_group').hasClass('d-none')) {
-                    link += "&source_" + i + "=" + $('#source_' + i).val();
+                    if(i == 1) {
+                        link += "?";
+                    }
+                    else {
+                        link += "&";
+                    }
+                    
+                    link += "source_" + i + "=" + $('#source_' + i).val();
                 }
             }
             

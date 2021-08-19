@@ -14,9 +14,9 @@ include '_cut_history.php';
 
 include '_info.php';
 
-// Определяем ID незакрытого ролика
+// Определяем ID последнего закрытого ролика
 $cut_id = null;
-$sql = "select id from cut where cutter_id = $user_id and id not in (select cut_id from cut_source)";
+$sql = "select id from cut where cutter_id = $user_id and id in (select cut_id from cut_source) order by id desc limit 1";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $cut_id = $row[0];
