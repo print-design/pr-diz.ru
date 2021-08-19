@@ -6,7 +6,7 @@ function CheckCuts($user_id) {
     $fetcher = new Fetcher($sql);
     $row = $fetcher->Fetch();
     
-    if($row == 0) {
+    if($row[0] == 0) {
         if(mb_substr_count($php_self, 'next.php') > 0 || mb_substr_count($php_self, 'print.php') > 0 || mb_substr_count($php_self, 'close.php') > 0) {
             header("Location: ".APPLICATION."/cutter/");
         }
