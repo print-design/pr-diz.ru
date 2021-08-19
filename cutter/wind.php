@@ -122,7 +122,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         
         // Переход на страницу печати рулонов
         if(empty($error_message)) {
-            //
+            header("Location: print.php");
         }
     }
 }
