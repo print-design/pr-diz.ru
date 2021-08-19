@@ -7,19 +7,6 @@ $ud_ves = '';
 $width = '';
 
 $cut_id = null;
-$sql = "select id from cut where cutter_id = $user_id and id not in (select cut_id from cut_source)";
-$fetcher = new Fetcher($sql);
-if($row = $fetcher->Fetch()) {
-    $cut_id = $row[0];
-}
-
-if(null == $cut_id) {
-    $sql = "select id from cut where cutter_id = $user_id and id in (select cut_id from cut_source) order by id desc limit 1";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        $cut_id = $row[0];
-    }
-}
 
 // Для окна "Нарезка 1"
 if(null !== filter_input(INPUT_GET, 'supplier_id') 
@@ -38,6 +25,21 @@ if(null !== filter_input(INPUT_GET, 'supplier_id')
         $ud_ves = $row['weight'];
         $thickness = filter_input(INPUT_GET, 'thickness');
         $width = filter_input(INPUT_GET, 'width');
+    }
+}
+else {
+    $sql = "select id from cut where cutter_id = $user_id and id not in (select cut_id from cut_source)";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $cut_id = $row[0];        
+    }
+    
+    if(null == $cut_id) {
+        $sql = "select id from cut where cutter_id = $user_id and id in (select cut_id from cut_source) order by id desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $cut_id = $row[0];
+        }
     }
 }
 

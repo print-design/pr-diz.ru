@@ -13,7 +13,6 @@ if(!empty($error_message)) {
 include '_cut_history.php';
 
 $id = filter_input(INPUT_GET, 'id');
-$cut_id = filter_input(INPUT_GET, 'cut_id');
 
 // Получение данных
 $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, s.name supplier, r.id_from_supplier, "
@@ -202,7 +201,7 @@ $sticker_top = 1700;
     
     // Переход на последнюю страницу
     function Submit() {
-        OpenAjaxPage("_finish.php?cut_id=<?=$cut_id ?>");
+        OpenAjaxPage("_finish.php");
         submit = true;
     }
     

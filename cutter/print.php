@@ -2,6 +2,9 @@
 include '../include/topscripts.php';
 include '../qr/qrlib.php';
 
+// Текущий пользователь
+$user_id = GetUserId();
+
 // Текущее время
 $current_date_time = date("dmYHis");
 

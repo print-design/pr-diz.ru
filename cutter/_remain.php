@@ -188,7 +188,7 @@ if($row = $fetcher->Fetch()) {
                                 alert(data);
                             }
                             else {
-                                OpenAjaxPage("_print_remain.php?id=" + data + "&cut_id=<?=$cut_id ?>");
+                                OpenAjaxPage("_print_remain.php?id=" + data);
                                 submit = true;
                             }
                         })
