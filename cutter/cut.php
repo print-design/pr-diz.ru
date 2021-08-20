@@ -77,6 +77,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         for($i=1; $i<19; $i++) {
             if(!empty(filter_input(INPUT_POST, 'stream_'.$i))) {
                 $link .= '&stream_'.$i.'='.filter_input(INPUT_POST, 'stream_'.$i);
+                $link .= '&comment_'.$i.'='.urlencode(filter_input(INPUT_POST, 'comment_'.$i));
             }
         }
         
@@ -131,11 +132,14 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     ?>
                 <div class="form-group stream_group<?=$stream_group_display_class ?>" id="stream_<?=$i ?>_group">
                     <label for="stream_<?=$i ?>">Ручей <?=$i ?></label>
-                    <div class="input-group w-75">
-                        <input type="text" id="stream_<?=$i ?>" name="stream_<?=$i ?>" class="form-control int-only<?=$$stream_valid_name ?>" value="<?= isset($_REQUEST['stream_'.$i]) ? $_REQUEST['stream_'.$i] : '' ?>" autocomplete="off" />
+                    <div class="input-group">
+                        <input type="text" id="stream_<?=$i ?>" name="stream_<?=$i ?>" class="form-control int-only<?=$$stream_valid_name ?>" value="<?= isset($_REQUEST['stream_'.$i]) ? $_REQUEST['stream_'.$i] : '' ?>" placeholder="Ширина" autocomplete="off" />
                         <div class="input-group-append"><span class="input-group-text">мм</span></div>
-                        <div class="invalid-feedback invalid-stream"><?=$$stream_message ?></div>
+                        <div class="invalid-feedback invalid-stream"><?=$$stream_message ?></div>                        
                     </div>
+                </div>
+                <div class="form-group stream_group<?=$stream_group_display_class ?>" id="comment_<?=$i ?>_group">
+                    <input type="text" id="comment_<?=$i ?>" name="comment_<?=$i ?>" class="form-control" value="<?= isset($_REQUEST['comment_'.$i]) ? $_REQUEST['comment_'.$i] : '' ?>" placeholder="Комментарий" autocomplete="off" />
                 </div>
                     <?php endfor; ?>
                 <div class="form-group">
@@ -160,6 +164,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                 if(streams_count != '') {
                     iStreamsCount = parseInt(streams_count);
                     iMaxCount = parseInt($('#streams_count').attr('data-max'));
+                    
                     if(!isNaN(iMaxCount) && iStreamsCount > iMaxCount) {
                         iStreamsCount = iMaxCount;
                     }
@@ -167,6 +172,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     if(!isNaN(iStreamsCount)) {
                         for(i=1; i<=iStreamsCount; i++) {
                             $('#stream_' + i + '_group').removeClass('d-none');
+                            $('#comment_' + i + '_group').removeClass('d-none');
                             $('#stream_' + i + '_group .input-group input').attr('required', 'required');
                         }
                     }

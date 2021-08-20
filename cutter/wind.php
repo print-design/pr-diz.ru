@@ -100,12 +100,12 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         if(empty($error_message)) {
             $id_from_supplier = "Из раскроя";
             $cell = "Цех";
-            $comment = "";
             
             for($i=1; $i<=19; $i++) {
                 if(key_exists('stream_'.$i, $_POST)) {
                     $width = filter_input(INPUT_POST, 'stream_'.$i);
                     $net_weight = filter_input(INPUT_POST, 'net_weight_'.$i);
+                    $comment = filter_input(INPUT_POST, 'comment_'.$i);
     
                     $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id, cut_wind_id) "
                             . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$user_id', $cut_wind_id)";
@@ -188,6 +188,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     if(key_exists('stream_'.$i, $_GET)):
                     ?>
                 <input type="hidden" id="stream_<?=$i ?>" name="stream_<?=$i ?>" value="<?=$_GET['stream_'.$i] ?>" />
+                <input type="hidden" id="comment_<?=$i ?>" name="comment_<?=$i ?>" value="<?= urldecode($_GET['comment_'.$i]) ?>" />
                 <input type="hidden" id="net_weight_<?=$i ?>" name="net_weight_<?=$i ?>" />
                     <?php
                     endif;
