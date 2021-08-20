@@ -167,6 +167,10 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     }
     
     $comment = addslashes(filter_input(INPUT_POST, 'comment'));
+    
+    if(IsInRole(array('dev'))) {
+    }
+    
     $date = filter_input(INPUT_POST, 'date');
     $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id');
     
@@ -595,6 +599,16 @@ $cut_wind_id = $row['cut_wind_id'];
                         <?php endif; ?>
                         <textarea id="comment" name="comment" rows="4" class="form-control no-latin"<?=$comment_disabled ?>><?=$comment_value ?></textarea>
                         <div class="invalid-feedback"></div>
+                    </div>
+                    <?php
+                    $is_unknown_checked = '';
+                    if($is_unknown == 1) {
+                        $is_unknown_checked = " checked='checked'";
+                    }
+                    ?>
+                    <div class="form-group">
+                        <input type="checkbox" id="is_unknown" name="is_unknown"<?=$is_unknown_checked ?> />
+                        <label class="form-check-label" for="is_unknown">Неизвестный</label>
                     </div>
                     <div class="d-flex justify-content-between mt-4">
                         <div class="p-0">
