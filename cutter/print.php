@@ -183,7 +183,7 @@ if($row = $fetcher->Fetch()) {
         <script>
             $(document).ready(function (){
                 let myShareData = {
-                    url: '<?=APPLICATION ?>/cutter/_print.php'
+                    url: '<?=APPLICATION ?>/cutter/_print.php?cut_wind_id=<?=$cut_wind_id ?>'
                 };
         
                 const sharelink = document.getElementById("sharelink");
