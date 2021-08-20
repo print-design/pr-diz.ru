@@ -6,7 +6,7 @@
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         ?>
-            OpenAjaxPage('_close.php?cut_id=<?=$row[0] ?>');
+            OpenAjaxPage('_close.php');
         <?php
     }
     ?>

@@ -6,6 +6,8 @@ $thickness = '';
 $ud_ves = '';
 $width = '';
 
+$cut_id = null;
+
 // Для окна "Нарезка 1"
 if(null !== filter_input(INPUT_GET, 'supplier_id') 
         && null !== filter_input(INPUT_GET, 'film_brand_id') 
@@ -25,15 +27,30 @@ if(null !== filter_input(INPUT_GET, 'supplier_id')
         $width = filter_input(INPUT_GET, 'width');
     }
 }
+else {
+    $sql = "select id from cut where cutter_id = $user_id and id not in (select cut_id from cut_source)";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $cut_id = $row[0];        
+    }
+    
+    if(null == $cut_id) {
+        $sql = "select id from cut where cutter_id = $user_id and id in (select cut_id from cut_source) order by id desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $cut_id = $row[0];
+        }
+    }
+}
 
 // Для всех остальных окон
-if(null !== filter_input(INPUT_GET, 'cut_id')) {
+if(null !== $cut_id) {
     $sql = "select s.name supplier, fb.name film_brand, fbv.weight, c.thickness, c.width "
             . "from cut c "
             . "inner join supplier s on c.supplier_id = s.id "
             . "inner join film_brand fb on c.film_brand_id = fb.id "
             . "inner join film_brand_variation fbv on fbv.film_brand_id = fb.id "
-            . "where c.id = ". filter_input(INPUT_GET, 'cut_id')." and fb.id = c.film_brand_id and fbv.thickness = c.thickness";
+            . "where c.id = $cut_id and fb.id = c.film_brand_id and fbv.thickness = c.thickness";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $supplier = $row['supplier'];
@@ -71,8 +88,8 @@ if(null !== filter_input(INPUT_GET, 'cut_id')) {
                     endfor;
                     
                     // Для всех остальных окон
-                    if(null !== filter_input(INPUT_GET, 'cut_id')):
-                    $sql = "select width from cut_stream where cut_id = ". filter_input(INPUT_GET, 'cut_id');
+                    if(null !== $cut_id):
+                    $sql = "select width from cut_stream where cut_id = $cut_id";
                     $fetcher = new Fetcher($sql);
                     $i = 0;
                     while ($row = $fetcher->Fetch()):
@@ -84,7 +101,7 @@ if(null !== filter_input(INPUT_GET, 'cut_id')) {
                     ?>
                     <p class="font-weight-bold mt-2" style="font-size: large;">Сколько нарезали?</p>
                     <?php
-                    $sql = "select length from cut_wind where cut_id = ". filter_input(INPUT_GET, 'cut_id');
+                    $sql = "select length from cut_wind where cut_id = $cut_id";
                     $fetcher = new Fetcher($sql);
                     $i=0;
                     while ($row = $fetcher->Fetch()):
@@ -93,7 +110,7 @@ if(null !== filter_input(INPUT_GET, 'cut_id')) {
                     <?php
                     endwhile;
                     
-                    $sql = "select sum(length) from cut_wind where cut_id = ". filter_input(INPUT_GET, 'cut_id');
+                    $sql = "select sum(length) from cut_wind where cut_id = $cut_id";
                     $fetcher = new Fetcher($sql);
                     if($row = $fetcher->Fetch()):
                     ?>
