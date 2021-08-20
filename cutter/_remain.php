@@ -14,7 +14,13 @@ include '_cut_history.php';
 
 include '_info.php';
 
-$cut_id = filter_input(INPUT_GET, 'cut_id');
+// Определяем ID последнего закрытого ролика
+$cut_id = null;
+$sql = "select id from cut where cutter_id = $user_id and id in (select cut_id from cut_source) order by id desc limit 1";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $cut_id = $row[0];
+}
 
 // СТАТУС "СВОБОДНЫЙ"
 $free_status_id = 1;
@@ -152,7 +158,7 @@ if($row = $fetcher->Fetch()) {
         form_valid = true;
         
         if(!$('#remains').is(':checked')) {
-            OpenAjaxPage("_finish.php?cut_id=<?=$cut_id ?>");
+            OpenAjaxPage("_finish.php");
         }
         else {
             if($('#radius').val() == '') {
@@ -182,7 +188,7 @@ if($row = $fetcher->Fetch()) {
                                 alert(data);
                             }
                             else {
-                                OpenAjaxPage("_print_remain.php?id=" + data + "&cut_id=<?=$cut_id ?>");
+                                OpenAjaxPage("_print_remain.php?id=" + data);
                                 submit = true;
                             }
                         })

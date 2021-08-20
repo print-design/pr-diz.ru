@@ -1,7 +1,16 @@
 <?php
 include '../include/topscripts.php';
 
-$cut_id = filter_input(INPUT_GET, 'cut_id');
+// Текущий пользователь
+$user_id = GetUserId();
+
+// Определяем ID незакрытого ролика
+$cut_id = null;
+$sql = "select id from cut where cutter_id = $user_id and id not in (select cut_id from cut_source)";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $cut_id = $row[0];
+}
 
 // Статус "СВОБОДНЫЙ"
 $free_status_id = 1;
@@ -45,7 +54,7 @@ for($i=1; $i<=19; $i++) {
                     . "from roll r "
                     . "inner join film_brand fb on r.film_brand_id = fb.id "
                     . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                    . "where r.id = $roll_id and (rsh.status_id is null or rsh.status_id = $free_status_id)";
+                    . "where r.id = $roll_id"; // Проверку статусов временно отключаем // and (rsh.status_id is null or rsh.status_id = $free_status_id)";
             $fetcher = new Fetcher($sql);
             $error_message = $fetcher->error;
             
@@ -88,7 +97,7 @@ for($i=1; $i<=19; $i++) {
                         . "inner join pallet_roll pr on pr.pallet_id = p.id "
                         . "inner join film_brand fb on p.film_brand_id = fb.id "
                         . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                        . "where p.id = $pallet_id and pr.ordinal = $ordinal and (prsh.status_id is null or prsh.status_id = $free_status_id)";
+                        . "where p.id = $pallet_id and pr.ordinal = $ordinal"; // Проверку статусов временно отключаем // and (prsh.status_id is null or prsh.status_id = $free_status_id)";
                 $fetcher = new Fetcher($sql);
                 $error_message = $fetcher->error;
                 
@@ -187,7 +196,6 @@ if($valid) {
 // Меняем статусы исходных роликов
 if($valid) {
     foreach ($cut_sources as $cut_source) {
-        $user_id = GetUserId();
         $cut_id = $cut_source['cut_id'];
         $is_from_pallet = $cut_source['is_from_pallet'];
         $roll_id = $cut_source['roll_id'];

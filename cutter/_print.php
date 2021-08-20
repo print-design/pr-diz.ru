@@ -11,18 +11,24 @@ if(!empty($error_message)) {
 
 // История
 include '_cut_history.php';
-
-$cut_wind_id = filter_input(INPUT_GET, 'cut_wind_id');
     
 // Текущее время
 $current_date_time = date("dmYHis");
 
 // Находим id раскроя
-$cut_id = 0;
-$sql = "select cut_id from cut_wind where id=$cut_wind_id";
+$cut_id = null;
+$sql = "select id from cut where cutter_id = $user_id and id not in (select cut_id from cut_source)";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $cut_id = $row[0];
+}
+
+// Находим id последней намотки
+$cut_wind_id = null;
+$sql = "select id from cut_wind where cut_id = $cut_id order by id desc limit 1";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $cut_wind_id = $row[0];
 }
     
 $class_attr = " class='d-none'";
@@ -166,7 +172,7 @@ $current_roll++;
 <script>
     $(document).ready(function (){
         let myShareData = {
-            url: '<?=APPLICATION ?>/cutter/print.php?cut_wind_id=<?=$cut_wind_id ?>'
+            url: '<?=APPLICATION ?>/cutter/print.php'
         }
         
         const sharelink = document.getElementById("sharelink");
@@ -181,7 +187,7 @@ $current_roll++;
     });
     
     function Submit() {
-        OpenAjaxPage("_next.php?cut_id=<?=$cut_id ?>");
+        OpenAjaxPage("_next.php");
         submit = true;
     }
     

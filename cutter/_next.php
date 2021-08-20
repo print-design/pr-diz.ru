@@ -14,11 +14,9 @@ include '_cut_history.php';
 
 include '_info.php';
 
-// Получение объекта 
-$cut_id = filter_input(INPUT_GET, 'cut_id');
-
-// Если случайно перескочило на закрытую нарезку, то переходим на открытую нарезку
-$sql = "select id from cut where cutter_id = $user_id  and id not in (select cut_id from cut_source)";
+// Получение объекта
+$cut_id = null;
+$sql = "select id from cut where cutter_id = $user_id and id not in (select cut_id from cut_source)";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $cut_id = $row[0];
@@ -109,10 +107,10 @@ while ($row = $fetcher->Fetch()) {
             </div>
         </div>
         <div class="form-group">
-            <button type="button" class="btn btn-outline-dark form-control mt-3" id="next-submit" data-cut-id="<?=$cut_id ?>">След. намотка</button>
+            <button type="button" class="btn btn-outline-dark form-control mt-3" id="next-submit">След. намотка</button>
         </div>
         <div class="form-group">
-            <button type="button" class="btn btn-dark form-control mt-3" id="close-submit" data-cut-id="<?=$cut_id ?>">Заявка выполнена</button>
+            <button type="button" class="btn btn-dark form-control mt-3" id="close-submit">Заявка выполнена</button>
         </div>
     </form>
 </div>
@@ -241,7 +239,7 @@ while ($row = $fetcher->Fetch()) {
         }
         
         if(form_valid && !submit) {
-            link = "_create_wind.php?cut_id=" + $('#next-submit').attr('data-cut-id') + "&length=" + $('#length').val().replaceAll(/\D/g, '') + "&radius=" + $('#radius').val() + "&net_weight=" + $('#net_weight').val();
+            link = "_create_wind.php?length=" + $('#length').val().replaceAll(/\D/g, '') + "&radius=" + $('#radius').val() + "&net_weight=" + $('#net_weight').val();
             for(i=1; i<=19; i++) {
                 for(i=1; i<=19; i++) {
                     if($('#stream_' + i).length && $('#net_weight_' + i).length) {
@@ -257,7 +255,7 @@ while ($row = $fetcher->Fetch()) {
                             alert(data);
                         }
                         else {
-                            OpenAjaxPage("_print.php?cut_wind_id=" + data);
+                            OpenAjaxPage("_print.php");
                             submit = true;
                         }
                     })
@@ -284,7 +282,7 @@ while ($row = $fetcher->Fetch()) {
     
     // Закрытие заявки
     function Close() {
-        OpenAjaxPage("_close.php?cut_id=" + $('#close-submit').attr('data-cut-id'));
+        OpenAjaxPage("_close.php");
     }
     
     $('#close-submit').click(function() {
