@@ -2,26 +2,21 @@
 include '../include/topscripts.php';
 include '../qr/qrlib.php';
 
-// Текущий пользователь
-$user_id = GetUserId();
+// Если не задано значение cut_wind_id, перенаправляем на список
+$cut_wind_id = filter_input(INPUT_GET, 'cut_wind_id');
+if(empty($cut_wind_id)) {
+    header('Location: '.APPLICATION.'/cutter/');
+}
 
 // Текущее время
 $current_date_time = date("dmYHis");
 
 // Находим id раскроя
-$cut_id = null;
-$sql = "select id from cut where cutter_id = $user_id and id not in (select cut_id from cut_source)";
+$cut_id = 0;
+$sql = "select cut_id from cut_wind where id=$cut_wind_id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $cut_id = $row[0];
-}
-
-// Находим id последней намотки
-$cut_wind_id = null;
-$sql = "select id from cut_wind where cut_id = $cut_id order by id desc limit 1";
-$fetcher = new Fetcher($sql);
-if($row = $fetcher->Fetch()) {
-    $cut_wind_id = $row[0];
 }
 ?>
 <!DOCTYPE html>
