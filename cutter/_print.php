@@ -172,7 +172,7 @@ $current_roll++;
 <script>
     $(document).ready(function (){
         let myShareData = {
-            url: '<?=APPLICATION ?>/cutter/print.php'
+            url: '<?=APPLICATION ?>/cutter/print.php?cut_wind_id=<?=$cut_wind_id ?>'
         }
         
         const sharelink = document.getElementById("sharelink");
