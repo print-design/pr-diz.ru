@@ -168,9 +168,6 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     
     $comment = addslashes(filter_input(INPUT_POST, 'comment'));
     
-    if(IsInRole(array('dev'))) {
-    }
-    
     $date = filter_input(INPUT_POST, 'date');
     $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id');
     
@@ -250,7 +247,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
 $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, DATE_FORMAT(r.date, '%H:%i') time, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, r.id_from_supplier, r.film_brand_id, r.width, r.thickness, r.length, "
         . "r.net_weight, r.cell, "
         . "rsh.status_id status_id, DATE_FORMAT(rsh.date, '%d.%m.%Y') status_date, DATE_FORMAT(rsh.date, '%H.%i') status_time, "
-        . "r.comment, r.cut_wind_id "
+        . "r.comment, r.is_unknown, r.cut_wind_id "
         . "from roll r "
         . "inner join user u on r.storekeeper_id = u.id "
         . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
@@ -294,6 +291,8 @@ $status_time = $row['status_time'];
 
 $comment = filter_input(INPUT_POST, 'comment');
 if(null === $comment) $comment = $row['comment'];
+
+$is_unknown = $row['is_unknown'];
 
 $cut_wind_id = $row['cut_wind_id'];
 ?>
@@ -607,7 +606,7 @@ $cut_wind_id = $row['cut_wind_id'];
                     }
                     ?>
                     <div class="form-group">
-                        <input type="checkbox" id="is_unknown" name="is_unknown"<?=$is_unknown_checked ?> />
+                        <input type="checkbox" id="is_unknown" name="is_unknown"<?=$is_unknown_checked ?> disabled="disabled" />
                         <label class="form-check-label" for="is_unknown">Неизвестный</label>
                     </div>
                     <div class="d-flex justify-content-between mt-4">
