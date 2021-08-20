@@ -16,6 +16,37 @@ CheckCuts($user_id);
 // СТАТУС "СВОБОДНЫЙ"
 $free_status_id = 1;
 
+// Валидация формы
+define('ISINVALID', ' is-invalid');
+$form_valid = true;
+$error_message = '';
+
+$radius_valid = '';
+
+if(null !== filter_input(INPUT_POST, 'close-submit')) {
+    $radius = filter_input(INPUT_POST, 'radius');
+    if(filter_input(INPUT_POST, 'remains') && (empty($radius) || intval($radius) > 999)) {
+        $radius_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if($form_valid) {
+        if(filter_input(INPUT_POST, 'remains') != 'on') {
+            header("Location: finish.php");
+        }
+        else {
+            $supplier_id = filter_input(INPUT_POST, 'supplier_id');
+            $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
+            $thickness = filter_input(INPUT_POST, 'thickness');
+            $width = filter_input(INPUT_POST, 'width');
+            $net_weight = filter_input(INPUT_POST, 'net_weight');
+            $length = filter_input(INPUT_POST, 'length');
+            $spool = filter_input(INPUT_POST, 'spool');
+            $remains = filter_input(INPUT_POST, 'remains');
+        }
+    }
+}
+
 // Находим id раскроя
 $cut_id = null;
 $sql = "select id from cut where cutter_id = $user_id and id in (select cut_id from cut_source) order by id desc limit 1";
@@ -68,35 +99,60 @@ if($row = $fetcher->Fetch()) {
                 <input type="hidden" id="width" name="width" value="<?=$width ?>" />
                 <input type="hidden" id="net_weight" name="net_weight" />
                 <input type="hidden" id="length" name="length" />
+                <?php
+                $remains_checked = " checked='checked'";
+                $remainder_group_none = "";
+                $radius_required = " required='required'";
+                
+                if(null !== filter_input(INPUT_POST, 'close-submit') && filter_input(INPUT_POST, 'remains') != 'on') {
+                    $remains_checked = "";
+                    $remainder_group_none = " d-none";
+                    $radius_required = "";
+                }
+                ?>
                 <div class="form-group">
-                    <input type="checkbox" id="remains" name="remains" checked="checked" />
+                    <input type="checkbox" id="remains" name="remains"<?=$remains_checked ?> />
                     <label class="form-check-label" for="remains">Остался исходный ролик</label>
                 </div>
-                <div class="form-group remainder-group">
+                <div class="form-group remainder-group<?=$remainder_group_none ?>">
                     <label for="radius">Введите радиус от вала исходного роля</label>
                     <div class="input-group">
-                        <input type="text" class="form-control int-only" data-max="999" id="radius" name="radius" autocomplete="off" />
+                        <input type="text" class="form-control int-only<?=$radius_valid ?>" data-max="999" id="radius" name="radius" value="<?= filter_input(INPUT_POST, 'radius') ?>" autocomplete="off"<?=$radius_required ?> />
                         <div class="input-group-append"><span class="input-group-text">мм</span></div>
                         <div class="invalid-feedback">Число, макс. 999</div>
                     </div>
                 </div>
-                <div class="form-group remainder-group">
+                <div class="form-group remainder-group<?=$remainder_group_none ?>">
                     <label for="spool">Диаметр шпули</label>
                     <div class="d-block">
+                        <?php
+                        $checked76 = " checked='checked'";
+                        $checked152 = "";
+                        
+                        if(filter_input(INPUT_POST, 'spool') == 76) {
+                            $checked76 = " checked='checked'";
+                            $checked152 = "";
+                        }
+                        
+                        if(filter_input(INPUT_POST, 'spool') == 152) {
+                            $checked76 = "";
+                            $checked152 = " checked='checked'";
+                        }
+                        ?>
                         <div class="form-check-inline">
                             <label class="form-check-label">
-                                <input type="radio" class="form-check-input" id="spool" name="spool" value="76" checked="checked" />76 мм
+                                <input type="radio" class="form-check-input" id="spool" name="spool" value="76"<?=$checked76 ?> />76 мм
                             </label>
                         </div>
                         <div class="form-check-inline">
                             <label class="form-check-label">
-                                <input type="radio" class="form-check-input" id="spool" name="spool" value="152" />152 мм
+                                <input type="radio" class="form-check-input" id="spool" name="spool" value="152"<?=$checked152 ?> />152 мм
                             </label>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="button" class="btn btn-dark form-control" style="height: 5rem;" id="close-submit">Распечатать исходный роль<br /> и закрыть заявку</button>
+                    <button type="submit" class="btn btn-dark form-control" style="height: 5rem;" id="close-submit" name="close-submit">Распечатать исходный роль<br /> и закрыть заявку</button>
                 </div>
             </form>
         </div>
