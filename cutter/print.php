@@ -12,6 +12,25 @@ $user_id = GetUserId();
 // Проверяем, имеются ли незакрытые нарезки
 include '_check_cuts.php';
 CheckCuts($user_id);
+
+// Текущее время
+$current_date_time = date("dmYHis");
+
+// Находим id раскроя
+$cut_id = null;
+$sql = "select id from cut where cutter_id = $user_id and id not in (select cut_id from cut_source)";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $cut_id = $row[0];
+}
+        
+// Находим id последней намотки
+$cut_wind_id = null;
+$sql = "select id from cut_wind where cut_id = $cut_id order by id desc limit 1";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $cut_wind_id = $row[0];
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -23,25 +42,6 @@ CheckCuts($user_id);
     </head>
     <body>
         <?php
-        // Текущее время
-        $current_date_time = date("dmYHis");
-
-        // Находим id раскроя
-        $cut_id = null;
-        $sql = "select id from cut where cutter_id = $user_id and id not in (select cut_id from cut_source)";
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            $cut_id = $row[0];
-        }
-        
-        // Находим id последней намотки
-        $cut_wind_id = null;
-        $sql = "select id from cut_wind where cut_id = $cut_id order by id desc limit 1";
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            $cut_wind_id = $row[0];
-        }
-    
         $class_attr = " class='d-none'";
         if(isset($_COOKIE['cut_wind_id_'.$cut_wind_id]) && $_COOKIE['cut_wind_id_'.$cut_wind_id] == 1) {
             $class_attr = "";
@@ -183,7 +183,7 @@ CheckCuts($user_id);
         <script>
             $(document).ready(function (){
                 let myShareData = {
-                    url: '<?=APPLICATION ?>/cutter/print.php'
+                    url: '<?=APPLICATION ?>/cutter/_print.php'
                 };
         
                 const sharelink = document.getElementById("sharelink");

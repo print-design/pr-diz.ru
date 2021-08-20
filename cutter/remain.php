@@ -32,9 +32,11 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
     
     if($form_valid) {
         if(filter_input(INPUT_POST, 'remains') != 'on') {
+            // Переходим к странице "заявка закрыта, молодец."
             header("Location: finish.php");
         }
         else {
+            // Создаём остаточный ролик
             $supplier_id = filter_input(INPUT_POST, 'supplier_id');
             $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
             $thickness = filter_input(INPUT_POST, 'thickness');
@@ -42,7 +44,42 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
             $net_weight = filter_input(INPUT_POST, 'net_weight');
             $length = filter_input(INPUT_POST, 'length');
             $spool = filter_input(INPUT_POST, 'spool');
-            $remains = filter_input(INPUT_POST, 'remains');
+            $id_from_supplier = "Из раскроя";
+            $cell = "Цех";
+            $comment = "";
+            
+            $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id) "
+                    . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$user_id')";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+            $roll_id = $executer->insert_id;
+            
+            // Устанавливаем этому ролику статус "Свободный"
+            if(empty($error_message)) {
+                $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, $free_status_id, $user_id)";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+            }
+            
+            // Получаем ID последней закрытой нарезки данного пользователя
+            $cut_id = null;
+            $sql = "select id from cut where cutter_id = $user_id and id in (select cut_id from cut_source) order by id desc limit 1";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $cut_id = $row[0];
+            }
+            
+            // Добавляем остаточный ролик к последней закрытой нарезке данного пользователя
+            if(empty($error_message)) {
+                $sql = "update cut set remain = $roll_id where id = $cut_id";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+            }
+            
+            if(empty($error_message)) {
+                // Переходим к странице "печать остаточного ролика."
+                header("Location: print_remain.php");
+            }
         }
     }
 }
