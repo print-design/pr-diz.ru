@@ -159,6 +159,11 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                 
                 if(streams_count != '') {
                     iStreamsCount = parseInt(streams_count);
+                    iMaxCount = parseInt($('#streams_count').attr('data-max'));
+                    if(!isNaN(iMaxCount) && iStreamsCount > iMaxCount) {
+                        iStreamsCount = iMaxCount;
+                    }
+                    
                     if(!isNaN(iStreamsCount)) {
                         for(i=1; i<=iStreamsCount; i++) {
                             $('#stream_' + i + '_group').removeClass('d-none');
