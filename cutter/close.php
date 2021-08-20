@@ -174,33 +174,36 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
         }
     }
     
-        // Проверка сумм длин исходных роликов и намоток
-// (Временно отключаем)
-/*if($valid) {
-    // Общая длина исходных роллей
-    $source_sum = 0;
+    // Проверка сумм длин исходных роликов и намоток
+    if($form_valid) {
+        // Общая длина исходных роллей
+        $source_sum = 0;
     
-    foreach ($cut_sources as $cut_source) {
-        $source_sum += $cut_source['length'];
-    }
+        foreach ($cut_sources as $cut_source) {
+            $source_sum += $cut_source['length'];
+        }
     
-    // Общая длина намоток
-    $wind_sum = 0;
-    $sql = "select sum(length) sum from cut_wind where cut_id = $cut_id";
-    $fetcher = new Fetcher($sql);
+        // Общая длина намоток
+        $wind_sum = 0;
+        $sql = "select sum(length) sum from cut_wind where cut_id = $cut_id";
+        $fetcher = new Fetcher($sql);
     
-    if($row = $fetcher->Fetch()) {
-        $wind_sum = $row['sum'];
-    }
+        if($row = $fetcher->Fetch()) {
+            $wind_sum = $row['sum'];
+        }
     
-    if($wind_sum > $source_sum) {
-        $valid = false;
-        
-        foreach ($result as $key => $value) {
-            $result[$key] = "Сумма длин намоток больше суммы длин исходных роликов";
+        if($wind_sum > $source_sum) {
+            for($i=1; $i<=19; $i++) {
+                $source_message = 'source_'.$i.'_message';
+                $$source_message = "Сумма длин намоток больше суммы длин исходных роликов";
+                
+                $source_valid = 'source_'.$i.'_valid';
+                $$source_valid = ISINVALID;
+                
+                $form_valid = false;
+            }
         }
     }
-}*/
     
     // Проверяем, чтобы не ввели два одинаковых ролика
     if($form_valid) {
