@@ -77,9 +77,10 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         // Создание ручьёв
         if(empty($error_message)) {
             for($i=1; $i<=19; $i++) {
-                if(key_exists('stream_'.$i, $_GET)) {
-                    $width = filter_input(INPUT_GET, 'stream_'.$i);
-                    $sql = "insert into cut_stream (cut_id, width) values($cut_id, $width)";
+                if(key_exists('stream_'.$i, $_POST)) {
+                    $width = filter_input(INPUT_POST, 'stream_'.$i);
+                    $comment = addslashes(filter_input(INPUT_POST, 'comment_'.$i));
+                    $sql = "insert into cut_stream (cut_id, width, comment) values($cut_id, $width, '$comment')";
                     $executer = new Executer($sql);
                     $error_message = $executer->error;
                 }    
@@ -88,7 +89,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         
         // Создание намотки
         if(empty($error_message)) {
-            $net_weight = filter_input(INPUT_GET, 'net_weight');
+            $net_weight = filter_input(INPUT_POST, 'net_weight');
             
             $sql = "insert into cut_wind (cut_id, length, radius) values($cut_id, $length, $radius)";
             $executer = new Executer($sql);
@@ -148,6 +149,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                         for($i=1; $i<=19; $i++) {
                             if(!empty(filter_input(INPUT_GET, 'stream_'.$i))) {
                                 $backlink .= '&stream_'.$i.'='.filter_input(INPUT_GET, 'stream_'.$i);
+                                $backlink .= '&comment_'.$i.'='.filter_input(INPUT_GET, 'comment_'.$i);
                             }
                         }
                         ?>

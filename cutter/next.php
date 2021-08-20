@@ -60,7 +60,6 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         $cut_id = filter_input(INPUT_POST, 'cut_id');
         $net_weight = filter_input(INPUT_POST, 'net_weight'); echo $net_weight;
         $cell = "Цех";
-        $comment = "";
         
         $sql = "insert into cut_wind (cut_id, length, radius) values($cut_id, $length, $radius)";
         $executer = new Executer($sql);
@@ -91,6 +90,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             for($i=1; $i<=19; $i++) {
                 if(key_exists('stream_'.$i, $_POST)) {
                     $width = filter_input(INPUT_POST, 'stream_'.$i);
+                    $comment = filter_input(INPUT_POST, 'comment_'.$i);
                     $net_weight = filter_input(INPUT_POST, 'net_weight_'.$i);
         
                     $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id, cut_wind_id) "
@@ -135,12 +135,14 @@ if($row = $fetcher->Fetch()) {
     $winds_count = $row['winds_count'];
 }
 
-$sql = "select width from cut_stream where cut_id=$cut_id order by id";
+$sql = "select width, comment from cut_stream where cut_id=$cut_id order by id";
 $fetcher = new Fetcher($sql);
 $i = 0;
 while ($row = $fetcher->Fetch()) {
     $stream = 'stream_'.++$i;
     $$stream = $row['width'];
+    $comment = 'comment_'.$i;
+    $$comment = $row['comment'];
 }
 ?>
 <!DOCTYPE html>
@@ -188,9 +190,11 @@ while ($row = $fetcher->Fetch()) {
                     <?php
                     for($i=1; $i<=19; $i++):
                     $stream = 'stream_'.$i;
+                    $comment = 'comment_'.$i;
                     if(isset($$stream)):
                     ?>
                 <input type="hidden" id="stream_<?=$i ?>" name="stream_<?=$i ?>" value="<?=$$stream ?>" />
+                <input type="hidden" id="comment_<?=$i ?>" name="comment_<?=$i ?>" value="<?=$$comment ?>" />
                 <input type="hidden" id="net_weight_<?=$i ?>" name="net_weight_<?=$i ?>" />
                     <?php
                     endif;
