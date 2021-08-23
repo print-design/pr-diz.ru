@@ -58,7 +58,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     if($form_valid) {
         // Создание намотки
         $cut_id = filter_input(INPUT_POST, 'cut_id');
-        $net_weight = filter_input(INPUT_POST, 'net_weight'); echo $net_weight;
+        $net_weight = filter_input(INPUT_POST, 'net_weight');
         $cell = "Цех";
         
         $sql = "insert into cut_wind (cut_id, length, radius) values($cut_id, $length, $radius)";
