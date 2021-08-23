@@ -88,7 +88,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
                                 . "from roll r "
                                 . "inner join film_brand fb on r.film_brand_id = fb.id "
                                 . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                                . "where r.id = $roll_id and (rsh.status_id is null or rsh.status_id = $free_status_id)";
+                                . "where r.id = $roll_id"; // проверку статусов временно отключаем  // and (rsh.status_id is null or rsh.status_id = $free_status_id)";
                         $fetcher = new Fetcher($sql);
                         $error_message = $fetcher->error;
             
@@ -127,7 +127,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
                                     . "inner join pallet_roll pr on pr.pallet_id = p.id "
                                     . "inner join film_brand fb on p.film_brand_id = fb.id "
                                     . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                                    . "where p.id = $pallet_id and pr.ordinal = $ordinal and (prsh.status_id is null or prsh.status_id = $free_status_id)";
+                                    . "where p.id = $pallet_id and pr.ordinal = $ordinal"; // проверку статусов временно отключаем // and (prsh.status_id is null or prsh.status_id = $free_status_id)";
                             $fetcher = new Fetcher($sql);
                             $error_message = $fetcher->error;
                 
@@ -175,7 +175,8 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
     }
     
     // Проверка сумм длин исходных роликов и намоток
-    if($form_valid) {
+    // (Временно отключаем)
+    /*if($form_valid) {
         // Общая длина исходных роллей
         $source_sum = 0;
     
@@ -203,7 +204,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
                 $form_valid = false;
             }
         }
-    }
+    }*/
     
     // Проверяем, чтобы не ввели два одинаковых ролика
     if($form_valid) {
