@@ -147,7 +147,7 @@ include '_info.php';
             }
         }
     }
-
+            
     $(document).ready(CalculateByRadius);
             
     // Рассчитываем ширину и массу плёнки при изменении значений радиуса
@@ -238,7 +238,7 @@ include '_info.php';
                             alert(data);
                         }
                         else {
-                            OpenAjaxPage("_print.php");
+                            OpenAjaxPage("_print.php?cut_wind_id=" + data);
                             submit = true;
                         }
                     })

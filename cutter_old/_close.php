@@ -15,13 +15,19 @@ include '_cut_history.php';
 include '_info.php';
 
 // Получение объекта
-$user_id = GetUserId();
-$cut_id = null;
-$date = '';
-$sql = "select id, DATE_FORMAT(c.date, '%d.%m.%Y') date from cut c where cutter_id = $user_id and id not in (select cut_id from cut_source)";
+$cut_id = filter_input(INPUT_GET, 'cut_id');
+
+// Если случайно перескочило на закрытую нарезку, то переходим на открытую нарезку
+$sql = "select id from cut where cutter_id = $user_id  and id not in (select cut_id from cut_source)";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
-    $cut_id = $row['id'];
+    $cut_id = $row[0];
+}
+
+$date = '';
+$sql = "select DATE_FORMAT(c.date, '%d.%m.%Y') date from cut c where c.id=$cut_id";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
     $date = $row['date'];
 }
 ?>
@@ -29,7 +35,7 @@ if($row = $fetcher->Fetch()) {
     <nav class="navbar navbar-expand-sm justify-content-between">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <button type="button" class="nav-link btn btn-link" id="back-submit"><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
+                <button type="button" class="nav-link btn btn-link" id="back-submit" data-cut-id="<?= $cut_id ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
             </li>
         </ul>
         <ul class="navbar-nav">
@@ -59,7 +65,7 @@ if($row = $fetcher->Fetch()) {
         </div>
             <?php endfor; ?>
         <div class="form-group">
-            <button type="button" class="btn btn-dark form-control mt-4" id="close-submit">Закрыть заявку</button>
+            <button type="button" class="btn btn-dark form-control mt-4" id="close-submit" data-cut-id="<?=$cut_id ?>">Закрыть заявку</button>
         </div>
     </form>
 </div>
@@ -121,17 +127,10 @@ if($row = $fetcher->Fetch()) {
         }
     
         if(form_valid && !submit) {
-            link = "_create_sources.php";
+            link = "_create_sources.php?cut_id=" + $('#close-submit').attr('data-cut-id');
             for(i=1; i<=19; i++) {
                 if(!$('#source_' + i + '_group').hasClass('d-none')) {
-                    if(i == 1) {
-                        link += "?";
-                    }
-                    else {
-                        link += "&";
-                    }
-                    
-                    link += "source_" + i + "=" + $('#source_' + i).val();
+                    link += "&source_" + i + "=" + $('#source_' + i).val();
                 }
             }
             
@@ -154,7 +153,7 @@ if($row = $fetcher->Fetch()) {
                         }
                         
                         if(form_valid) {
-                            OpenAjaxPage("_remain.php");
+                            OpenAjaxPage("_remain.php?cut_id=" + $('#close-submit').attr('data-cut-id'));
                             submit = true;
                         }
                     })
@@ -181,7 +180,7 @@ if($row = $fetcher->Fetch()) {
     
     // Возвращение назад к последней намотке
     function Back() {
-        OpenAjaxPage("_next.php");
+        OpenAjaxPage("_next.php?cut_id=" + $('#back-submit').attr('data-cut-id'));
     }
     
     $('#back-submit').click(function() {

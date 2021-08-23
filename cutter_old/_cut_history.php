@@ -30,6 +30,37 @@ function IsValid($previous, $current) {
         $result = 1;
     }
     
+    // Если вторым параметром является cut_id, проверяем, чтобы третьим параметром было значение незакрытой резки
+    if(count($current_substrings) > 2 && ($current_substrings[0] == "_next.php" || $current_substrings[0] == "_close.php") && $current_substrings[1] == "cut_id") {
+        $sql = "select count(id) from cut_source where cut_id = ".$current_substrings[2];
+        $fetcher = new Fetcher($sql);
+        $row = $fetcher->Fetch();
+        
+        if($row[0] > 0) {
+            $result = 0;
+        }
+    }
+    
+    // Если вторым параметром является cut_wind_id, 
+    // проверяем, чтобы третьим параметром было значение последней намотки незакрытой нарезки
+    if(count($current_substrings) > 2 && $current_substrings[0] == "_print.php" && $current_substrings[1] == "cut_wind_id") {
+        $sql = "select count(id) from cut_source where cut_id = (select cut_id from cut_wind where id = ".$current_substrings[2].")";
+        $fetcher = new Fetcher($sql);
+        $row = $fetcher->Fetch();
+        
+        if($row[0] > 0) {
+            $result = 0;
+        }
+        
+        $sql = "select count(id) from cut_wind where cut_id = (select cut_id from cut_wind where id = ".$current_substrings[2].") and id > ".$current_substrings[2];
+        $fetcher = new Fetcher($sql);
+        $row = $fetcher->Fetch();
+        
+        if($row[0] > 0) {
+            $result = 0;
+        }
+    }
+    
     return $result;
 }
 
