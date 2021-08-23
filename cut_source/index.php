@@ -221,7 +221,7 @@ foreach ($roll_statuses as $status) {
                     $sql = "select 'pallet_roll' type, pr.id id, pr.pallet_id pallet_id, pr.ordinal ordinal, prsh.date timestamp, DATE_FORMAT(prsh.date, '%d.%m.%Y') date, fb.name film_brand, "
                             . "p.width width, p.thickness thickness, p.cell cell, pr.weight net_weight, pr.length length, "
                             . "s.name supplier, p.id_from_supplier id_from_supplier, "
-                            . "prsh.status_id status_id, p.comment comment, "
+                            . "prsh.status_id status_id, p.comment comment, 0 is_unknown, "
                             . "(select weight from film_brand_variation where film_brand_id=fb.id and thickness=p.thickness limit 1) density "
                             . "from pallet_roll pr "
                             . "inner join pallet p on pr.pallet_id = p.id "
@@ -233,7 +233,7 @@ foreach ($roll_statuses as $status) {
                             . "select 'roll' type, r.id id, 0 pallet_id, 0 ordinal, rsh.date timestamp, DATE_FORMAT(rsh.date, '%d.%m.%Y') date, fb.name film_brand, "
                             . "r.width width, r.thickness thickness, r.cell cell, r.net_weight net_weight, r.length length, "
                             . "s.name supplier, r.id_from_supplier id_from_supplier, "
-                            . "rsh.status_id status_id, r.comment comment, "
+                            . "rsh.status_id status_id, r.comment comment, r.is_unknown is_unknown, "
                             . "(select weight from film_brand_variation where film_brand_id=fb.id and thickness=r.thickness limit 1) density "
                             . "from roll r "
                             . "left join film_brand fb on r.film_brand_id = fb.id "
@@ -258,8 +258,13 @@ foreach ($roll_statuses as $status) {
                         $colour = $roll_statuses1[$row['status_id']]['colour'];
                         $colour_style = " color: $colour";
                     }
+                    
+                    $background_unknown = "";
+                    if($row['is_unknown'] == 1) {
+                        $background_unknown = " background: pink;";
+                    }
                     ?>
-                    <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
+                    <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;<?=$background_unknown ?>">
                         <td style="padding-left: 5px; padding-right: 5px;" class="d-none"><input type="checkbox" id="chk<?=$row['id'] ?>" name="chk<?=$row['id'] ?>" class="form-check chkFilm" /></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['date'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['film_brand'] ?></td>
