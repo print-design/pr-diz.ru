@@ -12,6 +12,7 @@ $radius = filter_input(INPUT_GET, 'radius');
 $spool = filter_input(INPUT_GET, 'spool');
 $net_weight = filter_input(INPUT_GET, 'net_weight');
 $length = filter_input(INPUT_GET, 'length');
+$cut_id = filter_input(INPUT_GET, 'cut_id');
 
 $id_from_supplier = "Из раскроя";
 $cell = "Цех";
@@ -34,13 +35,6 @@ $error_message = $executer->error;
                 
 if(!empty($error_message)) {
     exit($error_message);
-}
-
-$cut_id = null;
-$sql = "select id from cut where cutter_id = $user_id and id in (select cut_id from cut_source) order by id desc limit 1";
-$fetcher = new Fetcher($sql);
-if($row = $fetcher->Fetch()) {
-    $cut_id = $row[0];
 }
 
 $sql = "update cut set remain = $roll_id where id = $cut_id";

@@ -1,18 +1,27 @@
 <?php
-include '../include/topscripts.php';
+include_once '../include/topscripts.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Если не задано значение supplier_id, film_brand_id, thickness, width, перенаправляем на Главную
-$supplier_id = $_REQUEST['supplier_id'];
-$film_brand_id = $_REQUEST['film_brand_id'];
-$thickness = $_REQUEST['thickness'];
-$width = $_REQUEST['width'];
+// Текущий пользователь
+$user_id = GetUserId();
+
+// Проверяем имеются ли незакрытые нарезки
+include '_check_cuts.php';
+CheckCuts($user_id);
+
+// Параметры нарезаемого материала
+$supplier_id = filter_input(INPUT_GET, 'supplier_id');
+$film_brand_id = filter_input(INPUT_GET, 'film_brand_id');
+$thickness = filter_input(INPUT_GET, 'thickness');
+$width = filter_input(INPUT_GET, 'width');
+
+// Проверяем, чтобы были переданы все параметры материала
 if(empty($supplier_id) || empty($film_brand_id) || empty($thickness) || empty($width)) {
-    header('Location: '.APPLICATION.'/cutter/');
+    header("Location: ".APPLICATION."/cutter/");
 }
 
 // Валидация формы
@@ -22,42 +31,40 @@ $error_message = '';
 
 $streams_count_valid = '';
 for($i=1; $i<=19; $i++) {
-    $stream_valid = 'stream_'.$i.'_valid';
-    $$stream_valid = '';
-    
-    $stream_message = 'stream_'.$i.'_message';
+    $stream_message = 'stream_'.$i.'_valid';
     $$stream_message = 'Ширина ручья обязательно';
+    $stream_valid_name = 'stream_'.$i.'_valid';
+    $$stream_valid_name = '';
 }
 
-// Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'next-submit')) {
     $streams_count = filter_input(INPUT_POST, 'streams_count');
-    if(empty($streams_count) || is_nan($streams_count) || intval($streams_count) > 19) {
+    if(empty($streams_count) || intval($streams_count) > 19) {
         $streams_count_valid = ISINVALID;
         $form_valid = false;
     }
     
-    $temp_width = 0;
+    $streams_widths_sum = 0;
     
-    for($i=1; $i<=$streams_count; $i++) {
-        $stream = filter_input(INPUT_POST, 'stream_'.$i);
-        if(empty($stream)) {
-            $stream_valid = 'stream_'.$i.'_valid';
-            $$stream_valid = ISINVALID;
-            $stream_message = 'stream_'.$i.'_message';
-            $$stream_message = 'Ширина ручья обязательно';
-            $form_valid = false;
-        }
-        else {
-            $temp_width += intval($stream);
+    for($i=1; $i<=19; $i++) {
+        if(null !== filter_input(INPUT_POST, 'stream_'.$i)) {
+            $stream = 'stream_'.$i;
+            $$stream = filter_input(INPUT_POST, $stream);
+            if(empty($$stream)) {
+                $stream_valid = 'stream_'.$i.'_valid';
+            }
+            else {
+                $streams_widths_sum += intval($$stream);
+            }
         }
     }
     
-    if($form_valid) {
-        if($width != $temp_width) {
-            for($i=1; $i<=$streams_count; $i++) {
-                $stream_valid = 'stream_'.$i.'_valid';
-                $$stream_valid = ISINVALID;
+    // Сумма ширин ручьёв должна быть равна ширине исходной плёнки
+    if($streams_widths_sum != $width) {
+        for($i=1; $i<19; $i++) {
+            if(null !== filter_input(INPUT_POST, 'stream_'.$i)) {
+                $stream_valid_name = 'stream_'.$i.'_valid';
+                $$stream_valid_name = ISINVALID;
                 $stream_message = 'stream_'.$i.'_message';
                 $$stream_message = 'Сумма не равна общей ширине';
                 $form_valid = false;
@@ -66,14 +73,15 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
-        $streams = '';
-        
-        for($i=1; $i<=$streams_count; $i++) {
-            $streams .= '&stream_'.$i.'='. filter_input(INPUT_POST, 'stream_'.$i);
+        $link = "wind.php?supplier_id=$supplier_id&film_brand_id=$film_brand_id&thickness=$thickness&width=$width&streams_count=$streams_count";
+        for($i=1; $i<19; $i++) {
+            if(!empty(filter_input(INPUT_POST, 'stream_'.$i))) {
+                $link .= '&stream_'.$i.'='.filter_input(INPUT_POST, 'stream_'.$i);
+                $link .= '&comment_'.$i.'='.urlencode(filter_input(INPUT_POST, 'comment_'.$i));
+            }
         }
         
-        $link = APPLICATION.'/cutter/wind.php?supplier_id='.$supplier_id.'&film_brand_id='.$film_brand_id.'&thickness='.$thickness.'&width='.$width.'&streams_count='.$streams_count.$streams;
-        header('Location: '.$link);
+        header("Location: $link");
     }
 }
 ?>
@@ -82,77 +90,72 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     <head>
         <?php
         include '../include/head.php';
-        ?>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <?php
-        include '../include/style_mobile.php';
+        include '_head.php';
         ?>
     </head>
     <body>
-        <form method="post" action="material.php" id="back_form">
-            <?php foreach ($_REQUEST as $key=>$value): ?>
-            <input type="hidden" name="<?=$key ?>" value="<?=$value ?>" />
-            <?php endforeach; ?>
-            <div class="container-fluid header">
-                <nav class="navbar navbar-expand-sm justify-content-start">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" onclick="javascript: $('form#back_form').submit();"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </form>
+        <div class="container-fluid header">
+            <nav class="navbar navbar-expand-sm justify-content-start">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="material.php?supplier_id=<?= filter_input(INPUT_GET, 'supplier_id') ?>&film_brand_id=<?= filter_input(INPUT_GET, 'film_brand_id') ?>&thickness=<?= filter_input(INPUT_GET, 'thickness') ?>&width=<?= filter_input(INPUT_GET, 'width') ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
         <div id="topmost"></div>
         <div class="container-fluid">
+            <?php
+            if(!empty($error_message)) {
+                echo "<div class='alert alert-danger'>$error_message</div>";
+            }
+            ?>
             <h1>Нарезка / <?=date('d.m.Y') ?></h1>
             <p class="mb-3 mt-3" style="font-size: large;">Как режем?</p>
             <form method="post">
-                <?php foreach ($_REQUEST as $key=>$value): ?>
-                <input type="hidden" name="<?=$key ?>" value="<?=$value ?>" />
-                <?php endforeach; ?>
                 <div class="form-group">
                     <label for="streams_count">Кол-во ручьев</label>
-                    <input type="text" id="streams_count" name="streams_count" class="form-control int-only w-50<?=$streams_count_valid ?>" value="<?= filter_input(INPUT_POST, 'streams_count') ?>" required="required" autocomplete="off" />
+                    <input type="text" id="streams_count" name="streams_count" class="form-control int-only w-50<?=$streams_count_valid ?>" data-max="19" value="<?= isset($_REQUEST['streams_count']) ? $_REQUEST['streams_count'] : '' ?>" required="required" autocomplete="off" />
                     <div class="invalid-feedback">Число, макс. 19</div>
                 </div>
-                <?php
-                for($i=1; $i<=19; $i++):
-                $stream_valid_name = 'stream_'.$i.'_valid';
-                $stream_group_display_class = ' d-none';
-                $stream_message = 'stream_'.$i.'_message';
+                    <?php
+                    for($i=1; $i<=19; $i++):
+                    $stream_valid_name = 'stream_'.$i.'_valid';
+                    $stream_group_display_class = ' d-none';
+                    $stream_message = 'stream_'.$i.'_message';
                 
-                $streams_count = filter_input(INPUT_POST, 'streams_count');
+                    $streams_count = isset($_REQUEST['streams_count']) ? $_REQUEST['streams_count'] : null;
                 
-                if(null !== $streams_count && intval($streams_count) >= intval($i)) {
-                    $stream_group_display_class = '';
-                }
-                ?>
+                    if(null !== $streams_count && intval($streams_count) >= intval($i)) {
+                        $stream_group_display_class = '';
+                    }
+                    ?>
                 <div class="form-group stream_group<?=$stream_group_display_class ?>" id="stream_<?=$i ?>_group">
                     <label for="stream_<?=$i ?>">Ручей <?=$i ?></label>
-                    <div class="input-group w-75">
-                        <input type="text" id="stream_<?=$i ?>" name="stream_<?=$i ?>" class="form-control int-only<?=$$stream_valid_name ?>" value="<?= filter_input(INPUT_POST, 'stream_'.$i) ?>" autocomplete="off" />
+                    <div class="input-group">
+                        <input type="text" id="stream_<?=$i ?>" name="stream_<?=$i ?>" class="form-control int-only<?=$$stream_valid_name ?>" value="<?= isset($_REQUEST['stream_'.$i]) ? $_REQUEST['stream_'.$i] : '' ?>" placeholder="Ширина" autocomplete="off" />
                         <div class="input-group-append"><span class="input-group-text">мм</span></div>
-                        <div class="invalid-feedback"><?=$$stream_message ?></div>
+                        <div class="invalid-feedback invalid-stream"><?=$$stream_message ?></div>                        
                     </div>
                 </div>
-                <?php endfor; ?>
+                <div class="form-group stream_group<?=$stream_group_display_class ?>" id="comment_<?=$i ?>_group">
+                    <input type="text" id="comment_<?=$i ?>" name="comment_<?=$i ?>" class="form-control" value="<?= isset($_REQUEST['comment_'.$i]) ? $_REQUEST['comment_'.$i] : '' ?>" placeholder="Комментарий" autocomplete="off" />
+                </div>
+                    <?php endfor; ?>
                 <div class="form-group">
                     <button type="submit" class="btn btn-dark form-control mt-4" id="next-submit" name="next-submit">Приступить к раскрою</button>
                 </div>
             </form>
         </div>
         <?php
-        include '../include/footer.php';
-        include '../include/footer_mobile.php';
+        include '_footer.php';
         ?>
         <script>
-            // В поле "Кол-во ручьев" ограничиваем значения: целые числа от 1 до 19
+            // Показ или скрытие ручьёв в зависимости от введённого количества ручьёв
             $('#streams_count').keyup(function() {
-                KeyUpLimitIntValue($(this), 19);
                 SetStreams($(this).val());
             });
-            
+    
             // Показ и заполнение каждого ручья
             function SetStreams(streams_count) {
                 $('.stream_group').addClass('d-none');
@@ -160,9 +163,16 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                 
                 if(streams_count != '') {
                     iStreamsCount = parseInt(streams_count);
+                    iMaxCount = parseInt($('#streams_count').attr('data-max'));
+                    
+                    if(!isNaN(iMaxCount) && iStreamsCount > iMaxCount) {
+                        iStreamsCount = iMaxCount;
+                    }
+                    
                     if(!isNaN(iStreamsCount)) {
                         for(i=1; i<=iStreamsCount; i++) {
                             $('#stream_' + i + '_group').removeClass('d-none');
+                            $('#comment_' + i + '_group').removeClass('d-none');
                             $('#stream_' + i + '_group .input-group input').attr('required', 'required');
                         }
                     }

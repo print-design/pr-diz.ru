@@ -1,96 +1,19 @@
 <?php
-include_once '../include/topscripts.php';
+include '../include/topscripts.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Текущий пользователь
-$user_id = GetUserId();
-
-// Проверяем, имеются ли незакрытые нарезки
-include '_check_cuts.php';
-CheckCuts($user_id);
+// Если не задано значение cut_id, возвращаемся на первую страницу
+$cut_id = $_REQUEST['cut_id'];
+if(empty($cut_id)) {
+    header('Location: '.APPLICATION.'/cutter/');
+}
 
 // СТАТУС "СВОБОДНЫЙ"
 $free_status_id = 1;
-
-// Валидация формы
-define('ISINVALID', ' is-invalid');
-$form_valid = true;
-$error_message = '';
-
-$radius_valid = '';
-
-if(null !== filter_input(INPUT_POST, 'close-submit')) {
-    $radius = filter_input(INPUT_POST, 'radius');
-    if(filter_input(INPUT_POST, 'remains') && (empty($radius) || intval($radius) > 999)) {
-        $radius_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
-    if($form_valid) {
-        if(filter_input(INPUT_POST, 'remains') != 'on') {
-            // Переходим к странице "заявка закрыта, молодец."
-            header("Location: finish.php");
-        }
-        else {
-            // Создаём остаточный ролик
-            $supplier_id = filter_input(INPUT_POST, 'supplier_id');
-            $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
-            $thickness = filter_input(INPUT_POST, 'thickness');
-            $width = filter_input(INPUT_POST, 'width');
-            $net_weight = filter_input(INPUT_POST, 'net_weight');
-            $length = filter_input(INPUT_POST, 'length');
-            $spool = filter_input(INPUT_POST, 'spool');
-            $id_from_supplier = "Из раскроя";
-            $cell = "Цех";
-            $comment = "";
-            
-            $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id) "
-                    . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$user_id')";
-            $executer = new Executer($sql);
-            $error_message = $executer->error;
-            $roll_id = $executer->insert_id;
-            
-            // Устанавливаем этому ролику статус "Свободный"
-            if(empty($error_message)) {
-                $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, $free_status_id, $user_id)";
-                $executer = new Executer($sql);
-                $error_message = $executer->error;
-            }
-            
-            // Получаем ID последней закрытой нарезки данного пользователя
-            $cut_id = null;
-            $sql = "select id from cut where cutter_id = $user_id and id in (select cut_id from cut_source) order by id desc limit 1";
-            $fetcher = new Fetcher($sql);
-            if($row = $fetcher->Fetch()) {
-                $cut_id = $row[0];
-            }
-            
-            // Добавляем остаточный ролик к последней закрытой нарезке данного пользователя
-            if(empty($error_message)) {
-                $sql = "update cut set remain = $roll_id where id = $cut_id";
-                $executer = new Executer($sql);
-                $error_message = $executer->error;
-            }
-            
-            if(empty($error_message)) {
-                // Переходим к странице "печать остаточного ролика."
-                header("Location: print_remain.php");
-            }
-        }
-    }
-}
-
-// Находим id раскроя
-$cut_id = null;
-$sql = "select id from cut where cutter_id = $user_id and id in (select cut_id from cut_source) order by id desc limit 1";
-$fetcher = new Fetcher($sql);
-if($row = $fetcher->Fetch()) {
-    $cut_id = $row[0];
-}
 
 // Получение объекта
 $supplier_id = null;
@@ -106,84 +29,134 @@ if($row = $fetcher->Fetch()) {
     $thickness = $row['thickness'];
     $width = $row['width'];
 }
+
+// Валидация формы
+define('ISINVALID', ' is-invalid');
+$form_valid = true;
+$error_message = '';
+
+$radius_valid = '';
+
+if(null !== filter_input(INPUT_POST, 'close-submit')) {
+    if(null == filter_input(INPUT_POST, 'remains')) {
+        // Если не осталось исходного ролика, переходим на последнюю страницу
+        header('Location: '.APPLICATION.'/cutter/finish.php');
+    }
+    else {
+        // Если остался исходный ролик, создаём его, рассчитывая параметры по радиусу от вала и диаметру шпули
+        $radius = filter_input(INPUT_POST, 'radius');
+        if(empty($radius) || is_nan($radius) || intval($radius) > 999) {
+            $radius_valid = ISINVALID;
+            $form_valid = false;
+        }
+        
+        $spool = filter_input(INPUT_POST, 'spool');
+        
+        // Если пустые значения веса и длины, значит они почему-то не посчитались по радиусу от вала
+        // Выдаём сообщение об этом в контроле "радиус от вала"
+        $net_weight = filter_input(INPUT_POST, 'net_weight');
+        if(empty($net_weight)) {
+            $radius_valid = ISINVALID;
+            $form_valid = false;
+        }
+        
+        $length = filter_input(INPUT_POST, 'length');
+        if(empty($length)) {
+            $radius_valid = ISINVALID;
+            $form_valid = false;
+        }
+        
+        $id_from_supplier = "Из раскроя";
+        $cell = "Цех";
+        $comment = "";
+        $user_id = GetUserId();
+            
+        if($form_valid) {
+            $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id) "
+                . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$user_id')";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+            $roll_id = $executer->insert_id;
+            
+            if(empty($error_message)) {
+                $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, $free_status_id, $user_id)";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+                
+                if(empty($error_message)) {
+                    header('Location: '.APPLICATION."/cutter/print_remain.php?id=$roll_id");
+                }
+            }
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
     <head>
         <?php
         include '../include/head.php';
-        include '_head.php';
-        include '_info.php';
+        ?>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <?php
+        include '../include/style_mobile.php';
         ?>
     </head>
     <body>
         <div class="container-fluid header">
-            <nav class="navbar navbar-expand-sm justify-content-end">
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown no-dropdown-arrow-after">
-                        <a class="nav-link mr-0" href="javascript: void(0);" data-toggle="modal" data-target="#infoModal"><img src="<?=APPLICATION ?>/images/icons/info.svg" /></a>
-                    </li>
-                </ul>
-            </nav>
+            <nav class="navbar navbar-expand-sm justify-content-start"></nav>
         </div>
         <div id="topmost"></div>
         <div class="container-fluid">
             <h1>Закрытие заявки</h1>
             <form method="post">
-                <input type="hidden" id="supplier_id" name="supplier_id" value="<?=$supplier_id ?>" />
                 <input type="hidden" id="film_brand_id" name="film_brand_id" value="<?=$film_brand_id ?>" />
                 <input type="hidden" id="thickness" name="thickness" value="<?=$thickness ?>" />
                 <input type="hidden" id="width" name="width" value="<?=$width ?>" />
                 <input type="hidden" id="net_weight" name="net_weight" />
                 <input type="hidden" id="length" name="length" />
                 <?php
-                $remains_checked = " checked='checked'";
-                $remainder_group_none = "";
-                $radius_required = " required='required'";
-                
-                if(null !== filter_input(INPUT_POST, 'close-submit') && filter_input(INPUT_POST, 'remains') != 'on') {
-                    $remains_checked = "";
-                    $remainder_group_none = " d-none";
-                    $radius_required = "";
+                $checked = " checked='checked'";
+                if(filter_input(INPUT_POST, 'close-submit') !== null && filter_input(INPUT_POST, 'remains') == null) {
+                    $checked = "";
                 }
                 ?>
                 <div class="form-group">
-                    <input type="checkbox" id="remains" name="remains"<?=$remains_checked ?> />
+                    <input type="checkbox" id="remains" name="remains"<?=$checked ?> />
                     <label class="form-check-label" for="remains">Остался исходный ролик</label>
                 </div>
-                <div class="form-group remainder-group<?=$remainder_group_none ?>">
+                <?php
+                $remainder_class = " d-none";
+                $remainder_required = "";
+                
+                if(filter_input(INPUT_POST, 'close-submit') === null || filter_input(INPUT_POST, 'remains') == 'on') {
+                    $remainder_class = "";
+                    $remainder_required = " required='required'";
+                }
+                ?>
+                <div class="form-group remainder-group<?=$remainder_class ?>">
                     <label for="radius">Введите радиус от вала исходного роля</label>
                     <div class="input-group">
-                        <input type="text" class="form-control int-only<?=$radius_valid ?>" data-max="999" id="radius" name="radius" value="<?= filter_input(INPUT_POST, 'radius') ?>" autocomplete="off"<?=$radius_required ?> />
+                        <input type="text" class="form-control int-only<?=$radius_valid ?>" id="radius" name="radius" value="<?= filter_input(INPUT_POST, 'radius') ?>"<?=$remainder_required ?> autocomplete="off" />
                         <div class="input-group-append"><span class="input-group-text">мм</span></div>
-                        <div class="invalid-feedback">Число, макс. 999</div>
+                        <div class="invalid-feedback">Радиус от вала обязательно</div>
                     </div>
                 </div>
-                <div class="form-group remainder-group<?=$remainder_group_none ?>">
+                <div class="form-group remainder-group<?=$remainder_class ?>">
                     <label for="spool">Диаметр шпули</label>
+                    <?php
+                    $d76_checked = (filter_input(INPUT_POST, 'spool') == null || filter_input(INPUT_POST, 'spool') == 76) ? " checked='checked'" : "";
+                    $d152_checked = filter_input(INPUT_POST, 'spool') == 152 ? " checked='checked'" : "";
+                    ?>
                     <div class="d-block">
-                        <?php
-                        $checked76 = " checked='checked'";
-                        $checked152 = "";
-                        
-                        if(filter_input(INPUT_POST, 'spool') == 76) {
-                            $checked76 = " checked='checked'";
-                            $checked152 = "";
-                        }
-                        
-                        if(filter_input(INPUT_POST, 'spool') == 152) {
-                            $checked76 = "";
-                            $checked152 = " checked='checked'";
-                        }
-                        ?>
                         <div class="form-check-inline">
                             <label class="form-check-label">
-                                <input type="radio" class="form-check-input" id="spool" name="spool" value="76"<?=$checked76 ?> />76 мм
+                                <input type="radio" class="form-check-input" id="spool" name="spool" value="76"<?=$d76_checked ?> />76 мм
                             </label>
                         </div>
                         <div class="form-check-inline">
                             <label class="form-check-label">
-                                <input type="radio" class="form-check-input" id="spool" name="spool" value="152"<?=$checked152 ?> />152 мм
+                                <input type="radio" class="form-check-input" id="spool" name="spool" value="152"<?=$d152_checked ?> />152 мм
                             </label>
                         </div>
                     </div>
@@ -194,9 +167,15 @@ if($row = $fetcher->Fetch()) {
             </form>
         </div>
         <?php
-        include '_footer.php';
+        include '../include/footer.php';
+        include '../include/footer_mobile.php';
         ?>
         <script>
+            // В поле "Радиус" ограничиваем значения: целые числа от 1 до 999
+            $('#radius').keyup(function() {
+                KeyUpLimitIntValue($(this), 999);
+            });
+                
             // Скрытие/показ элементов формы в зависимости от того, остался ли исходный ролик
             $('#remains').change(function() {
                 if($(this).is(':checked')) {
@@ -208,7 +187,7 @@ if($row = $fetcher->Fetch()) {
                     $('input#radius').removeAttr('required');
                 }
             });
-    
+            
             // Все марки плёнки с их вариациями
             var films = new Map();
             
@@ -229,7 +208,7 @@ if($row = $fetcher->Fetch()) {
                 $('#net_weight').val('');
                 
                 film_brand_id = $('#film_brand_id').val();
-                spool = $('input[name="spool"]:checked').val();
+                spool = $('#spool').val();
                 thickness = $('#thickness').val();
                 radius = $('#radius').val();
                 width = $('#width').val();
@@ -248,7 +227,7 @@ if($row = $fetcher->Fetch()) {
             $(document).ready(CalculateByRadius);
             
             // Рассчитываем ширину и массу плёнки при изменении значений каждого поля, участвующего в вычислении
-            $('input[name="spool"]').click(CalculateByRadius);
+            $('#spool').change(CalculateByRadius);
             
             $('#radius').keypress(CalculateByRadius);
             

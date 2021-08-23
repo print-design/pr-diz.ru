@@ -3,6 +3,9 @@ include '../include/topscripts.php';
 
 // Если не задано значение id, перенаправляем на список
 $id = filter_input(INPUT_GET, 'id');
+if(empty($id)) {
+    header('Location: '.APPLICATION.'/roll/');
+}
 
 // Получение данных
 $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, s.name supplier, r.id_from_supplier, "
