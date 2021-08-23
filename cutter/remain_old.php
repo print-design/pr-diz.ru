@@ -129,51 +129,6 @@ if($row = $fetcher->Fetch()) {
         <div id="topmost"></div>
         <div class="container-fluid">
             <h1>Закрытие заявки</h1>
-            <p class="font-weight-bold mt-2" style="font-size: large;">Исходные ролики</p>
-            <?php
-            $sum_source = 0;
-            $i_source = 0;
-            $sql = "select concat('П', r.id) nomer, r.length "
-                    . "from cut_source cs "
-                    . "inner join roll r on cs.roll_id = r.id "
-                    . "where cs.cut_id = $cut_id "
-                    . "and cs.is_from_pallet = 0 "
-                    . "union "
-                    . "select concat('П', pr.pallet_id, 'Р', pr.ordinal) nomer, pr.length "
-                    . "from cut_source cs "
-                    . "inner join pallet_roll pr on cs.roll_id = pr.id "
-                    . "where cs.cut_id = $cut_id "
-                    . "and cs.is_from_pallet = 1";
-            $fetcher = new Fetcher($sql);
-            while ($row = $fetcher->Fetch()) {
-                ?>
-            <p><?=(++$i_source).'. '.$row['nomer'].' &ndash; '.$row['length'].' м.' ?></p>
-                <?php
-                $sum_source += intval($row['length']);
-            }
-            ?>
-            <p class="font-weight-bold">Всего: <?=$sum_source ?> м.</p>
-            <p class="font-weight-bold mt-2" style="font-size: large;">Длины намоток</p>
-            <?php
-            $sum_wind = 0;
-            $i_wind = 0;
-            $sql = "select length from cut_wind where cut_id = $cut_id";
-            $fetcher = new Fetcher($sql);
-            while ($row = $fetcher->Fetch()) {
-                ?>
-            <p><?=(++$i_wind).'. '.$row['length'].' м.' ?></p>
-                <?php
-                $sum_wind += intval($row['length']);
-            }
-            ?>
-            <p class="font-weight-bold">Всего: <?=$sum_wind ?> м.</p>
-            <?php
-            $sum_diff = intval($sum_source) - intval($sum_wind);
-            
-            if($sum_diff > 300):
-            ?>
-            <hr />
-            <p class="font-weight-bold mt-2" style="font-size: large;">Остался исходный ролик <?=$sum_diff ?> м.</p>
             <form method="post">
                 <input type="hidden" id="supplier_id" name="supplier_id" value="<?=$supplier_id ?>" />
                 <input type="hidden" id="film_brand_id" name="film_brand_id" value="<?=$film_brand_id ?>" />
@@ -181,8 +136,8 @@ if($row = $fetcher->Fetch()) {
                 <input type="hidden" id="width" name="width" value="<?=$width ?>" />
                 <input type="hidden" id="net_weight" name="net_weight" />
                 <input type="hidden" id="length" name="length" />
-                <input type="hidden" id="sum_diff" name="sum_diff" value="<?=$sum_diff ?>" />
                 <?php
+                $remains_checked = " checked='checked'";
                 $remainder_group_none = "";
                 $radius_required = " required='required'";
                 
@@ -192,6 +147,10 @@ if($row = $fetcher->Fetch()) {
                     $radius_required = "";
                 }
                 ?>
+                <div class="form-group">
+                    <input type="checkbox" id="remains" name="remains"<?=$remains_checked ?> />
+                    <label class="form-check-label" for="remains">Остался исходный ролик</label>
+                </div>
                 <div class="form-group remainder-group<?=$remainder_group_none ?>">
                     <label for="radius">Введите радиус от вала исходного роля</label>
                     <div class="input-group">
@@ -233,18 +192,23 @@ if($row = $fetcher->Fetch()) {
                     <button type="submit" class="btn btn-dark form-control" style="height: 5rem;" id="close-submit" name="close-submit">Распечатать исходный роль<br /> и закрыть заявку</button>
                 </div>
             </form>
-            <?php
-            else:
-            ?>
-            <a type="submit" href="finish.php" class="btn btn-dark form-control" style="height: 5rem;">Закрыть заявку</a>
-            <?php
-            endif;
-            ?>
         </div>
         <?php
         include '_footer.php';
         ?>
         <script>
+            // Скрытие/показ элементов формы в зависимости от того, остался ли исходный ролик
+            $('#remains').change(function() {
+                if($(this).is(':checked')) {
+                    $('.remainder-group').removeClass('d-none');
+                    $('input#radius').attr('required', 'required');
+                }
+                else {
+                    $('.remainder-group').addClass('d-none');
+                    $('input#radius').removeAttr('required');
+                }
+            });
+    
             // Все марки плёнки с их вариациями
             var films = new Map();
             
