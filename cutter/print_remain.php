@@ -202,7 +202,7 @@ if($row = $fetcher->Fetch()) {
         <script>
             $(document).ready(function (){
                 let shareData = {
-                    url: '<?=APPLICATION ?>/cutter/_print_remain.php'
+                    url: '<?=APPLICATION ?>/cutter/_print_remain.php?id=<?=$id ?>'
                 };
         
                 const sharelink = document.getElementById("sharelink");
