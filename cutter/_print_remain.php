@@ -1,19 +1,10 @@
 <?php
 include '../include/topscripts.php';
-include '../qr/qrlib.php';
 
-// Текущий пользователь
-$user_id = GetUserId();
-
-// Текущее время
-$current_date_time = date("dmYHis");
-
-// Находим id остаточного ролика последней закрытой нарезки данного пользователя
-$id = null;
-$sql = "select remain from cut where cutter_id = $user_id and id in (select cut_id from cut_source) order by id desc limit 1";
-$fetcher = new Fetcher($sql);
-if($row = $fetcher->Fetch()) {
-    $id = $row[0];
+// Если не задано значение id, перенаправляем на список
+$id = filter_input(INPUT_GET, 'id');
+if(empty($id)) {
+    header('Location: '.APPLICATION.'/roll/');
 }
 
 // Получение данных
@@ -55,6 +46,9 @@ if($row = $fetcher->Fetch()) {
 
 // Вертикальное положение бирки
 $sticker_top = 0;
+
+// Текущее время
+$current_date_time = date("dmYHis");
 ?>
 <!DOCTYPE html>
 <html>
@@ -86,6 +80,7 @@ $sticker_top = 0;
                         <td>Ширина<br /><strong><?=$width ?> мм</strong></td>
                         <td rowspan="6" class="qr" style="height: 20%; white-space: normal;">
                             <?php
+                            include '../qr/qrlib.php';
                             $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
                             $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/roll/roll.php?id='.$id;
                             $filename = "../temp/$current_date_time.png";
