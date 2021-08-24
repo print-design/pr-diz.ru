@@ -20,7 +20,7 @@ function CheckCuts($user_id) {
         // если страница не "Остаточный ролик"
         // берём последнюю закрытую нарезку и проверяем есть ли остаточный ролик и равна ли сумма длин исходных роликов сумме длин намоток (+-300 м)
         // и если их разница больше 300 м и нет остаточного ролика, перекидываем на страницу "остаточный ролик"
-        if(mb_substr_count($php_self, 'remain.php') == 0) {
+        if(mb_substr_count($php_self, '/remain.php') == 0) { // remain.php, но не print_remain.php
             if(empty($remain))
             {
                 $sum_source = 0;
@@ -61,7 +61,7 @@ function CheckCuts($user_id) {
                 header("Location: ".APPLICATION."/cutter/");
             }
         }
-        
+
         // Если незакрытых нарезок нет, то нечего делать на страницах "Намотка №", "Печать замотки" и "Закрытие нарезки"
         if(mb_substr_count($php_self, 'next.php') > 0 || mb_substr_count($php_self, 'print.php') > 0 || mb_substr_count($php_self, 'close.php') > 0) {
             header("Location: ".APPLICATION."/cutter/");
