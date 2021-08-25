@@ -18,13 +18,13 @@ include '../include/topscripts.php';
             <h1>Хранение плёнки на складе</h1>
             <table class="table table-hover">
                 <tr>
-                    <th style="width: 13%;">Номер плёнки</th>
-                    <th style="width: 13%;">Нач. дата</th>
-                    <th style="width: 13%;">Откуда</th>
-                    <th style="width: 13%;">Кон. дата</th>
-                    <th style="width: 13%;">Куда</th>
-                    <th style="width: 22%;">Менеджер</th>
-                    <th style="width: 13%;">Хранился</th>
+                    <th class="font-weight-bold" style="width: 13%;">Номер плёнки</th>
+                    <th class="font-weight-bold" style="width: 13%;">Нач. дата</th>
+                    <th class="font-weight-bold" style="width: 13%;">Откуда</th>
+                    <th class="font-weight-bold" style="width: 13%;">Кон. дата</th>
+                    <th class="font-weight-bold" style="width: 13%;">Куда</th>
+                    <th class="font-weight-bold" style="width: 22%;">Менеджер</th>
+                    <th class="font-weight-bold" style="width: 13%;">Хранился</th>
                 </tr>
                 <?php
                 $sql = "select count(id) from roll";
