@@ -27,7 +27,15 @@ include '../include/topscripts.php';
                     <th class="font-weight-bold" style="width: 13%;">Хранился</th>
                 </tr>
                 <?php
-                $sql = "select count(id) from roll";
+                $sql = "select "
+                        . "(select count(r.id) from roll r "
+                        . "left join (select roll_id, max(id) max_id from roll_status_history group by roll_id) rsh_max on rsh_max.roll_id = r.id "
+                        . "inner join roll_status_history rsh on rsh_max.max_id = rsh.id)"
+                        . "+ "
+                        . "(select count(pr.id) from pallet_roll pr "
+                        . "inner join pallet p on pr.pallet_id = p.id "
+                        . "left join (select pallet_roll_id, max(id) max_id from pallet_roll_status_history group by pallet_roll_id) prsh_max on prsh_max.pallet_roll_id = pr.id "
+                        . "inner join pallet_roll_status_history prsh on prsh_max.max_id = prsh.id)";
                 $fetcher = new Fetcher($sql);
                 if($roll = $fetcher->Fetch()) {
                     $pager_total_count = $roll[0];
@@ -39,7 +47,8 @@ include '../include/topscripts.php';
                         . "inner join roll_status_history rsh on rsh_max.max_id = rsh.id "
                         . "union "
                         . "select concat('П', p.id, 'Р', pr.ordinal), DATE_FORMAT(p.date, '%d.%m.%Y') admission, null cut_wind_id, prsh_max.max_id, DATE_FORMAT(prsh.date, '%d.%m.%Y') utilization, datediff(prsh.date, p.date) datediff, prsh.status_id, p.comment "
-                        . "from pallet_roll pr inner join pallet p on pr.pallet_id = p.id "
+                        . "from pallet_roll pr "
+                        . "inner join pallet p on pr.pallet_id = p.id "
                         . "left join (select pallet_roll_id, max(id) max_id from pallet_roll_status_history group by pallet_roll_id) prsh_max on prsh_max.pallet_roll_id = pr.id "
                         . "inner join pallet_roll_status_history prsh on prsh_max.max_id = prsh.id "
                         . "order by datediff desc "
