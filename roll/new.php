@@ -364,7 +364,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                         $is_unknown_checked = " checked='checked'";
                     }
                     ?>
-                    <div class="form-group">
+                    <div class="form-group d-none">
                         <input type="checkbox" id="is_unknown" name="is_unknown"<?=$is_unknown_checked ?> />
                         <label class="form-check-label" for="is_unknown">Неизвестный новый рулон</label>
                     </div>
