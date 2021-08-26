@@ -1,5 +1,19 @@
 <?php
 include '../include/topscripts.php';
+
+$brand_name = "";
+$thickness = "";
+
+// Обработка отправки формы
+if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
+    // Марка плёнки
+    $brand_name = filter_input(INPUT_POST, 'brand_name');
+    
+    // Толщина
+    $thickness = filter_input(INPUT_POST, 'thickness');
+    
+    // Получаем наибольшую ширину плёнки данного типа
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -96,6 +110,11 @@ include '../include/topscripts.php';
                             <button type="submit" id="rational_cut_submit" name="rational_cut_submit" class="btn btn-dark w-50">Рассчитать</button>
                         </div>
                     </form>
+                </div>
+                <div class="col-12 col-md-6 col-lg-8">
+                    <h2>Результаты</h2>
+                    <p><?=$brand_name ?></p>
+                    <p><?=$thickness ?></p>
                 </div>
             </div>
         </div>
