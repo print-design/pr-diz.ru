@@ -135,7 +135,7 @@ include '../include/topscripts.php';
                         '</div>' +
                         '</div>' +
                         '<di class="col-2">' +
-                        '<button type="button" id="btn_add_2" data-i="2" class="btn btn-outline-dark mt-4 btn_add"><i class="fas fa-plus"></i></button>' +
+                        '<button type="button" data-i="' + (parseInt($(this).attr('data-i')) + 1) + '" class="btn btn-outline-dark mt-4 btn_add"><i class="fas fa-plus"></i></button>' +
                         '</di>' +
                         '</div>');
                 $(this).addClass('d-none');
