@@ -366,7 +366,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                     ?>
                     <div class="form-group">
                         <input type="checkbox" id="is_unknown" name="is_unknown"<?=$is_unknown_checked ?> />
-                        <label class="form-check-label" for="is_unknown">Неизвестный</label>
+                        <label class="form-check-label" for="is_unknown">Неизвестный новый рулон</label>
                     </div>
                     <div class="d-flex justify-content-start mt-4">
                         <div class="p-0">
