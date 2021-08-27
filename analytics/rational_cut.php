@@ -54,19 +54,19 @@ if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
     
     // Перебираем все возможные сочетания ширин, чтобы их сумма была не больше максимальной
     $combination = array();
-    WalkTargets($combinations, $combination, $targets, $max_width);
+    $targets_count = count($targets);
+    WalkTargets($combinations, $combination, $targets, $targets_count, $max_width);
 }
 
-function WalkTargets(&$combinations, &$combination, &$targets, $max_width) {
-    foreach ($targets as $target) {
+function WalkTargets(&$combinations, &$combination, &$targets, $targets_count, $max_width) {
+    for($i=0; $i<$targets_count; $i++) {
         $current_combination = $combination;
-        array_push($current_combination, $target);
-        
+        array_push($current_combination, $targets[$i]);
         $sum_width = GetWidthsSum($current_combination);
         
         if($sum_width <= $max_width) {
             array_push($combinations, $current_combination);
-            WalkTargets($combinations, $current_combination, $targets, $max_width);
+            WalkTargets($combinations, $current_combination, $targets, $targets_count, $max_width);
         }
     }
 }
@@ -190,7 +190,7 @@ function GetWidthsSum($combination) {
                             $sum_width += intval($film['width']);
                         }
                         
-                        echo '('.$sum_width.')';
+                        echo '('.$sum_width.'), отход '.($max_width - $sum_width);
                     }
                     ?>
                 </div>
