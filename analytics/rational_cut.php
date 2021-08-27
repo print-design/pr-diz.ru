@@ -2,17 +2,25 @@
 include '../include/topscripts.php';
 
 $brand_name = "";
-$thickness = "";
+$thickness = null;
+$max_width = null;
 
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
     // Марка плёнки
-    $brand_name = filter_input(INPUT_POST, 'brand_name');
+    $brand_name = addslashes(filter_input(INPUT_POST, 'brand_name'));
     
     // Толщина
     $thickness = filter_input(INPUT_POST, 'thickness');
     
     // Получаем наибольшую ширину плёнки данного типа
+    $sql = "select max(r.width) from roll r "
+            . "inner join film_brand fb on r.film_brand_id = fb.id "
+            . "where trim(fb.name) = '$brand_name' and r.thickness = $thickness";
+    $fetcher = new Fetcher($sql);
+    $row = $fetcher->Fetch();
+    $max_width = $row[0];
+    
 }
 ?>
 <!DOCTYPE html>
@@ -38,7 +46,7 @@ if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
                             <select id="brand_name" name="brand_name" class="form-control" required="required">
                                 <option value="" hidden="hidden">...</option>
                                     <?php
-                                    $sql = "select distinct name from film_brand order by name";
+                                    $sql = "select distinct trim(name) name from film_brand order by name";
                                     $fetcher = new Fetcher($sql);
                                     while ($row = $fetcher->Fetch()):
                                     $selected = '';
@@ -113,8 +121,7 @@ if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
                 </div>
                 <div class="col-12 col-md-6 col-lg-8">
                     <h2>Результаты</h2>
-                    <p><?=$brand_name ?></p>
-                    <p><?=$thickness ?></p>
+                    <p><?=$max_width ?></p>
                 </div>
             </div>
         </div>
