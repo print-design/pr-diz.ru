@@ -54,19 +54,31 @@ if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
     
     // Перебираем все возможные сочетания ширин, чтобы их сумма была не больше максимальной
     $combination = array();
-    WalkTargets($combinations, $combination, $targets);
+    WalkTargets($combinations, $combination, $targets, $max_width);
 }
 
-function WalkTargets(&$combinations, &$combination, &$targets) {
+function WalkTargets(&$combinations, &$combination, &$targets, $max_width) {
     foreach ($targets as $target) {
         $current_combination = $combination;
         array_push($current_combination, $target);
-        array_push($combinations, $current_combination);
+        
+        $sum_width = GetWidthsSum($current_combination);
+        
+        if($sum_width <= $max_width) {
+            array_push($combinations, $current_combination);
+            WalkTargets($combinations, $current_combination, $targets, $max_width);
+        }
     }
 }
 
 function GetWidthsSum($combination) {
-    return 0;
+    $sum = 0;
+    
+    foreach ($combination as $film) {
+        $sum += intval($film['width']);
+    }
+    
+    return $sum;
 }
 ?>
 <!DOCTYPE html>
@@ -171,7 +183,14 @@ function GetWidthsSum($combination) {
                     <?php
                     foreach($combinations as $combination) {
                         echo '<br />';
-                        print_r($combination);
+                        $sum_width = 0;
+                        
+                        foreach($combination as $film) {
+                            echo $film['width'].' - ';
+                            $sum_width += intval($film['width']);
+                        }
+                        
+                        echo '('.$sum_width.')';
                     }
                     ?>
                 </div>
