@@ -1,16 +1,154 @@
 <?php
 include '../include/topscripts.php';
 
+// Статус "СВОБОДНЫЙ"
+$free_status_id = 1;
+
+$brand_name = "";
+$thickness = null;
+$widths = array();
+$max_width = null;
+$width_combinations = array();
+
+// Обработка отправки формы
+if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
+    // Марка плёнки
+    $brand_name = addslashes(filter_input(INPUT_POST, 'brand_name'));
+    
+    // Толщина
+    $thickness = filter_input(INPUT_POST, 'thickness');
+    
+    // Создаём список конечных плёнок
+    $targets = array();
+    $i = 0;
+    while (null !== filter_input(INPUT_POST, 'width_'.(++$i)) && null !== filter_input(INPUT_POST, 'length_'.$i)) {
+        $target = array();
+        $target['width'] = filter_input(INPUT_POST, 'width_'.$i);
+        $target['length'] = filter_input(INPUT_POST, 'length_'.$i);
+        array_push($targets, $target);
+    }
+    
+    // Получаем все ширины плёнок данного типа
+    $sql = "select distinct r.width from roll r "
+            . "inner join film_brand fb on r.film_brand_id = fb.id "
+            . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+            . "where trim(fb.name) = '$brand_name' and r.thickness = $thickness and (rsh.status_id is null or rsh.status_id = $free_status_id)";
+    $fetcher = new Fetcher($sql);
+    while($row = $fetcher->Fetch()) {
+        array_push($widths, $row[0]);
+    }
+    
+    // Получаем наибольшую ширину плёнки данного типа
+    $sql = "select ifnull(("
+            . "select max(r.width) from roll r "
+            . "inner join film_brand fb on r.film_brand_id = fb.id "
+            . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+            . "where trim(fb.name) = '$brand_name' and r.thickness = $thickness and (rsh.status_id is null or rsh.status_id = $free_status_id)"
+            . "), 0)";
+    
+    $fetcher = new Fetcher($sql);
+    $row = $fetcher->Fetch();
+    $max_width_roll = $row[0];
+    
+    $sql = "select ifnull(("
+            . "select max(p.width) from pallet_roll pr "
+            . "inner join pallet p on pr.pallet_id = p.id "
+            . "inner join film_brand fb on p.film_brand_id = fb.id "
+            . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+            . "where trim(fb.name) = '$brand_name' and p.thickness = $thickness and (prsh.status_id is null or prsh.status_id = $free_status_id)"
+            . "), 0)";
+    $fetcher = new Fetcher($sql);
+    $row = $fetcher->Fetch();
+    $max_width_pallet = $row[0];
+    
+    $max_width = max($max_width_roll, $max_width_pallet);
+    array_push($widths, $max_width);
+    
+    // Составляем список ширин конечных плёнок (чтобы при обходе исключить лишние сочетания)
+    $target_widths_counts = GetWidthsCounts($targets);
+    $targets_count = count($targets);
+    
+    // Перебираем все возможные сочетания ширин, чтобы их сумма была не больше максимальной
+    GetCutsByWidth($targets, $targets_count, $max_width, $target_widths_counts, $width_combinations);
+    
+    foreach($widths as $width) {
+        GetCutsByWidth($targets, $targets_count, $width, $target_widths_counts, $width_combinations);
+    }
+}
+
+function GetCutsByWidth($targets, $targets_count, $width, $target_widths_counts, &$width_combinations) {
+    // Перебираем все возможные сочетания ширин, чтобы их сумма была не больше максимальной
+    $combinations = array();
+    $combination = array();
+    WalkTargets($combinations, $combination, $targets, $targets_count, $width, $target_widths_counts);
+    $width_combinations[$width] = $combinations;
+}
+
+function WalkTargets(&$combinations, &$combination, &$targets, $targets_count, $max_width, $target_widths_counts) {
+    for($i=0; $i<$targets_count; $i++) {
+        $current_combination = $combination;
+        array_push($current_combination, $targets[$i]);
+        $sum_width = GetWidthsSum($current_combination);
+        
+        if($sum_width <= $max_width) {
+            $valid = true;
+            
+            if(in_array($current_combination, $combinations)) {
+                $valid = false;
+            }
+            
+            if($valid) {
+                $widths_counts = GetWidthsCounts($current_combination);
+                
+                foreach (array_keys($target_widths_counts) as $key) {
+                    if(isset($widths_counts[$key]) && $widths_counts[$key] > $target_widths_counts[$key]) {
+                        $valid = false;
+                    }
+                }
+            }
+            
+            if($valid) {
+                array_push($combinations, $current_combination);
+                WalkTargets($combinations, $current_combination, $targets, $targets_count, $max_width, $target_widths_counts);
+            }
+        }
+    }
+}
+
+function GetWidthsSum($combination) {
+    $sum = 0;
+    
+    foreach ($combination as $film) {
+        $sum += intval($film['width']);
+    }
+    
+    return $sum;
+}
+
+function GetWidthsCounts($combination) {
+    $widths_counts = array();
+    foreach ($combination as $film) {
+        if(!isset($widths_counts[$film['width']])) {
+            $widths_counts[$film['width']] = 0;
+        }
+        
+        $widths_counts[$film['width']]++;
+    }
+    
+    return $widths_counts;
+}
+
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
 $cut_id = null;
 $ordinal = null;
 
 if(!empty($id)) {
-    $sql = "select rational_cut_id from rational_cut_stream where id=$id";
+    $sql = "select rcs.rational_cut_id, (select count(id) from rational_cut_stream where rational_cut_id = rcs.rational_cut_id and id <= rcs.id) ordinal from rational_cut_stream rcs where id=$id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
-        $cut_id = $row[0];
+        $cut_id = $row['rational_cut_id'];
+        $ordinal = $row['ordinal'];
     }
 }
 
@@ -77,7 +215,88 @@ if($row = $fetcher->Fetch()) {
                             </select>
                             <input type="hidden" id="thickness" name="thickness" value="<?=$thickness ?>" />
                         </div>
+                        <?php
+                        $i = 0;
+                        $sql = "select width, length from rational_cut_stream where rational_cut_id=$cut_id order by id";
+                        $fetcher = new Fetcher($sql);
+                        while ($row = $fetcher->Fetch()):
+                        ?>
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="form-group">
+                                    <label for="width_<?=(++$i) ?>">Ширина, мм</label>
+                                    <input type="text" class="form-control" disabled="disabled" value="<?=$row['width'] ?>" />
+                                    <input type="hidden" id="width_<?=$i ?>" name="width_<?=$i ?>" value="<?=$row['width'] ?>" />
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="form-group">
+                                    <label for="length_<?=$i ?>">Длина, м</label>
+                                    <input type="text" class="form-control" disabled="disabled" value="<?=$row['length'] ?>" />
+                                    <input type="hidden" id="length_<?=$i ?>" name="length_<?=$i ?>" value="<?=$row['length'] ?>" />
+                                </div>
+                            </div>
+                        </div>
+                        <?php endwhile; ?>
+                        <div class="form-group mt-4">
+                            <button type="submit" id="rational_cut_submit" name="rational_cut_submit" class="btn btn-dark w-50">Рассчитать</button>
+                        </div>
                     </form>
+                </div>
+                <div class="col-12 col-md-6 col-lg-8">
+                    <?php if(null !== filter_input(INPUT_POST, 'rational_cut_submit')): ?>
+                    <h2>Результаты</h2>
+                    <?php
+                    $min_waiste = null;
+                    $rational_combination = null;
+                    $rational_width = null;
+                    
+                    foreach (array_keys($width_combinations) as $width_key):
+                    ?>
+                    <p>Ширина: <?=$width_key ?></p>
+                    <?php
+                    foreach($width_combinations[$width_key] as $combination) {
+                        echo '<br />';
+                        $sum_width = 0;
+                        
+                        foreach($combination as $film) {
+                            echo $film['width'].' - ';
+                            $sum_width += intval($film['width']);
+                        }
+                        
+                        $waiste = $max_width - $sum_width;
+                        echo '('.$sum_width.'), отход '.($waiste);
+                        
+                        if($min_waiste === null) {
+                            $min_waiste = $waiste;
+                        }
+                        else {
+                            $min_waiste = min($min_waiste, $waiste);
+                        }
+                        
+                        if($waiste == $min_waiste) {
+                            $rational_combination = $combination;
+                            $rational_width = $width_key;
+                        }
+                    }
+                    ?>
+                    <hr />
+                    <?php endforeach; ?>
+                    <p>
+                        Рациональная комбинация:&nbsp;
+                        <?php
+                        $sum_width = 0;
+                        
+                        if(!empty($rational_combination) && !empty($rational_width)) {
+                            foreach ($rational_combination as $film) {
+                                echo $film['width'].' - ';
+                                $sum_width += intval($film['width']);
+                            }
+                            echo '('.$sum_width.'), ширина '.$rational_width.', отход '.($min_waiste);
+                        }
+                        ?>
+                    </p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
