@@ -6,8 +6,9 @@ $free_status_id = 1;
 
 $brand_name = "";
 $thickness = null;
+$widths = array();
 $max_width = null;
-$combinations = array();
+$width_combinations = array();
 
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
@@ -25,6 +26,16 @@ if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
         $target['width'] = filter_input(INPUT_POST, 'width_'.$i);
         $target['length'] = filter_input(INPUT_POST, 'length_'.$i);
         array_push($targets, $target);
+    }
+    
+    // Получаем все ширины плёнок данного типа
+    $sql = "select distinct r.width from roll r "
+            . "inner join film_brand fb on r.film_brand_id = fb.id "
+            . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+            . "where trim(fb.name) = '$brand_name' and r.thickness = $thickness and (rsh.status_id is null or rsh.status_id = $free_status_id)";
+    $fetcher = new Fetcher($sql);
+    while($row = $fetcher->Fetch()) {
+        array_push($widths, $row[0]);
     }
     
     // Получаем наибольшую ширину плёнки данного типа
@@ -51,14 +62,30 @@ if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
     $max_width_pallet = $row[0];
     
     $max_width = max($max_width_roll, $max_width_pallet);
+    array_push($widths, $max_width);
     
     // Составляем список ширин конечных плёнок (чтобы при обходе исключить лишние сочетания)
     $target_widths_counts = GetWidthsCounts($targets);
+    $targets_count = count($targets);
     
     // Перебираем все возможные сочетания ширин, чтобы их сумма была не больше максимальной
+    //$combinations = array();
+    //$combination = array();
+    //WalkTargets($combinations, $combination, $targets, $targets_count, $max_width, $target_widths_counts);
+    //$width_combinations[$max_width] = $combinations;
+    GetCutsByWidth($targets, $targets_count, $max_width, $target_widths_counts, $width_combinations);
+    
+    foreach($widths as $width) {
+        GetCutsByWidth($targets, $targets_count, $width, $target_widths_counts, $width_combinations);
+    }
+}
+
+function GetCutsByWidth($targets, $targets_count, $width, $target_widths_counts, &$width_combinations) {
+    // Перебираем все возможные сочетания ширин, чтобы их сумма была не больше максимальной
+    $combinations = array();
     $combination = array();
-    $targets_count = count($targets);
-    WalkTargets($combinations, $combination, $targets, $targets_count, $max_width, $target_widths_counts);
+    WalkTargets($combinations, $combination, $targets, $targets_count, $width, $target_widths_counts);
+    $width_combinations[$width] = $combinations;
 }
 
 function WalkTargets(&$combinations, &$combination, &$targets, $targets_count, $max_width, $target_widths_counts) {
@@ -214,12 +241,16 @@ function GetWidthsCounts($combination) {
                 <div class="col-12 col-md-6 col-lg-8">
                     <?php if(null !== filter_input(INPUT_POST, 'rational_cut_submit')): ?>
                     <h2>Результаты</h2>
-                    <p>Наибольшая возможная ширина: <?=$max_width ?></p>
                     <?php
                     $min_waiste = null;
                     $rational_combination = null;
+                    $rational_width = null;
                     
-                    foreach($combinations as $combination) {
+                    foreach (array_keys($width_combinations) as $width_key):
+                    ?>
+                    <p>Ширина: <?=$width_key ?></p>
+                    <?php
+                    foreach($width_combinations[$width_key] as $combination) {
                         echo '<br />';
                         $sum_width = 0;
                         
@@ -236,20 +267,27 @@ function GetWidthsCounts($combination) {
                         }
                         else {
                             $min_waiste = min($min_waiste, $waiste);
+                        }
+                        
+                        if($waiste == $min_waiste) {
                             $rational_combination = $combination;
+                            $rational_width = $width_key;
                         }
                     }
                     ?>
-                    <br /><br />
+                    <hr />
+                    <?php endforeach; ?>
                     <p>
                         Рациональная комбинация:&nbsp;
                         <?php
-                        if(!empty($rational_combination)) {
+                        $sum_width = 0;
+                        
+                        if(!empty($rational_combination) && !empty($rational_width)) {
                             foreach ($rational_combination as $film) {
                                 echo $film['width'].' - ';
                                 $sum_width += intval($film['width']);
                             }
-                            echo '('.$sum_width.'), отход '.($waiste);
+                            echo '('.$sum_width.'), ширина '.$rational_width.', отход '.($min_waiste);
                         }
                         ?>
                     </p>
