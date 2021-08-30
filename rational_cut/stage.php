@@ -151,6 +151,15 @@ if($row = $fetcher->Fetch()) {
     $brand_name = $row['brand_name'];
     $thickness = $row['thickness'];
 }
+
+// Если этап не указан, получаем первый этап (если он есть)
+if(empty($id)) {
+    $sql = "select min(id) from rational_cut_stage where rational_cut_id = $cut_id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $id = $row[0];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
