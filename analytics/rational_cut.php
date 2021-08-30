@@ -215,6 +215,9 @@ function GetWidthsCounts($combination) {
                     <h2>Результаты</h2>
                     <p>Наибольшая возможная ширина: <?=$max_width ?></p>
                     <?php
+                    $min_waiste = null;
+                    $rational_combination = null;
+                    
                     foreach($combinations as $combination) {
                         echo '<br />';
                         $sum_width = 0;
@@ -224,9 +227,29 @@ function GetWidthsCounts($combination) {
                             $sum_width += intval($film['width']);
                         }
                         
-                        echo '('.$sum_width.'), отход '.($max_width - $sum_width);
+                        $waiste = $max_width - $sum_width;
+                        echo '('.$sum_width.'), отход '.($waiste);
+                        
+                        if($min_waiste === null) {
+                            $min_waiste = $waiste;
+                        }
+                        else {
+                            $min_waiste = min($min_waiste, $waiste);
+                            $rational_combination = $combination;
+                        }
                     }
                     ?>
+                    <br /><br />
+                    <p>
+                        Рациональная комбинация:&nbsp;
+                        <?php
+                        foreach ($rational_combination as $film) {
+                            echo $film['width'].' - ';
+                            $sum_width += intval($film['width']);
+                        }
+                        echo '('.$sum_width.'), отход '.($waiste);
+                        ?>
+                    </p>
                 </div>
             </div>
         </div>
