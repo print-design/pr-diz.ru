@@ -212,6 +212,7 @@ function GetWidthsCounts($combination) {
                     </form>
                 </div>
                 <div class="col-12 col-md-6 col-lg-8">
+                    <?php if(null !== filter_input(INPUT_POST, 'rational_cut_submit')): ?>
                     <h2>Результаты</h2>
                     <p>Наибольшая возможная ширина: <?=$max_width ?></p>
                     <?php
@@ -243,13 +244,16 @@ function GetWidthsCounts($combination) {
                     <p>
                         Рациональная комбинация:&nbsp;
                         <?php
-                        foreach ($rational_combination as $film) {
-                            echo $film['width'].' - ';
-                            $sum_width += intval($film['width']);
+                        if(!empty($rational_combination)) {
+                            foreach ($rational_combination as $film) {
+                                echo $film['width'].' - ';
+                                $sum_width += intval($film['width']);
+                            }
+                            echo '('.$sum_width.'), отход '.($waiste);
                         }
-                        echo '('.$sum_width.'), отход '.($waiste);
                         ?>
                     </p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
