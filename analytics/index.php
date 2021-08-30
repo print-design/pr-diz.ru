@@ -11,7 +11,7 @@ include '../include/topscripts.php';
     </head>
     <body>
         <?php
-        include 'header.php';
+        include '../include/header_analytics.php';
         include '../include/pager_top.php';
         ?>
         <div class="container-fluid">
