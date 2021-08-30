@@ -23,6 +23,14 @@ include '../include/topscripts.php';
                     <a href="new.php" class="btn btn-outline-dark"><i class="fas fa-plus"></i>&nbsp;Новый раскрой</a>
                 </div>
             </div>
+            <?php
+            $sql = "select id from rational_cut order by id desc";
+            $fetcher = new Fetcher($sql);
+            while ($row = $fetcher->Fetch()):
+                $id = $row['id'];
+            ?>
+            <p><a href="stage.php<?= BuildQuery('cut_id', $id) ?>">Раскрой <?=$id ?></a></p>
+            <?php endwhile; ?>
         </div>
     </body>
     <?php
