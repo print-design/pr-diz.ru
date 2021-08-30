@@ -52,21 +52,42 @@ if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
     
     $max_width = max($max_width_roll, $max_width_pallet);
     
+    // Составляем список ширин конечных плёнок (чтобы при обходе исключить лишние сочетания)
+    $target_widths_counts = GetWidthsCounts($targets);
+    
     // Перебираем все возможные сочетания ширин, чтобы их сумма была не больше максимальной
     $combination = array();
     $targets_count = count($targets);
-    WalkTargets($combinations, $combination, $targets, $targets_count, $max_width);
+    WalkTargets($combinations, $combination, $targets, $targets_count, $max_width, $target_widths_counts);
 }
 
-function WalkTargets(&$combinations, &$combination, &$targets, $targets_count, $max_width) {
+function WalkTargets(&$combinations, &$combination, &$targets, $targets_count, $max_width, $target_widths_counts) {
     for($i=0; $i<$targets_count; $i++) {
         $current_combination = $combination;
         array_push($current_combination, $targets[$i]);
         $sum_width = GetWidthsSum($current_combination);
         
         if($sum_width <= $max_width) {
-            array_push($combinations, $current_combination);
-            WalkTargets($combinations, $current_combination, $targets, $targets_count, $max_width);
+            $valid = true;
+            
+            if(in_array($current_combination, $combinations)) {
+                $valid = false;
+            }
+            
+            if($valid) {
+                $widths_counts = GetWidthsCounts($current_combination);
+                
+                foreach (array_keys($target_widths_counts) as $key) {
+                    if(isset($widths_counts[$key]) && $widths_counts[$key] > $target_widths_counts[$key]) {
+                        $valid = false;
+                    }
+                }
+            }
+            
+            if($valid) {
+                array_push($combinations, $current_combination);
+                WalkTargets($combinations, $current_combination, $targets, $targets_count, $max_width, $target_widths_counts);
+            }
         }
     }
 }
@@ -79,6 +100,19 @@ function GetWidthsSum($combination) {
     }
     
     return $sum;
+}
+
+function GetWidthsCounts($combination) {
+    $widths_counts = array();
+    foreach ($combination as $film) {
+        if(!isset($widths_counts[$film['width']])) {
+            $widths_counts[$film['width']] = 0;
+        }
+        
+        $widths_counts[$film['width']]++;
+    }
+    
+    return $widths_counts;
 }
 ?>
 <!DOCTYPE html>
