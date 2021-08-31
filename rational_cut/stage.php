@@ -262,49 +262,9 @@ if($row = $fetcher->Fetch()) {
                 </div>
                 <div class="col-12 col-md-6 col-lg-4">
                     <h2>Все комбинации</h2>
-                    <?php 
-                    if(null !== filter_input(INPUT_POST, 'rational_cut_submit')):
-                        
-                    $min_waiste = null;
-                    $rational_combination = null;
-                    $rational_width = null;
-                    
-                    foreach (array_keys($width_combinations) as $width_key):
-                    ?>
-                    <p class="font-weight-bold">Ширина: <?=$width_key ?></p>
                     <?php
-                    foreach($width_combinations[$width_key] as $combination) {
-                        $str_width = implode(' + ', $combination);
-                        $sum_width = array_sum($combination);
-                        $waiste = $width_key - $sum_width;
-                        echo $str_width.' (='.$sum_width.'), отход '.$waiste;
-                        
-                        if($min_waiste === null) {
-                            $min_waiste = $waiste;
-                        }
-                        else {
-                            $min_waiste = min($min_waiste, $waiste);
-                        }
-                        
-                        if($waiste == $min_waiste) {
-                            $rational_combination = $combination;
-                            $rational_width = $width_key;
-                        }
-                        
-                        echo '<br />';
-                    }
-                    ?>
-                    <hr />
-                    <?php
-                    endforeach;
-                    endif;
-                    ?>
-                    
-                    
-                    <?php
-                    $sql = "select rcswce.width element, rcswc.id combination, rcswc.sum, rcswc.remainder, rcsw.width "
-                            . "from rational_cut_stage_width_combination_element rcswce "
-                            . "inner join rational_cut_stage_width_combination rcswc on rcswce.rational_cut_stage_width_combination_id = rcswc.id "
+                    $sql = "select rcswc.sum, rcswc.remainder, rcsw.width, (select GROUP_CONCAT(`width` SEPARATOR ' + ') from rational_cut_stage_width_combination_element where rational_cut_stage_width_combination_id = rcswc.id) elements "
+                            . "from rational_cut_stage_width_combination rcswc "
                             . "inner join rational_cut_stage_width rcsw on rcswc.rational_cut_stage_width_id = rcsw.id "
                             . "where rcsw.rational_cut_stage_id = $id";
                     $grabber = new Grabber($sql);
@@ -320,27 +280,20 @@ if($row = $fetcher->Fetch()) {
                             $combinations = array();
                         }
                         
-                        if(isset($combinations[$row['combination']])) {
-                            $combination = $combinations[$row['combination']];
-                        }
-                        else {
-                            $combination = array();
-                            $combination['sum'] = $row['sum'];
-                            $combination['remainder'] = $row['remainder'];
-                            $combination['elements'] = array();
-                        }
-                        
-                        array_push($combination['elements'], $row['element']);
-                        $combinations[$row['combination']] = $combination;
+                        $combination = array();
+                        $combination['sum'] = $row['sum'];
+                        $combination['remainder'] = $row['remainder'];
+                        $combination['elements'] = $row['elements'];
+                        array_push($combinations, $combination);
                         $widths[$row['width']] = $combinations;
                     }
                     
-                    foreach(array_keys($widths) as $width_key):
+                    foreach (array_keys($widths) as $width_key):
                     ?>
                     <p class="font-weight-bold">Ширина: <?=$width_key ?></p>
                     <?php
-                    foreach($widths[$width_key] as $combination) {
-                        echo implode(' + ', $combination['elements']).' (='.$combination['sum'].'), отход '.$combination['remainder'];
+                    foreach ($widths[$width_key] as $combination) {
+                        echo $combination['elements'].' (='.$combination['sum'].'), отход '.$combination['remainder'];
                         echo '<br />';
                     }
                     ?>
