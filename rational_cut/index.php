@@ -23,15 +23,23 @@ include '../include/topscripts.php';
                     <a href="new.php" class="btn btn-outline-dark"><i class="fas fa-plus"></i>&nbsp;Новый раскрой</a>
                 </div>
             </div>
-            <?php
-            $sql = "select id, rational_cut_id from rational_cut_stage order by id desc";
-            $fetcher = new Fetcher($sql);
-            while ($row = $fetcher->Fetch()):
-                $id = $row['id'];
-                $cut_id = $row['rational_cut_id'];
-            ?>
-            <p><a href="stage.php<?= BuildQuery('id', $id) ?>">Раскрой <?=$cut_id ?></a></p>
-            <?php endwhile; ?>
+            <table class="table table-hover">
+                <?php
+                $sql = "select rcs.id, DATE_FORMAT(rc.date, '%d.%m.%Y') date,rc.brand_name, rc.thickness "
+                        . "from rational_cut_stage rcs "
+                        . "inner join rational_cut rc on rcs.rational_cut_id = rc.id "
+                        . "order by rcs.id desc";
+                $fetcher = new Fetcher($sql);
+                while ($row = $fetcher->Fetch()):
+                    ?>
+                <tr>
+                    <td><?=$row['date'] ?></td>
+                    <td><?=$row['brand_name'] ?></td>
+                    <td><?=$row['thickness'] ?> мм</td>
+                    <td><a href="stage.php<?= BuildQuery('id', $row['id']) ?>">Перейти</a></td>
+                </tr>
+                    <?php endwhile; ?>
+            </table>
         </div>
     </body>
     <?php

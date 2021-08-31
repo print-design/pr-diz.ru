@@ -14,6 +14,17 @@ $thickness = null;
 $widths = array();
 $width_combinations = array();
 
+// Обработка выбора плёнки для раскроя
+if(null !== filter_input(INPUT_POST, 'select_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $selected_is_pallet = filter_input(INPUT_POST, 'selected_is_pallet');
+    $selected_id = filter_input(INPUT_POST, 'selected_id');
+    
+    $sql = "update rational_cut_stage set selected_is_pallet = $selected_is_pallet, selected_id = $selected_id where id = $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+}
+
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
     // ID этапа аскроя
@@ -65,8 +76,18 @@ if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
         GetCutsByWidth($targets, $targets_count, $width, $target_widths_counts, $width_combinations);
     }
     
-    // Удаляем результаты предыдущиго расчёта по данному этапу
-    $sql = "delete from rational_cut_stage_width where rational_cut_stage_id = $id";
+    // Удаляем результаты предыдущиго расчёта по данному этапу и следующим этапам
+    $sql = "delete from rational_cut_stage_width where rational_cut_stage_id >= $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    // Отменяем выбор плёнки
+    $sql = "update rational_cut_stage set selected_is_pallet = null, selected_id = null";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    // Удаляем все следующие этапы
+    $sql = "delete from rational_cut_stage where rational_cut_id = (select rational_cut_id from rational_cut_stage where id = $id) and id > $id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     
@@ -168,12 +189,17 @@ function GetWidthsCounts($combination) {
 $id = filter_input(INPUT_GET, 'id');
 $cut_id = null;
 $ordinal = null;
+$selected_is_pallet = null;
+$selected_id = null;
 
-$sql = "select rcs.rational_cut_id, (select count(id) from rational_cut_stage where rational_cut_id = rcs.rational_cut_id and id <= rcs.id) ordinal from rational_cut_stage rcs where id=$id";
+$sql = "select rcs.rational_cut_id, rcs.selected_is_pallet, selected_id, (select count(id) from rational_cut_stage where rational_cut_id = rcs.rational_cut_id and id <= rcs.id) ordinal "
+        . "from rational_cut_stage rcs where id=$id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $cut_id = $row['rational_cut_id'];
     $ordinal = $row['ordinal'];
+    $selected_is_pallet = $row['selected_is_pallet'];
+    $selected_id = $row['selected_id'];
 }
 
 $brand_name = '';
@@ -183,6 +209,17 @@ $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $brand_name = $row['brand_name'];
     $thickness = $row['thickness'];
+}
+
+// Получение всех статусов
+$fetcher = (new Fetcher("select id, name, colour from roll_status"));
+$statuses = array();
+
+while ($row = $fetcher->Fetch()) {
+    $status = array();
+    $status['name'] = $row['name'];
+    $status['colour'] = $row['colour'];
+    $statuses[$row['id']] = $status;
 }
 ?>
 <!DOCTYPE html>
@@ -255,8 +292,19 @@ if($row = $fetcher->Fetch()) {
                             </div>
                         </div>
                         <?php endwhile; ?>
-                        <div class="form-group mt-4">
-                            <button type="submit" id="rational_cut_submit" name="rational_cut_submit" class="btn btn-dark w-50">Рассчитать</button>
+                        <div class="row mt-4">
+                            <div class="col-5">
+                                <div class="form-group">
+                                    <button type="submit" id="rational_cut_submit" name="rational_cut_submit" class="btn btn-dark form-control">Рассчитать</button>
+                                </div>
+                            </div>
+                            <?php if($selected_is_pallet !== null && $selected_id !== null): ?>
+                            <div class="col-5">
+                                <div class="form-group">
+                                    <button type="submit" id="next_stage_submit" name="next_stage_submit" class="btn btn-outline-dark form-control">Следующий этап</button>
+                                </div>
+                            </div>
+                            <?php endif; ?>
                         </div>
                     </form>
                 </div>
@@ -352,28 +400,98 @@ if($row = $fetcher->Fetch()) {
                     <p class="font-weight-bold mt-3">Плёнки:</p>
                     <table>
                         <?php
-                        $sql = "select r.id, concat('Р', r.id) nr, DATE_FORMAT(r.date, '%d.%m.%Y') date, rsh.status_id "
-                                . "from roll r "
-                                . "inner join film_brand fb on r.film_brand_id = fb.id "
-                                . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                                . "where trim(fb.name) = '$brand_name' and r.thickness = $thickness and (rsh.status_id is null or rsh.status_id = $free_status_id) "
-                                . "and r.width = $width_key";
+                        $sql = "select pr.id, concat('П', p.id, 'Р', pr.ordinal) nr, DATE_FORMAT(p.date, '%d.%m.%Y') date, pr.length, prsh.status_id "
+                                . "from pallet_roll pr "
+                                . "inner join pallet p on pr.pallet_id = p.id "
+                                . "inner join film_brand fb on p.film_brand_id = fb.id "
+                                . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+                                . "where trim(fb.name) = '$brand_name' and p.thickness = $thickness and p.width = $width_key";
                         $fetcher = new Fetcher($sql);
                         while ($row = $fetcher->Fetch()):
+                        if($row['status_id'] == $free_status_id || empty($row['status_id'])):
+                        $status = '';
+                        $colour_style = '';
+                        $status_id = $row['status_id'];
+                        if(empty($status_id)) {
+                            $status_id = $free_status_id;
+                        }
+                        
+                        if(!empty($statuses[$status_id]['name'])) {
+                            $status = $statuses[$status_id]['name'];
+                        }
+                    
+                        if(!empty($statuses[$status_id]['colour'])) {
+                            $colour = $statuses[$status_id]['colour'];
+                            $colour_style = " color: $colour";
+                        }
+                        
+                        $selected_color = "white";
+                        if($selected_is_pallet !== null && $selected_id == $row['id']) {
+                            $selected_color = "silver";
+                        }
                         ?>
-                        <tr>
-                            <td class="pr-3"><a href="<?=APPLICATION.'/roll/roll.php?id='.$row['id'] ?>" target="_blank"><?=$row['nr'] ?></a></td>
+                        <tr style="background-color: <?=$selected_color ?>">
+                            <td class="pr-3"><a href="<?=APPLICATION.'/pallet/roll.php?id='.$row['id'] ?>" target="_blank"><?=$row['nr'] ?></a></td>
                             <td class="pr-3"><?=$row['date'] ?></td>
-                            <td class="pr-3"><?=$row['status_id'] ?></td>
+                            <td class="pr-3"><?=$row['length'] ?> м</td>
+                            <td class="pr-3" style="font-size: 10px;<?=$colour_style ?>"><?= mb_strtoupper($status) ?></td>
                             <td>
                                 <form method="post">
-                                    <input type="hidden" name="is_pallet" value="0" />
-                                    <input type="hidden" name="id" value="<?=$row['id'] ?>" />
-                                    <button type="submit" class="btn btn-sm">Выбрать</button>
+                                    <input type="hidden" name="selected_is_pallet" value="1" />
+                                    <input type="hidden" name="selected_id" value="<?=$row['id'] ?>" />
+                                    <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                                    <button type="submit" class="btn btn-sm" name="select_submit">Выбрать</button>
                                 </form>
                             </td>
                         </tr>
-                        <?php endwhile; ?>
+                        <?php
+                        endif;
+                        endwhile;
+                        
+                        $sql = "select r.id, concat('Р', r.id) nr, DATE_FORMAT(r.date, '%d.%m.%Y') date, r.length, rsh.status_id "
+                                . "from roll r "
+                                . "inner join film_brand fb on r.film_brand_id = fb.id "
+                                . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+                                . "where trim(fb.name) = '$brand_name' and r.thickness = $thickness and r.width = $width_key";
+                        $fetcher = new Fetcher($sql);
+                        while ($row = $fetcher->Fetch()):
+                        if($row['status_id'] == $free_status_id || empty($row['status_id'])):
+                        $status = '';
+                        $colour_style = '';
+                        $status_id = $row['status_id'];
+                        if(empty($status_id)) {
+                            $status_id = $free_status_id;
+                        }
+                        
+                        if(!empty($statuses[$status_id]['name'])) {
+                            $status = $statuses[$status_id]['name'];
+                        }
+                    
+                        if(!empty($statuses[$status_id]['colour'])) {
+                            $colour = $statuses[$status_id]['colour'];
+                            $colour_style = " color: $colour";
+                        }
+                        
+                        $selected_color = "white";
+                        if($selected_is_pallet !== null && $selected_id == $row['id']) {
+                            $selected_color = "silver";
+                        }
+                        ?>
+                        <tr style="background-color: <?=$selected_color ?>">
+                            <td class="pr-3"><a href="<?=APPLICATION.'/roll/roll.php?id='.$row['id'] ?>" target="_blank"><?=$row['nr'] ?></a></td>
+                            <td class="pr-3"><?=$row['date'] ?></td>
+                            <td class="pr-3"><?=$row['length'] ?> м</td>
+                            <td class="pr-3" style="font-size: 10px;<?=$colour_style ?>"><?= mb_strtoupper($status) ?></td>
+                            <td>
+                                <form method="post">
+                                    <input type="hidden" name="selected_is_pallet" value="0" />
+                                    <input type="hidden" name="selected_id" value="<?=$row['id'] ?>" />
+                                    <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                                    <button type="submit" class="btn btn-sm" name="select_submit">Выбрать</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <?php endif; endwhile; ?>
                     </table>
                     <hr />
                     <?php endforeach; endif; ?>
