@@ -302,15 +302,81 @@ if($row = $fetcher->Fetch()) {
                 </div>
                 <div class="col-12 col-md-6 col-lg-4">
                     <h2>Рациональные комбинации</h2>
-                    <?php if(null !== filter_input(INPUT_POST, 'rational_cut_submit')): ?>
-                    <p>
-                        <?php
-                        if(!empty($rational_combination) && !empty($rational_width)) {
-                            echo implode(' + ', $rational_combination).' (='. array_sum($rational_combination).'), ширина'.$rational_width.', отход '.$min_waiste;
+                    <?php
+                    $min_remainder = null;
+                    
+                    $sql = "select min(rcswc.remainder) "
+                            . "from rational_cut_stage_width_combination rcswc "
+                            . "inner join rational_cut_stage_width rcsw on rcswc.rational_cut_stage_width_id = rcsw.id "
+                            . "where rcsw.rational_cut_stage_id = $id";
+                    $fetcher = new Fetcher($sql);
+                    if($row = $fetcher->Fetch()) {
+                        $min_remainder = $row[0];
+                    }
+                    
+                    if(null !== $min_remainder):
+                    $sql = "select rcswc.sum, rcswc.remainder, rcsw.width, (select GROUP_CONCAT(`width` SEPARATOR ' + ') from rational_cut_stage_width_combination_element where rational_cut_stage_width_combination_id = rcswc.id) elements "
+                            . "from rational_cut_stage_width_combination rcswc "
+                            . "inner join rational_cut_stage_width rcsw on rcswc.rational_cut_stage_width_id = rcsw.id "
+                            . "where rcsw.rational_cut_stage_id = $id and rcswc.remainder = $min_remainder";
+                    $grabber = new Grabber($sql);
+                    $result = $grabber->result;
+                    
+                    $widths = array();
+                    
+                    foreach ($result as $row) {
+                        if(isset($widths[$row['width']])) {
+                            $combinations = $widths[$row['width']];
                         }
+                        else {
+                            $combinations = array();
+                        }
+                        
+                        $combination = array();
+                        $combination['sum'] = $row['sum'];
+                        $combination['remainder'] = $row['remainder'];
+                        $combination['elements'] = $row['elements'];
+                        array_push($combinations, $combination);
+                        $widths[$row['width']] = $combinations;
+                    }
+                    
+                    foreach (array_keys($widths) as $width_key):
+                    ?>
+                    <p class="font-weight-bold">Ширина: <?=$width_key ?></p>
+                    <?php
+                    foreach ($widths[$width_key] as $combination) {
+                        echo $combination['elements'].' (='.$combination['sum'].'), отход '.$combination['remainder'];
+                        echo '<br />';
+                    }
+                    ?>
+                    <p class="font-weight-bold mt-3">Плёнки:</p>
+                    <table>
+                        <?php
+                        $sql = "select r.id, concat('Р', r.id) nr, DATE_FORMAT(r.date, '%d.%m.%Y') date, rsh.status_id "
+                                . "from roll r "
+                                . "inner join film_brand fb on r.film_brand_id = fb.id "
+                                . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+                                . "where trim(fb.name) = '$brand_name' and r.thickness = $thickness and (rsh.status_id is null or rsh.status_id = $free_status_id) "
+                                . "and r.width = $width_key";
+                        $fetcher = new Fetcher($sql);
+                        while ($row = $fetcher->Fetch()):
                         ?>
-                    </p>
-                    <?php endif; ?>
+                        <tr>
+                            <td class="pr-3"><a href="<?=APPLICATION.'/roll/roll.php?id='.$row['id'] ?>" target="_blank"><?=$row['nr'] ?></a></td>
+                            <td class="pr-3"><?=$row['date'] ?></td>
+                            <td class="pr-3"><?=$row['status_id'] ?></td>
+                            <td>
+                                <form method="post">
+                                    <input type="hidden" name="is_pallet" value="0" />
+                                    <input type="hidden" name="id" value="<?=$row['id'] ?>" />
+                                    <button type="submit" class="btn btn-sm">Выбрать</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </table>
+                    <hr />
+                    <?php endforeach; endif; ?>
                 </div>
             </div>
         </div>
