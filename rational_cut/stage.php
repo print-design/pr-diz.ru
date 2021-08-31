@@ -20,10 +20,9 @@ if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
     // Создаём список конечных плёнок
     $targets = array();
     $i = 0;
-    while (null !== filter_input(INPUT_POST, 'width_'.(++$i)) && null !== filter_input(INPUT_POST, 'length_'.$i)) {
+    while (null !== filter_input(INPUT_POST, 'width_'.(++$i))) {
         $target = array();
-        $target['width'] = filter_input(INPUT_POST, 'width_'.$i);
-        $target['length'] = filter_input(INPUT_POST, 'length_'.$i);
+        $target = filter_input(INPUT_POST, 'width_'.$i);
         array_push($targets, $target);
     }
     
@@ -57,6 +56,8 @@ if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
     foreach($widths as $width) {
         GetCutsByWidth($targets, $targets_count, $width, $target_widths_counts, $width_combinations);
     }
+    
+    // Сохраняем данные в базу
 }
 
 function GetCutsByWidth($targets, $targets_count, $width, $target_widths_counts, &$width_combinations) {
@@ -101,8 +102,8 @@ function WalkTargets(&$combinations, &$combination, &$targets, $targets_count, $
 function GetWidthsSum($combination) {
     $sum = 0;
     
-    foreach ($combination as $film) {
-        $sum += intval($film['width']);
+    foreach ($combination as $width) {
+        $sum += intval($width);
     }
     
     return $sum;
@@ -110,12 +111,12 @@ function GetWidthsSum($combination) {
 
 function GetWidthsCounts($combination) {
     $widths_counts = array();
-    foreach ($combination as $film) {
-        if(!isset($widths_counts[$film['width']])) {
-            $widths_counts[$film['width']] = 0;
+    foreach ($combination as $width) {
+        if(!isset($widths_counts[$width])) {
+            $widths_counts[$width] = 0;
         }
         
-        $widths_counts[$film['width']]++;
+        $widths_counts[$width]++;
     }
     
     return $widths_counts;
@@ -249,15 +250,10 @@ if(empty($id)) {
                     <p class="font-weight-bold">Ширина: <?=$width_key ?></p>
                     <?php
                     foreach($width_combinations[$width_key] as $combination) {
-                        $sum_width = 0;
-                        
-                        foreach($combination as $film) {
-                            echo $film['width'].' + ';
-                            $sum_width += intval($film['width']);
-                        }
-                        
+                        $str_width = implode(' + ', $combination);
+                        $sum_width = array_sum($combination);
                         $waiste = $width_key - $sum_width;
-                        echo '(='.$sum_width.'), отход '.($waiste);
+                        echo $str_width.' (='.$sum_width.'), отход '.$waiste;
                         
                         if($min_waiste === null) {
                             $min_waiste = $waiste;
@@ -285,14 +281,8 @@ if(empty($id)) {
                     <?php if(null !== filter_input(INPUT_POST, 'rational_cut_submit')): ?>
                     <p>
                         <?php
-                        $sum_width = 0;
-                        
                         if(!empty($rational_combination) && !empty($rational_width)) {
-                            foreach ($rational_combination as $film) {
-                                echo $film['width'].' + ';
-                                $sum_width += intval($film['width']);
-                            }
-                            echo '(='.$sum_width.'), ширина '.$rational_width.', отход '.($min_waiste);
+                            echo implode(' + ', $rational_combination).' (='. array_sum($rational_combination).'), ширина'.$rational_width.', отход '.$min_waiste;
                         }
                         ?>
                     </p>
