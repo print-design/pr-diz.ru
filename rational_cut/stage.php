@@ -1,6 +1,11 @@
 <?php
 include '../include/topscripts.php';
 
+// Если не указан id, перенаправляем на основную страницу
+if(empty(filter_input(INPUT_GET, 'id'))) {
+    header("Location: ".APPLICATION.'/rational_cut/');
+}
+
 // Статус "СВОБОДНЫЙ"
 $free_status_id = 1;
 
@@ -11,6 +16,9 @@ $width_combinations = array();
 
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
+    // ID этапа аскроя
+    $id = filter_input(INPUT_POST, 'id');
+    
     // Марка плёнки
     $brand_name = addslashes(filter_input(INPUT_POST, 'brand_name'));
     
@@ -57,7 +65,41 @@ if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
         GetCutsByWidth($targets, $targets_count, $width, $target_widths_counts, $width_combinations);
     }
     
+    // Удаляем результаты предыдущиго расчёта по данному этапу
+    $sql = "delete from rational_cut_stage_width where rational_cut_stage_id = $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
     // Сохраняем данные в базу
+    foreach (array_keys($width_combinations) as $width_key) {
+        // Сохраняем длины
+        $sql_width = "insert into rational_cut_stage_width (rational_cut_stage_id, width) values ($id, $width_key)";
+        $executer_width = new Executer($sql_width);
+        $error_message = $executer_width->error;
+        $width_id = $executer_width->insert_id;
+        
+        if(empty($error_message) && !empty($width_id)) {
+            // Сохраняем комбинации
+            foreach($width_combinations[$width_key] as $combination) {
+                $sum_width = array_sum($combination);
+                $remainder = $width_key - $sum_width;
+                
+                $sql_combination = "insert into rational_cut_stage_width_combination (rational_cut_stage_width_id, sum, remainder) values ($width_id, $sum_width, $remainder)";
+                $executer_combination = new Executer($sql_combination);
+                $error_message = $executer_combination->error;
+                $combination_id = $executer_combination->insert_id;
+                
+                if(empty($error_message) && !empty($combination_id)) {
+                    // Сохраняем элементы комбинаций
+                    foreach ($combination as $element) {
+                        $sql_element = "insert into rational_cut_stage_width_combination_element (rational_cut_stage_width_combination_id, width) values ($combination_id, $element)";
+                        $executer_element = new Executer($sql_element);
+                        $error_message = $executer_element->error;
+                    }
+                }
+            }
+        }
+    }
 }
 
 function GetCutsByWidth($targets, $targets_count, $width, $target_widths_counts, &$width_combinations) {
@@ -127,21 +169,11 @@ $id = filter_input(INPUT_GET, 'id');
 $cut_id = null;
 $ordinal = null;
 
-if(!empty($id)) {
-    $sql = "select rcs.rational_cut_id, (select count(id) from rational_cut_stream where rational_cut_id = rcs.rational_cut_id and id <= rcs.id) ordinal from rational_cut_stream rcs where id=$id";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        $cut_id = $row['rational_cut_id'];
-        $ordinal = $row['ordinal'];
-    }
-}
-
-if(empty($cut_id)) {
-    $sql = "select id from rational_cut where id not in (select rational_cut_id from rational_cut_stage)";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        $cut_id = $row[0];
-    }
+$sql = "select rcs.rational_cut_id, (select count(id) from rational_cut_stage where rational_cut_id = rcs.rational_cut_id and id <= rcs.id) ordinal from rational_cut_stage rcs where id=$id";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $cut_id = $row['rational_cut_id'];
+    $ordinal = $row['ordinal'];
 }
 
 $brand_name = '';
@@ -151,15 +183,6 @@ $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $brand_name = $row['brand_name'];
     $thickness = $row['thickness'];
-}
-
-// Если этап не указан, получаем первый этап (если он есть)
-if(empty($id)) {
-    $sql = "select min(id) from rational_cut_stage where rational_cut_id = $cut_id";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        $id = $row[0];
-    }
 }
 ?>
 <!DOCTYPE html>
@@ -185,6 +208,7 @@ if(empty($id)) {
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
                     <form method="post">
+                        <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                         <div class="form-group">
                             <label for="brand_name">Марка плёнки</label>
                             <select id="brand_name_disabled" name="brand_name_disabled" class="form-control" disabled="disabled">
@@ -210,7 +234,7 @@ if(empty($id)) {
                         </div>
                         <?php
                         $i = 0;
-                        $sql = "select width, length from rational_cut_stream where rational_cut_id=$cut_id order by id";
+                        $sql = "select width, length from rational_cut_stage_stream where rational_cut_stage_id=$id order by id";
                         $fetcher = new Fetcher($sql);
                         while ($row = $fetcher->Fetch()):
                         ?>
@@ -275,6 +299,53 @@ if(empty($id)) {
                     endforeach;
                     endif;
                     ?>
+                    
+                    
+                    <?php
+                    $sql = "select rcswce.width element, rcswc.id combination, rcswc.sum, rcswc.remainder, rcsw.width "
+                            . "from rational_cut_stage_width_combination_element rcswce "
+                            . "inner join rational_cut_stage_width_combination rcswc on rcswce.rational_cut_stage_width_combination_id = rcswc.id "
+                            . "inner join rational_cut_stage_width rcsw on rcswc.rational_cut_stage_width_id = rcsw.id "
+                            . "where rcsw.rational_cut_stage_id = $id";
+                    $grabber = new Grabber($sql);
+                    $result = $grabber->result;
+                    
+                    $widths = array();
+                    
+                    foreach ($result as $row) {
+                        if(isset($widths[$row['width']])) {
+                            $combinations = $widths[$row['width']];
+                        }
+                        else {
+                            $combinations = array();
+                        }
+                        
+                        if(isset($combinations[$row['combination']])) {
+                            $combination = $combinations[$row['combination']];
+                        }
+                        else {
+                            $combination = array();
+                            $combination['sum'] = $row['sum'];
+                            $combination['remainder'] = $row['remainder'];
+                            $combination['elements'] = array();
+                        }
+                        
+                        array_push($combination['elements'], $row['element']);
+                        $combinations[$row['combination']] = $combination;
+                        $widths[$row['width']] = $combinations;
+                    }
+                    
+                    foreach(array_keys($widths) as $width_key):
+                    ?>
+                    <p class="font-weight-bold">Ширина: <?=$width_key ?></p>
+                    <?php
+                    foreach($widths[$width_key] as $combination) {
+                        echo implode(' + ', $combination['elements']).' (='.$combination['sum'].'), отход '.$combination['remainder'];
+                        echo '<br />';
+                    }
+                    ?>
+                    <hr />
+                    <?php endforeach; ?>
                 </div>
                 <div class="col-12 col-md-6 col-lg-4">
                     <h2>Рациональные комбинации</h2>

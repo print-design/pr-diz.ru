@@ -24,12 +24,13 @@ include '../include/topscripts.php';
                 </div>
             </div>
             <?php
-            $sql = "select id from rational_cut order by id desc";
+            $sql = "select id, rational_cut_id from rational_cut_stage order by id desc";
             $fetcher = new Fetcher($sql);
             while ($row = $fetcher->Fetch()):
                 $id = $row['id'];
+                $cut_id = $row['rational_cut_id'];
             ?>
-            <p><a href="stage.php<?= BuildQuery('cut_id', $id) ?>">Раскрой <?=$id ?></a></p>
+            <p><a href="stage.php<?= BuildQuery('id', $id) ?>">Раскрой <?=$cut_id ?></a></p>
             <?php endwhile; ?>
         </div>
     </body>

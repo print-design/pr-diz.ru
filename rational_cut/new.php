@@ -43,19 +43,27 @@ if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $rational_cut_id = $executer->insert_id;
+        $rational_cut_stage_id = null;
         
         if(empty($error_message) && !empty($rational_cut_id)) {
-            foreach ($targets as $target) {
-                $width = $target['width'];
-                $length = $target['length'];
-                $sql = "insert into rational_cut_stream (rational_cut_id, width, length) values($rational_cut_id, $width, $length)";
-                $executer = new Executer($sql);
-                $error_message = $executer->error;
+            $sql = "insert into rational_cut_stage (rational_cut_id) values($rational_cut_id)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+            $rational_cut_stage_id = $executer->insert_id;
+            
+            if(empty($error_message) && !empty($rational_cut_stage_id)) {
+                foreach ($targets as $target) {
+                    $width = $target['width'];
+                    $length = $target['length'];
+                    $sql = "insert into rational_cut_stage_stream (rational_cut_stage_id, width, length) values($rational_cut_stage_id, $width, $length)";
+                    $executer = new Executer($sql);
+                    $error_message = $executer->error;
+                }
             }
         }
         
-        if(empty($error_message)) {
-            header("Location: stage.php");
+        if(empty($error_message) && !empty($rational_cut_stage_id)) {
+            header("Location: stage.php?id=$rational_cut_stage_id");
         }
     }
 }
