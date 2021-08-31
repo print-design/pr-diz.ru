@@ -77,12 +77,12 @@ if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
     }
     
     // Удаляем результаты предыдущиго расчёта по данному этапу и следующим этапам
-    $sql = "delete from rational_cut_stage_width where rational_cut_stage_id >= $id";
+    $sql = "delete from rational_cut_stage_width where rational_cut_stage_id = $id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     
     // Отменяем выбор плёнки
-    $sql = "update rational_cut_stage set selected_is_pallet = null, selected_id = null";
+    $sql = "update rational_cut_stage set selected_is_pallet = null, selected_id = null where id = $id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     
