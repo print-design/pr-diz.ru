@@ -61,7 +61,12 @@ if(null !== filter_input(INPUT_POST, 'next_stage_submit')) {
                 . "inner join rational_cut_stage rcs on rcsw.rational_cut_stage_id = rcs.id "
                 . "where rcs.id = $id "
                 . "and rcsw.width = $width "
-                . "and rcswc.remainder in (select min(remainder) from rational_cut_stage_width_combination group by rational_cut_stage_width_id))";
+                . "and rcswc.remainder = "
+                . "(select min(rcswc.remainder) "
+                . "from rational_cut_stage_width_combination rcswc "
+                . "inner join rational_cut_stage_width rcsw on rcswc.rational_cut_stage_width_id = rcsw.id "
+                . "inner join rational_cut_stage rcs on rcsw.rational_cut_stage_id = rcs.id "
+                . "where rcs.id = $id))";
         $grabber = new Grabber($sql);
         $error_message = $grabber->error;
         $combination_elements = $grabber->result;
