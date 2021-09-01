@@ -523,6 +523,26 @@ while ($row = $fetcher->Fetch()) {
                 </div>
                 <div class="col-12 col-md-6 col-lg-4">
                     <h2>Рациональные комбинации</h2>
+                    <div class="form-group">
+                        <label for="remainder">Отход</label>
+                        <select id="remainder" name="remainder" class="form-control w-25">
+                            <?php
+                            $sql = "select distinct rcswc.remainder "
+                                    . "from rational_cut_stage_width_combination rcswc "
+                                    . "inner join rational_cut_stage_width rcsw on rcswc.rational_cut_stage_width_id = rcsw.id "
+                                    . "where rcsw.rational_cut_stage_id = $id "
+                                    . "order by rcswc.remainder asc";
+                            $fetcher = new Fetcher($sql);
+                            while($row = $fetcher->Fetch()):
+                            $selected = "";
+                            if(filter_input(INPUT_GET, 'remainder') == $row[0]) {
+                                $selected = " selected='selected'";
+                            }
+                            ?>
+                            <option<?=$selected ?>><?=$row[0] ?></option>
+                            <?php endwhile; ?>
+                        </select>
+                    </div>
                     <?php
                     $rac_remainder = filter_input(INPUT_GET, 'remainder');
                     
@@ -677,4 +697,9 @@ while ($row = $fetcher->Fetch()) {
     <?php
     include '../include/footer.php';
     ?>
+    <script>
+        $('#remainder').change(function() {
+            window.location = '<?=APPLICATION.'/rational_cut/stage.php?id='. filter_input(INPUT_GET, 'id') ?>&remainder=' + $(this).val();
+        });
+    </script>
 </html>
