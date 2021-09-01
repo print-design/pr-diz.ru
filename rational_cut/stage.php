@@ -17,17 +17,19 @@ $width_combinations = array();
 // Обработка формы создания следующего этапа
 if(null !== filter_input(INPUT_POST, 'next_stage_submit')) {
     $id = filter_input(INPUT_POST, 'id');
-    
-    // Получаем длину и ширину выбранного ролика
+    $rational_cut_id = null;
     $selected_is_pallet = null;
     $selected_id = null;
-    $sql = "select selected_is_pallet, selected_id from rational_cut_stage where id = $id";
+    
+    $sql = "select rational_cut_id, selected_is_pallet, selected_id from rational_cut_stage where id = $id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
+        $rational_cut_id = $row['rational_cut_id'];
         $selected_is_pallet = $row['selected_is_pallet'];
         $selected_id = $row['selected_id'];
     }
     
+    // Получаем длину и ширину выбранного ролика
     $width = null;
     $length = null;
     $sql = "";
@@ -106,6 +108,26 @@ if(null !== filter_input(INPUT_POST, 'next_stage_submit')) {
                 $next_target = array('width' => $current_target['width'], 'length' => $current_target['length']);
                 array_push($next_targets, $next_target);
             }
+        }
+        
+        // Создаём следующий этап
+        $sql = "insert into rational_cut_stage (rational_cut_id) values($rational_cut_id)";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+        $next_stage_id = $executer->insert_id;
+        
+        if(empty($error_message) && !empty($next_stage_id)) {
+            foreach ($next_targets as $next_target) {
+                $width = $next_target['width'];
+                $length = $next_target['length'];
+                $sql = "insert into rational_cut_stage_stream (rational_cut_stage_id, width, length) values($next_stage_id, $width, $length)";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+            }
+        }
+        
+        if(empty($error_message)) {
+            header("Location:  stage.php?id=$next_stage_id");
         }
     }
 }
@@ -341,7 +363,7 @@ while ($row = $fetcher->Fetch()) {
             }
             ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/rational_cut/">К списку</a>
-            <h1>Раскрой <?=$cut_id ?>, этап 1</h1>
+            <h1>Раскрой <?=$cut_id ?>, этап <?=$ordinal ?></h1>
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
                     <form method="post">
