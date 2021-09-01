@@ -153,6 +153,11 @@ if(null !== filter_input(INPUT_POST, 'select_submit')) {
     $selected_is_pallet = filter_input(INPUT_POST, 'selected_is_pallet');
     $selected_id = filter_input(INPUT_POST, 'selected_id');
     
+    // Удаляем все следующие этапы
+    $sql = "delete from rational_cut_stage where rational_cut_id = (select rational_cut_id from rational_cut_stage where id = $id) and id > $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
     $sql = "update rational_cut_stage set selected_is_pallet = $selected_is_pallet, selected_id = $selected_id where id = $id";
     $executer = new Executer($sql);
     $error_message = $executer->error;

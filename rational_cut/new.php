@@ -141,7 +141,7 @@ if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
                         <?php
                         $i = 0;
                         while (++$i == 1 || (null != filter_input(INPUT_POST, 'width_'.$i) && null != filter_input(INPUT_POST, 'length_'.$i))):
-                            ?>
+                        ?>
                         <div class="row">
                             <div class="col-5">
                                 <div class="form-group">
@@ -165,11 +165,15 @@ if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
                                 <button type="button" data-i="<?=($i + 1) ?>" class="btn btn-outline-dark mt-4 btn_add<?=$class_d_none ?>"><i class="fas fa-plus"></i></button>
                             </di>
                         </div>
-                            <?php
-                            endwhile;
-                            ?>
-                        <div class="form-group mt-4">
-                            <button type="submit" id="rational_cut_submit" name="rational_cut_submit" class="btn btn-dark w-50">Сохранить</button>
+                        <?php
+                        endwhile;
+                        ?>
+                        <div class="row mt-4">
+                            <div class="col-5">
+                                <div class="form-group">
+                                    <button type="submit" id="rational_cut_submit" name="rational_cut_submit" class="btn btn-dark form-control">Сохранить</button>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
