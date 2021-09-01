@@ -46,7 +46,7 @@ if(null !== filter_input(INPUT_POST, 'next_stage_submit')) {
         }
     }
     
-    $widths = null;
+    $combination_elements = null;
     
     // Получение ширин результатов раскроя
     if(!empty($width)) {
@@ -62,10 +62,10 @@ if(null !== filter_input(INPUT_POST, 'next_stage_submit')) {
                 . "and rcswc.remainder in (select min(remainder) from rational_cut_stage_width_combination group by rational_cut_stage_width_id))";
         $grabber = new Grabber($sql);
         $error_message = $grabber->error;
-        $widths = $grabber->result;
+        $combination_elements = $grabber->result;
     }
     
-    if(!empty($widths)) {
+    if(!empty($combination_elements)) {
         // Создание списка конечных плёнок для следующего этапа.
         // Из каждой плёнки нынешнего этапа вычитаем длину исходного ролика нынешнего этапа.
         // Таким образом, на следующем этапе кроить понадобится только плёнку, оставшуюся после нынешнего этапа.
@@ -78,6 +78,35 @@ if(null !== filter_input(INPUT_POST, 'next_stage_submit')) {
         $current_targets = $grabber->result;
         
         $next_targets = array();
+        
+        $combination_elements_widths_counts = array();
+        
+        foreach ($combination_elements as $combination_element) {
+            if(!isset($combination_elements_widths_counts[$combination_element['width']])) {
+                $combination_elements_widths_counts[$combination_element['width']] = 1;
+            }
+            else {
+                $combination_elements_widths_counts[$combination_element['width']] = intval($combination_elements_widths_counts[$combination_element['width']]) + 1;
+            }
+        }
+        
+        foreach ($current_targets as $current_target) {
+            $has_been_cut = false;
+            foreach ($combination_elements as $combination_element) {
+                if($current_target['width'] == $combination_element['width'] && $combination_elements_widths_counts[$current_target['width']] > 0) {
+                    $next_target = array('width' => $current_target['width'], 'length' => intval($current_target['length']) - intval($length));
+                    array_push($next_targets, $next_target);
+                    $combination_elements_widths_counts[$current_target['width']] = intval($combination_elements_widths_counts[$current_target['width']]) - 1;
+                    $has_been_cut = true;
+                    break;
+                }
+            }
+            
+            if(!$has_been_cut) {
+                $next_target = array('width' => $current_target['width'], 'length' => $current_target['length']);
+                array_push($next_targets, $next_target);
+            }
+        }
     }
 }
 
