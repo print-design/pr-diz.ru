@@ -25,10 +25,9 @@ include '../include/topscripts.php';
             </div>
             <table class="table table-hover">
                 <?php
-                $sql = "select rcs.id, DATE_FORMAT(rc.date, '%d.%m.%Y') date,rc.brand_name, rc.thickness "
-                        . "from rational_cut_stage rcs "
-                        . "inner join rational_cut rc on rcs.rational_cut_id = rc.id "
-                        . "order by rcs.id desc";
+                $sql = "select rc.id, (select min(id) from rational_cut_stage where rational_cut_id = rc.id) stage_id, DATE_FORMAT(rc.date, '%d.%m.%Y') date,rc.brand_name, rc.thickness "
+                        . "from rational_cut rc "
+                        . "order by rc.id desc";
                 $fetcher = new Fetcher($sql);
                 while ($row = $fetcher->Fetch()):
                     ?>
@@ -36,7 +35,7 @@ include '../include/topscripts.php';
                     <td><?=$row['date'] ?></td>
                     <td><?=$row['brand_name'] ?></td>
                     <td><?=$row['thickness'] ?> мм</td>
-                    <td><a href="stage.php<?= BuildQuery('id', $row['id']) ?>">Перейти</a></td>
+                    <td><a href="stage.php<?= BuildQuery('id', $row['stage_id']) ?>">Перейти</a></td>
                 </tr>
                     <?php endwhile; ?>
             </table>

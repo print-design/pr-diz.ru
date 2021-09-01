@@ -96,8 +96,13 @@ if(null !== filter_input(INPUT_POST, 'next_stage_submit')) {
             $has_been_cut = false;
             foreach ($combination_elements as $combination_element) {
                 if($current_target['width'] == $combination_element['width'] && $combination_elements_widths_counts[$current_target['width']] > 0) {
-                    $next_target = array('width' => $current_target['width'], 'length' => intval($current_target['length']) - intval($length));
-                    array_push($next_targets, $next_target);
+                    $width_diff = intval($current_target['length']) - intval($length);
+                    
+                    if($width_diff > 0) {
+                        $next_target = array('width' => $current_target['width'], 'length' => intval($current_target['length']) - intval($length));
+                        array_push($next_targets, $next_target);
+                    }
+                    
                     $combination_elements_widths_counts[$current_target['width']] = intval($combination_elements_widths_counts[$current_target['width']]) - 1;
                     $has_been_cut = true;
                     break;
@@ -307,18 +312,21 @@ function GetWidthsCounts($combination) {
 $id = filter_input(INPUT_GET, 'id');
 $cut_id = null;
 $ordinal = null;
+$prev_id = null;
 $next_id = null;
 $selected_is_pallet = null;
 $selected_id = null;
 
 $sql = "select rcs.rational_cut_id, rcs.selected_is_pallet, selected_id, "
         . "(select count(id) from rational_cut_stage where rational_cut_id = rcs.rational_cut_id and id <= rcs.id) ordinal, "
+        . "(select max(id) from rational_cut_stage where rational_cut_id = rcs.rational_cut_id and id < rcs.id) prev_id, "
         . "(select min(id) from rational_cut_stage where rational_cut_id = rcs.rational_cut_id and id > rcs.id) next_id "
         . "from rational_cut_stage rcs where id=$id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $cut_id = $row['rational_cut_id'];
     $ordinal = $row['ordinal'];
+    $prev_id = $row['prev_id'];
     $next_id = $row['next_id'];
     $selected_is_pallet = $row['selected_is_pallet'];
     $selected_id = $row['selected_id'];
@@ -363,7 +371,27 @@ while ($row = $fetcher->Fetch()) {
             }
             ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/rational_cut/">К списку</a>
-            <h1>Раскрой <?=$cut_id ?>, этап <?=$ordinal ?></h1>
+            <div class="d-flex justify-content-between mb-auto">
+                <div class="p-1">
+                    <h1>Раскрой <?=$cut_id ?>, этап <?=$ordinal ?></h1>
+                </div>
+                <div class="p-1">
+                    <table>
+                        <tr>
+                            <td style="width: 100px;">
+                                <?php if(!empty($prev_id)): ?>
+                                <a class="btn btn-outline-dark" href="stage.php?id=<?=$prev_id ?>"><i class="fas fa-arrow-left"></i>&nbsp;Этап <?=($ordinal - 1) ?></a>
+                                <?php endif; ?>
+                            </td>
+                            <td style="width: 100px;">
+                                <?php if(!empty($next_id)): ?>
+                                <a class="btn btn-outline-dark" href="stage.php?id=<?=$next_id ?>">Этап <?=($ordinal + 1) ?>&nbsp;<i class="fas fa-arrow-right"></i></a>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
                     <form method="post">
