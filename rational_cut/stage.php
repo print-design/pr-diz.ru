@@ -55,6 +55,20 @@ if(null !== filter_input(INPUT_POST, 'next_stage_submit')) {
     
     $combination_elements = null;
     
+    // Получение рационального отхода
+    $rac_remainder = filter_input(INPUT_GET, 'remainder');
+    
+    if(null === $rac_remainder) {
+        $sql = "select min(rcswc.remainder) "
+                . "from rational_cut_stage_width_combination rcswc "
+                . "inner join rational_cut_stage_width rcsw on rcswc.rational_cut_stage_width_id = rcsw.id "
+                . "where rcsw.rational_cut_stage_id = $id";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $rac_remainder = $row[0];
+        }
+    }
+    
     // Получение ширин результатов раскроя
     if(!empty($width)) {
         $sql = "select width "
@@ -66,12 +80,7 @@ if(null !== filter_input(INPUT_POST, 'next_stage_submit')) {
                 . "inner join rational_cut_stage rcs on rcsw.rational_cut_stage_id = rcs.id "
                 . "where rcs.id = $id "
                 . "and rcsw.width = $width "
-                . "and rcswc.remainder = "
-                . "(select min(rcswc.remainder) "
-                . "from rational_cut_stage_width_combination rcswc "
-                . "inner join rational_cut_stage_width rcsw on rcswc.rational_cut_stage_width_id = rcsw.id "
-                . "inner join rational_cut_stage rcs on rcsw.rational_cut_stage_id = rcs.id "
-                . "where rcs.id = $id))";
+                . "and rcswc.remainder = $rac_remainder)";
         $grabber = new Grabber($sql);
         $error_message = $grabber->error;
         $combination_elements = $grabber->result;
@@ -515,22 +524,24 @@ while ($row = $fetcher->Fetch()) {
                 <div class="col-12 col-md-6 col-lg-4">
                     <h2>Рациональные комбинации</h2>
                     <?php
-                    $min_remainder = null;
+                    $rac_remainder = filter_input(INPUT_GET, 'remainder');
                     
-                    $sql = "select min(rcswc.remainder) "
-                            . "from rational_cut_stage_width_combination rcswc "
-                            . "inner join rational_cut_stage_width rcsw on rcswc.rational_cut_stage_width_id = rcsw.id "
-                            . "where rcsw.rational_cut_stage_id = $id";
-                    $fetcher = new Fetcher($sql);
-                    if($row = $fetcher->Fetch()) {
-                        $min_remainder = $row[0];
+                    if(null === $rac_remainder) {
+                        $sql = "select min(rcswc.remainder) "
+                                . "from rational_cut_stage_width_combination rcswc "
+                                . "inner join rational_cut_stage_width rcsw on rcswc.rational_cut_stage_width_id = rcsw.id "
+                                . "where rcsw.rational_cut_stage_id = $id";
+                        $fetcher = new Fetcher($sql);
+                        if($row = $fetcher->Fetch()) {
+                            $rac_remainder = $row[0];
+                        }
                     }
                     
-                    if(null !== $min_remainder):
+                    if(null !== $rac_remainder):
                     $sql = "select rcswc.sum, rcswc.remainder, rcsw.width, (select GROUP_CONCAT(`width` SEPARATOR ' + ') from rational_cut_stage_width_combination_element where rational_cut_stage_width_combination_id = rcswc.id) elements "
                             . "from rational_cut_stage_width_combination rcswc "
                             . "inner join rational_cut_stage_width rcsw on rcswc.rational_cut_stage_width_id = rcsw.id "
-                            . "where rcsw.rational_cut_stage_id = $id and rcswc.remainder = $min_remainder";
+                            . "where rcsw.rational_cut_stage_id = $id and rcswc.remainder = $rac_remainder";
                     $grabber = new Grabber($sql);
                     $result = $grabber->result;
                     
