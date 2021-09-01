@@ -11,6 +11,17 @@ if(empty(filter_input(INPUT_GET, 'id'))) {
     header("Location: ".APPLICATION.'/rational_cut/');
 }
 
+// Если не указан remainder, но имеется выбранный ролик, то проверяем его отход
+// ДОРАБОТАТЬ!!!
+if(empty(filter_input(INPUT_GET, 'remainder'))) {
+    $sql = "select selected_is_pallet, selected_id from rational_cut_stage where id = ". filter_input(INPUT_GET, 'id');
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $selected_is_pallet = $row['selected_is_pallet']; echo $selected_is_pallet.'<br />';
+        $selected_id = $row['selected_id'];        echo $selected_id.'<br />';
+    }
+}
+
 // Статус "СВОБОДНЫЙ"
 $free_status_id = 1;
 
