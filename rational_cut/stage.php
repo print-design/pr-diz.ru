@@ -14,6 +14,73 @@ $thickness = null;
 $widths = array();
 $width_combinations = array();
 
+// Обработка формы создания следующего этапа
+if(null !== filter_input(INPUT_POST, 'next_stage_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    
+    // Получаем длину и ширину выбранного ролика
+    $selected_is_pallet = null;
+    $selected_id = null;
+    $sql = "select selected_is_pallet, selected_id from rational_cut_stage where id = $id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $selected_is_pallet = $row['selected_is_pallet'];
+        $selected_id = $row['selected_id'];
+    }
+    
+    $width = null;
+    $length = null;
+    $sql = "";
+    if($selected_is_pallet == 1) {
+        $sql = "select p.width, pr.length from pallet_roll pr inner join pallet p on pr.pallet_id = p.id where pr.id = $selected_id";
+    }
+    elseif($selected_is_pallet == 0) {
+        $sql = "select width, length from roll where id = $selected_id";
+    }
+    
+    if(!empty($sql)) {
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $width = $row['width'];
+            $length = $row['length'];
+        }
+    }
+    
+    $widths = null;
+    
+    // Получение ширин результатов раскроя
+    if(!empty($width)) {
+        $sql = "select width "
+                . "from rational_cut_stage_width_combination_element "
+                . "where rational_cut_stage_width_combination_id = "
+                . "(select min(rcswc.id) "
+                . "from rational_cut_stage_width_combination rcswc "
+                . "inner join rational_cut_stage_width rcsw on rcswc.rational_cut_stage_width_id = rcsw.id "
+                . "inner join rational_cut_stage rcs on rcsw.rational_cut_stage_id = rcs.id "
+                . "where rcs.id = $id "
+                . "and rcsw.width = $width "
+                . "and rcswc.remainder in (select min(remainder) from rational_cut_stage_width_combination group by rational_cut_stage_width_id))";
+        $grabber = new Grabber($sql);
+        $error_message = $grabber->error;
+        $widths = $grabber->result;
+    }
+    
+    if(!empty($widths)) {
+        // Создание списка конечных плёнок для следующего этапа.
+        // Из каждой плёнки нынешнего этапа вычитаем длину исходного ролика нынешнего этапа.
+        // Таким образом, на следующем этапе кроить понадобится только плёнку, оставшуюся после нынешнего этапа.
+    
+        // Получаем конечные ролики нынешнего этапа
+        $current_targets = null;
+        $sql = "select width, length from rational_cut_stage_stream where rational_cut_stage_id = $id";
+        $grabber = new Grabber($sql);
+        $error_message = $grabber->error;
+        $current_targets = $grabber->result;
+        
+        $next_targets = array();
+    }
+}
+
 // Обработка выбора плёнки для раскроя
 if(null !== filter_input(INPUT_POST, 'select_submit')) {
     $id = filter_input(INPUT_POST, 'id');
@@ -25,7 +92,7 @@ if(null !== filter_input(INPUT_POST, 'select_submit')) {
     $error_message = $executer->error;
 }
 
-// Обработка отправки формы
+// Обработка формы расчёта рационального раскроя для данного этапа
 if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
     // ID этапа аскроя
     $id = filter_input(INPUT_POST, 'id');
@@ -189,15 +256,19 @@ function GetWidthsCounts($combination) {
 $id = filter_input(INPUT_GET, 'id');
 $cut_id = null;
 $ordinal = null;
+$next_id = null;
 $selected_is_pallet = null;
 $selected_id = null;
 
-$sql = "select rcs.rational_cut_id, rcs.selected_is_pallet, selected_id, (select count(id) from rational_cut_stage where rational_cut_id = rcs.rational_cut_id and id <= rcs.id) ordinal "
+$sql = "select rcs.rational_cut_id, rcs.selected_is_pallet, selected_id, "
+        . "(select count(id) from rational_cut_stage where rational_cut_id = rcs.rational_cut_id and id <= rcs.id) ordinal, "
+        . "(select min(id) from rational_cut_stage where rational_cut_id = rcs.rational_cut_id and id > rcs.id) next_id "
         . "from rational_cut_stage rcs where id=$id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $cut_id = $row['rational_cut_id'];
     $ordinal = $row['ordinal'];
+    $next_id = $row['next_id'];
     $selected_is_pallet = $row['selected_is_pallet'];
     $selected_id = $row['selected_id'];
 }
@@ -298,7 +369,7 @@ while ($row = $fetcher->Fetch()) {
                                     <button type="submit" id="rational_cut_submit" name="rational_cut_submit" class="btn btn-dark form-control">Рассчитать</button>
                                 </div>
                             </div>
-                            <?php if($selected_is_pallet !== null && $selected_id !== null): ?>
+                            <?php if($selected_is_pallet !== null && $selected_id !== null && $next_id == null): ?>
                             <div class="col-5">
                                 <div class="form-group">
                                     <button type="submit" id="next_stage_submit" name="next_stage_submit" class="btn btn-outline-dark form-control">Следующий этап</button>
