@@ -1,17 +1,21 @@
 <?php
 include '../include/topscripts.php';
+
+// Авторизация
+if(!IsInRole(array('technologist', 'dev', 'manager'))) {
+    header('Location: '.APPLICATION.'/unauthorized.php');
+}
 ?>
 <!DOCTYPE html>
 <html>
     <head>
         <?php
         include '../include/head.php';
-        include 'style.php';
         ?>
     </head>
     <body>
         <?php
-        include '../include/header_analytics.php';
+        include '../include/header_sklad.php';
         include '../include/pager_top.php';
         ?>
         <div class="container-fluid">
@@ -25,6 +29,11 @@ include '../include/topscripts.php';
             </div>
             <table class="table table-hover">
                 <?php
+                $sql = "select count(id) from rational_cut";
+                $fetcher = new Fetcher($sql);
+                $row = $fetcher->Fetch();
+                $pager_total_count = $row[0];
+                
                 $sql = "select rc.id, (select min(id) from rational_cut_stage where rational_cut_id = rc.id) stage_id, DATE_FORMAT(rc.date, '%d.%m.%Y') date,rc.brand_name, rc.thickness "
                         . "from rational_cut rc "
                         . "order by rc.id desc";
@@ -39,6 +48,9 @@ include '../include/topscripts.php';
                 </tr>
                     <?php endwhile; ?>
             </table>
+            <?php
+            include '../include/pager_bottom.php';
+            ?>
         </div>
     </body>
     <?php

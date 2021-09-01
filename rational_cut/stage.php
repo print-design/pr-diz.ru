@@ -1,6 +1,11 @@
 <?php
 include '../include/topscripts.php';
 
+// Авторизация
+if(!IsInRole(array('technologist', 'dev', 'manager'))) {
+    header('Location: '.APPLICATION.'/unauthorized.php');
+}
+
 // Если не указан id, перенаправляем на основную страницу
 if(empty(filter_input(INPUT_GET, 'id'))) {
     header("Location: ".APPLICATION.'/rational_cut/');
@@ -362,12 +367,11 @@ while ($row = $fetcher->Fetch()) {
     <head>
         <?php
         include '../include/head.php';
-        include 'style.php';
         ?>
     </head>
     <body>
         <?php
-        include '../include/header_analytics.php';
+        include '../include/header_sklad.php';
         ?>
         <div class="container-fluid">
             <?php

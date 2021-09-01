@@ -1,6 +1,11 @@
 <?php
 include '../include/topscripts.php';
 
+// Авторизация
+if(!IsInRole(array('technologist', 'dev', 'manager'))) {
+    header('Location: '.APPLICATION.'/unauthorized.php');
+}
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -73,12 +78,11 @@ if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
     <head>
         <?php
         include '../include/head.php';
-        include 'style.php';
         ?>
     </head>
     <body>
         <?php
-        include '../include/header_analytics.php';
+        include '../include/header_sklad.php';
         ?>
         <div class="container-fluid">
             <?php
