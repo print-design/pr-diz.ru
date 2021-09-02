@@ -643,6 +643,7 @@ while ($row = $fetcher->Fetch()) {
                                 <form method="post">
                                     <input type="hidden" name="selected_is_pallet" value="1" />
                                     <input type="hidden" name="selected_id" value="<?=$row['id'] ?>" />
+                                    <input type="hidden" name="remainder" value="<?=$rac_remainder ?>" />
                                     <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                                     <button type="submit" class="btn btn-sm" name="select_submit">Выбрать</button>
                                 </form>
@@ -690,6 +691,7 @@ while ($row = $fetcher->Fetch()) {
                                 <form method="post">
                                     <input type="hidden" name="selected_is_pallet" value="0" />
                                     <input type="hidden" name="selected_id" value="<?=$row['id'] ?>" />
+                                    <input type="hidden" name="remainder" value="<?=$rac_remainder ?>" />
                                     <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                                     <button type="submit" class="btn btn-sm" name="select_submit">Выбрать</button>
                                 </form>
