@@ -20,8 +20,19 @@ $widths = array();
 $width_combinations = array();
 
 // Обработка формы выбора рационального отхода
-if(null !== filter_input(INPUT_POST, 'remainder_submit')) {
+if(null !== filter_input(INPUT_POST, 'remainder_submit')) {    
     $id = filter_input(INPUT_POST, 'id');
+    
+    // Отменяем выбор плёнки
+    $sql = "update rational_cut_stage set selected_is_pallet = null, selected_id = null, remainder = null where id = $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    // Удаляем все следующие этапы
+    $sql = "delete from rational_cut_stage where rational_cut_id = (select rational_cut_id from rational_cut_stage where id = $id) and id > $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
     $remainder = filter_input(INPUT_POST, 'remainder');
     $sql = "update rational_cut_stage set remainder = $remainder where id = $id";
     $executer = new Executer($sql);
