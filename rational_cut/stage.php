@@ -379,6 +379,10 @@ if($row = $fetcher->Fetch()) {
     $thickness = $row['thickness'];
 }
 
+$sql = "select width, length from rational_cut_stage_stream where rational_cut_stage_id=$id order by id";
+$grabber = new Grabber($sql);
+$streams = $grabber->result;
+
 // Получение всех статусов
 $fetcher = (new Fetcher("select id, name, colour from roll_status"));
 $statuses = array();
@@ -458,27 +462,25 @@ while ($row = $fetcher->Fetch()) {
                         </div>
                         <?php
                         $i = 0;
-                        $sql = "select width, length from rational_cut_stage_stream where rational_cut_stage_id=$id order by id";
-                        $fetcher = new Fetcher($sql);
-                        while ($row = $fetcher->Fetch()):
+                        foreach ($streams as $stream):
                         ?>
                         <div class="row">
                             <div class="col-5">
                                 <div class="form-group">
                                     <label for="width_<?=(++$i) ?>">Ширина, мм</label>
-                                    <input type="text" class="form-control" disabled="disabled" value="<?=$row['width'] ?>" />
-                                    <input type="hidden" id="width_<?=$i ?>" name="width_<?=$i ?>" value="<?=$row['width'] ?>" />
+                                    <input type="text" class="form-control" disabled="disabled" value="<?=$stream['width'] ?>" />
+                                    <input type="hidden" id="width_<?=$i ?>" name="width_<?=$i ?>" value="<?=$stream['width'] ?>" />
                                 </div>
                             </div>
                             <div class="col-5">
                                 <div class="form-group">
                                     <label for="length_<?=$i ?>">Длина, м</label>
-                                    <input type="text" class="form-control" disabled="disabled" value="<?=$row['length'] ?>" />
-                                    <input type="hidden" id="length_<?=$i ?>" name="length_<?=$i ?>" value="<?=$row['length'] ?>" />
+                                    <input type="text" class="form-control" disabled="disabled" value="<?=$stream['length'] ?>" />
+                                    <input type="hidden" id="length_<?=$i ?>" name="length_<?=$i ?>" value="<?=$stream['length'] ?>" />
                                 </div>
                             </div>
                         </div>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                         <div class="row mt-4">
                             <div class="col-5">
                                 <div class="form-group">
