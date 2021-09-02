@@ -501,7 +501,8 @@ while ($row = $fetcher->Fetch()) {
                     $sql = "select rcswc.sum, rcswc.remainder, rcsw.width, (select GROUP_CONCAT(`width` SEPARATOR ' + ') from rational_cut_stage_width_combination_element where rational_cut_stage_width_combination_id = rcswc.id) elements "
                             . "from rational_cut_stage_width_combination rcswc "
                             . "inner join rational_cut_stage_width rcsw on rcswc.rational_cut_stage_width_id = rcsw.id "
-                            . "where rcsw.rational_cut_stage_id = $id";
+                            . "where rcsw.rational_cut_stage_id = $id "
+                            . "order by rcsw.width";
                     $grabber = new Grabber($sql);
                     $result = $grabber->result;
                     
