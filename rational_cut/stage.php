@@ -23,7 +23,7 @@ $width_combinations = array();
 if(null !== filter_input(INPUT_POST, 'remainder_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $remainder = filter_input(INPUT_POST, 'remainder');
-    $sql = "update rational_cut_stage set remainder = $remainder";
+    $sql = "update rational_cut_stage set remainder = $remainder where id = $id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
 }
