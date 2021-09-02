@@ -11,17 +11,6 @@ if(empty(filter_input(INPUT_GET, 'id'))) {
     header("Location: ".APPLICATION.'/rational_cut/');
 }
 
-// Если не указан remainder, но имеется выбранный ролик, то проверяем его отход
-// ДОРАБОТАТЬ!!!
-if(empty(filter_input(INPUT_GET, 'remainder'))) {
-    $sql = "select selected_is_pallet, selected_id from rational_cut_stage where id = ". filter_input(INPUT_GET, 'id');
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        $selected_is_pallet = $row['selected_is_pallet']; echo $selected_is_pallet.'<br />';
-        $selected_id = $row['selected_id'];        echo $selected_id.'<br />';
-    }
-}
-
 // Статус "СВОБОДНЫЙ"
 $free_status_id = 1;
 
@@ -30,19 +19,30 @@ $thickness = null;
 $widths = array();
 $width_combinations = array();
 
+// Обработка формы выбора рационального отхода
+if(null !== filter_input(INPUT_POST, 'remainder_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $remainder = filter_input(INPUT_POST, 'remainder');
+    $sql = "update rational_cut_stage set remainder = $remainder";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+}
+
 // Обработка формы создания следующего этапа
 if(null !== filter_input(INPUT_POST, 'next_stage_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $rational_cut_id = null;
     $selected_is_pallet = null;
     $selected_id = null;
+    $remainder = null;
     
-    $sql = "select rational_cut_id, selected_is_pallet, selected_id from rational_cut_stage where id = $id";
+    $sql = "select rational_cut_id, selected_is_pallet, selected_id, remainder from rational_cut_stage where id = $id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $rational_cut_id = $row['rational_cut_id'];
         $selected_is_pallet = $row['selected_is_pallet'];
         $selected_id = $row['selected_id'];
+        $remainder = $row['remainder'];
     }
     
     // Получаем длину и ширину выбранного ролика
@@ -66,20 +66,6 @@ if(null !== filter_input(INPUT_POST, 'next_stage_submit')) {
     
     $combination_elements = null;
     
-    // Получение рационального отхода
-    $rac_remainder = filter_input(INPUT_GET, 'remainder');
-    
-    if(null === $rac_remainder) {
-        $sql = "select min(rcswc.remainder) "
-                . "from rational_cut_stage_width_combination rcswc "
-                . "inner join rational_cut_stage_width rcsw on rcswc.rational_cut_stage_width_id = rcsw.id "
-                . "where rcsw.rational_cut_stage_id = $id";
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            $rac_remainder = $row[0];
-        }
-    }
-    
     // Получение ширин результатов раскроя
     if(!empty($width)) {
         $sql = "select width "
@@ -91,7 +77,7 @@ if(null !== filter_input(INPUT_POST, 'next_stage_submit')) {
                 . "inner join rational_cut_stage rcs on rcsw.rational_cut_stage_id = rcs.id "
                 . "where rcs.id = $id "
                 . "and rcsw.width = $width "
-                . "and rcswc.remainder = $rac_remainder)";
+                . "and rcswc.remainder = $remainder)";
         $grabber = new Grabber($sql);
         $error_message = $grabber->error;
         $combination_elements = $grabber->result;
@@ -172,13 +158,15 @@ if(null !== filter_input(INPUT_POST, 'select_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $selected_is_pallet = filter_input(INPUT_POST, 'selected_is_pallet');
     $selected_id = filter_input(INPUT_POST, 'selected_id');
+    $remainder = filter_input(INPUT_POST, 'remainder');
     
     // Удаляем все следующие этапы
     $sql = "delete from rational_cut_stage where rational_cut_id = (select rational_cut_id from rational_cut_stage where id = $id) and id > $id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     
-    $sql = "update rational_cut_stage set selected_is_pallet = $selected_is_pallet, selected_id = $selected_id where id = $id";
+    // Устанавливаем для текущего этапа ID плёнки и рациональный отход
+    $sql = "update rational_cut_stage set selected_is_pallet = $selected_is_pallet, selected_id = $selected_id, remainder = $remainder where id = $id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
 }
@@ -203,77 +191,79 @@ if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
         array_push($targets, $target);
     }
     
-    // Получаем все ширины плёнок данного типа
-    // ... не из паллетов
-    $sql = "select distinct r.width from roll r "
-            . "inner join film_brand fb on r.film_brand_id = fb.id "
-            . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-            . "where trim(fb.name) = '$brand_name' and r.thickness = $thickness and (rsh.status_id is null or rsh.status_id = $free_status_id)";
-    $fetcher = new Fetcher($sql);
-    while($row = $fetcher->Fetch()) {
-        array_push($widths, $row[0]);
-    }
+    if(count($targets) > 0) {
+        // Получаем все ширины плёнок данного типа
+        // ... не из паллетов
+        $sql = "select distinct r.width from roll r "
+                . "inner join film_brand fb on r.film_brand_id = fb.id "
+                . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+                . "where trim(fb.name) = '$brand_name' and r.thickness = $thickness and (rsh.status_id is null or rsh.status_id = $free_status_id)";
+        $fetcher = new Fetcher($sql);
+        while($row = $fetcher->Fetch()) {
+            array_push($widths, $row[0]);
+        }
     
-    // ... из паллетов
-    $sql = "select distinct p.width from pallet_roll pr "
-            . "inner join pallet p on pr.pallet_id = p.id "
-            . "inner join film_brand fb on p.film_brand_id = fb.id "
-            . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-            . "where trim(fb.name) = '$brand_name' and p.thickness = $thickness and (prsh.status_id is null or prsh.status_id = $free_status_id)";
-    $fetcher = new Fetcher($sql);
-    while ($row = $fetcher->Fetch()) {
-        array_push($widths, $row[0]);
-    }
+        // ... из паллетов
+        $sql = "select distinct p.width from pallet_roll pr "
+                . "inner join pallet p on pr.pallet_id = p.id "
+                . "inner join film_brand fb on p.film_brand_id = fb.id "
+                . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+                . "where trim(fb.name) = '$brand_name' and p.thickness = $thickness and (prsh.status_id is null or prsh.status_id = $free_status_id)";
+        $fetcher = new Fetcher($sql);
+        while ($row = $fetcher->Fetch()) {
+            array_push($widths, $row[0]);
+        }
     
-    // Составляем список ширин конечных плёнок (чтобы при обходе исключить лишние сочетания)
-    $target_widths_counts = GetWidthsCounts($targets);
-    $targets_count = count($targets);
+        // Составляем список ширин конечных плёнок (чтобы при обходе исключить лишние сочетания)
+        $target_widths_counts = GetWidthsCounts($targets);
+        $targets_count = count($targets);
     
-    // Перебираем все возможные сочетания ширин, чтобы их сумма была не больше максимальной
-    foreach($widths as $width) {
-        GetCutsByWidth($targets, $targets_count, $width, $target_widths_counts, $width_combinations);
-    }
+        // Перебираем все возможные сочетания ширин, чтобы их сумма была не больше максимальной
+        foreach($widths as $width) {
+            GetCutsByWidth($targets, $targets_count, $width, $target_widths_counts, $width_combinations);
+        }
     
-    // Удаляем результаты предыдущиго расчёта по данному этапу и следующим этапам
-    $sql = "delete from rational_cut_stage_width where rational_cut_stage_id = $id";
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
+        // Удаляем результаты предыдущиго расчёта по данному этапу и следующим этапам
+        $sql = "delete from rational_cut_stage_width where rational_cut_stage_id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
     
-    // Отменяем выбор плёнки
-    $sql = "update rational_cut_stage set selected_is_pallet = null, selected_id = null where id = $id";
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
+        // Отменяем выбор плёнки
+        $sql = "update rational_cut_stage set selected_is_pallet = null, selected_id = null, remainder = null where id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
     
-    // Удаляем все следующие этапы
-    $sql = "delete from rational_cut_stage where rational_cut_id = (select rational_cut_id from rational_cut_stage where id = $id) and id > $id";
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
+        // Удаляем все следующие этапы
+        $sql = "delete from rational_cut_stage where rational_cut_id = (select rational_cut_id from rational_cut_stage where id = $id) and id > $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
     
-    // Сохраняем данные в базу
-    foreach (array_keys($width_combinations) as $width_key) {
-        // Сохраняем длины
-        $sql_width = "insert into rational_cut_stage_width (rational_cut_stage_id, width) values ($id, $width_key)";
-        $executer_width = new Executer($sql_width);
-        $error_message = $executer_width->error;
-        $width_id = $executer_width->insert_id;
+        // Сохраняем данные в базу
+        foreach (array_keys($width_combinations) as $width_key) {
+            // Сохраняем длины
+            $sql_width = "insert into rational_cut_stage_width (rational_cut_stage_id, width) values ($id, $width_key)";
+            $executer_width = new Executer($sql_width);
+            $error_message = $executer_width->error;
+            $width_id = $executer_width->insert_id;
         
-        if(empty($error_message) && !empty($width_id)) {
-            // Сохраняем комбинации
-            foreach($width_combinations[$width_key] as $combination) {
-                $sum_width = array_sum($combination);
-                $remainder = $width_key - $sum_width;
+            if(empty($error_message) && !empty($width_id)) {
+                // Сохраняем комбинации
+                foreach($width_combinations[$width_key] as $combination) {
+                    $sum_width = array_sum($combination);
+                    $remainder = $width_key - $sum_width;
                 
-                $sql_combination = "insert into rational_cut_stage_width_combination (rational_cut_stage_width_id, sum, remainder) values ($width_id, $sum_width, $remainder)";
-                $executer_combination = new Executer($sql_combination);
-                $error_message = $executer_combination->error;
-                $combination_id = $executer_combination->insert_id;
+                    $sql_combination = "insert into rational_cut_stage_width_combination (rational_cut_stage_width_id, sum, remainder) values ($width_id, $sum_width, $remainder)";
+                    $executer_combination = new Executer($sql_combination);
+                    $error_message = $executer_combination->error;
+                    $combination_id = $executer_combination->insert_id;
                 
-                if(empty($error_message) && !empty($combination_id)) {
-                    // Сохраняем элементы комбинаций
-                    foreach ($combination as $element) {
-                        $sql_element = "insert into rational_cut_stage_width_combination_element (rational_cut_stage_width_combination_id, width) values ($combination_id, $element)";
-                        $executer_element = new Executer($sql_element);
-                        $error_message = $executer_element->error;
+                    if(empty($error_message) && !empty($combination_id)) {
+                        // Сохраняем элементы комбинаций
+                        foreach ($combination as $element) {
+                            $sql_element = "insert into rational_cut_stage_width_combination_element (rational_cut_stage_width_combination_id, width) values ($combination_id, $element)";
+                            $executer_element = new Executer($sql_element);
+                            $error_message = $executer_element->error;
+                        }
                     }
                 }
             }
@@ -346,13 +336,14 @@ function GetWidthsCounts($combination) {
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
 $cut_id = null;
+$selected_is_pallet = null;
+$selected_id = null;
+$remainder = null;
 $ordinal = null;
 $prev_id = null;
 $next_id = null;
-$selected_is_pallet = null;
-$selected_id = null;
 
-$sql = "select rcs.rational_cut_id, rcs.selected_is_pallet, selected_id, "
+$sql = "select rcs.rational_cut_id, rcs.selected_is_pallet, rcs.selected_id, rcs.remainder, "
         . "(select count(id) from rational_cut_stage where rational_cut_id = rcs.rational_cut_id and id <= rcs.id) ordinal, "
         . "(select max(id) from rational_cut_stage where rational_cut_id = rcs.rational_cut_id and id < rcs.id) prev_id, "
         . "(select min(id) from rational_cut_stage where rational_cut_id = rcs.rational_cut_id and id > rcs.id) next_id "
@@ -360,11 +351,12 @@ $sql = "select rcs.rational_cut_id, rcs.selected_is_pallet, selected_id, "
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $cut_id = $row['rational_cut_id'];
+    $selected_is_pallet = $row['selected_is_pallet'];
+    $selected_id = $row['selected_id'];
+    $remainder = $row['remainder'];
     $ordinal = $row['ordinal'];
     $prev_id = $row['prev_id'];
     $next_id = $row['next_id'];
-    $selected_is_pallet = $row['selected_is_pallet'];
-    $selected_id = $row['selected_id'];
 }
 
 $brand_name = '';
@@ -534,38 +526,44 @@ while ($row = $fetcher->Fetch()) {
                 </div>
                 <div class="col-12 col-md-6 col-lg-4">
                     <h2>Рациональные комбинации</h2>
-                    <div class="form-group">
-                        <label for="remainder">Отход</label>
-                        <select id="remainder" name="remainder" class="form-control w-25">
-                            <?php
-                            $sql = "select distinct rcswc.remainder "
-                                    . "from rational_cut_stage_width_combination rcswc "
-                                    . "inner join rational_cut_stage_width rcsw on rcswc.rational_cut_stage_width_id = rcsw.id "
-                                    . "where rcsw.rational_cut_stage_id = $id "
-                                    . "order by rcswc.remainder asc";
-                            $fetcher = new Fetcher($sql);
-                            while($row = $fetcher->Fetch()):
-                            $selected = "";
-                            if(filter_input(INPUT_GET, 'remainder') == $row[0]) {
-                                $selected = " selected='selected'";
-                            }
-                            ?>
-                            <option<?=$selected ?>><?=$row[0] ?></option>
-                            <?php endwhile; ?>
-                        </select>
-                    </div>
+                    <form method="post">
+                        <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                        <input type="hidden" name="remainder_submit" value="1" />
+                        <div class="input-group w-50 mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Отход</span>
+                            </div>
+                            <select id="remainder" name="remainder" class="form-control w-25" onchange="javascript: this.form.submit();">
+                                <?php
+                                $sql = "select distinct rcswc.remainder "
+                                        . "from rational_cut_stage_width_combination rcswc "
+                                        . "inner join rational_cut_stage_width rcsw on rcswc.rational_cut_stage_width_id = rcsw.id "
+                                        . "where rcsw.rational_cut_stage_id = $id "
+                                        . "order by rcswc.remainder asc";
+                                $grabber = new Grabber($sql);
+                                $result = $grabber->result;
+                                $min_reminder = null;
+                                
+                                if(count($result) > 0) {
+                                    $min_reminder = $result[0]['remainder'];
+                                }
+                                
+                                foreach($result as $row):
+                                    $selected = "";
+                                    if($remainder == $row['remainder']) {
+                                        $selected = " selected='selected'";
+                                    }
+                                ?>
+                                <option<?=$selected ?>><?=$row['remainder'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </form>
                     <?php
-                    $rac_remainder = filter_input(INPUT_GET, 'remainder');
+                    $rac_remainder = $remainder;
                     
-                    if(null === $rac_remainder) {
-                        $sql = "select min(rcswc.remainder) "
-                                . "from rational_cut_stage_width_combination rcswc "
-                                . "inner join rational_cut_stage_width rcsw on rcswc.rational_cut_stage_width_id = rcsw.id "
-                                . "where rcsw.rational_cut_stage_id = $id";
-                        $fetcher = new Fetcher($sql);
-                        if($row = $fetcher->Fetch()) {
-                            $rac_remainder = $row[0];
-                        }
+                    if($rac_remainder == null) {
+                        $rac_remainder = $min_reminder;
                     }
                     
                     if(null !== $rac_remainder):
@@ -708,9 +706,4 @@ while ($row = $fetcher->Fetch()) {
     <?php
     include '../include/footer.php';
     ?>
-    <script>
-        $('#remainder').change(function() {
-            window.location = '<?=APPLICATION.'/rational_cut/stage.php?id='. filter_input(INPUT_GET, 'id') ?>&remainder=' + $(this).val();
-        });
-    </script>
 </html>
