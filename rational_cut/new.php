@@ -29,12 +29,15 @@ if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
     }
     
     $targets = array();
-    $i = 0;
-    while (null !== filter_input(INPUT_POST, 'width_'.(++$i)) && null !== filter_input(INPUT_POST, 'length_'.$i)) {
-        $target = array();
-        $target['width'] = filter_input(INPUT_POST, 'width_'.$i);
-        $target['length'] = filter_input(INPUT_POST, 'length_'.$i);
-        array_push($targets, $target);
+    $post_params = filter_input_array(INPUT_POST);
+    
+    foreach (array_keys($post_params) as $key) {
+        if(substr($key, 0, strlen('width_')) == 'width_') {
+            $target = array();
+            $target['width'] = filter_input(INPUT_POST, $key);
+            $target['length'] = filter_input(INPUT_POST, 'length_'.(substr($key, strlen('width_'))));
+            array_push($targets, $target);
+        }
     }
     
     if(count($targets) == 0) {
@@ -60,7 +63,7 @@ if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
                 foreach ($targets as $target) {
                     $width = $target['width'];
                     $length = $target['length'];
-                    $sql = "insert into rational_cut_stage_stream (rational_cut_stage_id, width, length) values($rational_cut_stage_id, $width, $length)";
+                    $sql = "insert into rational_cut_stage_stream (rational_cut_stage_id, width, length) values($rational_cut_stage_id, $width, $length)"; echo $sql.'<br />';
                     $executer = new Executer($sql);
                     $error_message = $executer->error;
                 }
