@@ -526,10 +526,10 @@ while ($row = $fetcher->Fetch()) {
                     
                     foreach (array_keys($widths) as $width_key):
                     ?>
-                    <p class="font-weight-bold">Ширина: <?=$width_key ?></p>
+                    <p class="font-weight-bold">Ширина: <?=$width_key ?> мм</p>
                     <?php
                     foreach ($widths[$width_key] as $combination) {
-                        echo $combination['elements'].' (='.$combination['sum'].'), отход '.$combination['remainder'];
+                        echo $combination['elements'].' (='.$combination['sum'].' мм), отход '.$combination['remainder'].' мм';
                         echo '<br />';
                     }
                     ?>
@@ -569,6 +569,9 @@ while ($row = $fetcher->Fetch()) {
                                 <option<?=$selected ?>><?=$row['remainder'] ?></option>
                                 <?php endforeach; ?>
                             </select>
+                            <div class="input-group-append">
+                                <span class="input-group-text">мм</span>
+                            </div>
                         </div>
                     </form>
                     <?php
@@ -606,10 +609,10 @@ while ($row = $fetcher->Fetch()) {
                     
                     foreach (array_keys($widths) as $width_key):
                     ?>
-                    <p class="font-weight-bold">Ширина: <?=$width_key ?></p>
+                    <p class="font-weight-bold">Ширина: <?=$width_key ?> мм</p>
                     <?php
                     foreach ($widths[$width_key] as $combination) {
-                        echo $combination['elements'].' (='.$combination['sum'].'), отход '.$combination['remainder'];
+                        echo $combination['elements'].' (='.$combination['sum'].' мм), отход '.$combination['remainder'].' мм';
                         echo '<br />';
                     }
                     ?>
