@@ -621,12 +621,14 @@ while ($row = $fetcher->Fetch()) {
                     <p class="font-weight-bold mt-3">Плёнки:</p>
                     <table>
                         <?php
+                        // Среди подходящих плёнок исключаем те, которые были уже выбраны в предядущих этапах
                         $sql = "select pr.id, concat('П', p.id, 'Р', pr.ordinal) nr, DATE_FORMAT(p.date, '%d.%m.%Y') date, pr.length, prsh.status_id "
                                 . "from pallet_roll pr "
                                 . "inner join pallet p on pr.pallet_id = p.id "
                                 . "inner join film_brand fb on p.film_brand_id = fb.id "
                                 . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                                . "where trim(fb.name) = '$brand_name' and p.thickness = $thickness and p.width = $width_key";
+                                . "where trim(fb.name) = '$brand_name' and p.thickness = $thickness and p.width = $width_key "
+                                . "and pr.id not in (select selected_id from rational_cut_stage where id < $id and selected_is_pallet = 1 and rational_cut_id = (select rational_cut_id from rational_cut_stage where id = $id))";
                         $fetcher = new Fetcher($sql);
                         while ($row = $fetcher->Fetch()):
                         if($row['status_id'] == $free_status_id || empty($row['status_id'])):
@@ -670,11 +672,13 @@ while ($row = $fetcher->Fetch()) {
                         endif;
                         endwhile;
                         
+                        // Среди подходящих плёнок исключаем те, которые были уже выбраны в предядущих этапах
                         $sql = "select r.id, concat('Р', r.id) nr, DATE_FORMAT(r.date, '%d.%m.%Y') date, r.length, rsh.status_id "
                                 . "from roll r "
                                 . "inner join film_brand fb on r.film_brand_id = fb.id "
                                 . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                                . "where trim(fb.name) = '$brand_name' and r.thickness = $thickness and r.width = $width_key";
+                                . "where trim(fb.name) = '$brand_name' and r.thickness = $thickness and r.width = $width_key "
+                                . "and r.id not in (select selected_id from rational_cut_stage where id < $id and selected_is_pallet = 0 and rational_cut_id = (select rational_cut_id from rational_cut_stage where id = $id))";
                         $fetcher = new Fetcher($sql);
                         while ($row = $fetcher->Fetch()):
                         if($row['status_id'] == $free_status_id || empty($row['status_id'])):
