@@ -434,7 +434,7 @@ while ($row = $fetcher->Fetch()) {
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 col-md-6 col-lg-4">
+                <div class="col-12 col-md-6 col-lg-3">
                     <form method="post">
                         <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                         <div class="form-group">
@@ -497,7 +497,7 @@ while ($row = $fetcher->Fetch()) {
                         </div>
                     </form>
                 </div>
-                <div class="col-12 col-md-6 col-lg-4">
+                <div class="col-12 col-md-6 col-lg-3">
                     <h2>Все комбинации</h2>
                     <?php
                     $sql = "select rcswc.sum, rcswc.remainder, rcsw.width, (select GROUP_CONCAT(`width` SEPARATOR ' + ') from rational_cut_stage_width_combination_element where rational_cut_stage_width_combination_id = rcswc.id) elements "
@@ -538,12 +538,12 @@ while ($row = $fetcher->Fetch()) {
                     <hr />
                     <?php endforeach; ?>
                 </div>
-                <div class="col-12 col-md-6 col-lg-4">
+                <div class="col-12 col-md-6 col-lg-6">
                     <h2>Рациональные комбинации</h2>
                     <form method="post">
                         <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                         <input type="hidden" name="remainder_submit" value="1" />
-                        <div class="input-group w-50 mb-3">
+                        <div class="input-group w-25 mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Отход</span>
                             </div>
@@ -620,6 +620,13 @@ while ($row = $fetcher->Fetch()) {
                     ?>
                     <p class="font-weight-bold mt-3">Плёнки:</p>
                     <table>
+                        <tr>
+                            <th style="font-size: small;">Номер</th>
+                            <th style="font-size: small;">Поступление</th>
+                            <th style="font-size: small;">Длина</th>
+                            <th style="font-size: small;">Статус</th>
+                            <th></th>
+                        </tr>
                         <?php
                         // Среди подходящих плёнок исключаем те, которые были уже выбраны в предядущих этапах
                         $sql = "select pr.id, concat('П', p.id, 'Р', pr.ordinal) nr, DATE_FORMAT(p.date, '%d.%m.%Y') date, pr.length, prsh.status_id "
