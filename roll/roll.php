@@ -604,7 +604,7 @@ $cut_wind_id = $row['cut_wind_id'];
                         $is_unknown_checked = " checked='checked'";
                     }
                     ?>
-                    <div class="form-group">
+                    <div class="form-group d-none">
                         <input type="checkbox" id="is_unknown" name="is_unknown"<?=$is_unknown_checked ?> disabled="disabled" />
                         <label class="form-check-label" for="is_unknown">Неизвестный</label>
                     </div>
