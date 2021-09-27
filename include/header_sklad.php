@@ -9,6 +9,7 @@ include 'left_bar.php';
             $rolls_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/roll')) == APPLICATION.'/roll' ? ' disabled' : '';
             $cut_sources_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/cut_source')) == APPLICATION.'/cut_source' ? ' disabled' : '';
             $utilized_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/utilized')) == APPLICATION.'/utilized' ? ' disabled' : '';
+            $rational_cut_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/rational_cut')) == APPLICATION.'/rational_cut' ? ' disabled' : '';
             $user_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/user/index.php' ? ' disabled' : '';
             $personal_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/personal/index.php' ? ' disabled' : '';
             
@@ -65,6 +66,14 @@ include 'left_bar.php';
             </li>
             <li class="nav-item">
                 <a class="nav-link<?=$utilized_status ?> text-nowrap" href="<?=APPLICATION ?>/utilized/">Сработанная пленка</a>
+            </li>
+            <?php
+            endif;
+            
+            if(IsInRole(array('technologist', 'dev', 'manager'))):
+            ?>
+            <li class="nav-item">
+                <a class="nav-link<?=$rational_cut_status ?> text-nowrap" href="<?=APPLICATION ?>/rational_cut">Рациональный раскрой</a>
             </li>
             <?php
             endif;
