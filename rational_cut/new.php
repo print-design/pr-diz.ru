@@ -96,7 +96,7 @@ if(null !== filter_input(INPUT_POST, 'rational_cut_submit')) {
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/rational_cut/">К списку</a>
             <h1 class="mb-4">Новый раскрой</h1>
             <div class="row">
-                <div class="col-12 col-md-6 col-lg-3">
+                <div class="col-12 col-md-6 col-lg-4">
                     <form method="post">
                         <div class="form-group">
                             <label for="brand_name">Марка плёнки</label>
