@@ -537,7 +537,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         // если нет печати, но есть ламинация: длина тиража чистая с ламинацией + длина приладки ламинации
         $dirty_length = 0;
         
-        if($machine_id != "NULL" && !empty($pure_length) && !empty($paints_count)) {
+        if($machine_id != "NULL" && !empty($pure_length) && !empty($paints_count) && !empty($tuning_waste_percents[$machine_id])) {
             $dirty_length = $pure_length + ($pure_length * $tuning_waste_percents[$machine_id] / 100 + $tuning_lengths[$machine_id] * $paints_count);
         }
         else if(!empty ($lamination1_brand_name) && !empty ($pure_length_lam) && !empty ($tuning_lengths[5])) {
@@ -622,7 +622,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         // время приладки каждой краски * число красок
         $tuning_time = null;
         
-        if($machine_id != "NULL" && $paints_count != "NULL") {
+        if($machine_id != "NULL" && $paints_count != "NULL" && !empty($tuning_times[$machine_id])) {
             $tuning_time = $tuning_times[$machine_id] / 60 * $paints_count;
         }
         
@@ -700,6 +700,9 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             }
         }
         
+        // Стоимость краски + лака + растворителя, руб
+        $paint_price_total = null;
+        
         echo "<p>Площадь тиража чистая, м2: $pure_area</p>";
         echo "<p>Ширина тиража обрезная, мм: $pure_width</p>";
         echo "<p>Ширина тиража с отходами, мм: $dirty_width</p>";
@@ -721,7 +724,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         echo "<p>Стоимость 1 печатной формы Тверь, руб: $cliche_tver_price_total</p>";
         echo "<p>Стоимость комплекта печатных форм, руб: $cliche_price_total</p>";
         echo "<hr />";
-                
+        echo "<p>Стоимость краски + лака + растворителя, руб: $paint_price_total</p>";
+        
         // *************************************
         // Сохранение в базу
         /*if(empty($error_message)) {
