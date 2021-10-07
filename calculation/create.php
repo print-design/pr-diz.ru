@@ -196,6 +196,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         if(empty($streams_count)) $streams_count = "NULL";
         $raport = filter_input(INPUT_POST, 'raport');
         if(empty($raport)) $raport = "NULL";
+        $ski = filter_input(INPUT_POST, 'ski');
+        if(empty($ski)) $ski = "NULL";
         $paints_count = filter_input(INPUT_POST, 'paints_count');
         if(empty($paints_count)) $paints_count = "NULL";
         
@@ -494,9 +496,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $$cliche_var = filter_input(INPUT_POST, "form_$i");
         }
         
-        // Ширина лыж
-        $ski_width = 0.02;
-        
         // 1. Площадь тиража чистая, м2
         // если в кг: 1000 * (вес заказа + вес лам1 + вес лам2) / удельный вес материала
         // если в шт: ширина ручья / 1000 * длина этикетки вдоль рапорта вала / 1000 * количество этикеток в заказе
@@ -555,7 +554,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $dirty_width = $pure_width / 1000;
         }
         else {
-            $dirty_width = ($pure_width / 1000) + $ski_width;
+            $dirty_width = ($pure_width / 1000) + $ski;
         }
             
         $vari = intval($dirty_width * 1000);
@@ -730,7 +729,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                     . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
                     . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
                     . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
-                    . "width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, extracharge, no_ski, "
+                    . "width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, extracharge, ski, no_ski, "
                     . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
                     . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                     . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -740,7 +739,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                     . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, "
                     . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_other_brand_name', $lamination1_other_price, $lamination1_other_thickness, $lamination1_other_weight, $lamination1_customers_material, "
                     . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_other_brand_name', $lamination2_other_price, $lamination2_other_thickness, $lamination2_other_weight, $lamination2_customers_material, "
-                    . "$width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, $extracharge, $no_ski, "
+                    . "$width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, $extracharge, $ski, $no_ski, "
                     . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
                     . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                     . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
@@ -787,7 +786,7 @@ if(!empty($id)) {
             . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
             . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
-            . "quantity, width, streams_count, length, stream_width, raport, paints_count, status_id, extracharge, no_ski, "
+            . "quantity, width, streams_count, length, stream_width, raport, paints_count, status_id, extracharge, ski, no_ski, "
             . "(select count(id) from techmap where calculation_id = $id) techmaps_count, "
             . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -1006,6 +1005,12 @@ $paints_count = filter_input(INPUT_POST, 'paints_count');
 if(null === $paints_count) {
     if(isset($row['paints_count'])) $paints_count = $row['paints_count'];
     else $paints_count = null;
+}
+
+$ski = filter_input(INPUT_POST, 'ski');
+if(null == $ski) {
+    if(isset($row['ski'])) $ski = $row['ski'];
+    else $ski = null;
 }
 
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
@@ -1802,6 +1807,27 @@ $colorfulnesses = array();
                                     </select>
                                 </div>
                             </div>
+                            <!-- Ширина лыж -->
+                            <div class="col-6 print-only d-none">
+                                <div class="form-group">
+                                    <label for="raport">Ширина лыж, м</label>
+                                    <?php
+                                    $disabled = $no_ski == 1 ? " disabled='disabled'" : "";
+                                    ?>
+                                    <input<?=$disabled ?> type="text" 
+                                           id="ski" 
+                                           name="ski" 
+                                           class="form-control float-only print-only d-none" 
+                                           placeholder="Ширина лыж, м" 
+                                           value="<?= empty($ski) ? 0.02 : floatval($ski) ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'ski'); $(this).attr('name', 'ski'); $(this).attr('placeholder', 'Ширина лыж, м');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'ski'); $(this).attr('name', 'ski'); $(this).attr('placeholder', 'Ширина лыж, м');" 
+                                           onfocusout="javascript: $(this).attr('id', 'ski'); $(this).attr('name', 'ski'); $(this).attr('placeholder', 'Ширина лыж, м');" />
+                                    <div class="invalid-feedback">Ширина лыж обязательно</div>
+                                </div>
+                            </div>
                         </div>
                         <!-- Печать без лыж -->
                         <div class="form-check mb-2 print-only d-none">
@@ -2051,6 +2077,18 @@ $colorfulnesses = array();
             // При смене типа работы: если тип работы "плёнка с печатью", показываем поля, предназначенные только для плёнки с печатью
             $('#work_type_id').change(function() {
                 SetFieldsVisibility($(this).val());
+            });
+            
+            // При щелчке на флажке "Печать без лыж" делаем поле "ширина лыж" доступным или нет
+            $('#no_ski').change(function() {
+                no_ski_checked = $(this).is(':checked');
+                
+                if(no_ski_checked) {
+                    $('#ski').attr('disabled', 'disabled');
+                }
+                else {
+                    $('#ski').removeAttr('disabled');
+                }
             });
             
             // Показываем или скрываем поля в зависимости от работы с печатью / без печати и наличия / отсутствия ламинации
