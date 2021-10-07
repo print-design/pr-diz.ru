@@ -44,10 +44,10 @@ const EURO = "euro";
 
 // Краски
 const CMYK = "cmyk";
-const C = "c";
-const M = "m";
-const Y = "y";
-const K = "k";
+const CYAN = "cyan";
+const MAGENTA = "magenta";
+const YELLOW = "yellow";
+const KONTUR = "kontur";
 const PANTON = "panton";
 const WHITE = "white";
 const LACQUER = "lacquer";
@@ -859,40 +859,52 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                     // площадь тиража с отходами * процент краски / 100
                     $paint_area = $dirty_area * $$percent_var / 100;
                     
-                    // Расход краски, г/м2
+                    // Расход краски, г/м2 и стоимость краски за 1 кг
                     $paint_expense = 0;
+                    $paint_price_kg = 0;
                     
                     switch ($$paint_var) {
                         case CMYK:
                             switch ($$cmyk_var) {
-                                case C:
+                                case CYAN:
                                     $paint_expense = $paint_c_expense;
+                                    $paint_price_kg = $paint_c;
                                     break;
-                                case M:
+                                case MAGENTA:
                                     $paint_expense = $paint_m_expense;
+                                    $paint_price_kg = $paint_m;
                                     break;
-                                case Y;
+                                case YELLOW;
                                     $paint_expense = $paint_y_expense;
+                                    $paint_price_kg = $paint_y;
                                     break;
-                                case K:
+                                case KONTUR:
                                     $paint_expense = $paint_k_expense;
+                                    $paint_price_kg = $paint_k;
                                     break;
-                            }
+                            };
                             break;
                         case PANTON:
                             $paint_expense = $paint_panton_expense;
+                            $paint_price_kg = $paint_panton;
                             break;
                         case WHITE:
                             $paint_expense = $paint_white_expense;
+                            $paint_price_kg = $paint_white;
                             break;
                         case LACQUER:
                             $paint_expense = $paint_lacquer_expense;
+                            $paint_price_kg = $paint_lacquer;
                             break;
                     }
                     
                     // Количество краски, кг
                     // площадь запечатки * расход краски / 1000
                     $paint_quantity = $paint_area * $paint_expense / 1000;
+                    
+                    // Стоимость краски, руб
+                    // количество краски * стоимость краски за 1 кг
+                    $paint_price_sum = $paint_quantity * $paint_price_kg;
                 }
             }
         }
