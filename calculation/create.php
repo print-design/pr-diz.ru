@@ -38,6 +38,10 @@ for($i=1; $i<=8; $i++) {
 // Значение марки плёнки "другая"
 const OTHER = "other";
 
+// Валюты
+const USD = "usd";
+const EURO = "euro";
+
 // Сохранение в базу расчёта
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     if(empty(filter_input(INPUT_POST, "customer_id"))) {
@@ -285,10 +289,10 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 if($row = $fetcher->Fetch()) {
                     $c_price = $row['price'];
                     
-                    if($row['currency'] == 'usd') {
+                    if($row['currency'] == USD) {
                         $c_price *= $usd;
                     }
-                    else if($row['currency'] == 'euro') {
+                    else if($row['currency'] == EURO) {
                         $c_price *= $euro;
                     }
                 }
@@ -332,10 +336,10 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 if($row = $fetcher->Fetch()) {
                     $c_price_lam1 = $row['price'];
                     
-                    if($row['currency'] == 'usd') {
+                    if($row['currency'] == USD) {
                         $c_price_lam1 *= $usd;
                     }
-                    else if($row['currency'] == 'euro') {
+                    else if($row['currency'] == EURO) {
                         $c_price_lam1 *= $euro;
                     }
                 }
@@ -379,10 +383,10 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 if($row = $fetcher->Fetch()) {
                     $c_price_lam2 = $row['price'];
                     
-                    if($row['currency'] == 'usd') {
+                    if($row['currency'] == USD) {
                         $c_price_lam2 *= $usd;
                     }
-                    else if($row['currency'] == 'euro') {
+                    else if($row['currency'] == EURO) {
                         $c_price_lam2 *= $euro;
                     }
                 }
@@ -424,52 +428,53 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         // Данные о форме
-        $cliche_flint_price = null;
-        $cliche_kodak_price = null;
-        $cliche_tver_price = null;
-        $cliche_film_price = null;
+        $cliche_flint = null;
+        $cliche_kodak = null;
+        $cliche_tver = null;
+        $cliche_film = null;
         $cliche_tver_coeff = null;
         $cliche_additional_size = null;
         $cliche_scotch = null;
         
         if($machine_id != "NULL") {
-            $sql = "select flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch from norm_form where machine_id = $machine_id order by id desc limit 1";
+            $sql = "select flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch "
+                    . "from norm_form where machine_id = $machine_id order by id desc limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
-                $cliche_flint_price = $row['flint'];
+                $cliche_flint = $row['flint'];
                 
-                if($row['flint_currency'] == 'usd') {
-                    $cliche_flint_price *= $usd;
+                if($row['flint_currency'] == USD) {
+                    $cliche_flint *= $usd;
                 }
-                else if($row['flint_currency'] == 'euro') {
-                    $cliche_flint_price *= $euro;
-                }
-                
-                $cliche_kodak_price = $row['kodak'];
-                
-                if($row['kodak_currency'] == 'usd') {
-                    $cliche_kodak_price *= $usd;
-                }
-                else if($row['kodak_currency'] == 'euro') {
-                    $cliche_kodak_price *= $euro;
+                else if($row['flint_currency'] == EURO) {
+                    $cliche_flint *= $euro;
                 }
                 
-                $cliche_tver_price = $row['tver'];
+                $cliche_kodak = $row['kodak'];
                 
-                if($row['tver_currency'] == 'usd') {
-                    $cliche_tver_price *= $usd;
+                if($row['kodak_currency'] == USD) {
+                    $cliche_kodak *= $usd;
                 }
-                else if($row['tver_currency'] == 'euro') {
-                    $cliche_tver_price *= $euro;
+                else if($row['kodak_currency'] == EURO) {
+                    $cliche_kodak *= $euro;
                 }
                 
-                $cliche_film_price = $row['film'];
+                $cliche_tver = $row['tver'];
                 
-                if($row['film_currency'] == 'usd') {
-                    $cliche_film_price *= $usd;
+                if($row['tver_currency'] == USD) {
+                    $cliche_tver *= $usd;
                 }
-                if($row['film_currency'] == 'euro') {
-                    $cliche_film_price *= $euro;
+                else if($row['tver_currency'] == EURO) {
+                    $cliche_tver *= $euro;
+                }
+                
+                $cliche_film = $row['film'];
+                
+                if($row['film_currency'] == USD) {
+                    $cliche_film *= $usd;
+                }
+                if($row['film_currency'] == EURO) {
+                    $cliche_film *= $euro;
                 }
                 
                 $cliche_tver_coeff = $row['tver_coeff'];
@@ -479,6 +484,132 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         // Данные о красках
+        $paint_c = null;
+        $paint_c_currency = null; 
+        $paint_c_expense = null;
+        $paint_m = null;
+        $paint_m_currency = null;
+        $paint_m_expense = null;
+        $paint_y = null;
+        $paint_y_currency = null;
+        $paint_y_expense = null;
+        $paint_k = null;
+        $paint_k_currency = null;
+        $paint_k_expense = null;
+        $paint_white = null;
+        $paint_white_currency = null;
+        $paint_white_expense = null;
+        $paint_panton = null;
+        $paint_panton_currency = null;
+        $paint_panton_expense = null;
+        $paint_lacquer = null;
+        $paint_lacquer_currency = null;
+        $paint_lacquer_expense = null;
+        $paint_paint_solvent = null;
+        $paint_solvent = null;
+        $paint_solvent_currency = null;
+        $paint_solvent_l = null;
+        $paint_solvent_l_currency = null;
+        $paint_lacquer_solvent_l = null;
+                
+        if($machine_id != "NULL") {
+            $sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent, solvent_currency, solvent_l, solvent_l_currency, lacquer_solvent_l "
+                    . "from norm_paint where machine_id = $machine_id order by id desc limit 1";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $paint_c = $row['c'];
+                
+                if($row['c_currency'] == USD) {
+                    $paint_c *= $usd;
+                }
+                else if($row['c_currency'] == EURO) {
+                    $paint_c *= $euro;
+                }
+                
+                $paint_c_expense = $row['c_expense'];
+                $paint_m = $row['m'];
+                
+                if($row['m_currency'] == USD) {
+                    $paint_m *= $usd;
+                }
+                else if($row['m_currency'] == EURO) {
+                    $paint_m *= $euro;
+                }
+                
+                $paint_m_expense = $row['m_expense'];
+                $paint_y = $row['y'];
+                
+                if($row['y_currency'] == USD) {
+                    $paint_y *= $usd;
+                }
+                else if($row['y_currency'] == EURO) {
+                    $paint_y *= $euro;
+                }
+                
+                $paint_y_expense = $row['y_expense'];
+                $paint_k = $row['k'];
+                
+                if($row['k_currency'] == USD) {
+                    $paint_k *= $usd;
+                }
+                else if($row['k_currency'] == EURO) {
+                    $paint_k *= $euro;
+                }
+                
+                $paint_k_expense = $row['k_expense'];
+                $paint_white = $row['white'];
+                
+                if($row['white_currency'] == USD) {
+                    $paint_white *= $usd;
+                }
+                else if($row['white_currency'] == EURO) {
+                    $paint_white *= $euro;
+                }
+                
+                $paint_white_expense = $row['white_expense'];
+                $paint_panton = $row['panton'];
+                
+                if($row['panton_currency'] == USD) {
+                    $paint_panton *= $usd;
+                }
+                else if($row['panton_currency'] == EURO) {
+                    $paint_panton *= $euro;
+                }
+                
+                $paint_panton_expense = $row['panton_expense'];
+                $paint_lacquer = $row['lacquer'];
+                
+                if($row['lacquer_currency'] == USD) {
+                    $paint_lacquer *= $usd;
+                }
+                else if($row['lacquer_currency'] == EURO) {
+                    $paint_lacquer *= $euro;
+                }
+                
+                $paint_lacquer_expense = $row['lacquer_expense'];
+                $paint_paint_solvent = $row['paint_solvent'];
+                $paint_solvent = $row['solvent'];
+                
+                if($row['solvent_currency'] == USD) {
+                    $paint_solvent *= $usd;
+                }
+                else if($row['solvent_currency'] == EURO) {
+                    $paint_solvent *= $euro;
+                }
+                
+                $paint_solvent_l = $row['solvent_l'];
+                
+                if($row['solvent_l_currency'] == USD) {
+                    $paint_solvent_l *= $usd;
+                }
+                else if($row['solvent_l_currency'] == EURO) {
+                    $paint_solvent_l *= $euro;
+                }
+                
+                $paint_lacquer_solvent_l = $row['lacquer_solvent_l'];
+            }
+        }
+        
         for ($i=1; $i<=8; $i++) {
             $paint_var = "paint_$i";
             $$paint_var = filter_input(INPUT_POST, "paint_$i");
@@ -654,54 +785,54 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         // 2. Стоимость 1 печатной формы Флинт, руб
         // площадь печатной формы * стоимость 1 см2 формы
-        $cliche_flint_price_total = null;
+        $cliche_flint_price = null;
         
-        if(!empty($cliche_area) && !empty($cliche_flint_price)) {
-            $cliche_flint_price_total = $cliche_area * $cliche_flint_price;
+        if(!empty($cliche_area) && !empty($cliche_flint)) {
+            $cliche_flint_price = $cliche_area * $cliche_flint;
         }
         
         // Стоимость 1 печатной формы Кодак, руб
         // площадь печатной формы * стоимость 1 см2 формы
-        $cliche_kodak_price_total = null;
+        $cliche_kodak_price = null;
         
-        if(!empty($cliche_area) && !empty($cliche_kodak_price)) {
-            $cliche_kodak_price_total = $cliche_area * $cliche_kodak_price;
+        if(!empty($cliche_area) && !empty($cliche_kodak)) {
+            $cliche_kodak_price = $cliche_area * $cliche_kodak;
         }
         
         // Стоимость 1 печатной формы Тверь, руб
         // площадь печатной формы * (стоимость 1 см2 формы + стоимость 1 см2 плёнок * коэфф. удорожания для тверских форм)
-        $cliche_tver_price_total = null;
+        $cliche_tver_price = null;
         
-        if(!empty($cliche_area) && !empty($cliche_tver_price) && !empty($cliche_film_price) && !empty($cliche_tver_coeff)) {
-            $cliche_tver_price_total = $cliche_area * ($cliche_tver_price + $cliche_film_price * $cliche_tver_coeff);
+        if(!empty($cliche_area) && !empty($cliche_tver) && !empty($cliche_film) && !empty($cliche_tver_coeff)) {
+            $cliche_tver_price = $cliche_area * ($cliche_tver + $cliche_film * $cliche_tver_coeff);
         }
         
         // Стоимость комплекта печатных форм
         // сумма стоимость форм для каждой краски
-        $cliche_price_total = null;
+        $cliche_price = null;
         
-        if(!empty($cliche_flint_price_total) && !empty($cliche_kodak_price_total) && !empty($cliche_tver_price_total)) {
-            $cliche_price_total = 0;
+        if(!empty($cliche_flint_price) && !empty($cliche_kodak_price) && !empty($cliche_tver_price)) {
+            $cliche_price = 0;
             
             for($i=1; $i<=8; $i++) {
                 $paint_var = "paint_$i";
                 $cliche_var = "cliche_$i";
                 if(!empty($$paint_var)) {        
                     if($$cliche_var == 'flint') {
-                        $cliche_price_total += $cliche_flint_price_total;
+                        $cliche_price += $cliche_flint_price;
                     }
                     else if($$cliche_var == 'kodak') {
-                        $cliche_price_total += $cliche_kodak_price_total;
+                        $cliche_price += $cliche_kodak_price;
                     }
                     else if($$cliche_var == 'tver') {
-                        $cliche_price_total += $cliche_tver_price_total;
+                        $cliche_price += $cliche_tver_price;
                     }
                 }
             }
         }
         
         // Стоимость краски + лака + растворителя, руб
-        $paint_price_total = null;
+        $paint_price = null;
         
         echo "<p>Площадь тиража чистая, м2: $pure_area</p>";
         echo "<p>Ширина тиража обрезная, мм: $pure_width</p>";
@@ -719,12 +850,12 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         echo "<p>Стоимость печати, руб: $print_price</p>";
         echo "<hr />";
         echo "<p>Площадь печатной формы, см2: $cliche_area</p>";
-        echo "<p>Стоимость 1 печатной формы Флинт, руб: $cliche_flint_price_total</p>";
-        echo "<p>Стоимость 1 печатной формы Кодак, руб: $cliche_kodak_price_total</p>";
-        echo "<p>Стоимость 1 печатной формы Тверь, руб: $cliche_tver_price_total</p>";
-        echo "<p>Стоимость комплекта печатных форм, руб: $cliche_price_total</p>";
+        echo "<p>Стоимость 1 печатной формы Флинт, руб: $cliche_flint_price</p>";
+        echo "<p>Стоимость 1 печатной формы Кодак, руб: $cliche_kodak_price</p>";
+        echo "<p>Стоимость 1 печатной формы Тверь, руб: $cliche_tver_price</p>";
+        echo "<p>Стоимость комплекта печатных форм, руб: $cliche_price</p>";
         echo "<hr />";
-        echo "<p>Стоимость краски + лака + растворителя, руб: $paint_price_total</p>";
+        echo "<p>Стоимость краски + лака + растворителя, руб: $paint_price</p>";
         
         // *************************************
         // Сохранение в базу
