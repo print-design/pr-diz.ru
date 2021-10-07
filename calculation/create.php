@@ -476,6 +476,24 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             }
         }
         
+        // Данные о красках
+        for ($i=1; $i<=8; $i++) {
+            $paint_var = "paint_$i";
+            $$paint_var = filter_input(INPUT_POST, "paint_$i");
+    
+            $color_var = "color_$i";
+            $$color_var = filter_input(INPUT_POST, "color_$i");
+    
+            $cmyk_var = "cmyk_$i";
+            $$cmyk_var = filter_input(INPUT_POST, "cmyk_$i");
+    
+            $percent_var = "percent_$i";
+            $$percent_var = filter_input(INPUT_POST, "percent_$i");
+    
+            $cliche_var = "cliche_$i";
+            $$cliche_var = filter_input(INPUT_POST, "form_$i");
+        }
+        
         // Ширина лыж
         $ski_width = 0.02;
         
@@ -659,6 +677,30 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $cliche_tver_price_total = $cliche_area * ($cliche_tver_price + $cliche_film_price * $cliche_tver_coeff);
         }
         
+        // Стоимость комплекта печатных форм
+        // сумма стоимость форм для каждой краски
+        $cliche_price_total = null;
+        
+        if(!empty($cliche_flint_price_total) && !empty($cliche_kodak_price_total) && !empty($cliche_tver_price_total)) {
+            $cliche_price_total = 0;
+            
+            for($i=1; $i<=8; $i++) {
+                $paint_var = "paint_$i";
+                $cliche_var = "cliche_$i";
+                if(!empty($$paint_var)) {        
+                    if($$cliche_var == 'flint') {
+                        $cliche_price_total += $cliche_flint_price_total;
+                    }
+                    else if($$cliche_var == 'kodak') {
+                        $cliche_price_total += $cliche_kodak_price_total;
+                    }
+                    else if($$cliche_var == 'tver') {
+                        $cliche_price_total += $cliche_tver_price_total;
+                    }
+                }
+            }
+        }
+        
         echo "<p>Площадь тиража чистая, м2: $pure_area</p>";
         echo "<p>Ширина тиража обрезная, мм: $pure_width</p>";
         echo "<p>Ширина тиража с отходами, мм: $dirty_width</p>";
@@ -678,6 +720,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         echo "<p>Стоимость 1 печатной формы Флинт, руб: $cliche_flint_price_total</p>";
         echo "<p>Стоимость 1 печатной формы Кодак, руб: $cliche_kodak_price_total</p>";
         echo "<p>Стоимость 1 печатной формы Тверь, руб: $cliche_tver_price_total</p>";
+        echo "<p>Стоимость комплекта печатных форм, руб: $cliche_price_total</p>";
+        echo "<hr />";
                 
         // *************************************
         // Сохранение в базу
