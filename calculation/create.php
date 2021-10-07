@@ -422,43 +422,55 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         // Данные о форме
-        $cliche_flint = null;
-        $cliche_kodak = null;
-        $cliche_tver = null;
+        $cliche_flint_price = null;
+        $cliche_kodak_price = null;
+        $cliche_tver_price = null;
+        $cliche_film_price = null;
+        $cliche_tver_coeff = null;
         $cliche_additional_size = null;
         $cliche_scotch = null;
         
         if($machine_id != "NULL") {
-            $sql = "select flint, flint_currency, kodak, kodak_currency, tver, tver_currency, overmeasure, scotch from norm_form where machine_id = $machine_id order by id desc limit 1";
+            $sql = "select flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch from norm_form where machine_id = $machine_id order by id desc limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
-                $cliche_flint = $row['flint'];
+                $cliche_flint_price = $row['flint'];
                 
                 if($row['flint_currency'] == 'usd') {
-                    $cliche_flint *= $usd;
+                    $cliche_flint_price *= $usd;
                 }
                 else if($row['flint_currency'] == 'euro') {
-                    $cliche_flint *= $euro;
+                    $cliche_flint_price *= $euro;
                 }
                 
-                $cliche_kodak = $row['kodak'];
+                $cliche_kodak_price = $row['kodak'];
                 
                 if($row['kodak_currency'] == 'usd') {
-                    $cliche_kodak *= $usd;
+                    $cliche_kodak_price *= $usd;
                 }
                 else if($row['kodak_currency'] == 'euro') {
-                    $cliche_kodak *= $euro;
+                    $cliche_kodak_price *= $euro;
                 }
                 
-                $cliche_tver = $row['tver'];
+                $cliche_tver_price = $row['tver'];
                 
                 if($row['tver_currency'] == 'usd') {
-                    $cliche_tver *= $usd;
+                    $cliche_tver_price *= $usd;
                 }
                 else if($row['tver_currency'] == 'euro') {
-                    $cliche_tver *= $euro;
+                    $cliche_tver_price *= $euro;
                 }
                 
+                $cliche_film_price = $row['film'];
+                
+                if($row['film_currency'] == 'usd') {
+                    $cliche_film_price *= $usd;
+                }
+                if($row['film_currency'] == 'euro') {
+                    $cliche_film_price *= $euro;
+                }
+                
+                $cliche_tver_coeff = $row['tver_coeff'];
                 $cliche_additional_size = $row['overmeasure'];
                 $cliche_scotch = $row['scotch'];
             }
@@ -623,8 +635,29 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $cliche_area = ($cliche_additional_size * 2 + $dirty_width / 1000 * 100) * ($cliche_additional_size * 2 + $raport / 10);
         }
         
-        // 2. Стоимость 1 печатной формы, руб
-        // 
+        // 2. Стоимость 1 печатной формы Флинт, руб
+        // площадь печатной формы * стоимость 1 см2 формы
+        $cliche_flint_price_total = null;
+        
+        if(!empty($cliche_area) && !empty($cliche_flint_price)) {
+            $cliche_flint_price_total = $cliche_area * $cliche_flint_price;
+        }
+        
+        // Стоимость 1 печатной формы Кодак, руб
+        // площадь печатной формы * стоимость 1 см2 формы
+        $cliche_kodak_price_total = null;
+        
+        if(!empty($cliche_area) && !empty($cliche_kodak_price)) {
+            $cliche_kodak_price_total = $cliche_area * $cliche_kodak_price;
+        }
+        
+        // Стоимость 1 печатной формы Тверь, руб
+        // площадь печатной формы * (стоимость 1 см2 формы + стоимость 1 см2 плёнок * коэфф. удорожания для тверских форм)
+        $cliche_tver_price_total = null;
+        
+        if(!empty($cliche_area) && !empty($cliche_tver_price) && !empty($cliche_film_price) && !empty($cliche_tver_coeff)) {
+            $cliche_tver_price_total = $cliche_area * ($cliche_tver_price + $cliche_film_price * $cliche_tver_coeff);
+        }
         
         echo "<p>Площадь тиража чистая, м2: $pure_area</p>";
         echo "<p>Ширина тиража обрезная, мм: $pure_width</p>";
@@ -642,6 +675,9 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         echo "<p>Стоимость печати, руб: $print_price</p>";
         echo "<hr />";
         echo "<p>Площадь печатной формы, см2: $cliche_area</p>";
+        echo "<p>Стоимость 1 печатной формы Флинт, руб: $cliche_flint_price_total</p>";
+        echo "<p>Стоимость 1 печатной формы Кодак, руб: $cliche_kodak_price_total</p>";
+        echo "<p>Стоимость 1 печатной формы Тверь, руб: $cliche_tver_price_total</p>";
                 
         // *************************************
         // Сохранение в базу
