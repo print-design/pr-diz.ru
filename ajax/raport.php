@@ -13,7 +13,7 @@ if(!empty($machine_id)) {
     foreach ($result as $row) {
         $name = $row['name'];
         $value = $row['value'];
-        $raport = (empty($name) ? "" : $name." ").floatval($value);
+        $raport = (empty($name) ? "" : "(".$name.") ").floatval($value);
         echo "<option value='$value'>$raport</option>";
     }
 }

@@ -134,19 +134,19 @@ if($row = $fetcher->Fetch()) {
                             <div class="invalid-feedback">Стоимость обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="speed">Скорость работы оборудования (м/час)</label>
+                            <label for="speed">Скорость работы оборудования (км/час)</label>
                             <input type="text" 
                                    class="form-control float-only" 
                                    id="speed" 
                                    name="speed" 
                                    value="<?= empty($speed) ? "" : floatval($speed) ?>" 
-                                   placeholder="Скорость, м/час" 
+                                   placeholder="Скорость, км/час" 
                                    required="required" 
                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'speed'); $(this).attr('name', 'speed'); $(this).attr('placeholder', 'Скорость, м/час');" 
+                                   onmouseup="javascript: $(this).attr('id', 'speed'); $(this).attr('name', 'speed'); $(this).attr('placeholder', 'Скорость, км/час');" 
                                    onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'speed'); $(this).attr('name', 'speed'); $(this).attr('placeholder', 'Скорость, м/час');" 
-                                   onfocusout="javascript: $(this).attr('id', 'speed'); $(this).attr('name', 'speed'); $(this).attr('placeholder', 'Скорость, м/час');" />
+                                   onkeyup="javascript: $(this).attr('id', 'speed'); $(this).attr('name', 'speed'); $(this).attr('placeholder', 'Скорость, км/час');" 
+                                   onfocusout="javascript: $(this).attr('id', 'speed'); $(this).attr('name', 'speed'); $(this).attr('placeholder', 'Скорость, км/час');" />
                             <div class="invalid-feedback">Скорость обязательно</div>
                         </div>
                         <button type="submit" id="norm_machine_submit" name="norm_machine_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>

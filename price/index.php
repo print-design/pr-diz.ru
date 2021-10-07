@@ -40,6 +40,7 @@ $error_message = '';
             $sql = "select distinct fb.name film_brand, fbv.thickness, fp.price, fp.currency "
                     . "from film_brand_variation fbv "
                     . "inner join film_brand fb on fbv.film_brand_id = fb.id left join film_price fp on fp.brand_name = fb.name and fp.thickness = fbv.thickness "
+                    . "where fp.price is null or fp.id in (select max(id) from film_price group by brand_name, thickness) "
                     . "order by fb.name, fbv.thickness";
             $result = (new Grabber($sql))->result;
             $film_brand_variations = array();

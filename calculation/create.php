@@ -230,33 +230,411 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $$form_var = filter_input(INPUT_POST, "form_$i");
         }
         
-        $sql = "insert into calculation (customer_id, name, work_type_id, unit, machine_id, "
-                . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
-                . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
-                . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
-                . "width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, extracharge, no_ski, "
-                . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
-                . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
-                . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
-                . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
-                . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
-                . "values($customer_id, '$name', $work_type_id, '$unit', $machine_id, "
-                . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, "
-                . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_other_brand_name', $lamination1_other_price, $lamination1_other_thickness, $lamination1_other_weight, $lamination1_customers_material, "
-                . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_other_brand_name', $lamination2_other_price, $lamination2_other_thickness, $lamination2_other_weight, $lamination2_customers_material, "
-                . "$width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, $extracharge, $no_ski, "
-                . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
-                . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
-                . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
-                . "'$percent_1', '$percent_2', '$percent_3', '$percent_4', '$percent_5', '$percent_6', '$percent_7', '$percent_8', "
-                . "'$form_1', '$form_2', '$form_3', '$form_4', '$form_5', '$form_6', '$form_7', '$form_8')";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
-        $insert_id = $executer->insert_id;
+        // ************************************
+        // РАСЧЁТ
+        
+        // Курс рубля и евро
+        $euro = null;
+        $usd = null;
+        
+        if(empty($error_message)) {
+            $sql = "select euro, usd from currency order by id desc limit 1";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $euro = $row['euro'];
+                $usd = $row['usd'];
+            }
+            
+            if(empty($euro) || empty($usd)) {
+                $error_message = "Не заданы курсы валют";
+            }
+        }
+        
+        // Удельный вес
+        $c_weight = null;
+        
+        if(empty($error_message)) {
+            if($other_weight != "NULL") {
+                $c_weight = $other_weight;
+            }
+            else if(!empty ($brand_name) && $thickness != "NULL") {
+                $sql = "select fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name = '$brand_name' and fbv.thickness = $thickness limit 1";
+                $fetcher = new Fetcher($sql);
+                if($row = $fetcher->Fetch()) {
+                    $c_weight = $row['weight'];
+                }
+            }
+            
+            if(empty($c_weight)) {
+                $error_message = "Для данной толщины плёнки не задан удельный вес";
+            }
+        }
+        
+        // Цена материала
+        $c_price = null;
+        
+        if(empty($error_message)) {
+            if($other_price != "NULL") {
+                $c_price = $other_price;
+            }
+            else if(!empty ($brand_name) && $thickness != "NULL") {
+                $sql = "select price from film_price where brand_name = '$brand_name' and thickness = $thickness and date <= current_timestamp() order by date desc limit 1";
+                $fetcher = new Fetcher($sql);
+                if($row = $fetcher->Fetch()) {
+                    $c_price = $row['price'];
+                }
+            }
+            
+            if(empty($c_price)) {
+                $error_message = "Для данной толщины плёнки не указана цена";
+            }
+        }
+        
+        // Удельный вес ламинации 1
+        $c_weight_lam1 = null;
+        
+        if(empty($error_message)) {
+            if($lamination1_other_weight != "NULL") {
+                $c_weight_lam1 = $lamination1_other_weight;
+            }
+            else if(!empty ($lamination1_brand_name) && $lamination1_thickness != "NULL") {
+                $sql = "select fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name = '$lamination1_brand_name' and fbv.thickness = $lamination1_thickness limit 1";
+                $fetcher = new Fetcher($sql);
+                if($row = $fetcher->Fetch()) {
+                    $c_weight_lam1 = $row['weight'];
+                }
+            }
+            
+            if(!empty($lamination1_brand_name) && $lamination1_thickness != "NULL" && empty($c_weight_lam1)) {
+                $error_message = "Для данной толщина ламинации 1 не задан удельный вес";
+            }
+        }
+        
+        // Цена ламинации 1
+        $c_price_lam1 = null;
+        
+        if(empty($error_message)) {
+            if($lamination1_other_price != "NULL") {
+                $c_price_lam1 = $lamination1_other_price;
+            }
+            else if(!empty ($lamination1_brand_name) && $lamination1_thickness != "NULL") {
+                $sql = "select price from film_price where brand_name = '$lamination1_brand_name' and thickness = $lamination1_thickness and date <= current_timestamp() order by date desc limit 1";
+                $fetcher = new Fetcher($sql);
+                if($row = $fetcher->Fetch()) {
+                    $c_price_lam1 = $row['price'];
+                }
+            }
+            
+            if(empty($c_price_lam1)) {
+                $error_message = "Для данной толщины ламинации 1 не указана цена";
+            }
+        }
+        
+        // Удельный вес ламинации 2
+        $c_weight_lam2 = null;
+        
+        if(empty($error_message)) {
+            if($lamination2_other_weight != "NULL") {
+                $c_weight_lam2 = $lamination2_other_weight;
+            }
+            else if(!empty ($lamination2_brand_name) && $lamination2_thickness != "NULL") {
+                $sql = "select fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name = '$lamination2_brand_name' and fbv.thickness = $lamination2_thickness limit 1";
+                $fetcher = new Fetcher($sql);
+                if($row = $fetcher->Fetch()) {
+                    $c_weight_lam2 = $row['weight'];
+                }
+            }
+            
+            if(!empty($lamination2_brand_name) && $lamination2_thickness != "NULL" && empty($c_weight_lam2)) {
+                $error_message = "Для данной толщины ламинации 2 не задан удельный вес";
+            }
+        }
+        
+        // Цена ламинации 2
+        $c_price_lam2 = null;
+        
+        if(empty($error_message)) {
+            if($lamination2_other_price != "NULL") {
+                $c_price_lam2 = $lamination2_other_price;
+            }
+            else if(!empty ($lamination2_brand_name) && $lamination2_thickness != "NULL") {
+                $sql = "select price from film_price where brand_name = '$lamination2_brand_name' and thickness = $lamination2_thickness and date <= current_timestamp() order by date desc limit 1";
+                $fetcher = new Fetcher($sql);
+                if($row = $fetcher->Fetch()) {
+                    $c_price_lam2 = $row['price'];
+                }
+            }
+            
+            if(empty($c_price_lam2)) {
+                $error_message = "Для данной толщины ламинации 2 не указана цена";
+            }
+        }
+        
+        // Данные о приладке (время приладки, метраж приладки, процент отходов)
+        $tuning_times = array();
+        $tuning_lengths = array();
+        $tuning_waste_percents = array();
+        
+        if(empty($error_message)) {
+            $sql = "select machine_id, time, length, waste_percent "
+                    . "from norm_fitting where date in "
+                    . "(select max(date) from norm_fitting group by machine_id)";
+            $fetcher = new Fetcher($sql);
+            while($row = $fetcher->Fetch()) {
+                $tuning_times[$row['machine_id']] = $row['time'];
+                $tuning_lengths[$row['machine_id']] = $row['length'];
+                $tuning_waste_percents[$row['machine_id']] = $row['waste_percent'];
+            }
+        }
+        
+        // Данные о машине
+        $machine_speed = null;
+        $machine_price = null;
+        
+        if($machine_id != "NULL") {
+            $sql = "select price, speed from norm_machine where machine_id = $machine_id order by id desc limit 1";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $machine_price = $row['price'];
+                $machine_speed = $row['speed'];
+            }
+        }
+        
+        // Данные о форме
+        $cliche_flint = null;
+        $cliche_flint_currency = null;
+        $cliche_kodak = null;
+        $cliche_kodak_currency = null;
+        $cliche_tver = null;
+        $cliche_tver_currency = null;
+        $cliche_additional_size = null;
+        $cliche_scotch = null;
+        
+        if($machine_id != "NULL") {
+            $sql = "select flint, flint_currency, kodak, kodak_currency, tver, tver_currency, overmeasure, scotch from norm_form where machine_id = $machine_id order by id desc limit 1";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $cliche_flint = $row['flint'];
+                $cliche_flint_currency = $row['flint_currency'];
+                $cliche_kodak = $row['kodak'];
+                $cliche_kodak_currency = $row['kodak_currency'];
+                $cliche_tver = $row['tver'];
+                $cliche_tver_currency = $row['tver_currency'];
+                $cliche_additional_size = $row['overmeasure'];
+                $cliche_scotch = $row['scotch'];
+            }
+        }
+        
+        // Ширина лыж
+        $ski_width = 0.02;
+        
+        // 1. Площадь тиража чистая, м2
+        // если в кг: 1000 * (вес заказа + вес лам1 + вес лам2) / удельный вес материала
+        // если в шт: ширина ручья / 1000 * длина этикетки вдоль рапорта вала / 1000 * количество этикеток в заказе
+        $pure_area = 0;
+        
+        if($unit == 'kg' && !empty($quantity) && !empty($c_weight)) {
+            $pure_area = 1000 * $quantity / ($c_weight + (empty($c_weight_lam1) ? 0 : $c_weight_lam1) + (empty($c_weight_lam2) ? 0 : $c_weight_lam2));
+        }
+        else if($unit == 'thing' && !empty ($stream_width) && !empty ($length) && !empty ($quantity)) {
+            $pure_area = $stream_width / 1000 * $length / 1000 * $quantity;
+        }
+        
+        // 2. Ширина тиража обрезная, мм
+        // ширина ручья * количество ручьёв
+        $pure_width = 0;
+        
+        if(!empty($stream_width) && !empty($streams_count)) {
+            $pure_width = $stream_width * $streams_count;
+        }
+        
+        // 3. Длина тиража чистая, м
+        // площадь тиража чистая / ширина тиража обрезная
+        $pure_length = 0;
+        
+        if(!empty($pure_area) && !empty($pure_width)) {
+            $pure_length = $pure_area / $pure_width * 1000;
+        }
+        
+        // Длина тиража чистая с ламинацией
+        // длина тиража чистая * (процент отходов для ламинатора + 100) / 100;
+        $pure_length_lam = 0;
+        
+        if(!empty($pure_length) && !empty($tuning_waste_percents[5])) {
+            $pure_length_lam = $pure_length * ($tuning_waste_percents[5] + 100) / 100;
+        }
+        
+        // 4. Длина тиража с отходами, м
+        // если есть печать: длина тиража чистая + (длина тиража чистая * процент отхода машины) / 100 + длина приладки для машины * число красок
+        // если нет печати, но есть ламинация: длина тиража чистая с ламинацией + длина приладки ламинации
+        $dirty_length = 0;
+        
+        if($machine_id != "NULL" && !empty($pure_length) && !empty($paints_count)) {
+            $dirty_length = $pure_length + ($pure_length * $tuning_waste_percents[$machine_id] / 100 + $tuning_lengths[$machine_id] * $paints_count);
+        }
+        else if(!empty ($lamination1_brand_name) && !empty ($pure_length_lam) && !empty ($tuning_lengths[5])) {
+            $dirty_length = $pure_length_lam + $tuning_lengths[5];
+        }
+        
+        // 5. Ширина тиража с отходами, мм
+        // с лыжами: ширина лыж + ширина тиража обрезная
+        // без лыж: ширина тиража обрезная
+        // затем отругляем ширину тиража с отходами до возможности деления на 5 без остатка
+        $dirty_width = null;
+        
+        if($no_ski) {
+            $dirty_width = $pure_width / 1000;
+        }
+        else {
+            $dirty_width = ($pure_width / 1000) + $ski_width;
+        }
+            
+        $vari = intval($dirty_width * 1000);
+        $varcc = $vari % 5;
+        $numiterazij = 0;
+            
+        if($varcc > 0) {
+            while ($varcc > 0) {
+                $vari++;
+                $varcc = $vari % 5;
+                $numiterazij++;
+                if($numiterazij > 500) break;
+            }
+                
+            $dirty_width = floatval($vari);
+        }
+        
+        if(!empty($dirty_width)) {
+            $dirty_width *= 1000;
+        }
+        
+        // 6. Площадь тиража с отходами, м2
+        // длина тиража с отходами * ширина тиража с отходами
+        $dirty_area = null;
+        
+        if(!empty($dirty_length) && !empty($dirty_width)) {
+            $dirty_area = $dirty_length * $dirty_width / 1000;
+        }
+        
+        // 7. Вес материала готовой продукции чистый, кг
+        // площадь тиража чистая * удельный вес материала / 1000
+        $pure_weight = null;
+        
+        if(!empty($pure_area) && !empty($c_weight)) {
+            $pure_weight = $pure_area * $c_weight / 1000;
+        }
+        
+        // 8. Вес материала готовой продукции с отходами, кг
+        // площадь тиража с отходами * удельный вес материала / 1000
+        $dirty_weight = null;
+        
+        if(!empty($dirty_area) && !empty($c_weight)) {
+            $dirty_weight = $dirty_area * $c_weight / 1000;
+        }
+        
+        // 9. Стоимость материала печати, руб
+        // вес материала печати с отходами * цена материала за 1 кг
+        $material_price = null;
+        
+        if(!empty($dirty_weight) && !empty($c_price)) {
+            $material_price = $dirty_weight * $c_price;
+        }
+        
+        //***************************************************************************
+        
+        // 1. Время печати тиража без приладки, ч
+        // длина тиража чистая / 1000 / скорость работы флекс машины
+        $print_time = null;
+        
+        if(!empty($pure_length) && !empty($machine_speed)) {
+            $print_time = $pure_length / 1000 / $machine_speed;
+        }
+        
+        // 2. Время приладки, ч
+        // время приладки каждой краски * число красок
+        $tuning_time = null;
+        
+        if($machine_id != "NULL" && $paints_count != "NULL") {
+            $tuning_time = $tuning_times[$machine_id] / 60 * $paints_count;
+        }
+        
+        // 3. Время печати с приладкой, ч
+        // время печати + время приладки
+        $print_tuning_time = null;
+        
+        if(!empty($print_time) && !empty($tuning_time)) {
+            $print_tuning_time = $print_time + $tuning_time;
+        }
+        
+        // 4. Стоимость печати, руб
+        // время печати с приладкой * стоимость работы машины
+        $print_price = null;
+        
+        if(!empty($print_tuning_time) && !empty($machine_price)) {
+            $print_price = $print_tuning_time * $machine_price;
+        }
+        
+        //***************************************************************
+        
+        // 1. Площадь печатной формы, см2
+        // (припуск * 2 + ширина тиража с отходами * 100) * (припуск * 2 + рапорт вала / 10)
+        $cliche_area = null;
+        
+        if(!empty($cliche_additional_size) && !empty($dirty_width) && $raport !== "NULL") {
+            $cliche_area = ($cliche_additional_size * 2 + $dirty_width / 1000 * 100) * ($cliche_additional_size * 2 + $raport / 10);
+        }
+        
+        // 2. Стоимость 1 печатной формы, руб
+        // 
+        
+        echo "<p>Площадь тиража чистая, м2: $pure_area</p>";
+        echo "<p>Ширина тиража обрезная, мм: $pure_width</p>";
+        echo "<p>Ширина тиража с отходами, мм: $dirty_width</p>";
+        echo "<p>Длина тиража чистая, м: $pure_length</p>";
+        echo "<p>Длина тиража с отходами, м: $dirty_length</p>";
+        echo "<p>Площадь тиража с отходами, м2: $dirty_area</p>";
+        echo "<p>Вес материала печати чистый, кг: $pure_weight</p>";
+        echo "<p>Вес материала печати с отходами, кг: $dirty_weight</p>";
+        echo "<p>Стоимость материала печати, руб: $material_price</p>";
+        echo "<hr />";
+        echo "<p>Время печати тиража без приладки, ч: $print_time</p>";
+        echo "<p>Время приладки, ч: $tuning_time</p>";
+        echo "<p>Время печати с приладкой, ч: $print_tuning_time</p>";
+        echo "<p>Стоимость печати, руб: $print_price</p>";
+        echo "<hr />";
+        echo "<p>Площадь печатной формы, см2: $cliche_area</p>";
+                
+        // *************************************
+        // Сохранение в базу
+        /*if(empty($error_message)) {
+            $sql = "insert into calculation (customer_id, name, work_type_id, unit, machine_id, "
+                    . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
+                    . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
+                    . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
+                    . "width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, extracharge, no_ski, "
+                    . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
+                    . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
+                    . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
+                    . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
+                    . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
+                    . "values($customer_id, '$name', $work_type_id, '$unit', $machine_id, "
+                    . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, "
+                    . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_other_brand_name', $lamination1_other_price, $lamination1_other_thickness, $lamination1_other_weight, $lamination1_customers_material, "
+                    . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_other_brand_name', $lamination2_other_price, $lamination2_other_thickness, $lamination2_other_weight, $lamination2_customers_material, "
+                    . "$width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, $extracharge, $no_ski, "
+                    . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
+                    . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
+                    . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
+                    . "'$percent_1', '$percent_2', '$percent_3', '$percent_4', '$percent_5', '$percent_6', '$percent_7', '$percent_8', "
+                    . "'$form_1', '$form_2', '$form_3', '$form_4', '$form_5', '$form_6', '$form_7', '$form_8')";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+            $insert_id = $executer->insert_id;
+        }
         
         if(empty($error_message)) {
             header('Location: '.APPLICATION.'/calculation/create.php?id='.$insert_id);
-        }
+        }*/
     }
 }
 
@@ -1295,7 +1673,7 @@ $colorfulnesses = array();
                                             while($row = $fetcher->Fetch()) {
                                                 $raport_name = $row['name'];
                                                 $raport_value = floatval($row['value']);
-                                                $display_value = (empty($raport_name) ? "" : $raport_name." ").$raport_value;
+                                                $display_value = (empty($raport_name) ? "" : "(".$raport_name.") ").$raport_value;
                                                 $selected = "";
                                                 if($raport_value == $raport) $selected = " selected='selected'";
                                                 echo "<option value='$raport_value'$selected>$display_value</option>";
@@ -1472,6 +1850,7 @@ $colorfulnesses = array();
                                         <?php
                                         $flint_selected = "";
                                         $kodak_selected = "";
+                                        $tver_selected = "";
                                     
                                         $form_var = "form_$i";
                                         $form_selected_var = $$form_var."_selected";
@@ -1479,6 +1858,7 @@ $colorfulnesses = array();
                                         ?>
                                         <option value="flint"<?=$flint_selected ?>>Флинт</option>
                                         <option value="kodak"<?=$kodak_selected ?>>Кодак</option>
+                                        <option value="tver"<?=$tver_selected ?>>Тверь</option>
                                     </select>
                                 </div>
                             </div>
