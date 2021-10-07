@@ -278,10 +278,17 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $c_price = $other_price;
             }
             else if(!empty ($brand_name) && $thickness != "NULL") {
-                $sql = "select price from film_price where brand_name = '$brand_name' and thickness = $thickness and date <= current_timestamp() order by date desc limit 1";
+                $sql = "select price, currency from film_price where brand_name = '$brand_name' and thickness = $thickness and date <= current_timestamp() order by date desc limit 1";
                 $fetcher = new Fetcher($sql);
                 if($row = $fetcher->Fetch()) {
                     $c_price = $row['price'];
+                    
+                    if($row['currency'] == 'usd') {
+                        $c_price *= $usd;
+                    }
+                    else if($row['currency'] == 'euro') {
+                        $c_price *= $euro;
+                    }
                 }
             }
             
@@ -318,10 +325,17 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $c_price_lam1 = $lamination1_other_price;
             }
             else if(!empty ($lamination1_brand_name) && $lamination1_thickness != "NULL") {
-                $sql = "select price from film_price where brand_name = '$lamination1_brand_name' and thickness = $lamination1_thickness and date <= current_timestamp() order by date desc limit 1";
+                $sql = "select price, currency from film_price where brand_name = '$lamination1_brand_name' and thickness = $lamination1_thickness and date <= current_timestamp() order by date desc limit 1";
                 $fetcher = new Fetcher($sql);
                 if($row = $fetcher->Fetch()) {
                     $c_price_lam1 = $row['price'];
+                    
+                    if($row['currency'] == 'usd') {
+                        $c_price_lam1 *= $usd;
+                    }
+                    else if($row['currency'] == 'euro') {
+                        $c_price_lam1 *= $euro;
+                    }
                 }
             }
             
@@ -358,10 +372,17 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $c_price_lam2 = $lamination2_other_price;
             }
             else if(!empty ($lamination2_brand_name) && $lamination2_thickness != "NULL") {
-                $sql = "select price from film_price where brand_name = '$lamination2_brand_name' and thickness = $lamination2_thickness and date <= current_timestamp() order by date desc limit 1";
+                $sql = "select price, currency from film_price where brand_name = '$lamination2_brand_name' and thickness = $lamination2_thickness and date <= current_timestamp() order by date desc limit 1";
                 $fetcher = new Fetcher($sql);
                 if($row = $fetcher->Fetch()) {
                     $c_price_lam2 = $row['price'];
+                    
+                    if($row['currency'] == 'usd') {
+                        $c_price_lam2 *= $usd;
+                    }
+                    else if($row['currency'] == 'euro') {
+                        $c_price_lam2 *= $euro;
+                    }
                 }
             }
             
@@ -402,11 +423,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         // Данные о форме
         $cliche_flint = null;
-        $cliche_flint_currency = null;
         $cliche_kodak = null;
-        $cliche_kodak_currency = null;
         $cliche_tver = null;
-        $cliche_tver_currency = null;
         $cliche_additional_size = null;
         $cliche_scotch = null;
         
@@ -415,11 +433,32 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 $cliche_flint = $row['flint'];
-                $cliche_flint_currency = $row['flint_currency'];
+                
+                if($row['flint_currency'] == 'usd') {
+                    $cliche_flint *= $usd;
+                }
+                else if($row['flint_currency'] == 'euro') {
+                    $cliche_flint *= $euro;
+                }
+                
                 $cliche_kodak = $row['kodak'];
-                $cliche_kodak_currency = $row['kodak_currency'];
+                
+                if($row['kodak_currency'] == 'usd') {
+                    $cliche_kodak *= $usd;
+                }
+                else if($row['kodak_currency'] == 'euro') {
+                    $cliche_kodak *= $euro;
+                }
+                
                 $cliche_tver = $row['tver'];
-                $cliche_tver_currency = $row['tver_currency'];
+                
+                if($row['tver_currency'] == 'usd') {
+                    $cliche_tver *= $usd;
+                }
+                else if($row['tver_currency'] == 'euro') {
+                    $cliche_tver *= $euro;
+                }
+                
                 $cliche_additional_size = $row['overmeasure'];
                 $cliche_scotch = $row['scotch'];
             }
