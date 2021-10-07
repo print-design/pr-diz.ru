@@ -42,6 +42,16 @@ const OTHER = "other";
 const USD = "usd";
 const EURO = "euro";
 
+// Краски
+const CMYK = "cmyk";
+const C = "c";
+const M = "m";
+const Y = "y";
+const K = "k";
+const PANTON = "panton";
+const WHITE = "white";
+const LACQUER = "lacquer";
+
 // Сохранение в базу расчёта
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     if(empty(filter_input(INPUT_POST, "customer_id"))) {
@@ -814,6 +824,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         if(!empty($cliche_flint_price) && !empty($cliche_kodak_price) && !empty($cliche_tver_price)) {
             $cliche_price = 0;
             
+            // Перебираем все используемые краски
             for($i=1; $i<=8; $i++) {
                 $paint_var = "paint_$i";
                 $cliche_var = "cliche_$i";
@@ -831,8 +842,60 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             }
         }
         
-        // Стоимость краски + лака + растворителя, руб
+        // 4. Стоимость краски + лака + растворителя, руб
         $paint_price = null;
+        
+        if(!empty($dirty_area)) {
+            $paint_price = 0;
+            
+            // Перебираем все используемые краски, лаки
+            for($i=1; $i<8; $i++) {
+                $paint_var = "paint_$i";
+                $percent_var = "percent_$i";
+                $cmyk_var = "cmyk_$i";
+                
+                if(!empty($$paint_var)) {
+                    // Площадь запечатки, м2
+                    // площадь тиража с отходами * процент краски / 100
+                    $paint_area = $dirty_area * $$percent_var / 100;
+                    
+                    // Расход краски, г/м2
+                    $paint_expense = 0;
+                    
+                    switch ($$paint_var) {
+                        case CMYK:
+                            switch ($$cmyk_var) {
+                                case C:
+                                    $paint_expense = $paint_c_expense;
+                                    break;
+                                case M:
+                                    $paint_expense = $paint_m_expense;
+                                    break;
+                                case Y;
+                                    $paint_expense = $paint_y_expense;
+                                    break;
+                                case K:
+                                    $paint_expense = $paint_k_expense;
+                                    break;
+                            }
+                            break;
+                        case PANTON:
+                            $paint_expense = $paint_panton_expense;
+                            break;
+                        case WHITE:
+                            $paint_expense = $paint_white_expense;
+                            break;
+                        case LACQUER:
+                            $paint_expense = $paint_lacquer_expense;
+                            break;
+                    }
+                    
+                    // Количество краски, кг
+                    // площадь запечатки * расход краски / 1000
+                    $paint_quantity = $paint_area * $paint_expense / 1000;
+                }
+            }
+        }
         
         echo "<p>Площадь тиража чистая, м2: $pure_area</p>";
         echo "<p>Ширина тиража обрезная, мм: $pure_width</p>";
