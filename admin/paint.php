@@ -40,6 +40,7 @@ $paint_solvent_valid = "";
 $solvent_valid = "";
 $solvent_l_valid = "";
 $lacquer_solvent_l_valid = "";
+$min_price_valid = "";
 
 // Сохранение введённых значений
 if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
@@ -133,6 +134,11 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
         $form_valid = false;
     }
     
+    if(empty(filter_input(INPUT_POST, 'min_price'))) {
+        $min_price_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
     $machine_id = filter_input(INPUT_POST, 'machine_id');
     
     if($form_valid) {
@@ -164,8 +170,9 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
         $old_solvent_l = "";
         $old_solvent_l_currency = "";
         $old_lacquer_solvent_l = "";
+        $old_min_price = "";
         
-        $sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent, solvent_currency, solvent_l, solvent_l_currency, lacquer_solvent_l from norm_paint where machine_id = $machine_id order by date desc limit 1";
+        $sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent, solvent_currency, solvent_l, solvent_l_currency, lacquer_solvent_l, min_price from norm_paint where machine_id = $machine_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -197,6 +204,7 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
             $old_solvent_l = $row['solvent_l'];
             $old_solvent_l_currency = $row['solvent_l_currency'];
             $old_lacquer_solvent_l = $row['lacquer_solvent_l'];
+            $old_min_price = $row['min_price'];
         }
         
         // Новый объект
@@ -227,6 +235,7 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
         $new_solvent_l = filter_input(INPUT_POST, 'solvent_l');
         $new_solvent_l_currency = filter_input(INPUT_POST, 'solvent_l_currency');
         $new_lacquer_solvent_l = filter_input(INPUT_POST, 'lacquer_solvent_l');
+        $new_min_price = filter_input(INPUT_POST, 'min_price');
         
         if($old_c != $new_c ||
                 $old_c_currency != $new_c_currency || 
@@ -254,8 +263,9 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
                 $old_solvent_currency != $new_solvent_currency || 
                 $old_solvent_l != $new_solvent_l || 
                 $old_solvent_l_currency != $new_solvent_l_currency || 
-                $old_lacquer_solvent_l != $new_lacquer_solvent_l) {
-            $sql = "insert into norm_paint (machine_id, c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent, solvent_currency, solvent_l, solvent_l_currency, lacquer_solvent_l) values ($machine_id, $new_c, '$new_c_currency', $new_c_expense, $new_m, '$new_m_currency', $new_m_expense, $new_y, '$new_y_currency', $new_y_expense, $new_k, '$new_k_currency', $new_k_expense, $new_white, '$new_white_currency', $new_white_expense, $new_panton, '$new_panton_currency', $new_panton_expense, $new_lacquer, '$new_lacquer_currency', $new_lacquer_expense, $new_paint_solvent, $new_solvent, '$new_solvent_currency', $new_solvent_l, '$new_solvent_l_currency', $new_lacquer_solvent_l)";
+                $old_lacquer_solvent_l != $new_lacquer_solvent_l || 
+                $old_min_price != $new_min_price) {
+            $sql = "insert into norm_paint (machine_id, c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent, solvent_currency, solvent_l, solvent_l_currency, lacquer_solvent_l, min_price) values ($machine_id, $new_c, '$new_c_currency', $new_c_expense, $new_m, '$new_m_currency', $new_m_expense, $new_y, '$new_y_currency', $new_y_expense, $new_k, '$new_k_currency', $new_k_expense, $new_white, '$new_white_currency', $new_white_expense, $new_panton, '$new_panton_currency', $new_panton_expense, $new_lacquer, '$new_lacquer_currency', $new_lacquer_expense, $new_paint_solvent, $new_solvent, '$new_solvent_currency', $new_solvent_l, '$new_solvent_l_currency', $new_lacquer_solvent_l, $new_min_price)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -293,8 +303,9 @@ $solvent_currency = "";
 $solvent_l = "";
 $solvent_l_currency = "";
 $lacquer_solvent_l = "";
+$min_price = "";
 
-$sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent, solvent_currency, solvent_l, solvent_l_currency, lacquer_solvent_l from norm_paint where machine_id = $machine_id order by date desc limit 1";
+$sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent, solvent_currency, solvent_l, solvent_l_currency, lacquer_solvent_l, min_price from norm_paint where machine_id = $machine_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -328,6 +339,7 @@ if($row = $fetcher->Fetch()) {
     $solvent_l = $row['solvent_l'];
     $solvent_l_currency = $row['solvent_l_currency'];
     $lacquer_solvent_l = $row['lacquer_solvent_l'];
+    $min_price = $row['min_price'];
 }
 ?>
 <!DOCTYPE html>
@@ -805,6 +817,30 @@ if($row = $fetcher->Fetch()) {
                                     <div class="invalid-feedback">Отношение лака к растворителю обязательно</div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="d-table-row">
+                            <div class="d-table-cell pr-3">
+                                <div class="form-group">
+                                    <label for="paint_solvent">Ограничение на минимальную стоимость, руб</label>
+                                    <div class="input-group">
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="min_price" 
+                                               name="min_price" 
+                                               value="<?= empty($min_price) || $min_price == 0.0 ? "" : floatval($min_price) ?>" 
+                                               placeholder="Мин. стоимость, руб" 
+                                               required="required" 
+                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onmouseup="javascript: $(this).attr('id', 'min_price'); $(this).attr('name', 'min_price'); $(this).attr('placeholder', 'Мин. стоимость, руб');" 
+                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                               onkeyup="javascript: $(this).attr('id', 'min_price'); $(this).attr('name', 'min_price'); $(this).attr('placeholder', 'Мин. стоимость, руб');" 
+                                               onfocusout="javascript: $(this).attr('id', 'min_price'); $(this).attr('name', 'min_price'); $(this).attr('placeholder', 'Мин. стоимость, руб');" />
+                                        <div class="input-group-append"><span class="input-group-text">%</span></div>
+                                    </div>
+                                    <div class="invalid-feedback">Ограничение на минимальную стоимость обязательно</div>
+                                </div>
+                            </div>
+                            <div class="d-table-cell pl-3"></div>
                         </div>
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
