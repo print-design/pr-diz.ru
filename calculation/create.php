@@ -355,7 +355,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 }
             }
             
-            if(empty($c_price_lam1)) {
+            if(empty($c_price_lam1) && !empty($c_weight_lam1)) {
                 $error_message = "Для данной толщины ламинации 1 не указана цена";
             }
         }
@@ -402,7 +402,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 }
             }
             
-            if(empty($c_price_lam2)) {
+            if(empty($c_price_lam2) && !empty($c_weight_lam2)) {
                 $error_message = "Для данной толщины ламинации 2 не указана цена";
             }
         }
