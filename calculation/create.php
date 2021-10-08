@@ -970,13 +970,56 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                     
                     $paint_price += $paint_solvent_price_sum;
                     
-                    //***************************************************
                     
-                    if(!empty($c_price_lam1) && !empty($c_weight_lam1)) {
-                        // Вес материала чистый, кг
-                    }
                 }
             }
+        }
+        
+        //***************************************************
+                    
+        if(!empty($c_price_lam1) && !empty($c_weight_lam1) && !empty($pure_area) && $machine_id != "NULL") {
+            // Вес материала чистый, кг
+            // площадь тиража чистая * удельный вес ламинации 1 / 1000
+            $pure_weight_lam1 = $pure_area * $c_weight_lam1 / 1000;
+                        
+            // Вес материала с отходами, кг
+            // (длина тиража с ламинацией + длина материала для приладки при ламинации) * ширина тиража с отходами (в метрах) * удельный вес ламинации 1 / 1000
+            $dirty_weight_lam1 = ($pure_length_lam + $tuning_lengths[$machine_id]) * $dirty_width / 1000 * $c_weight_lam1 / 1000;
+            
+            // Стоимость материала, руб
+            // удельная стоимость материала ламинации * вес материала с отходами
+            $price_lam1 = $c_price_lam1 * $dirty_weight_lam1;
+            
+            // Площадь ламинации
+            // SLamClear1=m_pY7*LamValWidth/1000 + 200
+            // LamValWidth=237;
+            // длина тиража чистая * ширина ламинирующего вала (всегда 237) / 1000 + длина материала для приладки
+            $lam_roller_width = 237;
+            $area_lam1 = $pure_length * $lam_roller_width / 1000 + $tuning_lengths[$machine_id];
+            
+            // Стоимость клеевого раствора, руб
+            // стоимость клеевого раствора за кг * расход клея * площадь ламинации
+            // dbEdit21=PLam1*CostRastvoraRubKg
+            // PLam1=RashodKlejaKgM2*SLamClear1
+            // RashodKlejaKgM2=RashodKlejaGrM2/1000;
+            // SLamClear1=m_pY7Lam*LamValWidth/1000 + LprilLam
+            $glue_price_lam1 = $area_lam1;
+        }
+        
+        //****************************************************
+        
+        if(!empty($c_price_lam2) && !empty($c_weight_lam2) && !empty($pure_area) && $machine_id != "NULL") {
+            // Вес материала чистый, кг
+            // площадь тиража чистая * удельный вес ламинации 1 / 1000
+            $pure_weight_lam2 = $pure_area * $c_weight_lam2 / 1000;
+                        
+            // Вес материала с отходами, кг
+            // (длина тиража с ламинацией + длина материала для приладки при ламинации) * ширина тиража с отходами (в метрах) * удельный вес ламинации 1 / 1000
+            $dirty_weight_lam2 = ($pure_length_lam + $tuning_lengths[$machine_id]) * $dirty_width / 1000 * $c_weight_lam2 / 1000;
+            
+            // Стоимость материала, руб
+            // удельная стоимость материала ламинации * вес материала с отходами
+            $price_lam2 = $c_price_lam2 * $dirty_weight_lam2;
         }
         
         echo "<p>Площадь тиража чистая, м2: $pure_area</p>";
@@ -1001,9 +1044,20 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         echo "<p>Стоимость комплекта печатных форм, руб: $cliche_price</p>";
         echo "<hr />";
         echo "<p>Стоимость краски + лака + растворителя, руб: $paint_price</p>";
-        if(!empty($c_price_lam1) && !empty($c_weight_lam1)) {
+        if(!empty($c_price_lam1) && !empty($c_weight_lam1) && $machine_id != "NULL") {
             echo "<hr />";
             echo "<p>Расход клея при ламинации, г/м2: $glue_expense</p>";
+            echo "<p>Вес материала чистый, кг: $pure_weight_lam1</p>";
+            echo "<p>Вес материала с отходами, кг: $dirty_weight_lam1</p>";
+            echo "<p>Стоимость материала, руб: $price_lam1</p>";
+            echo "<p>Стоимость клеевого раствора, руб: $glue_price_lam1</p>";
+        }
+        if(!empty($c_price_lam2) && !empty($c_weight_lam2) && $machine_id != "NULL") {
+            echo "<hr />";
+            echo "<p>Расход клея при ламинации, г/м2: $glue_expense</p>";
+            echo "<p>Вес материала чистый, кг: $pure_weight_lam2</p>";
+            echo "<p>Вес материала с отходами, кг: $dirty_weight_lam2</p>";
+            echo "<p>Стоимость материала, руб: $price_lam2</p>";
         }
         
         // *************************************
