@@ -496,31 +496,22 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         // Данные о красках
         $paint_c = null;
-        $paint_c_currency = null; 
         $paint_c_expense = null;
         $paint_m = null;
-        $paint_m_currency = null;
         $paint_m_expense = null;
         $paint_y = null;
-        $paint_y_currency = null;
         $paint_y_expense = null;
         $paint_k = null;
-        $paint_k_currency = null;
         $paint_k_expense = null;
         $paint_white = null;
-        $paint_white_currency = null;
         $paint_white_expense = null;
         $paint_panton = null;
-        $paint_panton_currency = null;
         $paint_panton_expense = null;
         $paint_lacquer = null;
-        $paint_lacquer_currency = null;
         $paint_lacquer_expense = null;
         $paint_paint_solvent = null;
         $paint_solvent = null;
-        $paint_solvent_currency = null;
         $paint_solvent_l = null;
-        $paint_solvent_l_currency = null;
         $paint_lacquer_solvent_l = null;
         $paint_min_price = null;
                 
@@ -639,6 +630,39 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $cliche_var = "cliche_$i";
             $$cliche_var = filter_input(INPUT_POST, "form_$i");
         }
+        
+        // Данные о клее при ламинации
+        $glue_price = null;
+        $glue_expense = null;
+        $glue_solvent_price = null;
+        $glue_solvent_percent = null;
+        
+        $sql = "select glue, glue_currency, glue_expense, solvent, solvent_currency, glue_solvent from norm_glue order by id desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $glue_price = $row['glue'];
+            
+            if($row['glue_currency'] == USD) {
+                $glue_price *= $usd;
+            }
+            else if($row['glue_currency'] == EURO) {
+                $glue_price *= $euro;
+            }
+                
+            $glue_expense = $row['glue_expense'];
+            $glue_solvent_price = $row['solvent'];
+            
+            if($row['solvent_currency'] == USD) {
+                $glue_solvent_price *= $usd;
+            }
+            else if($row['solvent_currency'] == EURO) {
+                $glue_solvent_price *= $euro;
+            }
+                
+            $glue_solvent_percent = $row['glue_solvent'];
+        }
+        
+        //********************************************************
         
         // 1. Площадь тиража чистая, м2
         // если в кг: 1000 * (вес заказа + вес лам1 + вес лам2) / удельный вес материала
@@ -945,6 +969,12 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                     $paint_solvent_price_sum = ($paint_price_sum * $paint_solvent_final / 100) + ($solvent_price_sum * (100 - $paint_solvent_final) / 100);
                     
                     $paint_price += $paint_solvent_price_sum;
+                    
+                    //***************************************************
+                    
+                    if(!empty($c_price_lam1) && !empty($c_weight_lam1)) {
+                        // Вес материала чистый, кг
+                    }
                 }
             }
         }
@@ -971,7 +1001,10 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         echo "<p>Стоимость комплекта печатных форм, руб: $cliche_price</p>";
         echo "<hr />";
         echo "<p>Стоимость краски + лака + растворителя, руб: $paint_price</p>";
-        echo "<hr />";
+        if(!empty($c_price_lam1) && !empty($c_weight_lam1)) {
+            echo "<hr />";
+            echo "<p>Расход клея при ламинации, г/м2: $glue_expense</p>";
+        }
         
         // *************************************
         // Сохранение в базу
