@@ -52,8 +52,9 @@ const PANTON = "panton";
 const WHITE = "white";
 const LACQUER = "lacquer";
 
-// Сохранение в базу расчёта
+// Обработка нажатия кнопки "Сохранить расчёт"
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
+    // Валидация
     if(empty(filter_input(INPUT_POST, "customer_id"))) {
         $customer_id_valid = ISINVALID;
         $form_valid = false;
@@ -521,9 +522,10 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $paint_solvent_l = null;
         $paint_solvent_l_currency = null;
         $paint_lacquer_solvent_l = null;
+        $paint_min_price = null;
                 
         if($machine_id != "NULL") {
-            $sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent, solvent_currency, solvent_l, solvent_l_currency, lacquer_solvent_l "
+            $sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent, solvent_currency, solvent_l, solvent_l_currency, lacquer_solvent_l, min_price "
                     . "from norm_paint where machine_id = $machine_id order by id desc limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
@@ -617,6 +619,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 }
                 
                 $paint_lacquer_solvent_l = $row['lacquer_solvent_l'];
+                $paint_min_price = $row['min_price'];
             }
         }
         
@@ -845,7 +848,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         // 4. Стоимость краски + лака + растворителя, руб
         $paint_price = null;
         
-        if(!empty($dirty_area)) {
+        if(!empty($dirty_area) && $work_type_id == 2) {
             $paint_price = 0;
             
             // Перебираем все используемые краски, лаки
@@ -859,52 +862,89 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                     // площадь тиража с отходами * процент краски / 100
                     $paint_area = $dirty_area * $$percent_var / 100;
                     
-                    // Расход краски, г/м2 и стоимость краски за 1 кг
-                    $paint_expense = 0;
-                    $paint_price_kg = 0;
+                    // Расход краски, г/м2
+                    $paint_expense_final = 0;
+                    
+                    // Стоимость краски за 1 кг, руб
+                    $paint_price_final = 0;
+                    
+                    // Стоимость растворителя за 1 кг, руб
+                    $solvent_price_final = 0;
+                    
+                    // Процент краски по отношению к растворителю
+                    $paint_solvent_final = 0;
                     
                     switch ($$paint_var) {
                         case CMYK:
                             switch ($$cmyk_var) {
                                 case CYAN:
-                                    $paint_expense = $paint_c_expense;
-                                    $paint_price_kg = $paint_c;
+                                    $paint_expense_final = $paint_c_expense;
+                                    $paint_price_final = $paint_c;
+                                    $solvent_price_final = $paint_solvent;
+                                    $paint_solvent_final = $paint_paint_solvent;
                                     break;
                                 case MAGENTA:
-                                    $paint_expense = $paint_m_expense;
-                                    $paint_price_kg = $paint_m;
+                                    $paint_expense_final = $paint_m_expense;
+                                    $paint_price_final = $paint_m;
+                                    $solvent_price_final = $paint_solvent;
+                                    $paint_solvent_final = $paint_paint_solvent;
                                     break;
                                 case YELLOW;
-                                    $paint_expense = $paint_y_expense;
-                                    $paint_price_kg = $paint_y;
+                                    $paint_expense_final = $paint_y_expense;
+                                    $paint_price_final = $paint_y;
+                                    $solvent_price_final = $paint_solvent;
+                                    $paint_solvent_final = $paint_paint_solvent;
                                     break;
                                 case KONTUR:
                                     $paint_expense = $paint_k_expense;
-                                    $paint_price_kg = $paint_k;
+                                    $paint_price_final = $paint_k;
+                                    $solvent_price_final = $paint_solvent;
+                                    $paint_solvent_final = $paint_paint_solvent;
                                     break;
                             };
                             break;
                         case PANTON:
-                            $paint_expense = $paint_panton_expense;
-                            $paint_price_kg = $paint_panton;
+                            $paint_expense_final = $paint_panton_expense;
+                            $paint_price_final = $paint_panton;
+                            $solvent_price_final = $paint_solvent;
+                            $paint_solvent_final = $paint_paint_solvent;
                             break;
                         case WHITE:
-                            $paint_expense = $paint_white_expense;
-                            $paint_price_kg = $paint_white;
+                            $paint_expense_final = $paint_white_expense;
+                            $paint_price_final = $paint_white;
+                            $solvent_price_final = $paint_solvent;
+                            $paint_solvent_final = $paint_paint_solvent;
                             break;
                         case LACQUER:
-                            $paint_expense = $paint_lacquer_expense;
-                            $paint_price_kg = $paint_lacquer;
+                            $paint_expense_final = $paint_lacquer_expense;
+                            $paint_price_final = $paint_lacquer;
+                            $solvent_price_final = $paint_solvent_l;
+                            $paint_solvent_final = $paint_lacquer_solvent_l;
                             break;
                     }
                     
                     // Количество краски, кг
                     // площадь запечатки * расход краски / 1000
-                    $paint_quantity = $paint_area * $paint_expense / 1000;
+                    $paint_quantity = $paint_area * $paint_expense_final / 1000;
                     
-                    // Стоимость краски, руб
+                    // Стоимость неразведённой краски, руб
                     // количество краски * стоимость краски за 1 кг
-                    $paint_price_sum = $paint_quantity * $paint_price_kg;
+                    $paint_price_sum = $paint_quantity * $paint_price_final;
+                    
+                    // Проверяем, чтобы стоимость была не меньше минимальной стоимости
+                    if($paint_price_sum < $paint_min_price) {
+                        $paint_price_sum = $paint_min_price;
+                    }
+                    
+                    // Стоимость растворителя
+                    // количество краски * стоимость растворителя за 1 кг
+                    $solvent_price_sum = $paint_quantity * $solvent_price_final;
+                    
+                    // Стоимость разведённой краски
+                    // (стоимость краски * процент краски / 100) + (стоимость краски * (100 - процент краски) / 100)
+                    $paint_solvent_price_sum = ($paint_price_sum * $paint_solvent_final / 100) + ($solvent_price_sum * (100 - $paint_solvent_final) / 100);
+                    
+                    $paint_price += $paint_solvent_price_sum;
                 }
             }
         }
@@ -931,6 +971,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         echo "<p>Стоимость комплекта печатных форм, руб: $cliche_price</p>";
         echo "<hr />";
         echo "<p>Стоимость краски + лака + растворителя, руб: $paint_price</p>";
+        echo "<hr />";
         
         // *************************************
         // Сохранение в базу
