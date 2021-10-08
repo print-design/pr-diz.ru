@@ -997,13 +997,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             // удельная стоимость материала ламинации * вес материала с отходами
             $price_lam1 = $c_price_lam1 * $dirty_weight_lam1;
             
+            // Удельная стоимость клеевого раствора
+            // (стоимость клея * соотношение кл/раст / 100) + (стоимость растворителя для клея * (100 - соотношение кл/раст) / 100)
+            $glue_solvent_g = ($glue_price * $glue_solvent_percent / 100) + ($glue_solvent_price * (100 - $glue_solvent_percent) / 100);
+            
             // Стоимость клеевого раствора, руб
-            // dbEdit21=PLam1*CostRastvoraRubKg
-            // PLam1=RashodKlejaKgM2*SLamClear1
-            // RashodKlejaKgM2=RashodKlejaGrM2/1000;
-            // SLamClear1=m_pY7Lam*LamValWidth/1000 + LprilLam
-            // Подтв: m_pY7Lam, 
-            $glue_price_lam1 = $pure_length_lam;
+            // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
+            $glue_price_lam1 = $glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination1_roller / 1000 + $tuning_lengths[$machine_id]);
         }
         
         //****************************************************
@@ -1020,6 +1020,14 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             // Стоимость материала, руб
             // удельная стоимость материала ламинации * вес материала с отходами
             $price_lam2 = $c_price_lam2 * $dirty_weight_lam2;
+            
+            // Удельная стоимость клеевого раствора
+            // (стоимость клея * соотношение кл/раст / 100) + (стоимость растворителя для клея * (100 - соотношение кл/раст) / 100)
+            $glue_solvent_g = ($glue_price * $glue_solvent_percent / 100) + ($glue_solvent_price * (100 - $glue_solvent_percent) / 100);
+            
+            // Стоимость клеевого раствора, руб
+            // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
+            $glue_price_lam2 = $glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination2_roller / 1000 + $tuning_lengths[$machine_id]);
         }
         
         echo "<p>Площадь тиража чистая, м2: $pure_area</p>";
@@ -1058,6 +1066,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             echo "<p>Вес материала чистый, кг: $pure_weight_lam2</p>";
             echo "<p>Вес материала с отходами, кг: $dirty_weight_lam2</p>";
             echo "<p>Стоимость материала, руб: $price_lam2</p>";
+            echo "<p>Стоимость клеевого раствора, руб: $glue_price_lam2</p>";
         }
         
         // *************************************
