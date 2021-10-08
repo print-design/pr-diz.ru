@@ -422,8 +422,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         if(empty($error_message)) {
             $sql = "select machine_id, time, length, waste_percent "
-                    . "from norm_fitting where date in "
-                    . "(select max(date) from norm_fitting group by machine_id)";
+                    . "from norm_fitting "
+                    . "where date in (select max(date) from norm_fitting group by machine_id)";
             $fetcher = new Fetcher($sql);
             while($row = $fetcher->Fetch()) {
                 $tuning_times[$row['machine_id']] = $row['time'];
@@ -433,15 +433,17 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         // Данные о машине
-        $machine_speed = null;
-        $machine_price = null;
+        $machine_speeds = array();
+        $machine_prices = array();
         
         if($machine_id != "NULL") {
-            $sql = "select price, speed from norm_machine where machine_id = $machine_id order by id desc limit 1";
+            $sql = "select machine_id, price, speed "
+                    . "from norm_machine "
+                    . "where date in (select max(date) from norm_machine group by machine_id)";
             $fetcher = new Fetcher($sql);
-            if($row = $fetcher->Fetch()) {
-                $machine_price = $row['price'];
-                $machine_speed = $row['speed'];
+            while($row = $fetcher->Fetch()) {
+                $machine_prices[$row['machine_id']] = $row['price'];
+                $machine_speeds[$row['machine_id']] = $row['speed'];
             }
         }
         
@@ -791,15 +793,15 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         // длина тиража чистая / 1000 / скорость работы флекс машины
         $print_time = null;
         
-        if(!empty($pure_length) && !empty($machine_speed)) {
-            $print_time = $pure_length / 1000 / $machine_speed;
+        if(!empty($pure_length) && $machine_id != "NULL") {
+            $print_time = $pure_length / 1000 / $machine_speeds[$machine_id];
         }
         
         // 2. Время приладки, ч
         // время приладки каждой краски * число красок
         $tuning_time = null;
         
-        if($machine_id != "NULL" && $paints_count != "NULL" && !empty($tuning_times[$machine_id])) {
+        if($machine_id != "NULL" && $paints_count != "NULL") {
             $tuning_time = $tuning_times[$machine_id] / 60 * $paints_count;
         }
         
@@ -815,8 +817,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         // время печати с приладкой * стоимость работы машины
         $print_price = null;
         
-        if(!empty($print_tuning_time) && !empty($machine_price)) {
-            $print_price = $print_tuning_time * $machine_price;
+        if(!empty($print_tuning_time) && $machine_id != "NULL") {
+            $print_price = $print_tuning_time * $machine_prices[$machine_id];
         }
         
         //***************************************************************
@@ -978,8 +980,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                     $paint_solvent_price_sum = ($paint_price_sum * $paint_solvent_final / 100) + ($solvent_price_sum * (100 - $paint_solvent_final) / 100);
                     
                     $paint_price += $paint_solvent_price_sum;
-                    
-                    
                 }
             }
         }
@@ -1006,6 +1006,10 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             // Стоимость клеевого раствора, руб
             // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
             $glue_price_lam1 = $glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination1_roller / 1000 + $tuning_lengths[$machine_id]);
+            
+            // Стоимость процесса ламинации
+            // стоимость работы оборудования + (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования
+            $price_sum_lam1 = $machine_prices[$laminator_machine_id] + ($pure_length_lam / 1000 / $machine_speeds[$laminator_machine_id]) * $machine_prices[$laminator_machine_id];
         }
         
         //****************************************************
@@ -1030,6 +1034,10 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             // Стоимость клеевого раствора, руб
             // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
             $glue_price_lam2 = $glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination2_roller / 1000 + $tuning_lengths[$machine_id]);
+            
+            // Стоимость процесса ламинации
+            // стоимость работы оборудования + (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования
+            $price_sum_lam2 = $machine_prices[$laminator_machine_id] + ($pure_length_lam / 1000 / $machine_speeds[$laminator_machine_id]) * $machine_prices[$laminator_machine_id];
         }
         
         echo "<p>Площадь тиража чистая, м2: $pure_area</p>";
@@ -1061,6 +1069,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             echo "<p>Вес материала с отходами, кг: $dirty_weight_lam1</p>";
             echo "<p>Стоимость материала, руб: $price_lam1</p>";
             echo "<p>Стоимость клеевого раствора, руб: $glue_price_lam1</p>";
+            echo "<p>Стоимость процесса ламинации, руб: $price_sum_lam1</p>";
         }
         if(!empty($c_price_lam2) && !empty($c_weight_lam2) && $machine_id != "NULL") {
             echo "<hr />";
@@ -1069,6 +1078,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             echo "<p>Вес материала с отходами, кг: $dirty_weight_lam2</p>";
             echo "<p>Стоимость материала, руб: $price_lam2</p>";
             echo "<p>Стоимость клеевого раствора, руб: $glue_price_lam2</p>";
+            echo "<p>Стоимость процесса ламинации, руб: $price_sum_lam2</p>";
         }
         
         // *************************************
