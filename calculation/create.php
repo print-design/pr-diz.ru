@@ -52,6 +52,9 @@ const PANTON = "panton";
 const WHITE = "white";
 const LACQUER = "lacquer";
 
+// id ламинатора
+$laminator_machine_id = 5;
+
 // Обработка нажатия кнопки "Сохранить расчёт"
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     // Валидация
@@ -180,6 +183,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         if(empty($lamination1_other_thickness)) $lamination1_other_thickness = "NULL";
         $lamination1_other_weight = filter_input(INPUT_POST, 'lamination1_other_weight');
         if(empty($lamination1_other_weight)) $lamination1_other_weight = "NULL";
+        $lamination1_roller = filter_input(INPUT_POST, 'lamination1_roller');
+        if(empty($lamination1_roller)) $lamination1_roller = "NULL";
         $lamination1_customers_material = 0;
         if(filter_input(INPUT_POST, 'lamination1_customers_material') == 'on') {
             $lamination1_customers_material = 1;
@@ -195,6 +200,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         if(empty($lamination2_other_thickness)) $lamination2_other_thickness = "NULL";
         $lamination2_other_weight = filter_input(INPUT_POST, 'lamination2_other_weight');
         if(empty($lamination2_other_weight)) $lamination2_other_weight = "NULL";
+        $lamination2_roller = filter_input(INPUT_POST, 'lamination2_roller');
+        if(empty($lamination2_roller)) $lamination2_roller = "NULL";
         $lamination2_customers_material = 0;
         if(filter_input(INPUT_POST, 'lamination2_customers_material') == 'on') {
             $lamination2_customers_material = 1;
@@ -977,7 +984,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         //***************************************************
                     
-        if(!empty($c_price_lam1) && !empty($c_weight_lam1) && !empty($pure_area) && $machine_id != "NULL") {
+        if(!empty($c_price_lam1) && !empty($c_weight_lam1) && !empty($pure_area) && $machine_id != "NULL" && $lamination1_roller != "NULL") {
             // Вес материала чистый, кг
             // площадь тиража чистая * удельный вес ламинации 1 / 1000
             $pure_weight_lam1 = $pure_area * $c_weight_lam1 / 1000;
@@ -1001,7 +1008,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         //****************************************************
         
-        if(!empty($c_price_lam2) && !empty($c_weight_lam2) && !empty($pure_area) && $machine_id != "NULL") {
+        if(!empty($c_price_lam2) && !empty($c_weight_lam2) && !empty($pure_area) && $machine_id != "NULL" && $lamination2_roller != "NULL") {
             // Вес материала чистый, кг
             // площадь тиража чистая * удельный вес ламинации 1 / 1000
             $pure_weight_lam2 = $pure_area * $c_weight_lam2 / 1000;
@@ -1058,8 +1065,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         /*if(empty($error_message)) {
             $sql = "insert into calculation (customer_id, name, work_type_id, unit, machine_id, "
                     . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
-                    . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
-                    . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
+                    . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_roller, lamination1_customers_material, "
+                    . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_roller, lamination2_customers_material, "
                     . "width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, extracharge, ski, no_ski, "
                     . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
                     . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -1068,8 +1075,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                     . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
                     . "values($customer_id, '$name', $work_type_id, '$unit', $machine_id, "
                     . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, "
-                    . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_other_brand_name', $lamination1_other_price, $lamination1_other_thickness, $lamination1_other_weight, $lamination1_customers_material, "
-                    . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_other_brand_name', $lamination2_other_price, $lamination2_other_thickness, $lamination2_other_weight, $lamination2_customers_material, "
+                    . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_other_brand_name', $lamination1_other_price, $lamination1_other_thickness, $lamination1_other_weight, $lamination1_roller, $lamination1_customers_material, "
+                    . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_other_brand_name', $lamination2_other_price, $lamination2_other_thickness, $lamination2_other_weight, $lamination2_roller, $lamination2_customers_material, "
                     . "$width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, $extracharge, $ski, $no_ski, "
                     . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
                     . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
@@ -1115,8 +1122,8 @@ if(empty($id)) {
 if(!empty($id)) {
     $sql = "select date, customer_id, name, work_type_id, unit, machine_id, "
             . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
-            . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
-            . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
+            . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_roller, lamination1_customers_material, "
+            . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_roller, lamination2_customers_material, "
             . "quantity, width, streams_count, length, stream_width, raport, paints_count, status_id, extracharge, ski, no_ski, "
             . "(select count(id) from techmap where calculation_id = $id) techmaps_count, "
             . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
@@ -1241,6 +1248,12 @@ if(null === $lamination1_other_weight) {
     else $lamination1_other_weight = null;
 }
 
+$lamination1_roller = filter_input(INPUT_POST, 'lamination1_roller');
+if(null === $lamination1_roller) {
+    if(isset($row['lamination1_roller'])) $lamination1_roller = $row['lamination1_roller'];
+    else $lamination1_roller = null;
+}
+
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     $lamination1_customers_material = filter_input(INPUT_POST, 'lamination1_customers_material') == 'on' ? 1 : 0;
 }
@@ -1283,6 +1296,12 @@ $lamination2_other_weight = filter_input(INPUT_POST, 'lamination2_other_weight')
 if(null === $lamination2_other_weight) {
     if(isset($row['lamination2_other_weight'])) $lamination2_other_weight = $row['lamination2_other_weight'];
     else $lamination2_other_weight = null;
+}
+
+$lamination2_roller = filter_input(INPUT_POST, 'lamination2_roller');
+if(null === $lamination2_roller) {
+    if(isset($row['lamination2_roller'])) $lamination2_roller = $row['lamination2_roller'];
+    else $lamination2_roller = null;
 }
 
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
@@ -1880,9 +1899,26 @@ $colorfulnesses = array();
                             </div>
                             <div class="row">
                                 <div class="col-6">
-                                    <div id="show_lamination_2">
-                                        <button type="button" class="btn btn-light" onclick="javascript: ShowLamination2();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
-                                    </div> 
+                                    <div class="form-group">
+                                        <label for="lamination1_roller">Ширина вала, мм</label>
+                                        <select id="lamination1_roller" name="lamination1_roller" class="form-control">
+                                            <option value="" hidden="hidden" selected="selected">Ширина вала...</option>
+                                            <?php
+                                            $sql = "select value from roller where machine_id=$laminator_machine_id order by value"; echo $sql;
+                                            $rollers = (new Grabber($sql))->result;
+                                                
+                                            foreach ($rollers as $row):
+                                            $selected = '';
+                                            if($row['value'] == $lamination1_roller) {
+                                                $selected = " selected='selected'";
+                                            }
+                                            ?>
+                                            <option value="<?=$row['value'] ?>"<?=$selected ?>><?=$row['value'] ?></option>
+                                            <?php
+                                            endforeach;
+                                            ?>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="form-check">
@@ -1894,6 +1930,14 @@ $colorfulnesses = array();
                                         </label>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div id="show_lamination_2">
+                                        <button type="button" class="btn btn-light" onclick="javascript: ShowLamination2();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
+                                    </div> 
+                                </div>
+                                <div class="col-6"></div>
                             </div>
                             <!-- Ламинация 2 -->
                             <div id="form_lamination_2" class="d-none">
@@ -2027,7 +2071,28 @@ $colorfulnesses = array();
                                     <div class="col-1"></div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-6"></div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="lamination2_roller">Ширина вала, мм</label>
+                                            <select id="lamination2_roller" name="lamination2_roller" class="form-control">
+                                                <option value="" hidden="hidden" selected="selected">Ширина вала...</option>
+                                                <?php
+                                                $sql = "select value from roller where machine_id=$laminator_machine_id order by value"; echo $sql;
+                                                $rollers = (new Grabber($sql))->result;
+                                                
+                                                foreach ($rollers as $row):
+                                                $selected = '';
+                                                if($row['value'] == $lamination2_roller) {
+                                                    $selected = " selected='selected'";
+                                                }
+                                                ?>
+                                                <option value="<?=$row['value'] ?>"<?=$selected ?>><?=$row['value'] ?></option>
+                                                <?php
+                                                endforeach;
+                                                ?>
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="col-6">
                                         <div class="form-check">
                                             <label class="form-check-label text-nowrap" style="line-height: 25px;">
@@ -2622,6 +2687,7 @@ $colorfulnesses = array();
                 $('#film_title').addClass('d-none');
                 $('#lamination1_brand_name').attr('required', 'required');
                 $('#lamination1_thickness').attr('required', 'required');
+                $('#lamination1_roller').attr('required', 'required');
                 SetFieldsVisibility($('#work_type_id').val());
                 SetBrandFieldsVisibility($('#lamination1_brand_name').val(), $('#lamination1_customers_material').is(':checked'), 'lamination1_');
             }
@@ -2659,6 +2725,7 @@ $colorfulnesses = array();
                 $('#hide_lamination_1').removeClass('d-flex');
                 $('#lamination2_brand_name').attr('required', 'required');
                 $('#lamination2_thickness').attr('required', 'required');
+                $('#lamination2_roller').attr('required', 'required');
                 SetBrandFieldsVisibility($('#lamination2_brand_name').val(), $('#lamination2_customers_material').is(':checked'), 'lamination2_');
             }
             
