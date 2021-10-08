@@ -985,6 +985,10 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         //***************************************************
+        
+        // Итого себестоимость ламинации, руб
+        // материал1 + материал2 + клей1 + клей2 + процесс1 + процесс2
+        $price_lam_total = 0;
                     
         if(!empty($c_price_lam1) && !empty($c_weight_lam1) && !empty($pure_area) && $machine_id != "NULL" && $lamination1_roller != "NULL") {
             // Вес материала чистый, кг
@@ -997,7 +1001,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             
             // Стоимость материала, руб
             // удельная стоимость материала ламинации * вес материала с отходами
-            $price_lam1 = $c_price_lam1 * $dirty_weight_lam1;
+            $price_lam1_material = $c_price_lam1 * $dirty_weight_lam1;
             
             // Удельная стоимость клеевого раствора
             // (стоимость клея * доля клея / (доля клея + доля раствора)) + (стоимость растворителя для клея * доля раствора / (доля клея + доля раствора))
@@ -1005,14 +1009,15 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             
             // Стоимость клеевого раствора, руб
             // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
-            $glue_price_lam1 = $glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination1_roller / 1000 + $tuning_lengths[$machine_id]);
+            $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination1_roller / 1000 + $tuning_lengths[$machine_id]);
             
             // Стоимость процесса ламинации
             // стоимость работы оборудования + (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования
-            $price_sum_lam1 = $machine_prices[$laminator_machine_id] + ($pure_length_lam / 1000 / $machine_speeds[$laminator_machine_id]) * $machine_prices[$laminator_machine_id];
+            $price_lam1_work = $machine_prices[$laminator_machine_id] + ($pure_length_lam / 1000 / $machine_speeds[$laminator_machine_id]) * $machine_prices[$laminator_machine_id];
+            
+            // Итого
+            $price_lam_total += $price_lam1_material + $price_lam1_glue + $price_lam1_work;
         }
-        
-        //****************************************************
         
         if(!empty($c_price_lam2) && !empty($c_weight_lam2) && !empty($pure_area) && $machine_id != "NULL" && $lamination2_roller != "NULL") {
             // Вес материала чистый, кг
@@ -1025,7 +1030,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             
             // Стоимость материала, руб
             // удельная стоимость материала ламинации * вес материала с отходами
-            $price_lam2 = $c_price_lam2 * $dirty_weight_lam2;
+            $price_lam2_material = $c_price_lam2 * $dirty_weight_lam2;
             
             // Удельная стоимость клеевого раствора
             // (стоимость клея * соотношение кл/раст / 100) + (стоимость растворителя для клея * (100 - соотношение кл/раст) / 100)
@@ -1033,12 +1038,17 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             
             // Стоимость клеевого раствора, руб
             // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
-            $glue_price_lam2 = $glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination2_roller / 1000 + $tuning_lengths[$machine_id]);
+            $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination2_roller / 1000 + $tuning_lengths[$machine_id]);
             
             // Стоимость процесса ламинации
             // стоимость работы оборудования + (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования
-            $price_sum_lam2 = $machine_prices[$laminator_machine_id] + ($pure_length_lam / 1000 / $machine_speeds[$laminator_machine_id]) * $machine_prices[$laminator_machine_id];
+            $price_lam2_work = $machine_prices[$laminator_machine_id] + ($pure_length_lam / 1000 / $machine_speeds[$laminator_machine_id]) * $machine_prices[$laminator_machine_id];
+            
+            // Итого
+            $price_lam_total += $price_lam2_material + $price_lam2_glue + $price_lam2_work;
         }
+        
+        //***************************************************************************
         
         echo "<p>Площадь тиража чистая, м2: $pure_area</p>";
         echo "<p>Ширина тиража обрезная, мм: $pure_width</p>";
@@ -1067,19 +1077,21 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             echo "<p>Расход клея при ламинации, г/м2: $glue_expense</p>";
             echo "<p>Вес материала чистый, кг: $pure_weight_lam1</p>";
             echo "<p>Вес материала с отходами, кг: $dirty_weight_lam1</p>";
-            echo "<p>Стоимость материала, руб: $price_lam1</p>";
-            echo "<p>Стоимость клеевого раствора, руб: $glue_price_lam1</p>";
-            echo "<p>Стоимость процесса ламинации, руб: $price_sum_lam1</p>";
+            echo "<p>Стоимость материала, руб: $price_lam1_material</p>";
+            echo "<p>Стоимость клеевого раствора, руб: $price_lam1_glue</p>";
+            echo "<p>Стоимость процесса ламинации, руб: $price_lam1_work</p>";
         }
         if(!empty($c_price_lam2) && !empty($c_weight_lam2) && $machine_id != "NULL") {
             echo "<hr />";
             echo "<p>Расход клея при ламинации, г/м2: $glue_expense</p>";
             echo "<p>Вес материала чистый, кг: $pure_weight_lam2</p>";
             echo "<p>Вес материала с отходами, кг: $dirty_weight_lam2</p>";
-            echo "<p>Стоимость материала, руб: $price_lam2</p>";
-            echo "<p>Стоимость клеевого раствора, руб: $glue_price_lam2</p>";
-            echo "<p>Стоимость процесса ламинации, руб: $price_sum_lam2</p>";
+            echo "<p>Стоимость материала, руб: $price_lam2_material</p>";
+            echo "<p>Стоимость клеевого раствора, руб: $price_lam2_glue</p>";
+            echo "<p>Стоимость процесса ламинации, руб: $price_lam2_work</p>";
         }
+        echo "<hr />";
+        echo "<p>Итого себестоимость ламинации, руб: $price_lam_total</p>";
         
         // *************************************
         // Сохранение в базу
