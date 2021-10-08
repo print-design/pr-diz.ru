@@ -642,9 +642,10 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $glue_price = null;
         $glue_expense = null;
         $glue_solvent_price = null;
-        $glue_solvent_percent = null;
+        $glue_glue_part = null;
+        $glue_solvent_part = null;
         
-        $sql = "select glue, glue_currency, glue_expense, solvent, solvent_currency, glue_solvent from norm_glue order by id desc limit 1";
+        $sql = "select glue, glue_currency, glue_expense, solvent, solvent_currency, glue_part, solvent_part from norm_glue order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $glue_price = $row['glue'];
@@ -666,7 +667,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $glue_solvent_price *= $euro;
             }
                 
-            $glue_solvent_percent = $row['glue_solvent'];
+            $glue_glue_part = $row['glue_part'];
+            $glue_solvent_part = $row['solvent_part'];
         }
         
         //********************************************************
@@ -998,8 +1000,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $price_lam1 = $c_price_lam1 * $dirty_weight_lam1;
             
             // Удельная стоимость клеевого раствора
-            // (стоимость клея * соотношение кл/раст / 100) + (стоимость растворителя для клея * (100 - соотношение кл/раст) / 100)
-            $glue_solvent_g = ($glue_price * $glue_solvent_percent / 100) + ($glue_solvent_price * (100 - $glue_solvent_percent) / 100);
+            // (стоимость клея * доля клея / (доля клея + доля раствора)) + (стоимость растворителя для клея * доля раствора / (доля клея + доля раствора))
+            $glue_solvent_g = ($glue_price * $glue_glue_part / ($glue_glue_part + $glue_solvent_part)) + ($glue_solvent_price * $glue_solvent_part / ($glue_glue_part + $glue_solvent_part));
             
             // Стоимость клеевого раствора, руб
             // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
@@ -1023,7 +1025,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             
             // Удельная стоимость клеевого раствора
             // (стоимость клея * соотношение кл/раст / 100) + (стоимость растворителя для клея * (100 - соотношение кл/раст) / 100)
-            $glue_solvent_g = ($glue_price * $glue_solvent_percent / 100) + ($glue_solvent_price * (100 - $glue_solvent_percent) / 100);
+            $glue_solvent_g = ($glue_price * $glue_glue_part / ($glue_glue_part + $glue_solvent_part)) + ($glue_solvent_price * $glue_solvent_part / ($glue_glue_part + $glue_solvent_part));
             
             // Стоимость клеевого раствора, руб
             // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
