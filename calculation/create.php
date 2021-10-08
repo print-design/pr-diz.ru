@@ -990,20 +990,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             // удельная стоимость материала ламинации * вес материала с отходами
             $price_lam1 = $c_price_lam1 * $dirty_weight_lam1;
             
-            // Площадь ламинации
-            // SLamClear1=m_pY7*LamValWidth/1000 + 200
-            // LamValWidth=237;
-            // длина тиража чистая * ширина ламинирующего вала (всегда 237) / 1000 + длина материала для приладки
-            $lam_roller_width = 237;
-            $area_lam1 = $pure_length * $lam_roller_width / 1000 + $tuning_lengths[$machine_id];
-            
             // Стоимость клеевого раствора, руб
-            // стоимость клеевого раствора за кг * расход клея * площадь ламинации
             // dbEdit21=PLam1*CostRastvoraRubKg
             // PLam1=RashodKlejaKgM2*SLamClear1
             // RashodKlejaKgM2=RashodKlejaGrM2/1000;
             // SLamClear1=m_pY7Lam*LamValWidth/1000 + LprilLam
-            $glue_price_lam1 = $area_lam1;
+            // Подтв: m_pY7Lam, 
+            $glue_price_lam1 = $pure_length_lam;
         }
         
         //****************************************************
