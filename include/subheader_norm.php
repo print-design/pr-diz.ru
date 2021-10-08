@@ -34,6 +34,7 @@ $glue_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATI
 $machine_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/machine.php')) == APPLICATION.'/admin/machine.php' ? " active" : "";
 $fitting_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/fitting.php')) == APPLICATION.'/admin/fitting.php' ? " active" : "";
 $raport_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/raport.php')) == APPLICATION.'/admin/raport.php' ? " active" : "";
+$roller_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/roller.php')) == APPLICATION.'/admin/roller.php' ? " active" : "";
 ?>
 <hr class="pb-0 mb-0" />
 <div class="d-flex justify-content-start">
@@ -60,6 +61,11 @@ $raport_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICA
             if($machine_id != MACHINE_LAMINATOR):
             ?>
             <a href="<?=APPLICATION ?>/admin/raport.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$raport_class ?>">Рапорт</a>
+            <?php
+            endif;
+            if($machine_id == MACHINE_LAMINATOR):
+            ?>
+            <a href="<?=APPLICATION ?>/admin/roller.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$roller_class ?>">Ширина вала</a>
             <?php
             endif;
             ?>
