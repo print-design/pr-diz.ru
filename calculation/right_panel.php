@@ -4,6 +4,413 @@ $calculation_class = "";
 if(isset($create_calculation_submit_class) && empty($create_calculation_submit_class)) {
     $calculation_class = " class='d-none'";    
 }
+
+// Курс доллара и евро
+$euro = null;
+$usd = null;
+        
+$sql = "select euro, usd from currency where date <= '$date' order by date desc limit 1";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $euro = $row['euro'];
+    $usd = $row['usd'];
+}
+            
+if(empty($euro) || empty($usd)) {
+    $error_message = "Не заданы курсы валют";
+}
+        
+// Удельный вес
+$c_weight = null;
+        
+if(!empty($other_weight)) {
+    $c_weight = $other_weight;
+}
+elseif(!empty ($brand_name) && !empty ($thickness)) {
+    $sql = "select fbv.weight "
+            . "from film_brand_variation fbv "
+            . "inner join film_brand fb on fbv.film_brand_id = fb.id "
+            . "where fb.name = '$brand_name' and fbv.thickness = $thickness limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $c_weight = $row['weight'];
+    }
+}
+            
+if(empty($c_weight)) {
+    $error_message = "Для данной толщины плёнки не задан удельный вес";
+}
+
+        
+// Цена материала
+$c_price = null;
+        
+if(!empty($other_price)) {
+    $c_price = $other_price;
+}
+else if(!empty ($brand_name) && !empty ($thickness)) {
+    $sql = "select price, currency from film_price where brand_name = '$brand_name' and thickness = $thickness and date <= '$date' order by date desc limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $c_price = $row['price'];
+                    
+        if($row['currency'] == USD) {
+            $c_price *= $usd;
+        }
+        else if($row['currency'] == EURO) {
+            $c_price *= $euro;
+        }
+    }
+}
+            
+if(empty($c_price)) {
+    $error_message = "Для данной толщины плёнки не указана цена";
+}
+        
+// Удельный вес ламинации 1
+$c_weight_lam1 = null;
+        
+if(!empty($lamination1_other_weight)) {
+    $c_weight_lam1 = $lamination1_other_weight;
+}
+else if(!empty ($lamination1_brand_name) && !empty ($lamination1_thickness)) {
+    $sql = "select fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name = '$lamination1_brand_name' and fbv.thickness = $lamination1_thickness limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $c_weight_lam1 = $row['weight'];
+    }
+}
+            
+if(!empty($lamination1_brand_name) && !empty($lamination1_thickness) && empty($c_weight_lam1)) {
+    $error_message = "Для данной толщина ламинации 1 не задан удельный вес";
+}
+        
+// Цена ламинации 1
+$c_price_lam1 = null;
+        
+if(!empty($lamination1_other_price)) {
+    $c_price_lam1 = $lamination1_other_price;
+}
+else if(!empty ($lamination1_brand_name) && !empty ($lamination1_thickness)) {
+    $sql = "select price, currency from film_price where brand_name = '$lamination1_brand_name' and thickness = $lamination1_thickness and date <= '$date' order by date desc limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $c_price_lam1 = $row['price'];
+                    
+        if($row['currency'] == USD) {
+            $c_price_lam1 *= $usd;
+        }
+        else if($row['currency'] == EURO) {
+            $c_price_lam1 *= $euro;
+        }
+    }
+}
+            
+if(empty($c_price_lam1) && !empty($c_weight_lam1)) {
+    $error_message = "Для данной толщины ламинации 1 не указана цена";
+}
+        
+// Удельный вес ламинации 2
+$c_weight_lam2 = null;
+        
+if(!empty($lamination2_other_weight)) {
+    $c_weight_lam2 = $lamination2_other_weight;
+}
+else if(!empty ($lamination2_brand_name) && !empty ($lamination2_thickness)) {
+    $sql = "select fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name = '$lamination2_brand_name' and fbv.thickness = $lamination2_thickness limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $c_weight_lam2 = $row['weight'];
+    }
+}
+            
+if(!empty($lamination2_brand_name) && !empty($lamination2_thickness) && empty($c_weight_lam2)) {
+    $error_message = "Для данной толщины ламинации 2 не задан удельный вес";
+}
+        
+// Цена ламинации 2
+$c_price_lam2 = null;
+        
+if(!empty($lamination2_other_price)) {
+    $c_price_lam2 = $lamination2_other_price;
+}
+else if(!empty ($lamination2_brand_name) && !empty ($lamination2_thickness)) {
+    $sql = "select price, currency from film_price where brand_name = '$lamination2_brand_name' and thickness = $lamination2_thickness and date <= '$date' order by date desc limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $c_price_lam2 = $row['price'];
+                    
+        if($row['currency'] == USD) {
+            $c_price_lam2 *= $usd;
+        }
+        else if($row['currency'] == EURO) {
+            $c_price_lam2 *= $euro;
+        }
+    }
+}
+            
+if(empty($c_price_lam2) && !empty($c_weight_lam2)) {
+    $error_message = "Для данной толщины ламинации 2 не указана цена";
+}
+        
+// Данные о приладке (время приладки, метраж приладки, процент отходов)
+$tuning_times = array();
+$tuning_lengths = array();
+$tuning_waste_percents = array();
+        
+$sql = "select machine_id, time, length, waste_percent "
+        . "from norm_fitting "
+        . "where date in (select max(date) from norm_fitting where date <= '$date' group by machine_id)";
+$fetcher = new Fetcher($sql);
+while($row = $fetcher->Fetch()) {
+    $tuning_times[$row['machine_id']] = $row['time'];
+    $tuning_lengths[$row['machine_id']] = $row['length'];
+    $tuning_waste_percents[$row['machine_id']] = $row['waste_percent'];
+}
+        
+// Данные о машине
+$machine_speeds = array();
+$machine_prices = array();
+        
+if(!empty($machine_id)) {
+    $sql = "select machine_id, price, speed "
+            . "from norm_machine "
+            . "where date in (select max(date) from norm_machine where date <= '$date' group by machine_id)";
+    $fetcher = new Fetcher($sql);
+    while($row = $fetcher->Fetch()) {
+        $machine_prices[$row['machine_id']] = $row['price'];
+        $machine_speeds[$row['machine_id']] = $row['speed'];
+    }
+}
+        
+// Данные о форме
+$cliche_flint = null;
+$cliche_kodak = null;
+$cliche_tver = null;
+$cliche_film = null;
+$cliche_tver_coeff = null;
+$cliche_additional_size = null;
+$cliche_scotch = null;
+        
+if(!empty($machine_id)) {
+    $sql = "select flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch, scotch_currency "
+            . "from norm_form where machine_id = $machine_id and date <= '$date' order by date desc limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $cliche_flint = $row['flint'];
+                
+        if($row['flint_currency'] == USD) {
+            $cliche_flint *= $usd;
+        }
+        else if($row['flint_currency'] == EURO) {
+            $cliche_flint *= $euro;
+        }
+                
+        $cliche_kodak = $row['kodak'];
+                
+        if($row['kodak_currency'] == USD) {
+            $cliche_kodak *= $usd;
+        }
+        else if($row['kodak_currency'] == EURO) {
+            $cliche_kodak *= $euro;
+        }
+                
+        $cliche_tver = $row['tver'];
+            
+        if($row['tver_currency'] == USD) {
+            $cliche_tver *= $usd;
+        }
+        else if($row['tver_currency'] == EURO) {
+            $cliche_tver *= $euro;
+        }
+                
+        $cliche_film = $row['film'];
+                
+        if($row['film_currency'] == USD) {
+            $cliche_film *= $usd;
+        }
+        if($row['film_currency'] == EURO) {
+            $cliche_film *= $euro;
+        }
+                
+        $cliche_tver_coeff = $row['tver_coeff'];
+        $cliche_additional_size = $row['overmeasure'];
+                
+        $cliche_scotch = $row['scotch'];
+                
+        if($row['scotch_currency'] == USD) {
+            $cliche_scotch *= $usd;
+        }
+        if($row['scotch_currency'] == EURO) {
+            $cliche_scotch *= $euro;
+        }
+    }
+}
+        
+// Данные о красках
+$paint_c = null;
+$paint_c_expense = null;
+$paint_m = null;
+$paint_m_expense = null;
+$paint_y = null;
+$paint_y_expense = null;
+$paint_k = null;
+$paint_k_expense = null;
+$paint_white = null;
+$paint_white_expense = null;
+$paint_panton = null;
+$paint_panton_expense = null;
+$paint_lacquer = null;
+$paint_lacquer_expense = null;
+$paint_paint_solvent = null;
+$paint_solvent = null;
+$paint_solvent_l = null;
+$paint_lacquer_solvent_l = null;
+$paint_min_price = null;
+                
+if(!empty($machine_id)) {
+    $sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent, solvent_currency, solvent_l, solvent_l_currency, lacquer_solvent_l, min_price "
+            . "from norm_paint where machine_id = $machine_id and date <= '$date' order by date desc limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $paint_c = $row['c'];
+                
+        if($row['c_currency'] == USD) {
+            $paint_c *= $usd;
+        }
+        else if($row['c_currency'] == EURO) {
+            $paint_c *= $euro;
+        }
+                
+        $paint_c_expense = $row['c_expense'];
+        $paint_m = $row['m'];
+                
+        if($row['m_currency'] == USD) {
+            $paint_m *= $usd;
+        }
+        else if($row['m_currency'] == EURO) {
+            $paint_m *= $euro;
+        }
+                
+        $paint_m_expense = $row['m_expense'];
+        $paint_y = $row['y'];
+                
+        if($row['y_currency'] == USD) {
+            $paint_y *= $usd;
+        }
+        else if($row['y_currency'] == EURO) {
+            $paint_y *= $euro;
+        }
+                
+        $paint_y_expense = $row['y_expense'];
+        $paint_k = $row['k'];
+                
+        if($row['k_currency'] == USD) {
+            $paint_k *= $usd;
+        }
+        else if($row['k_currency'] == EURO) {
+            $paint_k *= $euro;
+        }
+                
+        $paint_k_expense = $row['k_expense'];
+        $paint_white = $row['white'];
+                
+        if($row['white_currency'] == USD) {
+            $paint_white *= $usd;
+        }
+        else if($row['white_currency'] == EURO) {
+            $paint_white *= $euro;
+        }
+                
+        $paint_white_expense = $row['white_expense'];
+        $paint_panton = $row['panton'];
+                
+        if($row['panton_currency'] == USD) {
+            $paint_panton *= $usd;
+        }
+        else if($row['panton_currency'] == EURO) {
+            $paint_panton *= $euro;
+        }
+                
+        $paint_panton_expense = $row['panton_expense'];
+        $paint_lacquer = $row['lacquer'];
+                
+        if($row['lacquer_currency'] == USD) {
+            $paint_lacquer *= $usd;
+        }
+        else if($row['lacquer_currency'] == EURO) {
+            $paint_lacquer *= $euro;
+        }
+                
+        $paint_lacquer_expense = $row['lacquer_expense'];
+        $paint_paint_solvent = $row['paint_solvent'];
+        $paint_solvent = $row['solvent'];
+                
+        if($row['solvent_currency'] == USD) {
+            $paint_solvent *= $usd;
+        }
+        else if($row['solvent_currency'] == EURO) {
+            $paint_solvent *= $euro;
+        }
+                
+        $paint_solvent_l = $row['solvent_l'];
+            
+        if($row['solvent_l_currency'] == USD) {
+            $paint_solvent_l *= $usd;
+        }
+        else if($row['solvent_l_currency'] == EURO) {
+            $paint_solvent_l *= $euro;
+        }
+                
+        $paint_lacquer_solvent_l = $row['lacquer_solvent_l'];
+        $paint_min_price = $row['min_price'];
+    }
+}
+        
+// Данные о клее при ламинации
+$glue_price = null;
+$glue_expense = null;
+$glue_expense_pet = null;
+$glue_solvent_price = null;
+$glue_glue_part = null;
+$glue_solvent_part = null;
+        
+$sql = "select glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, glue_part, solvent_part from norm_glue where date <= '$date' order by date desc limit 1";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $glue_price = $row['glue'];
+            
+    if($row['glue_currency'] == USD) {
+        $glue_price *= $usd;
+    }
+    else if($row['glue_currency'] == EURO) {
+        $glue_price *= $euro;
+    }
+
+    $glue_expense = $row['glue_expense'];
+    $glue_expense_pet = $row['glue_expense_pet'];
+    $glue_solvent_price = $row['solvent'];
+            
+    if($row['solvent_currency'] == USD) {
+        $glue_solvent_price *= $usd;
+    }
+    else if($row['solvent_currency'] == EURO) {
+        $glue_solvent_price *= $euro;
+    }
+                
+    $glue_glue_part = $row['glue_part'];
+    $glue_solvent_part = $row['solvent_part'];
+}
+
+// Результаты рассчёта
+$pure_area = null;
+
+$sql = "select pure_area from calculation_result where calculation_id = $id";
+$fetcher = new Fetcher($sql);
+
+if($row = $fetcher->Fetch()) {
+    $pure_area = $row['pure_area'];
+}
 ?>
 <div id="calculation"<?=$calculation_class ?> style="position: absolute; top: 0px; bottom: auto;">
     <h1>Расчет</h1>
@@ -27,27 +434,29 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
                                 <?php endif; ?>
                             </div>
                         </div>
-                        <?php
-                        $sql = "select euro, usd from currency where date < '$date' order by id desc limit 1";
-                        $fetcher = new Fetcher($sql);
-                        if($row = $fetcher->Fetch()):
-                        ?>
                         <div class="col-4">
                             <div class="p-2" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 60px; width: 100px;">
                                 <div class="text-nowrap" style="font-size: x-small;">Курс евро</div>
-                                <?=number_format($row['euro'], 2, ',', ' ') ?>
+                                <?=number_format($euro, 2, ',', ' ') ?>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="p-2" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 60px; width: 100px;">
                                 <div class="text-nowrap" style="font-size: x-small;">Курс доллара</div>
-                                <?=number_format($row['usd'], 2, ',', ' ') ?>
+                                <?=number_format($usd, 2, ',', ' ') ?>
                             </div>
                         </div>
-                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="table-cell"></div>
+            </div>
+        </div>
+        <div class="d-table w-100">
+            <div class="d-table-row">
+                <div class="d-table-cell pb-2 pt-2" style="width: 33%;">
+                    <div>Площадь тиража чистая</div>
+                    <div class="value mb-2"><?=rtrim(rtrim(number_format($pure_area, 2, ",", " "), "0"), ",") ?> м<sup>2</sup></div>
+                </div>
             </div>
         </div>
         <div class="mt-3">
@@ -123,9 +532,14 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
         <div id="costs" class="d-none">
             <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть подробности</button>
             <h2 class="mt-2">Подробности</h2>
-            <div class="d-table w-100">
-                <div class="d-table-row">
-                    <div class="d-table-cell pb-2 pt-2" style="width: 33%;">
+            <div class="font-weight-bold">Площадь тиража чистая</div>
+            <div>если в кг: 1000 * вес заказа / удельный вес материала</div>
+            <div>если в шт: ширина ручья / 1000 * длина этикетки вдоль рапорта вала / 1000 * количество этикеток в заказе</div>
+            <?php if($unit == 'kg'): ?>
+            <div class="value mb-2"><?="1000 * ".$quantity." / ".$c_weight." = ".$pure_area ?></div>
+            <?php elseif($unit == 'thing'): ?>
+            <div class="value mb-2"><?=$unit ?></div>
+            <?php endif; ?>
                         <div>Отходы</div>
                         <div class="value mb-2">1 280 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">4,5 кг</span></div>
                         <?php if($work_type_id == 2): ?>
@@ -150,10 +564,6 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
                         <div>Работа ламинатора</div>
                         <div class="value mb-2">1 500 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">3 часа</span></div>
                         <?php endif; ?>
-                    </div>
-                    <div class="d-table-cell"></div>
-                </div>
-            </div>
         </div>
         <?php
         endif;
