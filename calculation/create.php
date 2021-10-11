@@ -1247,8 +1247,18 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $insert_id = $executer->insert_id;
             
             if(empty($error_message) && !empty($insert_id)) {
-                $sql = "insert into calculation_result (calculation_id, pure_area) "
-                        . "values ($insert_id, $pure_area)";
+                $sql = "insert into calculation_result (calculation_id, pure_area, pure_width, pure_length, pure_length_lam, "
+                        . "dirty_length, dirty_width, dirty_area, pure_weight, dirty_weight, material_price, print_time, tuning_time, "
+                        . "print_tuning_time, print_price, cliche_area, cliche, cliche_price, paint_price, pure_weight_lam1, dirty_weight_lam1, "
+                        . "price_lam1_material, price_lam1_glue, price_lam1_work, pure_weight_lam2, dirty_weight_lam2, price_lam2_material, "
+                        . "price_lam2_glue, price_lam2_work, price_lam_total, pure_weight_total, dirty_weight_total, cost_no_cliche, "
+                        . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_thing, cost_with_cliche_thing) "
+                        . "values ($insert_id, $pure_area, $pure_width, $pure_length, $pure_length_lam, "
+                        . "$dirty_length, $dirty_width, $dirty_area, $pure_weight, $dirty_weight, $material_price, $print_time, $tuning_time, "
+                        . "$print_tuning_time, $print_price, $cliche_area, $cliche, $cliche_price, $paint_price, $pure_weight_lam1, $dirty_weight_lam1, "
+                        . "$price_lam1_material, $price_lam1_glue, $price_lam1_work, $pure_weight_lam2, $dirty_weight_lam2, $price_lam2_material, "
+                        . "$price_lam2_glue, $price_lam2_work, $price_lam_total, $pure_weight_total, $dirty_weight_total, $cost_no_cliche, "
+                        . "$cost_with_cliche, $cost_no_cliche_kg, $cost_with_cliche_kg, $cost_no_cliche_thing, $cost_with_cliche_thing)";
                 $executer = new Executer($sql);
                 $error_message = $executer->error;
             }
