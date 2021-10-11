@@ -1080,6 +1080,20 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $dirty_weight_total = $dirty_area * ($c_weight + ($c_weight_lam1 ?? 0) + ($c_weight_lam2 ?? 0)) / 1000;
         }
         
+        // Итого себестоимость материала за 1 кг без форм, руб
+        // m_Edit59 = m_dbEdit42 / m_dbEdit70
+        // m_dbEdit70 вес заказа
+        // m_dbEdit42 = m_pY10 + m_pY3 + m_dbEdit6 + dbEdit7 + CostScothF
+        // стоимость материала печати + стоимость печати + стоимость красок, лака и растворителя + итого себестоимость ламинации + стоимость скотча для наклейки форм
+        $cost_no_cliche = null;
+        
+        if($unit != "kg" || empty($quantity)) {
+            $cost_no_cliche = 0;
+        }
+        else if(!empty ($material_price) && !empty ($print_price) && !empty ($paint_price) && !empty ($price_lam_total) + !empty ($cliche_scotch)) {
+            $cost_no_cliche = ($material_price + $print_price + $paint_price + $price_lam_total + $cliche_scotch) / $quantity;
+        }
+        
         //***************************************************************************
         
         echo "<p>Площадь тиража чистая, м2: $pure_area</p>";
@@ -1127,6 +1141,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         echo "<hr />";
         echo "<p>Вес материала готовой продукции чистый, кг: $pure_weight_total</p>";
         echo "<p>Вес материала готовой продукции с отходами, кг: $dirty_weight_total</p>";
+        echo "<hr />";
+        echo "<p>Итого себестоимость материала за 1 кг без форм, руб: $cost_no_cliche</p>";
         
         // *************************************
         // Сохранение в базу
