@@ -1233,6 +1233,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $executer = new Executer($sql);
             $error_message = $executer->error;
             $insert_id = $executer->insert_id;
+            
+            if(empty($error_message) && !empty($insert_id)) {
+                $sql = "insert into calculation_result (calculation_id, pure_area) "
+                        . "values ($insert_id, $pure_area)";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+            }
         }
         
         if(empty($error_message)) {
