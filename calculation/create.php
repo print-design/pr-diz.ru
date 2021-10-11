@@ -457,7 +457,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $cliche_scotch = null;
         
         if($machine_id != "NULL") {
-            $sql = "select flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch "
+            $sql = "select flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch, scotch_currency "
                     . "from norm_form where machine_id = $machine_id order by id desc limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
@@ -499,7 +499,15 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 
                 $cliche_tver_coeff = $row['tver_coeff'];
                 $cliche_additional_size = $row['overmeasure'];
+                
                 $cliche_scotch = $row['scotch'];
+                
+                if($row['scotch_currency'] == USD) {
+                    $cliche_scotch *= $usd;
+                }
+                if($row['scotch_currency'] == EURO) {
+                    $cliche_scotch *= $euro;
+                }
             }
         }
         
@@ -1083,15 +1091,16 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         // Итого себестоимость материала за 1 кг без форм, руб
         // m_Edit59 = m_dbEdit42 / m_dbEdit70
         // m_dbEdit70 вес заказа
-        // m_dbEdit42 = m_pY10 + m_pY3 + m_dbEdit6 + dbEdit7 + CostScothF
-        // стоимость материала печати + стоимость печати + стоимость красок, лака и растворителя + итого себестоимость ламинации + стоимость скотча для наклейки форм
+        // m_dbEdit42 = m_pY10 + m_pY3 + m_dbEdit6 + dbEdit7 + CostScothF // 1033.91
+        // CostScothF=m_pX10*CostScothForm*m_pX2*m_pY6/10000;
+        // стоимость материала печати + стоимость печати + стоимость красок, лака и растворителя + итого себестоимость ламинации + (стоимость скотча для наклейки форм * число красок * площадь печатной формы)
         $cost_no_cliche = null;
         
         if($unit != "kg" || empty($quantity)) {
             $cost_no_cliche = 0;
         }
-        else if(!empty ($material_price) && !empty ($print_price) && !empty ($paint_price) && !empty ($price_lam_total) + !empty ($cliche_scotch)) {
-            $cost_no_cliche = ($material_price + $print_price + $paint_price + $price_lam_total + $cliche_scotch) / $quantity;
+        else if(!empty ($material_price) && !empty ($print_price) && !empty ($paint_price) && !empty ($price_lam_total) && !empty ($cliche_scotch) && !empty ($paints_count) && !empty ($cliche_area)) {
+            $cost_no_cliche = ($material_price + $print_price + $paint_price + $price_lam_total + ($cliche_scotch * $paints_count * $cliche_area / 10000)) / $quantity;
         }
         
         //***************************************************************************

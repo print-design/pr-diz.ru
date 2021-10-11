@@ -82,8 +82,9 @@ if(null !== filter_input(INPUT_POST, 'norm_form_submit')) {
         $old_tver_coeff = "";
         $old_overmeasure = "";
         $old_scotch = "";
+        $old_scotch_currency = "";
         
-        $sql = "select flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch from norm_form where machine_id = $machine_id order by date desc limit 1";
+        $sql = "select flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch, scotch_currency from norm_form where machine_id = $machine_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -99,6 +100,7 @@ if(null !== filter_input(INPUT_POST, 'norm_form_submit')) {
             $old_tver_coeff = $row['tver_coeff'];
             $old_overmeasure = $row['overmeasure'];
             $old_scotch = $row['scotch'];
+            $old_scotch_currency = $row['scotch_currency'];
         }
 
         // Новый объект
@@ -113,6 +115,7 @@ if(null !== filter_input(INPUT_POST, 'norm_form_submit')) {
         $new_tver_coeff = filter_input(INPUT_POST, 'tver_coeff');
         $new_overmeasure = filter_input(INPUT_POST, 'overmeasure');
         $new_scotch = filter_input(INPUT_POST, 'scotch');
+        $new_scotch_currency = filter_input(INPUT_POST, 'scotch_currency');
         
         if($old_flint != $new_flint || 
                 $old_flint_currency != $new_flint_currency || 
@@ -124,8 +127,9 @@ if(null !== filter_input(INPUT_POST, 'norm_form_submit')) {
                 $old_film_currency != $new_film_currency || 
                 $old_tver_coeff != $new_tver_coeff || 
                 $old_overmeasure != $new_overmeasure || 
-                $old_scotch != $new_scotch) {
-            $sql = "insert into norm_form (machine_id, flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch) values ($machine_id, $new_flint, '$new_flint_currency', $new_kodak, '$new_kodak_currency', $new_tver, '$new_tver_currency', $new_film, '$new_film_currency', $new_tver_coeff, $new_overmeasure, $new_scotch)";
+                $old_scotch != $new_scotch || 
+                $old_scotch_currency != $new_scotch_currency) {
+            $sql = "insert into norm_form (machine_id, flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch, scotch_currency) values ($machine_id, $new_flint, '$new_flint_currency', $new_kodak, '$new_kodak_currency', $new_tver, '$new_tver_currency', $new_film, '$new_film_currency', $new_tver_coeff, $new_overmeasure, $new_scotch, '$new_scotch_currency')";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -147,8 +151,9 @@ $film_currency = "";
 $tver_coeff = "";
 $overmeasure = "";
 $scotch = "";
+$scotch_currency = "";
 
-$sql = "select flint, kodak, flint_currency, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch from norm_form where machine_id = $machine_id order by date desc limit 1";
+$sql = "select flint, kodak, flint_currency, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch, scotch_currency from norm_form where machine_id = $machine_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -166,6 +171,7 @@ if($row = $fetcher->Fetch()) {
     $tver_coeff = $row['tver_coeff'];
     $overmeasure = $row['overmeasure'];
     $scotch = $row['scotch'];
+    $scotch_currency = $row['scotch_currency'];
 }
 ?>
 <!DOCTYPE html>
@@ -343,19 +349,29 @@ if($row = $fetcher->Fetch()) {
                             <div class="invalid-feedback">Припуски обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="scotch">Скотч (м<sup>2</sup>)</label>
-                            <input type="text" 
-                                   class="form-control float-only" 
-                                   id="scotch" 
-                                   name="scotch" 
-                                   value="<?= empty($scotch) ? "" : floatval($scotch) ?>" 
-                                   placeholder="Скотч, м2" 
-                                   required="required" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'scotch'); $(this).attr('name', 'scotch'); $(this).attr('placeholder', 'Скотч, м2');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'scotch'); $(this).attr('name', 'scotch'); $(this).attr('placeholder', 'Скотч, м2');" 
-                                   onfocusout="javascript: $(this).attr('id', 'scotch'); $(this).attr('name', 'scotch'); $(this).attr('placeholder', 'Скотч, м2');" />
+                            <label for="scotch">Скотч (за м<sup>2</sup>)</label>
+                            <div class="input-group">
+                                <input type="text" 
+                                       class="form-control float-only" 
+                                       id="scotch" 
+                                       name="scotch" 
+                                       value="<?= empty($scotch) ? "" : floatval($scotch) ?>" 
+                                       placeholder="Скотч, м2" 
+                                       required="required" 
+                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onmouseup="javascript: $(this).attr('id', 'scotch'); $(this).attr('name', 'scotch'); $(this).attr('placeholder', 'Скотч, м2');" 
+                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                       onkeyup="javascript: $(this).attr('id', 'scotch'); $(this).attr('name', 'scotch'); $(this).attr('placeholder', 'Скотч, м2');" 
+                                       onfocusout="javascript: $(this).attr('id', 'scotch'); $(this).attr('name', 'scotch'); $(this).attr('placeholder', 'Скотч, м2');" />
+                                <div class="input-group-append">
+                                    <select id="scotch_currency" name="scotch_currency" required="required">
+                                        <option value="" hidden="">...</option>
+                                        <option value="rub"<?=$scotch_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
+                                        <option value="usd"<?=$scotch_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
+                                        <option value="euro"<?=$scotch_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="invalid-feedback">Скотч обязательно</div>
                         </div>
                         <button type="submit" id="norm_form_submit" name="norm_form_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
