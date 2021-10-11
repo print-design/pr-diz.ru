@@ -6,6 +6,23 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Значение марки плёнки "другая"
+const OTHER = "other";
+
+// Валюты
+const USD = "usd";
+const EURO = "euro";
+
+// Краски
+const CMYK = "cmyk";
+const CYAN = "cyan";
+const MAGENTA = "magenta";
+const YELLOW = "yellow";
+const KONTUR = "kontur";
+const PANTON = "panton";
+const WHITE = "white";
+const LACQUER = "lacquer";
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -34,23 +51,6 @@ for($i=1; $i<=8; $i++) {
     $percent_valid_var = 'percent_'.$i.'_valid';
     $$percent_valid_var = '';
 }
-
-// Значение марки плёнки "другая"
-const OTHER = "other";
-
-// Валюты
-const USD = "usd";
-const EURO = "euro";
-
-// Краски
-const CMYK = "cmyk";
-const CYAN = "cyan";
-const MAGENTA = "magenta";
-const YELLOW = "yellow";
-const KONTUR = "kontur";
-const PANTON = "panton";
-const WHITE = "white";
-const LACQUER = "lacquer";
 
 // id ламинатора
 $laminator_machine_id = 5;
@@ -712,7 +712,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $pure_length = $pure_area / $pure_width * 1000;
         }
         
-        // Длина тиража чистая с ламинацией
+        // Длина тиража чистая с ламинацией, м
         // длина тиража чистая * (процент отходов для ламинатора + 100) / 100;
         $pure_length_lam = 0;
         
@@ -1249,13 +1249,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             if(empty($error_message) && !empty($insert_id)) {
                 $sql = "insert into calculation_result (calculation_id, pure_area, pure_width, pure_length, pure_length_lam, "
                         . "dirty_length, dirty_width, dirty_area, pure_weight, dirty_weight, material_price, print_time, tuning_time, "
-                        . "print_tuning_time, print_price, cliche_area, cliche, cliche_price, paint_price, pure_weight_lam1, dirty_weight_lam1, "
+                        . "print_tuning_time, print_price, cliche_area, cliche_price, paint_price, pure_weight_lam1, dirty_weight_lam1, "
                         . "price_lam1_material, price_lam1_glue, price_lam1_work, pure_weight_lam2, dirty_weight_lam2, price_lam2_material, "
                         . "price_lam2_glue, price_lam2_work, price_lam_total, pure_weight_total, dirty_weight_total, cost_no_cliche, "
                         . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_thing, cost_with_cliche_thing) "
                         . "values ($insert_id, $pure_area, $pure_width, $pure_length, $pure_length_lam, "
                         . "$dirty_length, $dirty_width, $dirty_area, $pure_weight, $dirty_weight, $material_price, $print_time, $tuning_time, "
-                        . "$print_tuning_time, $print_price, $cliche_area, $cliche, $cliche_price, $paint_price, $pure_weight_lam1, $dirty_weight_lam1, "
+                        . "$print_tuning_time, $print_price, $cliche_area, $cliche_price, $paint_price, $pure_weight_lam1, $dirty_weight_lam1, "
                         . "$price_lam1_material, $price_lam1_glue, $price_lam1_work, $pure_weight_lam2, $dirty_weight_lam2, $price_lam2_material, "
                         . "$price_lam2_glue, $price_lam2_work, $price_lam_total, $pure_weight_total, $dirty_weight_total, $cost_no_cliche, "
                         . "$cost_with_cliche, $cost_no_cliche_kg, $cost_with_cliche_kg, $cost_no_cliche_thing, $cost_with_cliche_thing)";

@@ -6,6 +6,23 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Значение марки плёнки "другая"
+const OTHER = "other";
+
+// Валюты
+const USD = "usd";
+const EURO = "euro";
+
+// Краски
+const CMYK = "cmyk";
+const CYAN = "cyan";
+const MAGENTA = "magenta";
+const YELLOW = "yellow";
+const KONTUR = "kontur";
+const PANTON = "panton";
+const WHITE = "white";
+const LACQUER = "lacquer";
+
 // Смена статуса
 if(null !== filter_input(INPUT_POST, 'change_status_submit')) {
     $id = filter_input(INPUT_POST, 'id');
