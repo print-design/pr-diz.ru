@@ -763,7 +763,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $dirty_area = $dirty_length * $dirty_width / 1000;
         }
         
-        // 7. Вес материала готовой продукции чистый, кг
+        // 7. Вес материала печати чистый, кг
         // площадь тиража чистая * удельный вес материала / 1000
         $pure_weight = null;
         
@@ -771,7 +771,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $pure_weight = $pure_area * $c_weight / 1000;
         }
         
-        // 8. Вес материала готовой продукции с отходами, кг
+        // 8. Вес материала печати с отходами, кг
         // площадь тиража с отходами * удельный вес материала / 1000
         $dirty_weight = null;
         
@@ -1064,6 +1064,24 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         //***************************************************************************
         
+        // Вес материала готовой продукции чистый
+	// площадь тиража чистая * удельный вес материала + удельный вес ламинации 1 + удельный вес ламинации 2 / 1000
+        $pure_weight_total = null;
+        
+        if(!empty($pure_area) && !empty($c_weight)) {
+            $pure_weight_total = $pure_area * ($c_weight + ($c_weight_lam1 ?? 0) + ($c_weight_lam2 ?? 0)) / 1000;
+        }
+        
+        // Вес материала готовой продукции с отходами
+        // площадь тиража с отходами * удельный вес материала + удельный вес ламинации 1 + удельный вес ламинации 2 / 1000
+        $dirty_weight_total = null;
+        
+        if(!empty($dirty_area) && !empty($c_weight)) {
+            $dirty_weight_total = $dirty_area * ($c_weight + ($c_weight_lam1 ?? 0) + ($c_weight_lam2 ?? 0)) / 1000;
+        }
+        
+        //***************************************************************************
+        
         echo "<p>Площадь тиража чистая, м2: $pure_area</p>";
         echo "<p>Ширина тиража обрезная, мм: $pure_width</p>";
         echo "<p>Ширина тиража с отходами, мм: $dirty_width</p>";
@@ -1106,6 +1124,9 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         echo "<hr />";
         echo "<p>Итого себестоимость ламинации, руб: $price_lam_total</p>";
+        echo "<hr />";
+        echo "<p>Вес материала готовой продукции чистый, кг: $pure_weight_total</p>";
+        echo "<p>Вес материала готовой продукции с отходами, кг: $dirty_weight_total</p>";
         
         // *************************************
         // Сохранение в базу
