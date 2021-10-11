@@ -420,16 +420,14 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $tuning_lengths = array();
         $tuning_waste_percents = array();
         
-        if(empty($error_message)) {
-            $sql = "select machine_id, time, length, waste_percent "
-                    . "from norm_fitting "
-                    . "where date in (select max(date) from norm_fitting group by machine_id)";
-            $fetcher = new Fetcher($sql);
-            while($row = $fetcher->Fetch()) {
-                $tuning_times[$row['machine_id']] = $row['time'];
-                $tuning_lengths[$row['machine_id']] = $row['length'];
-                $tuning_waste_percents[$row['machine_id']] = $row['waste_percent'];
-            }
+        $sql = "select machine_id, time, length, waste_percent "
+                . "from norm_fitting "
+                . "where date in (select max(date) from norm_fitting group by machine_id)";
+        $fetcher = new Fetcher($sql);
+        while($row = $fetcher->Fetch()) {
+            $tuning_times[$row['machine_id']] = $row['time'];
+            $tuning_lengths[$row['machine_id']] = $row['length'];
+            $tuning_waste_percents[$row['machine_id']] = $row['waste_percent'];
         }
         
         // Данные о машине
@@ -651,11 +649,12 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         // Данные о клее при ламинации
         $glue_price = null;
         $glue_expense = null;
+        $glue_expense_pet = null;
         $glue_solvent_price = null;
         $glue_glue_part = null;
         $glue_solvent_part = null;
         
-        $sql = "select glue, glue_currency, glue_expense, solvent, solvent_currency, glue_part, solvent_part from norm_glue order by id desc limit 1";
+        $sql = "select glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, glue_part, solvent_part from norm_glue order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $glue_price = $row['glue'];
@@ -666,8 +665,9 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             else if($row['glue_currency'] == EURO) {
                 $glue_price *= $euro;
             }
-                
+
             $glue_expense = $row['glue_expense'];
+            $glue_expense_pet = $row['glue_expense_pet'];
             $glue_solvent_price = $row['solvent'];
             
             if($row['solvent_currency'] == USD) {
@@ -1027,7 +1027,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             
             // Стоимость клеевого раствора, руб
             // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
+            // Если марка плёнки начинается на pet
+            // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
             $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination1_roller / 1000 + $tuning_lengths[$machine_id]);
+            
+            if(stripos($brand_name, 'pet') == 0) {
+                $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination1_roller / 1000 + $tuning_lengths[$machine_id]);
+            }
             
             // Стоимость процесса ламинации
             // стоимость работы оборудования + (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования
@@ -1061,7 +1067,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             
             // Стоимость клеевого раствора, руб
             // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
+            // Если марка плёнки начинается на pet
+            // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
             $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination2_roller / 1000 + $tuning_lengths[$machine_id]);
+            
+            if(stripos($brand_name, 'pet') == 0) {
+                $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination2_roller / 1000 + $tuning_lengths[$machine_id]);
+            }
             
             // Стоимость процесса ламинации
             // стоимость работы оборудования + (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования
