@@ -781,9 +781,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         // 9. Стоимость материала печати, руб
         // вес материала печати с отходами * цена материала за 1 кг
+        // Если сырьё заказчика, то стоимость материала 0
         $material_price = null;
         
-        if(!empty($dirty_weight) && !empty($c_price)) {
+        if($customers_material) {
+            $material_price = 0;
+        }
+        else if(!empty($dirty_weight) && !empty($c_price)) {
             $material_price = $dirty_weight * $c_price;
         }
         
@@ -1001,7 +1005,12 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             
             // Стоимость материала, руб
             // удельная стоимость материала ламинации * вес материала с отходами
-            $price_lam1_material = $c_price_lam1 * $dirty_weight_lam1;
+            if($lamination1_customers_material) {
+                $price_lam1_material = 0;
+            }
+            else {
+                $price_lam1_material = $c_price_lam1 * $dirty_weight_lam1;
+            }
             
             // Удельная стоимость клеевого раствора
             // (стоимость клея * доля клея / (доля клея + доля раствора)) + (стоимость растворителя для клея * доля раствора / (доля клея + доля раствора))
@@ -1030,7 +1039,12 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             
             // Стоимость материала, руб
             // удельная стоимость материала ламинации * вес материала с отходами
-            $price_lam2_material = $c_price_lam2 * $dirty_weight_lam2;
+            if($lamination2_customers_material) {
+                $price_lam2_material = 0;
+            }
+            else {
+                $price_lam2_material = $c_price_lam2 * $dirty_weight_lam2;
+            }
             
             // Удельная стоимость клеевого раствора
             // (стоимость клея * соотношение кл/раст / 100) + (стоимость растворителя для клея * (100 - соотношение кл/раст) / 100)
