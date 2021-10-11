@@ -119,10 +119,10 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
         <?php
         if(!empty($lamination1_brand_name) || !empty($lamination2_brand_name) || $work_type_id == 2):
         ?>
-        <button type="button" class="btn btn-light" id="show_costs" onclick="javascript: ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать расходы</button>
+        <button type="button" class="btn btn-light" id="show_costs" onclick="javascript: ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать подробности</button>
         <div id="costs" class="d-none">
-            <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
-            <h2 class="mt-2">Расходы</h2>
+            <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть подробности</button>
+            <h2 class="mt-2">Подробности</h2>
             <div class="d-table w-100">
                 <div class="d-table-row">
                     <div class="d-table-cell pb-2 pt-2" style="width: 33%;">

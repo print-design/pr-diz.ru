@@ -682,8 +682,9 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         //********************************************************
+        // НАЧАЛО РАСЧЁТОВ
         
-        // 1. Площадь тиража чистая, м2
+        // Площадь тиража чистая, м2
         // если в кг: 1000 * (вес заказа + вес лам1 + вес лам2) / удельный вес материала
         // если в шт: ширина ручья / 1000 * длина этикетки вдоль рапорта вала / 1000 * количество этикеток в заказе
         $pure_area = 0;
@@ -695,7 +696,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $pure_area = $stream_width / 1000 * $length / 1000 * $quantity;
         }
         
-        // 2. Ширина тиража обрезная, мм
+        // Ширина тиража обрезная, мм
         // ширина ручья * количество ручьёв
         $pure_width = 0;
         
@@ -703,7 +704,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $pure_width = $stream_width * $streams_count;
         }
         
-        // 3. Длина тиража чистая, м
+        // Длина тиража чистая, м
         // площадь тиража чистая / ширина тиража обрезная
         $pure_length = 0;
         
@@ -719,7 +720,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $pure_length_lam = $pure_length * ($tuning_waste_percents[5] + 100) / 100;
         }
         
-        // 4. Длина тиража с отходами, м
+        // Длина тиража с отходами, м
         // если есть печать: длина тиража чистая + (длина тиража чистая * процент отхода машины) / 100 + длина приладки для машины * число красок
         // если нет печати, но есть ламинация: длина тиража чистая с ламинацией + длина приладки ламинации
         $dirty_length = 0;
@@ -731,7 +732,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $dirty_length = $pure_length_lam + $tuning_lengths[5];
         }
         
-        // 5. Ширина тиража с отходами, мм
+        // Ширина тиража с отходами, мм
         // с лыжами: ширина лыж + ширина тиража обрезная
         // без лыж: ширина тиража обрезная
         // затем отругляем ширину тиража с отходами до возможности деления на 5 без остатка
@@ -763,7 +764,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $dirty_width *= 1000;
         }
         
-        // 6. Площадь тиража с отходами, м2
+        // Площадь тиража с отходами, м2
         // длина тиража с отходами * ширина тиража с отходами
         $dirty_area = null;
         
@@ -771,7 +772,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $dirty_area = $dirty_length * $dirty_width / 1000;
         }
         
-        // 7. Вес материала печати чистый, кг
+        // Вес материала печати чистый, кг
         // площадь тиража чистая * удельный вес материала / 1000
         $pure_weight = null;
         
@@ -779,7 +780,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $pure_weight = $pure_area * $c_weight / 1000;
         }
         
-        // 8. Вес материала печати с отходами, кг
+        // Вес материала печати с отходами, кг
         // площадь тиража с отходами * удельный вес материала / 1000
         $dirty_weight = null;
         
@@ -787,7 +788,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $dirty_weight = $dirty_area * $c_weight / 1000;
         }
         
-        // 9. Стоимость материала печати, руб
+        // Стоимость материала печати, руб
         // вес материала печати с отходами * цена материала за 1 кг
         // Если сырьё заказчика, то стоимость материала 0
         $material_price = null;
@@ -801,7 +802,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         //***************************************************************************
         
-        // 1. Время печати тиража без приладки, ч
+        // Время печати тиража без приладки, ч
         // длина тиража чистая / 1000 / скорость работы флекс машины
         $print_time = null;
         
@@ -809,7 +810,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $print_time = $pure_length / 1000 / $machine_speeds[$machine_id];
         }
         
-        // 2. Время приладки, ч
+        // Время приладки, ч
         // время приладки каждой краски * число красок
         $tuning_time = null;
         
@@ -817,7 +818,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $tuning_time = $tuning_times[$machine_id] / 60 * $paints_count;
         }
         
-        // 3. Время печати с приладкой, ч
+        // Время печати с приладкой, ч
         // время печати + время приладки
         $print_tuning_time = null;
         
@@ -825,7 +826,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $print_tuning_time = $print_time + $tuning_time;
         }
         
-        // 4. Стоимость печати, руб
+        // Стоимость печати, руб
         // время печати с приладкой * стоимость работы машины
         $print_price = null;
         
@@ -835,7 +836,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         //***************************************************************
         
-        // 1. Площадь печатной формы, см2
+        // Площадь печатной формы, см2
         // (припуск * 2 + ширина тиража с отходами * 100) * (припуск * 2 + рапорт вала / 10)
         $cliche_area = null;
         
@@ -843,7 +844,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $cliche_area = ($cliche_additional_size * 2 + $dirty_width / 1000 * 100) * ($cliche_additional_size * 2 + $raport / 10);
         }
         
-        // 2. Стоимость 1 печатной формы Флинт, руб
+        // Стоимость 1 печатной формы Флинт, руб
         // площадь печатной формы * стоимость 1 см2 формы
         $cliche_flint_price = null;
         
@@ -892,7 +893,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             }
         }
         
-        // 4. Стоимость краски + лака + растворителя, руб
+        // Стоимость краски + лака + растворителя, руб
         $paint_price = null;
         
         if(!empty($dirty_area) && $work_type_id == 2) {
@@ -1153,7 +1154,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         //***************************************************************************
         
-        echo "<p>Площадь тиража чистая, м2: $pure_area</p>";
+        /*echo "<p>Площадь тиража чистая, м2: $pure_area</p>";
         echo "<p>Ширина тиража обрезная, мм: $pure_width</p>";
         echo "<p>Ширина тиража с отходами, мм: $dirty_width</p>";
         echo "<p>Длина тиража чистая, м: $pure_length</p>";
@@ -1204,11 +1205,11 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         echo "<p>Итого себестоимость материала за 1 кг без форм, руб: $cost_no_cliche_kg</p>";
         echo "<p>Итого себестоимость материала за 1 кг с формами, руб: $cost_with_cliche_kg</p>";
         echo "<p>Итого себестоимость материала за 1 шт без форм, руб: $cost_no_cliche_thing</p>";
-        echo "<p>Итого себестоимость материала за 1 шт с формами, руб: $cost_with_cliche_thing</p>";
+        echo "<p>Итого себестоимость материала за 1 шт с формами, руб: $cost_with_cliche_thing</p>";*/
         
         // *************************************
         // Сохранение в базу
-        /*if(empty($error_message)) {
+        if(empty($error_message)) {
             $sql = "insert into calculation (customer_id, name, work_type_id, unit, machine_id, "
                     . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
                     . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_roller, lamination1_customers_material, "
@@ -1236,7 +1237,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         if(empty($error_message)) {
             header('Location: '.APPLICATION.'/calculation/create.php?id='.$insert_id);
-        }*/
+        }
     }
 }
 
@@ -2328,7 +2329,7 @@ $colorfulnesses = array();
                             <!-- Рапорт -->
                             <div class="col-6 print-only d-none">
                                 <div class="form-group">
-                                    <label for="raport">Рапорт</label>
+                                    <label for="raport">Рапорт, мм</label>
                                     <select id="raport" name="raport" class="form-control print-only d-none">
                                         <option value="" hidden="hidden" selected="selected">Рапорт...</option>
                                         <?php
