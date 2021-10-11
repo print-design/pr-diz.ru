@@ -24,6 +24,7 @@ $error_message = '';
 
 $glue_valid = '';
 $glue_expense_valid = '';
+$glue_expense_pet_valid = '';
 $solvent_valid = '';
 $glue_part_valid = '';
 $solvent_part_valid = '';
@@ -37,6 +38,11 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
     
     if(empty(filter_input(INPUT_POST, 'glue_expense'))) {
         $glue_expense_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(empty(filter_input(INPUT_POST, 'glue_expense_pet'))) {
+        $glue_expense_pet_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -62,12 +68,13 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
         $old_glue = '';
         $old_glue_currency = '';
         $old_glue_expense = '';
+        $old_glue_expense_pet = '';
         $old_solvent = '';
         $old_solvent_currency = '';
         $old_glue_part = '';
         $old_solvent_part = '';
         
-        $sql = "select glue, glue_currency, glue_expense, solvent, solvent_currency, glue_part, solvent_part from norm_glue where machine_id = $machine_id order by date desc limit 1";
+        $sql = "select glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, glue_part, solvent_part from norm_glue where machine_id = $machine_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -75,6 +82,7 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
             $old_glue = $row['glue'];
             $old_glue_currency = $row['glue_currency'];
             $old_glue_expense = $row['glue_expense'];
+            $old_glue_expense_pet = $row['glue_expense_pet'];
             $old_solvent = $row['solvent'];
             $old_solvent_currency = $row['solvent_currency'];
             $old_glue_part = $row['glue_part'];
@@ -85,6 +93,7 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
         $new_glue = filter_input(INPUT_POST, 'glue');
         $new_glue_currency = filter_input(INPUT_POST, 'glue_currency');
         $new_glue_expense = filter_input(INPUT_POST, 'glue_expense');
+        $new_glue_expense_pet = filter_input(INPUT_POST, 'glue_expense_pet');
         $new_solvent = filter_input(INPUT_POST, 'solvent');
         $new_solvent_currency = filter_input(INPUT_POST, 'solvent_currency');
         $new_glue_part = filter_input(INPUT_POST, 'glue_part');
@@ -92,12 +101,13 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
         
         if($old_glue != $new_glue || 
                 $old_glue_currency != $new_glue_currency || 
-                $old_glue_expense != $new_glue_expense ||
+                $old_glue_expense != $new_glue_expense || 
+                $old_glue_expense_pet != $new_glue_expense_pet || 
                 $old_solvent != $new_solvent || 
                 $old_solvent_currency != $new_solvent_currency || 
                 $old_glue_part != $new_glue_part || 
                 $old_solvent_part != $new_solvent_part) {
-            $sql = "insert into norm_glue (machine_id, glue, glue_currency, glue_expense, solvent, solvent_currency, glue_part, solvent_part) values ($machine_id, $new_glue, '$new_glue_currency', $new_glue_expense, $new_solvent, '$new_solvent_currency', $new_glue_part, $new_solvent_part)";
+            $sql = "insert into norm_glue (machine_id, glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, glue_part, solvent_part) values ($machine_id, $new_glue, '$new_glue_currency', $new_glue_expense, $new_glue_expense_pet, $new_solvent, '$new_solvent_currency', $new_glue_part, $new_solvent_part)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -111,12 +121,13 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
 $glue = '';
 $glue_currency = '';
 $glue_expense = '';
+$glue_expense_pet = '';
 $solvent = '';
 $solvent_currency = '';
 $glue_part = '';
 $solvent_part = '';
 
-$sql = "select glue, glue_currency, glue_expense, solvent, solvent_currency, glue_part, solvent_part from norm_glue where machine_id = $machine_id order by date desc limit 1";
+$sql = "select glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, glue_part, solvent_part from norm_glue where machine_id = $machine_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -127,6 +138,7 @@ if($row = $fetcher->Fetch()) {
     $solvent = $row['solvent'];
     $glue_currency = $row['glue_currency'];
     $glue_expense = $row['glue_expense'];
+    $glue_expense_pet = $row['glue_expense_pet'];
     $solvent_currency = $row['solvent_currency'];
     $glue_part = $row['glue_part'];
     $solvent_part = $row['solvent_part'];
@@ -210,7 +222,23 @@ if($row = $fetcher->Fetch()) {
                                    onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                    onkeyup="javascript: $(this).attr('id', 'glue_expense'); $(this).attr('name', 'glue_expense'); $(this).attr('placeholder', 'Расход клея, г/м2');" 
                                    onfocusout="javascript: $(this).attr('id', 'glue_expense'); $(this).attr('name', 'glue_expense'); $(this).attr('placeholder', 'Расход клея, г/м2');" />
-                            <div class="invalid-feedback">Стоимость клея обязательно</div>
+                            <div class="invalid-feedback">Расход клея обязательно</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="glue">Расход клея при ламинации ПЭТ, г/м<sup>2</sup></label>
+                            <input type="text" 
+                                   class="form-control float-only" 
+                                   id="glue_expense_pet" 
+                                   name="glue_expense_pet" 
+                                   value="<?= empty($glue_expense_pet) ? "" : floatval($glue_expense_pet) ?>" 
+                                   placeholder="Расход клея при ламинации ПЭТ, г/м2" 
+                                   required="required" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onmouseup="javascript: $(this).attr('id', 'glue_expense_pet'); $(this).attr('name', 'glue_expense_pet'); $(this).attr('placeholder', 'Расход клея при ламинации ПЭТ, г/м2');" 
+                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                   onkeyup="javascript: $(this).attr('id', 'glue_expense_pet'); $(this).attr('name', 'glue_expense_pet'); $(this).attr('placeholder', 'Расход клея при ламинации ПЭТ, г/м2');" 
+                                   onfocusout="javascript: $(this).attr('id', 'glue_expense_pet'); $(this).attr('name', 'glue_expense_pet'); $(this).attr('placeholder', 'Расход клея при ламинации ПЭТ, г/м2');" />
+                            <div class="invalid-feedback">Расход клея при ламинации ПЭТ обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="solvent">Стоимость растворителя для клея (за кг)</label>
