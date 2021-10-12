@@ -86,6 +86,10 @@ if(null !== filter_input(INPUT_POST, 'roller_delete_submit')) {
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
                     <table class="table table-hover">
+                        <tr>
+                            <th>Значение</th>
+                            <th></th>
+                        </tr>
                         <?php
                         $sql = "select id, value from roller where machine_id = $machine_id order by value";
                         $grabber = new Grabber($sql);

@@ -20,7 +20,6 @@ if($machine_id == MACHINE_LAMINATOR) {
 // Добавление рапорта
 if(null !== filter_input(INPUT_POST, 'raport_create_submit')) {
     $machine_id = filter_input(INPUT_POST, 'machine_id');
-    $name = filter_input(INPUT_POST, 'name');
     $value = filter_input(INPUT_POST, 'value');
     
     if(!empty($value)) {
@@ -38,7 +37,7 @@ if(null !== filter_input(INPUT_POST, 'raport_create_submit')) {
         }
         
         if(empty($error_message)) {
-            $sql = "insert into raport (machine_id, name, value) values ($machine_id, '$name', $value)";
+            $sql = "insert into raport (machine_id, value) values ($machine_id, $value)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -88,18 +87,16 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                 <div class="col-12 col-md-6 col-lg-4">
                     <table class="table table-hover">
                         <tr>
-                            <th class="font-weight-bold" style="border-top: 0;">Наименование</th>
-                            <th class="font-weight-bold" style="border-top: 0;">Шаг</th>
-                            <th style="border-top: 0;"></th>
+                            <th>Значение</th>
+                            <th></th>
                         </tr>
                         <?php
-                        $sql = "select id, name, value from raport where machine_id = $machine_id order by value";
+                        $sql = "select id, value from raport where machine_id = $machine_id order by value";
                         $grabber = new Grabber($sql);
                         $raports_of_machine = $grabber->result;
                         foreach ($raports_of_machine as $row):
                         ?>
                         <tr>
-                            <td><?=$row['name'] ?></td>
                             <td><?= floatval($row['value']) ?></td>
                             <td class="text-right">
                                 <form method="post">
@@ -117,7 +114,6 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                     <form method="post" class="form-inline">
                         <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                         <input type="hidden" name="scroll" />
-                        <input type="text" class="form-control mr-2" name="name" placeholder="Наименование..." />
                         <input type="text" class="form-control mr-2 float-only" name="value" placeholder="Шаг..." required="required" />
                         <button type="submit" name="raport_create_submit" class="btn btn-outline-dark fas fa-plus"></button>
                     </form>
