@@ -771,9 +771,9 @@ elseif(!empty ($id) && !empty ($date)) {
             <div>без лыж: ширина тиража обрезная</div>
             <div>затем отругляем ширину тиража с отходами до возможности деления на 5 без остатка</div>
             <?php if($no_ski): ?>
-            <div class="value mb-2"><?="$pure_width / 1000 = $dirty_width" ?></div>
+            <div class="value mb-2"><?="$pure_width = $dirty_width" ?></div>
             <?php else: ?>
-            <div class="value mb-2"><?="($pure_width / 1000) + $ski = $dirty_width" ?></div>
+            <div class="value mb-2"><?="$pure_width + ($ski * 1000) = $dirty_width" ?></div>
             <?php endif; ?>
             
             <div class="font-weight-bold">Площадь тиража с отходами</div>
