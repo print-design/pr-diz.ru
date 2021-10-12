@@ -624,25 +624,63 @@ elseif(!empty ($id) && !empty ($date)) {
             </div>
         </div>
         <div class="mt-3">
-            <h2>Стоимость</h2>
+            <h2>Вес материала готовой продукции</h2>
+        </div>
+        <div class="d-table w-100">
+            <div class="d-table-cell pb-1" style="width: 33%;">
+                <div>Чистый</div>
+                <div class="value"><?=rtrim(rtrim(number_format($pure_weight_total, 3, ",", " "), "0"), ",") ?> кг</div>
+            </div>
+            <div class="d-table-cell pb-1" style="width: 33%;">
+                <div>С отходами</div>
+                <div class="value"><?=rtrim(rtrim(number_format($dirty_weight_total, 3, ",", " "), "0"), ",") ?> кг</div>
+            </div>
+            <div class="d-table-cell pb-1" style="width: 33%;"></div>
+        </div>
+        <div class="mt-3">
+            <h2>Себестоимость</h2>
         </div>
         <div class="d-table w-100">
             <div class="d-table-row">
-                <div class="d-table-cell pb-2 pt-2" style="width: 33%;">
-                    <h3>Себестоимость</h3>
-                    <div>Себестоимость</div>
-                    <div class="value mb-2">860 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
-                    <?php if($work_type_id == 2): ?>
-                    <div>Себестоимость форм</div>
-                    <div class="value mb-2">800 000 &#8381;</div>
-                    <?php endif; ?>
+                <div class="d-table-cell" style="width: 33%;">
+                    <h3>Всего</h3>
                 </div>
-                <div class="d-table-cell pb-2 pt-2 pl-3" style="width: 33%;">
-                    <h3>Отгрузочная стоимость</h3>
-                    <div>Отгрузочная стоимость</div>
-                    <div class="value">1 200 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
+                <div class="d-table-cell" style="width: 33%;">
+                    <h3>За 1 кг</h3>
                 </div>
-                <div class="d-table-cell"></div>
+                <div class="d-table-cell" style="width: 33%;">
+                    <h3>За 1 шт</h3>
+                </div>
+            </div>
+        </div>
+        <div class="d-table w-100">
+            <div class="d-table-row">
+                <div class="d-table-cell pb-1" style="width: 33%;">
+                    <div>Без форм</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($cost_no_cliche, 3, ",", " "), "0"), ",") ?> руб</div>
+                </div>
+                <div class="d-table-cell pb-1" style="width: 33%;">
+                    <div>Без форм</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($cost_no_cliche_kg, 3, ",", " "), "0"), ",") ?> руб</div>
+                </div>
+                <div class="d-table-cell pb-1" style="width: 33%;">
+                    <div>Без форм</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($cost_no_cliche_thing, 3, ",", " "), "0"), ",") ?> руб</div>
+                </div>
+            </div>
+            <div class="d-table-row">
+                <div class="d-table-cell pb-1" style="width: 33%;">
+                    <div>С формами</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($cost_with_cliche, 3, ",", " "), "0"), ",") ?> руб</div>
+                </div>
+                <div class="d-table-cell pb-1" style="width: 33%;">
+                    <div>С формами</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($cost_with_cliche_kg, 3, ",", " "), "0"), ",") ?> руб</div>
+                </div>
+                <div class="d-table-cell pb-1" style="width: 33%;">
+                    <div>С формами</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($cost_with_cliche_thing, 3, ",", " "), "0"), ",") ?> руб</div>
+                </div>
             </div>
         </div>
         <?php
