@@ -1052,6 +1052,47 @@ elseif(!empty ($id) && !empty ($date)) {
             <div class="font-weight-bold">Итого себестоимость ламинации</div>
             <div>материал1 + материал2 + клей1 + клей2 + процесс1 + процесс2</div>
             <div class="value mb-2"><?=($price_lam1_material ?? 0)." + ".($price_lam2_material ?? 0)." + ".($price_lam1_glue ?? 0)." + ".($price_lam2_glue ?? 0)." + ".($price_lam1_work ?? 0)." + ".($price_lam2_work ?? 0)." = ".($price_lam_total ?? 0) ?></div>
+            
+            <!---------------------------------------------------------->
+            
+            <div class="font-weight-bold">Вес материала готовой продукции чистый</div>
+            <div>стоимость материала печати + стоимость печати</div>
+            <div>+ стоимость красок, лака и растворителя + итого себестоимость ламинации</div>
+            <div>+ (стоимость скотча для наклейки форм * число красок * площадь печатной формы / 10000)</div>
+            <div class="value mb-2"><?="$material_price + $print_price + $paint_price + $price_lam_total + ($cliche_scotch * $paints_count * $cliche_area / 10000) = $cost_no_cliche" ?></div>
+            
+            <div class="font-weight-bold">Вес материала готовой продукции с отходами</div>
+            <div>итого стоимость без форм + стоимость комплекта печатных форм</div>
+            <div class="value mb-2"><?="$dirty_area * ($c_weight + ($c_weight_lam1 ?? 0) + ($c_weight_lam2 ?? 0)) / 1000 = $dirty_weight_total" ?></div>
+            
+            <div class="font-weight-bold">Итого себестоимость без форм</div>
+            <div>стоимость материала печати + стоимость печати + стоимость красок, лака и растворителя</div>
+            <div>+ итого себестоимость ламинации + (стоимость скотча для наклейки форм * число красок * площадь печатной формы / 10000)</div>
+            <div class="value mb-2"><?="$material_price + $print_price + $paint_price + $price_lam_total + ($cliche_scotch * $paints_count * $cliche_area / 10000) = $cost_no_cliche" ?></div>
+            
+            <div class="font-weight-bold">Итого себестоимость с формами</div>
+            <div>итого стоимость без форм + стоимость комплекта печатных форм</div>
+            <div class="value mb-2"><?="$cost_no_cliche + $cliche_price = $cost_with_cliche" ?></div>
+            
+            <?php if($unit == "kg" && !empty($quantity)): ?>
+            <div class="font-weight-bold">Итого себестоимость за 1 кг без форм</div>
+            <div>итого себестоимость без форм / вес заказа</div>
+            <div class="value mb-2"><?="$$cost_no_cliche / $quantity = $cost_no_cliche_kg" ?></div>
+            
+            <div class="font-weight-bold">Итого себестоимость за 1 кг с формами</div>
+            <div>итого стоимость с формами / вес заказа</div>
+            <div class="value mb-2"><?="$cost_with_cliche / $quantity = $cost_with_cliche_kg" ?></div>
+            <?php endif; ?>
+            
+            <?php if($unit == "thing" && !empty($quantity)): ?>
+            <div class="font-weight-bold">Итого себестоимость за 1 шт без форм</div>
+            <div>итого себестоимость без форм / количество заказа</div>
+            <div class="value mb-2"><?="$cost_no_cliche / $quantity = $cost_no_cliche_thing" ?></div>
+            
+            <div class="font-weight-bold">Итого себестоимость за 1 шт с формами</div>
+            <div>итого стоимость с формами / количество заказа</div>
+            <div class="value mb-2"><?="$cost_with_cliche / $quantity = $cost_with_cliche_thing" ?></div>
+            <?php endif; ?>
         </div>
         <?php
         endif;
