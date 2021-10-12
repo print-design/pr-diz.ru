@@ -734,6 +734,7 @@ elseif(!empty ($id) && !empty ($date)) {
         <div id="costs" class="d-none">
             <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть подробности</button>
             <h2 class="mt-2">Подробности</h2>
+            
             <div class="font-weight-bold">Площадь тиража чистая</div>
             <div>если в кг: 1000 * вес заказа / удельный вес материала и ламинации</div>
             <div>если в шт: ширина ручья / 1000 * длина этикетки вдоль рапорта вала / 1000 * количество этикеток в заказе</div>
@@ -742,10 +743,64 @@ elseif(!empty ($id) && !empty ($date)) {
             <?php elseif($unit == 'thing'): ?>
             <div class="value mb-2"><?=$unit ?></div>
             <?php endif; ?>
+            
+            <div class="font-weight-bold">Ширина тиража обрезная</div>
+            <div>ширина ручья * количество ручьёв</div>
+            <div class="value mb-2"><?="$stream_width * $streams_count = $pure_width" ?></div>
+            
+            <div class="font-weight-bold">Длина тиража чистая</div>
+            <div>площадь тиража чистая / ширина тиража обрезная</div>
+            <div class="value mb-2"><?="$pure_area / $pure_width * 1000 = $pure_length" ?></div>
+            
+            <div class="font-weight-bold">Длина тиража чистая с ламинацией</div>
+            <div>длина тиража чистая * (процент отходов для ламинатора + 100) / 100</div>
+            <div class="value mb-2"><?="$pure_length * ($tuning_waste_percents[5] + 100) / 100 = $pure_length_lam" ?></div>
+            
+            <div class="font-weight-bold">Длина тиража с отходами</div>
+            <div>если есть печать: длина тиража чистая + (длина тиража чистая * процент отхода машины / 100</div>
+            <div>+ длина приладки для машины * число красок)</div>
+            <div>если нет печати, но есть ламинация: длина тиража чистая с ламинацией + длина приладки ламинации</div>
+            <?php if(!empty($machine_id) && !empty($pure_length) && !empty($paints_count) && !empty($tuning_waste_percents[$machine_id])): ?>
+            <div class="value mb-2"><?="$pure_length + ($pure_length * $tuning_waste_percents[$machine_id] / 100 + $tuning_lengths[$machine_id] * $paints_count) = $dirty_length" ?></div>
+            <?php elseif(!empty ($lamination1_brand_name) && !empty ($pure_length_lam) && !empty ($tuning_lengths[5])): ?>
+            <div class="value mb-2"><?="$pure_length_lam + $tuning_lengths[5] = $dirty_length" ?></div>
+            <?php endif; ?>
+            
+            <div class="font-weight-bold">Ширина тиража с отходами</div>
+            <div>с лыжами: ширина тиража обрезная + ширина лыж</div>
+            <div>без лыж: ширина тиража обрезная</div>
+            <div>затем отругляем ширину тиража с отходами до возможности деления на 5 без остатка</div>
+            <?php if($no_ski): ?>
+            <div class="value mb-2"><?="$pure_width / 1000 = $dirty_width" ?></div>
+            <?php else: ?>
+            <div class="value mb-2"><?="($pure_width / 1000) + $ski = $dirty_width" ?></div>
+            <?php endif; ?>
+            
+            <div class="font-weight-bold">Площадь тиража с отходами</div>
+            <div>длина тиража с отходами * ширина тиража с отходами</div>
+            <div class="value mb-2"><?="$dirty_length * $dirty_width / 1000 = $dirty_area" ?></div>
+            
+            <div class="font-weight-bold">Вес материала печати чистый</div>
+            <div>площадь тиража чистая * удельный вес материала</div>
+            <div class="value mb-2"><?="$pure_area * $c_weight / 1000 = $pure_weight" ?></div>
+            
+            <div class="font-weight-bold">Вес материала печати с отходами</div>
+            <div>площадь тиража с отходами * удельный вес материала</div>
+            <div class="value mb-2"><?="$dirty_area * $c_weight / 1000 = $dirty_weight" ?></div>
+            
+            <div class="font-weight-bold">Стоимость материала печати</div>
+            <div>Если сырьё заказчика: 0</div>
+            <div>Иначе: вес материала печати с отходами * цена материала за 1 кг</div>
+            <?php if($customers_material): ?>
+            <div class="value mb-2">0</div>
+            <?php else: ?>
+            <div class="value mb-2"><?="$dirty_weight * $c_price = $material_price" ?></div>
+            <?php endif; ?>
+            
             <div class="font-weight-bold">Удельная стоимость клеевого раствора</div>
             <div>(стоимость клея * доля клея / (доля клея + доля растворителя)) </div>
             <div>+ (стоимость растворителя * доля раствора / (доля клея + доля растворителя))</div>
-            <div class="value mb-2"><?="($glue_price * $glue_glue_part / ($glue_glue_part + $glue_solvent_part)) + ($glue_solvent_price * $glue_solvent_part / ($glue_glue_part + $glue_solvent_part)) = $glue_solvent_g"  ?></span></div>
+            <div class="value mb-2"><?="($glue_price * $glue_glue_part / ($glue_glue_part + $glue_solvent_part)) + ($glue_solvent_price * $glue_solvent_part / ($glue_glue_part + $glue_solvent_part)) = $glue_solvent_g" ?></div>
         </div>
         <?php
         endif;

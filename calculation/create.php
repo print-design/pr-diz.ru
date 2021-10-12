@@ -728,7 +728,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         if($machine_id != "NULL" && !empty($pure_length) && !empty($paints_count) && !empty($tuning_waste_percents[$machine_id])) {
             $dirty_length = $pure_length + ($pure_length * $tuning_waste_percents[$machine_id] / 100 + $tuning_lengths[$machine_id] * $paints_count);
         }
-        else if(!empty ($lamination1_brand_name) && !empty ($pure_length_lam) && !empty ($tuning_lengths[5])) {
+        elseif(!empty ($lamination1_brand_name) && !empty ($pure_length_lam) && !empty ($tuning_lengths[5])) {
             $dirty_length = $pure_length_lam + $tuning_lengths[5];
         }
         
