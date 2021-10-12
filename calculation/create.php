@@ -1035,7 +1035,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination1_roller / 1000 + $tuning_lengths[$machine_id]);
             }
             
-            // Стоимость процесса ламинации 1
+            // Стоимость процесса ламинации 1, руб
             // стоимость работы оборудования + (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования
             $price_lam1_work = $machine_prices[$laminator_machine_id] + ($pure_length_lam / 1000 / $machine_speeds[$laminator_machine_id]) * $machine_prices[$laminator_machine_id];
             
@@ -1048,7 +1048,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             // площадь тиража чистая * удельный вес ламинации 1 / 1000
             $pure_weight_lam2 = $pure_area * $c_weight_lam2 / 1000;
                         
-            // Вес материала с отходами 2, кг
+            // Вес материала ламинации 2 с отходами 2, кг
             // (длина тиража с ламинацией + длина материала для приладки при ламинации) * ширина тиража с отходами (в метрах) * удельный вес ламинации 1 / 1000
             $dirty_weight_lam2 = ($pure_length_lam + $tuning_lengths[$machine_id]) * $dirty_width / 1000 * $c_weight_lam2 / 1000;
             
@@ -1075,7 +1075,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination2_roller / 1000 + $tuning_lengths[$machine_id]);
             }
             
-            // Стоимость процесса ламинации 2
+            // Стоимость процесса ламинации 2, руб
             // стоимость работы оборудования + (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования
             $price_lam2_work = $machine_prices[$laminator_machine_id] + ($pure_length_lam / 1000 / $machine_speeds[$laminator_machine_id]) * $machine_prices[$laminator_machine_id];
             

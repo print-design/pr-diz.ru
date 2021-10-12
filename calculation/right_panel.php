@@ -373,6 +373,9 @@ elseif(!empty ($id) && !empty ($date)) {
     $glue_solvent_price = null;
     $glue_glue_part = null;
     $glue_solvent_part = null;
+    
+    // Удельная стоимость клеевого раствора
+    $glue_solvent_g = null;
         
     $sql = "select glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, glue_part, solvent_part from norm_glue where date <= '$date' order by date desc limit 1";
     $fetcher = new Fetcher($sql);
@@ -399,9 +402,12 @@ elseif(!empty ($id) && !empty ($date)) {
                 
         $glue_glue_part = $row['glue_part'];
         $glue_solvent_part = $row['solvent_part'];
+        
+        // Удельная стоимость клеевого раствора
+        $glue_solvent_g = ($glue_price * $glue_glue_part / ($glue_glue_part + $glue_solvent_part)) + ($glue_solvent_price * $glue_solvent_part / ($glue_glue_part + $glue_solvent_part));
     }
 
-    // Результаты рассчёта
+    // Результаты расчёта
     $pure_area = null;    $pure_width = null;    $pure_length = null;
     $pure_length_lam = null;    $dirty_length = null;    $dirty_width = null;
     $dirty_area = null;    $pure_weight = null;    $dirty_weight = null;
@@ -521,7 +527,10 @@ elseif(!empty ($id) && !empty ($date)) {
                     <div>Время печати тиража без приладки</div>
                     <div class="value"><?=rtrim(rtrim(number_format($print_time, 3, ",", " "), "0"), ",") ?> ч</div>
                 </div>
-                <div class="d-table-cell pb-1" style="width: 33%;"></div>
+                <div class="d-table-cell pb-1" style="width: 33%;">
+                    <div>Вес материала ламинации 1 чистый</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($pure_weight_lam1, 3, ",", " "), "0"), ",") ?> кг</div>
+                </div>
             </div>
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
@@ -532,7 +541,10 @@ elseif(!empty ($id) && !empty ($date)) {
                     <div>Время приладки</div>
                     <div class="value"><?=rtrim(rtrim(number_format($tuning_time, 3, ",", " "), "0"), ",") ?> ч</div>
                 </div>
-                <div class="d-table-cell pb-1" style="width: 33%;"></div>
+                <div class="d-table-cell pb-1" style="width: 33%;">
+                    <div>Вес материала ламинации 1 с отходами</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($dirty_weight_lam1, 3, ",", " "), "0"), ",") ?> кг</div>
+                </div>
             </div>
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
@@ -543,7 +555,10 @@ elseif(!empty ($id) && !empty ($date)) {
                     <div>Время печати с приладкой</div>
                     <div class="value"><?=rtrim(rtrim(number_format($print_tuning_time, 3, ",", " "), "0"), ",") ?> ч</div>
                 </div>
-                <div class="d-table-cell pb-1" style="width: 33%;"></div>
+                <div class="d-table-cell pb-1" style="width: 33%;">
+                    <div>Стоимость материала ламинации 1</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($price_lam1_material, 3, ",", " "), "0"), ",") ?> руб</div>
+                </div>
             </div>
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
@@ -554,7 +569,10 @@ elseif(!empty ($id) && !empty ($date)) {
                     <div>Стоимость печати</div>
                     <div class="value"><?=rtrim(rtrim(number_format($print_price, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
-                <div class="d-table-cell pb-1" style="width: 33%;"></div>
+                <div class="d-table-cell pb-1" style="width: 33%;">
+                    <div>Стоимость клеевого раствора 1</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($price_lam1_glue, 3, ",", " "), "0"), ",") ?> руб</div>
+                </div>
             </div>
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
@@ -565,7 +583,10 @@ elseif(!empty ($id) && !empty ($date)) {
                     <div>Площадь печатной формы</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cliche_area, 3, ",", " "), "0"), ",") ?> м<sup>2</sup></div>
                 </div>
-                <div class="d-table-cell pb-1" style="width: 33%;"></div>
+                <div class="d-table-cell pb-1" style="width: 33%;">
+                    <div>Стоимость процесса ламинации 1</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($price_lam1_work, 3, ",", " "), "0"), ",") ?> руб</div>
+                </div>
             </div>
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
@@ -576,7 +597,10 @@ elseif(!empty ($id) && !empty ($date)) {
                     <div>Стоимость 1 печатной формы Флинт</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cliche_flint_price, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
-                <div class="d-table-cell pb-1" style="width: 33%;"></div>
+                <div class="d-table-cell pb-1" style="width: 33%;">
+                    <div>Вес материала ламинации 2 чистый</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($pure_weight_lam2, 3, ",", " "), "0"), ",") ?> кг</div>
+                </div>
             </div>
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
@@ -587,7 +611,10 @@ elseif(!empty ($id) && !empty ($date)) {
                     <div>Стоимость 1 печатной формы Кодак</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cliche_kodak_price, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
-                <div class="d-table-cell pb-1" style="width: 33%;"></div>
+                <div class="d-table-cell pb-1" style="width: 33%;">
+                    <div>Вес материала ламинации 2 с отходами</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($dirty_weight_lam2, 3, ",", " "), "0"), ",") ?> кг</div>
+                </div>
             </div>
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
@@ -598,7 +625,10 @@ elseif(!empty ($id) && !empty ($date)) {
                     <div>Стоимость 1 печатной формы Тверь</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cliche_tver_price, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
-                <div class="d-table-cell pb-1" style="width: 33%;"></div>
+                <div class="d-table-cell pb-1" style="width: 33%;">
+                    <div>Стоимость материала ламинации 2</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($price_lam2_material, 3, ",", " "), "0"), ",") ?> руб</div>
+                </div>
             </div>
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
@@ -609,7 +639,10 @@ elseif(!empty ($id) && !empty ($date)) {
                     <div>Стоимость комплекта печатных форм</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cliche_price, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
-                <div class="d-table-cell pb-1" style="width: 33%;"></div>
+                <div class="d-table-cell pb-1" style="width: 33%;">
+                    <div>Стоимость клеевого раствора 2</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($price_lam2_glue, 3, ",", " "), "0"), ",") ?> руб</div>
+                </div>
             </div>
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
@@ -620,7 +653,18 @@ elseif(!empty ($id) && !empty ($date)) {
                     <div>Стоимость краски + лака + растворителя</div>
                     <div class="value"><?=rtrim(rtrim(number_format($paint_price, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
+                <div class="d-table-cell pb-1" style="width: 33%;">
+                    <div>Стоимость процесса ламинации 2</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($price_lam2_work, 3, ",", " "), "0"), ",") ?> руб</div>
+                </div>
+            </div>
+            <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;"></div>
+                <div class="d-table-cell pb-1" style="width: 33%;"></div>
+                <div class="d-table-cell pb-1" style="width: 33%;">
+                    <div>Итого себестоимость ламинации</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($price_lam_total, 3, ",", " "), "0"), ",") ?> руб</div>
+                </div>
             </div>
         </div>
         <div class="mt-3">
@@ -691,37 +735,17 @@ elseif(!empty ($id) && !empty ($date)) {
             <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть подробности</button>
             <h2 class="mt-2">Подробности</h2>
             <div class="font-weight-bold">Площадь тиража чистая</div>
-            <div>если в кг: 1000 * вес заказа / удельный вес материала + ламинации</div>
+            <div>если в кг: 1000 * вес заказа / удельный вес материала и ламинации</div>
             <div>если в шт: ширина ручья / 1000 * длина этикетки вдоль рапорта вала / 1000 * количество этикеток в заказе</div>
             <?php if($unit == 'kg'): ?>
-            <div class="value mb-2"><?="1000 * ".$quantity." / (".$c_weight.(empty($c_weight_lam1) ? "" : " + ".$c_weight_lam1).(empty($c_weight_lam2) ? "" : " + ".$c_weight_lam2).") = ".$pure_area ?></div>
+            <div class="value mb-2"><?="1000 * $quantity / (".$c_weight.(empty($c_weight_lam1) ? "" : " + ".$c_weight_lam1).(empty($c_weight_lam2) ? "" : " + ".$c_weight_lam2).") = ".$pure_area ?></div>
             <?php elseif($unit == 'thing'): ?>
             <div class="value mb-2"><?=$unit ?></div>
             <?php endif; ?>
-                        <div>Отходы</div>
-                        <div class="value mb-2">1 280 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">4,5 кг</span></div>
-                        <?php if($work_type_id == 2): ?>
-                        <div>Краска</div>
-                        <div class="value mb-2">17 500 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">17,5 кг</span></div>
-                        <?php
-                        endif;
-                        if(!empty($lamination1_brand_name) || !empty($lamination2_brand_name)):
-                        ?>
-                        <div>Клей</div>
-                        <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">1,0 кг</span></div>
-                        <?php
-                        endif;
-                        if($work_type_id == 2):
-                        ?>
-                        <div>Печать тиража</div>
-                        <div class="value mb-2">470 500 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">6 ч. 30 мин.</span></div>
-                        <?php
-                        endif;
-                        if(!empty($lamination1_brand_name) || !empty($lamination2_brand_name)):
-                        ?>
-                        <div>Работа ламинатора</div>
-                        <div class="value mb-2">1 500 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">3 часа</span></div>
-                        <?php endif; ?>
+            <div class="font-weight-bold">Удельная стоимость клеевого раствора</div>
+            <div>(стоимость клея * доля клея / (доля клея + доля растворителя)) </div>
+            <div>+ (стоимость растворителя * доля раствора / (доля клея + доля растворителя))</div>
+            <div class="value mb-2"><?="($glue_price * $glue_glue_part / ($glue_glue_part + $glue_solvent_part)) + ($glue_solvent_price * $glue_solvent_part / ($glue_glue_part + $glue_solvent_part)) = $glue_solvent_g"  ?></span></div>
         </div>
         <?php
         endif;
