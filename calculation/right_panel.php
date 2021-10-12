@@ -1059,11 +1059,11 @@ elseif(!empty ($id) && !empty ($date)) {
             <div>стоимость материала печати + стоимость печати</div>
             <div>+ стоимость красок, лака и растворителя + итого себестоимость ламинации</div>
             <div>+ (стоимость скотча для наклейки форм * число красок * площадь печатной формы / 10000)</div>
-            <div class="value mb-2"><?="$material_price + $print_price + $paint_price + $price_lam_total + ($cliche_scotch * $paints_count * $cliche_area / 10000) = $cost_no_cliche" ?></div>
+            <div class="value mb-2"><?="$pure_area * ($c_weight + (".($c_weight_lam1 ?? 0).") + (".($c_weight_lam2 ?? 0).")) / 1000 = $pure_weight_total" ?></div>
             
             <div class="font-weight-bold">Вес материала готовой продукции с отходами</div>
             <div>итого стоимость без форм + стоимость комплекта печатных форм</div>
-            <div class="value mb-2"><?="$dirty_area * ($c_weight + ($c_weight_lam1 ?? 0) + ($c_weight_lam2 ?? 0)) / 1000 = $dirty_weight_total" ?></div>
+            <div class="value mb-2"><?="$dirty_area * ($c_weight + (".($c_weight_lam1 ?? 0).") + (".($c_weight_lam2 ?? 0).")) / 1000 = $dirty_weight_total" ?></div>
             
             <div class="font-weight-bold">Итого себестоимость без форм</div>
             <div>стоимость материала печати + стоимость печати + стоимость красок, лака и растворителя</div>
