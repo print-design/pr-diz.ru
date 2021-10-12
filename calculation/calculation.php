@@ -23,6 +23,9 @@ const PANTON = "panton";
 const WHITE = "white";
 const LACQUER = "lacquer";
 
+// id ламинатора
+$laminator_machine_id = 5;
+
 // Смена статуса
 if(null !== filter_input(INPUT_POST, 'change_status_submit')) {
     $id = filter_input(INPUT_POST, 'id');

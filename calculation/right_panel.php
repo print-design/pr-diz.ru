@@ -976,6 +976,82 @@ elseif(!empty ($id) && !empty ($date)) {
             <div>(стоимость клея * доля клея / (доля клея + доля растворителя)) </div>
             <div>+ (стоимость растворителя * доля раствора / (доля клея + доля растворителя))</div>
             <div class="value mb-2"><?="($glue_price * $glue_glue_part / ($glue_glue_part + $glue_solvent_part)) + ($glue_solvent_price * $glue_solvent_part / ($glue_glue_part + $glue_solvent_part)) = $glue_solvent_g" ?></div>
+            
+            <div class="font-weight-bold">Вес материала ламинации 1 чистый</div>
+            <div>площадь тиража чистая * удельный вес ламинации 1 / 1000</div>
+            <div class="value mb-2"><?="$pure_area * $c_weight_lam1 / 1000 = $pure_weight_lam1" ?></div>
+            
+            <div class="font-weight-bold">Вес материала ламинации 1 с отходами</div>
+            <div>(длина тиража с ламинацией + длина материала для приладки при ламинации)</div>
+            <div> * ширина тиража с отходами (в метрах) * удельный вес ламинации 1 / 1000</div>
+            <div class="value mb-2"><?="($pure_length_lam + $tuning_lengths[$machine_id]) * $dirty_width / 1000 * $c_weight_lam1 / 1000 = $dirty_weight_lam1" ?></div>
+            
+            <div class="font-weight-bold">Стоимость материала ламинации 1</div>
+            <div>если сырьё заказчика: 0</div>
+            <div>иначе: удельная стоимость материала ламинации * вес материала с отходами</div>
+            <?php if($lamination1_customers_material): ?>
+            <div class="value mb-2">0</div>
+            <?php else: ?>
+            <div class="value mb-2"><?="$c_price_lam1 * $dirty_weight_lam1 = $price_lam1_material" ?></div>
+            <?php endif; ?>
+            
+            <div class="font-weight-bold">Стоимость клеевого раствора 1</div>
+            <div>если марка плёнки начинается на pet:</div>
+            <div>удельная стоимость клеевого раствора * расход клея для ламинации ПЭТ</div>
+            <div>* (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)</div>
+            <div>иначе:</div>
+            <div>удельная стоимость клеевого раствора * расход клея</div>
+            <div>* (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)</div>
+            <?php if(stripos($lamination1_brand_name, 'pet') === 0): ?>
+            <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination1_roller / 1000 + $tuning_lengths[$machine_id]) = $price_lam1_glue" ?></div>
+            <?php else: ?>
+            <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination1_roller / 1000 + $tuning_lengths[$machine_id]) = $price_lam1_glue" ?></div>
+            <?php endif; ?>
+            
+            <div class="font-weight-bold">Стоимость процесса ламинации 1</div>
+            <div>стоимость работы оборудования</div>
+            <div>+ (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования</div>
+            <div class="value mb-2"><?="$machine_prices[$laminator_machine_id] + ($pure_length_lam / 1000 / $machine_speeds[$laminator_machine_id]) * $machine_prices[$laminator_machine_id] = $price_lam1_work" ?></div>
+            
+            <div class="font-weight-bold">Вес материала ламинации 2 чистый</div>
+            <div>площадь тиража чистая * удельный вес ламинации 1 / 1000</div>
+            <div class="value mb-2"><?="$pure_area * $c_weight_lam2 / 1000 = $pure_weight_lam2" ?></div>
+            
+            <div class="font-weight-bold">Вес материала ламинации 2 с отходами 2</div>
+            <div>(длина тиража с ламинацией + длина материала для приладки при ламинации)</div>
+            <div>* ширина тиража с отходами (в метрах) * удельный вес ламинации 1 / 1000</div>
+            <div class="value mb-2"><?="($pure_length_lam + $tuning_lengths[$machine_id]) * $dirty_width / 1000 * $c_weight_lam2 / 1000 = $dirty_weight_lam2" ?></div>
+            
+            <div class="font-weight-bold">Стоимость материала ламинации 2</div>
+            <div>если сырьё заказчика: 0</div>
+            <div>иначе: удельная стоимость материала ламинации * вес материала с отходами</div>
+            <?php if($lamination2_customers_material): ?>
+            <div class="value mb-2">0</div>
+            <?php else: ?>
+            <div class="value mb-2"><?="$c_price_lam2 * $dirty_weight_lam2 = $price_lam2_material" ?></div>
+            <?php endif; ?>
+            
+            <div class="font-weight-bold">Стоимость клеевого раствора 2</div>
+            <div>если марка плёнки начинается на pet:</div>
+            <div>удельная стоимость клеевого раствора * расход клея для ламинации ПЭТ</div>
+            <div>* (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)</div>
+            <div>иначе:</div>
+            <div>удельная стоимость клеевого раствора * расход клея</div>
+            <div>* (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)</div>
+            <?php if(stripos($lamination2_brand_name, 'pet') === 0): ?>
+            <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination2_roller / 1000 + $tuning_lengths[$machine_id]) = $price_lam2_glue" ?></div>
+            <?php else: ?>
+            <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination2_roller / 1000 + $tuning_lengths[$machine_id]) = $price_lam2_glue" ?></div>
+            <?php endif; ?>
+            
+            <div class="font-weight-bold">Стоимость процесса ламинации 2</div>
+            <div>стоимость работы оборудования</div>
+            <div>+ (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования</div>
+            <div class="value mb-2"><?="$machine_prices[$laminator_machine_id] + ($pure_length_lam / 1000 / $machine_speeds[$laminator_machine_id]) * $machine_prices[$laminator_machine_id] = $price_lam2_work" ?></div>
+            
+            <div class="font-weight-bold">Итого себестоимость ламинации</div>
+            <div>материал1 + материал2 + клей1 + клей2 + процесс1 + процесс2</div>
+            <div class="value mb-2"><?=($price_lam1_material ?? 0)." + ".($price_lam2_material ?? 0)." + ".($price_lam1_glue ?? 0)." + ".($price_lam2_glue ?? 0)." + ".($price_lam1_work ?? 0)." + ".($price_lam2_work ?? 0)." = ".($price_lam_total ?? 0) ?></div>
         </div>
         <?php
         endif;
