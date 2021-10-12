@@ -407,6 +407,7 @@ elseif(!empty ($id) && !empty ($date)) {
     $dirty_area = null;    $pure_weight = null;    $dirty_weight = null;
     $material_price = null;    $print_time = null;    $tuning_time = null;
     $print_tuning_time = null;    $print_price = null;    $cliche_area = null;
+    $cliche_flint_price = null;    $cliche_kodak_price = null;    $cliche_tver_price = null;
     $cliche_price = null;    $paint_price = null;    $pure_weight_lam1 = null;
     $dirty_weight_lam1 = null;    $price_lam1_material = null;    $price_lam1_glue = null;
     $price_lam1_work = null;    $pure_weight_lam2 = null;    $dirty_weight_lam2 = null;
@@ -417,7 +418,8 @@ elseif(!empty ($id) && !empty ($date)) {
 
     $sql = "select pure_area, pure_width, pure_length, pure_length_lam, "
             . "dirty_length, dirty_width, dirty_area, pure_weight, dirty_weight, material_price, print_time, tuning_time, "
-            . "print_tuning_time, print_price, cliche_area, cliche_price, paint_price, pure_weight_lam1, dirty_weight_lam1, "
+            . "print_tuning_time, print_price, cliche_area, cliche_flint_price, cliche_kodak_price, cliche_tver_price, "
+            . "cliche_price, paint_price, pure_weight_lam1, dirty_weight_lam1, "
             . "price_lam1_material, price_lam1_glue, price_lam1_work, pure_weight_lam2, dirty_weight_lam2, price_lam2_material, "
             . "price_lam2_glue, price_lam2_work, price_lam_total, pure_weight_total, dirty_weight_total, cost_no_cliche, "
             . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_thing, cost_with_cliche_thing"
@@ -440,6 +442,9 @@ elseif(!empty ($id) && !empty ($date)) {
         $print_tuning_time = $row['print_tuning_time'];
         $print_price = $row['print_price'];
         $cliche_area = $row['cliche_area'];
+        $cliche_flint_price = $row['cliche_flint_price'];
+        $cliche_kodak_price = $row['cliche_kodak_price'];
+        $cliche_tver_price = $row['cliche_tver_price'];
         $cliche_price = $row['cliche_price'];
         $paint_price = $row['paint_price'];
         $pure_weight_lam1 = $row['pure_weight_lam1'];
@@ -568,8 +573,8 @@ elseif(!empty ($id) && !empty ($date)) {
                     <div class="value"><?=rtrim(rtrim(number_format($dirty_width, 3, ",", " "), "0"), ",") ?> мм</div>
                 </div>
                 <div class="d-table-cell pb-1" style="width: 33%;">
-                    <div>Стоимость 1 печатной формы</div>
-                    <div class="value"><?=rtrim(rtrim(number_format($cliche_price, 3, ",", " "), "0"), ",") ?> руб</div>
+                    <div>Стоимость 1 печатной формы Флинт</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($cliche_flint_price, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <div class="d-table-cell pb-1" style="width: 33%;"></div>
             </div>
@@ -579,8 +584,8 @@ elseif(!empty ($id) && !empty ($date)) {
                     <div class="value"><?=rtrim(rtrim(number_format($dirty_area, 3, ",", " "), "0"), ",") ?> м<sup>2</sup></div>
                 </div>
                 <div class="d-table-cell pb-1" style="width: 33%;">
-                    <div>Стоимость комплекта печатных форм</div>
-                    <div class="value"><?=rtrim(rtrim(number_format($cliche_price, 3, ",", " "), "0"), ",") ?> руб</div>
+                    <div>Стоимость 1 печатной формы Кодак</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($cliche_kodak_price, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <div class="d-table-cell pb-1" style="width: 33%;"></div>
             </div>
@@ -590,8 +595,8 @@ elseif(!empty ($id) && !empty ($date)) {
                     <div class="value"><?=rtrim(rtrim(number_format($pure_weight, 3, ",", " "), "0"), ",") ?> кг</div>
                 </div>
                 <div class="d-table-cell pb-1" style="width: 33%;">
-                    <div>Стоимость краски + лака + растворителя</div>
-                    <div class="value"><?=rtrim(rtrim(number_format($paint_price, 3, ",", " "), "0"), ",") ?> руб</div>
+                    <div>Стоимость 1 печатной формы Тверь</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($cliche_tver_price, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <div class="d-table-cell pb-1" style="width: 33%;"></div>
             </div>
@@ -600,14 +605,22 @@ elseif(!empty ($id) && !empty ($date)) {
                     <div>Вес материала печати с отходами</div>
                     <div class="value"><?=rtrim(rtrim(number_format($dirty_weight, 3, ",", " "), "0"), ",") ?> кг</div>
                 </div>
-                
+                <div class="d-table-cell pb-1" style="width: 33%;">
+                    <div>Стоимость комплекта печатных форм</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($cliche_price, 3, ",", " "), "0"), ",") ?> руб</div>
+                </div>
+                <div class="d-table-cell pb-1" style="width: 33%;"></div>
             </div>
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
                     <div>Стоимость материала печати</div>
                     <div class="value"><?=rtrim(rtrim(number_format($material_price, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
-                
+                <div class="d-table-cell pb-1" style="width: 33%;">
+                    <div>Стоимость краски + лака + растворителя</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($paint_price, 3, ",", " "), "0"), ",") ?> руб</div>
+                </div>
+                <div class="d-table-cell pb-1" style="width: 33%;"></div>
             </div>
         </div>
         <div class="mt-3">
