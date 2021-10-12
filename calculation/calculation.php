@@ -63,7 +63,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.brand_name, c.thickness, other_brand_name, other_price, other_thickness, other_weight, c.customers_material, "
         . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, c.lamination1_roller, c.lamination1_customers_material, "
         . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, c.lamination2_roller, c.lamination2_customers_material, "
-        . "c.width, c.length, c.stream_width, c.streams_count, c.raport raport_value, c.paints_count, "
+        . "c.width, c.length, c.stream_width, c.streams_count, c.raport, c.paints_count, "
         . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
         . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -75,7 +75,6 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
         . "wt.name work_type, "
         . "mt.name machine, mt.colorfulness, "
-        . "(select name from raport where value = c.raport and machine_id = c.machine_id) raport_name, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) weight, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
@@ -124,7 +123,7 @@ $width = $row['width'];
 $length = $row['length'];
 $stream_width = $row['stream_width'];
 $streams_count = $row['streams_count'];
-$raport = (empty($row['raport_name']) ? "" : $row['raport_name']." ").(rtrim(rtrim(number_format($row['raport_value'], 3, ",", " "), "0"), ","));
+$raport = $row['raport'];
 $paints_count = $row['paints_count'];
 
 for($i=1; $i<=$paints_count; $i++) {
@@ -263,7 +262,7 @@ $num_for_customer = $row['num_for_customer'];
                             endif;
                             if(!empty($raport)):
                             ?>
-                        <tr><th>Рапорт</th><td><?= $raport ?> мм</td></tr>
+                        <tr><th>Рапорт</th><td><?= rtrim(rtrim(number_format($raport, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                             <?php
                             endif;
                             if(!empty($streams_count)):
