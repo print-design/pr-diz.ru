@@ -869,7 +869,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         // Стоимость комплекта печатных форм
-        // сумма стоимость форм для каждой краски
+        // сумма стоимости форм для каждой краски
         $cliche_price = null;
         
         if(!empty($cliche_flint_price) && !empty($cliche_kodak_price) && !empty($cliche_tver_price)) {
