@@ -1004,15 +1004,15 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $price_lam_total = 0;
                     
         if(!empty($c_price_lam1) && !empty($c_weight_lam1) && !empty($pure_area) && $machine_id != "NULL" && $lamination1_roller != "NULL") {
-            // Вес материала чистый, кг
+            // Вес материала ламинации 1 чистый, кг
             // площадь тиража чистая * удельный вес ламинации 1 / 1000
             $pure_weight_lam1 = $pure_area * $c_weight_lam1 / 1000;
                         
-            // Вес материала с отходами, кг
+            // Вес материала ламинации 1 с отходами, кг
             // (длина тиража с ламинацией + длина материала для приладки при ламинации) * ширина тиража с отходами (в метрах) * удельный вес ламинации 1 / 1000
             $dirty_weight_lam1 = ($pure_length_lam + $tuning_lengths[$machine_id]) * $dirty_width / 1000 * $c_weight_lam1 / 1000;
             
-            // Стоимость материала, руб
+            // Стоимость материала ламинации 1, руб
             // удельная стоимость материала ламинации * вес материала с отходами
             if($lamination1_customers_material) {
                 $price_lam1_material = 0;
@@ -1021,11 +1021,11 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $price_lam1_material = $c_price_lam1 * $dirty_weight_lam1;
             }
             
-            // Удельная стоимость клеевого раствора
+            // Удельная стоимость клеевого раствора 1, руб
             // (стоимость клея * доля клея / (доля клея + доля раствора)) + (стоимость растворителя для клея * доля раствора / (доля клея + доля раствора))
             $glue_solvent_g = ($glue_price * $glue_glue_part / ($glue_glue_part + $glue_solvent_part)) + ($glue_solvent_price * $glue_solvent_part / ($glue_glue_part + $glue_solvent_part));
             
-            // Стоимость клеевого раствора, руб
+            // Стоимость клеевого раствора 1, руб
             // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
             // Если марка плёнки начинается на pet
             // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
@@ -1035,7 +1035,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination1_roller / 1000 + $tuning_lengths[$machine_id]);
             }
             
-            // Стоимость процесса ламинации
+            // Стоимость процесса ламинации 1
             // стоимость работы оборудования + (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования
             $price_lam1_work = $machine_prices[$laminator_machine_id] + ($pure_length_lam / 1000 / $machine_speeds[$laminator_machine_id]) * $machine_prices[$laminator_machine_id];
             
@@ -1044,15 +1044,15 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         if(!empty($c_price_lam2) && !empty($c_weight_lam2) && !empty($pure_area) && $machine_id != "NULL" && $lamination2_roller != "NULL") {
-            // Вес материала чистый, кг
+            // Вес материала ламинации 2 чистый, кг
             // площадь тиража чистая * удельный вес ламинации 1 / 1000
             $pure_weight_lam2 = $pure_area * $c_weight_lam2 / 1000;
                         
-            // Вес материала с отходами, кг
+            // Вес материала с отходами 2, кг
             // (длина тиража с ламинацией + длина материала для приладки при ламинации) * ширина тиража с отходами (в метрах) * удельный вес ламинации 1 / 1000
             $dirty_weight_lam2 = ($pure_length_lam + $tuning_lengths[$machine_id]) * $dirty_width / 1000 * $c_weight_lam2 / 1000;
             
-            // Стоимость материала, руб
+            // Стоимость материала ламинации 2, руб
             // удельная стоимость материала ламинации * вес материала с отходами
             if($lamination2_customers_material) {
                 $price_lam2_material = 0;
@@ -1061,11 +1061,11 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $price_lam2_material = $c_price_lam2 * $dirty_weight_lam2;
             }
             
-            // Удельная стоимость клеевого раствора
+            // Удельная стоимость клеевого раствора 2, руб
             // (стоимость клея * соотношение кл/раст / 100) + (стоимость растворителя для клея * (100 - соотношение кл/раст) / 100)
             $glue_solvent_g = ($glue_price * $glue_glue_part / ($glue_glue_part + $glue_solvent_part)) + ($glue_solvent_price * $glue_solvent_part / ($glue_glue_part + $glue_solvent_part));
             
-            // Стоимость клеевого раствора, руб
+            // Стоимость клеевого раствора 2, руб
             // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
             // Если марка плёнки начинается на pet
             // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
@@ -1075,7 +1075,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination2_roller / 1000 + $tuning_lengths[$machine_id]);
             }
             
-            // Стоимость процесса ламинации
+            // Стоимость процесса ламинации 2
             // стоимость работы оборудования + (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования
             $price_lam2_work = $machine_prices[$laminator_machine_id] + ($pure_length_lam / 1000 / $machine_speeds[$laminator_machine_id]) * $machine_prices[$laminator_machine_id];
             
