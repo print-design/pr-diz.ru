@@ -1031,7 +1031,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
             $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination1_roller / 1000 + $tuning_lengths[$machine_id]);
             
-            if(stripos($brand_name, 'pet') == 0) {
+            if(stripos($brand_name, 'pet') === 0) {
                 $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination1_roller / 1000 + $tuning_lengths[$machine_id]);
             }
             
@@ -1071,7 +1071,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
             $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination2_roller / 1000 + $tuning_lengths[$machine_id]);
             
-            if(stripos($brand_name, 'pet') == 0) {
+            if(stripos($brand_name, 'pet') === 0) {
                 $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination2_roller / 1000 + $tuning_lengths[$machine_id]);
             }
             
