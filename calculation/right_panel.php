@@ -1077,7 +1077,7 @@ elseif(!empty ($id) && !empty ($date)) {
             <?php if($unit == "kg" && !empty($quantity)): ?>
             <div class="font-weight-bold">Итого себестоимость за 1 кг без форм</div>
             <div>итого себестоимость без форм / вес заказа</div>
-            <div class="value mb-2"><?="$$cost_no_cliche / $quantity = $cost_no_cliche_kg" ?></div>
+            <div class="value mb-2"><?="$cost_no_cliche / $quantity = $cost_no_cliche_kg" ?></div>
             
             <div class="font-weight-bold">Итого себестоимость за 1 кг с формами</div>
             <div>итого стоимость с формами / вес заказа</div>
