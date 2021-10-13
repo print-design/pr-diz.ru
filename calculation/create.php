@@ -1002,6 +1002,12 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         // Итого себестоимость ламинации, руб
         // материал1 + материал2 + клей1 + клей2 + процесс1 + процесс2
         $price_lam_total = 0;
+        
+        $pure_weight_lam1 = null;
+        $dirty_weight_lam1 = null;
+        $price_lam1_material = null;
+        $price_lam1_glue = null;
+        $price_lam1_work = null;
                     
         if(!empty($c_price_lam1) && !empty($c_weight_lam1) && !empty($pure_area) && $machine_id != "NULL" && $lamination1_roller != "NULL") {
             // Вес материала ламинации 1 чистый, кг
@@ -1042,6 +1048,12 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             // Итого
             $price_lam_total += $price_lam1_material + $price_lam1_glue + $price_lam1_work;
         }
+        
+        $pure_weight_lam2 = null;
+        $dirty_weight_lam2 = null;
+        $price_lam2_material = null;
+        $price_lam2_glue = null;
+        $price_lam2_work = null;
         
         if(!empty($c_price_lam2) && !empty($c_weight_lam2) && !empty($pure_area) && $machine_id != "NULL" && $lamination2_roller != "NULL") {
             // Вес материала ламинации 2 чистый, кг
