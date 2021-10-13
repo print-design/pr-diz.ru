@@ -1021,7 +1021,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                         
             // Вес материала ламинации 1 с отходами, кг
             // (длина тиража с ламинацией + длина материала для приладки при ламинации) * ширина тиража с отходами (в метрах) * удельный вес ламинации 1 / 1000
-            $dirty_weight_lam1 = ($pure_length_lam + $tuning_lengths[$machine_id]) * $dirty_width / 1000 * $c_weight_lam1 / 1000;
+            $dirty_weight_lam1 = ($pure_length_lam + $tuning_lengths[$laminator_machine_id]) * $dirty_width / 1000 * $c_weight_lam1 / 1000;
             
             // Стоимость материала ламинации 1, руб
             // удельная стоимость материала ламинации * вес материала с отходами
@@ -1040,10 +1040,10 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
             // Если марка плёнки начинается на pet
             // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
-            $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination1_roller / 1000 + $tuning_lengths[$machine_id]);
+            $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination1_roller / 1000 + $tuning_lengths[$laminator_machine_id]);
             
             if(stripos($lamination1_brand_name, 'pet') === 0) {
-                $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination1_roller / 1000 + $tuning_lengths[$machine_id]);
+                $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination1_roller / 1000 + $tuning_lengths[$laminator_machine_id]);
             }
             
             // Стоимость процесса ламинации 1, руб
@@ -1067,7 +1067,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                         
             // Вес материала ламинации 2 с отходами 2, кг
             // (длина тиража с ламинацией + длина материала для приладки при ламинации) * ширина тиража с отходами (в метрах) * удельный вес ламинации 1 / 1000
-            $dirty_weight_lam2 = ($pure_length_lam + $tuning_lengths[$machine_id]) * $dirty_width / 1000 * $c_weight_lam2 / 1000;
+            $dirty_weight_lam2 = ($pure_length_lam + $tuning_lengths[$laminator_machine_id]) * $dirty_width / 1000 * $c_weight_lam2 / 1000;
             
             // Стоимость материала ламинации 2, руб
             // удельная стоимость материала ламинации * вес материала с отходами
@@ -1086,10 +1086,10 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
             // Если марка плёнки начинается на pet
             // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
-            $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination2_roller / 1000 + $tuning_lengths[$machine_id]);
+            $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination2_roller / 1000 + $tuning_lengths[$laminator_machine_id]);
             
             if(stripos($lamination2_brand_name, 'pet') === 0) {
-                $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination2_roller / 1000 + $tuning_lengths[$machine_id]);
+                $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination2_roller / 1000 + $tuning_lengths[$laminator_machine_id]);
             }
             
             // Стоимость процесса ламинации 2, руб
@@ -1787,7 +1787,7 @@ $colorfulnesses = array();
                         $kg_checked = ($unit == "kg" || empty($unit)) ? " checked='checked'" : "";
                         $thing_checked = $unit == "thing" ? " checked='checked'" : "";
                         ?>
-                        <div class="print-only justify-content-start mt-2 mb-1 d-none">
+                        <div class="justify-content-start mt-2 mb-1">
                             <div class="form-check-inline">
                                 <label class="form-check-label">
                                     <input type="radio" class="form-check-input" name="unit" value="kg"<?=$kg_checked ?> />Килограммы
@@ -1799,31 +1799,6 @@ $colorfulnesses = array();
                                 </label>
                             </div>
                         </div>
-                        <!-- Печатная машина -->
-                        <div class="print-only d-none">
-                        <div class="form-group w-100">
-                            <label for="machine_id">Печатная машина</label>
-                            <select id="machine_id" name="machine_id" class="form-control print-only d-none">
-                                <option value="" hidden="hidden" selected="selected">Печатная машина...</option>
-                                <?php
-                                $sql = "select id, name, colorfulness from machine where colorfulness > 0";
-                                $fetcher = new Fetcher($sql);
-                                
-                                while ($row = $fetcher->Fetch()):
-                                $selected = '';
-                                if($row['id'] == $machine_id) {
-                                    $selected = " selected='selected'";
-                                }
-                                ?>
-                                <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'].' ('.$row['colorfulness'].' красок)' ?></option>
-                                <?php
-                                // Заполняем список красочностей, чтобы при выборе машины установить нужное количество элементов списка
-                                $colorfulnesses[$row['id']] = $row['colorfulness'];
-                                endwhile;
-                                ?>
-                            </select>
-                        </div>
-                            </div>
                         <!-- Объем заказа -->
                         <div class="row">
                             <!-- Объем заказа -->
@@ -1844,6 +1819,31 @@ $colorfulnesses = array();
                                            onfocusout="avascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" />
                                     <div class="invalid-feedback">Объем заказа обязательно</div>
                                 </div>
+                            </div>
+                        </div>
+                        <!-- Печатная машина -->
+                        <div class="print-only d-none">
+                            <div class="form-group w-100">
+                                <label for="machine_id">Печатная машина</label>
+                                <select id="machine_id" name="machine_id" class="form-control print-only d-none">
+                                    <option value="" hidden="hidden" selected="selected">Печатная машина...</option>
+                                        <?php
+                                        $sql = "select id, name, colorfulness from machine where colorfulness > 0";
+                                        $fetcher = new Fetcher($sql);
+                                
+                                        while ($row = $fetcher->Fetch()):
+                                        $selected = '';
+                                        if($row['id'] == $machine_id) {
+                                            $selected = " selected='selected'";
+                                        }
+                                        ?>
+                                    <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'].' ('.$row['colorfulness'].' красок)' ?></option>
+                                        <?php
+                                        // Заполняем список красочностей, чтобы при выборе машины установить нужное количество элементов списка
+                                        $colorfulnesses[$row['id']] = $row['colorfulness'];
+                                        endwhile;
+                                        ?>
+                                </select>
                             </div>
                         </div>
                         <!-- Основная плёнка -->

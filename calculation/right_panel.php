@@ -171,15 +171,13 @@ elseif(!empty ($id) && !empty ($date)) {
     $machine_speeds = array();
     $machine_prices = array();
         
-    if(!empty($machine_id)) {
-        $sql = "select machine_id, price, speed "
-                . "from norm_machine "
-                . "where date in (select max(date) from norm_machine where date <= '$date' group by machine_id)";
-        $fetcher = new Fetcher($sql);
-        while($row = $fetcher->Fetch()) {
-            $machine_prices[$row['machine_id']] = $row['price'];
-            $machine_speeds[$row['machine_id']] = $row['speed'];
-        }
+    $sql = "select machine_id, price, speed "
+            . "from norm_machine "
+            . "where date in (select max(date) from norm_machine where date <= '$date' group by machine_id)";
+    $fetcher = new Fetcher($sql);
+    while($row = $fetcher->Fetch()) {
+        $machine_prices[$row['machine_id']] = $row['price'];
+        $machine_speeds[$row['machine_id']] = $row['speed'];
     }
         
     // Данные о форме
@@ -1044,7 +1042,7 @@ elseif(!empty ($id) && !empty ($date)) {
             <div class="font-weight-bold">Вес материала ламинации 1 с отходами</div>
             <div>(длина тиража с ламинацией + длина материала для приладки при ламинации)</div>
             <div> * ширина тиража с отходами (в метрах) * удельный вес ламинации 1 / 1000</div>
-            <div class="value mb-2"><?="($pure_length_lam + $tuning_lengths[$machine_id]) * $dirty_width / 1000 * $c_weight_lam1 / 1000 = $dirty_weight_lam1" ?></div>
+            <div class="value mb-2"><?="($pure_length_lam + $tuning_lengths[$laminator_machine_id]) * $dirty_width / 1000 * $c_weight_lam1 / 1000 = $dirty_weight_lam1" ?></div>
             
             <div class="font-weight-bold">Стоимость материала ламинации 1</div>
             <div>если сырьё заказчика: 0</div>
@@ -1063,9 +1061,9 @@ elseif(!empty ($id) && !empty ($date)) {
             <div>удельная стоимость клеевого раствора * расход клея</div>
             <div>* (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)</div>
             <?php if(stripos($lamination1_brand_name, 'pet') === 0): ?>
-            <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination1_roller / 1000 + $tuning_lengths[$machine_id]) = $price_lam1_glue" ?></div>
+            <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination1_roller / 1000 + $tuning_lengths[$laminator_machine_id]) = $price_lam1_glue" ?></div>
             <?php else: ?>
-            <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination1_roller / 1000 + $tuning_lengths[$machine_id]) = $price_lam1_glue" ?></div>
+            <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination1_roller / 1000 + $tuning_lengths[$laminator_machine_id]) = $price_lam1_glue" ?></div>
             <?php endif; ?>
             
             <div class="font-weight-bold">Стоимость процесса ламинации 1</div>
@@ -1081,7 +1079,7 @@ elseif(!empty ($id) && !empty ($date)) {
             <div class="font-weight-bold">Вес материала ламинации 2 с отходами 2</div>
             <div>(длина тиража с ламинацией + длина материала для приладки при ламинации)</div>
             <div>* ширина тиража с отходами (в метрах) * удельный вес ламинации 1 / 1000</div>
-            <div class="value mb-2"><?="($pure_length_lam + $tuning_lengths[$machine_id]) * $dirty_width / 1000 * $c_weight_lam2 / 1000 = $dirty_weight_lam2" ?></div>
+            <div class="value mb-2"><?="($pure_length_lam + $tuning_lengths[$laminator_machine_id]) * $dirty_width / 1000 * $c_weight_lam2 / 1000 = $dirty_weight_lam2" ?></div>
             
             <div class="font-weight-bold">Стоимость материала ламинации 2</div>
             <div>если сырьё заказчика: 0</div>
@@ -1100,9 +1098,9 @@ elseif(!empty ($id) && !empty ($date)) {
             <div>удельная стоимость клеевого раствора * расход клея</div>
             <div>* (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)</div>
             <?php if(stripos($lamination2_brand_name, 'pet') === 0): ?>
-            <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination2_roller / 1000 + $tuning_lengths[$machine_id]) = $price_lam2_glue" ?></div>
+            <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination2_roller / 1000 + $tuning_lengths[$laminator_machine_id]) = $price_lam2_glue" ?></div>
             <?php else: ?>
-            <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination2_roller / 1000 + $tuning_lengths[$machine_id]) = $price_lam2_glue" ?></div>
+            <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination2_roller / 1000 + $tuning_lengths[$laminator_machine_id]) = $price_lam2_glue" ?></div>
             <?php endif; ?>
             
             <div class="font-weight-bold">Стоимость процесса ламинации 2</div>
