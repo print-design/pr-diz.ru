@@ -692,7 +692,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         if($unit == 'kg' && !empty($quantity) && !empty($c_weight)) {
             $pure_area = 1000 * $quantity / ($c_weight + (empty($c_weight_lam1) ? 0 : $c_weight_lam1) + (empty($c_weight_lam2) ? 0 : $c_weight_lam2));
         }
-        else if($unit == 'thing' && !empty ($stream_width) && !empty ($length) && !empty ($quantity)) {
+        else if($unit == 'thing' && $stream_width != "NULL" && $length != "NULL" && !empty ($quantity)) {
             $pure_area = $stream_width / 1000 * $length / 1000 * $quantity;
         }
         
@@ -700,7 +700,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         // ширина ручья * количество ручьёв
         $pure_width = 0;
         
-        if(!empty($stream_width) && !empty($streams_count)) {
+        if($stream_width != "NULL" && $streams_count != "NULL") {
             $pure_width = $stream_width * $streams_count;
         }
         
@@ -725,7 +725,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         // если нет печати, но есть ламинация: длина тиража чистая с ламинацией + длина приладки ламинации
         $dirty_length = 0;
         
-        if($machine_id != "NULL" && !empty($pure_length) && !empty($paints_count) && !empty($tuning_waste_percents[$machine_id])) {
+        if($machine_id != "NULL" && !empty($pure_length) && $paints_count != "NULl" && !empty($tuning_waste_percents[$machine_id])) {
             $dirty_length = $pure_length + ($pure_length * $tuning_waste_percents[$machine_id] / 100 + $tuning_lengths[$machine_id] * $paints_count);
         }
         elseif(!empty ($lamination1_brand_name) && !empty ($pure_length_lam) && !empty ($tuning_lengths[5])) {
