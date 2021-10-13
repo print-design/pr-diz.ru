@@ -795,7 +795,7 @@ elseif(!empty ($id) && !empty ($date)) {
             <?php if($unit == 'kg'): ?>
             <div class="value mb-2"><?="1000 * $quantity / (".$c_weight.(empty($c_weight_lam1) ? "" : " + ".$c_weight_lam1).(empty($c_weight_lam2) ? "" : " + ".$c_weight_lam2).") = ".$pure_area ?></div>
             <?php elseif($unit == 'thing'): ?>
-            <div class="value mb-2"><?=$unit ?></div>
+            <div class="value mb-2"><?="$stream_width / 1000 * $length / 1000 * $quantity = $pure_area" ?></div>
             <?php endif; ?>
             
             <div class="font-weight-bold">Ширина тиража обрезная</div>
