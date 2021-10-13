@@ -437,15 +437,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $machine_speeds = array();
         $machine_prices = array();
         
-        if($machine_id != "NULL") {
-            $sql = "select machine_id, price, speed "
-                    . "from norm_machine "
-                    . "where date in (select max(date) from norm_machine group by machine_id)";
-            $fetcher = new Fetcher($sql);
-            while($row = $fetcher->Fetch()) {
-                $machine_prices[$row['machine_id']] = $row['price'];
-                $machine_speeds[$row['machine_id']] = $row['speed'];
-            }
+        $sql = "select machine_id, price, speed "
+                . "from norm_machine "
+                . "where date in (select max(date) from norm_machine group by machine_id)";
+        $fetcher = new Fetcher($sql);
+        while($row = $fetcher->Fetch()) {
+            $machine_prices[$row['machine_id']] = $row['price'];
+            $machine_speeds[$row['machine_id']] = $row['speed'];
         }
         
         // Данные о форме
