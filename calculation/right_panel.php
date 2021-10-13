@@ -1129,30 +1129,30 @@ elseif(!empty ($id) && !empty ($date)) {
             <div class="font-weight-bold">Итого себестоимость без форм</div>
             <div>стоимость материала печати + стоимость печати + стоимость красок, лака и растворителя</div>
             <div>+ итого себестоимость ламинации + (стоимость скотча для наклейки форм * число красок * площадь печатной формы / 10000)</div>
-            <div class="value mb-2"><?="$material_price + $print_price + $paint_price + $price_lam_total + ($cliche_scotch * $paints_count * $cliche_area / 10000) = $cost_no_cliche" ?></div>
+            <div class="value mb-2"><?=($material_price ?? 0)." + ".($print_price ?? 0)." + ".($paint_price ?? 0)." + ".($price_lam_total ?? 0)." + (".($cliche_scotch ?? 0)." * ".($paints_count ?? 0)." * ".($cliche_area ?? 0)." / 10000) = $cost_no_cliche" ?></div>
             
             <div class="font-weight-bold">Итого себестоимость с формами</div>
             <div>итого стоимость без форм + стоимость комплекта печатных форм</div>
-            <div class="value mb-2"><?="$cost_no_cliche + $cliche_price = $cost_with_cliche" ?></div>
+            <div class="value mb-2"><?=($cost_no_cliche ?? 0)." + ".($cliche_price ?? 0)." = $cost_with_cliche" ?></div>
             
             <?php if($unit == "kg" && !empty($quantity)): ?>
             <div class="font-weight-bold">Итого себестоимость за 1 кг без форм</div>
             <div>итого себестоимость без форм / вес заказа</div>
-            <div class="value mb-2"><?="$cost_no_cliche / $quantity = $cost_no_cliche_kg" ?></div>
+            <div class="value mb-2"><?=($cost_no_cliche ?? 0)." / ".($quantity ?? 0)." = $cost_no_cliche_kg" ?></div>
             
             <div class="font-weight-bold">Итого себестоимость за 1 кг с формами</div>
             <div>итого стоимость с формами / вес заказа</div>
-            <div class="value mb-2"><?="$cost_with_cliche / $quantity = $cost_with_cliche_kg" ?></div>
+            <div class="value mb-2"><?=($cost_with_cliche ?? 0)." / ".($quantity ?? 0)." = $cost_with_cliche_kg" ?></div>
             <?php endif; ?>
             
             <?php if($unit == "thing" && !empty($quantity)): ?>
             <div class="font-weight-bold">Итого себестоимость за 1 шт без форм</div>
             <div>итого себестоимость без форм / количество заказа</div>
-            <div class="value mb-2"><?="$cost_no_cliche / $quantity = $cost_no_cliche_thing" ?></div>
+            <div class="value mb-2"><?=($cost_no_cliche ?? 0)." / ".($quantity ?? 0)." = $cost_no_cliche_thing" ?></div>
             
             <div class="font-weight-bold">Итого себестоимость за 1 шт с формами</div>
             <div>итого стоимость с формами / количество заказа</div>
-            <div class="value mb-2"><?="$cost_with_cliche / $quantity = $cost_with_cliche_thing" ?></div>
+            <div class="value mb-2"><?=($cost_with_cliche ?? 0)." / ".($quantity ?? 0)." = $cost_with_cliche_thing" ?></div>
             <?php endif; ?>
         </div>
         <?php
