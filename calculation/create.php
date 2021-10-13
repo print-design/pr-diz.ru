@@ -1119,7 +1119,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         // Итого себестоимость без форм, руб
         // m_dbEdit42 = m_pY10 + m_pY3 + m_dbEdit6 + dbEdit7 + CostScothF
         // стоимость материала печати + стоимость печати + стоимость красок, лака и растворителя + итого себестоимость ламинации + (стоимость скотча для наклейки форм * число красок * площадь печатной формы / 10000)
-        $cost_no_cliche = ($material_price ?? 0) + ($print_price ?? 0) + ($paint_price ?? 0) + ($price_lam_total ?? 0) + (($cliche_scotch ?? 0) * ($paints_count ?? 0) * ($cliche_area ?? 0) / 10000);
+        $cost_no_cliche = ($material_price ?? 0) + ($print_price ?? 0) + ($paint_price ?? 0) + ($price_lam_total ?? 0) + (($cliche_scotch ?? 0) * ($paints_count == "NULL" ? 0 : intval($paints_count)) * ($cliche_area ?? 0) / 10000);
         
         // Итого себестоимость с формами, руб
         // итого стоимость без форм + стоимость комплекта печатных форм
