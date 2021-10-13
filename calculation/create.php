@@ -1012,7 +1012,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $price_lam1_glue = null;
         $price_lam1_work = null;
                     
-        if(!empty($c_price_lam1) && !empty($c_weight_lam1) && !empty($pure_area) && $machine_id != "NULL" && $lamination1_roller != "NULL") {
+        if(!empty($c_price_lam1) && !empty($c_weight_lam1) && !empty($pure_area) && $lamination1_roller != "NULL") {
             // Вес материала ламинации 1 чистый, кг
             // площадь тиража чистая * удельный вес ламинации 1 / 1000
             $pure_weight_lam1 = $pure_area * $c_weight_lam1 / 1000;
@@ -1058,7 +1058,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $price_lam2_glue = null;
         $price_lam2_work = null;
         
-        if(!empty($c_price_lam2) && !empty($c_weight_lam2) && !empty($pure_area) && $machine_id != "NULL" && $lamination2_roller != "NULL") {
+        if(!empty($c_price_lam2) && !empty($c_weight_lam2) && !empty($pure_area) && $lamination2_roller != "NULL") {
             // Вес материала ламинации 2 чистый, кг
             // площадь тиража чистая * удельный вес ламинации 1 / 1000
             $pure_weight_lam2 = $pure_area * $c_weight_lam2 / 1000;
@@ -1203,7 +1203,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         echo "<p>Стоимость комплекта печатных форм, руб: $cliche_price</p>";
         echo "<hr />";
         echo "<p>Стоимость краски + лака + растворителя, руб: $paint_price</p>";
-        if(!empty($c_price_lam1) && !empty($c_weight_lam1) && $machine_id != "NULL") {
+        if(!empty($c_price_lam1) && !empty($c_weight_lam1)) {
             echo "<hr />";
             echo "<p>Расход клея при ламинации, г/м2: $glue_expense</p>";
             echo "<p>Вес материала чистый, кг: $pure_weight_lam1</p>";
@@ -1212,7 +1212,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             echo "<p>Стоимость клеевого раствора, руб: $price_lam1_glue</p>";
             echo "<p>Стоимость процесса ламинации, руб: $price_lam1_work</p>";
         }
-        if(!empty($c_price_lam2) && !empty($c_weight_lam2) && $machine_id != "NULL") {
+        if(!empty($c_price_lam2) && !empty($c_weight_lam2)) {
             echo "<hr />";
             echo "<p>Расход клея при ламинации, г/м2: $glue_expense</p>";
             echo "<p>Вес материала чистый, кг: $pure_weight_lam2</p>";
