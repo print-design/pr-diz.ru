@@ -1247,6 +1247,46 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $insert_id = $executer->insert_id;
             
             if(empty($error_message) && !empty($insert_id)) {
+                if($pure_area === null) $pure_area = "NULL";
+                if($pure_width === null) $pure_width = "NULL";
+                if($pure_length === null) $pure_length = "NULL";
+                if($pure_length_lam === null) $pure_length_lam = "NULL";
+                if($dirty_length === null) $dirty_length = "NULL";
+                if($dirty_width === null) $dirty_width = "NULL";
+                if($dirty_area === null) $dirty_area = "NULL";
+                if($pure_weight === null) $pure_weight = "NULL";
+                if($dirty_weight === null) $dirty_weight = "NULL";
+                if($material_price === null) $material_price = "NULL";
+                if($print_time === null) $print_time = "NULL";
+                if($tuning_time === null) $tuning_time = "NULL";
+                if($print_tuning_time === null) $print_tuning_time = "NULL";
+                if($print_price === null) $print_price = "NULL";
+                if($cliche_area === null) $cliche_area = "NULL";
+                if($cliche_flint_price === null) $cliche_flint_price = "NULL";
+                if($cliche_kodak_price === null) $cliche_kodak_price = "NULL";
+                if($cliche_tver_price === null) $cliche_tver_price = "NULL";
+                if($cliche_price === null) $cliche_price = "NULL";
+                if($paint_price === null) $paint_price = "NULL";
+                if($pure_weight_lam1 === null) $pure_weight_lam1 = "NULL";
+                if($dirty_weight_lam1 === null) $dirty_weight_lam1 = "NULL";
+                if($price_lam1_material === null) $price_lam1_material = "NULL";
+                if($price_lam1_glue === null) $price_lam1_glue = "NULL";
+                if($price_lam1_work === null) $price_lam1_work = "NULL";
+                if($pure_weight_lam2 === null) $pure_weight_lam2 = "NULL";
+                if($dirty_weight_lam2 === null) $dirty_weight_lam2 = "NULL";
+                if($price_lam2_material === null) $price_lam2_material = "NULL";
+                if($price_lam2_glue === null) $price_lam1_glue = "NULL";
+                if($price_lam2_work === null) $price_lam2_work = "NULL";
+                if($price_lam_total === null) $price_lam_total = "NULL";
+                if($pure_weight_total === null) $pure_weight_total = "NULL";
+                if($dirty_weight_total === null) $dirty_weight_total = "NULL";
+                if($cost_no_cliche === null) $cost_no_cliche = "NULL";
+                if($cost_with_cliche === null) $cost_with_cliche = "NULL";
+                if($cost_no_cliche_kg === null) $cost_no_cliche_kg = "NULL";
+                if($cost_with_cliche_kg === null) $cost_with_cliche_kg = "NULL";
+                if($cost_no_cliche_thing === null) $cost_no_cliche_thing = "NULL";
+                if($cost_with_cliche_thing === null) $cost_with_cliche_thing = "NULL";
+                        
                 $sql = "insert into calculation_result (calculation_id, pure_area, pure_width, pure_length, pure_length_lam, "
                         . "dirty_length, dirty_width, dirty_area, pure_weight, dirty_weight, material_price, print_time, tuning_time, "
                         . "print_tuning_time, print_price, cliche_area, cliche_flint_price, cliche_kodak_price, cliche_tver_price, cliche_price, "
