@@ -530,7 +530,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $paint_solvent_l = null;
         $paint_lacquer_solvent_l = null;
         $paint_min_price = null;
-                
+        
         if($machine_id != "NULL") {
             $sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent, solvent_currency, solvent_l, solvent_l_currency, lacquer_solvent_l, min_price "
                     . "from norm_paint where machine_id = $machine_id order by id desc limit 1";
@@ -1119,19 +1119,11 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         // Итого себестоимость без форм, руб
         // m_dbEdit42 = m_pY10 + m_pY3 + m_dbEdit6 + dbEdit7 + CostScothF
         // стоимость материала печати + стоимость печати + стоимость красок, лака и растворителя + итого себестоимость ламинации + (стоимость скотча для наклейки форм * число красок * площадь печатной формы / 10000)
-        $cost_no_cliche = null;
-        
-        if(!empty ($material_price) && !empty ($print_price) && !empty ($paint_price) && !empty ($price_lam_total) && !empty ($cliche_scotch) && !empty ($paints_count) && !empty ($cliche_area)) {
-            $cost_no_cliche = $material_price + $print_price + $paint_price + $price_lam_total + ($cliche_scotch * $paints_count * $cliche_area / 10000);
-        }
+        $cost_no_cliche = ($material_price ?? 0) + ($print_price ?? 0) + ($paint_price ?? 0) + ($price_lam_total ?? 0) + (($cliche_scotch ?? 0) * ($paints_count ?? 0) * ($cliche_area ?? 0) / 10000);
         
         // Итого себестоимость с формами, руб
         // итого стоимость без форм + стоимость комплекта печатных форм
-        $cost_with_cliche = null;
-        
-        if(!empty ($cost_no_cliche) && !empty($cliche_price)) {
-            $cost_with_cliche = $cost_no_cliche + $cliche_price;
-        }
+        $cost_with_cliche = ($cost_no_cliche ?? 0) + ($cliche_price ?? 0);
         
         // Итого себестоимость за 1 кг без форм, руб
         // итого себестоимость без форм / вес заказа
@@ -1141,7 +1133,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $cost_no_cliche_kg = 0;
         }
         else if(!empty ($cost_no_cliche)) {
-            $cost_no_cliche_kg = $cost_no_cliche / $quantity;
+            $cost_no_cliche_kg = ($cost_no_cliche ?? 0) / $quantity;
         }
         
         // Итого себестоимость за 1 кг с формами, руб
@@ -1152,7 +1144,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $cost_with_cliche_kg = 0;
         }
         else if(!empty ($cost_with_cliche)) {
-            $cost_with_cliche_kg = $cost_with_cliche / $quantity;
+            $cost_with_cliche_kg = ($cost_with_cliche ?? 0) / $quantity;
         }
         
         // Итого себестоимость за 1 шт без форм, руб
@@ -1163,7 +1155,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $cost_no_cliche_thing = 0;
         }
         else if(!empty ($cost_no_cliche)) {
-            $cost_no_cliche_thing = $cost_no_cliche / $quantity;
+            $cost_no_cliche_thing = ($cost_no_cliche ?? 0) / $quantity;
         }
         
         // Итого себестоимость за 1 шт с формами, руб
@@ -1174,7 +1166,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $cost_with_cliche_thing = 0;
         }
         else if(!empty ($cost_with_cliche)) {
-            $cost_with_cliche_thing = $cost_with_cliche / $quantity;
+            $cost_with_cliche_thing = ($cost_with_cliche ?? 0) / $quantity;
         }
         
         //***************************************************************************
