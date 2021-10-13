@@ -57,6 +57,11 @@ $laminator_machine_id = 5;
 
 // Обработка нажатия кнопки "Сохранить расчёт"
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
+    // Если тип работы "Пленка без печати", то обязательно требуем добавить хотя бы одну ламинацию
+    if(filter_input(INPUT_POST, 'work_type_id') == 1 && empty(filter_input(INPUT_POST, 'lamination1_brand_name'))) {
+        $error_message = "Если тип работы 'Пленка без печати', то выберите хотя бы одну ламинацию";
+    }
+    
     // Валидация
     if(empty(filter_input(INPUT_POST, "customer_id"))) {
         $customer_id_valid = ISINVALID;
