@@ -189,7 +189,6 @@ $num_for_customer = $row['num_for_customer'];
     </head>
     <body>
         <?php
-        include './right_panel.php';
         include '../include/header_zakaz.php';
         ?>
         <div id="calculation_cancel" class="modal fade show">
@@ -446,6 +445,7 @@ $num_for_customer = $row['num_for_customer'];
         </div>
         <?php
         include '../include/footer.php';
+        include './right_panel.php';
         ?>
         <script>
             // Показ расходов

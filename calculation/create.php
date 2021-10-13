@@ -1287,7 +1287,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 if($pure_weight_lam2 === null) $pure_weight_lam2 = "NULL";
                 if($dirty_weight_lam2 === null) $dirty_weight_lam2 = "NULL";
                 if($price_lam2_material === null) $price_lam2_material = "NULL";
-                if($price_lam2_glue === null) $price_lam1_glue = "NULL";
+                if($price_lam2_glue === null) $price_lam2_glue = "NULL";
                 if($price_lam2_work === null) $price_lam2_work = "NULL";
                 if($price_lam_total === null) $price_lam_total = "NULL";
                 if($pure_weight_total === null) $pure_weight_total = "NULL";
@@ -1689,7 +1689,6 @@ $colorfulnesses = array();
     </head>
     <body>
         <?php
-        include './right_panel.php';
         include '../include/header_zakaz.php';
         ?>
         <div class="container-fluid">
@@ -2643,6 +2642,7 @@ $colorfulnesses = array();
         </div>
         <?php
         include '../include/footer.php';
+        include './right_panel.php';
         ?>
         <script src="<?=APPLICATION ?>/js/select2.min.js"></script>
         <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
