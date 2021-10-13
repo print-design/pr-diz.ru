@@ -66,7 +66,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.brand_name, c.thickness, other_brand_name, other_price, other_thickness, other_weight, c.customers_material, "
         . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, c.lamination1_roller, c.lamination1_customers_material, "
         . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, c.lamination2_roller, c.lamination2_customers_material, "
-        . "c.width, c.length, c.stream_width, c.streams_count, c.machine_id, c.raport, c.paints_count, "
+        . "c.length, c.stream_width, c.streams_count, c.machine_id, c.raport, c.paints_count, "
         . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
         . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -122,7 +122,6 @@ $lamination2_other_thickness = $row['lamination2_other_thickness'];
 $lamination2_other_weight = $row['lamination2_other_weight'];
 $lamination2_roller = $row['lamination2_roller'];
 $lamination2_customers_material = $row['lamination2_customers_material'];
-$width = $row['width'];
 $length = $row['length'];
 $stream_width = $row['stream_width'];
 $streams_count = $row['streams_count'];
@@ -246,11 +245,6 @@ $num_for_customer = $row['num_for_customer'];
                             if(!empty($machine)):
                             ?>
                         <tr><th>Печатная машина</th><td><?=$machine.' ('.$colorfulness.' красок)' ?></td></tr>
-                            <?php
-                            endif;
-                            if(!empty($width)):
-                            ?>
-                        <tr><th>Обрезная ширина</th><td><?= rtrim(rtrim(number_format($width, 2, ",", " "), "0"), ",") ?></td></tr>
                             <?php
                             endif;
                             if(!empty($length)):

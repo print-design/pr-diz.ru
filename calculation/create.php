@@ -213,8 +213,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         $quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity'));
-        $width = filter_input(INPUT_POST, 'width');
-        if(empty($width)) $width = "NULL";
         $length = filter_input(INPUT_POST, 'length');
         if(empty($length)) $length = "NULL";
         $stream_width = filter_input(INPUT_POST, 'stream_width');
@@ -1243,7 +1241,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                     . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
                     . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_roller, lamination1_customers_material, "
                     . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_roller, lamination2_customers_material, "
-                    . "width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, extracharge, ski, no_ski, "
+                    . "quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, extracharge, ski, no_ski, "
                     . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
                     . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                     . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -1253,7 +1251,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                     . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, "
                     . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_other_brand_name', $lamination1_other_price, $lamination1_other_thickness, $lamination1_other_weight, $lamination1_roller, $lamination1_customers_material, "
                     . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_other_brand_name', $lamination2_other_price, $lamination2_other_thickness, $lamination2_other_weight, $lamination2_roller, $lamination2_customers_material, "
-                    . "$width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, $extracharge, $ski, $no_ski, "
+                    . "$quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, $extracharge, $ski, $no_ski, "
                     . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
                     . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                     . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
@@ -1359,7 +1357,7 @@ if(!empty($id)) {
             . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
             . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_roller, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_roller, lamination2_customers_material, "
-            . "quantity, width, streams_count, length, stream_width, raport, paints_count, status_id, extracharge, ski, no_ski, "
+            . "quantity, streams_count, length, stream_width, raport, paints_count, status_id, extracharge, ski, no_ski, "
             . "(select count(id) from techmap where calculation_id = $id) techmaps_count, "
             . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -1554,12 +1552,6 @@ if(null === $quantity) {
 }
 else {
     $quantity = preg_replace("/\D/", "", $quantity);
-}
-
-$width = filter_input(INPUT_POST, 'width');
-if(null === $width) {
-    if(isset($row['width'])) $width = $row['width'];
-    else $width = null;
 }
 
 $streams_count = filter_input(INPUT_POST, 'streams_count');
@@ -2341,50 +2333,14 @@ $colorfulnesses = array();
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <!-- Обрезная ширина -->
-                            <div class="col-6 lam-only no-print-only d-none">
-                                <div class="form-group">
-                                    <label for="width">Обрезная ширина</label>
-                                    <input type="text" 
-                                           id="width" 
-                                           name="width" 
-                                           class="form-control int-only lam-only no-print-only d-none" 
-                                           placeholder="Обрезная ширина, мм" 
-                                           value="<?=$width ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Обрезная ширина, мм')" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Обрезная ширина, мм')" 
-                                           onfocusout="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Обрезная ширина, мм')" />
-                                    <div class="invalid-feedback">Обрезная ширина обязательно</div>
-                                </div>
-                            </div>
-                            <!-- Длина от метки до метки -->
-                            <div class="col-6 print-only d-none">
-                                <div class="form-group">
-                                    <label for="length">Длина от метки до метки, мм</label>
-                                    <input type="text" 
-                                           id="length" 
-                                           name="length" 
-                                           class="form-control print-only d-none" 
-                                           placeholder="Длина от метки до метки, мм" 
-                                           value="<?= empty($length) ? "" : floatval($length) ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки, мм');" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки, мм');" 
-                                           onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки, мм');" />
-                                    <div class="invalid-feedback">Длина от метки до метки обязательно</div>
-                                </div>
-                            </div>
                             <!-- Ширина ручья -->
-                            <div class="col-6 print-only d-none">
+                            <div class="col-6 lam-only print-no-print d-none">
                                 <div class="form-group">
                                     <label for="stream_width">Ширина ручья, мм</label>
                                     <input type="text" 
                                            id="stream_width" 
                                            name="stream_width" 
-                                           class="form-control print-only d-none" 
+                                           class="form-control int-only lam-only print-no-print d-none" 
                                            placeholder="Ширина ручья, мм" 
                                            value="<?= empty($stream_width) ? "" : floatval($stream_width) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -2411,6 +2367,24 @@ $colorfulnesses = array();
                                            onkeyup="javascript: $(this).attr('id', 'streams_count'); $(this).attr('name', 'streams_count'); $(this).attr('placeholder', 'Количество ручьев');" 
                                            onfocusout="javascript: $(this).attr('id', 'streams_count'); $(this).attr('name', 'streams_count'); $(this).attr('placeholder', 'Количество ручьев');" />
                                     <div class="invalid-feedback">Количество ручьев обязательно</div>
+                                </div>
+                            </div>
+                            <!-- Длина от метки до метки -->
+                            <div class="col-6 print-only d-none">
+                                <div class="form-group">
+                                    <label for="length">Длина от метки до метки, мм</label>
+                                    <input type="text" 
+                                           id="length" 
+                                           name="length" 
+                                           class="form-control print-only d-none" 
+                                           placeholder="Длина от метки до метки, мм" 
+                                           value="<?= empty($length) ? "" : floatval($length) ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки, мм');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки, мм');" 
+                                           onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки, мм');" />
+                                    <div class="invalid-feedback">Длина от метки до метки обязательно</div>
                                 </div>
                             </div>
                             <!-- Рапорт -->
