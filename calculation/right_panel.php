@@ -1003,6 +1003,7 @@ elseif(!empty ($id) && !empty ($date)) {
             
             <!-------------------------------------------------------------------->
             
+            <?php if(!empty($lamination1_brand_name)): ?>
             <div class="font-weight-bold">Удельная стоимость клеевого раствора</div>
             <div>(стоимость клея * доля клея / (доля клея + доля растворителя)) </div>
             <div>+ (стоимость растворителя * доля раствора / (доля клея + доля растворителя))</div>
@@ -1044,6 +1045,7 @@ elseif(!empty ($id) && !empty ($date)) {
             <div>+ (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования</div>
             <div class="value mb-2"><?="$machine_prices[$laminator_machine_id] + ($pure_length_lam / 1000 / $machine_speeds[$laminator_machine_id]) * $machine_prices[$laminator_machine_id] = $price_lam1_work" ?></div>
             
+            <?php if(!empty($lamination2_brand_name)): ?>
             <div class="font-weight-bold">Вес материала ламинации 2 чистый</div>
             <div>площадь тиража чистая * удельный вес ламинации 1 / 1000</div>
             <div class="value mb-2"><?="$pure_area * $c_weight_lam2 / 1000 = $pure_weight_lam2" ?></div>
@@ -1079,10 +1081,12 @@ elseif(!empty ($id) && !empty ($date)) {
             <div>стоимость работы оборудования</div>
             <div>+ (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования</div>
             <div class="value mb-2"><?="$machine_prices[$laminator_machine_id] + ($pure_length_lam / 1000 / $machine_speeds[$laminator_machine_id]) * $machine_prices[$laminator_machine_id] = $price_lam2_work" ?></div>
+            <?php endif; ?>
             
             <div class="font-weight-bold">Итого себестоимость ламинации</div>
             <div>материал1 + материал2 + клей1 + клей2 + процесс1 + процесс2</div>
             <div class="value mb-2"><?=($price_lam1_material ?? 0)." + ".($price_lam2_material ?? 0)." + ".($price_lam1_glue ?? 0)." + ".($price_lam2_glue ?? 0)." + ".($price_lam1_work ?? 0)." + ".($price_lam2_work ?? 0)." = ".($price_lam_total ?? 0) ?></div>
+            <?php endif; ?>
             
             <!---------------------------------------------------------->
             
