@@ -1879,7 +1879,7 @@ $colorfulnesses = array();
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="other_price">Цена</label>
+                                    <label for="other_price">Цена, руб</label>
                                     <input type="text" 
                                            id="other_price" 
                                            name="other_price" 
@@ -1913,7 +1913,7 @@ $colorfulnesses = array();
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="other_weight">Удельный вес</label>
+                                    <label for="other_weight">Удельный вес, г/м<sup>2</sup></label>
                                     <input type="text" 
                                            id="other_weight" 
                                            name="other_weight" 
@@ -2031,7 +2031,7 @@ $colorfulnesses = array();
                                 </div>
                                 <div class="col-5">
                                     <div class="form-group">
-                                        <label for="lamination1_other_price">Цена</label>
+                                        <label for="lamination1_other_price">Цена, руб</label>
                                         <input type="text" 
                                                id="lamination1_other_price" 
                                                name="lamination1_other_price" 
@@ -2066,7 +2066,7 @@ $colorfulnesses = array();
                                 </div>
                                 <div class="col-5">
                                     <div class="form-group">
-                                        <label for="lamination1_other_weight">Удельный вес</label>
+                                        <label for="lamination1_other_weight">Удельный вес, г/м<sup>2</sup></label>
                                         <input type="text" 
                                                id="lamination1_other_weight" 
                                                name="lamination1_other_weight" 
@@ -2204,7 +2204,7 @@ $colorfulnesses = array();
                                     </div>
                                     <div class="col-5">
                                         <div class="form-group">
-                                            <label for="lamination2_other_price">Цена</label>
+                                            <label for="lamination2_other_price">Цена, руб</label>
                                             <input type="text" 
                                                    id="lamination2_other_price" 
                                                    name="lamination2_other_price" 
@@ -2239,7 +2239,7 @@ $colorfulnesses = array();
                                     </div>
                                     <div class="col-5">
                                         <div class="form-group">
-                                            <label for="lamination2_other_weight">Удельный вес</label>
+                                            <label for="lamination2_other_weight">Удельный вес, г/м<sup>2</sup></label>
                                             <input type="text" 
                                                    id="lamination2_other_weight" 
                                                    name="lamination2_other_weight" 
