@@ -918,7 +918,7 @@ elseif(!empty ($id) && !empty ($date)) {
             <div>3. Стоимость неразведённой краски (руб) = количество краски * стоимость краски за 1 кг</div>
             <div>4. Проверяем, чтобы эта цифра была не меньше минимальной стоимости</div>
             <div>5. Стоимость растворителя = количество краски * стоимость растворителя за 1 кг</div>
-            <div>ИТОГО: (стоимость краски * процент краски / 100) + (стоимость краски * (100 - процент краски) / 100)</div>
+            <div>ИТОГО: (стоимость краски * процент краски / 100) + (стоимость растворителя * (100 - процент краски) / 100)</div>
             <?php
             $paint_price = 0;
             
@@ -1015,7 +1015,7 @@ elseif(!empty ($id) && !empty ($date)) {
                     echo "<div class='value mb-2'>$paint_quantity * $solvent_price_final = $solvent_price_sum</div>";
                     
                     // Стоимость разведённой краски
-                    // (стоимость краски * процент краски / 100) + (стоимость краски * (100 - процент краски) / 100)
+                    // (стоимость краски * процент краски / 100) + (стоимость растворителя * (100 - процент краски) / 100)
                     $paint_solvent_price_sum = ($paint_price_sum * $paint_solvent_final / 100) + ($solvent_price_sum * (100 - $paint_solvent_final) / 100);
                     echo "<div class='value mb-2'>($paint_price_sum * $paint_solvent_final / 100) + ($solvent_price_sum * (100 - $paint_solvent_final) / 100) = $paint_solvent_price_sum</div>";
                     
