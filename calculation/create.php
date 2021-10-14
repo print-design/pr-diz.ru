@@ -707,7 +707,9 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         // Длина тиража чистая, м
         // площадь тиража чистая / ширина тиража обрезная
-        $pure_length = ($pure_area ?? 0) / ($pure_width ?? 0) * 1000;
+        if(!empty($pure_width)) {
+            $pure_length = ($pure_area ?? 0) / ($pure_width ?? 0) * 1000;
+        }
         
         // Длина тиража чистая с ламинацией, м
         // длина тиража чистая * (процент отходов для ламинатора + 100) / 100;
