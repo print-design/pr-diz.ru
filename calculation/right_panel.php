@@ -960,7 +960,7 @@ elseif(!empty ($id) && !empty ($date)) {
                                     $solvent_price_final = $paint_solvent;
                                     $paint_solvent_final = $paint_paint_solvent;
                                     break;
-                                case YELLOW;
+                                case YELLOW:
                                     $paint_expense_final = $paint_y_expense;
                                     $paint_price_final = $paint_y;
                                     $solvent_price_final = $paint_solvent;
