@@ -967,7 +967,7 @@ elseif(!empty ($id) && !empty ($date)) {
                                     $paint_solvent_final = $paint_paint_solvent;
                                     break;
                                 case KONTUR:
-                                    $paint_expense = $paint_k_expense;
+                                    $paint_expense_final = $paint_k_expense;
                                     $paint_price_final = $paint_k;
                                     $solvent_price_final = $paint_solvent;
                                     $paint_solvent_final = $paint_paint_solvent;
