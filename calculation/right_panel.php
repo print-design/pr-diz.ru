@@ -195,23 +195,23 @@ elseif(!empty ($id) && !empty ($date)) {
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $cliche_flint = $row['flint'];
-                
+            
             if($row['flint_currency'] == USD) {
                 $cliche_flint *= $usd;
             }
             else if($row['flint_currency'] == EURO) {
                 $cliche_flint *= $euro;
             }
-                
+            
             $cliche_kodak = $row['kodak'];
-                
+            
             if($row['kodak_currency'] == USD) {
                 $cliche_kodak *= $usd;
             }
             else if($row['kodak_currency'] == EURO) {
                 $cliche_kodak *= $euro;
             }
-                
+            
             $cliche_tver = $row['tver'];
             
             if($row['tver_currency'] == USD) {
@@ -220,7 +220,7 @@ elseif(!empty ($id) && !empty ($date)) {
             else if($row['tver_currency'] == EURO) {
                 $cliche_tver *= $euro;
             }
-                
+            
             $cliche_film = $row['film'];
                 
             if($row['film_currency'] == USD) {
@@ -229,12 +229,12 @@ elseif(!empty ($id) && !empty ($date)) {
             if($row['film_currency'] == EURO) {
                 $cliche_film *= $euro;
             }
-                
+            
             $cliche_tver_coeff = $row['tver_coeff'];
             $cliche_additional_size = $row['overmeasure'];
-                
+            
             $cliche_scotch = $row['scotch'];
-                
+            
             if($row['scotch_currency'] == USD) {
                 $cliche_scotch *= $usd;
             }
