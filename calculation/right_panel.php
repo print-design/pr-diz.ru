@@ -1032,7 +1032,7 @@ elseif(!empty ($id) && !empty ($date)) {
             <?php if(!empty($lamination1_brand_name)): ?>
             <div class="font-weight-bold">Удельная стоимость клеевого раствора</div>
             <div>(стоимость клея * доля клея / (доля клея + доля растворителя)) </div>
-            <div>+ (стоимость растворителя * доля раствора / (доля клея + доля растворителя))</div>
+            <div>+ (стоимость растворителя * доля растворителя / (доля клея + доля растворителя))</div>
             <div class="value mb-2"><?="($glue_price * $glue_glue_part / ($glue_glue_part + $glue_solvent_part)) + ($glue_solvent_price * $glue_solvent_part / ($glue_glue_part + $glue_solvent_part)) = $glue_solvent_g" ?></div>
             
             <div class="font-weight-bold">Вес материала ламинации 1 чистый</div>
