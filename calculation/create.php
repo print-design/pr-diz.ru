@@ -1146,7 +1146,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         //***************************************************************************
         
-        echo "<p>Площадь тиража чистая, м2: $pure_area</p>";
+        /*echo "<p>Площадь тиража чистая, м2: $pure_area</p>";
         echo "<p>Ширина тиража обрезная, мм: $pure_width</p>";
         echo "<p>Ширина тиража с отходами, мм: $dirty_width</p>";
         echo "<p>Длина тиража чистая, м: $pure_length</p>";
@@ -1197,11 +1197,11 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         echo "<p>Итого себестоимость материала за 1 кг без форм, руб: $cost_no_cliche_kg</p>";
         echo "<p>Итого себестоимость материала за 1 кг с формами, руб: $cost_with_cliche_kg</p>";
         echo "<p>Итого себестоимость материала за 1 шт без форм, руб: $cost_no_cliche_thing</p>";
-        echo "<p>Итого себестоимость материала за 1 шт с формами, руб: $cost_with_cliche_thing</p>";
+        echo "<p>Итого себестоимость материала за 1 шт с формами, руб: $cost_with_cliche_thing</p>";*/
         
         // *************************************
         // Сохранение в базу
-        /*if(empty($error_message)) {
+        if(empty($error_message)) {
             $sql = "insert into calculation (customer_id, name, work_type_id, unit, machine_id, "
                     . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
                     . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_roller, lamination1_customers_material, "
@@ -1288,7 +1288,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         if(empty($error_message)) {
             header('Location: '.APPLICATION.'/calculation/create.php?id='.$insert_id);
-        }*/
+        }
     }
 }
 
