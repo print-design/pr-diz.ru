@@ -616,7 +616,7 @@ elseif(!empty ($id) && !empty ($date)) {
                 </div>
                 <?php if($work_type_id == 2): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Стоимость 1 печатной формы Флинт</div>
+                    <div>Стоимость 1 новой формы Флинт</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cliche_flint_price, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
@@ -634,7 +634,7 @@ elseif(!empty ($id) && !empty ($date)) {
                 </div>
                 <?php if($work_type_id == 2): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Стоимость 1 печатной формы Кодак</div>
+                    <div>Стоимость 1 новой формы Кодак</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cliche_kodak_price, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
@@ -652,7 +652,7 @@ elseif(!empty ($id) && !empty ($date)) {
                 </div>
                 <?php if($work_type_id == 2): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Стоимость 1 печатной формы Тверь</div>
+                    <div>Стоимость 1 новой формы Тверь</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cliche_tver_price, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
@@ -895,15 +895,18 @@ elseif(!empty ($id) && !empty ($date)) {
                 $paint_var = "paint_$i";
                 $cliche_var = "form_$i";
                 if(!empty($$paint_var)) {
-                    if($$cliche_var == 'flint') {
+                    if($$cliche_var == 'old') {
+                        echo "<div class='value mb-2'>$cliche_price + 0 = ".$cliche_price."</div>";
+                    }
+                    elseif($$cliche_var == 'flint') {
                         echo "<div class='value mb-2'>$cliche_price + $cliche_flint_price = ".($cliche_price + $cliche_flint_price)."</div>";
                         $cliche_price += $cliche_flint_price;
                     }
-                    else if($$cliche_var == 'kodak') {
+                    elseif($$cliche_var == 'kodak') {
                         echo "<div class='value mb-2'>$cliche_price + $cliche_kodak_price = ".($cliche_price + $cliche_kodak_price)."</div>";
                         $cliche_price += $cliche_kodak_price;
                     }
-                    else if($$cliche_var == 'tver') {
+                    elseif($$cliche_var == 'tver') {
                         echo "<div class='value mb-2'>$cliche_price + $cliche_tver_price = ".($cliche_price + $cliche_tver_price)."</div>";
                         $cliche_price += $cliche_tver_price;
                     }

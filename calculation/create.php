@@ -835,37 +835,38 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $cliche_area = (($cliche_additional_size ?? 0) * 2 + ($dirty_width ?? 0) / 1000 * 100) * (($cliche_additional_size ?? 0) * 2 + $raport / 10);
         }
         
-        // Стоимость 1 печатной формы Флинт, руб
+        // Стоимость 1 новой формы Флинт, руб
         // площадь печатной формы * стоимость 1 см2 формы
         $cliche_flint_price = ($cliche_area ?? 0) * ($cliche_flint ?? 0);
         
-        // Стоимость 1 печатной формы Кодак, руб
+        // Стоимость 1 новой формы Кодак, руб
         // площадь печатной формы * стоимость 1 см2 формы 
         $cliche_kodak_price = ($cliche_area ?? 0) * ($cliche_kodak ?? 0);
         
-        // Стоимость 1 печатной формы Тверь, руб
+        // Стоимость 1 новой формы Тверь, руб
         // площадь печатной формы * (стоимость 1 см2 формы + стоимость 1 см2 плёнок * коэфф. удорожания для тверских форм)
         $cliche_tver_price = ($cliche_area ?? 0) * (($cliche_tver ?? 0) + ($cliche_film ?? 0) * ($cliche_tver_coeff ?? 0));
         
         // Стоимость комплекта печатных форм
         // сумма стоимости форм для каждой краски
-        $cliche_price = null;
+        $cliche_price = 0;
         
         if(!empty($cliche_flint_price) && !empty($cliche_kodak_price) && !empty($cliche_tver_price)) {
-            $cliche_price = 0;
-            
             // Перебираем все используемые краски
             for($i=1; $i<=8; $i++) {
                 $paint_var = "paint_$i";
                 $cliche_var = "cliche_$i";
                 if(!empty($$paint_var)) {        
-                    if($$cliche_var == 'flint') {
+                    if($$cliche_var == 'old') {
+                        $cliche_price += 0;
+                    }
+                    elseif($$cliche_var == 'flint') {
                         $cliche_price += $cliche_flint_price;
                     }
-                    else if($$cliche_var == 'kodak') {
+                    elseif($$cliche_var == 'kodak') {
                         $cliche_price += $cliche_kodak_price;
                     }
-                    else if($$cliche_var == 'tver') {
+                    elseif($$cliche_var == 'tver') {
                         $cliche_price += $cliche_tver_price;
                     }
                 }
@@ -1157,9 +1158,9 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         echo "<p>Стоимость печати, руб: $print_price</p>";
         echo "<hr />";
         echo "<p>Площадь печатной формы, см2: $cliche_area</p>";
-        echo "<p>Стоимость 1 печатной формы Флинт, руб: $cliche_flint_price</p>";
-        echo "<p>Стоимость 1 печатной формы Кодак, руб: $cliche_kodak_price</p>";
-        echo "<p>Стоимость 1 печатной формы Тверь, руб: $cliche_tver_price</p>";
+        echo "<p>Стоимость 1 новой формы Флинт, руб: $cliche_flint_price</p>";
+        echo "<p>Стоимость 1 новой формы Кодак, руб: $cliche_kodak_price</p>";
+        echo "<p>Стоимость 1 новой формы Тверь, руб: $cliche_tver_price</p>";
         echo "<p>Стоимость комплекта печатных форм, руб: $cliche_price</p>";
         echo "<hr />";
         echo "<p>Стоимость краски + лака + растворителя, руб: $paint_price</p>";
@@ -1879,7 +1880,7 @@ $colorfulnesses = array();
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="other_price">Цена, руб</label>
+                                    <label for="other_price">Цена за 1 кг, руб</label>
                                     <input type="text" 
                                            id="other_price" 
                                            name="other_price" 
@@ -2031,7 +2032,7 @@ $colorfulnesses = array();
                                 </div>
                                 <div class="col-5">
                                     <div class="form-group">
-                                        <label for="lamination1_other_price">Цена, руб</label>
+                                        <label for="lamination1_other_price">Цена за 1 кг, руб</label>
                                         <input type="text" 
                                                id="lamination1_other_price" 
                                                name="lamination1_other_price" 
@@ -2204,7 +2205,7 @@ $colorfulnesses = array();
                                     </div>
                                     <div class="col-5">
                                         <div class="form-group">
-                                            <label for="lamination2_other_price">Цена, руб</label>
+                                            <label for="lamination2_other_price">Цена за 1 кг, руб</label>
                                             <input type="text" 
                                                    id="lamination2_other_price" 
                                                    name="lamination2_other_price" 
@@ -2556,6 +2557,7 @@ $colorfulnesses = array();
                                     <label for="form_<?=$i ?>">Форма</label>
                                     <select id="form_<?=$i ?>" name="form_<?=$i ?>" class="form-control form">
                                         <?php
+                                        $old_selected = "";
                                         $flint_selected = "";
                                         $kodak_selected = "";
                                         $tver_selected = "";
@@ -2564,9 +2566,10 @@ $colorfulnesses = array();
                                         $form_selected_var = $$form_var."_selected";
                                         $$form_selected_var = " selected='selected'";
                                         ?>
-                                        <option value="flint"<?=$flint_selected ?>>Флинт</option>
-                                        <option value="kodak"<?=$kodak_selected ?>>Кодак</option>
-                                        <option value="tver"<?=$tver_selected ?>>Тверь</option>
+                                        <option value="old"<?=$old_selected ?>>Старая</option>
+                                        <option value="flint"<?=$flint_selected ?>>Новая Флинт</option>
+                                        <option value="kodak"<?=$kodak_selected ?>>Новая Кодак</option>
+                                        <option value="tver"<?=$tver_selected ?>>Новая Тверь</option>
                                     </select>
                                 </div>
                             </div>
