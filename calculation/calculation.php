@@ -247,7 +247,7 @@ $num_for_customer = $row['num_for_customer'];
                         <tr><th>Печатная машина</th><td><?=$machine.' ('.$colorfulness.' красок)' ?></td></tr>
                             <?php
                             endif;
-                            if(!empty($length)):
+                            if($length !== null):
                             ?>
                         <tr><th>Длина от метки до метки</th><td><?= rtrim(rtrim(number_format($length, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                             <?php

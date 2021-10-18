@@ -214,7 +214,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         $quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity'));
         $length = filter_input(INPUT_POST, 'length');
-        if(empty($length)) $length = "NULL";
+        if($length === null) $length = "NULL";
         $stream_width = filter_input(INPUT_POST, 'stream_width');
         if(empty($stream_width)) $stream_width = "NULL";
         $streams_count = filter_input(INPUT_POST, 'streams_count');
@@ -2339,7 +2339,7 @@ $colorfulnesses = array();
                                            name="length" 
                                            class="form-control int-only print-only d-none" 
                                            placeholder="Длина от метки до метки, мм" 
-                                           value="<?= empty($length) ? "" : floatval($length) ?>" 
+                                           value="<?= $length === null ? "" : floatval($length) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки, мм');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
