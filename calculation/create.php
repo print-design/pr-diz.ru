@@ -2337,7 +2337,7 @@ $colorfulnesses = array();
                                     <input type="text" 
                                            id="length" 
                                            name="length" 
-                                           class="form-control print-only d-none" 
+                                           class="form-control int-only print-only d-none" 
                                            placeholder="Длина от метки до метки, мм" 
                                            value="<?= empty($length) ? "" : floatval($length) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -3056,17 +3056,6 @@ $colorfulnesses = array();
             
             $('input.panton').change(function(){
                 ChangeLimitIntValue($(this), 99999);
-            });
-            
-            // Ограничение значения поля "Длина от метки до метки" до 3 цифр
-            $('input#length').keydown(function(e) {
-                if(!KeyDownLimitIntValue($(e.target), e, 999)) {
-                    return false;
-                }
-            });
-            
-            $('input#length').change(function(){
-                ChangeLimitIntValue($(this), 999);
             });
             
             // Ограничение значения поля "Ширина ручья" до 4 цифр
