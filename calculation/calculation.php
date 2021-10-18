@@ -413,14 +413,17 @@ $num_for_customer = $row['num_for_customer'];
                                         <td>
                                             <?php
                                             switch ($$form_var) {
+                                                case "old":
+                                                    echo 'Старая';
+                                                    break;
                                                 case "flint":
-                                                    echo 'Флинт';
+                                                    echo 'Новая Флинт';
                                                     break;
                                                 case "kodak":
-                                                    echo "Кодак";
+                                                    echo "Новая Кодак";
                                                     break;
                                                 case "tver":
-                                                    echo "Тверь";
+                                                    echo "Новая Тверь";
                                                     break;
                                                 default:
                                                     echo $$form_var;
