@@ -923,12 +923,14 @@ elseif(!empty ($id) && !empty ($date)) {
             
             <div class="font-weight-bold">Стоимость краски + лака + растворителя</div>
             <div>Для каждой краски:</div>
-            <div>1. Площадь запечатки (м2) = площадь тиража с отходами * процент краски / 100</div>
-            <div>2. Количество краски (кг) = площадь запечатки * расход краски / 1000</div>
-            <div>3. Стоимость неразведённой краски (руб) = количество краски * стоимость краски за 1 кг</div>
-            <div>4. Проверяем, чтобы эта цифра была не меньше минимальной стоимости</div>
-            <div>5. Стоимость растворителя = количество краски * стоимость растворителя за 1 кг</div>
-            <div>ИТОГО: (стоимость краски * процент краски / 100) + (стоимость растворителя * (100 - процент краски) / 100)</div>
+            <div>1) Площадь запечатки (м2) = площадь тиража с отходами * процент краски / 100</div>
+            <div>2) Количество краски (кг) = площадь запечатки * расход краски / 1000</div>
+            <div>3) Стоимость краски (неразведённой, руб) = количество краски * стоимость краски за 1 кг</div>
+            <div>(Проверяем, чтобы эта цифра была не меньше минимальной стоимости.)</div>
+            <di>Если меньше, то вместо неё ставим минимальную.)</di>
+            <div>4) Стоимость растворителя = количество краски * стоимость растворителя за 1 кг</div>
+            <div>5) Стоимость разведённой краски =</div>
+            <div>(стоимость краски * процент краски / 100) + (стоимость растворителя * (100 - процент краски) / 100)</div>
             <?php
             $paint_price = 0;
             
@@ -941,7 +943,7 @@ elseif(!empty ($id) && !empty ($date)) {
                     // Площадь запечатки, м2
                     // площадь тиража с отходами * процент краски / 100
                     $paint_area = $dirty_area * $$percent_var / 100;
-                    echo "<div class='value mb-2'>$dirty_area * ".$$percent_var." / 100 = $paint_area</div>";
+                    echo "<div class='value mb-2'>1) $dirty_area * ".$$percent_var." / 100 = $paint_area</div>";
                     
                     // Расход краски, г/м2
                     $paint_expense_final = 0;
@@ -1007,12 +1009,12 @@ elseif(!empty ($id) && !empty ($date)) {
                     // Количество краски, кг
                     // площадь запечатки * расход краски / 1000
                     $paint_quantity = $paint_area * $paint_expense_final / 1000;
-                    echo "<div class='value mb-2'>$paint_area * $paint_expense_final / 1000 = $paint_quantity</div>";
+                    echo "<div class='value mb-2'>2) $paint_area * $paint_expense_final / 1000 = $paint_quantity</div>";
                     
                     // Стоимость неразведённой краски, руб
                     // количество краски * стоимость краски за 1 кг
                     $paint_price_sum = $paint_quantity * $paint_price_final;
-                    echo "<div class='value mb-2'>$paint_quantity * $paint_price_final = $paint_price_sum</div>";
+                    echo "<div class='value mb-2'>3) $paint_quantity * $paint_price_final = $paint_price_sum</div>";
                     
                     // Проверяем, чтобы стоимость была не меньше минимальной стоимости
                     if($paint_price_sum < $paint_min_price) {
@@ -1022,12 +1024,12 @@ elseif(!empty ($id) && !empty ($date)) {
                     // Стоимость растворителя
                     // количество краски * стоимость растворителя за 1 кг
                     $solvent_price_sum = $paint_quantity * $solvent_price_final;
-                    echo "<div class='value mb-2'>$paint_quantity * $solvent_price_final = $solvent_price_sum</div>";
+                    echo "<div class='value mb-2'>4) $paint_quantity * $solvent_price_final = $solvent_price_sum</div>";
                     
                     // Стоимость разведённой краски
                     // (стоимость краски * процент краски / 100) + (стоимость растворителя * (100 - процент краски) / 100)
                     $paint_solvent_price_sum = ($paint_price_sum * $paint_solvent_final / 100) + ($solvent_price_sum * (100 - $paint_solvent_final) / 100);
-                    echo "<div class='value mb-2'>($paint_price_sum * $paint_solvent_final / 100) + ($solvent_price_sum * (100 - $paint_solvent_final) / 100) = $paint_solvent_price_sum</div>";
+                    echo "<div class='value mb-2'>5) ($paint_price_sum * $paint_solvent_final / 100) + ($solvent_price_sum * (100 - $paint_solvent_final) / 100) = $paint_solvent_price_sum</div>";
                     
                     echo "<div class='value mb-2'>$paint_solvent_price_sum + $paint_price = ".($paint_solvent_price_sum + $paint_price)."</div><div>---</div>";
                     $paint_price += $paint_solvent_price_sum;
