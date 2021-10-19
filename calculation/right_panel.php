@@ -688,8 +688,8 @@ elseif(!empty ($id) && !empty ($date)) {
                 </div>
                 <?php if($work_type_id == 2): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Стоимость краски + лака + растворителя</div>
-                    <div class="value"><?=rtrim(rtrim(number_format($paint_price, 3, ",", " "), "0"), ",") ?> руб</div>
+                    <div>Стоимость скотча для наклейки форм</div>
+                    <div class="value"><?=rtrim(rtrim(number_format((($cliche_scotch ?? 0) * ($paints_count ?? 0) * ($cliche_area ?? 0) / 10000), 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
                 <?php if(!empty($lamination2_brand_name)): ?>
@@ -702,7 +702,10 @@ elseif(!empty ($id) && !empty ($date)) {
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;"></div>
                 <?php if($work_type_id == 2): ?>
-                <div class="d-table-cell pb-1"></div>
+                <div class="d-table-cell pb-1">
+                    <div>Стоимость краски + лака + растворителя</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($paint_price, 3, ",", " "), "0"), ",") ?> руб</div>
+                </div>
                 <?php endif; ?>
                 <?php if(!empty($lamination1_brand_name)): ?>
                 <div class="d-table-cell pb-1">
@@ -913,6 +916,10 @@ elseif(!empty ($id) && !empty ($date)) {
                 }
             }
             ?>
+            
+            <div class="font-weight-bold">Стоимость скотча для наклейки форм</div>
+            <div>стоимость скотча для наклейки форм * число красок * площадь печатной формы / 10000</div>
+            <div class="value mb-2"><?=($cliche_scotch ?? 0)." * ".($paints_count ?? 0)." * ".($cliche_area ?? 0)." / 10000 = ".(($cliche_scotch ?? 0) * ($paints_count ?? 0) * ($cliche_area ?? 0) / 10000) ?></div>
             
             <div class="font-weight-bold">Стоимость краски + лака + растворителя</div>
             <div>Для каждой краски:</div>
