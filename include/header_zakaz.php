@@ -38,10 +38,22 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
         $customer_extension = filter_input(INPUT_POST, 'customer_extension');
         $customer_email = filter_input(INPUT_POST, 'customer_email');
         
-        $sql = "insert into customer (name, person, phone, extension, email) values ('$customer_name', '$customer_person', '$customer_phone', '$customer_extension', '$customer_email')";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
-        $customer_id = $executer->insert_id;
+        $customer_id = null;
+        
+        // Если такой заказчик уже есть, просто получаем его ID
+        $sql = "select id from customer where name = '$customer_name' limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $customer_id = $row[0];
+        }
+        
+        // Если такого заказчика нет, создаём его
+        if(empty($customer_id)) {
+            $sql = "insert into customer (name, person, phone, extension, email) values ('$customer_name', '$customer_person', '$customer_phone', '$customer_extension', '$customer_email')";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+            $customer_id = $executer->insert_id;
+        }
     }
 }
 
