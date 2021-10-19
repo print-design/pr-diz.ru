@@ -476,40 +476,33 @@ elseif(!empty ($id) && !empty ($date)) {
 <div id="calculation"<?=$calculation_class ?> style="position: absolute; top: 0px; bottom: auto;">
     <h1>Расчет</h1>
     <form method="post">
-        <div class="d-table w-100">
-            <div class="d-table-row">
-                <div class="d-table-cell" style="width: 60%;">
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
-                                <div class="text-nowrap" style="font-size: x-small;">Наценка</div>
-                                <?php if($status_id == 1 || $status_id == 2): ?>
-                                <div class="input-group">
-                                    <input type="text" id="extracharge" name="extracharge" data-id="<?=$id ?>" style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" value="<?=$extracharge ?>" required="required" />
-                                    <div class="input-group-append" style="height: 28px;">
-                                        <span class="input-group-text">%</span>
-                                    </div>
-                                </div>
-                                <?php else: ?>
-                                <span class="text-nowrap"><?=$extracharge ?>%</span>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="p-2" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 60px; width: 100px;">
-                                <div class="text-nowrap" style="font-size: x-small;">Курс евро</div>
-                                <?=number_format($euro, 2, ',', ' ') ?>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="p-2" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 60px; width: 100px;">
-                                <div class="text-nowrap" style="font-size: x-small;">Курс доллара</div>
-                                <?=number_format($usd, 2, ',', ' ') ?>
-                            </div>
+        <div class="row">
+            <div class="col-3">
+                <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
+                    <div class="text-nowrap" style="font-size: x-small;">Наценка</div>
+                    <?php if($status_id == 1 || $status_id == 2): ?>
+                    <div class="input-group">
+                        <input type="text" id="extracharge" name="extracharge" data-id="<?=$id ?>" style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" value="<?=$extracharge ?>" required="required" />
+                        <div class="input-group-append" style="height: 28px;">
+                            <span class="input-group-text">%</span>
                         </div>
                     </div>
+                    <?php else: ?>
+                    <span class="text-nowrap"><?=$extracharge ?>%</span>
+                    <?php endif; ?>
                 </div>
-                <div class="table-cell"></div>
+            </div>
+            <div class="col-3">
+                <div class="p-2" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 60px; width: 100px;">
+                    <div class="text-nowrap" style="font-size: x-small;">Курс евро</div>
+                    <?=number_format($euro, 2, ',', ' ') ?>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="p-2" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 60px; width: 100px;">
+                    <div class="text-nowrap" style="font-size: x-small;">Курс доллара</div>
+                    <?=number_format($usd, 2, ',', ' ') ?>
+                </div>
             </div>
         </div>
         <div class="mt-3">
