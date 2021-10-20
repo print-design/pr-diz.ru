@@ -87,9 +87,28 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     $raport = $row['raport'];
     $paints_count = $row['paints_count'];
     
+    // Формы
     $new_forms_count = 0;
     $new_forms_vendor = "";
     $new_forms_vendor_id = 0;
+    
+    // Краски
+    $procentc = 0;
+    $procentm = 0;
+    $procenty = 0;
+    $procentk = 0;
+    $procentk2 = 0;
+    $procentbel = 0;
+    $procentbel2 = 0;
+    $procentp1 = 0;
+    $procentp2 = 0;
+    $procentp3 = 0;
+    $procentp4 = 0;
+    $procentp5 = 0;
+    $procentp6 = 0;
+    $procentp7 = 0;
+    $procentp8 = 0;
+    $procentlak = 0;
     
     for($i=1; $i<=$paints_count; $i++) {
         $paint_var = "paint_$i";
@@ -126,6 +145,68 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
                     $new_forms_vendor_id = 1;
                     break;
             }
+        }
+        
+        switch($$paint_var) {
+            case "cmyk":
+                if($$cmyk_var == "cyan" && empty($procentc)) {
+                    $procentc = $$percent_var;
+                }
+                elseif($$cmyk_var == "magenta" && empty ($procentm)) {
+                    $procentm = $$percent_var;
+                }
+                elseif($$cmyk_var == "yellow" && empty ($procenty)) {
+                    $procenty = $$percent_var;
+                }
+                elseif($$cmyk_var == "kontur" && empty ($procentk)) {
+                    $procentk = $$percent_var;
+                }
+                elseif($$cmyk_var == "kontur" && empty ($procentk2)) {
+                    $procentk2 = $$percent_var;
+                }
+                break;
+            
+            case "panton":
+                if(empty($procentp1)) {
+                    $procentp1 = $$percent_var;
+                }
+                elseif(empty ($procentp2)) {
+                    $procentp2 = $$percent_var;
+                }
+                elseif(empty ($procentp3)) {
+                    $procentp3 = $$percent_var;
+                }
+                elseif(empty ($procentp4)) {
+                    $procentp4 = $$percent_var;
+                }
+                elseif(empty ($procentp5)) {
+                    $procentp5 = $$percent_var;
+                }
+                elseif(empty ($procentp6)) {
+                    $procentp6 = $$percent_var;
+                }
+                elseif(empty($procentp7)) {
+                    $procentp7 = $$percent_var;
+                }
+                elseif(empty ($procentp8)) {
+                    $procentp8 = $$percent_var;
+                }
+                break;
+            
+            case "white":
+                if(empty($procentbel)) {
+                    $procentbel = $$percent_var;
+                }
+                elseif(empty ($procentbel2)) {
+                    $procentbel2 = $$percent_var;
+                }
+                break;
+            
+            case "lacquer":
+                if(empty($procentlak)) {
+                    $procentlak = $$percent_var;
+                }
+                break;
         }
     }
     
@@ -282,19 +363,19 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     echo mb_convert_encoding("Изготовителя новых форм (номер):$new_forms_vendor_id;\n", "cp1251");
     echo mb_convert_encoding("Печать с лыжами :$with_ski;\n", "cp1251");
     echo mb_convert_encoding("Ширина лыж,м :      $ski;\n", "cp1251");
-    echo mb_convert_encoding("Расход краски, ProcentC :      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Расход краски, ProcentM :      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Расход краски, ProcentY :      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Расход краски, ProcentK :     30.00;\n", "cp1251");
-    echo mb_convert_encoding("Расход краски, ProcentBel :     30.00;\n", "cp1251");
-    echo mb_convert_encoding("Расход краски, ProcentP1 :      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Расход краски, ProcentP2 :      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Расход краски, ProcentP3 :      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Расход краски, ProcentP4 :      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Расход краски, ProcentP5 :      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Расход краски, ProcentP6 :      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Расход краски, ProcentP7 :      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Расход краски, ProcentP8 :      0.00;\n", "cp1251");
+    echo mb_convert_encoding("Расход краски, ProcentC :      $procentc;\n", "cp1251");
+    echo mb_convert_encoding("Расход краски, ProcentM :      $procentm;\n", "cp1251");
+    echo mb_convert_encoding("Расход краски, ProcentY :      $procenty;\n", "cp1251");
+    echo mb_convert_encoding("Расход краски, ProcentK :     $procentk;\n", "cp1251");
+    echo mb_convert_encoding("Расход краски, ProcentBel :     $procentbel;\n", "cp1251");
+    echo mb_convert_encoding("Расход краски, ProcentP1 :      $procentp1;\n", "cp1251");
+    echo mb_convert_encoding("Расход краски, ProcentP2 :      $procentp2;\n", "cp1251");
+    echo mb_convert_encoding("Расход краски, ProcentP3 :      $procentp3;\n", "cp1251");
+    echo mb_convert_encoding("Расход краски, ProcentP4 :      $procentp4;\n", "cp1251");
+    echo mb_convert_encoding("Расход краски, ProcentP5 :      $procentp5;\n", "cp1251");
+    echo mb_convert_encoding("Расход краски, ProcentP6 :      $procentp6;\n", "cp1251");
+    echo mb_convert_encoding("Расход краски, ProcentP7 :      $procentp7;\n", "cp1251");
+    echo mb_convert_encoding("Расход краски, ProcentP8 :      $procentp8;\n", "cp1251");
     echo mb_convert_encoding("Площадь тиража чистая,м2 : 21978.022;\n", "cp1251");
     echo mb_convert_encoding("Ширина тиража обрезная,мм :   720.000;\n", "cp1251");
     echo mb_convert_encoding("Ширина тиража с отходами,мм :   740.000;\n", "cp1251");
@@ -350,11 +431,11 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     echo mb_convert_encoding("Итого, себестоимость за 1кг с формами, руб :    305.51;\n", "cp1251");
     echo mb_convert_encoding("Итого, себестоимость за 1шт без форм, руб :      0.00;\n", "cp1251");
     echo mb_convert_encoding("Итого, себестоимость за 1шт с формами, руб :      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Расход лака, ProcentLak :      0.00;\n", "cp1251");
+    echo mb_convert_encoding("Расход лака, ProcentLak :      $procentlak;\n", "cp1251");
     echo mb_convert_encoding("Расход клея при 1 ламинации, гр на м2:      0.00;\n", "cp1251");
     echo mb_convert_encoding("Расход клея при 2 ламинации, гр на м2:      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Расход краски, ProcentBel2 :      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Расход краски, ProcentK2 :      0.00;\n", "cp1251");
+    echo mb_convert_encoding("Расход краски, ProcentBel2 :      $procentbel2;\n", "cp1251");
+    echo mb_convert_encoding("Расход краски, ProcentK2 :      $procentk2;\n", "cp1251");
     
     die();
 }
