@@ -72,7 +72,7 @@ include 'left_bar.php';
             
             if(IsInRole(array('technologist', 'dev', 'manager'))):
             ?>
-            <li class="nav-item">
+            <li class="nav-item d-none">
                 <a class="nav-link<?=$rational_cut_status ?> text-nowrap" href="<?=APPLICATION ?>/rational_cut">Рациональный раскрой</a>
             </li>
             <?php
