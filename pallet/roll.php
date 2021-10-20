@@ -78,14 +78,27 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
             $error_message = $executer->error;
         
             if(empty($error_message)) {
+                // Если статус не изменился, то перенаправляем на ту же страницу.
+                // Если изменился, то на первую страницу нового раздела
+                $querystring = "";
+                
+                if(isset($status_id)) {
+                    if($status_id == $row['status_id']) {
+                        $querystring = BuildQueryRemove('id');
+                    }
+                    else {
+                        $querystring = BuildQueryAddRemove('page', 1, 'id');
+                    }
+                }
+            
                 if(isset($status_id) && $status_id == $utilized_status_id) {
-                    header('Location: '.APPLICATION.'/utilized/');
+                    header('Location: '.APPLICATION.'/utilized/'.BuildQueryRemove('id'));
                 }
                 elseif(isset($status_id) && $status_id == $cut_status_id) {
-                    header('Location: '.APPLICATION.'/cut_source/');
+                    header('Location: '.APPLICATION.'/cut_source/'.BuildQueryRemove('id'));
                 }
                 else {
-                    header('Location: '.APPLICATION.'/pallet/');
+                    header('Location: '.APPLICATION.'/pallet/'.BuildQueryRemove('id'));
                 }
             }
         }
