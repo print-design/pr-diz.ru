@@ -4,20 +4,7 @@ include '../include/topscripts.php';
 if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $file_name = "calculation_$id.txm";
-    $now = gmdate("D, d M Y H:i:s");
-    
-    header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
-    header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
-    header("Last-Modified: {$now} GMT");
-
-    // force download
-    header("Content-Type: application/force-download");
-    header("Content-Type: application/octet-stream");
-    header("Content-Type: application/download");
-
-    // disposition / encoding on response body
-    header("Content-Disposition: attachment;filename={$file_name}");
-    header("Content-Transfer-Encoding: binary");
+    DownloadSendHeaders($file_name);
     
     echo mb_convert_encoding("НАИМЕНОВАНИЕ ЗАКАЗА :пипетка;\n", "cp1251");
     echo mb_convert_encoding("ЗАКАЗЧИК :амт Трейд;\n", "cp1251");
