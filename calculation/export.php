@@ -334,6 +334,90 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
         $with_ski = 1;
     }
     
+    // Результаты расчёта
+    $pure_area = null;    $pure_width = null;    $pure_length = null;
+    $pure_length_lam = null;    $dirty_length = null;    $dirty_width = null;
+    $dirty_area = null;    $pure_weight = null;    $dirty_weight = null;
+    $material_price = null;    $print_time = null;    $tuning_time = null;
+    $print_tuning_time = null;    $print_price = null;    $cliche_area = null;
+    $cliche_flint_price = null;    $cliche_kodak_price = null;    $cliche_tver_price = null;
+    $cliche_price = null;    $paint_price = null;    $pure_weight_lam1 = null;
+    $dirty_weight_lam1 = null;    $price_lam1_material = null;    $price_lam1_glue = null;
+    $price_lam1_work = null;    $pure_weight_lam2 = null;    $dirty_weight_lam2 = null;
+    $price_lam2_material = null;    $price_lam2_glue = null;    $price_lam2_work = null;
+    $price_lam_total = null;    $pure_weight_total = null;    $dirty_weight_total = null;
+    $cost_no_cliche = null;    $cost_with_cliche = null;    $cost_no_cliche_kg = null;
+    $cost_with_cliche_kg = null;    $cost_no_cliche_thing = null;    $cost_with_cliche_thing = null;
+
+    $sql = "select pure_area, pure_width, pure_length, pure_length_lam, "
+            . "dirty_length, dirty_width, dirty_area, pure_weight, dirty_weight, material_price, print_time, tuning_time, "
+            . "print_tuning_time, print_price, cliche_area, cliche_flint_price, cliche_kodak_price, cliche_tver_price, "
+            . "cliche_price, paint_price, pure_weight_lam1, dirty_weight_lam1, "
+            . "price_lam1_material, price_lam1_glue, price_lam1_work, pure_weight_lam2, dirty_weight_lam2, price_lam2_material, "
+            . "price_lam2_glue, price_lam2_work, price_lam_total, pure_weight_total, dirty_weight_total, cost_no_cliche, "
+            . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_thing, cost_with_cliche_thing"
+            . " from calculation_result where calculation_id = $id";
+    $fetcher = new Fetcher($sql);
+
+    if($row = $fetcher->Fetch()) {
+        $pure_area = $row['pure_area'];
+        $pure_width = $row['pure_width'];
+        $pure_length = $row['pure_length'];
+        $pure_length_lam = $row['pure_length_lam'];
+        $dirty_length = $row['dirty_length'];
+        $dirty_width = $row['dirty_width'];
+        $dirty_area = $row['dirty_area'];
+        $pure_weight = $row['pure_weight'];
+        $dirty_weight = $row['dirty_weight'];
+        $material_price = $row['material_price'];
+        $print_time = $row['print_time'];
+        $tuning_time = $row['tuning_time'];
+        $print_tuning_time = $row['print_tuning_time'];
+        $print_price = $row['print_price'];
+        $cliche_area = $row['cliche_area'];
+        $cliche_flint_price = $row['cliche_flint_price'];
+        $cliche_kodak_price = $row['cliche_kodak_price'];
+        $cliche_tver_price = $row['cliche_tver_price'];
+        $cliche_price = $row['cliche_price'];
+        $paint_price = $row['paint_price'];
+        $pure_weight_lam1 = $row['pure_weight_lam1'];
+        $dirty_weight_lam1 = $row['dirty_weight_lam1'];
+        $price_lam1_material = $row['price_lam1_material'];
+        $price_lam1_glue = $row['price_lam1_glue'];
+        $price_lam1_work = $row['price_lam1_work'];
+        $pure_weight_lam2 = $row['pure_weight_lam2'];
+        $dirty_weight_lam2 = $row['dirty_weight_lam2'];
+        $price_lam2_material = $row['price_lam2_material'];
+        $price_lam2_glue = $row['price_lam2_glue'];
+        $price_lam2_work = $row['price_lam2_work'];
+        $price_lam_total = $row['price_lam_total'];
+        $pure_weight_total = $row['pure_weight_total'];
+        $dirty_weight_total = $row['dirty_weight_total'];
+        $cost_no_cliche = $row['cost_no_cliche'];
+        $cost_with_cliche = $row['cost_with_cliche'];
+        $cost_no_cliche_kg = $row['cost_no_cliche_kg'];
+        $cost_with_cliche_kg = $row['cost_with_cliche_kg'];
+        $cost_no_cliche_thing = $row['cost_no_cliche_thing'];
+        $cost_with_cliche_thing = $row['cost_with_cliche_thing'];
+    }
+    
+    // Стоимость новой формы
+    $new_cliche_price = 0;
+    
+    switch($new_forms_vendor_id) {
+        case 1:
+            $new_cliche_price = $cliche_tver_price;
+            break;
+        
+        case 2:
+            $new_cliche_price = $cliche_flint_price;
+            break;
+        
+        case 3:
+            $new_cliche_price = $cliche_kodak_price;
+            break;
+    }
+    
     // Помещаем данные в файл
     echo mb_convert_encoding("НАИМЕНОВАНИЕ ЗАКАЗА :$name;\n", "cp1251");
     echo mb_convert_encoding("ЗАКАЗЧИК :$customer;\n", "cp1251");
@@ -376,25 +460,25 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     echo mb_convert_encoding("Расход краски, ProcentP6 :      $procentp6;\n", "cp1251");
     echo mb_convert_encoding("Расход краски, ProcentP7 :      $procentp7;\n", "cp1251");
     echo mb_convert_encoding("Расход краски, ProcentP8 :      $procentp8;\n", "cp1251");
-    echo mb_convert_encoding("Площадь тиража чистая,м2 : 21978.022;\n", "cp1251");
-    echo mb_convert_encoding("Ширина тиража обрезная,мм :   720.000;\n", "cp1251");
-    echo mb_convert_encoding("Ширина тиража с отходами,мм :   740.000;\n", "cp1251");
-    echo mb_convert_encoding("Длина тиража чистая,м : 30525.031;\n", "cp1251");
-    echo mb_convert_encoding("Длина тиража с отходами,м : 32040.781;\n", "cp1251");
-    echo mb_convert_encoding("Площадь тиража с отходами,м2 : 23710.178;\n", "cp1251");
-    echo mb_convert_encoding("Вес материала печати чистый,кг :   500.000;\n", "cp1251");
-    echo mb_convert_encoding("Вес материала печати с отходами,кг :   539.407;\n", "cp1251");
-    echo mb_convert_encoding("Вес материала готовой продукции чистый,кг :   500.000;\n", "cp1251");
-    echo mb_convert_encoding("Вес материала готовой продукции с отходами,кг :   539.407;\n", "cp1251");
-    echo mb_convert_encoding("Стоимость материала печати,руб:135930.450;\n", "cp1251");
-    echo mb_convert_encoding("Время печати тиража без приладки,ч:       3.1;\n", "cp1251");
-    echo mb_convert_encoding("Время приладки,ч :       1.3;\n", "cp1251");
-    echo mb_convert_encoding("Время печати с приладкой,ч :       4.4;\n", "cp1251");
-    echo mb_convert_encoding("Стоимость печати,руб :   6140.17;\n", "cp1251");
-    echo mb_convert_encoding("Площадь печатной формы,см2 :   3344.00;\n", "cp1251");
-    echo mb_convert_encoding("Стоимость 1 печатной формы,руб :   5294.89;\n", "cp1251");
-    echo mb_convert_encoding("Стоимость комплекта печатной формы,руб :      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Стоимость всех красок + лак + растворитель,руб:   9461.75;\n", "cp1251");
+    echo mb_convert_encoding("Площадь тиража чистая,м2 : $pure_area;\n", "cp1251");
+    echo mb_convert_encoding("Ширина тиража обрезная,мм :   $pure_width;\n", "cp1251");
+    echo mb_convert_encoding("Ширина тиража с отходами,мм :   $dirty_width;\n", "cp1251");
+    echo mb_convert_encoding("Длина тиража чистая,м : $pure_length;\n", "cp1251");
+    echo mb_convert_encoding("Длина тиража с отходами,м : $dirty_length;\n", "cp1251");
+    echo mb_convert_encoding("Площадь тиража с отходами,м2 : $dirty_area;\n", "cp1251");
+    echo mb_convert_encoding("Вес материала печати чистый,кг :   $pure_weight;\n", "cp1251");
+    echo mb_convert_encoding("Вес материала печати с отходами,кг :   $dirty_weight;\n", "cp1251");
+    echo mb_convert_encoding("Вес материала готовой продукции чистый,кг :   $pure_weight_total;\n", "cp1251");
+    echo mb_convert_encoding("Вес материала готовой продукции с отходами,кг :   $dirty_weight_total;\n", "cp1251");
+    echo mb_convert_encoding("Стоимость материала печати,руб:$material_price;\n", "cp1251");
+    echo mb_convert_encoding("Время печати тиража без приладки,ч:       $print_time;\n", "cp1251");
+    echo mb_convert_encoding("Время приладки,ч :       $tuning_time;\n", "cp1251");
+    echo mb_convert_encoding("Время печати с приладкой,ч :       $print_tuning_time;\n", "cp1251");
+    echo mb_convert_encoding("Стоимость печати,руб :   $print_price;\n", "cp1251");
+    echo mb_convert_encoding("Площадь печатной формы,см2 :   $cliche_area;\n", "cp1251");
+    echo mb_convert_encoding("Стоимость 1 печатной формы,руб :   $new_cliche_price;\n", "cp1251");
+    echo mb_convert_encoding("Стоимость комплекта печатной формы,руб :      $cliche_price;\n", "cp1251");
+    echo mb_convert_encoding("Стоимость всех красок + лак + растворитель,руб:   $paint_price;\n", "cp1251");
     echo mb_convert_encoding("Количество ламинаций:0;\n", "cp1251");
     echo mb_convert_encoding("ИТОГО, себестоимость без печатных форм,руб : 152754.27;\n", "cp1251");
     echo mb_convert_encoding("ИТОГО, себестоимость с печатными формами,руб : 152754.27;\n", "cp1251");
@@ -412,25 +496,25 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     echo mb_convert_encoding("Ширина материала второй ламинации,мм:    740.00;\n", "cp1251");
     echo mb_convert_encoding("Ширина вала второй ламинации,мм:      0.00;\n", "cp1251");
     echo mb_convert_encoding("Цена материала за 1 кг второй ламинации,руб:      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Вес материала первой ламинации чистый,кг:     0.000;\n", "cp1251");
-    echo mb_convert_encoding("Вес материала первой ламинации с отходами,кг:     0.000;\n", "cp1251");
-    echo mb_convert_encoding("Стоимость материала первой ламинации,руб:      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Стоимость клеевого раствора первой ламинации,руб:      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Стоимость процесса первой ламинации,руб:      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Вес материала второй ламинации чистый,кг:     0.000;\n", "cp1251");
-    echo mb_convert_encoding("Вес материала второй ламинации с отходами,кг:     0.000;\n", "cp1251");
-    echo mb_convert_encoding("Стоимость материала второй ламинации,руб:      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Стоимость клеевого раствора второй ламинации,руб:      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Стоимость процесса второй ламинации,руб:      0.00;\n", "cp1251");
-    echo mb_convert_encoding("ИТОГО себестоимость ламинации,руб:      0.00;\n", "cp1251");
-    echo mb_convert_encoding("ИТОГО, себестоимость без печатных форм,руб : 152754.27;\n", "cp1251");
-    echo mb_convert_encoding("ИТОГО, себестоимость с печатными формами,руб : 152754.27;\n", "cp1251");
+    echo mb_convert_encoding("Вес материала первой ламинации чистый,кг:     $pure_weight_lam1;\n", "cp1251");
+    echo mb_convert_encoding("Вес материала первой ламинации с отходами,кг:     $dirty_weight_lam1;\n", "cp1251");
+    echo mb_convert_encoding("Стоимость материала первой ламинации,руб:      $price_lam1_material;\n", "cp1251");
+    echo mb_convert_encoding("Стоимость клеевого раствора первой ламинации,руб:      $price_lam1_glue;\n", "cp1251");
+    echo mb_convert_encoding("Стоимость процесса первой ламинации,руб:      $price_lam1_work;\n", "cp1251");
+    echo mb_convert_encoding("Вес материала второй ламинации чистый,кг:     $pure_weight_lam2;\n", "cp1251");
+    echo mb_convert_encoding("Вес материала второй ламинации с отходами,кг:     $dirty_weight_lam2;\n", "cp1251");
+    echo mb_convert_encoding("Стоимость материала второй ламинации,руб:      $price_lam2_material;\n", "cp1251");
+    echo mb_convert_encoding("Стоимость клеевого раствора второй ламинации,руб:      $price_lam2_glue;\n", "cp1251");
+    echo mb_convert_encoding("Стоимость процесса второй ламинации,руб:      $price_lam2_work;\n", "cp1251");
+    echo mb_convert_encoding("ИТОГО себестоимость ламинации,руб:      $price_lam_total;\n", "cp1251");
+    echo mb_convert_encoding("ИТОГО, себестоимость без печатных форм,руб : $cost_no_cliche;\n", "cp1251");
+    echo mb_convert_encoding("ИТОГО, себестоимость с печатными формами,руб : $cost_with_cliche;\n", "cp1251");
     echo mb_convert_encoding("Номер вала первой ламинации:1;\n", "cp1251");
     echo mb_convert_encoding("Номер вала второй ламинации:3;\n", "cp1251");
-    echo mb_convert_encoding("Итого, себестоимость за 1кг без форм, руб :    305.51;\n", "cp1251");
-    echo mb_convert_encoding("Итого, себестоимость за 1кг с формами, руб :    305.51;\n", "cp1251");
-    echo mb_convert_encoding("Итого, себестоимость за 1шт без форм, руб :      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Итого, себестоимость за 1шт с формами, руб :      0.00;\n", "cp1251");
+    echo mb_convert_encoding("Итого, себестоимость за 1кг без форм, руб :    $cost_no_cliche_kg;\n", "cp1251");
+    echo mb_convert_encoding("Итого, себестоимость за 1кг с формами, руб :    $cost_with_cliche_kg;\n", "cp1251");
+    echo mb_convert_encoding("Итого, себестоимость за 1шт без форм, руб :      $cost_no_cliche_thing;\n", "cp1251");
+    echo mb_convert_encoding("Итого, себестоимость за 1шт с формами, руб :      $cost_with_cliche_thing;\n", "cp1251");
     echo mb_convert_encoding("Расход лака, ProcentLak :      $procentlak;\n", "cp1251");
     echo mb_convert_encoding("Расход клея при 1 ламинации, гр на м2:      0.00;\n", "cp1251");
     echo mb_convert_encoding("Расход клея при 2 ламинации, гр на м2:      0.00;\n", "cp1251");
