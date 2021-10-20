@@ -504,8 +504,9 @@ elseif(!empty ($id) && !empty ($date)) {
             </div>
         </div>
         <div class="col-3 text-right">
-            <form method="post">
-                <button type="submit" class="btn btn-dark">Экспорт</button>
+            <form method="post" action="<?=APPLICATION ?>/calculation/export.php">
+                <input type="hidden" id="id" name="id" value="<?=$id ?>" />
+                <button type="submit" class="btn btn-dark" id="export_calculation_submit" name="export_calculation_submit">Экспорт</button>
             </form>
         </div>
     </div>
