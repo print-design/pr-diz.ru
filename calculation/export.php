@@ -6,9 +6,117 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     $file_name = "calculation_$id.txm";
     DownloadSendHeaders($file_name);
     
-    echo mb_convert_encoding("НАИМЕНОВАНИЕ ЗАКАЗА :пипетка;\n", "cp1251");
-    echo mb_convert_encoding("ЗАКАЗЧИК :амт Трейд;\n", "cp1251");
-    echo mb_convert_encoding("МЕНЕДЖЕР :Вера Шеховцова;\n", "cp1251");
+    $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c.unit, "
+            . "c.brand_name, c.thickness, other_brand_name, other_price, other_thickness, other_weight, c.customers_material, "
+            . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, c.lamination1_roller, c.lamination1_customers_material, "
+            . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, c.lamination2_roller, c.lamination2_customers_material, "
+            . "c.length, c.stream_width, c.streams_count, c.machine_id, c.raport, c.paints_count, "
+            . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
+            . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
+            . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
+            . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
+            . "c.form_1, c.form_2, c.form_3, form_4, form_5, form_6, form_7, form_8, "
+            . "c.status_id, c.extracharge, c.ski, c.no_ski, "
+            . "cs.name status, cs.colour, cs.colour2, cs.image, "
+            . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
+            . "wt.name work_type, "
+            . "mt.name machine, mt.colorfulness, "
+            . "u.last_name, u.first_name, "
+            . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) weight, "
+            . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
+            . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_weight "
+            . "from calculation c "
+            . "left join calculation_status cs on c.status_id = cs.id "
+            . "left join customer cu on c.customer_id = cu.id "
+            . "left join work_type wt on c.work_type_id = wt.id "
+            . "left join machine mt on c.machine_id = mt.id "
+            . "left join user u on c.manager_id = u.id "
+            . "where c.id=$id";
+    $row = (new Fetcher($sql))->Fetch();
+    
+    $date = $row['date'];
+    $customer_id = $row['customer_id'];
+    $name = $row['name'];
+    $work_type_id = $row['work_type_id'];
+    $quantity = $row['quantity'];
+    $unit = $row['unit'];
+    $brand_name = $row['brand_name'];
+    $thickness = $row['thickness'];
+    $weight = $row['weight'];
+    $other_brand_name = $row['other_brand_name'];
+    $other_price = $row['other_price'];
+    $other_thickness = $row['other_thickness'];
+    $other_weight = $row['other_weight'];
+    $customers_material = $row['customers_material'];
+    $lamination1_brand_name = $row['lamination1_brand_name'];
+    $lamination1_thickness = $row['lamination1_thickness'];
+    $lamination1_weight = $row['lamination1_weight'];
+    $lamination1_other_brand_name = $row['lamination1_other_brand_name'];
+    $lamination1_other_price = $row['lamination1_other_price'];
+    $lamination1_other_thickness = $row['lamination1_other_thickness'];
+    $lamination1_other_weight = $row['lamination1_other_weight'];
+    $lamination1_roller = $row['lamination1_roller'];
+    $lamination1_customers_material = $row['lamination1_customers_material'];
+    $lamination2_brand_name = $row['lamination2_brand_name'];
+    $lamination2_thickness = $row['lamination2_thickness'];
+    $lamination2_weight = $row['lamination2_weight'];
+    $lamination2_other_brand_name = $row['lamination2_other_brand_name'];
+    $lamination2_other_price = $row['lamination2_other_price'];
+    $lamination2_other_thickness = $row['lamination2_other_thickness'];
+    $lamination2_other_weight = $row['lamination2_other_weight'];
+    $lamination2_roller = $row['lamination2_roller'];
+    $lamination2_customers_material = $row['lamination2_customers_material'];
+    $length = $row['length'];
+    $stream_width = $row['stream_width'];
+    $streams_count = $row['streams_count'];
+    $machine_id = $row['machine_id'];
+    $raport = $row['raport'];
+    $paints_count = $row['paints_count'];
+    
+    for($i=1; $i<=$paints_count; $i++) {
+        $paint_var = "paint_$i";
+        $$paint_var = $row[$paint_var];
+        
+        $color_var = "color_$i";
+        $$color_var = $row[$color_var];
+        
+        $cmyk_var = "cmyk_$i";
+        $$cmyk_var = $row[$cmyk_var];
+        
+        $percent_var = "percent_$i";
+        $$percent_var = $row[$percent_var];
+        
+        $form_var = "form_$i";
+        $$form_var = $row[$form_var];
+    }
+    
+    $status_id = $row['status_id'];
+    $extracharge = $row['extracharge'];
+    $ski = $row['ski'];
+    $no_ski = $row['no_ski'];
+    
+    $status = $row['status'];
+    $colour = $row['colour'];
+    $colour2 = $row['colour2'];
+    $image = $row['image'];
+    
+    $customer = $row['customer'];
+    $customer_phone = $row['customer_phone'];
+    $customer_extension = $row['customer_extension'];
+    $customer_email = $row['customer_email'];
+    $customer_person = $row['customer_person'];
+    
+    $work_type = $row['work_type'];
+    
+    $machine = $row['machine'];
+    $colorfulness = $row['colorfulness'];
+    $last_name = $row['last_name'];
+    $first_name = $row['first_name'];
+    
+    // Помещаем данные в файл
+    echo mb_convert_encoding("НАИМЕНОВАНИЕ ЗАКАЗА :$name;\n", "cp1251");
+    echo mb_convert_encoding("ЗАКАЗЧИК :$customer;\n", "cp1251");
+    echo mb_convert_encoding("МЕНЕДЖЕР :$last_name $first_name;\n", "cp1251");
     echo mb_convert_encoding("РАЗМЕР ЭТИКЕТКИ :;\n", "cp1251");
     echo mb_convert_encoding("ДАТА :18.10.21;\n", "cp1251");
     echo mb_convert_encoding("ПЕЧАТЬ ЕСТЬ/НЕТ:1;\n", "cp1251");
