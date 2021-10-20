@@ -144,16 +144,12 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
     }
     
     $comment = addslashes(filter_input(INPUT_POST, 'comment'));
-    $is_unknown = 0;
-    if(filter_input(INPUT_POST, 'is_unknown') == 'on') {
-        $is_unknown = 1;
-    }
     $date = filter_input(INPUT_POST, 'date');
     $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id');
     
     if($form_valid) {
-        $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, is_unknown, storekeeper_id) "
-                . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', $is_unknown, '$storekeeper_id')";
+        $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id) "
+                . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$storekeeper_id')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $roll_id = $executer->insert_id;
@@ -357,16 +353,6 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                         <label for="comment">Комментарий</label>
                         <textarea id="comment" name="comment" rows="4" class="form-control no-latin"><?= htmlentities(filter_input(INPUT_POST, 'comment')) ?></textarea>
                         <div class="invalid-feedback"></div>
-                    </div>
-                    <?php
-                    $is_unknown_checked = '';
-                    if(filter_input(INPUT_POST, 'is_unknown') == 'on') {
-                        $is_unknown_checked = " checked='checked'";
-                    }
-                    ?>
-                    <div class="form-group d-none">
-                        <input type="checkbox" id="is_unknown" name="is_unknown"<?=$is_unknown_checked ?> />
-                        <label class="form-check-label" for="is_unknown">Неизвестный новый рулон</label>
                     </div>
                     <div class="d-flex justify-content-start mt-4">
                         <div class="p-0">
