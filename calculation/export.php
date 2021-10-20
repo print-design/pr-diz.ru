@@ -87,6 +87,10 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     $raport = $row['raport'];
     $paints_count = $row['paints_count'];
     
+    $new_forms_count = 0;
+    $new_forms_vendor = "";
+    $new_forms_vendor_id = 0;
+    
     for($i=1; $i<=$paints_count; $i++) {
         $paint_var = "paint_$i";
         $$paint_var = $row[$paint_var];
@@ -102,6 +106,27 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
         
         $form_var = "form_$i";
         $$form_var = $row[$form_var];
+        
+        if(!empty($$form_var) && $$form_var != "old") {
+            $new_forms_count++;
+            
+            switch ($$form_var) {
+                case "flint":
+                    $new_forms_vendor = "Москва Флинт";
+                    $new_forms_vendor_id = 2;
+                    break;
+                
+                case "kodak":
+                    $new_forms_vendor = "Москва Кодак";
+                    $new_forms_vendor_id = 3;
+                    break;
+                
+                case "tver":
+                    $new_forms_vendor = "Тверь (наши)";
+                    $new_forms_vendor_id = 1;
+                    break;
+            }
+        }
     }
     
     $status_id = $row['status_id'];
@@ -221,6 +246,13 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
         $error_message = "Не заданы курсы валют";
     }
     
+    // Печать с лыжами
+    $with_ski = 0;
+    
+    if(!$no_ski) {
+        $with_ski = 1;
+    }
+    
     // Помещаем данные в файл
     echo mb_convert_encoding("НАИМЕНОВАНИЕ ЗАКАЗА :$name;\n", "cp1251");
     echo mb_convert_encoding("ЗАКАЗЧИК :$customer;\n", "cp1251");
@@ -244,12 +276,12 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     echo mb_convert_encoding("Удельный вес бумаги,грамм/м2 :     $weight_final;\n", "cp1251");
     echo mb_convert_encoding("Цена материала за 1 кг,руб :    $price_final;\n", "cp1251");
     echo mb_convert_encoding("Средний курс рубля за 1 евро :     $euro;\n", "cp1251");
-    echo mb_convert_encoding("Число красок :         2;\n", "cp1251");
-    echo mb_convert_encoding("Число новых форм :         0;\n", "cp1251");
-    echo mb_convert_encoding("Название изготовителя новых форм :Москва Флинт;\n", "cp1251");
-    echo mb_convert_encoding("Изготовителя новых форм (номер):2;\n", "cp1251");
-    echo mb_convert_encoding("Печать с лыжами :1;\n", "cp1251");
-    echo mb_convert_encoding("Ширина лыж,м :      0.02;\n", "cp1251");
+    echo mb_convert_encoding("Число красок :         $paints_count;\n", "cp1251");
+    echo mb_convert_encoding("Число новых форм :         $new_forms_count;\n", "cp1251");
+    echo mb_convert_encoding("Название изготовителя новых форм :$new_forms_vendor;\n", "cp1251");
+    echo mb_convert_encoding("Изготовителя новых форм (номер):$new_forms_vendor_id;\n", "cp1251");
+    echo mb_convert_encoding("Печать с лыжами :$with_ski;\n", "cp1251");
+    echo mb_convert_encoding("Ширина лыж,м :      $ski;\n", "cp1251");
     echo mb_convert_encoding("Расход краски, ProcentC :      0.00;\n", "cp1251");
     echo mb_convert_encoding("Расход краски, ProcentM :      0.00;\n", "cp1251");
     echo mb_convert_encoding("Расход краски, ProcentY :      0.00;\n", "cp1251");
