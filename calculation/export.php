@@ -1,6 +1,20 @@
 <?php
 include '../include/topscripts.php';
 
+// Валюты
+const USD = "usd";
+const EURO = "euro";
+
+// Краски
+const CMYK = "cmyk";
+const CYAN = "cyan";
+const MAGENTA = "magenta";
+const YELLOW = "yellow";
+const KONTUR = "kontur";
+const PANTON = "panton";
+const WHITE = "white";
+const LACQUER = "lacquer";
+
 if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $file_name = "calculation_$id.txm";
@@ -20,7 +34,7 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
             . "cs.name status, cs.colour, cs.colour2, cs.image, "
             . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
             . "wt.name work_type, "
-            . "mt.name machine, mt.colorfulness, "
+            . "mt.shortname machine, mt.colorfulness, "
             . "u.last_name, u.first_name, "
             . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) weight, "
             . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
@@ -109,9 +123,103 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     $work_type = $row['work_type'];
     
     $machine = $row['machine'];
+    $machine_full = "";
+    $machine_number = 0;
+    
+    switch ($machine) {
+        case "zbs1":
+            $machine_full = "ZBS1/6color";
+            $machine_number = 1;
+            break;
+        
+        case "zbs2":
+            $machine_full = "ZBS2/6color";
+            $machine_number = 2;
+            break;
+        
+        case "zbs3":
+            $machine_full = "ZBS3/8color";
+            $machine_number = 3;
+            break;
+        
+        case "comiflex":
+            $machine_full = "Comiflex";
+            $machine_number = 4;
+            break;
+    }
+    
+    $quantity_type = 0;
+    $order_weight = 0;
+    $order_number = 0;
+    
+    if($unit == "kg") {
+        $quantity_type = 1;
+        $order_weight = $quantity;
+    }
+    else {
+        $quantity_type = 2;
+        $order_number = $quantity;
+    }
+    
     $colorfulness = $row['colorfulness'];
     $last_name = $row['last_name'];
     $first_name = $row['first_name'];
+    
+    // Толщина материала
+    $thickness_final = 0;
+    
+    if(!empty($thickness)) {
+        $thickness_final = $thickness;
+    }
+    elseif(!empty ($other_thickness)) {
+        $thickness_final = $other_thickness;
+    }
+    
+    // Вес материала
+    $weight_final = 0;
+    
+    if(!empty($weight)) {
+        $weight_final = $weight;
+    }
+    elseif(!empty ($other_weight)) {
+        $weight_final = $other_weight;
+    }
+    
+    // Цена материала
+    $price_final = 0;
+    
+    if(!empty($other_price)) {
+        $price_final = $other_price;
+    }
+    elseif(!empty ($brand_name) && !empty ($thickness)) {
+        $sql = "select price, currency from film_price where brand_name = '$brand_name' and thickness = $thickness and date <= '$date' order by date desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $price_final = $row['price'];
+                    
+            if($row['currency'] == USD) {
+                $price_final *= $usd;
+            }
+            elseif($row['currency'] == EURO) {
+                $price_final *= $euro;
+            }
+        }
+    }
+    
+    // Курс доллара и евро
+    $euro = 0;
+    $usd = 0;
+        
+    $sql = "select euro, usd from currency where date <= '$date' order by date desc limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $euro = $row['euro'];
+        $usd = $row['usd'];
+    }
+            
+    if(empty($euro) || empty($usd)) {
+        $error_message = "Не заданы курсы валют";
+    }
     
     // Помещаем данные в файл
     echo mb_convert_encoding("НАИМЕНОВАНИЕ ЗАКАЗА :$name;\n", "cp1251");
@@ -119,23 +227,23 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     echo mb_convert_encoding("МЕНЕДЖЕР :$last_name $first_name;\n", "cp1251");
     echo mb_convert_encoding("РАЗМЕР ЭТИКЕТКИ :;\n", "cp1251");
     echo mb_convert_encoding("ДАТА :18.10.21;\n", "cp1251");
-    echo mb_convert_encoding("ПЕЧАТЬ ЕСТЬ/НЕТ:1;\n", "cp1251");
-    echo mb_convert_encoding("ТИП ФЛЕКСМАШИНЫ :Comiflex;\n", "cp1251");
-    echo mb_convert_encoding("ТИП ФЛЕКСМАШИНЫ НОМЕР:4;\n", "cp1251");
-    echo mb_convert_encoding("Вес заказа,кг :    500.00;\n", "cp1251");
-    echo mb_convert_encoding("Количество этикеток в заказе,шт :         0;\n", "cp1251");
-    echo mb_convert_encoding("ТИП ЗАКАЗА вес/количество:1;\n", "cp1251");
-    echo mb_convert_encoding("Количество ручьев,шт :         3;\n", "cp1251");
+    echo mb_convert_encoding("ПЕЧАТЬ ЕСТЬ/НЕТ:".(empty($machine_id) ? 0 : 1).";\n", "cp1251");
+    echo mb_convert_encoding("ТИП ФЛЕКСМАШИНЫ :$machine_full;\n", "cp1251");
+    echo mb_convert_encoding("ТИП ФЛЕКСМАШИНЫ НОМЕР:$machine_number;\n", "cp1251");
+    echo mb_convert_encoding("Вес заказа,кг :    $order_weight;\n", "cp1251");
+    echo mb_convert_encoding("Количество этикеток в заказе,шт :         $order_number;\n", "cp1251");
+    echo mb_convert_encoding("ТИП ЗАКАЗА вес/количество:$quantity_type;\n", "cp1251");
+    echo mb_convert_encoding("Количество ручьев,шт :         $streams_count;\n", "cp1251");
     echo mb_convert_encoding("Количество зтикеток в одном ручье на рапорте,шт :         0;\n", "cp1251");
-    echo mb_convert_encoding("Ширина ручья,мм :    240.00;\n", "cp1251");
-    echo mb_convert_encoding("Длина этикетки вдоль рапорта вала,мм :      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Рапорт вала,мм :   420.000;\n", "cp1251");
-    echo mb_convert_encoding("Название типа материала :БОПП прозрачный;\n", "cp1251");
-    echo mb_convert_encoding("Тип материала (номер):1;\n", "cp1251");
-    echo mb_convert_encoding("Толщина материала,мкм :     25.00;\n", "cp1251");
-    echo mb_convert_encoding("Удельный вес бумаги,грамм/м2 :     22.75;\n", "cp1251");
-    echo mb_convert_encoding("Цена материала за 1 кг,руб :    252.00;\n", "cp1251");
-    echo mb_convert_encoding("Средний курс рубля за 1 евро :     87.00;\n", "cp1251");
+    echo mb_convert_encoding("Ширина ручья,мм :    $stream_width;\n", "cp1251");
+    echo mb_convert_encoding("Длина этикетки вдоль рапорта вала,мм :      $length;\n", "cp1251");
+    echo mb_convert_encoding("Рапорт вала,мм :   $raport;\n", "cp1251");
+    echo mb_convert_encoding("Название типа материала :Другие материалы;\n", "cp1251");
+    echo mb_convert_encoding("Тип материала (номер):9;\n", "cp1251");
+    echo mb_convert_encoding("Толщина материала,мкм :     $thickness_final;\n", "cp1251");
+    echo mb_convert_encoding("Удельный вес бумаги,грамм/м2 :     $weight_final;\n", "cp1251");
+    echo mb_convert_encoding("Цена материала за 1 кг,руб :    $price_final;\n", "cp1251");
+    echo mb_convert_encoding("Средний курс рубля за 1 евро :     $euro;\n", "cp1251");
     echo mb_convert_encoding("Число красок :         2;\n", "cp1251");
     echo mb_convert_encoding("Число новых форм :         0;\n", "cp1251");
     echo mb_convert_encoding("Название изготовителя новых форм :Москва Флинт;\n", "cp1251");
