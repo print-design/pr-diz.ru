@@ -229,14 +229,27 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
         
         if(empty($error_message)) {
+            // Если статус не изменился, то перенаправляем на ту же страницу.
+            // Если изменился, то на первую страницу нового раздела
+            $querystring = "";
+                
+            if(isset($status_id)) {
+                if($status_id == $row['status_id']) {
+                    $querystring = BuildQueryRemove('id');
+                }
+                else {
+                    $querystring = BuildQueryAddRemove('page', 1, 'id');
+                }
+            }
+                
             if(isset($status_id) && $status_id == $utilized_status_id) {
-                header('Location: '.APPLICATION.'/utilized/');
+                header('Location: '.APPLICATION.'/utilized/'.$querystring);
             }
             elseif(isset($status_id) && $status_id == $cut_status_id) {
-                header('Location: '.APPLICATION.'/cut_source/');
+                header('Location: '.APPLICATION.'/cut_source/'.$querystring);
             }
             else {
-                header('Location: '.APPLICATION.'/roll/');
+                header('Location: '.APPLICATION.'/roll/'.$querystring);
             }
         }
     }
