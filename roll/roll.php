@@ -229,7 +229,6 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
         
         if(empty($error_message)) {
-                
             if($row['status_id'] == $utilized_status_id) {
                 header('Location: '.APPLICATION.'/utilized/'. BuildQueryRemove('id'));
             }
