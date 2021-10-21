@@ -281,6 +281,26 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
         $thickness_final = $other_thickness;
     }
     
+    // Толщина материала 1 ламинации
+    $lamination1_thickness_final = 0;
+    
+    if(!empty($lamination1_thickness)) {
+        $lamination1_thickness_final = $lamination1_thickness;
+    }
+    elseif(!empty ($lamination1_other_thickness)) {
+        $lamination1_thickness_final = $lamination1_other_thickness;
+    }
+    
+    // Толщина материала 2 ламинации
+    $lamination2_thickness_final = 0;
+    
+    if(!empty($lamination2_thickness)) {
+        $lamination2_thickness_final = $lamination2_thickness;
+    }
+    elseif(!empty ($lamination2_other_thickness)) {
+        $lamination2_thickness_final = $lamination2_other_thickness;
+    }
+    
     // Вес материала
     $weight_final = 0;
     
@@ -289,6 +309,26 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     }
     elseif(!empty ($other_weight)) {
         $weight_final = $other_weight;
+    }
+    
+    // Вес материала 1 ламинации
+    $lamination1_weight_final = 0;
+    
+    if(!empty($lamination1_weight)) {
+        $lamination1_weight_final = $lamination1_weight;
+    }
+    elseif(!empty ($lamination1_other_weight)) {
+        $lamination1_weight_final = $lamination1_other_weight;
+    }
+    
+    // Вес материала 2 ламинации
+    $lamination2_weight_final = 0;
+    
+    if(!empty($lamination2_weight)) {
+        $lamination2_weight_final = $lamination2_weight;
+    }
+    elseif(!empty ($lamination2_other_weight)) {
+        $lamination2_weight_final = $lamination2_other_weight;
     }
     
     // Цена материала
@@ -308,6 +348,48 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
             }
             elseif($row['currency'] == EURO) {
                 $price_final *= $euro;
+            }
+        }
+    }
+    
+    // Цена материала 1 ламинации
+    $lamination1_price_final = 0;
+    
+    if(!empty($lamination1_other_price)) {
+        $lamination1_price_final = $lamination1_other_price;
+    }
+    elseif(!empty ($lamination1_brand_name) && !empty ($lamination1_thickness)) {
+        $sql = "select price, currency from film_price where brand_name = '$lamination1_brand_name' and thickness = $lamination1_thickness and date <= '$date' order by date desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $lamination1_price_final = $row['price'];
+                    
+            if($row['currency'] == USD) {
+                $lamination1_price_final *= $usd;
+            }
+            elseif($row['currency'] == EURO) {
+                $lamination1_price_final *= $euro;
+            }
+        }
+    }
+    
+    // Цена материала 2 ламинации
+    $lamination2_price_final = 0;
+    
+    if(!empty($lamination2_other_price)) {
+        $lamination2_price_final = $lamination2_other_price;
+    }
+    elseif(!empty ($lamination2_brand_name) && !empty ($lamination2_thickness)) {
+        $sql = "select price, currency from film_price where brand_name = '$lamination2_brand_name' and thickness = $lamination2_thickness and date <= '$date' order by date desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $lamination2_price_final = $row['price'];
+                    
+            if($row['currency'] == USD) {
+                $lamination2_price_final *= $usd;
+            }
+            elseif($row['currency'] == EURO) {
+                $lamination2_price_final *= $euro;
             }
         }
     }
@@ -418,12 +500,23 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
             break;
     }
     
+    // Количество ламинаций
+    $laminations_count = 0;
+    
+    if(!empty($lamination1_brand_name)) {
+        $laminations_count = 1;
+    }
+    
+    if(!empty($lamination2_brand_name)) {
+        $laminations_count = 2;
+    }
+    
     // Помещаем данные в файл
     echo mb_convert_encoding("НАИМЕНОВАНИЕ ЗАКАЗА :$name;\n", "cp1251");
     echo mb_convert_encoding("ЗАКАЗЧИК :$customer;\n", "cp1251");
     echo mb_convert_encoding("МЕНЕДЖЕР :$last_name $first_name;\n", "cp1251");
     echo mb_convert_encoding("РАЗМЕР ЭТИКЕТКИ :;\n", "cp1251");
-    echo mb_convert_encoding("ДАТА :18.10.21;\n", "cp1251");
+    echo mb_convert_encoding("ДАТА :".DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y').";\n", "cp1251");
     echo mb_convert_encoding("ПЕЧАТЬ ЕСТЬ/НЕТ:".(empty($machine_id) ? 0 : 1).";\n", "cp1251");
     echo mb_convert_encoding("ТИП ФЛЕКСМАШИНЫ :$machine_full;\n", "cp1251");
     echo mb_convert_encoding("ТИП ФЛЕКСМАШИНЫ НОМЕР:$machine_number;\n", "cp1251");
@@ -479,23 +572,23 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     echo mb_convert_encoding("Стоимость 1 печатной формы,руб :   $new_cliche_price;\n", "cp1251");
     echo mb_convert_encoding("Стоимость комплекта печатной формы,руб :      $cliche_price;\n", "cp1251");
     echo mb_convert_encoding("Стоимость всех красок + лак + растворитель,руб:   $paint_price;\n", "cp1251");
-    echo mb_convert_encoding("Количество ламинаций:0;\n", "cp1251");
-    echo mb_convert_encoding("ИТОГО, себестоимость без печатных форм,руб : 152754.27;\n", "cp1251");
-    echo mb_convert_encoding("ИТОГО, себестоимость с печатными формами,руб : 152754.27;\n", "cp1251");
-    echo mb_convert_encoding("Название типа материала первой ламинации: ;\n", "cp1251");
-    echo mb_convert_encoding("Тип материала первой ламинации:0;\n", "cp1251");
-    echo mb_convert_encoding("Толщина материала первой ламинации,мкм:      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Удельный вес материала первой ламинации,грамм/м2:      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Ширина материала первой ламинации,мм:    740.00;\n", "cp1251");
-    echo mb_convert_encoding("Ширина вала первой ламинации,мм:      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Цена материала за 1 кг первой ламинации,руб:      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Название типа материала второй ламинации: ;\n", "cp1251");
-    echo mb_convert_encoding("Тип материала второй ламинации:0;\n", "cp1251");
-    echo mb_convert_encoding("Толщина материала второй ламинации,мкм:      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Удельный вес материала второй ламинации,грамм/м2:      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Ширина материала второй ламинации,мм:    740.00;\n", "cp1251");
-    echo mb_convert_encoding("Ширина вала второй ламинации,мм:      0.00;\n", "cp1251");
-    echo mb_convert_encoding("Цена материала за 1 кг второй ламинации,руб:      0.00;\n", "cp1251");
+    echo mb_convert_encoding("Количество ламинаций:$laminations_count;\n", "cp1251");
+    echo mb_convert_encoding("ИТОГО, себестоимость без печатных форм,руб : $cost_no_cliche;\n", "cp1251");
+    echo mb_convert_encoding("ИТОГО, себестоимость с печатными формами,руб : $cost_with_cliche;\n", "cp1251");
+    echo mb_convert_encoding("Название типа материала первой ламинации: Другие материалы;\n", "cp1251");
+    echo mb_convert_encoding("Тип материала первой ламинации:9;\n", "cp1251");
+    echo mb_convert_encoding("Толщина материала первой ламинации,мкм:      $lamination1_thickness_final;\n", "cp1251");
+    echo mb_convert_encoding("Удельный вес материала первой ламинации,грамм/м2:      $lamination1_weight_final;\n", "cp1251");
+    echo mb_convert_encoding("Ширина материала первой ламинации,мм:    0.00;\n", "cp1251");
+    echo mb_convert_encoding("Ширина вала первой ламинации,мм:      $lamination1_roller;\n", "cp1251");
+    echo mb_convert_encoding("Цена материала за 1 кг первой ламинации,руб:      $lamination1_price_final;\n", "cp1251");
+    echo mb_convert_encoding("Название типа материала второй ламинации: Другие материалы;\n", "cp1251");
+    echo mb_convert_encoding("Тип материала второй ламинации:9;\n", "cp1251");
+    echo mb_convert_encoding("Толщина материала второй ламинации,мкм:      $lamination2_thickness_final;\n", "cp1251");
+    echo mb_convert_encoding("Удельный вес материала второй ламинации,грамм/м2:      $lamination2_weight_final;\n", "cp1251");
+    echo mb_convert_encoding("Ширина материала второй ламинации,мм:    0.00;\n", "cp1251");
+    echo mb_convert_encoding("Ширина вала второй ламинации,мм:      $lamination2_roller;\n", "cp1251");
+    echo mb_convert_encoding("Цена материала за 1 кг второй ламинации,руб:      $lamination2_price_final;\n", "cp1251");
     echo mb_convert_encoding("Вес материала первой ламинации чистый,кг:     $pure_weight_lam1;\n", "cp1251");
     echo mb_convert_encoding("Вес материала первой ламинации с отходами,кг:     $dirty_weight_lam1;\n", "cp1251");
     echo mb_convert_encoding("Стоимость материала первой ламинации,руб:      $price_lam1_material;\n", "cp1251");
@@ -510,7 +603,7 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     echo mb_convert_encoding("ИТОГО, себестоимость без печатных форм,руб : $cost_no_cliche;\n", "cp1251");
     echo mb_convert_encoding("ИТОГО, себестоимость с печатными формами,руб : $cost_with_cliche;\n", "cp1251");
     echo mb_convert_encoding("Номер вала первой ламинации:1;\n", "cp1251");
-    echo mb_convert_encoding("Номер вала второй ламинации:3;\n", "cp1251");
+    echo mb_convert_encoding("Номер вала второй ламинации:1;\n", "cp1251");
     echo mb_convert_encoding("Итого, себестоимость за 1кг без форм, руб :    $cost_no_cliche_kg;\n", "cp1251");
     echo mb_convert_encoding("Итого, себестоимость за 1кг с формами, руб :    $cost_with_cliche_kg;\n", "cp1251");
     echo mb_convert_encoding("Итого, себестоимость за 1шт без форм, руб :      $cost_no_cliche_thing;\n", "cp1251");
