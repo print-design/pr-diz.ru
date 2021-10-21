@@ -271,6 +271,51 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     $last_name = $row['last_name'];
     $first_name = $row['first_name'];
     
+    // Марка плёнки
+    $brand_name_final = "";
+    $brand_type_final = 0;
+    
+    if(!empty($brand_name)) {
+        if(stripos($brand_name, 'pet') === 0) {
+            $brand_name_final = "ПЭТ";
+            $brand_type_final = 5;
+        }
+        else {
+            $brand_name_final = "Другие материалы";
+            $brand_type_final = 9;
+        }
+    }
+    
+    // Марка плёнки 1 ламинации
+    $lamination1_brand_name_final = "";
+    $lamination1_brand_type_final = 0;
+    
+    if(!empty($lamination1_brand_name)) {
+        if(stripos($lamination1_brand_name, 'pet') === 0) {
+            $lamination1_brand_name_final = "ПЭТ";
+            $lamination1_brand_type_final = 5;
+        }
+        else {
+            $lamination1_brand_name_final = "Другие материалы";
+            $lamination1_brand_type_final = 9;
+        }
+    }
+    
+    // Марка плёнки 2 ламинации
+    $lamination2_brand_name_final = "";
+    $lamination2_brand_type_final = 0;
+    
+    if(!empty($lamination2_brand_name)) {
+        if(stripos($lamination2_brand_name, 'pet') === 0) {
+            $lamination2_brand_name_final = "ПЭТ";
+            $lamination2_brand_type_final = 5;
+        }
+        else {
+            $lamination2_brand_name_final = "Другие материалы";
+            $lamination2_brand_type_final = 9;
+        }
+    }
+    
     // Толщина материала
     $thickness_final = 0;
     
@@ -528,8 +573,8 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     echo mb_convert_encoding("Ширина ручья,мм :    $stream_width;\n", "cp1251");
     echo mb_convert_encoding("Длина этикетки вдоль рапорта вала,мм :      $length;\n", "cp1251");
     echo mb_convert_encoding("Рапорт вала,мм :   $raport;\n", "cp1251");
-    echo mb_convert_encoding("Название типа материала :Другие материалы;\n", "cp1251");
-    echo mb_convert_encoding("Тип материала (номер):9;\n", "cp1251");
+    echo mb_convert_encoding("Название типа материала :$brand_name_final;\n", "cp1251");
+    echo mb_convert_encoding("Тип материала (номер):$brand_type_final;\n", "cp1251");
     echo mb_convert_encoding("Толщина материала,мкм :     $thickness_final;\n", "cp1251");
     echo mb_convert_encoding("Удельный вес бумаги,грамм/м2 :     $weight_final;\n", "cp1251");
     echo mb_convert_encoding("Цена материала за 1 кг,руб :    $price_final;\n", "cp1251");
@@ -575,15 +620,15 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     echo mb_convert_encoding("Количество ламинаций:$laminations_count;\n", "cp1251");
     echo mb_convert_encoding("ИТОГО, себестоимость без печатных форм,руб : $cost_no_cliche;\n", "cp1251");
     echo mb_convert_encoding("ИТОГО, себестоимость с печатными формами,руб : $cost_with_cliche;\n", "cp1251");
-    echo mb_convert_encoding("Название типа материала первой ламинации: Другие материалы;\n", "cp1251");
-    echo mb_convert_encoding("Тип материала первой ламинации:9;\n", "cp1251");
+    echo mb_convert_encoding("Название типа материала первой ламинации: $lamination1_brand_name_final;\n", "cp1251");
+    echo mb_convert_encoding("Тип материала первой ламинации:$lamination1_brand_type_final;\n", "cp1251");
     echo mb_convert_encoding("Толщина материала первой ламинации,мкм:      $lamination1_thickness_final;\n", "cp1251");
     echo mb_convert_encoding("Удельный вес материала первой ламинации,грамм/м2:      $lamination1_weight_final;\n", "cp1251");
     echo mb_convert_encoding("Ширина материала первой ламинации,мм:    0.00;\n", "cp1251");
     echo mb_convert_encoding("Ширина вала первой ламинации,мм:      $lamination1_roller;\n", "cp1251");
     echo mb_convert_encoding("Цена материала за 1 кг первой ламинации,руб:      $lamination1_price_final;\n", "cp1251");
-    echo mb_convert_encoding("Название типа материала второй ламинации: Другие материалы;\n", "cp1251");
-    echo mb_convert_encoding("Тип материала второй ламинации:9;\n", "cp1251");
+    echo mb_convert_encoding("Название типа материала второй ламинации: $lamination2_brand_name_final;\n", "cp1251");
+    echo mb_convert_encoding("Тип материала второй ламинации:$lamination2_brand_type_final;\n", "cp1251");
     echo mb_convert_encoding("Толщина материала второй ламинации,мкм:      $lamination2_thickness_final;\n", "cp1251");
     echo mb_convert_encoding("Удельный вес материала второй ламинации,грамм/м2:      $lamination2_weight_final;\n", "cp1251");
     echo mb_convert_encoding("Ширина материала второй ламинации,мм:    0.00;\n", "cp1251");
