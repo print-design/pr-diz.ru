@@ -1068,7 +1068,9 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense * (($pure_length_lam ?? 0) * $lamination2_roller / 1000 + $tuning_lengths[$laminator_machine_id]);
             
             if(stripos($lamination2_brand_name, 'pet') === 0) {
-                $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense_pet * (($pure_length_lam ?? 0) * $lamination2_roller / 1000 + $tuning_lengths[$laminator_machine_id]);
+                //$price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense_pet * (($pure_length_lam ?? 0) * $lamination2_roller / 1000 + $tuning_lengths[$laminator_machine_id]);
+                // ВНИМАНИЕ!!! Сточка выше скорее всего правильная. Строчка ниже скорее всего неправильная.
+                $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense_pet * (($pure_length_lam ?? 0) * $lamination1_roller / 1000 + $tuning_lengths[$laminator_machine_id]);
             }
             
             // Стоимость процесса ламинации 2, руб
