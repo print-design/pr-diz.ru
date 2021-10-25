@@ -1928,8 +1928,20 @@ $colorfulnesses = array();
                         </div>
                         <div class="row">
                             <div class="col-6">
-                                <div id="show_lamination_1">
-                                    <button type="button" class="btn btn-light" onclick="javascript: ShowLamination1();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
+                                <div class="form-group">
+                                    <label for="width">Ширина, мм</label>
+                                    <input type="text" 
+                                           id="width" 
+                                           name="width" 
+                                           class="form-control int-only" 
+                                           placeholder="Ширина" 
+                                           value="<?= filter_input(INPUT_POST, 'width') ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина, мм')" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина, мм')" 
+                                           onfocusout="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина, мм')" />
+                                    <div class="invalid-feedback">Ширина обязательно</div>
                                 </div>
                             </div>
                             <div class="col-6">
@@ -1940,6 +1952,13 @@ $colorfulnesses = array();
                                         ?>
                                         <input type="checkbox" class="form-check-input" id="customers_material" name="customers_material" value="on"<?=$checked ?>>Сырьё заказчика
                                     </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div id="show_lamination_1">
+                                    <button type="button" class="btn btn-light" onclick="javascript: ShowLamination1();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                                 </div>
                             </div>
                         </div>
