@@ -2092,25 +2092,8 @@ $colorfulnesses = array();
                             </div>
                             <div class="row">
                                 <div class="col-6">
-                                    <div class="form-group">
-                                        <label for="lamination1_roller">Ширина вала, мм</label>
-                                        <select id="lamination1_roller" name="lamination1_roller" class="form-control">
-                                            <option value="" hidden="hidden" selected="selected">Ширина вала...</option>
-                                            <?php
-                                            $sql = "select value from roller where machine_id=$laminator_machine_id order by value"; echo $sql;
-                                            $rollers = (new Grabber($sql))->result;
-                                                
-                                            foreach ($rollers as $row):
-                                            $selected = '';
-                                            if($row['value'] == $lamination1_roller) {
-                                                $selected = " selected='selected'";
-                                            }
-                                            ?>
-                                            <option value="<?=$row['value'] ?>"<?=$selected ?>><?=$row['value'] ?></option>
-                                            <?php
-                                            endforeach;
-                                            ?>
-                                        </select>
+                                    <div id="show_lamination_2">
+                                        <button type="button" class="btn btn-light" onclick="javascript: ShowLamination2();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -2123,14 +2106,6 @@ $colorfulnesses = array();
                                         </label>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <div id="show_lamination_2">
-                                        <button type="button" class="btn btn-light" onclick="javascript: ShowLamination2();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
-                                    </div> 
-                                </div>
-                                <div class="col-6"></div>
                             </div>
                             <!-- Ламинация 2 -->
                             <div id="form_lamination_2" class="d-none">
@@ -2264,28 +2239,7 @@ $colorfulnesses = array();
                                     <div class="col-1"></div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label for="lamination2_roller">Ширина вала, мм</label>
-                                            <select id="lamination2_roller" name="lamination2_roller" class="form-control">
-                                                <option value="" hidden="hidden" selected="selected">Ширина вала...</option>
-                                                <?php
-                                                $sql = "select value from roller where machine_id=$laminator_machine_id order by value"; echo $sql;
-                                                $rollers = (new Grabber($sql))->result;
-                                                
-                                                foreach ($rollers as $row):
-                                                $selected = '';
-                                                if($row['value'] == $lamination2_roller) {
-                                                    $selected = " selected='selected'";
-                                                }
-                                                ?>
-                                                <option value="<?=$row['value'] ?>"<?=$selected ?>><?=$row['value'] ?></option>
-                                                <?php
-                                                endforeach;
-                                                ?>
-                                            </select>
-                                        </div>
-                                    </div>
+                                    <div class="col-6"></div>
                                     <div class="col-6">
                                         <div class="form-check">
                                             <label class="form-check-label text-nowrap" style="line-height: 25px;">
@@ -2301,13 +2255,13 @@ $colorfulnesses = array();
                         </div>
                         <div class="row mt-3">
                             <!-- Ширина ручья -->
-                            <div class="col-6 lam-only print-no-print d-none">
+                            <div class="col-6 lam-only print-only d-none">
                                 <div class="form-group">
                                     <label for="stream_width">Ширина ручья, мм</label>
                                     <input type="text" 
                                            id="stream_width" 
                                            name="stream_width" 
-                                           class="form-control int-only lam-only print-no-print d-none" 
+                                           class="form-control int-only lam-only print-only d-none" 
                                            placeholder="Ширина ручья, мм" 
                                            value="<?= empty($stream_width) ? "" : floatval($stream_width) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -2319,13 +2273,13 @@ $colorfulnesses = array();
                                 </div>
                             </div>
                             <!-- Количество ручьёв -->
-                            <div class="col-6 lam-only print-no-print d-none">
+                            <div class="col-6 lam-only print-only d-none">
                                 <div class="form-group">
                                     <label for="streams_count">Количество ручьев</label>
                                     <input type="text" 
                                            id="streams_count" 
                                            name="streams_count" 
-                                           class="form-control int-only lam-only print-no-print d-none" 
+                                           class="form-control int-only lam-only print-only d-none" 
                                            placeholder="Количество ручьев" 
                                            value="<?=$streams_count ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -2396,6 +2350,29 @@ $colorfulnesses = array();
                                            onkeyup="javascript: $(this).attr('id', 'ski'); $(this).attr('name', 'ski'); $(this).attr('placeholder', 'Ширина лыж, м');" 
                                            onfocusout="javascript: $(this).attr('id', 'ski'); $(this).attr('name', 'ski'); $(this).attr('placeholder', 'Ширина лыж, м');" />
                                     <div class="invalid-feedback">Ширина лыж обязательно</div>
+                                </div>
+                            </div>
+                            <!-- Ширина вала ламинации -->
+                            <div class="col-6 lam-only d-none">
+                                <div class="form-group">
+                                    <label for="lamination_roller">Ширина вала ламинации, мм</label>
+                                    <select id="lamination_roller" name="lamination_roller" class="form-control lam-only d-none">
+                                        <option value="" hidden="hidden" selected="selected">Ширина вала ламинации...</option>
+                                            <?php
+                                            $sql = "select value from roller where machine_id=$laminator_machine_id order by value"; echo $sql;
+                                            $rollers = (new Grabber($sql))->result;
+                                                
+                                            foreach ($rollers as $row):
+                                            $selected = '';
+                                            if($row['value'] == $lamination2_roller) {
+                                                $selected = " selected='selected'";
+                                            }
+                                            ?>
+                                        <option value="<?=$row['value'] ?>"<?=$selected ?>><?=$row['value'] ?></option>
+                                            <?php
+                                            endforeach;
+                                            ?>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -2673,11 +2650,8 @@ $colorfulnesses = array();
                     
                     // Показываем поля "только с печатью"
                     $('.print-only').removeClass('d-none');
-                    $('.print-only').attr('required', 'required');
-                
-                    // Показываем поля "с печатью и без печати"
-                    $('.print-no-print').removeClass('d-none');
-                    $('.print-no-print').attr('required', 'required');
+                    $('input.print-only').attr('required', 'required');
+                    $('select.print-only').attr('required', 'required');
                 }
                 else {
                     // Скрываем поля "только с печатью"
@@ -2686,20 +2660,27 @@ $colorfulnesses = array();
                     
                     // Показываем поля "только без печати"
                     $('.no-print-only').removeClass('d-none');
-                    $('.no-print-only').attr('required', 'required');
+                    $('input.no-print-only').attr('required', 'required');
+                    $('select.no-print-only').attr('required', 'required');
                 
-                    // Показываем поля "с печатью и без печати"
-                    $('.print-no-print').removeClass('d-none');
-                    $('.print-no-print').attr('required', 'required');
+                    
+                }
                 
-                    // Скрываем поля "только с ламинацией"
-                    $('.lam-only').addClass('d-none');
-                    $('.lam-only').removeAttr('required');
-                
-                    // Если видима ламинация, то показываем поля "только с ламинацией"
-                    if($('#form_lamination_1').is(':visible')) {
-                        $('.lam-only').not('.print-only').removeClass('d-none');
-                        $('.lam-only').not('.print-only').attr('required', 'required');
+                // Если видима ламинация, то показываем поля "только с ламинацией"
+                // Иначе скрываем эти поля
+                if($('#form_lamination_1').is(':visible')) {
+                    $('.lam-only').removeClass('d-none');
+                    $('input.lam-only').attr('required', 'required');
+                    $('select.lam-only').attr('required', 'required');
+                }
+                else {
+                    if (work_type_id == 2) {
+                        $('.lam-only').not('.print-only').addClass('d-none');
+                        $('.lam-only').not('.print-only').removeAttr('required');
+                    }
+                    else {
+                        $('.lam-only').addClass('d-none');
+                        $('.lam-only').removeAttr('required');
                     }
                 }
             }
