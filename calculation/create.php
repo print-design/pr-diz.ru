@@ -991,7 +991,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $price_lam1_glue = null;
         $price_lam1_work = null;
                     
-        if($lamination_roller != "NULL") {
+        if(!empty($lamination1_brand_name)) {
             // Вес материала ламинации 1 чистый, кг
             // площадь тиража чистая * удельный вес ламинации 1 / 1000
             $pure_weight_lam1 = ($pure_area ?? 0) * ($c_weight_lam1 ?? 0) / 1000;
@@ -1037,7 +1037,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $price_lam2_glue = null;
         $price_lam2_work = null;
         
-        if($lamination_roller != "NULL") {
+        if(!empty($lamination2_brand_name)) {
             // Вес материала ламинации 2 чистый, кг
             // площадь тиража чистая * удельный вес ламинации 1 / 1000
             $pure_weight_lam2 = ($pure_area ?? 0) * ($c_weight_lam2 ?? 0) / 1000;
@@ -2280,22 +2280,22 @@ $colorfulnesses = array();
                                     <div class="invalid-feedback">Количество ручьев обязательно</div>
                                 </div>
                             </div>
-                            <!-- Длина от метки до метки -->
+                            <!-- Длина этикетки вдоль рапорта вала -->
                             <div class="col-6 print-only d-none">
                                 <div class="form-group">
-                                    <label for="length">Длина от метки до метки, мм</label>
+                                    <label for="length">Длина этикетки вдоль рапорта вала, мм</label>
                                     <input type="text" 
                                            id="length" 
                                            name="length" 
                                            class="form-control int-only print-only d-none" 
-                                           placeholder="Длина от метки до метки, мм" 
+                                           placeholder="Длина этикетки вдоль рапорта вала, мм" 
                                            value="<?= $length === null ? "" : floatval($length) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки, мм');" 
+                                           onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки вдоль рапорта вала, мм');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки, мм');" 
-                                           onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки, мм');" />
-                                    <div class="invalid-feedback">Длина от метки до метки обязательно</div>
+                                           onkeyup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки вдоль рапорта вала, мм');" 
+                                           onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки вдоль рапорта вала, мм');" />
+                                    <div class="invalid-feedback">Длина этикетки вдоль рапорта вала обязательно</div>
                                 </div>
                             </div>
                             <!-- Рапорт -->

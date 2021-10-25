@@ -248,7 +248,7 @@ $num_for_customer = $row['num_for_customer'];
                             endif;
                             if($length !== null):
                             ?>
-                        <tr><th>Длина от метки до метки</th><td><?= rtrim(rtrim(number_format($length, 2, ",", ""), "0"), ",") ?> мм</td></tr>
+                        <tr><th>Длина этикетки вдоль рапорта вала</th><td><?= rtrim(rtrim(number_format($length, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                             <?php
                             endif;
                             if(!empty($stream_width)):
