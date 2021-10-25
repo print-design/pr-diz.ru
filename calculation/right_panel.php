@@ -518,182 +518,182 @@ elseif(!empty ($id) && !empty ($date)) {
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
                     <h3>Плёнка</h3>
-                    <div>Площадь тиража чистая</div>
+                    <div class="param-name">Площадь тиража чистая</div>
                     <div class="value"><?=rtrim(rtrim(number_format($pure_area, 3, ",", " "), "0"), ",") ?> м<sup>2</sup></div>
                 </div>
                 <?php if($work_type_id == 2): ?>
                 <div class="d-table-cell pb-1">
                     <h3>Печать</h3>
-                    <div>Время печати тиража без приладки</div>
+                    <div class="param-name">Время печати тиража без приладки</div>
                     <div class="value"><?=rtrim(rtrim(number_format($print_time, 3, ",", " "), "0"), ",") ?> ч</div>
                 </div>
                 <?php endif; ?>
                 <?php if(!empty($lamination1_brand_name)): ?>
                 <div class="d-table-cell pb-1">
                     <h3>Ламинация</h3>
-                    <div>Вес материала ламинации 1 чистый</div>
+                    <div class="param-name">Вес материала ламинации 1 чистый</div>
                     <div class="value"><?=rtrim(rtrim(number_format($pure_weight_lam1, 3, ",", " "), "0"), ",") ?> кг</div>
                 </div>
                 <?php endif; ?>
             </div>
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
-                    <div>Ширина тиража обрезная</div>
+                    <div class="param-name">Ширина тиража обрезная</div>
                     <div class="value"><?=rtrim(rtrim(number_format($pure_width, 3, ",", " "), "0"), ",") ?> мм</div>
                 </div>
                 <?php if($work_type_id == 2): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Время приладки</div>
+                    <div class="param-name">Время приладки</div>
                     <div class="value"><?=rtrim(rtrim(number_format($tuning_time, 3, ",", " "), "0"), ",") ?> ч</div>
                 </div>
                 <?php endif; ?>
                 <?php if(!empty($lamination1_brand_name)): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Вес материала ламинации 1 с отходами</div>
+                    <div class="param-name">Вес материала ламинации 1 с отходами</div>
                     <div class="value"><?=rtrim(rtrim(number_format($dirty_weight_lam1, 3, ",", " "), "0"), ",") ?> кг</div>
                 </div>
                 <?php endif; ?>
             </div>
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
-                    <div>Длина тиража чистая</div>
+                    <div class="param-name">Длина тиража чистая</div>
                     <div class="value"><?=rtrim(rtrim(number_format($pure_length, 3, ",", " "), "0"), ",") ?> м</div>
                 </div>
                 <?php if($work_type_id == 2): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Время печати с приладкой</div>
+                    <div class="param-name">Время печати с приладкой</div>
                     <div class="value"><?=rtrim(rtrim(number_format($print_tuning_time, 3, ",", " "), "0"), ",") ?> ч</div>
                 </div>
                 <?php endif; ?>
                 <?php if(!empty($lamination1_brand_name)): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Стоимость материала ламинации 1</div>
+                    <div class="param-name">Стоимость материала ламинации 1</div>
                     <div class="value"><?=rtrim(rtrim(number_format($price_lam1_material, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
             </div>
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
-                    <div>Длина тиража чистая с ламинацией</div>
+                    <div class="param-name">Длина тиража чистая с ламинацией</div>
                     <div class="value"><?=rtrim(rtrim(number_format($pure_length_lam, 3, ",", " "), "0"), ",") ?> м</div>
                 </div>
                 <?php if($work_type_id == 2): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Стоимость печати</div>
+                    <div class="param-name">Стоимость печати</div>
                     <div class="value"><?=rtrim(rtrim(number_format($print_price, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
                 <?php if(!empty($lamination1_brand_name)): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Стоимость клеевого раствора 1</div>
+                    <div class="param-name">Стоимость клеевого раствора 1</div>
                     <div class="value"><?=rtrim(rtrim(number_format($price_lam1_glue, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
             </div>
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
-                    <div>Длина тиража с отходами</div>
+                    <div class="param-name">Длина тиража с отходами</div>
                     <div class="value"><?=rtrim(rtrim(number_format($dirty_length, 3, ",", " "), "0"), ",") ?> м</div>
                 </div>
                 <?php if($work_type_id == 2): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Площадь печатной формы</div>
+                    <div class="param-name">Площадь печатной формы</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cliche_area, 3, ",", " "), "0"), ",") ?> м<sup>2</sup></div>
                 </div>
                 <?php endif; ?>
                 <?php if(!empty($lamination1_brand_name)): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Стоимость процесса ламинации 1</div>
+                    <div class="param-name">Стоимость процесса ламинации 1</div>
                     <div class="value"><?=rtrim(rtrim(number_format($price_lam1_work, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
             </div>
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
-                    <div>Ширина тиража с отходами</div>
+                    <div class="param-name">Ширина тиража с отходами</div>
                     <div class="value"><?=rtrim(rtrim(number_format($dirty_width, 3, ",", " "), "0"), ",") ?> мм</div>
                 </div>
                 <?php if($work_type_id == 2): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Стоимость 1 новой формы Флинт</div>
+                    <div class="param-name">Стоимость 1 новой формы Флинт</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cliche_flint_price, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
                 <?php if(!empty($lamination2_brand_name)): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Вес материала ламинации 2 чистый</div>
+                    <div class="param-name">Вес материала ламинации 2 чистый</div>
                     <div class="value"><?=rtrim(rtrim(number_format($pure_weight_lam2, 3, ",", " "), "0"), ",") ?> кг</div>
                 </div>
                 <?php endif; ?>
             </div>
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
-                    <div>Площадь тиража с отходами</div>
+                    <div class="param-name">Площадь тиража с отходами</div>
                     <div class="value"><?=rtrim(rtrim(number_format($dirty_area, 3, ",", " "), "0"), ",") ?> м<sup>2</sup></div>
                 </div>
                 <?php if($work_type_id == 2): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Стоимость 1 новой формы Кодак</div>
+                    <div class="param-name">Стоимость 1 новой формы Кодак</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cliche_kodak_price, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
                 <?php if(!empty($lamination2_brand_name)): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Вес материала ламинации 2 с отходами</div>
+                    <div class="param-name">Вес материала ламинации 2 с отходами</div>
                     <div class="value"><?=rtrim(rtrim(number_format($dirty_weight_lam2, 3, ",", " "), "0"), ",") ?> кг</div>
                 </div>
                 <?php endif; ?>
             </div>
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
-                    <div>Вес материала печати чистый</div>
+                    <div class="param-name">Вес материала печати чистый</div>
                     <div class="value"><?=rtrim(rtrim(number_format($pure_weight, 3, ",", " "), "0"), ",") ?> кг</div>
                 </div>
                 <?php if($work_type_id == 2): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Стоимость 1 новой формы Тверь</div>
+                    <div class="param-name">Стоимость 1 новой формы Тверь</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cliche_tver_price, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
                 <?php if(!empty($lamination2_brand_name)): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Стоимость материала ламинации 2</div>
+                    <div class="param-name">Стоимость материала ламинации 2</div>
                     <div class="value"><?=rtrim(rtrim(number_format($price_lam2_material, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
             </div>
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
-                    <div>Вес материала печати с отходами</div>
+                    <div class="param-name">Вес материала печати с отходами</div>
                     <div class="value"><?=rtrim(rtrim(number_format($dirty_weight, 3, ",", " "), "0"), ",") ?> кг</div>
                 </div>
                 <?php if($work_type_id == 2): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Стоимость комплекта печатных форм</div>
+                    <div class="param-name">Стоимость комплекта печатных форм</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cliche_price, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
                 <?php if(!empty($lamination2_brand_name)): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Стоимость клеевого раствора 2</div>
+                    <div class="param-name">Стоимость клеевого раствора 2</div>
                     <div class="value"><?=rtrim(rtrim(number_format($price_lam2_glue, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
             </div>
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
-                    <div>Стоимость материала печати</div>
+                    <div class="param-name">Стоимость материала печати</div>
                     <div class="value"><?=rtrim(rtrim(number_format($material_price, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php if($work_type_id == 2): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Стоимость скотча для наклейки форм</div>
+                    <div class="param-name">Стоимость скотча для наклейки форм</div>
                     <div class="value"><?=rtrim(rtrim(number_format((($cliche_scotch ?? 0) * ($paints_count ?? 0) * ($cliche_area ?? 0) / 10000), 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
                 <?php if(!empty($lamination2_brand_name)): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Стоимость процесса ламинации 2</div>
+                    <div class="param-name">Стоимость процесса ламинации 2</div>
                     <div class="value"><?=rtrim(rtrim(number_format($price_lam2_work, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
@@ -702,13 +702,13 @@ elseif(!empty ($id) && !empty ($date)) {
                 <div class="d-table-cell pb-1" style="width: 33%;"></div>
                 <?php if($work_type_id == 2): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Стоимость краски + лака + растворителя</div>
+                    <div class="param-name">Стоимость краски + лака + растворителя</div>
                     <div class="value"><?=rtrim(rtrim(number_format($paint_price, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
                 <?php if(!empty($lamination1_brand_name)): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Итого себестоимость ламинации</div>
+                    <div class="param-name">Итого себестоимость ламинации</div>
                     <div class="value"><?=rtrim(rtrim(number_format($price_lam_total, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
@@ -719,11 +719,11 @@ elseif(!empty ($id) && !empty ($date)) {
         </div>
         <div class="d-table w-100">
             <div class="d-table-cell pb-1" style="width: 33%;">
-                <div>Чистый</div>
+                <div class="param-name">Чистый</div>
                 <div class="value"><?=rtrim(rtrim(number_format($pure_weight_total, 3, ",", " "), "0"), ",") ?> кг</div>
             </div>
             <div class="d-table-cell pb-1" style="width: 33%;">
-                <div>С отходами</div>
+                <div class="param-name">С отходами</div>
                 <div class="value"><?=rtrim(rtrim(number_format($dirty_weight_total, 3, ",", " "), "0"), ",") ?> кг</div>
             </div>
             <div class="d-table-cell pb-1" style="width: 33%;"></div>
@@ -750,34 +750,34 @@ elseif(!empty ($id) && !empty ($date)) {
         <div class="d-table w-100">
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
-                    <div>Без форм</div>
+                    <div class="param-name">Без форм</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cost_no_cliche, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php if($unit == "kg" && !empty($quantity)): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Без форм</div>
+                    <div class="param-name">Без форм</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cost_no_cliche_kg, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php elseif($unit == "thing" && !empty($quantity)): ?>
                 <div class="d-table-cell pb-1">
-                    <div>Без форм</div>
+                    <div class="param-name">Без форм</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cost_no_cliche_thing, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
             </div>
             <div class="d-table-row">
                 <div class="d-table-cell pb-1" style="width: 33%;">
-                    <div>С формами</div>
+                    <div class="param-name">С формами</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cost_with_cliche, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php if($unit == "kg" && !empty($quantity)): ?>
                 <div class="d-table-cell pb-1">
-                    <div>С формами</div>
+                    <div class="param-name">С формами</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cost_with_cliche_kg, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php elseif($unit == "thing" && !empty($quantity)): ?>
                 <div class="d-table-cell pb-1">
-                    <div>С формами</div>
+                    <div class="param-name">С формами</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cost_with_cliche_thing, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>

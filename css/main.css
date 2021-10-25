@@ -532,9 +532,12 @@ textarea#editable {
     margin-top: 140px;
 }
 
+#calculation .param-name {
+    font-weight: bold;
+}
+
 #calculation .value {
     font-size: 18px;
-    font-weight: 700;
 }
 
 /* Переключатель "активен - не активен" */
