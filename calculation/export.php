@@ -22,9 +22,9 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     
     $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c.unit, "
             . "c.brand_name, c.thickness, other_brand_name, other_price, other_thickness, other_weight, c.customers_material, "
-            . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, c.lamination1_roller, c.lamination1_customers_material, "
-            . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, c.lamination2_roller, c.lamination2_customers_material, "
-            . "c.length, c.stream_width, c.streams_count, c.machine_id, c.raport, c.paints_count, "
+            . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, c.lamination1_customers_material, "
+            . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, c.lamination2_customers_material, "
+            . "c.length, c.stream_width, c.streams_count, c.machine_id, c.raport, c.lamination_roller, c.paints_count, "
             . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -69,7 +69,6 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     $lamination1_other_price = $row['lamination1_other_price'];
     $lamination1_other_thickness = $row['lamination1_other_thickness'];
     $lamination1_other_weight = $row['lamination1_other_weight'];
-    $lamination1_roller = $row['lamination1_roller'];
     $lamination1_customers_material = $row['lamination1_customers_material'];
     $lamination2_brand_name = $row['lamination2_brand_name'];
     $lamination2_thickness = $row['lamination2_thickness'];
@@ -78,13 +77,13 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     $lamination2_other_price = $row['lamination2_other_price'];
     $lamination2_other_thickness = $row['lamination2_other_thickness'];
     $lamination2_other_weight = $row['lamination2_other_weight'];
-    $lamination2_roller = $row['lamination2_roller'];
     $lamination2_customers_material = $row['lamination2_customers_material'];
     $length = $row['length'];
     $stream_width = $row['stream_width'];
     $streams_count = $row['streams_count'];
     $machine_id = $row['machine_id'];
     $raport = $row['raport'];
+    $lamination_roller = $row['lamination_roller'];
     $paints_count = $row['paints_count'];
     
     // Формы
@@ -625,14 +624,14 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     echo mb_convert_encoding("Толщина материала первой ламинации,мкм:      $lamination1_thickness_final;\n", "cp1251");
     echo mb_convert_encoding("Удельный вес материала первой ламинации,грамм/м2:      $lamination1_weight_final;\n", "cp1251");
     echo mb_convert_encoding("Ширина материала первой ламинации,мм:    0.00;\n", "cp1251");
-    echo mb_convert_encoding("Ширина вала первой ламинации,мм:      $lamination1_roller;\n", "cp1251");
+    echo mb_convert_encoding("Ширина вала первой ламинации,мм:      $lamination_roller;\n", "cp1251");
     echo mb_convert_encoding("Цена материала за 1 кг первой ламинации,руб:      $lamination1_price_final;\n", "cp1251");
     echo mb_convert_encoding("Название типа материала второй ламинации: $lamination2_brand_name_final;\n", "cp1251");
     echo mb_convert_encoding("Тип материала второй ламинации:$lamination2_brand_type_final;\n", "cp1251");
     echo mb_convert_encoding("Толщина материала второй ламинации,мкм:      $lamination2_thickness_final;\n", "cp1251");
     echo mb_convert_encoding("Удельный вес материала второй ламинации,грамм/м2:      $lamination2_weight_final;\n", "cp1251");
     echo mb_convert_encoding("Ширина материала второй ламинации,мм:    0.00;\n", "cp1251");
-    echo mb_convert_encoding("Ширина вала второй ламинации,мм:      $lamination2_roller;\n", "cp1251");
+    echo mb_convert_encoding("Ширина вала второй ламинации,мм:      $lamination_roller;\n", "cp1251");
     echo mb_convert_encoding("Цена материала за 1 кг второй ламинации,руб:      $lamination2_price_final;\n", "cp1251");
     echo mb_convert_encoding("Вес материала первой ламинации чистый,кг:     $pure_weight_lam1;\n", "cp1251");
     echo mb_convert_encoding("Вес материала первой ламинации с отходами,кг:     $dirty_weight_lam1;\n", "cp1251");
