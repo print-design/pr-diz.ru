@@ -45,6 +45,10 @@ $other_weight_valid = '';
 
 $width_valid = '';
 $width_valid_message = "Ширина обязательно";
+$stream_width_valid = '';
+$stream_width_valid_message = "Ширина ручья обязательно";
+$streams_count_valid = '';
+$streams_count_valid_message = "Количество ручьёв обязательно";
 
 // Переменные для валидации цвета, CMYK и процента
 for($i=1; $i<=8; $i++) {
@@ -66,38 +70,11 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     // Если тип работы "Пленка без печати", то обязательно требуем добавить хотя бы одну ламинацию
     if(filter_input(INPUT_POST, 'work_type_id') == 1 && empty(filter_input(INPUT_POST, 'lamination1_brand_name'))) {
         $error_message = "Если тип работы 'Пленка без печати', то выберите хотя бы одну ламинацию";
-    }
-    
-    // Проверка ширины, чтобы она была не больше, чем возможно для данной машины
-    $width = filter_input(INPUT_POST, 'width');
-    
-    if(empty($width)) {
-        $width_valid = ISINVALID;
-        $form_valid = false;
-    }
-    elseif(!empty($machine_id)) {
-        $machine_name = "";
-        $machine_max_width = 0;
-        
-        $sql = "select name, max_width from machine where id = $machine_id";
-        $fetcher = new Fetcher($sql);
-        
-        if($row = $fetcher->Fetch()) {
-            $machine_name = $row['name'];
-            $machine_max_width = $row['max_width'];
-        }
-        
-        if($width > $machine_max_width) {
-            $width_valid_message = "Ширина для $machine_name не более $machine_max_width мм";
-        }
-    }
-    elseif($width > MAX_LAMINATION_WIDTH) {
-        $width_valid_message = "Ширина для ламинации не более ".MAX_LAMINATION_WIDTH." мм";
-        $width_valid = ISINVALID;
         $form_valid = false;
     }
     
     // Валидация
+    
     if(empty(filter_input(INPUT_POST, "customer_id"))) {
         $customer_id_valid = ISINVALID;
         $form_valid = false;
@@ -151,6 +128,48 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $thickness_valid = ISINVALID;
             $form_valid = false;
         }
+    }
+    
+    // Проверка ширины, чтобы она была не больше, чем возможно для данной машины
+    $width = filter_input(INPUT_POST, 'width');
+    
+    // Ширина должна быть всегда указана: как для печати так и для ламинации без печати
+    if(empty($width)) {
+        $width_valid = ISINVALID;
+        $form_valid = false;
+    }
+    elseif(!empty($machine_id)) {
+        $machine_name = "";
+        $machine_max_width = 0;
+        
+        $sql = "select name, max_width from machine where id = $machine_id";
+        $fetcher = new Fetcher($sql);
+        
+        if($row = $fetcher->Fetch()) {
+            $machine_name = $row['name'];
+            $machine_max_width = $row['max_width'];
+        }
+        
+        if($width > $machine_max_width) {
+            $width_valid_message = "Ширина для $machine_name не более $machine_max_width мм";
+        }
+    }
+    elseif($width > MAX_LAMINATION_WIDTH) {
+        $width_valid_message = "Ширина для ламинации не более ".MAX_LAMINATION_WIDTH." мм";
+        $width_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    // Сумма ширин ручьёв должна быть равна ширине плёнки
+    $stream_width = filter_input(INPUT_POST, 'stream_width');
+    $streams_count = filter_input(INPUT_POST, 'streams_count');
+    
+    if($stream_width * $streams_count != $width) {
+        $stream_width_valid = ISINVALID;
+        $streams_count_valid = ISINVALID;
+        $stream_width_valid_message = "Сумма не равна ширине плёнки";
+        $streams_count_valid_message = "Сумма не равна ширине плёнки";
+        $form_valid = false;
     }
     
     // Проверка валидности цвета, CMYK и процента
@@ -1236,7 +1255,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         // Сохранение в базу
         if(empty($error_message)) {
             $sql = "insert into calculation (customer_id, name, work_type_id, unit, machine_id, "
-                    . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
+                    . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, width, "
                     . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
                     . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
                     . "quantity, streams_count, length, stream_width, raport, lamination_roller, paints_count, manager_id, status_id, extracharge, ski, no_ski, "
@@ -1246,7 +1265,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                     . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
                     . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
                     . "values($customer_id, '$name', $work_type_id, '$unit', $machine_id, "
-                    . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, "
+                    . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, $width, "
                     . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_other_brand_name', $lamination1_other_price, $lamination1_other_thickness, $lamination1_other_weight, $lamination1_customers_material, "
                     . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_other_brand_name', $lamination2_other_price, $lamination2_other_thickness, $lamination2_other_weight, $lamination2_customers_material, "
                     . "$quantity, $streams_count, $length, $stream_width, $raport, $lamination_roller, $paints_count, $manager_id, $status_id, $extracharge, $ski, $no_ski, "
@@ -1352,7 +1371,7 @@ if(empty($id)) {
 
 if(!empty($id)) {
     $sql = "select date, customer_id, name, work_type_id, unit, machine_id, "
-            . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
+            . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, width, "
             . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
             . "quantity, streams_count, length, stream_width, raport, lamination_roller, paints_count, status_id, extracharge, ski, no_ski, "
@@ -1429,6 +1448,12 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
 else {
     if(isset($row['customers_material'])) $customers_material = $row['customers_material'];
     else $customers_material = null;
+}
+
+$width = filter_input(INPUT_POST, 'width');
+if(null === $width) {
+    if(isset($row['width'])) $width = $row['width'];
+    else $width = null;
 }
 
 $unit = filter_input(INPUT_POST, "unit");
@@ -1964,18 +1989,19 @@ $colorfulnesses = array();
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="width">Ширина, мм</label>
+                                    <label for="width">Ширина пленки, мм</label>
                                     <input type="text" 
                                            id="width" 
                                            name="width" 
-                                           class="form-control int-only" 
-                                           placeholder="Ширина" 
-                                           value="<?= filter_input(INPUT_POST, 'width') ?>" 
+                                           class="form-control int-only<?=$width_valid ?>" 
+                                           required="required" 
+                                           placeholder="Ширина пленки, мм" 
+                                           value="<?=$width ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина, мм')" 
+                                           onmouseup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина пленки, мм')" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина, мм')" 
-                                           onfocusout="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина, мм')" />
+                                           onkeyup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина пленки, мм')" 
+                                           onfocusout="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина пленки, мм')" />
                                     <div class="invalid-feedback"><?=$width_valid_message ?></div>
                                 </div>
                             </div>
@@ -2305,7 +2331,7 @@ $colorfulnesses = array();
                                     <input type="text" 
                                            id="stream_width" 
                                            name="stream_width" 
-                                           class="form-control int-only lam-only print-only d-none" 
+                                           class="form-control int-only lam-only print-only d-none<?=$stream_width_valid ?>" 
                                            placeholder="Ширина ручья, мм" 
                                            value="<?= empty($stream_width) ? "" : floatval($stream_width) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -2313,7 +2339,7 @@ $colorfulnesses = array();
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" 
                                            onfocusout="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" />
-                                    <div class="invalid-feedback">Ширина ручья обязательно</div>
+                                    <div class="invalid-feedback"><?=$stream_width_valid_message ?></div>
                                 </div>
                             </div>
                             <!-- Количество ручьёв -->
@@ -2323,7 +2349,7 @@ $colorfulnesses = array();
                                     <input type="text" 
                                            id="streams_count" 
                                            name="streams_count" 
-                                           class="form-control int-only lam-only print-only d-none" 
+                                           class="form-control int-only lam-only print-only d-none<?=$streams_count_valid ?>" 
                                            placeholder="Количество ручьев" 
                                            value="<?=$streams_count ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -2331,7 +2357,7 @@ $colorfulnesses = array();
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="javascript: $(this).attr('id', 'streams_count'); $(this).attr('name', 'streams_count'); $(this).attr('placeholder', 'Количество ручьев');" 
                                            onfocusout="javascript: $(this).attr('id', 'streams_count'); $(this).attr('name', 'streams_count'); $(this).attr('placeholder', 'Количество ручьев');" />
-                                    <div class="invalid-feedback">Количество ручьев обязательно</div>
+                                    <div class="invalid-feedback"><?=$streams_count_valid_message ?></div>
                                 </div>
                             </div>
                             <!-- Длина этикетки вдоль рапорта вала -->

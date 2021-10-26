@@ -63,7 +63,7 @@ if(empty($id)) {
 }
 
 $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c.unit, "
-        . "c.brand_name, c.thickness, other_brand_name, other_price, other_thickness, other_weight, c.customers_material, "
+        . "c.brand_name, c.thickness, other_brand_name, other_price, other_thickness, other_weight, c.customers_material, width, "
         . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, c.lamination1_customers_material, "
         . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, c.lamination2_customers_material, "
         . "c.length, c.stream_width, c.streams_count, c.machine_id, c.raport, c.lamination_roller, c.paints_count, "
@@ -104,6 +104,7 @@ $other_price = $row['other_price'];
 $other_thickness = $row['other_thickness'];
 $other_weight = $row['other_weight'];
 $customers_material = $row['customers_material'];
+$width = $row['width'];
 $lamination1_brand_name = $row['lamination1_brand_name'];
 $lamination1_thickness = $row['lamination1_thickness'];
 $lamination1_weight = $row['lamination1_weight'];
@@ -246,9 +247,9 @@ $num_for_customer = $row['num_for_customer'];
                         <tr><th>Печатная машина</th><td><?=$machine.' ('.$colorfulness.' красок)' ?></td></tr>
                             <?php
                             endif;
-                            if($length !== null):
+                            if(!empty($width)):
                             ?>
-                        <tr><th>Длина этикетки вдоль рапорта вала</th><td><?= rtrim(rtrim(number_format($length, 2, ",", ""), "0"), ",") ?> мм</td></tr>
+                        <tr><th>Ширина плёнки</th><td><?=$width ?> мм</td></tr>
                             <?php
                             endif;
                             if(!empty($stream_width)):
@@ -256,19 +257,24 @@ $num_for_customer = $row['num_for_customer'];
                         <tr><th>Ширина ручья</th><td><?= rtrim(rtrim(number_format($stream_width, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                             <?php
                             endif;
+                            if(!empty($streams_count)):
+                            ?>
+                        <tr><th>Количество ручьев</th><td><?= $streams_count ?></td></tr>
+                            <?php
+                            endif;
                             if(!empty($raport)):
                             ?>
                         <tr><th>Рапорт</th><td><?= rtrim(rtrim(number_format($raport, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                             <?php
                             endif;
+                            if(!empty($length)):
+                            ?>
+                        <tr><th>Длина этикетки вдоль рапорта вала</th><td><?= rtrim(rtrim(number_format($length, 2, ",", ""), "0"), ",") ?> мм</td></tr>
+                            <?php
+                            endif;
                             if(!empty($lamination_roller)):
                             ?>
                         <tr><th>Ширина вала ламинации</th><td><?= rtrim(rtrim(number_format($lamination_roller, 2, ",", ""), "0"), ",") ?> мм</td></tr>
-                            <?php
-                            endif;
-                            if(!empty($streams_count)):
-                            ?>
-                        <tr><th>Количество ручьев</th><td><?= $streams_count ?></td></tr>
                             <?php
                             endif;
                             if(!empty($machine)):
