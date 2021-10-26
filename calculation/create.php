@@ -76,66 +76,99 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     
     // Валидация
     
-    if(empty(filter_input(INPUT_POST, "customer_id"))) {
+    $customer_id = filter_input(INPUT_POST, 'customer_id');
+    
+    if(empty($customer_id)) {
         $customer_id_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, "name"))) {
+    $name = addslashes(filter_input(INPUT_POST, 'name'));
+    
+    if(empty($name)) {
         $name_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'work_type_id'))) {
+    $work_type_id = filter_input(INPUT_POST, 'work_type_id');
+    
+    if(empty($work_type_id)) {
         $work_type_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'brand_name'))) {
-        $brand_name_valid = ISINVALID;
-        $form_valid = false;
-    }
+    $unit = filter_input(INPUT_POST, 'unit');
+    $quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity'));
     
     if(empty(filter_input(INPUT_POST, 'quantity'))) {
         $quantity_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(filter_input(INPUT_POST, 'brand_name') == OTHER) {
+    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    $brand_name = addslashes(filter_input(INPUT_POST, 'brand_name'));
+    
+    if(empty($brand_name)) {
+        $brand_name_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $thickness = filter_input(INPUT_POST, 'thickness');
+    $other_brand_name = filter_input(INPUT_POST, 'other_brand_name');
+    $other_price = filter_input(INPUT_POST, 'other_price');
+    $other_thickness = filter_input(INPUT_POST, 'other_thickness');
+    $other_weight = filter_input(INPUT_POST, 'other_weight');
+    
+    if($brand_name == OTHER) {
         // Проверка валидности параметров, введённых вручную при выборе марки плёнки "Другая"
-        if(empty(filter_input(INPUT_POST, 'other_brand_name'))) {
+        if(empty($other_brand_name)) {
             $other_brand_name_valid = ISINVALID;
             $form_valid = false;
         }
         
-        if(filter_input(INPUT_POST, 'customers_material') != 'on' && empty(filter_input(INPUT_POST, 'other_price'))) {
+        if(filter_input(INPUT_POST, 'customers_material') != 'on' && empty($other_price)) {
             $other_price_valid = ISINVALID;
             $form_valid = false;
         }
         
-        if(empty(filter_input(INPUT_POST, 'other_thickness'))) {
+        if(empty($other_thickness)) {
             $other_thickness_valid = ISINVALID;
             $form_valid = false;
         }
         
-        if(empty(filter_input(INPUT_POST, 'other_weight'))) {
+        if(empty($other_weight)) {
             $other_weight_valid = ISINVALID;
             $form_valid = false;
         }
     }
     else {
         // Проверка валидности параметров стандартных плёнок
-        if(empty(filter_input(INPUT_POST, 'thickness'))) {
+        if(empty($thickness)) {
             $thickness_valid = ISINVALID;
             $form_valid = false;
         }
     }
     
-    // Ширина должна быть всегда указана: как для печати так и для ламинации без печати.
-    // Она должна быть не больше, чем возможно для данной машины.
-    $width = filter_input(INPUT_POST, 'width');
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    $customers_material = 0;
+    if(filter_input(INPUT_POST, 'customers_material') == 'on') {
+        $customers_material = 1;
+    }
     
+    $width = filter_input(INPUT_POST, 'width');
+    
+    
+    
+    $length = filter_input(INPUT_POST, 'length');
+    
+    // Если объём заказа в штуках, то длина этикетки вдоль рапорта вала обязательно, больше нуля
+    if($unit == 'thing' && empty($length)) {
+        $length_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    // Ширина материала должна быть всегда указана: как для печати так и для ламинации без печати.
+    // Она должна быть не больше, чем возможно для данной машины.
+    // При этом, если печать с лыыжами, то сравнивается ширина плюс лыжи.
     if(empty($width)) {
         $width_valid = ISINVALID;
         $form_valid = false;
@@ -176,13 +209,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $form_valid = false;
     }
     
-    // Если объём заказа в штуках, то длина этикетки вдоль рапорта вала обязательно, больше нуля
-    $unit = filter_input(INPUT_POST, 'unit');
-    $length = filter_input(INPUT_POST, 'length');
+    $raport = filter_input(INPUT_POST, 'raport');
+    $lamination_roller = filter_input(INPUT_POST, 'lamination_roller');
+    $ski = filter_input(INPUT_POST, 'ski');
     
-    if($unit == 'thing' && empty($length)) {
-        $length_valid = ISINVALID;
-        $form_valid = false;
+    $no_ski = 0;
+    if(filter_input(INPUT_POST, 'no_ski') == 'on') {
+        $no_ski = 1;
     }
     
     // Проверка валидности цвета, CMYK и процента
@@ -223,24 +256,10 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     }
     
     if($form_valid) {
-        $customer_id = filter_input(INPUT_POST, 'customer_id');
-        $name = addslashes(filter_input(INPUT_POST, 'name'));
-        $work_type_id = filter_input(INPUT_POST, 'work_type_id');
-        $brand_name = addslashes(filter_input(INPUT_POST, 'brand_name'));
-        $thickness = filter_input(INPUT_POST, 'thickness');
         if(empty($thickness)) $thickness = "NULL";
-        $other_brand_name = filter_input(INPUT_POST, 'other_brand_name');
-        $other_price = filter_input(INPUT_POST, 'other_price');
         if(empty($other_price)) $other_price = "NULL";
-        $other_thickness = filter_input(INPUT_POST, 'other_thickness');
         if(empty($other_thickness)) $other_thickness = "NULL";
-        $other_weight = filter_input(INPUT_POST, 'other_weight');
         if(empty($other_weight)) $other_weight = "NULL";
-        $customers_material = 0;
-        if(filter_input(INPUT_POST, 'customers_material') == 'on') {
-            $customers_material = 1;
-        }
-        
         $unit = filter_input(INPUT_POST, 'unit');
         $machine_id = filter_input(INPUT_POST, 'machine_id');
         if(empty($machine_id)) $machine_id = "NULL";
@@ -275,26 +294,15 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $lamination2_customers_material = 1;
         }
         
-        $quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity'));
-        $length = filter_input(INPUT_POST, 'length');
         if($length === null || $length === '') $length = "NULL";
-        $stream_width = filter_input(INPUT_POST, 'stream_width');
         if(empty($stream_width)) $stream_width = "NULL";
-        $streams_count = filter_input(INPUT_POST, 'streams_count');
         if(empty($streams_count)) $streams_count = "NULL";
-        $raport = filter_input(INPUT_POST, 'raport');
         if(empty($raport)) $raport = "NULL";
-        $lamination_roller = filter_input(INPUT_POST, 'lamination_roller');
         if(empty($lamination_roller)) $lamination_roller = "NULL";
-        $ski = filter_input(INPUT_POST, 'ski');
+        
         if(empty($ski)) $ski = "NULL";
         $paints_count = filter_input(INPUT_POST, 'paints_count');
         if(empty($paints_count)) $paints_count = "NULL";
-        
-        $no_ski = 0;
-        if(filter_input(INPUT_POST, 'no_ski') == 'on') {
-            $no_ski = 1;
-        }
         
         $manager_id = GetUserId();
         $status_id = 1; // Статус "Расчёт"
