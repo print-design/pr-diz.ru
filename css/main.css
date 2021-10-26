@@ -532,6 +532,10 @@ textarea#editable {
     color: #3794cc;
 }
 
+.param-value {
+    font-size: 18px;
+}
+
 .algorithm {
     color: #3945af;
 }

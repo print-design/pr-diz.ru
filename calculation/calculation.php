@@ -227,61 +227,55 @@ $num_for_customer = $row['num_for_customer'];
                         <?=$image ?>&nbsp;&nbsp;&nbsp;<?=$status ?>
                     </div>
                     <table class="w-100 calculation-table">
-                        <tr>
-                            <th class="param-name">Заказчик</th>
-                            <td><?=$customer ?></td>
-                        </tr>
-                        <tr>
-                            <th class="param-name">Название заказа</th>
-                            <td><?=$name ?></td>
-                        </tr>
-                        <tr><th class="param-name">Тип работы</th><td><?=$work_type ?></td></tr>
+                        <tr><th>Заказчик</th><td class="param-value"><?=$customer ?></td></tr>
+                        <tr><th>Название заказа</th><td class="param-value"><?=$name ?></td></tr>
+                        <tr><th>Тип работы</th><td class="param-value"><?=$work_type ?></td></tr>
                             <?php
                             if(!empty($quantity) && !empty($unit)):
                             ?>
-                        <tr><th class="param-name">Объем заказа</th><td><?= rtrim(rtrim(number_format($quantity, 2, ",", " "), "0"), ",") ?> <?=$unit == 'kg' ? "кг" : "шт" ?></td></tr>
+                        <tr><th>Объем заказа</th><td class="param-value"><?= rtrim(rtrim(number_format($quantity, 2, ",", " "), "0"), ",") ?> <?=$unit == 'kg' ? "кг" : "шт" ?></td></tr>
                             <?php
                             endif;
                             if(!empty($machine)):
                             ?>
-                        <tr><th class="param-name">Печатная машина</th><td><?=$machine.' ('.$colorfulness.' красок)' ?></td></tr>
+                        <tr><th>Печатная машина</th><td class="param-value"><?=$machine.' ('.$colorfulness.' красок)' ?></td></tr>
                             <?php
                             endif;
                             if(!empty($width)):
                             ?>
-                        <tr><th class="param-name">Ширина материала</th><td><?=$width ?> мм</td></tr>
+                        <tr><th>Ширина материала</th><td class="param-value"><?=$width ?> мм</td></tr>
                             <?php
                             endif;
                             if(!empty($stream_width)):
                             ?>
-                        <tr><th class="param-name">Ширина ручья</th><td><?= rtrim(rtrim(number_format($stream_width, 2, ",", ""), "0"), ",") ?> мм</td></tr>
+                        <tr><th>Ширина ручья</th><td class="param-value"><?= rtrim(rtrim(number_format($stream_width, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                             <?php
                             endif;
                             if(!empty($streams_count)):
                             ?>
-                        <tr><th class="param-name">Количество ручьев</th><td><?= $streams_count ?></td></tr>
+                        <tr><th>Количество ручьев</th><td class="param-value"><?= $streams_count ?></td></tr>
                             <?php
                             endif;
                             if(!empty($raport)):
                             ?>
-                        <tr><th class="param-name">Рапорт</th><td><?= rtrim(rtrim(number_format($raport, 2, ",", ""), "0"), ",") ?> мм</td></tr>
+                        <tr><th>Рапорт</th><td class="param-value"><?= rtrim(rtrim(number_format($raport, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                             <?php
                             endif;
                             if(!empty($length)):
                             ?>
-                        <tr><th class="param-name">Длина этикетки вдоль рапорта вала</th><td><?= rtrim(rtrim(number_format($length, 2, ",", ""), "0"), ",") ?> мм</td></tr>
+                        <tr><th>Длина этикетки вдоль рапорта вала</th><td class="param-value"><?= rtrim(rtrim(number_format($length, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                             <?php
                             endif;
                             if(!empty($lamination_roller)):
                             ?>
-                        <tr><th class="param-name">Ширина вала ламинации</th><td><?= rtrim(rtrim(number_format($lamination_roller, 2, ",", ""), "0"), ",") ?> мм</td></tr>
+                        <tr><th>Ширина вала ламинации</th><td class="param-value"><?= rtrim(rtrim(number_format($lamination_roller, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                             <?php
                             endif;
                             if(!empty($machine)):
                             ?>
                         <tr>
-                            <th class="param-name">Ширина лыж</th>
-                            <td>
+                            <th>Ширина лыж</th>
+                            <td class="param-value">
                                 <?php
                                 if($no_ski) {
                                     echo "Без лыж";
@@ -297,8 +291,8 @@ $num_for_customer = $row['num_for_customer'];
                             if(!empty($brand_name) && !empty($thickness)):
                             ?>
                         <tr>
-                            <th class="param-name">Пленка</th>
-                            <td>
+                            <th>Пленка</th>
+                            <td class="param-value">
                                 <table class="w-100">
                                     <tr>
                                         <td><?=$brand_name ?></td>
@@ -310,8 +304,8 @@ $num_for_customer = $row['num_for_customer'];
                         </tr>
                             <?php elseif(!empty($other_brand_name)): ?>
                         <tr>
-                            <th class="param-name">Пленка</th>
-                            <td>
+                            <th>Пленка</th>
+                            <td class="param-value">
                                 <table class="w-100">
                                     <tr>
                                         <td><?=$other_brand_name ?></td>
@@ -328,8 +322,8 @@ $num_for_customer = $row['num_for_customer'];
                             if(!empty($lamination1_brand_name)) $lamination = "1";
                             if(!empty($lamination2_brand_name)) $lamination = "2";
                             ?>
-                            <th class="param-name">Ламинация: <?=$lamination ?></th>
-                            <td>
+                            <th>Ламинация: <?=$lamination ?></th>
+                            <td class="param-value">
                                 <?php if(!empty($lamination1_brand_name) && !empty($lamination1_thickness)): ?>
                                 <table class="w-100">
                                     <tr>
@@ -383,8 +377,8 @@ $num_for_customer = $row['num_for_customer'];
                             if(!empty($paints_count)):
                             ?>
                         <tr>
-                            <th class="param-name">Красочность: <?=$paints_count ?></th>
-                            <td>
+                            <th>Красочность: <?=$paints_count ?></th>
+                            <td class="param-value">
                                 <table class="w-100">
                                     <?php
                                     for($i=1; $i<=$paints_count; $i++):
