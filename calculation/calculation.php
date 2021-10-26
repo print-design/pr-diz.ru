@@ -281,11 +281,16 @@ $num_for_customer = $row['num_for_customer'];
                             ?>
                         <tr>
                             <th>Ширина лыж</th>
-                            <td><?=rtrim(rtrim(number_format($ski, 2, ",", " "), "0"), ",") ?> м</td>
-                        </tr>
-                        <tr>
-                            <th>Печать без лыж</th>
-                            <td><?=$no_ski == 1 ? "ДА" : "НЕТ" ?></td>
+                            <td>
+                                <?php
+                                if($no_ski) {
+                                    echo "Без лыж";
+                                }
+                                else {
+                                    echo rtrim(rtrim(number_format($ski, 2, ",", " "), "0"), ",")." м";
+                                }
+                                ?>
+                            </td>
                         </tr>
                             <?php
                             endif;
