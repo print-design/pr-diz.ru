@@ -909,23 +909,25 @@ elseif(!empty ($id) && !empty ($date)) {
             <?php
             $cliche_price = 0;
             for($i=1; $i<=8; $i++) {
-                $paint_var = "paint_$i";
-                $cliche_var = "form_$i";
-                if(!empty($$paint_var)) {
-                    if($$cliche_var == 'old') {
-                        echo "<div class='value mb-2'>$cliche_price + 0 = ".$cliche_price."</div>";
-                    }
-                    elseif($$cliche_var == 'flint') {
-                        echo "<div class='value mb-2'>$cliche_price + $cliche_flint_price = ".($cliche_price + $cliche_flint_price)."</div>";
-                        $cliche_price += $cliche_flint_price;
-                    }
-                    elseif($$cliche_var == 'kodak') {
-                        echo "<div class='value mb-2'>$cliche_price + $cliche_kodak_price = ".($cliche_price + $cliche_kodak_price)."</div>";
-                        $cliche_price += $cliche_kodak_price;
-                    }
-                    elseif($$cliche_var == 'tver') {
-                        echo "<div class='value mb-2'>$cliche_price + $cliche_tver_price = ".($cliche_price + $cliche_tver_price)."</div>";
-                        $cliche_price += $cliche_tver_price;
+                if(!empty($paints_count) && $paints_count >= $i) {
+                    $paint_var = "paint_$i";
+                    $cliche_var = "form_$i";
+                    if(!empty($$paint_var)) {
+                        if($$cliche_var == 'old') {
+                            echo "<div class='value mb-2'>$cliche_price + 0 = ".$cliche_price."</div>";
+                        }
+                        elseif($$cliche_var == 'flint') {
+                            echo "<div class='value mb-2'>$cliche_price + $cliche_flint_price = ".($cliche_price + $cliche_flint_price)."</div>";
+                            $cliche_price += $cliche_flint_price;
+                        }
+                        elseif($$cliche_var == 'kodak') {
+                            echo "<div class='value mb-2'>$cliche_price + $cliche_kodak_price = ".($cliche_price + $cliche_kodak_price)."</div>";
+                            $cliche_price += $cliche_kodak_price;
+                        }
+                        elseif($$cliche_var == 'tver') {
+                            echo "<div class='value mb-2'>$cliche_price + $cliche_tver_price = ".($cliche_price + $cliche_tver_price)."</div>";
+                            $cliche_price += $cliche_tver_price;
+                        }
                     }
                 }
             }
@@ -949,104 +951,106 @@ elseif(!empty ($id) && !empty ($date)) {
             $paint_price = 0;
             
             for($i=1; $i<8; $i++) {
-                $paint_var = "paint_$i";
-                $percent_var = "percent_$i";
-                $cmyk_var = "cmyk_$i";
+                if(!empty($paints_count) && $paints_count >= $i) {
+                    $paint_var = "paint_$i";
+                    $percent_var = "percent_$i";
+                    $cmyk_var = "cmyk_$i";
                 
-                if(!empty($$paint_var)) {
-                    // Площадь запечатки, м2
-                    // площадь тиража с отходами * процент краски / 100
-                    $paint_area = $dirty_area * $$percent_var / 100;
-                    echo "<div class='value mb-2'>1) $dirty_area * ".$$percent_var." / 100 = $paint_area</div>";
+                    if(!empty($$paint_var)) {
+                        // Площадь запечатки, м2
+                        // площадь тиража с отходами * процент краски / 100
+                        $paint_area = $dirty_area * $$percent_var / 100;
+                        echo "<div class='value mb-2'>1) $dirty_area * ".$$percent_var." / 100 = $paint_area</div>";
                     
-                    // Расход краски, г/м2
-                    $paint_expense_final = 0;
+                        // Расход краски, г/м2
+                        $paint_expense_final = 0;
                     
-                    // Стоимость краски за 1 кг, руб
-                    $paint_price_final = 0;
+                        // Стоимость краски за 1 кг, руб
+                        $paint_price_final = 0;
                     
-                    // Стоимость растворителя за 1 кг, руб
-                    $solvent_price_final = 0;
+                        // Стоимость растворителя за 1 кг, руб
+                        $solvent_price_final = 0;
                     
-                    // Процент краски по отношению к растворителю
-                    $paint_solvent_final = 0;
+                        // Процент краски по отношению к растворителю
+                        $paint_solvent_final = 0;
                     
-                    switch ($$paint_var) {
-                        case CMYK:
-                            switch ($$cmyk_var) {
-                                case CYAN:
-                                    $paint_expense_final = $paint_c_expense;
-                                    $paint_price_final = $paint_c;
-                                    $solvent_price_final = $paint_solvent;
-                                    $paint_solvent_final = $paint_paint_solvent;
-                                    break;
-                                case MAGENTA:
-                                    $paint_expense_final = $paint_m_expense;
-                                    $paint_price_final = $paint_m;
-                                    $solvent_price_final = $paint_solvent;
-                                    $paint_solvent_final = $paint_paint_solvent;
-                                    break;
-                                case YELLOW:
-                                    $paint_expense_final = $paint_y_expense;
-                                    $paint_price_final = $paint_y;
-                                    $solvent_price_final = $paint_solvent;
-                                    $paint_solvent_final = $paint_paint_solvent;
-                                    break;
-                                case KONTUR:
-                                    $paint_expense_final = $paint_k_expense;
-                                    $paint_price_final = $paint_k;
-                                    $solvent_price_final = $paint_solvent;
-                                    $paint_solvent_final = $paint_paint_solvent;
-                                    break;
-                            };
-                            break;
-                        case PANTON:
-                            $paint_expense_final = $paint_panton_expense;
-                            $paint_price_final = $paint_panton;
-                            $solvent_price_final = $paint_solvent;
-                            $paint_solvent_final = $paint_paint_solvent;
-                            break;
-                        case WHITE:
-                            $paint_expense_final = $paint_white_expense;
-                            $paint_price_final = $paint_white;
-                            $solvent_price_final = $paint_solvent;
-                            $paint_solvent_final = $paint_paint_solvent;
-                            break;
-                        case LACQUER:
-                            $paint_expense_final = $paint_lacquer_expense;
-                            $paint_price_final = $paint_lacquer;
-                            $solvent_price_final = $paint_solvent_l;
-                            $paint_solvent_final = $paint_lacquer_solvent_l;
-                            break;
+                        switch ($$paint_var) {
+                            case CMYK:
+                                switch ($$cmyk_var) {
+                                    case CYAN:
+                                        $paint_expense_final = $paint_c_expense;
+                                        $paint_price_final = $paint_c;
+                                        $solvent_price_final = $paint_solvent;
+                                        $paint_solvent_final = $paint_paint_solvent;
+                                        break;
+                                    case MAGENTA:
+                                        $paint_expense_final = $paint_m_expense;
+                                        $paint_price_final = $paint_m;
+                                        $solvent_price_final = $paint_solvent;
+                                        $paint_solvent_final = $paint_paint_solvent;
+                                        break;
+                                    case YELLOW:
+                                        $paint_expense_final = $paint_y_expense;
+                                        $paint_price_final = $paint_y;
+                                        $solvent_price_final = $paint_solvent;
+                                        $paint_solvent_final = $paint_paint_solvent;
+                                        break;
+                                    case KONTUR:
+                                        $paint_expense_final = $paint_k_expense;
+                                        $paint_price_final = $paint_k;
+                                        $solvent_price_final = $paint_solvent;
+                                        $paint_solvent_final = $paint_paint_solvent;
+                                        break;
+                                };
+                                break;
+                            case PANTON:
+                                $paint_expense_final = $paint_panton_expense;
+                                $paint_price_final = $paint_panton;
+                                $solvent_price_final = $paint_solvent;
+                                $paint_solvent_final = $paint_paint_solvent;
+                                break;
+                            case WHITE:
+                                $paint_expense_final = $paint_white_expense;
+                                $paint_price_final = $paint_white;
+                                $solvent_price_final = $paint_solvent;
+                                $paint_solvent_final = $paint_paint_solvent;
+                                break;
+                            case LACQUER:
+                                $paint_expense_final = $paint_lacquer_expense;
+                                $paint_price_final = $paint_lacquer;
+                                $solvent_price_final = $paint_solvent_l;
+                                $paint_solvent_final = $paint_lacquer_solvent_l;
+                                break;
+                        }
+                    
+                        // Количество краски, кг
+                        // площадь запечатки * расход краски / 1000
+                        $paint_quantity = $paint_area * $paint_expense_final / 1000;
+                        echo "<div class='value mb-2'>2) $paint_area * $paint_expense_final / 1000 = $paint_quantity</div>";
+                    
+                        // Стоимость неразведённой краски, руб
+                        // количество краски * стоимость краски за 1 кг
+                        $paint_price_sum = $paint_quantity * $paint_price_final;
+                        echo "<div class='value mb-2'>3) $paint_quantity * $paint_price_final = $paint_price_sum</div>";
+                    
+                        // Проверяем, чтобы стоимость была не меньше минимальной стоимости
+                        if($paint_price_sum < $paint_min_price) {
+                            $paint_price_sum = $paint_min_price;
+                        }
+                    
+                        // Стоимость растворителя
+                        // количество краски * стоимость растворителя за 1 кг
+                        $solvent_price_sum = $paint_quantity * $solvent_price_final;
+                        echo "<div class='value mb-2'>4) $paint_quantity * $solvent_price_final = $solvent_price_sum</div>";
+                    
+                        // Стоимость разведённой краски
+                        // (стоимость краски * процент краски / 100) + (стоимость растворителя * (100 - процент краски) / 100)
+                        $paint_solvent_price_sum = ($paint_price_sum * $paint_solvent_final / 100) + ($solvent_price_sum * (100 - $paint_solvent_final) / 100);
+                        echo "<div class='value mb-2'>5) ($paint_price_sum * $paint_solvent_final / 100) + ($solvent_price_sum * (100 - $paint_solvent_final) / 100) = $paint_solvent_price_sum</div>";
+                    
+                        echo "<div class='value mb-2'>$paint_solvent_price_sum + $paint_price = ".($paint_solvent_price_sum + $paint_price)."</div><div>---</div>";
+                        $paint_price += $paint_solvent_price_sum;
                     }
-                    
-                    // Количество краски, кг
-                    // площадь запечатки * расход краски / 1000
-                    $paint_quantity = $paint_area * $paint_expense_final / 1000;
-                    echo "<div class='value mb-2'>2) $paint_area * $paint_expense_final / 1000 = $paint_quantity</div>";
-                    
-                    // Стоимость неразведённой краски, руб
-                    // количество краски * стоимость краски за 1 кг
-                    $paint_price_sum = $paint_quantity * $paint_price_final;
-                    echo "<div class='value mb-2'>3) $paint_quantity * $paint_price_final = $paint_price_sum</div>";
-                    
-                    // Проверяем, чтобы стоимость была не меньше минимальной стоимости
-                    if($paint_price_sum < $paint_min_price) {
-                        $paint_price_sum = $paint_min_price;
-                    }
-                    
-                    // Стоимость растворителя
-                    // количество краски * стоимость растворителя за 1 кг
-                    $solvent_price_sum = $paint_quantity * $solvent_price_final;
-                    echo "<div class='value mb-2'>4) $paint_quantity * $solvent_price_final = $solvent_price_sum</div>";
-                    
-                    // Стоимость разведённой краски
-                    // (стоимость краски * процент краски / 100) + (стоимость растворителя * (100 - процент краски) / 100)
-                    $paint_solvent_price_sum = ($paint_price_sum * $paint_solvent_final / 100) + ($solvent_price_sum * (100 - $paint_solvent_final) / 100);
-                    echo "<div class='value mb-2'>5) ($paint_price_sum * $paint_solvent_final / 100) + ($solvent_price_sum * (100 - $paint_solvent_final) / 100) = $paint_solvent_price_sum</div>";
-                    
-                    echo "<div class='value mb-2'>$paint_solvent_price_sum + $paint_price = ".($paint_solvent_price_sum + $paint_price)."</div><div>---</div>";
-                    $paint_price += $paint_solvent_price_sum;
                 }
             }
             ?>

@@ -305,21 +305,30 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         // Данные о цвете
         for($i=1; $i<=8; $i++) {
             $paint_var = "paint_$i";
-            $$paint_var = filter_input(INPUT_POST, "paint_$i");
-            
             $color_var = "color_$i";
-            $$color_var = filter_input(INPUT_POST, "color_$i");
-            if(empty($$color_var)) $$color_var = "NULL";
-            
             $cmyk_var = "cmyk_$i";
-            $$cmyk_var = filter_input(INPUT_POST, "cmyk_$i");
-            
             $percent_var = "percent_$i";
-            $$percent_var = filter_input(INPUT_POST, "percent_$i");
-            if(empty($$percent_var)) $$percent_var = "NULL";
-            
             $form_var = "form_$i";
-            $$form_var = filter_input(INPUT_POST, "form_$i");
+            
+            $$paint_var = null;
+            $$color_var = "NULL";
+            $$cmyk_var = null;
+            $$percent_var = "NULL";
+            $$form_var = null;
+            
+            if(!empty($paints_count) && $paints_count >= $i) {
+                $$paint_var = filter_input(INPUT_POST, "paint_$i");
+            
+                $$color_var = filter_input(INPUT_POST, "color_$i");
+                if(empty($$color_var)) $$color_var = "NULL";
+            
+                $$cmyk_var = filter_input(INPUT_POST, "cmyk_$i");
+            
+                $$percent_var = filter_input(INPUT_POST, "percent_$i");
+                if(empty($$percent_var)) $$percent_var = "NULL";
+            
+                $$form_var = filter_input(INPUT_POST, "form_$i");
+            }
         }
         
         // ************************************
@@ -696,20 +705,22 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         for ($i=1; $i<=8; $i++) {
-            $paint_var = "paint_$i";
-            $$paint_var = filter_input(INPUT_POST, "paint_$i");
+            if(!empty($paints_count) && $paints_count >= $i) {
+                $paint_var = "paint_$i";
+                $$paint_var = filter_input(INPUT_POST, "paint_$i");
     
-            $color_var = "color_$i";
-            $$color_var = filter_input(INPUT_POST, "color_$i");
+                $color_var = "color_$i";
+                $$color_var = filter_input(INPUT_POST, "color_$i");
     
-            $cmyk_var = "cmyk_$i";
-            $$cmyk_var = filter_input(INPUT_POST, "cmyk_$i");
+                $cmyk_var = "cmyk_$i";
+                $$cmyk_var = filter_input(INPUT_POST, "cmyk_$i");
     
-            $percent_var = "percent_$i";
-            $$percent_var = filter_input(INPUT_POST, "percent_$i");
+                $percent_var = "percent_$i";
+                $$percent_var = filter_input(INPUT_POST, "percent_$i");
     
-            $cliche_var = "cliche_$i";
-            $$cliche_var = filter_input(INPUT_POST, "form_$i");
+                $cliche_var = "cliche_$i";
+                $$cliche_var = filter_input(INPUT_POST, "form_$i");
+            }
         }
         
         // Данные о клее при ламинации
@@ -923,20 +934,22 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         if(!empty($cliche_flint_price) && !empty($cliche_kodak_price) && !empty($cliche_tver_price)) {
             // Перебираем все используемые краски
             for($i=1; $i<=8; $i++) {
-                $paint_var = "paint_$i";
-                $cliche_var = "cliche_$i";
-                if(!empty($$paint_var)) {        
-                    if($$cliche_var == 'old') {
-                        $cliche_price += 0;
-                    }
-                    elseif($$cliche_var == 'flint') {
-                        $cliche_price += $cliche_flint_price;
-                    }
-                    elseif($$cliche_var == 'kodak') {
-                        $cliche_price += $cliche_kodak_price;
-                    }
-                    elseif($$cliche_var == 'tver') {
-                        $cliche_price += $cliche_tver_price;
+                if(!empty($paints_count) && $paints_count >= $i) {
+                    $paint_var = "paint_$i";
+                    $cliche_var = "cliche_$i";
+                    if(!empty($$paint_var)) {        
+                        if($$cliche_var == 'old') {
+                            $cliche_price += 0;
+                        }
+                        elseif($$cliche_var == 'flint') {
+                            $cliche_price += $cliche_flint_price;
+                        }
+                        elseif($$cliche_var == 'kodak') {
+                            $cliche_price += $cliche_kodak_price;
+                        }
+                        elseif($$cliche_var == 'tver') {
+                            $cliche_price += $cliche_tver_price;
+                        }
                     }
                 }
             }
@@ -950,98 +963,100 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             
             // Перебираем все используемые краски, лаки
             for($i=1; $i<8; $i++) {
-                $paint_var = "paint_$i";
-                $percent_var = "percent_$i";
-                $cmyk_var = "cmyk_$i";
+                if(!empty($paints_count) && $paints_count >= $i) {
+                    $paint_var = "paint_$i";
+                    $percent_var = "percent_$i";
+                    $cmyk_var = "cmyk_$i";
                 
-                if(!empty($$paint_var)) {
-                    // Площадь запечатки, м2
-                    // площадь тиража с отходами * процент краски / 100
-                    $paint_area = $dirty_area * $$percent_var / 100;
+                    if(!empty($$paint_var)) {
+                        // Площадь запечатки, м2
+                        // площадь тиража с отходами * процент краски / 100
+                        $paint_area = $dirty_area * $$percent_var / 100;
                     
-                    // Расход краски, г/м2
-                    $paint_expense_final = 0;
+                        // Расход краски, г/м2
+                        $paint_expense_final = 0;
                     
-                    // Стоимость краски за 1 кг, руб
-                    $paint_price_final = 0;
+                        // Стоимость краски за 1 кг, руб
+                        $paint_price_final = 0;
                     
-                    // Стоимость растворителя за 1 кг, руб
-                    $solvent_price_final = 0;
+                        // Стоимость растворителя за 1 кг, руб
+                        $solvent_price_final = 0;
                     
-                    // Процент краски по отношению к растворителю
-                    $paint_solvent_final = 0;
+                        // Процент краски по отношению к растворителю
+                        $paint_solvent_final = 0;
                     
-                    switch ($$paint_var) {
-                        case CMYK:
-                            switch ($$cmyk_var) {
-                                case CYAN:
-                                    $paint_expense_final = $paint_c_expense;
-                                    $paint_price_final = $paint_c;
-                                    $solvent_price_final = $paint_solvent;
-                                    $paint_solvent_final = $paint_paint_solvent;
-                                    break;
-                                case MAGENTA:
-                                    $paint_expense_final = $paint_m_expense;
-                                    $paint_price_final = $paint_m;
-                                    $solvent_price_final = $paint_solvent;
-                                    $paint_solvent_final = $paint_paint_solvent;
-                                    break;
-                                case YELLOW:
-                                    $paint_expense_final = $paint_y_expense;
-                                    $paint_price_final = $paint_y;
-                                    $solvent_price_final = $paint_solvent;
-                                    $paint_solvent_final = $paint_paint_solvent;
-                                    break;
-                                case KONTUR:
-                                    $paint_expense_final = $paint_k_expense;
-                                    $paint_price_final = $paint_k;
-                                    $solvent_price_final = $paint_solvent;
-                                    $paint_solvent_final = $paint_paint_solvent;
-                                    break;
-                            };
-                            break;
-                        case PANTON:
-                            $paint_expense_final = $paint_panton_expense;
-                            $paint_price_final = $paint_panton;
-                            $solvent_price_final = $paint_solvent;
-                            $paint_solvent_final = $paint_paint_solvent;
-                            break;
-                        case WHITE:
-                            $paint_expense_final = $paint_white_expense;
-                            $paint_price_final = $paint_white;
-                            $solvent_price_final = $paint_solvent;
-                            $paint_solvent_final = $paint_paint_solvent;
-                            break;
-                        case LACQUER:
-                            $paint_expense_final = $paint_lacquer_expense;
-                            $paint_price_final = $paint_lacquer;
-                            $solvent_price_final = $paint_solvent_l;
-                            $paint_solvent_final = $paint_lacquer_solvent_l;
-                            break;
+                        switch ($$paint_var) {
+                            case CMYK:
+                                switch ($$cmyk_var) {
+                                    case CYAN:
+                                        $paint_expense_final = $paint_c_expense;
+                                        $paint_price_final = $paint_c;
+                                        $solvent_price_final = $paint_solvent;
+                                        $paint_solvent_final = $paint_paint_solvent;
+                                        break;
+                                    case MAGENTA:
+                                        $paint_expense_final = $paint_m_expense;
+                                        $paint_price_final = $paint_m;
+                                        $solvent_price_final = $paint_solvent;
+                                        $paint_solvent_final = $paint_paint_solvent;
+                                        break;
+                                    case YELLOW:
+                                        $paint_expense_final = $paint_y_expense;
+                                        $paint_price_final = $paint_y;
+                                        $solvent_price_final = $paint_solvent;
+                                        $paint_solvent_final = $paint_paint_solvent;
+                                        break;
+                                    case KONTUR:
+                                        $paint_expense_final = $paint_k_expense;
+                                        $paint_price_final = $paint_k;
+                                        $solvent_price_final = $paint_solvent;
+                                        $paint_solvent_final = $paint_paint_solvent;
+                                        break;
+                                };
+                                break;
+                            case PANTON:
+                                $paint_expense_final = $paint_panton_expense;
+                                $paint_price_final = $paint_panton;
+                                $solvent_price_final = $paint_solvent;
+                                $paint_solvent_final = $paint_paint_solvent;
+                                break;
+                            case WHITE:
+                                $paint_expense_final = $paint_white_expense;
+                                $paint_price_final = $paint_white;
+                                $solvent_price_final = $paint_solvent;
+                                $paint_solvent_final = $paint_paint_solvent;
+                                break;
+                            case LACQUER:
+                                $paint_expense_final = $paint_lacquer_expense;
+                                $paint_price_final = $paint_lacquer;
+                                $solvent_price_final = $paint_solvent_l;
+                                $paint_solvent_final = $paint_lacquer_solvent_l;
+                                break;
+                        }
+                    
+                        // Количество краски, кг
+                        // площадь запечатки * расход краски / 1000
+                        $paint_quantity = $paint_area * $paint_expense_final / 1000;
+                    
+                        // Стоимость неразведённой краски, руб
+                        // количество краски * стоимость краски за 1 кг
+                        $paint_price_sum = $paint_quantity * $paint_price_final;
+                    
+                        // Проверяем, чтобы стоимость была не меньше минимальной стоимости
+                        if($paint_price_sum < $paint_min_price) {
+                            $paint_price_sum = $paint_min_price;
+                        }
+                    
+                        // Стоимость растворителя
+                        // количество краски * стоимость растворителя за 1 кг
+                        $solvent_price_sum = $paint_quantity * $solvent_price_final;
+                    
+                        // Стоимость разведённой краски
+                        // (стоимость краски * процент краски / 100) + (стоимость краски * (100 - процент краски) / 100)
+                        $paint_solvent_price_sum = ($paint_price_sum * $paint_solvent_final / 100) + ($solvent_price_sum * (100 - $paint_solvent_final) / 100);
+                    
+                        $paint_price += $paint_solvent_price_sum;
                     }
-                    
-                    // Количество краски, кг
-                    // площадь запечатки * расход краски / 1000
-                    $paint_quantity = $paint_area * $paint_expense_final / 1000;
-                    
-                    // Стоимость неразведённой краски, руб
-                    // количество краски * стоимость краски за 1 кг
-                    $paint_price_sum = $paint_quantity * $paint_price_final;
-                    
-                    // Проверяем, чтобы стоимость была не меньше минимальной стоимости
-                    if($paint_price_sum < $paint_min_price) {
-                        $paint_price_sum = $paint_min_price;
-                    }
-                    
-                    // Стоимость растворителя
-                    // количество краски * стоимость растворителя за 1 кг
-                    $solvent_price_sum = $paint_quantity * $solvent_price_final;
-                    
-                    // Стоимость разведённой краски
-                    // (стоимость краски * процент краски / 100) + (стоимость краски * (100 - процент краски) / 100)
-                    $paint_solvent_price_sum = ($paint_price_sum * $paint_solvent_final / 100) + ($solvent_price_sum * (100 - $paint_solvent_final) / 100);
-                    
-                    $paint_price += $paint_solvent_price_sum;
                 }
             }
         }
