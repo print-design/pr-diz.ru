@@ -129,7 +129,7 @@ elseif(!empty ($id) && !empty ($date)) {
         
     // Цена ламинации 2
     $c_price_lam2 = null;
-        
+    
     if(!empty($lamination2_other_price)) {
         $c_price_lam2 = $lamination2_other_price;
     }
@@ -156,7 +156,7 @@ elseif(!empty ($id) && !empty ($date)) {
     $tuning_times = array();
     $tuning_lengths = array();
     $tuning_waste_percents = array();
-        
+    
     $sql = "select machine_id, time, length, waste_percent "
             . "from norm_fitting "
             . "where date in (select max(date) from norm_fitting where date <= '$date' group by machine_id)";
@@ -166,7 +166,7 @@ elseif(!empty ($id) && !empty ($date)) {
         $tuning_lengths[$row['machine_id']] = $row['length'];
         $tuning_waste_percents[$row['machine_id']] = $row['waste_percent'];
     }
-        
+    
     // Данные о машине
     $machine_speeds = array();
     $machine_prices = array();
@@ -179,7 +179,7 @@ elseif(!empty ($id) && !empty ($date)) {
         $machine_prices[$row['machine_id']] = $row['price'];
         $machine_speeds[$row['machine_id']] = $row['speed'];
     }
-        
+    
     // Данные о форме
     $cliche_flint = null;
     $cliche_kodak = null;
@@ -243,7 +243,7 @@ elseif(!empty ($id) && !empty ($date)) {
             }
         }
     }
-        
+    
     // Данные о красках
     $paint_c = null;
     $paint_c_expense = null;
@@ -419,7 +419,7 @@ elseif(!empty ($id) && !empty ($date)) {
     $price_lam_total = null;    $pure_weight_total = null;    $dirty_weight_total = null;
     $cost_no_cliche = null;    $cost_with_cliche = null;    $cost_no_cliche_kg = null;
     $cost_with_cliche_kg = null;    $cost_no_cliche_thing = null;    $cost_with_cliche_thing = null;
-
+    
     $sql = "select pure_area, pure_width, pure_length, pure_length_lam, "
             . "dirty_length, dirty_width, dirty_area, pure_weight, dirty_weight, material_price, print_time, tuning_time, "
             . "print_tuning_time, print_price, cliche_area, cliche_flint_price, cliche_kodak_price, cliche_tver_price, "
@@ -695,6 +695,21 @@ elseif(!empty ($id) && !empty ($date)) {
                 <div class="d-table-cell pb-1">
                     <div class="param-name">Стоимость процесса ламинации 2</div>
                     <div class="value"><?=rtrim(rtrim(number_format($price_lam2_work, 3, ",", " "), "0"), ",") ?> руб</div>
+                </div>
+                <?php endif; ?>
+            </div>
+            <div class="d-table-row">
+                <div class="d-table-cell pb-1" style="width: 33%;"></div>
+                <?php if($work_type_id == 2): ?>
+                <div class="d-table-cell pb-1">
+                    <div class="param-name">Длина приладки</div>
+                    <div class="value"><?= rtrim(rtrim(number_format($tuning_lengths[$machine_id], 3, ",", " "), "0"), ",") ?> м</div>
+                </div>
+                <?php endif; ?>
+                <?php if(!empty($lamination1_brand_name)): ?>
+                <div class="d-table-cell pb-1">
+                    <div class="param-name">Длина приладки</div>
+                    <div class="value"><?= rtrim(rtrim(number_format($tuning_lengths[$laminator_machine_id], 3, ",", " "), "0"), ",") ?> м</div>
                 </div>
                 <?php endif; ?>
             </div>
