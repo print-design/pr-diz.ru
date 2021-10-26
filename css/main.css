@@ -527,13 +527,18 @@ textarea#editable {
 }
 
 /* Правая панель расчётов */
+.param-name {
+    font-weight: bold;
+    color: #3794cc;
+}
+
+.algorithm {
+    color: #3945af;
+}
+
 #calculation {
     right: 15px;
     margin-top: 140px;
-}
-
-#calculation .param-name {
-    font-weight: bold;
 }
 
 #calculation .value {
