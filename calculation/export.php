@@ -583,7 +583,7 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     echo mb_convert_encoding("Название изготовителя новых форм :$new_forms_vendor;\n", "cp1251");
     echo mb_convert_encoding("Изготовителя новых форм (номер):$new_forms_vendor_id;\n", "cp1251");
     echo mb_convert_encoding("Печать с лыжами :$with_ski;\n", "cp1251");
-    echo mb_convert_encoding("Ширина лыж,м :      $ski;\n", "cp1251");
+    echo mb_convert_encoding("Ширина лыж,м :      ".($ski / 1000).";\n", "cp1251");
     echo mb_convert_encoding("Расход краски, ProcentC :      $procentc;\n", "cp1251");
     echo mb_convert_encoding("Расход краски, ProcentM :      $procentm;\n", "cp1251");
     echo mb_convert_encoding("Расход краски, ProcentY :      $procenty;\n", "cp1251");

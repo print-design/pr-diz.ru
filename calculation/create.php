@@ -813,7 +813,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $dirty_width = $pure_width / 1000;
         }
         else {
-            $dirty_width = ($pure_width / 1000) + $ski;
+            $dirty_width = ($pure_width + $ski) / 1000;
         }
             
         $vari = intval($dirty_width * 1000);
@@ -2439,14 +2439,14 @@ $colorfulnesses = array();
                                     <input<?=$disabled ?> type="text" 
                                            id="ski" 
                                            name="ski" 
-                                           class="form-control float-only print-only d-none" 
-                                           placeholder="Ширина лыж, м" 
-                                           value="<?= empty($ski) ? 0.02 : floatval($ski) ?>" 
+                                           class="form-control int-only print-only d-none" 
+                                           placeholder="Ширина лыж, мм" 
+                                           value="<?= empty($ski) ? 20 : intval($ski) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'ski'); $(this).attr('name', 'ski'); $(this).attr('placeholder', 'Ширина лыж, м');" 
+                                           onmouseup="javascript: $(this).attr('id', 'ski'); $(this).attr('name', 'ski'); $(this).attr('placeholder', 'Ширина лыж, мм');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'ski'); $(this).attr('name', 'ski'); $(this).attr('placeholder', 'Ширина лыж, м');" 
-                                           onfocusout="javascript: $(this).attr('id', 'ski'); $(this).attr('name', 'ski'); $(this).attr('placeholder', 'Ширина лыж, м');" />
+                                           onkeyup="javascript: $(this).attr('id', 'ski'); $(this).attr('name', 'ski'); $(this).attr('placeholder', 'Ширина лыж, мм');" 
+                                           onfocusout="javascript: $(this).attr('id', 'ski'); $(this).attr('name', 'ski'); $(this).attr('placeholder', 'Ширина лыж, мм');" />
                                     <div class="invalid-feedback">Ширина лыж обязательно</div>
                                 </div>
                             </div>
