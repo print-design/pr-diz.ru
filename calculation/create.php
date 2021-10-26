@@ -962,7 +962,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $paint_price = 0;
             
             // Перебираем все используемые краски, лаки
-            for($i=1; $i<8; $i++) {
+            for($i=1; $i<=8; $i++) {
                 if(!empty($paints_count) && $paints_count >= $i) {
                     $paint_var = "paint_$i";
                     $percent_var = "percent_$i";
