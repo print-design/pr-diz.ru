@@ -249,7 +249,7 @@ $num_for_customer = $row['num_for_customer'];
                             endif;
                             if(!empty($width)):
                             ?>
-                        <tr><th>Ширина плёнки</th><td><?=$width ?> мм</td></tr>
+                        <tr><th>Ширина материала</th><td><?=$width ?> мм</td></tr>
                             <?php
                             endif;
                             if(!empty($stream_width)):

@@ -2017,19 +2017,19 @@ $colorfulnesses = array();
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="width">Ширина пленки, мм</label>
+                                    <label for="width">Ширина материала, мм</label>
                                     <input type="text" 
                                            id="width" 
                                            name="width" 
                                            class="form-control int-only<?=$width_valid ?>" 
                                            required="required" 
-                                           placeholder="Ширина пленки, мм" 
+                                           placeholder="Ширина материала, мм" 
                                            value="<?=$width ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина пленки, мм')" 
+                                           onmouseup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина материала, мм')" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина пленки, мм')" 
-                                           onfocusout="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина пленки, мм')" />
+                                           onkeyup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина материала, мм')" 
+                                           onfocusout="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина материала, мм')" />
                                     <div class="invalid-feedback"><?=$width_valid_message ?></div>
                                 </div>
                             </div>
