@@ -140,6 +140,11 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $width_valid = ISINVALID;
         $form_valid = false;
     }
+    elseif(!empty(filter_input(INPUT_POST, 'lamination1_brand_name')) && $width > MAX_LAMINATION_WIDTH) {
+        $width_valid_message = "Ширина для ламинации не более ".MAX_LAMINATION_WIDTH." мм";
+        $width_valid = ISINVALID;
+        $form_valid = false;
+    }
     elseif(!empty($machine_id)) {
         $machine_name = "";
         $machine_max_width = 0;
@@ -157,11 +162,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $width_valid = ISINVALID;
             $form_valid = false;
         }
-    }
-    elseif($width > MAX_LAMINATION_WIDTH) {
-        $width_valid_message = "Ширина для ламинации не более ".MAX_LAMINATION_WIDTH." мм";
-        $width_valid = ISINVALID;
-        $form_valid = false;
     }
     
     // Сумма ширин ручьёв должна быть равна ширине плёнки
