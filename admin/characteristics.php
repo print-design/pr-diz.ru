@@ -140,7 +140,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="max_width">Максимальная ширина материала, мм</label>
                             <input type="text" 
-                                   class="form-control float-only" 
+                                   class="form-control int-only" 
                                    id="max_width" 
                                    name="max_width" 
                                    value="<?= empty($max_width) || $max_width == 0.0 ? "" : floatval($max_width) ?>" 

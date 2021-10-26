@@ -23,6 +23,9 @@ const PANTON = "panton";
 const WHITE = "white";
 const LACQUER = "lacquer";
 
+// Максимальная ширина для ламинации
+const MAX_LAMINATION_WIDTH = 104;
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -39,6 +42,9 @@ $other_brand_name_valid = '';
 $other_price_valid = '';
 $other_thickness_valid = '';
 $other_weight_valid = '';
+
+$width_valid = '';
+$width_valid_message = "Ширина обязательно";
 
 // Переменные для валидации цвета, CMYK и процента
 for($i=1; $i<=8; $i++) {
@@ -60,6 +66,35 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     // Если тип работы "Пленка без печати", то обязательно требуем добавить хотя бы одну ламинацию
     if(filter_input(INPUT_POST, 'work_type_id') == 1 && empty(filter_input(INPUT_POST, 'lamination1_brand_name'))) {
         $error_message = "Если тип работы 'Пленка без печати', то выберите хотя бы одну ламинацию";
+    }
+    
+    // Проверка ширины, чтобы она была не больше, чем возможно для данной машины
+    $width = filter_input(INPUT_POST, 'width');
+    
+    if(empty($width)) {
+        $width_valid = ISINVALID;
+        $form_valid = false;
+    }
+    elseif(!empty($machine_id)) {
+        $machine_name = "";
+        $machine_max_width = 0;
+        
+        $sql = "select name, max_width from machine where id = $machine_id";
+        $fetcher = new Fetcher($sql);
+        
+        if($row = $fetcher->Fetch()) {
+            $machine_name = $row['name'];
+            $machine_max_width = $row['max_width'];
+        }
+        
+        if($width > $machine_max_width) {
+            $width_valid_message = "Ширина для $machine_name не более $machine_max_width мм";
+        }
+    }
+    elseif($width > MAX_LAMINATION_WIDTH) {
+        $width_valid_message = "Ширина для ламинации не более ".MAX_LAMINATION_WIDTH." мм";
+        $width_valid = ISINVALID;
+        $form_valid = false;
     }
     
     // Валидация
@@ -431,7 +466,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $tuning_waste_percents[$row['machine_id']] = $row['waste_percent'];
         }
         
-        // Данные о машине
+        // Данные о нормах работы машин
         $machine_speeds = array();
         $machine_prices = array();
         
@@ -1941,7 +1976,7 @@ $colorfulnesses = array();
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина, мм')" 
                                            onfocusout="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина, мм')" />
-                                    <div class="invalid-feedback">Ширина обязательно</div>
+                                    <div class="invalid-feedback"><?=$width_valid_message ?></div>
                                 </div>
                             </div>
                             <div class="col-6">
