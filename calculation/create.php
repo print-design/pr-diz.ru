@@ -49,6 +49,7 @@ $stream_width_valid = '';
 $stream_width_valid_message = "Ширина ручья обязательно";
 $streams_count_valid = '';
 $streams_count_valid_message = "Количество ручьёв обязательно";
+$length_valid = '';
 
 // Переменные для валидации цвета, CMYK и процента
 for($i=1; $i<=8; $i++) {
@@ -130,10 +131,11 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
     }
     
-    // Проверка ширины, чтобы она была не больше, чем возможно для данной машины
+    // Ширина должна быть всегда указана: как для печати так и для ламинации без печати.
+    // Она должна быть не больше, чем возможно для данной машины.
     $width = filter_input(INPUT_POST, 'width');
+    $machine_id = filter_input(INPUT_POST, 'machine_id');
     
-    // Ширина должна быть всегда указана: как для печати так и для ламинации без печати
     if(empty($width)) {
         $width_valid = ISINVALID;
         $form_valid = false;
@@ -152,6 +154,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         if($width > $machine_max_width) {
             $width_valid_message = "Ширина для $machine_name не более $machine_max_width мм";
+            $width_valid = ISINVALID;
+            $form_valid = false;
         }
     }
     elseif($width > MAX_LAMINATION_WIDTH) {
@@ -164,11 +168,20 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     $stream_width = filter_input(INPUT_POST, 'stream_width');
     $streams_count = filter_input(INPUT_POST, 'streams_count');
     
-    if($stream_width * $streams_count != $width) {
+    if(!empty($stream_width) && !empty($streams_count) && $stream_width * $streams_count != $width) {
         $stream_width_valid = ISINVALID;
         $streams_count_valid = ISINVALID;
         $stream_width_valid_message = "Сумма не равна ширине плёнки";
         $streams_count_valid_message = "Сумма не равна ширине плёнки";
+        $form_valid = false;
+    }
+    
+    // Если объём заказа в штуках, то длина этикетки вдоль рапорта вала обязательно, больше нуля
+    $unit = filter_input(INPUT_POST, 'unit');
+    $length = filter_input(INPUT_POST, 'length');
+    
+    if($unit == 'thing' && empty($length)) {
+        $length_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -2367,7 +2380,7 @@ $colorfulnesses = array();
                                     <input type="text" 
                                            id="length" 
                                            name="length" 
-                                           class="form-control int-only print-only d-none" 
+                                           class="form-control int-only print-only d-none<?=$length_valid ?>" 
                                            placeholder="Длина этикетки вдоль рапорта вала, мм" 
                                            value="<?= $length === null ? "" : floatval($length) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -2375,7 +2388,7 @@ $colorfulnesses = array();
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки вдоль рапорта вала, мм');" 
                                            onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки вдоль рапорта вала, мм');" />
-                                    <div class="invalid-feedback">Длина этикетки вдоль рапорта вала обязательно</div>
+                                    <div class="invalid-feedback">Длина обязательно, больше нуля</div>
                                 </div>
                             </div>
                             <!-- Рапорт -->
