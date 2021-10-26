@@ -155,9 +155,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     }
     
     $width = filter_input(INPUT_POST, 'width');
-    
-    
-    
     $length = filter_input(INPUT_POST, 'length');
     
     // Если объём заказа в штуках, то длина этикетки вдоль рапорта вала обязательно, больше нуля
@@ -166,9 +163,18 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $form_valid = false;
     }
     
+    $raport = filter_input(INPUT_POST, 'raport');
+    $lamination_roller = filter_input(INPUT_POST, 'lamination_roller');
+    $ski = filter_input(INPUT_POST, 'ski');
+    
+    $no_ski = 0;
+    if(filter_input(INPUT_POST, 'no_ski') == 'on') {
+        $no_ski = 1;
+    }
+    
     // Ширина материала должна быть всегда указана: как для печати так и для ламинации без печати.
     // Она должна быть не больше, чем возможно для данной машины.
-    // При этом, если печать с лыыжами, то сравнивается ширина плюс лыжи.
+    // При этом, если печать с лыжами, то сравнивается ширина плюс лыжи.
     if(empty($width)) {
         $width_valid = ISINVALID;
         $form_valid = false;
@@ -190,8 +196,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $machine_max_width = $row['max_width'];
         }
         
-        if($width > $machine_max_width) {
+        if($no_ski && $width > $machine_max_width) {
             $width_valid_message = "Ширина для $machine_name не более $machine_max_width мм";
+            $width_valid = ISINVALID;
+            $form_valid = false;
+        }
+        elseif(!$no_ski && ($width + $ski) > $machine_max_width) {
+            $width_valid_message = "Ширина для $machine_name (минус лыжи) не более ".($machine_max_width - $ski)." мм";
             $width_valid = ISINVALID;
             $form_valid = false;
         }
@@ -207,15 +218,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $stream_width_valid_message = "Сумма не равна ширине плёнки";
         $streams_count_valid_message = "Сумма не равна ширине плёнки";
         $form_valid = false;
-    }
-    
-    $raport = filter_input(INPUT_POST, 'raport');
-    $lamination_roller = filter_input(INPUT_POST, 'lamination_roller');
-    $ski = filter_input(INPUT_POST, 'ski');
-    
-    $no_ski = 0;
-    if(filter_input(INPUT_POST, 'no_ski') == 'on') {
-        $no_ski = 1;
     }
     
     // Проверка валидности цвета, CMYK и процента
