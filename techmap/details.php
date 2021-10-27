@@ -33,14 +33,25 @@ if(null !== filter_input(INPUT_POST, 'remove-date-submit')) {
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
 
-$sql = "select c.name, t.work_date "
+$sql = "select t.date, t.work_date, t.designer, t.printer, t.cutter, "
+        . "c.name name, c.unit, c.quantity, cus.name customer, u.last_name manager "
         . "from techmap t "
         . "inner join calculation c on t.calculation_id = c.id "
+        . "inner join customer cus on c.customer_id = cus.id "
+        . "inner join user u on c.manager_id = u.id "
         . "where t.id = $id";
 $row = (new Fetcher($sql))->Fetch();
 
-$name = $row['name'];
+$date = DateTime::createFromFormat("Y-m-d H:i:s", $row['date']);
 $work_date = $row['work_date'];
+$designer = $row['designer'];
+$printer = $row['printer'];
+$cutter = $row['cutter'];
+$name = $row['name'];
+$unit = $row['unit'];
+$quantity = $row['quantity'];
+$customer = $row['customer'];
+$manager = $row['manager'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -60,22 +71,48 @@ $work_date = $row['work_date'];
             }
             ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/techmap/<?= BuildQueryRemove("id") ?>">К списку</a>
-            <h1 style="font-size: 32px; font-weight: 600;"><?= htmlentities($name) ?></h1>
-            <h2>Дата печати тиража</h2>
-            <form method="post" class="form-inline">
-                <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-                <div class="form-group">
-                    <div class="input-group">
-                        <input type="date" id="work_date" name="work_date" value="<?=$work_date ?>" class="form-control" />
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-dark" name="add-date-submit">OK</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group ml-3">
-                    <button type="submit" class="btn btn-outline-dark" name="remove-date-submit"<?= empty($work_date) ? " disabled='disabled'" : "" ?>>В черновики</button>
-                </div>
-            </form>
+            <h1 style="font-size: 32px; font-weight: 600;">Заявка на флекс-печать от <?= $date->format('d').' '.$GLOBALS['months_genitive'][intval($date->format('m'))].' '.$date->format('Y') ?> г</h1>
+            <table class="table table-bordered">
+                <tr>
+                    <th style="width: 25%;">Менеджер</th>
+                    <th style="width: 25%;">Дизайнер</th>
+                    <th style="width: 25%;">Печатник</th>
+                    <th style="width: 25%;">Резчик</th>
+                </tr>
+                <tr>
+                    <td><?=$manager ?></td>
+                    <td><?=$designer ?></td>
+                    <td><?=$printer ?></td>
+                    <td><?=$cutter ?></td>
+                </tr>
+                 <tr>
+                     <th colspan="2">Наименование заказа</th>
+                     <td colspan="2"><?= $customer.', '.$name ?></td>
+                 </tr>
+                 <tr>
+                     <th colspan="2">Общий тираж</th>
+                     <td colspan="2"><?=$quantity.' '.($unit == 'kg' ? 'кг' : 'шт') ?></td>
+                 </tr>
+                <tr>
+                    <th colspan="2">Дата печати тиража</th>
+                    <td colspan="2">
+                        <form method="post" class="form-inline">
+                            <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="date" id="work_date" name="work_date" value="<?=$work_date ?>" class="form-control" />
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-dark" name="add-date-submit">OK</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group ml-3">
+                                <button type="submit" class="btn btn-outline-dark" name="remove-date-submit"<?= empty($work_date) ? " disabled='disabled'" : "" ?>>В черновики</button>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+            </table>
         </div>
         <?php
         include '../include/footer.php';

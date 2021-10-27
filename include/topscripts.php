@@ -18,16 +18,16 @@ $months_genitive = array();
 
 $months_genitive[1] = "января";
 $months_genitive[2] = "февраля";
-$months_genitive[3] = "января";
-$months_genitive[4] = "января";
-$months_genitive[5] = "января";
-$months_genitive[6] = "января";
-$months_genitive[7] = "января";
-$months_genitive[8] = "января";
-$months_genitive[9] = "января";
-$months_genitive[10] = "января";
-$months_genitive[11] = "января";
-$months_genitive[12] = "января";
+$months_genitive[3] = "марта";
+$months_genitive[4] = "апреля";
+$months_genitive[5] = "мая";
+$months_genitive[6] = "июня";
+$months_genitive[7] = "июля";
+$months_genitive[8] = "августа";
+$months_genitive[9] = "сентабря";
+$months_genitive[10] = "октября";
+$months_genitive[11] = "ноября";
+$months_genitive[12] = "декабря";
 
 // Функции
 function LoggedIn() {
