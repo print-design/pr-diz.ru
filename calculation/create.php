@@ -1413,7 +1413,7 @@ if(!empty($id)) {
             . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
             . "quantity, streams_count, length, stream_width, raport, lamination_roller, paints_count, status_id, extracharge, ski, no_ski, "
-            . "(select count(id) from techmap where calculation_id = $id) techmaps_count, "
+            . "(select id from techmap where calculation_id = $id limit 1) techmap_id, "
             . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
             . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -1653,8 +1653,8 @@ else {
     else $no_ski = null;
 }
 
-if(isset($row['techmaps_count'])) $techmaps_count = $row['techmaps_count'];
-else $techmaps_count = null;
+if(isset($row['techmap_id'])) $techmap_id = $row['techmap_id'];
+else $techmap_id = null;
 
 if(isset($row['status_id'])) $status_id = $row['status_id'];
 else $status_id = null;
@@ -1749,7 +1749,7 @@ $colorfulnesses = array();
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= filter_input(INPUT_GET, "mode") == "recalc" ? "calculation.php".BuildQueryRemove("mode") : "" ?>">Назад</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= filter_input(INPUT_GET, "mode") == "recalc" ? "calculation.php".BuildQueryRemove("mode") : "" ?>">К списку</a>
             <div class="row">
                 <!-- Левая половина -->
                 <div class="col-5" id="left_side">

@@ -1196,8 +1196,8 @@ elseif(!empty ($id) && !empty ($date)) {
             <?php elseif ($status_id == 4): ?>
         <button type="submit" id="status_id" name="status_id" value="6" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Составить тех. карту</button>
             <?php endif; ?>
-            <?php if ($techmaps_count != 0): ?>
-        <a href="javascript: void(0);" class="btn btn-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
+            <?php if (!empty($techmap_id)): ?>
+        <a href="<?=APPLICATION.'/techmap/details.php?id='.$techmap_id ?>" class="btn btn-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
             <?php endif; ?>
             <?php if($status_id == 6): ?>
         <button type="submit" id="status_id" name="status_id" value="7" class="btn btn-outline-dark mt-3" style="width: 200px;">Завершить</button>

@@ -6,14 +6,14 @@ include 'left_bar.php';
         <ul class="navbar-nav">
             <?php
             $calculation_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/calculation')) == APPLICATION.'/calculation' ? ' disabled' : '';
-            if(IsInRole(array('technologist', 'dev', 'senior'))):
+            $techmap_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/techmap')) == APPLICATION.'/techmap' ? ' disabled' : '';
             ?>
             <li class="nav-item">
                 <a class="nav-link<?=$calculation_status ?>" href="<?=APPLICATION ?>/calculation/">Расчеты</a>
             </li>
-            <?php
-            endif;
-            ?>
+            <li class="nav-item">
+                <a class="nav-link<?=$techmap_status ?>" href="<?=APPLICATION ?>/techmap/">Технологические карты</a>
+            </li>
         </ul>
         <?php
         if(file_exists('find.php')) {

@@ -73,7 +73,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
         . "c.form_1, c.form_2, c.form_3, form_4, form_5, form_6, form_7, form_8, "
         . "c.status_id, c.extracharge, c.ski, c.no_ski, "
-        . "(select count(id) from techmap where calculation_id = $id) techmaps_count, "
+        . "(select id from techmap where calculation_id = $id limit 1) techmap_id, "
         . "cs.name status, cs.colour, cs.colour2, cs.image, "
         . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
         . "wt.name work_type, "
@@ -150,7 +150,7 @@ $status_id = $row['status_id'];
 $extracharge = $row['extracharge'];
 $ski = $row['ski'];
 $no_ski = $row['no_ski'];
-$techmaps_count = $row['techmaps_count'];
+$techmap_id = $row['techmap_id'];
 
 $status = $row['status'];
 $colour = $row['colour'];
@@ -168,7 +168,7 @@ $work_type = $row['work_type'];
 $machine = $row['machine'];
 $colorfulness = $row['colorfulness'];
 
-$techmaps_count = $row['techmaps_count'];
+$techmap_id = $row['techmap_id'];
 $num_for_customer = $row['num_for_customer'];
 ?>
 <!DOCTYPE html>
@@ -217,7 +217,7 @@ $num_for_customer = $row['num_for_customer'];
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemove("id") ?>">Назад</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemove("id") ?>">К списку</a>
             <div class="row">
                 <!-- Левая половина -->
                 <div class="col-5" id="left_side">
