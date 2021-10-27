@@ -1193,8 +1193,6 @@ elseif(!empty ($id) && !empty ($date)) {
         <button type="submit" id="status_id" name="status_id" value="2" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Отправить КП</button>
             <?php elseif($status_id == 2): ?>
         <button type="submit" id="status_id" name="status_id" value="3" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Отправить в работу</button>
-            <?php elseif ($status_id == 4): ?>
-        <button type="submit" id="status_id" name="status_id" value="6" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Составить тех. карту</button>
             <?php endif; ?>
             <?php if (!empty($techmap_id)): ?>
         <a href="<?=APPLICATION.'/techmap/details.php?id='.$techmap_id ?>" class="btn btn-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
@@ -1203,4 +1201,10 @@ elseif(!empty ($id) && !empty ($date)) {
         <button type="submit" id="status_id" name="status_id" value="7" class="btn btn-outline-dark mt-3" style="width: 200px;">Завершить</button>
             <?php endif; ?>
     </form>
+    <?php if($status_id == 4): ?>
+    <form method="post" action="<?=APPLICATION ?>/techmap/create.php">
+        <input type="hidden" name="calculation_id" value="<?=$id ?>" />
+        <button type="submit" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Составить тех. карту</button>
+    </form>
+    <?php endif; ?>
 </div>
