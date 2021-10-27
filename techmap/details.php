@@ -33,7 +33,7 @@ if(null !== filter_input(INPUT_POST, 'remove-date-submit')) {
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
 
-$sql = "select t.date, t.work_date, t.designer, t.printer, t.cutter, "
+$sql = "select t.date, t.calculation_id, t.work_date, t.designer, t.printer, t.cutter, "
         . "c.name name, c.unit, c.quantity, cus.name customer, u.last_name manager "
         . "from techmap t "
         . "inner join calculation c on t.calculation_id = c.id "
@@ -43,6 +43,7 @@ $sql = "select t.date, t.work_date, t.designer, t.printer, t.cutter, "
 $row = (new Fetcher($sql))->Fetch();
 
 $date = DateTime::createFromFormat("Y-m-d H:i:s", $row['date']);
+$calculation_id = $row['calculation_id'];
 $work_date = $row['work_date'];
 $designer = $row['designer'];
 $printer = $row['printer'];
@@ -71,6 +72,7 @@ $manager = $row['manager'];
             }
             ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/techmap/<?= BuildQueryRemove("id") ?>">К списку</a>
+            <a class="btn btn-outline-dark ml-3" href="<?=APPLICATION ?>/calculation/calculation.php?id=<?=$calculation_id ?>">Расчет</a>
             <h1 style="font-size: 32px; font-weight: 600;">Заявка на флекс-печать от <?= $date->format('d').' '.$GLOBALS['months_genitive'][intval($date->format('m'))].' '.$date->format('Y') ?> г</h1>
             <table class="table table-bordered">
                 <tr>
