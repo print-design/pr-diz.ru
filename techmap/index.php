@@ -62,6 +62,7 @@ function OrderLink($param) {
                         <th class="text-center">Объем&nbsp;&nbsp;<?= OrderLink('quantity') ?></th>
                         <th>Тип работы&nbsp;&nbsp;<?= OrderLink('work_type') ?></th>
                         <th>Менеджер&nbsp;&nbsp;<?= OrderLink('manager') ?></th>
+                        <th>В работу&nbsp;&nbsp;<?= OrderLink('work_date') ?></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -99,10 +100,14 @@ function OrderLink($param) {
                             case 'manager':
                                 $orderby = "order by u.last_name asc, u.first_name asc";
                                 break;
+                            
+                            case 'work_date':
+                                $orderby = "order by t.work_date desc";
+                                break;
                         }
                     }
                     
-                    $sql = "select t.id, t.date, c.customer_id, cus.name customer, c.name, c.quantity, c.unit, wt.name work_type, u.last_name, u.first_name, "
+                    $sql = "select t.id, t.date, t.work_date, c.customer_id, cus.name customer, c.name, c.quantity, c.unit, wt.name work_type, u.last_name, u.first_name, "
                             . "(select count(t1.id) from techmap t1 inner join calculation c1 on t1.calculation_id = c1.id where c1.customer_id = c.customer_id and t1.id <= t.id) num_for_customer "
                             . "from techmap t "
                             . "inner join calculation c on t.calculation_id = c.id "
@@ -115,6 +120,11 @@ function OrderLink($param) {
                     while ($row = $fetcher->Fetch()):
                         
                     $rowcounter++;
+                    $colour = 'green';
+                    
+                    if(empty($row['work_date'])) {
+                        $colour = "orange";
+                    }
                     ?>
                     <tr>
                         <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['num_for_customer'] ?></td>
@@ -124,6 +134,7 @@ function OrderLink($param) {
                         <td class="text-right text-nowrap"><?= number_format($row['quantity'], 0, ",", " ") ?>&nbsp;<?=$row['unit'] == 'kg' ? 'кг' : 'шт' ?></td>
                         <td><?=$row['work_type'] ?></td>
                         <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
+                        <td class="text-nowrap"><i class="fas fa-circle" style="color: <?=$colour ?>"></i>&nbsp;&nbsp;<?= empty($row['work_date']) ? 'черновик' : DateTime::createFromFormat('Y-m-d', $row['work_date'])->format('d.m.Y') ?></td>
                         <td><a href="details.php<?= BuildQuery("id", $row['id']) ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a></td>
                     </tr>
                     <?php
