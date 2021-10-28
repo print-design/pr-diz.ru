@@ -81,8 +81,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) weight, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
-        . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_weight, "
-        . "(select count(id) from calculation_result where calculation_id = c.id) results_count "
+        . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_weight "
         . "from calculation c "
         . "left join calculation_status cs on c.status_id = cs.id "
         . "left join customer cu on c.customer_id = cu.id "
@@ -129,7 +128,6 @@ $machine_id = $row['machine_id'];
 $raport = $row['raport'];
 $lamination_roller = $row['lamination_roller'];
 $paints_count = $row['paints_count'];
-$results_count = $row['results_count'];
 
 for($i=1; $i<=$paints_count; $i++) {
     $paint_var = "paint_$i";
@@ -453,24 +451,24 @@ $num_for_customer = $row['num_for_customer'];
                             endif;
                             ?>
                     </table>
-                    
+                    <?php if($status_id == 3): ?>
                     <form method="post">
-                        <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-                        <?php if($results_count == 0): ?>
-                        <button type="submit" name="calculate-submit" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Рассчитать</button>
-                        <?php else: ?>
-                        <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Пересчитать</a>
-                        <?php endif; ?>
+                        <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                        <input type="hidden" id="change_status_submit" name="change_status_submit" />
+                        <button type="submit" id="status_id" name="status_id" value="5" class="btn btn-outline-dark mt-5 mr-2" style="width: 200px;">Отклонить</button>
+                        <button type="submit" id="status_id" name="status_id" value="4" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Одобрить</button>
                     </form>
+                    <?php endif; if ($status_id == 1 || $status_id == 2 || $status_id == 4 || $status_id == 5 || $status_id == 6 || $status_id == 7 || $status_id == 8): ?>
+                    <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Пересчитать</a>
+                    <?php endif; if ($status_id == 4 || $status_id == 6): ?>
+                    <button type="button" class="btn btn-outline-dark mt-5" style="width: 200px;" data-toggle="modal" data-target="#calculation_cancel">Отменить заказ</button>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
         <?php
         include '../include/footer.php';
-        
-        if($results_count > 0) {
-            include './right_panel.php';
-        }
+        include './right_panel.php';
         ?>
         <script>
             // Показ расходов
