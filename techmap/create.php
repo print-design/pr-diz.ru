@@ -13,8 +13,11 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
     $designer = addslashes(filter_input(INPUT_POST, 'designer'));
     $printer = addslashes(filter_input(INPUT_POST, 'printer'));
     $cutter = addslashes(filter_input(INPUT_POST, 'cutter'));
+    $printings_number = filter_input(INPUT_POST, 'printings_number');
+    if(is_nan($printings_number)) $printings_number = "NULL";
     
-    $sql = "insert into techmap (calculation_id, designer, printer, cutter) values($calculation_id, '$designer', '$printer', '$cutter')";
+    $sql = "insert into techmap (calculation_id, designer, printer, cutter, printings_number) "
+            . "values($calculation_id, '$designer', '$printer', '$cutter', $printings_number)";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     $techmap_id = $executer->insert_id;
@@ -100,6 +103,10 @@ if($row = $fetcher->Fetch()) {
                     <tr>
                         <th colspan="2">Общий тираж</th>
                         <td colspan="2"><?=$quantity.' '.($unit == 'kg' ? 'кг' : 'шт') ?></td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Количество тиражей</th>
+                        <td colspan="2"><input type="number" min="1" step="1" name="printings_number" class="form-control" style="width: 150px;" value="<?= filter_input(INPUT_POST, 'printings_number') ?>" /></td>
                     </tr>
                 </table>
                 <button type="submit" name="create-submit" class="btn btn-dark" style="width: 200px;">Создать</button>

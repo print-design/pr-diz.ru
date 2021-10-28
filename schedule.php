@@ -71,8 +71,16 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
             }
             ?>
             <table class="table table-bordered">
-            <?php foreach ($period as $date): ?>
-                <tr>
+            <?php
+            foreach ($period as $date): 
+            $weekday = $date->format('w');
+            $rowstyle = '';
+            
+            if($weekday == 6 || $weekday == 0) {
+                $rowstyle = " style='background-color: lightcyan;'";
+            }
+            ?>
+                <tr<?=$rowstyle ?>>
                     <td style="width: 5%;"><?= $GLOBALS['weekdays'][$date->format('w')] ?></td>
                     <td style="width: 10%;"><?=$date->format('d.m.Y') ?></td>
                     <td>

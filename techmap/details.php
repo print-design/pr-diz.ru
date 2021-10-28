@@ -33,7 +33,7 @@ if(null !== filter_input(INPUT_POST, 'remove-date-submit')) {
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
 
-$sql = "select t.date, t.calculation_id, t.work_date, t.designer, t.printer, t.cutter, "
+$sql = "select t.date, t.calculation_id, t.work_date, t.designer, t.printer, t.cutter, t.printings_number, "
         . "c.name name, c.unit, c.quantity, cus.name customer, u.last_name manager "
         . "from techmap t "
         . "inner join calculation c on t.calculation_id = c.id "
@@ -48,6 +48,7 @@ $work_date = $row['work_date'];
 $designer = $row['designer'];
 $printer = $row['printer'];
 $cutter = $row['cutter'];
+$printings_number = $row['printings_number'];
 $name = $row['name'];
 $unit = $row['unit'];
 $quantity = $row['quantity'];
@@ -94,6 +95,10 @@ $manager = $row['manager'];
                  <tr>
                      <th colspan="2">Общий тираж</th>
                      <td colspan="2"><?=$quantity.' '.($unit == 'kg' ? 'кг' : 'шт') ?></td>
+                 </tr>
+                 <tr>
+                     <th colspan="2">Количество тиражей</th>
+                     <td colspan="2"><?=$printings_number ?></td>
                  </tr>
                 <tr>
                     <th colspan="2">Дата печати тиража</th>
