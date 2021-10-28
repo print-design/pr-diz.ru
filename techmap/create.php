@@ -14,10 +14,14 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
     $printer = addslashes(filter_input(INPUT_POST, 'printer'));
     $cutter = addslashes(filter_input(INPUT_POST, 'cutter'));
     $printings_number = filter_input(INPUT_POST, 'printings_number');
-    if(is_nan($printings_number)) $printings_number = "NULL";
+    if($printings_number === null || $printings_number === '') $printings_number = "NULL";
+    $rolls_number = filter_input(INPUT_POST, 'rolls_number');
+    if($rolls_number === null || $rolls_number === '') $rolls_number = "NULL";
+    $reverse_print = filter_input(INPUT_POST, 'reverse_print');
+    if($reverse_print === null || $reverse_print === '') $reverse_print = "NULL";
     
-    $sql = "insert into techmap (calculation_id, designer, printer, cutter, printings_number) "
-            . "values($calculation_id, '$designer', '$printer', '$cutter', $printings_number)";
+    $sql = "insert into techmap (calculation_id, designer, printer, cutter, printings_number, rolls_number, reverse_print) "
+            . "values($calculation_id, '$designer', '$printer', '$cutter', $printings_number, $rolls_number, $reverse_print)"; echo $sql;
     $executer = new Executer($sql);
     $error_message = $executer->error;
     $techmap_id = $executer->insert_id;
@@ -41,26 +45,49 @@ if(empty($calculation_id)) {
 }
 
 // Получение объекта расчёта
-$name = '';
-$unit = '';
-$quantity = '';
-$customer = '';
-$manager = '';
-
-$sql = "select c.name name, c.unit, c.quantity, cus.name customer, u.last_name manager "
+$sql = "select c.name name, c.unit, c.quantity, "
+        . "c.brand_name, c.other_brand_name, c.lamination1_brand_name, c.lamination1_other_brand_name, c.lamination2_brand_name, c.lamination2_other_brand_name, c.paints_count, "
+        . "c.paint_1, c.paint_2, c.paint_3, c.paint_4, c.paint_5, c.paint_6, c.paint_7, c.paint_8, c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, "
+        . "cus.name customer, u.last_name manager, "
+        . "cr.dirty_width, cr.dirty_length "
         . "from calculation c "
         . "inner join user u on c.manager_id = u.id "
         . "inner join customer cus on c.customer_id = cus.id "
+        . "inner join calculation_result cr on cr.calculation_id = c.id "
         . "where c.id = $calculation_id";
-$fetcher = new Fetcher($sql);
+$row = (new Fetcher($sql))->Fetch();
 
-if($row = $fetcher->Fetch()) {
-    $name = $row['name'];
-    $unit = $row['unit'];
-    $quantity = $row['quantity'];
-    $customer = $row['customer'];
-    $manager = $row['manager'];
+$name = $row['name'];
+$unit = $row['unit'];
+$quantity = $row['quantity'];
+$customer = $row['customer'];
+$brand_name = $row['brand_name'] == 'other' ? $row['other_brand_name'] : $row['brand_name'];
+$lamination1_brand_name = $row['lamination1_brand_name'] == 'other' ? $row['lamination1_other_brand_name'] : $row['lamination1_brand_name'];
+$lamination2_brand_name = $row['lamination2_brand_name'] == 'other' ? $row['lamination2_other_brand_name'] : $row['lamination2_brand_name'];
+$paints_count = $row['paints_count'];
+$paints = array();
+for($i=1; $i<=$paints_count; $i++) {
+    $paint = '';
+    
+    if($row['paint_'.$i] == 'cmyk') {
+        $paint = $row['cmyk_'.$i];
+    }
+    elseif($row['paint_'.$i] == 'panton') {
+        $paint = 'P'.$row['color_'.$i];
+    }
+    elseif($row['paint_'.$i] == 'white') {
+        $paint = "белила";
+    }
+    elseif($row['paint_'.$i] == 'lacquer') {
+        $paint = "лак";
+    }
+    
+    $paint .= ' ('.$row['percent_'.$i].'%)';
+    array_push($paints, $paint);
 }
+$manager = $row['manager'];
+$dirty_width = $row['dirty_width'];
+$dirty_length = $row['dirty_length'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -102,11 +129,57 @@ if($row = $fetcher->Fetch()) {
                     </tr>
                     <tr>
                         <th colspan="2">Общий тираж</th>
-                        <td colspan="2"><?=$quantity.' '.($unit == 'kg' ? 'кг' : 'шт') ?></td>
+                        <td colspan="2"><?=rtrim(rtrim(number_format($quantity, 2, ",", " "), "0"), ",").' '.($unit == 'kg' ? 'кг' : 'шт') ?></td>
                     </tr>
                     <tr>
                         <th colspan="2">Количество тиражей</th>
                         <td colspan="2"><input type="number" min="1" step="1" name="printings_number" class="form-control" style="width: 150px;" value="<?= filter_input(INPUT_POST, 'printings_number') ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th rowspan="4">Бумага ролевая</th>
+                        <th>Ширина роля (бумаги)</th>
+                        <td colspan="2"><?=rtrim(rtrim(number_format($dirty_width, 2, ",", " "), "0"), ",") ?></td>
+                    </tr>
+                    <tr>
+                        <th>Количество бумаги в метрах</th>
+                        <td colspan="2"><?=rtrim(rtrim(number_format($dirty_length, 2, ",", " "), "0"), ",") ?></td>
+                    </tr>
+                    <tr>
+                        <th>Количество ролей</th>
+                        <td colspan="2"><input type="number" min="1" step="1" name="rolls_number" class="form-control" style="width: 150px;" value="<?= filter_input(INPUT_POST, 'rolls_number') ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th>Наименование, маркировка бумаги</th>
+                        <td colspan="2"><?=$brand_name.' '.(empty($lamination1_brand_name) ? '' : '+ '.$lamination1_brand_name).(empty($lamination2_brand_name) ? '' : '+ '.$lamination2_brand_name) ?></td>
+                    </tr>
+                    <tr>
+                        <td class="p-0">
+                            <table class="table mb-0">
+                                <tr>
+                                    <td rowspan="2">Печать</td>
+                                    <td>прямая</td>
+                                    <?php
+                                    $reverse_print_0_checked = '';
+                                    if(filter_input(INPUT_POST, 'reverse_print') === '0') {
+                                        $reverse_print_0_checked = " checked='checked'";
+                                    }
+                                    ?>
+                                    <td><input type="radio" name="reverse_print" value="0" class="form-control"<?=$reverse_print_0_checked ?> /></td>
+                                </tr>
+                                <tr>
+                                    <td>оборотная</td>
+                                    <?php
+                                    $reverse_print_1_checked = '';
+                                    if(filter_input(INPUT_POST, 'reverse_print') === '1') {
+                                        $reverse_print_1_checked = " checked='checked'";
+                                    }
+                                    ?>
+                                    <td><input type="radio" name="reverse_print" value="1" class="form-control"<?=$reverse_print_1_checked ?> /></td>
+                                </tr>
+                            </table>
+                        </td>
+                        <th>Красочность</th>
+                        <td colspan="2"><?=implode(' + ', $paints) ?></td>
                     </tr>
                 </table>
                 <button type="submit" name="create-submit" class="btn btn-dark" style="width: 200px;">Создать</button>
