@@ -81,10 +81,6 @@ $work_type = $row['work_type'];
 $machine = $row['machine'];
 $colorfulness = $row['colorfulness'];
 
-// Список красочностей каждой машины
-$colorfulnesses = array();
-$colorfulnesses[$machine_id] = $row['colorfulness'];
-
 // Данные о цветах
 for ($i=1; $i<=8; $i++) {
     $paint_var = "paint_$i";
@@ -382,11 +378,11 @@ for ($i=1; $i<=8; $i++) {
                     <form method="post">
                         <div class="form-group">
                             <label for="paints_count">Количество красок</label>
-                            <select id="paints_count" name="paints_count" class="form-control">
+                            <select id="paints_count" name="paints_count" class="form-control" required="required">
                                 <option value="" hidden="hidden">Количество красок...</option>
                                     <?php
                                     if(!empty($paints_count) || !empty($machine_id)):
-                                        for($i = 1; $i <= $colorfulnesses[$machine_id]; $i++):
+                                        for($i = 1; $i <= $colorfulness; $i++):
                                             $selected = "";
                                         if($paints_count == $i) {
                                             $selected = " selected='selected'";
