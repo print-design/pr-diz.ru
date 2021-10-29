@@ -741,7 +741,14 @@ $colorfulnesses = array();
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= filter_input(INPUT_GET, "mode") == "recalc" ? "calculation.php".BuildQueryRemove("mode") : "" ?>">К списку</a>
+            <?php
+            if(null !== filter_input(INPUT_GET, 'id')):
+            $id = filter_input(INPUT_GET, 'id');
+            ?>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/calculation.php?id=<?=$id ?>">Назад</a>
+            <?php else: ?>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/">К списку</a>
+            <?php endif; ?>
             <div class="row">
                 <!-- Левая половина -->
                 <div class="col-5" id="left_side">

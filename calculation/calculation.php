@@ -1080,8 +1080,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) weight, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
-        . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_weight, "
-        . "(select count(id) from calculation_result where calculation_id = c.id) results_count "
+        . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_weight "
         . "from calculation c "
         . "left join customer cu on c.customer_id = cu.id "
         . "left join work_type wt on c.work_type_id = wt.id "
@@ -1127,7 +1126,6 @@ $machine_id = $row['machine_id'];
 $raport = $row['raport'];
 $lamination_roller = $row['lamination_roller'];
 $paints_count = $row['paints_count'];
-$results_count = $row['results_count'];
 
 for($i=1; $i<=$paints_count; $i++) {
     $paint_var = "paint_$i";
@@ -1484,14 +1482,43 @@ $num_for_customer = $row['num_for_customer'];
                             ?>
                     </table>
                     
-                    <?php if($results_count == 0): ?>
+                    <?php
+                    if(empty($calculation_result_id)):
+                        if($work_type_id == 1):
+                    ?>
                     <form method="post">
                         <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                         <button type="submit" name="calculate-submit" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Рассчитать</button>
                     </form>
-                    <?php else: ?>
+                    <?php
+                        elseif(empty($paints_count)):
+                    ?>
+                    <a href="colouring.php<?= BuildQuery("id", $id) ?>" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Добавить красочность</a>
+                    <?php
+                        else:
+                            $cliche_exist = true;
+                            for($i=1; $i<=$paints_count; $i++) {
+                                $cliche_var = "form_$i";
+                                if(empty($$cliche_var)) {
+                                    $cliche_exist = false;
+                                }
+                            }
+                            
+                            if(!$cliche_exist):
+                            ?>
+                    <a href="cliche.php<?= BuildQuery("id", $id) ?>" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Добавить формы</a>
+                            <?php
+                            else:
+                            ?>
+                    <button type="submit" name="calculate-submit" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Рассчитать</button>
+                            <?php
+                            endif;
+                        endif;
+                    else:
+                    ?>
                     <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Пересчитать</a>
                     <?php endif; ?>
+                    
                     <?php if(!empty($techmap_id)): ?>
                     <a href="<?=APPLICATION.'/techmap/details.php?id='.$techmap_id ?>" class="btn btn-outline-dark mt-5 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
                     <?php elseif (!empty($calculation_result_id)): ?>
@@ -1506,7 +1533,7 @@ $num_for_customer = $row['num_for_customer'];
         <?php
         include '../include/footer.php';
         
-        if($results_count > 0) {
+        if(!empty($calculation_result_id)) {
             include './right_panel.php';
         }
         ?>
