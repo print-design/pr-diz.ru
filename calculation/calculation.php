@@ -1489,7 +1489,10 @@ $num_for_customer = $row['num_for_customer'];
                             <?php
                             else:
                             ?>
-                    <button type="submit" name="calculate-submit" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Рассчитать</button>
+                    <form method="post" class="d-inline-block">
+                        <input type="hidden" name="id" value="<?=$id ?>" />
+                        <button type="submit" name="calculate-submit" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Рассчитать</button>
+                    </form>
                             <?php
                             endif;
                         endif;
