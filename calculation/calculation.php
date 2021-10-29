@@ -248,14 +248,14 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             $c_weight_lam2 = $lamination2_other_weight;
         }
         else {
-            $c_weight_lam2 = $lamination2_other_weight;
+            $c_weight_lam2 = $lamination2_weight;
         }
             
         if(!empty($lamination2_brand_name) && !empty($lamination2_thickness) && empty($c_weight_lam2)) {
             $error_message = "Для данной толщины ламинации 2 не задан удельный вес";
         }
     }
-        
+    
     // Цена ламинации 2
     $c_price_lam2 = null;
         
