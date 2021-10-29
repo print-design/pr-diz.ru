@@ -39,7 +39,7 @@ if(empty($calculation_id)) {
 }
 
 // Получение объекта расчёта
-$sql = "select c.name name, c.unit, c.quantity, "
+$sql = "select c.name name, c.unit, c.quantity, c.raport, "
         . "c.brand_name, c.other_brand_name, c.lamination1_brand_name, c.lamination1_other_brand_name, c.lamination2_brand_name, c.lamination2_other_brand_name, c.paints_count, "
         . "c.paint_1, c.paint_2, c.paint_3, c.paint_4, c.paint_5, c.paint_6, c.paint_7, c.paint_8, c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, "
         . "cus.name customer, u.last_name manager, "
@@ -54,6 +54,7 @@ $row = (new Fetcher($sql))->Fetch();
 $name = $row['name'];
 $unit = $row['unit'];
 $quantity = $row['quantity'];
+$raport = $row['raport'];
 $customer = $row['customer'];
 $brand_name = $row['brand_name'] == 'other' ? $row['other_brand_name'] : $row['brand_name'];
 $lamination1_brand_name = $row['lamination1_brand_name'] == 'other' ? $row['lamination1_other_brand_name'] : $row['lamination1_brand_name'];
@@ -174,6 +175,10 @@ $dirty_length = $row['dirty_length'];
                         </td>
                         <th>Красочность</th>
                         <td colspan="2"><?=implode(' + ', $paints) ?></td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Рапорт, число зубьев</th>
+                        <td colspan="2"><?=$raport ?></td>
                     </tr>
                 </table>
                 <button type="submit" name="create-submit" class="btn btn-dark" style="width: 200px;">Создать</button>
