@@ -123,12 +123,12 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             $$percent_var = null;
         }
         
-        $form_var = "form_$i";
+        $cliche_var = "cliche_$i";
         if($i <= $paints_count) {
-            $$form_var = $row[$form_var];
+            $$cliche_var = $row["form_$i"];
         }
         else {
-            $$form_var = null;
+            $$cliche_var = null;
         }
     }
 
@@ -494,26 +494,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             $paint_min_price = $row['min_price'];
         }
     }
-        
-    for ($i=1; $i<=8; $i++) {
-        if(!empty($paints_count) && $paints_count >= $i) {
-            $paint_var = "paint_$i";
-            $$paint_var = filter_input(INPUT_POST, "paint_$i");
-
-            $color_var = "color_$i";
-            $$color_var = filter_input(INPUT_POST, "color_$i");
     
-            $cmyk_var = "cmyk_$i";
-            $$cmyk_var = filter_input(INPUT_POST, "cmyk_$i");
-    
-            $percent_var = "percent_$i";
-            $$percent_var = filter_input(INPUT_POST, "percent_$i");
-    
-            $cliche_var = "cliche_$i";
-            $$cliche_var = filter_input(INPUT_POST, "form_$i");
-        }
-    }
-        
     // Данные о клее при ламинации
     $glue_price = null;
     $glue_expense = null;
