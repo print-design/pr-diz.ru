@@ -24,7 +24,7 @@ const WHITE = "white";
 const LACQUER = "lacquer";
 
 // Максимальная ширина для ламинации
-const MAX_LAMINATION_WIDTH = 104;
+const MAX_LAMINATION_WIDTH = 1040;
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
