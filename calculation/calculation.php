@@ -409,7 +409,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             else if($row['c_currency'] == EURO) {
                 $paint_c *= $euro;
             }
-                
+            
             $paint_c_expense = $row['c_expense'];
             $paint_m = $row['m'];
                 
@@ -419,7 +419,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             else if($row['m_currency'] == EURO) {
                 $paint_m *= $euro;
             }
-                
+            
             $paint_m_expense = $row['m_expense'];
             $paint_y = $row['y'];
                 
@@ -429,58 +429,58 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             else if($row['y_currency'] == EURO) {
                 $paint_y *= $euro;
             }
-                
+            
             $paint_y_expense = $row['y_expense'];
             $paint_k = $row['k'];
-                
+            
             if($row['k_currency'] == USD) {
                 $paint_k *= $usd;
             }
             else if($row['k_currency'] == EURO) {
                 $paint_k *= $euro;
             }
-                
+            
             $paint_k_expense = $row['k_expense'];
             $paint_white = $row['white'];
-                
+            
             if($row['white_currency'] == USD) {
                 $paint_white *= $usd;
             }
             else if($row['white_currency'] == EURO) {
                 $paint_white *= $euro;
             }
-                
+            
             $paint_white_expense = $row['white_expense'];
             $paint_panton = $row['panton'];
-                
+            
             if($row['panton_currency'] == USD) {
                 $paint_panton *= $usd;
             }
             else if($row['panton_currency'] == EURO) {
                 $paint_panton *= $euro;
             }
-                
+            
             $paint_panton_expense = $row['panton_expense'];
             $paint_lacquer = $row['lacquer'];
-                
+            
             if($row['lacquer_currency'] == USD) {
                 $paint_lacquer *= $usd;
             }
             else if($row['lacquer_currency'] == EURO) {
                 $paint_lacquer *= $euro;
             }
-                
+            
             $paint_lacquer_expense = $row['lacquer_expense'];
             $paint_paint_solvent = $row['paint_solvent'];
             $paint_solvent = $row['solvent'];
-                
+            
             if($row['solvent_currency'] == USD) {
                 $paint_solvent *= $usd;
             }
             else if($row['solvent_currency'] == EURO) {
                 $paint_solvent *= $euro;
             }
-                
+            
             $paint_solvent_l = $row['solvent_l'];
                 
             if($row['solvent_l_currency'] == USD) {
@@ -489,7 +489,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             else if($row['solvent_l_currency'] == EURO) {
                 $paint_solvent_l *= $euro;
             }
-                
+            
             $paint_lacquer_solvent_l = $row['lacquer_solvent_l'];
             $paint_min_price = $row['min_price'];
         }
@@ -514,18 +514,18 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         else if($row['glue_currency'] == EURO) {
             $glue_price *= $euro;
         }
-
+        
         $glue_expense = $row['glue_expense'];
         $glue_expense_pet = $row['glue_expense_pet'];
         $glue_solvent_price = $row['solvent'];
-            
+        
         if($row['solvent_currency'] == USD) {
             $glue_solvent_price *= $usd;
         }
         else if($row['solvent_currency'] == EURO) {
             $glue_solvent_price *= $euro;
         }
-                
+        
         $glue_glue_part = $row['glue_part'];
         $glue_solvent_part = $row['solvent_part'];
     }
@@ -1203,31 +1203,26 @@ $num_for_customer = $row['num_for_customer'];
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px blue; color: blue;">
                         <i class="fas fa-calculator"></i>&nbsp;&nbsp;&nbsp;Сделан расчёт
                     </div>
-                    <?php elseif($row['work_type_id'] == 1): ?>
+                    <?php elseif(empty($row['paints_count'])): ?>
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px brown; color: brown;">
                         <i class="far fa-clock"></i>&nbsp;&nbsp;&nbsp;Требуется расчёт
                     </div>
-                    <?php elseif(empty($row['paints_count'])): ?>
+                    <?php
+                    else:
+                        $percents_exist = true;
+                        
+                        for($i=1; $i<=$paints_count; $i++) {
+                            if(empty($row["percent_$i"])) {
+                                $percents_exist = false;
+                            }
+                        }
+                        
+                        if(!$percents_exist):
+                    ?>
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px orange; color: orange;">
                         <i class="far fa-clock"></i>&nbsp;&nbsp;&nbsp;Требуется красочность
                     </div>
-                    <?php
-                    else:
-                        $cliche_exist = true;
-                        for($i=1; $i<=$paints_count; $i++) {
-                            if(empty($row["form_$i"])) {
-                                $cliche_exist = false;
-                            }
-                        }
-                    
-                        if(!$cliche_exist):
-                    ?>
-                    <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px pink; color: pink;">
-                        <i class="far fa-clock"></i>&nbsp;&nbsp;&nbsp;Требуются формы
-                    </div>
-                    <?php
-                        else:
-                    ?>
+                    <?php else: ?>
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px brown; color: brown;">
                         <i class="far fa-clock"></i>&nbsp;&nbsp;&nbsp;Требуется расчёт
                     </div>
@@ -1461,45 +1456,32 @@ $num_for_customer = $row['num_for_customer'];
                             ?>
                     </table>
                     
-                    <?php
-                    if(empty($calculation_result_id)):
-                        if($work_type_id == 1):
-                    ?>
-                    <form method="post">
-                        <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-                        <button type="submit" name="calculate-submit" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Рассчитать</button>
-                    </form>
-                    <?php
-                        elseif(empty($paints_count)):
-                    ?>
-                    <a href="colouring.php<?= BuildQuery("id", $id) ?>" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Добавить красочность</a>
-                    <?php
-                        else:
-                            $cliche_exist = true;
-                            for($i=1; $i<=$paints_count; $i++) {
-                                $cliche_var = "form_$i";
-                                if(empty($$cliche_var)) {
-                                    $cliche_exist = false;
-                                }
-                            }
-                            
-                            if(!$cliche_exist):
-                            ?>
-                    <a href="cliche.php<?= BuildQuery("id", $id) ?>" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Добавить формы</a>
-                            <?php
-                            else:
-                            ?>
+                    <?php if(!empty($calculation_result_id)): ?>
+                    <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Пересчитать</a>
+                    <?php elseif(empty($row['paints_count'])): ?>
                     <form method="post" class="d-inline-block">
                         <input type="hidden" name="id" value="<?=$id ?>" />
                         <button type="submit" name="calculate-submit" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Рассчитать</button>
                     </form>
-                            <?php
-                            endif;
-                        endif;
+                    <?php
                     else:
+                        $percents_exist = true;
+                        
+                        for($i=1; $i<=$paints_count; $i++) {
+                            if(empty($row["percent_$i"])) {
+                                $percents_exist = false;
+                            }
+                        }
+                        
+                        if(!$percents_exist):
                     ?>
-                    <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Пересчитать</a>
-                    <?php endif; ?>
+                    <a href="colouring.php<?= BuildQuery("id", $id) ?>" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Добавить красочность</a>
+                    <?php else: ?>
+                    <button type="submit" name="calculate-submit" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Рассчитать</button>
+                    <?php 
+                        endif;
+                    endif;
+                    ?>
                     
                     <?php if(!empty($techmap_id)): ?>
                     <a href="<?=APPLICATION.'/techmap/details.php?id='.$techmap_id ?>" class="btn btn-outline-dark mt-5 mr-2" style="width: 200px;">Посмотреть тех. карту</a>

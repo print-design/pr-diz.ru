@@ -186,8 +186,7 @@ function OrderLink($param) {
                     }
                     
                     $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.unit, c.quantity, c.work_type_id, c.paints_count, "
-                            . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
-                            . "c.form_1, c.form_2, c.form_3, form_4, form_5, form_6, form_7, form_8, "
+                            . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
                             . "cr.id calculation_result_id, tm.id techmap_id, "
                             . "wt.name work_type, u.last_name, u.first_name, "
                             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
@@ -216,29 +215,24 @@ function OrderLink($param) {
                         $colour = "blue";
                         $colour_style = " color: $colour";
                     }
-                    elseif($row['work_type_id'] == 1) {
+                    elseif(empty ($row['paints_count'])) {
                         $status = "Требуется расчёт";
                         $colour = "brown";
                         $colour_style = " color: $colour";
                     }
-                    elseif(empty($row['paints_count'])) {
-                        $status = "Требуется красочность";
-                        $colour = "orange";
-                        $colour_style = " color: $colour";
-                    }
                     else {
                         $paints_count = $row['paints_count'];
-                        $cliche_exist = true;
+                        $percents_exist = true;
                         
                         for($i=1; $i<=$paints_count; $i++) {
-                            if(empty($row["form_$i"])) {
-                                $cliche_exist = false;
+                            if(empty($row["percent_$i"])) {
+                                $percents_exist = false;
                             }
                         }
                         
-                        if(!$cliche_exist) {
-                            $status = "Требуются формы";
-                            $colour = "pink";
+                        if(!$percents_exist) {
+                            $status = "Требуется красочность";
+                            $colour = "orange";
                             $colour_style = " color: $colour";
                         }
                         else {
