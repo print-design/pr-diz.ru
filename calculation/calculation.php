@@ -1231,18 +1231,33 @@ $num_for_customer = $row['num_for_customer'];
                         <i class="far fa-clock"></i>&nbsp;&nbsp;&nbsp;Требуется расчёт
                     </div>
                     <?php elseif(empty($row['paints_count'])): ?>
-                    <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px yellow; color: yellow;">
+                    <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px orange; color: orange;">
                         <i class="far fa-clock"></i>&nbsp;&nbsp;&nbsp;Требуется красочность
                     </div>
-                    <?php elseif(empty($row["form_$paints_count"])): ?>
-                    <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px orange; color: orange;">
+                    <?php
+                    else:
+                        $cliche_exist = true;
+                        for($i=1; $i<=$paints_count; $i++) {
+                            if(empty($row["form_$i"])) {
+                                $cliche_exist = false;
+                            }
+                        }
+                    
+                        if(!$cliche_exist):
+                    ?>
+                    <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px pink; color: pink;">
                         <i class="far fa-clock"></i>&nbsp;&nbsp;&nbsp;Требуются формы
                     </div>
-                    <?php else: ?>
+                    <?php
+                        else:
+                    ?>
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px brown; color: brown;">
                         <i class="far fa-clock"></i>&nbsp;&nbsp;&nbsp;Требуется расчёт
                     </div>
-                    <?php endif; ?>
+                    <?php
+                        endif;
+                    endif;
+                    ?>
                     <table class="w-100 calculation-table">
                         <tr><th>Заказчик</th><td class="param-value"><?=$customer ?></td></tr>
                         <tr><th>Название заказа</th><td class="param-value"><?=$name ?></td></tr>

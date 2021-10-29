@@ -1486,10 +1486,10 @@ $colorfulnesses = array();
                             </label>
                         </div>
                         <!-- Количество красок -->
-                        <div class="print-only d-none">
+                        <div class="d-none paints-count">
                             <div class="form-group">
                                 <label for="paints_count">Количество красок</label>
-                                <select id="paints_count" name="paints_count" class="form-control print-only d-none">
+                                <select id="paints_count" name="paints_count" class="form-control paints-count d-none">
                                     <option value="" hidden="hidden">Количество красок...</option>
                                         <?php
                                         if(!empty($paints_count) || !empty($machine_id)):
@@ -1752,6 +1752,9 @@ $colorfulnesses = array();
                     $('.print-only').removeClass('d-none');
                     $('input.print-only').attr('required', 'required');
                     $('select.print-only').attr('required', 'required');
+                    
+                    // Показываем поле "Количество красок" (но не делаем обязательным)
+                    $('.paints-count').removeClass('d-none');
                 }
                 else {
                     // Скрываем поля "только с печатью"
@@ -1763,7 +1766,8 @@ $colorfulnesses = array();
                     $('input.no-print-only').attr('required', 'required');
                     $('select.no-print-only').attr('required', 'required');
                 
-                    
+                    // Скрываем поле "Количество красок"
+                    $('.paints-count').addClass('d-none');
                 }
                 
                 // Если видима ламинация, то показываем поля "только с ламинацией"

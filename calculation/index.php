@@ -223,15 +223,22 @@ function OrderLink($param) {
                     }
                     elseif(empty($row['paints_count'])) {
                         $status = "Требуется красочность";
-                        $colour = "yellow";
+                        $colour = "orange";
                         $colour_style = " color: $colour";
                     }
                     else {
                         $paints_count = $row['paints_count'];
+                        $cliche_exist = true;
                         
-                        if(empty($row["form_$paints_count"])) {
+                        for($i=1; $i<=$paints_count; $i++) {
+                            if(empty($row["form_$i"])) {
+                                $cliche_exist = false;
+                            }
+                        }
+                        
+                        if(!$cliche_exist) {
                             $status = "Требуются формы";
-                            $colour = "orange";
+                            $colour = "pink";
                             $colour_style = " color: $colour";
                         }
                         else {

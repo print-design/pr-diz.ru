@@ -27,13 +27,7 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
     $techmap_id = $executer->insert_id;
     
     if(empty($error_message) && !empty($techmap_id)) {
-        $sql = "update calculation set status_id = ".TECHMAP_CREATED_STATUS_ID." where id = $calculation_id";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
-        
-        if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/techmap/details.php?id='.$techmap_id);
-        }
+        header('Location: '.APPLICATION.'/techmap/details.php?id='.$techmap_id);
     }
 }
 
