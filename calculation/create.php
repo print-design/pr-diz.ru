@@ -1653,14 +1653,13 @@ $colorfulnesses = array();
                             endfor;
                             ?>
                         </div>
-                        <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark mt-3<?=$create_calculation_submit_class ?>">Сохранить</button>
+                        <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark mt-3">Сохранить</button>
                     </form>
                 </div>
             </div>
         </div>
         <?php
         include '../include/footer.php';
-        include './right_panel.php';
         ?>
         <script src="<?=APPLICATION ?>/js/select2.min.js"></script>
         <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
