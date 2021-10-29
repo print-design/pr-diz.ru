@@ -692,20 +692,6 @@ for ($i=1; $i<=8; $i++) {
     }
 }
 
-// Расчёт скрываем:
-// 1. При создании нового заказчика
-// 2. При создании нового расчёта
-// 3. При невалидной форме
-// Если показываем рассчёт, то не показываем кнопку отправки.
-// И наоборот.
-$create_calculation_submit_class = " d-none";
-
-if(null !== filter_input(INPUT_POST, 'create_customer_submit') || 
-        null === filter_input(INPUT_GET, 'id') ||
-        !$form_valid) {
-    $create_calculation_submit_class = "";
-}
-
 // Список красочностей каждой машины
 $colorfulnesses = array();
 ?>

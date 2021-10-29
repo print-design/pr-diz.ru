@@ -1183,27 +1183,6 @@ $num_for_customer = $row['num_for_customer'];
         <?php
         include '../include/header_zakaz.php';
         ?>
-        <div id="calculation_cancel" class="modal fade show">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form method="post">
-                        <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-                        <input type="hidden" id="change_status_submit" name="change_status_submit" />
-                        <div class="modal-header">
-                            <div style="font-size: x-large;">Отмена заказа</div>
-                            <button type="button" class="close calculation_cancel_dismiss" data-dismiss="modal"><i class="fas fa-times"></i></button>
-                        </div>
-                        <div class="modal-body">
-                            Вы уверены, что хотите отменить заказ?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-dark" style="width: 120px;" data-dismiss="modal">Нет</button>
-                            <button type="submit" class="btn btn-dark" style="width: 120px;" name="status_id" value="8">Да</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
         <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
