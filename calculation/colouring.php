@@ -6,6 +6,115 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Валидация формы
+define('ISINVALID', ' is-invalid');
+$form_valid = true;
+$error_message = '';
+
+// Переменные для валидации цвета, CMYK и процента
+for($i=1; $i<=8; $i++) {
+    $color_valid_var = 'color_'.$i.'_valid';
+    $$color_valid_var = '';
+    
+    $cmyk_valid_var = 'cmyk_'.$i.'_valid';
+    $$cmyk_valid_var = '';
+    
+    $percent_valid_var = 'percent_'.$i.'_valid';
+    $$percent_valid_var = '';
+}
+
+if(null !== filter_input(INPUT_POST, 'save-submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    
+    // Проверка валидности цвета, CMYK и процента
+    $paints_count = filter_input(INPUT_POST, 'paints_count');
+    
+    for($i=1; $i<=8; $i++) {
+        if(!empty($paints_count) && is_numeric($paints_count) && $i <= $paints_count) {
+            $paint_var = "paint_".$i;
+            $$paint_var = filter_input(INPUT_POST, 'paint_'.$i);
+            
+            $color_var = "color_".$i;
+            $$color_var = filter_input(INPUT_POST, 'color_'.$i);
+            
+            $cmyk_var = "cmyk_".$i;
+            $$cmyk_var = filter_input(INPUT_POST, 'cmyk_'.$i);
+            
+            $percent_var = "percent_".$i;
+            $$percent_var = filter_input(INPUT_POST, 'percent_'.$i);
+            
+            if(empty($$percent_var)) {
+                $percent_valid_var = 'percent_'.$i.'_valid';
+                $$percent_valid_var = ISINVALID;
+                $form_valid = false;
+            }
+            
+            if($$paint_var == 'panton' && empty($$color_var)) {
+                $color_valid_var = 'color_'.$i.'_valid';
+                $$color_valid_var = ISINVALID;
+                $form_valid = false;
+            }
+            
+            if($$paint_var == 'cmyk' && empty($$cmyk_var)) {
+                $cmyk_valid_var = 'cmyk_'.$i.'_valid';
+                $$cmyk_valid_var = ISINVALID;
+                $form_valid = false;
+            }
+        }
+    }
+    
+    if($form_valid) {
+        $paints_count = filter_input(INPUT_POST, 'paints_count');
+        if(empty($paints_count)) $paints_count = "NULL";
+        
+        // Данные о цвете
+        for($i=1; $i<=8; $i++) {
+            $paint_var = "paint_$i";
+            $color_var = "color_$i";
+            $cmyk_var = "cmyk_$i";
+            $percent_var = "percent_$i";
+            $form_var = "form_$i";
+            
+            $$paint_var = null;
+            $$color_var = "NULL";
+            $$cmyk_var = null;
+            $$percent_var = "NULL";
+            $$form_var = null;
+            
+            if(!empty($paints_count) && $paints_count >= $i) {
+                $$paint_var = filter_input(INPUT_POST, "paint_$i");
+            
+                $$color_var = filter_input(INPUT_POST, "color_$i");
+                if(empty($$color_var)) $$color_var = "NULL";
+            
+                $$cmyk_var = filter_input(INPUT_POST, "cmyk_$i");
+            
+                $$percent_var = filter_input(INPUT_POST, "percent_$i");
+                if(empty($$percent_var)) $$percent_var = "NULL";
+            
+                $$form_var = filter_input(INPUT_POST, "form_$i");
+            }
+        }
+        
+        // Сохранение в базу
+        if(empty($error_message)) {
+            $sql = "update calculation set paints_count=$paints_count, "
+                    . "paint_1='$paint_1', paint_2='$paint_2', paint_3='$paint_3', paint_4='$paint_4', paint_5='$paint_5', paint_6='$paint_6', paint_7='$paint_7', paint_8='$paint_8', "
+                    . "color_1=$color_1, color_2=$color_2, color_3=$color_3, color_4=$color_4, color_5=$color_5, color_6=$color_6, color_7=$color_7, color_8=$color_8, "
+                    . "cmyk_1='$cmyk_1', cmyk_2='$cmyk_2', cmyk_3='$cmyk_3', cmyk_4='$cmyk_4', cmyk_5='$cmyk_5', cmyk_6='$cmyk_6', cmyk_7='$cmyk_7', cmyk_8='$cmyk_8', "
+                    . "percent_1=$percent_1, percent_2=$percent_2, percent_3=$percent_3, percent_4=$percent_4, percent_5=$percent_5, percent_6=$percent_6, percent_7=$percent_7, percent_8=$percent_8, "
+                    . "form_1='$form_1', form_2='$form_2', form_3='$form_3', form_4='$form_4', form_5='$form_5', form_6='$form_6', form_7='$form_7', form_8='$form_8'"
+                    . "where id=$id";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+            
+            if(empty($error_message)) {
+                header('Location: calculation.php?id='.$id);
+            }
+        }
+    }
+}
+
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
 
@@ -376,6 +485,7 @@ for ($i=1; $i<=8; $i++) {
                     </table>
                 
                     <form method="post">
+                        <input type="hidden" name="id" value="<?=$id ?>" />
                         <div class="form-group">
                             <label for="paints_count">Количество красок</label>
                             <select id="paints_count" name="paints_count" class="form-control" required="required">
@@ -557,6 +667,17 @@ for ($i=1; $i<=8; $i++) {
         include '../include/footer.php';
         ?>
         <script>
+            // В поле "процент" ограничиваем значения: целые числа от 1 до 100
+            $('.percent').keydown(function(e) {
+                if(!KeyDownLimitIntValue($(e.target), e, 100)) {
+                    return false;
+                }
+            });
+    
+            $(".percent").change(function(){
+                ChangeLimitIntValue($(this), 100);
+            });
+            
             // Обработка выбора количества красок
             $('#paints_count').change(function(){
                 var count = $(this).val();
