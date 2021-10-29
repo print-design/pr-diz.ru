@@ -207,7 +207,7 @@ function OrderLink($param) {
                     $colour_style = '';
                     
                     if(!empty($row['techmap_id'])) {
-                        $status = "Составлена техническая карта";
+                        $status = "Составлена тех. карта";
                         $colour = "green";
                         $colour_style = " color: $colour";
                     }
@@ -218,7 +218,7 @@ function OrderLink($param) {
                     }
                     elseif($row['work_type_id'] == 1) {
                         $status = "Требуется расчёт";
-                        $colour = "orange";
+                        $colour = "brown";
                         $colour_style = " color: $colour";
                     }
                     elseif(empty($row['paints_count'])) {
@@ -231,12 +231,12 @@ function OrderLink($param) {
                         
                         if(empty($row["form_$paints_count"])) {
                             $status = "Требуются формы";
-                            $colour = "gold";
+                            $colour = "orange";
                             $colour_style = " color: $colour";
                         }
                         else {
                             $status = "Требуется расчёт";
-                            $colour = "orange";
+                            $colour = "brown";
                             $colour_style = " color: $colour";
                         }
                     }

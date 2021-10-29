@@ -1071,9 +1071,9 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
         . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
         . "c.form_1, c.form_2, c.form_3, form_4, form_5, form_6, form_7, form_8, "
-        . "c.status_id, c.extracharge, c.ski, c.no_ski, "
+        . "c.extracharge, c.ski, c.no_ski, "
         . "(select id from techmap where calculation_id = $id limit 1) techmap_id, "
-        . "cs.name status, cs.colour, cs.colour2, cs.image, "
+        . "(select id from calculation_result where calculation_id = $id) calculation_result_id, "
         . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
         . "wt.name work_type, "
         . "mt.name machine, mt.colorfulness, "
@@ -1083,7 +1083,6 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_weight, "
         . "(select count(id) from calculation_result where calculation_id = c.id) results_count "
         . "from calculation c "
-        . "left join calculation_status cs on c.status_id = cs.id "
         . "left join customer cu on c.customer_id = cu.id "
         . "left join work_type wt on c.work_type_id = wt.id "
         . "left join machine mt on c.machine_id = mt.id "
@@ -1147,16 +1146,10 @@ for($i=1; $i<=$paints_count; $i++) {
     $$form_var = $row[$form_var];
 }
 
-$status_id = $row['status_id'];
 $extracharge = $row['extracharge'];
 $ski = $row['ski'];
 $no_ski = $row['no_ski'];
 $techmap_id = $row['techmap_id'];
-
-$status = $row['status'];
-$colour = $row['colour'];
-$colour2 = $row['colour2'];
-$image = $row['image'];
 
 $customer = $row['customer'];
 $customer_phone = $row['customer_phone'];
@@ -1170,6 +1163,7 @@ $machine = $row['machine'];
 $colorfulness = $row['colorfulness'];
 
 $techmap_id = $row['techmap_id'];
+$calculation_result_id = $row['calculation_result_id'];
 $num_for_customer = $row['num_for_customer'];
 ?>
 <!DOCTYPE html>
@@ -1224,9 +1218,31 @@ $num_for_customer = $row['num_for_customer'];
                 <div class="col-5" id="left_side">
                     <h1 style="font-size: 32px; font-weight: 600;"><?= htmlentities($name) ?></h1>
                     <h2 style="font-size: 26px;">№<?=$customer_id."-".$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
-                    <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; background-color: <?=$colour2 ?>; border: solid 2px <?=$colour ?>; color: <?=$colour ?>">
-                        <?=$image ?>&nbsp;&nbsp;&nbsp;<?=$status ?>
+                    <?php if(!empty($techmap_id)): ?>
+                    <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px green; color: green;">
+                        <i class="fas fa-file"></i>&nbsp;&nbsp;&nbsp;Составлена технологическая карта
                     </div>
+                    <?php elseif(!empty ($row['calculation_result_id'])): ?>
+                    <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px blue; color: blue;">
+                        <i class="fas fa-calculator"></i>&nbsp;&nbsp;&nbsp;Сделан расчёт
+                    </div>
+                    <?php elseif($row['work_type_id'] == 1): ?>
+                    <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px brown; color: brown;">
+                        <i class="far fa-clock"></i>&nbsp;&nbsp;&nbsp;Требуется расчёт
+                    </div>
+                    <?php elseif(empty($row['paints_count'])): ?>
+                    <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px yellow; color: yellow;">
+                        <i class="far fa-clock"></i>&nbsp;&nbsp;&nbsp;Требуется красочность
+                    </div>
+                    <?php elseif(empty($row["form_$paints_count"])): ?>
+                    <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px orange; color: orange;">
+                        <i class="far fa-clock"></i>&nbsp;&nbsp;&nbsp;Требуются формы
+                    </div>
+                    <?php else: ?>
+                    <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px brown; color: brown;">
+                        <i class="far fa-clock"></i>&nbsp;&nbsp;&nbsp;Требуется расчёт
+                    </div>
+                    <?php endif; ?>
                     <table class="w-100 calculation-table">
                         <tr><th>Заказчик</th><td class="param-value"><?=$customer ?></td></tr>
                         <tr><th>Название заказа</th><td class="param-value"><?=$name ?></td></tr>
@@ -1453,14 +1469,22 @@ $num_for_customer = $row['num_for_customer'];
                             ?>
                     </table>
                     
+                    <?php if($results_count == 0): ?>
                     <form method="post">
                         <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-                        <?php if($results_count == 0): ?>
                         <button type="submit" name="calculate-submit" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Рассчитать</button>
-                        <?php else: ?>
-                        <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Пересчитать</a>
-                        <?php endif; ?>
                     </form>
+                    <?php else: ?>
+                    <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Пересчитать</a>
+                    <?php endif; ?>
+                    <?php if(!empty($techmap_id)): ?>
+                    <a href="<?=APPLICATION.'/techmap/details.php?id='.$techmap_id ?>" class="btn btn-outline-dark mt-5 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
+                    <?php elseif (!empty($calculation_result_id)): ?>
+                    <form method="post" action="<?=APPLICATION ?>/techmap/create.php" class="d-inline-block">
+                        <input type="hidden" name="calculation_id" value="<?=$id ?>" />
+                        <button type="submit" class="btn btn-outline-dark mt-5 mr-2" style="width: 200px;">Составить тех. карту</button>
+                    </form>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

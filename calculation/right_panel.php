@@ -479,16 +479,12 @@ elseif(!empty ($id) && !empty ($date)) {
         <div class="col-3">
             <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
                 <div class="text-nowrap" style="font-size: x-small;">Наценка</div>
-                <?php if($status_id == 1 || $status_id == 2): ?>
                 <div class="input-group">
                     <input type="text" id="extracharge" name="extracharge" data-id="<?=$id ?>" style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" value="<?=$extracharge ?>" required="required" />
                     <div class="input-group-append" style="height: 28px;">
                         <span class="input-group-text">%</span>
                     </div>
                 </div>
-                <?php else: ?>
-                <span class="text-nowrap"><?=$extracharge ?>%</span>
-                <?php endif; ?>
             </div>
         </div>
         <div class="col-3">
@@ -513,7 +509,6 @@ elseif(!empty ($id) && !empty ($date)) {
     <div class="mt-3">
         <h2>Материалы</h2>
     </div>
-    <form method="post">
         <div class="d-table w-100">
             <div class="d-table-row">
                 <div class="d-table-cell pb-1 pr-4" style="width: 33%;">
@@ -1186,25 +1181,4 @@ elseif(!empty ($id) && !empty ($date)) {
         <?php
         endif;
         ?>
-        <div style="clear:both"></div>
-        <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-        <input type="hidden" id="change_status_submit" name="change_status_submit" />
-            <?php if($status_id == 1): ?>
-        <button type="submit" id="status_id" name="status_id" value="2" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Отправить КП</button>
-            <?php elseif($status_id == 2): ?>
-        <button type="submit" id="status_id" name="status_id" value="3" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Отправить в работу</button>
-            <?php endif; ?>
-            <?php if (!empty($techmap_id)): ?>
-        <a href="<?=APPLICATION.'/techmap/details.php?id='.$techmap_id ?>" class="btn btn-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
-            <?php endif; ?>
-            <?php if($status_id == 6): ?>
-        <button type="submit" id="status_id" name="status_id" value="7" class="btn btn-outline-dark mt-3" style="width: 200px;">Завершить</button>
-            <?php endif; ?>
-    </form>
-    <?php if($status_id == 4): ?>
-    <form method="post" action="<?=APPLICATION ?>/techmap/create.php">
-        <input type="hidden" name="calculation_id" value="<?=$id ?>" />
-        <button type="submit" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Составить тех. карту</button>
-    </form>
-    <?php endif; ?>
 </div>
