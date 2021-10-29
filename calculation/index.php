@@ -6,17 +6,6 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Получение всех статусов
-$fetcher = (new Fetcher("select id, name, colour from calculation_status"));
-$statuses = array();
-
-while ($row = $fetcher->Fetch()) {
-    $status = array();
-    $status['name'] = $row['name'];
-    $status['colour'] = $row['colour'];
-    $statuses[$row['id']] = $status;
-}
-
 function OrderLink($param) {
     if(array_key_exists('order', $_REQUEST) && $_REQUEST['order'] == $param) {
         echo "<strong><i class='fas fa-arrow-down' style='color: black; font-size: small;'></i></strong>";
@@ -59,12 +48,6 @@ function OrderLink($param) {
                         else $where .= " and c.unit='$unit'";
                     }
                     
-                    $status = filter_input(INPUT_GET, 'status');
-                    if(!empty($status)) {
-                        if(empty($where)) $where = " where c.status_id=$status";
-                        else $where .= " and c.status_id=$status";
-                    }
-                    
                     $work_type = filter_input(INPUT_GET, 'work_type');
                     if(!empty($work_type)) {
                         if(empty($where)) $where = " where c.work_type_id=$work_type";
@@ -103,19 +86,6 @@ function OrderLink($param) {
                             <option value="">Шт/кг...</option>
                             <option value="thing"<?= filter_input(INPUT_GET, 'unit') == 'thing' ? " selected='selected'" : "" ?>>Шт</option>
                             <option value="kg"<?= filter_input(INPUT_GET, 'unit') == 'kg' ? " selected='selected'" : "" ?>>Кг</option>
-                        </select>
-                        <select id="status" name="status" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
-                            <option value="">Статус...</option>
-                            <?php
-                            $sql = "select distinct cs.id, cs.name from calculation c inner join calculation_status cs on c.status_id = cs.id order by cs.name";
-                            $fetcher = new Fetcher($sql);
-                            
-                            while ($row = $fetcher->Fetch()):
-                            ?>
-                            <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'status') ? " selected='selected'" : "") ?>><?=$row['name'] ?></option>
-                            <?php
-                            endwhile;
-                            ?>
                         </select>
                         <select id="work_type" name="work_type" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Тип работы...</option>
@@ -170,7 +140,7 @@ function OrderLink($param) {
                         <th class="text-center">Объем&nbsp;&nbsp;<?= OrderLink('quantity') ?></th>
                         <th>Тип работы&nbsp;&nbsp;<?= OrderLink('work_type') ?></th>
                         <th>Менеджер&nbsp;&nbsp;<?= OrderLink('manager') ?></th>
-                        <th>Статус&nbsp;&nbsp;<?= OrderLink('status') ?></th>
+                        <th>Статус</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -215,10 +185,15 @@ function OrderLink($param) {
                         }
                     }
                     
-                    $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.unit, c.quantity, c.work_type_id, "
-                            . "wt.name work_type, u.last_name, u.first_name, c.status_id, "
+                    $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.unit, c.quantity, c.work_type_id, c.paints_count, "
+                            . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
+                            . "c.form_1, c.form_2, c.form_3, form_4, form_5, form_6, form_7, form_8, "
+                            . "cr.id calculation_result_id, tm.id techmap_id, "
+                            . "wt.name work_type, u.last_name, u.first_name, "
                             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                             . "from calculation c "
+                            . "left join calculation_result cr on cr.calculation_id = c.id "
+                            . "left join techmap tm on tm.calculation_id = c.id "
                             . "inner join customer cus on c.customer_id = cus.id "
                             . "inner join work_type wt on c.work_type_id = wt.id "
                             . "inner join user u on c.manager_id = u.id$where "
@@ -231,13 +206,39 @@ function OrderLink($param) {
                     $status = '';
                     $colour_style = '';
                     
-                    if(!empty($statuses[$row['status_id']]['name'])) {
-                        $status = $statuses[$row['status_id']]['name'];
-                    }
-                    
-                    if(!empty($statuses[$row['status_id']]['colour'])) {
-                        $colour = $statuses[$row['status_id']]['colour'];
+                    if(!empty($row['techmap_id'])) {
+                        $status = "Составлена техническая карта";
+                        $colour = "green";
                         $colour_style = " color: $colour";
+                    }
+                    elseif(!empty ($row['calculation_result_id'])) {
+                        $status = "Сделан расчёт";
+                        $colour = "blue";
+                        $colour_style = " color: $colour";
+                    }
+                    elseif($row['work_type_id'] == 1) {
+                        $status = "Требуется расчёт";
+                        $colour = "orange";
+                        $colour_style = " color: $colour";
+                    }
+                    elseif(empty($row['paints_count'])) {
+                        $status = "Требуется красочность";
+                        $colour = "yellow";
+                        $colour_style = " color: $colour";
+                    }
+                    else {
+                        $paints_count = $row['paints_count'];
+                        
+                        if(empty($row["form_$paints_count"])) {
+                            $status = "Требуются формы";
+                            $colour = "gold";
+                            $colour_style = " color: $colour";
+                        }
+                        else {
+                            $status = "Требуется расчёт";
+                            $colour = "orange";
+                            $colour_style = " color: $colour";
+                        }
                     }
                     ?>
                     <tr>
@@ -283,12 +284,6 @@ function OrderLink($param) {
                 language: "ru",
                 width: '4rem'
             })
-            
-            $('#status').select2({
-                placeholder: "Статус...",
-                maximumSelectionLength: 1,
-                language: "ru"
-            });
             
             $('#work_type').select2({
                 placeholder: "Тип работы...",
