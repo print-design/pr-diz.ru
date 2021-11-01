@@ -108,8 +108,14 @@ $reverse_print = $row['reverse_print'];
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/techmap/<?= BuildQueryRemove("id") ?>">К списку</a>
-            <a class="btn btn-outline-dark ml-3" href="<?=APPLICATION ?>/calculation/calculation.php?id=<?=$calculation_id ?>">Расчет</a>
+            <div class="d-flex justify-content-between mb-auto">
+                <div class="p-1">
+                    <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/techmap/<?= BuildQueryRemove("id") ?>">К списку</a>
+                </div>
+                <div class="p-1">
+                    <a class="btn btn-outline-dark ml-3 topbutton" style="width: 200px;" href="<?=APPLICATION ?>/calculation/calculation.php?id=<?=$calculation_id ?>">К расчету</a>
+                </div>
+            </div>
             <h1 style="font-size: 32px; font-weight: 600;">Заявка на флекс-печать от <?= $date->format('d').' '.$GLOBALS['months_genitive'][intval($date->format('m'))].' '.$date->format('Y') ?> г</h1>
             <table class="table table-bordered">
                 <tr>
