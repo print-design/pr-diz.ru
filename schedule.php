@@ -119,10 +119,8 @@ foreach ($period as $date) {
                     </form>
                 </div>
             </div>
-            <?php
-            foreach ($dateshifts as $dateshift):
-            ?>
             <table class="table table-bordered">
+                <?php foreach ($dateshifts as $dateshift): ?>
                 <tr>
                     <td style="width: 5%;"><?= $GLOBALS['weekdays'][$dateshift['date']->format('w')] ?></td>
                     <td style="width: 10%;"><?=$dateshift['date']->format('d.m.Y') ?></td>
@@ -140,7 +138,7 @@ foreach ($period as $date) {
                         ?>
                     </td>
                 </tr>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
             </table>
         </div>
         <?php
