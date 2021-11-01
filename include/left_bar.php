@@ -14,7 +14,7 @@ $zakaz_class = '';
 $sklad_class = '';
 $grafik_class = '';
 
-if($folder == "calculation" || $folder == "techmap" || $folder = "schedule.php") {
+if($folder == "calculation" || $folder == "techmap" || $file == "schedule.php") {
     $zakaz_class = " active";
 }
 else if($folder == "pallet" || $folder == "roll" || $folder == "cut_source" || $folder == "utilized") {

@@ -144,7 +144,9 @@ function OrderLink($param) {
                             <?php endwhile; ?>
                         </select>
                     </form>
+                    <?php if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager'))): ?>
                     <a href="create.php" class="btn btn-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
+                    <?php endif; ?>
                 </div>
             </div>
             <table class="table table-hover" id="content_table">

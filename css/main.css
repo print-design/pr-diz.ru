@@ -364,6 +364,11 @@ table.print tr td, table.print tr th {
     margin-right: 5px;
 }
 
+.topbutton {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
 /*Формы*/
 label {
     font-size: 12px;
