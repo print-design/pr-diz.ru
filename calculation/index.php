@@ -140,6 +140,7 @@ function OrderLink($param) {
                         <th class="text-center">Объем&nbsp;&nbsp;<?= OrderLink('quantity') ?></th>
                         <th>Тип работы&nbsp;&nbsp;<?= OrderLink('work_type') ?></th>
                         <th>Менеджер&nbsp;&nbsp;<?= OrderLink('manager') ?></th>
+                        <th>Комментарий</th>
                         <th>Статус</th>
                         <th></th>
                     </tr>
@@ -187,6 +188,7 @@ function OrderLink($param) {
                     
                     $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.unit, c.quantity, c.work_type_id, c.paints_count, "
                             . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
+                            . "comment, "
                             . "cr.id calculation_result_id, tm.id techmap_id, "
                             . "wt.name work_type, u.last_name, u.first_name, "
                             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
@@ -250,6 +252,7 @@ function OrderLink($param) {
                         <td class="text-right text-nowrap"><?=number_format($row['quantity'], 0, ",", " ") ?>&nbsp;<?=$row['unit'] == 'kg' ? 'кг' : 'шт' ?></td>
                         <td><?=$row['work_type'] ?></td>
                         <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
+                        <td><?=$row['comment'] ?></td>
                         <td class="text-nowrap"><i class="fas fa-circle" style="color: <?=$colour ?>;"></i>&nbsp;&nbsp;<?=$status ?></td>
                         <td><a href="calculation.php<?= BuildQuery("id", $row['id']) ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a></td>
                     </tr>
