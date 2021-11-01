@@ -68,6 +68,8 @@ $laminator_machine_id = 5;
 
 // Обработка нажатия кнопки "Сохранить расчёт"
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    
     // Если тип работы "Пленка без печати", то обязательно требуем добавить хотя бы одну ламинацию
     if(filter_input(INPUT_POST, 'work_type_id') == 1 && empty(filter_input(INPUT_POST, 'lamination1_brand_name'))) {
         $error_message = "Если тип работы 'Пленка без печати', то выберите хотя бы одну ламинацию";
@@ -338,33 +340,65 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
        
         // Сохранение в базу
         if(empty($error_message)) {
-            $sql = "insert into calculation (customer_id, name, work_type_id, unit, machine_id, "
-                    . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, width, "
-                    . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
-                    . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
-                    . "quantity, streams_count, length, stream_width, raport, lamination_roller, paints_count, manager_id, status_id, extracharge, ski, no_ski, "
-                    . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
-                    . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
-                    . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
-                    . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
-                    . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
-                    . "values($customer_id, '$name', $work_type_id, '$unit', $machine_id, "
-                    . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, $width, "
-                    . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_other_brand_name', $lamination1_other_price, $lamination1_other_thickness, $lamination1_other_weight, $lamination1_customers_material, "
-                    . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_other_brand_name', $lamination2_other_price, $lamination2_other_thickness, $lamination2_other_weight, $lamination2_customers_material, "
-                    . "$quantity, $streams_count, $length, $stream_width, $raport, $lamination_roller, $paints_count, $manager_id, $status_id, $extracharge, $ski, $no_ski, "
-                    . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
-                    . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
-                    . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
-                    . "'$percent_1', '$percent_2', '$percent_3', '$percent_4', '$percent_5', '$percent_6', '$percent_7', '$percent_8', "
-                    . "'$form_1', '$form_2', '$form_3', '$form_4', '$form_5', '$form_6', '$form_7', '$form_8')";
-            $executer = new Executer($sql);
-            $error_message = $executer->error;
-            $insert_id = $executer->insert_id;
+            // Если пустой id, то создаём новый объект
+            if(empty($id)) {
+                $sql = "insert into calculation (customer_id, name, work_type_id, unit, machine_id, "
+                        . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, width, "
+                        . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
+                        . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
+                        . "quantity, streams_count, length, stream_width, raport, lamination_roller, paints_count, manager_id, status_id, extracharge, ski, no_ski, "
+                        . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
+                        . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "                    . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
+                        . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
+                        . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
+                        . "values($customer_id, '$name', $work_type_id, '$unit', $machine_id, "
+                        . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, $width, "
+                        . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_other_brand_name', $lamination1_other_price, $lamination1_other_thickness, $lamination1_other_weight, $lamination1_customers_material, "
+                        . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_other_brand_name', $lamination2_other_price, $lamination2_other_thickness, $lamination2_other_weight, $lamination2_customers_material, "
+                        . "$quantity, $streams_count, $length, $stream_width, $raport, $lamination_roller, $paints_count, $manager_id, $status_id, $extracharge, $ski, $no_ski, "
+                        . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
+                        . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
+                        . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
+                        . "'$percent_1', '$percent_2', '$percent_3', '$percent_4', '$percent_5', '$percent_6', '$percent_7', '$percent_8', "
+                        . "'$form_1', '$form_2', '$form_3', '$form_4', '$form_5', '$form_6', '$form_7', '$form_8')";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+                $id = $executer->insert_id;
+            }
+            else {
+                $sql = "update calculation "
+                        . "set customer_id=$customer_id, name='$name', work_type_id=$work_type_id, unit='$unit', machine_id=$machine_id, "
+                        . "brand_name='$brand_name', thickness=$thickness, other_brand_name='$other_brand_name', other_price=$other_price, "
+                        . "other_thickness=$other_thickness, other_weight=$other_weight, customers_material=$customers_material, width=$width, "
+                        . "lamination1_brand_name='$lamination1_brand_name', lamination1_thickness=$lamination1_thickness, "
+                        . "lamination1_other_brand_name='$lamination1_other_brand_name', lamination1_other_price=$lamination1_other_price, "
+                        . "lamination1_other_thickness=$lamination1_other_thickness, lamination1_other_weight=$lamination1_other_weight, "
+                        . "lamination1_customers_material=$lamination1_customers_material, "
+                        . "lamination2_brand_name='$lamination2_brand_name', lamination2_thickness=$lamination2_thickness, "
+                        . "lamination2_other_brand_name='$lamination2_other_brand_name', lamination2_other_price=$lamination2_other_price, "
+                        . "lamination2_other_thickness=$lamination2_other_thickness, lamination2_other_weight=$lamination2_other_weight, "
+                        . "lamination2_customers_material=$lamination2_customers_material, "
+                        . "quantity=$quantity, streams_count=$streams_count, length=$length, stream_width=$stream_width, raport=$raport, "
+                        . "lamination_roller=$lamination_roller, paints_count=$paints_count, manager_id=$manager_id, status_id=$status_id, "
+                        . "extracharge=$extracharge, ski=$ski, no_ski=$no_ski, "
+                        . "paint_1='$paint_1', paint_2='$paint_2', paint_3='$paint_3', paint_4='$paint_4', "
+                        . "paint_5='$paint_5', paint_6='$paint_6', paint_7='$paint_7', paint_8='$paint_8', "
+                        . "color_1='$color_1', color_2='$color_2', color_3='$color_3', color_4='$color_4', "
+                        . "color_5='$color_5', color_6='$color_6', color_7='$color_7', color_8='$color_8', "
+                        . "cmyk_1='$cmyk_1', cmyk_2='$cmyk_2', cmyk_3='$cmyk_3', cmyk_4='$cmyk_4', "
+                        . "cmyk_5='$cmyk_5', cmyk_6='$cmyk_6', cmyk_7='$cmyk_7', cmyk_8='$cmyk_8', "
+                        . "percent_1='$percent_1', percent_2='$percent_2', percent_3='$percent_3', percent_4='$percent_4', "
+                        . "percent_5='$percent_5', percent_6='$percent_6', percent_7='$percent_7', percent_8='$percent_8', "
+                        . "form_1='$form_1', form_2='$form_2', form_3='$form_3', form_4='$form_4', "
+                        . "form_5='$form_5', form_6='$form_6', form_7='$form_7', form_8='$form_8' "
+                        . "where id=$id";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+            }
         }
         
         if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/calculation/calculation.php?id='.$insert_id);
+            header('Location: '.APPLICATION.'/calculation/calculation.php?id='.$id);
         }
     }
 }

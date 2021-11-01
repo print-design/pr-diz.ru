@@ -1554,7 +1554,7 @@ $num_for_customer = $row['num_for_customer'];
                         
                         if($percents_exist):
                     ?>
-                    <form method="post">
+                    <form method="post" class="d-inline-block">
                         <input type="hidden" name="id" value="<?=$id ?>" />
                         <button type="submit" name="calculate-submit" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Рассчитать</button>
                     </form>
@@ -1562,6 +1562,10 @@ $num_for_customer = $row['num_for_customer'];
                         endif;
                     endif;
                     ?>
+                    
+                    <?php if(empty($calculation_result_id)): ?>
+                    <a href="create.php<?= BuildQuery("id", $id) ?>" class="btn btn-outline-dark mt-5 mr-2" style="width: 200px;">Редактировать</a>
+                    <?php endif; ?>
                     
                     <?php if(!empty($techmap_id)): ?>
                     <a href="<?=APPLICATION.'/techmap/details.php?id='.$techmap_id ?>" class="btn btn-outline-dark mt-5 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
