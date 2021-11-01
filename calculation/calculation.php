@@ -46,6 +46,16 @@ if(null !== filter_input(INPUT_POST, 'percent-submit')) {
     }
 }
 
+// Ввод комментария
+if(null !== filter_input(INPUT_POST, 'comment-submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $comment = addslashes(filter_input(INPUT_POST, 'comment'));
+    
+    $sql = "update calculation set comment='$comment' where id=$id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+}
+
 // Расчёт
 if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     $id = filter_input(INPUT_POST, 'id');
@@ -1091,6 +1101,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
         . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
         . "c.form_1, c.form_2, c.form_3, form_4, form_5, form_6, form_7, form_8, "
+        . "comment, "
         . "c.extracharge, c.ski, c.no_ski, "
         . "(select id from techmap where calculation_id = $id limit 1) techmap_id, "
         . "(select id from calculation_result where calculation_id = $id) calculation_result_id, "
@@ -1163,6 +1174,8 @@ for($i=1; $i<=$paints_count; $i++) {
     $form_var = "form_$i";
     $$form_var = $row[$form_var];
 }
+
+$comment = $row['comment'];
 
 $extracharge = $row['extracharge'];
 $ski = $row['ski'];
@@ -1469,7 +1482,7 @@ $num_for_customer = $row['num_for_customer'];
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <button type="submit" class="btn btn-outline-dark d-none" name="percent-submit">Сохранить</button>
+                                                    <button type="submit" class="btn btn-outline-dark invisible" name="percent-submit">Сохранить</button>
                                                 </div>
                                             </form>
                                             <?php endif; ?>
@@ -1505,6 +1518,21 @@ $num_for_customer = $row['num_for_customer'];
                             <?php
                             endif;
                             ?>
+                        <tr>
+                            <th>Комментарий</th>
+                            <td>
+                                <form class="form-inline" method="post">
+                                    <input type="hidden" name="id" value="<?=$id ?>" />
+                                    <input type="hidden" id="scroll" name="scroll" />
+                                    <div class="form-group">
+                                        <textarea id="comment" name="comment" rows="3" cols="40" class="form-control"><?= htmlentities($comment) ?></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" name="comment-submit" class="btn btn-outline-dark invisible">Сохранить</button>
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
                     </table>
                     
                     <?php if(!empty($calculation_result_id)): ?>
@@ -1561,11 +1589,16 @@ $num_for_customer = $row['num_for_customer'];
                 }
                 
                 // Делаем также доступной кнопку "Сохранить"
-                $(this).form().find('button').removeClass('d-none');
+                $(this).form().find('button').removeClass('invisible');
             });
     
             $(".percent").change(function(){
                 ChangeLimitIntValue($(this), 100);
+            });
+            
+            // Делаем доступной кнопку "Сохранить" для коментария
+            $('#comment').keydown(function() {
+                $(this).form().find('button').removeClass('invisible');
             });
             
             // Показ расходов
