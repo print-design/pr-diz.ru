@@ -5,6 +5,82 @@ include 'include/topscripts.php';
 if(!IsInRole(array('technologist', 'dev', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
+
+function CreateDateShift(&$dateshift, $techmaps) {
+    $formatted_date = $dateshift['date']->format('Y-m-d');
+    $key = $formatted_date.$dateshift['shift'];
+    $dateshift['row'] = array();
+    if(isset($techmaps[$key])) $dateshift['row'] = $techmaps[$key];
+            
+    $str_date = $dateshift['date']->format('Y-m-d');
+            
+    $dateshift['techmaps'] = array();
+    if(array_key_exists($str_date, $techmaps) && array_key_exists($dateshift['shift'], $techmaps[$str_date])) {
+        $dateshift['editions'] = $techmaps[$str_date][$dateshift['shift']];
+    }
+            
+    $day_techmaps = array();
+    if(array_key_exists($str_date, $techmaps) && array_key_exists('day', $techmaps[$str_date])) {
+        $day_techmaps = $techmaps[$str_date]['day'];
+    }
+            
+    $night_techmaps = array();
+    if(array_key_exists($str_date, $techmaps) && array_key_exists('night', $techmaps[$str_date])) {
+        $night_techmaps = $techmaps[$str_date]['night'];
+    }
+            
+    $day_rowspan = count($day_techmaps);
+    if($day_rowspan == 0) $day_rowspan = 1;
+    $night_rowspan = count($night_techmaps);
+    if($night_rowspan == 0) $night_rowspan = 1;
+    $dateshift['rowspan'] = $day_rowspan + $night_rowspan;
+    $dateshift['my_rowspan'] = $dateshift['shift'] == 'day' ? $day_rowspan : $night_rowspan;
+}
+
+$date_from = null;
+$date_to = null;
+GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);
+            
+// Список технологических карт
+$techmaps = [];
+            
+$sql = "select t.id, t.work_date, t.work_shift, c.name "
+        . "from techmap t "
+        . "inner join calculation c on t.calculation_id = c.id "
+        . "where t.work_date >='".$date_from->format('Y-m-d')."' and t.work_date <= '".$date_to->format('Y-m-d')."' "
+        . "order by t.id";
+$fetcher = new Fetcher($sql);
+while($item = $fetcher->Fetch()) {
+    if(!array_key_exists($item['work_date'], $techmaps) || !array_key_exists($item['work_shift'], $techmaps[$item['work_date']])) $techmaps[$item['work_date']][$item['work_shift']] = [];
+    array_push($techmaps[$item['work_date']][$item['work_shift']], $item);
+}
+
+// Список дат и смен
+if($date_from < $date_to) {
+    $date_diff = $date_from->diff($date_to);
+    $interval = DateInterval::createFromDateString("1 day");
+    $period = new DatePeriod($date_from, $interval, $date_diff->days);
+}
+else {
+    $period = array();
+    array_push($period, $date_from);
+}
+            
+$dateshifts = array();
+
+foreach ($period as $date) {
+    $dateshift['date'] = $date;
+    $dateshift['shift'] = 'day';
+    $dateshift['top'] = 'top';
+    CreateDateShift($dateshift, $techmaps);
+    array_push($dateshifts, $dateshift);
+        
+    $dateshift['date'] = $date;
+    $dateshift['shift'] = 'night';
+    $dateshift['top'] = 'nottop';
+    CreateDateShift($dateshift, $techmaps);
+    array_push($dateshifts, $dateshift);
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -44,48 +120,15 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
                 </div>
             </div>
             <?php
-            $date_from = null;
-            $date_to = null;
-            GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);
-            
-            $date_diff = $date_from->diff($date_to);
-            $interval = DateInterval::createFromDateString("1 day");
-            $period = new DatePeriod($date_from, $interval, $date_diff->days);
-            $techmaps = array();
-            
-            $sql = "select t.id, t.work_date, c.name "
-                    . "from techmap t "
-                    . "inner join calculation c on t.calculation_id = c.id "
-                    . "where t.work_date >='".$date_from->format('Y-m-d')."' and t.work_date <= '".$date_to->format('Y-m-d')."' "
-                    . "order by t.id";
-            $fetcher = new Fetcher($sql);
-            while($row = $fetcher->Fetch()) {
-                if(!key_exists($row['work_date'], $techmaps)) {
-                    $techmaps[$row['work_date']] = array();
-                }
-                
-                $techmap = array();
-                $techmap['id'] = $row['id'];
-                $techmap['name'] = $row['name'];
-                array_push($techmaps[$row['work_date']], $techmap);
-            }
+            foreach ($dateshifts as $dateshift):
             ?>
             <table class="table table-bordered">
-            <?php
-            foreach ($period as $date): 
-            $weekday = $date->format('w');
-            $rowstyle = '';
-            
-            if($weekday == 6 || $weekday == 0) {
-                $rowstyle = " style='background-color: lightcyan;'";
-            }
-            ?>
-                <tr<?=$rowstyle ?>>
-                    <td style="width: 5%;"><?= $GLOBALS['weekdays'][$date->format('w')] ?></td>
-                    <td style="width: 10%;"><?=$date->format('d.m.Y') ?></td>
+                <tr>
+                    <td style="width: 5%;"><?= $GLOBALS['weekdays'][$dateshift['date']->format('w')] ?></td>
+                    <td style="width: 10%;"><?=$dateshift['date']->format('d.m.Y') ?></td>
                     <td>
                         <?php
-                        $date_formatted = $date->format('Y-m-d');
+                        /*$date_formatted = $dateshift['date']->format('Y-m-d');
                         
                         if(key_exists($date_formatted, $techmaps)):
                         foreach ($techmaps[$date_formatted] as $techmap):
@@ -93,7 +136,7 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
                         <p><a href="<?=APPLICATION ?>/techmap/details.php?id=<?=$techmap['id'] ?>"><?=$techmap['name'] ?></a></p>
                         <?php
                         endforeach;
-                        endif;
+                        endif;*/
                         ?>
                     </td>
                 </tr>
