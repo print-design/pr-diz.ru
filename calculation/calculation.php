@@ -26,6 +26,26 @@ const PANTON = "panton";
 const WHITE = "white";
 const LACQUER = "lacquer";
 
+$form_valid = true;
+
+// Заполнение красочности
+if(null !== filter_input(INPUT_POST, 'percent-submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $color_id = filter_input(INPUT_POST, 'color_id');
+    $percent = filter_input(INPUT_POST, 'percent');
+    
+    if(empty($percent)) {
+        $error_message = "Процент обязательно";
+        $form_valid = false;
+    }
+    
+    if($form_valid) {
+        $sql = "update calculation set percent_$color_id = $percent where id=$id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+}
+
 // Расчёт
 if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     $id = filter_input(INPUT_POST, 'id');
@@ -1422,7 +1442,38 @@ $num_for_customer = $row['num_for_customer'];
                                             }
                                             ?>
                                         </td>
-                                        <td><?=$$percent_var ?>%</td>
+                                        <td>
+                                            <?php if(!empty($calculation_result_id)): ?>
+                                            <?=$$percent_var ?>%
+                                            <?php else: ?>
+                                            <form method="post" class="form-inline">
+                                                <input type="hidden" name="id" value="<?=$id ?>" />
+                                                <input type="hidden" name="color_id" value="<?=$i ?>" />
+                                                <input type="hidden" id="scroll" name="scroll" />
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <input type="text" 
+                                                               class="form-control int-only percent" 
+                                                               style="width: 50px;" 
+                                                               name="percent" 
+                                                               value="<?= empty($$percent_var) ? '' : $$percent_var ?>" 
+                                                               required="required"
+                                                               onmousedown="javascript: $(this).removeAttr('name');" 
+                                                               onmouseup="javascript: $(this).attr('name', 'percent');" 
+                                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); }" 
+                                                               onkeyup="javascript: $(this).attr('name', 'percent');" 
+                                                               onfocusout="javascript: $(this).attr('name', 'percent');" />
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text">%</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-outline-dark d-none" name="percent-submit">Сохранить</button>
+                                                </div>
+                                            </form>
+                                            <?php endif; ?>
+                                        </td>
                                         <td>
                                             <?php
                                             switch ($$form_var) {
@@ -1473,11 +1524,12 @@ $num_for_customer = $row['num_for_customer'];
                             }
                         }
                         
-                        if(!$percents_exist):
+                        if($percents_exist):
                     ?>
-                    <a href="colouring.php<?= BuildQuery("id", $id) ?>" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Добавить красочность</a>
-                    <?php else: ?>
-                    <button type="submit" name="calculate-submit" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Рассчитать</button>
+                    <form method="post">
+                        <input type="hidden" name="id" value="<?=$id ?>" />
+                        <button type="submit" name="calculate-submit" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Рассчитать</button>
+                    </form>
                     <?php 
                         endif;
                     endif;
@@ -1502,6 +1554,20 @@ $num_for_customer = $row['num_for_customer'];
         }
         ?>
         <script>
+            // В поле "процент" ограничиваем значения: целые числа от 1 до 100
+            $('.percent').keydown(function(e) {
+                if(!KeyDownLimitIntValue($(e.target), e, 100)) {
+                    return false;
+                }
+                
+                // Делаем также доступной кнопку "Сохранить"
+                $(this).form().find('button').removeClass('d-none');
+            });
+    
+            $(".percent").change(function(){
+                ChangeLimitIntValue($(this), 100);
+            });
+            
             // Показ расходов
             function ShowCosts() {
                 $("#costs").removeClass("d-none");
