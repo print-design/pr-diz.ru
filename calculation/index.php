@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'manager'))) {
+if(!IsInRole(array('technologist', 'dev', 'manager', 'top_manager', 'designer'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -41,6 +41,18 @@ function OrderLink($param) {
                     <?php
                     // Фильтр
                     $where = '';
+                    
+                    $customer = filter_input(INPUT_GET, 'customer');
+                    if(!empty($customer)) {
+                        if(empty($where)) $where = " where c.customer_id=$customer";
+                        else $where .= " and c.customer_id=$customer";
+                    }
+                    
+                    $name = addslashes(filter_input(INPUT_GET, 'name'));
+                    if(!empty($name)) {
+                        if(empty($where)) $where = " where c.name=(select name from calculation where id=$name)";
+                        else $where .= " and c.name=(select name from calculation where id=$name)";
+                    }
                     
                     $unit = filter_input(INPUT_GET, 'unit');
                     if(!empty($unit)) {
@@ -82,6 +94,28 @@ function OrderLink($param) {
                         <?php if(null !== $order): ?>
                         <input type="hidden" name="order" value="<?= $order ?>" />
                         <?php endif; ?>
+                        <select id="customer" name="customer" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Заказчик...</option>
+                            <?php
+                            $sql = "select distinct cus.id, cus.name from calculation c inner join customer cus on c.customer_id = cus.id order by cus.name";
+                            $fetcher = new Fetcher($sql);
+                            
+                            while ($row = $fetcher->Fetch()):
+                            ?>
+                            <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'customer') ? " selected='selected'" : "") ?>><?=$row['name'] ?></option>
+                            <?php endwhile; ?>
+                        </select>
+                        <select id="name" name="name" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Имя заказа...</option>
+                            <?php
+                            $sql = "select distinct c.name, (select id from calculation where name=c.name limit 1) id from calculation c order by name";
+                            $fetcher = new Fetcher($sql);
+                            
+                            while($row = $fetcher->Fetch()):
+                            ?>
+                            <option value="<?= $row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'name') ? " selected='selected'" : "") ?>><?= $row['name'] ?></option>
+                            <?php endwhile; ?>
+                        </select>
                         <select id="unit" name="unit" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Шт/кг...</option>
                             <option value="thing"<?= filter_input(INPUT_GET, 'unit') == 'thing' ? " selected='selected'" : "" ?>>Шт</option>
@@ -96,9 +130,7 @@ function OrderLink($param) {
                             while ($row = $fetcher->Fetch()):
                             ?>
                             <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'work_type') ? " selected='selected'" : "") ?>><?=$row['name'] ?></option>
-                            <?php
-                            endwhile;
-                            ?>
+                            <?php endwhile; ?>
                         </select>
                         <select id="manager" name="manager" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Менеджер...</option>
@@ -109,22 +141,7 @@ function OrderLink($param) {
                             while ($row = $fetcher->Fetch()):
                             ?>
                             <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'manager') ? " selected='selected'" : "") ?>><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></option>
-                            <?php
-                            endwhile;
-                            ?>
-                        </select>
-                        <select id="customer" name="customer" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
-                            <option value="">Заказчик...</option>
-                            <?php
-                            $sql = "select distinct cus.id, cus.name from calculation c inner join customer cus on c.customer_id = cus.id order by cus.name";
-                            $fetcher = new Fetcher($sql);
-                            
-                            while ($row = $fetcher->Fetch()):
-                            ?>
-                            <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'customer') ? " selected='selected'" : "") ?>><?=$row['name'] ?></option>
-                            <?php
-                            endwhile;
-                            ?>
+                            <?php endwhile; ?>
                         </select>
                     </form>
                     <a href="create.php" class="btn btn-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
@@ -282,6 +299,18 @@ function OrderLink($param) {
         <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
         <script>
             // Список с  поиском
+            $('#customer').select2({
+                placeholder: "Заказчик...",
+                maximumSelectionLength: 1,
+                language: "ru"
+            });
+            
+            $('#name').select2({
+                placeholder: "Имя заказа...",
+                maximumSelectionLength: 1,
+                language: "ru"
+            });
+            
             $('#unit').select2({
                 placeholder: "Шт/кг...",
                 maximumStatusLength: 1,
@@ -302,11 +331,7 @@ function OrderLink($param) {
                 language: "ru"
             });
             
-            $('#customer').select2({
-                placeholder: "Заказчик...",
-                maximumSelectionLength: 1,
-                language: "ru"
-            });
+            
             
             // Заполнение информации о заказчике
             $('a.customer').click(function(e) {
