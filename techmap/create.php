@@ -159,7 +159,7 @@ $dirty_length = $row['dirty_length'];
                                         $reverse_print_0_checked = " checked='checked'";
                                     }
                                     ?>
-                                    <td><input type="radio" name="reverse_print" value="0" class="form-control"<?=$reverse_print_0_checked ?> /></td>
+                                    <td><input type="radio" name="reverse_print" value="0" class="form-check-inline"<?=$reverse_print_0_checked ?> /></td>
                                 </tr>
                                 <tr>
                                     <td>оборотная</td>
@@ -169,7 +169,7 @@ $dirty_length = $row['dirty_length'];
                                         $reverse_print_1_checked = " checked='checked'";
                                     }
                                     ?>
-                                    <td><input type="radio" name="reverse_print" value="1" class="form-control"<?=$reverse_print_1_checked ?> /></td>
+                                    <td><input type="radio" name="reverse_print" value="1" class="form-check-inline"<?=$reverse_print_1_checked ?> /></td>
                                 </tr>
                             </table>
                         </td>
