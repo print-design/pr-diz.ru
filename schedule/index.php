@@ -62,9 +62,6 @@ if(null !== filter_input(INPUT_POST, 'grafik-submit')) {
     $error_message = $executer->error;
 }
 
-// Проверка соответствия между расписанием и графиком, удаление неактуальных ссылок на график
-$sql = "";
-
 function CreateDateShift(&$dateshift, $techmaps) {
     $str_date = $dateshift['date']->format('Y-m-d');
             
@@ -98,6 +95,28 @@ function ShowTechmap($techmap, $top, $dateshift) {
 $date_from = null;
 $date_to = null;
 GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);
+
+// Проверка соответствия между расписанием и графиком, удаление неактуальных ссылок на график
+$grafik_editions = array();
+array_push($grafik_editions, 0);
+
+$sql = "select e.id from edition e inner join "
+        . "workshift ws on e.workshift_id = ws.id "
+        . "where ws.date >= '".$date_from->format('Y-m-d')."' and ws.date <= '".$date_to->format('Y-m-d')."'";
+$fetcher = new FetcherGrafik($sql);
+
+while ($row = $fetcher->Fetch()) {
+    array_push($grafik_editions, $row['id']);
+}
+
+$grafik_editions_implode = implode(', ', $grafik_editions);
+
+$sql = "update techmap set grafik_id = null "
+        . "where grafik_id not in ($grafik_editions_implode) "
+        . "and work_date >= '".$date_from->format('Y-m-d')."' "
+        . "and work_date <= '".$date_to->format('Y-m-d')."'";
+$executer = new Executer($sql);
+$error_message = $executer->error;
             
 // Список технологических карт
 $techmaps = [];
