@@ -1,9 +1,65 @@
 <?php
 include '../include/topscripts.php';
+include '../include/database_grafik.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
+}
+
+// Добавление тех. карты в график
+if(null !== filter_input(INPUT_POST, 'grafik-submit')) {
+    // Нахождение заказчика и названия заказа
+    $customer = '';
+    $name = '';
+    
+    $id = filter_input(INPUT_POST, 'id');
+    
+    $sql = "select cus.name customer, c.name calculation "
+            . "from techmap t "
+            . "inner join calculation c on t.calculation_id = c.id "
+            . "inner join customer cus on c.customer_id = cus.id "
+            . "where t.id=$id";
+    $fetcher = new Fetcher($sql);
+    
+    if($row = $fetcher->Fetch()) {
+        $customer = addslashes($row['customer']);
+        $name = addslashes($row['calculation']);
+    }
+    else {
+        $error_message = "Ошибка при запросе заказчика и имени заказа";
+    }
+    
+    // Нахождение рабочей смены в графике
+    $date = filter_input(INPUT_POST, 'date');
+    $shift = filter_input(INPUT_POST, 'shift');
+    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    $grafik_machines = array(1 => 2, 2 => 3, 3 => 4, 4 => 1);
+    $grafik_machine_id = $grafik_machines[$machine_id];
+    $workshift_id = null;
+    
+    $sql = "select id from workshift where date = '$date' and shift = '$shift' and machine_id = $grafik_machine_id";
+    $fetcher = new FetcherGrafik($sql);
+        
+    if($row = $fetcher->Fetch()) {
+        $workshift_id = $row['id'];
+    }
+    else {
+        $sql = "insert into workshift (date, shift, machine_id) values ('$date', '$shift', $grafik_machine_id)";
+        $executer = new ExecuterGrafik($sql);
+        $workshift_id = $executer->insert_id;
+        $error_message = $executer->error;
+    }
+    
+    // Создание нового тиража
+    $sql = "insert into edition (name, organization, workshift_id) values ('$name', '$customer', $workshift_id)";
+    $executer = new ExecuterGrafik($sql);
+    $error_message = $executer->error;
+    $insert_id = $executer->insert_id;
+    
+    $sql = "update techmap set grafik_id=$insert_id where id=$id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
 }
 
 function CreateDateShift(&$dateshift, $techmaps) {

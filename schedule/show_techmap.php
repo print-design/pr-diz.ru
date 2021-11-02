@@ -41,6 +41,9 @@ else {
     <?php elseif(!empty($techmap['machine_id'])): ?>
     <form method="post">
         <input type="hidden" name="id" value="<?=$techmap['id'] ?>" />
+        <input type="hidden" name="date" value="<?=$dateshift['date']->format('Y-m-d') ?>" />
+        <input type="hidden" name="shift" value="<?=$dateshift['shift'] ?>" />
+        <input type="hidden" name="machine_id" value="<?=$techmap['machine_id'] ?>" />
         <input type="hidden" name="scroll" />
         <button type="submit" name="grafik-submit" class="btn btn-outline-dark">В график</button>
     </form>
