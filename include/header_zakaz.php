@@ -26,7 +26,7 @@ include 'left_bar.php';
             if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager'))):
             ?>
             <li class="nav-item">
-                <a class="nav-link<?=$schedule_status ?>" href="<?=APPLICATION ?>/schedule.php">Расписание</a>
+                <a class="nav-link<?=$schedule_status ?>" href="<?=APPLICATION ?>/schedule/">Расписание</a>
             </li>
             <?php endif; ?>
         </ul>
