@@ -37,7 +37,14 @@ else {
 <td class="<?=$top.' '.$dateshift['shift'] ?>"><?=$techmap['machine'] ?></td>
 <td class="<?=$top.' '.$dateshift['shift'] ?>">
     <?php if(!empty($techmap['grafik_id']) && !empty($techmap['machine_id'])): ?>
-    В графике
+    <div class="d-inline-block">В графике</div>
+    <div class="d-inline-block">
+        <form method="post">
+            <input type="hidden" name="grafik_id" value="<?=$techmap['grafik_id'] ?>" />
+            <input type="hidden" name="scroll" />
+            <button type="submit" name="remove-from-grafik-submit" class="btn btn-dark btn-sm confirmable">Удалить</button>
+        </form>
+    </div>
     <?php elseif(!empty($techmap['machine_id'])): ?>
     <form method="post">
         <input type="hidden" name="id" value="<?=$techmap['id'] ?>" />

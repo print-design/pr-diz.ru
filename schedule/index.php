@@ -7,7 +7,7 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Добавление тех. карты в график
+// Добавление тиража в график
 if(null !== filter_input(INPUT_POST, 'grafik-submit')) {
     // Нахождение заказчика и названия заказа
     $customer = '';
@@ -52,14 +52,70 @@ if(null !== filter_input(INPUT_POST, 'grafik-submit')) {
     }
     
     // Создание нового тиража
-    $sql = "insert into edition (name, organization, workshift_id) values ('$name', '$customer', $workshift_id)";
+    $position = 1;
+    $sql = "insert into edition (name, organization, workshift_id, position) values ('$name', '$customer', $workshift_id, $position)";
     $executer = new ExecuterGrafik($sql);
     $error_message = $executer->error;
     $insert_id = $executer->insert_id;
     
+    // Удаление пустых тиражей в конечной смене
+    $sql = "delete from edition where workshift_id = $workshift_id "
+            . "and (name is null or name = '') "
+            . "and (organization is null or organization = '') "
+            . "and length is null "
+            . "and status_id is null "
+            . "and lamination_id is null "
+            . "and coloring is null "
+            . "and roller_id is null "
+            . "and manager_id is null "
+            . "and (comment is null or comment = '')";
+    $executer = new ExecuterGrafik($sql);
+    $error_message = $executer->error;
+    
     $sql = "update techmap set grafik_id=$insert_id where id=$id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
+}
+
+// Удаление тиража из графика
+if(null !== filter_input(INPUT_POST, 'remove-from-grafik-submit')) {
+    $grafik_id = filter_input(INPUT_POST, 'grafik_id');
+    
+    $sql = "update techmap set grafik_id = null where grafik_id = $grafik_id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    $workshift_id = null;
+    
+    if(empty($error_message)) {
+        $sql = "select workshift_id from edition where id = $grafik_id";
+        $fetcher = new FetcherGrafik($sql);
+        $error_message = $fetcher->error;
+        
+        if($row = $fetcher->Fetch()) {
+            $workshift_id = $row[0];
+            
+            $sql = "delete from edition where id = $grafik_id";
+            $executer = new ExecuterGrafik($sql);
+            $error_message = $executer->error;
+            
+            if(empty($error_message)) {
+                $count = (new FetcherGrafik("select count(id) from edition where workshift_id = $workshift_id"))->Fetch()[0];
+                
+                if($count == 0) {
+                    $row = (new FetcherGrafik("select user1_id, user2_id from workshift where id = $workshift_id"))->Fetch();
+                    
+                    if(empty($row[0]) && empty($row[1])) {
+                        $error_message = (new ExecuterGrafik("delete from workshift where id = $workshift_id"))->error;
+                    }
+                    else {
+                        $position = 1;
+                        $error_message = (new Executer("insert into edition (workshift_id, position) values ($workshift_id, $position)"))->error;
+                    }
+                }
+            }
+        }
+    }
 }
 
 function CreateDateShift(&$dateshift, $techmaps) {
