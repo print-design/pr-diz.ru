@@ -1,5 +1,6 @@
 <?php
 include '../include/topscripts.php';
+include '../include/database_grafik.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'manager'))) {
@@ -11,12 +12,50 @@ if(empty(filter_input(INPUT_GET, 'id'))) {
     header('Location: '.APPLICATION.'/techmap/');
 }
 
+function DeleteFromGrafik($grafik_id) {
+    if(!is_nan($grafik_id)) {
+        $sql = "select workshift_id from edition where id = $grafik_id";
+        $fetcher = new FetcherGrafik($sql);
+        $error_message = $fetcher->error;
+        
+        if($row = $fetcher->Fetch()) {
+            $workshift_id = $row[0];
+            
+            $sql = "delete from edition where id = $grafik_id";
+            $executer = new ExecuterGrafik($sql);
+            $error_message = $executer->error;
+            
+            if(empty($error_message)) {
+                $count = (new FetcherGrafik("select count(id) from edition where workshift_id = $workshift_id"))->Fetch()[0];
+                
+                if($count == 0) {
+                    $row = (new FetcherGrafik("select user1_id, user2_id from workshift where id = $workshift_id"))->Fetch();
+                    
+                    if(empty($row[0]) && empty($row[1])) {
+                        $error_message = (new ExecuterGrafik("delete from workshift where id = $workshift_id"))->error;
+                    }
+                    else {
+                        $position = 1;
+                        $error_message = (new ExecuterGrafik("insert into edition (workshift_id, position) values ($workshift_id, $position)"))->error;
+                    }
+                }
+            }
+        }
+    }
+}
+
 if(null !== filter_input(INPUT_POST, 'add-date-submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $work_date = filter_input(INPUT_POST, 'work_date');
     $work_shift = filter_input(INPUT_POST, 'work_shift');
     
     if(!empty($work_date) && !empty($work_shift)) {
+        $sql = "select grafik_id from techmap where id=$id";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            DeleteFromGrafik($row[0]);
+        }
+        
         $sql = "update techmap set work_date='$work_date', work_shift='$work_shift' where id=$id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
@@ -25,6 +64,12 @@ if(null !== filter_input(INPUT_POST, 'add-date-submit')) {
 
 if(null !== filter_input(INPUT_POST, 'remove-date-submit')) {
     $id = filter_input(INPUT_POST, 'id');
+    
+    $sql = "select grafik_id from techmap where id=$id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        DeleteFromGrafik($row[0]);
+    }
     
     $sql = "update techmap set work_date=NULL, work_shift=NULL where id=$id";
     $executer = new Executer($sql);
