@@ -43,7 +43,7 @@ GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to')
 // Список технологических карт
 $techmaps = [];
             
-$sql = "select t.id, t.work_date, t.work_shift, "
+$sql = "select t.id, t.work_date, t.work_shift, t.grafik_id, "
         . "c.name, c.unit, c.quantity, "
         . "c.brand_name, c.thickness, c.other_brand_name, c.other_thickness, "
         . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_other_brand_name, c.lamination1_other_thickness, "

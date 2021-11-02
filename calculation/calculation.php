@@ -1232,11 +1232,11 @@ $num_for_customer = $row['num_for_customer'];
                         <div class="p-1">
                             <?php if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager'))): ?>
                             <?php if(!empty($calculation_result_id)): ?>
-                            <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-dark ml-2 topbutton" style="width: 200px;">Пересчитать</a>
+                            <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Пересчитать</a>
                             <?php elseif(empty($row['paints_count'])): ?>
                             <form method="post" class="d-inline-block">
                                 <input type="hidden" name="id" value="<?=$id ?>" />
-                                <button type="submit" name="calculate-submit" class="btn btn-dark ml-2 topbutton" style="width: 200px;">Рассчитать</button>
+                                <button type="submit" name="calculate-submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Рассчитать</button>
                             </form>
                                 <?php
                                 else:
@@ -1252,7 +1252,7 @@ $num_for_customer = $row['num_for_customer'];
                                 ?>
                             <form method="post" class="d-inline-block">
                                 <input type="hidden" name="id" value="<?=$id ?>" />
-                                <button type="submit" name="calculate-submit" class="btn btn-dark ml-2 topbutton" style="width: 200px;">Рассчитать</button>
+                                <button type="submit" name="calculate-submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Рассчитать</button>
                             </form>
                             <?php 
                                 endif;

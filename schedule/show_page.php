@@ -39,7 +39,7 @@
                             <input type="date" name="to" value="<?= filter_input(INPUT_GET, 'to') ?>" class="form-control" />
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-dark ml-2">OK</button>
+                            <button type="submit" class="btn btn-outline-dark ml-2">OK</button>
                         </div>
                     </form>
                 </div>
@@ -58,6 +58,7 @@
                         $techmap = null;
                         if(count($dateshift['techmaps']) == 0):
                         ?>
+                        <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?>'></td>
                         <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?>'></td>
                         <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?>'></td>
                         <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?>'></td>

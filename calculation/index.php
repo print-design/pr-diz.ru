@@ -145,7 +145,7 @@ function OrderLink($param) {
                         </select>
                     </form>
                     <?php if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager'))): ?>
-                    <a href="create.php" class="btn btn-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
+                    <a href="create.php" class="btn btn-outline-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
                     <?php endif; ?>
                 </div>
             </div>
