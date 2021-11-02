@@ -7,23 +7,18 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
 }
 
 function CreateDateShift(&$dateshift, $techmaps) {
-    $formatted_date = $dateshift['date']->format('Y-m-d');
-    $key = $formatted_date.$dateshift['shift'];
-    $dateshift['row'] = array();
-    if(isset($techmaps[$key])) $dateshift['row'] = $techmaps[$key];
-            
     $str_date = $dateshift['date']->format('Y-m-d');
             
     $dateshift['techmaps'] = array();
     if(array_key_exists($str_date, $techmaps) && array_key_exists($dateshift['shift'], $techmaps[$str_date])) {
-        $dateshift['editions'] = $techmaps[$str_date][$dateshift['shift']];
+        $dateshift['techmaps'] = $techmaps[$str_date][$dateshift['shift']];
     }
             
     $day_techmaps = array();
     if(array_key_exists($str_date, $techmaps) && array_key_exists('day', $techmaps[$str_date])) {
         $day_techmaps = $techmaps[$str_date]['day'];
     }
-            
+    
     $night_techmaps = array();
     if(array_key_exists($str_date, $techmaps) && array_key_exists('night', $techmaps[$str_date])) {
         $night_techmaps = $techmaps[$str_date]['night'];
@@ -122,22 +117,35 @@ foreach ($period as $date) {
             <table class="table table-bordered">
                 <?php foreach ($dateshifts as $dateshift): ?>
                 <tr>
-                    <td style="width: 5%;"><?= $GLOBALS['weekdays'][$dateshift['date']->format('w')] ?></td>
-                    <td style="width: 10%;"><?=$dateshift['date']->format('d.m.Y') ?></td>
-                    <td>
+                    <?php if($dateshift['shift'] == 'day'): ?>
+                    <td class='<?=$dateshift['top'] ?> <?=$dateshift['shift'] ?>' rowspan='<?=$dateshift['rowspan'] ?>'><?=$GLOBALS['weekdays'] [$dateshift['date']->format('w')] ?></td>
+                    <td class='<?=$dateshift['top'] ?> <?=$dateshift['shift'] ?>' rowspan='<?=$dateshift['rowspan'] ?>'><?=$dateshift['date']->format('d.m').".".$dateshift['date']->format('Y') ?></td>
+                    <?php endif; ?>
+                    <td class='<?=$dateshift['top'] ?> <?=$dateshift['shift'] ?>' rowspan='<?=$dateshift['my_rowspan'] ?>'><?=($dateshift['shift'] == 'day' ? 'День' : 'Ночь') ?></td>
+                    
+                    <?php $techmap = null; ?>
+                    <?php if(count($dateshift['techmaps']) == 0): ?>
+                    <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?>'></td>
+                    <?php else: ?>
                         <?php
-                        /*$date_formatted = $dateshift['date']->format('Y-m-d');
-                        
-                        if(key_exists($date_formatted, $techmaps)):
-                        foreach ($techmaps[$date_formatted] as $techmap):
+                        $techmap = array_shift($dateshift['techmaps']);
                         ?>
-                        <p><a href="<?=APPLICATION ?>/techmap/details.php?id=<?=$techmap['id'] ?>"><?=$techmap['name'] ?></a></p>
-                        <?php
-                        endforeach;
-                        endif;*/
-                        ?>
-                    </td>
+                    <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?>'><?=$techmap['name'] ?></td>
+                    <?php endif; ?>
                 </tr>
+                
+                <!-- Дополнительные тех. карты -->
+                <?php
+                $techmap = array_shift($dateshift['techmaps']);
+                while ($techmap != null):
+                ?>
+                <tr>
+                    <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?>'><?=$techmap['name'] ?></td>
+                </tr>
+                <?php
+                $techmap = array_shift($dateshift['techmaps']);
+                endwhile;
+                ?>
                 <?php endforeach; ?>
             </table>
         </div>
