@@ -62,6 +62,9 @@ if(null !== filter_input(INPUT_POST, 'grafik-submit')) {
     $error_message = $executer->error;
 }
 
+// Проверка соответствия между расписанием и графиком, удаление неактуальных ссылок на график
+$sql = "";
+
 function CreateDateShift(&$dateshift, $techmaps) {
     $str_date = $dateshift['date']->format('Y-m-d');
             
