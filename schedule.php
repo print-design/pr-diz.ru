@@ -83,6 +83,15 @@ foreach ($period as $date) {
         <?php
         include 'include/head.php';
         ?>
+        <style>
+            table tbody tr td.top {
+                border-top: solid 2px darkgray;
+            }
+            
+            table tbody tr td.night {
+                background-color: #F2F2F2;
+            }
+        </style>
     </head>
     <body>
         <?php
@@ -115,38 +124,42 @@ foreach ($period as $date) {
                 </div>
             </div>
             <table class="table table-bordered">
-                <?php foreach ($dateshifts as $dateshift): ?>
-                <tr>
-                    <?php if($dateshift['shift'] == 'day'): ?>
-                    <td class='<?=$dateshift['top'] ?> <?=$dateshift['shift'] ?>' rowspan='<?=$dateshift['rowspan'] ?>'><?=$GLOBALS['weekdays'] [$dateshift['date']->format('w')] ?></td>
-                    <td class='<?=$dateshift['top'] ?> <?=$dateshift['shift'] ?>' rowspan='<?=$dateshift['rowspan'] ?>'><?=$dateshift['date']->format('d.m').".".$dateshift['date']->format('Y') ?></td>
-                    <?php endif; ?>
-                    <td class='<?=$dateshift['top'] ?> <?=$dateshift['shift'] ?>' rowspan='<?=$dateshift['my_rowspan'] ?>'><?=($dateshift['shift'] == 'day' ? 'День' : 'Ночь') ?></td>
+                <tbody>
+                    <?php foreach ($dateshifts as $dateshift): ?>
+                    <tr>
+                        <?php if($dateshift['shift'] == 'day'): ?>
+                        <td class='<?=$dateshift['top'] ?> <?=$dateshift['shift'] ?>' rowspan='<?=$dateshift['rowspan'] ?>'><?=$GLOBALS['weekdays'] [$dateshift['date']->format('w')] ?></td>
+                        <td class='<?=$dateshift['top'] ?> <?=$dateshift['shift'] ?>' rowspan='<?=$dateshift['rowspan'] ?>'><?=$dateshift['date']->format('d.m').".".$dateshift['date']->format('Y') ?></td>
+                        <?php endif; ?>
+                        <td class='<?=$dateshift['top'] ?> <?=$dateshift['shift'] ?>' rowspan='<?=$dateshift['my_rowspan'] ?>'><?=($dateshift['shift'] == 'day' ? 'День' : 'Ночь') ?></td>
                     
-                    <?php $techmap = null; ?>
-                    <?php if(count($dateshift['techmaps']) == 0): ?>
-                    <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?>'></td>
-                    <?php else: ?>
                         <?php
+                        $techmap = null;
+                        if(count($dateshift['techmaps']) == 0):
+                        ?>
+                        <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?>'></td>
+                        <?php
+                        else:
                         $techmap = array_shift($dateshift['techmaps']);
                         ?>
-                    <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?>'><?=$techmap['name'] ?></td>
-                    <?php endif; ?>
-                </tr>
+                        <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?>'><?=$techmap['name'] ?></td>
+                        <?php endif; ?>
+                    </tr>
                 
-                <!-- Дополнительные тех. карты -->
-                <?php
-                $techmap = array_shift($dateshift['techmaps']);
-                while ($techmap != null):
-                ?>
-                <tr>
-                    <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?>'><?=$techmap['name'] ?></td>
-                </tr>
-                <?php
-                $techmap = array_shift($dateshift['techmaps']);
-                endwhile;
-                ?>
-                <?php endforeach; ?>
+                    <!-- Дополнительные тех. карты -->
+                    <?php
+                    $techmap = array_shift($dateshift['techmaps']);
+                    while ($techmap != null):
+                    ?>
+                    <tr>
+                        <td class='<?="nottop ".$dateshift['shift'] ?>'><?=$techmap['name'] ?></td>
+                    </tr>
+                    <?php
+                    $techmap = array_shift($dateshift['techmaps']);
+                    endwhile;
+                    endforeach;
+                    ?>
+                </tbody>
             </table>
         </div>
         <?php
