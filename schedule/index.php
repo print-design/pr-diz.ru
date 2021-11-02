@@ -85,8 +85,6 @@ if(null !== filter_input(INPUT_POST, 'remove-from-grafik-submit')) {
     $executer = new Executer($sql);
     $error_message = $executer->error;
     
-    $workshift_id = null;
-    
     if(empty($error_message)) {
         $sql = "select workshift_id from edition where id = $grafik_id";
         $fetcher = new FetcherGrafik($sql);
@@ -110,7 +108,7 @@ if(null !== filter_input(INPUT_POST, 'remove-from-grafik-submit')) {
                     }
                     else {
                         $position = 1;
-                        $error_message = (new Executer("insert into edition (workshift_id, position) values ($workshift_id, $position)"))->error;
+                        $error_message = (new ExecuterGrafik("insert into edition (workshift_id, position) values ($workshift_id, $position)"))->error;
                     }
                 }
             }
