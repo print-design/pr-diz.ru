@@ -56,3 +56,4 @@ else {
     </form>
     <?php endif; ?>
 </td>
+<td class="<?=$top.' '.$dateshift['shift'] ?>"><a href="<?=APPLICATION ?>/techmap/details.php<?= BuildQuery("id", $techmap['id']) ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a></td>

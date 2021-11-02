@@ -13,7 +13,7 @@ if(empty(filter_input(INPUT_GET, 'id'))) {
 }
 
 function DeleteFromGrafik($grafik_id) {
-    if(!is_nan($grafik_id)) {
+    if(!empty($grafik_id)) {
         $sql = "select workshift_id from edition where id = $grafik_id";
         $fetcher = new FetcherGrafik($sql);
         $error_message = $fetcher->error;

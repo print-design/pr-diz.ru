@@ -64,6 +64,7 @@
                         <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?>'></td>
                         <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?>'></td>
                         <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?>'></td>
+                        <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?>'></td>
                         <?php
                         else:
                         $techmap = array_shift($dateshift['techmaps']);
