@@ -1016,7 +1016,11 @@ $colorfulnesses = array();
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-6"></div>
+                            <div class="col-6">
+                                <div id="show_lamination_1">
+                                    <button type="button" class="btn btn-light" onclick="javascript: ShowLamination1();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
+                                </div>
+                            </div>
                             <div class="col-6">
                                 <div class="form-check">
                                     <label class="form-check-label text-nowrap" style="line-height: 25px;">
@@ -1025,13 +1029,6 @@ $colorfulnesses = array();
                                         ?>
                                         <input type="checkbox" class="form-check-input" id="customers_material" name="customers_material" value="on"<?=$checked ?>>Сырьё заказчика
                                     </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <div id="show_lamination_1">
-                                    <button type="button" class="btn btn-light" onclick="javascript: ShowLamination1();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                                 </div>
                             </div>
                         </div>
