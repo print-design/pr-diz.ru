@@ -43,8 +43,6 @@ $other_price_valid = '';
 $other_thickness_valid = '';
 $other_weight_valid = '';
 
-$width_valid = '';
-$width_valid_message = "Ширина обязательно";
 $stream_width_valid = '';
 $stream_width_valid_message = "Ширина ручья обязательно";
 $streams_count_valid = '';
@@ -156,7 +154,59 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $customers_material = 1;
     }
     
-    $width = filter_input(INPUT_POST, 'width');
+    $stream_width = filter_input(INPUT_POST, 'stream_width');
+    
+    if(empty($stream_width)) {
+        $stream_width_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $streams_count = filter_input(INPUT_POST, 'streams_count');
+    
+    if(empty($streams_count)) {
+        $streams_count_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    // Общая ширина материала (сумма ширин ручьёв) должна быть не больше, чем возможно для данной машины.
+    // При этом, если печать с лыжами, то сравнивается ширина плюс лыжи.
+    $sum_stream_widths = intval($stream_width) * intval($streams_count);
+    
+    if(!empty(filter_input(INPUT_POST, 'lamination1_brand_name')) && $sum_stream_widths > MAX_LAMINATION_WIDTH) {
+        $stream_width_valid_message = "Общая ширина для ламинации не более ".MAX_LAMINATION_WIDTH." мм";
+        $streams_count_valid_message = $stream_width_valid_message;
+        $stream_width_valid = ISINVALID;
+        $streams_count_valid = ISINVALID;
+        $form_valid = false;
+    }
+    elseif(!empty($machine_id)) {
+        $machine_name = "";
+        $machine_max_width = 0;
+        
+        $sql = "select name, max_width from machine where id = $machine_id";
+        $fetcher = new Fetcher($sql);
+        
+        if($row = $fetcher->Fetch()) {
+            $machine_name = $row['name'];
+            $machine_max_width = $row['max_width'];
+        }
+        
+        if($no_ski && $sum_stream_widths > $machine_max_width) {
+            $stream_width_valid_message = "Общая ширина для $machine_name не более $machine_max_width мм";
+            $streams_count_valid_message = $stream_width_valid_message;
+            $stream_width_valid = ISINVALID;
+            $streams_count_valid = ISINVALID;
+            $form_valid = false;
+        }
+        elseif(!$no_ski && ($sum_stream_widths + $ski) > $machine_max_width) {
+            $stream_width_valid_message = "Общая ширина для $machine_name (минус лыжи) не более ".($machine_max_width - $ski)." мм";
+            $streams_count_valid_message = $stream_width_valid_message;
+            $stream_width_valid = ISINVALID;
+            $streams_count_valid = ISINVALID;
+            $form_valid = false;
+        }
+    }
+    
     $length = filter_input(INPUT_POST, 'length');
     
     // Если объём заказа в штуках, то длина этикетки вдоль рапорта вала обязательно, больше нуля
@@ -172,54 +222,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     $no_ski = 0;
     if(filter_input(INPUT_POST, 'no_ski') == 'on') {
         $no_ski = 1;
-    }
-    
-    // Ширина материала должна быть всегда указана: как для печати так и для ламинации без печати.
-    // Она должна быть не больше, чем возможно для данной машины.
-    // При этом, если печать с лыжами, то сравнивается ширина плюс лыжи.
-    if(empty($width)) {
-        $width_valid = ISINVALID;
-        $form_valid = false;
-    }
-    elseif(!empty(filter_input(INPUT_POST, 'lamination1_brand_name')) && $width > MAX_LAMINATION_WIDTH) {
-        $width_valid_message = "Ширина для ламинации не более ".MAX_LAMINATION_WIDTH." мм";
-        $width_valid = ISINVALID;
-        $form_valid = false;
-    }
-    elseif(!empty($machine_id)) {
-        $machine_name = "";
-        $machine_max_width = 0;
-        
-        $sql = "select name, max_width from machine where id = $machine_id";
-        $fetcher = new Fetcher($sql);
-        
-        if($row = $fetcher->Fetch()) {
-            $machine_name = $row['name'];
-            $machine_max_width = $row['max_width'];
-        }
-        
-        if($no_ski && $width > $machine_max_width) {
-            $width_valid_message = "Ширина для $machine_name не более $machine_max_width мм";
-            $width_valid = ISINVALID;
-            $form_valid = false;
-        }
-        elseif(!$no_ski && ($width + $ski) > $machine_max_width) {
-            $width_valid_message = "Ширина для $machine_name (минус лыжи) не более ".($machine_max_width - $ski)." мм";
-            $width_valid = ISINVALID;
-            $form_valid = false;
-        }
-    }
-    
-    // Сумма ширин ручьёв должна быть равна ширине плёнки
-    $stream_width = filter_input(INPUT_POST, 'stream_width');
-    $streams_count = filter_input(INPUT_POST, 'streams_count');
-    
-    if(!empty($stream_width) && !empty($streams_count) && $stream_width * $streams_count != $width) {
-        $stream_width_valid = ISINVALID;
-        $streams_count_valid = ISINVALID;
-        $stream_width_valid_message = "Сумма не равна ширине плёнки";
-        $streams_count_valid_message = "Сумма не равна ширине плёнки";
-        $form_valid = false;
     }
     
     // Проверка валидности цвета, CMYK и процента
@@ -343,7 +345,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             // Если mode = recalc, то создаём новый объект
             if(filter_input(INPUT_GET, 'mode') == 'recalc') {
                 $sql = "insert into calculation (customer_id, name, work_type_id, unit, machine_id, "
-                        . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, width, "
+                        . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
                         . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
                         . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
                         . "quantity, streams_count, length, stream_width, raport, lamination_roller, paints_count, manager_id, status_id, extracharge, ski, no_ski, "
@@ -352,7 +354,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                         . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
                         . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
                         . "values($customer_id, '$name', $work_type_id, '$unit', $machine_id, "
-                        . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, $width, "
+                        . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, "
                         . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_other_brand_name', $lamination1_other_price, $lamination1_other_thickness, $lamination1_other_weight, $lamination1_customers_material, "
                         . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_other_brand_name', $lamination2_other_price, $lamination2_other_thickness, $lamination2_other_weight, $lamination2_customers_material, "
                         . "$quantity, $streams_count, $length, $stream_width, $raport, $lamination_roller, $paints_count, $manager_id, $status_id, $extracharge, $ski, $no_ski, "
@@ -369,7 +371,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $sql = "update calculation "
                         . "set customer_id=$customer_id, name='$name', work_type_id=$work_type_id, unit='$unit', machine_id=$machine_id, "
                         . "brand_name='$brand_name', thickness=$thickness, other_brand_name='$other_brand_name', other_price=$other_price, "
-                        . "other_thickness=$other_thickness, other_weight=$other_weight, customers_material=$customers_material, width=$width, "
+                        . "other_thickness=$other_thickness, other_weight=$other_weight, customers_material=$customers_material, "
                         . "lamination1_brand_name='$lamination1_brand_name', lamination1_thickness=$lamination1_thickness, "
                         . "lamination1_other_brand_name='$lamination1_other_brand_name', lamination1_other_price=$lamination1_other_price, "
                         . "lamination1_other_thickness=$lamination1_other_thickness, lamination1_other_weight=$lamination1_other_weight, "
@@ -403,25 +405,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     }
 }
 
-// Смена статуса
-if(null !== filter_input(INPUT_POST, 'change_status_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $status_id = filter_input(INPUT_POST, 'status_id');
-    $extracharge = filter_input(INPUT_POST, 'extracharge');
-    if(empty($extracharge)) {
-        $sql = "update calculation set status_id=$status_id where id=$id";
-    }
-    else {
-        $sql = "update calculation set status_id=$status_id, extracharge=$extracharge where id=$id";
-    }
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
-    
-    if(empty($error_message)) {
-        header('Location: '.APPLICATION.'/calculation/calculation.php'. BuildQuery('id', $id));
-    }
-}
-
 // Получение объекта
 $id = filter_input(INPUT_POST, 'id');
 if(empty($id)) {
@@ -430,7 +413,7 @@ if(empty($id)) {
 
 if(!empty($id)) {
     $sql = "select date, customer_id, name, work_type_id, unit, machine_id, "
-            . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, width, "
+            . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
             . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
             . "quantity, streams_count, length, stream_width, raport, lamination_roller, paints_count, status_id, extracharge, ski, no_ski, "
@@ -507,12 +490,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
 else {
     if(isset($row['customers_material'])) $customers_material = $row['customers_material'];
     else $customers_material = null;
-}
-
-$width = filter_input(INPUT_POST, 'width');
-if(null === $width) {
-    if(isset($row['width'])) $width = $row['width'];
-    else $width = null;
 }
 
 $unit = filter_input(INPUT_POST, "unit");
@@ -1039,24 +1016,7 @@ $colorfulnesses = array();
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="width">Ширина материала, мм</label>
-                                    <input type="text" 
-                                           id="width" 
-                                           name="width" 
-                                           class="form-control int-only<?=$width_valid ?>" 
-                                           required="required" 
-                                           placeholder="Ширина материала, мм" 
-                                           value="<?=$width ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина материала, мм')" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина материала, мм')" 
-                                           onfocusout="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина материала, мм')" />
-                                    <div class="invalid-feedback"><?=$width_valid_message ?></div>
-                                </div>
-                            </div>
+                            <div class="col-6"></div>
                             <div class="col-6">
                                 <div class="form-check">
                                     <label class="form-check-label text-nowrap" style="line-height: 25px;">
@@ -1456,7 +1416,7 @@ $colorfulnesses = array();
                             <!-- Ширина лыж -->
                             <div class="col-6 print-only d-none">
                                 <div class="form-group">
-                                    <label for="raport">Ширина лыж, м</label>
+                                    <label for="raport">Ширина лыж, мм</label>
                                     <?php
                                     $disabled = $no_ski == 1 ? " disabled='disabled'" : "";
                                     ?>
