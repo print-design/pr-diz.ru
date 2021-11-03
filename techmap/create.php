@@ -24,12 +24,11 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
     $spool = filter_input(INPUT_POST, 'spool');
     $number_per_spool = filter_input(INPUT_POST, 'number_per_spool');
     $winding = filter_input(INPUT_POST, 'winding');
-    $number_per_meter = filter_input(INPUT_POST, 'number_per_meter');
     
     $sql = "insert into techmap (calculation_id, designer, printer, cutter, printings_number, rolls_number, reverse_print, "
-            . "self_adhesive, spool, number_per_spool, winding, number_per_meter) "
+            . "self_adhesive, spool, number_per_spool, winding) "
             . "values($calculation_id, '$designer', '$printer', '$cutter', $printings_number, $rolls_number, $reverse_print, "
-            . "$self_adhesive, $spool, $number_per_spool, $winding, $number_per_meter)";
+            . "$self_adhesive, $spool, $number_per_spool, $winding)";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     $techmap_id = $executer->insert_id;
@@ -101,6 +100,27 @@ $dirty_length = $row['dirty_length'];
         <?php
         include '../include/head.php';
         ?>
+        <style>
+            .roll-selector input {
+                margin:0;padding:0;
+                -webkit-appearance:none;
+                -moz-appearance:none;
+                appearance:none;
+            }
+            
+            .roll-selector label {
+                cursor:pointer;
+                border: solid 3px white;
+            }
+            
+            .roll-selector label:hover {
+                border: solid 3px lightgray;
+            }
+            
+            .roll-selector input[type="radio"]:checked + label {
+                border: solid 3px darkgray;
+            }
+        </style>
     </head>
     <body>
         <?php
@@ -211,7 +231,7 @@ $dirty_length = $row['dirty_length'];
                         </td>
                     </tr>
                     <tr>
-                        <th rowspan="4">Резка и размотка продукции</th>
+                        <th rowspan="3">Резка и размотка продукции</th>
                         <th>Размер шпули (внутренний диаметр)</th>
                         <td colspan="2">
                             <select class="form-control" name="spool" style="width: 150px;">
@@ -233,8 +253,27 @@ $dirty_length = $row['dirty_length'];
                         <td colspan="2"><input type="number" min="1" step="1" name="winding" class="form-control int-only" style="width: 150px;" value="<?= filter_input(INPUT_POST, 'winding') ?>" /></td>
                     </tr>
                     <tr>
-                        <th>Количество этикеток в 1 м одного ручья</th>
-                        <td colspan="2"><input type="number" min="1" step="1" name="number_per_meter" class="form-control int-only" style="width: 150px;" value="<?= filter_input(INPUT_POST, 'number_per_meter') ?>" /></td>
+                        <th colspan="4">
+                            Дополнительная информация
+                            <div class="form-group roll-selector">
+                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_1" name="roll_type" value="1" />
+                                <label for="roll_type_1" id="label_roll_type_1"><image src="../images/rolls/2-50.gif" style="height: 50px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_2" name="roll_type" value="2" />
+                                <label for="roll_type_2" id="label_roll_type_1"><image src="../images/rolls/2-50.gif" style="height: 50px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_3" name="roll_type" value="3" />
+                                <label for="roll_type_3" id="label_roll_type_1"><image src="../images/rolls/3-50.gif" style="height: 50px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_4" name="roll_type" value="4" />
+                                <label for="roll_type_4" id="label_roll_type_1"><image src="../images/rolls/4-50.gif" style="height: 50px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_5" name="roll_type" value="5" />
+                                <label for="roll_type_5" id="label_roll_type_1"><image src="../images/rolls/5-50.gif" style="height: 50px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_6" name="roll_type" value="6" />
+                                <label for="roll_type_6" id="label_roll_type_1"><image src="../images/rolls/6-50.gif" style="height: 50px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_7" name="roll_type" value="7" />
+                                <label for="roll_type_7" id="label_roll_type_1"><image src="../images/rolls/7-50.gif" style="height: 50px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_8" name="roll_type" value="8" />
+                                <label for="roll_type_8" id="label_roll_type_1"><image src="../images/rolls/8-50.gif" style="height: 50px; width: auto;" /></label>
+                            </div>
+                        </th>
                     </tr>
                 </table>
                 <button type="submit" name="create-submit" class="btn btn-dark" style="width: 200px;">Создать</button>

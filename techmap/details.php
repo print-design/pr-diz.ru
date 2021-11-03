@@ -80,7 +80,7 @@ if(null !== filter_input(INPUT_POST, 'remove-date-submit')) {
 $id = filter_input(INPUT_GET, 'id');
 
 $sql = "select t.date, t.calculation_id, t.work_date, t.work_shift, t.designer, t.printer, t.cutter, t.printings_number, t.rolls_number, "
-        . "t.reverse_print, t.self_adhesive, t.spool, t.number_per_spool, t.winding, t.number_per_meter, "
+        . "t.reverse_print, t.self_adhesive, t.spool, t.number_per_spool, t.winding, "
         . "c.name name, c.unit, c.quantity, "
         . "c.brand_name, c.other_brand_name, c.lamination1_brand_name, c.lamination1_other_brand_name, c.lamination2_brand_name, c.lamination2_other_brand_name, "
         . "c.streams_count, c.length, c.raport, c.paints_count, "
@@ -143,7 +143,6 @@ $self_adhesive = $row['self_adhesive'];
 $spool = $row['spool'];
 $number_per_spool = $row['number_per_spool'];
 $winding = $row['winding'];
-$number_per_meter = $row['number_per_meter'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -247,7 +246,7 @@ $number_per_meter = $row['number_per_meter'];
                     <th colspan="2"><?=$self_adhesive === null ? "" : ($self_adhesive === 0 ? "ручная" : "автомат") ?></th>
                 </tr>
                 <tr>
-                    <th rowspan="4">Резка и размотка продукции</th>
+                    <th rowspan="3">Резка и размотка продукции</th>
                     <th>Размер шпули (внутренний диаметр)</th>
                     <td colspan="2"><?=$spool ?></td>
                 </tr>
@@ -258,10 +257,6 @@ $number_per_meter = $row['number_per_meter'];
                 <tr>
                     <th>Намотка, в метрах</th>
                     <td colspan="2"><?=$winding ?></td>
-                </tr>
-                <tr>
-                    <th>Количество этикеток в 1 м одного ручья</th>
-                    <td colspan="2"><?=$number_per_meter ?></td>
                 </tr>
                 <tr>
                     <th colspan="2">Дата печати тиража</th>
