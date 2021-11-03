@@ -23,12 +23,16 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
     if($self_adhesive === null || $self_adhesive === '') $self_adhesive = "NULL";
     $spool = filter_input(INPUT_POST, 'spool');
     $number_per_spool = filter_input(INPUT_POST, 'number_per_spool');
+    if($number_per_spool === null || $number_per_spool === '') $number_per_spool = "NULL";
     $winding = filter_input(INPUT_POST, 'winding');
+    if($winding === null || $winding === '') $winding = "NULL";
+    $roll_type = filter_input(INPUT_POST, 'roll_type');
+    if($roll_type === null || $roll_type === '') $roll_type = "NULL";
     
     $sql = "insert into techmap (calculation_id, designer, printer, cutter, printings_number, rolls_number, reverse_print, "
-            . "self_adhesive, spool, number_per_spool, winding) "
+            . "self_adhesive, spool, number_per_spool, winding, roll_type) "
             . "values($calculation_id, '$designer', '$printer', '$cutter', $printings_number, $rolls_number, $reverse_print, "
-            . "$self_adhesive, $spool, $number_per_spool, $winding)";
+            . "$self_adhesive, $spool, $number_per_spool, $winding, $roll_type)";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     $techmap_id = $executer->insert_id;
@@ -136,6 +140,7 @@ $dirty_length = $row['dirty_length'];
             <h1 style="font-size: 32px; font-weight: 600;">Новая заявка на флекс-печать</h1>
             <form method="post">
                 <input type="hidden" name="calculation_id" value="<?=$calculation_id ?>" />
+                <input type="hidden" name="scroll" />
                 <table class="table table-bordered">
                     <tr>
                         <th style="width: 25%;">Менеджер</th>
@@ -256,22 +261,23 @@ $dirty_length = $row['dirty_length'];
                         <th colspan="4">
                             Дополнительная информация
                             <div class="form-group roll-selector">
-                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_1" name="roll_type" value="1" />
-                                <label for="roll_type_1" id="label_roll_type_1"><image src="../images/rolls/2-50.gif" style="height: 50px; width: auto;" /></label>
-                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_2" name="roll_type" value="2" />
-                                <label for="roll_type_2" id="label_roll_type_1"><image src="../images/rolls/2-50.gif" style="height: 50px; width: auto;" /></label>
-                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_3" name="roll_type" value="3" />
-                                <label for="roll_type_3" id="label_roll_type_1"><image src="../images/rolls/3-50.gif" style="height: 50px; width: auto;" /></label>
-                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_4" name="roll_type" value="4" />
-                                <label for="roll_type_4" id="label_roll_type_1"><image src="../images/rolls/4-50.gif" style="height: 50px; width: auto;" /></label>
-                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_5" name="roll_type" value="5" />
-                                <label for="roll_type_5" id="label_roll_type_1"><image src="../images/rolls/5-50.gif" style="height: 50px; width: auto;" /></label>
-                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_6" name="roll_type" value="6" />
-                                <label for="roll_type_6" id="label_roll_type_1"><image src="../images/rolls/6-50.gif" style="height: 50px; width: auto;" /></label>
-                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_7" name="roll_type" value="7" />
-                                <label for="roll_type_7" id="label_roll_type_1"><image src="../images/rolls/7-50.gif" style="height: 50px; width: auto;" /></label>
-                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_8" name="roll_type" value="8" />
-                                <label for="roll_type_8" id="label_roll_type_1"><image src="../images/rolls/8-50.gif" style="height: 50px; width: auto;" /></label>
+                                <?php $roll_type = filter_input(INPUT_POST, 'roll_type'); ?>
+                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_1" name="roll_type" value="1"<?=$roll_type == 1 ? " checked='checked'" : "" ?> />
+                                <label for="roll_type_1"><image src="../images/rolls/2-50.gif" style="height: 50px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_2" name="roll_type" value="2"<?=$roll_type == 2 ? " checked='checked'" : "" ?> />
+                                <label for="roll_type_2"><image src="../images/rolls/2-50.gif" style="height: 50px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_3" name="roll_type" value="3"<?=$roll_type == 3 ? " checked='checked'" : "" ?> />
+                                <label for="roll_type_3"><image src="../images/rolls/3-50.gif" style="height: 50px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_4" name="roll_type" value="4"<?=$roll_type == 4 ? " checked='checked'" : "" ?> />
+                                <label for="roll_type_4"><image src="../images/rolls/4-50.gif" style="height: 50px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_5" name="roll_type" value="5"<?=$roll_type == 5 ? " checked='checked'" : "" ?> />
+                                <label for="roll_type_5"><image src="../images/rolls/5-50.gif" style="height: 50px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_6" name="roll_type" value="6"<?=$roll_type == 6 ? " checked='checked'" : "" ?> />
+                                <label for="roll_type_6"><image src="../images/rolls/6-50.gif" style="height: 50px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_7" name="roll_type" value="7"<?=$roll_type == 7 ? " checked='checked'" : "" ?> />
+                                <label for="roll_type_7"><image src="../images/rolls/7-50.gif" style="height: 50px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_8" name="roll_type" value="8"<?=$roll_type == 8 ? " checked='checked'" : "" ?> />
+                                <label for="roll_type_8"><image src="../images/rolls/8-50.gif" style="height: 50px; width: auto;" /></label>
                             </div>
                         </th>
                     </tr>

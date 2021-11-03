@@ -80,7 +80,7 @@ if(null !== filter_input(INPUT_POST, 'remove-date-submit')) {
 $id = filter_input(INPUT_GET, 'id');
 
 $sql = "select t.date, t.calculation_id, t.work_date, t.work_shift, t.designer, t.printer, t.cutter, t.printings_number, t.rolls_number, "
-        . "t.reverse_print, t.self_adhesive, t.spool, t.number_per_spool, t.winding, "
+        . "t.reverse_print, t.self_adhesive, t.spool, t.number_per_spool, t.winding, t.roll_type, "
         . "c.name name, c.unit, c.quantity, "
         . "c.brand_name, c.other_brand_name, c.lamination1_brand_name, c.lamination1_other_brand_name, c.lamination2_brand_name, c.lamination2_other_brand_name, "
         . "c.streams_count, c.length, c.raport, c.paints_count, "
@@ -143,6 +143,7 @@ $self_adhesive = $row['self_adhesive'];
 $spool = $row['spool'];
 $number_per_spool = $row['number_per_spool'];
 $winding = $row['winding'];
+$roll_type = $row['roll_type'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -150,6 +151,16 @@ $winding = $row['winding'];
         <?php
         include '../include/head.php';
         ?>
+        <style>
+            .roll_type {
+                display: inline-block;
+                border: solid 3px white;
+            }
+            
+            .roll_type.selected {
+                border: solid 3px darkgray;
+            }
+        </style>
     </head>
     <body>
         <?php
@@ -258,6 +269,21 @@ $winding = $row['winding'];
                     <th>Намотка, в метрах</th>
                     <td colspan="2"><?=$winding ?></td>
                 </tr>
+                <tr>
+                    <th colspan="4">
+                        Дополнительная информация
+                        <div class="roll-selector">
+                            <div class="roll_type<?=$roll_type == 1 ? " selected" : "" ?>"><image src="../images/rolls/2-50.gif" style="height: 50px; width: auto;" /></div>
+                            <div class="roll_type<?=$roll_type == 2 ? " selected" : "" ?>"><image src="../images/rolls/2-50.gif" style="height: 50px; width: auto;" /></div>
+                            <div class="roll_type<?=$roll_type == 3 ? " selected" : "" ?>"><image src="../images/rolls/3-50.gif" style="height: 50px; width: auto;" /></div>
+                            <div class="roll_type<?=$roll_type == 4 ? " selected" : "" ?>"><image src="../images/rolls/4-50.gif" style="height: 50px; width: auto;" /></div>
+                            <div class="roll_type<?=$roll_type == 5 ? " selected" : "" ?>"><image src="../images/rolls/5-50.gif" style="height: 50px; width: auto;" /></div>
+                            <div class="roll_type<?=$roll_type == 6 ? " selected" : "" ?>"><image src="../images/rolls/6-50.gif" style="height: 50px; width: auto;" /></div>
+                            <div class="roll_type<?=$roll_type == 7 ? " selected" : "" ?>"><image src="../images/rolls/7-50.gif" style="height: 50px; width: auto;" /></div>
+                            <div class="roll_type<?=$roll_type == 8 ? " selected" : "" ?>"><image src="../images/rolls/8-50.gif" style="height: 50px; width: auto;" /></div>
+                            </div>
+                        </th>
+                    </tr>
                 <tr>
                     <th colspan="2">Дата печати тиража</th>
                     <td colspan="2">

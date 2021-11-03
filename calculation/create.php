@@ -340,8 +340,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
        
         // Сохранение в базу
         if(empty($error_message)) {
-            // Если пустой id, то создаём новый объект
-            if(empty($id)) {
+            // Если mode = recalc, то создаём новый объект
+            if(filter_input(INPUT_GET, 'mode') == 'recalc') {
                 $sql = "insert into calculation (customer_id, name, work_type_id, unit, machine_id, "
                         . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, width, "
                         . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
