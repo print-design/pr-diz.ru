@@ -719,7 +719,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="solvent">Стоимость растворителя для красок (за кг)<br /> комифлекс - флексоль 82<br /> остальные - этоксипропанол</label>
+                                    <label for="solvent">Стоимость растворителя "этоксипропанол"<br /> (за кг)<br />для красок (на всех машинах кроме Comiflex)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
@@ -747,7 +747,7 @@ if($row = $fetcher->Fetch()) {
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
-                                    <label for="solvent">Стоимость растворителя для лака (за кг)<br />флексоль 82</label>
+                                    <label for="solvent">Стоимость растворителя "флексоль 82"<br />(за кг)<br />для лака и (только на Comiflex) для красок</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
@@ -770,7 +770,7 @@ if($row = $fetcher->Fetch()) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback">Стоимость растворителя для лака обязательно</div>
+                                    <div class="invalid-feedback">Стоимость растворителя "флексоль 82" обязательно</div>
                                 </div>
                             </div>
                         </div>
