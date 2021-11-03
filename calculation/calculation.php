@@ -61,7 +61,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     $id = filter_input(INPUT_POST, 'id');
     
     $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c.unit, "
-            . "c.brand_name, c.thickness, other_brand_name, other_price, other_thickness, other_weight, c.customers_material, width, "
+            . "c.brand_name, c.thickness, other_brand_name, other_price, other_thickness, other_weight, c.customers_material, "
             . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, c.lamination1_customers_material, "
             . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, c.lamination2_customers_material, "
             . "c.length, c.stream_width, c.streams_count, c.machine_id, c.raport, c.lamination_roller, c.paints_count, c.manager_id, "
@@ -93,7 +93,6 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     $other_thickness = $row['other_thickness'];
     $other_weight = $row['other_weight'];
     $customers_material = $row['customers_material'];
-    $width = $row['width'];
     $lamination1_brand_name = $row['lamination1_brand_name'];
     $lamination1_thickness = $row['lamination1_thickness'];
     $lamination1_weight = $row['lamination1_weight'];
@@ -1092,7 +1091,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
 $id = filter_input(INPUT_GET, 'id');
 
 $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c.unit, "
-        . "c.brand_name, c.thickness, other_brand_name, other_price, other_thickness, other_weight, c.customers_material, width, "
+        . "c.brand_name, c.thickness, other_brand_name, other_price, other_thickness, other_weight, c.customers_material, "
         . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, c.lamination1_customers_material, "
         . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, c.lamination2_customers_material, "
         . "c.length, c.stream_width, c.streams_count, c.machine_id, c.raport, c.lamination_roller, c.paints_count, "
@@ -1133,7 +1132,6 @@ $other_price = $row['other_price'];
 $other_thickness = $row['other_thickness'];
 $other_weight = $row['other_weight'];
 $customers_material = $row['customers_material'];
-$width = $row['width'];
 $lamination1_brand_name = $row['lamination1_brand_name'];
 $lamination1_thickness = $row['lamination1_thickness'];
 $lamination1_weight = $row['lamination1_weight'];
@@ -1325,11 +1323,6 @@ $num_for_customer = $row['num_for_customer'];
                             if(!empty($machine)):
                             ?>
                         <tr><th>Печатная машина</th><td class="param-value"><?=$machine.' ('.$colorfulness.' красок)' ?></td></tr>
-                            <?php
-                            endif;
-                            if(!empty($width)):
-                            ?>
-                        <tr><th>Ширина материала</th><td class="param-value"><?=$width ?> мм</td></tr>
                             <?php
                             endif;
                             if(!empty($stream_width)):
