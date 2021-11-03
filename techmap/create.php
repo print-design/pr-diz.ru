@@ -21,9 +21,15 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
     if($reverse_print === null || $reverse_print === '') $reverse_print = "NULL";
     $self_adhesive = filter_input(INPUT_POST, 'self_adhesive');
     if($self_adhesive === null || $self_adhesive === '') $self_adhesive = "NULL";
+    $spool = filter_input(INPUT_POST, 'spool');
+    $number_per_spool = filter_input(INPUT_POST, 'number_per_spool');
+    $winding = filter_input(INPUT_POST, 'winding');
+    $number_per_meter = filter_input(INPUT_POST, 'number_per_meter');
     
-    $sql = "insert into techmap (calculation_id, designer, printer, cutter, printings_number, rolls_number, reverse_print, self_adhesive) "
-            . "values($calculation_id, '$designer', '$printer', '$cutter', $printings_number, $rolls_number, $reverse_print, $self_adhesive)";
+    $sql = "insert into techmap (calculation_id, designer, printer, cutter, printings_number, rolls_number, reverse_print, "
+            . "self_adhesive, spool, number_per_spool, winding, number_per_meter) "
+            . "values($calculation_id, '$designer', '$printer', '$cutter', $printings_number, $rolls_number, $reverse_print, "
+            . "$self_adhesive, $spool, $number_per_spool, $winding, $number_per_meter)";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     $techmap_id = $executer->insert_id;
@@ -133,7 +139,7 @@ $dirty_length = $row['dirty_length'];
                     </tr>
                     <tr>
                         <th colspan="2">Количество тиражей</th>
-                        <td colspan="2"><input type="number" min="1" step="1" name="printings_number" class="form-control" style="width: 150px;" value="<?= filter_input(INPUT_POST, 'printings_number') ?>" /></td>
+                        <td colspan="2"><input type="number" min="1" step="1" name="printings_number" class="form-control int-only" style="width: 150px;" value="<?= filter_input(INPUT_POST, 'printings_number') ?>" /></td>
                     </tr>
                     <tr>
                         <th rowspan="4">Бумага ролевая</th>
@@ -146,7 +152,7 @@ $dirty_length = $row['dirty_length'];
                     </tr>
                     <tr>
                         <th>Количество ролей</th>
-                        <td colspan="2"><input type="number" min="1" step="1" name="rolls_number" class="form-control" style="width: 150px;" value="<?= filter_input(INPUT_POST, 'rolls_number') ?>" /></td>
+                        <td colspan="2"><input type="number" min="1" step="1" name="rolls_number" class="form-control int-only" style="width: 150px;" value="<?= filter_input(INPUT_POST, 'rolls_number') ?>" /></td>
                     </tr>
                     <tr>
                         <th>Наименование, маркировка бумаги</th>
@@ -204,9 +210,38 @@ $dirty_length = $row['dirty_length'];
                             </div>
                         </td>
                     </tr>
+                    <tr>
+                        <th rowspan="4">Резка и размотка продукции</th>
+                        <th>Размер шпули (внутренний диаметр)</th>
+                        <td colspan="2">
+                            <select class="form-control" name="spool" style="width: 150px;">
+                                <option value="" hidden="hidden">...</option>
+                                <?php $post_spool = filter_input(INPUT_POST, 'spool'); ?>
+                                <option value="40"<?=$post_spool == 40 ? " selected='selected'" : "" ?>>40</option>
+                                <option value="50"<?=$post_spool == 50 ? " selected='selected'" : "" ?>>50</option>
+                                <option value="76"<?=$post_spool == 76 ? " selected='selected'" : "" ?>>76</option>
+                                <option value="152"<?=$post_spool == 152 ? " selected='selected'" : "" ?>>152</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>К-во этикеток на шпуле</th>
+                        <td colspan="2"><input type="number" min="1" step="1" name="number_per_spool" class="form-control int-only" style="width: 150px;" value="<?= filter_input(INPUT_POST, 'number_per_spool') ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th>Намотка, в метрах</th>
+                        <td colspan="2"><input type="number" min="1" step="1" name="winding" class="form-control int-only" style="width: 150px;" value="<?= filter_input(INPUT_POST, 'winding') ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th>Количество этикеток в 1 м одного ручья</th>
+                        <td colspan="2"><input type="number" min="1" step="1" name="number_per_meter" class="form-control int-only" style="width: 150px;" value="<?= filter_input(INPUT_POST, 'number_per_meter') ?>" /></td>
+                    </tr>
                 </table>
                 <button type="submit" name="create-submit" class="btn btn-dark" style="width: 200px;">Создать</button>
             </form>
         </div>
+        <?php
+        include '../include/footer.php';
+        ?>
     </body>
 </html>
