@@ -19,9 +19,11 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
     if($rolls_number === null || $rolls_number === '') $rolls_number = "NULL";
     $reverse_print = filter_input(INPUT_POST, 'reverse_print');
     if($reverse_print === null || $reverse_print === '') $reverse_print = "NULL";
+    $self_adhesive = filter_input(INPUT_POST, 'self_adhesive');
+    if($self_adhesive === null || $self_adhesive === '') $self_adhesive = "NULL";
     
-    $sql = "insert into techmap (calculation_id, designer, printer, cutter, printings_number, rolls_number, reverse_print) "
-            . "values($calculation_id, '$designer', '$printer', '$cutter', $printings_number, $rolls_number, $reverse_print)"; echo $sql;
+    $sql = "insert into techmap (calculation_id, designer, printer, cutter, printings_number, rolls_number, reverse_print, self_adhesive) "
+            . "values($calculation_id, '$designer', '$printer', '$cutter', $printings_number, $rolls_number, $reverse_print, $self_adhesive)";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     $techmap_id = $executer->insert_id;
@@ -39,8 +41,9 @@ if(empty($calculation_id)) {
 }
 
 // Получение объекта расчёта
-$sql = "select c.name name, c.unit, c.quantity, c.raport, "
-        . "c.brand_name, c.other_brand_name, c.lamination1_brand_name, c.lamination1_other_brand_name, c.lamination2_brand_name, c.lamination2_other_brand_name, c.paints_count, "
+$sql = "select c.name name, c.unit, c.quantity, "
+        . "c.brand_name, c.other_brand_name, c.lamination1_brand_name, c.lamination1_other_brand_name, c.lamination2_brand_name, c.lamination2_other_brand_name, "
+        . "c.streams_count, c.length, c.raport, c.paints_count, "
         . "c.paint_1, c.paint_2, c.paint_3, c.paint_4, c.paint_5, c.paint_6, c.paint_7, c.paint_8, c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, "
         . "cus.name customer, u.last_name manager, "
         . "cr.dirty_width, cr.dirty_length "
@@ -54,11 +57,13 @@ $row = (new Fetcher($sql))->Fetch();
 $name = $row['name'];
 $unit = $row['unit'];
 $quantity = $row['quantity'];
-$raport = $row['raport'];
 $customer = $row['customer'];
 $brand_name = $row['brand_name'] == 'other' ? $row['other_brand_name'] : $row['brand_name'];
 $lamination1_brand_name = $row['lamination1_brand_name'] == 'other' ? $row['lamination1_other_brand_name'] : $row['lamination1_brand_name'];
 $lamination2_brand_name = $row['lamination2_brand_name'] == 'other' ? $row['lamination2_other_brand_name'] : $row['lamination2_brand_name'];
+$streams_count = $row['streams_count'];
+$length = $row['length'];
+$raport = $row['raport'];
 $paints_count = $row['paints_count'];
 $paints = array();
 for($i=1; $i<=$paints_count; $i++) {
@@ -179,6 +184,25 @@ $dirty_length = $row['dirty_length'];
                     <tr>
                         <th colspan="2">Рапорт, число зубьев</th>
                         <td colspan="2"><?=$raport ?></td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Размер этикетки</th>
+                        <td colspan="2"><?=$length ?></td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Количество ручьев</th>
+                        <td colspan="2"><?=$streams_count ?></td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Способ наклейки (ручная, автомат)</th>
+                        <td colspan="2">
+                            <div class="form-group">
+                                <input type="radio" class="form-check-inline" id="self_adhesive_0" name="self_adhesive" value="0" />
+                                <label for="self_adhesive_0" class="form-check-label">ручная</label>
+                                <input type="radio" class="form-check-inline ml-3" id="self_adhesive_1" name="self_adhesive" value="1" />
+                                <label for="self_adhesive_1" class="form-check-label">автомат</label>
+                            </div>
+                        </td>
                     </tr>
                 </table>
                 <button type="submit" name="create-submit" class="btn btn-dark" style="width: 200px;">Создать</button>

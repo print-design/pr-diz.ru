@@ -79,9 +79,11 @@ if(null !== filter_input(INPUT_POST, 'remove-date-submit')) {
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
 
-$sql = "select t.date, t.calculation_id, t.work_date, t.work_shift, t.designer, t.printer, t.cutter, t.printings_number, t.rolls_number, t.reverse_print, "
-        . "c.name name, c.unit, c.quantity, c.raport, "
-        . "c.brand_name, c.other_brand_name, c.lamination1_brand_name, c.lamination1_other_brand_name, c.lamination2_brand_name, c.lamination2_other_brand_name, c.paints_count, "
+$sql = "select t.date, t.calculation_id, t.work_date, t.work_shift, t.designer, t.printer, t.cutter, t.printings_number, t.rolls_number, "
+        . "t.reverse_print, t.self_adhesive, "
+        . "c.name name, c.unit, c.quantity, "
+        . "c.brand_name, c.other_brand_name, c.lamination1_brand_name, c.lamination1_other_brand_name, c.lamination2_brand_name, c.lamination2_other_brand_name, "
+        . "c.streams_count, c.length, c.raport, c.paints_count, "
         . "c.paint_1, c.paint_2, c.paint_3, c.paint_4, c.paint_5, c.paint_6, c.paint_7, c.paint_8, c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, "
         . "cus.name customer, u.last_name manager, "
         . "cr.dirty_width, cr.dirty_length "
@@ -105,10 +107,12 @@ $rolls_number = $row['rolls_number'];
 $name = $row['name'];
 $unit = $row['unit'];
 $quantity = $row['quantity'];
-$raport = $row['raport'];
 $brand_name = $row['brand_name'] == 'other' ? $row['other_brand_name'] : $row['brand_name'];
 $lamination1_brand_name = $row['lamination1_brand_name'] == 'other' ? $row['lamination1_other_brand_name'] : $row['lamination1_brand_name'];
 $lamination2_brand_name = $row['lamination2_brand_name'] == 'other' ? $row['lamination2_other_brand_name'] : $row['lamination2_brand_name'];
+$streams_count = $row['streams_count'];
+$length = $row['length'];
+$raport = $row['raport'];
 $paints_count = $row['paints_count'];
 $paints = array();
 for($i=1; $i<=$paints_count; $i++) {
@@ -135,6 +139,7 @@ $manager = $row['manager'];
 $dirty_width = $row['dirty_width'];
 $dirty_length = $row['dirty_length'];
 $reverse_print = $row['reverse_print'];
+$self_adhesive = $row['self_adhesive'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -224,6 +229,18 @@ $reverse_print = $row['reverse_print'];
                 <tr>
                     <th colspan="2">Рапорт, число зубьев</th>
                     <td colspan="2"><?=$raport ?></td>
+                </tr>
+                <tr>
+                    <th colspan="2">Размер этикетки</th>
+                    <td colspan="2"><?=$length ?></td>
+                </tr>
+                <tr>
+                    <th colspan="2">Количество ручьев</th>
+                    <td colspan="2"><?=$streams_count ?></td>
+                </tr>
+                <tr>
+                    <th colspan="2">Способ наклейки (ручная, автомат)</th>
+                    <th colspan="2"><?=$self_adhesive === null ? "" : ($self_adhesive === 0 ? "ручная" : "автомат") ?></th>
                 </tr>
                 <tr>
                     <th colspan="2">Дата печати тиража</th>
