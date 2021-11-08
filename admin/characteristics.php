@@ -22,16 +22,10 @@ define('ISINVALID', ' is-invalid');
 $form_valid = true;
 $error_message = '';
 
-$colorfulness_valid = '';
 $max_width_valid = '';
 
 // Сохранение введённых значений
 if(null !== filter_input(INPUT_POST, 'characteristics_submit')) {
-    if(empty(filter_input(INPUT_POST, 'colorfulness'))) {
-        $colorfulness_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
     if(empty(filter_input(INPUT_POST, 'max_width'))) {
         $max_width_valid = ISINVALID;
         $form_valid = false;
@@ -41,24 +35,21 @@ if(null !== filter_input(INPUT_POST, 'characteristics_submit')) {
     
     if($form_valid) {
         // Старый объект
-        $old_colorfulness = '';
         $old_max_width = '';
         
-        $sql = "select colorfulness, max_width from machine where id = $machine_id";
+        $sql = "select max_width from machine where id = $machine_id";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
-            $old_colorfulness = $row['colorfulness'];
             $old_max_width = $row['max_width'];
         }
         
         // Новый объект
-        $new_colorfulness = filter_input(INPUT_POST, 'colorfulness');
         $new_max_width = filter_input(INPUT_POST, 'max_width');
         
-        if($old_colorfulness != $new_colorfulness || $old_max_width != $new_max_width) {
-            $sql = "update machine set colorfulness = $new_colorfulness, max_width = $new_max_width where id = $machine_id";
+        if($old_max_width != $new_max_width) {
+            $sql = "update machine set max_width = $new_max_width where id = $machine_id";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -69,17 +60,15 @@ if(null !== filter_input(INPUT_POST, 'characteristics_submit')) {
 }
 
 // Получение объекта
-$colorfulness = '';
 $max_width = '';
 
-$sql = "select colorfulness, max_width from machine where id = $machine_id";
+$sql = "select max_width from machine where id = $machine_id";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
 }
 
 if($row = $fetcher->Fetch()) {
-    $colorfulness = $row['colorfulness'];
     $max_width = $row['max_width'];
 }
 ?>
@@ -121,22 +110,6 @@ if($row = $fetcher->Fetch()) {
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
                         <input type="hidden" id="machine_id" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
-                        <div class="form-group">
-                            <label for="colorfulness">Красочность</label>
-                            <select id="colorfulness" name="colorfulness" class="form-control">
-                                <option value="" hidden="hidden">Красочность...</option>
-                                <?php
-                                for($i=1; $i<=8; $i++):
-                                $selected = '';
-                                if($i == $colorfulness) {
-                                    $selected = " selected='selected'";
-                                }
-                                ?>
-                                <option value="<?=$i ?>"<?=$selected ?>><?=$i ?></option>
-                                <?php endfor; ?>
-                            </select>
-                            <div class="invalid-feedback">Красочность обязательно</div>
-                        </div>
                         <div class="form-group">
                             <label for="max_width">Максимальная ширина материала, мм</label>
                             <input type="text" 

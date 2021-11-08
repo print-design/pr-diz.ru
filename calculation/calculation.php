@@ -1106,7 +1106,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "(select id from calculation_result where calculation_id = $id) calculation_result_id, "
         . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
         . "wt.name work_type, "
-        . "mt.name machine, mt.colorfulness, "
+        . "mt.name machine, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) weight, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
@@ -1189,7 +1189,6 @@ $customer_person = $row['customer_person'];
 $work_type = $row['work_type'];
 
 $machine = $row['machine'];
-$colorfulness = $row['colorfulness'];
 
 $techmap_id = $row['techmap_id'];
 $calculation_result_id = $row['calculation_result_id'];
@@ -1322,7 +1321,7 @@ $num_for_customer = $row['num_for_customer'];
                             endif;
                             if(!empty($machine)):
                             ?>
-                        <tr><th>Печатная машина</th><td class="param-value"><?=$machine.' ('.$colorfulness.' красок)' ?></td></tr>
+                        <tr><th>Печатная машина</th><td class="param-value"><?=$machine ?></td></tr>
                             <?php
                             endif;
                             if(!empty($stream_width)):
