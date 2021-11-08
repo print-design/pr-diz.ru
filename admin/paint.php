@@ -6,16 +6,8 @@ if(!IsInRole(array('technologist', 'dev'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Машина
-$machine_id = filter_input(INPUT_GET, 'machine_id');
-
 // Номер ламинатора
 const MACHINE_LAMINATOR = 5;
-
-// Страница не предназначена для ламинатора
-if($machine_id == MACHINE_LAMINATOR) {
-    header("Location: ".APPLICATION."/admin/glue.php".BuildQuery("machine_id", $machine_id));
-}
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -139,8 +131,6 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
         $form_valid = false;
     }
     
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
-    
     if($form_valid) {
         // Старый объект
         $old_c = "";
@@ -172,7 +162,7 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
         $old_lacquer_solvent = "";
         $old_min_price = "";
         
-        $sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent_etoxipropanol, solvent_etoxipropanol_currency, solvent_flexol82, solvent_flexol82_currency, lacquer_solvent, min_price from norm_paint where machine_id = $machine_id order by date desc limit 1";
+        $sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent_etoxipropanol, solvent_etoxipropanol_currency, solvent_flexol82, solvent_flexol82_currency, lacquer_solvent, min_price from norm_paint order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -265,7 +255,7 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
                 $old_solvent_flexol82_currency != $new_solvent_flexol82_currency || 
                 $old_lacquer_solvent != $new_lacquer_solvent || 
                 $old_min_price != $new_min_price) {
-            $sql = "insert into norm_paint (machine_id, c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent_etoxipropanol, solvent_etoxipropanol_currency, solvent_flexol82, solvent_flexol82_currency, lacquer_solvent, min_price) values ($machine_id, $new_c, '$new_c_currency', $new_c_expense, $new_m, '$new_m_currency', $new_m_expense, $new_y, '$new_y_currency', $new_y_expense, $new_k, '$new_k_currency', $new_k_expense, $new_white, '$new_white_currency', $new_white_expense, $new_panton, '$new_panton_currency', $new_panton_expense, $new_lacquer, '$new_lacquer_currency', $new_lacquer_expense, $new_paint_solvent, $new_solvent_etoxipropanol, '$new_solvent_etoxipropanol_currency', $new_solvent_flexol82, '$new_solvent_flexol82_currency', $new_lacquer_solvent, $new_min_price)";
+            $sql = "insert into norm_paint (c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent_etoxipropanol, solvent_etoxipropanol_currency, solvent_flexol82, solvent_flexol82_currency, lacquer_solvent, min_price) values ($new_c, '$new_c_currency', $new_c_expense, $new_m, '$new_m_currency', $new_m_expense, $new_y, '$new_y_currency', $new_y_expense, $new_k, '$new_k_currency', $new_k_expense, $new_white, '$new_white_currency', $new_white_expense, $new_panton, '$new_panton_currency', $new_panton_expense, $new_lacquer, '$new_lacquer_currency', $new_lacquer_expense, $new_paint_solvent, $new_solvent_etoxipropanol, '$new_solvent_etoxipropanol_currency', $new_solvent_flexol82, '$new_solvent_flexol82_currency', $new_lacquer_solvent, $new_min_price)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -305,7 +295,7 @@ $solvent_flexol82_currency = "";
 $lacquer_solvent = "";
 $min_price = "";
 
-$sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent_etoxipropanol, solvent_etoxipropanol_currency, solvent_flexol82, solvent_flexol82_currency, lacquer_solvent, min_price from norm_paint where machine_id = $machine_id order by date desc limit 1";
+$sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent_etoxipropanol, solvent_etoxipropanol_currency, solvent_flexol82, solvent_flexol82_currency, lacquer_solvent, min_price from norm_paint order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -372,12 +362,34 @@ if($row = $fetcher->Fetch()) {
                     ?>
                 </div>
             </div>
-            <?php
-            include '../include/subheader_norm.php';
-            ?>
+            <hr class="pb-0 mb-0" />
+            <div class="d-flex justify-content-start">
+                <div class="p-1">
+                    <div class="text-nowrap nav2">
+                        <?php
+                        $sql = "select id, name from machine";
+                        $fetcher = new Fetcher($sql);
+                        
+                        while ($row = $fetcher->Fetch()):
+                        if($row['id'] == MACHINE_LAMINATOR):
+                        ?>
+                        <a href="glue.php<?= BuildQuery('machine_id', $row['id']) ?>" class="mr-4"><?=$row['name'] ?></a>
+                        <?php
+                        else:
+                        ?>
+                        <a href="characteristics.php<?= BuildQuery('machine_id', $row['id']) ?>" class="mr-4"><?=$row['name'] ?></a>
+                        <?php
+                        endif;
+                        endwhile;
+                        ?>
+                        <a href="currency.php" class="mr-4">Курсы валют</a>
+                        <a href="extracharge.php" class="mr-4">Наценка</a>
+                        <a href="paint.php" class="mr-4 active">Стоимость краски</a>
+                    </div>
+                </div>
+            </div>
             <hr />
             <form method="post">
-                <input type="hidden" id="machine_id" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
                 <div class="row">
                     <div class="col-12 col-md-8 col-lg-4 d-table">
                         <div class="d-table-row">

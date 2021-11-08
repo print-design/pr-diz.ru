@@ -111,6 +111,7 @@ if(empty($error_message)) {
                         ?>
                         <a href="currency.php" class="mr-4">Курсы валют</a>
                         <a href="extracharge.php" class="mr-4 active">Наценка</a>
+                        <a href="paint.php" class="mr-4">Стоимость краски</a>
                     </div>
                 </div>
             </div>
