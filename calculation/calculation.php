@@ -327,7 +327,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $tuning_waste_percents[$row['machine_id']] = $row['waste_percent'];
     }
         
-    // Данные о нормах работы машин
+    // Данные о машинах
     $machine_speeds = array();
     $machine_prices = array();
         
@@ -338,6 +338,14 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     while($row = $fetcher->Fetch()) {
         $machine_prices[$row['machine_id']] = $row['price'];
         $machine_speeds[$row['machine_id']] = $row['speed'];
+    }
+    
+    $machine_shortnames = array();
+    
+    $sql = "select id, shortname from machine";
+    $fetcher = new Fetcher($sql);
+    while ($row = $fetcher->Fetch()) {
+        $machine_shortnames[$row['id']] = $row['shortname'];
     }
         
     // Данные о форме
@@ -420,108 +428,106 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     $paint_lacquer = null;
     $paint_lacquer_expense = null;
     $paint_paint_solvent = null;
-    $paint_solvent = null;
-    $paint_solvent_l = null;
-    $paint_lacquer_solvent_l = null;
+    $paint_solvent_etoxipropanol = null;
+    $paint_solvent_flexol82 = null;
+    $paint_lacquer_solvent = null;
     $paint_min_price = null;
         
-    if(!empty($machine_id)) {
-        $sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent, solvent_currency, solvent_l, solvent_l_currency, lacquer_solvent_l, min_price "
-                . "from norm_paint where machine_id = $machine_id order by id desc limit 1";
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            $paint_c = $row['c'];
+    $sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent_etoxipropanol, solvent_etoxipropanol_currency, solvent_flexol82, solvent_flexol82_currency, lacquer_solvent, min_price "
+            . "from norm_paint order by id desc limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $paint_c = $row['c'];
                 
-            if($row['c_currency'] == USD) {
-                $paint_c *= $usd;
-            }
-            else if($row['c_currency'] == EURO) {
-                $paint_c *= $euro;
-            }
-            
-            $paint_c_expense = $row['c_expense'];
-            $paint_m = $row['m'];
-                
-            if($row['m_currency'] == USD) {
-                $paint_m *= $usd;
-            }
-            else if($row['m_currency'] == EURO) {
-                $paint_m *= $euro;
-            }
-            
-            $paint_m_expense = $row['m_expense'];
-            $paint_y = $row['y'];
-                
-            if($row['y_currency'] == USD) {
-                $paint_y *= $usd;
-            }
-            else if($row['y_currency'] == EURO) {
-                $paint_y *= $euro;
-            }
-            
-            $paint_y_expense = $row['y_expense'];
-            $paint_k = $row['k'];
-            
-            if($row['k_currency'] == USD) {
-                $paint_k *= $usd;
-            }
-            else if($row['k_currency'] == EURO) {
-                $paint_k *= $euro;
-            }
-            
-            $paint_k_expense = $row['k_expense'];
-            $paint_white = $row['white'];
-            
-            if($row['white_currency'] == USD) {
-                $paint_white *= $usd;
-            }
-            else if($row['white_currency'] == EURO) {
-                $paint_white *= $euro;
-            }
-            
-            $paint_white_expense = $row['white_expense'];
-            $paint_panton = $row['panton'];
-            
-            if($row['panton_currency'] == USD) {
-                $paint_panton *= $usd;
-            }
-            else if($row['panton_currency'] == EURO) {
-                $paint_panton *= $euro;
-            }
-            
-            $paint_panton_expense = $row['panton_expense'];
-            $paint_lacquer = $row['lacquer'];
-            
-            if($row['lacquer_currency'] == USD) {
-                $paint_lacquer *= $usd;
-            }
-            else if($row['lacquer_currency'] == EURO) {
-                $paint_lacquer *= $euro;
-            }
-            
-            $paint_lacquer_expense = $row['lacquer_expense'];
-            $paint_paint_solvent = $row['paint_solvent'];
-            $paint_solvent = $row['solvent'];
-            
-            if($row['solvent_currency'] == USD) {
-                $paint_solvent *= $usd;
-            }
-            else if($row['solvent_currency'] == EURO) {
-                $paint_solvent *= $euro;
-            }
-            
-            $paint_solvent_l = $row['solvent_l'];
-                
-            if($row['solvent_l_currency'] == USD) {
-                $paint_solvent_l *= $usd;
-            }
-            else if($row['solvent_l_currency'] == EURO) {
-                $paint_solvent_l *= $euro;
-            }
-            
-            $paint_lacquer_solvent_l = $row['lacquer_solvent_l'];
-            $paint_min_price = $row['min_price'];
+        if($row['c_currency'] == USD) {
+            $paint_c *= $usd;
         }
+        else if($row['c_currency'] == EURO) {
+            $paint_c *= $euro;
+        }
+            
+        $paint_c_expense = $row['c_expense'];
+        $paint_m = $row['m'];
+            
+        if($row['m_currency'] == USD) {
+            $paint_m *= $usd;
+        }
+        else if($row['m_currency'] == EURO) {
+            $paint_m *= $euro;
+        }
+            
+        $paint_m_expense = $row['m_expense'];
+        $paint_y = $row['y'];
+                
+        if($row['y_currency'] == USD) {
+            $paint_y *= $usd;
+        }
+        else if($row['y_currency'] == EURO) {
+            $paint_y *= $euro;
+        }
+            
+        $paint_y_expense = $row['y_expense'];
+        $paint_k = $row['k'];
+            
+        if($row['k_currency'] == USD) {
+            $paint_k *= $usd;
+        }
+        else if($row['k_currency'] == EURO) {
+            $paint_k *= $euro;
+        }
+            
+        $paint_k_expense = $row['k_expense'];
+        $paint_white = $row['white'];
+            
+        if($row['white_currency'] == USD) {
+            $paint_white *= $usd;
+        }
+        else if($row['white_currency'] == EURO) {
+            $paint_white *= $euro;
+        }
+            
+        $paint_white_expense = $row['white_expense'];
+        $paint_panton = $row['panton'];
+            
+        if($row['panton_currency'] == USD) {
+            $paint_panton *= $usd;
+        }
+        else if($row['panton_currency'] == EURO) {
+            $paint_panton *= $euro;
+        }
+            
+        $paint_panton_expense = $row['panton_expense'];
+        $paint_lacquer = $row['lacquer'];
+            
+        if($row['lacquer_currency'] == USD) {
+            $paint_lacquer *= $usd;
+        }
+        else if($row['lacquer_currency'] == EURO) {
+            $paint_lacquer *= $euro;
+        }
+            
+        $paint_lacquer_expense = $row['lacquer_expense'];
+        $paint_paint_solvent = $row['paint_solvent'];
+        $paint_solvent_etoxipropanol = $row['solvent_etoxipropanol'];
+            
+        if($row['solvent_etoxipropanol_currency'] == USD) {
+            $paint_solvent_etoxipropanol *= $usd;
+        }
+        else if($row['solvent_etoxipropanol_currency'] == EURO) {
+            $paint_solvent_etoxipropanol *= $euro;
+        }
+            
+        $paint_solvent_flexol82 = $row['solvent_flexol82'];
+                
+        if($row['solvent_flexol82_currency'] == USD) {
+            $paint_solvent_flexol82 *= $usd;
+        }
+        else if($row['solvent_flexol82_currency'] == EURO) {
+            $paint_solvent_flexol82 *= $euro;
+        }
+            
+        $paint_lacquer_solvent = $row['lacquer_solvent'];
+        $paint_min_price = $row['min_price'];
     }
     
     // Данные о клее при ламинации
@@ -792,25 +798,25 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
                                 case CYAN:
                                     $paint_expense_final = $paint_c_expense;
                                     $paint_price_final = $paint_c;
-                                    $solvent_price_final = $paint_solvent;
+                                    $solvent_price_final = $machine_shortnames[$machine_id] == 'comiflex' ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
                                     $paint_solvent_final = $paint_paint_solvent;
                                     break;
                                 case MAGENTA:
                                     $paint_expense_final = $paint_m_expense;
                                     $paint_price_final = $paint_m;
-                                    $solvent_price_final = $paint_solvent;
+                                    $solvent_price_final = $machine_shortnames[$machine_id] == 'comiflex' ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
                                     $paint_solvent_final = $paint_paint_solvent;
                                     break;
                                 case YELLOW:
                                     $paint_expense_final = $paint_y_expense;
                                     $paint_price_final = $paint_y;
-                                    $solvent_price_final = $paint_solvent;
+                                    $solvent_price_final = $machine_shortnames[$machine_id] == 'comiflex' ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
                                     $paint_solvent_final = $paint_paint_solvent;
                                     break;
                                 case KONTUR:
                                     $paint_expense_final = $paint_k_expense;
                                     $paint_price_final = $paint_k;
-                                    $solvent_price_final = $paint_solvent;
+                                    $solvent_price_final = $machine_shortnames[$machine_id] == 'comiflex' ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
                                     $paint_solvent_final = $paint_paint_solvent;
                                     break;
                             };
@@ -818,20 +824,20 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
                         case PANTON:
                             $paint_expense_final = $paint_panton_expense;
                             $paint_price_final = $paint_panton;
-                            $solvent_price_final = $paint_solvent;
+                            $solvent_price_final = $machine_shortnames[$machine_id] == 'comiflex' ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
                             $paint_solvent_final = $paint_paint_solvent;
                             break;
                         case WHITE:
                             $paint_expense_final = $paint_white_expense;
                             $paint_price_final = $paint_white;
-                            $solvent_price_final = $paint_solvent;
+                            $solvent_price_final = $machine_shortnames[$machine_id] == 'comiflex' ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
                             $paint_solvent_final = $paint_paint_solvent;
                             break;
                         case LACQUER:
                             $paint_expense_final = $paint_lacquer_expense;
                             $paint_price_final = $paint_lacquer;
-                            $solvent_price_final = $paint_solvent_l;
-                            $paint_solvent_final = $paint_lacquer_solvent_l;
+                            $solvent_price_final = $paint_solvent_flexol82;
+                            $paint_solvent_final = $paint_lacquer_solvent_flexol82;
                             break;
                     }
                 
