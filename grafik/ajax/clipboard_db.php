@@ -22,8 +22,8 @@ if($edition !== null) {
         $origin_id = $edition;
         $origin_name = addslashes($row['organization']).': '.addslashes($row['name']);
         
-        $sql = "insert into clipboard (name, organization, length, status_id, lamination_id, coloring, roller_id, manager_id, comment, origin_id, origin_name) "
-                . "values ('$name', '$organization', $length, $status_id, $lamination_id, $coloring, $roller_id, $manager_id, '$comment', $origin_id, '$origin_name')";
+        $sql = "insert into clipboard (name, organization, length, status_id, lamination_id, coloring, roller, manager_id, comment, origin_id, origin_name) "
+                . "values ('$name', '$organization', $length, $status_id, $lamination_id, $coloring, (select name from roller where id=$roller_id), $manager_id, '$comment', $origin_id, '$origin_name')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
