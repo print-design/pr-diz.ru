@@ -37,9 +37,9 @@ $panton_expense_valid = "";
 $lacquer_valid = "";
 $lacquer_expense_valid = "";
 $paint_solvent_valid = "";
-$solvent_valid = "";
-$solvent_l_valid = "";
-$lacquer_solvent_l_valid = "";
+$solvent_etoxipropanol_valid = "";
+$solvent_flexol82_valid = "";
+$lacquer_solvent_valid = "";
 $min_price_valid = "";
 
 // Сохранение введённых значений
@@ -119,18 +119,18 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'solvent')) || empty(filter_input(INPUT_POST, 'solvent_currency'))) {
-        $solvent_valid = ISINVALID;
+    if(empty(filter_input(INPUT_POST, 'solvent_etoxipropanol')) || empty(filter_input(INPUT_POST, 'solvent_etoxipropanol_currency'))) {
+        $solvent_etoxipropanol_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'solvent_l')) || empty(filter_input(INPUT_POST, 'solvent_l_currency'))) {
-        $solvent_l_valid = ISINVALID;
+    if(empty(filter_input(INPUT_POST, 'solvent_flexol82')) || empty(filter_input(INPUT_POST, 'solvent_flexol82_currency'))) {
+        $solvent_flexol82_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'lacquer_solvent_l'))) {
-        $lacquer_solvent_l_valid = ISINVALID;
+    if(empty(filter_input(INPUT_POST, 'lacquer_solvent'))) {
+        $lacquer_solvent_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -165,14 +165,14 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
         $old_lacquer_currency = "";
         $old_lacquer_expense = "";
         $old_paint_solvent = "";
-        $old_solvent = "";
-        $old_solvent_currency = "";
-        $old_solvent_l = "";
-        $old_solvent_l_currency = "";
-        $old_lacquer_solvent_l = "";
+        $old_solvent_etoxipropanol = "";
+        $old_solvent_etoxipropanol_currency = "";
+        $old_solvent_flexol82 = "";
+        $old_solvent_flexol82_currency = "";
+        $old_lacquer_solvent = "";
         $old_min_price = "";
         
-        $sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent, solvent_currency, solvent_l, solvent_l_currency, lacquer_solvent_l, min_price from norm_paint where machine_id = $machine_id order by date desc limit 1";
+        $sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent_etoxipropanol, solvent_etoxipropanol_currency, solvent_flexol82, solvent_flexol82_currency, lacquer_solvent, min_price from norm_paint where machine_id = $machine_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -199,11 +199,11 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
             $old_lacquer_currency = $row["lacquer_currency"];
             $old_lacquer_expense = $row['lacquer_expense'];
             $old_paint_solvent = $row["paint_solvent"];
-            $old_solvent = $row["solvent"];
-            $old_solvent_currency = $row["solvent_currency"];
-            $old_solvent_l = $row['solvent_l'];
-            $old_solvent_l_currency = $row['solvent_l_currency'];
-            $old_lacquer_solvent_l = $row['lacquer_solvent_l'];
+            $old_solvent_etoxipropanol = $row["solvent_etoxipropanol"];
+            $old_solvent_etoxipropanol_currency = $row["solvent_etoxipropanol_currency"];
+            $old_solvent_flexol82 = $row['solvent_flexol82'];
+            $old_solvent_flexol82_currency = $row['solvent_flexol82_currency'];
+            $old_lacquer_solvent = $row['lacquer_solvent'];
             $old_min_price = $row['min_price'];
         }
         
@@ -230,11 +230,11 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
         $new_lacquer_currency = filter_input(INPUT_POST, "lacquer_currency");
         $new_lacquer_expense = filter_input(INPUT_POST, 'lacquer_expense');
         $new_paint_solvent = filter_input(INPUT_POST, "paint_solvent");
-        $new_solvent = filter_input(INPUT_POST, "solvent");
-        $new_solvent_currency = filter_input(INPUT_POST, "solvent_currency");
-        $new_solvent_l = filter_input(INPUT_POST, 'solvent_l');
-        $new_solvent_l_currency = filter_input(INPUT_POST, 'solvent_l_currency');
-        $new_lacquer_solvent_l = filter_input(INPUT_POST, 'lacquer_solvent_l');
+        $new_solvent_etoxipropanol = filter_input(INPUT_POST, "solvent_etoxipropanol");
+        $new_solvent_etoxipropanol_currency = filter_input(INPUT_POST, "solvent_etoxipropanol_currency");
+        $new_solvent_flexol82 = filter_input(INPUT_POST, 'solvent_flexol82');
+        $new_solvent_flexol82_currency = filter_input(INPUT_POST, 'solvent_flexol82_currency');
+        $new_lacquer_solvent = filter_input(INPUT_POST, 'lacquer_solvent');
         $new_min_price = filter_input(INPUT_POST, 'min_price');
         
         if($old_c != $new_c ||
@@ -259,13 +259,13 @@ if(null !== filter_input(INPUT_POST, 'norm_paint_submit')) {
                 $old_lacquer_currency != $new_lacquer_currency || 
                 $old_lacquer_expense != $new_lacquer_expense ||
                 $old_paint_solvent != $new_paint_solvent ||
-                $old_solvent != $new_solvent ||
-                $old_solvent_currency != $new_solvent_currency || 
-                $old_solvent_l != $new_solvent_l || 
-                $old_solvent_l_currency != $new_solvent_l_currency || 
-                $old_lacquer_solvent_l != $new_lacquer_solvent_l || 
+                $old_solvent_etoxipropanol != $new_solvent_etoxipropanol ||
+                $old_solvent_etoxipropanol_currency != $new_solvent_etoxipropanol_currency || 
+                $old_solvent_flexol82 != $new_solvent_flexol82 || 
+                $old_solvent_flexol82_currency != $new_solvent_flexol82_currency || 
+                $old_lacquer_solvent != $new_lacquer_solvent || 
                 $old_min_price != $new_min_price) {
-            $sql = "insert into norm_paint (machine_id, c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent, solvent_currency, solvent_l, solvent_l_currency, lacquer_solvent_l, min_price) values ($machine_id, $new_c, '$new_c_currency', $new_c_expense, $new_m, '$new_m_currency', $new_m_expense, $new_y, '$new_y_currency', $new_y_expense, $new_k, '$new_k_currency', $new_k_expense, $new_white, '$new_white_currency', $new_white_expense, $new_panton, '$new_panton_currency', $new_panton_expense, $new_lacquer, '$new_lacquer_currency', $new_lacquer_expense, $new_paint_solvent, $new_solvent, '$new_solvent_currency', $new_solvent_l, '$new_solvent_l_currency', $new_lacquer_solvent_l, $new_min_price)";
+            $sql = "insert into norm_paint (machine_id, c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent_etoxipropanol, solvent_etoxipropanol_currency, solvent_flexol82, solvent_flexol82_currency, lacquer_solvent, min_price) values ($machine_id, $new_c, '$new_c_currency', $new_c_expense, $new_m, '$new_m_currency', $new_m_expense, $new_y, '$new_y_currency', $new_y_expense, $new_k, '$new_k_currency', $new_k_expense, $new_white, '$new_white_currency', $new_white_expense, $new_panton, '$new_panton_currency', $new_panton_expense, $new_lacquer, '$new_lacquer_currency', $new_lacquer_expense, $new_paint_solvent, $new_solvent_etoxipropanol, '$new_solvent_etoxipropanol_currency', $new_solvent_flexol82, '$new_solvent_flexol82_currency', $new_lacquer_solvent, $new_min_price)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -298,14 +298,14 @@ $lacquer = "";
 $lacquer_currency = "";
 $lacquer_expense = "";
 $paint_solvent = "";
-$solvent = "";
-$solvent_currency = "";
-$solvent_l = "";
-$solvent_l_currency = "";
-$lacquer_solvent_l = "";
+$solvent_etoxipropanol = "";
+$solvent_etoxipropanol_currency = "";
+$solvent_flexol82 = "";
+$solvent_flexol82_currency = "";
+$lacquer_solvent = "";
 $min_price = "";
 
-$sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent, solvent_currency, solvent_l, solvent_l_currency, lacquer_solvent_l, min_price from norm_paint where machine_id = $machine_id order by date desc limit 1";
+$sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent_etoxipropanol, solvent_etoxipropanol_currency, solvent_flexol82, solvent_flexol82_currency, lacquer_solvent, min_price from norm_paint where machine_id = $machine_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -334,11 +334,11 @@ if($row = $fetcher->Fetch()) {
     $lacquer_currency = $row["lacquer_currency"];
     $lacquer_expense = $row['lacquer_expense'];
     $paint_solvent = $row["paint_solvent"];
-    $solvent = $row["solvent"];
-    $solvent_currency = $row["solvent_currency"];
-    $solvent_l = $row['solvent_l'];
-    $solvent_l_currency = $row['solvent_l_currency'];
-    $lacquer_solvent_l = $row['lacquer_solvent_l'];
+    $solvent_etoxipropanol = $row["solvent_etoxipropanol"];
+    $solvent_etoxipropanol_currency = $row["solvent_etoxipropanol_currency"];
+    $solvent_flexol82 = $row['solvent_flexol82'];
+    $solvent_flexol82_currency = $row['solvent_flexol82_currency'];
+    $lacquer_solvent = $row['lacquer_solvent'];
     $min_price = $row['min_price'];
 }
 ?>
@@ -719,26 +719,26 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="solvent">Стоимость растворителя "этоксипропанол"<br /> (за кг)<br />для красок (на всех машинах кроме Comiflex)</label>
+                                    <label for="solvent_etoxipropanol">Стоимость растворителя "этоксипропанол"<br /> (за кг)<br />для красок (на всех машинах кроме Comiflex)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
-                                               id="solvent" 
-                                               name="solvent" 
-                                               value="<?= empty($solvent) || $solvent == 0.0 ? "" : floatval($solvent) ?>" 
+                                               id="solvent_etoxipropanol" 
+                                               name="solvent_etoxipropanol" 
+                                               value="<?= empty($solvent_etoxipropanol) || $solvent_etoxipropanol == 0.0 ? "" : floatval($solvent_etoxipropanol) ?>" 
                                                placeholder="Стоимость, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onmouseup="javascript: $(this).attr('id', 'solvent_etoxipropanol'); $(this).attr('name', 'solvent_etoxipropanol'); $(this).attr('placeholder', 'Стоимость, за кг');" 
                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" 
-                                               onfocusout="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" />
+                                               onkeyup="javascript: $(this).attr('id', 'solvent_etoxipropanol'); $(this).attr('name', 'solvent_etoxipropanol'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'solvent_etoxipropanol'); $(this).attr('name', 'solvent_etoxipropanol'); $(this).attr('placeholder', 'Стоимость, за кг');" />
                                         <div class="input-group-append">
-                                            <select id="solvent_currency" name="solvent_currency" required="required">
+                                            <select id="solvent_etoxipropanol_currency" name="solvent_etoxipropanol_currency" required="required">
                                                 <option value="" hidden="">...</option>
-                                                <option value="rub"<?=$solvent_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
-                                                <option value="usd"<?=$solvent_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                                <option value="euro"<?=$solvent_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
+                                                <option value="rub"<?=$solvent_etoxipropanol_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
+                                                <option value="usd"<?=$solvent_etoxipropanol_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
+                                                <option value="euro"<?=$solvent_etoxipropanol_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
                                             </select>
                                         </div>
                                     </div>
@@ -747,26 +747,26 @@ if($row = $fetcher->Fetch()) {
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
-                                    <label for="solvent">Стоимость растворителя "флексоль 82"<br />(за кг)<br />для лака и (только на Comiflex) для красок</label>
+                                    <label for="solvent_flexol82">Стоимость растворителя "флексоль 82"<br />(за кг)<br />для лака и (только на Comiflex) для красок</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
-                                               id="solvent_l" 
-                                               name="solvent_l" 
-                                               value="<?= empty($solvent_l) || $solvent_l == 0.0 ? "" : floatval($solvent_l) ?>" 
+                                               id="solvent_flexol82" 
+                                               name="solvent_flexol82" 
+                                               value="<?= empty($solvent_flexol82) || $solvent_flexol82 == 0.0 ? "" : floatval($solvent_flexol82) ?>" 
                                                placeholder="Стоимость, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'solvent_l'); $(this).attr('name', 'solvent_l'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onmouseup="javascript: $(this).attr('id', 'solvent_flexol82'); $(this).attr('name', 'solvent_flexol82'); $(this).attr('placeholder', 'Стоимость, за кг');" 
                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'solvent_l'); $(this).attr('name', 'solvent_l'); $(this).attr('placeholder', 'Стоимость, за кг');" 
-                                               onfocusout="javascript: $(this).attr('id', 'solvent_l'); $(this).attr('name', 'solvent_l'); $(this).attr('placeholder', 'Стоимость, за кг');" />
+                                               onkeyup="javascript: $(this).attr('id', 'solvent_flexol82'); $(this).attr('name', 'solvent_flexol82'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'solvent_flexol82'); $(this).attr('name', 'solvent_flexol82'); $(this).attr('placeholder', 'Стоимость, за кг');" />
                                         <div class="input-group-append">
-                                            <select id="solvent_currency" name="solvent_l_currency" required="required">
+                                            <select id="solvent_flexol82_currency" name="solvent_flexol82_currency" required="required">
                                                 <option value="" hidden="">...</option>
-                                                <option value="rub"<?=$solvent_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
-                                                <option value="usd"<?=$solvent_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                                <option value="euro"<?=$solvent_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
+                                                <option value="rub"<?=$solvent_flexol82_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
+                                                <option value="usd"<?=$solvent_flexol82_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
+                                                <option value="euro"<?=$solvent_flexol82_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
                                             </select>
                                         </div>
                                     </div>
@@ -798,20 +798,20 @@ if($row = $fetcher->Fetch()) {
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
-                                    <label for="paint_solvent">Отношение лака к растворителю (в процентах)</label>
+                                    <label for="lacquer_solvent">Отношение лака к растворителю (в процентах)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control" 
-                                               id="lacquer_solvent_l" 
-                                               name="lacquer_solvent_l" 
-                                               value="<?= empty($lacquer_solvent_l) || $lacquer_solvent_l == 0.0 ? "" : floatval($lacquer_solvent_l) ?>" 
+                                               id="lacquer_solvent" 
+                                               name="lacquer_solvent" 
+                                               value="<?= empty($lacquer_solvent) || $lacquer_solvent == 0.0 ? "" : floatval($lacquer_solvent) ?>" 
                                                placeholder="В процентах" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'lacquer_solvent_l'); $(this).attr('name', 'lacquer_solvent_l'); $(this).attr('placeholder', 'В процентах');" 
+                                               onmouseup="javascript: $(this).attr('id', 'lacquer_solvent'); $(this).attr('name', 'lacquer_solvent'); $(this).attr('placeholder', 'В процентах');" 
                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'lacquer_solvent_l'); $(this).attr('name', 'lacquer_solvent_l'); $(this).attr('placeholder', 'В процентах');" 
-                                               onfocusout="javascript: $(this).attr('id', 'lacquer_solvent_l'); $(this).attr('name', 'lacquer_solvent_l'); $(this).attr('placeholder', 'В процентах');" />
+                                               onkeyup="javascript: $(this).attr('id', 'lacquer_solvent'); $(this).attr('name', 'lacquer_solvent'); $(this).attr('placeholder', 'В процентах');" 
+                                               onfocusout="javascript: $(this).attr('id', 'lacquer_solvent'); $(this).attr('name', 'lacquer_solvent'); $(this).attr('placeholder', 'В процентах');" />
                                         <div class="input-group-append"><span class="input-group-text">%</span></div>
                                     </div>
                                     <div class="invalid-feedback">Отношение лака к растворителю обязательно</div>
@@ -821,7 +821,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="paint_solvent">Ограничение на минимальную стоимость, руб</label>
+                                    <label for="min_price">Ограничение на минимальную стоимость, руб</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control" 
