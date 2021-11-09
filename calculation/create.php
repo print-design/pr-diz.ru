@@ -884,8 +884,8 @@ for ($i=1; $i<=8; $i++) {
                         <!-- Печатная машина -->
                         <div class="print-only d-none">
                             <div class="form-group w-100">
-                                <label for="machine_id">Печатная машина</label>
-                                <select id="machine_id" name="machine_id" class="form-control print-only d-none">
+                                <label for="machine">Печатная машина</label>
+                                <select id="machine" name="machine" class="form-control print-only d-none">
                                     <option value="" hidden="hidden" selected="selected">Печатная машина...</option>
                                     <?php
                                     $zbs_selected = "";
@@ -1458,7 +1458,7 @@ for ($i=1; $i<=8; $i++) {
                                     <select id="lamination_roller" name="lamination_roller" class="form-control lam-only d-none">
                                         <option value="" hidden="hidden" selected="selected">Ширина вала ламинации...</option>
                                             <?php
-                                            $sql = "select value from roller where machine_id=$laminator_machine_id order by value"; echo $sql;
+                                            $sql = "select value from norm_lamination_roller order by value"; echo $sql;
                                             $rollers = (new Grabber($sql))->result;
                                                 
                                             foreach ($rollers as $row):
@@ -1490,19 +1490,15 @@ for ($i=1; $i<=8; $i++) {
                                 <label for="paints_count">Количество красок</label>
                                 <select id="paints_count" name="paints_count" class="form-control print-only d-none">
                                     <option value="" hidden="hidden">Количество красок...</option>
-                                        <?php
-                                        if(!empty($paints_count) || !empty($machine_id)):
-                                        for($i = 1; $i <= $colorfulnesses[$machine_id]; $i++):
-                                            $selected = "";
+                                        <?php                                        
+                                        for($i = 1; $i <= 8; $i++):
+                                        $selected = "";
                                         if($paints_count == $i) {
                                             $selected = " selected='selected'";
                                         }
                                         ?>
                                     <option<?=$selected ?>><?=$i ?></option>
-                                        <?php
-                                        endfor;
-                                        endif;
-                                        ?>
+                                        <?php endfor; ?>
                                 </select>
                             </div>
                             <!-- Каждая краска -->
@@ -1801,31 +1797,14 @@ for ($i=1; $i<=8; $i++) {
                 }
             });
             
-            // Заполняем список красочностей
-            var colorfulnesses = {};
-            <?php foreach (array_keys($colorfulnesses) as $key): ?>
-                colorfulnesses[<?=$key ?>] = <?=$colorfulnesses[$key] ?>;
-            <?php endforeach; ?>
-            
             // Обработка выбора машины, заполнение списка рапортов
-            $('#machine_id').change(function(){
+            $('#machine').change(function(){
                 if($(this).val() == "") {
                     $('#raport').html("<option value=''>Рапорт...</option>")
                 }
                 else {
-                    // Заполняем список количеств цветов
-                    $('.paint_block').addClass('d-none');
-                    $('.paint').removeAttr('required');
-                                
-                    colorfulness = parseInt(colorfulnesses[$(this).val()]);
-                    var colorfulness_list = "<option value='' hidden='hidden'>Количество красок...</option>";
-                    for(var i=1; i<=colorfulness; i++) {
-                        colorfulness_list = colorfulness_list + "<option>" + i + "</option>";
-                    }
-                    $('#paints_count').html(colorfulness_list);
-                    
                     // Заполняем список рапортов
-                    $.ajax({ url: "../ajax/raport.php?machine_id=" + $(this).val() })
+                    $.ajax({ url: "../ajax/raport.php?machine=" + $(this).val() })
                             .done(function(data) {
                                 $('#raport').html(data);
                             })
