@@ -381,7 +381,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                         . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
                         . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
                         . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
-                        . "values($customer_id, '$name', $work_type_id, '$unit', $machine, "
+                        . "values($customer_id, '$name', $work_type_id, '$unit', '$machine', "
                         . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, "
                         . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_other_brand_name', $lamination1_other_price, $lamination1_other_thickness, $lamination1_other_weight, $lamination1_customers_material, "
                         . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_other_brand_name', $lamination2_other_price, $lamination2_other_thickness, $lamination2_other_weight, $lamination2_customers_material, "
@@ -397,7 +397,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             }
             else {
                 $sql = "update calculation "
-                        . "set customer_id=$customer_id, name='$name', work_type_id=$work_type_id, unit='$unit', machine=$machine, "
+                        . "set customer_id=$customer_id, name='$name', work_type_id=$work_type_id, unit='$unit', machine='$machine', "
                         . "brand_name='$brand_name', thickness=$thickness, other_brand_name='$other_brand_name', other_price=$other_price, "
                         . "other_thickness=$other_thickness, other_weight=$other_weight, customers_material=$customers_material, "
                         . "lamination1_brand_name='$lamination1_brand_name', lamination1_thickness=$lamination1_thickness, "
@@ -863,9 +863,15 @@ for ($i=1; $i<=8; $i++) {
                                     <input type="radio" class="form-check-input" name="unit" id="unit_kg" value="kg"<?=$kg_checked ?> /><span id="unit_kg_label">Килограммы</span>
                                 </label>
                             </div>
+                            <?php
+                            $unit_thing_display_none = "";
+                            if($work_type_id == 1) {
+                                $unit_thing_display_none = " d-none";
+                            }
+                            ?>
                             <div class="form-check-inline">
                                 <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="unit" id="unit_thing" value="thing"<?=$thing_checked ?> /><span id="unit_thing_label">Штуки</span>
+                                    <input type="radio" class="form-check-input<?=$unit_thing_display_none ?>" name="unit" id="unit_thing" value="thing"<?=$thing_checked ?> /><span id="unit_thing_label" class="placeh<?=$unit_thing_display_none ?>">Штуки</span>
                                 </label>
                             </div>
                         </div>
@@ -1755,12 +1761,12 @@ for ($i=1; $i<=8; $i++) {
                 // При типе "Плёнка без печати" количество возможно только в килограммах
                 if($(this).val() == 1) {
                     $('#unit_kg').prop('checked', true);
-                    $('#unit_thing').hide();
-                    $('#unit_thing_label').hide();
+                    $('#unit_thing').addClass('d-none');
+                    $('#unit_thing_label').addClass('d-none');
                 }
                 else {
-                    $('#unit_thing').show();
-                    $('#unit_thing_label').show();
+                    $('#unit_thing').removeClass('d-none');
+                    $('#unit_thing_label').removeClass('d-none');
                 }
                 
                 SetFieldsVisibility($(this).val());
