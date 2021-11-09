@@ -125,7 +125,7 @@ if($row = $fetcher->Fetch()) {
                     <form method="post">
                         <input type="hidden" id="machine_id" name="machine_id" value="<?= $machine_id ?>" />
                         <div class="form-group">
-                            <label for="time">Время приладки<?= $machine_id == MACHINE_LAMINATOR ? "" : " 1 краски" ?> (мин)</label>
+                            <label for="time">Время приладки 1 краски (мин)</label>
                             <input type="text" 
                                    class="form-control float-only" 
                                    id="time" 
@@ -141,7 +141,7 @@ if($row = $fetcher->Fetch()) {
                             <div class="invalid-feedback">Время обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="length">Метраж приладки<?= $machine_id == MACHINE_LAMINATOR ? "" : " 1 краски" ?> (метры)</label>
+                            <label for="length">Метраж приладки 1 краски (метры)</label>
                             <input type="text" 
                                    class="form-control float-only" 
                                    id="length" 

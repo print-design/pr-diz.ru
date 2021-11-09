@@ -44,7 +44,6 @@ $machine_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLIC
 $colorfulness_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/characteristics.php')) == APPLICATION.'/admin/characteristics.php' ? " active" : "";
 $fitting_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/fitting.php')) == APPLICATION.'/admin/fitting.php' ? " active" : "";
 $raport_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/raport.php')) == APPLICATION.'/admin/raport.php' ? " active" : "";
-$roller_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/roller.php')) == APPLICATION.'/admin/roller.php' ? " active" : "";
 ?>
 <hr class="pb-0 mb-0" />
 <div class="d-flex justify-content-start">
@@ -54,7 +53,6 @@ $roller_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICA
             <a href="<?=APPLICATION ?>/admin/characteristics.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$colorfulness_class ?>">Характеристики</a>
             <a href="<?=APPLICATION ?>/admin/fitting.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$fitting_class ?>">Приладка</a>
             <a href="<?=APPLICATION ?>/admin/raport.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$raport_class ?>">Рапорт</a>
-            <a href="<?=APPLICATION ?>/admin/roller.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$roller_class ?>">Ширина вала</a>
         </div>
     </div>
 </div>
