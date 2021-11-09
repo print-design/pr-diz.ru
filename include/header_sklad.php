@@ -5,8 +5,8 @@ include 'left_bar.php';
     <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
             <?php
-            $pallets_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/pallet')) == APPLICATION.'/pallet' ? ' disabled' : '';
             $rolls_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/roll')) == APPLICATION.'/roll' ? ' disabled' : '';
+            $pallets_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/pallet')) == APPLICATION.'/pallet' ? ' disabled' : '';
             $cut_sources_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/cut_source')) == APPLICATION.'/cut_source' ? ' disabled' : '';
             $utilized_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/utilized')) == APPLICATION.'/utilized' ? ' disabled' : '';
             $rational_cut_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/rational_cut')) == APPLICATION.'/rational_cut' ? ' disabled' : '';
@@ -55,11 +55,11 @@ include 'left_bar.php';
             
             if(IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))):
             ?>
-            <li class="nav-item">
-                <a class="nav-link<?=$pallets_status ?>" href="<?=APPLICATION ?>/pallet/">Паллеты</a>
-            </li>
             <li class='nav-item'>
                 <a class="nav-link<?=$rolls_status ?>" href="<?=APPLICATION ?>/roll/">Рулоны</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link<?=$pallets_status ?>" href="<?=APPLICATION ?>/pallet/">Паллеты</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link<?=$cut_sources_status ?>" href="<?=APPLICATION ?>/cut_source/">Раскроили</a>

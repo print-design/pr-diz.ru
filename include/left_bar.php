@@ -34,7 +34,7 @@ else if($file == "grafik.php") {
     endif;
     if(IsInRole(array('technologist', 'storekeeper', 'dev', 'manager', 'top_manager'))):
     ?>
-    <a href="<?=APPLICATION ?>/pallet/" class="left_bar_item<?=$sklad_class ?>" title="Склад" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_sklad.svg" /></a>
+    <a href="<?=APPLICATION ?>/roll/" class="left_bar_item<?=$sklad_class ?>" title="Склад" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_sklad.svg" /></a>
     <a href="<?=APPLICATION ?>/grafik.php?id=1" class="left_bar_item<?=$grafik_class ?>" title="График" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_grafik.svg" /></a>
     <?php
     endif;
