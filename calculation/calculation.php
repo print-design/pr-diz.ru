@@ -6,6 +6,10 @@ if(!IsInRole(array('technologist', 'dev', 'manager', 'top_manager', 'designer'))
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Машины
+const ZBS = "zbs";
+const COMIFLEX = "comiflex";
+
 // Значение марки плёнки "другая"
 const OTHER = "other";
 
@@ -370,8 +374,8 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     $machine_id = null;
     
     if(!empty($machine) && !empty($paints_count)) {
-        if($machine == 'comiflex') {
-            $machine_id = $machine_ids['comiflex'];
+        if($machine == COMIFLEX) {
+            $machine_id = $machine_ids[COMIFLEX];
         }
         elseif($paints_count > 6) {
             $machine_id = $machine_ids['zbs3'];
@@ -829,25 +833,25 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
                                 case CYAN:
                                     $paint_expense_final = $paint_c_expense;
                                     $paint_price_final = $paint_c;
-                                    $solvent_price_final = $machine_shortnames[$machine_id] == 'comiflex' ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
+                                    $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
                                     $paint_solvent_final = $paint_paint_solvent;
                                     break;
                                 case MAGENTA:
                                     $paint_expense_final = $paint_m_expense;
                                     $paint_price_final = $paint_m;
-                                    $solvent_price_final = $machine_shortnames[$machine_id] == 'comiflex' ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
+                                    $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
                                     $paint_solvent_final = $paint_paint_solvent;
                                     break;
                                 case YELLOW:
                                     $paint_expense_final = $paint_y_expense;
                                     $paint_price_final = $paint_y;
-                                    $solvent_price_final = $machine_shortnames[$machine_id] == 'comiflex' ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
+                                    $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
                                     $paint_solvent_final = $paint_paint_solvent;
                                     break;
                                 case KONTUR:
                                     $paint_expense_final = $paint_k_expense;
                                     $paint_price_final = $paint_k;
-                                    $solvent_price_final = $machine_shortnames[$machine_id] == 'comiflex' ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
+                                    $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
                                     $paint_solvent_final = $paint_paint_solvent;
                                     break;
                             };
@@ -855,13 +859,13 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
                         case PANTON:
                             $paint_expense_final = $paint_panton_expense;
                             $paint_price_final = $paint_panton;
-                            $solvent_price_final = $machine_shortnames[$machine_id] == 'comiflex' ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
+                            $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
                             $paint_solvent_final = $paint_paint_solvent;
                             break;
                         case WHITE:
                             $paint_expense_final = $paint_white_expense;
                             $paint_price_final = $paint_white;
-                            $solvent_price_final = $machine_shortnames[$machine_id] == 'comiflex' ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
+                            $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
                             $paint_solvent_final = $paint_paint_solvent;
                             break;
                         case LACQUER:

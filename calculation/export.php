@@ -1,6 +1,10 @@
 <?php
 include '../include/topscripts.php';
 
+// Машины
+const ZBS = "zbs";
+const COMIFLEX = "comiflex";
+
 // Валюты
 const USD = "usd";
 const EURO = "euro";
@@ -24,7 +28,7 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
             . "c.brand_name, c.thickness, other_brand_name, other_price, other_thickness, other_weight, c.customers_material, "
             . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, c.lamination1_customers_material, "
             . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, c.lamination2_customers_material, "
-            . "c.length, c.stream_width, c.streams_count, c.machine_id, c.raport, c.lamination_roller, c.paints_count, "
+            . "c.length, c.stream_width, c.streams_count, c.machine, c.raport, c.lamination_roller, c.paints_count, "
             . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -34,7 +38,6 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
             . "cs.name status, cs.colour, cs.colour2, cs.image, "
             . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
             . "wt.name work_type, "
-            . "mt.shortname machine, mt.colorfulness, "
             . "u.last_name, u.first_name, "
             . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) weight, "
             . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
@@ -43,7 +46,6 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
             . "left join calculation_status cs on c.status_id = cs.id "
             . "left join customer cu on c.customer_id = cu.id "
             . "left join work_type wt on c.work_type_id = wt.id "
-            . "left join machine mt on c.machine_id = mt.id "
             . "left join user u on c.manager_id = u.id "
             . "where c.id=$id";
     $row = (new Fetcher($sql))->Fetch();
@@ -81,10 +83,41 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     $length = $row['length'];
     $stream_width = $row['stream_width'];
     $streams_count = $row['streams_count'];
-    $machine_id = $row['machine_id'];
+    $machine = $row['machine'];
     $raport = $row['raport'];
     $lamination_roller = $row['lamination_roller'];
     $paints_count = $row['paints_count'];
+    
+    // Номер машины
+    $machine_ids = array();
+    $machine_shortnames = array();
+    
+    $sql = "select id, shortname from machine";
+    $fetcher = new Fetcher($sql);
+    while ($row = $fetcher->Fetch()) {
+        $machine_ids[$row['shortname']] = $row['id'];
+        $machine_shortnames[$row['id']] = $row['shortname'];
+    }
+    
+    $machine_id = null;
+    
+    if(!empty($machine) && !empty($paints_count)) {
+        if($machine == COMIFLEX) {
+            $machine_id = $machine_ids[COMIFLEX];
+        }
+        elseif($paints_count > 6) {
+            $machine_id = $machine_ids['zbs3'];
+        }
+        else {
+            $machine_id = $machine_ids['zbs1'];
+        }
+    }
+    
+    $machine_shortname = null;
+    
+    if(empty($machine_id)) {
+        $machine_shortname = $machine_shortnames[$machine_id];
+    }
     
     // Формы
     $new_forms_count = 0;
@@ -227,11 +260,10 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     
     $work_type = $row['work_type'];
     
-    $machine = $row['machine'];
     $machine_full = "";
     $machine_number = 0;
     
-    switch ($machine) {
+    switch ($machine_shortname) {
         case "zbs1":
             $machine_full = "ZBS1/6color";
             $machine_number = 1;

@@ -6,6 +6,10 @@ if(!IsInRole(array('technologist', 'dev', 'manager', 'top_manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Машины
+const ZBS = "zbs";
+const COMIFLEX = "comiflex";
+
 // Значение марки плёнки "другая"
 const OTHER = "other";
 
@@ -215,6 +219,16 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     }
     
     // Номер машины
+    $machine_ids = array();
+    $machine_shortnames = array();
+    
+    $sql = "select id, shortname from machine";
+    $fetcher = new Fetcher($sql);
+    while ($row = $fetcher->Fetch()) {
+        $machine_ids[$row['shortname']] = $row['id'];
+        $machine_shortnames[$row['id']] = $row['shortname'];
+    }
+    
     $machine_id = null;
     
     if(!empty($machine) && !empty($paints_count)) {
@@ -708,9 +722,6 @@ for ($i=1; $i<=8; $i++) {
         else $$form_var = null;
     }
 }
-
-// Список красочностей каждой машины
-$colorfulnesses = array();
 ?>
 <!DOCTYPE html>
 <html>
@@ -876,22 +887,20 @@ $colorfulnesses = array();
                                 <label for="machine_id">Печатная машина</label>
                                 <select id="machine_id" name="machine_id" class="form-control print-only d-none">
                                     <option value="" hidden="hidden" selected="selected">Печатная машина...</option>
-                                        <?php
-                                        $sql = "select id, name, colorfulness from machine where colorfulness > 0";
-                                        $fetcher = new Fetcher($sql);
-                                
-                                        while ($row = $fetcher->Fetch()):
-                                        $selected = '';
-                                        if($row['id'] == $machine_id) {
-                                            $selected = " selected='selected'";
-                                        }
-                                        ?>
-                                    <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'].' ('.$row['colorfulness'].' красок)' ?></option>
-                                        <?php
-                                        // Заполняем список красочностей, чтобы при выборе машины установить нужное количество элементов списка
-                                        $colorfulnesses[$row['id']] = $row['colorfulness'];
-                                        endwhile;
-                                        ?>
+                                    <?php
+                                    $zbs_selected = "";
+                                    if($machine == ZBS) {
+                                        $zbs_selected = " selected='selected'";
+                                    }
+                                    ?>
+                                    <option value="<?=ZBS ?>"<?=$zbs_selected ?>>ZBS</option>
+                                    <?php
+                                    $comiflex_selected = "";
+                                    if($machine == COMIFLEX) {
+                                        $comiflex_selected = " selected='selected'";
+                                    }
+                                    ?>
+                                    <option value="<?=COMIFLEX ?>"<?=$comiflex_selected ?>>Comiflex</option>
                                 </select>
                             </div>
                         </div>
