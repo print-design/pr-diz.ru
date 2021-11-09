@@ -178,6 +178,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     }
     
     $raport = filter_input(INPUT_POST, 'raport');
+    $number_on_raport = filter_input(INPUT_POST, 'number_on_raport');
     $lamination_roller = filter_input(INPUT_POST, 'lamination_roller');
     $ski = filter_input(INPUT_POST, 'ski');
     
@@ -324,6 +325,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         if(empty($stream_width)) $stream_width = "NULL";
         if(empty($streams_count)) $streams_count = "NULL";
         if(empty($raport)) $raport = "NULL";
+        if(empty($number_on_raport)) $number_on_raport = "NULL";
         if(empty($lamination_roller)) $lamination_roller = "NULL";
         
         if(empty($ski)) $ski = "NULL";
@@ -373,16 +375,17 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                         . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
                         . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
                         . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
-                        . "quantity, streams_count, length, stream_width, raport, lamination_roller, paints_count, manager_id, status_id, extracharge, ski, no_ski, "
+                        . "quantity, streams_count, length, stream_width, raport, number_on_raport, lamination_roller, paints_count, manager_id, status_id, extracharge, ski, no_ski, "
                         . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
-                        . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "                    . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
+                        . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
+                        . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
                         . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
                         . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
                         . "values($customer_id, '$name', $work_type_id, '$unit', $machine, "
                         . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, "
                         . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_other_brand_name', $lamination1_other_price, $lamination1_other_thickness, $lamination1_other_weight, $lamination1_customers_material, "
                         . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_other_brand_name', $lamination2_other_price, $lamination2_other_thickness, $lamination2_other_weight, $lamination2_customers_material, "
-                        . "$quantity, $streams_count, $length, $stream_width, $raport, $lamination_roller, $paints_count, $manager_id, $status_id, $extracharge, $ski, $no_ski, "
+                        . "$quantity, $streams_count, $length, $stream_width, $raport, $number_on_raport, $lamination_roller, $paints_count, $manager_id, $status_id, $extracharge, $ski, $no_ski, "
                         . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
                         . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                         . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
@@ -406,6 +409,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                         . "lamination2_other_thickness=$lamination2_other_thickness, lamination2_other_weight=$lamination2_other_weight, "
                         . "lamination2_customers_material=$lamination2_customers_material, "
                         . "quantity=$quantity, streams_count=$streams_count, length=$length, stream_width=$stream_width, raport=$raport, "
+                        . "number_on_raport=$number_on_raport, "
                         . "lamination_roller=$lamination_roller, paints_count=$paints_count, manager_id=$manager_id, status_id=$status_id, "
                         . "extracharge=$extracharge, ski=$ski, no_ski=$no_ski, "
                         . "paint_1='$paint_1', paint_2='$paint_2', paint_3='$paint_3', paint_4='$paint_4', "
@@ -441,7 +445,7 @@ if(!empty($id)) {
             . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
             . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
-            . "quantity, streams_count, length, stream_width, raport, lamination_roller, paints_count, status_id, extracharge, ski, no_ski, "
+            . "quantity, streams_count, length, stream_width, raport, number_on_raport, lamination_roller, paints_count, status_id, extracharge, ski, no_ski, "
             . "(select id from techmap where calculation_id = $id limit 1) techmap_id, "
             . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -648,6 +652,12 @@ $raport = filter_input(INPUT_POST, 'raport');
 if(null === $raport) {
     if(isset($row['raport'])) $raport = $row['raport'];
     else $raport = null;
+}
+
+$number_on_raport = filter_input(INPUT_POST, 'number_on_raport');
+if(null === $number_on_raport) {
+    if(isset($row['number_on_raport'])) $number_on_raport = $row['number_on_raport'];
+    else $number_on_raport = null;
 }
 
 $lamination_roller = filter_input(INPUT_POST, 'lamination_roller');
@@ -1430,25 +1440,22 @@ for ($i=1; $i<=8; $i++) {
                                     </select>
                                 </div>
                             </div>
-                            <!-- Ширина лыж -->
+                            <!-- Количество этикеток на рапорте -->
                             <div class="col-6 print-only d-none">
                                 <div class="form-group">
-                                    <label for="raport">Ширина лыж, мм</label>
-                                    <?php
-                                    $disabled = $no_ski == 1 ? " disabled='disabled'" : "";
-                                    ?>
-                                    <input<?=$disabled ?> type="text" 
-                                           id="ski" 
-                                           name="ski" 
+                                    <label for="number_on_raport">Количество этикеток на рапорте</label>
+                                    <input type="text" 
+                                           id="number_on_raport" 
+                                           name="number_on_raport" 
                                            class="form-control int-only print-only d-none" 
-                                           placeholder="Ширина лыж, мм" 
-                                           value="<?= empty($ski) ? 20 : intval($ski) ?>" 
+                                           placeholder="Количество этикеток на рапорте" 
+                                           value="<?= $number_on_raport === null ? "" : intval($number_on_raport) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'ski'); $(this).attr('name', 'ski'); $(this).attr('placeholder', 'Ширина лыж, мм');" 
+                                           onmouseup="javascript: $(this).attr('id', 'number_on_raport'); $(this).attr('name', 'number_on_raport'); $(this).attr('placeholder', 'Количество этикеток на рапорте');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'ski'); $(this).attr('name', 'ski'); $(this).attr('placeholder', 'Ширина лыж, мм');" 
-                                           onfocusout="javascript: $(this).attr('id', 'ski'); $(this).attr('name', 'ski'); $(this).attr('placeholder', 'Ширина лыж, мм');" />
-                                    <div class="invalid-feedback">Ширина лыж обязательно</div>
+                                           onkeyup="javascript: $(this).attr('id', 'number_on_raport'); $(this).attr('name', 'number_on_raport'); $(this).attr('placeholder', 'Количество этикеток на рапорте');" 
+                                           onfocusout="javascript: $(this).attr('id', 'number_on_raport'); $(this).attr('name', 'number_on_raport'); $(this).attr('placeholder', 'Количество этикеток на рапорте');" />
+                                    <div class="invalid-feedback">Количество этикеток на рапорте обязательно</div>
                                 </div>
                             </div>
                             <!-- Ширина вала ламинации -->
@@ -1475,14 +1482,39 @@ for ($i=1; $i<=8; $i++) {
                                 </div>
                             </div>
                         </div>
-                        <!-- Печать без лыж -->
-                        <div class="form-check mb-2 print-only d-none">
-                            <label class="form-check-label text-nowrap" style="line-height: 25px;">
-                                <?php
-                                $checked = $no_ski == 1 ? " checked='checked'" : "";
-                                ?>
-                                <input type="checkbox" class="form-check-input" id="no_ski" name="no_ski" value="on"<?=$checked ?>>Печать без лыж
-                            </label>
+                        <div class="row">
+                            <!-- Ширина лыж -->
+                            <div class="col-6 print-only d-none">
+                                <div class="form-group">
+                                    <label for="raport">Ширина лыж, мм</label>
+                                    <?php
+                                    $disabled = $no_ski == 1 ? " disabled='disabled'" : "";
+                                    ?>
+                                    <input<?=$disabled ?> type="text" 
+                                           id="ski" 
+                                           name="ski" 
+                                           class="form-control int-only print-only d-none" 
+                                           placeholder="Ширина лыж, мм" 
+                                           value="<?= empty($ski) ? 20 : intval($ski) ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'ski'); $(this).attr('name', 'ski'); $(this).attr('placeholder', 'Ширина лыж, мм');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'ski'); $(this).attr('name', 'ski'); $(this).attr('placeholder', 'Ширина лыж, мм');" 
+                                           onfocusout="javascript: $(this).attr('id', 'ski'); $(this).attr('name', 'ski'); $(this).attr('placeholder', 'Ширина лыж, мм');" />
+                                    <div class="invalid-feedback">Ширина лыж обязательно</div>
+                                </div>
+                            </div>
+                            <!-- Печать без лыж -->
+                            <div class="col-6 print-only d-none">
+                                <div class="form-check pt-4">
+                                    <label class="form-check-label text-nowrap" style="line-height: 25px;">
+                                        <?php
+                                        $checked = $no_ski == 1 ? " checked='checked'" : "";
+                                        ?>
+                                        <input type="checkbox" class="form-check-input" id="no_ski" name="no_ski" value="on"<?=$checked ?>>Печать без лыж
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                         <!-- Количество красок -->
                         <div class="print-only d-none">
