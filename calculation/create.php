@@ -369,8 +369,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
        
         // Сохранение в базу
         if(empty($error_message)) {
-            // Если mode = recalc, то создаём новый объект
-            if(filter_input(INPUT_GET, 'mode') == 'recalc') {
+            // Если mode = recalc или пустой id, то создаём новый объект
+            if(filter_input(INPUT_GET, 'mode') == 'recalc' || empty(filter_input(INPUT_GET, 'id'))) {
                 $sql = "insert into calculation (customer_id, name, work_type_id, unit, machine, "
                         . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
                         . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
@@ -860,12 +860,12 @@ for ($i=1; $i<=8; $i++) {
                         <div class="justify-content-start mt-2 mb-1">
                             <div class="form-check-inline">
                                 <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="unit" value="kg"<?=$kg_checked ?> />Килограммы
+                                    <input type="radio" class="form-check-input" name="unit" id="unit_kg" value="kg"<?=$kg_checked ?> /><span id="unit_kg_label">Килограммы</span>
                                 </label>
                             </div>
                             <div class="form-check-inline">
                                 <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="unit" value="thing"<?=$thing_checked ?> />Штуки
+                                    <input type="radio" class="form-check-input" name="unit" id="unit_thing" value="thing"<?=$thing_checked ?> /><span id="unit_thing_label">Штуки</span>
                                 </label>
                             </div>
                         </div>
@@ -1465,7 +1465,7 @@ for ($i=1; $i<=8; $i++) {
                                     <select id="lamination_roller" name="lamination_roller" class="form-control lam-only d-none">
                                         <option value="" hidden="hidden" selected="selected">Ширина вала ламинации...</option>
                                             <?php
-                                            $sql = "select value from norm_lamination_roller order by value"; echo $sql;
+                                            $sql = "select value from norm_laminator_roller order by value"; echo $sql;
                                             $rollers = (new Grabber($sql))->result;
                                                 
                                             foreach ($rollers as $row):
@@ -1752,6 +1752,17 @@ for ($i=1; $i<=8; $i++) {
             
             // При смене типа работы: если тип работы "плёнка с печатью", показываем поля, предназначенные только для плёнки с печатью
             $('#work_type_id').change(function() {
+                // При типе "Плёнка без печати" количество возможно только в килограммах
+                if($(this).val() == 1) {
+                    $('#unit_kg').prop('checked', true);
+                    $('#unit_thing').hide();
+                    $('#unit_thing_label').hide();
+                }
+                else {
+                    $('#unit_thing').show();
+                    $('#unit_thing_label').show();
+                }
+                
                 SetFieldsVisibility($(this).val());
             });
             
