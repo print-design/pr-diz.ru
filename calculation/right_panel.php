@@ -177,7 +177,7 @@ elseif(!empty ($id) && !empty ($date)) {
         $laminator_tuning_length = $row['length'];
     }
     
-    // Данные о машине
+    // Данные о машинах
     $machine_speeds = array();
     $machine_prices = array();
         
@@ -200,12 +200,28 @@ elseif(!empty ($id) && !empty ($date)) {
         $laminator_speed = $row['speed'];
     }
     
+    $machine_ids = array();
     $machine_shortnames = array();
     
     $sql = "select id, shortname from machine";
     $fetcher = new Fetcher($sql);
     while ($row = $fetcher->Fetch()) {
+        $machine_ids[$row['shortname']] = $row['id'];
         $machine_shortnames[$row['id']] = $row['shortname'];
+    }
+    
+    $machine_id = null;
+    
+    if(!empty($machine) && !empty($paints_count)) {
+        if($machine == 'comiflex') {
+            $machine_id = $machine_ids['comiflex'];
+        }
+        elseif($paints_count > 6) {
+            $machine_id = $machine_ids['zbs3'];
+        }
+        else {
+            $machine_id = $machine_ids['zbs1'];
+        }
     }
     
     // Данные о форме

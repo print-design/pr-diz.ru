@@ -61,7 +61,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             . "c.brand_name, c.thickness, other_brand_name, other_price, other_thickness, other_weight, c.customers_material, "
             . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, c.lamination1_customers_material, "
             . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, c.lamination2_customers_material, "
-            . "c.length, c.stream_width, c.streams_count, c.machine_id, c.raport, c.lamination_roller, c.paints_count, c.manager_id, "
+            . "c.length, c.stream_width, c.streams_count, c.machine, c.raport, c.lamination_roller, c.paints_count, c.manager_id, "
             . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -109,7 +109,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     $length = $row['length'];
     $stream_width = $row['stream_width'];
     $streams_count = $row['streams_count'];
-    $machine_id = $row['machine_id'];
+    $machine = $row['machine'];
     $raport = $row['raport'];
     $lamination_roller = $row['lamination_roller'];
     $paints_count = $row['paints_count'];
@@ -334,7 +334,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $laminator_tuning_length = $row['length'];
     }
         
-    // Данные о машинах
+    // Данные о машинах    
     $machine_speeds = array();
     $machine_prices = array();
         
@@ -357,12 +357,28 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $laminator_speed = $row['speed'];
     }
     
+    $machine_ids = array();
     $machine_shortnames = array();
     
     $sql = "select id, shortname from machine";
     $fetcher = new Fetcher($sql);
     while ($row = $fetcher->Fetch()) {
+        $machine_ids[$row['shortname']] = $row['id'];
         $machine_shortnames[$row['id']] = $row['shortname'];
+    }
+    
+    $machine_id = null;
+    
+    if(!empty($machine) && !empty($paints_count)) {
+        if($machine == 'comiflex') {
+            $machine_id = $machine_ids['comiflex'];
+        }
+        elseif($paints_count > 6) {
+            $machine_id = $machine_ids['zbs3'];
+        }
+        else {
+            $machine_id = $machine_ids['zbs1'];
+        }
     }
         
     // Данные о форме
@@ -1115,7 +1131,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.brand_name, c.thickness, other_brand_name, other_price, other_thickness, other_weight, c.customers_material, "
         . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, c.lamination1_customers_material, "
         . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, c.lamination2_customers_material, "
-        . "c.length, c.stream_width, c.streams_count, c.machine_id, c.raport, c.lamination_roller, c.paints_count, "
+        . "c.length, c.stream_width, c.streams_count, c.machine, c.raport, c.lamination_roller, c.paints_count, "
         . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
         . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -1127,7 +1143,6 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "(select id from calculation_result where calculation_id = $id) calculation_result_id, "
         . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
         . "wt.name work_type, "
-        . "mt.name machine, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) weight, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
@@ -1135,7 +1150,6 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "from calculation c "
         . "left join customer cu on c.customer_id = cu.id "
         . "left join work_type wt on c.work_type_id = wt.id "
-        . "left join machine mt on c.machine_id = mt.id "
         . "where c.id=$id";
 $row = (new Fetcher($sql))->Fetch();
 
@@ -1172,7 +1186,7 @@ $lamination2_customers_material = $row['lamination2_customers_material'];
 $length = $row['length'];
 $stream_width = $row['stream_width'];
 $streams_count = $row['streams_count'];
-$machine_id = $row['machine_id'];
+$machine = $row['machine'];
 $raport = $row['raport'];
 $lamination_roller = $row['lamination_roller'];
 $paints_count = $row['paints_count'];
@@ -1208,8 +1222,6 @@ $customer_email = $row['customer_email'];
 $customer_person = $row['customer_person'];
 
 $work_type = $row['work_type'];
-
-$machine = $row['machine'];
 
 $techmap_id = $row['techmap_id'];
 $calculation_result_id = $row['calculation_result_id'];
