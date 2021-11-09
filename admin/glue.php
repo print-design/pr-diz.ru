@@ -6,16 +6,8 @@ if(!IsInRole(array('technologist', 'dev'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Машина
-$machine_id = filter_input(INPUT_GET, 'machine_id');
-
 // Номер ламинатора
 const MACHINE_LAMINATOR = 5;
-
-// Страница предназначена только для ламинатора
-if($machine_id != MACHINE_LAMINATOR) {
-    header("Location: ".APPLICATION."/admin/characteristics.php".BuildQuery("machine_id", $machine_id));
-}
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -61,8 +53,6 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
         $form_valid = false;
     }
     
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
-    
     if($form_valid) {
         // Старый объект
         $old_glue = '';
@@ -74,7 +64,7 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
         $old_glue_part = '';
         $old_solvent_part = '';
         
-        $sql = "select glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, glue_part, solvent_part from norm_glue where machine_id = $machine_id order by date desc limit 1";
+        $sql = "select glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, glue_part, solvent_part from norm_glue order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -107,7 +97,7 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
                 $old_solvent_currency != $new_solvent_currency || 
                 $old_glue_part != $new_glue_part || 
                 $old_solvent_part != $new_solvent_part) {
-            $sql = "insert into norm_glue (machine_id, glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, glue_part, solvent_part) values ($machine_id, $new_glue, '$new_glue_currency', $new_glue_expense, $new_glue_expense_pet, $new_solvent, '$new_solvent_currency', $new_glue_part, $new_solvent_part)";
+            $sql = "insert into norm_glue (glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, glue_part, solvent_part) values ($new_glue, '$new_glue_currency', $new_glue_expense, $new_glue_expense_pet, $new_solvent, '$new_solvent_currency', $new_glue_part, $new_solvent_part)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -127,7 +117,7 @@ $solvent_currency = '';
 $glue_part = '';
 $solvent_part = '';
 
-$sql = "select glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, glue_part, solvent_part from norm_glue where machine_id = $machine_id order by date desc limit 1";
+$sql = "select glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, glue_part, solvent_part from norm_glue order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -181,7 +171,6 @@ if($row = $fetcher->Fetch()) {
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
-                        <input type="hidden" id="machine_id" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
                         <div class="form-group">
                             <label for="glue">Стоимость клея (за кг)</label>
                             <div class="input-group">

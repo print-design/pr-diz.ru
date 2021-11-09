@@ -14,7 +14,7 @@ const MACHINE_LAMINATOR = 5;
 
 // Страница не предназначена для ламинатора
 if($machine_id == MACHINE_LAMINATOR) {
-    header("Location: ".APPLICATION."/admin/glue.php".BuildQuery("machine_id", $machine_id));
+    header("Location: ".APPLICATION."/admin/machine.php".BuildQuery("machine_id", $machine_id));
 }
 
 // Добавление рапорта
