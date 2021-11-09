@@ -61,9 +61,6 @@ for($i=1; $i<=8; $i++) {
     $$percent_valid_var = '';
 }
 
-// id ламинатора
-$laminator_machine_id = 5;
-
 // Обработка нажатия кнопки "Сохранить расчёт"
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     $id = filter_input(INPUT_POST, 'id');
@@ -105,7 +102,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $form_valid = false;
     }
     
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    $machine = filter_input(INPUT_POST, 'machine');
     $brand_name = addslashes(filter_input(INPUT_POST, 'brand_name'));
     
     if(empty($brand_name)) {
@@ -168,45 +165,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $form_valid = false;
     }
     
-    // Общая ширина материала (сумма ширин ручьёв) должна быть не больше, чем возможно для данной машины.
-    // При этом, если печать с лыжами, то сравнивается ширина плюс лыжи.
-    $sum_stream_widths = intval($stream_width) * intval($streams_count);
-    
-    if(!empty(filter_input(INPUT_POST, 'lamination1_brand_name')) && $sum_stream_widths > MAX_LAMINATION_WIDTH) {
-        $stream_width_valid_message = "Общая ширина для ламинации не более ".MAX_LAMINATION_WIDTH." мм";
-        $streams_count_valid_message = $stream_width_valid_message;
-        $stream_width_valid = ISINVALID;
-        $streams_count_valid = ISINVALID;
-        $form_valid = false;
-    }
-    elseif(!empty($machine_id)) {
-        $machine_name = "";
-        $machine_max_width = 0;
-        
-        $sql = "select name, max_width from machine where id = $machine_id";
-        $fetcher = new Fetcher($sql);
-        
-        if($row = $fetcher->Fetch()) {
-            $machine_name = $row['name'];
-            $machine_max_width = $row['max_width'];
-        }
-        
-        if($no_ski && $sum_stream_widths > $machine_max_width) {
-            $stream_width_valid_message = "Общая ширина для $machine_name не более $machine_max_width мм";
-            $streams_count_valid_message = $stream_width_valid_message;
-            $stream_width_valid = ISINVALID;
-            $streams_count_valid = ISINVALID;
-            $form_valid = false;
-        }
-        elseif(!$no_ski && ($sum_stream_widths + $ski) > $machine_max_width) {
-            $stream_width_valid_message = "Общая ширина для $machine_name (минус лыжи) не более ".($machine_max_width - $ski)." мм";
-            $streams_count_valid_message = $stream_width_valid_message;
-            $stream_width_valid = ISINVALID;
-            $streams_count_valid = ISINVALID;
-            $form_valid = false;
-        }
-    }
-    
     $length = filter_input(INPUT_POST, 'length');
     
     // Если объём заказа в штуках, то длина этикетки вдоль рапорта вала обязательно, больше нуля
@@ -256,14 +214,67 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
     }
     
+    // Номер машины
+    $machine_id = null;
+    
+    if(!empty($machine) && !empty($paints_count)) {
+        if($machine == 'comiflex') {
+            $machine_id = $machine_ids['comiflex'];
+        }
+        elseif($paints_count > 6) {
+            $machine_id = $machine_ids['zbs3'];
+        }
+        else {
+            $machine_id = $machine_ids['zbs1'];
+        }
+    }
+    
+    // Общая ширина материала (сумма ширин ручьёв) должна быть не больше, чем возможно для данной машины.
+    // При этом, если печать с лыжами, то сравнивается ширина плюс лыжи.
+    $sum_stream_widths = intval($stream_width) * intval($streams_count);
+    
+    if(!empty(filter_input(INPUT_POST, 'lamination1_brand_name')) && $sum_stream_widths > MAX_LAMINATION_WIDTH) {
+        $stream_width_valid_message = "Общая ширина для ламинации не более ".MAX_LAMINATION_WIDTH." мм";
+        $streams_count_valid_message = $stream_width_valid_message;
+        $stream_width_valid = ISINVALID;
+        $streams_count_valid = ISINVALID;
+        $form_valid = false;
+    }
+    elseif(!empty($machine_id)) {
+        $machine_name = "";
+        $machine_max_width = 0;
+        
+        $sql = "select name, max_width from machine where id = $machine_id";
+        $fetcher = new Fetcher($sql);
+        
+        if($row = $fetcher->Fetch()) {
+            $machine_name = $row['name'];
+            $machine_max_width = $row['max_width'];
+        }
+        
+        if($no_ski && $sum_stream_widths > $machine_max_width) {
+            $stream_width_valid_message = "Общая ширина для $machine_name не более $machine_max_width мм";
+            $streams_count_valid_message = $stream_width_valid_message;
+            $stream_width_valid = ISINVALID;
+            $streams_count_valid = ISINVALID;
+            $form_valid = false;
+        }
+        elseif(!$no_ski && ($sum_stream_widths + $ski) > $machine_max_width) {
+            $stream_width_valid_message = "Общая ширина для $machine_name (минус лыжи) не более ".($machine_max_width - $ski)." мм";
+            $streams_count_valid_message = $stream_width_valid_message;
+            $stream_width_valid = ISINVALID;
+            $streams_count_valid = ISINVALID;
+            $form_valid = false;
+        }
+    }
+    
     if($form_valid) {
         if(empty($thickness)) $thickness = "NULL";
         if(empty($other_price)) $other_price = "NULL";
         if(empty($other_thickness)) $other_thickness = "NULL";
         if(empty($other_weight)) $other_weight = "NULL";
         $unit = filter_input(INPUT_POST, 'unit');
-        $machine_id = filter_input(INPUT_POST, 'machine_id');
-        if(empty($machine_id)) $machine_id = "NULL";
+        $machine = filter_input(INPUT_POST, 'machine');
         
         $lamination1_brand_name = addslashes(filter_input(INPUT_POST, 'lamination1_brand_name'));
         $lamination1_thickness = filter_input(INPUT_POST, 'lamination1_thickness');
@@ -344,7 +355,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         if(empty($error_message)) {
             // Если mode = recalc, то создаём новый объект
             if(filter_input(INPUT_GET, 'mode') == 'recalc') {
-                $sql = "insert into calculation (customer_id, name, work_type_id, unit, machine_id, "
+                $sql = "insert into calculation (customer_id, name, work_type_id, unit, machine, "
                         . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
                         . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
                         . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
@@ -353,7 +364,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                         . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "                    . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
                         . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
                         . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
-                        . "values($customer_id, '$name', $work_type_id, '$unit', $machine_id, "
+                        . "values($customer_id, '$name', $work_type_id, '$unit', $machine, "
                         . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, "
                         . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_other_brand_name', $lamination1_other_price, $lamination1_other_thickness, $lamination1_other_weight, $lamination1_customers_material, "
                         . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_other_brand_name', $lamination2_other_price, $lamination2_other_thickness, $lamination2_other_weight, $lamination2_customers_material, "
@@ -369,7 +380,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             }
             else {
                 $sql = "update calculation "
-                        . "set customer_id=$customer_id, name='$name', work_type_id=$work_type_id, unit='$unit', machine_id=$machine_id, "
+                        . "set customer_id=$customer_id, name='$name', work_type_id=$work_type_id, unit='$unit', machine=$machine, "
                         . "brand_name='$brand_name', thickness=$thickness, other_brand_name='$other_brand_name', other_price=$other_price, "
                         . "other_thickness=$other_thickness, other_weight=$other_weight, customers_material=$customers_material, "
                         . "lamination1_brand_name='$lamination1_brand_name', lamination1_thickness=$lamination1_thickness, "
@@ -412,7 +423,7 @@ if(empty($id)) {
 }
 
 if(!empty($id)) {
-    $sql = "select date, customer_id, name, work_type_id, unit, machine_id, "
+    $sql = "select date, customer_id, name, work_type_id, unit, machine, "
             . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
             . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
@@ -498,10 +509,10 @@ if(null === $unit) {
     else $unit = null;
 }
 
-$machine_id = filter_input(INPUT_POST, 'machine_id');
-if(null === $machine_id) {
-    if(isset($row['machine_id'])) $machine_id = $row['machine_id'];
-    else $machine_id = null;
+$machine = filter_input(INPUT_POST, 'machine');
+if(null === $machine) {
+    if(isset($row['machine'])) $machine_id = $row['machine'];
+    else $machine = null;
 }
 
 $lamination1_brand_name = filter_input(INPUT_POST, 'lamination1_brand_name');
