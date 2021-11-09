@@ -56,16 +56,16 @@ include 'left_bar.php';
             if(IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))):
             ?>
             <li class='nav-item'>
-                <a class="nav-link<?=$rolls_status ?>" href="<?=APPLICATION ?>/roll/">Рулоны</a>
+                <a class="nav-link<?=$rolls_status ?>" href="<?=APPLICATION ?>/roll/<?= BuildQueryRemove('page') ?>">Рулоны</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$pallets_status ?>" href="<?=APPLICATION ?>/pallet/">Паллеты</a>
+                <a class="nav-link<?=$pallets_status ?>" href="<?=APPLICATION ?>/pallet/<?= BuildQueryRemove('page') ?>">Паллеты</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$cut_sources_status ?>" href="<?=APPLICATION ?>/cut_source/">Раскроили</a>
+                <a class="nav-link<?=$cut_sources_status ?>" href="<?=APPLICATION ?>/cut_source/<?= BuildQueryRemove('page') ?>">Раскроили</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$utilized_status ?> text-nowrap" href="<?=APPLICATION ?>/utilized/">Сработанная пленка</a>
+                <a class="nav-link<?=$utilized_status ?> text-nowrap" href="<?=APPLICATION ?>/utilized/<?= BuildQueryRemove('page') ?>">Сработанная пленка</a>
             </li>
             <?php
             endif;
