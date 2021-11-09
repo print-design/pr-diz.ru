@@ -6,9 +6,6 @@ if(!IsInRole(array('technologist', 'dev'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Номер ламинатора
-const MACHINE_LAMINATOR = 5;
-
 // Список типов наценки
 $sql = "select id, name from extracharge_type";
 $grabber = new Grabber($sql);

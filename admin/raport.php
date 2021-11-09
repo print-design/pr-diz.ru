@@ -9,14 +9,6 @@ if(!IsInRole(array('technologist', 'dev'))) {
 // Машина
 $machine_id = filter_input(INPUT_GET, 'machine_id');
 
-// Номер ламинатора
-const MACHINE_LAMINATOR = 5;
-
-// Страница не предназначена для ламинатора
-if($machine_id == MACHINE_LAMINATOR) {
-    header("Location: ".APPLICATION."/admin/machine.php".BuildQuery("machine_id", $machine_id));
-}
-
 // Добавление рапорта
 if(null !== filter_input(INPUT_POST, 'raport_create_submit')) {
     $machine_id = filter_input(INPUT_POST, 'machine_id');

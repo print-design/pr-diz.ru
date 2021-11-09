@@ -6,9 +6,6 @@ if(!IsInRole(array('technologist', 'dev', 'manager', 'top_manager', 'designer'))
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// id ламинатора
-$laminator_machine_id = 5;
-
 // Значение марки плёнки "другая"
 const OTHER = "other";
 
@@ -326,6 +323,16 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $tuning_lengths[$row['machine_id']] = $row['length'];
         $tuning_waste_percents[$row['machine_id']] = $row['waste_percent'];
     }
+    
+    $laminator_tuning_time = null;
+    $laminator_tuning_length = null;
+    
+    $sql = "select time, length, waste_percent from norm_laminator_fitting order by id desc limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $laminator_tuning_time = $row['time'];
+        $laminator_tuning_length = $row['length'];
+    }
         
     // Данные о машинах
     $machine_speeds = array();
@@ -338,6 +345,16 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     while($row = $fetcher->Fetch()) {
         $machine_prices[$row['machine_id']] = $row['price'];
         $machine_speeds[$row['machine_id']] = $row['speed'];
+    }
+    
+    $laminator_price = null;
+    $laminator_speed = null;
+    
+    $sql = "select price, speed from norm_laminator order by id desc limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $laminator_price = $row['price'];
+        $laminator_speed = $row['speed'];
     }
     
     $machine_shortnames = array();
@@ -885,7 +902,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
                         
         // Вес материала ламинации 1 с отходами, кг
         // (длина тиража с ламинацией + длина материала для приладки при ламинации) * ширина тиража с отходами (в метрах) * удельный вес ламинации 1 / 1000
-        $dirty_weight_lam1 = (($pure_length_lam ?? 0) + $tuning_lengths[$laminator_machine_id]) * ($dirty_width ?? 0) / 1000 * ($c_weight_lam1 ?? 0) / 1000;
+        $dirty_weight_lam1 = (($pure_length_lam ?? 0) + $laminator_tuning_length) * ($dirty_width ?? 0) / 1000 * ($c_weight_lam1 ?? 0) / 1000;
             
         // Стоимость материала ламинации 1, руб
         // удельная стоимость материала ламинации * вес материала с отходами
@@ -904,15 +921,15 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
         // Если марка плёнки начинается на pet
         // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
-        $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense * (($pure_length_lam ?? 0) * $lamination_roller / 1000 + $tuning_lengths[$laminator_machine_id]);
+        $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense * (($pure_length_lam ?? 0) * $lamination_roller / 1000 + $laminator_tuning_length);
             
         if(stripos($brand_name, 'pet') === 0 || stripos($lamination1_brand_name, 'pet') === 0) {
-            $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense_pet * (($pure_length_lam ?? 0) * $lamination_roller / 1000 + $tuning_lengths[$laminator_machine_id]);
+            $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense_pet * (($pure_length_lam ?? 0) * $lamination_roller / 1000 + $laminator_tuning_length);
         }
             
         // Стоимость процесса ламинации 1, руб
         // стоимость работы оборудования + (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования
-        $price_lam1_work = $machine_prices[$laminator_machine_id] + (($pure_length_lam ?? 0) / 1000 / $machine_speeds[$laminator_machine_id]) * $machine_prices[$laminator_machine_id];
+        $price_lam1_work = $laminator_price + (($pure_length_lam ?? 0) / 1000 / $laminator_speed) * $laminator_price;
             
         // Итого
         $price_lam_total += ($price_lam1_material ?? 0) + ($price_lam1_glue ?? 0) + ($price_lam1_work ?? 0);
@@ -931,7 +948,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
                         
         // Вес материала ламинации 2 с отходами 2, кг
         // (длина тиража с ламинацией + длина материала для приладки при ламинации) * ширина тиража с отходами (в метрах) * удельный вес ламинации 1 / 1000
-        $dirty_weight_lam2 = (($pure_length_lam ?? 0) + $tuning_lengths[$laminator_machine_id]) * $dirty_width / 1000 * $c_weight_lam2 / 1000;
+        $dirty_weight_lam2 = (($pure_length_lam ?? 0) + $laminator_tuning_length) * $dirty_width / 1000 * $c_weight_lam2 / 1000;
             
         // Стоимость материала ламинации 2, руб
         // удельная стоимость материала ламинации * вес материала с отходами
@@ -950,15 +967,15 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
         // Если марка плёнки начинается на pet
         // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
-        $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense * (($pure_length_lam ?? 0) * $lamination_roller / 1000 + $tuning_lengths[$laminator_machine_id]);
+        $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense * (($pure_length_lam ?? 0) * $lamination_roller / 1000 + $laminator_tuning_length);
             
         if(stripos($lamination2_brand_name, 'pet') === 0) {
-            $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense_pet * (($pure_length_lam ?? 0) * $lamination_roller / 1000 + $tuning_lengths[$laminator_machine_id]);
+            $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense_pet * (($pure_length_lam ?? 0) * $lamination_roller / 1000 + $laminator_tuning_length);
         }
             
         // Стоимость процесса ламинации 2, руб
         // стоимость работы оборудования + (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования
-        $price_lam2_work = $machine_prices[$laminator_machine_id] + (($pure_length_lam ?? 0) / 1000 / $machine_speeds[$laminator_machine_id]) * $machine_prices[$laminator_machine_id];
+        $price_lam2_work = $laminator_price + (($pure_length_lam ?? 0) / 1000 / $laminator_speed) * $laminator_price;
             
         // Итого
         $price_lam_total += ($price_lam2_material ?? 0) + ($price_lam2_glue ?? 0) + ($price_lam2_work ?? 0);

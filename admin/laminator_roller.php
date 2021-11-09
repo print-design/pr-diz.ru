@@ -6,9 +6,6 @@ if(!IsInRole(array('technologist', 'dev'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Номер ламинатора
-const MACHINE_LAMINATOR = 5;
-
 // Добавление ширины вала
 if(null !== filter_input(INPUT_POST, 'roller_create_submit')) {
     $value = filter_input(INPUT_POST, 'value');

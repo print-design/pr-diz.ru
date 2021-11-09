@@ -6,9 +6,6 @@ if(!IsInRole(array('technologist', 'dev'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Номер ламинатора
-const MACHINE_LAMINATOR = 5;
-
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;

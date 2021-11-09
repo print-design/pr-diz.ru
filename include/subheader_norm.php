@@ -51,26 +51,10 @@ $roller_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICA
     <div class="p-1">
         <div class="text-nowrap nav2">
             <a href="<?=APPLICATION ?>/admin/machine.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$machine_class ?>">Нормы работы оборудования</a>
-            <?php
-            if($machine_id != MACHINE_LAMINATOR):
-            ?>
             <a href="<?=APPLICATION ?>/admin/characteristics.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$colorfulness_class ?>">Характеристики</a>
-            <?php
-            endif;
-            ?>            
             <a href="<?=APPLICATION ?>/admin/fitting.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$fitting_class ?>">Приладка</a>
-            <?php
-            if($machine_id != MACHINE_LAMINATOR):
-            ?>
             <a href="<?=APPLICATION ?>/admin/raport.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$raport_class ?>">Рапорт</a>
-            <?php
-            endif;
-            if($machine_id == MACHINE_LAMINATOR):
-            ?>
             <a href="<?=APPLICATION ?>/admin/roller.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$roller_class ?>">Ширина вала</a>
-            <?php
-            endif;
-            ?>
         </div>
     </div>
 </div>

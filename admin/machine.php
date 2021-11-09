@@ -9,9 +9,6 @@ if(!IsInRole(array('technologist', 'dev'))) {
 // Машина
 $machine_id = filter_input(INPUT_GET, 'machine_id');
 
-// Номер ламинатора
-const MACHINE_LAMINATOR = 5;
-
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
