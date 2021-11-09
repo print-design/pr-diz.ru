@@ -6,16 +6,8 @@ if(!IsInRole(array('technologist', 'dev'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Машина
-$machine_id = filter_input(INPUT_GET, 'machine_id');
-
 // Номер ламинатора
 const MACHINE_LAMINATOR = 5;
-
-// Страница не предназначена для ламинатора
-if($machine_id == MACHINE_LAMINATOR) {
-    header("Location: ".APPLICATION."/admin/machine.php".BuildQuery("machine_id", $machine_id));
-}
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -67,8 +59,6 @@ if(null !== filter_input(INPUT_POST, 'norm_form_submit')) {
         $form_valid = false;
     }
     
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
-    
     if($form_valid) {
         // Старый объект
         $old_flint = "";
@@ -84,7 +74,7 @@ if(null !== filter_input(INPUT_POST, 'norm_form_submit')) {
         $old_scotch = "";
         $old_scotch_currency = "";
         
-        $sql = "select flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch, scotch_currency from norm_form where machine_id = $machine_id order by date desc limit 1";
+        $sql = "select flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch, scotch_currency from norm_form order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -129,7 +119,7 @@ if(null !== filter_input(INPUT_POST, 'norm_form_submit')) {
                 $old_overmeasure != $new_overmeasure || 
                 $old_scotch != $new_scotch || 
                 $old_scotch_currency != $new_scotch_currency) {
-            $sql = "insert into norm_form (machine_id, flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch, scotch_currency) values ($machine_id, $new_flint, '$new_flint_currency', $new_kodak, '$new_kodak_currency', $new_tver, '$new_tver_currency', $new_film, '$new_film_currency', $new_tver_coeff, $new_overmeasure, $new_scotch, '$new_scotch_currency')";
+            $sql = "insert into norm_form (flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch, scotch_currency) values ($new_flint, '$new_flint_currency', $new_kodak, '$new_kodak_currency', $new_tver, '$new_tver_currency', $new_film, '$new_film_currency', $new_tver_coeff, $new_overmeasure, $new_scotch, '$new_scotch_currency')";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -153,7 +143,7 @@ $overmeasure = "";
 $scotch = "";
 $scotch_currency = "";
 
-$sql = "select flint, kodak, flint_currency, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch, scotch_currency from norm_form where machine_id = $machine_id order by date desc limit 1";
+$sql = "select flint, kodak, flint_currency, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch, scotch_currency from norm_form order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -211,7 +201,6 @@ if($row = $fetcher->Fetch()) {
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
-                        <input type="hidden" id="machine_id" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
                         <div class="form-group">
                             <label for="flint">Flint (за см<sup>2</sup>)</label>
                             <div class="input-group">

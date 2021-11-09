@@ -357,58 +357,56 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     $cliche_additional_size = null;
     $cliche_scotch = null;
         
-    if(!empty($machine_id)) {
-        $sql = "select flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch, scotch_currency "
-                . "from norm_form where machine_id = $machine_id order by id desc limit 1";
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            $cliche_flint = $row['flint'];
+    $sql = "select flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch, scotch_currency "
+            . "from norm_form order by id desc limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $cliche_flint = $row['flint'];
                 
-            if($row['flint_currency'] == USD) {
-                $cliche_flint *= $usd;
-            }
-            else if($row['flint_currency'] == EURO) {
-                $cliche_flint *= $euro;
-            }
+        if($row['flint_currency'] == USD) {
+            $cliche_flint *= $usd;
+        }
+        else if($row['flint_currency'] == EURO) {
+            $cliche_flint *= $euro;
+        }
                 
-            $cliche_kodak = $row['kodak'];
+        $cliche_kodak = $row['kodak'];
                 
-            if($row['kodak_currency'] == USD) {
-                $cliche_kodak *= $usd;
-            }
-            else if($row['kodak_currency'] == EURO) {
-                $cliche_kodak *= $euro;
-            }
+        if($row['kodak_currency'] == USD) {
+            $cliche_kodak *= $usd;
+        }
+        else if($row['kodak_currency'] == EURO) {
+            $cliche_kodak *= $euro;
+        }
                 
-            $cliche_tver = $row['tver'];
+        $cliche_tver = $row['tver'];
                 
-            if($row['tver_currency'] == USD) {
-                $cliche_tver *= $usd;
-            }
-            else if($row['tver_currency'] == EURO) {
-                $cliche_tver *= $euro;
-            }
+        if($row['tver_currency'] == USD) {
+            $cliche_tver *= $usd;
+        }
+        else if($row['tver_currency'] == EURO) {
+            $cliche_tver *= $euro;
+        }
                 
-            $cliche_film = $row['film'];
+        $cliche_film = $row['film'];
                 
-            if($row['film_currency'] == USD) {
-                $cliche_film *= $usd;
-            }
-            if($row['film_currency'] == EURO) {
-                $cliche_film *= $euro;
-            }
+        if($row['film_currency'] == USD) {
+            $cliche_film *= $usd;
+        }
+        if($row['film_currency'] == EURO) {
+            $cliche_film *= $euro;
+        }
                 
-            $cliche_tver_coeff = $row['tver_coeff'];
-            $cliche_additional_size = $row['overmeasure'];
+        $cliche_tver_coeff = $row['tver_coeff'];
+        $cliche_additional_size = $row['overmeasure'];
                 
-            $cliche_scotch = $row['scotch'];
+        $cliche_scotch = $row['scotch'];
                 
-            if($row['scotch_currency'] == USD) {
-                $cliche_scotch *= $usd;
-            }
-            if($row['scotch_currency'] == EURO) {
-                $cliche_scotch *= $euro;
-            }
+        if($row['scotch_currency'] == USD) {
+            $cliche_scotch *= $usd;
+        }
+        if($row['scotch_currency'] == EURO) {
+            $cliche_scotch *= $euro;
         }
     }
         
