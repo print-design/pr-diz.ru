@@ -34,8 +34,7 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
             . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
             . "c.form_1, c.form_2, c.form_3, form_4, form_5, form_6, form_7, form_8, "
-            . "c.status_id, c.extracharge, c.ski, c.no_ski, "
-            . "cs.name status, cs.colour, cs.colour2, cs.image, "
+            . "c.extracharge, c.ski, c.no_ski, "
             . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
             . "wt.name work_type, "
             . "u.last_name, u.first_name, "
@@ -43,7 +42,6 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
             . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
             . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_weight "
             . "from calculation c "
-            . "left join calculation_status cs on c.status_id = cs.id "
             . "left join customer cu on c.customer_id = cu.id "
             . "left join work_type wt on c.work_type_id = wt.id "
             . "left join user u on c.manager_id = u.id "
@@ -88,6 +86,21 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     $lamination_roller = $row['lamination_roller'];
     $paints_count = $row['paints_count'];
     
+    $extracharge = $row['extracharge'];
+    $ski = $row['ski'];
+    $no_ski = $row['no_ski'];
+    
+    $customer = $row['customer'];
+    $customer_phone = $row['customer_phone'];
+    $customer_extension = $row['customer_extension'];
+    $customer_email = $row['customer_email'];
+    $customer_person = $row['customer_person'];
+    
+    $work_type = $row['work_type'];
+    
+    $last_name = $row['last_name'];
+    $first_name = $row['first_name'];
+    
     // Номер машины
     $machine_ids = array();
     $machine_shortnames = array();
@@ -115,7 +128,7 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     
     $machine_shortname = null;
     
-    if(empty($machine_id)) {
+    if(!empty($machine_id)) {
         $machine_shortname = $machine_shortnames[$machine_id];
     }
     
@@ -242,24 +255,6 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
         }
     }
     
-    $status_id = $row['status_id'];
-    $extracharge = $row['extracharge'];
-    $ski = $row['ski'];
-    $no_ski = $row['no_ski'];
-    
-    $status = $row['status'];
-    $colour = $row['colour'];
-    $colour2 = $row['colour2'];
-    $image = $row['image'];
-    
-    $customer = $row['customer'];
-    $customer_phone = $row['customer_phone'];
-    $customer_extension = $row['customer_extension'];
-    $customer_email = $row['customer_email'];
-    $customer_person = $row['customer_person'];
-    
-    $work_type = $row['work_type'];
-    
     $machine_full = "";
     $machine_number = 0;
     
@@ -297,10 +292,6 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
         $quantity_type = 2;
         $order_number = $quantity;
     }
-    
-    $colorfulness = $row['colorfulness'];
-    $last_name = $row['last_name'];
-    $first_name = $row['first_name'];
     
     // Марка плёнки
     $brand_name_final = "";
