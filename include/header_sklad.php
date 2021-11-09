@@ -5,11 +5,10 @@ include 'left_bar.php';
     <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
             <?php
-            $pallets_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/pallet')) == APPLICATION.'/pallet' ? ' disabled' : '';
             $rolls_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/roll')) == APPLICATION.'/roll' ? ' disabled' : '';
+            $pallets_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/pallet')) == APPLICATION.'/pallet' ? ' disabled' : '';
             $cut_sources_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/cut_source')) == APPLICATION.'/cut_source' ? ' disabled' : '';
             $utilized_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/utilized')) == APPLICATION.'/utilized' ? ' disabled' : '';
-            //$rational_cut_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/rational_cut')) == APPLICATION.'/rational_cut' ? ' disabled' : '';
             $user_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/user/index.php' ? ' disabled' : '';
             $personal_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/personal/index.php' ? ' disabled' : '';
             
@@ -55,28 +54,20 @@ include 'left_bar.php';
             
             if(IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))):
             ?>
-            <li class="nav-item">
-                <a class="nav-link<?=$pallets_status ?>" href="<?=APPLICATION ?>/pallet/">Паллеты</a>
-            </li>
             <li class='nav-item'>
-                <a class="nav-link<?=$rolls_status ?>" href="<?=APPLICATION ?>/roll/">Рулоны</a>
+                <a class="nav-link<?=$rolls_status ?>" href="<?=APPLICATION ?>/roll/<?= BuildQueryRemove('page') ?>">Рулоны</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$cut_sources_status ?>" href="<?=APPLICATION ?>/cut_source/">Раскроили</a>
+                <a class="nav-link<?=$pallets_status ?>" href="<?=APPLICATION ?>/pallet/<?= BuildQueryRemove('page') ?>">Паллеты</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$utilized_status ?> text-nowrap" href="<?=APPLICATION ?>/utilized/">Сработанная пленка</a>
+                <a class="nav-link<?=$cut_sources_status ?>" href="<?=APPLICATION ?>/cut_source/<?= BuildQueryRemove('page') ?>">Раскроили</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link<?=$utilized_status ?> text-nowrap" href="<?=APPLICATION ?>/utilized/<?= BuildQueryRemove('page') ?>">Сработанная пленка</a>
             </li>
             <?php
             endif;
-            
-            /*if(IsInRole(array('technologist', 'dev', 'manager'))):
-            ?>
-            <li class="nav-item">
-                <a class="nav-link<?=$rational_cut_status ?> text-nowrap" href="<?=APPLICATION ?>/rational_cut">Рациональный раскрой</a>
-            </li>
-            <?php
-            endif;*/
             
             if($_SERVER['HTTP_HOST'] == "pr-diz-test.ru") {
                 echo "<li style='font-weight: bold; font-size: large; margin-left: 50px;'>ТЕСТОВАЯ</li>";
