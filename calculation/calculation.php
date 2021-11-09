@@ -1136,7 +1136,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.brand_name, c.thickness, other_brand_name, other_price, other_thickness, other_weight, c.customers_material, "
         . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, c.lamination1_customers_material, "
         . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, c.lamination2_customers_material, "
-        . "c.length, c.stream_width, c.streams_count, c.machine, c.raport, c.lamination_roller, c.paints_count, "
+        . "c.length, c.stream_width, c.streams_count, c.machine, c.raport, c.number_on_raport, c.lamination_roller, c.paints_count, "
         . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
         . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -1193,6 +1193,7 @@ $stream_width = $row['stream_width'];
 $streams_count = $row['streams_count'];
 $machine = $row['machine'];
 $raport = $row['raport'];
+$number_on_raport = $row['number_on_raport'];
 $lamination_roller = $row['lamination_roller'];
 $paints_count = $row['paints_count'];
 
