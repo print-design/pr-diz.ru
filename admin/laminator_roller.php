@@ -6,25 +6,16 @@ if(!IsInRole(array('technologist', 'dev'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Машина
-$machine_id = filter_input(INPUT_GET, 'machine_id');
-
 // Номер ламинатора
 const MACHINE_LAMINATOR = 5;
 
-// Страница предназначена только для ламинатора
-if($machine_id != MACHINE_LAMINATOR) {
-    header("Location: ".APPLICATION."/admin/machine.php".BuildQuery("machine_id", $machine_id));
-}
-
 // Добавление ширины вала
 if(null !== filter_input(INPUT_POST, 'roller_create_submit')) {
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
     $value = filter_input(INPUT_POST, 'value');
     
     if(!empty($value)) {
-        // Проверка, имеется ли такой вал у данной машины
-        $sql = "select count(id) from roller where machine_id=$machine_id and value=$value";
+        // Проверка, имеется ли такой вал
+        $sql = "select count(id) from norm_laminator_roller where value=$value";
         $fetcher = new Fetcher($sql);
         
         $count = 0;
@@ -33,11 +24,11 @@ if(null !== filter_input(INPUT_POST, 'roller_create_submit')) {
         }
         
         if($count != 0) {
-            $error_message = "Для этой машины уже имеется такой вал.";
+            $error_message = "Такой вал уже имеется.";
         }
         
         if(empty($error_message)) {
-            $sql = "insert into roller (machine_id, value) values($machine_id, $value)";
+            $sql = "insert into norm_laminator_roller (value) values($value)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -50,7 +41,7 @@ if(null !== filter_input(INPUT_POST, 'roller_create_submit')) {
 // Удаление ширины вала
 if(null !== filter_input(INPUT_POST, 'roller_delete_submit')) {
     $id = filter_input(INPUT_POST, 'id');
-    $sql = "delete from roller where id=$id";
+    $sql = "delete from norm_laminator_roller where id=$id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
 }
@@ -91,10 +82,10 @@ if(null !== filter_input(INPUT_POST, 'roller_delete_submit')) {
                             <th></th>
                         </tr>
                         <?php
-                        $sql = "select id, value from roller where machine_id = $machine_id order by value";
+                        $sql = "select id, value from norm_laminator_roller order by value";
                         $grabber = new Grabber($sql);
-                        $rollers_of_machine = $grabber->result;
-                        foreach ($rollers_of_machine as $row):
+                        $rollers = $grabber->result;
+                        foreach ($rollers as $row):
                         ?>
                         <tr>
                             <td><?=$row['value'] ?></td>
@@ -112,7 +103,6 @@ if(null !== filter_input(INPUT_POST, 'roller_delete_submit')) {
                     </table>
                     <h2>Новая ширина вала</h2>
                     <form method="post" class="form-inline">
-                        <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                         <input type="hidden" name="scroll" />
                         <input type="text" class="form-control mr-2 int-only" name="value" placeholder="Ширина вала..." required="required" />
                         <button type="submit" name="roller_create_submit" class="btn btn-outline-dark fas fa-plus"></button>
