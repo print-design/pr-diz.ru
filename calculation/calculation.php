@@ -331,12 +331,14 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     
     $laminator_tuning_time = null;
     $laminator_tuning_length = null;
+    $laminator_tuning_waste_percent = null;
     
     $sql = "select time, length, waste_percent from norm_laminator_fitting order by id desc limit 1";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $laminator_tuning_time = $row['time'];
         $laminator_tuning_length = $row['length'];
+        $laminator_tuning_waste_percent = $row['waste_percent'];
     }
         
     // Данные о машинах    
@@ -632,7 +634,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         
     // Длина тиража чистая с ламинацией, м
     // длина тиража чистая * (процент отходов для ламинатора + 100) / 100;
-    $pure_length_lam = ($pure_length ?? 0) * ($tuning_waste_percents[5] + 100) / 100;
+    $pure_length_lam = ($pure_length ?? 0) * ($laminator_tuning_waste_percent + 100) / 100;
         
     // Длина тиража с отходами, м
     // если есть печать: длина тиража чистая + (длина тиража чистая * процент отхода машины) / 100 + длина приладки для машины * число красок
@@ -643,7 +645,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $dirty_length = ($pure_length ?? 0) + (($pure_length ?? 0) * $tuning_waste_percents[$machine_id] / 100 + $tuning_lengths[$machine_id] * $paints_count);
     }
     elseif(!empty ($lamination1_brand_name)) {
-        $dirty_length = ($pure_length_lam ?? 0) + $tuning_lengths[5];
+        $dirty_length = ($pure_length_lam ?? 0) + $laminator_tuning_length;
     }
         
     // Ширина тиража с отходами, мм
