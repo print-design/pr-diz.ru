@@ -1,8 +1,3 @@
-<?php
-if(empty(filter_input(INPUT_GET, 'machine_id'))) {
-    header('Location: '.APPLICATION);
-}
-?>
 <hr class="pb-0 mb-0" />
 <div class="d-flex justify-content-start">
     <div class="p-1">
@@ -12,9 +7,19 @@ if(empty(filter_input(INPUT_GET, 'machine_id'))) {
             $fetcher = new Fetcher($sql);
             
             while ($row = $fetcher->Fetch()):
-            $machine_id_class = $row['id'] == filter_input(INPUT_GET, 'machine_id') ? " active" : "";
+            $machine_id_class = (!empty($machine_id) && $row['id'] == $machine_id) ? " active" : "";
+            
+            $file_name = "";
+            if(empty($machine_id)) {
+                if($row['id'] == MACHINE_LAMINATOR) {
+                    $file_name = "glue.php";
+                }
+                else {
+                    $file_name = "characteristics.php";
+                }
+            }
             ?>
-            <a href="<?= BuildQuery('machine_id', $row['id']) ?>" class="mr-4<?=$machine_id_class ?>"><?=$row['name'] ?></a>
+            <a href="<?= $file_name.BuildQuery('machine_id', $row['id']) ?>" class="mr-4<?=$machine_id_class ?>"><?=$row['name'] ?></a>
             <?php
             endwhile;
             
@@ -29,6 +34,7 @@ if(empty(filter_input(INPUT_GET, 'machine_id'))) {
     </div>
 </div>
 <?php
+if(!empty($machine_id)):
 $colorfulness_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/characteristics.php')) == APPLICATION.'/admin/characteristics.php' ? " active" : "";
 $form_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/form.php')) == APPLICATION.'/admin/form.php' ? " active" : "";
 $glue_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/glue.php')) == APPLICATION.'/admin/glue.php' ? " active" : "";
@@ -42,7 +48,6 @@ $roller_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICA
     <div class="p-1">
         <div class="text-nowrap nav2">
             <?php
-            $machine_id = filter_input(INPUT_GET, 'machine_id');
             if($machine_id != MACHINE_LAMINATOR):
             ?>
             <a href="<?=APPLICATION ?>/admin/characteristics.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$colorfulness_class ?>">Характеристики</a>
@@ -73,3 +78,4 @@ $roller_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICA
         </div>
     </div>
 </div>
+<?php endif; ?>
