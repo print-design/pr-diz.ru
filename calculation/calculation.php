@@ -1265,7 +1265,7 @@ $num_for_customer = $row['num_for_customer'];
                 <div class="col-5" id="left_side">
                     <div class="d-flex justify-content-between mb-auto">
                         <div class="p-1">
-                            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemove("id") ?>">К списку</a>
+                            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemove('manager', GetUserId(), 'id') ?>">К списку</a>
                         </div>
                         <div class="p-1">
                             <?php if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager'))): ?>
