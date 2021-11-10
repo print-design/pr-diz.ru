@@ -7,7 +7,7 @@ if(IsInRole(array('electrocarist'))) {
 }
 
 // Авторизация
-elseif(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
+elseif(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager', 'top_manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
