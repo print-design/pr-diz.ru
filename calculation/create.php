@@ -2078,6 +2078,29 @@ for ($i=1; $i<=8; $i++) {
                 $('#form_lamination_2 select').removeAttr('disabled');
             }
             
+            // При изменении значения рапорта или количества этикеток на ручье
+            // автоматически вычисляем длину этикетки вдоль рапорта вала
+            $('#raport').change(function() {
+                CalculateLength()
+            });
+            
+            $('#number_on_raport').change(function() {
+                CalculateLength()
+            });
+            
+            $('#number_on_raport').keyup(function() {
+                CalculateLength()
+            });
+            
+            function CalculateLength() {
+                var raport = $('#raport').val();
+                var number_on_raport = $('#number_on_raport').val();
+                
+                if(raport && number_on_raport) {
+                    $('#length').val(parseFloat(raport) / parseFloat(number_on_raport));
+                }
+            }
+            
             // Обработка выбора количества красок
             $('#paints_count').change(function(){
                 var count = $(this).val();

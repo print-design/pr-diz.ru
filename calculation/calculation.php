@@ -1667,7 +1667,7 @@ $num_for_customer = $row['num_for_customer'];
                 AdjustFixedBlock($('#calculation'));
             }
             
-            // Ограницение значений наценки
+            // Ограничение значений наценки
             $('#extracharge').keydown(function(e) {
                 if(!KeyDownLimitIntValue($(e.target), e, 999)) {
                     return false;
