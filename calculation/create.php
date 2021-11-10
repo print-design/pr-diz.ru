@@ -529,7 +529,7 @@ if(null === $unit) {
 
 $machine = filter_input(INPUT_POST, 'machine');
 if(null === $machine) {
-    if(isset($row['machine'])) $machine_id = $row['machine'];
+    if(isset($row['machine'])) $machine = $row['machine'];
     else $machine = null;
 }
 
@@ -1430,8 +1430,24 @@ for ($i=1; $i<=8; $i++) {
                                     <select id="raport" name="raport" class="form-control print-only d-none">
                                         <option value="" hidden="hidden" selected="selected">Рапорт...</option>
                                         <?php
-                                        if(!empty($machine_id)) {
-                                            $sql = "select value from raport where machine_id = $machine_id order by value";
+                                        if(!empty($machine)) {
+                                            $sql = "";
+                                            
+                                            if($machine == "comiflex") {
+                                                $sql = "select r.value "
+                                                        . "from raport r "
+                                                        . "inner join machine m on r.machine_id = m.id "
+                                                        . "where m.shortname = 'comiflex' "
+                                                        . "order by r.value";
+                                            }
+                                            elseif($machine == "zbs") {
+                                                $sql = "select distinct r.value "
+                                                        . "from raport r "
+                                                        . "inner join machine m on r.machine_id = m.id "
+                                                        . "where m.shortname in ('zbs1', 'zbs2', 'zbs3') "
+                                                        . "order by r.value";
+                                            }
+                                            
                                             $fetcher = new Fetcher($sql);
                                             
                                             while($row = $fetcher->Fetch()) {
