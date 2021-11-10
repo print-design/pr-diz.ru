@@ -1382,7 +1382,7 @@ $num_for_customer = $row['num_for_customer'];
                             endif;
                             if(!empty($number_on_raport)):
                             ?>
-                        <tr><th>Количество этикеток на рапорте</th><td class="param-value"><?=$number_on_raport ?></td></tr>
+                        <tr><th>Количество этикеток на ручье</th><td class="param-value"><?=$number_on_raport ?></td></tr>
                             <?php
                             endif;
                             if(!empty($length)):

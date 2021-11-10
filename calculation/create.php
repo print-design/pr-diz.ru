@@ -1474,22 +1474,22 @@ for ($i=1; $i<=8; $i++) {
                                     </select>
                                 </div>
                             </div>
-                            <!-- Количество этикеток на рапорте -->
+                            <!-- Количество этикеток на ручье -->
                             <div class="col-6 print-only d-none">
                                 <div class="form-group">
-                                    <label for="number_on_raport">Количество этикеток на рапорте</label>
+                                    <label for="number_on_raport">Количество этикеток на ручье</label>
                                     <input type="text" 
                                            id="number_on_raport" 
                                            name="number_on_raport" 
                                            class="form-control int-only print-only d-none" 
-                                           placeholder="Количество этикеток на рапорте" 
+                                           placeholder="Количество этикеток на ручье" 
                                            value="<?= $number_on_raport === null ? "" : intval($number_on_raport) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'number_on_raport'); $(this).attr('name', 'number_on_raport'); $(this).attr('placeholder', 'Количество этикеток на рапорте');" 
+                                           onmouseup="javascript: $(this).attr('id', 'number_on_raport'); $(this).attr('name', 'number_on_raport'); $(this).attr('placeholder', 'Количество этикеток на ручье');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'number_on_raport'); $(this).attr('name', 'number_on_raport'); $(this).attr('placeholder', 'Количество этикеток на рапорте');" 
-                                           onfocusout="javascript: $(this).attr('id', 'number_on_raport'); $(this).attr('name', 'number_on_raport'); $(this).attr('placeholder', 'Количество этикеток на рапорте');" />
-                                    <div class="invalid-feedback">Количество этикеток на рапорте обязательно</div>
+                                           onkeyup="javascript: $(this).attr('id', 'number_on_raport'); $(this).attr('name', 'number_on_raport'); $(this).attr('placeholder', 'Количество этикеток на ручье');" 
+                                           onfocusout="javascript: $(this).attr('id', 'number_on_raport'); $(this).attr('name', 'number_on_raport'); $(this).attr('placeholder', 'Количество этикеток на ручье');" />
+                                    <div class="invalid-feedback">Количество этикеток на ручье обязательно</div>
                                 </div>
                             </div>
                             <!-- Ширина вала ламинации -->
