@@ -10,7 +10,7 @@ if(!empty(filter_input(INPUT_COOKIE, USERNAME))):
 ?>
 <ul class="navbar-nav">
     <?php
-    if(IsInRole(array('technologist', 'dev'))):
+    if(IsInRole(array('technologist', 'dev', 'top_manager'))):
     ?>
     <li class="nav-item">
         <a class="nav-link" href="<?=APPLICATION ?>/user/">Админка</a>
