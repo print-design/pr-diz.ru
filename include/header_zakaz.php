@@ -16,14 +16,14 @@ include 'left_bar.php';
             </li>
             <?php
             endif;
-            if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager'))):
+            if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager')) && false):
             ?>
             <li class="nav-item">
                 <a class="nav-link<?=$techmap_status ?>" href="<?=APPLICATION ?>/techmap/">Технологические карты</a>
             </li>
             <?php
             endif;
-            if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager'))):
+            if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager')) && false):
             ?>
             <li class="nav-item">
                 <a class="nav-link<?=$schedule_status ?>" href="<?=APPLICATION ?>/schedule/">Расписание</a>
