@@ -1377,7 +1377,7 @@ $num_for_customer = $row['num_for_customer'];
                             endif;
                             if(!empty($raport)):
                             ?>
-                        <tr><th>Рапорт</th><td class="param-value"><?= rtrim(rtrim(number_format($raport, 2, ",", ""), "0"), ",") ?> мм</td></tr>
+                        <tr><th>Рапорт</th><td class="param-value"><?= rtrim(rtrim(number_format($raport, 3, ",", ""), "0"), ",") ?> мм</td></tr>
                             <?php
                             endif;
                             if(!empty($number_on_raport)):
@@ -1387,7 +1387,7 @@ $num_for_customer = $row['num_for_customer'];
                             endif;
                             if(!empty($length)):
                             ?>
-                        <tr><th>Длина этикетки вдоль рапорта вала</th><td class="param-value"><?= rtrim(rtrim(number_format($length, 2, ",", ""), "0"), ",") ?> мм</td></tr>
+                        <tr><th>Длина этикетки вдоль рапорта вала</th><td class="param-value"><?= rtrim(rtrim(number_format($length, 4, ",", ""), "0"), ",") ?> мм</td></tr>
                             <?php
                             endif;
                             if(!empty($lamination_roller)):

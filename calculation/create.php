@@ -48,7 +48,13 @@ $stream_width_valid = '';
 $stream_width_valid_message = "Ширина ручья обязательно";
 $streams_count_valid = '';
 $streams_count_valid_message = "Количество ручьёв обязательно";
+
 $length_valid = '';
+$length_message = "Длина этикетки вдоль рапорта вала обязательно";
+$number_on_raport_valid = '';
+$number_on_raport_message = "Количество этикеток на ручье обязательно";
+$raport_valid = '';
+$raport_message = "Рапорт обязательно";
 
 // Переменные для валидации цвета, CMYK и процента
 for($i=1; $i<=8; $i++) {
@@ -293,6 +299,18 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $form_valid = false;
             }
         }
+    }
+    
+    // Длина этикетки вдоль рапорта, умноженная на количество этикеток на ручье
+    // Должна соответствовать рапорту
+    if($length * $number_on_raport != $raport) {
+        $raport_valid = ISINVALID;
+        $length_valid = ISINVALID;
+        $number_on_raport_valid = ISINVALID;
+        $raport_message = "Сумма длин не соответствует рапорту";
+        $length_message = $raport_message;
+        $number_on_raport_message = $raport_message;
+        $form_valid = false;
     }
     
     if($form_valid) {
@@ -1432,14 +1450,14 @@ for ($i=1; $i<=8; $i++) {
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки вдоль рапорта вала, мм');" 
                                            onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки вдоль рапорта вала, мм');" />
-                                    <div class="invalid-feedback">Длина обязательно, больше нуля</div>
+                                    <div class="invalid-feedback"><?=$length_message ?></div>
                                 </div>
                             </div>
                             <!-- Рапорт -->
                             <div class="col-6 print-only d-none">
                                 <div class="form-group">
                                     <label for="raport">Рапорт, мм</label>
-                                    <select id="raport" name="raport" class="form-control print-only d-none">
+                                    <select id="raport" name="raport" class="form-control print-only d-none<?=$raport_valid ?>">
                                         <option value="" hidden="hidden" selected="selected">Рапорт...</option>
                                         <?php
                                         if(!empty($machine)) {
@@ -1472,6 +1490,7 @@ for ($i=1; $i<=8; $i++) {
                                         }
                                         ?>
                                     </select>
+                                    <div class="invalid-feedback"><?=$raport_message ?></div>
                                 </div>
                             </div>
                             <!-- Количество этикеток на ручье -->
@@ -1481,7 +1500,7 @@ for ($i=1; $i<=8; $i++) {
                                     <input type="text" 
                                            id="number_on_raport" 
                                            name="number_on_raport" 
-                                           class="form-control int-only print-only d-none" 
+                                           class="form-control int-only print-only d-none<?=$number_on_raport_valid ?>" 
                                            placeholder="Количество этикеток на ручье" 
                                            value="<?= $number_on_raport === null ? "" : intval($number_on_raport) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -1489,7 +1508,7 @@ for ($i=1; $i<=8; $i++) {
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="javascript: $(this).attr('id', 'number_on_raport'); $(this).attr('name', 'number_on_raport'); $(this).attr('placeholder', 'Количество этикеток на ручье');" 
                                            onfocusout="javascript: $(this).attr('id', 'number_on_raport'); $(this).attr('name', 'number_on_raport'); $(this).attr('placeholder', 'Количество этикеток на ручье');" />
-                                    <div class="invalid-feedback">Количество этикеток на ручье обязательно</div>
+                                    <div class="invalid-feedback"><?=$number_on_raport_message ?></div>
                                 </div>
                             </div>
                             <!-- Ширина вала ламинации -->
