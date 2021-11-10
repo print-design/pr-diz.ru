@@ -866,7 +866,7 @@ elseif(!empty ($id) && !empty ($date)) {
             
             <div class="param-name">Длина тиража чистая с ламинацией</div>
             <div class="algorithm">длина тиража чистая * (процент отходов для ламинатора + 100) / 100</div>
-            <div class="value mb-2"><?="$pure_length * ($tuning_waste_percents[5] + 100) / 100 = $pure_length_lam" ?></div>
+            <div class="value mb-2"><?="$pure_length * ($laminator_tuning_waste_percent + 100) / 100 = $pure_length_lam" ?></div>
             
             <div class="param-name">Длина тиража с отходами</div>
             <div class="algorithm">если есть печать: длина тиража чистая + (длина тиража чистая * процент отхода машины / 100</div>
@@ -874,8 +874,8 @@ elseif(!empty ($id) && !empty ($date)) {
             <div class="algorithm">если нет печати, но есть ламинация: длина тиража чистая с ламинацией + длина приладки ламинации</div>
             <?php if(!empty($machine_id) && !empty($pure_length) && !empty($paints_count) && !empty($tuning_waste_percents[$machine_id])): ?>
             <div class="value mb-2"><?="$pure_length + ($pure_length * $tuning_waste_percents[$machine_id] / 100 + $tuning_lengths[$machine_id] * $paints_count) = $dirty_length" ?></div>
-            <?php elseif(!empty ($lamination1_brand_name) && !empty ($pure_length_lam) && !empty ($tuning_lengths[5])): ?>
-            <div class="value mb-2"><?="$pure_length_lam + $tuning_lengths[5] = $dirty_length" ?></div>
+            <?php elseif(!empty ($lamination1_brand_name) && !empty ($pure_length_lam) && !empty ($laminator_tuning_length)): ?>
+            <div class="value mb-2"><?="$pure_length_lam + $laminator_tuning_length = $dirty_length" ?></div>
             <?php endif; ?>
             
             <div class="param-name">Ширина тиража с отходами</div>

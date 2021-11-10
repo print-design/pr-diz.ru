@@ -1424,7 +1424,7 @@ for ($i=1; $i<=8; $i++) {
                                     <input type="text" 
                                            id="length" 
                                            name="length" 
-                                           class="form-control int-only print-only d-none<?=$length_valid ?>" 
+                                           class="form-control float-only print-only d-none<?=$length_valid ?>" 
                                            placeholder="Длина этикетки вдоль рапорта вала, мм" 
                                            value="<?= $length === null ? "" : floatval($length) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
