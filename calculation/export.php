@@ -101,37 +101,6 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     $last_name = $row['last_name'];
     $first_name = $row['first_name'];
     
-    // Номер машины
-    $machine_ids = array();
-    $machine_shortnames = array();
-    
-    $sql = "select id, shortname from machine";
-    $fetcher = new Fetcher($sql);
-    while ($row = $fetcher->Fetch()) {
-        $machine_ids[$row['shortname']] = $row['id'];
-        $machine_shortnames[$row['id']] = $row['shortname'];
-    }
-    
-    $machine_id = null;
-    
-    if(!empty($machine) && !empty($paints_count)) {
-        if($machine == COMIFLEX) {
-            $machine_id = $machine_ids[COMIFLEX];
-        }
-        elseif($paints_count > 6) {
-            $machine_id = $machine_ids['zbs3'];
-        }
-        else {
-            $machine_id = $machine_ids['zbs1'];
-        }
-    }
-    
-    $machine_shortname = null;
-    
-    if(!empty($machine_id)) {
-        $machine_shortname = $machine_shortnames[$machine_id];
-    }
-    
     // Формы
     $new_forms_count = 0;
     $new_forms_vendor = "";
@@ -253,6 +222,37 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
                 }
                 break;
         }
+    }
+    
+    // Номер машины
+    $machine_ids = array();
+    $machine_shortnames = array();
+    
+    $sql = "select id, shortname from machine";
+    $fetcher = new Fetcher($sql);
+    while ($row = $fetcher->Fetch()) {
+        $machine_ids[$row['shortname']] = $row['id'];
+        $machine_shortnames[$row['id']] = $row['shortname'];
+    }
+    
+    $machine_id = null;
+    
+    if(!empty($machine) && !empty($paints_count)) {
+        if($machine == COMIFLEX) {
+            $machine_id = $machine_ids[COMIFLEX];
+        }
+        elseif($paints_count > 6) {
+            $machine_id = $machine_ids['zbs3'];
+        }
+        else {
+            $machine_id = $machine_ids['zbs1'];
+        }
+    }
+    
+    $machine_shortname = null;
+    
+    if(!empty($machine_id)) {
+        $machine_shortname = $machine_shortnames[$machine_id];
     }
     
     $machine_full = "";
