@@ -1060,7 +1060,7 @@ elseif(!empty ($id) && !empty ($date)) {
                                 $paint_expense_final = $paint_lacquer_expense;
                                 $paint_price_final = $paint_lacquer;
                                 $solvent_price_final = $paint_solvent_flexol82;
-                                $paint_solvent_final = $paint_lacquer_solvent_flexol82;
+                                $paint_solvent_final = $paint_lacquer_solvent;
                                 break;
                         }
                     
