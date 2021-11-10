@@ -169,12 +169,14 @@ elseif(!empty ($id) && !empty ($date)) {
     
     $laminator_tuning_time = null;
     $laminator_tuning_length = null;
+    $laminator_tuning_waste_percent = null;
     
     $sql = "select time, length, waste_percent from norm_laminator_fitting order by id desc limit 1";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $laminator_tuning_time = $row['time'];
         $laminator_tuning_length = $row['length'];
+        $laminator_tuning_waste_percent = $row['waste_percent'];
     }
     
     // Данные о машинах
