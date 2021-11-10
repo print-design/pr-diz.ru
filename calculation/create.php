@@ -243,27 +243,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     
     // Общая ширина материала (сумма ширин ручьёв) должна быть не больше, чем возможно для данной машины.
     // При этом, если печать с лыжами, то сравнивается ширина плюс лыжи.
-    $sum_stream_widths = intval($stream_width) * intval($streams_count);
+    $sum_stream_widths = 0;
     
-    if(!empty(filter_input(INPUT_POST, 'lamination1_brand_name'))) {
-        $laminator_max_width = 0;
-        
-        $sql = "select max_width from norm_laminator order by id desc limit 1";
-        $fetcher = new Fetcher($sql);
-        
-        if($row = $fetcher->Fetch()) {
-            $laminator_max_width = $row['max_width'];
-        }
-        
-        if($sum_stream_widths > $laminator_max_width) {
-            $stream_width_valid_message = "Общая ширина для ламинации не более $laminator_max_width мм";
-            $streams_count_valid_message = $stream_width_valid_message;
-            $stream_width_valid = ISINVALID;
-            $streams_count_valid = ISINVALID;
-            $form_valid = false;
-        }
+    if(!empty($stream_width) && !empty($streams_count)) {
+        $sum_stream_widths = intval($stream_width) * intval($streams_count);
     }
-    elseif(!empty($machine_id)) {
+    
+    if(!empty($machine_id)) {
         $machine_max_width = 0;
         
         $sql = "select max_width from norm_machine where machine_id = $machine_id order by id desc limit 1";
@@ -274,18 +260,38 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         if($no_ski && $sum_stream_widths > $machine_max_width) {
-            $stream_width_valid_message = "Общая ширина для печати не более $machine_max_width мм";
+            $stream_width_valid_message = "Сумма ручьёв для печати не более $machine_max_width мм";
             $streams_count_valid_message = $stream_width_valid_message;
             $stream_width_valid = ISINVALID;
             $streams_count_valid = ISINVALID;
             $form_valid = false;
         }
         elseif(!$no_ski && ($sum_stream_widths + $ski) > $machine_max_width) {
-            $stream_width_valid_message = "Общая ширина для печати (минус лыжи) не более ".($machine_max_width - $ski)." мм";
+            $stream_width_valid_message = "Сумма ручьёв для печати (минус лыжи) не более ".($machine_max_width - $ski)." мм";
             $streams_count_valid_message = $stream_width_valid_message;
             $stream_width_valid = ISINVALID;
             $streams_count_valid = ISINVALID;
             $form_valid = false;
+        }
+
+        // Если печать с ламинацией, то проверяем ещё и максимальную ширину для ламинации
+        if(!empty(filter_input(INPUT_POST, 'lamination1_brand_name'))) {
+            $laminator_max_width = 0;
+        
+            $sql = "select max_width from norm_laminator order by id desc limit 1";
+            $fetcher = new Fetcher($sql);
+        
+            if($row = $fetcher->Fetch()) {
+                $laminator_max_width = $row['max_width'];
+            }
+        
+            if($sum_stream_widths > $laminator_max_width) {
+                $stream_width_valid_message = "Сумма ручьёв для ламинации не более $laminator_max_width мм";
+                $streams_count_valid_message = $stream_width_valid_message;
+                $stream_width_valid = ISINVALID;
+                $streams_count_valid = ISINVALID;
+                $form_valid = false;
+            }
         }
     }
     
