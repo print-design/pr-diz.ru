@@ -29,7 +29,7 @@ else if($file == "grafik.php") {
     <?php
     if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager', 'designer'))):
     ?>
-    <a href="<?=APPLICATION ?>/calculation/?manager=<?= GetUserId() ?>" class="left_bar_item<?=$zakaz_class ?>" title="Заказы"><img src="<?=APPLICATION ?>/images/nav_clock.svg" /></a>
+    <a href="<?=APPLICATION ?>/calculation/<?= IsInRole('manager') ? BuildQuery("manager", GetUserId()) : "" ?>" class="left_bar_item<?=$zakaz_class ?>" title="Заказы"><img src="<?=APPLICATION ?>/images/nav_clock.svg" /></a>
     <?php
     endif;
     if(IsInRole(array('technologist', 'storekeeper', 'dev', 'manager', 'top_manager'))):

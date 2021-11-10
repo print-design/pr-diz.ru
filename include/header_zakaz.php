@@ -12,7 +12,7 @@ include 'left_bar.php';
             if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager', 'designer'))):
             ?>
             <li class="nav-item">
-                <a class="nav-link<?=$calculation_status ?>" href="<?=APPLICATION ?>/calculation/?manager=<?= GetUserId() ?>">Расчеты</a>
+                <a class="nav-link<?=$calculation_status ?>" href="<?=APPLICATION ?>/calculation/<?= IsInRole('manager') ? BuildQuery("manager", GetUserId()) : "" ?>">Расчеты</a>
             </li>
             <?php
             endif;
