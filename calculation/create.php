@@ -824,7 +824,8 @@ for ($i=1; $i<=8; $i++) {
                                 <select id="customer_id" name="customer_id" class="form-control<?=$customer_id_valid ?>" multiple="multiple" required="required">
                                     <option value="">Заказчик...</option>
                                         <?php
-                                        $sql = "select id, name from customer order by name";
+                                        $manager_id = GetUserId();
+                                        $sql = "select id, name from customer where manager_id = $manager_id order by name";
                                         $fetcher = new Fetcher($sql);
                                         
                                         while ($row = $fetcher->Fetch()):
