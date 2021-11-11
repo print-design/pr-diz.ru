@@ -123,6 +123,20 @@ $dirty_length = $row['dirty_length'];
             .roll-selector input[type="radio"]:checked + label {
                 border: solid 3px darkgray;
             }
+            
+            table.table {
+                font-family: 'Times New Roman', 'serif';
+            }
+            
+            table.table tr th {
+                font-weight: bold;
+                color: black;
+                font-size: 22px;
+            }
+            
+            table.table tr td {
+                font-size: 22px;
+            }
         </style>
     </head>
     <body>

@@ -159,6 +159,20 @@ $roll_type = $row['roll_type'];
             .roll_type.selected {
                 border: solid 3px darkgray;
             }
+            
+            table.table {
+                font-family: 'Times New Roman', 'serif';
+            }
+            
+            table.table tr th {
+                font-weight: bold;
+                color: black;
+                font-size: 22px;
+            }
+            
+            table.table tr td {
+                font-size: 22px;
+            }
         </style>
     </head>
     <body>
