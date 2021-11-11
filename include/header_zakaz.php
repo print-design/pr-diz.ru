@@ -84,7 +84,7 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
                     <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
                 </div>
                 <div class="modal-body">
-                    <div class="text-danger d-none" id="customer_exists">Такой заказчик есть</div>
+                    <div class="text-danger d-none" id="customer_exists" style="font-size: x-large;">Такой заказчик есть</div>
                     <div class="form-group">
                         <input type="text" 
                                id="customer_name" 

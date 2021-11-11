@@ -1416,7 +1416,7 @@ $num_for_customer = $row['num_for_customer'];
                             ?>
                         <tr>
                             <th>Пленка</th>
-                            <td class="param-value">
+                            <td class="param-value text-nowrap">
                                 <table class="w-100">
                                     <tr>
                                         <td><?=$brand_name ?></td>
