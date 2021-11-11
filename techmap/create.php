@@ -273,7 +273,7 @@ $dirty_length = $row['dirty_length'];
                     <tr>
                         <th colspan="4">
                             Дополнительная информация
-                            <div class="form-group roll-selector">
+                            <div class="form-group roll-selector mt-3">
                                 <?php $roll_type = filter_input(INPUT_POST, 'roll_type'); ?>
                                 <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_1" name="roll_type" value="1"<?=$roll_type == 1 ? " checked='checked'" : "" ?> />
                                 <label for="roll_type_1"><image src="../images/rolls/2-50.gif" style="height: 50px; width: auto;" /></label>

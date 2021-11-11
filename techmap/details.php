@@ -173,6 +173,10 @@ $roll_type = $row['roll_type'];
             table.table tr td {
                 font-size: 22px;
             }
+            
+            table.table tr td form {
+                font-family: 'Arial', 'sans serif';
+            }
         </style>
     </head>
     <body>
@@ -267,7 +271,7 @@ $roll_type = $row['roll_type'];
                 </tr>
                 <tr>
                     <th colspan="2">Способ наклейки (ручная, автомат)</th>
-                    <th colspan="2"><?=$self_adhesive === null ? "" : ($self_adhesive === 0 ? "ручная" : "автомат") ?></th>
+                    <td colspan="2"><?=$self_adhesive === null ? "" : ($self_adhesive === 0 ? "ручная" : "автомат") ?></td>
                 </tr>
                 <tr>
                     <th rowspan="3">Резка и размотка продукции</th>
@@ -285,7 +289,7 @@ $roll_type = $row['roll_type'];
                 <tr>
                     <th colspan="4">
                         Дополнительная информация
-                        <div class="roll-selector">
+                        <div class="roll-selector mt-3">
                             <div class="roll_type<?=$roll_type == 1 ? " selected" : "" ?>"><image src="../images/rolls/2-50.gif" style="height: 50px; width: auto;" /></div>
                             <div class="roll_type<?=$roll_type == 2 ? " selected" : "" ?>"><image src="../images/rolls/2-50.gif" style="height: 50px; width: auto;" /></div>
                             <div class="roll_type<?=$roll_type == 3 ? " selected" : "" ?>"><image src="../images/rolls/3-50.gif" style="height: 50px; width: auto;" /></div>
