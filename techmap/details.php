@@ -306,6 +306,7 @@ $roll_type = $row['roll_type'];
                     <td colspan="2">
                         <form method="post" class="form-inline">
                             <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                            <input type="hidden" name="scroll" />
                             <div class="form-group mr-3">
                                 <input type="date" id="work_date" name="work_date" value="<?=$work_date ?>" class="form-control" />
                             </div>
