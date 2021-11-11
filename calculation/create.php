@@ -801,7 +801,7 @@ for ($i=1; $i<=8; $i++) {
             ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/calculation.php?id=<?=$id ?>">Назад</a>
             <?php else: ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/">К списку</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= IsInRole('manager') ? BuildQueryAddRemove('manager', GetUserId(), 'id') : BuildQueryRemove('id') ?>">К списку</a>
             <?php endif; ?>
             <div class="row">
                 <!-- Левая половина -->
