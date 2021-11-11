@@ -303,7 +303,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     
     // Длина этикетки вдоль рапорта, умноженная на количество этикеток на ручье
     // Должна соответствовать рапорту
-    if($length * $number_on_raport != $raport) {
+    //if($length * $number_on_raport != $raport) {
+    if(round($raport / $number_on_raport, 4) != $length) {
         $raport_valid = ISINVALID;
         $length_valid = ISINVALID;
         $number_on_raport_valid = ISINVALID;
@@ -1781,6 +1782,27 @@ for ($i=1; $i<=8; $i++) {
                 }
             });
             
+            // Проверка, что заказчик существует
+            $("#customer_name").keyup(function() {
+                if($(this).val() == "") {
+                    $('#customer_exists').addClass('d-none');
+                }
+                else {
+                    $.ajax({ url: "../ajax/customer_exists.php?name=" + $(this).val() })
+                            .done(function(data) {
+                                if(data == 0) {
+                                    $('#customer_exists').addClass('d-none');
+                                }
+                                else {
+                                    $('#customer_exists').removeClass('d-none');
+                                }
+                            })
+                            .fail(function() {
+                                alert('Ошибка при проверке, что заказчик существует');
+                            });
+                }
+            });
+            
             // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
             $('#streams_count').keydown(function(e) {
                 if(!KeyDownLimitIntValue($(e.target), e, 50)) {
@@ -2097,7 +2119,7 @@ for ($i=1; $i<=8; $i++) {
                 var number_on_raport = $('#number_on_raport').val();
                 
                 if(raport && number_on_raport) {
-                    $('#length').val(parseFloat(raport) / parseFloat(number_on_raport));
+                    $('#length').val(Math.round(parseFloat(raport) / parseFloat(number_on_raport) * 10000, -4) / 10000);
                 }
             }
             

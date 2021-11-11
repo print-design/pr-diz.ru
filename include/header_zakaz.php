@@ -52,11 +52,12 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
         $customer_phone = filter_input(INPUT_POST, 'customer_phone');
         $customer_extension = filter_input(INPUT_POST, 'customer_extension');
         $customer_email = filter_input(INPUT_POST, 'customer_email');
+        $customer_manager_id = GetUserId();
         
         $customer_id = null;
         
         // Если такой заказчик уже есть, просто получаем его ID
-        $sql = "select id from customer where name = '$customer_name' limit 1";
+        $sql = "select id from customer where name = '$customer_name' and manager_id = $customer_manager_id limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $customer_id = $row[0];
@@ -64,7 +65,7 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
         
         // Если такого заказчика нет, создаём его
         if(empty($customer_id)) {
-            $sql = "insert into customer (name, person, phone, extension, email) values ('$customer_name', '$customer_person', '$customer_phone', '$customer_extension', '$customer_email')";
+            $sql = "insert into customer (name, person, phone, extension, email, manager_id) values ('$customer_name', '$customer_person', '$customer_phone', '$customer_extension', '$customer_email', $customer_manager_id)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
             $customer_id = $executer->insert_id;
@@ -83,6 +84,7 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
                     <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
                 </div>
                 <div class="modal-body">
+                    <div class="text-danger d-none" id="customer_exists">Такой заказчик есть</div>
                     <div class="form-group">
                         <input type="text" 
                                id="customer_name" 
