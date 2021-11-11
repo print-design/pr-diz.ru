@@ -366,8 +366,42 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $manager_id = GetUserId();
         $status_id = 1; // Статус "Расчёт"
         
-        $extracharge = filter_input(INPUT_POST, 'h_extracharge');
-        if(empty($extracharge)) $extracharge = 35; // Наценка по умолчанию 35
+        $extracharge = filter_input(INPUT_POST, 'extracharge');
+        
+        if(empty($extracharge)) {
+            // Если объём заказа в штуках, то наценка по умолчанию 35.
+            // Если в килограммах, то наценку берём из таблицы extracharge.
+            $extracharge = 35;
+            
+            if($unit == "kg") {
+                // Тип наценки:
+                $extracharge_type_id = 0;
+                
+                if($work_type_id == 1) {
+                    // 1 - без печати
+                    $extracharge_type_id = 1;
+                }
+                elseif(empty ($lamination1_brand_name)) {
+                    // 2 - печать без ламинации
+                    $extracharge_type_id = 2;
+                }
+                elseif(empty ($lamination2_brand_name)) {
+                    // 3 - печать с одной ламинацией
+                    $extracharge_type_id = 3;
+                }
+                else {
+                    // 4 - печать с двумя ламинациями
+                    $extracharge_type_id = 4;
+                }
+                
+                $sql_ec = "select value from extracharge where from_weight <= $quantity and to_weight >= $quantity and extracharge_type_id = $extracharge_type_id order by id limit 1";
+                $fetcher_ec = new Fetcher($sql_ec);
+                
+                if($row_ec = $fetcher_ec->Fetch()) {
+                    $extracharge = $row_ec[0];
+                }
+            }
+        }
         
         // Данные о цвете
         for($i=1; $i<=8; $i++) {
@@ -724,7 +758,7 @@ if(isset($row['status_id'])) $status_id = $row['status_id'];
 else $status_id = null;
 
 if(isset($row['extracharge'])) $extracharge = $row['extracharge'];
-else $extracharge = 0;
+else $extracharge = null;
 
 // Данные о цветах
 for ($i=1; $i<=8; $i++) {
@@ -809,7 +843,7 @@ for ($i=1; $i<=8; $i++) {
                 <div class="col-5" id="left_side">
                     <form method="post">
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-                        <input type="hidden" id="h_extracharge" name="h_extracharge" class="extracharge" value="<?=$extracharge ?>" />
+                        <input type="hidden" id="extracharge" name="extracharge" class="extracharge" value="<?=$extracharge ?>" />
                         <input type="hidden" id="scroll" name="scroll" />
                         <?php if(null === filter_input(INPUT_GET, 'id') || filter_input(INPUT_GET, 'mode') == 'recalc'): ?>
                         <h1>Новый расчет</h1>
