@@ -1303,7 +1303,7 @@ $num_for_customer = $row['num_for_customer'];
                     
                             <?php if(!empty($techmap_id)): ?>
                             <a href="<?=APPLICATION.'/techmap/details.php?id='.$techmap_id ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Посмотреть тех. карту</a>
-                                <?php elseif (!empty($calculation_result_id) && false): ?>
+                                <?php elseif (!empty($calculation_result_id)): ?>
                             <form method="post" action="<?=APPLICATION ?>/techmap/create.php" class="d-inline-block">
                                 <input type="hidden" name="calculation_id" value="<?=$id ?>" />
                                 <button type="submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Составить тех. карту</button>

@@ -16,7 +16,7 @@ include 'left_bar.php';
             </li>
             <?php
             endif;
-            if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager')) && false):
+            if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager'))):
             ?>
             <li class="nav-item">
                 <a class="nav-link<?=$techmap_status ?>" href="<?=APPLICATION ?>/techmap/">Технологические карты</a>
