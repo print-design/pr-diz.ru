@@ -279,32 +279,32 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $streams_count_valid = ISINVALID;
             $form_valid = false;
         }
-
-        // Если печать с ламинацией, то проверяем ещё и максимальную ширину для ламинации
-        if(!empty(filter_input(INPUT_POST, 'lamination1_brand_name'))) {
-            $laminator_max_width = 0;
+    }
+    
+    // Если печать с ламинацией, то проверяем ещё и максимальную ширину для ламинации
+    if(!empty(filter_input(INPUT_POST, 'lamination1_brand_name'))) {
+        $laminator_max_width = 0;
         
-            $sql = "select max_width from norm_laminator order by id desc limit 1";
-            $fetcher = new Fetcher($sql);
+        $sql = "select max_width from norm_laminator order by id desc limit 1";
+        $fetcher = new Fetcher($sql);
         
-            if($row = $fetcher->Fetch()) {
-                $laminator_max_width = $row['max_width'];
-            }
+        if($row = $fetcher->Fetch()) {
+            $laminator_max_width = $row['max_width'];
+        }
         
-            if($sum_stream_widths > $laminator_max_width) {
-                $stream_width_valid_message = "Сумма ручьёв для ламинации не более $laminator_max_width мм";
-                $streams_count_valid_message = $stream_width_valid_message;
-                $stream_width_valid = ISINVALID;
-                $streams_count_valid = ISINVALID;
-                $form_valid = false;
-            }
+        if($sum_stream_widths > $laminator_max_width) {
+            $stream_width_valid_message = "Сумма ручьёв для ламинации не более $laminator_max_width мм";
+            $streams_count_valid_message = $stream_width_valid_message;
+            $stream_width_valid = ISINVALID;
+            $streams_count_valid = ISINVALID;
+            $form_valid = false;
         }
     }
     
     // Длина этикетки вдоль рапорта, умноженная на количество этикеток на ручье
     // Должна соответствовать рапорту
     //if($length * $number_on_raport != $raport) {
-    if(round($raport / $number_on_raport, 4) != $length) {
+    if(!empty($raport) && !empty($number_on_raport) && !empty($length) && round($raport / $number_on_raport, 4) != $length) {
         $raport_valid = ISINVALID;
         $length_valid = ISINVALID;
         $number_on_raport_valid = ISINVALID;
