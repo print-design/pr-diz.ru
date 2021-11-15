@@ -332,8 +332,6 @@ function OrderLink($param) {
                 language: "ru"
             });
             
-            
-            
             // Заполнение информации о заказчике
             $('a.customer').click(function(e) {
                 var customer_id = $(e.target).attr('data-customer-id');

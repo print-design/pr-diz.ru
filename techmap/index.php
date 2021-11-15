@@ -21,6 +21,7 @@ function OrderLink($param) {
         <?php
         include '../include/head.php';
         ?>
+        <link href="<?=APPLICATION ?>/css/select2.min.css" rel="stylesheet"/>
     </head>
     <body>
         <?php
@@ -50,6 +51,63 @@ function OrderLink($param) {
                     }
                     ?>
                     <div class="d-inline ml-3" style="color: gray; font-size: x-large;"><?=$pager_total_count ?></div>
+                </div>
+                <div class="p-1 text-nowrap">
+                    <?php $order = filter_input(INPUT_GET, 'order'); ?>
+                    <form class="form-inline d-inline" method="get">
+                        <?php if(null !== $order): ?>
+                        <input type="hidden" name="order" value="<?= $order ?>" />
+                        <?php endif; ?>
+                        <select id="customer" name="customer" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Заказчик...</option>
+                            <?php
+                            $sql = "select distinct cus.id, cus.name from calculation c inner join techmap tm on tm.calculation_id = c.id inner join customer cus on c.customer_id = cus.id order by cus.name";
+                            $fetcher = new Fetcher($sql);
+                            
+                            while ($row = $fetcher->Fetch()):
+                            ?>
+                            <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'customer') ? " selected='selected'" : "") ?>><?=$row['name'] ?></option>
+                            <?php endwhile; ?>
+                        </select>
+                        <select id="name" name="name" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Имя заказа...</option>
+                            <?php
+                            $sql = "select distinct c.name, (select id from calculation where name=c.name limit 1) id from calculation c inner join techmap tm on tm.calculation_id = c.id order by name";
+                            $fetcher = new Fetcher($sql);
+                            
+                            while($row = $fetcher->Fetch()):
+                            ?>
+                            <option value="<?= $row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'name') ? " selected='selected'" : "") ?>><?= $row['name'] ?></option>
+                            <?php endwhile; ?>
+                        </select>
+                        <select id="unit" name="unit" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Шт/кг...</option>
+                            <option value="thing"<?= filter_input(INPUT_GET, 'unit') == 'thing' ? " selected='selected'" : "" ?>>Шт</option>
+                            <option value="kg"<?= filter_input(INPUT_GET, 'unit') == 'kg' ? " selected='selected'" : "" ?>>Кг</option>
+                        </select>
+                        <select id="work_type" name="work_type" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Тип работы...</option>
+                            <?php
+                            $sql = "select distinct wt.id, wt.name from calculation c inner join techmap tm on tm.calculation_id = c.id inner join work_type wt on c.work_type_id = wt.id order by wt.name";
+                            $fetcher = new Fetcher($sql);
+                            
+                            while ($row = $fetcher->Fetch()):
+                            ?>
+                            <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'work_type') ? " selected='selected'" : "") ?>><?=$row['name'] ?></option>
+                            <?php endwhile; ?>
+                        </select>
+                        <select id="manager" name="manager" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Менеджер...</option>
+                            <?php
+                            $sql = "select distinct u.id, u.last_name, u.first_name from calculation c inner join techmap tm on tm.calculation_id = c.id inner join user u on c.manager_id = u.id order by u.last_name";
+                            $fetcher = new Fetcher($sql);
+                            
+                            while ($row = $fetcher->Fetch()):
+                            ?>
+                            <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'manager') ? " selected='selected'" : "") ?>><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></option>
+                            <?php endwhile; ?>
+                        </select>
+                    </form>
                 </div>
             </div>
             <table class="table table-hover" id="content-table">
@@ -159,7 +217,42 @@ function OrderLink($param) {
         <?php
         include '../include/footer.php';
         ?>
+        <script src="<?=APPLICATION ?>/js/select2.min.js"></script>
+        <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
         <script>
+            // Список с  поиском
+            $('#customer').select2({
+                placeholder: "Заказчик...",
+                maximumSelectionLength: 1,
+                language: "ru"
+            });
+            
+            $('#name').select2({
+                placeholder: "Имя заказа...",
+                maximumSelectionLength: 1,
+                language: "ru"
+            });
+            
+            $('#unit').select2({
+                placeholder: "Шт/кг...",
+                maximumStatusLength: 1,
+                language: "ru",
+                width: '4rem'
+            })
+            
+            $('#work_type').select2({
+                placeholder: "Тип работы...",
+                maximumSelectionLength: 1,
+                language: "ru",
+                width: '10rem'
+            });
+            
+            $('#manager').select2({
+                placeholder: "Менеджер...",
+                maximumSelectionLength: 1,
+                language: "ru"
+            });
+            
             // Заполнение информации о заказчике
             $('a.customer').click(function(e) {
                 var customer_id = $(e.target).attr('data-customer-id');
