@@ -42,8 +42,44 @@ function OrderLink($param) {
                     // Фильтр
                     $where = '';
                     
+                    $customer = filter_input(INPUT_GET, 'customer');
+                    if(!empty($customer)) {
+                        if(empty($where)) $where = " where c.customer_id=$customer";
+                        else $where .= " and c.customer_id=$customer";
+                    }
+                    
+                    $name = addslashes(filter_input(INPUT_GET, 'name'));
+                    if(!empty($name)) {
+                        if(empty($where)) $where = " where c.name=(select name from calculation where id=$name)";
+                        else $where .= " and c.name=(select name from calculation where id=$name)";
+                    }
+                    
+                    $unit = filter_input(INPUT_GET, 'unit');
+                    if(!empty($unit)) {
+                        if(empty($where)) $where = " where c.unit='$unit'";
+                        else $where .= " and c.unit='$unit'";
+                    }
+                    
+                    $work_type = filter_input(INPUT_GET, 'work_type');
+                    if(!empty($work_type)) {
+                        if(empty($where)) $where = " where c.work_type_id=$work_type";
+                        else $where .= " and c.work_type_id=$work_type";
+                    }
+                    
+                    $manager = filter_input(INPUT_GET, 'manager');
+                    if(!empty($manager)) {
+                        if(empty($where)) $where = " where c.manager_id=$manager";
+                        else $where .= " and c.manager_id=$manager";
+                    }
+                    
+                    $customer = filter_input(INPUT_GET, 'customer');
+                    if(!empty($customer)) {
+                        if(empty($where)) $where = " where c.customer_id=$customer";
+                        else $where .= " and c.customer_id=$customer";
+                    }
+                    
                     // Общее количество технологических карт для установления количества страниц в постраничном выводе
-                    $sql = "select count(t.id) from techmap t$where";
+                    $sql = "select count(t.id) from techmap t inner join calculation c on t.calculation_id = c.id$where";
                     $fetcher = new Fetcher($sql);
                     
                     if($row = $fetcher->Fetch()) {
