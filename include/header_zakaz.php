@@ -19,7 +19,7 @@ include 'left_bar.php';
             if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager'))):
             ?>
             <li class="nav-item">
-                <a class="nav-link<?=$techmap_status ?>" href="<?=APPLICATION ?>/techmap/">Технологические карты</a>
+                <a class="nav-link<?=$techmap_status ?>" href="<?=APPLICATION ?>/techmap/<?= IsInRole('manager') ? BuildQuery("manager", GetUserId()) : "" ?>">Технологические карты</a>
             </li>
             <?php
             endif;
