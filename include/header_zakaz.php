@@ -9,21 +9,21 @@ include 'left_bar.php';
             $techmap_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/techmap')) == APPLICATION.'/techmap' ? ' disabled' : '';
             $schedule_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/schedule')) == APPLICATION.'/schedule' ? ' disabled' : '';
             
-            if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager', 'designer'))):
+            if(IsInRole(array('technologist', 'dev', 'manager', 'administrator', 'designer'))):
             ?>
             <li class="nav-item">
                 <a class="nav-link<?=$calculation_status ?>" href="<?=APPLICATION ?>/calculation/<?= IsInRole('manager') ? BuildQuery("manager", GetUserId()) : "" ?>">Расчеты</a>
             </li>
             <?php
             endif;
-            if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager'))):
+            if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))):
             ?>
             <li class="nav-item">
                 <a class="nav-link<?=$techmap_status ?>" href="<?=APPLICATION ?>/techmap/<?= IsInRole('manager') ? BuildQuery("manager", GetUserId()) : "" ?>">Технологические карты</a>
             </li>
             <?php
             endif;
-            if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager')) && false):
+            if(IsInRole(array('technologist', 'dev', 'manager', 'administrator')) && false):
             ?>
             <li class="nav-item">
                 <a class="nav-link<?=$schedule_status ?>" href="<?=APPLICATION ?>/schedule/">Расписание</a>

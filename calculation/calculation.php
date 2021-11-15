@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'manager', 'top_manager', 'designer'))) {
+if(!IsInRole(array('technologist', 'dev', 'manager', 'administrator', 'designer'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -1268,7 +1268,7 @@ $num_for_customer = $row['num_for_customer'];
                             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= IsInRole('manager') ? BuildQueryAddRemove('manager', GetUserId(), 'id') : BuildQueryRemove('id') ?>">К списку</a>
                         </div>
                         <div class="p-1">
-                            <?php if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager'))): ?>
+                            <?php if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))): ?>
                             <?php if(!empty($calculation_result_id)): ?>
                             <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Пересчитать</a>
                             <?php elseif(empty($row['paints_count'])): ?>
@@ -1614,7 +1614,7 @@ $num_for_customer = $row['num_for_customer'];
                                     <div class="form-group">
                                         <textarea id="comment" name="comment" rows="3" cols="40" class="form-control"><?= htmlentities($comment) ?></textarea>
                                     </div>
-                                    <?php if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager'))): ?>
+                                    <?php if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))): ?>
                                     <div class="form-group">
                                         <button type="submit" name="comment-submit" class="btn btn-outline-dark invisible">Сохранить</button>
                                     </div>

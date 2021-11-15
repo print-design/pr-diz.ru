@@ -53,7 +53,7 @@ include 'left_bar.php';
                 }
             }
             
-            if(IsInRole(array('technologist', 'dev', 'storekeeper', 'manager', 'top_manager'))):
+            if(IsInRole(array('technologist', 'dev', 'storekeeper', 'manager', 'administrator'))):
             ?>
             <li class='nav-item'>
                 <a class="nav-link<?=$rolls_status ?>" href="<?=APPLICATION ?>/roll/<?= BuildQueryRemove('page') ?>">Рулоны</a>

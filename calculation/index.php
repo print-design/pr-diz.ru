@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'manager', 'top_manager', 'designer'))) {
+if(!IsInRole(array('technologist', 'dev', 'manager', 'administrator', 'designer'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -144,7 +144,7 @@ function OrderLink($param) {
                             <?php endwhile; ?>
                         </select>
                     </form>
-                    <?php if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager'))): ?>
+                    <?php if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))): ?>
                     <a href="create.php" class="btn btn-outline-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
                     <?php endif; ?>
                 </div>

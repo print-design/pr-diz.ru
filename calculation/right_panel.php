@@ -521,7 +521,7 @@ elseif(!empty ($id) && !empty ($date)) {
         <div class="col-3">
             <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
                 <div class="text-nowrap" style="font-size: x-small;">Наценка</div>
-                <?php if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager'))): ?>
+                <?php if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))): ?>
                 <div class="input-group">
                     <input type="text" id="extracharge" name="extracharge" data-id="<?=$id ?>" style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" value="<?=$extracharge ?>" required="required" />
                     <div class="input-group-append" style="height: 28px;">
@@ -546,7 +546,7 @@ elseif(!empty ($id) && !empty ($date)) {
             </div>
         </div>
         <div class="col-3 text-right">
-            <?php if(IsInRole(array('technologist', 'dev', 'manager', 'top_manager'))): ?>
+            <?php if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))): ?>
             <form method="post" action="<?=APPLICATION ?>/calculation/export.php">
                 <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                 <button type="submit" class="btn btn-dark" id="export_calculation_submit" name="export_calculation_submit">Экспорт</button>
