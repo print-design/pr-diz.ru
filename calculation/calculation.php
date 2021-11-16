@@ -403,13 +403,13 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     }
         
     // Данные о форме
-    $cliche_flint = null;
-    $cliche_kodak = null;
-    $cliche_tver = null;
-    $cliche_film = null;
-    $cliche_tver_coeff = null;
-    $cliche_additional_size = null;
-    $cliche_scotch = null;
+    $cliche_flint = null; // Стоимость формы Флинт за см2
+    $cliche_kodak = null; // Стоимость формы Кодак за см2
+    $cliche_tver = null; // Стоимость тверской формы за см2
+    $cliche_film = null; // Стоимость плёнки для формы за см2
+    $cliche_tver_coeff = null; // Коэффициент удорожания для тверских форм
+    $cliche_additional_size = null; // Величина припуска
+    $cliche_scotch = null; // Стоимость скотча за м2
         
     $sql = "select flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, tver_coeff, overmeasure, scotch, scotch_currency "
             . "from norm_form order by id desc limit 1";
@@ -465,25 +465,25 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     }
         
     // Данные о красках
-    $paint_c = null;
-    $paint_c_expense = null;
-    $paint_m = null;
-    $paint_m_expense = null;
-    $paint_y = null;
-    $paint_y_expense = null;
-    $paint_k = null;
-    $paint_k_expense = null;
-    $paint_white = null;
-    $paint_white_expense = null;
-    $paint_panton = null;
-    $paint_panton_expense = null;
-    $paint_lacquer = null;
-    $paint_lacquer_expense = null;
-    $paint_paint_solvent = null;
-    $paint_solvent_etoxipropanol = null;
-    $paint_solvent_flexol82 = null;
-    $paint_lacquer_solvent = null;
-    $paint_min_price = null;
+    $paint_c = null; // Стоимость краски Cyan
+    $paint_c_expense = null; // Расход краски Cyan
+    $paint_m = null; // Стоимость краски Magenta
+    $paint_m_expense = null; // Расход краски Magenta
+    $paint_y = null; // Стоимость краски Yellow
+    $paint_y_expense = null; // Расход краски Yellow
+    $paint_k = null; // Стоимость краски Kontur
+    $paint_k_expense = null; // Расход краски Kontur
+    $paint_white = null; // Стоимость белой краски
+    $paint_white_expense = null; // Расход белой краски
+    $paint_panton = null; // Стоимость пантона
+    $paint_panton_expense = null; // Расход пантона
+    $paint_lacquer = null; // Стоимость лака
+    $paint_lacquer_expense = null; // Расход лака
+    $paint_paint_solvent = null; // Отношение краски к растворителю в процентах
+    $paint_solvent_etoxipropanol = null; // Стоимость этоксипропанола
+    $paint_solvent_flexol82 = null; // Стоимость флексоля 82
+    $paint_lacquer_solvent = null; // Отношение лака к растворителю в процентах
+    $paint_min_price = null; // Ограничение на минимальную стоимость в рублях
         
     $sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, paint_solvent, solvent_etoxipropanol, solvent_etoxipropanol_currency, solvent_flexol82, solvent_flexol82_currency, lacquer_solvent, min_price "
             . "from norm_paint order by id desc limit 1";
@@ -583,12 +583,12 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     }
     
     // Данные о клее при ламинации
-    $glue_price = null;
-    $glue_expense = null;
-    $glue_expense_pet = null;
-    $glue_solvent_price = null;
-    $glue_glue_part = null;
-    $glue_solvent_part = null;
+    $glue_price = null; // Стоимость клея
+    $glue_expense = null; // Расход клея
+    $glue_expense_pet = null; // Расход клея для ламинации ПЭТ
+    $glue_solvent_price = null; // Стоимость растворителя для клея
+    $glue_glue_part = null; // Доля клея в растворе
+    $glue_solvent_part = null; // Доля растворителя в растворе
         
     $sql = "select glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, glue_part, solvent_part from norm_glue order by id desc limit 1";
     $fetcher = new Fetcher($sql);
