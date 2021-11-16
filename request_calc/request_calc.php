@@ -731,10 +731,10 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     
     // Вес материала печати чистый, кг
     // площадь тиража чистая * удельный вес материала / 1000
-    $pure_density = 0;
+    $pure_weight = 0;
     
     if(!empty($c_density)) {
-        $pure_density = ($pure_area ?? 0) * $c_density / 1000;
+        $pure_weight = ($pure_area ?? 0) * $c_density / 1000;
     }
     else {
         $error_message = "Отсутствуют данные об удельном весе материала";
@@ -742,10 +742,10 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     
     // Вес материала печати с отходами, кг
     // площадь тиража с отходами * удельный вес материала / 1000
-    $dirty_density = 0;
+    $dirty_weight = 0;
     
     if(!empty($c_density)) {
-        $dirty_density = ($dirty_area ?? 0) * $c_density / 1000;
+        $dirty_weight = ($dirty_area ?? 0) * $c_density / 1000;
     }
     else {
         $error_message = "Отсутствуют данные об удельном весе материала";
@@ -760,7 +760,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $material_price = 0;
     }
     elseif(!empty($c_price)) {
-        $material_price = ($dirty_density ?? 0) * $c_price;
+        $material_price = ($dirty_weight ?? 0) * $c_price;
     }
     else {
         $error_message = "Отсутствуют данные о стоимости материала";
