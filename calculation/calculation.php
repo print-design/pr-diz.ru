@@ -77,99 +77,103 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_weight "
             . "from calculation c "
             . "where c.id=$id";
-    $row = (new Fetcher($sql))->Fetch();
+    if($row = (new Fetcher($sql))->Fetch())
+    {
+        $date = $row['date']; // Дата создания расчёта
+        $customer_id = $row['customer_id']; // ID заказчика
+        $name = $row['name']; // Наименование расчёта
+        $work_type_id = $row['work_type_id']; // Тип работы (Плёнка с печатью / Плёнка без печати)
+        $quantity = $row['quantity']; // Количество заказа (в рублях или штуках)
+        $unit = $row['unit']; // Единица количества заказа ('kg' или 'thing', соотв. рубли или штуки)
+        $brand_name = $row['brand_name']; // Марка плёнки (если выбиралась из списка)
+        $thickness = $row['thickness']; // Толщина плёнки (если выбиралась из списка)
+        $weight = $row['weight']; // Удельный вес плёнки (если выбиралась из списка)
+        $other_brand_name = $row['other_brand_name']; // Марка плёнки (если вводилась вручную)
+        $other_price = $row['other_price']; // Цена плёнки (если вводилась вручную)
+        $other_thickness = $row['other_thickness']; // Толщина плёнки (если вводилась вручную)
+        $other_weight = $row['other_weight']; // Удельный вес плёнки (если вводилась вручную)
+        $customers_material = $row['customers_material']; // Материал заказчика (ДА/НЕТ)
+        $lamination1_brand_name = $row['lamination1_brand_name']; // Марка плёнки ламинации 1 (если выбиралась из списка)
+        $lamination1_thickness = $row['lamination1_thickness']; // Толщина плёнки ламинации 1 (если выбиралась из списка)
+        $lamination1_weight = $row['lamination1_weight']; // Удельный вес плёнки ламинации 1 (если выбиралась из списка)
+        $lamination1_other_brand_name = $row['lamination1_other_brand_name']; // Марка плёнки ламинации 1 (если вводилась вручную)
+        $lamination1_other_price = $row['lamination1_other_price']; // Цена плёнки ламинации 1 (если вводилась вручную)
+        $lamination1_other_thickness = $row['lamination1_other_thickness']; // Толщина плёнки ламинации 1 (если вводилась вручную)
+        $lamination1_other_weight = $row['lamination1_other_weight']; // Удельный вес плёнки ламинации 1 (если вводилась вручную)
+        $lamination1_customers_material = $row['lamination1_customers_material']; // Ламинация 1 - материал заказчика (ДА/НЕТ)
+        $lamination2_brand_name = $row['lamination2_brand_name']; // Марка плёнки ламинации 2 (если выбиралась из списка)
+        $lamination2_thickness = $row['lamination2_thickness']; // Толщина плёнки ламинации 2 (если выбиралась из списка)
+        $lamination2_weight = $row['lamination2_weight']; // Удельный вес плёнки ламинации 2 (если выбиралась из списка)
+        $lamination2_other_brand_name = $row['lamination2_other_brand_name']; // Марка плёнки ламинации 2 (если вводилась вручную)
+        $lamination2_other_price = $row['lamination2_other_price']; // Цена плёнки ламинации 2 (если вводилась вручную)
+        $lamination2_other_thickness = $row['lamination2_other_thickness']; // Толщина плёнки ламинации 2 (если вводилась вручную)
+        $lamination2_other_weight = $row['lamination2_other_weight']; // Удельный вес плёнки ламинации 2 (если вводилась вручную)
+        $lamination2_customers_material = $row['lamination2_customers_material']; // Ламинация 2 - материал заказчика (ДА/НЕТ)
+        $length = $row['length']; // Длина этикетки вдоль рапорта вала
+        $stream_width = $row['stream_width']; // Ширина ручья
+        $streams_count = $row['streams_count']; // Количество ручьёв
+        $machine = $row['machine']; // Тип машины ('zbs' или 'comiflex')
+        $raport = $row['raport']; // Рапорт
+        $number_on_raport = $row['number_on_raport']; // Количество этикеток на ручье
+        $lamination_roller = $row['lamination_roller']; // Ширина вала ламинации
+        $paints_count = $row['paints_count']; // Количество красок
+        $manager_id = $row['manager_id']; // ID менеджера
 
-    $date = $row['date']; // Дата создания расчёта
-    $customer_id = $row['customer_id']; // ID заказчика
-    $name = $row['name']; // Наименование расчёта
-    $work_type_id = $row['work_type_id']; // Тип работы (Плёнка с печатью / Плёнка без печати)
-    $quantity = $row['quantity']; // Количество заказа (в рублях или штуках)
-    $unit = $row['unit']; // Единица количества заказа ('kg' или 'thing', соотв. рубли или штуки)
-    $brand_name = $row['brand_name']; // Марка плёнки (если выбиралась из списка)
-    $thickness = $row['thickness']; // Толщина плёнки (если выбиралась из списка)
-    $weight = $row['weight']; // Удельный вес плёнки (если выбиралась из списка)
-    $other_brand_name = $row['other_brand_name']; // Марка плёнки (если вводилась вручную)
-    $other_price = $row['other_price']; // Цена плёнки (если вводилась вручную)
-    $other_thickness = $row['other_thickness']; // Толщина плёнки (если вводилась вручную)
-    $other_weight = $row['other_weight']; // Удельный вес плёнки (если вводилась вручную)
-    $customers_material = $row['customers_material']; // Материал заказчика (ДА/НЕТ)
-    $lamination1_brand_name = $row['lamination1_brand_name']; // Марка плёнки ламинации 1 (если выбиралась из списка)
-    $lamination1_thickness = $row['lamination1_thickness']; // Толщина плёнки ламинации 1 (если выбиралась из списка)
-    $lamination1_weight = $row['lamination1_weight']; // Удельный вес плёнки ламинации 1 (если выбиралась из списка)
-    $lamination1_other_brand_name = $row['lamination1_other_brand_name']; // Марка плёнки ламинации 1 (если вводилась вручную)
-    $lamination1_other_price = $row['lamination1_other_price']; // Цена плёнки ламинации 1 (если вводилась вручную)
-    $lamination1_other_thickness = $row['lamination1_other_thickness']; // Толщина плёнки ламинации 1 (если вводилась вручную)
-    $lamination1_other_weight = $row['lamination1_other_weight']; // Удельный вес плёнки ламинации 1 (если вводилась вручную)
-    $lamination1_customers_material = $row['lamination1_customers_material']; // Ламинация 1 - материал заказчика (ДА/НЕТ)
-    $lamination2_brand_name = $row['lamination2_brand_name']; // Марка плёнки ламинации 2 (если выбиралась из списка)
-    $lamination2_thickness = $row['lamination2_thickness']; // Толщина плёнки ламинации 2 (если выбиралась из списка)
-    $lamination2_weight = $row['lamination2_weight']; // Удельный вес плёнки ламинации 2 (если выбиралась из списка)
-    $lamination2_other_brand_name = $row['lamination2_other_brand_name']; // Марка плёнки ламинации 2 (если вводилась вручную)
-    $lamination2_other_price = $row['lamination2_other_price']; // Цена плёнки ламинации 2 (если вводилась вручную)
-    $lamination2_other_thickness = $row['lamination2_other_thickness']; // Толщина плёнки ламинации 2 (если вводилась вручную)
-    $lamination2_other_weight = $row['lamination2_other_weight']; // Удельный вес плёнки ламинации 2 (если вводилась вручную)
-    $lamination2_customers_material = $row['lamination2_customers_material']; // Ламинация 2 - материал заказчика (ДА/НЕТ)
-    $length = $row['length']; // Длина этикетки вдоль рапорта вала
-    $stream_width = $row['stream_width']; // Ширина ручья
-    $streams_count = $row['streams_count']; // Количество ручьёв
-    $machine = $row['machine']; // Тип машины ('zbs' или 'comiflex')
-    $raport = $row['raport']; // Рапорт
-    $number_on_raport = $row['number_on_raport']; // Количество этикеток на ручье
-    $lamination_roller = $row['lamination_roller']; // Ширина вала ламинации
-    $paints_count = $row['paints_count']; // Количество красок
-    $manager_id = $row['manager_id']; // ID менеджера
-
-    // Заполнение переменных для красок:
-    // $paint_1, ..., $paint_8 - тип краски (CMYK / Пантон / Белый / Лак)
-    // $color_1, ..., $color_8 - номер пантона
-    // $cmyk_1, ..., $cmyk_8 - компонент CMYK (Cyan / Magenta / Yellow / Contour)
-    // $percent_1, ..., $percent_8 - процент краски
-    // $cliche_1, ..., $cliche_8 - форма (Старая / Новая Флинт / Новая Кодак / Новая Тверь)
-    for($i=1; $i<=8; $i++) {
-        $paint_var = "paint_$i";
-        if($i <= $paints_count) {
-            $$paint_var = $row[$paint_var];
-        }
-        else {
-            $$paint_var = null;
-        }
+        // Заполнение переменных для красок:
+        // $paint_1, ..., $paint_8 - тип краски (CMYK / Пантон / Белый / Лак)
+        // $color_1, ..., $color_8 - номер пантона
+        // $cmyk_1, ..., $cmyk_8 - компонент CMYK (Cyan / Magenta / Yellow / Contour)
+        // $percent_1, ..., $percent_8 - процент краски
+        // $cliche_1, ..., $cliche_8 - форма (Старая / Новая Флинт / Новая Кодак / Новая Тверь)
+        for($i=1; $i<=8; $i++) {
+            $paint_var = "paint_$i";
+            if($i <= $paints_count) {
+                $$paint_var = $row[$paint_var];
+            }
+            else {
+                $$paint_var = null;
+            }
         
-        $color_var = "color_$i";
-        if($i <= $paints_count) {
-            $$color_var = $row[$color_var];
-        }
-        else {
-            $$color_var = null;
-        }
+            $color_var = "color_$i";
+            if($i <= $paints_count) {
+                $$color_var = $row[$color_var];
+            }
+            else {
+                $$color_var = null;
+            }
         
-        $cmyk_var = "cmyk_$i";
-        if($i <= $paints_count) {
-            $$cmyk_var = $row[$cmyk_var];
-        }
-        else {
-            $$cmyk_var = null;
-        }
+            $cmyk_var = "cmyk_$i";
+            if($i <= $paints_count) {
+                $$cmyk_var = $row[$cmyk_var];
+            }
+            else {
+                $$cmyk_var = null;
+            }
         
         $percent_var = "percent_$i";
-        if($i <= $paints_count) {
-            $$percent_var = $row[$percent_var];
-        }
-        else {
-            $$percent_var = null;
-        }
+            if($i <= $paints_count) {
+                $$percent_var = $row[$percent_var];
+            }
+            else {
+                $$percent_var = null;
+            }
         
-        $cliche_var = "cliche_$i";
-        if($i <= $paints_count) {
-            $$cliche_var = $row["form_$i"];
+            $cliche_var = "cliche_$i";
+            if($i <= $paints_count) {
+                $$cliche_var = $row["form_$i"];
+            }
+            else {
+                $$cliche_var = null;
+            }
         }
-        else {
-            $$cliche_var = null;
-        }
-    }
 
-    $extracharge = $row['extracharge'];
-    $ski = $row['ski'];
-    $no_ski = $row['no_ski'];
+        $extracharge = $row['extracharge']; // Наценка
+        $ski = $row['ski']; // Ширина лыж
+        $no_ski = $row['no_ski']; // Печать без лыж (ДА/НЕТ)
+    }
+    else {
+        $error_message = "Ошибка при получении из базы исходных данных для расчёта";
+    }
     
     // Курс доллара и евро
     $euro = null;
@@ -208,15 +212,16 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     $c_price = null;
         
     if(empty($error_message)) {
-        if(!empty($other_price)) {
+        if(!empty($other_price)) { // Если материал вводился вручную, цена также введена вручную
             $c_price = $other_price;
         }
-        else if(!empty ($brand_name) && !empty ($thickness)) {
+        else if(!empty ($brand_name) && !empty ($thickness)) { // Если материал выбирался из списка, цену берём из базы
             $sql = "select price, currency from film_price where brand_name = '$brand_name' and thickness = $thickness and date <= current_timestamp() order by date desc limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 $c_price = $row['price'];
-                    
+                
+                // Если цена не в рублях, переводим её в рубли
                 if($row['currency'] == USD) {
                     $c_price *= $usd;
                 }
@@ -235,10 +240,10 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     $c_weight_lam1 = null;
         
     if(empty($error_message)) {
-        if(!empty($lamination1_other_weight)) {
+        if(!empty($lamination1_other_weight)) { // Если материал ламинации 1 введён вручную
             $c_weight_lam1 = $lamination1_other_weight;
         }
-        else {
+        else { // Если материал ламинации 1 выбран из списка
             $c_weight_lam1 = $lamination1_weight;
         }
             
@@ -251,10 +256,10 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     $c_price_lam1 = null;
         
     if(empty($error_message)) {
-        if(!empty($lamination1_other_price)) {
+        if(!empty($lamination1_other_price)) { // Если материал ламинации 1 введён вручную, цена также введена вручную
             $c_price_lam1 = $lamination1_other_price;
         }
-        else if(!empty ($lamination1_brand_name) && !empty ($lamination1_thickness)) {
+        else if(!empty ($lamination1_brand_name) && !empty ($lamination1_thickness)) { // Если материал ламинации 1 выбран из списка, цену берём из базы
             $sql = "select price, currency from film_price where brand_name = '$lamination1_brand_name' and thickness = $lamination1_thickness and date <= current_timestamp() order by date desc limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
@@ -278,10 +283,10 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     $c_weight_lam2 = null;
         
     if(empty($error_message)) {
-        if(!empty($lamination2_other_weight)) {
+        if(!empty($lamination2_other_weight)) { // Удельный вес ламинации 2 введён вручную
             $c_weight_lam2 = $lamination2_other_weight;
         }
-        else {
+        else { // Удельный вес ламинации 1 выбран из списка
             $c_weight_lam2 = $lamination2_weight;
         }
             
@@ -293,11 +298,11 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     // Цена ламинации 2
     $c_price_lam2 = null;
         
-    if(empty($error_message)) {
+    if(empty($error_message)) { // Если материал ламинации 2 введён вручную, цена также введена вручную
         if(!empty($lamination2_other_price)) {
             $c_price_lam2 = $lamination2_other_price;
         }
-        else if(!empty ($lamination2_brand_name) && !empty ($lamination2_thickness)) {
+        else if(!empty ($lamination2_brand_name) && !empty ($lamination2_thickness)) { // Если материал ламинации 2 выбран из списка, цену получаем из базы
             $sql = "select price, currency from film_price where brand_name = '$lamination2_brand_name' and thickness = $lamination2_thickness and date <= current_timestamp() order by date desc limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
@@ -317,10 +322,10 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         }
     }
         
-    // Данные о приладке (время приладки, метраж приладки, процент отходов)
-    $tuning_times = array();
-    $tuning_lengths = array();
-    $tuning_waste_percents = array();
+    // Данные о приладке для печати
+    $tuning_times = array(); // Массив - время приладки для каждой машины
+    $tuning_lengths = array(); // Массив - метраж приладки для каждой машины
+    $tuning_waste_percents = array(); // Массив - процент отходов для каждой машины
         
     $sql = "select machine_id, time, length, waste_percent "
             . "from norm_fitting "
@@ -332,9 +337,10 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $tuning_waste_percents[$row['machine_id']] = $row['waste_percent'];
     }
     
-    $laminator_tuning_time = null;
-    $laminator_tuning_length = null;
-    $laminator_tuning_waste_percent = null;
+    // Данные для приладки для ламинации
+    $laminator_tuning_time = null; // Время приладки ламинатора
+    $laminator_tuning_length = null; // Метраж приладки ламинатора
+    $laminator_tuning_waste_percent = null; // Процент отходов ламинатора
     
     $sql = "select time, length, waste_percent from norm_laminator_fitting order by id desc limit 1";
     $fetcher = new Fetcher($sql);
@@ -345,8 +351,8 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     }
         
     // Данные о машинах    
-    $machine_speeds = array();
-    $machine_prices = array();
+    $machine_speeds = array(); // Массив - скорость работы каждой машины
+    $machine_prices = array(); // Массов - стоимость работы каждой машины
         
     $sql = "select machine_id, price, speed "
             . "from norm_machine "
@@ -357,8 +363,9 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $machine_speeds[$row['machine_id']] = $row['speed'];
     }
     
-    $laminator_price = null;
-    $laminator_speed = null;
+    // Данные о ламинаторе
+    $laminator_price = null; // Скорость работы ламинатора
+    $laminator_speed = null; // Стоимость работы ламинатора
     
     $sql = "select price, speed from norm_laminator order by id desc limit 1";
     $fetcher = new Fetcher($sql);
@@ -367,8 +374,8 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $laminator_speed = $row['speed'];
     }
     
-    $machine_ids = array();
-    $machine_shortnames = array();
+    $machine_ids = array(); // Массив - идентификаторы каждой машины для поиска по наименованию
+    $machine_shortnames = array(); // Массив - наименования каждой машины для поиска по идентификатора
     
     $sql = "select id, shortname from machine";
     $fetcher = new Fetcher($sql);
@@ -377,6 +384,10 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $machine_shortnames[$row['id']] = $row['shortname'];
     }
     
+    // Идентификатор текущей машины
+    // Если тип машины "comiflex", текущая машина - Comiflex
+    // Если тип машины "zbs" и количество красок больше 6, то машина - ZBS3
+    // Если тип машины "zbs" и количество красок меньше или равно 6, то машина - ZBS1
     $machine_id = null;
     
     if(!empty($machine) && !empty($paints_count)) {
