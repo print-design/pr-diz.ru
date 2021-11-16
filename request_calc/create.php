@@ -42,7 +42,7 @@ $quantity_valid = '';
 $other_brand_name_valid = '';
 $other_price_valid = '';
 $other_thickness_valid = '';
-$other_weight_valid = '';
+$other_density_valid = '';
 
 $stream_width_valid = '';
 $stream_width_valid_message = "Ширина ручья обязательно";
@@ -121,7 +121,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     $other_brand_name = filter_input(INPUT_POST, 'other_brand_name');
     $other_price = filter_input(INPUT_POST, 'other_price');
     $other_thickness = filter_input(INPUT_POST, 'other_thickness');
-    $other_weight = filter_input(INPUT_POST, 'other_weight');
+    $other_density = filter_input(INPUT_POST, 'other_density');
     
     if($brand_name == OTHER) {
         // Проверка валидности параметров, введённых вручную при выборе марки плёнки "Другая"
@@ -140,8 +140,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
             $form_valid = false;
         }
         
-        if(empty($other_weight)) {
-            $other_weight_valid = ISINVALID;
+        if(empty($other_density)) {
+            $other_density_valid = ISINVALID;
             $form_valid = false;
         }
     }
@@ -318,7 +318,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         if(empty($thickness)) $thickness = "NULL";
         if(empty($other_price)) $other_price = "NULL";
         if(empty($other_thickness)) $other_thickness = "NULL";
-        if(empty($other_weight)) $other_weight = "NULL";
+        if(empty($other_density)) $other_density = "NULL";
         $unit = filter_input(INPUT_POST, 'unit');
         $machine = filter_input(INPUT_POST, 'machine');
         
@@ -330,8 +330,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         if(empty($lamination1_other_price)) $lamination1_other_price = "NULL";
         $lamination1_other_thickness = filter_input(INPUT_POST, 'lamination1_other_thickness');
         if(empty($lamination1_other_thickness)) $lamination1_other_thickness = "NULL";
-        $lamination1_other_weight = filter_input(INPUT_POST, 'lamination1_other_weight');
-        if(empty($lamination1_other_weight)) $lamination1_other_weight = "NULL";
+        $lamination1_other_density = filter_input(INPUT_POST, 'lamination1_other_density');
+        if(empty($lamination1_other_density)) $lamination1_other_density = "NULL";
         $lamination1_customers_material = 0;
         if(filter_input(INPUT_POST, 'lamination1_customers_material') == 'on') {
             $lamination1_customers_material = 1;
@@ -345,8 +345,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         if(empty($lamination2_other_price)) $lamination2_other_price = "NULL";
         $lamination2_other_thickness = filter_input(INPUT_POST, 'lamination2_other_thickness');
         if(empty($lamination2_other_thickness)) $lamination2_other_thickness = "NULL";
-        $lamination2_other_weight = filter_input(INPUT_POST, 'lamination2_other_weight');
-        if(empty($lamination2_other_weight)) $lamination2_other_weight = "NULL";
+        $lamination2_other_density = filter_input(INPUT_POST, 'lamination2_other_density');
+        if(empty($lamination2_other_density)) $lamination2_other_density = "NULL";
         $lamination2_customers_material = 0;
         if(filter_input(INPUT_POST, 'lamination2_customers_material') == 'on') {
             $lamination2_customers_material = 1;
@@ -436,9 +436,9 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
             // Если mode = recalc или пустой id, то создаём новый объект
             if(filter_input(INPUT_GET, 'mode') == 'recalc' || empty(filter_input(INPUT_GET, 'id'))) {
                 $sql = "insert into request_calc (customer_id, name, work_type_id, unit, machine, "
-                        . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
-                        . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
-                        . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
+                        . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_density, customers_material, "
+                        . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_density, lamination1_customers_material, "
+                        . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_density, lamination2_customers_material, "
                         . "quantity, streams_count, length, stream_width, raport, number_on_raport, lamination_roller, paints_count, manager_id, extracharge, ski_width, no_ski, "
                         . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
                         . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -446,9 +446,9 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
                         . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
                         . "values($customer_id, '$name', $work_type_id, '$unit', '$machine', "
-                        . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, "
-                        . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_other_brand_name', $lamination1_other_price, $lamination1_other_thickness, $lamination1_other_weight, $lamination1_customers_material, "
-                        . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_other_brand_name', $lamination2_other_price, $lamination2_other_thickness, $lamination2_other_weight, $lamination2_customers_material, "
+                        . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_density, $customers_material, "
+                        . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_other_brand_name', $lamination1_other_price, $lamination1_other_thickness, $lamination1_other_density, $lamination1_customers_material, "
+                        . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_other_brand_name', $lamination2_other_price, $lamination2_other_thickness, $lamination2_other_density, $lamination2_customers_material, "
                         . "$quantity, $streams_count, $length, $stream_width, $raport, $number_on_raport, $lamination_roller, $paints_count, $manager_id, $extracharge, $ski_width, $no_ski, "
                         . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
                         . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
@@ -463,14 +463,14 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                 $sql = "update request_calc "
                         . "set customer_id=$customer_id, name='$name', work_type_id=$work_type_id, unit='$unit', machine='$machine', "
                         . "brand_name='$brand_name', thickness=$thickness, other_brand_name='$other_brand_name', other_price=$other_price, "
-                        . "other_thickness=$other_thickness, other_weight=$other_weight, customers_material=$customers_material, "
+                        . "other_thickness=$other_thickness, other_density=$other_density, customers_material=$customers_material, "
                         . "lamination1_brand_name='$lamination1_brand_name', lamination1_thickness=$lamination1_thickness, "
                         . "lamination1_other_brand_name='$lamination1_other_brand_name', lamination1_other_price=$lamination1_other_price, "
-                        . "lamination1_other_thickness=$lamination1_other_thickness, lamination1_other_weight=$lamination1_other_weight, "
+                        . "lamination1_other_thickness=$lamination1_other_thickness, lamination1_other_density=$lamination1_other_density, "
                         . "lamination1_customers_material=$lamination1_customers_material, "
                         . "lamination2_brand_name='$lamination2_brand_name', lamination2_thickness=$lamination2_thickness, "
                         . "lamination2_other_brand_name='$lamination2_other_brand_name', lamination2_other_price=$lamination2_other_price, "
-                        . "lamination2_other_thickness=$lamination2_other_thickness, lamination2_other_weight=$lamination2_other_weight, "
+                        . "lamination2_other_thickness=$lamination2_other_thickness, lamination2_other_density=$lamination2_other_density, "
                         . "lamination2_customers_material=$lamination2_customers_material, "
                         . "quantity=$quantity, streams_count=$streams_count, length=$length, stream_width=$stream_width, raport=$raport, "
                         . "number_on_raport=$number_on_raport, "
@@ -506,9 +506,9 @@ if(empty($id)) {
 
 if(!empty($id)) {
     $sql = "select date, customer_id, name, work_type_id, unit, machine, "
-            . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
-            . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
-            . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
+            . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_density, customers_material, "
+            . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_density, lamination1_customers_material, "
+            . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_density, lamination2_customers_material, "
             . "quantity, streams_count, length, stream_width, raport, number_on_raport, lamination_roller, paints_count, extracharge, ski_width, no_ski, "
             . "(select id from techmap where request_calc_id = $id limit 1) techmap_id, "
             . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
@@ -571,10 +571,10 @@ if(null === $other_thickness) {
     else $other_thickness = null;
 }
 
-$other_weight = filter_input(INPUT_POST, 'other_weight');
-if(null === $other_weight) {
-    if(isset($row['other_weight'])) $other_weight = $row['other_weight'];
-    else $other_weight = null;
+$other_density = filter_input(INPUT_POST, 'other_density');
+if(null === $other_density) {
+    if(isset($row['other_density'])) $other_density = $row['other_density'];
+    else $other_density = null;
 }
 
 if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
@@ -627,10 +627,10 @@ if(null === $lamination1_other_thickness) {
     else $lamination1_other_thickness = null;
 }
 
-$lamination1_other_weight = filter_input(INPUT_POST, 'lamination1_other_weight');
-if(null === $lamination1_other_weight) {
-    if(isset($row['lamination1_other_weight'])) $lamination1_other_weight = $row['lamination1_other_weight'];
-    else $lamination1_other_weight = null;
+$lamination1_other_density = filter_input(INPUT_POST, 'lamination1_other_density');
+if(null === $lamination1_other_density) {
+    if(isset($row['lamination1_other_density'])) $lamination1_other_density = $row['lamination1_other_density'];
+    else $lamination1_other_density = null;
 }
 
 if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
@@ -671,10 +671,10 @@ if(null === $lamination2_other_thickness) {
     else $lamination2_other_thickness = null;
 }
 
-$lamination2_other_weight = filter_input(INPUT_POST, 'lamination2_other_weight');
-if(null === $lamination2_other_weight) {
-    if(isset($row['lamination2_other_weight'])) $lamination2_other_weight = $row['lamination2_other_weight'];
-    else $lamination2_other_weight = null;
+$lamination2_other_density = filter_input(INPUT_POST, 'lamination2_other_density');
+if(null === $lamination2_other_density) {
+    if(isset($row['lamination2_other_density'])) $lamination2_other_density = $row['lamination2_other_density'];
+    else $lamination2_other_density = null;
 }
 
 if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
@@ -1097,18 +1097,18 @@ for ($i=1; $i<=8; $i++) {
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="other_weight">Удельный вес, г/м<sup>2</sup></label>
+                                    <label for="other_density">Удельный вес, г/м<sup>2</sup></label>
                                     <input type="text" 
-                                           id="other_weight" 
-                                           name="other_weight" 
+                                           id="other_density" 
+                                           name="other_density" 
                                            class="form-control float-only" 
                                            placeholder="Удельный вес" 
-                                           value="<?= empty($other_weight) ? '' : floatval($other_weight) ?>" 
+                                           value="<?= empty($other_density) ? '' : floatval($other_density) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'other_weight'); $(this).attr('name', 'other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
+                                           onmouseup="javascript: $(this).attr('id', 'other_density'); $(this).attr('name', 'other_density'); $(this).attr('placeholder', 'Удельный вес')" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'other_weight'); $(this).attr('name', 'other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
-                                           onfocusout="javascript: $(this).attr('id', 'other_weight'); $(this).attr('name', 'other_weight'); $(this).attr('placeholder', 'Удельный вес')" />
+                                           onkeyup="javascript: $(this).attr('id', 'other_density'); $(this).attr('name', 'other_density'); $(this).attr('placeholder', 'Удельный вес')" 
+                                           onfocusout="javascript: $(this).attr('id', 'other_density'); $(this).attr('name', 'other_density'); $(this).attr('placeholder', 'Удельный вес')" />
                                     <div class="invalid-feedback">Удельный вес обязательно</div>
                                 </div>
                             </div>
@@ -1250,18 +1250,18 @@ for ($i=1; $i<=8; $i++) {
                                 </div>
                                 <div class="col-5">
                                     <div class="form-group">
-                                        <label for="lamination1_other_weight">Удельный вес, г/м<sup>2</sup></label>
+                                        <label for="lamination1_other_density">Удельный вес, г/м<sup>2</sup></label>
                                         <input type="text" 
-                                               id="lamination1_other_weight" 
-                                               name="lamination1_other_weight" 
+                                               id="lamination1_other_density" 
+                                               name="lamination1_other_density" 
                                                class="form-control float-only" 
                                                placeholder="Удельный вес" 
-                                               value="<?= empty($lamination1_other_weight) ? '' : floatval($lamination1_other_weight) ?>" 
+                                               value="<?= empty($lamination1_other_density) ? '' : floatval($lamination1_other_density) ?>" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'lamination1_other_weight'); $(this).attr('name', 'lamination1_other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
+                                               onmouseup="javascript: $(this).attr('id', 'lamination1_other_density'); $(this).attr('name', 'lamination1_other_density'); $(this).attr('placeholder', 'Удельный вес')" 
                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'lamination1_other_weight'); $(this).attr('name', 'lamination1_other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
-                                               onfocusout="javascript: $(this).attr('id', 'lamination1_other_weight'); $(this).attr('name', 'lamination1_other_weight'); $(this).attr('placeholder', 'Удельный вес')" />
+                                               onkeyup="javascript: $(this).attr('id', 'lamination1_other_density'); $(this).attr('name', 'lamination1_other_density'); $(this).attr('placeholder', 'Удельный вес')" 
+                                               onfocusout="javascript: $(this).attr('id', 'lamination1_other_density'); $(this).attr('name', 'lamination1_other_density'); $(this).attr('placeholder', 'Удельный вес')" />
                                         <div class="invalid-feedback">Удельный вес обязательно</div>
                                     </div>
                                 </div>
@@ -1398,18 +1398,18 @@ for ($i=1; $i<=8; $i++) {
                                     </div>
                                     <div class="col-5">
                                         <div class="form-group">
-                                            <label for="lamination2_other_weight">Удельный вес, г/м<sup>2</sup></label>
+                                            <label for="lamination2_other_density">Удельный вес, г/м<sup>2</sup></label>
                                             <input type="text" 
-                                                   id="lamination2_other_weight" 
-                                                   name="lamination2_other_weight" 
+                                                   id="lamination2_other_density" 
+                                                   name="lamination2_other_density" 
                                                    class="form-control float-only" 
                                                    placeholder="Удельный вес" 
-                                                   value="<?= empty($lamination2_other_weight) ? '' : floatval($lamination2_other_weight) ?>" 
+                                                   value="<?= empty($lamination2_other_density) ? '' : floatval($lamination2_other_density) ?>" 
                                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_other_weight'); $(this).attr('name', 'lamination2_other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
+                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_other_density'); $(this).attr('name', 'lamination2_other_density'); $(this).attr('placeholder', 'Удельный вес')" 
                                                    onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_other_weight'); $(this).attr('name', 'lamination2_other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
-                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_other_weight'); $(this).attr('name', 'lamination2_other_weight'); $(this).attr('placeholder', 'Удельный вес')" />
+                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_other_density'); $(this).attr('name', 'lamination2_other_density'); $(this).attr('placeholder', 'Удельный вес')" 
+                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_other_density'); $(this).attr('name', 'lamination2_other_density'); $(this).attr('placeholder', 'Удельный вес')" />
                                             <div class="invalid-feedback">Удельный вес обязательно</div>
                                         </div>
                                     </div>

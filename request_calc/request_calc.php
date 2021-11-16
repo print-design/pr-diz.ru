@@ -62,9 +62,9 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     $id = filter_input(INPUT_POST, 'id');
     
     $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c.unit, "
-            . "c.brand_name, c.thickness, other_brand_name, other_price, other_thickness, other_weight, c.customers_material, "
-            . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, c.lamination1_customers_material, "
-            . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, c.lamination2_customers_material, "
+            . "c.brand_name, c.thickness, other_brand_name, other_price, other_thickness, other_density, c.customers_material, "
+            . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_density, c.lamination1_customers_material, "
+            . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_density, c.lamination2_customers_material, "
             . "c.length, c.stream_width, c.streams_count, c.machine, c.raport, c.number_on_raport, c.lamination_roller, c.paints_count, c.manager_id, "
             . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -72,42 +72,42 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
             . "c.form_1, c.form_2, c.form_3, form_4, form_5, form_6, form_7, form_8, "
             . "c.extracharge, c.ski_width, c.no_ski, "
-            . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) weight, "
-            . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
-            . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_weight "
+            . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) density, "
+            . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_density, "
+            . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_density "
             . "from request_calc c "
             . "where c.id=$id";
     if($row = (new Fetcher($sql))->Fetch())
     {
         $date = $row['date']; // Дата создания расчёта
         $customer_id = $row['customer_id']; // ID заказчика
-        $name = $row['name']; // Наименование расчёта
+        $request_name = $row['name']; // Наименование расчёта
         $work_type_id = $row['work_type_id']; // Тип работы (Плёнка с печатью / Плёнка без печати)
         $quantity = $row['quantity']; // Объём заказа (в рублях или штуках)
         $unit = $row['unit']; // Единица объёма заказа ('kg' или 'pieces', соотв. рубли или штуки)
         $brand_name = $row['brand_name']; // Марка плёнки (если выбиралась из списка)
         $thickness = $row['thickness']; // Толщина плёнки (если выбиралась из списка)
-        $weight = $row['weight']; // Удельный вес плёнки (если выбиралась из списка)
+        $density = $row['density']; // Удельный вес плёнки (если выбиралась из списка)
         $other_brand_name = $row['other_brand_name']; // Марка плёнки (если вводилась вручную)
         $other_price = $row['other_price']; // Цена плёнки (если вводилась вручную)
         $other_thickness = $row['other_thickness']; // Толщина плёнки (если вводилась вручную)
-        $other_weight = $row['other_weight']; // Удельный вес плёнки (если вводилась вручную)
+        $other_density = $row['other_density']; // Удельный вес плёнки (если вводилась вручную)
         $customers_material = $row['customers_material']; // Материал заказчика (ДА/НЕТ)
         $lamination1_brand_name = $row['lamination1_brand_name']; // Марка плёнки ламинации 1 (если выбиралась из списка)
         $lamination1_thickness = $row['lamination1_thickness']; // Толщина плёнки ламинации 1 (если выбиралась из списка)
-        $lamination1_weight = $row['lamination1_weight']; // Удельный вес плёнки ламинации 1 (если выбиралась из списка)
+        $lamination1_density = $row['lamination1_density']; // Удельный вес плёнки ламинации 1 (если выбиралась из списка)
         $lamination1_other_brand_name = $row['lamination1_other_brand_name']; // Марка плёнки ламинации 1 (если вводилась вручную)
         $lamination1_other_price = $row['lamination1_other_price']; // Цена плёнки ламинации 1 (если вводилась вручную)
         $lamination1_other_thickness = $row['lamination1_other_thickness']; // Толщина плёнки ламинации 1 (если вводилась вручную)
-        $lamination1_other_weight = $row['lamination1_other_weight']; // Удельный вес плёнки ламинации 1 (если вводилась вручную)
+        $lamination1_other_density = $row['lamination1_other_density']; // Удельный вес плёнки ламинации 1 (если вводилась вручную)
         $lamination1_customers_material = $row['lamination1_customers_material']; // Ламинация 1 - материал заказчика (ДА/НЕТ)
         $lamination2_brand_name = $row['lamination2_brand_name']; // Марка плёнки ламинации 2 (если выбиралась из списка)
         $lamination2_thickness = $row['lamination2_thickness']; // Толщина плёнки ламинации 2 (если выбиралась из списка)
-        $lamination2_weight = $row['lamination2_weight']; // Удельный вес плёнки ламинации 2 (если выбиралась из списка)
+        $lamination2_density = $row['lamination2_density']; // Удельный вес плёнки ламинации 2 (если выбиралась из списка)
         $lamination2_other_brand_name = $row['lamination2_other_brand_name']; // Марка плёнки ламинации 2 (если вводилась вручную)
         $lamination2_other_price = $row['lamination2_other_price']; // Цена плёнки ламинации 2 (если вводилась вручную)
         $lamination2_other_thickness = $row['lamination2_other_thickness']; // Толщина плёнки ламинации 2 (если вводилась вручную)
-        $lamination2_other_weight = $row['lamination2_other_weight']; // Удельный вес плёнки ламинации 2 (если вводилась вручную)
+        $lamination2_other_density = $row['lamination2_other_density']; // Удельный вес плёнки ламинации 2 (если вводилась вручную)
         $lamination2_customers_material = $row['lamination2_customers_material']; // Ламинация 2 - материал заказчика (ДА/НЕТ)
         $length = $row['length']; // Длина этикетки вдоль рапорта вала
         $stream_width = $row['stream_width']; // Ширина ручья
@@ -193,17 +193,17 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     }
         
     // Удельный вес
-    $c_weight = null;
+    $c_density = null;
         
     if(empty($error_message)) {
-        if(!empty($other_weight)) {
-            $c_weight = $other_weight;
+        if(!empty($other_density)) {
+            $c_density = $other_density;
         }
         else {
-            $c_weight = $weight;
+            $c_density = $density;
         }
         
-        if(empty($c_weight)) {
+        if(empty($c_density)) {
             $error_message = "Для данной толщины плёнки не задан удельный вес";
         }
     }
@@ -237,17 +237,17 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     }
         
     // Удельный вес ламинации 1
-    $c_weight_lam1 = null;
+    $c_density_lam1 = null;
         
     if(empty($error_message)) {
-        if(!empty($lamination1_other_weight)) { // Если материал ламинации 1 введён вручную
-            $c_weight_lam1 = $lamination1_other_weight;
+        if(!empty($lamination1_other_density)) { // Если материал ламинации 1 введён вручную
+            $c_density_lam1 = $lamination1_other_density;
         }
         else { // Если материал ламинации 1 выбран из списка
-            $c_weight_lam1 = $lamination1_weight;
+            $c_density_lam1 = $lamination1_density;
         }
             
-        if(!empty($lamination1_brand_name) && !empty($lamination1_thickness) && empty($c_weight_lam1)) {
+        if(!empty($lamination1_brand_name) && !empty($lamination1_thickness) && empty($c_density_lam1)) {
             $error_message = "Для данной толщина ламинации 1 не задан удельный вес";
         }
     }
@@ -274,23 +274,23 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             }
         }
             
-        if(empty($c_price_lam1) && !empty($c_weight_lam1)) {
+        if(empty($c_price_lam1) && !empty($c_density_lam1)) {
             $error_message = "Для данной толщины ламинации 1 не указана цена";
         }
     }
         
     // Удельный вес ламинации 2
-    $c_weight_lam2 = null;
+    $c_density_lam2 = null;
         
     if(empty($error_message)) {
-        if(!empty($lamination2_other_weight)) { // Удельный вес ламинации 2 введён вручную
-            $c_weight_lam2 = $lamination2_other_weight;
+        if(!empty($lamination2_other_density)) { // Удельный вес ламинации 2 введён вручную
+            $c_density_lam2 = $lamination2_other_density;
         }
         else { // Удельный вес ламинации 1 выбран из списка
-            $c_weight_lam2 = $lamination2_weight;
+            $c_density_lam2 = $lamination2_density;
         }
             
-        if(!empty($lamination2_brand_name) && !empty($lamination2_thickness) && empty($c_weight_lam2)) {
+        if(!empty($lamination2_brand_name) && !empty($lamination2_thickness) && empty($c_density_lam2)) {
             $error_message = "Для данной толщины ламинации 2 не задан удельный вес";
         }
     }
@@ -317,7 +317,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             }
         }
             
-        if(empty($c_price_lam2) && !empty($c_weight_lam2)) {
+        if(empty($c_price_lam2) && !empty($c_density_lam2)) {
             $error_message = "Для данной толщины ламинации 2 не указана цена";
         }
     }
@@ -625,8 +625,8 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     // если в шт: ширина ручья / 1000 * длина этикетки вдоль рапорта вала / 1000 * количество этикеток в заказе
     $pure_area = 0;
         
-    if($unit == 'kg' && !empty($quantity) && !empty($c_weight)) {
-        $pure_area = 1000 * $quantity / ($c_weight + (empty($c_weight_lam1) ? 0 : $c_weight_lam1) + (empty($c_weight_lam2) ? 0 : $c_weight_lam2));
+    if($unit == 'kg' && !empty($quantity) && !empty($c_density)) {
+        $pure_area = 1000 * $quantity / ($c_density + (empty($c_density_lam1) ? 0 : $c_density_lam1) + (empty($c_density_lam2) ? 0 : $c_density_lam2));
     }
     else if($unit == 'pieces' && !empty ($stream_width) && !empty ($length) && !empty ($quantity)) {
         $pure_area = $stream_width / 1000 * $length / 1000 * $quantity;
@@ -731,10 +731,10 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     
     // Вес материала печати чистый, кг
     // площадь тиража чистая * удельный вес материала / 1000
-    $pure_weight = 0;
+    $pure_density = 0;
     
-    if(!empty($c_weight)) {
-        $pure_weight = ($pure_area ?? 0) * $c_weight / 1000;
+    if(!empty($c_density)) {
+        $pure_density = ($pure_area ?? 0) * $c_density / 1000;
     }
     else {
         $error_message = "Отсутствуют данные об удельном весе материала";
@@ -742,10 +742,10 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     
     // Вес материала печати с отходами, кг
     // площадь тиража с отходами * удельный вес материала / 1000
-    $dirty_weight = 0;
+    $dirty_density = 0;
     
-    if(!empty($c_weight)) {
-        $dirty_weight = ($dirty_area ?? 0) * $c_weight / 1000;
+    if(!empty($c_density)) {
+        $dirty_density = ($dirty_area ?? 0) * $c_density / 1000;
     }
     else {
         $error_message = "Отсутствуют данные об удельном весе материала";
@@ -760,7 +760,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $material_price = 0;
     }
     elseif(!empty($c_price)) {
-        $material_price = ($dirty_weight ?? 0) * $c_price;
+        $material_price = ($dirty_density ?? 0) * $c_price;
     }
     else {
         $error_message = "Отсутствуют данные о стоимости материала";
@@ -985,11 +985,11 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     if(!empty($lamination1_brand_name)) {
         // Вес материала ламинации 1 чистый, кг
         // площадь тиража чистая * удельный вес ламинации 1 / 1000
-        $pure_weight_lam1 = ($pure_area ?? 0) * ($c_weight_lam1 ?? 0) / 1000;
+        $pure_weight_lam1 = ($pure_area ?? 0) * ($c_density_lam1 ?? 0) / 1000;
                         
         // Вес материала ламинации 1 с отходами, кг
         // (длина тиража с ламинацией + длина материала для приладки при ламинации) * ширина тиража с отходами (в метрах) * удельный вес ламинации 1 / 1000
-        $dirty_weight_lam1 = (($pure_length_lam ?? 0) + $laminator_tuning_length) * ($dirty_width ?? 0) / 1000 * ($c_weight_lam1 ?? 0) / 1000;
+        $dirty_weight_lam1 = (($pure_length_lam ?? 0) + $laminator_tuning_length) * ($dirty_width ?? 0) / 1000 * ($c_density_lam1 ?? 0) / 1000;
             
         // Стоимость материала ламинации 1, руб
         // если материал заказчика, то стоимость равна 0
@@ -1036,11 +1036,11 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     if(!empty($lamination2_brand_name)) {
         // Вес материала ламинации 2 чистый, кг
         // площадь тиража чистая * удельный вес ламинации 1 / 1000
-        $pure_weight_lam2 = ($pure_area ?? 0) * ($c_weight_lam2 ?? 0) / 1000;
+        $pure_weight_lam2 = ($pure_area ?? 0) * ($c_density_lam2 ?? 0) / 1000;
                         
         // Вес материала ламинации 2 с отходами 2, кг
         // (длина тиража с ламинацией + длина материала для приладки при ламинации) * ширина тиража с отходами (в метрах) * удельный вес ламинации 1 / 1000
-        $dirty_weight_lam2 = (($pure_length_lam ?? 0) + $laminator_tuning_length) * $dirty_width / 1000 * $c_weight_lam2 / 1000;
+        $dirty_weight_lam2 = (($pure_length_lam ?? 0) + $laminator_tuning_length) * $dirty_width / 1000 * $c_density_lam2 / 1000;
             
         // Стоимость материала ламинации 2, руб
         // удельная стоимость материала ламинации * вес материала с отходами
@@ -1081,11 +1081,11 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         
     // Вес материала готовой продукции чистый
     // площадь тиража чистая * удельный вес материала + удельный вес ламинации 1 + удельный вес ламинации 2 / 1000
-    $pure_weight_total = ($pure_area ?? 0) * (($c_weight ?? 0) + ($c_weight_lam1 ?? 0) + ($c_weight_lam2 ?? 0)) / 1000;
+    $pure_weight_total = ($pure_area ?? 0) * (($c_density ?? 0) + ($c_density_lam1 ?? 0) + ($c_density_lam2 ?? 0)) / 1000;
         
     // Вес материала готовой продукции с отходами
     // площадь тиража с отходами * удельный вес материала + удельный вес ламинации 1 + удельный вес ламинации 2 / 1000
-    $dirty_weight_total = ($dirty_area ?? 0) * (($c_weight ?? 0) + ($c_weight_lam1 ?? 0) + ($c_weight_lam2 ?? 0)) / 1000;
+    $dirty_weight_total = ($dirty_area ?? 0) * (($c_density ?? 0) + ($c_density_lam1 ?? 0) + ($c_density_lam2 ?? 0)) / 1000;
         
     //***************************************************************************
         
@@ -1228,9 +1228,9 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
 $id = filter_input(INPUT_GET, 'id');
 
 $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c.unit, "
-        . "c.brand_name, c.thickness, other_brand_name, other_price, other_thickness, other_weight, c.customers_material, "
-        . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, c.lamination1_customers_material, "
-        . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, c.lamination2_customers_material, "
+        . "c.brand_name, c.thickness, other_brand_name, other_price, other_thickness, other_density, c.customers_material, "
+        . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_density, c.lamination1_customers_material, "
+        . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_density, c.lamination2_customers_material, "
         . "c.length, c.stream_width, c.streams_count, c.machine, c.raport, c.number_on_raport, c.lamination_roller, c.paints_count, "
         . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
         . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -1244,9 +1244,9 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
         . "wt.name work_type, "
         . "(select count(id) from request_calc where customer_id = c.customer_id and id <= c.id) num_for_customer, "
-        . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) weight, "
-        . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
-        . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_weight "
+        . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) density, "
+        . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_density, "
+        . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_density "
         . "from request_calc c "
         . "left join customer cu on c.customer_id = cu.id "
         . "left join work_type wt on c.work_type_id = wt.id "
@@ -1255,33 +1255,33 @@ $row = (new Fetcher($sql))->Fetch();
 
 $date = $row['date'];
 $customer_id = $row['customer_id'];
-$name = $row['name'];
+$request_name = $row['name'];
 $work_type_id = $row['work_type_id'];
 $quantity = $row['quantity'];
 $unit = $row['unit'];
 $brand_name = $row['brand_name'];
 $thickness = $row['thickness'];
-$weight = $row['weight'];
+$density = $row['density'];
 $other_brand_name = $row['other_brand_name'];
 $other_price = $row['other_price'];
 $other_thickness = $row['other_thickness'];
-$other_weight = $row['other_weight'];
+$other_density = $row['other_density'];
 $customers_material = $row['customers_material'];
 $lamination1_brand_name = $row['lamination1_brand_name'];
 $lamination1_thickness = $row['lamination1_thickness'];
-$lamination1_weight = $row['lamination1_weight'];
+$lamination1_density = $row['lamination1_density'];
 $lamination1_other_brand_name = $row['lamination1_other_brand_name'];
 $lamination1_other_price = $row['lamination1_other_price'];
 $lamination1_other_thickness = $row['lamination1_other_thickness'];
-$lamination1_other_weight = $row['lamination1_other_weight'];
+$lamination1_other_density = $row['lamination1_other_density'];
 $lamination1_customers_material = $row['lamination1_customers_material'];
 $lamination2_brand_name = $row['lamination2_brand_name'];
 $lamination2_thickness = $row['lamination2_thickness'];
-$lamination2_weight = $row['lamination2_weight'];
+$lamination2_density = $row['lamination2_density'];
 $lamination2_other_brand_name = $row['lamination2_other_brand_name'];
 $lamination2_other_price = $row['lamination2_other_price'];
 $lamination2_other_thickness = $row['lamination2_other_thickness'];
-$lamination2_other_weight = $row['lamination2_other_weight'];
+$lamination2_other_density = $row['lamination2_other_density'];
 $lamination2_customers_material = $row['lamination2_customers_material'];
 $length = $row['length'];
 $stream_width = $row['stream_width'];
@@ -1406,7 +1406,7 @@ $num_for_customer = $row['num_for_customer'];
                         </div>
                     </div>
             
-                    <h1 style="font-size: 32px; font-weight: 600;"><?= htmlentities($name) ?></h1>
+                    <h1 style="font-size: 32px; font-weight: 600;"><?= htmlentities($request_name) ?></h1>
                     <h2 style="font-size: 26px;">№<?=$customer_id."-".$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
                     <?php if(!empty($techmap_id)): ?>
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px green; color: green;">
@@ -1445,7 +1445,7 @@ $num_for_customer = $row['num_for_customer'];
                     ?>
                     <table class="w-100 calculation-table">
                         <tr><th>Заказчик</th><td class="param-value"><?=$customer ?></td></tr>
-                        <tr><th>Название заказа</th><td class="param-value"><?=$name ?></td></tr>
+                        <tr><th>Название заказа</th><td class="param-value"><?=$request_name ?></td></tr>
                         <tr><th>Тип работы</th><td class="param-value"><?=$work_type ?></td></tr>
                             <?php
                             if(!empty($quantity) && !empty($unit)):
@@ -1513,7 +1513,7 @@ $num_for_customer = $row['num_for_customer'];
                                 <table class="w-100">
                                     <tr>
                                         <td><?=$brand_name ?></td>
-                                        <td><?= number_format($thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                                        <td><?= number_format($thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                                         <td class="w-25"><?=$customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                                     </tr>
                                 </table>
@@ -1526,7 +1526,7 @@ $num_for_customer = $row['num_for_customer'];
                                 <table class="w-100">
                                     <tr>
                                         <td><?=$other_brand_name ?></td>
-                                        <td><?= number_format($other_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($other_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                                        <td><?= number_format($other_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($other_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                                         <td class="w-25"><?=$customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                                     </tr>
                                 </table>
@@ -1545,7 +1545,7 @@ $num_for_customer = $row['num_for_customer'];
                                 <table class="w-100">
                                     <tr>
                                         <td><?=$lamination1_brand_name ?></td>
-                                        <td><?= number_format($lamination1_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                                        <td><?= number_format($lamination1_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                                         <td class="w-25"><?=$lamination1_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                                     </tr>
                                     <?php
@@ -1553,13 +1553,13 @@ $num_for_customer = $row['num_for_customer'];
                                     ?>
                                     <tr>
                                         <td><?=$lamination2_brand_name ?></td>
-                                        <td><?= number_format($lamination2_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                                        <td><?= number_format($lamination2_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                                         <td class="w-25"><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                                     </tr>
                                     <?php elseif(!empty($lamination2_other_brand_name)): ?>
                                     <tr>
                                         <td><?=$lamination2_other_brand_name ?></td>
-                                        <td><?= number_format($lamination2_other_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_other_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                                        <td><?= number_format($lamination2_other_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_other_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                                         <td class="w-25"><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                                     </tr>
                                     <?php endif; ?>
@@ -1568,7 +1568,7 @@ $num_for_customer = $row['num_for_customer'];
                                 <table class="w-100">
                                     <tr>
                                         <td><?=$lamination1_other_brand_name ?></td>
-                                        <td><?= number_format($lamination1_other_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_other_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                                        <td><?= number_format($lamination1_other_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_other_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                                         <td class="w-25"><?=$lamination1_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                                     </tr>
                                     <?php
@@ -1576,13 +1576,13 @@ $num_for_customer = $row['num_for_customer'];
                                     ?>
                                     <tr>
                                         <td><?=$lamination2_brand_name ?></td>
-                                        <td><?= number_format($lamination2_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                                        <td><?= number_format($lamination2_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                                         <td class="w-25"><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                                     </tr>
                                     <?php elseif(!empty($lamination2_other_brand_name)): ?>
                                     <tr>
                                         <td><?=$lamination2_other_brand_name ?></td>
-                                        <td><?= number_format($lamination2_other_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_other_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                                        <td><?= number_format($lamination2_other_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_other_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                                         <td class="w-25"><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                                     </tr>
                                     <?php endif; ?>
