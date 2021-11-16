@@ -83,8 +83,8 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $customer_id = $row['customer_id']; // ID заказчика
         $name = $row['name']; // Наименование расчёта
         $work_type_id = $row['work_type_id']; // Тип работы (Плёнка с печатью / Плёнка без печати)
-        $quantity = $row['quantity']; // Количество заказа (в рублях или штуках)
-        $unit = $row['unit']; // Единица количества заказа ('kg' или 'thing', соотв. рубли или штуки)
+        $quantity = $row['quantity']; // Объём заказа (в рублях или штуках)
+        $unit = $row['unit']; // Единица объёма заказа ('kg' или 'thing', соотв. рубли или штуки)
         $brand_name = $row['brand_name']; // Марка плёнки (если выбиралась из списка)
         $thickness = $row['thickness']; // Толщина плёнки (если выбиралась из списка)
         $weight = $row['weight']; // Удельный вес плёнки (если выбиралась из списка)
@@ -621,7 +621,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     // НАЧАЛО РАСЧЁТОВ
         
     // Площадь тиража чистая, м2
-    // если в кг: 1000 * вес заказа / удельный вес материала
+    // если в кг: 1000 * объём заказа / удельный вес материала
     // если в шт: ширина ручья / 1000 * длина этикетки вдоль рапорта вала / 1000 * количество этикеток в заказе
     $pure_area = 0;
         
@@ -752,8 +752,8 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     }
     
     // Стоимость материала печати, руб
-    // вес материала печати с отходами * цена материала за 1 кг
-    // Если сырьё заказчика, то стоимость материала 0
+    // если сырьё заказчика, то стоимость материала равна 0
+    // иначе: вес материала печати с отходами * цена материала за 1 кг
     $material_price = null;
         
     if($customers_material) {
@@ -972,16 +972,15 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     }
         
     //***************************************************
+    // СТОИМОСТЬ ЛАМИНАЦИИ
+    
+    $price_lam_total = 0; // Итого стоимость ламинации, руб
         
-    // Итого себестоимость ламинации, руб
-    // материал1 + материал2 + клей1 + клей2 + процесс1 + процесс2
-    $price_lam_total = 0;
-        
-    $pure_weight_lam1 = null;
-    $dirty_weight_lam1 = null;
-    $price_lam1_material = null;
-    $price_lam1_glue = null;
-    $price_lam1_work = null;
+    $pure_weight_lam1 = null; // Вес материала ламинации 1 чистый, кг
+    $dirty_weight_lam1 = null; // Вес материала ламинации 1 с отходами, кг
+    $price_lam1_material = null; // Стоимость материала ламинации 1, руб
+    $price_lam1_glue = null; // Стоимость клеевого раствора 1, руб
+    $price_lam1_work = null; // Стоимость процесса ламинации 1, руб
                     
     if(!empty($lamination1_brand_name)) {
         // Вес материала ламинации 1 чистый, кг
@@ -993,7 +992,8 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $dirty_weight_lam1 = (($pure_length_lam ?? 0) + $laminator_tuning_length) * ($dirty_width ?? 0) / 1000 * ($c_weight_lam1 ?? 0) / 1000;
             
         // Стоимость материала ламинации 1, руб
-        // удельная стоимость материала ламинации * вес материала с отходами
+        // если материал заказчика, то стоимость равна 0
+        // иначе удельная стоимость материала ламинации * вес материала с отходами
         if($lamination1_customers_material) {
             $price_lam1_material = 0;
         }
@@ -1009,25 +1009,29 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
         // Если марка плёнки начинается на pet
         // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
-        $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense * (($pure_length_lam ?? 0) * $lamination_roller / 1000 + $laminator_tuning_length);
+        $price_lam1_glue = null;
             
         if(stripos($brand_name, 'pet') === 0 || stripos($lamination1_brand_name, 'pet') === 0) {
             $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense_pet * (($pure_length_lam ?? 0) * $lamination_roller / 1000 + $laminator_tuning_length);
+        }
+        else {
+            $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense * (($pure_length_lam ?? 0) * $lamination_roller / 1000 + $laminator_tuning_length);
         }
             
         // Стоимость процесса ламинации 1, руб
         // стоимость работы оборудования + (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования
         $price_lam1_work = $laminator_price + (($pure_length_lam ?? 0) / 1000 / $laminator_speed) * $laminator_price;
             
-        // Итого
+        // Итого стоимость ламинации 1, руб
+        // материал1 + клей1 + процесс1
         $price_lam_total += ($price_lam1_material ?? 0) + ($price_lam1_glue ?? 0) + ($price_lam1_work ?? 0);
     }
         
-    $pure_weight_lam2 = null;
-    $dirty_weight_lam2 = null;
-    $price_lam2_material = null;
-    $price_lam2_glue = null;
-    $price_lam2_work = null;
+    $pure_weight_lam2 = null; // Вес материала ламинации 2 чистый, кг
+    $dirty_weight_lam2 = null; // Вес материала ламинации 2 с отходами 2, кг
+    $price_lam2_material = null; // Стоимость материала ламинации 2, руб
+    $price_lam2_glue = null; // Стоимость клеевого раствора 2, руб
+    $price_lam2_work = null; // Стоимость процесса ламинации 2, руб
         
     if(!empty($lamination2_brand_name)) {
         // Вес материала ламинации 2 чистый, кг
@@ -1055,17 +1059,21 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
         // Если марка плёнки начинается на pet
         // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
-        $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense * (($pure_length_lam ?? 0) * $lamination_roller / 1000 + $laminator_tuning_length);
+        $price_lam2_glue = null;
             
         if(stripos($lamination2_brand_name, 'pet') === 0) {
             $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense_pet * (($pure_length_lam ?? 0) * $lamination_roller / 1000 + $laminator_tuning_length);
+        }
+        else {
+            $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense * (($pure_length_lam ?? 0) * $lamination_roller / 1000 + $laminator_tuning_length);
         }
             
         // Стоимость процесса ламинации 2, руб
         // стоимость работы оборудования + (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования
         $price_lam2_work = $laminator_price + (($pure_length_lam ?? 0) / 1000 / $laminator_speed) * $laminator_price;
             
-        // Итого
+        // Итого стоимость ламинации, руб
+        // материал1 + материал2 + клей1 + клей2 + процесс1 + процесс2
         $price_lam_total += ($price_lam2_material ?? 0) + ($price_lam2_glue ?? 0) + ($price_lam2_work ?? 0);
     }
         
@@ -1091,47 +1099,67 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     $cost_with_cliche = ($cost_no_cliche ?? 0) + ($cliche_price ?? 0);
         
     // Итого себестоимость за 1 кг без форм, руб
-    // итого себестоимость без форм / вес заказа
+    // итого себестоимость без форм / j,]`v заказа
     $cost_no_cliche_kg = null;
-        
-    if($unit != "kg" || empty($quantity)) {
-        $cost_no_cliche_kg = 0;
+    
+    if($unit == "kg") {
+        if(!empty($quantity)) {
+            $cost_no_cliche_kg = ($cost_no_cliche ?? 0) / $quantity;
+        }
+        else {
+            $error_message = "Отсутствуют данные об объёме заказа";
+        }
     }
-    else if(!empty ($cost_no_cliche)) {
-        $cost_no_cliche_kg = ($cost_no_cliche ?? 0) / $quantity;
+    else {
+        $cost_no_cliche_kg = 0;
     }
         
     // Итого себестоимость за 1 кг с формами, руб
-    // итого стоимость с формами / вес заказа
+    // итого стоимость с формами / объём заказа
     $cost_with_cliche_kg = null;
-        
-    if($unit != "kg" || empty($quantity)) {
-        $cost_with_cliche_kg = 0;
+    
+    if($unit == "kg") {
+        if(!empty($quantity)) {
+            $cost_with_cliche_kg = ($cost_with_cliche ?? 0) / $quantity;
+        }
+        else {
+            $error_message = "Отсутствуют данные об объёме заказа";
+        }
     }
-    else if(!empty ($cost_with_cliche)) {
-        $cost_with_cliche_kg = ($cost_with_cliche ?? 0) / $quantity;
+    else {
+        $cost_with_cliche_kg = 0;
     }
         
     // Итого себестоимость за 1 шт без форм, руб
-    // итого себестоимость без форм / вес заказа
+    // итого себестоимость без форм / объём заказа
     $cost_no_cliche_thing = null;
-        
-    if($unit != "thing" || empty($quantity)) {
-        $cost_no_cliche_thing = 0;
+    
+    if($unit == "thing") {
+        if(!empty($quantity)) {
+            $cost_no_cliche_thing = ($cost_no_cliche ?? 0) / $quantity;
+        }
+        else {
+            $error_message = "Отсутствуют данные об объёме заказа";
+        }
     }
-    else if(!empty ($cost_no_cliche)) {
-        $cost_no_cliche_thing = ($cost_no_cliche ?? 0) / $quantity;
+    else {
+        $cost_no_cliche_thing = 0;
     }
         
     // Итого себестоимость за 1 шт с формами, руб
-    // итого стоимость с формами / вес заказа
+    // итого стоимость с формами / объём заказа
     $cost_with_cliche_thing = null;
-        
-    if($unit != "thing" || empty($quantity)) {
-        $cost_with_cliche_thing = 0;
+    
+    if($unit == "thing") {
+        if(!empty($quantity)) {
+            $cost_with_cliche_thing = ($cost_with_cliche ?? 0) / $quantity;
+        }
+        else {
+            $error_message = "Отсутствуют данные об объёме заказа";
+        }
     }
-    else if(!empty ($cost_with_cliche)) {
-        $cost_with_cliche_thing = ($cost_with_cliche ?? 0) / $quantity;
+    else {
+        $cost_with_cliche_thing = 0;
     }
     
     // *************************************

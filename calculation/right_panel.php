@@ -850,7 +850,7 @@ elseif(!empty ($id) && !empty ($date)) {
             <h2 class="mt-2">Подробности</h2>
             
             <div class="param-name">Площадь тиража чистая</div>
-            <div class="algorithm">если в кг: 1000 * вес заказа / удельный вес материала и ламинации</div>
+            <div class="algorithm">если в кг: 1000 * объём заказа / удельный вес материала и ламинации</div>
             <div class="algorithm">если в шт: ширина ручья / 1000 * длина этикетки вдоль рапорта вала / 1000 * количество этикеток в заказе</div>
             <?php if($unit == 'kg'): ?>
             <div class="value mb-2"><?="1000 * $quantity / (".$c_weight.(empty($c_weight_lam1) ? "" : " + ".$c_weight_lam1).(empty($c_weight_lam2) ? "" : " + ".$c_weight_lam2).") = ".$pure_area ?></div>
@@ -1208,21 +1208,21 @@ elseif(!empty ($id) && !empty ($date)) {
             
             <?php if($unit == "kg" && !empty($quantity)): ?>
             <div class="param-name">Итого себестоимость за 1 кг без форм</div>
-            <div class="algorithm">итого себестоимость без форм / вес заказа</div>
+            <div class="algorithm">итого себестоимость без форм / объём заказа</div>
             <div class="value mb-2"><?=($cost_no_cliche ?? 0)." / ".($quantity ?? 0)." = $cost_no_cliche_kg" ?></div>
             
             <div class="param-name">Итого себестоимость за 1 кг с формами</div>
-            <div class="algorithm">итого стоимость с формами / вес заказа</div>
+            <div class="algorithm">итого стоимость с формами / объём заказа</div>
             <div class="value mb-2"><?=($cost_with_cliche ?? 0)." / ".($quantity ?? 0)." = $cost_with_cliche_kg" ?></div>
             <?php endif; ?>
             
             <?php if($unit == "thing" && !empty($quantity)): ?>
             <div class="param-name">Итого себестоимость за 1 шт без форм</div>
-            <div class="algorithm">итого себестоимость без форм / количество заказа</div>
+            <div class="algorithm">итого себестоимость без форм / объём заказа</div>
             <div class="value mb-2"><?=($cost_no_cliche ?? 0)." / ".($quantity ?? 0)." = $cost_no_cliche_thing" ?></div>
             
             <div class="param-name">Итого себестоимость за 1 шт с формами</div>
-            <div class="algorithm">итого стоимость с формами / количество заказа</div>
+            <div class="algorithm">итого стоимость с формами / объём заказа</div>
             <div class="value mb-2"><?=($cost_with_cliche ?? 0)." / ".($quantity ?? 0)." = $cost_with_cliche_thing" ?></div>
             <?php endif; ?>
         </div>
