@@ -183,7 +183,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     $raport = filter_input(INPUT_POST, 'raport');
     $number_on_raport = filter_input(INPUT_POST, 'number_on_raport');
     $lamination_roller = filter_input(INPUT_POST, 'lamination_roller');
-    $ski = filter_input(INPUT_POST, 'ski');
+    $ski_width = filter_input(INPUT_POST, 'ski_width');
     
     $no_ski = 0;
     if(filter_input(INPUT_POST, 'no_ski') == 'on') {
@@ -272,8 +272,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
             $streams_count_valid = ISINVALID;
             $form_valid = false;
         }
-        elseif(!$no_ski && ($sum_stream_widths + $ski) > $machine_max_width) {
-            $stream_width_valid_message = "Сумма ручьёв для печати (минус лыжи) не более ".($machine_max_width - $ski)." мм";
+        elseif(!$no_ski && ($sum_stream_widths + $ski_width) > $machine_max_width) {
+            $stream_width_valid_message = "Сумма ручьёв для печати (минус лыжи) не более ".($machine_max_width - $ski_width)." мм";
             $streams_count_valid_message = $stream_width_valid_message;
             $stream_width_valid = ISINVALID;
             $streams_count_valid = ISINVALID;
@@ -359,7 +359,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         if(empty($number_on_raport)) $number_on_raport = "NULL";
         if(empty($lamination_roller)) $lamination_roller = "NULL";
         
-        if(empty($ski)) $ski = "NULL";
+        if(empty($ski_width)) $ski_width = "NULL";
         $paints_count = filter_input(INPUT_POST, 'paints_count');
         if(empty($paints_count)) $paints_count = "NULL";
         
@@ -439,7 +439,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
                         . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
                         . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
-                        . "quantity, streams_count, length, stream_width, raport, number_on_raport, lamination_roller, paints_count, manager_id, extracharge, ski, no_ski, "
+                        . "quantity, streams_count, length, stream_width, raport, number_on_raport, lamination_roller, paints_count, manager_id, extracharge, ski_width, no_ski, "
                         . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
                         . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                         . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -449,7 +449,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, "
                         . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_other_brand_name', $lamination1_other_price, $lamination1_other_thickness, $lamination1_other_weight, $lamination1_customers_material, "
                         . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_other_brand_name', $lamination2_other_price, $lamination2_other_thickness, $lamination2_other_weight, $lamination2_customers_material, "
-                        . "$quantity, $streams_count, $length, $stream_width, $raport, $number_on_raport, $lamination_roller, $paints_count, $manager_id, $extracharge, $ski, $no_ski, "
+                        . "$quantity, $streams_count, $length, $stream_width, $raport, $number_on_raport, $lamination_roller, $paints_count, $manager_id, $extracharge, $ski_width, $no_ski, "
                         . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
                         . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                         . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
@@ -475,7 +475,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "quantity=$quantity, streams_count=$streams_count, length=$length, stream_width=$stream_width, raport=$raport, "
                         . "number_on_raport=$number_on_raport, "
                         . "lamination_roller=$lamination_roller, paints_count=$paints_count, manager_id=$manager_id, "
-                        . "extracharge=$extracharge, ski=$ski, no_ski=$no_ski, "
+                        . "extracharge=$extracharge, ski_width=$ski_width, no_ski=$no_ski, "
                         . "paint_1='$paint_1', paint_2='$paint_2', paint_3='$paint_3', paint_4='$paint_4', "
                         . "paint_5='$paint_5', paint_6='$paint_6', paint_7='$paint_7', paint_8='$paint_8', "
                         . "color_1='$color_1', color_2='$color_2', color_3='$color_3', color_4='$color_4', "
@@ -509,7 +509,7 @@ if(!empty($id)) {
             . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
             . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
-            . "quantity, streams_count, length, stream_width, raport, number_on_raport, lamination_roller, paints_count, extracharge, ski, no_ski, "
+            . "quantity, streams_count, length, stream_width, raport, number_on_raport, lamination_roller, paints_count, extracharge, ski_width, no_ski, "
             . "(select id from techmap where request_calc_id = $id limit 1) techmap_id, "
             . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -736,10 +736,10 @@ if(null === $paints_count) {
     else $paints_count = null;
 }
 
-$ski = filter_input(INPUT_POST, 'ski');
-if(null == $ski) {
-    if(isset($row['ski'])) $ski = $row['ski'];
-    else $ski = null;
+$ski_width = filter_input(INPUT_POST, 'ski_width');
+if(null == $ski_width) {
+    if(isset($row['ski_width'])) $ski_width = $row['ski_width'];
+    else $ski_width = null;
 }
 
 if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
@@ -1576,16 +1576,16 @@ for ($i=1; $i<=8; $i++) {
                                     $disabled = $no_ski == 1 ? " disabled='disabled'" : "";
                                     ?>
                                     <input<?=$disabled ?> type="text" 
-                                           id="ski" 
-                                           name="ski" 
+                                           id="ski_width" 
+                                           name="ski_width" 
                                            class="form-control int-only print-only d-none" 
                                            placeholder="Ширина лыж, мм" 
-                                           value="<?= empty($ski) ? 20 : intval($ski) ?>" 
+                                           value="<?= empty($ski_width) ? 20 : intval($ski_width) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'ski'); $(this).attr('name', 'ski'); $(this).attr('placeholder', 'Ширина лыж, мм');" 
+                                           onmouseup="javascript: $(this).attr('id', 'ski_width'); $(this).attr('name', 'ski_width'); $(this).attr('placeholder', 'Ширина лыж, мм');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'ski'); $(this).attr('name', 'ski'); $(this).attr('placeholder', 'Ширина лыж, мм');" 
-                                           onfocusout="javascript: $(this).attr('id', 'ski'); $(this).attr('name', 'ski'); $(this).attr('placeholder', 'Ширина лыж, мм');" />
+                                           onkeyup="javascript: $(this).attr('id', 'ski_width'); $(this).attr('name', 'ski_width'); $(this).attr('placeholder', 'Ширина лыж, мм');" 
+                                           onfocusout="javascript: $(this).attr('id', 'ski_width'); $(this).attr('name', 'ski_width'); $(this).attr('placeholder', 'Ширина лыж, мм');" />
                                     <div class="invalid-feedback">Ширина лыж обязательно</div>
                                 </div>
                             </div>
@@ -1877,10 +1877,10 @@ for ($i=1; $i<=8; $i++) {
                 no_ski_checked = $(this).is(':checked');
                 
                 if(no_ski_checked) {
-                    $('#ski').attr('disabled', 'disabled');
+                    $('#ski_width').attr('disabled', 'disabled');
                 }
                 else {
-                    $('#ski').removeAttr('disabled');
+                    $('#ski_width').removeAttr('disabled');
                 }
             });
             

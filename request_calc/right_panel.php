@@ -887,7 +887,7 @@ elseif(!empty ($id) && !empty ($date)) {
             <?php if($no_ski): ?>
             <div class="value mb-2"><?="$pure_width = $dirty_width" ?></div>
             <?php else: ?>
-            <div class="value mb-2"><?="$pure_width + $ski = $dirty_width" ?></div>
+            <div class="value mb-2"><?="$pure_width + $ski_width = $dirty_width" ?></div>
             <?php endif; ?>
             
             <div class="param-name">Площадь тиража с отходами</div>

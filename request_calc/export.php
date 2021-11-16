@@ -34,7 +34,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
             . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
             . "c.form_1, c.form_2, c.form_3, form_4, form_5, form_6, form_7, form_8, "
-            . "c.extracharge, c.ski, c.no_ski, "
+            . "c.extracharge, c.ski_width, c.no_ski, "
             . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
             . "wt.name work_type, "
             . "u.last_name, u.first_name, "
@@ -87,7 +87,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     $paints_count = $row['paints_count'];
     
     $extracharge = $row['extracharge'];
-    $ski = $row['ski'];
+    $ski_width = $row['ski_width'];
     $no_ski = $row['no_ski'];
     
     $customer = $row['customer'];
@@ -606,7 +606,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     echo mb_convert_encoding("Название изготовителя новых форм :$new_forms_vendor;\n", "cp1251");
     echo mb_convert_encoding("Изготовителя новых форм (номер):$new_forms_vendor_id;\n", "cp1251");
     echo mb_convert_encoding("Печать с лыжами :$with_ski;\n", "cp1251");
-    echo mb_convert_encoding("Ширина лыж,м :      ".($ski / 1000).";\n", "cp1251");
+    echo mb_convert_encoding("Ширина лыж,м :      ".($ski_width / 1000).";\n", "cp1251");
     echo mb_convert_encoding("Расход краски, ProcentC :      $procentc;\n", "cp1251");
     echo mb_convert_encoding("Расход краски, ProcentM :      $procentm;\n", "cp1251");
     echo mb_convert_encoding("Расход краски, ProcentY :      $procenty;\n", "cp1251");

@@ -71,7 +71,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
             . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
             . "c.form_1, c.form_2, c.form_3, form_4, form_5, form_6, form_7, form_8, "
-            . "c.extracharge, c.ski, c.no_ski, "
+            . "c.extracharge, c.ski_width, c.no_ski, "
             . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) weight, "
             . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
             . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_weight "
@@ -168,7 +168,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         }
 
         $extracharge = $row['extracharge']; // Наценка
-        $ski = $row['ski']; // Ширина лыж
+        $ski_width = $row['ski_width']; // Ширина лыж
         $no_ski = $row['no_ski']; // Печать без лыж (ДА/НЕТ)
     }
     else {
@@ -683,8 +683,8 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     if($no_ski) {
         $dirty_width = $pure_width / 1000;
     }
-    elseif(!empty ($ski)) {
-        $dirty_width = ($pure_width + $ski) / 1000;
+    elseif(!empty ($ski_width)) {
+        $dirty_width = ($pure_width + $ski_width) / 1000;
     }
     else {
         $error_message = "Отсутствуют данные о ширине лыж";
@@ -1238,7 +1238,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
         . "c.form_1, c.form_2, c.form_3, form_4, form_5, form_6, form_7, form_8, "
         . "comment, "
-        . "c.extracharge, c.ski, c.no_ski, "
+        . "c.extracharge, c.ski_width, c.no_ski, "
         . "(select id from techmap where request_calc_id = $id order by id desc limit 1) techmap_id, "
         . "(select id from request_calc_result where request_calc_id = $id order by id desc limit 1) request_calc_result_id, "
         . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
@@ -1312,7 +1312,7 @@ for($i=1; $i<=$paints_count; $i++) {
 $comment = $row['comment'];
 
 $extracharge = $row['extracharge'];
-$ski = $row['ski'];
+$ski_width = $row['ski_width'];
 $no_ski = $row['no_ski'];
 $techmap_id = $row['techmap_id'];
 
@@ -1498,7 +1498,7 @@ $num_for_customer = $row['num_for_customer'];
                                     echo "Без лыж";
                                 }
                                 else {
-                                    echo rtrim(rtrim(number_format($ski, 2, ",", " "), "0"), ",")." м";
+                                    echo rtrim(rtrim(number_format($ski_width, 2, ",", " "), "0"), ",")." м";
                                 }
                                 ?>
                             </td>
