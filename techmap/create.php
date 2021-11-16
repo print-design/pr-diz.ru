@@ -9,7 +9,7 @@ if(!IsInRole(array('technologist', 'dev', 'manager', 'administrator'))) {
 const TECHMAP_CREATED_STATUS_ID = 6;
 
 if(null !== filter_input(INPUT_POST, 'create-submit')) {
-    $calculation_id = filter_input(INPUT_POST, 'calculation_id');
+    $request_calc_id = filter_input(INPUT_POST, 'request_calc_id');
     $designer = addslashes(filter_input(INPUT_POST, 'designer'));
     $printer = addslashes(filter_input(INPUT_POST, 'printer'));
     $cutter = addslashes(filter_input(INPUT_POST, 'cutter'));
@@ -29,9 +29,9 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
     $roll_type = filter_input(INPUT_POST, 'roll_type');
     if($roll_type === null || $roll_type === '') $roll_type = "NULL";
     
-    $sql = "insert into techmap (calculation_id, designer, printer, cutter, printings_number, rolls_number, reverse_print, "
+    $sql = "insert into techmap (request_calc_id, designer, printer, cutter, printings_number, rolls_number, reverse_print, "
             . "self_adhesive, spool, number_per_spool, winding, roll_type) "
-            . "values($calculation_id, '$designer', '$printer', '$cutter', $printings_number, $rolls_number, $reverse_print, "
+            . "values($request_calc_id, '$designer', '$printer', '$cutter', $printings_number, $rolls_number, $reverse_print, "
             . "$self_adhesive, $spool, $number_per_spool, $winding, $roll_type)";
     $executer = new Executer($sql);
     $error_message = $executer->error;
@@ -43,9 +43,9 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
 }
 
 // Открыть можно только через кнопку "Составить технологическую карту"
-$calculation_id = filter_input(INPUT_POST, 'calculation_id');
+$request_calc_id = filter_input(INPUT_POST, 'request_calc_id');
 
-if(empty($calculation_id)) {
+if(empty($request_calc_id)) {
     header('Location: '.APPLICATION.'/techmap/');
 }
 
@@ -56,11 +56,11 @@ $sql = "select c.name name, c.unit, c.quantity, "
         . "c.paint_1, c.paint_2, c.paint_3, c.paint_4, c.paint_5, c.paint_6, c.paint_7, c.paint_8, c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
         . "cus.name customer, u.last_name manager, "
         . "cr.dirty_width, cr.dirty_length "
-        . "from calculation c "
+        . "from request_calc c "
         . "inner join user u on c.manager_id = u.id "
         . "inner join customer cus on c.customer_id = cus.id "
-        . "inner join calculation_result cr on cr.calculation_id = c.id "
-        . "where c.id = $calculation_id";
+        . "inner join request_calc_result cr on cr.request_calc_id = c.id "
+        . "where c.id = $request_calc_id";
 $row = (new Fetcher($sql))->Fetch();
 
 $name = $row['name'];
@@ -149,10 +149,10 @@ $dirty_length = $row['dirty_length'];
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/calculation.php?id=<?=$calculation_id ?>">Отмена</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/request_calc/request_calc.php?id=<?=$request_calc_id ?>">Отмена</a>
             <h1 style="font-size: 32px; font-weight: 600;">Новая заявка на флекс-печать</h1>
             <form method="post">
-                <input type="hidden" name="calculation_id" value="<?=$calculation_id ?>" />
+                <input type="hidden" name="request_calc_id" value="<?=$request_calc_id ?>" />
                 <input type="hidden" name="scroll" />
                 <table class="table table-bordered">
                     <tr>

@@ -69,7 +69,7 @@ for($i=1; $i<=8; $i++) {
 }
 
 // Обработка нажатия кнопки "Сохранить расчёт"
-if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
+if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     
     // Если тип работы "Пленка без печати", то обязательно требуем добавить хотя бы одну ламинацию
@@ -435,7 +435,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         if(empty($error_message)) {
             // Если mode = recalc или пустой id, то создаём новый объект
             if(filter_input(INPUT_GET, 'mode') == 'recalc' || empty(filter_input(INPUT_GET, 'id'))) {
-                $sql = "insert into calculation (customer_id, name, work_type_id, unit, machine, "
+                $sql = "insert into request_calc (customer_id, name, work_type_id, unit, machine, "
                         . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
                         . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
                         . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
@@ -460,7 +460,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $id = $executer->insert_id;
             }
             else {
-                $sql = "update calculation "
+                $sql = "update request_calc "
                         . "set customer_id=$customer_id, name='$name', work_type_id=$work_type_id, unit='$unit', machine='$machine', "
                         . "brand_name='$brand_name', thickness=$thickness, other_brand_name='$other_brand_name', other_price=$other_price, "
                         . "other_thickness=$other_thickness, other_weight=$other_weight, customers_material=$customers_material, "
@@ -493,7 +493,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/calculation/calculation.php?id='.$id);
+            header('Location: '.APPLICATION.'/request_calc/request_calc.php?id='.$id);
         }
     }
 }
@@ -510,13 +510,13 @@ if(!empty($id)) {
             . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
             . "quantity, streams_count, length, stream_width, raport, number_on_raport, lamination_roller, paints_count, extracharge, ski, no_ski, "
-            . "(select id from techmap where calculation_id = $id limit 1) techmap_id, "
+            . "(select id from techmap where request_calc_id = $id limit 1) techmap_id, "
             . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
             . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
             . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
             . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8 "
-            . "from calculation where id=$id";
+            . "from request_calc where id=$id";
     $row = (new Fetcher($sql))->Fetch();
 }
 
@@ -577,7 +577,7 @@ if(null === $other_weight) {
     else $other_weight = null;
 }
 
-if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
+if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     $customers_material = filter_input(INPUT_POST, 'customers_material') == 'on' ? 1 : 0;
 }
 else {
@@ -633,7 +633,7 @@ if(null === $lamination1_other_weight) {
     else $lamination1_other_weight = null;
 }
 
-if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
+if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     $lamination1_customers_material = filter_input(INPUT_POST, 'lamination1_customers_material') == 'on' ? 1 : 0;
 }
 else {
@@ -677,7 +677,7 @@ if(null === $lamination2_other_weight) {
     else $lamination2_other_weight = null;
 }
 
-if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
+if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     $lamination2_customers_material = filter_input(INPUT_POST, 'lamination2_customers_material') == 'on' ? 1 : 0;
 }
 else {
@@ -742,7 +742,7 @@ if(null == $ski) {
     else $ski = null;
 }
 
-if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
+if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     $no_ski = filter_input(INPUT_POST, 'no_ski') == 'on' ? 1 : 0;
 }
 else {
@@ -830,9 +830,9 @@ for ($i=1; $i<=8; $i++) {
             if(null !== filter_input(INPUT_GET, 'id')):
             $id = filter_input(INPUT_GET, 'id');
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/calculation.php?id=<?=$id ?>">Назад</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/request_calc/request_calc.php?id=<?=$id ?>">Назад</a>
             <?php else: ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= IsInRole('manager') ? BuildQueryAddRemove('manager', GetUserId(), 'id') : BuildQueryRemove('id') ?>">К списку</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/request_calc/<?= IsInRole('manager') ? BuildQueryAddRemove('manager', GetUserId(), 'id') : BuildQueryRemove('id') ?>">К списку</a>
             <?php endif; ?>
             <div class="row">
                 <!-- Левая половина -->
@@ -1772,7 +1772,7 @@ for ($i=1; $i<=8; $i++) {
                             endfor;
                             ?>
                         </div>
-                        <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark mt-3">Сохранить</button>
+                        <button type="submit" id="create_request_calc_submit" name="create_request_calc_submit" class="btn btn-dark mt-3">Сохранить</button>
                     </form>
                 </div>
             </div>
@@ -2256,7 +2256,7 @@ for ($i=1; $i<=8; $i++) {
             // Скрытие расчёта
             function HideCalculation() {
                 $("#calculation").addClass("d-none");
-                $("#create_calculation_submit").removeClass("d-none");
+                $("#create_request_calc_submit").removeClass("d-none");
             }
             
             // Ограницение значений наценки

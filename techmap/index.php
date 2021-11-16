@@ -50,8 +50,8 @@ function OrderLink($param) {
                     
                     $name = addslashes(filter_input(INPUT_GET, 'name'));
                     if(!empty($name)) {
-                        if(empty($where)) $where = " where c.name=(select name from calculation where id=$name)";
-                        else $where .= " and c.name=(select name from calculation where id=$name)";
+                        if(empty($where)) $where = " where c.name=(select name from request_calc where id=$name)";
+                        else $where .= " and c.name=(select name from request_calc where id=$name)";
                     }
                     
                     $unit = filter_input(INPUT_GET, 'unit');
@@ -79,7 +79,7 @@ function OrderLink($param) {
                     }
                     
                     // Общее количество технологических карт для установления количества страниц в постраничном выводе
-                    $sql = "select count(t.id) from techmap t inner join calculation c on t.calculation_id = c.id$where";
+                    $sql = "select count(t.id) from techmap t inner join request_calc c on t.request_calc_id = c.id$where";
                     $fetcher = new Fetcher($sql);
                     
                     if($row = $fetcher->Fetch()) {
@@ -97,7 +97,7 @@ function OrderLink($param) {
                         <select id="customer" name="customer" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Заказчик...</option>
                             <?php
-                            $sql = "select distinct cus.id, cus.name from calculation c inner join techmap tm on tm.calculation_id = c.id inner join customer cus on c.customer_id = cus.id order by cus.name";
+                            $sql = "select distinct cus.id, cus.name from request_calc c inner join techmap tm on tm.request_calc_id = c.id inner join customer cus on c.customer_id = cus.id order by cus.name";
                             $fetcher = new Fetcher($sql);
                             
                             while ($row = $fetcher->Fetch()):
@@ -108,7 +108,7 @@ function OrderLink($param) {
                         <select id="name" name="name" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Имя заказа...</option>
                             <?php
-                            $sql = "select distinct c.name, (select id from calculation where name=c.name limit 1) id from calculation c inner join techmap tm on tm.calculation_id = c.id order by name";
+                            $sql = "select distinct c.name, (select id from request_calc where name=c.name limit 1) id from request_calc c inner join techmap tm on tm.request_calc_id = c.id order by name";
                             $fetcher = new Fetcher($sql);
                             
                             while($row = $fetcher->Fetch()):
@@ -124,7 +124,7 @@ function OrderLink($param) {
                         <select id="work_type" name="work_type" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Тип работы...</option>
                             <?php
-                            $sql = "select distinct wt.id, wt.name from calculation c inner join techmap tm on tm.calculation_id = c.id inner join work_type wt on c.work_type_id = wt.id order by wt.name";
+                            $sql = "select distinct wt.id, wt.name from request_calc c inner join techmap tm on tm.request_calc_id = c.id inner join work_type wt on c.work_type_id = wt.id order by wt.name";
                             $fetcher = new Fetcher($sql);
                             
                             while ($row = $fetcher->Fetch()):
@@ -135,7 +135,7 @@ function OrderLink($param) {
                         <select id="manager" name="manager" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Менеджер...</option>
                             <?php
-                            $sql = "select distinct u.id, u.last_name, u.first_name from calculation c inner join techmap tm on tm.calculation_id = c.id inner join user u on c.manager_id = u.id order by u.last_name";
+                            $sql = "select distinct u.id, u.last_name, u.first_name from request_calc c inner join techmap tm on tm.request_calc_id = c.id inner join user u on c.manager_id = u.id order by u.last_name";
                             $fetcher = new Fetcher($sql);
                             
                             while ($row = $fetcher->Fetch()):
@@ -202,9 +202,9 @@ function OrderLink($param) {
                     }
                     
                     $sql = "select t.id, t.date, t.work_date, t.work_shift, c.customer_id, cus.name customer, c.name, c.quantity, c.unit, wt.name work_type, u.last_name, u.first_name, "
-                            . "(select count(t1.id) from techmap t1 inner join calculation c1 on t1.calculation_id = c1.id where c1.customer_id = c.customer_id and t1.id <= t.id) num_for_customer "
+                            . "(select count(t1.id) from techmap t1 inner join request_calc c1 on t1.request_calc_id = c1.id where c1.customer_id = c.customer_id and t1.id <= t.id) num_for_customer "
                             . "from techmap t "
-                            . "inner join calculation c on t.calculation_id = c.id "
+                            . "inner join request_calc c on t.request_calc_id = c.id "
                             . "inner join customer cus on c.customer_id = cus.id "
                             . "inner join work_type wt on c.work_type_id = wt.id "
                             . "inner join user u on c.manager_id = u.id$where "

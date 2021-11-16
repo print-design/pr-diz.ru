@@ -5,14 +5,14 @@ include 'left_bar.php';
     <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
             <?php
-            $calculation_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/calculation')) == APPLICATION.'/calculation' ? ' disabled' : '';
+            $request_calc_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/request_calc')) == APPLICATION.'/request_calc' ? ' disabled' : '';
             $techmap_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/techmap')) == APPLICATION.'/techmap' ? ' disabled' : '';
             $schedule_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/schedule')) == APPLICATION.'/schedule' ? ' disabled' : '';
             
             if(IsInRole(array('technologist', 'dev', 'manager', 'administrator', 'designer'))):
             ?>
             <li class="nav-item">
-                <a class="nav-link<?=$calculation_status ?>" href="<?=APPLICATION ?>/calculation/<?= IsInRole('manager') ? BuildQuery("manager", GetUserId()) : "" ?>">Расчеты</a>
+                <a class="nav-link<?=$request_calc_status ?>" href="<?=APPLICATION ?>/request_calc/<?= IsInRole('manager') ? BuildQuery("manager", GetUserId()) : "" ?>">Расчеты</a>
             </li>
             <?php
             endif;

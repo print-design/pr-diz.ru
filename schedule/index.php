@@ -15,16 +15,16 @@ if(null !== filter_input(INPUT_POST, 'grafik-submit')) {
     
     $id = filter_input(INPUT_POST, 'id');
     
-    $sql = "select cus.name customer, c.name calculation "
+    $sql = "select cus.name customer, c.name request_calc "
             . "from techmap t "
-            . "inner join calculation c on t.calculation_id = c.id "
+            . "inner join request_calc c on t.request_calc_id = c.id "
             . "inner join customer cus on c.customer_id = cus.id "
             . "where t.id=$id";
     $fetcher = new Fetcher($sql);
     
     if($row = $fetcher->Fetch()) {
         $customer = addslashes($row['customer']);
-        $name = addslashes($row['calculation']);
+        $name = addslashes($row['request_calc']);
     }
     else {
         $error_message = "Ошибка при запросе заказчика и имени заказа";
@@ -182,7 +182,7 @@ $sql = "select t.id, t.work_date, t.work_shift, t.grafik_id, "
         . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_other_brand_name, c.lamination2_other_thickness, "
         . "c.machine_id, cus.name customer, m.name machine "
         . "from techmap t "
-        . "inner join calculation c on t.calculation_id = c.id "
+        . "inner join request_calc c on t.request_calc_id = c.id "
         . "inner join customer cus on c.customer_id = cus.id "
         . "left join machine m on c.machine_id = m.id "
         . "where t.work_date >='".$date_from->format('Y-m-d')."' and t.work_date <= '".$date_to->format('Y-m-d')."' "

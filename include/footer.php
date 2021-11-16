@@ -321,7 +321,7 @@
         
         var id = field.attr('data-id');
         field.val('000');
-        $.ajax({ url: "../ajax/calculation.php?extracharge=" + extracharge + "&id=" + id, context: field })
+        $.ajax({ url: "../ajax/request_calc.php?extracharge=" + extracharge + "&id=" + id, context: field })
                 .done(function(data) {
                     field.val(data);
                     $('.extracharge').val(data);

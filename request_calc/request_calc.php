@@ -41,7 +41,7 @@ if(null !== filter_input(INPUT_POST, 'percent-submit')) {
     }
     
     if($form_valid) {
-        $sql = "update calculation set percent_$color_id = $percent where id=$id";
+        $sql = "update request_calc set percent_$color_id = $percent where id=$id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
@@ -52,7 +52,7 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $comment = addslashes(filter_input(INPUT_POST, 'comment'));
     
-    $sql = "update calculation set comment='$comment' where id=$id";
+    $sql = "update request_calc set comment='$comment' where id=$id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
 }
@@ -75,7 +75,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) weight, "
             . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
             . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_weight "
-            . "from calculation c "
+            . "from request_calc c "
             . "where c.id=$id";
     if($row = (new Fetcher($sql))->Fetch())
     {
@@ -1205,7 +1205,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         if($cost_no_cliche_thing === null) $cost_no_cliche_thing = "NULL";
         if($cost_with_cliche_thing === null) $cost_with_cliche_thing = "NULL";
                         
-        $sql = "insert into calculation_result (calculation_id, pure_area, pure_width, pure_length, pure_length_lam, "
+        $sql = "insert into request_calc_result (request_calc_id, pure_area, pure_width, pure_length, pure_length_lam, "
                 . "dirty_length, dirty_width, dirty_area, pure_weight, dirty_weight, material_price, print_time, tuning_time, "
                 . "print_tuning_time, print_price, cliche_area, cliche_flint_price, cliche_kodak_price, cliche_tver_price, cliche_price, "
                 . "paint_price, pure_weight_lam1, dirty_weight_lam1, "
@@ -1239,15 +1239,15 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.form_1, c.form_2, c.form_3, form_4, form_5, form_6, form_7, form_8, "
         . "comment, "
         . "c.extracharge, c.ski, c.no_ski, "
-        . "(select id from techmap where calculation_id = $id order by id desc limit 1) techmap_id, "
-        . "(select id from calculation_result where calculation_id = $id order by id desc limit 1) calculation_result_id, "
+        . "(select id from techmap where request_calc_id = $id order by id desc limit 1) techmap_id, "
+        . "(select id from request_calc_result where request_calc_id = $id order by id desc limit 1) request_calc_result_id, "
         . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
         . "wt.name work_type, "
-        . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
+        . "(select count(id) from request_calc where customer_id = c.customer_id and id <= c.id) num_for_customer, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) weight, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_weight "
-        . "from calculation c "
+        . "from request_calc c "
         . "left join customer cu on c.customer_id = cu.id "
         . "left join work_type wt on c.work_type_id = wt.id "
         . "where c.id=$id";
@@ -1325,7 +1325,7 @@ $customer_person = $row['customer_person'];
 $work_type = $row['work_type'];
 
 $techmap_id = $row['techmap_id'];
-$calculation_result_id = $row['calculation_result_id'];
+$request_calc_result_id = $row['request_calc_result_id'];
 $num_for_customer = $row['num_for_customer'];
 ?>
 <!DOCTYPE html>
@@ -1358,11 +1358,11 @@ $num_for_customer = $row['num_for_customer'];
                 <div class="col-5" id="left_side">
                     <div class="d-flex justify-content-between mb-auto">
                         <div class="p-1">
-                            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= IsInRole('manager') ? BuildQueryAddRemove('manager', GetUserId(), 'id') : BuildQueryRemove('id') ?>">К списку</a>
+                            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/request_calc/<?= IsInRole('manager') ? BuildQueryAddRemove('manager', GetUserId(), 'id') : BuildQueryRemove('id') ?>">К списку</a>
                         </div>
                         <div class="p-1">
                             <?php if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))): ?>
-                            <?php if(!empty($calculation_result_id)): ?>
+                            <?php if(!empty($request_calc_result_id)): ?>
                             <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Пересчитать</a>
                             <?php elseif(empty($row['paints_count'])): ?>
                             <form method="post" class="d-inline-block">
@@ -1390,15 +1390,15 @@ $num_for_customer = $row['num_for_customer'];
                             endif;
                             ?>
                             
-                            <?php if(empty($calculation_result_id)): ?>
+                            <?php if(empty($request_calc_result_id)): ?>
                             <a href="create.php<?= BuildQuery("id", $id) ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Редактировать</a>
                             <?php endif; ?>
                     
                             <?php if(!empty($techmap_id)): ?>
                             <a href="<?=APPLICATION.'/techmap/details.php?id='.$techmap_id ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Посмотреть тех. карту</a>
-                                <?php elseif (!empty($calculation_result_id)): ?>
+                                <?php elseif (!empty($request_calc_result_id)): ?>
                             <form method="post" action="<?=APPLICATION ?>/techmap/create.php" class="d-inline-block">
-                                <input type="hidden" name="calculation_id" value="<?=$id ?>" />
+                                <input type="hidden" name="request_calc_id" value="<?=$id ?>" />
                                 <button type="submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Составить тех. карту</button>
                             </form>
                                 <?php endif; ?>
@@ -1412,7 +1412,7 @@ $num_for_customer = $row['num_for_customer'];
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px green; color: green;">
                         <i class="fas fa-file"></i>&nbsp;&nbsp;&nbsp;Составлена технологическая карта
                     </div>
-                    <?php elseif(!empty ($row['calculation_result_id'])): ?>
+                    <?php elseif(!empty ($row['request_calc_result_id'])): ?>
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px blue; color: blue;">
                         <i class="fas fa-calculator"></i>&nbsp;&nbsp;&nbsp;Сделан расчёт
                     </div>
@@ -1636,7 +1636,7 @@ $num_for_customer = $row['num_for_customer'];
                                             ?>
                                         </td>
                                         <td>
-                                            <?php if(!empty($calculation_result_id)): ?>
+                                            <?php if(!empty($request_calc_result_id)): ?>
                                             <?=$$percent_var ?>%
                                             <?php else: ?>
                                             <form method="post" class="form-inline">
@@ -1722,7 +1722,7 @@ $num_for_customer = $row['num_for_customer'];
         <?php
         include '../include/footer.php';
         
-        if(!empty($calculation_result_id)) {
+        if(!empty($request_calc_result_id)) {
             include './right_panel.php';
         }
         ?>

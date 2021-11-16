@@ -79,7 +79,7 @@ if(null !== filter_input(INPUT_POST, 'remove-date-submit')) {
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
 
-$sql = "select t.date, t.calculation_id, t.work_date, t.work_shift, t.designer, t.printer, t.cutter, t.printings_number, t.rolls_number, "
+$sql = "select t.date, t.request_calc_id, t.work_date, t.work_shift, t.designer, t.printer, t.cutter, t.printings_number, t.rolls_number, "
         . "t.reverse_print, t.self_adhesive, t.spool, t.number_per_spool, t.winding, t.roll_type, "
         . "c.name name, c.unit, c.quantity, "
         . "c.brand_name, c.other_brand_name, c.lamination1_brand_name, c.lamination1_other_brand_name, c.lamination2_brand_name, c.lamination2_other_brand_name, "
@@ -88,15 +88,15 @@ $sql = "select t.date, t.calculation_id, t.work_date, t.work_shift, t.designer, 
         . "cus.name customer, u.last_name manager, "
         . "cr.dirty_width, cr.dirty_length "
         . "from techmap t "
-        . "inner join calculation c on t.calculation_id = c.id "
+        . "inner join request_calc c on t.request_calc_id = c.id "
         . "inner join customer cus on c.customer_id = cus.id "
         . "inner join user u on c.manager_id = u.id "
-        . "inner join calculation_result cr on cr.calculation_id = c.id "
+        . "inner join request_calc_result cr on cr.request_calc_id = c.id "
         . "where t.id = $id";
 $row = (new Fetcher($sql))->Fetch();
 
 $date = DateTime::createFromFormat("Y-m-d H:i:s", $row['date']);
-$calculation_id = $row['calculation_id'];
+$request_calc_id = $row['request_calc_id'];
 $work_date = $row['work_date'];
 $work_shift = $row['work_shift'];
 $designer = $row['designer'];
@@ -190,7 +190,7 @@ $roll_type = $row['roll_type'];
             }
             ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/techmap/<?= IsInRole('manager') ? BuildQueryAddRemove('manager', GetUserId(), 'id') : BuildQueryRemove('id') ?>">К списку</a>
-            <a class="btn btn-outline-dark ml-3 topbutton" style="width: 200px;" href="<?=APPLICATION ?>/calculation/calculation.php?id=<?=$calculation_id ?>">К расчету</a>
+            <a class="btn btn-outline-dark ml-3 topbutton" style="width: 200px;" href="<?=APPLICATION ?>/request_calc/request_calc.php?id=<?=$request_calc_id ?>">К расчету</a>
             <h1 style="font-size: 32px; font-weight: 600;">Заявка на флекс-печать от <?= $date->format('d').' '.$GLOBALS['months_genitive'][intval($date->format('m'))].' '.$date->format('Y') ?> г</h1>
             <table class="table table-bordered">
                 <tr>

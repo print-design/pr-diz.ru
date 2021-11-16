@@ -1,7 +1,7 @@
 <?php 
 $calculation_class = "";
 
-if(isset($create_calculation_submit_class) && empty($create_calculation_submit_class)) {
+if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit_class)) {
     $calculation_class = " class='d-none'";
 }
 elseif(!empty ($id) && !empty ($date)) {
@@ -469,7 +469,7 @@ elseif(!empty ($id) && !empty ($date)) {
             . "price_lam1_material, price_lam1_glue, price_lam1_work, pure_weight_lam2, dirty_weight_lam2, price_lam2_material, "
             . "price_lam2_glue, price_lam2_work, price_lam_total, pure_weight_total, dirty_weight_total, cost_no_cliche, "
             . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_thing, cost_with_cliche_thing"
-            . " from calculation_result where calculation_id = $id order by id desc limit 1";
+            . " from request_calc_result where request_calc_id = $id order by id desc limit 1";
     $fetcher = new Fetcher($sql);
 
     if($row = $fetcher->Fetch()) {
@@ -547,9 +547,9 @@ elseif(!empty ($id) && !empty ($date)) {
         </div>
         <div class="col-3 text-right">
             <?php if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))): ?>
-            <form method="post" action="<?=APPLICATION ?>/calculation/export.php">
+            <form method="post" action="<?=APPLICATION ?>/request_calc/export.php">
                 <input type="hidden" id="id" name="id" value="<?=$id ?>" />
-                <button type="submit" class="btn btn-dark" id="export_calculation_submit" name="export_calculation_submit">Экспорт</button>
+                <button type="submit" class="btn btn-dark" id="export_request_calc_submit" name="export_request_calc_submit">Экспорт</button>
             </form>
             <?php endif; ?>
         </div>
