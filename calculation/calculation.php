@@ -631,6 +631,9 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     else if($unit == 'thing' && !empty ($stream_width) && !empty ($length) && !empty ($quantity)) {
         $pure_area = $stream_width / 1000 * $length / 1000 * $quantity;
     }
+    else {
+        $error_message = "Отсутствуют данные об объёме заказа";
+    }
         
     // Ширина тиража обрезная, мм
     // ширина ручья * количество ручьёв
@@ -639,11 +642,17 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     if(!empty($stream_width) && !empty($streams_count)) {
         $pure_width = $stream_width * $streams_count;
     }
+    else {
+        $error_message = "Отсутствуют данные о ширине ручья и количестве ручьёв";
+    }
         
     // Длина тиража чистая, м
     // площадь тиража чистая / ширина тиража обрезная
-    if(!empty($pure_width)) {
-        $pure_length = ($pure_area ?? 0) / ($pure_width ?? 0) * 1000;
+    if(!empty($pure_width) && $pure_width > 0) {
+        $pure_length = ($pure_area ?? 0) / $pure_width * 1000;
+    }
+    else {
+        $error_message = "Отсутствует информация о ширине тиража";
     }
         
     // Длина тиража чистая с ламинацией, м
@@ -661,6 +670,9 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     elseif(!empty ($lamination1_brand_name)) {
         $dirty_length = ($pure_length_lam ?? 0) + $laminator_tuning_length;
     }
+    else {
+        $error_message = "Если не указана печатная машина, должна быть добавлена хоть одна ламинация";
+    }
         
     // Ширина тиража с отходами, мм
     // с лыжами: ширина лыж + ширина тиража обрезная
@@ -671,31 +683,36 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     if($no_ski) {
         $dirty_width = $pure_width / 1000;
     }
-    else {
+    elseif(!empty ($ski)) {
         $dirty_width = ($pure_width + $ski) / 1000;
     }
-            
-    $vari = intval($dirty_width * 1000);
-    $varcc = $vari % 5;
-    $numiterazij = 0;
-            
-    if($varcc > 0) {
-        while ($varcc > 0) {
-            $vari++;
-            $varcc = $vari % 5;
-            $numiterazij++;
-            if($numiterazij > 500) break;
-        }
-            
-        $varid = doubleval($vari);
-            
-        if($varid !== null) {
-            $dirty_width = $varid / 1000;
-        }
+    else {
+        $error_message = "Если печать с лыжами, то должна быть указана ширина лыж";
     }
+    
+    if(!empty($dirty_width)) {
+        $vari = intval($dirty_width * 1000);
+        $varcc = $vari % 5;
+        $numiterazij = 0;
+            
+        if($varcc > 0) {
+            while ($varcc > 0) {
+                $vari++;
+                $varcc = $vari % 5;
+                $numiterazij++;
+                if($numiterazij > 500) break;
+            }
+            
+            $varid = doubleval($vari);
+            
+            if($varid !== null) {
+                $dirty_width = $varid / 1000;
+            }
+        }
         
-    if($dirty_width !== null) {
-        $dirty_width *= 1000;
+        if($dirty_width !== null) {
+            $dirty_width *= 1000;
+        }
     }
         
     // Площадь тиража с отходами, м2
