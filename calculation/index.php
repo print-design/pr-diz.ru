@@ -198,10 +198,6 @@ function OrderLink($param) {
                             case 'manager':
                                 $orderby = "order by u.last_name asc, u.first_name asc";
                                 break;
-                            
-                            case 'status':
-                                $orderby = "order by c.status_id";
-                                break;
                         }
                     }
                     

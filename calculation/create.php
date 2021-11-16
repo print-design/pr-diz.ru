@@ -364,7 +364,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         if(empty($paints_count)) $paints_count = "NULL";
         
         $manager_id = GetUserId();
-        $status_id = 1; // Статус "Расчёт"
         
         $extracharge = filter_input(INPUT_POST, 'extracharge');
         
@@ -440,7 +439,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                         . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
                         . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
                         . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
-                        . "quantity, streams_count, length, stream_width, raport, number_on_raport, lamination_roller, paints_count, manager_id, status_id, extracharge, ski, no_ski, "
+                        . "quantity, streams_count, length, stream_width, raport, number_on_raport, lamination_roller, paints_count, manager_id, extracharge, ski, no_ski, "
                         . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
                         . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                         . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -450,7 +449,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                         . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, "
                         . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_other_brand_name', $lamination1_other_price, $lamination1_other_thickness, $lamination1_other_weight, $lamination1_customers_material, "
                         . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_other_brand_name', $lamination2_other_price, $lamination2_other_thickness, $lamination2_other_weight, $lamination2_customers_material, "
-                        . "$quantity, $streams_count, $length, $stream_width, $raport, $number_on_raport, $lamination_roller, $paints_count, $manager_id, $status_id, $extracharge, $ski, $no_ski, "
+                        . "$quantity, $streams_count, $length, $stream_width, $raport, $number_on_raport, $lamination_roller, $paints_count, $manager_id, $extracharge, $ski, $no_ski, "
                         . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
                         . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                         . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
@@ -475,7 +474,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                         . "lamination2_customers_material=$lamination2_customers_material, "
                         . "quantity=$quantity, streams_count=$streams_count, length=$length, stream_width=$stream_width, raport=$raport, "
                         . "number_on_raport=$number_on_raport, "
-                        . "lamination_roller=$lamination_roller, paints_count=$paints_count, manager_id=$manager_id, status_id=$status_id, "
+                        . "lamination_roller=$lamination_roller, paints_count=$paints_count, manager_id=$manager_id, "
                         . "extracharge=$extracharge, ski=$ski, no_ski=$no_ski, "
                         . "paint_1='$paint_1', paint_2='$paint_2', paint_3='$paint_3', paint_4='$paint_4', "
                         . "paint_5='$paint_5', paint_6='$paint_6', paint_7='$paint_7', paint_8='$paint_8', "
@@ -510,7 +509,7 @@ if(!empty($id)) {
             . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
             . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
-            . "quantity, streams_count, length, stream_width, raport, number_on_raport, lamination_roller, paints_count, status_id, extracharge, ski, no_ski, "
+            . "quantity, streams_count, length, stream_width, raport, number_on_raport, lamination_roller, paints_count, extracharge, ski, no_ski, "
             . "(select id from techmap where calculation_id = $id limit 1) techmap_id, "
             . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -753,9 +752,6 @@ else {
 
 if(isset($row['techmap_id'])) $techmap_id = $row['techmap_id'];
 else $techmap_id = null;
-
-if(isset($row['status_id'])) $status_id = $row['status_id'];
-else $status_id = null;
 
 if(isset($row['extracharge'])) $extracharge = $row['extracharge'];
 else $extracharge = null;
