@@ -84,7 +84,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $name = $row['name']; // Наименование расчёта
         $work_type_id = $row['work_type_id']; // Тип работы (Плёнка с печатью / Плёнка без печати)
         $quantity = $row['quantity']; // Объём заказа (в рублях или штуках)
-        $unit = $row['unit']; // Единица объёма заказа ('kg' или 'thing', соотв. рубли или штуки)
+        $unit = $row['unit']; // Единица объёма заказа ('kg' или 'pieces', соотв. рубли или штуки)
         $brand_name = $row['brand_name']; // Марка плёнки (если выбиралась из списка)
         $thickness = $row['thickness']; // Толщина плёнки (если выбиралась из списка)
         $weight = $row['weight']; // Удельный вес плёнки (если выбиралась из списка)
@@ -628,7 +628,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     if($unit == 'kg' && !empty($quantity) && !empty($c_weight)) {
         $pure_area = 1000 * $quantity / ($c_weight + (empty($c_weight_lam1) ? 0 : $c_weight_lam1) + (empty($c_weight_lam2) ? 0 : $c_weight_lam2));
     }
-    else if($unit == 'thing' && !empty ($stream_width) && !empty ($length) && !empty ($quantity)) {
+    else if($unit == 'pieces' && !empty ($stream_width) && !empty ($length) && !empty ($quantity)) {
         $pure_area = $stream_width / 1000 * $length / 1000 * $quantity;
     }
     else {
@@ -1132,34 +1132,34 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         
     // Итого себестоимость за 1 шт без форм, руб
     // итого себестоимость без форм / объём заказа
-    $cost_no_cliche_thing = null;
+    $cost_no_cliche_pieces = null;
     
-    if($unit == "thing") {
+    if($unit == "pieces") {
         if(!empty($quantity)) {
-            $cost_no_cliche_thing = ($cost_no_cliche ?? 0) / $quantity;
+            $cost_no_cliche_pieces = ($cost_no_cliche ?? 0) / $quantity;
         }
         else {
             $error_message = "Отсутствуют данные об объёме заказа";
         }
     }
     else {
-        $cost_no_cliche_thing = 0;
+        $cost_no_cliche_pieces = 0;
     }
         
     // Итого себестоимость за 1 шт с формами, руб
     // итого стоимость с формами / объём заказа
-    $cost_with_cliche_thing = null;
+    $cost_with_cliche_pieces = null;
     
-    if($unit == "thing") {
+    if($unit == "pieces") {
         if(!empty($quantity)) {
-            $cost_with_cliche_thing = ($cost_with_cliche ?? 0) / $quantity;
+            $cost_with_cliche_pieces = ($cost_with_cliche ?? 0) / $quantity;
         }
         else {
             $error_message = "Отсутствуют данные об объёме заказа";
         }
     }
     else {
-        $cost_with_cliche_thing = 0;
+        $cost_with_cliche_pieces = 0;
     }
     
     // *************************************
@@ -1202,8 +1202,8 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         if($cost_with_cliche === null) $cost_with_cliche = "NULL";
         if($cost_no_cliche_kg === null) $cost_no_cliche_kg = "NULL";
         if($cost_with_cliche_kg === null) $cost_with_cliche_kg = "NULL";
-        if($cost_no_cliche_thing === null) $cost_no_cliche_thing = "NULL";
-        if($cost_with_cliche_thing === null) $cost_with_cliche_thing = "NULL";
+        if($cost_no_cliche_pieces === null) $cost_no_cliche_pieces = "NULL";
+        if($cost_with_cliche_pieces === null) $cost_with_cliche_pieces = "NULL";
                         
         $sql = "insert into request_calc_result (request_calc_id, pure_area, pure_width, pure_length, pure_length_lam, "
                 . "dirty_length, dirty_width, dirty_area, pure_weight, dirty_weight, material_price, print_time, tuning_time, "
@@ -1211,14 +1211,14 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
                 . "paint_price, pure_weight_lam1, dirty_weight_lam1, "
                 . "price_lam1_material, price_lam1_glue, price_lam1_work, pure_weight_lam2, dirty_weight_lam2, price_lam2_material, "
                 . "price_lam2_glue, price_lam2_work, price_lam_total, pure_weight_total, dirty_weight_total, cost_no_cliche, "
-                . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_thing, cost_with_cliche_thing) "
+                . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_pieces, cost_with_cliche_pieces) "
                 . "values ($id, $pure_area, $pure_width, $pure_length, $pure_length_lam, "
                 . "$dirty_length, $dirty_width, $dirty_area, $pure_weight, $dirty_weight, $material_price, $print_time, $tuning_time, "
                 . "$print_tuning_time, $print_price, $cliche_area, $cliche_flint_price, $cliche_kodak_price, $cliche_tver_price, $cliche_price, "
                 . "$paint_price, $pure_weight_lam1, $dirty_weight_lam1, "
                 . "$price_lam1_material, $price_lam1_glue, $price_lam1_work, $pure_weight_lam2, $dirty_weight_lam2, $price_lam2_material, "
                 . "$price_lam2_glue, $price_lam2_work, $price_lam_total, $pure_weight_total, $dirty_weight_total, $cost_no_cliche, "
-                . "$cost_with_cliche, $cost_no_cliche_kg, $cost_with_cliche_kg, $cost_no_cliche_thing, $cost_with_cliche_thing)";
+                . "$cost_with_cliche, $cost_no_cliche_kg, $cost_with_cliche_kg, $cost_no_cliche_pieces, $cost_with_cliche_pieces)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }

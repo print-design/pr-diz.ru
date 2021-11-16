@@ -175,7 +175,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     $length = filter_input(INPUT_POST, 'length');
     
     // Если объём заказа в штуках, то длина этикетки вдоль рапорта вала обязательно, больше нуля
-    if($unit == 'thing' && empty($length)) {
+    if($unit == 'pieces' && empty($length)) {
         $length_valid = ISINVALID;
         $form_valid = false;
     }
@@ -917,7 +917,7 @@ for ($i=1; $i<=8; $i++) {
                         <!-- Единица заказа -->
                         <?php
                         $kg_checked = ($unit == "kg" || empty($unit)) ? " checked='checked'" : "";
-                        $thing_checked = $unit == "thing" ? " checked='checked'" : "";
+                        $pieces_checked = $unit == "pieces" ? " checked='checked'" : "";
                         ?>
                         <div class="justify-content-start mt-2 mb-1">
                             <div class="form-check-inline">
@@ -926,14 +926,14 @@ for ($i=1; $i<=8; $i++) {
                                 </label>
                             </div>
                             <?php
-                            $unit_thing_display_none = "";
+                            $unit_pieces_display_none = "";
                             if($work_type_id == 1) {
-                                $unit_thing_display_none = " d-none";
+                                $unit_pieces_display_none = " d-none";
                             }
                             ?>
                             <div class="form-check-inline">
                                 <label class="form-check-label">
-                                    <input type="radio" class="form-check-input<?=$unit_thing_display_none ?>" name="unit" id="unit_thing" value="thing"<?=$thing_checked ?> /><span id="unit_thing_label" class="placeh<?=$unit_thing_display_none ?>">Штуки</span>
+                                    <input type="radio" class="form-check-input<?=$unit_pieces_display_none ?>" name="unit" id="unit_pieces" value="pieces"<?=$pieces_checked ?> /><span id="unit_pieces_label" class="placeh<?=$unit_pieces_display_none ?>">Штуки</span>
                                 </label>
                             </div>
                         </div>
@@ -1861,12 +1861,12 @@ for ($i=1; $i<=8; $i++) {
                 // При типе "Плёнка без печати" количество возможно только в килограммах
                 if($(this).val() == 1) {
                     $('#unit_kg').prop('checked', true);
-                    $('#unit_thing').addClass('d-none');
-                    $('#unit_thing_label').addClass('d-none');
+                    $('#unit_pieces').addClass('d-none');
+                    $('#unit_pieces_label').addClass('d-none');
                 }
                 else {
-                    $('#unit_thing').removeClass('d-none');
-                    $('#unit_thing_label').removeClass('d-none');
+                    $('#unit_pieces').removeClass('d-none');
+                    $('#unit_pieces_label').removeClass('d-none');
                 }
                 
                 SetFieldsVisibility($(this).val());
@@ -1933,7 +1933,7 @@ for ($i=1; $i<=8; $i++) {
                 $('#label_quantity').text('Объем заказа, кг');
             }
             
-            if($('input[value=thing]').is(':checked')) {
+            if($('input[value=pieces]').is(':checked')) {
                 $('#label_quantity').text('Объем заказа, шт');
             }
                 

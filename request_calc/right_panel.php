@@ -460,7 +460,7 @@ elseif(!empty ($id) && !empty ($date)) {
     $price_lam2_material = null;    $price_lam2_glue = null;    $price_lam2_work = null;
     $price_lam_total = null;    $pure_weight_total = null;    $dirty_weight_total = null;
     $cost_no_cliche = null;    $cost_with_cliche = null;    $cost_no_cliche_kg = null;
-    $cost_with_cliche_kg = null;    $cost_no_cliche_thing = null;    $cost_with_cliche_thing = null;
+    $cost_with_cliche_kg = null;    $cost_no_cliche_pieces = null;    $cost_with_cliche_pieces = null;
     
     $sql = "select pure_area, pure_width, pure_length, pure_length_lam, "
             . "dirty_length, dirty_width, dirty_area, pure_weight, dirty_weight, material_price, print_time, tuning_time, "
@@ -468,7 +468,7 @@ elseif(!empty ($id) && !empty ($date)) {
             . "cliche_price, paint_price, pure_weight_lam1, dirty_weight_lam1, "
             . "price_lam1_material, price_lam1_glue, price_lam1_work, pure_weight_lam2, dirty_weight_lam2, price_lam2_material, "
             . "price_lam2_glue, price_lam2_work, price_lam_total, pure_weight_total, dirty_weight_total, cost_no_cliche, "
-            . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_thing, cost_with_cliche_thing"
+            . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_pieces, cost_with_cliche_pieces"
             . " from request_calc_result where request_calc_id = $id order by id desc limit 1";
     $fetcher = new Fetcher($sql);
 
@@ -510,8 +510,8 @@ elseif(!empty ($id) && !empty ($date)) {
         $cost_with_cliche = $row['cost_with_cliche'];
         $cost_no_cliche_kg = $row['cost_no_cliche_kg'];
         $cost_with_cliche_kg = $row['cost_with_cliche_kg'];
-        $cost_no_cliche_thing = $row['cost_no_cliche_thing'];
-        $cost_with_cliche_thing = $row['cost_with_cliche_thing'];
+        $cost_no_cliche_pieces = $row['cost_no_cliche_pieces'];
+        $cost_with_cliche_pieces = $row['cost_with_cliche_pieces'];
     }
 }
 ?>
@@ -798,7 +798,7 @@ elseif(!empty ($id) && !empty ($date)) {
                 <div class="d-table-cell">
                     <h3>За 1 кг</h3>
                 </div>
-                <?php elseif($unit == "thing" && !empty($quantity)): ?>
+                <?php elseif($unit == "pieces" && !empty($quantity)): ?>
                 <div class="d-table-cell">
                     <h3>За 1 шт</h3>
                 </div>
@@ -816,10 +816,10 @@ elseif(!empty ($id) && !empty ($date)) {
                     <div class="param-name">Без форм</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cost_no_cliche_kg, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
-                <?php elseif($unit == "thing" && !empty($quantity)): ?>
+                <?php elseif($unit == "pieces" && !empty($quantity)): ?>
                 <div class="d-table-cell pb-1 pr-4">
                     <div class="param-name">Без форм</div>
-                    <div class="value"><?=rtrim(rtrim(number_format($cost_no_cliche_thing, 3, ",", " "), "0"), ",") ?> руб</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($cost_no_cliche_pieces, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
             </div>
@@ -833,10 +833,10 @@ elseif(!empty ($id) && !empty ($date)) {
                     <div class="param-name">С формами</div>
                     <div class="value"><?=rtrim(rtrim(number_format($cost_with_cliche_kg, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
-                <?php elseif($unit == "thing" && !empty($quantity)): ?>
+                <?php elseif($unit == "pieces" && !empty($quantity)): ?>
                 <div class="d-table-cell pb-1 pr-4">
                     <div class="param-name">С формами</div>
-                    <div class="value"><?=rtrim(rtrim(number_format($cost_with_cliche_thing, 3, ",", " "), "0"), ",") ?> руб</div>
+                    <div class="value"><?=rtrim(rtrim(number_format($cost_with_cliche_pieces, 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
             </div>
@@ -854,7 +854,7 @@ elseif(!empty ($id) && !empty ($date)) {
             <div class="algorithm">если в шт: ширина ручья / 1000 * длина этикетки вдоль рапорта вала / 1000 * количество этикеток в заказе</div>
             <?php if($unit == 'kg'): ?>
             <div class="value mb-2"><?="1000 * $quantity / (".$c_weight.(empty($c_weight_lam1) ? "" : " + ".$c_weight_lam1).(empty($c_weight_lam2) ? "" : " + ".$c_weight_lam2).") = ".$pure_area ?></div>
-            <?php elseif($unit == 'thing'): ?>
+            <?php elseif($unit == 'pieces'): ?>
             <div class="value mb-2"><?="$stream_width / 1000 * $length / 1000 * $quantity = $pure_area" ?></div>
             <?php endif; ?>
             
@@ -1216,14 +1216,14 @@ elseif(!empty ($id) && !empty ($date)) {
             <div class="value mb-2"><?=($cost_with_cliche ?? 0)." / ".($quantity ?? 0)." = $cost_with_cliche_kg" ?></div>
             <?php endif; ?>
             
-            <?php if($unit == "thing" && !empty($quantity)): ?>
+            <?php if($unit == "pieces" && !empty($quantity)): ?>
             <div class="param-name">Итого себестоимость за 1 шт без форм</div>
             <div class="algorithm">итого себестоимость без форм / объём заказа</div>
-            <div class="value mb-2"><?=($cost_no_cliche ?? 0)." / ".($quantity ?? 0)." = $cost_no_cliche_thing" ?></div>
+            <div class="value mb-2"><?=($cost_no_cliche ?? 0)." / ".($quantity ?? 0)." = $cost_no_cliche_pieces" ?></div>
             
             <div class="param-name">Итого себестоимость за 1 шт с формами</div>
             <div class="algorithm">итого стоимость с формами / объём заказа</div>
-            <div class="value mb-2"><?=($cost_with_cliche ?? 0)." / ".($quantity ?? 0)." = $cost_with_cliche_thing" ?></div>
+            <div class="value mb-2"><?=($cost_with_cliche ?? 0)." / ".($quantity ?? 0)." = $cost_with_cliche_pieces" ?></div>
             <?php endif; ?>
         </div>
         <?php

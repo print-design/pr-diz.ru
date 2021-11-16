@@ -496,7 +496,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     $price_lam2_material = null;    $price_lam2_glue = null;    $price_lam2_work = null;
     $price_lam_total = null;    $pure_weight_total = null;    $dirty_weight_total = null;
     $cost_no_cliche = null;    $cost_with_cliche = null;    $cost_no_cliche_kg = null;
-    $cost_with_cliche_kg = null;    $cost_no_cliche_thing = null;    $cost_with_cliche_thing = null;
+    $cost_with_cliche_kg = null;    $cost_no_cliche_pieces = null;    $cost_with_cliche_pieces = null;
 
     $sql = "select pure_area, pure_width, pure_length, pure_length_lam, "
             . "dirty_length, dirty_width, dirty_area, pure_weight, dirty_weight, material_price, print_time, tuning_time, "
@@ -504,7 +504,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
             . "cliche_price, paint_price, pure_weight_lam1, dirty_weight_lam1, "
             . "price_lam1_material, price_lam1_glue, price_lam1_work, pure_weight_lam2, dirty_weight_lam2, price_lam2_material, "
             . "price_lam2_glue, price_lam2_work, price_lam_total, pure_weight_total, dirty_weight_total, cost_no_cliche, "
-            . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_thing, cost_with_cliche_thing"
+            . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_pieces, cost_with_cliche_pieces"
             . " from request_calc_result where request_calc_id = $id order by id desc limit 1";
     $fetcher = new Fetcher($sql);
 
@@ -546,8 +546,8 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
         $cost_with_cliche = $row['cost_with_cliche'];
         $cost_no_cliche_kg = $row['cost_no_cliche_kg'];
         $cost_with_cliche_kg = $row['cost_with_cliche_kg'];
-        $cost_no_cliche_thing = $row['cost_no_cliche_thing'];
-        $cost_with_cliche_thing = $row['cost_with_cliche_thing'];
+        $cost_no_cliche_pieces = $row['cost_no_cliche_pieces'];
+        $cost_with_cliche_pieces = $row['cost_with_cliche_pieces'];
     }
     
     // Стоимость новой формы
@@ -673,8 +673,8 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     echo mb_convert_encoding("Номер вала второй ламинации:1;\n", "cp1251");
     echo mb_convert_encoding("Итого, себестоимость за 1кг без форм, руб :    $cost_no_cliche_kg;\n", "cp1251");
     echo mb_convert_encoding("Итого, себестоимость за 1кг с формами, руб :    $cost_with_cliche_kg;\n", "cp1251");
-    echo mb_convert_encoding("Итого, себестоимость за 1шт без форм, руб :      $cost_no_cliche_thing;\n", "cp1251");
-    echo mb_convert_encoding("Итого, себестоимость за 1шт с формами, руб :      $cost_with_cliche_thing;\n", "cp1251");
+    echo mb_convert_encoding("Итого, себестоимость за 1шт без форм, руб :      $cost_no_cliche_pieces;\n", "cp1251");
+    echo mb_convert_encoding("Итого, себестоимость за 1шт с формами, руб :      $cost_with_cliche_pieces;\n", "cp1251");
     echo mb_convert_encoding("Расход лака, ProcentLak :      $procentlak;\n", "cp1251");
     echo mb_convert_encoding("Расход клея при 1 ламинации, гр на м2:      0.00;\n", "cp1251");
     echo mb_convert_encoding("Расход клея при 2 ламинации, гр на м2:      0.00;\n", "cp1251");
