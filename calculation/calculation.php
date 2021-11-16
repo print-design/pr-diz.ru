@@ -150,7 +150,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
                 $$cmyk_var = null;
             }
         
-        $percent_var = "percent_$i";
+            $percent_var = "percent_$i";
             if($i <= $paints_count) {
                 $$percent_var = $row[$percent_var];
             }
@@ -652,7 +652,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $pure_length = ($pure_area ?? 0) / $pure_width * 1000;
     }
     else {
-        $error_message = "Отсутствует информация о ширине тиража";
+        $error_message = "Отсутствуют данные о ширине тиража";
     }
         
     // Длина тиража чистая с ламинацией, м
@@ -679,7 +679,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     // без лыж: ширина тиража обрезная
     // затем отругляем ширину тиража с отходами до возможности деления на 5 без остатка
     $dirty_width = null;
-        
+    
     if($no_ski) {
         $dirty_width = $pure_width / 1000;
     }
@@ -687,7 +687,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $dirty_width = ($pure_width + $ski) / 1000;
     }
     else {
-        $error_message = "Если печать с лыжами, то должна быть указана ширина лыж";
+        $error_message = "Отсутствуют данные о ширине лыж";
     }
     
     if(!empty($dirty_width)) {
@@ -714,31 +714,43 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             $dirty_width *= 1000;
         }
     }
-        
+    else {
+        $error_message = "Отсутствуют данные о ширине тиража с отходами";
+    }
+    
     // Площадь тиража с отходами, м2
     // длина тиража с отходами * ширина тиража с отходами
     $dirty_area = 0;
-        
+    
     if(!empty($dirty_width)) {
         $dirty_area = ($dirty_length ?? 0) * $dirty_width / 1000;
     }
-        
+    else {
+        $error_message = "Отсутствуют данные о ширине тиража с отходами";
+    }
+    
     // Вес материала печати чистый, кг
     // площадь тиража чистая * удельный вес материала / 1000
     $pure_weight = 0;
-        
+    
     if(!empty($c_weight)) {
         $pure_weight = ($pure_area ?? 0) * $c_weight / 1000;
     }
-        
+    else {
+        $error_message = "Отсутствуют данные об удельном весе материала";
+    }
+    
     // Вес материала печати с отходами, кг
     // площадь тиража с отходами * удельный вес материала / 1000
     $dirty_weight = 0;
-        
+    
     if(!empty($c_weight)) {
         $dirty_weight = ($dirty_area ?? 0) * $c_weight / 1000;
     }
-        
+    else {
+        $error_message = "Отсутствуют данные об удельном весе материала";
+    }
+    
     // Стоимость материала печати, руб
     // вес материала печати с отходами * цена материала за 1 кг
     // Если сырьё заказчика, то стоимость материала 0
@@ -747,193 +759,215 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     if($customers_material) {
         $material_price = 0;
     }
-    else if(!empty($c_price)) {
+    elseif(!empty($c_price)) {
         $material_price = ($dirty_weight ?? 0) * $c_price;
     }
-        
+    else {
+        $error_message = "Отсутствуют данные о стоимости материала";
+    }
+    
     //***************************************************************************
-        
-    // Время печати тиража без приладки, ч
-    // длина тиража чистая / 1000 / скорость работы флекс машины
-    $print_time = null;
-        
+    // СТОИМОСТЬ ПЕЧАТИ
+    
+    $print_time = null; // Время печати тиража без приладки, ч
+    $tuning_time = null; // Время приладки, ч
+    $print_tuning_time = null; // Время печати с приладкой, ч
+    $print_price = null; // Стоимость печати, руб
+    
+    $cliche_area = null; // Площадь печатной формы, см2
+    $cliche_flint_price = null; // Стоимость 1 новой формы Флинт, руб
+    $cliche_kodak_price = null; // Стоимость 1 новой формы Кодак, руб
+    $cliche_tver_price = null; // Стоимость 1 новой формы Тверь, руб
+    $cliche_price = null; // Стоимость комплекта печатных форм
+    
+    $paint_price = null; // Стоимость краски + лака + растворителя, руб
+    
     if(!empty($machine_id)) {
+        // Время печати тиража без приладки, ч
+        // длина тиража чистая / 1000 / скорость работы флекс машины
         $print_time = ($pure_length ?? 0) / 1000 / $machine_speeds[$machine_id];
-    }
+    
+        // Время приладки, ч
+        // время приладки каждой краски * число красок
+        if(!empty($paints_count)) {
+            $tuning_time = $tuning_times[$machine_id] / 60 * $paints_count;
+        }
+        else {
+            $error_message = "Отсутствуют данные о количестве красок";
+        }
+    
+        // Время печати с приладкой, ч
+        // время печати + время приладки
+        $print_tuning_time = ($print_time ?? 0) + ($tuning_time ?? 0);
         
-    // Время приладки, ч
-    // время приладки каждой краски * число красок
-    $tuning_time = null;
-        
-    if(!empty($machine_id) && !empty($paints_count)) {
-        $tuning_time = $tuning_times[$machine_id] / 60 * $paints_count;
-    }
-        
-    // Время печати с приладкой, ч
-    // время печати + время приладки
-    $print_tuning_time = ($print_time ?? 0) + ($tuning_time ?? 0);
-        
-    // Стоимость печати, руб
-    // время печати с приладкой * стоимость работы машины
-    $print_price = null;
-        
-    if(!empty($machine_id)) {
+        // Стоимость печати, руб
+        // время печати с приладкой * стоимость работы машины
         $print_price = ($print_tuning_time ?? 0) * $machine_prices[$machine_id];
-    }
         
-    //***************************************************************
+        //***************************************************************
         
-    // Площадь печатной формы, см2
-    // (припуск * 2 + ширина тиража с отходами * 100) * (припуск * 2 + рапорт вала / 10)
-    $cliche_area = null;
+        // Площадь печатной формы, см2
+        // (припуск * 2 + ширина тиража с отходами * 100) * (припуск * 2 + рапорт вала / 10)
+        if(!empty($raport)) {
+            $cliche_area = (($cliche_additional_size ?? 0) * 2 + ($dirty_width ?? 0) / 1000 * 100) * (($cliche_additional_size ?? 0) * 2 + $raport / 10);
+        }
+        else {
+            $error_message = "Отсутствуют данные о рапорте";
+        }
         
-    if(!empty($raport)) {
-        $cliche_area = (($cliche_additional_size ?? 0) * 2 + ($dirty_width ?? 0) / 1000 * 100) * (($cliche_additional_size ?? 0) * 2 + $raport / 10);
-    }
+        // Стоимость 1 новой формы Флинт, руб
+        // площадь печатной формы * стоимость 1 см2 формы
+        $cliche_flint_price = ($cliche_area ?? 0) * ($cliche_flint ?? 0);
         
-    // Стоимость 1 новой формы Флинт, руб
-    // площадь печатной формы * стоимость 1 см2 формы
-    $cliche_flint_price = ($cliche_area ?? 0) * ($cliche_flint ?? 0);
+        // Стоимость 1 новой формы Кодак, руб
+        // площадь печатной формы * стоимость 1 см2 формы 
+        $cliche_kodak_price = ($cliche_area ?? 0) * ($cliche_kodak ?? 0);
         
-    // Стоимость 1 новой формы Кодак, руб
-    // площадь печатной формы * стоимость 1 см2 формы 
-    $cliche_kodak_price = ($cliche_area ?? 0) * ($cliche_kodak ?? 0);
+        // Стоимость 1 новой формы Тверь, руб
+        // площадь печатной формы * (стоимость 1 см2 формы + стоимость 1 см2 плёнок * коэфф. удорожания для тверских форм)
+        $cliche_tver_price = ($cliche_area ?? 0) * (($cliche_tver ?? 0) + ($cliche_film ?? 0) * ($cliche_tver_coeff ?? 0));
         
-    // Стоимость 1 новой формы Тверь, руб
-    // площадь печатной формы * (стоимость 1 см2 формы + стоимость 1 см2 плёнок * коэфф. удорожания для тверских форм)
-    $cliche_tver_price = ($cliche_area ?? 0) * (($cliche_tver ?? 0) + ($cliche_film ?? 0) * ($cliche_tver_coeff ?? 0));
-        
-    // Стоимость комплекта печатных форм
-    // сумма стоимости форм для каждой краски
-    $cliche_price = 0;
-        
-    if(!empty($cliche_flint_price) && !empty($cliche_kodak_price) && !empty($cliche_tver_price)) {
-        // Перебираем все используемые краски
-        for($i=1; $i<=8; $i++) {
-            if(!empty($paints_count) && $paints_count >= $i) {
-                $paint_var = "paint_$i";
-                $cliche_var = "cliche_$i";
-                if(!empty($$paint_var)) {        
-                    if($$cliche_var == 'old') {
-                        $cliche_price += 0;
+        // Стоимость комплекта печатных форм
+        // сумма стоимости форм для каждой краски
+        if(!empty($cliche_flint_price) && !empty($cliche_kodak_price) && !empty($cliche_tver_price)) {
+            // Перебираем все используемые краски
+            if(!empty($paints_count)){
+                for($i=1; $i<=8; $i++) {
+                    if($paints_count >= $i) {
+                        $paint_var = "paint_$i";
+                        $cliche_var = "cliche_$i";
+                        if(!empty($$paint_var)) {        
+                            if($$cliche_var == 'old') {
+                                $cliche_price += 0;
+                            }
+                            elseif($$cliche_var == 'flint') {
+                                $cliche_price += $cliche_flint_price;
+                            }
+                            elseif($$cliche_var == 'kodak') {
+                                $cliche_price += $cliche_kodak_price;
+                            }
+                            elseif($$cliche_var == 'tver') {
+                                $cliche_price += $cliche_tver_price;
+                            }
+                        }
                     }
-                    elseif($$cliche_var == 'flint') {
-                        $cliche_price += $cliche_flint_price;
-                    }
-                    elseif($$cliche_var == 'kodak') {
-                        $cliche_price += $cliche_kodak_price;
-                    }
-                    elseif($$cliche_var == 'tver') {
-                        $cliche_price += $cliche_tver_price;
+                }
+            }
+            else {
+                $error_message = "Отсутствуют данные о количестве красок";
+            }
+        }
+        else {
+            $error_message = "Отсутствуют или неполные данные о стоимости форм";
+        }
+        
+        // Стоимость краски + лака + растворителя, руб
+        if(!empty($dirty_area)) {
+            $paint_price = 0;
+            
+            // Перебираем все используемые краски
+            for($i=1; $i<=8; $i++) {
+                if(!empty($paints_count) && $paints_count >= $i) {
+                    $paint_var = "paint_$i";
+                    $percent_var = "percent_$i";
+                    $cmyk_var = "cmyk_$i";
+                
+                    if(!empty($$paint_var)) {
+                        // Площадь запечатки, м2
+                        // площадь тиража с отходами * процент краски / 100
+                        $paint_area = $dirty_area * $$percent_var / 100;
+                    
+                        // Расход краски, г/м2
+                        $paint_expense_final = 0;
+                    
+                        // Стоимость краски за 1 кг, руб
+                        $paint_price_final = 0;
+                    
+                        // Стоимость растворителя за 1 кг, руб
+                        $solvent_price_final = 0;
+                    
+                        // Процент краски по отношению к растворителю
+                        $paint_solvent_final = 0;
+                    
+                        switch ($$paint_var) {
+                            case CMYK:
+                                switch ($$cmyk_var) {
+                                    case CYAN:
+                                        $paint_expense_final = $paint_c_expense;
+                                        $paint_price_final = $paint_c;
+                                        $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
+                                        $paint_solvent_final = $paint_paint_solvent;
+                                        break;
+                                    case MAGENTA:
+                                        $paint_expense_final = $paint_m_expense;
+                                        $paint_price_final = $paint_m;
+                                        $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
+                                        $paint_solvent_final = $paint_paint_solvent;
+                                        break;
+                                    case YELLOW:
+                                        $paint_expense_final = $paint_y_expense;
+                                        $paint_price_final = $paint_y;
+                                        $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
+                                        $paint_solvent_final = $paint_paint_solvent;
+                                        break;
+                                    case KONTUR:
+                                        $paint_expense_final = $paint_k_expense;
+                                        $paint_price_final = $paint_k;
+                                        $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
+                                        $paint_solvent_final = $paint_paint_solvent;
+                                        break;
+                                };
+                                break;
+                            case PANTON:
+                                $paint_expense_final = $paint_panton_expense;
+                                $paint_price_final = $paint_panton;
+                                $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
+                                $paint_solvent_final = $paint_paint_solvent;
+                                break;
+                            case WHITE:
+                                $paint_expense_final = $paint_white_expense;
+                                $paint_price_final = $paint_white;
+                                $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
+                                $paint_solvent_final = $paint_paint_solvent;
+                                break;
+                            case LACQUER:
+                                $paint_expense_final = $paint_lacquer_expense;
+                                $paint_price_final = $paint_lacquer;
+                                $solvent_price_final = $paint_solvent_flexol82;
+                                $paint_solvent_final = $paint_lacquer_solvent;
+                                break;
+                        }
+                
+                        // Количество краски, кг
+                        // площадь запечатки * расход краски / 1000
+                        $paint_quantity = $paint_area * $paint_expense_final / 1000;
+                    
+                        // Стоимость неразведённой краски, руб
+                        // количество краски * стоимость краски за 1 кг
+                        $paint_price_sum = $paint_quantity * $paint_price_final;
+                    
+                        // Проверяем, чтобы стоимость была не меньше минимальной стоимости
+                        // Если меньше, то присваиваем стоимости значение минимальной стоимости
+                        if($paint_price_sum < $paint_min_price) {
+                            $paint_price_sum = $paint_min_price;
+                        }
+                    
+                        // Стоимость растворителя
+                        // количество краски * стоимость растворителя за 1 кг
+                        $solvent_price_sum = $paint_quantity * $solvent_price_final;
+                    
+                        // Стоимость разведённой краски
+                        // (стоимость краски * процент краски / 100) + (стоимость краски * (100 - процент краски) / 100)
+                        $paint_solvent_price_sum = ($paint_price_sum * $paint_solvent_final / 100) + ($solvent_price_sum * (100 - $paint_solvent_final) / 100);
+                    
+                        // Итого стоимость краски + лака + растворителя, руб
+                        $paint_price += $paint_solvent_price_sum;
                     }
                 }
             }
         }
-    }
-        
-    // Стоимость краски + лака + растворителя, руб
-    $paint_price = null;
-        
-    if(!empty($dirty_area) && $work_type_id == 2) {
-        $paint_price = 0;
-            
-        // Перебираем все используемые краски, лаки
-        for($i=1; $i<=8; $i++) {
-            if(!empty($paints_count) && $paints_count >= $i) {
-                $paint_var = "paint_$i";
-                $percent_var = "percent_$i";
-                $cmyk_var = "cmyk_$i";
-                
-                if(!empty($$paint_var)) {
-                    // Площадь запечатки, м2
-                    // площадь тиража с отходами * процент краски / 100
-                    $paint_area = $dirty_area * $$percent_var / 100;
-                    
-                    // Расход краски, г/м2
-                    $paint_expense_final = 0;
-                    
-                    // Стоимость краски за 1 кг, руб
-                    $paint_price_final = 0;
-                    
-                    // Стоимость растворителя за 1 кг, руб
-                    $solvent_price_final = 0;
-                    
-                    // Процент краски по отношению к растворителю
-                    $paint_solvent_final = 0;
-                    
-                    switch ($$paint_var) {
-                        case CMYK:
-                            switch ($$cmyk_var) {
-                                case CYAN:
-                                    $paint_expense_final = $paint_c_expense;
-                                    $paint_price_final = $paint_c;
-                                    $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
-                                    $paint_solvent_final = $paint_paint_solvent;
-                                    break;
-                                case MAGENTA:
-                                    $paint_expense_final = $paint_m_expense;
-                                    $paint_price_final = $paint_m;
-                                    $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
-                                    $paint_solvent_final = $paint_paint_solvent;
-                                    break;
-                                case YELLOW:
-                                    $paint_expense_final = $paint_y_expense;
-                                    $paint_price_final = $paint_y;
-                                    $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
-                                    $paint_solvent_final = $paint_paint_solvent;
-                                    break;
-                                case KONTUR:
-                                    $paint_expense_final = $paint_k_expense;
-                                    $paint_price_final = $paint_k;
-                                    $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
-                                    $paint_solvent_final = $paint_paint_solvent;
-                                    break;
-                            };
-                            break;
-                        case PANTON:
-                            $paint_expense_final = $paint_panton_expense;
-                            $paint_price_final = $paint_panton;
-                            $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
-                            $paint_solvent_final = $paint_paint_solvent;
-                            break;
-                        case WHITE:
-                            $paint_expense_final = $paint_white_expense;
-                            $paint_price_final = $paint_white;
-                            $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $paint_solvent_flexol82 : $paint_solvent_etoxipropanol;
-                            $paint_solvent_final = $paint_paint_solvent;
-                            break;
-                        case LACQUER:
-                            $paint_expense_final = $paint_lacquer_expense;
-                            $paint_price_final = $paint_lacquer;
-                            $solvent_price_final = $paint_solvent_flexol82;
-                            $paint_solvent_final = $paint_lacquer_solvent;
-                            break;
-                    }
-                
-                    // Количество краски, кг
-                    // площадь запечатки * расход краски / 1000
-                    $paint_quantity = $paint_area * $paint_expense_final / 1000;
-                    
-                    // Стоимость неразведённой краски, руб
-                    // количество краски * стоимость краски за 1 кг
-                    $paint_price_sum = $paint_quantity * $paint_price_final;
-                    
-                    // Проверяем, чтобы стоимость была не меньше минимальной стоимости
-                    if($paint_price_sum < $paint_min_price) {
-                        $paint_price_sum = $paint_min_price;
-                    }
-                    
-                    // Стоимость растворителя
-                    // количество краски * стоимость растворителя за 1 кг
-                    $solvent_price_sum = $paint_quantity * $solvent_price_final;
-                    
-                    // Стоимость разведённой краски
-                    // (стоимость краски * процент краски / 100) + (стоимость краски * (100 - процент краски) / 100)
-                    $paint_solvent_price_sum = ($paint_price_sum * $paint_solvent_final / 100) + ($solvent_price_sum * (100 - $paint_solvent_final) / 100);
-                    
-                    $paint_price += $paint_solvent_price_sum;
-                }
-            }
+        else {
+            $error_message = "Отсутствуют данные о площади тиража с отходами";
         }
     }
         
