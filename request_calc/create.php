@@ -195,8 +195,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     
     for($i=1; $i<=8; $i++) {
         if(!empty($ink_number) && is_numeric($ink_number) && $i <= $ink_number) {
-            $paint_var = "paint_".$i;
-            $$paint_var = filter_input(INPUT_POST, 'paint_'.$i);
+            $ink_var = "ink_".$i;
+            $$ink_var = filter_input(INPUT_POST, 'ink_'.$i);
             
             $color_var = "color_".$i;
             $$color_var = filter_input(INPUT_POST, 'color_'.$i);
@@ -208,13 +208,13 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
             $$percent_var = filter_input(INPUT_POST, 'percent_'.$i);
             
             // Проценты вводят художники, поэтому их не делаем обязательными
-            if($$paint_var == 'panton' && empty($$color_var)) {
+            if($$ink_var == 'panton' && empty($$color_var)) {
                 $color_valid_var = 'color_'.$i.'_valid';
                 $$color_valid_var = ISINVALID;
                 $form_valid = false;
             }
             
-            if($$paint_var == 'cmyk' && empty($$cmyk_var)) {
+            if($$ink_var == 'cmyk' && empty($$cmyk_var)) {
                 $cmyk_valid_var = 'cmyk_'.$i.'_valid';
                 $$cmyk_valid_var = ISINVALID;
                 $form_valid = false;
@@ -404,20 +404,20 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         
         // Данные о цвете
         for($i=1; $i<=8; $i++) {
-            $paint_var = "paint_$i";
+            $ink_var = "ink_$i";
             $color_var = "color_$i";
             $cmyk_var = "cmyk_$i";
             $percent_var = "percent_$i";
             $cliche_var = "cliche_$i";
             
-            $$paint_var = null;
+            $$ink_var = null;
             $$color_var = "NULL";
             $$cmyk_var = null;
             $$percent_var = "NULL";
             $$cliche_var = null;
             
             if(!empty($ink_number) && $ink_number >= $i) {
-                $$paint_var = filter_input(INPUT_POST, "paint_$i");
+                $$ink_var = filter_input(INPUT_POST, "ink_$i");
             
                 $$color_var = filter_input(INPUT_POST, "color_$i");
                 if(empty($$color_var)) $$color_var = "NULL";
@@ -440,7 +440,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
                         . "lamination2_brand_name, lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
                         . "quantity, streams_number, length, stream_width, raport, number_on_raport, lamination_roller_width, ink_number, manager_id, extracharge, ski_width, no_ski, "
-                        . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
+                        . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
                         . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                         . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
                         . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
@@ -450,7 +450,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_individual_brand_name', $lamination1_individual_price, $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, "
                         . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_individual_brand_name', $lamination2_individual_price, $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, "
                         . "$quantity, $streams_number, $length, $stream_width, $raport, $number_on_raport, $lamination_roller_width, $ink_number, $manager_id, $extracharge, $ski_width, $no_ski, "
-                        . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
+                        . "'$ink_1', '$ink_2', '$ink_3', '$ink_4', '$ink_5', '$ink_6', '$ink_7', '$ink_8', "
                         . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                         . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
                         . "'$percent_1', '$percent_2', '$percent_3', '$percent_4', '$percent_5', '$percent_6', '$percent_7', '$percent_8', "
@@ -476,8 +476,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "number_on_raport=$number_on_raport, "
                         . "lamination_roller_width=$lamination_roller_width, ink_number=$ink_number, manager_id=$manager_id, "
                         . "extracharge=$extracharge, ski_width=$ski_width, no_ski=$no_ski, "
-                        . "paint_1='$paint_1', paint_2='$paint_2', paint_3='$paint_3', paint_4='$paint_4', "
-                        . "paint_5='$paint_5', paint_6='$paint_6', paint_7='$paint_7', paint_8='$paint_8', "
+                        . "ink_1='$ink_1', ink_2='$ink_2', ink_3='$ink_3', ink_4='$ink_4', "
+                        . "ink_5='$ink_5', ink_6='$ink_6', ink_7='$ink_7', ink_8='$ink_8', "
                         . "color_1='$color_1', color_2='$color_2', color_3='$color_3', color_4='$color_4', "
                         . "color_5='$color_5', color_6='$color_6', color_7='$color_7', color_8='$color_8', "
                         . "cmyk_1='$cmyk_1', cmyk_2='$cmyk_2', cmyk_3='$cmyk_3', cmyk_4='$cmyk_4', "
@@ -511,7 +511,7 @@ if(!empty($id)) {
             . "lamination2_brand_name, lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
             . "quantity, streams_number, length, stream_width, raport, number_on_raport, lamination_roller_width, ink_number, extracharge, ski_width, no_ski, "
             . "(select id from techmap where request_calc_id = $id limit 1) techmap_id, "
-            . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
+            . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
             . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
             . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
@@ -758,11 +758,11 @@ else $extracharge = null;
 
 // Данные о цветах
 for ($i=1; $i<=8; $i++) {
-    $paint_var = "paint_$i";
-    $$paint_var = filter_input(INPUT_POST, "paint_$i");
-    if(null === $$paint_var) {
-        if(isset($row["paint_$i"])) $$paint_var = $row["paint_$i"];
-        else $$paint_var = null;
+    $ink_var = "ink_$i";
+    $$ink_var = filter_input(INPUT_POST, "ink_$i");
+    if(null === $$ink_var) {
+        if(isset($row["ink_$i"])) $$ink_var = $row["ink_$i"];
+        else $$ink_var = null;
     }
     
     $color_var = "color_$i";
@@ -1622,44 +1622,44 @@ for ($i=1; $i<=8; $i++) {
                             <?php
                             for($i=1; $i<=8; $i++):
                             $block_class = " d-none";
-                            $paint_required = "";
+                            $ink_required = "";
 
                             if(!empty($ink_number) && is_numeric($ink_number) && $i <= $ink_number) {
                                 $block_class = "";
-                                $paint_required = " required='required'";
+                                $ink_required = " required='required'";
                             }
                             ?>
-                            <div class="row paint_block<?=$block_class ?>" id="paint_block_<?=$i ?>">
+                            <div class="row ink_block<?=$block_class ?>" id="ink_block_<?=$i ?>">
                                 <?php
-                                $paint_class = " col-12";
+                                $ink_class = " col-12";
                                 $cmyk_class = " d-none";
                                 $color_class = " d-none";
                                 $percent_class = " d-none";
                                 $form_class = " d-none";
                             
-                                $paint_var_name = "paint_$i";
+                                $ink_var_name = "ink_$i";
                             
-                                if($$paint_var_name == "white" || $$paint_var_name == "lacquer") {
-                                    $paint_class = " col-6";
+                                if($$ink_var_name == "white" || $$ink_var_name == "lacquer") {
+                                    $ink_class = " col-6";
                                     $percent_class = " col-3";
                                     $form_class = " col-3";
                                 }
-                                else if($$paint_var_name == "panton") {
-                                    $paint_class = " col-3";
+                                else if($$ink_var_name == "panton") {
+                                    $ink_class = " col-3";
                                     $color_class = " col-3";
                                     $percent_class = " col-3";
                                     $form_class = " col-3";
                                 }
-                                else if($$paint_var_name == "cmyk") {
-                                    $paint_class = " col-3";
+                                else if($$ink_var_name == "cmyk") {
+                                    $ink_class = " col-3";
                                     $cmyk_class = " col-3";
                                     $percent_class = " col-3";
                                     $form_class = " col-3";
                                 }
                                 ?>
-                                <div class="form-group<?=$paint_class ?>" id="paint_group_<?=$i ?>">
-                                    <label for="paint_<?=$i ?>"><?=$i ?> цвет</label>
-                                    <select id="paint_<?=$i ?>" name="paint_<?=$i ?>" class="form-control paint" data-id="<?=$i ?>"<?=$paint_required ?>>
+                                <div class="form-group<?=$ink_class ?>" id="ink_group_<?=$i ?>">
+                                    <label for="ink_<?=$i ?>"><?=$i ?> цвет</label>
+                                    <select id="ink_<?=$i ?>" name="ink_<?=$i ?>" class="form-control paint" data-id="<?=$i ?>"<?=$ink_required ?>>
                                         <option value="" hidden="hidden" selected="selected">Цвет...</option>
                                         <?php
                                         $cmyk_selected = "";
@@ -1667,7 +1667,7 @@ for ($i=1; $i<=8; $i++) {
                                         $white_selected = "";
                                         $lacquer_selected = "";
                                     
-                                        $selected_var_name = $$paint_var_name."_selected";
+                                        $selected_var_name = $$ink_var_name."_selected";
                                         $$selected_var_name = " selected='selected'";
                                         ?>
                                         <option value="cmyk"<?=$cmyk_selected ?>>CMYK</option>
@@ -2157,15 +2157,15 @@ for ($i=1; $i<=8; $i++) {
             // Обработка выбора количества красок
             $('#ink_number').change(function(){
                 var count = $(this).val();
-                $('.paint_block').addClass('d-none');
+                $('.ink_block').addClass('d-none');
                 $('.paint').removeAttr('required');
                 
                 if(count != '') {
                     iCount = parseInt(count);
                     
                     for(var i=1; i<=iCount; i++) {
-                        $('#paint_block_' + i).removeClass('d-none');
-                        $('#paint_' + i).attr('required', 'required');
+                        $('#ink_block_' + i).removeClass('d-none');
+                        $('#ink_' + i).attr('required', 'required');
                     }
                 }
             });
@@ -2176,9 +2176,9 @@ for ($i=1; $i<=8; $i++) {
                 var data_id = $(this).attr('data-id');
                 
                 // Устанавливаем видимость всех элементов по умолчанию, как если бы выбрали пустое значение
-                $('#paint_group_' + data_id).removeClass('col-12');
-                $('#paint_group_' + data_id).removeClass('col-6');
-                $('#paint_group_' + data_id).removeClass('col-3');
+                $('#ink_group_' + data_id).removeClass('col-12');
+                $('#ink_group_' + data_id).removeClass('col-6');
+                $('#ink_group_' + data_id).removeClass('col-3');
                 
                 $('#color_group_' + data_id).removeClass('col-3');
                 $('#color_group_' + data_id).addClass('d-none');
@@ -2199,21 +2199,21 @@ for ($i=1; $i<=8; $i++) {
                 
                 // Затем, в зависимости от выбранного значения, устанавливаем видимость нужного элемента для этого значения
                 if(paint == 'lacquer')  {
-                    $('#paint_group_' + data_id).addClass('col-6');
+                    $('#ink_group_' + data_id).addClass('col-6');
                     $('#percent_group_' + data_id).addClass('col-3');
                     $('#percent_group_' + data_id).removeClass('d-none');
                     $('#cliche_group_' + data_id).addClass('col-3');
                     $('#cliche_group_' + data_id).removeClass('d-none');
                 }
                 else if(paint == 'white') {
-                    $('#paint_group_' + data_id).addClass('col-6');
+                    $('#ink_group_' + data_id).addClass('col-6');
                     $('#percent_group_' + data_id).addClass('col-3');
                     $('#percent_group_' + data_id).removeClass('d-none');
                     $('#cliche_group_' + data_id).addClass('col-3');
                     $('#cliche_group_' + data_id).removeClass('d-none');
                 }
                 else if(paint == 'cmyk') {
-                    $('#paint_group_' + data_id).addClass('col-3');
+                    $('#ink_group_' + data_id).addClass('col-3');
                     $('#cmyk_group_' + data_id).addClass('col-3');
                     $('#cmyk_group_' + data_id).removeClass('d-none');
                     $('#percent_group_' + data_id).addClass('col-3');
@@ -2224,7 +2224,7 @@ for ($i=1; $i<=8; $i++) {
                     $('#cmyk_' + data_id).attr('required', 'required');
                 }
                 else if(paint == 'panton') {
-                    $('#paint_group_' + data_id).addClass('col-3');
+                    $('#ink_group_' + data_id).addClass('col-3');
                     $('#color_group_' + data_id).addClass('col-3');
                     $('#color_group_' + data_id).removeClass('d-none');
                     $('#percent_group_' + data_id).addClass('col-3');
@@ -2235,7 +2235,7 @@ for ($i=1; $i<=8; $i++) {
                     $('#color_' + data_id).attr('required', 'required');
                 }
                 else {
-                    $('#paint_group_' + data_id).addClass('col-12');
+                    $('#ink_group_' + data_id).addClass('col-12');
                 }
             });
             

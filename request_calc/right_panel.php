@@ -289,101 +289,101 @@ elseif(!empty ($id) && !empty ($date)) {
     }
     
     // Данные о красках
-    $paint_c = null;
-    $paint_c_expense = null;
-    $paint_m = null;
-    $paint_m_expense = null;
-    $paint_y = null;
-    $paint_y_expense = null;
-    $paint_k = null;
-    $paint_k_expense = null;
-    $paint_white = null;
-    $paint_white_expense = null;
-    $paint_panton = null;
-    $paint_panton_expense = null;
-    $paint_lacquer = null;
-    $paint_lacquer_expense = null;
-    $paint_ink_solvent = null;
+    $ink_c = null;
+    $ink_c_expense = null;
+    $ink_m = null;
+    $ink_m_expense = null;
+    $ink_y = null;
+    $ink_y_expense = null;
+    $ink_k = null;
+    $ink_k_expense = null;
+    $ink_white = null;
+    $ink_white_expense = null;
+    $ink_panton = null;
+    $ink_panton_expense = null;
+    $ink_lacquer = null;
+    $ink_lacquer_expense = null;
+    $ink_ink_solvent = null;
     $ink_solvent_etoxipropanol = null;
     $ink_solvent_flexol82 = null;
-    $paint_lacquer_solvent = null;
-    $paint_min_price = null;
+    $ink_lacquer_solvent = null;
+    $ink_min_price = null;
     
     $sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, ink_solvent, solvent_etoxipropanol, solvent_etoxipropanol_currency, solvent_flexol82, solvent_flexol82_currency, lacquer_solvent, min_price "
             . "from norm_ink where date <= '$date' order by date desc limit 1";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
-        $paint_c = $row['c'];
+        $ink_c = $row['c'];
                 
         if($row['c_currency'] == USD) {
-            $paint_c *= $usd;
+            $ink_c *= $usd;
         }
         else if($row['c_currency'] == EURO) {
-            $paint_c *= $euro;
+            $ink_c *= $euro;
         }
                 
-        $paint_c_expense = $row['c_expense'];
-        $paint_m = $row['m'];
+        $ink_c_expense = $row['c_expense'];
+        $ink_m = $row['m'];
                 
         if($row['m_currency'] == USD) {
-            $paint_m *= $usd;
+            $ink_m *= $usd;
         }
         else if($row['m_currency'] == EURO) {
-            $paint_m *= $euro;
+            $ink_m *= $euro;
         }
                 
-        $paint_m_expense = $row['m_expense'];
-        $paint_y = $row['y'];
+        $ink_m_expense = $row['m_expense'];
+        $ink_y = $row['y'];
                 
         if($row['y_currency'] == USD) {
-            $paint_y *= $usd;
+            $ink_y *= $usd;
         }
         else if($row['y_currency'] == EURO) {
-            $paint_y *= $euro;
+            $ink_y *= $euro;
         }
                 
-        $paint_y_expense = $row['y_expense'];
-        $paint_k = $row['k'];
+        $ink_y_expense = $row['y_expense'];
+        $ink_k = $row['k'];
                 
         if($row['k_currency'] == USD) {
-            $paint_k *= $usd;
+            $ink_k *= $usd;
         }
         else if($row['k_currency'] == EURO) {
-            $paint_k *= $euro;
+            $ink_k *= $euro;
         }
                 
-        $paint_k_expense = $row['k_expense'];
-        $paint_white = $row['white'];
+        $ink_k_expense = $row['k_expense'];
+        $ink_white = $row['white'];
                 
         if($row['white_currency'] == USD) {
-            $paint_white *= $usd;
+            $ink_white *= $usd;
         }
         else if($row['white_currency'] == EURO) {
-            $paint_white *= $euro;
+            $ink_white *= $euro;
         }
                 
-        $paint_white_expense = $row['white_expense'];
-        $paint_panton = $row['panton'];
+        $ink_white_expense = $row['white_expense'];
+        $ink_panton = $row['panton'];
                 
         if($row['panton_currency'] == USD) {
-            $paint_panton *= $usd;
+            $ink_panton *= $usd;
         }
         else if($row['panton_currency'] == EURO) {
-            $paint_panton *= $euro;
+            $ink_panton *= $euro;
         }
                 
-        $paint_panton_expense = $row['panton_expense'];
-        $paint_lacquer = $row['lacquer'];
+        $ink_panton_expense = $row['panton_expense'];
+        $ink_lacquer = $row['lacquer'];
 
         if($row['lacquer_currency'] == USD) {
-            $paint_lacquer *= $usd;
+            $ink_lacquer *= $usd;
         }
         else if($row['lacquer_currency'] == EURO) {
-            $paint_lacquer *= $euro;
+            $ink_lacquer *= $euro;
         }
                 
-        $paint_lacquer_expense = $row['lacquer_expense'];
-        $paint_ink_solvent = $row['ink_solvent'];
+        $ink_lacquer_expense = $row['lacquer_expense'];
+        $ink_ink_solvent = $row['ink_solvent'];
         $ink_solvent_etoxipropanol = $row['solvent_etoxipropanol'];
                 
         if($row['solvent_etoxipropanol_currency'] == USD) {
@@ -402,8 +402,8 @@ elseif(!empty ($id) && !empty ($date)) {
             $ink_solvent_flexol82 *= $euro;
         }
                 
-        $paint_lacquer_solvent = $row['lacquer_solvent'];
-        $paint_min_price = $row['min_price'];
+        $ink_lacquer_solvent = $row['lacquer_solvent'];
+        $ink_min_price = $row['min_price'];
     }
         
     // Данные о клее при ламинации
@@ -953,9 +953,9 @@ elseif(!empty ($id) && !empty ($date)) {
             $cliche_price = 0;
             for($i=1; $i<=8; $i++) {
                 if(!empty($ink_number) && $ink_number >= $i) {
-                    $paint_var = "paint_$i";
+                    $ink_var = "ink_$i";
                     $cliche_var = "cliche_$i";
-                    if(!empty($$paint_var)) {
+                    if(!empty($$ink_var)) {
                         if($$cliche_var == 'old') {
                             echo "<div class='value mb-2'>$cliche_price + 0 = ".$cliche_price."</div>";
                         }
@@ -995,18 +995,18 @@ elseif(!empty ($id) && !empty ($date)) {
             
             for($i=1; $i<=8; $i++) {
                 if(!empty($ink_number) && $ink_number >= $i) {
-                    $paint_var = "paint_$i";
+                    $ink_var = "ink_$i";
                     $percent_var = "percent_$i";
                     $cmyk_var = "cmyk_$i";
                 
-                    if(!empty($$paint_var)) {
+                    if(!empty($$ink_var)) {
                         // Площадь запечатки, м2
                         // площадь тиража с отходами * процент краски / 100
-                        $paint_area = $dirty_area * $$percent_var / 100;
-                        echo "<div class='value mb-2'>1) $dirty_area * ".$$percent_var." / 100 = $paint_area</div>";
+                        $ink_area = $dirty_area * $$percent_var / 100;
+                        echo "<div class='value mb-2'>1) $dirty_area * ".$$percent_var." / 100 = $ink_area</div>";
                     
                         // Расход краски, г/м2
-                        $paint_expense_final = 0;
+                        $ink_expense_final = 0;
                     
                         // Стоимость краски за 1 кг, руб
                         $ink_price_final = 0;
@@ -1017,74 +1017,74 @@ elseif(!empty ($id) && !empty ($date)) {
                         // Процент краски по отношению к растворителю
                         $ink_solvent_final = 0;
                     
-                        switch ($$paint_var) {
+                        switch ($$ink_var) {
                             case CMYK:
                                 switch ($$cmyk_var) {
                                     case CYAN:
-                                        $paint_expense_final = $paint_c_expense;
-                                        $ink_price_final = $paint_c;
+                                        $ink_expense_final = $ink_c_expense;
+                                        $ink_price_final = $ink_c;
                                         $solvent_price_final = $machine_shortnames[$machine_id] == 'comiflex' ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
-                                        $ink_solvent_final = $paint_ink_solvent;
+                                        $ink_solvent_final = $ink_ink_solvent;
                                         break;
                                     case MAGENTA:
-                                        $paint_expense_final = $paint_m_expense;
-                                        $ink_price_final = $paint_m;
+                                        $ink_expense_final = $ink_m_expense;
+                                        $ink_price_final = $ink_m;
                                         $solvent_price_final = $machine_shortnames[$machine_id] == 'comiflex' ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
-                                        $ink_solvent_final = $paint_ink_solvent;
+                                        $ink_solvent_final = $ink_ink_solvent;
                                         break;
                                     case YELLOW:
-                                        $paint_expense_final = $paint_y_expense;
-                                        $ink_price_final = $paint_y;
+                                        $ink_expense_final = $ink_y_expense;
+                                        $ink_price_final = $ink_y;
                                         $solvent_price_final = $machine_shortnames[$machine_id] == 'comiflex' ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
-                                        $ink_solvent_final = $paint_ink_solvent;
+                                        $ink_solvent_final = $ink_ink_solvent;
                                         break;
                                     case KONTUR:
-                                        $paint_expense_final = $paint_k_expense;
-                                        $ink_price_final = $paint_k;
+                                        $ink_expense_final = $ink_k_expense;
+                                        $ink_price_final = $ink_k;
                                         $solvent_price_final = $machine_shortnames[$machine_id] == 'comiflex' ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
-                                        $ink_solvent_final = $paint_ink_solvent;
+                                        $ink_solvent_final = $ink_ink_solvent;
                                         break;
                                 };
                                 break;
                             case PANTON:
-                                $paint_expense_final = $paint_panton_expense;
-                                $ink_price_final = $paint_panton;
+                                $ink_expense_final = $ink_panton_expense;
+                                $ink_price_final = $ink_panton;
                                 $solvent_price_final = $machine_shortnames[$machine_id] == 'comiflex' ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
-                                $ink_solvent_final = $paint_ink_solvent;
+                                $ink_solvent_final = $ink_ink_solvent;
                                 break;
                             case WHITE:
-                                $paint_expense_final = $paint_white_expense;
-                                $ink_price_final = $paint_white;
+                                $ink_expense_final = $ink_white_expense;
+                                $ink_price_final = $ink_white;
                                 $solvent_price_final = $machine_shortnames[$machine_id] == 'comiflex' ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
-                                $ink_solvent_final = $paint_ink_solvent;
+                                $ink_solvent_final = $ink_ink_solvent;
                                 break;
                             case LACQUER:
-                                $paint_expense_final = $paint_lacquer_expense;
-                                $ink_price_final = $paint_lacquer;
+                                $ink_expense_final = $ink_lacquer_expense;
+                                $ink_price_final = $ink_lacquer;
                                 $solvent_price_final = $ink_solvent_flexol82;
-                                $ink_solvent_final = $paint_lacquer_solvent;
+                                $ink_solvent_final = $ink_lacquer_solvent;
                                 break;
                         }
                     
                         // Количество краски, кг
                         // площадь запечатки * расход краски / 1000
-                        $paint_quantity = $paint_area * $paint_expense_final / 1000;
-                        echo "<div class='value mb-2'>2) $paint_area * $paint_expense_final / 1000 = $paint_quantity</div>";
+                        $ink_quantity = $ink_area * $ink_expense_final / 1000;
+                        echo "<div class='value mb-2'>2) $ink_area * $ink_expense_final / 1000 = $ink_quantity</div>";
                     
                         // Стоимость неразведённой краски, руб
                         // количество краски * стоимость краски за 1 кг
-                        $ink_price_sum = $paint_quantity * $ink_price_final;
-                        echo "<div class='value mb-2'>3) $paint_quantity * $ink_price_final = $ink_price_sum</div>";
+                        $ink_price_sum = $ink_quantity * $ink_price_final;
+                        echo "<div class='value mb-2'>3) $ink_quantity * $ink_price_final = $ink_price_sum</div>";
                     
                         // Проверяем, чтобы стоимость была не меньше минимальной стоимости
-                        if($ink_price_sum < $paint_min_price) {
-                            $ink_price_sum = $paint_min_price;
+                        if($ink_price_sum < $ink_min_price) {
+                            $ink_price_sum = $ink_min_price;
                         }
                     
                         // Стоимость растворителя
                         // количество краски * стоимость растворителя за 1 кг
-                        $solvent_price_sum = $paint_quantity * $solvent_price_final;
-                        echo "<div class='value mb-2'>4) $paint_quantity * $solvent_price_final = $solvent_price_sum</div>";
+                        $solvent_price_sum = $ink_quantity * $solvent_price_final;
+                        echo "<div class='value mb-2'>4) $ink_quantity * $solvent_price_final = $solvent_price_sum</div>";
                     
                         // Стоимость разведённой краски
                         // (стоимость краски * процент краски / 100) + (стоимость растворителя * (100 - процент краски) / 100)

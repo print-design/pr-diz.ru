@@ -29,7 +29,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
             . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, c.lamination1_customers_material, "
             . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, c.lamination2_customers_material, "
             . "c.label_length, c.stream_width, c.streams_number, c.machine_type, c.raport, c.lamination_roller_width, c.ink_number, "
-            . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
+            . "c.ink_1, c.ink_2, c.ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
             . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
             . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
@@ -125,8 +125,8 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     $procentlak = 0;
     
     for($i=1; $i<=$ink_number; $i++) {
-        $paint_var = "paint_$i";
-        $$paint_var = $row[$paint_var];
+        $ink_var = "ink_$i";
+        $$ink_var = $row[$ink_var];
         
         $color_var = "color_$i";
         $$color_var = $row[$color_var];
@@ -161,7 +161,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
             }
         }
         
-        switch($$paint_var) {
+        switch($$ink_var) {
             case "cmyk":
                 if($$cmyk_var == "cyan" && empty($procentc)) {
                     $procentc = $$percent_var;
