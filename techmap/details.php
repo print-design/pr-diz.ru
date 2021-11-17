@@ -114,24 +114,24 @@ $streams_number = $row['streams_number'];
 $label_length = $row['label_length'];
 $raport = $row['raport'];
 $ink_number = $row['ink_number'];
-$paints = array();
+$inks = array();
 for($i=1; $i<=$ink_number; $i++) {
-    $paint = '';
+    $ink = '';
     
     if($row['ink_'.$i] == 'cmyk') {
-        $paint = $row['cmyk_'.$i];
+        $ink = $row['cmyk_'.$i];
     }
     elseif($row['ink_'.$i] == 'panton') {
-        $paint = 'P'.$row['color_'.$i];
+        $ink = 'P'.$row['color_'.$i];
     }
     elseif($row['ink_'.$i] == 'white') {
-        $paint = "белила";
+        $ink = "белила";
     }
     elseif($row['ink_'.$i] == 'lacquer') {
-        $paint = "лак";
+        $ink = "лак";
     }
     
-    array_push($paints, $paint);
+    array_push($inks, $ink);
 }
 $customer = $row['customer'];
 $manager = $row['manager'];
@@ -249,7 +249,7 @@ $roll_type = $row['roll_type'];
                         </table>
                     </td>
                     <th>Красочность</th>
-                    <td colspan="2"><?=implode(' + ', $paints) ?></td>
+                    <td colspan="2"><?=implode(' + ', $inks) ?></td>
                 </tr>
                 <tr>
                     <th colspan="2">Рапорт, число зубьев</th>

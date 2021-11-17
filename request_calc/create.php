@@ -1659,7 +1659,7 @@ for ($i=1; $i<=8; $i++) {
                                 ?>
                                 <div class="form-group<?=$ink_class ?>" id="ink_group_<?=$i ?>">
                                     <label for="ink_<?=$i ?>"><?=$i ?> цвет</label>
-                                    <select id="ink_<?=$i ?>" name="ink_<?=$i ?>" class="form-control paint" data-id="<?=$i ?>"<?=$ink_required ?>>
+                                    <select id="ink_<?=$i ?>" name="ink_<?=$i ?>" class="form-control ink" data-id="<?=$i ?>"<?=$ink_required ?>>
                                         <option value="" hidden="hidden" selected="selected">Цвет...</option>
                                         <?php
                                         $cmyk_selected = "";
@@ -2158,7 +2158,7 @@ for ($i=1; $i<=8; $i++) {
             $('#ink_number').change(function(){
                 var count = $(this).val();
                 $('.ink_block').addClass('d-none');
-                $('.paint').removeAttr('required');
+                $('.ink').removeAttr('required');
                 
                 if(count != '') {
                     iCount = parseInt(count);
@@ -2171,8 +2171,8 @@ for ($i=1; $i<=8; $i++) {
             });
             
             // Обработка выбора краски
-            $('.paint').change(function(){
-                paint = $(this).val();
+            $('.ink').change(function(){
+                ink = $(this).val();
                 var data_id = $(this).attr('data-id');
                 
                 // Устанавливаем видимость всех элементов по умолчанию, как если бы выбрали пустое значение
@@ -2198,21 +2198,21 @@ for ($i=1; $i<=8; $i++) {
                 $('#cmyk_' + data_id).removeAttr('required');
                 
                 // Затем, в зависимости от выбранного значения, устанавливаем видимость нужного элемента для этого значения
-                if(paint == 'lacquer')  {
+                if(ink == 'lacquer')  {
                     $('#ink_group_' + data_id).addClass('col-6');
                     $('#percent_group_' + data_id).addClass('col-3');
                     $('#percent_group_' + data_id).removeClass('d-none');
                     $('#cliche_group_' + data_id).addClass('col-3');
                     $('#cliche_group_' + data_id).removeClass('d-none');
                 }
-                else if(paint == 'white') {
+                else if(ink == 'white') {
                     $('#ink_group_' + data_id).addClass('col-6');
                     $('#percent_group_' + data_id).addClass('col-3');
                     $('#percent_group_' + data_id).removeClass('d-none');
                     $('#cliche_group_' + data_id).addClass('col-3');
                     $('#cliche_group_' + data_id).removeClass('d-none');
                 }
-                else if(paint == 'cmyk') {
+                else if(ink == 'cmyk') {
                     $('#ink_group_' + data_id).addClass('col-3');
                     $('#cmyk_group_' + data_id).addClass('col-3');
                     $('#cmyk_group_' + data_id).removeClass('d-none');
@@ -2223,7 +2223,7 @@ for ($i=1; $i<=8; $i++) {
                     
                     $('#cmyk_' + data_id).attr('required', 'required');
                 }
-                else if(paint == 'panton') {
+                else if(ink == 'panton') {
                     $('#ink_group_' + data_id).addClass('col-3');
                     $('#color_group_' + data_id).addClass('col-3');
                     $('#color_group_' + data_id).removeClass('d-none');

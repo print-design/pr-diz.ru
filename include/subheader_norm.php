@@ -25,14 +25,14 @@
                     " active" : "";
             $currency_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/currency.php')) == APPLICATION.'/admin/currency.php' ? " active" : "";
             $extracharge_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/extracharge.php')) == APPLICATION.'/admin/extracharge.php' ? " active" : "";
-            $ink_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/paint.php')) == APPLICATION.'/admin/paint.php' ? " active" : "";
+            $ink_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/ink.php')) == APPLICATION.'/admin/ink.php' ? " active" : "";
             $glue_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/glue.php')) == APPLICATION.'/admin/glue.php' ? " active" : "";
             $form_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/form.php')) == APPLICATION.'/admin/form.php' ? " active" : "";
             ?>
             <a href="laminator.php" class="mr-4<?=$laminator_class ?>">Ламинатор</a>
             <a href="currency.php" class="mr-4<?=$currency_class ?>">Курсы валют</a>
             <a href="extracharge.php" class="mr-4<?=$extracharge_class ?>">Наценка</a>
-            <a href="paint.php" class="mr-4<?=$ink_class ?>">Стоимость краски</a>
+            <a href="ink.php" class="mr-4<?=$ink_class ?>">Стоимость краски</a>
             <a href="glue.php" class="mr-4<?=$glue_class ?>">Стоимость клея</a>
             <a href="form.php" class="mr-4<?=$form_class ?>">Стоимость форм</a>
         </div>
