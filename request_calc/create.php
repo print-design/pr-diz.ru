@@ -11,7 +11,7 @@ const ZBS = "zbs";
 const COMIFLEX = "comiflex";
 
 // Значение марки плёнки "другая"
-const OTHER = "other";
+const INDIVIDUAL = "individual";
 
 // Валюты
 const USD = "usd";
@@ -123,7 +123,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     $individual_thickness = filter_input(INPUT_POST, 'individual_thickness');
     $individual_density = filter_input(INPUT_POST, 'individual_density');
     
-    if($brand_name == OTHER) {
+    if($brand_name == INDIVIDUAL) {
         // Проверка валидности параметров, введённых вручную при выборе марки плёнки "Другая"
         if(empty($individual_brand_name)) {
             $individual_brand_name_valid = ISINVALID;
@@ -1014,7 +1014,7 @@ for ($i=1; $i<=8; $i++) {
                                                 $individual_selected = " selected='selected'";
                                             }
                                             ?>
-                                        <option value="<?=OTHER ?>"<?=$individual_selected ?>>Другая</option>
+                                        <option value="<?=INDIVIDUAL ?>"<?=$individual_selected ?>>Другая</option>
                                     </select>
                                 </div>
                             </div>
@@ -1155,7 +1155,7 @@ for ($i=1; $i<=8; $i++) {
                                                     $lamination1_individual_selected = " selected='selected'";
                                                 }
                                                 ?>
-                                            <option value="<?=OTHER ?>"<?=$lamination1_individual_selected ?>>Другая</option>
+                                            <option value="<?=INDIVIDUAL ?>"<?=$lamination1_individual_selected ?>>Другая</option>
                                         </select>
                                     </div>
                                 </div>
@@ -1309,7 +1309,7 @@ for ($i=1; $i<=8; $i++) {
                                                         $lamination2_individual_selected = " selected='selected'";
                                                     }
                                                     ?>
-                                                <option value="<?=OTHER ?>"<?=$lamination2_individual_selected ?>>Другая</option>
+                                                <option value="<?=INDIVIDUAL ?>"<?=$lamination2_individual_selected ?>>Другая</option>
                                             </select>
                                         </div>
                                     </div>
@@ -1973,7 +1973,7 @@ for ($i=1; $i<=8; $i++) {
                     $('#' + prefix + 'individual_price').removeAttr('disabled');
                 }
                 
-                if(value == '<?=OTHER ?>') {
+                if(value == '<?=INDIVIDUAL ?>') {
                     $('#' + prefix + 'thickness').removeAttr('required');
                     $('#' + prefix + 'thickness').addClass('d-none');
                     $('#' + prefix + 'thickness').prev('label').addClass('d-none');

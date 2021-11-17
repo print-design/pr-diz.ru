@@ -11,7 +11,7 @@ const ZBS = "zbs";
 const COMIFLEX = "comiflex";
 
 // Значение марки плёнки "другая"
-const OTHER = "other";
+const INDIVIDUAL = "individual";
 
 // Валюты
 const USD = "usd";

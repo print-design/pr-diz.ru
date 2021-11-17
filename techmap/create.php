@@ -6,7 +6,8 @@ if(!IsInRole(array('technologist', 'dev', 'manager', 'administrator'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-const TECHMAP_CREATED_STATUS_ID = 6;
+// Значение марки плёнки "другая"
+const INDIVIDUAL = "individual";
 
 if(null !== filter_input(INPUT_POST, 'create-submit')) {
     $request_calc_id = filter_input(INPUT_POST, 'request_calc_id');
@@ -67,9 +68,9 @@ $name = $row['name'];
 $unit = $row['unit'];
 $quantity = $row['quantity'];
 $customer = $row['customer'];
-$brand_name = $row['brand_name'] == 'other' ? $row['individual_brand_name'] : $row['brand_name'];
-$lamination1_brand_name = $row['lamination1_brand_name'] == 'other' ? $row['lamination1_individual_brand_name'] : $row['lamination1_brand_name'];
-$lamination2_brand_name = $row['lamination2_brand_name'] == 'other' ? $row['lamination2_individual_brand_name'] : $row['lamination2_brand_name'];
+$brand_name = $row['brand_name'] == INDIVIDUAL ? $row['individual_brand_name'] : $row['brand_name'];
+$lamination1_brand_name = $row['lamination1_brand_name'] == INDIVIDUAL ? $row['lamination1_individual_brand_name'] : $row['lamination1_brand_name'];
+$lamination2_brand_name = $row['lamination2_brand_name'] == INDIVIDUAL ? $row['lamination2_individual_brand_name'] : $row['lamination2_brand_name'];
 $streams_count = $row['streams_count'];
 $length = $row['length'];
 $raport = $row['raport'];
