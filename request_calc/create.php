@@ -191,10 +191,10 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     }
     
     // Проверка валидности цвета, CMYK и процента
-    $paints_count = filter_input(INPUT_POST, 'paints_count');
+    $ink_number = filter_input(INPUT_POST, 'ink_number');
     
     for($i=1; $i<=8; $i++) {
-        if(!empty($paints_count) && is_numeric($paints_count) && $i <= $paints_count) {
+        if(!empty($ink_number) && is_numeric($ink_number) && $i <= $ink_number) {
             $paint_var = "paint_".$i;
             $$paint_var = filter_input(INPUT_POST, 'paint_'.$i);
             
@@ -235,11 +235,11 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     
     $machine_id = null;
     
-    if(!empty($machine_type) && !empty($paints_count)) {
+    if(!empty($machine_type) && !empty($ink_number)) {
         if($machine_type == 'comiflex') {
             $machine_id = $machine_ids['comiflex'];
         }
-        elseif($paints_count > 6) {
+        elseif($ink_number > 6) {
             $machine_id = $machine_ids['zbs3'];
         }
         else {
@@ -360,8 +360,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         if(empty($lamination_roller_width)) $lamination_roller_width = "NULL";
         
         if(empty($ski_width)) $ski_width = "NULL";
-        $paints_count = filter_input(INPUT_POST, 'paints_count');
-        if(empty($paints_count)) $paints_count = "NULL";
+        $ink_number = filter_input(INPUT_POST, 'ink_number');
+        if(empty($ink_number)) $ink_number = "NULL";
         
         $manager_id = GetUserId();
         
@@ -416,7 +416,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
             $$percent_var = "NULL";
             $$cliche_var = null;
             
-            if(!empty($paints_count) && $paints_count >= $i) {
+            if(!empty($ink_number) && $ink_number >= $i) {
                 $$paint_var = filter_input(INPUT_POST, "paint_$i");
             
                 $$color_var = filter_input(INPUT_POST, "color_$i");
@@ -439,7 +439,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "brand_name, thickness, individual_brand_name, individual_price, individual_thickness, individual_density, customers_material, "
                         . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
                         . "lamination2_brand_name, lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
-                        . "quantity, streams_number, length, stream_width, raport, number_on_raport, lamination_roller_width, paints_count, manager_id, extracharge, ski_width, no_ski, "
+                        . "quantity, streams_number, length, stream_width, raport, number_on_raport, lamination_roller_width, ink_number, manager_id, extracharge, ski_width, no_ski, "
                         . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
                         . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                         . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -449,7 +449,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "'$brand_name', $thickness, '$individual_brand_name', $individual_price, $individual_thickness, $individual_density, $customers_material, "
                         . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_individual_brand_name', $lamination1_individual_price, $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, "
                         . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_individual_brand_name', $lamination2_individual_price, $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, "
-                        . "$quantity, $streams_number, $length, $stream_width, $raport, $number_on_raport, $lamination_roller_width, $paints_count, $manager_id, $extracharge, $ski_width, $no_ski, "
+                        . "$quantity, $streams_number, $length, $stream_width, $raport, $number_on_raport, $lamination_roller_width, $ink_number, $manager_id, $extracharge, $ski_width, $no_ski, "
                         . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
                         . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                         . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
@@ -474,7 +474,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "lamination2_customers_material=$lamination2_customers_material, "
                         . "quantity=$quantity, streams_number=$streams_number, length=$length, stream_width=$stream_width, raport=$raport, "
                         . "number_on_raport=$number_on_raport, "
-                        . "lamination_roller_width=$lamination_roller_width, paints_count=$paints_count, manager_id=$manager_id, "
+                        . "lamination_roller_width=$lamination_roller_width, ink_number=$ink_number, manager_id=$manager_id, "
                         . "extracharge=$extracharge, ski_width=$ski_width, no_ski=$no_ski, "
                         . "paint_1='$paint_1', paint_2='$paint_2', paint_3='$paint_3', paint_4='$paint_4', "
                         . "paint_5='$paint_5', paint_6='$paint_6', paint_7='$paint_7', paint_8='$paint_8', "
@@ -509,7 +509,7 @@ if(!empty($id)) {
             . "brand_name, thickness, individual_brand_name, individual_price, individual_thickness, individual_density, customers_material, "
             . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
-            . "quantity, streams_number, length, stream_width, raport, number_on_raport, lamination_roller_width, paints_count, extracharge, ski_width, no_ski, "
+            . "quantity, streams_number, length, stream_width, raport, number_on_raport, lamination_roller_width, ink_number, extracharge, ski_width, no_ski, "
             . "(select id from techmap where request_calc_id = $id limit 1) techmap_id, "
             . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -730,10 +730,10 @@ if(null === $lamination_roller_width) {
     else $lamination_roller_width = null;
 }
 
-$paints_count = filter_input(INPUT_POST, 'paints_count');
-if(null === $paints_count) {
-    if(isset($row['paints_count'])) $paints_count = $row['paints_count'];
-    else $paints_count = null;
+$ink_number = filter_input(INPUT_POST, 'ink_number');
+if(null === $ink_number) {
+    if(isset($row['ink_number'])) $ink_number = $row['ink_number'];
+    else $ink_number = null;
 }
 
 $ski_width = filter_input(INPUT_POST, 'ski_width');
@@ -1604,13 +1604,13 @@ for ($i=1; $i<=8; $i++) {
                         <!-- Количество красок -->
                         <div class="print-only d-none">
                             <div class="form-group">
-                                <label for="paints_count">Количество красок</label>
-                                <select id="paints_count" name="paints_count" class="form-control print-only d-none">
+                                <label for="ink_number">Количество красок</label>
+                                <select id="ink_number" name="ink_number" class="form-control print-only d-none">
                                     <option value="" hidden="hidden">Количество красок...</option>
                                         <?php                                        
                                         for($i = 1; $i <= 8; $i++):
                                         $selected = "";
-                                        if($paints_count == $i) {
+                                        if($ink_number == $i) {
                                             $selected = " selected='selected'";
                                         }
                                         ?>
@@ -1624,7 +1624,7 @@ for ($i=1; $i<=8; $i++) {
                             $block_class = " d-none";
                             $paint_required = "";
 
-                            if(!empty($paints_count) && is_numeric($paints_count) && $i <= $paints_count) {
+                            if(!empty($ink_number) && is_numeric($ink_number) && $i <= $ink_number) {
                                 $block_class = "";
                                 $paint_required = " required='required'";
                             }
@@ -2155,7 +2155,7 @@ for ($i=1; $i<=8; $i++) {
             }
             
             // Обработка выбора количества красок
-            $('#paints_count').change(function(){
+            $('#ink_number').change(function(){
                 var count = $(this).val();
                 $('.paint_block').addClass('d-none');
                 $('.paint').removeAttr('required');

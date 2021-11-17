@@ -201,7 +201,7 @@ function OrderLink($param) {
                         }
                     }
                     
-                    $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.unit, c.quantity, c.work_type_id, c.paints_count, "
+                    $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.unit, c.quantity, c.work_type_id, c.ink_number, "
                             . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
                             . "comment, "
                             . "(select id from request_calc_result where request_calc_id = c.id order by id desc limit 1) request_calc_result_id, "
@@ -231,16 +231,16 @@ function OrderLink($param) {
                         $colour = "blue";
                         $colour_style = " color: $colour";
                     }
-                    elseif(empty ($row['paints_count'])) {
+                    elseif(empty ($row['ink_number'])) {
                         $status = "Требуется расчёт";
                         $colour = "brown";
                         $colour_style = " color: $colour";
                     }
                     else {
-                        $paints_count = $row['paints_count'];
+                        $ink_number = $row['ink_number'];
                         $percents_exist = true;
                         
-                        for($i=1; $i<=$paints_count; $i++) {
+                        for($i=1; $i<=$ink_number; $i++) {
                             if(empty($row["percent_$i"])) {
                                 $percents_exist = false;
                             }

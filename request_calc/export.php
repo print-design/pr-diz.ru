@@ -28,7 +28,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
             . "c.brand_name, c.thickness, individual_brand_name, individual_price, individual_thickness, individual_density, c.customers_material, "
             . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, c.lamination1_customers_material, "
             . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, c.lamination2_customers_material, "
-            . "c.label_length, c.stream_width, c.streams_number, c.machine_type, c.raport, c.lamination_roller_width, c.paints_count, "
+            . "c.label_length, c.stream_width, c.streams_number, c.machine_type, c.raport, c.lamination_roller_width, c.ink_number, "
             . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -84,7 +84,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     $machine_type = $row['machine_type'];
     $raport = $row['raport'];
     $lamination_roller_width = $row['lamination_roller_width'];
-    $paints_count = $row['paints_count'];
+    $ink_number = $row['ink_number'];
     
     $extracharge = $row['extracharge'];
     $ski_width = $row['ski_width'];
@@ -124,7 +124,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     $procentp8 = 0;
     $procentlak = 0;
     
-    for($i=1; $i<=$paints_count; $i++) {
+    for($i=1; $i<=$ink_number; $i++) {
         $paint_var = "paint_$i";
         $$paint_var = $row[$paint_var];
         
@@ -237,11 +237,11 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     
     $machine_id = null;
     
-    if(!empty($machine_type) && !empty($paints_count)) {
+    if(!empty($machine_type) && !empty($ink_number)) {
         if($machine_type == COMIFLEX) {
             $machine_id = $machine_ids[COMIFLEX];
         }
-        elseif($paints_count > 6) {
+        elseif($ink_number > 6) {
             $machine_id = $machine_ids['zbs3'];
         }
         else {
@@ -601,7 +601,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     echo mb_convert_encoding("Удельный вес бумаги,грамм/м2 :     $weight_final;\n", "cp1251");
     echo mb_convert_encoding("Цена материала за 1 кг,руб :    $price_final;\n", "cp1251");
     echo mb_convert_encoding("Средний курс рубля за 1 евро :     $euro;\n", "cp1251");
-    echo mb_convert_encoding("Число красок :         $paints_count;\n", "cp1251");
+    echo mb_convert_encoding("Число красок :         $ink_number;\n", "cp1251");
     echo mb_convert_encoding("Число новых форм :         $new_cliches_count;\n", "cp1251");
     echo mb_convert_encoding("Название изготовителя новых форм :$new_cliches_vendor;\n", "cp1251");
     echo mb_convert_encoding("Изготовителя новых форм (номер):$new_cliches_vendor_id;\n", "cp1251");

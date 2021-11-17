@@ -65,7 +65,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             . "c.brand_name, c.thickness, individual_brand_name, individual_price, individual_thickness, individual_density, c.customers_material, "
             . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, c.lamination1_customers_material, "
             . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, c.lamination2_customers_material, "
-            . "c.label_length, c.stream_width, c.streams_number, c.machine_type, c.raport, c.number_on_raport, c.lamination_roller_width, c.paints_count, c.manager_id, "
+            . "c.label_length, c.stream_width, c.streams_number, c.machine_type, c.raport, c.number_on_raport, c.lamination_roller_width, c.ink_number, c.manager_id, "
             . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -116,7 +116,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $raport = $row['raport']; // Рапорт
         $number_on_raport = $row['number_on_raport']; // Количество этикеток на ручье
         $lamination_roller_width = $row['lamination_roller_width']; // Ширина вала ламинации
-        $paints_count = $row['paints_count']; // Количество красок
+        $ink_number = $row['ink_number']; // Количество красок
         $manager_id = $row['manager_id']; // ID менеджера
 
         // Заполнение переменных для красок:
@@ -127,7 +127,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         // $cliche_1, ..., $cliche_8 - форма (Старая / Новая Флинт / Новая Кодак / Новая Тверь)
         for($i=1; $i<=8; $i++) {
             $paint_var = "paint_$i";
-            if($i <= $paints_count) {
+            if($i <= $ink_number) {
                 $$paint_var = $row[$paint_var];
             }
             else {
@@ -135,7 +135,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             }
         
             $color_var = "color_$i";
-            if($i <= $paints_count) {
+            if($i <= $ink_number) {
                 $$color_var = $row[$color_var];
             }
             else {
@@ -143,7 +143,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             }
         
             $cmyk_var = "cmyk_$i";
-            if($i <= $paints_count) {
+            if($i <= $ink_number) {
                 $$cmyk_var = $row[$cmyk_var];
             }
             else {
@@ -151,7 +151,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             }
         
             $percent_var = "percent_$i";
-            if($i <= $paints_count) {
+            if($i <= $ink_number) {
                 $$percent_var = $row[$percent_var];
             }
             else {
@@ -159,7 +159,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             }
         
             $cliche_var = "cliche_$i";
-            if($i <= $paints_count) {
+            if($i <= $ink_number) {
                 $$cliche_var = $row["cliche_$i"];
             }
             else {
@@ -390,11 +390,11 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     // Если тип машины "zbs" и количество красок меньше или равно 6, то машина - ZBS1
     $machine_id = null;
     
-    if(!empty($machine_type) && !empty($paints_count)) {
+    if(!empty($machine_type) && !empty($ink_number)) {
         if($machine_type == COMIFLEX) {
             $machine_id = $machine_ids[COMIFLEX];
         }
-        elseif($paints_count > 6) {
+        elseif($ink_number > 6) {
             $machine_id = $machine_ids['zbs3'];
         }
         else {
@@ -664,8 +664,8 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     // если нет печати, но есть ламинация: длина тиража чистая с ламинацией + длина приладки ламинации
     $dirty_length = 0;
         
-    if(!empty($machine_id) && !empty($paints_count)) {
-        $dirty_length = ($pure_length ?? 0) + (($pure_length ?? 0) * $tuning_waste_percents[$machine_id] / 100 + $tuning_lengths[$machine_id] * $paints_count);
+    if(!empty($machine_id) && !empty($ink_number)) {
+        $dirty_length = ($pure_length ?? 0) + (($pure_length ?? 0) * $tuning_waste_percents[$machine_id] / 100 + $tuning_lengths[$machine_id] * $ink_number);
     }
     elseif(!empty ($lamination1_brand_name)) {
         $dirty_length = ($pure_length_lam ?? 0) + $laminator_tuning_length;
@@ -789,8 +789,8 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     
         // Время приладки, ч
         // время приладки каждой краски * число красок
-        if(!empty($paints_count)) {
-            $tuning_time = $tuning_times[$machine_id] / 60 * $paints_count;
+        if(!empty($ink_number)) {
+            $tuning_time = $tuning_times[$machine_id] / 60 * $ink_number;
         }
         else {
             $error_message = "Отсутствуют данные о количестве красок";
@@ -831,9 +831,9 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         // сумма стоимости форм для каждой краски
         if(!empty($cliche_flint_price) && !empty($cliche_kodak_price) && !empty($cliche_tver_price)) {
             // Перебираем все используемые краски
-            if(!empty($paints_count)){
+            if(!empty($ink_number)){
                 for($i=1; $i<=8; $i++) {
-                    if($paints_count >= $i) {
+                    if($ink_number >= $i) {
                         $paint_var = "paint_$i";
                         $cliche_var = "cliche_$i";
                         if(!empty($$paint_var)) {        
@@ -867,7 +867,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             
             // Перебираем все используемые краски
             for($i=1; $i<=8; $i++) {
-                if(!empty($paints_count) && $paints_count >= $i) {
+                if(!empty($ink_number) && $ink_number >= $i) {
                     $paint_var = "paint_$i";
                     $percent_var = "percent_$i";
                     $cmyk_var = "cmyk_$i";
@@ -1092,7 +1092,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     // Итого себестоимость без форм, руб
     // m_dbEdit42 = m_pY10 + m_pY3 + m_dbEdit6 + dbEdit7 + CostScothF
     // стоимость материала печати + стоимость печати + стоимость красок, лака и растворителя + итого себестоимость ламинации + (стоимость скотча для наклейки форм * число красок * площадь печатной формы / 10000)
-    $cost_no_cliche = ($material_price ?? 0) + ($print_price ?? 0) + ($paint_price ?? 0) + ($price_lam_total ?? 0) + (($cliche_scotch ?? 0) * (empty($paints_count) ? 0 : intval($paints_count)) * ($cliche_area ?? 0) / 10000);
+    $cost_no_cliche = ($material_price ?? 0) + ($print_price ?? 0) + ($paint_price ?? 0) + ($price_lam_total ?? 0) + (($cliche_scotch ?? 0) * (empty($ink_number) ? 0 : intval($ink_number)) * ($cliche_area ?? 0) / 10000);
         
     // Итого себестоимость с формами, руб
     // итого стоимость без форм + стоимость комплекта печатных форм
@@ -1231,7 +1231,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.brand_name, c.thickness, individual_brand_name, individual_price, individual_thickness, individual_density, c.customers_material, "
         . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, c.lamination1_customers_material, "
         . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, c.lamination2_customers_material, "
-        . "c.label_length, c.stream_width, c.streams_number, c.machine_type, c.raport, c.number_on_raport, c.lamination_roller_width, c.paints_count, "
+        . "c.label_length, c.stream_width, c.streams_number, c.machine_type, c.raport, c.number_on_raport, c.lamination_roller_width, c.ink_number, "
         . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
         . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -1290,9 +1290,9 @@ $machine_type = $row['machine_type'];
 $raport = $row['raport'];
 $number_on_raport = $row['number_on_raport'];
 $lamination_roller_width = $row['lamination_roller_width'];
-$paints_count = $row['paints_count'];
+$ink_number = $row['ink_number'];
 
-for($i=1; $i<=$paints_count; $i++) {
+for($i=1; $i<=$ink_number; $i++) {
     $paint_var = "paint_$i";
     $$paint_var = $row[$paint_var];
     
@@ -1364,7 +1364,7 @@ $num_for_customer = $row['num_for_customer'];
                             <?php if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))): ?>
                             <?php if(!empty($request_calc_result_id)): ?>
                             <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Пересчитать</a>
-                            <?php elseif(empty($row['paints_count'])): ?>
+                            <?php elseif(empty($row['ink_number'])): ?>
                             <form method="post" class="d-inline-block">
                                 <input type="hidden" name="id" value="<?=$id ?>" />
                                 <button type="submit" name="calculate-submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Рассчитать</button>
@@ -1373,7 +1373,7 @@ $num_for_customer = $row['num_for_customer'];
                                 else:
                                     $percents_exist = true;
                         
-                                    for($i=1; $i<=$paints_count; $i++) {
+                                    for($i=1; $i<=$ink_number; $i++) {
                                         if(empty($row["percent_$i"])) {
                                             $percents_exist = false;
                                         }
@@ -1416,7 +1416,7 @@ $num_for_customer = $row['num_for_customer'];
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px blue; color: blue;">
                         <i class="fas fa-calculator"></i>&nbsp;&nbsp;&nbsp;Сделан расчёт
                     </div>
-                    <?php elseif(empty($row['paints_count'])): ?>
+                    <?php elseif(empty($row['ink_number'])): ?>
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px brown; color: brown;">
                         <i class="far fa-clock"></i>&nbsp;&nbsp;&nbsp;Требуется расчёт
                     </div>
@@ -1424,7 +1424,7 @@ $num_for_customer = $row['num_for_customer'];
                     else:
                         $percents_exist = true;
                         
-                        for($i=1; $i<=$paints_count; $i++) {
+                        for($i=1; $i<=$ink_number; $i++) {
                             if(empty($row["percent_$i"])) {
                                 $percents_exist = false;
                             }
@@ -1591,14 +1591,14 @@ $num_for_customer = $row['num_for_customer'];
                             </td>
                         </tr>
                             <?php
-                            if(!empty($paints_count)):
+                            if(!empty($ink_number)):
                             ?>
                         <tr>
-                            <th>Красочность: <?=$paints_count ?></th>
+                            <th>Красочность: <?=$ink_number ?></th>
                             <td class="param-value">
                                 <table class="w-100">
                                     <?php
-                                    for($i=1; $i<=$paints_count; $i++):
+                                    for($i=1; $i<=$ink_number; $i++):
                                     $paint_var = "paint_$i";
                                     $color_var = "color_$i";
                                     $cmyk_var = "cmyk_$i";

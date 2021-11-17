@@ -214,11 +214,11 @@ elseif(!empty ($id) && !empty ($date)) {
     
     $machine_id = null;
     
-    if(!empty($machine_type) && !empty($paints_count)) {
+    if(!empty($machine_type) && !empty($ink_number)) {
         if($machine_type == 'comiflex') {
             $machine_id = $machine_ids['comiflex'];
         }
-        elseif($paints_count > 6) {
+        elseif($ink_number > 6) {
             $machine_id = $machine_ids['zbs3'];
         }
         else {
@@ -731,7 +731,7 @@ elseif(!empty ($id) && !empty ($date)) {
                 <?php if($work_type_id == 2): ?>
                 <div class="d-table-cell pb-1 pr-4">
                     <div class="param-name">Стоимость скотча для наклейки форм</div>
-                    <div class="value"><?=rtrim(rtrim(number_format((($cliche_scotch ?? 0) * ($paints_count ?? 0) * ($cliche_area ?? 0) / 10000), 3, ",", " "), "0"), ",") ?> руб</div>
+                    <div class="value"><?=rtrim(rtrim(number_format((($cliche_scotch ?? 0) * ($ink_number ?? 0) * ($cliche_area ?? 0) / 10000), 3, ",", " "), "0"), ",") ?> руб</div>
                 </div>
                 <?php endif; ?>
                 <?php if(!empty($lamination2_brand_name)): ?>
@@ -874,8 +874,8 @@ elseif(!empty ($id) && !empty ($date)) {
             <div class="algorithm">если есть печать: длина тиража чистая + (длина тиража чистая * процент отхода машины / 100</div>
             <div class="algorithm">+ длина приладки для машины * число красок)</div>
             <div class="algorithm">если нет печати, но есть ламинация: длина тиража чистая с ламинацией + длина приладки ламинации</div>
-            <?php if(!empty($machine_id) && !empty($pure_length) && !empty($paints_count) && !empty($tuning_waste_percents[$machine_id])): ?>
-            <div class="value mb-2"><?="$pure_length + ($pure_length * $tuning_waste_percents[$machine_id] / 100 + $tuning_lengths[$machine_id] * $paints_count) = $dirty_length" ?></div>
+            <?php if(!empty($machine_id) && !empty($pure_length) && !empty($ink_number_count) && !empty($tuning_waste_percents[$machine_id])): ?>
+            <div class="value mb-2"><?="$pure_length + ($pure_length * $tuning_waste_percents[$machine_id] / 100 + $tuning_lengths[$machine_id] * $ink_number) = $dirty_length" ?></div>
             <?php elseif(!empty ($lamination1_brand_name) && !empty ($pure_length_lam) && !empty ($laminator_tuning_length)): ?>
             <div class="value mb-2"><?="$pure_length_lam + $laminator_tuning_length = $dirty_length" ?></div>
             <?php endif; ?>
@@ -920,7 +920,7 @@ elseif(!empty ($id) && !empty ($date)) {
             
             <div class="param-name">Время приладки</div>
             <div class="algorithm">время приладки каждой краски / 60 * число красок</div>
-            <div class="value mb-2"><?="$tuning_times[$machine_id] / 60 * $paints_count = $tuning_time" ?></div>
+            <div class="value mb-2"><?="$tuning_times[$machine_id] / 60 * $ink_number = $tuning_time" ?></div>
             
             <div class="param-name">Время печати с приладкой</div>
             <div class="algorithm">время печати + время приладки</div>
@@ -952,7 +952,7 @@ elseif(!empty ($id) && !empty ($date)) {
             <?php
             $cliche_price = 0;
             for($i=1; $i<=8; $i++) {
-                if(!empty($paints_count) && $paints_count >= $i) {
+                if(!empty($ink_number) && $ink_number >= $i) {
                     $paint_var = "paint_$i";
                     $cliche_var = "cliche_$i";
                     if(!empty($$paint_var)) {
@@ -978,7 +978,7 @@ elseif(!empty ($id) && !empty ($date)) {
             
             <div class="param-name">Стоимость скотча для наклейки форм</div>
             <div class="algorithm">стоимость скотча для наклейки форм * число красок * площадь печатной формы / 10000</div>
-            <div class="value mb-2"><?=($cliche_scotch ?? 0)." * ".($paints_count ?? 0)." * ".($cliche_area ?? 0)." / 10000 = ".(($cliche_scotch ?? 0) * ($paints_count ?? 0) * ($cliche_area ?? 0) / 10000) ?></div>
+            <div class="value mb-2"><?=($cliche_scotch ?? 0)." * ".($ink_number ?? 0)." * ".($cliche_area ?? 0)." / 10000 = ".(($cliche_scotch ?? 0) * ($ink_number ?? 0) * ($cliche_area ?? 0) / 10000) ?></div>
             
             <div class="param-name">Стоимость краски + лака + растворителя</div>
             <div class="algorithm">Для каждой краски:</div>
@@ -994,7 +994,7 @@ elseif(!empty ($id) && !empty ($date)) {
             $paint_price = 0;
             
             for($i=1; $i<=8; $i++) {
-                if(!empty($paints_count) && $paints_count >= $i) {
+                if(!empty($ink_number) && $ink_number >= $i) {
                     $paint_var = "paint_$i";
                     $percent_var = "percent_$i";
                     $cmyk_var = "cmyk_$i";
@@ -1200,7 +1200,7 @@ elseif(!empty ($id) && !empty ($date)) {
             <div class="param-name">Итого себестоимость без форм</div>
             <div class="algorithm">стоимость материала печати + стоимость печати + стоимость красок, лака и растворителя</div>
             <div class="algorithm">+ итого себестоимость ламинации + (стоимость скотча для наклейки форм * число красок * площадь печатной формы / 10000)</div>
-            <div class="value mb-2"><?=($material_price ?? 0)." + ".($print_price ?? 0)." + ".($paint_price ?? 0)." + ".($price_lam_total ?? 0)." + (".($cliche_scotch ?? 0)." * ".($paints_count ?? 0)." * ".($cliche_area ?? 0)." / 10000) = $cost_no_cliche" ?></div>
+            <div class="value mb-2"><?=($material_price ?? 0)." + ".($print_price ?? 0)." + ".($paint_price ?? 0)." + ".($price_lam_total ?? 0)." + (".($cliche_scotch ?? 0)." * ".($ink_number ?? 0)." * ".($cliche_area ?? 0)." / 10000) = $cost_no_cliche" ?></div>
             
             <div class="param-name">Итого себестоимость с формами</div>
             <div class="algorithm">итого стоимость без форм + стоимость комплекта печатных форм</div>
