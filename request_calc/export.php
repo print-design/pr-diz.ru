@@ -33,7 +33,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
             . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
             . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
-            . "c.cliche_1, c.form_2, c.form_3, form_4, form_5, form_6, form_7, form_8, "
+            . "c.cliche_1, c.cliche_2, c.cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8, "
             . "c.extracharge, c.ski_width, c.no_ski, "
             . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
             . "wt.name work_type, "

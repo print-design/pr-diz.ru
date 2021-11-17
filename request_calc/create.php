@@ -444,7 +444,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                         . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
                         . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
-                        . "cliche_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
+                        . "cliche_1, cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8) "
                         . "values($customer_id, '$name', $work_type_id, '$unit', '$machine', "
                         . "'$brand_name', $thickness, '$individual_brand_name', $individual_price, $individual_thickness, $individual_density, $customers_material, "
                         . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_individual_brand_name', $lamination1_individual_price, $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, "
@@ -454,7 +454,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                         . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
                         . "'$percent_1', '$percent_2', '$percent_3', '$percent_4', '$percent_5', '$percent_6', '$percent_7', '$percent_8', "
-                        . "'$cliche_1', '$form_2', '$form_3', '$form_4', '$form_5', '$form_6', '$form_7', '$form_8')";
+                        . "'$cliche_1', '$cliche_2', '$cliche_3', '$cliche_4', '$cliche_5', '$cliche_6', '$cliche_7', '$cliche_8')";
                 $executer = new Executer($sql);
                 $error_message = $executer->error;
                 $id = $executer->insert_id;
@@ -484,8 +484,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "cmyk_5='$cmyk_5', cmyk_6='$cmyk_6', cmyk_7='$cmyk_7', cmyk_8='$cmyk_8', "
                         . "percent_1='$percent_1', percent_2='$percent_2', percent_3='$percent_3', percent_4='$percent_4', "
                         . "percent_5='$percent_5', percent_6='$percent_6', percent_7='$percent_7', percent_8='$percent_8', "
-                        . "cliche_1='$cliche_1', form_2='$form_2', form_3='$form_3', form_4='$form_4', "
-                        . "form_5='$form_5', form_6='$form_6', form_7='$form_7', form_8='$form_8' "
+                        . "cliche_1='$cliche_1', cliche_2='$cliche_2', cliche_3='$cliche_3', cliche_4='$cliche_4', "
+                        . "cliche_5='$cliche_5', cliche_6='$cliche_6', cliche_7='$cliche_7', cliche_8='$cliche_8' "
                         . "where id=$id";
                 $executer = new Executer($sql);
                 $error_message = $executer->error;
@@ -515,7 +515,7 @@ if(!empty($id)) {
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
             . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
             . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
-            . "cliche_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8 "
+            . "cliche_1, cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8 "
             . "from request_calc where id=$id";
     $row = (new Fetcher($sql))->Fetch();
 }
