@@ -860,7 +860,7 @@ elseif(!empty ($id) && !empty ($date)) {
             
             <div class="param-name">Ширина тиража обрезная</div>
             <div class="algorithm">ширина ручья * количество ручьёв</div>
-            <div class="value mb-2"><?="$stream_width * $streams_count = $pure_width" ?></div>
+            <div class="value mb-2"><?="$stream_width * $streams_number = $pure_width" ?></div>
             
             <div class="param-name">Длина тиража чистая</div>
             <div class="algorithm">площадь тиража чистая / ширина тиража обрезная * 1000</div>

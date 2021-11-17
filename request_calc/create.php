@@ -46,8 +46,8 @@ $individual_density_valid = '';
 
 $stream_width_valid = '';
 $stream_width_valid_message = "Ширина ручья обязательно";
-$streams_count_valid = '';
-$streams_count_valid_message = "Количество ручьёв обязательно";
+$streams_number_valid = '';
+$streams_number_valid_message = "Количество ручьёв обязательно";
 
 $length_valid = '';
 $length_message = "Длина этикетки вдоль рапорта вала обязательно";
@@ -165,10 +165,10 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $form_valid = false;
     }
     
-    $streams_count = filter_input(INPUT_POST, 'streams_count');
+    $streams_number = filter_input(INPUT_POST, 'streams_number');
     
-    if(empty($streams_count)) {
-        $streams_count_valid = ISINVALID;
+    if(empty($streams_number)) {
+        $streams_number_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -251,8 +251,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     // При этом, если печать с лыжами, то сравнивается ширина плюс лыжи.
     $sum_stream_widths = 0;
     
-    if(!empty($stream_width) && !empty($streams_count)) {
-        $sum_stream_widths = intval($stream_width) * intval($streams_count);
+    if(!empty($stream_width) && !empty($streams_number)) {
+        $sum_stream_widths = intval($stream_width) * intval($streams_number);
     }
     
     if(!empty($machine_id)) {
@@ -267,16 +267,16 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         
         if($no_ski && $sum_stream_widths > $machine_max_width) {
             $stream_width_valid_message = "Сумма ручьёв для печати не более $machine_max_width мм";
-            $streams_count_valid_message = $stream_width_valid_message;
+            $streams_number_valid_message = $stream_width_valid_message;
             $stream_width_valid = ISINVALID;
-            $streams_count_valid = ISINVALID;
+            $streams_number_valid = ISINVALID;
             $form_valid = false;
         }
         elseif(!$no_ski && ($sum_stream_widths + $ski_width) > $machine_max_width) {
             $stream_width_valid_message = "Сумма ручьёв для печати (минус лыжи) не более ".($machine_max_width - $ski_width)." мм";
-            $streams_count_valid_message = $stream_width_valid_message;
+            $streams_number_valid_message = $stream_width_valid_message;
             $stream_width_valid = ISINVALID;
-            $streams_count_valid = ISINVALID;
+            $streams_number_valid = ISINVALID;
             $form_valid = false;
         }
     }
@@ -294,9 +294,9 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         
         if($sum_stream_widths > $laminator_max_width) {
             $stream_width_valid_message = "Сумма ручьёв для ламинации не более $laminator_max_width мм";
-            $streams_count_valid_message = $stream_width_valid_message;
+            $streams_number_valid_message = $stream_width_valid_message;
             $stream_width_valid = ISINVALID;
-            $streams_count_valid = ISINVALID;
+            $streams_number_valid = ISINVALID;
             $form_valid = false;
         }
     }
@@ -354,7 +354,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         
         if($length === null || $length === '') $length = "NULL";
         if(empty($stream_width)) $stream_width = "NULL";
-        if(empty($streams_count)) $streams_count = "NULL";
+        if(empty($streams_number)) $streams_number = "NULL";
         if(empty($raport)) $raport = "NULL";
         if(empty($number_on_raport)) $number_on_raport = "NULL";
         if(empty($lamination_roller)) $lamination_roller = "NULL";
@@ -439,7 +439,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "brand_name, thickness, individual_brand_name, individual_price, individual_thickness, individual_density, customers_material, "
                         . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
                         . "lamination2_brand_name, lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
-                        . "quantity, streams_count, length, stream_width, raport, number_on_raport, lamination_roller, paints_count, manager_id, extracharge, ski_width, no_ski, "
+                        . "quantity, streams_number, length, stream_width, raport, number_on_raport, lamination_roller, paints_count, manager_id, extracharge, ski_width, no_ski, "
                         . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
                         . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                         . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -449,7 +449,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "'$brand_name', $thickness, '$individual_brand_name', $individual_price, $individual_thickness, $individual_density, $customers_material, "
                         . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_individual_brand_name', $lamination1_individual_price, $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, "
                         . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_individual_brand_name', $lamination2_individual_price, $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, "
-                        . "$quantity, $streams_count, $length, $stream_width, $raport, $number_on_raport, $lamination_roller, $paints_count, $manager_id, $extracharge, $ski_width, $no_ski, "
+                        . "$quantity, $streams_number, $length, $stream_width, $raport, $number_on_raport, $lamination_roller, $paints_count, $manager_id, $extracharge, $ski_width, $no_ski, "
                         . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
                         . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                         . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
@@ -472,7 +472,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "lamination2_individual_brand_name='$lamination2_individual_brand_name', lamination2_individual_price=$lamination2_individual_price, "
                         . "lamination2_individual_thickness=$lamination2_individual_thickness, lamination2_individual_density=$lamination2_individual_density, "
                         . "lamination2_customers_material=$lamination2_customers_material, "
-                        . "quantity=$quantity, streams_count=$streams_count, length=$length, stream_width=$stream_width, raport=$raport, "
+                        . "quantity=$quantity, streams_number=$streams_number, length=$length, stream_width=$stream_width, raport=$raport, "
                         . "number_on_raport=$number_on_raport, "
                         . "lamination_roller=$lamination_roller, paints_count=$paints_count, manager_id=$manager_id, "
                         . "extracharge=$extracharge, ski_width=$ski_width, no_ski=$no_ski, "
@@ -509,7 +509,7 @@ if(!empty($id)) {
             . "brand_name, thickness, individual_brand_name, individual_price, individual_thickness, individual_density, customers_material, "
             . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
-            . "quantity, streams_count, length, stream_width, raport, number_on_raport, lamination_roller, paints_count, extracharge, ski_width, no_ski, "
+            . "quantity, streams_number, length, stream_width, raport, number_on_raport, lamination_roller, paints_count, extracharge, ski_width, no_ski, "
             . "(select id from techmap where request_calc_id = $id limit 1) techmap_id, "
             . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -694,10 +694,10 @@ else {
     $quantity = preg_replace("/\D/", "", $quantity);
 }
 
-$streams_count = filter_input(INPUT_POST, 'streams_count');
-if(null === $streams_count) {
-    if(isset($row['streams_count'])) $streams_count = $row['streams_count'];
-    else $streams_count = null;
+$streams_number = filter_input(INPUT_POST, 'streams_number');
+if(null === $streams_number) {
+    if(isset($row['streams_number'])) $streams_number = $row['streams_number'];
+    else $streams_number = null;
 }
 
 $label_length = filter_input(INPUT_POST, 'label_length');
@@ -1452,19 +1452,19 @@ for ($i=1; $i<=8; $i++) {
                             <!-- Количество ручьёв -->
                             <div class="col-6 lam-only print-only d-none">
                                 <div class="form-group">
-                                    <label for="streams_count">Количество ручьев</label>
+                                    <label for="streams_number">Количество ручьев</label>
                                     <input type="text" 
-                                           id="streams_count" 
-                                           name="streams_count" 
-                                           class="form-control int-only lam-only print-only d-none<?=$streams_count_valid ?>" 
+                                           id="streams_number" 
+                                           name="streams_number" 
+                                           class="form-control int-only lam-only print-only d-none<?=$streams_number_valid ?>" 
                                            placeholder="Количество ручьев" 
-                                           value="<?=$streams_count ?>" 
+                                           value="<?=$streams_number ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'streams_count'); $(this).attr('name', 'streams_count'); $(this).attr('placeholder', 'Количество ручьев');" 
+                                           onmouseup="javascript: $(this).attr('id', 'streams_number'); $(this).attr('name', 'streams_number'); $(this).attr('placeholder', 'Количество ручьев');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'streams_count'); $(this).attr('name', 'streams_count'); $(this).attr('placeholder', 'Количество ручьев');" 
-                                           onfocusout="javascript: $(this).attr('id', 'streams_count'); $(this).attr('name', 'streams_count'); $(this).attr('placeholder', 'Количество ручьев');" />
-                                    <div class="invalid-feedback"><?=$streams_count_valid_message ?></div>
+                                           onkeyup="javascript: $(this).attr('id', 'streams_number'); $(this).attr('name', 'streams_number'); $(this).attr('placeholder', 'Количество ручьев');" 
+                                           onfocusout="javascript: $(this).attr('id', 'streams_number'); $(this).attr('name', 'streams_number'); $(this).attr('placeholder', 'Количество ручьев');" />
+                                    <div class="invalid-feedback"><?=$streams_number_valid_message ?></div>
                                 </div>
                             </div>
                             <!-- Количество этикеток на ручье -->
@@ -1835,13 +1835,13 @@ for ($i=1; $i<=8; $i++) {
             });
             
             // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
-            $('#streams_count').keydown(function(e) {
+            $('#streams_number').keydown(function(e) {
                 if(!KeyDownLimitIntValue($(e.target), e, 50)) {
                     return false;
                 }
             });
     
-            $("#streams_count").change(function(){
+            $("#streams_number").change(function(){
                 ChangeLimitIntValue($(this), 50);
             });
             

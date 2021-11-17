@@ -65,7 +65,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             . "c.brand_name, c.thickness, individual_brand_name, individual_price, individual_thickness, individual_density, c.customers_material, "
             . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, c.lamination1_customers_material, "
             . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, c.lamination2_customers_material, "
-            . "c.label_length, c.stream_width, c.streams_count, c.machine, c.raport, c.number_on_raport, c.lamination_roller, c.paints_count, c.manager_id, "
+            . "c.label_length, c.stream_width, c.streams_number, c.machine, c.raport, c.number_on_raport, c.lamination_roller, c.paints_count, c.manager_id, "
             . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -111,7 +111,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $lamination2_customers_material = $row['lamination2_customers_material']; // Ламинация 2 - материал заказчика (ДА/НЕТ)
         $label_length = $row['label_length']; // Длина этикетки вдоль рапорта вала
         $stream_width = $row['stream_width']; // Ширина ручья
-        $streams_count = $row['streams_count']; // Количество ручьёв
+        $streams_number = $row['streams_number']; // Количество ручьёв
         $machine = $row['machine']; // Тип машины ('zbs' или 'comiflex')
         $raport = $row['raport']; // Рапорт
         $number_on_raport = $row['number_on_raport']; // Количество этикеток на ручье
@@ -639,8 +639,8 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     // ширина ручья * количество ручьёв
     $pure_width = 0;
         
-    if(!empty($stream_width) && !empty($streams_count)) {
-        $pure_width = $stream_width * $streams_count;
+    if(!empty($stream_width) && !empty($streams_number)) {
+        $pure_width = $stream_width * $streams_number;
     }
     else {
         $error_message = "Отсутствуют данные о ширине ручья и количестве ручьёв";
@@ -1231,7 +1231,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.brand_name, c.thickness, individual_brand_name, individual_price, individual_thickness, individual_density, c.customers_material, "
         . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, c.lamination1_customers_material, "
         . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, c.lamination2_customers_material, "
-        . "c.label_length, c.stream_width, c.streams_count, c.machine, c.raport, c.number_on_raport, c.lamination_roller, c.paints_count, "
+        . "c.label_length, c.stream_width, c.streams_number, c.machine, c.raport, c.number_on_raport, c.lamination_roller, c.paints_count, "
         . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
         . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -1285,7 +1285,7 @@ $lamination2_individual_density = $row['lamination2_individual_density'];
 $lamination2_customers_material = $row['lamination2_customers_material'];
 $label_length = $row['label_length'];
 $stream_width = $row['stream_width'];
-$streams_count = $row['streams_count'];
+$streams_number = $row['streams_number'];
 $machine = $row['machine'];
 $raport = $row['raport'];
 $number_on_raport = $row['number_on_raport'];
@@ -1463,9 +1463,9 @@ $num_for_customer = $row['num_for_customer'];
                         <tr><th>Ширина ручья</th><td class="param-value"><?= rtrim(rtrim(number_format($stream_width, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                             <?php
                             endif;
-                            if(!empty($streams_count)):
+                            if(!empty($streams_number)):
                             ?>
-                        <tr><th>Количество ручьев</th><td class="param-value"><?= $streams_count ?></td></tr>
+                        <tr><th>Количество ручьев</th><td class="param-value"><?= $streams_number ?></td></tr>
                             <?php
                             endif;
                             if(!empty($raport)):

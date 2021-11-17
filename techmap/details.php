@@ -83,7 +83,7 @@ $sql = "select t.date, t.request_calc_id, t.work_date, t.work_shift, t.designer,
         . "t.reverse_print, t.self_adhesive, t.spool, t.number_per_spool, t.winding, t.roll_type, "
         . "c.name name, c.unit, c.quantity, "
         . "c.brand_name, c.individual_brand_name, c.lamination1_brand_name, c.lamination1_individual_brand_name, c.lamination2_brand_name, c.lamination2_individual_brand_name, "
-        . "c.streams_count, c.label_length, c.raport, c.paints_count, "
+        . "c.streams_number, c.label_length, c.raport, c.paints_count, "
         . "c.paint_1, c.paint_2, c.paint_3, c.paint_4, c.paint_5, c.paint_6, c.paint_7, c.paint_8, c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
         . "cus.name customer, u.last_name manager, "
         . "cr.dirty_width, cr.dirty_length "
@@ -110,7 +110,7 @@ $quantity = $row['quantity'];
 $brand_name = $row['brand_name'] == INDIVIDUAL ? $row['individual_brand_name'] : $row['brand_name'];
 $lamination1_brand_name = $row['lamination1_brand_name'] == INDIVIDUAL ? $row['lamination1_individual_brand_name'] : $row['lamination1_brand_name'];
 $lamination2_brand_name = $row['lamination2_brand_name'] == INDIVIDUAL ? $row['lamination2_individual_brand_name'] : $row['lamination2_brand_name'];
-$streams_count = $row['streams_count'];
+$streams_number = $row['streams_number'];
 $label_length = $row['label_length'];
 $raport = $row['raport'];
 $paints_count = $row['paints_count'];
@@ -261,7 +261,7 @@ $roll_type = $row['roll_type'];
                 </tr>
                 <tr>
                     <th colspan="2">Количество ручьев</th>
-                    <td colspan="2"><?=$streams_count ?></td>
+                    <td colspan="2"><?=$streams_number ?></td>
                 </tr>
                 <tr>
                     <th colspan="2">Способ наклейки (ручная, автомат)</th>
