@@ -408,13 +408,13 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
             $color_var = "color_$i";
             $cmyk_var = "cmyk_$i";
             $percent_var = "percent_$i";
-            $form_var = "form_$i";
+            $cliche_var = "cliche_$i";
             
             $$paint_var = null;
             $$color_var = "NULL";
             $$cmyk_var = null;
             $$percent_var = "NULL";
-            $$form_var = null;
+            $$cliche_var = null;
             
             if(!empty($paints_count) && $paints_count >= $i) {
                 $$paint_var = filter_input(INPUT_POST, "paint_$i");
@@ -427,7 +427,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                 $$percent_var = filter_input(INPUT_POST, "percent_$i");
                 if(empty($$percent_var)) $$percent_var = "NULL";
             
-                $$form_var = filter_input(INPUT_POST, "form_$i");
+                $$cliche_var = filter_input(INPUT_POST, "cliche_$i");
             }
         }
        
@@ -444,7 +444,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                         . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
                         . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
-                        . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
+                        . "cliche_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
                         . "values($customer_id, '$name', $work_type_id, '$unit', '$machine', "
                         . "'$brand_name', $thickness, '$individual_brand_name', $individual_price, $individual_thickness, $individual_density, $customers_material, "
                         . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_individual_brand_name', $lamination1_individual_price, $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, "
@@ -454,7 +454,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                         . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
                         . "'$percent_1', '$percent_2', '$percent_3', '$percent_4', '$percent_5', '$percent_6', '$percent_7', '$percent_8', "
-                        . "'$form_1', '$form_2', '$form_3', '$form_4', '$form_5', '$form_6', '$form_7', '$form_8')";
+                        . "'$cliche_1', '$form_2', '$form_3', '$form_4', '$form_5', '$form_6', '$form_7', '$form_8')";
                 $executer = new Executer($sql);
                 $error_message = $executer->error;
                 $id = $executer->insert_id;
@@ -484,7 +484,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "cmyk_5='$cmyk_5', cmyk_6='$cmyk_6', cmyk_7='$cmyk_7', cmyk_8='$cmyk_8', "
                         . "percent_1='$percent_1', percent_2='$percent_2', percent_3='$percent_3', percent_4='$percent_4', "
                         . "percent_5='$percent_5', percent_6='$percent_6', percent_7='$percent_7', percent_8='$percent_8', "
-                        . "form_1='$form_1', form_2='$form_2', form_3='$form_3', form_4='$form_4', "
+                        . "cliche_1='$cliche_1', form_2='$form_2', form_3='$form_3', form_4='$form_4', "
                         . "form_5='$form_5', form_6='$form_6', form_7='$form_7', form_8='$form_8' "
                         . "where id=$id";
                 $executer = new Executer($sql);
@@ -515,7 +515,7 @@ if(!empty($id)) {
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
             . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
             . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
-            . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8 "
+            . "cliche_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8 "
             . "from request_calc where id=$id";
     $row = (new Fetcher($sql))->Fetch();
 }
@@ -786,11 +786,11 @@ for ($i=1; $i<=8; $i++) {
         else $$percent_var = null;
     }
     
-    $form_var = "form_$i";
-    $$form_var = filter_input(INPUT_POST, "form_$i");
-    if(null === $$form_var) {
-        if(isset($row["form_$i"])) $$form_var = $row["form_$i"];
-        else $$form_var = null;
+    $cliche_var = "cliche_$i";
+    $$cliche_var = filter_input(INPUT_POST, "cliche_$i");
+    if(null === $$cliche_var) {
+        if(isset($row["cliche_$i"])) $$cliche_var = $row["cliche_$i"];
+        else $$cliche_var = null;
     }
 }
 ?>
@@ -1748,18 +1748,18 @@ for ($i=1; $i<=8; $i++) {
                                         <div class="invalid-feedback">Процент обязательно</div>
                                     </div>
                                 </div>
-                                <div class="form-group<?=$form_class ?>" id="form_group_<?=$i ?>">
-                                    <label for="form_<?=$i ?>">Форма</label>
-                                    <select id="form_<?=$i ?>" name="form_<?=$i ?>" class="form-control form">
+                                <div class="form-group<?=$cliche_class ?>" id="cliche_group_<?=$i ?>">
+                                    <label for="cliche_<?=$i ?>">Форма</label>
+                                    <select id="cliche_<?=$i ?>" name="form_<?=$i ?>" class="form-control form">
                                         <?php
                                         $old_selected = "";
                                         $flint_selected = "";
                                         $kodak_selected = "";
                                         $tver_selected = "";
                                     
-                                        $form_var = "form_$i";
-                                        $form_selected_var = $$form_var."_selected";
-                                        $$form_selected_var = " selected='selected'";
+                                        $cliche_var = "cliche_$i";
+                                        $cliche_selected_var = $$cliche_var."_selected";
+                                        $$cliche_selected_var = " selected='selected'";
                                         ?>
                                         <option value="old"<?=$old_selected ?>>Старая</option>
                                         <option value="flint"<?=$flint_selected ?>>Новая Флинт</option>
@@ -2189,8 +2189,8 @@ for ($i=1; $i<=8; $i++) {
                 $('#percent_group_' + data_id).removeClass('col-3');
                 $('#percent_group_' + data_id).addClass('d-none');
                 
-                $('#form_group_' + data_id).removeClass('col-3');
-                $('#form_group_' + data_id).addClass('d-none');
+                $('#cliche_group_' + data_id).removeClass('col-3');
+                $('#cliche_group_' + data_id).addClass('d-none');
                 
                 // Снимаем атрибут required с кода цвета, CMYK и процента
                 // Проценты вводит художник, поэтому их не делаем обязательными
@@ -2202,15 +2202,15 @@ for ($i=1; $i<=8; $i++) {
                     $('#paint_group_' + data_id).addClass('col-6');
                     $('#percent_group_' + data_id).addClass('col-3');
                     $('#percent_group_' + data_id).removeClass('d-none');
-                    $('#form_group_' + data_id).addClass('col-3');
-                    $('#form_group_' + data_id).removeClass('d-none');
+                    $('#cliche_group_' + data_id).addClass('col-3');
+                    $('#cliche_group_' + data_id).removeClass('d-none');
                 }
                 else if(paint == 'white') {
                     $('#paint_group_' + data_id).addClass('col-6');
                     $('#percent_group_' + data_id).addClass('col-3');
                     $('#percent_group_' + data_id).removeClass('d-none');
-                    $('#form_group_' + data_id).addClass('col-3');
-                    $('#form_group_' + data_id).removeClass('d-none');
+                    $('#cliche_group_' + data_id).addClass('col-3');
+                    $('#cliche_group_' + data_id).removeClass('d-none');
                 }
                 else if(paint == 'cmyk') {
                     $('#paint_group_' + data_id).addClass('col-3');
@@ -2218,8 +2218,8 @@ for ($i=1; $i<=8; $i++) {
                     $('#cmyk_group_' + data_id).removeClass('d-none');
                     $('#percent_group_' + data_id).addClass('col-3');
                     $('#percent_group_' + data_id).removeClass('d-none');
-                    $('#form_group_' + data_id).addClass('col-3');
-                    $('#form_group_' + data_id).removeClass('d-none');
+                    $('#cliche_group_' + data_id).addClass('col-3');
+                    $('#cliche_group_' + data_id).removeClass('d-none');
                     
                     $('#cmyk_' + data_id).attr('required', 'required');
                 }
@@ -2229,8 +2229,8 @@ for ($i=1; $i<=8; $i++) {
                     $('#color_group_' + data_id).removeClass('d-none');
                     $('#percent_group_' + data_id).addClass('col-3');
                     $('#percent_group_' + data_id).removeClass('d-none');
-                    $('#form_group_' + data_id).addClass('col-3');
-                    $('#form_group_' + data_id).removeClass('d-none');
+                    $('#cliche_group_' + data_id).addClass('col-3');
+                    $('#cliche_group_' + data_id).removeClass('d-none');
                     
                     $('#color_' + data_id).attr('required', 'required');
                 }

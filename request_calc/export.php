@@ -33,7 +33,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
             . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
             . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
-            . "c.form_1, c.form_2, c.form_3, form_4, form_5, form_6, form_7, form_8, "
+            . "c.cliche_1, c.form_2, c.form_3, form_4, form_5, form_6, form_7, form_8, "
             . "c.extracharge, c.ski_width, c.no_ski, "
             . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
             . "wt.name work_type, "
@@ -102,9 +102,9 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     $first_name = $row['first_name'];
     
     // Формы
-    $new_forms_count = 0;
-    $new_forms_vendor = "";
-    $new_forms_vendor_id = 0;
+    $new_cliches_count = 0;
+    $new_cliches_vendor = "";
+    $new_cliches_vendor_id = 0;
     
     // Краски
     $procentc = 0;
@@ -137,26 +137,26 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
         $percent_var = "percent_$i";
         $$percent_var = $row[$percent_var];
         
-        $form_var = "form_$i";
-        $$form_var = $row[$form_var];
+        $cliche_var = "cliche_$i";
+        $$cliche_var = $row[$cliche_var];
         
-        if(!empty($$form_var) && $$form_var != "old") {
-            $new_forms_count++;
+        if(!empty($$cliche_var) && $$cliche_var != "old") {
+            $new_cliches_count++;
             
-            switch ($$form_var) {
+            switch ($$cliche_var) {
                 case "flint":
-                    $new_forms_vendor = "Москва Флинт";
-                    $new_forms_vendor_id = 2;
+                    $new_cliches_vendor = "Москва Флинт";
+                    $new_cliches_vendor_id = 2;
                     break;
                 
                 case "kodak":
-                    $new_forms_vendor = "Москва Кодак";
-                    $new_forms_vendor_id = 3;
+                    $new_cliches_vendor = "Москва Кодак";
+                    $new_cliches_vendor_id = 3;
                     break;
                 
                 case "tver":
-                    $new_forms_vendor = "Тверь (наши)";
-                    $new_forms_vendor_id = 1;
+                    $new_cliches_vendor = "Тверь (наши)";
+                    $new_cliches_vendor_id = 1;
                     break;
             }
         }
@@ -553,7 +553,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     // Стоимость новой формы
     $new_cliche_price = 0;
     
-    switch($new_forms_vendor_id) {
+    switch($new_cliches_vendor_id) {
         case 1:
             $new_cliche_price = $cliche_tver_price;
             break;
@@ -602,9 +602,9 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     echo mb_convert_encoding("Цена материала за 1 кг,руб :    $price_final;\n", "cp1251");
     echo mb_convert_encoding("Средний курс рубля за 1 евро :     $euro;\n", "cp1251");
     echo mb_convert_encoding("Число красок :         $paints_count;\n", "cp1251");
-    echo mb_convert_encoding("Число новых форм :         $new_forms_count;\n", "cp1251");
-    echo mb_convert_encoding("Название изготовителя новых форм :$new_forms_vendor;\n", "cp1251");
-    echo mb_convert_encoding("Изготовителя новых форм (номер):$new_forms_vendor_id;\n", "cp1251");
+    echo mb_convert_encoding("Число новых форм :         $new_cliches_count;\n", "cp1251");
+    echo mb_convert_encoding("Название изготовителя новых форм :$new_cliches_vendor;\n", "cp1251");
+    echo mb_convert_encoding("Изготовителя новых форм (номер):$new_cliches_vendor_id;\n", "cp1251");
     echo mb_convert_encoding("Печать с лыжами :$with_ski;\n", "cp1251");
     echo mb_convert_encoding("Ширина лыж,м :      ".($ski_width / 1000).";\n", "cp1251");
     echo mb_convert_encoding("Расход краски, ProcentC :      $procentc;\n", "cp1251");
