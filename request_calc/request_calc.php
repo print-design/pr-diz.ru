@@ -65,7 +65,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             . "c.brand_name, c.thickness, individual_brand_name, individual_price, individual_thickness, individual_density, c.customers_material, "
             . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, c.lamination1_customers_material, "
             . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, c.lamination2_customers_material, "
-            . "c.label_length, c.stream_width, c.streams_number, c.machine_type, c.raport, c.number_on_raport, c.lamination_roller, c.paints_count, c.manager_id, "
+            . "c.label_length, c.stream_width, c.streams_number, c.machine_type, c.raport, c.number_on_raport, c.lamination_roller_width, c.paints_count, c.manager_id, "
             . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -115,7 +115,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $machine_type = $row['machine_type']; // Тип машины ('zbs' или 'comiflex')
         $raport = $row['raport']; // Рапорт
         $number_on_raport = $row['number_on_raport']; // Количество этикеток на ручье
-        $lamination_roller = $row['lamination_roller']; // Ширина вала ламинации
+        $lamination_roller_width = $row['lamination_roller_width']; // Ширина вала ламинации
         $paints_count = $row['paints_count']; // Количество красок
         $manager_id = $row['manager_id']; // ID менеджера
 
@@ -1012,10 +1012,10 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $price_lam1_glue = null;
             
         if(stripos($brand_name, 'pet') === 0 || stripos($lamination1_brand_name, 'pet') === 0) {
-            $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense_pet * (($pure_length_lam ?? 0) * $lamination_roller / 1000 + $laminator_tuning_length);
+            $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense_pet * (($pure_length_lam ?? 0) * $lamination_roller_width / 1000 + $laminator_tuning_length);
         }
         else {
-            $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense * (($pure_length_lam ?? 0) * $lamination_roller / 1000 + $laminator_tuning_length);
+            $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense * (($pure_length_lam ?? 0) * $lamination_roller_width / 1000 + $laminator_tuning_length);
         }
             
         // Стоимость процесса ламинации 1, руб
@@ -1062,10 +1062,10 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $price_lam2_glue = null;
             
         if(stripos($lamination2_brand_name, 'pet') === 0) {
-            $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense_pet * (($pure_length_lam ?? 0) * $lamination_roller / 1000 + $laminator_tuning_length);
+            $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense_pet * (($pure_length_lam ?? 0) * $lamination_roller_width / 1000 + $laminator_tuning_length);
         }
         else {
-            $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense * (($pure_length_lam ?? 0) * $lamination_roller / 1000 + $laminator_tuning_length);
+            $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense * (($pure_length_lam ?? 0) * $lamination_roller_width / 1000 + $laminator_tuning_length);
         }
             
         // Стоимость процесса ламинации 2, руб
@@ -1231,7 +1231,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.brand_name, c.thickness, individual_brand_name, individual_price, individual_thickness, individual_density, c.customers_material, "
         . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, c.lamination1_customers_material, "
         . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, c.lamination2_customers_material, "
-        . "c.label_length, c.stream_width, c.streams_number, c.machine_type, c.raport, c.number_on_raport, c.lamination_roller, c.paints_count, "
+        . "c.label_length, c.stream_width, c.streams_number, c.machine_type, c.raport, c.number_on_raport, c.lamination_roller_width, c.paints_count, "
         . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
         . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -1289,7 +1289,7 @@ $streams_number = $row['streams_number'];
 $machine_type = $row['machine_type'];
 $raport = $row['raport'];
 $number_on_raport = $row['number_on_raport'];
-$lamination_roller = $row['lamination_roller'];
+$lamination_roller_width = $row['lamination_roller_width'];
 $paints_count = $row['paints_count'];
 
 for($i=1; $i<=$paints_count; $i++) {
@@ -1483,9 +1483,9 @@ $num_for_customer = $row['num_for_customer'];
                         <tr><th>Длина этикетки вдоль рапорта вала</th><td class="param-value"><?= rtrim(rtrim(number_format($length, 4, ",", ""), "0"), ",") ?> мм</td></tr>
                             <?php
                             endif;
-                            if(!empty($lamination_roller)):
+                            if(!empty($lamination_roller_width)):
                             ?>
-                        <tr><th>Ширина вала ламинации</th><td class="param-value"><?= rtrim(rtrim(number_format($lamination_roller, 2, ",", ""), "0"), ",") ?> мм</td></tr>
+                        <tr><th>Ширина вала ламинации</th><td class="param-value"><?= rtrim(rtrim(number_format($lamination_roller_width, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                             <?php
                             endif;
                             if(!empty($machine_type)):

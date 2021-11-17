@@ -1134,9 +1134,9 @@ elseif(!empty ($id) && !empty ($date)) {
             <div class="algorithm">удельная стоимость клеевого раствора / 1000 * расход клея</div>
             <div class="algorithm">* (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)</div>
             <?php if(stripos($brand_name, 'pet') === 0 || stripos($lamination1_brand_name, 'pet') === 0): ?>
-            <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination_roller / 1000 + $laminator_tuning_length) = $price_lam1_glue" ?></div>
+            <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination_roller_width / 1000 + $laminator_tuning_length) = $price_lam1_glue" ?></div>
             <?php else: ?>
-            <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination_roller / 1000 + $laminator_tuning_length) = $price_lam1_glue" ?></div>
+            <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination_roller_width / 1000 + $laminator_tuning_length) = $price_lam1_glue" ?></div>
             <?php endif; ?>
             
             <div class="param-name">Стоимость процесса ламинации 1</div>
@@ -1171,9 +1171,9 @@ elseif(!empty ($id) && !empty ($date)) {
             <div class="algorithm">удельная стоимость клеевого раствора / 1000 * расход клея</div>
             <div class="algorithm">* (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)</div>
             <?php if(stripos($lamination2_brand_name, 'pet') === 0): ?>
-            <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination_roller / 1000 + $laminator_tuning_length) = $price_lam2_glue" ?></div>
+            <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense_pet * ($pure_length_lam * $lamination_roller_width / 1000 + $laminator_tuning_length) = $price_lam2_glue" ?></div>
             <?php else: ?>
-            <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination_roller / 1000 + $laminator_tuning_length) = $price_lam2_glue" ?></div>
+            <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination_roller_width / 1000 + $laminator_tuning_length) = $price_lam2_glue" ?></div>
             <?php endif; ?>
             
             <div class="param-name">Стоимость процесса ламинации 2</div>

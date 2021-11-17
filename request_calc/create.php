@@ -182,7 +182,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     
     $raport = filter_input(INPUT_POST, 'raport');
     $number_on_raport = filter_input(INPUT_POST, 'number_on_raport');
-    $lamination_roller = filter_input(INPUT_POST, 'lamination_roller');
+    $lamination_roller_width = filter_input(INPUT_POST, 'lamination_roller_width');
     $ski_width = filter_input(INPUT_POST, 'ski_width');
     
     $no_ski = 0;
@@ -357,7 +357,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         if(empty($streams_number)) $streams_number = "NULL";
         if(empty($raport)) $raport = "NULL";
         if(empty($number_on_raport)) $number_on_raport = "NULL";
-        if(empty($lamination_roller)) $lamination_roller = "NULL";
+        if(empty($lamination_roller_width)) $lamination_roller_width = "NULL";
         
         if(empty($ski_width)) $ski_width = "NULL";
         $paints_count = filter_input(INPUT_POST, 'paints_count');
@@ -439,7 +439,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "brand_name, thickness, individual_brand_name, individual_price, individual_thickness, individual_density, customers_material, "
                         . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
                         . "lamination2_brand_name, lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
-                        . "quantity, streams_number, length, stream_width, raport, number_on_raport, lamination_roller, paints_count, manager_id, extracharge, ski_width, no_ski, "
+                        . "quantity, streams_number, length, stream_width, raport, number_on_raport, lamination_roller_width, paints_count, manager_id, extracharge, ski_width, no_ski, "
                         . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
                         . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                         . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -449,7 +449,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "'$brand_name', $thickness, '$individual_brand_name', $individual_price, $individual_thickness, $individual_density, $customers_material, "
                         . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_individual_brand_name', $lamination1_individual_price, $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, "
                         . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_individual_brand_name', $lamination2_individual_price, $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, "
-                        . "$quantity, $streams_number, $length, $stream_width, $raport, $number_on_raport, $lamination_roller, $paints_count, $manager_id, $extracharge, $ski_width, $no_ski, "
+                        . "$quantity, $streams_number, $length, $stream_width, $raport, $number_on_raport, $lamination_roller_width, $paints_count, $manager_id, $extracharge, $ski_width, $no_ski, "
                         . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
                         . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                         . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
@@ -474,7 +474,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "lamination2_customers_material=$lamination2_customers_material, "
                         . "quantity=$quantity, streams_number=$streams_number, length=$length, stream_width=$stream_width, raport=$raport, "
                         . "number_on_raport=$number_on_raport, "
-                        . "lamination_roller=$lamination_roller, paints_count=$paints_count, manager_id=$manager_id, "
+                        . "lamination_roller_width=$lamination_roller_width, paints_count=$paints_count, manager_id=$manager_id, "
                         . "extracharge=$extracharge, ski_width=$ski_width, no_ski=$no_ski, "
                         . "paint_1='$paint_1', paint_2='$paint_2', paint_3='$paint_3', paint_4='$paint_4', "
                         . "paint_5='$paint_5', paint_6='$paint_6', paint_7='$paint_7', paint_8='$paint_8', "
@@ -509,7 +509,7 @@ if(!empty($id)) {
             . "brand_name, thickness, individual_brand_name, individual_price, individual_thickness, individual_density, customers_material, "
             . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
-            . "quantity, streams_number, length, stream_width, raport, number_on_raport, lamination_roller, paints_count, extracharge, ski_width, no_ski, "
+            . "quantity, streams_number, length, stream_width, raport, number_on_raport, lamination_roller_width, paints_count, extracharge, ski_width, no_ski, "
             . "(select id from techmap where request_calc_id = $id limit 1) techmap_id, "
             . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -701,7 +701,7 @@ if(null === $streams_number) {
 }
 
 $label_length = filter_input(INPUT_POST, 'label_length');
-if(null === $length) {
+if(null === $label_length) {
     if(isset($row['label_length'])) $length = $row['label_length'];
     else $label_length = null;
 }
@@ -724,10 +724,10 @@ if(null === $number_on_raport) {
     else $number_on_raport = null;
 }
 
-$lamination_roller = filter_input(INPUT_POST, 'lamination_roller');
-if(null === $lamination_roller) {
-    if(isset($row['lamination_roller'])) $lamination_roller = $row['lamination_roller'];
-    else $lamination_roller = null;
+$lamination_roller_width = filter_input(INPUT_POST, 'lamination_roller_width');
+if(null === $lamination_roller_width) {
+    if(isset($row['lamination_roller_width'])) $lamination_roller_width = $row['lamination_roller_width'];
+    else $lamination_roller_width = null;
 }
 
 $paints_count = filter_input(INPUT_POST, 'paints_count');
@@ -1546,8 +1546,8 @@ for ($i=1; $i<=8; $i++) {
                             <!-- Ширина вала ламинации -->
                             <div class="col-6 lam-only d-none">
                                 <div class="form-group">
-                                    <label for="lamination_roller">Ширина вала ламинации, мм</label>
-                                    <select id="lamination_roller" name="lamination_roller" class="form-control lam-only d-none">
+                                    <label for="lamination_roller_width">Ширина вала ламинации, мм</label>
+                                    <select id="lamination_roller_width" name="lamination_roller_width" class="form-control lam-only d-none">
                                         <option value="" hidden="hidden" selected="selected">Ширина вала ламинации...</option>
                                             <?php
                                             $sql = "select value from norm_laminator_roller order by value"; echo $sql;
@@ -1555,7 +1555,7 @@ for ($i=1; $i<=8; $i++) {
                                                 
                                             foreach ($rollers as $row):
                                             $selected = '';
-                                            if($row['value'] == $lamination_roller) {
+                                            if($row['value'] == $lamination_roller_width) {
                                                 $selected = " selected='selected'";
                                             }
                                             ?>
