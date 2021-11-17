@@ -780,7 +780,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     $cliche_tver_price = null; // Стоимость 1 новой формы Тверь, руб
     $cliche_price = null; // Стоимость комплекта печатных форм
     
-    $paint_price = null; // Стоимость краски + лака + растворителя, руб
+    $ink_price = null; // Стоимость краски + лака + растворителя, руб
     
     if(!empty($machine_id)) {
         // Время печати тиража без приладки, ч
@@ -863,7 +863,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         
         // Стоимость краски + лака + растворителя, руб
         if(!empty($dirty_area)) {
-            $paint_price = 0;
+            $ink_price = 0;
             
             // Перебираем все используемые краски
             for($i=1; $i<=8; $i++) {
@@ -881,7 +881,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
                         $paint_expense_final = 0;
                     
                         // Стоимость краски за 1 кг, руб
-                        $paint_price_final = 0;
+                        $ink_price_final = 0;
                     
                         // Стоимость растворителя за 1 кг, руб
                         $solvent_price_final = 0;
@@ -894,25 +894,25 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
                                 switch ($$cmyk_var) {
                                     case CYAN:
                                         $paint_expense_final = $paint_c_expense;
-                                        $paint_price_final = $paint_c;
+                                        $ink_price_final = $paint_c;
                                         $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
                                         $ink_solvent_final = $paint_ink_solvent;
                                         break;
                                     case MAGENTA:
                                         $paint_expense_final = $paint_m_expense;
-                                        $paint_price_final = $paint_m;
+                                        $ink_price_final = $paint_m;
                                         $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
                                         $ink_solvent_final = $paint_ink_solvent;
                                         break;
                                     case YELLOW:
                                         $paint_expense_final = $paint_y_expense;
-                                        $paint_price_final = $paint_y;
+                                        $ink_price_final = $paint_y;
                                         $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
                                         $ink_solvent_final = $paint_ink_solvent;
                                         break;
                                     case KONTUR:
                                         $paint_expense_final = $paint_k_expense;
-                                        $paint_price_final = $paint_k;
+                                        $ink_price_final = $paint_k;
                                         $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
                                         $ink_solvent_final = $paint_ink_solvent;
                                         break;
@@ -920,19 +920,19 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
                                 break;
                             case PANTON:
                                 $paint_expense_final = $paint_panton_expense;
-                                $paint_price_final = $paint_panton;
+                                $ink_price_final = $paint_panton;
                                 $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
                                 $ink_solvent_final = $paint_ink_solvent;
                                 break;
                             case WHITE:
                                 $paint_expense_final = $paint_white_expense;
-                                $paint_price_final = $paint_white;
+                                $ink_price_final = $paint_white;
                                 $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
                                 $ink_solvent_final = $paint_ink_solvent;
                                 break;
                             case LACQUER:
                                 $paint_expense_final = $paint_lacquer_expense;
-                                $paint_price_final = $paint_lacquer;
+                                $ink_price_final = $paint_lacquer;
                                 $solvent_price_final = $ink_solvent_flexol82;
                                 $ink_solvent_final = $paint_lacquer_solvent;
                                 break;
@@ -944,12 +944,12 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
                     
                         // Стоимость неразведённой краски, руб
                         // количество краски * стоимость краски за 1 кг
-                        $paint_price_sum = $paint_quantity * $paint_price_final;
+                        $ink_price_sum = $paint_quantity * $ink_price_final;
                     
                         // Проверяем, чтобы стоимость была не меньше минимальной стоимости
                         // Если меньше, то присваиваем стоимости значение минимальной стоимости
-                        if($paint_price_sum < $paint_min_price) {
-                            $paint_price_sum = $paint_min_price;
+                        if($ink_price_sum < $paint_min_price) {
+                            $ink_price_sum = $paint_min_price;
                         }
                     
                         // Стоимость растворителя
@@ -958,10 +958,10 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
                     
                         // Стоимость разведённой краски
                         // (стоимость краски * процент краски / 100) + (стоимость краски * (100 - процент краски) / 100)
-                        $ink_solvent_price_sum = ($paint_price_sum * $ink_solvent_final / 100) + ($solvent_price_sum * (100 - $ink_solvent_final) / 100);
+                        $ink_solvent_price_sum = ($ink_price_sum * $ink_solvent_final / 100) + ($solvent_price_sum * (100 - $ink_solvent_final) / 100);
                     
                         // Итого стоимость краски + лака + растворителя, руб
-                        $paint_price += $ink_solvent_price_sum;
+                        $ink_price += $ink_solvent_price_sum;
                     }
                 }
             }
@@ -1092,7 +1092,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     // Итого себестоимость без форм, руб
     // m_dbEdit42 = m_pY10 + m_pY3 + m_dbEdit6 + dbEdit7 + CostScothF
     // стоимость материала печати + стоимость печати + стоимость красок, лака и растворителя + итого себестоимость ламинации + (стоимость скотча для наклейки форм * число красок * площадь печатной формы / 10000)
-    $cost_no_cliche = ($material_price ?? 0) + ($print_price ?? 0) + ($paint_price ?? 0) + ($price_lam_total ?? 0) + (($cliche_scotch ?? 0) * (empty($ink_number) ? 0 : intval($ink_number)) * ($cliche_area ?? 0) / 10000);
+    $cost_no_cliche = ($material_price ?? 0) + ($print_price ?? 0) + ($ink_price ?? 0) + ($price_lam_total ?? 0) + (($cliche_scotch ?? 0) * (empty($ink_number) ? 0 : intval($ink_number)) * ($cliche_area ?? 0) / 10000);
         
     // Итого себестоимость с формами, руб
     // итого стоимость без форм + стоимость комплекта печатных форм
@@ -1184,7 +1184,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         if($cliche_kodak_price === null) $cliche_kodak_price = "NULL";
         if($cliche_tver_price === null) $cliche_tver_price = "NULL";
         if($cliche_price === null) $cliche_price = "NULL";
-        if($paint_price === null) $paint_price = "NULL";
+        if($ink_price === null) $ink_price = "NULL";
         if($pure_weight_lam1 === null) $pure_weight_lam1 = "NULL";
         if($dirty_weight_lam1 === null) $dirty_weight_lam1 = "NULL";
         if($price_lam1_material === null) $price_lam1_material = "NULL";
@@ -1208,14 +1208,14 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $sql = "insert into request_calc_result (request_calc_id, pure_area, pure_width, pure_length, pure_length_lam, "
                 . "dirty_length, dirty_width, dirty_area, pure_weight, dirty_weight, material_price, print_time, tuning_time, "
                 . "print_tuning_time, print_price, cliche_area, cliche_flint_price, cliche_kodak_price, cliche_tver_price, cliche_price, "
-                . "paint_price, pure_weight_lam1, dirty_weight_lam1, "
+                . "ink_price, pure_weight_lam1, dirty_weight_lam1, "
                 . "price_lam1_material, price_lam1_glue, price_lam1_work, pure_weight_lam2, dirty_weight_lam2, price_lam2_material, "
                 . "price_lam2_glue, price_lam2_work, price_lam_total, pure_weight_total, dirty_weight_total, cost_no_cliche, "
                 . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_pieces, cost_with_cliche_pieces) "
                 . "values ($id, $pure_area, $pure_width, $pure_length, $pure_length_lam, "
                 . "$dirty_length, $dirty_width, $dirty_area, $pure_weight, $dirty_weight, $material_price, $print_time, $tuning_time, "
                 . "$print_tuning_time, $print_price, $cliche_area, $cliche_flint_price, $cliche_kodak_price, $cliche_tver_price, $cliche_price, "
-                . "$paint_price, $pure_weight_lam1, $dirty_weight_lam1, "
+                . "$ink_price, $pure_weight_lam1, $dirty_weight_lam1, "
                 . "$price_lam1_material, $price_lam1_glue, $price_lam1_work, $pure_weight_lam2, $dirty_weight_lam2, $price_lam2_material, "
                 . "$price_lam2_glue, $price_lam2_work, $price_lam_total, $pure_weight_total, $dirty_weight_total, $cost_no_cliche, "
                 . "$cost_with_cliche, $cost_no_cliche_kg, $cost_with_cliche_kg, $cost_no_cliche_pieces, $cost_with_cliche_pieces)";
