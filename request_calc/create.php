@@ -49,8 +49,8 @@ $stream_width_valid_message = "Ширина ручья обязательно";
 $streams_number_valid = '';
 $streams_number_valid_message = "Количество ручьёв обязательно";
 
-$length_valid = '';
-$length_message = "Длина этикетки вдоль рапорта вала обязательно";
+$label_length_valid = '';
+$label_length_message = "Длина этикетки вдоль рапорта вала обязательно";
 $number_on_raport_valid = '';
 $number_on_raport_message = "Количество этикеток на ручье обязательно";
 $raport_valid = '';
@@ -175,8 +175,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     $label_length = filter_input(INPUT_POST, 'label_length');
     
     // Если объём заказа в штуках, то длина этикетки вдоль рапорта вала обязательно, больше нуля
-    if($unit == 'pieces' && empty($length)) {
-        $length_valid = ISINVALID;
+    if($unit == 'pieces' && empty($label_length)) {
+        $label_length_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -303,13 +303,13 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     
     // Длина этикетки вдоль рапорта, умноженная на количество этикеток на ручье
     // Должна соответствовать рапорту
-    //if($length * $number_on_raport != $raport) {
-    if(!empty($raport) && !empty($number_on_raport) && !empty($length) && round($raport / $number_on_raport, 4) != $length) {
+    //if($label_length * $number_on_raport != $raport) {
+    if(!empty($raport) && !empty($number_on_raport) && !empty($label_length) && round($raport / $number_on_raport, 4) != $label_length) {
         $raport_valid = ISINVALID;
-        $length_valid = ISINVALID;
+        $label_length_valid = ISINVALID;
         $number_on_raport_valid = ISINVALID;
         $raport_message = "Сумма длин не соответствует рапорту";
-        $length_message = $raport_message;
+        $label_length_message = $raport_message;
         $number_on_raport_message = $raport_message;
         $form_valid = false;
     }
@@ -352,7 +352,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
             $lamination2_customers_material = 1;
         }
         
-        if($length === null || $length === '') $length = "NULL";
+        if($label_length === null || $label_length === '') $label_length = "NULL";
         if(empty($stream_width)) $stream_width = "NULL";
         if(empty($streams_number)) $streams_number = "NULL";
         if(empty($raport)) $raport = "NULL";
@@ -439,7 +439,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "brand_name, thickness, individual_brand_name, individual_price, individual_thickness, individual_density, customers_material, "
                         . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
                         . "lamination2_brand_name, lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
-                        . "quantity, streams_number, length, stream_width, raport, number_on_raport, lamination_roller_width, ink_number, manager_id, extracharge, ski_width, no_ski, "
+                        . "quantity, streams_number, label_length, stream_width, raport, number_on_raport, lamination_roller_width, ink_number, manager_id, extracharge, ski_width, no_ski, "
                         . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
                         . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                         . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -449,7 +449,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "'$brand_name', $thickness, '$individual_brand_name', $individual_price, $individual_thickness, $individual_density, $customers_material, "
                         . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_individual_brand_name', $lamination1_individual_price, $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, "
                         . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_individual_brand_name', $lamination2_individual_price, $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, "
-                        . "$quantity, $streams_number, $length, $stream_width, $raport, $number_on_raport, $lamination_roller_width, $ink_number, $manager_id, $extracharge, $ski_width, $no_ski, "
+                        . "$quantity, $streams_number, $label_length, $stream_width, $raport, $number_on_raport, $lamination_roller_width, $ink_number, $manager_id, $extracharge, $ski_width, $no_ski, "
                         . "'$ink_1', '$ink_2', '$ink_3', '$ink_4', '$ink_5', '$ink_6', '$ink_7', '$ink_8', "
                         . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                         . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
@@ -472,7 +472,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "lamination2_individual_brand_name='$lamination2_individual_brand_name', lamination2_individual_price=$lamination2_individual_price, "
                         . "lamination2_individual_thickness=$lamination2_individual_thickness, lamination2_individual_density=$lamination2_individual_density, "
                         . "lamination2_customers_material=$lamination2_customers_material, "
-                        . "quantity=$quantity, streams_number=$streams_number, length=$length, stream_width=$stream_width, raport=$raport, "
+                        . "quantity=$quantity, streams_number=$streams_number, label_length=$label_length, stream_width=$stream_width, raport=$raport, "
                         . "number_on_raport=$number_on_raport, "
                         . "lamination_roller_width=$lamination_roller_width, ink_number=$ink_number, manager_id=$manager_id, "
                         . "extracharge=$extracharge, ski_width=$ski_width, no_ski=$no_ski, "
@@ -509,7 +509,7 @@ if(!empty($id)) {
             . "brand_name, thickness, individual_brand_name, individual_price, individual_thickness, individual_density, customers_material, "
             . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
-            . "quantity, streams_number, length, stream_width, raport, number_on_raport, lamination_roller_width, ink_number, extracharge, ski_width, no_ski, "
+            . "quantity, streams_number, label_length, stream_width, raport, number_on_raport, lamination_roller_width, ink_number, extracharge, ski_width, no_ski, "
             . "(select id from techmap where request_calc_id = $id limit 1) techmap_id, "
             . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
