@@ -7,6 +7,9 @@ if(!IsInRole(array('technologist', 'dev', 'manager', 'administrator'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Значение марки плёнки "другая"
+const INDIVIDUAL = "individual";
+
 // Перенаправление при пустом id
 if(empty(filter_input(INPUT_GET, 'id'))) {
     header('Location: '.APPLICATION.'/techmap/');
@@ -257,7 +260,7 @@ $roll_type = $row['roll_type'];
                 </tr>
                 <tr>
                     <th colspan="2">Размер этикетки</th>
-                    <td colspan="2"><?=$length ?></td>
+                    <td colspan="2"><?=$label_length ?></td>
                 </tr>
                 <tr>
                     <th colspan="2">Количество ручьев</th>
