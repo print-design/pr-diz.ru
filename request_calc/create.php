@@ -172,7 +172,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $form_valid = false;
     }
     
-    $length = filter_input(INPUT_POST, 'length');
+    $label_length = filter_input(INPUT_POST, 'label_length');
     
     // Если объём заказа в штуках, то длина этикетки вдоль рапорта вала обязательно, больше нуля
     if($unit == 'pieces' && empty($length)) {
@@ -700,10 +700,10 @@ if(null === $streams_count) {
     else $streams_count = null;
 }
 
-$length = filter_input(INPUT_POST, 'length');
+$label_length = filter_input(INPUT_POST, 'label_length');
 if(null === $length) {
-    if(isset($row['length'])) $length = $row['length'];
-    else $length = null;
+    if(isset($row['label_length'])) $length = $row['label_length'];
+    else $label_length = null;
 }
 
 $stream_width = filter_input(INPUT_POST, 'stream_width');
@@ -1528,18 +1528,18 @@ for ($i=1; $i<=8; $i++) {
                             <!-- Длина этикетки вдоль рапорта вала -->
                             <div class="col-6 print-only d-none">
                                 <div class="form-group">
-                                    <label for="length">Длина этикетки вдоль рапорта вала, мм</label>
+                                    <label for="label_length">Длина этикетки вдоль рапорта вала, мм</label>
                                     <input type="text" 
-                                           id="length" 
-                                           name="length" 
+                                           id="label_length" 
+                                           name="label_length" 
                                            class="form-control float-only print-only d-none<?=$length_valid ?>" 
                                            placeholder="Длина этикетки вдоль рапорта вала, мм" 
                                            value="<?= $length === null ? "" : floatval($length) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки вдоль рапорта вала, мм');" 
+                                           onmouseup="javascript: $(this).attr('id', 'label_length'); $(this).attr('name', 'label_length'); $(this).attr('placeholder', 'Длина этикетки вдоль рапорта вала, мм');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки вдоль рапорта вала, мм');" 
-                                           onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки вдоль рапорта вала, мм');" />
+                                           onkeyup="javascript: $(this).attr('id', 'label_length'); $(this).attr('name', 'label_length'); $(this).attr('placeholder', 'Длина этикетки вдоль рапорта вала, мм');" 
+                                           onfocusout="javascript: $(this).attr('id', 'label_length'); $(this).attr('name', 'label_length'); $(this).attr('placeholder', 'Длина этикетки вдоль рапорта вала, мм');" />
                                     <div class="invalid-feedback"><?=$length_message ?></div>
                                 </div>
                             </div>

@@ -111,7 +111,7 @@ $brand_name = $row['brand_name'] == INDIVIDUAL ? $row['individual_brand_name'] :
 $lamination1_brand_name = $row['lamination1_brand_name'] == INDIVIDUAL ? $row['lamination1_individual_brand_name'] : $row['lamination1_brand_name'];
 $lamination2_brand_name = $row['lamination2_brand_name'] == INDIVIDUAL ? $row['lamination2_individual_brand_name'] : $row['lamination2_brand_name'];
 $streams_count = $row['streams_count'];
-$length = $row['length'];
+$label_length = $row['label_length'];
 $raport = $row['raport'];
 $paints_count = $row['paints_count'];
 $paints = array();

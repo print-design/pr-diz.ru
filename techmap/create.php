@@ -53,7 +53,7 @@ if(empty($request_calc_id)) {
 // Получение объекта расчёта
 $sql = "select c.name name, c.unit, c.quantity, "
         . "c.brand_name, c.individual_brand_name, c.lamination1_brand_name, c.lamination1_individual_brand_name, c.lamination2_brand_name, c.lamination2_individual_brand_name, "
-        . "c.streams_count, c.length, c.raport, c.paints_count, "
+        . "c.streams_count, c.label_length, c.raport, c.paints_count, "
         . "c.paint_1, c.paint_2, c.paint_3, c.paint_4, c.paint_5, c.paint_6, c.paint_7, c.paint_8, c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
         . "cus.name customer, u.last_name manager, "
         . "cr.dirty_width, cr.dirty_length "
@@ -72,7 +72,7 @@ $brand_name = $row['brand_name'] == INDIVIDUAL ? $row['individual_brand_name'] :
 $lamination1_brand_name = $row['lamination1_brand_name'] == INDIVIDUAL ? $row['lamination1_individual_brand_name'] : $row['lamination1_brand_name'];
 $lamination2_brand_name = $row['lamination2_brand_name'] == INDIVIDUAL ? $row['lamination2_individual_brand_name'] : $row['lamination2_brand_name'];
 $streams_count = $row['streams_count'];
-$length = $row['length'];
+$label_length = $row['label_length'];
 $raport = $row['raport'];
 $paints_count = $row['paints_count'];
 $paints = array();

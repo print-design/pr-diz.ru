@@ -109,7 +109,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $lamination2_individual_thickness = $row['lamination2_individual_thickness']; // Толщина плёнки ламинации 2 (если вводилась вручную)
         $lamination2_individual_density = $row['lamination2_individual_density']; // Удельный вес плёнки ламинации 2 (если вводилась вручную)
         $lamination2_customers_material = $row['lamination2_customers_material']; // Ламинация 2 - материал заказчика (ДА/НЕТ)
-        $length = $row['length']; // Длина этикетки вдоль рапорта вала
+        $label_length = $row['label_length']; // Длина этикетки вдоль рапорта вала
         $stream_width = $row['stream_width']; // Ширина ручья
         $streams_count = $row['streams_count']; // Количество ручьёв
         $machine = $row['machine']; // Тип машины ('zbs' или 'comiflex')
@@ -1283,7 +1283,7 @@ $lamination2_individual_price = $row['lamination2_individual_price'];
 $lamination2_individual_thickness = $row['lamination2_individual_thickness'];
 $lamination2_individual_density = $row['lamination2_individual_density'];
 $lamination2_customers_material = $row['lamination2_customers_material'];
-$length = $row['length'];
+$label_length = $row['label_length'];
 $stream_width = $row['stream_width'];
 $streams_count = $row['streams_count'];
 $machine = $row['machine'];
