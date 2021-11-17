@@ -51,7 +51,7 @@ if(empty($request_calc_id)) {
 
 // Получение объекта расчёта
 $sql = "select c.name name, c.unit, c.quantity, "
-        . "c.brand_name, c.other_brand_name, c.lamination1_brand_name, c.lamination1_other_brand_name, c.lamination2_brand_name, c.lamination2_other_brand_name, "
+        . "c.brand_name, c.individual_brand_name, c.lamination1_brand_name, c.lamination1_individual_brand_name, c.lamination2_brand_name, c.lamination2_individual_brand_name, "
         . "c.streams_count, c.length, c.raport, c.paints_count, "
         . "c.paint_1, c.paint_2, c.paint_3, c.paint_4, c.paint_5, c.paint_6, c.paint_7, c.paint_8, c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
         . "cus.name customer, u.last_name manager, "
@@ -67,9 +67,9 @@ $name = $row['name'];
 $unit = $row['unit'];
 $quantity = $row['quantity'];
 $customer = $row['customer'];
-$brand_name = $row['brand_name'] == 'other' ? $row['other_brand_name'] : $row['brand_name'];
-$lamination1_brand_name = $row['lamination1_brand_name'] == 'other' ? $row['lamination1_other_brand_name'] : $row['lamination1_brand_name'];
-$lamination2_brand_name = $row['lamination2_brand_name'] == 'other' ? $row['lamination2_other_brand_name'] : $row['lamination2_brand_name'];
+$brand_name = $row['brand_name'] == 'other' ? $row['individual_brand_name'] : $row['brand_name'];
+$lamination1_brand_name = $row['lamination1_brand_name'] == 'other' ? $row['lamination1_individual_brand_name'] : $row['lamination1_brand_name'];
+$lamination2_brand_name = $row['lamination2_brand_name'] == 'other' ? $row['lamination2_individual_brand_name'] : $row['lamination2_brand_name'];
 $streams_count = $row['streams_count'];
 $length = $row['length'];
 $raport = $row['raport'];

@@ -1,22 +1,22 @@
 <?php
 $material = "";
 
-if(!empty($techmap['other_brand_name']) && !empty($techmap['other_thickness'])) {
-    $material = $techmap['other_brand_name']."(".$techmap['other_thickness']." мкм)";
+if(!empty($techmap['individual_brand_name']) && !empty($techmap['individual_thickness'])) {
+    $material = $techmap['individual_brand_name']."(".$techmap['individual_thickness']." мкм)";
 }
 else {
     $material = $techmap['brand_name']." (".$techmap['thickness']." мкм)";
 }
 
-if(!empty($techmap['lamination1_other_brand_name']) && !empty($techmap['lamination1_other_thickness'])) {
-    $material .= ' + '.$techmap['lamination1_other_brand_name']."(".$techmap['lamination1_other_thickness']." мкм)";
+if(!empty($techmap['lamination1_individual_brand_name']) && !empty($techmap['lamination1_individual_thickness'])) {
+    $material .= ' + '.$techmap['lamination1_individual_brand_name']."(".$techmap['lamination1_individual_thickness']." мкм)";
 }
 elseif(!empty($techmap['lamination1_brand_name']) && !empty($techmap['lamination1_thickness'])) {
     $material .= ' + '.$techmap['lamination1_brand_name']." (".$techmap['lamination1_thickness']." мкм)";
 }
 
-if(!empty($techmap['lamination2_other_brand_name']) && !empty($techmap['lamination2_other_thickness'])) {
-    $material .= ' + '.$techmap['lamination2_other_brand_name']."(".$techmap['lamination2_other_thickness']." мкм)";
+if(!empty($techmap['lamination2_individual_brand_name']) && !empty($techmap['lamination2_individual_thickness'])) {
+    $material .= ' + '.$techmap['lamination2_individual_brand_name']."(".$techmap['lamination2_individual_thickness']." мкм)";
 }
 elseif(!empty($techmap['lamination2_brand_name']) && !empty($techmap['lamination2_thickness'])) {
     $material .= ' + '.$techmap['lamination2_brand_name']." (".$techmap['lamination2_thickness']." мкм)";

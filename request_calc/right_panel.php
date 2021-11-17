@@ -23,8 +23,8 @@ elseif(!empty ($id) && !empty ($date)) {
     // Удельный вес
     $c_weight = null;
         
-    if(!empty($other_density)) {
-        $c_weight = $other_density;
+    if(!empty($individual_density)) {
+        $c_weight = $individual_density;
     }
     elseif(!empty ($brand_name) && !empty ($thickness)) {
         $sql = "select fbv.weight "
@@ -44,8 +44,8 @@ elseif(!empty ($id) && !empty ($date)) {
     // Цена материала
     $c_price = null;
         
-    if(!empty($other_price)) {
-        $c_price = $other_price;
+    if(!empty($individual_price)) {
+        $c_price = $individual_price;
     }
     elseif(!empty ($brand_name) && !empty ($thickness)) {
         $sql = "select price, currency from film_price where brand_name = '$brand_name' and thickness = $thickness and date <= '$date' order by date desc limit 1";
@@ -69,8 +69,8 @@ elseif(!empty ($id) && !empty ($date)) {
     // Удельный вес ламинации 1
     $c_weight_lam1 = null;
         
-    if(!empty($lamination1_other_density)) {
-        $c_weight_lam1 = $lamination1_other_density;
+    if(!empty($lamination1_individual_density)) {
+        $c_weight_lam1 = $lamination1_individual_density;
     }
     else if(!empty ($lamination1_brand_name) && !empty ($lamination1_thickness)) {
         $sql = "select fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name = '$lamination1_brand_name' and fbv.thickness = $lamination1_thickness limit 1";
@@ -87,8 +87,8 @@ elseif(!empty ($id) && !empty ($date)) {
     // Цена ламинации 1
     $c_price_lam1 = null;
         
-    if(!empty($lamination1_other_price)) {
-        $c_price_lam1 = $lamination1_other_price;
+    if(!empty($lamination1_individual_price)) {
+        $c_price_lam1 = $lamination1_individual_price;
     }
     elseif(!empty ($lamination1_brand_name) && !empty ($lamination1_thickness)) {
         $sql = "select price, currency from film_price where brand_name = '$lamination1_brand_name' and thickness = $lamination1_thickness and date <= '$date' order by date desc limit 1";
@@ -112,8 +112,8 @@ elseif(!empty ($id) && !empty ($date)) {
     // Удельный вес ламинации 2
     $c_weight_lam2 = null;
         
-    if(!empty($lamination2_other_density)) {
-        $c_weight_lam2 = $lamination2_other_density;
+    if(!empty($lamination2_individual_density)) {
+        $c_weight_lam2 = $lamination2_individual_density;
     }
     else if(!empty ($lamination2_brand_name) && !empty ($lamination2_thickness)) {
         $sql = "select fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name = '$lamination2_brand_name' and fbv.thickness = $lamination2_thickness limit 1";
@@ -130,8 +130,8 @@ elseif(!empty ($id) && !empty ($date)) {
     // Цена ламинации 2
     $c_price_lam2 = null;
     
-    if(!empty($lamination2_other_price)) {
-        $c_price_lam2 = $lamination2_other_price;
+    if(!empty($lamination2_individual_price)) {
+        $c_price_lam2 = $lamination2_individual_price;
     }
     else if(!empty ($lamination2_brand_name) && !empty ($lamination2_thickness)) {
         $sql = "select price, currency from film_price where brand_name = '$lamination2_brand_name' and thickness = $lamination2_thickness and date <= '$date' order by date desc limit 1";
