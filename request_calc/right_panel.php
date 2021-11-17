@@ -158,8 +158,8 @@ elseif(!empty ($id) && !empty ($date)) {
     $tuning_waste_percents = array();
     
     $sql = "select machine_id, time, length, waste_percent "
-            . "from norm_fitting "
-            . "where date in (select max(date) from norm_fitting where date <= '$date' group by machine_id)";
+            . "from norm_tuning "
+            . "where date in (select max(date) from norm_tuning where date <= '$date' group by machine_id)";
     $fetcher = new Fetcher($sql);
     while($row = $fetcher->Fetch()) {
         $tuning_times[$row['machine_id']] = $row['time'];
@@ -171,7 +171,7 @@ elseif(!empty ($id) && !empty ($date)) {
     $laminator_tuning_length = null;
     $laminator_tuning_waste_percent = null;
     
-    $sql = "select time, length, waste_percent from norm_laminator_fitting order by id desc limit 1";
+    $sql = "select time, length, waste_percent from norm_laminator_tuning order by id desc limit 1";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $laminator_tuning_time = $row['time'];

@@ -145,7 +145,7 @@ if($row = $fetcher->Fetch()) {
                             </div>
                             <div class="invalid-feedback">Евро обязательно</div>
                         </div>
-                        <button type="submit" id="norm_fitting_submit" name="currency_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
+                        <button type="submit" id="currency_submit" name="currency_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
                     </form>
                 </div>
             </div>
