@@ -954,7 +954,7 @@ elseif(!empty ($id) && !empty ($date)) {
             for($i=1; $i<=8; $i++) {
                 if(!empty($paints_count) && $paints_count >= $i) {
                     $paint_var = "paint_$i";
-                    $cliche_var = "form_$i";
+                    $cliche_var = "cliche_$i";
                     if(!empty($$paint_var)) {
                         if($$cliche_var == 'old') {
                             echo "<div class='value mb-2'>$cliche_price + 0 = ".$cliche_price."</div>";

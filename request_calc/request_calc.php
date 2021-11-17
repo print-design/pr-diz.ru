@@ -160,7 +160,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         
             $cliche_var = "cliche_$i";
             if($i <= $paints_count) {
-                $$cliche_var = $row["form_$i"];
+                $$cliche_var = $row["cliche_$i"];
             }
             else {
                 $$cliche_var = null;
