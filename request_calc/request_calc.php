@@ -628,8 +628,8 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     if($unit == 'kg' && !empty($quantity) && !empty($c_density)) {
         $pure_area = 1000 * $quantity / ($c_density + (empty($c_density_lam1) ? 0 : $c_density_lam1) + (empty($c_density_lam2) ? 0 : $c_density_lam2));
     }
-    else if($unit == 'pieces' && !empty ($stream_width) && !empty ($length) && !empty ($quantity)) {
-        $pure_area = $stream_width / 1000 * $length / 1000 * $quantity;
+    else if($unit == 'pieces' && !empty ($stream_width) && !empty ($label_length) && !empty ($quantity)) {
+        $pure_area = $stream_width / 1000 * $label_length / 1000 * $quantity;
     }
     else {
         $error_message = "Отсутствуют данные об объёме заказа";
@@ -1478,9 +1478,9 @@ $num_for_customer = $row['num_for_customer'];
                         <tr><th>Количество этикеток на ручье</th><td class="param-value"><?=$number_on_raport ?></td></tr>
                             <?php
                             endif;
-                            if(!empty($length)):
+                            if(!empty($label_length)):
                             ?>
-                        <tr><th>Длина этикетки вдоль рапорта вала</th><td class="param-value"><?= rtrim(rtrim(number_format($length, 4, ",", ""), "0"), ",") ?> мм</td></tr>
+                        <tr><th>Длина этикетки вдоль рапорта вала</th><td class="param-value"><?= rtrim(rtrim(number_format($label_length, 4, ",", ""), "0"), ",") ?> мм</td></tr>
                             <?php
                             endif;
                             if(!empty($lamination_roller_width)):
