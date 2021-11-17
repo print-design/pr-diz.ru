@@ -109,7 +109,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $form_valid = false;
     }
     
-    $machine = filter_input(INPUT_POST, 'machine');
+    $machine_type = filter_input(INPUT_POST, 'machine_type');
     $brand_name = addslashes(filter_input(INPUT_POST, 'brand_name'));
     
     if(empty($brand_name)) {
@@ -235,8 +235,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     
     $machine_id = null;
     
-    if(!empty($machine) && !empty($paints_count)) {
-        if($machine == 'comiflex') {
+    if(!empty($machine_type) && !empty($paints_count)) {
+        if($machine_type == 'comiflex') {
             $machine_id = $machine_ids['comiflex'];
         }
         elseif($paints_count > 6) {
@@ -320,7 +320,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         if(empty($individual_thickness)) $individual_thickness = "NULL";
         if(empty($individual_density)) $individual_density = "NULL";
         $unit = filter_input(INPUT_POST, 'unit');
-        $machine = filter_input(INPUT_POST, 'machine');
+        $machine_type = filter_input(INPUT_POST, 'machine_type');
         
         $lamination1_brand_name = addslashes(filter_input(INPUT_POST, 'lamination1_brand_name'));
         $lamination1_thickness = filter_input(INPUT_POST, 'lamination1_thickness');
@@ -435,7 +435,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         if(empty($error_message)) {
             // Если mode = recalc или пустой id, то создаём новый объект
             if(filter_input(INPUT_GET, 'mode') == 'recalc' || empty(filter_input(INPUT_GET, 'id'))) {
-                $sql = "insert into request_calc (customer_id, name, work_type_id, unit, machine, "
+                $sql = "insert into request_calc (customer_id, name, work_type_id, unit, machine_type, "
                         . "brand_name, thickness, individual_brand_name, individual_price, individual_thickness, individual_density, customers_material, "
                         . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
                         . "lamination2_brand_name, lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
@@ -445,7 +445,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
                         . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
                         . "cliche_1, cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8) "
-                        . "values($customer_id, '$name', $work_type_id, '$unit', '$machine', "
+                        . "values($customer_id, '$name', $work_type_id, '$unit', '$machine_type', "
                         . "'$brand_name', $thickness, '$individual_brand_name', $individual_price, $individual_thickness, $individual_density, $customers_material, "
                         . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_individual_brand_name', $lamination1_individual_price, $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, "
                         . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_individual_brand_name', $lamination2_individual_price, $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, "
@@ -461,7 +461,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
             }
             else {
                 $sql = "update request_calc "
-                        . "set customer_id=$customer_id, name='$name', work_type_id=$work_type_id, unit='$unit', machine='$machine', "
+                        . "set customer_id=$customer_id, name='$name', work_type_id=$work_type_id, unit='$unit', machine_type='$machine_type', "
                         . "brand_name='$brand_name', thickness=$thickness, individual_brand_name='$individual_brand_name', individual_price=$individual_price, "
                         . "individual_thickness=$individual_thickness, individual_density=$individual_density, customers_material=$customers_material, "
                         . "lamination1_brand_name='$lamination1_brand_name', lamination1_thickness=$lamination1_thickness, "
@@ -505,7 +505,7 @@ if(empty($id)) {
 }
 
 if(!empty($id)) {
-    $sql = "select date, customer_id, name, work_type_id, unit, machine, "
+    $sql = "select date, customer_id, name, work_type_id, unit, machine_type, "
             . "brand_name, thickness, individual_brand_name, individual_price, individual_thickness, individual_density, customers_material, "
             . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
@@ -591,10 +591,10 @@ if(null === $unit) {
     else $unit = null;
 }
 
-$machine = filter_input(INPUT_POST, 'machine');
-if(null === $machine) {
-    if(isset($row['machine'])) $machine = $row['machine'];
-    else $machine = null;
+$machine_type = filter_input(INPUT_POST, 'machine_type');
+if(null === $machine_type) {
+    if(isset($row['machine_type'])) $machine_type = $row['machine_type'];
+    else $machine_type = null;
 }
 
 $lamination1_brand_name = filter_input(INPUT_POST, 'lamination1_brand_name');
@@ -962,19 +962,19 @@ for ($i=1; $i<=8; $i++) {
                         <!-- Печатная машина -->
                         <div class="print-only d-none">
                             <div class="form-group w-100">
-                                <label for="machine">Печатная машина</label>
-                                <select id="machine" name="machine" class="form-control print-only d-none">
+                                <label for="machine_type">Печатная машина</label>
+                                <select id="machine_type" name="machine_type" class="form-control print-only d-none">
                                     <option value="" hidden="hidden" selected="selected">Печатная машина...</option>
                                     <?php
                                     $zbs_selected = "";
-                                    if($machine == ZBS) {
+                                    if($machine_type == ZBS) {
                                         $zbs_selected = " selected='selected'";
                                     }
                                     ?>
                                     <option value="<?=ZBS ?>"<?=$zbs_selected ?>>ZBS</option>
                                     <?php
                                     $comiflex_selected = "";
-                                    if($machine == COMIFLEX) {
+                                    if($machine_type == COMIFLEX) {
                                         $comiflex_selected = " selected='selected'";
                                     }
                                     ?>
@@ -1492,17 +1492,17 @@ for ($i=1; $i<=8; $i++) {
                                     <select id="raport" name="raport" class="form-control print-only d-none<?=$raport_valid ?>">
                                         <option value="" hidden="hidden" selected="selected">Рапорт...</option>
                                         <?php
-                                        if(!empty($machine)) {
+                                        if(!empty($machine_type)) {
                                             $sql = "";
                                             
-                                            if($machine == "comiflex") {
+                                            if($machine_type == "comiflex") {
                                                 $sql = "select r.value "
                                                         . "from raport r "
                                                         . "inner join machine m on r.machine_id = m.id "
                                                         . "where m.shortname = 'comiflex' "
                                                         . "order by r.value";
                                             }
-                                            elseif($machine == "zbs") {
+                                            elseif($machine_type == "zbs") {
                                                 $sql = "select distinct r.value "
                                                         . "from raport r "
                                                         . "inner join machine m on r.machine_id = m.id "
@@ -1947,13 +1947,13 @@ for ($i=1; $i<=8; $i++) {
             });
             
             // Обработка выбора машины, заполнение списка рапортов
-            $('#machine').change(function(){
+            $('#machine_type').change(function(){
                 if($(this).val() == "") {
                     $('#raport').html("<option value=''>Рапорт...</option>")
                 }
                 else {
                     // Заполняем список рапортов
-                    $.ajax({ url: "../ajax/raport.php?machine=" + $(this).val() })
+                    $.ajax({ url: "../ajax/raport.php?machine_type=" + $(this).val() })
                             .done(function(data) {
                                 $('#raport').html(data);
                             })

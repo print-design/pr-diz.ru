@@ -28,7 +28,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
             . "c.brand_name, c.thickness, individual_brand_name, individual_price, individual_thickness, individual_density, c.customers_material, "
             . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, c.lamination1_customers_material, "
             . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, c.lamination2_customers_material, "
-            . "c.label_length, c.stream_width, c.streams_number, c.machine, c.raport, c.lamination_roller, c.paints_count, "
+            . "c.label_length, c.stream_width, c.streams_number, c.machine_type, c.raport, c.lamination_roller, c.paints_count, "
             . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -81,7 +81,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     $label_length = $row['label_length'];
     $stream_width = $row['stream_width'];
     $streams_number = $row['streams_number'];
-    $machine = $row['machine'];
+    $machine_type = $row['machine_type'];
     $raport = $row['raport'];
     $lamination_roller = $row['lamination_roller'];
     $paints_count = $row['paints_count'];
@@ -237,8 +237,8 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     
     $machine_id = null;
     
-    if(!empty($machine) && !empty($paints_count)) {
-        if($machine == COMIFLEX) {
+    if(!empty($machine_type) && !empty($paints_count)) {
+        if($machine_type == COMIFLEX) {
             $machine_id = $machine_ids[COMIFLEX];
         }
         elseif($paints_count > 6) {

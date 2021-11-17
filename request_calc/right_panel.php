@@ -214,8 +214,8 @@ elseif(!empty ($id) && !empty ($date)) {
     
     $machine_id = null;
     
-    if(!empty($machine) && !empty($paints_count)) {
-        if($machine == 'comiflex') {
+    if(!empty($machine_type) && !empty($paints_count)) {
+        if($machine_type == 'comiflex') {
             $machine_id = $machine_ids['comiflex'];
         }
         elseif($paints_count > 6) {

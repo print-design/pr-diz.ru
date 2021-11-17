@@ -1,11 +1,11 @@
 <?php
 include '../include/topscripts.php';
 
-$machine = filter_input(INPUT_GET, 'machine');
+$machine_type = filter_input(INPUT_GET, 'machine_type');
 
 echo "<option value='' hidden='hidden'>Рапорт...</option>";
 
-if($machine == "comiflex") {
+if($machine_type == "comiflex") {
     $sql = "select r.value "
             . "from raport r "
             . "inner join machine m on r.machine_id = m.id "
@@ -20,7 +20,7 @@ if($machine == "comiflex") {
         echo "<option value='$value'>$raport</option>";
     }
 }
-elseif($machine == "zbs") {
+elseif($machine_type == "zbs") {
     $sql = "select distinct r.value "
             . "from raport r "
             . "inner join machine m on r.machine_id = m.id "
