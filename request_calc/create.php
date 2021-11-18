@@ -702,7 +702,7 @@ if(null === $streams_number) {
 
 $label_length = filter_input(INPUT_POST, 'label_length');
 if(null === $label_length) {
-    if(isset($row['label_length'])) $length = $row['label_length'];
+    if(isset($row['label_length'])) $label_length = $row['label_length'];
     else $label_length = null;
 }
 
@@ -1534,13 +1534,13 @@ for ($i=1; $i<=8; $i++) {
                                            name="label_length" 
                                            class="form-control float-only print-only d-none<?=$length_valid ?>" 
                                            placeholder="Длина этикетки вдоль рапорта вала, мм" 
-                                           value="<?= $length === null ? "" : floatval($length) ?>" 
+                                           value="<?= $label_length === null ? "" : floatval($label_length) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'label_length'); $(this).attr('name', 'label_length'); $(this).attr('placeholder', 'Длина этикетки вдоль рапорта вала, мм');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="javascript: $(this).attr('id', 'label_length'); $(this).attr('name', 'label_length'); $(this).attr('placeholder', 'Длина этикетки вдоль рапорта вала, мм');" 
                                            onfocusout="javascript: $(this).attr('id', 'label_length'); $(this).attr('name', 'label_length'); $(this).attr('placeholder', 'Длина этикетки вдоль рапорта вала, мм');" />
-                                    <div class="invalid-feedback"><?=$length_message ?></div>
+                                    <div class="invalid-feedback"><?=$label_length_message ?></div>
                                 </div>
                             </div>
                             <!-- Ширина вала ламинации -->

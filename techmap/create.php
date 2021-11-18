@@ -232,7 +232,7 @@ $dirty_length = $row['dirty_length'];
                     </tr>
                     <tr>
                         <th colspan="2">Размер этикетки</th>
-                        <td colspan="2"><?=$length ?></td>
+                        <td colspan="2"><?=$label_length ?></td>
                     </tr>
                     <tr>
                         <th colspan="2">Количество ручьев</th>
