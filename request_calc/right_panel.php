@@ -616,10 +616,12 @@ elseif(!empty ($id) && !empty ($date)) {
                 <?php endif; ?>
             </div>
             <div class="d-table-row">
+                <?php if(!empty($lamination1_brand_name)): ?>
                 <div class="d-table-cell pb-1 pr-4" style="width: 33%;">
                     <div class="param-name">Длина тиража чистая с ламинацией</div>
                     <div class="value"><?=rtrim(rtrim(number_format($pure_length_lam, 3, ",", " "), "0"), ",") ?> м</div>
                 </div>
+                <?php endif; ?>
                 <?php if($work_type_id == 2): ?>
                 <div class="d-table-cell pb-1 pr-4">
                     <div class="param-name">Стоимость печати</div>
@@ -866,15 +868,17 @@ elseif(!empty ($id) && !empty ($date)) {
             <div class="algorithm">площадь тиража чистая / ширина тиража обрезная * 1000</div>
             <div class="value mb-2"><?="$pure_area / $pure_width * 1000 = $pure_length" ?></div>
             
+            <?php if(!empty($lamination1_brand_name)): ?>
             <div class="param-name">Длина тиража чистая с ламинацией</div>
             <div class="algorithm">длина тиража чистая * (процент отходов для ламинатора + 100) / 100</div>
             <div class="value mb-2"><?="$pure_length * ($laminator_tuning_waste_percent + 100) / 100 = $pure_length_lam" ?></div>
+            <?php endif; ?>
             
             <div class="param-name">Длина тиража с отходами</div>
             <div class="algorithm">если есть печать: длина тиража чистая + (длина тиража чистая * процент отхода машины / 100</div>
             <div class="algorithm">+ длина приладки для машины * число красок)</div>
             <div class="algorithm">если нет печати, но есть ламинация: длина тиража чистая с ламинацией + длина приладки ламинации</div>
-            <?php if(!empty($machine_id) && !empty($pure_length) && !empty($ink_number_count) && !empty($tuning_waste_percents[$machine_id])): ?>
+            <?php if(!empty($machine_id) && !empty($pure_length) && !empty($ink_number) && !empty($tuning_waste_percents[$machine_id])): ?>
             <div class="value mb-2"><?="$pure_length + ($pure_length * $tuning_waste_percents[$machine_id] / 100 + $tuning_lengths[$machine_id] * $ink_number) = $dirty_length" ?></div>
             <?php elseif(!empty ($lamination1_brand_name) && !empty ($pure_length_lam) && !empty ($laminator_tuning_length)): ?>
             <div class="value mb-2"><?="$pure_length_lam + $laminator_tuning_length = $dirty_length" ?></div>
