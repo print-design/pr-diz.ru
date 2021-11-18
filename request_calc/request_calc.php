@@ -1353,59 +1353,55 @@ $num_for_customer = $row['num_for_customer'];
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/request_calc/<?= IsInRole('manager') ? BuildQueryAddRemove('manager', GetUserId(), 'id') : BuildQueryRemove('id') ?>">К списку</a>
+            <div class="d-inline-block" style="width: 150px;"></div>
+            <?php if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))): ?>
+            <?php if(!empty($request_calc_result_id)): ?>
+            <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Пересчитать</a>
+            <?php elseif(empty($row['ink_number'])): ?>
+            <form method="post" class="d-inline-block">
+                <input type="hidden" name="id" value="<?=$id ?>" />
+                <button type="submit" name="calculate-submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Рассчитать</button>
+            </form>
+            <?php
+            else:
+                $percents_exist = true;
+                        
+                for($i=1; $i<=$ink_number; $i++) {
+                    if(empty($row["percent_$i"])) {
+                        $percents_exist = false;
+                    }
+                }
+                                    
+            if($percents_exist):
+            ?>
+            <form method="post" class="d-inline-block">
+                <input type="hidden" name="id" value="<?=$id ?>" />
+                <button type="submit" name="calculate-submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Рассчитать</button>
+            </form>
+            <?php 
+            endif;
+            endif;
+            ?>
+                            
+            <?php if(empty($request_calc_result_id)): ?>
+            <a href="create.php<?= BuildQuery("id", $id) ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Редактировать</a>
+            <?php endif; ?>
+                    
+            <?php if(!empty($techmap_id)): ?>
+            <a href="<?=APPLICATION.'/techmap/details.php?id='.$techmap_id ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Посмотреть тех. карту</a>
+            <?php elseif (!empty($request_calc_result_id)): ?>
+            <form method="post" action="<?=APPLICATION ?>/techmap/create.php" class="d-inline-block">
+                <input type="hidden" name="request_calc_id" value="<?=$id ?>" />
+                <button type="submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Составить тех. карту</button>
+            </form>
+            <?php
+            endif;
+            endif;
+            ?>
             <div class="row">
                 <!-- Левая половина -->
                 <div class="col-5" id="left_side">
-                    <div class="d-flex justify-content-between mb-auto">
-                        <div class="p-1">
-                            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/request_calc/<?= IsInRole('manager') ? BuildQueryAddRemove('manager', GetUserId(), 'id') : BuildQueryRemove('id') ?>">К списку</a>
-                        </div>
-                        <div class="p-1">
-                            <?php if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))): ?>
-                            <?php if(!empty($request_calc_result_id)): ?>
-                            <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Пересчитать</a>
-                            <?php elseif(empty($row['ink_number'])): ?>
-                            <form method="post" class="d-inline-block">
-                                <input type="hidden" name="id" value="<?=$id ?>" />
-                                <button type="submit" name="calculate-submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Рассчитать</button>
-                            </form>
-                                <?php
-                                else:
-                                    $percents_exist = true;
-                        
-                                    for($i=1; $i<=$ink_number; $i++) {
-                                        if(empty($row["percent_$i"])) {
-                                            $percents_exist = false;
-                                        }
-                                    }
-                                    
-                                    if($percents_exist):
-                                ?>
-                            <form method="post" class="d-inline-block">
-                                <input type="hidden" name="id" value="<?=$id ?>" />
-                                <button type="submit" name="calculate-submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Рассчитать</button>
-                            </form>
-                            <?php 
-                                endif;
-                            endif;
-                            ?>
-                            
-                            <?php if(empty($request_calc_result_id)): ?>
-                            <a href="create.php<?= BuildQuery("id", $id) ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Редактировать</a>
-                            <?php endif; ?>
-                    
-                            <?php if(!empty($techmap_id)): ?>
-                            <a href="<?=APPLICATION.'/techmap/details.php?id='.$techmap_id ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Посмотреть тех. карту</a>
-                                <?php elseif (!empty($request_calc_result_id)): ?>
-                            <form method="post" action="<?=APPLICATION ?>/techmap/create.php" class="d-inline-block">
-                                <input type="hidden" name="request_calc_id" value="<?=$id ?>" />
-                                <button type="submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Составить тех. карту</button>
-                            </form>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-            
                     <h1 style="font-size: 32px; font-weight: 600;"><?= htmlentities($request_name) ?></h1>
                     <h2 style="font-size: 26px;">№<?=$customer_id."-".$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
                     <?php if(!empty($techmap_id)): ?>
