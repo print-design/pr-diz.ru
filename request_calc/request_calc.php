@@ -1450,6 +1450,13 @@ $num_for_customer = $row['num_for_customer'];
                             <?php
                             endif;
                             if(!empty($machine_type)):
+                            $machine_type_final = $machine_type;
+                            if($machine_type == ZBS) {
+                                $machine_type = 'ZBS';
+                            }
+                            elseif($machine_type == COMIFLEX) {
+                                $machine_type = "Comiflex";
+                            }
                             ?>
                         <tr><th>Печатная машина</th><td class="param-value"><?=$machine_type ?></td></tr>
                             <?php
