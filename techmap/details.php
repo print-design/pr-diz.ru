@@ -84,7 +84,7 @@ $id = filter_input(INPUT_GET, 'id');
 
 $sql = "select t.date, t.request_calc_id, t.work_date, t.work_shift, t.designer, t.printer, t.cutter, t.printings_number, t.rolls_number, "
         . "t.reverse_print, t.self_adhesive, t.spool, t.number_per_spool, t.winding, t.roll_type, "
-        . "c.name name, c.unit, c.quantity, "
+        . "c.name name, c.unit, c.quantity, c.work_type_id, "
         . "c.brand_name, c.individual_brand_name, c.lamination1_brand_name, c.lamination1_individual_brand_name, c.lamination2_brand_name, c.lamination2_individual_brand_name, "
         . "c.streams_number, c.label_length, c.raport, c.ink_number, "
         . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
@@ -110,6 +110,7 @@ $rolls_number = $row['rolls_number'];
 $name = $row['name'];
 $unit = $row['unit'];
 $quantity = $row['quantity'];
+$work_type_id = $row['work_type_id'];
 $brand_name = $row['brand_name'] == INDIVIDUAL ? $row['individual_brand_name'] : $row['brand_name'];
 $lamination1_brand_name = $row['lamination1_brand_name'] == INDIVIDUAL ? $row['lamination1_individual_brand_name'] : $row['lamination1_brand_name'];
 $lamination2_brand_name = $row['lamination2_brand_name'] == INDIVIDUAL ? $row['lamination2_individual_brand_name'] : $row['lamination2_brand_name'];
@@ -260,7 +261,7 @@ $roll_type = $row['roll_type'];
                 </tr>
                 <tr>
                     <th colspan="2">Размер этикетки</th>
-                    <td colspan="2"><?=$label_length ?></td>
+                    <td colspan="2"><?=$work_type_id == 1 ? "" : $label_length ?></td>
                 </tr>
                 <tr>
                     <th colspan="2">Количество ручьев</th>

@@ -23,6 +23,7 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
     $self_adhesive = filter_input(INPUT_POST, 'self_adhesive');
     if($self_adhesive === null || $self_adhesive === '') $self_adhesive = "NULL";
     $spool = filter_input(INPUT_POST, 'spool');
+    if($spool === null || $spool === '') $spool = "NULL";
     $number_per_spool = filter_input(INPUT_POST, 'number_per_spool');
     if($number_per_spool === null || $number_per_spool === '') $number_per_spool = "NULL";
     $winding = filter_input(INPUT_POST, 'winding');
@@ -51,7 +52,7 @@ if(empty($request_calc_id)) {
 }
 
 // Получение объекта расчёта
-$sql = "select c.name name, c.unit, c.quantity, "
+$sql = "select c.name name, c.unit, c.quantity, c.work_type_id, "
         . "c.brand_name, c.individual_brand_name, c.lamination1_brand_name, c.lamination1_individual_brand_name, c.lamination2_brand_name, c.lamination2_individual_brand_name, "
         . "c.streams_number, c.label_length, c.raport, c.ink_number, "
         . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
@@ -67,6 +68,7 @@ $row = (new Fetcher($sql))->Fetch();
 $name = $row['name'];
 $unit = $row['unit'];
 $quantity = $row['quantity'];
+$work_type_id = $row['work_type_id'];
 $customer = $row['customer'];
 $brand_name = $row['brand_name'] == INDIVIDUAL ? $row['individual_brand_name'] : $row['brand_name'];
 $lamination1_brand_name = $row['lamination1_brand_name'] == INDIVIDUAL ? $row['lamination1_individual_brand_name'] : $row['lamination1_brand_name'];
@@ -232,7 +234,7 @@ $dirty_length = $row['dirty_length'];
                     </tr>
                     <tr>
                         <th colspan="2">Размер этикетки</th>
-                        <td colspan="2"><?=$label_length ?></td>
+                        <td colspan="2"><?=$work_type_id == 1 ? '' : $label_length ?></td>
                     </tr>
                     <tr>
                         <th colspan="2">Количество ручьев</th>
