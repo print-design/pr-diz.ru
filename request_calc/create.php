@@ -303,7 +303,6 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     
     // Длина этикетки вдоль рапорта, умноженная на количество этикеток на ручье
     // Должна соответствовать рапорту
-    //if($label_length * $number_on_raport != $raport) {
     if(!empty($raport) && !empty($number_on_raport) && !empty($label_length) && round($raport / $number_on_raport, 4) != $label_length) {
         $raport_valid = ISINVALID;
         $label_length_valid = ISINVALID;
@@ -1532,7 +1531,7 @@ for ($i=1; $i<=8; $i++) {
                                     <input type="text" 
                                            id="label_length" 
                                            name="label_length" 
-                                           class="form-control float-only print-only d-none<?=$length_valid ?>" 
+                                           class="form-control float-only print-only d-none<?=$label_length_valid ?>" 
                                            placeholder="Длина этикетки вдоль рапорта вала, мм" 
                                            value="<?= $label_length === null ? "" : floatval($label_length) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -2150,7 +2149,7 @@ for ($i=1; $i<=8; $i++) {
                 var number_on_raport = $('#number_on_raport').val();
                 
                 if(raport && number_on_raport) {
-                    $('#length').val(Math.round(parseFloat(raport) / parseFloat(number_on_raport) * 10000, -4) / 10000);
+                    $('#label_length').val(Math.round(parseFloat(raport) / parseFloat(number_on_raport) * 10000, -4) / 10000);
                 }
             }
             
