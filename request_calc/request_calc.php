@@ -1717,14 +1717,18 @@ $num_for_customer = $row['num_for_customer'];
                         </tr>
                     </table>
                 </div>
+                <div class="col-1"></div>
+                <div class="col-6">
+                    <?php
+                    if(!empty($request_calc_result_id)) {
+                        include './right_panel.php';
+                    }
+                    ?>
+                </div>
             </div>
         </div>
         <?php
         include '../include/footer.php';
-        
-        if(!empty($request_calc_result_id)) {
-            include './right_panel.php';
-        }
         ?>
         <script>
             // В поле "процент" ограничиваем значения: целые числа от 1 до 100
@@ -1772,13 +1776,6 @@ $num_for_customer = $row['num_for_customer'];
                 
                 // Сохранение значения в базе
                 EditExtracharge($(this));
-            });
-            
-            // Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне
-            AdjustFixedBlock($('#calculation'));
-            
-            $(window).on("scroll", function(){
-                AdjustFixedBlock($('#calculation'));
             });
         </script>
     </body>
