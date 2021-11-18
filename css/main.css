@@ -546,11 +546,6 @@ textarea#editable {
     color: #3945af;
 }
 
-#calculation {
-    right: 15px;
-    margin-top: 140px;
-}
-
 #calculation .value {
     font-size: 18px;
 }
