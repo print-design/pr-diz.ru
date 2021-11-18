@@ -77,6 +77,19 @@ function OrderLink($param) {
                         if(empty($where)) $where = " where c.customer_id=$customer";
                         else $where .= " and c.customer_id=$customer";
                     }
+                    
+                    $from = filter_input(INPUT_GET, 'from');
+                    if(!empty($from)) {
+                        if(empty($where)) $where = " where c.date >= '$from'";
+                        else $where .= " and c.date >= '$from'";
+                    }
+                    
+                    $to = filter_input(INPUT_GET, 'to');
+                    if(!empty($to)) {
+                        $to = date('Y-m-d', strtotime($to.' +1 days'));
+                        if(empty($where)) $where = " where c.date <= '$to'";
+                        else $where .= " and c.date <= '$to'";
+                    }
 
                     // Общее количество расчётов для установления количества страниц в постраничном выводе
                     $sql = "select count(c.id) from request_calc c$where";
@@ -143,6 +156,20 @@ function OrderLink($param) {
                             <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'manager') ? " selected='selected'" : "") ?>><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></option>
                             <?php endwhile; ?>
                         </select>
+                        <?php
+                        $from_value = filter_input(INPUT_GET, 'from');
+                        if(empty($from_value)) {
+                            $from_value = date("Y-m-d", strtotime('-6 months'));
+                        }
+                        $to_value = filter_input(INPUT_GET, 'to');
+                        if(empty($to_value)) {
+                            $to_value = date("Y-m-d");
+                        }
+                        ?>
+                        <div class="d-inline ml-3 mr-1">от</div>
+                        <input type="date" id="from" name="from" class="form-control" style="width: 160px;" value="<?=$from_value ?>" onchange="javascript: this.form.submit();"/>
+                        <div class="d-inline ml-1 mr-1">до</div>
+                        <input type="date" id="to" name="to" class="form-control" style="width: 160px;" value="<?= $to_value ?>" onchange="javascript: this.form.submit();"/>
                     </form>
                     <?php if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))): ?>
                     <a href="create.php" class="btn btn-outline-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
