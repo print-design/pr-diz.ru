@@ -1754,14 +1754,12 @@ $num_for_customer = $row['num_for_customer'];
             function ShowCosts() {
                 $("#costs").removeClass("d-none");
                 $("#show_costs").addClass("d-none");
-                AdjustFixedBlock($('#calculation'));
             }
             
             // Скрытие расходов
             function HideCosts() {
                 $("#costs").addClass("d-none");
                 $("#show_costs").removeClass("d-none");
-                AdjustFixedBlock($('#calculation'));
             }
             
             // Ограничение значений наценки

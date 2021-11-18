@@ -1,10 +1,6 @@
 <?php 
-$calculation_class = "";
 
-if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit_class)) {
-    $calculation_class = " class='d-none'";
-}
-elseif(!empty ($id) && !empty ($date)) {
+if(!empty ($id) && !empty ($date)) {
     // Курс доллара и евро
     $euro = null;
     $usd = null;
@@ -515,7 +511,7 @@ elseif(!empty ($id) && !empty ($date)) {
     }
 }
 ?>
-<div id="calculation"<?=$calculation_class ?> style="position: absolute; top: 0px; bottom: auto;">
+<div id="calculation">
     <h1>Расчет</h1>
     <div class="row">
         <div class="col-3">
