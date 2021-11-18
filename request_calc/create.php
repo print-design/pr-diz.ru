@@ -1634,26 +1634,26 @@ for ($i=1; $i<=8; $i++) {
                                 $cmyk_class = " d-none";
                                 $color_class = " d-none";
                                 $percent_class = " d-none";
-                                $form_class = " d-none";
+                                $cliche_class = " d-none";
                             
                                 $ink_var_name = "ink_$i";
                             
                                 if($$ink_var_name == "white" || $$ink_var_name == "lacquer") {
                                     $ink_class = " col-6";
                                     $percent_class = " col-3";
-                                    $form_class = " col-3";
+                                    $cliche_class = " col-3";
                                 }
                                 else if($$ink_var_name == "panton") {
                                     $ink_class = " col-3";
                                     $color_class = " col-3";
                                     $percent_class = " col-3";
-                                    $form_class = " col-3";
+                                    $cliche_class = " col-3";
                                 }
                                 else if($$ink_var_name == "cmyk") {
                                     $ink_class = " col-3";
                                     $cmyk_class = " col-3";
                                     $percent_class = " col-3";
-                                    $form_class = " col-3";
+                                    $cliche_class = " col-3";
                                 }
                                 ?>
                                 <div class="form-group<?=$ink_class ?>" id="ink_group_<?=$i ?>">
@@ -1749,7 +1749,7 @@ for ($i=1; $i<=8; $i++) {
                                 </div>
                                 <div class="form-group<?=$cliche_class ?>" id="cliche_group_<?=$i ?>">
                                     <label for="cliche_<?=$i ?>">Форма</label>
-                                    <select id="cliche_<?=$i ?>" name="form_<?=$i ?>" class="form-control form">
+                                    <select id="cliche_<?=$i ?>" name="cliche_<?=$i ?>" class="form-control form">
                                         <?php
                                         $old_selected = "";
                                         $flint_selected = "";
