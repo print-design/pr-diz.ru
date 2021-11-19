@@ -854,7 +854,11 @@ for ($i=1; $i<=8; $i++) {
                                     <option value="">Заказчик...</option>
                                         <?php
                                         $manager_id = GetUserId();
-                                        $sql = "select id, name from customer order by name";
+                                        $sql = "select id, name from customer where manager_id = $manager_id";
+                                        if(!empty($customer_id)) {
+                                            $sql .= " union select id, name from customer where id = $customer_id";
+                                        }
+                                        $sql .= " order by name";
                                         $fetcher = new Fetcher($sql);
                                         
                                         while ($row = $fetcher->Fetch()):
