@@ -132,7 +132,6 @@ function OrderLink($param) {
                         <th>Менеджер&nbsp;&nbsp;<?= OrderLink('manager') ?></th>
                         <th>Комментарий</th>
                         <th>Статус</th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -233,13 +232,12 @@ function OrderLink($param) {
                         <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['num_for_customer'] ?></td>
                         <td class="text-nowrap"><?= DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y') ?></td>
                         <td><a href="javascript: void(0);" class="customer" data-toggle="modal" data-target="#customerModal" data-customer-id="<?=$row['customer_id'] ?>"><?=$row['customer'] ?></a></td>
-                        <td><?= htmlentities($row['name']) ?></td>
+                        <td><a href="request_calc.php<?= BuildQuery("id", $row['id']) ?>"><?= htmlentities($row['name']) ?></a></td>
                         <td class="text-right text-nowrap"><?=number_format($row['quantity'], 0, ",", " ") ?>&nbsp;<?=$row['unit'] == 'kg' ? 'кг' : 'шт' ?></td>
                         <td><?=$row['work_type'] ?></td>
                         <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
                         <td><?=$row['comment'] ?></td>
                         <td class="text-nowrap"><i class="fas fa-circle" style="color: <?=$colour ?>;"></i>&nbsp;&nbsp;<?=$status ?></td>
-                        <td><a href="request_calc.php<?= BuildQuery("id", $row['id']) ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a></td>
                     </tr>
                     <?php
                     endwhile;
