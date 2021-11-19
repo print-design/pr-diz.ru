@@ -637,9 +637,8 @@ if(!empty ($id) && !empty ($date)) {
             <div class="param-name mt-2">С отходами</div>
             <div class="value"><?=rtrim(rtrim(number_format($dirty_weight_total, 3, ",", " "), "0"), ",") ?> кг</div>
         </div>
-        <?php if($work_type_id == 2): ?>
         <div class="col-4">
-            <h3>Печать</h3>
+            <h3>Пленка</h3>
             
             <div class="param-name mt-2">Чистый</div>
             <div class="value"><?=rtrim(rtrim(number_format($pure_weight, 3, ",", " "), "0"), ",") ?> кг</div>
@@ -647,7 +646,6 @@ if(!empty ($id) && !empty ($date)) {
             <div class="param-name mt-2">С отходами</div>
             <div class="value"><?=rtrim(rtrim(number_format($dirty_weight, 3, ",", " "), "0"), ",") ?> кг</div>
         </div>
-        <?php endif; ?>
         <?php if(!empty($lamination1_brand_name)): ?>
         <div class="col-4">
             <h3>Ламинация</h3>
