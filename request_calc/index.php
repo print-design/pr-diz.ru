@@ -54,18 +54,6 @@ function OrderLink($param) {
                         else $where .= " and c.name=(select name from request_calc where id=$name)";
                     }
                     
-                    $unit = filter_input(INPUT_GET, 'unit');
-                    if(!empty($unit)) {
-                        if(empty($where)) $where = " where c.unit='$unit'";
-                        else $where .= " and c.unit='$unit'";
-                    }
-                    
-                    $work_type = filter_input(INPUT_GET, 'work_type');
-                    if(!empty($work_type)) {
-                        if(empty($where)) $where = " where c.work_type_id=$work_type";
-                        else $where .= " and c.work_type_id=$work_type";
-                    }
-                    
                     $manager = filter_input(INPUT_GET, 'manager');
                     if(!empty($manager)) {
                         if(empty($where)) $where = " where c.manager_id=$manager";
@@ -99,7 +87,6 @@ function OrderLink($param) {
                         $pager_total_count = $row[0];
                     }
                     ?>
-                    <div class="d-inline ml-3" style="color: gray; font-size: x-large;"><?=$pager_total_count ?></div>
                 </div>
                 <div class="p-1 text-nowrap">
                     <?php $order = filter_input(INPUT_GET, 'order'); ?>
@@ -107,7 +94,7 @@ function OrderLink($param) {
                         <?php if(null !== $order): ?>
                         <input type="hidden" name="order" value="<?= $order ?>" />
                         <?php endif; ?>
-                        <select id="customer" name="customer" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                        <select id="customer" name="customer" class="form-control form-control-sm" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Заказчик...</option>
                             <?php
                             $sql = "select distinct cus.id, cus.name from request_calc c inner join customer cus on c.customer_id = cus.id order by cus.name";
@@ -118,7 +105,7 @@ function OrderLink($param) {
                             <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'customer') ? " selected='selected'" : "") ?>><?=$row['name'] ?></option>
                             <?php endwhile; ?>
                         </select>
-                        <select id="name" name="name" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                        <select id="name" name="name" class="form-control form-control-sm" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Имя заказа...</option>
                             <?php
                             $sql = "select distinct c.name, (select id from request_calc where name=c.name limit 1) id from request_calc c order by name";
@@ -129,23 +116,7 @@ function OrderLink($param) {
                             <option value="<?= $row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'name') ? " selected='selected'" : "") ?>><?= $row['name'] ?></option>
                             <?php endwhile; ?>
                         </select>
-                        <select id="unit" name="unit" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
-                            <option value="">Шт/кг...</option>
-                            <option value="pieces"<?= filter_input(INPUT_GET, 'unit') == 'pieces' ? " selected='selected'" : "" ?>>Шт</option>
-                            <option value="kg"<?= filter_input(INPUT_GET, 'unit') == 'kg' ? " selected='selected'" : "" ?>>Кг</option>
-                        </select>
-                        <select id="work_type" name="work_type" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
-                            <option value="">Тип работы...</option>
-                            <?php
-                            $sql = "select distinct wt.id, wt.name from request_calc c inner join work_type wt on c.work_type_id = wt.id order by wt.name";
-                            $fetcher = new Fetcher($sql);
-                            
-                            while ($row = $fetcher->Fetch()):
-                            ?>
-                            <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'work_type') ? " selected='selected'" : "") ?>><?=$row['name'] ?></option>
-                            <?php endwhile; ?>
-                        </select>
-                        <select id="manager" name="manager" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                        <select id="manager" name="manager" class="form-control form-control-sm" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Менеджер...</option>
                             <?php
                             $sql = "select distinct u.id, u.last_name, u.first_name from request_calc c inner join user u on c.manager_id = u.id order by u.last_name";
@@ -167,9 +138,9 @@ function OrderLink($param) {
                         }
                         ?>
                         <div class="d-inline ml-3 mr-1">от</div>
-                        <input type="date" id="from" name="from" class="form-control" style="width: 160px;" value="<?=$from_value ?>" onchange="javascript: this.form.submit();"/>
+                        <input type="date" id="from" name="from" class="form-control form-control-sm" style="width: 140px;" value="<?=$from_value ?>" onchange="javascript: this.form.submit();"/>
                         <div class="d-inline ml-1 mr-1">до</div>
-                        <input type="date" id="to" name="to" class="form-control" style="width: 160px;" value="<?= $to_value ?>" onchange="javascript: this.form.submit();"/>
+                        <input type="date" id="to" name="to" class="form-control form-control-sm" style="width: 140px;" value="<?= $to_value ?>" onchange="javascript: this.form.submit();"/>
                     </form>
                     <?php if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))): ?>
                     <a href="create.php" class="btn btn-outline-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
@@ -333,20 +304,6 @@ function OrderLink($param) {
                 placeholder: "Имя заказа...",
                 maximumSelectionLength: 1,
                 language: "ru"
-            });
-            
-            $('#unit').select2({
-                placeholder: "Шт/кг...",
-                maximumStatusLength: 1,
-                language: "ru",
-                width: '4rem'
-            })
-            
-            $('#work_type').select2({
-                placeholder: "Тип работы...",
-                maximumSelectionLength: 1,
-                language: "ru",
-                width: '10rem'
             });
             
             $('#manager').select2({
