@@ -31,7 +31,7 @@ include 'left_bar.php';
             <?php endif; ?>
         </ul>
         <?php
-        if(file_exists('filter.php')) {
+        if(substr(filter_input(INPUT_SERVER, 'PHP_SELF'), (strlen(filter_input(INPUT_SERVER, 'PHP_SELF')) - strlen('index.php'))) == 'index.php') {
             include 'filter.php';
         }
         else {
