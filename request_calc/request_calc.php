@@ -1638,7 +1638,7 @@ $num_for_customer = $row['num_for_customer'];
                                             }
                                             ?>
                                         </td>
-                                        <td>
+                                        <td class="text-nowrap">
                                             <?php
                                             if($$ink_var == "cmyk") {
                                                 echo $$cmyk_var;
@@ -1674,13 +1674,13 @@ $num_for_customer = $row['num_for_customer'];
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="form-group">
-                                                    <button type="submit" class="btn btn-outline-dark invisible" name="percent-submit">Сохранить</button>
+                                                <div class="form-group d-none">
+                                                    <button type="submit" class="btn btn-outline-dark" name="percent-submit">Сохранить</button>
                                                 </div>
                                             </form>
                                             <?php endif; ?>
                                         </td>
-                                        <td>
+                                        <td class="text-nowrap">
                                             <?php
                                             switch ($$cliche_var) {
                                                 case "old":
@@ -1721,8 +1721,8 @@ $num_for_customer = $row['num_for_customer'];
                                         <textarea id="comment" name="comment" rows="3" cols="40" class="form-control"><?= htmlentities($comment) ?></textarea>
                                     </div>
                                     <?php if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))): ?>
-                                    <div class="form-group">
-                                        <button type="submit" name="comment-submit" class="btn btn-outline-dark invisible">Сохранить</button>
+                                    <div class="form-group invisible">
+                                        <button type="submit" name="comment-submit" class="btn btn-outline-dark">Сохранить</button>
                                     </div>
                                     <?php endif; ?>
                                 </form>
@@ -1751,7 +1751,7 @@ $num_for_customer = $row['num_for_customer'];
                 }
                 
                 // Делаем также доступной кнопку "Сохранить"
-                $(this).form().find('button').removeClass('invisible');
+                $(this).form().find('.d-none').removeClass('d-none');
             });
     
             $(".percent").change(function(){
