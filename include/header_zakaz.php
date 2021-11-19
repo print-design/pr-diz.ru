@@ -31,8 +31,8 @@ include 'left_bar.php';
             <?php endif; ?>
         </ul>
         <?php
-        if(file_exists('find.php')) {
-            include 'find.php';
+        if(file_exists('filter.php')) {
+            include 'filter.php';
         }
         else {
             echo "<div class='ml-auto'></div>";
