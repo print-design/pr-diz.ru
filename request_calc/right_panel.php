@@ -518,12 +518,16 @@ if(!empty ($id) && !empty ($date)) {
             <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
                 <div class="text-nowrap" style="font-size: x-small;">Наценка</div>
                 <?php if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))): ?>
-                <div class="input-group">
-                    <input type="text" id="extracharge" name="extracharge" data-id="<?=$id ?>" style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" value="<?=$extracharge ?>" required="required" />
-                    <div class="input-group-append" style="height: 28px;">
-                        <span class="input-group-text">%</span>
+                <form method="post" class="form-inline">
+                    <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                    <div class="input-group">
+                        <input type="text" id="extracharge" name="extracharge" data-id="<?=$id ?>" style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" value="<?=$extracharge ?>" required="required" />
+                        <div class="input-group-append" style="height: 28px;">
+                            <span class="input-group-text">%</span>
+                        </div>
                     </div>
-                </div>
+                    <button class="btn btn-sm btn-dark d-none" id="extracharge-submit" name="extracharge-submit">Сохранить</button>
+                </form>
                 <?php else: ?>
                 <?=$extracharge ?>
                 <?php endif; ?>
@@ -548,6 +552,89 @@ if(!empty ($id) && !empty ($date)) {
                 <button type="submit" class="btn btn-dark" id="export_request_calc_submit" name="export_request_calc_submit">Экспорт</button>
             </form>
             <?php endif; ?>
+        </div>
+    </div>
+    <div class="mt-3">
+        <h2>Отгрузочная стоимость</h2>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <h3>Всего</h3>
+                
+            <div class="param-name mt-2">Без форм</div>
+            <div class="value"><?=rtrim(rtrim(number_format(($cost_no_cliche + ($cost_no_cliche * $extracharge / 100)), 3, ",", " "), "0"), ",") ?> руб</div>
+                    
+            <div class="param-name mt-2">С формами</div>
+            <div class="value"><?=rtrim(rtrim(number_format(($cost_with_cliche + $cost_with_cliche * $extracharge / 100), 3, ",", " "), "0"), ",") ?> руб</div>
+        </div>
+        <?php if($unit == "kg" && !empty($quantity)): ?>
+        <div class="col-4">
+            <h3>За 1 кг</h3>
+                    
+            <div class="param-name mt-2">Без форм</div>
+            <div class="value"><?=rtrim(rtrim(number_format(($cost_no_cliche_kg + ($cost_no_cliche_kg * $extracharge / 100)), 3, ",", " "), "0"), ",") ?> руб</div>
+                    
+            <div class="param-name mt-2">С формами</div>
+            <div class="value"><?=rtrim(rtrim(number_format(($cost_with_cliche_kg + ($cost_with_cliche_kg * $extracharge / 100)), 3, ",", " "), "0"), ",") ?> руб</div>
+        </div>
+        <?php elseif($unit == "pieces" && !empty($quantity)): ?>
+        <div class="col-4">
+            <h3>За 1 шт</h3>
+                    
+            <div class="param-name mt-2">Без форм</div>
+            <div class="value"><?=rtrim(rtrim(number_format(($cost_no_cliche_pieces + ($cost_no_cliche_pieces * $extracharge / 100)), 3, ",", " "), "0"), ",") ?> руб</div>
+                    
+            <div class="param-name mt-2">С формами</div>
+            <div class="value"><?=rtrim(rtrim(number_format(($cost_with_cliche_pieces + ($cost_with_cliche_pieces * $extracharge / 100)), 3, ",", " "), "0"), ",") ?> руб</div>
+        </div>
+        <?php endif; ?>
+    </div>
+    <div class="mt-3">
+        <h2>Себестоимость</h2>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <h3>Всего</h3>
+                
+            <div class="param-name mt-2">Без форм</div>
+            <div class="value"><?=rtrim(rtrim(number_format($cost_no_cliche, 3, ",", " "), "0"), ",") ?> руб</div>
+                    
+            <div class="param-name mt-2">С формами</div>
+            <div class="value"><?=rtrim(rtrim(number_format($cost_with_cliche, 3, ",", " "), "0"), ",") ?> руб</div>
+        </div>
+        <?php if($unit == "kg" && !empty($quantity)): ?>
+        <div class="col-4">
+            <h3>За 1 кг</h3>
+                    
+            <div class="param-name mt-2">Без форм</div>
+            <div class="value"><?=rtrim(rtrim(number_format($cost_no_cliche_kg, 3, ",", " "), "0"), ",") ?> руб</div>
+                    
+            <div class="param-name mt-2">С формами</div>
+            <div class="value"><?=rtrim(rtrim(number_format($cost_with_cliche_kg, 3, ",", " "), "0"), ",") ?> руб</div>
+        </div>
+        <?php elseif($unit == "pieces" && !empty($quantity)): ?>
+        <div class="col-4">
+            <h3>За 1 шт</h3>
+                    
+            <div class="param-name mt-2">Без форм</div>
+            <div class="value"><?=rtrim(rtrim(number_format($cost_no_cliche_pieces, 3, ",", " "), "0"), ",") ?> руб</div>
+                    
+            <div class="param-name mt-2">С формами</div>
+            <div class="value"><?=rtrim(rtrim(number_format($cost_with_cliche_pieces, 3, ",", " "), "0"), ",") ?> руб</div>
+        </div>
+        <?php endif; ?>
+    </div>
+    <div class="mt-3">
+        <h2>Вес материала готовой продукции</h2>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <div class="param-name">Чистый</div>
+            <div class="value"><?=rtrim(rtrim(number_format($pure_weight_total, 3, ",", " "), "0"), ",") ?> кг</div>
+        </div>
+        <div class="col-4">
+            <div class="param-name">С отходами</div>
+            <div class="value"><?=rtrim(rtrim(number_format($dirty_weight_total, 3, ",", " "), "0"), ",") ?> кг</div>
         </div>
     </div>
     <div class="mt-3">
@@ -671,54 +758,6 @@ if(!empty ($id) && !empty ($date)) {
             <div class="param-name mt-2">Итого себестоимость ламинации</div>
             <div class="value"><?=rtrim(rtrim(number_format($price_lam_total, 3, ",", " "), "0"), ",") ?> руб</div>
             <?php endif; ?>
-        </div>
-        <?php endif; ?>
-    </div>
-    <div class="mt-3">
-        <h2>Вес материала готовой продукции</h2>
-    </div>
-    <div class="row">
-        <div class="col-4">
-            <div class="param-name">Чистый</div>
-            <div class="value"><?=rtrim(rtrim(number_format($pure_weight_total, 3, ",", " "), "0"), ",") ?> кг</div>
-        </div>
-        <div class="col-4">
-            <div class="param-name">С отходами</div>
-            <div class="value"><?=rtrim(rtrim(number_format($dirty_weight_total, 3, ",", " "), "0"), ",") ?> кг</div>
-        </div>
-    </div>
-    <div class="mt-3">
-        <h2>Себестоимость</h2>
-    </div>
-    <div class="row">
-        <div class="col-4">
-            <h3>Всего</h3>
-                
-            <div class="param-name mt-2">Без форм</div>
-            <div class="value"><?=rtrim(rtrim(number_format($cost_no_cliche, 3, ",", " "), "0"), ",") ?> руб</div>
-                    
-            <div class="param-name mt-2">С формами</div>
-            <div class="value"><?=rtrim(rtrim(number_format($cost_with_cliche, 3, ",", " "), "0"), ",") ?> руб</div>
-        </div>
-        <?php if($unit == "kg" && !empty($quantity)): ?>
-        <div class="col-4">
-            <h3>За 1 кг</h3>
-                    
-            <div class="param-name mt-2">Без форм</div>
-            <div class="value"><?=rtrim(rtrim(number_format($cost_no_cliche_kg, 3, ",", " "), "0"), ",") ?> руб</div>
-                    
-            <div class="param-name mt-2">С формами</div>
-            <div class="value"><?=rtrim(rtrim(number_format($cost_with_cliche_kg, 3, ",", " "), "0"), ",") ?> руб</div>
-        </div>
-        <?php elseif($unit == "pieces" && !empty($quantity)): ?>
-        <div class="col-4">
-            <h3>За 1 шт</h3>
-                    
-            <div class="param-name mt-2">Без форм</div>
-            <div class="value"><?=rtrim(rtrim(number_format($cost_no_cliche_pieces, 3, ",", " "), "0"), ",") ?> руб</div>
-                    
-            <div class="param-name mt-2">С формами</div>
-            <div class="value"><?=rtrim(rtrim(number_format($cost_with_cliche_pieces, 3, ",", " "), "0"), ",") ?> руб</div>
         </div>
         <?php endif; ?>
     </div>

@@ -57,6 +57,16 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
     $error_message = $executer->error;
 }
 
+// Расчёт отгрузочной стоимости
+if(null !== filter_input(INPUT_POST, 'extracharge-submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $extracharge = filter_input(INPUT_POST, 'extracharge');
+    
+    $sql = "update request_calc set extracharge=$extracharge where id=$id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+}
+
 // Расчёт
 if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     $id = filter_input(INPUT_POST, 'id');
@@ -1774,9 +1784,10 @@ $num_for_customer = $row['num_for_customer'];
             
             $('#extracharge').change(function(){
                 ChangeLimitIntValue($(this), 999);
-                
-                // Сохранение значения в базе
-                EditExtracharge($(this));
+            });
+            
+            $('#extracharge').keyup(function(){
+                $('#extracharge-submit').removeClass('d-none');
             });
         </script>
     </body>
