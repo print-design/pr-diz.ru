@@ -730,7 +730,7 @@ if(!empty ($id) && !empty ($date)) {
         <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть подробности</button>
         <h2 class="mt-2">Подробности</h2>
             
-        <div class="param-name">Площадь тиража чистая</div>
+        <div class="param-name">Площадь тиража чистая, м<sup>2</sup></div>
         <div class="algorithm">если в кг: 1000 * объём заказа / удельный вес материала и ламинации</div>
         <div class="algorithm">если в шт: ширина ручья / 1000 * длина этикетки вдоль рапорта вала / 1000 * количество этикеток в заказе</div>
         <?php if($unit == 'kg'): ?>
@@ -739,21 +739,21 @@ if(!empty ($id) && !empty ($date)) {
         <div class="value mb-2"><?="$stream_width / 1000 * $label_length / 1000 * $quantity = $pure_area" ?></div>
         <?php endif; ?>
             
-        <div class="param-name">Ширина тиража обрезная</div>
+        <div class="param-name">Ширина тиража обрезная, мм</div>
         <div class="algorithm">ширина ручья * количество ручьёв</div>
         <div class="value mb-2"><?="$stream_width * $streams_number = $pure_width" ?></div>
             
-        <div class="param-name">Длина тиража чистая</div>
+        <div class="param-name">Длина тиража чистая, м</div>
         <div class="algorithm">площадь тиража чистая / ширина тиража обрезная * 1000</div>
         <div class="value mb-2"><?="$pure_area / $pure_width * 1000 = $pure_length" ?></div>
             
         <?php if(!empty($lamination1_brand_name)): ?>
-        <div class="param-name">Длина тиража чистая с ламинацией</div>
+        <div class="param-name">Длина тиража чистая с ламинацией, м</div>
         <div class="algorithm">длина тиража чистая * (процент отходов для ламинатора + 100) / 100</div>
         <div class="value mb-2"><?="$pure_length * ($laminator_tuning_waste_percent + 100) / 100 = $pure_length_lam" ?></div>
         <?php endif; ?>
             
-        <div class="param-name">Длина тиража с отходами</div>
+        <div class="param-name">Длина тиража с отходами, м</div>
         <div class="algorithm">если есть печать: длина тиража чистая + (длина тиража чистая * процент отхода машины / 100</div>
         <div class="algorithm">+ длина приладки для машины * число красок)</div>
         <div class="algorithm">если нет печати, но есть ламинация: длина тиража чистая с ламинацией + длина приладки ламинации</div>
@@ -763,7 +763,7 @@ if(!empty ($id) && !empty ($date)) {
         <div class="value mb-2"><?="$pure_length_lam + $laminator_tuning_length = $dirty_length" ?></div>
         <?php endif; ?>
             
-        <div class="param-name">Ширина тиража с отходами</div>
+        <div class="param-name">Ширина тиража с отходами, мм</div>
         <div class="algorithm">с лыжами: ширина тиража обрезная + ширина лыж</div>
         <div class="algorithm">без лыж: ширина тиража обрезная</div>
         <div class="algorithm">затем отругляем ширину тиража с отходами до возможности деления на 5 без остатка</div>
@@ -773,19 +773,19 @@ if(!empty ($id) && !empty ($date)) {
         <div class="value mb-2"><?="$pure_width + $ski_width = $dirty_width" ?></div>
         <?php endif; ?>
             
-        <div class="param-name">Площадь тиража с отходами</div>
+        <div class="param-name">Площадь тиража с отходами, м<sup>2</sup></div>
         <div class="algorithm">длина тиража с отходами * ширина тиража с отходами / 1000</div>
         <div class="value mb-2"><?="$dirty_length * $dirty_width / 1000 = $dirty_area" ?></div>
             
-        <div class="param-name">Вес материала печати чистый</div>
+        <div class="param-name">Вес материала печати чистый, кг</div>
         <div class="algorithm">площадь тиража чистая * удельный вес материала / 1000</div>
         <div class="value mb-2"><?="$pure_area * $c_weight / 1000 = $pure_weight" ?></div>
             
-        <div class="param-name">Вес материала печати с отходами</div>
+        <div class="param-name">Вес материала печати с отходами, кг</div>
         <div class="algorithm">площадь тиража с отходами * удельный вес материала / 1000</div>
         <div class="value mb-2"><?="$dirty_area * $c_weight / 1000 = $dirty_weight" ?></div>
             
-        <div class="param-name">Стоимость материала печати</div>
+        <div class="param-name">Стоимость материала печати, руб</div>
         <div class="algorithm">Если сырьё заказчика: 0</div>
         <div class="algorithm">Иначе: вес материала печати с отходами * цена материала за 1 кг</div>
         <?php if($customers_material): ?>
@@ -797,40 +797,40 @@ if(!empty ($id) && !empty ($date)) {
         <!-------------------------------------------------------------------->
             
         <?php if($work_type_id == 2): ?>
-        <div class="param-name">Время печати тиража без приладки</div>
+        <div class="param-name">Время печати тиража без приладки, ч</div>
         <div class="algorithm">длина тиража чистая / 1000 / скорость работы флекс машины</div>
         <div class="value mb-2"><?="$pure_length / 1000 / $machine_speeds[$machine_id] = $print_time" ?></div>
             
-        <div class="param-name">Время приладки</div>
+        <div class="param-name">Время приладки, ч</div>
         <div class="algorithm">время приладки каждой краски / 60 * число красок</div>
         <div class="value mb-2"><?="$tuning_times[$machine_id] / 60 * $ink_number = $tuning_time" ?></div>
             
-        <div class="param-name">Время печати с приладкой</div>
+        <div class="param-name">Время печати с приладкой, ч</div>
         <div class="algorithm">время печати + время приладки</div>
         <div class="value mb-2"><?="$print_time + $tuning_time = $print_tuning_time" ?></div>
             
-        <div class="param-name">Стоимость печати</div>
+        <div class="param-name">Стоимость печати, руб</div>
         <div class="algorithm">время печати с приладкой * стоимость работы машины</div>
         <div class="value mb-2"><?="$print_tuning_time * $machine_prices[$machine_id] = $print_price" ?></div>
             
-        <div class="param-name">Площадь печатной формы</div>
+        <div class="param-name">Площадь печатной формы, м<sup>2</sup></div>
         <div class="algorithm">(припуск * 2 + ширина тиража с отходами / 1000 * 100) * (припуск * 2 + рапорт вала / 10)</div>
         <div class="value mb-2"><?="($cliche_additional_size * 2 + $dirty_width / 1000 * 100) * ($cliche_additional_size * 2 + $raport / 10) = $cliche_area" ?></div>
             
-        <div class="param-name">Стоимость 1 печатной формы Флинт</div>
+        <div class="param-name">Стоимость 1 печатной формы Флинт, руб</div>
         <div class="algorithm">площадь печатной формы * стоимость 1 см2 формы</div>
         <div class="value mb-2"><?="$cliche_area * $cliche_flint = $cliche_flint_price" ?></div>
             
-        <div class="param-name">Стоимость 1 печатной формы Кодак</div>
+        <div class="param-name">Стоимость 1 печатной формы Кодак, руб</div>
         <div class="algorithm">площадь печатной формы * стоимость 1 см2 формы</div>
         <div class="value mb-2"><?="$cliche_area * $cliche_kodak = $cliche_kodak_price" ?></div>
             
-        <div class="param-name">Стоимость 1 печатной формы Тверь</div>
+        <div class="param-name">Стоимость 1 печатной формы Тверь, руб</div>
         <div class="algorithm">площадь печатной формы</div>
         <div class="algorithm">* (стоимость 1 см2 формы + стоимость 1 см2 плёнок * коэфф. удорожания для тверских форм)</div>
         <div class="value mb-2"><?="$cliche_area * ($cliche_tver + $cliche_film * $cliche_tver_coeff) = $cliche_tver_price" ?></div>
             
-        <div class="param-name">Стоимость комплекта печатных форм</div>
+        <div class="param-name">Стоимость комплекта печатных форм, руб</div>
         <div class="algorithm">сумма стоимости форм для каждой краски</div>
         <?php
         $cliche_price = 0;
@@ -859,11 +859,11 @@ if(!empty ($id) && !empty ($date)) {
         }
         ?>
             
-        <div class="param-name">Стоимость скотча для наклейки форм</div>
+        <div class="param-name">Стоимость скотча для наклейки форм, руб</div>
         <div class="algorithm">стоимость скотча для наклейки форм * число красок * площадь печатной формы / 10000</div>
         <div class="value mb-2"><?=($cliche_scotch ?? 0)." * ".($ink_number ?? 0)." * ".($cliche_area ?? 0)." / 10000 = ".(($cliche_scotch ?? 0) * ($ink_number ?? 0) * ($cliche_area ?? 0) / 10000) ?></div>
             
-        <div class="param-name">Стоимость краски + лака + растворителя</div>
+        <div class="param-name">Стоимость краски + лака + растворителя, руб</div>
         <div class="algorithm">Для каждой краски:</div>
         <div class="algorithm">1) Площадь запечатки (м2) = площадь тиража с отходами * процент краски / 100</div>
         <div class="algorithm">2) Количество краски (кг) = площадь запечатки * расход краски / 1000</div>
@@ -986,21 +986,21 @@ if(!empty ($id) && !empty ($date)) {
         <!-------------------------------------------------------------------->
             
         <?php if(!empty($lamination1_brand_name)): ?>
-        <div class="param-name">Удельная стоимость клеевого раствора</div>
+        <div class="param-name">Удельная стоимость клеевого раствора, руб/кг</div>
         <div class="algorithm">(стоимость клея * доля клея / (доля клея + доля растворителя)) </div>
         <div class="algorithm">+ (стоимость растворителя * доля растворителя / (доля клея + доля растворителя))</div>
         <div class="value mb-2"><?="($glue_price * $glue_glue_part / ($glue_glue_part + $glue_solvent_part)) + ($glue_solvent_price * $glue_solvent_part / ($glue_glue_part + $glue_solvent_part)) = $glue_solvent_g" ?></div>
             
-        <div class="param-name">Вес материала ламинации 1 чистый</div>
+        <div class="param-name">Вес материала ламинации 1 чистый, кг</div>
         <div class="algorithm">площадь тиража чистая * удельный вес ламинации 1 / 1000</div>
         <div class="value mb-2"><?="$pure_area * $c_weight_lam1 / 1000 = $pure_weight_lam1" ?></div>
             
-        <div class="param-name">Вес материала ламинации 1 с отходами</div>
+        <div class="param-name">Вес материала ламинации 1 с отходами, кг</div>
         <div class="algorithm">(длина тиража с ламинацией + длина материала для приладки при ламинации)</div>
         <div class="algorithm"> * ширина тиража с отходами / 1000 * удельный вес ламинации 1 / 1000</div>
         <div class="value mb-2"><?="($pure_length_lam + $laminator_tuning_length) * $dirty_width / 1000 * $c_weight_lam1 / 1000 = $dirty_weight_lam1" ?></div>
             
-        <div class="param-name">Стоимость материала ламинации 1</div>
+        <div class="param-name">Стоимость материала ламинации 1, руб</div>
         <div class="algorithm">если сырьё заказчика: 0</div>
         <div class="algorithm">иначе: удельная стоимость материала ламинации * вес материала с отходами</div>
         <?php if($lamination1_customers_material): ?>
@@ -1009,7 +1009,7 @@ if(!empty ($id) && !empty ($date)) {
         <div class="value mb-2"><?="$c_price_lam1 * $dirty_weight_lam1 = $price_lam1_material" ?></div>
         <?php endif; ?>
             
-        <div class="param-name">Стоимость клеевого раствора 1</div>
+        <div class="param-name">Стоимость клеевого раствора 1, руб</div>
         <div class="algorithm">если марка плёнки начинается на pet:</div>
         <div class="algorithm">удельная стоимость клеевого раствора / 1000 * расход клея для ламинации ПЭТ</div>
         <div class="algorithm">* (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)</div>
@@ -1022,22 +1022,22 @@ if(!empty ($id) && !empty ($date)) {
         <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination_roller_width / 1000 + $laminator_tuning_length) = $price_lam1_glue" ?></div>
         <?php endif; ?>
             
-        <div class="param-name">Стоимость процесса ламинации 1</div>
+        <div class="param-name">Стоимость процесса ламинации 1, руб</div>
         <div class="algorithm">стоимость работы оборудования</div>
         <div class="algorithm">+ (длина чистая с ламинацией / 1000 / скорость работы оборудования) * стоимость работы оборудования</div>
         <div class="value mb-2"><?="$laminator_price + ($pure_length_lam / 1000 / $laminator_speed) * $laminator_price = $price_lam1_work" ?></div>
             
         <?php if(!empty($lamination2_brand_name)): ?>
-        <div class="param-name">Вес материала ламинации 2 чистый</div>
+        <div class="param-name">Вес материала ламинации 2 чистый, кг</div>
         <div class="algorithm">площадь тиража чистая * удельный вес ламинации 1 / 1000</div>
         <div class="value mb-2"><?="$pure_area * $c_weight_lam2 / 1000 = $pure_weight_lam2" ?></div>
             
-        <div class="param-name">Вес материала ламинации 2 с отходами 2</div>
+        <div class="param-name">Вес материала ламинации 2 с отходами 2, кг</div>
         <div class="algorithm">(длина тиража с ламинацией + длина материала для приладки при ламинации)</div>
         <div class="algorithm">* ширина тиража с отходами / 1000 * удельный вес ламинации 1 / 1000</div>
         <div class="value mb-2"><?="($pure_length_lam + $laminator_tuning_length) * $dirty_width / 1000 * $c_weight_lam2 / 1000 = $dirty_weight_lam2" ?></div>
             
-        <div class="param-name">Стоимость материала ламинации 2</div>
+        <div class="param-name">Стоимость материала ламинации 2, руб</div>
         <div class="algorithm">если сырьё заказчика: 0</div>
         <div class="algorithm">иначе: удельная стоимость материала ламинации * вес материала с отходами</div>
         <?php if($lamination2_customers_material): ?>
@@ -1046,7 +1046,7 @@ if(!empty ($id) && !empty ($date)) {
         <div class="value mb-2"><?="$c_price_lam2 * $dirty_weight_lam2 = $price_lam2_material" ?></div>
         <?php endif; ?>
             
-        <div class="param-name">Стоимость клеевого раствора 2</div>
+        <div class="param-name">Стоимость клеевого раствора 2, руб</div>
         <div class="algorithm">если марка плёнки начинается на pet:</div>
         <div class="algorithm">удельная стоимость клеевого раствора / 1000 * расход клея для ламинации ПЭТ</div>
         <div class="algorithm">* (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)</div>
@@ -1059,54 +1059,82 @@ if(!empty ($id) && !empty ($date)) {
         <div class="value mb-2"><?="$glue_solvent_g / 1000 * $glue_expense * ($pure_length_lam * $lamination_roller_width / 1000 + $laminator_tuning_length) = $price_lam2_glue" ?></div>
         <?php endif; ?>
             
-        <div class="param-name">Стоимость процесса ламинации 2</div>
+        <div class="param-name">Стоимость процесса ламинации 2, руб</div>
         <div class="algorithm">стоимость работы оборудования</div>
         <div class="algorithm">+ (длина чистая с ламинацией / 1000 / скорость работы оборудования) * стоимость работы оборудования</div>
         <div class="value mb-2"><?="$laminator_price + ($pure_length_lam / 1000 / $laminator_speed) * $laminator_price = $price_lam2_work" ?></div>
         <?php endif; ?>
             
-        <div class="param-name">Итого себестоимость ламинации</div>
+        <div class="param-name">Итого себестоимость ламинации, руб</div>
         <div class="algorithm">материал1 + материал2 + клей1 + клей2 + процесс1 + процесс2</div>
         <div class="value mb-2"><?=($price_lam1_material ?? 0)." + ".($price_lam2_material ?? 0)." + ".($price_lam1_glue ?? 0)." + ".($price_lam2_glue ?? 0)." + ".($price_lam1_work ?? 0)." + ".($price_lam2_work ?? 0)." = ".($price_lam_total ?? 0) ?></div>
         <?php endif; ?>
             
         <!---------------------------------------------------------->
             
-        <div class="param-name">Вес материала готовой продукции чистый</div>
+        <div class="param-name">Вес материала готовой продукции чистый, руб</div>
         <div class="algorithm">площадь тиража чистая * (удельный вес материала + удельный вес ламинации 1 + удельный вес ламинации 2) / 1000</div>
         <div class="value mb-2"><?="$pure_area * ($c_weight + (".($c_weight_lam1 ?? 0).") + (".($c_weight_lam2 ?? 0).")) / 1000 = $pure_weight_total" ?></div>
             
-        <div class="param-name">Вес материала готовой продукции с отходами</div>
+        <div class="param-name">Вес материала готовой продукции с отходами, руб</div>
         <div class="algorithm">площадь тиража с отходами * (удельный вес материала + удельный вес ламинации 1 + удельный вес ламинации 2) / 1000</div>
         <div class="value mb-2"><?="$dirty_area * ($c_weight + (".($c_weight_lam1 ?? 0).") + (".($c_weight_lam2 ?? 0).")) / 1000 = $dirty_weight_total" ?></div>
             
-        <div class="param-name">Итого себестоимость без форм</div>
+        <div class="param-name">Итого себестоимость без форм, руб</div>
         <div class="algorithm">стоимость материала печати + стоимость печати + стоимость красок, лака и растворителя</div>
         <div class="algorithm">+ итого себестоимость ламинации + (стоимость скотча для наклейки форм * число красок * площадь печатной формы / 10000)</div>
         <div class="value mb-2"><?=($material_price ?? 0)." + ".($print_price ?? 0)." + ".($ink_price ?? 0)." + ".($price_lam_total ?? 0)." + (".($cliche_scotch ?? 0)." * ".($ink_number ?? 0)." * ".($cliche_area ?? 0)." / 10000) = $cost_no_cliche" ?></div>
             
-        <div class="param-name">Итого себестоимость с формами</div>
+        <div class="param-name">Итого себестоимость с формами, руб</div>
         <div class="algorithm">итого стоимость без форм + стоимость комплекта печатных форм</div>
         <div class="value mb-2"><?=($cost_no_cliche ?? 0)." + ".($cliche_price ?? 0)." = $cost_with_cliche" ?></div>
             
         <?php if($unit == "kg" && !empty($quantity)): ?>
-        <div class="param-name">Итого себестоимость за 1 кг без форм</div>
+        <div class="param-name">Итого себестоимость за 1 кг без форм, руб</div>
         <div class="algorithm">итого себестоимость без форм / объём заказа</div>
         <div class="value mb-2"><?=($cost_no_cliche ?? 0)." / ".($quantity ?? 0)." = $cost_no_cliche_kg" ?></div>
             
-        <div class="param-name">Итого себестоимость за 1 кг с формами</div>
+        <div class="param-name">Итого себестоимость за 1 кг с формами, руб</div>
         <div class="algorithm">итого стоимость с формами / объём заказа</div>
         <div class="value mb-2"><?=($cost_with_cliche ?? 0)." / ".($quantity ?? 0)." = $cost_with_cliche_kg" ?></div>
         <?php endif; ?>
             
         <?php if($unit == "pieces" && !empty($quantity)): ?>
-        <div class="param-name">Итого себестоимость за 1 шт без форм</div>
+        <div class="param-name">Итого себестоимость за 1 шт без форм, руб</div>
         <div class="algorithm">итого себестоимость без форм / объём заказа</div>
         <div class="value mb-2"><?=($cost_no_cliche ?? 0)." / ".($quantity ?? 0)." = $cost_no_cliche_pieces" ?></div>
             
-        <div class="param-name">Итого себестоимость за 1 шт с формами</div>
+        <div class="param-name">Итого себестоимость за 1 шт с формами, руб</div>
         <div class="algorithm">итого стоимость с формами / объём заказа</div>
         <div class="value mb-2"><?=($cost_with_cliche ?? 0)." / ".($quantity ?? 0)." = $cost_with_cliche_pieces" ?></div>
+        <?php endif; ?>
+        
+        <div class="param-name">Отгрузочная стоимость без форм, руб</div>
+        <div class="algorithm">себестоимость без форм  + (себестоимость без форм * наценка / 100)</div>
+        <div class="value mb-2"><?=$cost_no_cliche." + (".$cost_no_cliche. " * ".$extracharge." / 100) = ".($cost_no_cliche + ($cost_no_cliche * $extracharge / 100)) ?></div>
+        
+        <div class="param-name">Отгрузочная стоимость с формами, руб</div>
+        <div class="algorithm">себестоимость с формами  + (себестоимость с формами * наценка / 100)</div>
+        <div class="value mb-2"><?=$cost_with_cliche." + (".$cost_with_cliche. " * ".$extracharge." / 100) = ".($cost_with_cliche + ($cost_with_cliche * $extracharge / 100)) ?></div>
+        
+        <?php if($unit == "kg" && !empty($quantity)): ?>
+        <div class="param-name">Отгрузочная стоимость за 1 кг без форм, руб</div>
+        <div class="algorithm">себестоимость за 1 кг без форм  + (себестоимость за 1 кг без форм * наценка / 100)</div>
+        <div class="value mb-2"><?=$cost_no_cliche_kg." + (".$cost_no_cliche_kg. " * ".$extracharge." / 100) = ".($cost_no_cliche_kg + ($cost_no_cliche_kg * $extracharge / 100)) ?></div>
+        
+        <div class="param-name">Отгрузочная стоимость с формами, руб</div>
+        <div class="algorithm">себестоимость с формами  + (себестоимость с формами * наценка / 100)</div>
+        <div class="value mb-2"><?=$cost_with_cliche_kg." + (".$cost_with_cliche_kg. " * ".$extracharge." / 100) = ".($cost_with_cliche_kg + ($cost_with_cliche_kg * $extracharge / 100)) ?></div>
+        <?php endif; ?>
+        
+        <?php if($unit == "pieces" && !empty($quantity)): ?>
+        <div class="param-name">Отгрузочная стоимость за 1 кг без форм, руб</div>
+        <div class="algorithm">себестоимость за 1 кг без форм  + (себестоимость за 1 кг без форм * наценка / 100)</div>
+        <div class="value mb-2"><?=$cost_no_cliche_pieces." + (".$cost_no_cliche_pieces. " * ".$extracharge." / 100) = ".($cost_no_cliche_pieces + ($cost_no_cliche_pieces * $extracharge / 100)) ?></div>
+        
+        <div class="param-name">Отгрузочная стоимость с формами, руб</div>
+        <div class="algorithm">себестоимость за 1 кг с формами  + (себестоимость за 1 кг с формами * наценка / 100)</div>
+        <div class="value mb-2"><?=$cost_with_cliche_pieces." + (".$cost_with_cliche_pieces. " * ".$extracharge." / 100) = ".($cost_with_cliche_pieces + ($cost_with_cliche_pieces * $extracharge / 100)) ?></div>
         <?php endif; ?>
     </div>
     <?php
