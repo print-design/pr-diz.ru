@@ -57,14 +57,64 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
     $error_message = $executer->error;
 }
 
-// Расчёт отгрузочной стоимости
+// Расчёт наценки
 if(null !== filter_input(INPUT_POST, 'extracharge-submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $extracharge = filter_input(INPUT_POST, 'extracharge');
     
-    $sql = "update request_calc set extracharge=$extracharge where id=$id";
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
+    $norm = 35;
+    
+    $sql = "select work_type_id, unit, quantity, lamination1_brand_name, lamination2_brand_name from request_calc where id = $id";
+    $fetcher = new Fetcher($sql);
+    
+    if($row = $fetcher->Fetch()) {
+        $work_type_id = $row['work_type_id'];
+        $unit = $row['unit'];
+        $quantity = $row['quantity'];
+        $lamination1_brand_name = $row['lamination1_brand_name'];
+        $lamination2_brand_name = $row['lamination2_brand_name'];
+        
+        if($unit == "kg") {
+            // Тип наценки:
+            $extracharge_type_id = 0;
+                
+            if($work_type_id == 1) {
+                // 1 - без печати
+                $extracharge_type_id = 1;
+            }
+            elseif(empty ($lamination1_brand_name)) {
+                // 2 - печать без ламинации
+                $extracharge_type_id = 2;
+            }
+            elseif(empty ($lamination2_brand_name)) {
+                // 3 - печать с одной ламинацией
+                $extracharge_type_id = 3;
+            }
+            else {
+                // 4 - печать с двумя ламинациями
+                $extracharge_type_id = 4;
+            }
+                
+            $sql_ec = "select value from extracharge where from_weight <= $quantity and to_weight >= $quantity and extracharge_type_id = $extracharge_type_id order by id limit 1";
+            $fetcher_ec = new Fetcher($sql_ec);
+                
+            if($row_ec = $fetcher_ec->Fetch()) {
+                $norm = $row_ec[0];
+            }
+        }
+        else {
+            $error_message = "Ошибка при чтении данных о типе работы";
+        }
+    }
+    
+    if(intval($extracharge) < intval($norm)) {
+        $error_message = "Наценка должна быть не меньше ".intval($norm)."%";
+    }
+    else {
+        $sql = "update request_calc set extracharge=$extracharge where id=$id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
 }
 
 // Расчёт
