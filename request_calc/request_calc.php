@@ -1423,67 +1423,72 @@ $num_for_customer = $row['num_for_customer'];
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/request_calc/<?= IsInRole('manager') ? BuildQueryAddRemove('manager', GetUserId(), 'id') : BuildQueryRemove('id') ?>">К списку</a>
-            <div class="d-inline-block" style="width: 150px;"></div>
-            <?php if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))): ?>
-            <?php if(!empty($request_calc_result_id)): ?>
-            <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Пересчитать</a>
-            <?php elseif(empty($row['ink_number'])): ?>
-            <form method="post" class="d-inline-block">
-                <input type="hidden" name="id" value="<?=$id ?>" />
-                <button type="submit" name="calculate-submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Рассчитать</button>
-            </form>
-            <?php
-            else:
-                $percents_exist = true;
+            <div class="d-flex justify-content-between mb-2 w-50">
+                <div class="p-2">
+                    <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/request_calc/<?= IsInRole('manager') ? BuildQueryAddRemove('manager', GetUserId(), 'id') : BuildQueryRemove('id') ?>">К списку</a>
+                </div>
+                <div class="p-1 text-nowrap">
+                    <?php if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))): ?>
+                    <?php if(!empty($request_calc_result_id)): ?>
+                    <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Пересчитать</a>
+                    <?php elseif(empty($row['ink_number'])): ?>
+                    <form method="post" class="d-inline-block">
+                        <input type="hidden" name="id" value="<?=$id ?>" />
+                        <button type="submit" name="calculate-submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Рассчитать</button>
+                    </form>
+                    <?php
+                    else:
+                        $percents_exist = true;
                         
-                for($i=1; $i<=$ink_number; $i++) {
-                    if(empty($row["percent_$i"])) {
-                        $percents_exist = false;
-                    }
-                }
+                        for($i=1; $i<=$ink_number; $i++) {
+                            if(empty($row["percent_$i"])) {
+                                $percents_exist = false;
+                            }
+                        }
                                     
-            if($percents_exist):
-            ?>
-            <form method="post" class="d-inline-block">
-                <input type="hidden" name="id" value="<?=$id ?>" />
-                <button type="submit" name="calculate-submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Рассчитать</button>
-            </form>
-            <?php 
-            endif; // if($percents_exist):
-            endif; // if(!empty($request_calc_result_id)):
-            ?>
+                    if($percents_exist):
+                    ?>
+                    <form method="post" class="d-inline-block">
+                        <input type="hidden" name="id" value="<?=$id ?>" />
+                        <button type="submit" name="calculate-submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Рассчитать</button>
+                    </form>
+                    <?php 
+                    endif; // if($percents_exist):
+                    endif; // if(!empty($request_calc_result_id)):
+                    ?>
                             
-            <?php if(empty($request_calc_result_id)): ?>
-            <a href="create.php<?= BuildQuery("id", $id) ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Редактировать</a>
-            <?php endif; ?>
+                    <?php if(empty($request_calc_result_id)): ?>
+                    <a href="create.php<?= BuildQuery("id", $id) ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Редактировать</a>
+                    <?php endif; ?>
             
-            <?php
-            if(!empty($request_calc_result_id)):
-            if(!$confirm):
-            ?>
-            <?php if(IsInRole('administrator')): ?>
-            <form method="post" class="d-inline-block">
-                <input type="hidden" name="id" value="<?=$id ?>" />
-                <button type="submit" name="confirm-submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Утверждаю</button>
-            </form>
-            <?php
-            endif; // if(IsInRole('administrator')):
-            elseif(!empty($techmap_id)):
-            ?>
-            <a href="<?=APPLICATION.'/techmap/details.php?id='.$techmap_id ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Посмотреть тех. карту</a>
-            <?php
-            else:
-            ?>
-            <form method="post" action="<?=APPLICATION ?>/techmap/create.php" class="d-inline-block">
-                <input type="hidden" name="request_calc_id" value="<?=$id ?>" />
-                <button type="submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Составить тех. карту</button>
-            </form>
-            <?php
-            endif; // if(!$confirm):
-            endif; // if(!empty($request_calc_result_id)):            
-            endif; // if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))):
-            ?>
+                    <?php
+                    if(!empty($request_calc_result_id)):
+                    if(!$confirm):
+                    ?>
+                    <?php if(IsInRole('administrator')): ?>
+                    <form method="post" class="d-inline-block">
+                        <input type="hidden" name="id" value="<?=$id ?>" />
+                        <button type="submit" name="confirm-submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Утверждаю</button>
+                    </form>
+                    <?php
+                    endif; // if(IsInRole('administrator')):
+                    elseif(!empty($techmap_id)):
+                    ?>
+                    <a href="<?=APPLICATION.'/techmap/details.php?id='.$techmap_id ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Посмотреть тех. карту</a>
+                    <?php
+                    else:
+                    ?>
+                    <form method="post" action="<?=APPLICATION ?>/techmap/create.php" class="d-inline-block">
+                        <input type="hidden" name="request_calc_id" value="<?=$id ?>" />
+                        <button type="submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Составить тех. карту</button>
+                    </form>
+                    <?php
+                    endif; // if(!$confirm):
+                    endif; // if(!empty($request_calc_result_id)):            
+                    endif; // if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))):
+                    ?>
+                </div>
+            </div>
             <div class="row">
                 <!-- Левая половина -->
                 <div class="col-5" id="left_side">
