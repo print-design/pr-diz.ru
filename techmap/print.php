@@ -9,7 +9,7 @@
         <h1>Технологическая карта</h1>
     </body>
     <script>
-        var css = '@page { size: landscape; margin: 8mm; }',
+        var css = '@page { size: portrait; margin: 8mm; }',
                 head = document.head || document.getElementsByTagName('head')[0],
                 style = document.createElement('style');
             
