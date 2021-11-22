@@ -82,7 +82,7 @@ if(null !== filter_input(INPUT_POST, 'remove-date-submit')) {
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
 
-$sql = "select t.date, t.request_calc_id, t.work_date, t.work_shift, t.designer, t.printer, t.cutter, t.printings_number, t.rolls_number, "
+$sql = "select t.date, t.request_calc_id, t.work_date, t.work_shift, t.designer, t.printer, t.cutter, t.printings_number, t.rolls_number, t.information, "
         . "t.reverse_print, t.self_adhesive, t.spool, t.number_per_spool, t.winding, t.roll_type, "
         . "c.name name, c.unit, c.quantity, c.work_type_id, "
         . "c.brand_name, c.individual_brand_name, c.lamination1_brand_name, c.lamination1_individual_brand_name, c.lamination2_brand_name, c.lamination2_individual_brand_name, "
@@ -107,6 +107,7 @@ $printer = $row['printer'];
 $cutter = $row['cutter'];
 $printings_number = $row['printings_number'];
 $rolls_number = $row['rolls_number'];
+$information = $row['information'];
 $name = $row['name'];
 $unit = $row['unit'];
 $quantity = $row['quantity'];
@@ -284,7 +285,6 @@ $roll_type = $row['roll_type'];
                 </tr>
                 <tr>
                     <th colspan="4">
-                        Дополнительная информация
                         <div class="roll-selector mt-3">
                             <div class="roll_type<?=$roll_type == 1 ? " selected" : "" ?>"><image src="../images/rolls/2-50.gif" style="height: 50px; width: auto;" /></div>
                             <div class="roll_type<?=$roll_type == 2 ? " selected" : "" ?>"><image src="../images/rolls/2-50.gif" style="height: 50px; width: auto;" /></div>
@@ -294,9 +294,13 @@ $roll_type = $row['roll_type'];
                             <div class="roll_type<?=$roll_type == 6 ? " selected" : "" ?>"><image src="../images/rolls/6-50.gif" style="height: 50px; width: auto;" /></div>
                             <div class="roll_type<?=$roll_type == 7 ? " selected" : "" ?>"><image src="../images/rolls/7-50.gif" style="height: 50px; width: auto;" /></div>
                             <div class="roll_type<?=$roll_type == 8 ? " selected" : "" ?>"><image src="../images/rolls/8-50.gif" style="height: 50px; width: auto;" /></div>
-                            </div>
-                        </th>
-                    </tr>
+                        </div>
+                    </th>
+                </tr>
+                <tr>
+                    <th colspan="2">Дополнительная информация</th>
+                    <td colspan="2"><?=$information ?></td>
+                </tr>
                 <tr>
                     <th colspan="2">Дата печати тиража</th>
                     <td colspan="2">

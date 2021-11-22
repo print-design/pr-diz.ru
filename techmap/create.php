@@ -30,11 +30,12 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
     if($winding === null || $winding === '') $winding = "NULL";
     $roll_type = filter_input(INPUT_POST, 'roll_type');
     if($roll_type === null || $roll_type === '') $roll_type = "NULL";
+    $information = addslashes(filter_input(INPUT_POST, 'information'));
     
     $sql = "insert into techmap (request_calc_id, designer, printer, cutter, printings_number, rolls_number, reverse_print, "
-            . "self_adhesive, spool, number_per_spool, winding, roll_type) "
+            . "self_adhesive, spool, number_per_spool, winding, roll_type, information) "
             . "values($request_calc_id, '$designer', '$printer', '$cutter', $printings_number, $rolls_number, $reverse_print, "
-            . "$self_adhesive, $spool, $number_per_spool, $winding, $roll_type)";
+            . "$self_adhesive, $spool, $number_per_spool, $winding, $roll_type, '$information')";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     $techmap_id = $executer->insert_id;
@@ -283,7 +284,6 @@ $dirty_length = $row['dirty_length'];
                     </tr>
                     <tr>
                         <th colspan="4">
-                            Дополнительная информация
                             <div class="form-group roll-selector mt-3">
                                 <?php $roll_type = filter_input(INPUT_POST, 'roll_type'); ?>
                                 <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_1" name="roll_type" value="1"<?=$roll_type == 1 ? " checked='checked'" : "" ?> />
@@ -304,6 +304,10 @@ $dirty_length = $row['dirty_length'];
                                 <label for="roll_type_8"><image src="../images/rolls/8-50.gif" style="height: 50px; width: auto;" /></label>
                             </div>
                         </th>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Дополнительная информация</th>
+                        <td colspan="2"><textarea class="form-control" name="information" rows="6"></textarea></td>
                     </tr>
                 </table>
                 <button type="submit" name="create-submit" class="btn btn-dark" style="width: 200px;">Создать</button>
