@@ -110,6 +110,12 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     }
     
     $machine_type = filter_input(INPUT_POST, 'machine_type');
+    
+    $raport_resize = 0;
+    if(filter_input(INPUT_POST, 'raport_resize') == 'on') {
+        $raport_resize = 1;
+    }
+    
     $brand_name = addslashes(filter_input(INPUT_POST, 'brand_name'));
     
     if(empty($brand_name)) {
@@ -434,7 +440,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         if(empty($error_message)) {
             // Если mode = recalc или пустой id, то создаём новый объект
             if(filter_input(INPUT_GET, 'mode') == 'recalc' || empty(filter_input(INPUT_GET, 'id'))) {
-                $sql = "insert into request_calc (customer_id, name, work_type_id, unit, machine_type, "
+                $sql = "insert into request_calc (customer_id, name, work_type_id, unit, machine_type, raport_resize, "
                         . "brand_name, thickness, individual_brand_name, individual_price, individual_thickness, individual_density, customers_material, "
                         . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
                         . "lamination2_brand_name, lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
@@ -444,7 +450,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
                         . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
                         . "cliche_1, cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8) "
-                        . "values($customer_id, '$name', $work_type_id, '$unit', '$machine_type', "
+                        . "values($customer_id, '$name', $work_type_id, '$unit', '$machine_type', $raport_resize, "
                         . "'$brand_name', $thickness, '$individual_brand_name', $individual_price, $individual_thickness, $individual_density, $customers_material, "
                         . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_individual_brand_name', $lamination1_individual_price, $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, "
                         . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_individual_brand_name', $lamination2_individual_price, $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, "
@@ -460,7 +466,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
             }
             else {
                 $sql = "update request_calc "
-                        . "set customer_id=$customer_id, name='$name', work_type_id=$work_type_id, unit='$unit', machine_type='$machine_type', "
+                        . "set customer_id=$customer_id, name='$name', work_type_id=$work_type_id, unit='$unit', machine_type='$machine_type', raport_resize=$raport_resize, "
                         . "brand_name='$brand_name', thickness=$thickness, individual_brand_name='$individual_brand_name', individual_price=$individual_price, "
                         . "individual_thickness=$individual_thickness, individual_density=$individual_density, customers_material=$customers_material, "
                         . "lamination1_brand_name='$lamination1_brand_name', lamination1_thickness=$lamination1_thickness, "
@@ -504,7 +510,7 @@ if(empty($id)) {
 }
 
 if(!empty($id)) {
-    $sql = "select date, customer_id, name, work_type_id, unit, machine_type, "
+    $sql = "select date, customer_id, name, work_type_id, unit, machine_type, raport_resize, "
             . "brand_name, thickness, individual_brand_name, individual_price, individual_thickness, individual_density, customers_material, "
             . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
@@ -594,6 +600,14 @@ $machine_type = filter_input(INPUT_POST, 'machine_type');
 if(null === $machine_type) {
     if(isset($row['machine_type'])) $machine_type = $row['machine_type'];
     else $machine_type = null;
+}
+
+if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
+    $raport_resize = filter_input(INPUT_POST, 'raport_resize') == 'on' ? 1 : 0;
+}
+else {
+    if(isset($row['raport_resize'])) $raport_resize = $row['raport_resize'];
+    else $raport_resize = null;
 }
 
 $lamination1_brand_name = filter_input(INPUT_POST, 'lamination1_brand_name');
@@ -917,30 +931,6 @@ for ($i=1; $i<=8; $i++) {
                                 ?>
                             </select>
                         </div>
-                        <!-- Единица заказа -->
-                        <?php
-                        $kg_checked = ($unit == "kg" || empty($unit)) ? " checked='checked'" : "";
-                        $pieces_checked = $unit == "pieces" ? " checked='checked'" : "";
-                        ?>
-                        <div class="justify-content-start mt-2 mb-1">
-                            <div class="form-check-inline">
-                                <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="unit" id="unit_kg" value="kg"<?=$kg_checked ?> /><span id="unit_kg_label">Килограммы</span>
-                                </label>
-                            </div>
-                            <?php
-                            $unit_pieces_display_none = "";
-                            if($work_type_id == 1) {
-                                $unit_pieces_display_none = " d-none";
-                            }
-                            ?>
-                            <div class="form-check-inline">
-                                <label class="form-check-label">
-                                    <input type="radio" class="form-check-input<?=$unit_pieces_display_none ?>" name="unit" id="unit_pieces" value="pieces"<?=$pieces_checked ?> /><span id="unit_pieces_label" class="placeh<?=$unit_pieces_display_none ?>">Штуки</span>
-                                </label>
-                            </div>
-                        </div>
-                        <!-- Объем заказа -->
                         <div class="row">
                             <!-- Объем заказа -->
                             <div class="col-6">
@@ -961,28 +951,70 @@ for ($i=1; $i<=8; $i++) {
                                     <div class="invalid-feedback">Объем заказа обязательно</div>
                                 </div>
                             </div>
+                            <div class="col-6 pt-4">
+                                <!-- Единица заказа -->
+                                <?php
+                                $kg_checked = ($unit == "kg" || empty($unit)) ? " checked='checked'" : "";
+                                $pieces_checked = $unit == "pieces" ? " checked='checked'" : "";
+                                ?>
+                                <div class="form-check-inline">
+                                    <label class="form-check-label">
+                                        <input type="radio" class="form-check-input" name="unit" id="unit_kg" value="kg"<?=$kg_checked ?> /><span id="unit_kg_label">Килограммы</span>
+                                    </label>
+                                </div>
+                                <?php
+                                $unit_pieces_display_none = "";
+                                if($work_type_id == 1) {
+                                    $unit_pieces_display_none = " d-none";
+                                }
+                                ?>
+                                <div class="form-check-inline">
+                                    <label class="form-check-label">
+                                        <input type="radio" class="form-check-input<?=$unit_pieces_display_none ?>" name="unit" id="unit_pieces" value="pieces"<?=$pieces_checked ?> /><span id="unit_pieces_label" class="placeh<?=$unit_pieces_display_none ?>">Штуки</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-                        <!-- Печатная машина -->
-                        <div class="print-only d-none">
-                            <div class="form-group w-100">
-                                <label for="machine_type">Печатная машина</label>
-                                <select id="machine_type" name="machine_type" class="form-control print-only d-none">
-                                    <option value="" hidden="hidden" selected="selected">Печатная машина...</option>
-                                    <?php
-                                    $zbs_selected = "";
-                                    if($machine_type == ZBS) {
-                                        $zbs_selected = " selected='selected'";
-                                    }
-                                    ?>
-                                    <option value="<?=ZBS ?>"<?=$zbs_selected ?>>ZBS</option>
-                                    <?php
-                                    $comiflex_selected = "";
-                                    if($machine_type == COMIFLEX) {
-                                        $comiflex_selected = " selected='selected'";
-                                    }
-                                    ?>
-                                    <option value="<?=COMIFLEX ?>"<?=$comiflex_selected ?>>Comiflex</option>
-                                </select>
+                        <div class="print-only d-none row">
+                            <!-- Печатная машина -->
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="machine_type">Печатная машина</label>
+                                    <select id="machine_type" name="machine_type" class="form-control print-only d-none">
+                                        <option value="" hidden="hidden" selected="selected">Печатная машина...</option>
+                                        <?php
+                                        $zbs_selected = "";
+                                        if($machine_type == ZBS) {
+                                            $zbs_selected = " selected='selected'";
+                                        }
+                                        ?>
+                                        <option value="<?=ZBS ?>"<?=$zbs_selected ?>>ZBS</option>
+                                        <?php
+                                        $comiflex_selected = "";
+                                        if($machine_type == COMIFLEX) {
+                                            $comiflex_selected = " selected='selected'";
+                                        }
+                                        ?>
+                                        <option value="<?=COMIFLEX ?>"<?=$comiflex_selected ?>>Comiflex</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <?php
+                            $comiflex_only_class = " d-none";
+                            if($machine_type == COMIFLEX) {
+                                $comiflex_only_class = "";
+                            }
+                            ?>
+                            <!-- Растяжение / сжатие -->
+                            <div class="col-6 comiflex-only<?=$comiflex_only_class ?>">
+                                <div class="form-check pt-4">
+                                    <label class="form-check-label text-nowrap" style="line-height: 25px;">
+                                        <?php
+                                        $raport_resize_checked = $raport_resize == 1 ? " checked='checked'" : "";
+                                        ?>
+                                        <input type="checkbox" class="form-check-input" id="raport_resize" name="raport_resize" value="on"<?=$raport_resize_checked ?> />Растяжение/сжатие
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         <!-- Основная плёнка -->
@@ -1599,7 +1631,7 @@ for ($i=1; $i<=8; $i++) {
                                         <?php
                                         $checked = $no_ski == 1 ? " checked='checked'" : "";
                                         ?>
-                                        <input type="checkbox" class="form-check-input" id="no_ski" name="no_ski" value="on"<?=$checked ?>>Печать без лыж
+                                        <input type="checkbox" class="form-check-input" id="no_ski" name="no_ski" value="on"<?=$checked ?> /> Печать без лыж
                                     </label>
                                 </div>
                             </div>
@@ -1873,6 +1905,16 @@ for ($i=1; $i<=8; $i++) {
                 }
                 
                 SetFieldsVisibility($(this).val());
+            });
+            
+            // При смене машины: флажок "растяжение/сжатие" показываем только если машина Комифлекс
+            $('#machine_type').change(function() {
+                if($(this).val() == '<?=COMIFLEX ?>') {
+                    $('.comiflex-only').removeClass('d-none');
+                }
+                else {
+                    $('.comiflex-only').addClass('d-none');
+                }
             });
             
             // При щелчке на флажке "Печать без лыж" делаем поле "ширина лыж" доступным или нет
