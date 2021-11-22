@@ -173,7 +173,7 @@ function OrderLink($param) {
                     
                     $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.unit, c.quantity, c.work_type_id, c.ink_number, "
                             . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
-                            . "comment, "
+                            . "comment, confirm, "
                             . "(select id from request_calc_result where request_calc_id = c.id order by id desc limit 1) request_calc_result_id, "
                             . "(select id from techmap where request_calc_id = c.id order by id desc limit 1) techmap_id, "
                             . "wt.name work_type, u.last_name, u.first_name, "
@@ -194,6 +194,11 @@ function OrderLink($param) {
                     if(!empty($row['techmap_id'])) {
                         $status = "Составлена тех. карта";
                         $colour = "green";
+                        $colour_style = " color: $colour";
+                    }
+                    elseif($row['confirm']) {
+                        $status = "Утверждено администратором";
+                        $colour = "navy";
                         $colour_style = " color: $colour";
                     }
                     elseif(!empty ($row['request_calc_result_id'])) {

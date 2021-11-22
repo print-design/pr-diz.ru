@@ -57,6 +57,15 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
     $error_message = $executer->error;
 }
 
+// Утверждение администратором
+if(null !== filter_input(INPUT_POST, 'confirm-submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    
+    $sql = "update request_calc set confirm=1 where id=$id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+}
+
 // Расчёт наценки
 if(null !== filter_input(INPUT_POST, 'extracharge-submit')) {
     $id = filter_input(INPUT_POST, 'id');
@@ -306,7 +315,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         else { // Если материал ламинации 1 выбран из списка
             $c_density_lam1 = $lamination1_density;
         }
-            
+        
         if(!empty($lamination1_brand_name) && !empty($lamination1_thickness) && empty($c_density_lam1)) {
             $error_message = "Для данной толщина ламинации 1 не задан удельный вес";
         }
@@ -1297,7 +1306,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
         . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
         . "c.cliche_1, c.cliche_2, c.cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8, "
-        . "comment, "
+        . "comment, confirm, "
         . "c.extracharge, c.ski_width, c.no_ski, "
         . "(select id from techmap where request_calc_id = $id order by id desc limit 1) techmap_id, "
         . "(select id from request_calc_result where request_calc_id = $id order by id desc limit 1) request_calc_result_id, "
@@ -1370,6 +1379,7 @@ for($i=1; $i<=$ink_number; $i++) {
 }
 
 $comment = $row['comment'];
+$confirm = $row['confirm'];
 
 $extracharge = $row['extracharge'];
 $ski_width = $row['ski_width'];
@@ -1440,24 +1450,39 @@ $num_for_customer = $row['num_for_customer'];
                 <button type="submit" name="calculate-submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Рассчитать</button>
             </form>
             <?php 
-            endif;
-            endif;
+            endif; // if($percents_exist):
+            endif; // if(!empty($request_calc_result_id)):
             ?>
                             
             <?php if(empty($request_calc_result_id)): ?>
             <a href="create.php<?= BuildQuery("id", $id) ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Редактировать</a>
             <?php endif; ?>
-                    
-            <?php if(!empty($techmap_id)): ?>
+            
+            <?php
+            if(!empty($request_calc_result_id)):
+            if(!$confirm):
+            ?>
+            <?php if(IsInRole('administrator')): ?>
+            <form method="post" class="d-inline-block">
+                <input type="hidden" name="id" value="<?=$id ?>" />
+                <button type="submit" name="confirm-submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Утверждаю</button>
+            </form>
+            <?php
+            endif; // if(IsInRole('administrator')):
+            elseif(!empty($techmap_id)):
+            ?>
             <a href="<?=APPLICATION.'/techmap/details.php?id='.$techmap_id ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Посмотреть тех. карту</a>
-            <?php elseif (!empty($request_calc_result_id)): ?>
+            <?php
+            else:
+            ?>
             <form method="post" action="<?=APPLICATION ?>/techmap/create.php" class="d-inline-block">
                 <input type="hidden" name="request_calc_id" value="<?=$id ?>" />
                 <button type="submit" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Составить тех. карту</button>
             </form>
             <?php
-            endif;
-            endif;
+            endif; // if(!$confirm):
+            endif; // if(!empty($request_calc_result_id)):            
+            endif; // if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))):
             ?>
             <div class="row">
                 <!-- Левая половина -->
@@ -1467,6 +1492,10 @@ $num_for_customer = $row['num_for_customer'];
                     <?php if(!empty($techmap_id)): ?>
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px green; color: green;">
                         <i class="fas fa-file"></i>&nbsp;&nbsp;&nbsp;Составлена технологическая карта
+                    </div>
+                    <?php elseif($confirm): ?>
+                    <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px navy; color: navy;">
+                        <i class="fas fa-check-square"></i>&nbsp;&nbsp;&nbsp;Утверждено администратором
                     </div>
                     <?php elseif(!empty ($row['request_calc_result_id'])): ?>
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px blue; color: blue;">
@@ -1496,7 +1525,7 @@ $num_for_customer = $row['num_for_customer'];
                         <i class="far fa-clock"></i>&nbsp;&nbsp;&nbsp;Требуется расчёт
                     </div>
                     <?php
-                        endif;
+                    endif;
                     endif;
                     ?>
                     <table class="w-100 calculation-table">
