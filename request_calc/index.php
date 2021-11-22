@@ -127,7 +127,7 @@ function OrderLink($param) {
                         <th>Дата&nbsp;&nbsp;<?= OrderLink('date') ?></th>
                         <th>Заказчик&nbsp;&nbsp;<?= OrderLink('customer') ?></th>
                         <th>Имя заказа&nbsp;&nbsp;<?= OrderLink('name') ?></th>
-                        <th class="text-center">Объем&nbsp;&nbsp;<?= OrderLink('quantity') ?></th>
+                        <th class="text-center">Объем заказа&nbsp;&nbsp;<?= OrderLink('quantity') ?></th>
                         <th>Тип работы&nbsp;&nbsp;<?= OrderLink('work_type') ?></th>
                         <th>Менеджер&nbsp;&nbsp;<?= OrderLink('manager') ?></th>
                         <th>Комментарий</th>
