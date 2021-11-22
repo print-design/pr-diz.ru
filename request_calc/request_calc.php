@@ -1424,7 +1424,7 @@ $num_for_customer = $row['num_for_customer'];
             }
             ?>
             <div class="d-flex justify-content-between mb-2 w-50">
-                <div class="p-2">
+                <div class="p-1">
                     <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/request_calc/<?= IsInRole('manager') ? BuildQueryAddRemove('manager', GetUserId(), 'id') : BuildQueryRemove('id') ?>">К списку</a>
                 </div>
                 <div class="p-1 text-nowrap">
