@@ -200,33 +200,30 @@ $dirty_length = $row['dirty_length'];
                         <td colspan="2"><?=$brand_name.' '.(empty($lamination1_brand_name) ? '' : '+ '.$lamination1_brand_name).(empty($lamination2_brand_name) ? '' : '+ '.$lamination2_brand_name) ?></td>
                     </tr>
                     <tr>
-                        <td class="p-0">
-                            <table class="table mb-0">
-                                <tr>
-                                    <td rowspan="2">Печать</td>
-                                    <td>прямая</td>
-                                    <?php
-                                    $reverse_print_0_checked = '';
-                                    if(filter_input(INPUT_POST, 'reverse_print') === '0') {
-                                        $reverse_print_0_checked = " checked='checked'";
-                                    }
-                                    ?>
-                                    <td><input type="radio" name="reverse_print" value="0" class="form-check-inline"<?=$reverse_print_0_checked ?> /></td>
-                                </tr>
-                                <tr>
-                                    <td>оборотная</td>
-                                    <?php
-                                    $reverse_print_1_checked = '';
-                                    if(filter_input(INPUT_POST, 'reverse_print') === '1') {
-                                        $reverse_print_1_checked = " checked='checked'";
-                                    }
-                                    ?>
-                                    <td><input type="radio" name="reverse_print" value="1" class="form-check-inline"<?=$reverse_print_1_checked ?> /></td>
-                                </tr>
-                            </table>
-                        </td>
-                        <th>Красочность</th>
+                        <th colspan="2">Красочность</th>
                         <td colspan="2"><?=implode(' + ', $inks) ?></td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Печать</th>
+                        <td colspan="2">
+                            <?php
+                            $reverse_print_0_checked = '';
+                            if(filter_input(INPUT_POST, 'reverse_print') == '0' && filter_input(INPUT_POST, 'reverse_print') !== null) {
+                                $reverse_print_0_checked = " checked='checked'";
+                            }
+                                
+                            $reverse_print_1_checked = '';
+                            if(filter_input(INPUT_POST, 'reverse_print') == '1' && filter_input(INPUT_POST, 'reverse_print') !== null) {
+                                $reverse_print_1_checked = " checked='checked'";
+                            }
+                            ?>
+                            <div class="form-group">
+                                <input type="radio" class="form-check-inline" id="reverse_print_0" name="reverse_print" value="0"<?=$reverse_print_0_checked ?> />
+                                <label for="reverse_print_0" class="form-check-label">прямая</label>
+                                <input type="radio" class="form-check-inline ml-3" id="reverse_print_1" name="reverse_print" value="1"<?=$reverse_print_1_checked ?> />
+                                <label for="reverse_print_1" class="form-check-label">оборотная</label>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <th colspan="2">Рапорт, число зубьев</th>
@@ -243,10 +240,21 @@ $dirty_length = $row['dirty_length'];
                     <tr>
                         <th colspan="2">Способ наклейки (ручная, автомат)</th>
                         <td colspan="2">
+                            <?php
+                            $self_adhesive_0_checked = '';
+                            if(filter_input(INPUT_POST, 'self_adhesive') == 0 && filter_input(INPUT_POST, 'self_adhesive') !== null) {
+                                $self_adhesive_0_checked = " checked='checked'";
+                            }
+                            
+                            $self_adhesive_1_checked = '';
+                            if(filter_input(INPUT_POST, 'self_adhesive') == 1 && filter_input(INPUT_POST, 'self_adhesive') !== null) {
+                                $self_adhesive_1_checked = " checked='checked'";
+                            }
+                            ?>
                             <div class="form-group">
-                                <input type="radio" class="form-check-inline" id="self_adhesive_0" name="self_adhesive" value="0" />
+                                <input type="radio" class="form-check-inline" id="self_adhesive_0" name="self_adhesive" value="0"<?=$self_adhesive_0_checked ?> />
                                 <label for="self_adhesive_0" class="form-check-label">ручная</label>
-                                <input type="radio" class="form-check-inline ml-3" id="self_adhesive_1" name="self_adhesive" value="1" />
+                                <input type="radio" class="form-check-inline ml-3" id="self_adhesive_1" name="self_adhesive" value="1"<?=$self_adhesive_1_checked ?> />
                                 <label for="self_adhesive_1" class="form-check-label">автомат</label>
                             </div>
                         </td>

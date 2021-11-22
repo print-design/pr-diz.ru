@@ -246,21 +246,12 @@ $roll_type = $row['roll_type'];
                     <td colspan="2"><?=$brand_name.' '.(empty($lamination1_brand_name) ? '' : '+ '.$lamination1_brand_name).(empty($lamination2_brand_name) ? '' : '+ '.$lamination2_brand_name) ?></td>
                 </tr>
                 <tr>
-                    <td class="p-0">
-                        <table class="table mb-0">
-                            <tr>
-                                <td rowspan="2">Печать</td>
-                                <td>прямая</td>
-                                <td><?php if($reverse_print == 0): ?><i class="fas fa-check"></i><?php endif; ?></td>
-                            </tr>
-                            <tr>
-                                <td>оборотная</td>
-                                <td><?php if($reverse_print == 1): ?><i class="fas fa-check"></i><?php endif; ?></td>
-                            </tr>
-                        </table>
-                    </td>
-                    <th>Красочность</th>
+                    <th colspan="2">Красочность</th>
                     <td colspan="2"><?=implode(' + ', $inks) ?></td>
+                </tr>
+                <tr>
+                    <th colspan="2">Печать</th>
+                    <td colspan="2"><?=$reverse_print === null ? "" : ($reverse_print == 0 ? "прямая" : "оборотная") ?></td>
                 </tr>
                 <tr>
                     <th colspan="2">Рапорт, число зубьев</th>
@@ -276,7 +267,7 @@ $roll_type = $row['roll_type'];
                 </tr>
                 <tr>
                     <th colspan="2">Способ наклейки (ручная, автомат)</th>
-                    <td colspan="2"><?=$self_adhesive === null ? "" : ($self_adhesive === 0 ? "ручная" : "автомат") ?></td>
+                    <td colspan="2"><?=$self_adhesive === null ? "" : ($self_adhesive == 0 ? "ручная" : "автомат") ?></td>
                 </tr>
                 <tr>
                     <th rowspan="3">Резка и размотка продукции</th>
