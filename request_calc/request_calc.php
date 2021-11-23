@@ -1848,8 +1848,8 @@ $num_for_customer = $row['num_for_customer'];
                                         <textarea id="comment" name="comment" rows="3" cols="40" class="form-control"><?= htmlentities($comment) ?></textarea>
                                     </div>
                                     <?php if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))): ?>
-                                    <div class="form-group invisible">
-                                        <button type="submit" name="comment-submit" class="btn btn-outline-dark">Сохранить</button>
+                                    <div class="form-group">
+                                        <button type="submit" id="comment-submit" name="comment-submit" class="btn btn-outline-dark invisible">Сохранить</button>
                                     </div>
                                     <?php endif; ?>
                                 </form>
@@ -1892,7 +1892,7 @@ $num_for_customer = $row['num_for_customer'];
             
             // Делаем доступной кнопку "Сохранить" для коментария
             $('#comment').keydown(function() {
-                $(this).form().find('button').removeClass('invisible');
+                $('#comment-submit').removeClass('invisible');
             });
             
             // Показ расходов
