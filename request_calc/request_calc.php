@@ -29,6 +29,16 @@ const LACQUER = "lacquer";
 
 $form_valid = true;
 
+// Смена менеджера
+if(null !== filter_input(INPUT_POST, 'manager-submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $manager_id = filter_input(INPUT_POST, 'manager_id');
+    
+    $sql = "update request_calc set manager_id=$manager_id where id=$id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+}
+
 // Заполнение красочности
 if(null !== filter_input(INPUT_POST, 'percent-submit')) {
     $id = filter_input(INPUT_POST, 'id');
@@ -1306,12 +1316,12 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
         . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
         . "c.cliche_1, c.cliche_2, c.cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8, "
-        . "comment, confirm, "
+        . "c.comment, c.confirm, c.manager_id, "
         . "c.extracharge, c.ski_width, c.no_ski, "
         . "(select id from techmap where request_calc_id = $id order by id desc limit 1) techmap_id, "
         . "(select id from request_calc_result where request_calc_id = $id order by id desc limit 1) request_calc_result_id, "
         . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
-        . "wt.name work_type, "
+        . "wt.name work_type, u.last_name, u.first_name, "
         . "(select count(id) from request_calc where customer_id = c.customer_id and id <= c.id) num_for_customer, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) density, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_density, "
@@ -1319,6 +1329,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "from request_calc c "
         . "left join customer cu on c.customer_id = cu.id "
         . "left join work_type wt on c.work_type_id = wt.id "
+        . "left join user u on c.manager_id = u.id "
         . "where c.id=$id";
 $row = (new Fetcher($sql))->Fetch();
 
@@ -1381,6 +1392,7 @@ for($i=1; $i<=$ink_number; $i++) {
 $comment = $row['comment'];
 $confirm = $row['confirm'];
 
+$manager_id = $row['manager_id'];
 $extracharge = $row['extracharge'];
 $ski_width = $row['ski_width'];
 $no_ski = $row['no_ski'];
@@ -1393,6 +1405,8 @@ $customer_email = $row['customer_email'];
 $customer_person = $row['customer_person'];
 
 $work_type = $row['work_type'];
+$last_name = $row['last_name'];
+$first_name = $row['first_name'];
 
 $techmap_id = $row['techmap_id'];
 $request_calc_result_id = $row['request_calc_result_id'];
@@ -1534,6 +1548,35 @@ $num_for_customer = $row['num_for_customer'];
                     endif;
                     ?>
                     <table class="w-100 calculation-table">
+                        <tr>
+                            <th>Менеджер</th>
+                            <td class="param-value">
+                                <form class="form-inline" method="post">
+                                    <input type="hidden" name="id" value="<?=$id ?>" />
+                                    <select class="form-control" name="manager_id" id="manager_id">
+                                        <?php
+                                        if(IsInRole('administrator')):
+                                        $sql = "select u.id, u.last_name, u.first_name "
+                                                . "from user u inner join role r on u.role_id = r.id "
+                                                . "where r.name in ('manager', 'administrator') "
+                                                . "order by u.last_name, u.first_name";
+                                        $fetcher = new Fetcher($sql);
+                                        while ($row = $fetcher->Fetch()):
+                                        $selected = "";
+                                        if($row['id'] == $manager_id) {
+                                            $selected = " selected='selected'";
+                                        }
+                                        ?>
+                                        <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['last_name'].' '.$row['first_name'] ?></option>
+                                        <?php endwhile; ?>
+                                    </select>
+                                    <button type="submit" name="manager-submit" id="manager-submit" class="btn btn-outline-dark d-none">Сменить</button>
+                                </form>
+                                <?php else: ?>
+                                <?=$last_name.' '.$first_name ?>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
                         <tr><th>Заказчик</th><td class="param-value"><?=$customer ?></td></tr>
                         <tr><th>Название заказа</th><td class="param-value"><?=$request_name ?></td></tr>
                         <tr><th>Тип работы</th><td class="param-value"><?=$work_type ?></td></tr>
@@ -1828,6 +1871,11 @@ $num_for_customer = $row['num_for_customer'];
         include '../include/footer.php';
         ?>
         <script>
+            // Делаем доступной кнопку "Сменить" для смены менеджера
+            $('#manager_id').change(function(){
+                $('#manager-submit').removeClass('d-none');
+            });
+            
             // В поле "процент" ограничиваем значения: целые числа от 1 до 100
             $('.percent').keydown(function(e) {
                 if(!KeyDownLimitIntValue($(e.target), e, 100)) {
