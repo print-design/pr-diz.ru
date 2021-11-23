@@ -119,7 +119,7 @@ $error_message = '';
         include '../include/footer.php';
         ?>
         <script>
-            $('.film-price').keypress(function() {
+            $('.film-price').keydown(function() {
                 $(this).parent().next('button').removeClass('d-none');
             });
             
