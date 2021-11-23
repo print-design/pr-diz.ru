@@ -309,14 +309,27 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     
     // Длина этикетки вдоль рапорта, умноженная на количество этикеток на ручье
     // Должна соответствовать рапорту
-    if(!empty($raport) && !empty($number_on_raport) && !empty($label_length) && round($raport / $number_on_raport, 4) != $label_length) {
-        $raport_valid = ISINVALID;
-        $label_length_valid = ISINVALID;
-        $number_on_raport_valid = ISINVALID;
-        $raport_message = "Сумма длин не соответствует рапорту";
-        $label_length_message = $raport_message;
-        $number_on_raport_message = $raport_message;
-        $form_valid = false;
+    if(!empty($raport) && !empty($number_on_raport) && !empty($label_length)) {
+        $label_length_min = $label_length;
+        $label_length_max = $label_length;
+        
+        // Если имеется расширение / сжатие рапорта, то сумма длин этикеток
+        // равна длине рапорта плюс/минус 10 мм
+        if($raport_resize) {
+            $label_length_min = $label_length - 10;
+            $label_length_max = $label_length + 10;
+        }
+        
+        if(round($raport / $number_on_raport, 4) < $label_length_min ||
+                round($raport / $number_on_raport, 4) > $label_length_max) {
+            $raport_valid = ISINVALID;
+            $label_length_valid = ISINVALID;
+            $number_on_raport_valid = ISINVALID;
+            $raport_message = "Сумма длин не соответствует рапорту";
+            $label_length_message = $raport_message;
+            $number_on_raport_message = $raport_message;
+            $form_valid = false;
+        }
     }
     
     if($form_valid) {
