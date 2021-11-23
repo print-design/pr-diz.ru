@@ -1551,11 +1551,11 @@ $num_for_customer = $row['num_for_customer'];
                         <tr>
                             <th>Менеджер</th>
                             <td class="param-value">
+                                <?php if(IsInRole('administrator')): ?>
                                 <form class="form-inline" method="post">
                                     <input type="hidden" name="id" value="<?=$id ?>" />
                                     <select class="form-control" name="manager_id" id="manager_id">
                                         <?php
-                                        if(IsInRole('administrator')):
                                         $sql = "select u.id, u.last_name, u.first_name "
                                                 . "from user u inner join role r on u.role_id = r.id "
                                                 . "where r.name in ('manager', 'administrator') "
