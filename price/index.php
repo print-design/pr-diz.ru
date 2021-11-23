@@ -6,6 +6,20 @@ if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Редактирование цены за материал
+if(null !== filter_input(INPUT_POST, 'price-submit')) {
+    $brand_name = filter_input(INPUT_POST, 'brand_name');
+    $thickness = filter_input(INPUT_POST, 'thickness');
+    $price = filter_input(INPUT_POST, 'price');
+    $currency = filter_input(INPUT_POST, 'currency');
+    
+    if(!empty($brand_name) && !empty($thickness) && !empty($price) && !empty($currency)) {
+        $sql = "insert into film_price (brand_name, thickness, price, currency) values ('$brand_name', $thickness, $price, '$currency')";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+}
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -67,28 +81,34 @@ $error_message = '';
                     <th>Цена</th>
                     <?php foreach ($film_brand_variations[$key] as $value): ?>
                     <td>
-                        <div class="input-group">
-                            <input type="text" 
-                                   name="price" 
-                                   class="form-control float-only film-price" 
-                                   placeholder="Цена" style="width: 80px;" 
-                                   value="<?=$value['price'] ?>" 
-                                   data-brand-name="<?=$key ?>" 
-                                   data-thickness="<?=$value['thickness'] ?>"
-                                   onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
-                                   onfocusout="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" />
-                            <div class="input-group-append">
-                                <select name="currency" class="film-currency">
-                                    <option value="" hidden="">...</option>
-                                    <option value="rub"<?=$value['currency'] == "rub" ? " selected='selected'" : "" ?>>Руб</option>
-                                    <option value="usd"<?=$value['currency'] == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                    <option value="euro"<?=$value['currency'] == "euro" ? " selected='selected'" : "" ?>>EUR</option>
-                                </select>
+                        <form class="form-inline" method="post">
+                            <input type="hidden" name="scroll" />
+                            <input type="hidden" name="brand_name" value="<?=$key ?>" />
+                            <input type="hidden" name="thickness" value="<?=$value['thickness'] ?>" />
+                            <div class="input-group">
+                                <input type="text" 
+                                       name="price" 
+                                       class="form-control float-only film-price" 
+                                       placeholder="Цена" style="width: 80px;" 
+                                       value="<?=$value['price'] ?>" 
+                                       data-brand-name="<?=$key ?>" 
+                                       data-thickness="<?=$value['thickness'] ?>"
+                                       onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onmouseup="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
+                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                       onkeyup="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
+                                       onfocusout="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" />
+                                <div class="input-group-append">
+                                    <select name="currency" class="film-currency">
+                                        <option value="" hidden="">...</option>
+                                        <option value="rub"<?=$value['currency'] == "rub" ? " selected='selected'" : "" ?>>Руб</option>
+                                        <option value="usd"<?=$value['currency'] == "usd" ? " selected='selected'" : "" ?>>USD</option>
+                                        <option value="euro"<?=$value['currency'] == "euro" ? " selected='selected'" : "" ?>>EUR</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
+                            <button class="btn btn-outline-dark d-none" name="price-submit">OK</button>
+                        </form>
                     </td>
                     <?php endforeach; ?>
                 </tr>
@@ -99,18 +119,12 @@ $error_message = '';
         include '../include/footer.php';
         ?>
         <script>
-            $('.film-price').focusout(function() {
-                currency_select = $(this).next('.input-group-append').children('select');
-                if(currency_select.val() != '') {
-                    SaveFilmPrice($(this), currency_select.val());
-                }
+            $('.film-price').keypress(function() {
+                $(this).parent().next('button').removeClass('d-none');
             });
             
             $('.film-currency').change(function() {
-                price_input = $(this).parent().prev('input');
-                if(price_input.val() != '') {
-                    SaveFilmPrice(price_input, $(this).val());
-                }
+                $(this).parent().parent().next('button').removeClass('d-none');
             })
             
             function SaveFilmPrice(price_input, currency) {
