@@ -456,6 +456,7 @@ if(!empty ($id) && !empty ($date)) {
     $price_lam_total = null;    $pure_weight_total = null;    $dirty_weight_total = null;
     $cost_no_cliche = null;    $cost_with_cliche = null;    $cost_no_cliche_kg = null;
     $cost_with_cliche_kg = null;    $cost_no_cliche_pieces = null;    $cost_with_cliche_pieces = null;
+    $extracharge = null;
     
     $sql = "select pure_area, pure_width, pure_length, pure_length_lam, "
             . "dirty_length, dirty_width, dirty_area, pure_weight, dirty_weight, material_price, print_time, tuning_time, "
@@ -463,7 +464,7 @@ if(!empty ($id) && !empty ($date)) {
             . "cliche_price, ink_price, pure_weight_lam1, dirty_weight_lam1, "
             . "price_lam1_material, price_lam1_glue, price_lam1_work, pure_weight_lam2, dirty_weight_lam2, price_lam2_material, "
             . "price_lam2_glue, price_lam2_work, price_lam_total, pure_weight_total, dirty_weight_total, cost_no_cliche, "
-            . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_pieces, cost_with_cliche_pieces"
+            . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_pieces, cost_with_cliche_pieces, extracharge"
             . " from request_calc_result where request_calc_id = $id order by id desc limit 1";
     $fetcher = new Fetcher($sql);
 
@@ -507,6 +508,7 @@ if(!empty ($id) && !empty ($date)) {
         $cost_with_cliche_kg = $row['cost_with_cliche_kg'];
         $cost_no_cliche_pieces = $row['cost_no_cliche_pieces'];
         $cost_with_cliche_pieces = $row['cost_with_cliche_pieces'];
+        $extracharge = $row['extracharge'];
     }
 }
 ?>

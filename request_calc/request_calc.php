@@ -130,7 +130,7 @@ if(null !== filter_input(INPUT_POST, 'extracharge-submit')) {
         $error_message = "Наценка должна быть не меньше ".intval($norm)."%";
     }
     else {
-        $sql = "update request_calc set extracharge=$extracharge where id=$id";
+        $sql = "update request_calc_result set extracharge=$extracharge where request_calc_id=$id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
@@ -150,7 +150,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
             . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
             . "c.cliche_1, c.cliche_2, c.cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8, "
-            . "c.extracharge, c.ski_width, c.no_ski, "
+            . "c.ski_width, c.no_ski, "
             . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) density, "
             . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_density, "
             . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_density "
@@ -246,7 +246,6 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             }
         }
 
-        $extracharge = $row['extracharge']; // Наценка
         $ski_width = $row['ski_width']; // Ширина лыж
         $no_ski = $row['no_ski']; // Печать без лыж (ДА/НЕТ)
     }
@@ -1317,7 +1316,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
         . "c.cliche_1, c.cliche_2, c.cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8, "
         . "c.comment, c.confirm, c.manager_id, "
-        . "c.extracharge, c.ski_width, c.no_ski, "
+        . "c.ski_width, c.no_ski, "
         . "(select id from techmap where request_calc_id = $id order by id desc limit 1) techmap_id, "
         . "(select id from request_calc_result where request_calc_id = $id order by id desc limit 1) request_calc_result_id, "
         . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
@@ -1393,7 +1392,6 @@ $comment = $row['comment'];
 $confirm = $row['confirm'];
 
 $manager_id = $row['manager_id'];
-$extracharge = $row['extracharge'];
 $ski_width = $row['ski_width'];
 $no_ski = $row['no_ski'];
 $techmap_id = $row['techmap_id'];
