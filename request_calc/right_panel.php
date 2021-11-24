@@ -1,5 +1,4 @@
 <?php 
-
 if(!empty ($id) && !empty ($date)) {
     // Курс доллара и евро
     $euro = null;
@@ -1136,11 +1135,11 @@ if(!empty ($id) && !empty ($date)) {
             
         <!---------------------------------------------------------->
             
-        <div class="param-name">Вес материала готовой продукции чистый, руб</div>
+        <div class="param-name">Вес материала готовой продукции чистый, кг</div>
         <div class="algorithm">площадь тиража чистая * (удельный вес материала + удельный вес ламинации 1 + удельный вес ламинации 2) / 1000</div>
         <div class="param-value mb-2"><?="$pure_area * ($c_weight + (".($c_weight_lam1 ?? 0).") + (".($c_weight_lam2 ?? 0).")) / 1000 = $pure_weight_total" ?></div>
             
-        <div class="param-name">Вес материала готовой продукции с отходами, руб</div>
+        <div class="param-name">Вес материала готовой продукции с отходами, кг</div>
         <div class="algorithm">площадь тиража с отходами * (удельный вес материала + удельный вес ламинации 1 + удельный вес ламинации 2) / 1000</div>
         <div class="param-value mb-2"><?="$dirty_area * ($c_weight + (".($c_weight_lam1 ?? 0).") + (".($c_weight_lam2 ?? 0).")) / 1000 = $dirty_weight_total" ?></div>
             

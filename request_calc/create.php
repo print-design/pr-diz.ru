@@ -383,37 +383,42 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         
         $manager_id = GetUserId();
         
-        // Если объём заказа в штуках, то наценка по умолчанию 35.
-        // Если в килограммах, то наценку берём из таблицы extracharge.
+        // Наценка
         $extracharge = 35;
+        
+        // Тип наценки:
+        $extracharge_type_id = 0;
+                
+        if($work_type_id == 1) {
+            // 1 - без печати
+            $extracharge_type_id = 1;
+        }
+        elseif(empty ($lamination1_brand_name)) {
+            // 2 - печать без ламинации
+            $extracharge_type_id = 2;
+        }
+        elseif(empty ($lamination2_brand_name)) {
+            // 3 - печать с одной ламинацией
+            $extracharge_type_id = 3;
+        }
+        else {
+            // 4 - печать с двумя ламинациями
+            $extracharge_type_id = 4;
+        }
             
-        if($unit == "kg") {
-            // Тип наценки:
-            $extracharge_type_id = 0;
-                
-            if($work_type_id == 1) {
-                // 1 - без печати
-                $extracharge_type_id = 1;
-            }
-            elseif(empty ($lamination1_brand_name)) {
-                // 2 - печать без ламинации
-                $extracharge_type_id = 2;
-            }
-            elseif(empty ($lamination2_brand_name)) {
-                // 3 - печать с одной ламинацией
-                $extracharge_type_id = 3;
-            }
-            else {
-                // 4 - печать с двумя ламинациями
-                $extracharge_type_id = 4;
-            }
-                
+        if($unit == "kg") {    
             $sql_ec = "select value from extracharge where ((from_weight <= $quantity and to_weight >= $quantity) or (from_weight <= $quantity and to_weight is null)) and extracharge_type_id = $extracharge_type_id order by id limit 1";
             $fetcher_ec = new Fetcher($sql_ec);
                 
             if($row_ec = $fetcher_ec->Fetch()) {
                 $extracharge = $row_ec[0];
             }
+        }
+        elseif(!empty ($stream_width) && !empty ($label_length)) {
+            // Если объём заказа в штуках, то вычисляем объём в килограммах:
+            // площадь тиража чистая (м) = ширина ручья (мм) / 1000 * длина этикетки вдоль рапорта вала (мм) / 1000 * количество этикеток в заказе
+            // удельный вес материала (г/м2) = удельный вес печати (г/м2) + удельный вес ламинации 1 (г/м2) + удельный вес ламинации 2 (г/м2)
+            // вес готовой продукции с отходами (кг) = площадь тиража с отходами * (удельный вес материала + удельный вес ламинации 1 + удельный вес ламинации 2) / 1000
         }
         
         // Данные о цвете
