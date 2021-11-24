@@ -52,7 +52,7 @@ $streams_number_valid_message = "Количество ручьёв обязат�
 $label_length_valid = '';
 $label_length_message = "Длина этикетки вдоль рапорта вала обязательно";
 $number_on_raport_valid = '';
-$number_on_raport_message = "Количество этикеток на ручье обязательно";
+$number_on_raport_message = "Количество этикеток на валу обязательно";
 $raport_valid = '';
 $raport_message = "Рапорт обязательно";
 
@@ -307,7 +307,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         }
     }
     
-    // Длина этикетки вдоль рапорта, умноженная на количество этикеток на ручье
+    // Длина этикетки вдоль рапорта, умноженная на количество этикеток на валу (1 ручей)
     // Должна соответствовать рапорту
     if(!empty($raport) && !empty($number_on_raport) && !empty($label_length)) {
         $label_length_min = $label_length;
@@ -1515,21 +1515,21 @@ for ($i=1; $i<=8; $i++) {
                                     <div class="invalid-feedback"><?=$streams_number_valid_message ?></div>
                                 </div>
                             </div>
-                            <!-- Количество этикеток на ручье -->
+                            <!-- Количество этикеток на валу (1 ручей) -->
                             <div class="col-6 print-only d-none">
                                 <div class="form-group">
-                                    <label for="number_on_raport">Количество этикеток на ручье</label>
+                                    <label for="number_on_raport">Количество этикеток на валу (1 ручей)</label>
                                     <input type="text" 
                                            id="number_on_raport" 
                                            name="number_on_raport" 
                                            class="form-control int-only print-only d-none<?=$number_on_raport_valid ?>" 
-                                           placeholder="Количество этикеток на ручье" 
+                                           placeholder="Количество этикеток на валу (1 ручей)" 
                                            value="<?= $number_on_raport === null ? "" : intval($number_on_raport) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'number_on_raport'); $(this).attr('name', 'number_on_raport'); $(this).attr('placeholder', 'Количество этикеток на ручье');" 
+                                           onmouseup="javascript: $(this).attr('id', 'number_on_raport'); $(this).attr('name', 'number_on_raport'); $(this).attr('placeholder', 'Количество этикеток на валу (1 ручей)');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'number_on_raport'); $(this).attr('name', 'number_on_raport'); $(this).attr('placeholder', 'Количество этикеток на ручье');" 
-                                           onfocusout="javascript: $(this).attr('id', 'number_on_raport'); $(this).attr('name', 'number_on_raport'); $(this).attr('placeholder', 'Количество этикеток на ручье');" />
+                                           onkeyup="javascript: $(this).attr('id', 'number_on_raport'); $(this).attr('name', 'number_on_raport'); $(this).attr('placeholder', 'Количество этикеток на валу (1 ручей)');" 
+                                           onfocusout="javascript: $(this).attr('id', 'number_on_raport'); $(this).attr('name', 'number_on_raport'); $(this).attr('placeholder', 'Количество этикеток на валу (1 ручей)');" />
                                     <div class="invalid-feedback"><?=$number_on_raport_message ?></div>
                                 </div>
                             </div>

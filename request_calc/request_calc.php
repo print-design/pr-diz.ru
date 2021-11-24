@@ -193,7 +193,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $streams_number = $row['streams_number']; // Количество ручьёв
         $machine_type = $row['machine_type']; // Тип машины ('zbs' или 'comiflex')
         $raport = $row['raport']; // Рапорт
-        $number_on_raport = $row['number_on_raport']; // Количество этикеток на ручье
+        $number_on_raport = $row['number_on_raport']; // Количество этикеток на валу (1 ручей)
         $lamination_roller_width = $row['lamination_roller_width']; // Ширина вала ламинации
         $ink_number = $row['ink_number']; // Количество красок
         $manager_id = $row['manager_id']; // ID менеджера
@@ -1615,7 +1615,7 @@ $num_for_customer = $row['num_for_customer'];
                             endif;
                             if(!empty($number_on_raport)):
                             ?>
-                        <tr><th>Количество этикеток на ручье</th><td class="param-value"><?=$number_on_raport ?></td></tr>
+                        <tr><th>Количество этикеток на валу (1 ручей)</th><td class="param-value"><?=$number_on_raport ?></td></tr>
                             <?php
                             endif;
                             if(!empty($label_length)):
