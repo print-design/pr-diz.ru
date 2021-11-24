@@ -384,7 +384,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $manager_id = GetUserId();
         
         // Наценка
-        $extracharge = 35;
+        // НАЦЕНКУ ПЕРЕНОСИМ В РАСЧЁТ
+        /*$extracharge = 35;
         
         // Тип наценки:
         $extracharge_type_id = 0;
@@ -413,13 +414,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
             if($row_ec = $fetcher_ec->Fetch()) {
                 $extracharge = $row_ec[0];
             }
-        }
-        elseif(!empty ($stream_width) && !empty ($label_length)) {
-            // Если объём заказа в штуках, то вычисляем объём в килограммах:
-            // площадь тиража чистая (м) = ширина ручья (мм) / 1000 * длина этикетки вдоль рапорта вала (мм) / 1000 * количество этикеток в заказе
-            // удельный вес материала (г/м2) = удельный вес печати (г/м2) + удельный вес ламинации 1 (г/м2) + удельный вес ламинации 2 (г/м2)
-            // вес готовой продукции с отходами (кг) = площадь тиража с отходами * (удельный вес материала + удельный вес ламинации 1 + удельный вес ламинации 2) / 1000
-        }
+        }*/
         
         // Данные о цвете
         for($i=1; $i<=8; $i++) {
@@ -458,7 +453,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "brand_name, thickness, individual_brand_name, individual_price, individual_thickness, individual_density, customers_material, "
                         . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
                         . "lamination2_brand_name, lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
-                        . "quantity, streams_number, label_length, stream_width, raport, number_on_raport, lamination_roller_width, ink_number, manager_id, extracharge, ski_width, no_ski, "
+                        . "quantity, streams_number, label_length, stream_width, raport, number_on_raport, lamination_roller_width, ink_number, manager_id, ski_width, no_ski, "
                         . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
                         . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                         . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -468,7 +463,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "'$brand_name', $thickness, '$individual_brand_name', $individual_price, $individual_thickness, $individual_density, $customers_material, "
                         . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_individual_brand_name', $lamination1_individual_price, $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, "
                         . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_individual_brand_name', $lamination2_individual_price, $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, "
-                        . "$quantity, $streams_number, $label_length, $stream_width, $raport, $number_on_raport, $lamination_roller_width, $ink_number, $manager_id, $extracharge, $ski_width, $no_ski, "
+                        . "$quantity, $streams_number, $label_length, $stream_width, $raport, $number_on_raport, $lamination_roller_width, $ink_number, $manager_id, $ski_width, $no_ski, "
                         . "'$ink_1', '$ink_2', '$ink_3', '$ink_4', '$ink_5', '$ink_6', '$ink_7', '$ink_8', "
                         . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                         . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
@@ -494,7 +489,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "quantity=$quantity, streams_number=$streams_number, label_length=$label_length, stream_width=$stream_width, raport=$raport, "
                         . "number_on_raport=$number_on_raport, "
                         . "lamination_roller_width=$lamination_roller_width, ink_number=$ink_number, manager_id=$manager_id, "
-                        . "extracharge=$extracharge, ski_width=$ski_width, no_ski=$no_ski, "
+                        . "ski_width=$ski_width, no_ski=$no_ski, "
                         . "ink_1='$ink_1', ink_2='$ink_2', ink_3='$ink_3', ink_4='$ink_4', "
                         . "ink_5='$ink_5', ink_6='$ink_6', ink_7='$ink_7', ink_8='$ink_8', "
                         . "color_1='$color_1', color_2='$color_2', color_3='$color_3', color_4='$color_4', "
@@ -528,7 +523,7 @@ if(!empty($id)) {
             . "brand_name, thickness, individual_brand_name, individual_price, individual_thickness, individual_density, customers_material, "
             . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
-            . "quantity, streams_number, label_length, stream_width, raport, number_on_raport, lamination_roller_width, ink_number, extracharge, ski_width, no_ski, "
+            . "quantity, streams_number, label_length, stream_width, raport, number_on_raport, lamination_roller_width, ink_number, ski_width, no_ski, "
             . "(select id from techmap where request_calc_id = $id limit 1) techmap_id, "
             . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -780,9 +775,6 @@ else {
 if(isset($row['techmap_id'])) $techmap_id = $row['techmap_id'];
 else $techmap_id = null;
 
-if(isset($row['extracharge'])) $extracharge = $row['extracharge'];
-else $extracharge = null;
-
 // Данные о цветах
 for ($i=1; $i<=8; $i++) {
     $ink_var = "ink_$i";
@@ -866,7 +858,6 @@ for ($i=1; $i<=8; $i++) {
                 <div class="col-5" id="left_side">
                     <form method="post">
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-                        <input type="hidden" id="extracharge" name="extracharge" class="extracharge" value="<?=$extracharge ?>" />
                         <input type="hidden" id="scroll" name="scroll" />
                         <?php if(null === filter_input(INPUT_GET, 'id') || filter_input(INPUT_GET, 'mode') == 'recalc'): ?>
                         <h1>Новый расчет</h1>
@@ -2318,20 +2309,6 @@ for ($i=1; $i<=8; $i++) {
                 $("#create_request_calc_submit").removeClass("d-none");
             }
             
-            // Ограницение значений наценки
-            $('#extracharge').keydown(function(e) {
-                if(!KeyDownLimitIntValue($(e.target), e, 999)) {
-                    return false;
-                }
-            });
-            
-            $('#extracharge').change(function(){
-                ChangeLimitIntValue($(this), 999);
-                
-                // Сохранение значения в базе
-                EditExtracharge($(this));
-            });
-            
             // Ограничение значения поля "пантон"
             $('input.panton').keydown(function(e) {
                 if(!KeyDownLimitIntValue($(e.target), e, 99999)) {
@@ -2352,19 +2329,6 @@ for ($i=1; $i<=8; $i++) {
             
             $('input#stream_width').change(function(){
                 ChangeLimitIntValue($(this), 9999);
-            });
-            
-            // Скрытие расчёта при изменении значения полей
-            $("input[id!=extracharge]").change(function () {
-                HideCalculation();
-            });
-            
-            $('select').change(function () {
-                HideCalculation();
-            });
-            
-            $("input[id!=extracharge]").keydown(function () {
-                HideCalculation();
             });
             
             // Скрытие расчёта, если имеется параметр mode=recalc
