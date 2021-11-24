@@ -22,6 +22,7 @@ if(null !== filter_input(INPUT_POST, 'create_extracharge_submit')) {
     $extracharge_type_id = filter_input(INPUT_POST, 'extracharge_type_id');
     $from_weight = filter_input(INPUT_POST, 'from_weight');
     $to_weight = filter_input(INPUT_POST, 'to_weight');
+    if(empty($to_weight)) $to_weight = "NULL";
     $value = filter_input(INPUT_POST, 'value');
     
     if(!empty($from_weight) && !empty($to_weight) && !empty($value)) {
@@ -108,7 +109,7 @@ if(empty($error_message)) {
                         foreach ($extracharges_of_type as $row):
                         ?>
                         <tr>
-                            <td class="pl-0"><?= floatval($row['from_weight']).' кг &ndash; '.floatval($row['to_weight']).' кг' ?></td>
+                            <td class="pl-0"><?= (empty($row['to_weight']) ? 'от ' : '').floatval($row['from_weight']).' кг'.(empty($row['to_weight']) ? '' : ' &ndash; '.floatval($row['to_weight']).' кг') ?></td>
                             <td class="pl-0"><?= floatval($row['value']).'%' ?></td>
                             <td class="text-right">
                                 <form method="post">
@@ -142,7 +143,6 @@ if(empty($error_message)) {
                                name="to_weight" 
                                class="form-control float-only ml-2 w-25" 
                                placeholder="До, кг" 
-                               required="required" 
                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                onmouseup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
@@ -182,7 +182,7 @@ if(empty($error_message)) {
                         foreach ($extracharges_of_type as $row):
                         ?>
                         <tr>
-                            <td class="pl-0"><?= floatval($row['from_weight']).' кг &ndash; '.floatval($row['to_weight']).' кг' ?></td>
+                            <td class="pl-0"><?= (empty($row['to_weight']) ? 'от ' : '').floatval($row['from_weight']).' кг'.(empty($row['to_weight']) ? '' : ' &ndash; '.floatval($row['to_weight']).' кг') ?></td>
                             <td class="pl-0"><?= floatval($row['value']).'%' ?></td>
                             <td class="text-right">
                                 <form method="post">
@@ -216,7 +216,6 @@ if(empty($error_message)) {
                                name="to_weight" 
                                class="form-control float-only ml-2 w-25" 
                                placeholder="До, кг" 
-                               required="required" 
                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                onmouseup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
@@ -256,7 +255,7 @@ if(empty($error_message)) {
                         foreach ($extracharges_of_type as $row):
                         ?>
                         <tr>
-                            <td class="pl-0"><?= floatval($row['from_weight']).' кг &ndash; '.floatval($row['to_weight']).' кг' ?></td>
+                            <td class="pl-0"><?= (empty($row['to_weight']) ? 'от ' : '').floatval($row['from_weight']).' кг'.(empty($row['to_weight']) ? '' : ' &ndash; '.floatval($row['to_weight']).' кг') ?></td>
                             <td class="pl-0"><?= floatval($row['value']).'%' ?></td>
                             <td class="text-right">
                                 <form method="post">
@@ -290,7 +289,6 @@ if(empty($error_message)) {
                                name="to_weight" 
                                class="form-control float-only ml-2 w-25" 
                                placeholder="До, кг" 
-                               required="required" 
                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                onmouseup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
@@ -330,7 +328,7 @@ if(empty($error_message)) {
                         foreach ($extracharges_of_type as $row):
                         ?>
                         <tr>
-                            <td class="pl-0"><?= floatval($row['from_weight']).' кг &ndash; '.floatval($row['to_weight']).' кг' ?></td>
+                            <td class="pl-0"><?= (empty($row['to_weight']) ? 'от ' : '').floatval($row['from_weight']).' кг'.(empty($row['to_weight']) ? '' : ' &ndash; '.floatval($row['to_weight']).' кг') ?></td>
                             <td class="pl-0"><?= floatval($row['value']).'%' ?></td>
                             <td class="text-right">
                                 <form method="post">
@@ -364,7 +362,6 @@ if(empty($error_message)) {
                                name="to_weight" 
                                class="form-control float-only ml-2 w-25" 
                                placeholder="До, кг" 
-                               required="required" 
                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                onmouseup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 

@@ -383,40 +383,36 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         
         $manager_id = GetUserId();
         
-        $extracharge = filter_input(INPUT_POST, 'extracharge');
-        
-        if(empty($extracharge)) {
-            // Если объём заказа в штуках, то наценка по умолчанию 35.
-            // Если в килограммах, то наценку берём из таблицы extracharge.
-            $extracharge = 35;
+        // Если объём заказа в штуках, то наценка по умолчанию 35.
+        // Если в килограммах, то наценку берём из таблицы extracharge.
+        $extracharge = 35;
             
-            if($unit == "kg") {
-                // Тип наценки:
-                $extracharge_type_id = 0;
+        if($unit == "kg") {
+            // Тип наценки:
+            $extracharge_type_id = 0;
                 
-                if($work_type_id == 1) {
-                    // 1 - без печати
-                    $extracharge_type_id = 1;
-                }
-                elseif(empty ($lamination1_brand_name)) {
-                    // 2 - печать без ламинации
-                    $extracharge_type_id = 2;
-                }
-                elseif(empty ($lamination2_brand_name)) {
-                    // 3 - печать с одной ламинацией
-                    $extracharge_type_id = 3;
-                }
-                else {
-                    // 4 - печать с двумя ламинациями
-                    $extracharge_type_id = 4;
-                }
+            if($work_type_id == 1) {
+                // 1 - без печати
+                $extracharge_type_id = 1;
+            }
+            elseif(empty ($lamination1_brand_name)) {
+                // 2 - печать без ламинации
+                $extracharge_type_id = 2;
+            }
+            elseif(empty ($lamination2_brand_name)) {
+                // 3 - печать с одной ламинацией
+                $extracharge_type_id = 3;
+            }
+            else {
+                // 4 - печать с двумя ламинациями
+                $extracharge_type_id = 4;
+            }
                 
-                $sql_ec = "select value from extracharge where from_weight <= $quantity and to_weight >= $quantity and extracharge_type_id = $extracharge_type_id order by id limit 1";
-                $fetcher_ec = new Fetcher($sql_ec);
+            $sql_ec = "select value from extracharge where ((from_weight <= $quantity and to_weight >= $quantity) or (from_weight <= $quantity and to_weight is null)) and extracharge_type_id = $extracharge_type_id order by id limit 1";
+            $fetcher_ec = new Fetcher($sql_ec);
                 
-                if($row_ec = $fetcher_ec->Fetch()) {
-                    $extracharge = $row_ec[0];
-                }
+            if($row_ec = $fetcher_ec->Fetch()) {
+                $extracharge = $row_ec[0];
             }
         }
         

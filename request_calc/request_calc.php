@@ -114,7 +114,7 @@ if(null !== filter_input(INPUT_POST, 'extracharge-submit')) {
                 $extracharge_type_id = 4;
             }
                 
-            $sql_ec = "select value from extracharge where from_weight <= $quantity and to_weight >= $quantity and extracharge_type_id = $extracharge_type_id order by id limit 1";
+            $sql_ec = "select value from extracharge where ((from_weight <= $quantity and to_weight >= $quantity) or (from_weight <= $quantity and to_weight is null)) and extracharge_type_id = $extracharge_type_id order by id limit 1";
             $fetcher_ec = new Fetcher($sql_ec);
                 
             if($row_ec = $fetcher_ec->Fetch()) {
