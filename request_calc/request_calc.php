@@ -332,7 +332,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         
     // Цена ламинации 1
     $c_price_lam1 = null;
-        
+    
     if(empty($error_message)) {
         if(!empty($lamination1_individual_price)) { // Если материал ламинации 1 введён вручную, цена также введена вручную
             $c_price_lam1 = $lamination1_individual_price;
@@ -356,10 +356,10 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
             $error_message = "Для данной толщины ламинации 1 не указана цена";
         }
     }
-        
+    
     // Удельный вес ламинации 2
     $c_density_lam2 = null;
-        
+    
     if(empty($error_message)) {
         if(!empty($lamination2_individual_density)) { // Удельный вес ламинации 2 введён вручную
             $c_density_lam2 = $lamination2_individual_density;
@@ -375,7 +375,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
     
     // Цена ламинации 2
     $c_price_lam2 = null;
-        
+    
     if(empty($error_message)) { // Если материал ламинации 2 введён вручную, цена также введена вручную
         if(!empty($lamination2_individual_price)) {
             $c_price_lam2 = $lamination2_individual_price;
@@ -1240,6 +1240,44 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         $cost_with_cliche_pieces = 0;
     }
     
+    // Наценка
+    $extracharge = 35;
+    
+    // Тип наценки:
+    $extracharge_type_id = 0;
+                
+    if($work_type_id == 1) {
+        // 1 - без печати
+        $extracharge_type_id = 1;
+    }
+    elseif(empty ($lamination1_brand_name)) {
+        // 2 - печать без ламинации
+        $extracharge_type_id = 2;
+    }
+    elseif(empty ($lamination2_brand_name)) {
+        // 3 - печать с одной ламинацией
+        $extracharge_type_id = 3;
+    }
+    else {
+        // 4 - печать с двумя ламинациями
+        $extracharge_type_id = 4;
+    }
+    
+    // Объём заказа в кг
+    $quantity_kg = $quantity;
+    
+    // Если объём заказа в штуках, переводим его в килограммы
+    if($unit == 'pieces') {
+        $quantity_kg = $dirty_weight_total;
+    }
+    
+    $sql_ec = "select value from extracharge where ((from_weight <= $quantity_kg and to_weight >= $quantity_kg) or (from_weight <= $quantity_kg and to_weight is null)) and extracharge_type_id = $extracharge_type_id order by id limit 1";
+    $fetcher_ec = new Fetcher($sql_ec);
+                
+    if($row_ec = $fetcher_ec->Fetch()) {
+        $extracharge = $row_ec[0];
+    }
+    
     // *************************************
     // Сохранение расчёта в базу
     if(empty($error_message)) {
@@ -1289,14 +1327,14 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
                 . "ink_price, pure_weight_lam1, dirty_weight_lam1, "
                 . "price_lam1_material, price_lam1_glue, price_lam1_work, pure_weight_lam2, dirty_weight_lam2, price_lam2_material, "
                 . "price_lam2_glue, price_lam2_work, price_lam_total, pure_weight_total, dirty_weight_total, cost_no_cliche, "
-                . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_pieces, cost_with_cliche_pieces) "
+                . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_pieces, cost_with_cliche_pieces, extracharge) "
                 . "values ($id, $pure_area, $pure_width, $pure_length, $pure_length_lam, "
                 . "$dirty_length, $dirty_width, $dirty_area, $pure_weight, $dirty_weight, $material_price, $print_time, $tuning_time, "
                 . "$print_tuning_time, $print_price, $cliche_area, $cliche_flint_price, $cliche_kodak_price, $cliche_tver_price, $cliche_price, "
                 . "$ink_price, $pure_weight_lam1, $dirty_weight_lam1, "
                 . "$price_lam1_material, $price_lam1_glue, $price_lam1_work, $pure_weight_lam2, $dirty_weight_lam2, $price_lam2_material, "
                 . "$price_lam2_glue, $price_lam2_work, $price_lam_total, $pure_weight_total, $dirty_weight_total, $cost_no_cliche, "
-                . "$cost_with_cliche, $cost_no_cliche_kg, $cost_with_cliche_kg, $cost_no_cliche_pieces, $cost_with_cliche_pieces)";
+                . "$cost_with_cliche, $cost_no_cliche_kg, $cost_with_cliche_kg, $cost_no_cliche_pieces, $cost_with_cliche_pieces, $extracharge)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
