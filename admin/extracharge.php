@@ -25,7 +25,7 @@ if(null !== filter_input(INPUT_POST, 'create_extracharge_submit')) {
     if(empty($to_weight)) $to_weight = "NULL";
     $value = filter_input(INPUT_POST, 'value');
     
-    if(!empty($from_weight) && !empty($to_weight) && !empty($value)) {
+    if(!empty($value)) {
         $sql = "insert into extracharge (extracharge_type_id, from_weight, to_weight, value) values ($extracharge_type_id, $from_weight, $to_weight, $value)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
