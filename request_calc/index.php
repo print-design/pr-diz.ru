@@ -126,8 +126,8 @@ function OrderLink($param) {
                         <th>ID&nbsp;&nbsp;<?= OrderLink('id') ?></th>
                         <th>Дата&nbsp;&nbsp;<?= OrderLink('date') ?></th>
                         <th>Заказчик&nbsp;&nbsp;<?= OrderLink('customer') ?></th>
-                        <th></th>
                         <th>Имя заказа&nbsp;&nbsp;<?= OrderLink('name') ?></th>
+                        <th></th>
                         <th class="text-center">Объем заказа&nbsp;&nbsp;<?= OrderLink('quantity') ?></th>
                         <th>Тип работы&nbsp;&nbsp;<?= OrderLink('work_type') ?></th>
                         <th>Менеджер&nbsp;&nbsp;<?= OrderLink('manager') ?></th>
@@ -237,9 +237,10 @@ function OrderLink($param) {
                     <tr>
                         <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['num_for_customer'] ?></td>
                         <td class="text-nowrap"><?= DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y') ?></td>
-                        <td><a href="javascript: void(0);" class="customer" data-toggle="modal" data-target="#customerModal" data-customer-id="<?=$row['customer_id'] ?>"><?=$row['customer'] ?></a></td>
-                        <td><a href="request_calc.php<?= BuildQuery("id", $row['id']) ?>"><img src="../images/icons/vertical-dots.svg" /></a></td>
+                        <td><?=$row['customer'] ?>&nbsp;<a href="javascript: void(0);" class="customer" data-toggle="modal" data-target="#customerModal" data-customer-id="<?=$row['customer_id'] ?>"><i class="fa fa-question-circle" data-customer-id="<?=$row['customer_id'] ?>"></i></a>
+                        </td>
                         <td><?= htmlentities($row['name']) ?></td>
+                        <td><a href="request_calc.php<?= BuildQuery("id", $row['id']) ?>"><img src="../images/icons/vertical-dots.svg" /></a></td>
                         <td class="text-right text-nowrap"><?=number_format($row['quantity'], 0, ",", " ") ?>&nbsp;<?=$row['unit'] == 'kg' ? 'кг' : 'шт' ?></td>
                         <td><?=$row['work_type'] ?></td>
                         <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
@@ -297,6 +298,9 @@ function OrderLink($param) {
                     $.ajax({ url: "../ajax/customer.php?id=" + customer_id })
                             .done(function(data) {
                                 $('#customerModal .modal-dialog .modal-content').html(data);
+                    })
+                            .fail(function() {
+                                alert('Ошибка при получении данных о заказчике');
                     });
                 }
             });
