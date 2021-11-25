@@ -1262,16 +1262,8 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         // 4 - печать с двумя ламинациями
         $extracharge_type_id = 4;
     }
-    
-    // Объём заказа в кг
-    $quantity_kg = $quantity;
-    
-    // Если объём заказа в штуках, переводим его в килограммы
-    if($unit == 'pieces') {
-        $quantity_kg = $dirty_weight_total;
-    }
-    
-    $sql_ec = "select value from extracharge where ((from_weight <= $quantity_kg and to_weight >= $quantity_kg) or (from_weight <= $quantity_kg and to_weight is null)) and extracharge_type_id = $extracharge_type_id order by id limit 1";
+       
+    $sql_ec = "select value from extracharge where ((from_weight <= $pure_weight_total and to_weight >= $pure_weight_total) or (from_weight <= $pure_weight_total and to_weight is null)) and extracharge_type_id = $extracharge_type_id order by id limit 1";
     $fetcher_ec = new Fetcher($sql_ec);
                 
     if($row_ec = $fetcher_ec->Fetch()) {
