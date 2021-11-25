@@ -1,3 +1,11 @@
+<?php
+// Статусы
+const NO_COLOR = 1;
+const NO_CALCULATION = 2;
+const CALCULATION = 3;
+const CONFIRM = 4;
+const TECHMAP = 5;
+?>
 <form class="form-inline ml-auto mr-3" method="get">
     <?php if(null !== filter_input(INPUT_GET, 'order')): ?>
     <input type="hidden" name="order" value="<?= filter_input(INPUT_GET, 'order') ?>" />
@@ -40,5 +48,13 @@
         ?>
         <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'manager') ? " selected='selected'" : "") ?>><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></option>
         <?php endwhile; ?>
+    </select>
+    <select id="status" name="status" class="form-control form-control-sm" multiple="multiple" onchange="javascript: this.form.submit();">
+        <option value="">Статус...</option>
+        <option value="<?=NO_COLOR ?>"<?=(filter_input(INPUT_GET, 'status') == NO_COLOR) ? " selected='selected'" : "" ?>>Требуется красочность</option>
+        <option value="<?=NO_CALCULATION ?>"<?=(filter_input(INPUT_GET, 'status') == NO_CALCULATION) ? " selected='selected'" : "" ?>>Требуется расчёт</option>
+        <option value="<?=CALCULATION ?>"<?=(filter_input(INPUT_GET, 'status') == CALCULATION) ? " selected='selected'" : "" ?>>Сделан расчёт</option>
+        <option value="<?=CONFIRM ?>"<?=(filter_input(INPUT_GET, 'status') == CONFIRM) ? " selected='selected'" : "" ?>>Утверждено администратором</option>
+        <option value="<?=TECHMAP ?>"<?=(filter_input(INPUT_GET, 'status') == TECHMAP) ? " selected='selected'" : "" ?>>Составлена тех. карта</option>
     </select>
 </form>

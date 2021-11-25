@@ -60,10 +60,10 @@ function OrderLink($param) {
                         else $where .= " and c.manager_id=$manager";
                     }
                     
-                    $customer = filter_input(INPUT_GET, 'customer');
-                    if(!empty($customer)) {
-                        if(empty($where)) $where = " where c.customer_id=$customer";
-                        else $where .= " and c.customer_id=$customer";
+                    $status = filter_input(INPUT_GET, 'status');
+                    if(!empty($status)) {
+                        if(empty($where)) $where = " where c.status_id=$status";
+                        else $where .= " and c.status_id=$status";
                     }
                     
                     $from = filter_input(INPUT_GET, 'from');
@@ -99,6 +99,9 @@ function OrderLink($param) {
                         <?php endif; ?>
                         <?php if(null !== filter_input(INPUT_GET, 'manager')): ?>
                         <input type="hidden" name="manager" value="<?= filter_input(INPUT_GET, 'manager') ?>" />
+                        <?php endif; ?>
+                        <?php if(null !== filter_input(INPUT_GET, 'status')): ?>
+                        <input type="hidden" name="status" value="<?= filter_input(INPUT_GET, 'status') ?>" />
                         <?php endif; ?>
                         <?php
                         $from_value = filter_input(INPUT_GET, 'from');
@@ -296,6 +299,12 @@ function OrderLink($param) {
                 maximumSelectionLength: 1,
                 language: "ru"
             });
+            
+            $('#status').select2({
+                placeholder: "Статус...",
+                maximumSelectionLength: 1,
+                language: "ru"
+            })
             
             // Заполнение информации о заказчике
             $('a.customer').click(function(e) {
