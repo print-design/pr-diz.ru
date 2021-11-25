@@ -27,6 +27,13 @@ const PANTON = "panton";
 const WHITE = "white";
 const LACQUER = "lacquer";
 
+// Статусы
+const NO_COLOR = 1;
+const NO_CALCULATION = 2;
+const CALCULATION = 3;
+const CONFIRM = 4;
+const TECHMAP = 5;
+
 $form_valid = true;
 
 // Смена менеджера
@@ -1339,14 +1346,13 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.brand_name, c.thickness, individual_brand_name, individual_price, individual_thickness, individual_density, c.customers_material, "
         . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, c.lamination1_customers_material, "
         . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, c.lamination2_customers_material, "
-        . "c.label_length, c.stream_width, c.streams_number, c.machine_type, c.raport, c.number_on_raport, c.lamination_roller_width, c.ink_number, "
+        . "c.label_length, c.stream_width, c.streams_number, c.machine_type, c.raport, c.number_on_raport, c.lamination_roller_width, c.ink_number, c.manager_id, c.ski_width, c.no_ski, "
         . "c.ink_1, c.ink_2, c.ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
         . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
         . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
         . "c.cliche_1, c.cliche_2, c.cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8, "
-        . "c.comment, c.confirm, c.manager_id, "
-        . "c.ski_width, c.no_ski, "
+        . "c.comment, c.confirm, c.status_id, "
         . "(select id from techmap where request_calc_id = $id order by id desc limit 1) techmap_id, "
         . "(select id from request_calc_result where request_calc_id = $id order by id desc limit 1) request_calc_result_id, "
         . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
@@ -1400,6 +1406,10 @@ $raport = $row['raport'];
 $number_on_raport = $row['number_on_raport'];
 $lamination_roller_width = $row['lamination_roller_width'];
 $ink_number = $row['ink_number'];
+$manager_id = $row['manager_id'];
+$ski_width = $row['ski_width'];
+$no_ski = $row['no_ski'];
+$techmap_id = $row['techmap_id'];
 
 for($i=1; $i<=$ink_number; $i++) {
     $ink_var = "ink_$i";
@@ -1420,11 +1430,7 @@ for($i=1; $i<=$ink_number; $i++) {
 
 $comment = $row['comment'];
 $confirm = $row['confirm'];
-
-$manager_id = $row['manager_id'];
-$ski_width = $row['ski_width'];
-$no_ski = $row['no_ski'];
-$techmap_id = $row['techmap_id'];
+$status_id = $row['status_id'];
 
 $customer = $row['customer'];
 $customer_phone = $row['customer_phone'];
@@ -1536,19 +1542,33 @@ $num_for_customer = $row['num_for_customer'];
                 <div class="col-5" id="left_side">
                     <h1 style="font-size: 32px; font-weight: 600;"><?= htmlentities($request_name) ?></h1>
                     <h2 style="font-size: 26px;">№<?=$customer_id."-".$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
-                    <?php if(!empty($techmap_id)): ?>
+                    <?php
+                    $real_status_id = null;
+                    
+                    if(!empty($techmap_id)):
+                        $real_status_id = TECHMAP;
+                    ?>
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px green; color: green;">
                         <i class="fas fa-file"></i>&nbsp;&nbsp;&nbsp;Составлена технологическая карта
                     </div>
-                    <?php elseif($confirm): ?>
+                    <?php
+                    elseif($confirm):
+                        $real_status_id = CONFIRM;
+                    ?>
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px navy; color: navy;">
                         <i class="fas fa-check-square"></i>&nbsp;&nbsp;&nbsp;Утверждено администратором
                     </div>
-                    <?php elseif(!empty ($row['request_calc_result_id'])): ?>
+                    <?php
+                    elseif(!empty ($row['request_calc_result_id'])):
+                        $real_status_id = CALCULATION;
+                    ?>
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px blue; color: blue;">
                         <i class="fas fa-calculator"></i>&nbsp;&nbsp;&nbsp;Сделан расчёт
                     </div>
-                    <?php elseif(empty($row['ink_number'])): ?>
+                    <?php
+                    elseif(empty($row['ink_number'])):
+                        $real_status_id = NO_CALCULATION;
+                    ?>
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px brown; color: brown;">
                         <i class="far fa-clock"></i>&nbsp;&nbsp;&nbsp;Требуется расчёт
                     </div>
@@ -1563,17 +1583,27 @@ $num_for_customer = $row['num_for_customer'];
                         }
                         
                         if(!$percents_exist):
+                            $real_status_id = NO_COLOR;
                     ?>
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px orange; color: orange;">
                         <i class="far fa-clock"></i>&nbsp;&nbsp;&nbsp;Требуется красочность
                     </div>
-                    <?php else: ?>
+                    <?php
+                    else:
+                        $real_status_id = NO_CALCULATION;
+                    ?>
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px brown; color: brown;">
                         <i class="far fa-clock"></i>&nbsp;&nbsp;&nbsp;Требуется расчёт
                     </div>
                     <?php
                     endif;
                     endif;
+                    
+                    // Обновляем поле status_id (оно нужно для сортировки по статусу на странице списка)
+                    if(!empty($real_status_id) && $status_id != $real_status_id) {
+                        $sql = "update request_calc set status_id = $real_status_id where id = $id";
+                        $executer = new Executer($sql);
+                    }
                     ?>
                     <table class="w-100 calculation-table">
                         <tr>

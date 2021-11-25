@@ -132,7 +132,7 @@ function OrderLink($param) {
                         <th>Тип работы&nbsp;&nbsp;<?= OrderLink('work_type') ?></th>
                         <th>Менеджер&nbsp;&nbsp;<?= OrderLink('manager') ?></th>
                         <th>Комментарий</th>
-                        <th>Статус</th>
+                        <th>Статус&nbsp;&nbsp;<?= OrderLink('status') ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -169,12 +169,16 @@ function OrderLink($param) {
                             case 'manager':
                                 $orderby = "order by u.last_name asc, u.first_name asc";
                                 break;
+                            
+                            case 'status':
+                                $orderby = "order by c.status_id";
+                                break;
                         }
                     }
                     
                     $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.unit, c.quantity, c.work_type_id, c.ink_number, "
-                            . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
-                            . "comment, confirm, "
+                            . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, "
+                            . "c.comment, c.confirm, c.status_id, "
                             . "(select id from request_calc_result where request_calc_id = c.id order by id desc limit 1) request_calc_result_id, "
                             . "(select id from techmap where request_calc_id = c.id order by id desc limit 1) techmap_id, "
                             . "wt.name work_type, u.last_name, u.first_name, "
@@ -192,45 +196,47 @@ function OrderLink($param) {
                     $status = '';
                     $colour_style = '';
                     
-                    if(!empty($row['techmap_id'])) {
-                        $status = "Составлена тех. карта";
-                        $colour = "green";
-                        $colour_style = " color: $colour";
-                    }
-                    elseif($row['confirm']) {
-                        $status = "Утверждено администратором";
-                        $colour = "navy";
-                        $colour_style = " color: $colour";
-                    }
-                    elseif(!empty ($row['request_calc_result_id'])) {
-                        $status = "Сделан расчёт";
-                        $colour = "blue";
-                        $colour_style = " color: $colour";
-                    }
-                    elseif(empty ($row['ink_number'])) {
-                        $status = "Требуется расчёт";
-                        $colour = "brown";
-                        $colour_style = " color: $colour";
-                    }
-                    else {
-                        $ink_number = $row['ink_number'];
-                        $percents_exist = true;
-                        
-                        for($i=1; $i<=$ink_number; $i++) {
-                            if(empty($row["percent_$i"])) {
-                                $percents_exist = false;
-                            }
-                        }
-                        
-                        if(!$percents_exist) {
-                            $status = "Требуется красочность";
-                            $colour = "orange";
+                    if(!empty($row['status_id'])) {
+                        if(!empty($row['techmap_id'])) {
+                            $status = "Составлена тех. карта";
+                            $colour = "green";
                             $colour_style = " color: $colour";
                         }
-                        else {
+                        elseif($row['confirm']) {
+                            $status = "Утверждено администратором";
+                            $colour = "navy";
+                            $colour_style = " color: $colour";
+                        }
+                        elseif(!empty ($row['request_calc_result_id'])) {
+                            $status = "Сделан расчёт";
+                            $colour = "blue";
+                            $colour_style = " color: $colour";
+                        }
+                        elseif(empty ($row['ink_number'])) {
                             $status = "Требуется расчёт";
                             $colour = "brown";
                             $colour_style = " color: $colour";
+                        }
+                        else {
+                            $ink_number = $row['ink_number'];
+                            $percents_exist = true;
+                        
+                            for($i=1; $i<=$ink_number; $i++) {
+                                if(empty($row["percent_$i"])) {
+                                    $percents_exist = false;
+                                }
+                            }
+                        
+                            if(!$percents_exist) {
+                                $status = "Требуется красочность";
+                                $colour = "orange";
+                                $colour_style = " color: $colour";
+                            }
+                            else {
+                                $status = "Требуется расчёт";
+                                $colour = "brown";
+                                $colour_style = " color: $colour";
+                            }
                         }
                     }
                     ?>
