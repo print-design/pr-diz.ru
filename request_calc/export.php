@@ -223,7 +223,23 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
         }
     }
     
-    // Номер машины
+    // Курс доллара и евро
+    $euro = 0;
+    $usd = 0;
+        
+    $sql = "select euro, usd from currency where date <= '$date' order by date desc limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $euro = $row['euro'];
+        $usd = $row['usd'];
+    }
+            
+    if(empty($euro) || empty($usd)) {
+        $error_message = "Не заданы курсы валют";
+    }
+    
+    
+    // Данные о машинах 
     $machine_ids = array();
     $machine_shortnames = array();
     
@@ -458,21 +474,6 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
                 $lamination2_price_final *= $euro;
             }
         }
-    }
-    
-    // Курс доллара и евро
-    $euro = 0;
-    $usd = 0;
-        
-    $sql = "select euro, usd from currency where date <= '$date' order by date desc limit 1";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        $euro = $row['euro'];
-        $usd = $row['usd'];
-    }
-            
-    if(empty($euro) || empty($usd)) {
-        $error_message = "Не заданы курсы валют";
     }
     
     // Печать с лыжами
