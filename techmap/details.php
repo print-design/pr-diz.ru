@@ -158,11 +158,11 @@ $roll_type = $row['roll_type'];
         <style>
             .roll_type {
                 display: inline-block;
-                border: solid 3px white;
+                border: solid 5px white;
             }
             
             .roll_type.selected {
-                border: solid 3px darkgray;
+                border: solid 5px darkblue;
             }
             
             table.table {

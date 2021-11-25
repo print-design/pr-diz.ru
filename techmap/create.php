@@ -117,15 +117,15 @@ $dirty_length = $row['dirty_length'];
             
             .roll-selector label {
                 cursor:pointer;
-                border: solid 3px white;
+                border: solid 5px white;
             }
             
             .roll-selector label:hover {
-                border: solid 3px lightgray;
+                border: solid 5px lightblue;
             }
             
             .roll-selector input[type="radio"]:checked + label {
-                border: solid 3px darkgray;
+                border: solid 5px darkblue;
             }
             
             table.table {
