@@ -34,7 +34,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
             . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
             . "c.cliche_1, c.cliche_2, c.cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8, "
-            . "c.extracharge, c.ski_width, c.no_ski, "
+            . "c.ski_width, c.no_ski, "
             . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
             . "wt.name work_type, "
             . "u.last_name, u.first_name, "
@@ -86,7 +86,6 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     $lamination_roller_width = $row['lamination_roller_width'];
     $ink_number = $row['ink_number'];
     
-    $extracharge = $row['extracharge'];
     $ski_width = $row['ski_width'];
     $no_ski = $row['no_ski'];
     
