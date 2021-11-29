@@ -8,10 +8,10 @@
     <?php if(null !== filter_input(INPUT_GET, 'to')): ?>
     <input type="hidden" name="to" value="<?= filter_input(INPUT_GET, 'to') ?>" />
     <?php endif; ?>
-    <select id="customer" name="customer" class="form-control form-control-sm" multiple="multiple" onchange="javascript: this.form.manager.value = ''; this.form.submit();">
+    <select id="customer" name="customer" class="form-control form-control-sm" multiple="multiple" onchange="javascript: this.form.name.value = ''; this.form.manager.value = ''; this.form.submit();">
         <option value="">Заказчик...</option>
         <?php
-        $sql = "select distinct cus.id, cus.name from request_calc c inner join customer cus on c.customer_id = cus.id order by cus.name";
+        $sql = "select distinct cus.id, cus.name from request_calc c inner join customer cus on c.customer_id = cus.id inner join techmap t on t.request_calc_id = c.id order by cus.name";
         $fetcher = new Fetcher($sql);
                             
         while ($row = $fetcher->Fetch()):
@@ -27,7 +27,7 @@
         if(!empty($customer_id)) {
             $where = "where c.customer_id = $customer_id ";
         }
-        $sql = "select distinct c.name, (select id from request_calc where name=c.name limit 1) id from request_calc c $where";
+        $sql = "select distinct c.name, (select id from request_calc where name=c.name limit 1) id from request_calc c inner join techmap t on t.request_calc_id = c.id $where";
         $sql .= "order by name";
         $fetcher = new Fetcher($sql);
                             
@@ -50,7 +50,7 @@
             }
         }
         
-        $sql = "select distinct u.id, u.last_name, u.first_name from request_calc c inner join user u on c.manager_id = u.id order by u.last_name";
+        $sql = "select distinct u.id, u.last_name, u.first_name from request_calc c inner join user u on c.manager_id = u.id inner join techmap t on t.request_calc_id = c.id order by u.last_name";
         $fetcher = new Fetcher($sql);
                             
         while ($row = $fetcher->Fetch()):

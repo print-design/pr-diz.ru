@@ -17,7 +17,7 @@ const TECHMAP = 6;
     <?php if(null !== filter_input(INPUT_GET, 'to')): ?>
     <input type="hidden" name="to" value="<?= filter_input(INPUT_GET, 'to') ?>" />
     <?php endif; ?>
-    <select id="customer" name="customer" class="form-control form-control-sm" multiple="multiple" onchange="javascript: this.form.manager.value = ''; this.form.submit();">
+    <select id="customer" name="customer" class="form-control form-control-sm" multiple="multiple" onchange="javascript: this.form.name.value = ''; this.form.manager.value = ''; this.form.submit();">
         <option value="">Заказчик...</option>
         <?php
         $sql = "select distinct cus.id, cus.name from request_calc c inner join customer cus on c.customer_id = cus.id order by cus.name";
