@@ -20,7 +20,7 @@ if($extracharge !== null) {
     }
 }
 
-// Автозаполнение заказчика
+// Автосохранение заказчика
 $customer_id = filter_input(INPUT_GET, 'customer_id');
 if($customer_id !== null) {
     $error_message = (new Executer("update request_calc set customer_id=$customer_id where id=$id"))->error;
@@ -29,11 +29,49 @@ if($customer_id !== null) {
     }
 }
 
-// Автозаполнение названия заказа
+// Автосохранение названия заказа
 $name = filter_input(INPUT_GET, 'name');
 if($name !== null) {
     $name = addslashes($name);
     $error_message = (new Executer("update request_calc set name='$name' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение типа работы
+$work_type_id = filter_input(INPUT_GET, 'work_type_id');
+if($work_type_id !== null) {
+    $work_type_id = addslashes($work_type_id);
+    $error_message = (new Executer("update request_calc set work_type_id=$work_type_id where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение объёма заказа
+$quantity = filter_input(INPUT_GET, 'quantity');
+if($quantity !== null) {
+    $quantity = preg_replace("/\D/", "", $quantity);
+    $error_message = (new Executer("update request_calc set quantity=$quantity where id=$id"))->error;
+    
+    $sql = "select unit from request_calc where id=$id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        if(empty($row[0])) {
+            $error_message = (new Executer("update request_calc set unit='kg' where id=$id"))->error;
+        }
+    }
+    
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение единицы объёма
+$unit = filter_input(INPUT_GET, 'unit');
+if($unit !== null) {
+    $error_message = (new Executer("update request_calc set unit='$unit' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }

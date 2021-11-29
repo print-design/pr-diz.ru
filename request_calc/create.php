@@ -1911,6 +1911,81 @@ for ($i=1; $i<=8; $i++) {
             });
             <?php endif; ?>
             
+            // При смене типа работы: если тип работы "плёнка с печатью", показываем поля, предназначенные только для плёнки с печатью
+            $('#work_type_id').change(function() {
+                // При типе "Плёнка без печати" количество возможно только в килограммах
+                if($(this).val() == 1) {
+                    $('#unit_kg').prop('checked', true);
+                    $('#unit_pieces').addClass('d-none');
+                    $('#unit_pieces_label').addClass('d-none');
+                }
+                else {
+                    $('#unit_pieces').removeClass('d-none');
+                    $('#unit_pieces_label').removeClass('d-none');
+                }
+                
+                SetFieldsVisibility($(this).val());
+                
+                // Автосохранение типа работы
+                <?php if(filter_input(INPUT_GET, 'mode') != 'recalc'): ?>
+                    $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&work_type_id=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении типа работы');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении типа работы');
+                        });
+                <?php endif; ?>
+            });
+            
+            // Автосохранение объёма заказа
+            <?php if(filter_input(INPUT_GET, 'mode') != 'recalc'): ?>
+            $('#quantity').keyup(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&quantity=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении объёма заказа');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении объёма заказа');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Если единица объёма - кг, то в поле "Объём" пишем "Объём, кг", иначе "Объем, шт"
+            if($('input[value=kg]').is(':checked')) {
+                $('#label_quantity').text('Объем заказа, кг');
+            }
+            
+            if($('input[value=pieces]').is(':checked')) {
+                $('#label_quantity').text('Объем заказа, шт');
+            }
+                
+            $('input[name=unit]').click(function(){
+                if($(this).val() == 'kg') {
+                    $('#label_quantity').text('Объем заказа, кг');
+                }
+                else {
+                    $('#label_quantity').text('Объем заказа, шт');
+                }
+                
+                // Автосохранение единицы объёма
+                <?php if(filter_input(INPUT_GET, 'mode') != 'recalc'): ?>
+                    $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&unit=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении единицы объёма');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении единицы объёма');
+                        });
+                <?php endif; ?>
+            });
+            
             // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
             $('#streams_number').keydown(function(e) {
                 if(!KeyDownLimitIntValue($(e.target), e, 50)) {
@@ -1931,22 +2006,6 @@ for ($i=1; $i<=8; $i++) {
     
             $(".percent").change(function(){
                 ChangeLimitIntValue($(this), 100);
-            });
-            
-            // При смене типа работы: если тип работы "плёнка с печатью", показываем поля, предназначенные только для плёнки с печатью
-            $('#work_type_id').change(function() {
-                // При типе "Плёнка без печати" количество возможно только в килограммах
-                if($(this).val() == 1) {
-                    $('#unit_kg').prop('checked', true);
-                    $('#unit_pieces').addClass('d-none');
-                    $('#unit_pieces_label').addClass('d-none');
-                }
-                else {
-                    $('#unit_pieces').removeClass('d-none');
-                    $('#unit_pieces_label').removeClass('d-none');
-                }
-                
-                SetFieldsVisibility($(this).val());
             });
             
             // При смене машины: флажок "растяжение/сжатие" показываем только если машина Комифлекс
@@ -2015,23 +2074,7 @@ for ($i=1; $i<=8; $i++) {
             
             SetFieldsVisibility($('#work_type_id').val());
             
-            // Если единица объёма - кг, то в поле "Объём" пишем "Объём, кг", иначе "Объем, шт"
-            if($('input[value=kg]').is(':checked')) {
-                $('#label_quantity').text('Объем заказа, кг');
-            }
             
-            if($('input[value=pieces]').is(':checked')) {
-                $('#label_quantity').text('Объем заказа, шт');
-            }
-                
-            $('input[name=unit]').click(function(){
-                if($(this).val() == 'kg') {
-                    $('#label_quantity').text('Объем заказа, кг');
-                }
-                else {
-                    $('#label_quantity').text('Объем заказа, шт');
-                }
-            });
             
             // Обработка выбора машины, заполнение списка рапортов
             $('#machine_type').change(function(){
