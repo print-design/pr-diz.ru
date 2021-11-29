@@ -77,6 +77,24 @@ if($unit !== null) {
     }
 }
 
+// Автосохранение типа машины
+$machine_type = filter_input(INPUT_GET, 'machine_type');
+if($machine_type !== null) {
+    $error_message = (new Executer("update request_calc set machine_type='$machine_type' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение расширения/сжатия
+$raport_resize = filter_input(INPUT_GET, 'raport_resize');
+if($raport_resize !== null) {
+    $error_message = (new Executer("update request_calc set raport_resize=$raport_resize where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
 // Вывод сообщения об ошибке
 if(!empty($error_message)) {
     echo $error_message;

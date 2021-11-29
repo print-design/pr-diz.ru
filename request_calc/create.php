@@ -1986,6 +1986,45 @@ for ($i=1; $i<=8; $i++) {
                 <?php endif; ?>
             });
             
+            // При смене машины: флажок "растяжение/сжатие" показываем только если машина Комифлекс
+            $('#machine_type').change(function() {
+                if($(this).val() == '<?=COMIFLEX ?>') {
+                    $('.comiflex-only').removeClass('d-none');
+                }
+                else {
+                    $('.comiflex-only').addClass('d-none');
+                }
+                
+                // Автосохранение типа машины
+                <?php if(filter_input(INPUT_GET, 'mode') != 'recalc'): ?>
+                    $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&machine_type=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении типа машины');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении типа машины');
+                        });
+                <?php endif; ?>
+            });
+            
+            // Автосохранение расширения/сжатия
+            <?php if(filter_input(INPUT_GET, 'mode') != 'recalc'): ?>
+            $('#raport_resize').click(function() {
+                var result = $(this).is(':checked') ? '1' : '0';
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&raport_resize=" + result })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении объёма заказа');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении объёма заказа');
+                        });
+            });
+            <?php endif; ?>
+            
             // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
             $('#streams_number').keydown(function(e) {
                 if(!KeyDownLimitIntValue($(e.target), e, 50)) {
@@ -2006,16 +2045,6 @@ for ($i=1; $i<=8; $i++) {
     
             $(".percent").change(function(){
                 ChangeLimitIntValue($(this), 100);
-            });
-            
-            // При смене машины: флажок "растяжение/сжатие" показываем только если машина Комифлекс
-            $('#machine_type').change(function() {
-                if($(this).val() == '<?=COMIFLEX ?>') {
-                    $('.comiflex-only').removeClass('d-none');
-                }
-                else {
-                    $('.comiflex-only').addClass('d-none');
-                }
             });
             
             // При щелчке на флажке "Печать без лыж" делаем поле "ширина лыж" доступным или нет
