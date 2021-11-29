@@ -95,6 +95,34 @@ if($raport_resize !== null) {
     }
 }
 
+// Автосохранение марки плёнки
+$brand_name = filter_input(INPUT_GET, 'brand_name');
+if($brand_name !== null) {
+    $brand_name = addslashes($brand_name);
+    $error_message = (new Executer("update request_calc set brand_name='$brand_name' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение толщины плёнки
+$thickness = filter_input(INPUT_GET, 'thickness');
+if($thickness !== null) {
+    $error_message = (new Executer("update request_calc set thickness='$thickness' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение флажка "Сырьё заказчика"
+$customers_material = filter_input(INPUT_GET, 'customers_material');
+if($customers_material !== null) {
+    $error_message = (new Executer("update request_calc set customers_material=$customers_material where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
 // Вывод сообщения об ошибке
 if(!empty($error_message)) {
     echo $error_message;

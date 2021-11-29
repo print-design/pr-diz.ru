@@ -1986,8 +1986,23 @@ for ($i=1; $i<=8; $i++) {
                 <?php endif; ?>
             });
             
-            // При смене машины: флажок "растяжение/сжатие" показываем только если машина Комифлекс
-            $('#machine_type').change(function() {
+            // Обработка выбора машины, заполнение списка рапортов.
+            // Флажок "растяжение/сжатие" показываем только если машина Комифлекс.
+            $('#machine_type').change(function(){
+                if($(this).val() == "") {
+                    $('#raport').html("<option value=''>Рапорт...</option>")
+                }
+                else {
+                    // Заполняем список рапортов
+                    $.ajax({ url: "../ajax/raport.php?machine_type=" + $(this).val() })
+                            .done(function(data) {
+                                $('#raport').html(data);
+                            })
+                            .fail(function() {
+                                alert('Ошиибка при выборе машины');
+                            });
+                }
+                
                 if($(this).val() == '<?=COMIFLEX ?>') {
                     $('.comiflex-only').removeClass('d-none');
                 }
@@ -2024,6 +2039,104 @@ for ($i=1; $i<=8; $i++) {
                         });
             });
             <?php endif; ?>
+            
+            // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин и установка видимости полей
+            $('#brand_name').change(function(){
+                SetBrandFieldsVisibility($(this).val(), $('#customers_material').is(':checked'), '');
+                
+                if($(this).val() == "") {
+                    $('#thickness').html("<option value=''>Толщина...</option>");
+                }
+                else {
+                    $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
+                            .done(function(data) {
+                                $('#thickness').html(data);
+                    })
+                            .fail(function() {
+                                alert('Ошибка при выборе марки пленки');
+                    });
+                }
+                
+                // Автосохранение марки плёнки.
+                <?php if(filter_input(INPUT_GET, 'mode') != 'recalc'): ?>
+                    $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&brand_name=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении марки плёнки');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении марки плёнки');
+                        });
+                <?php endif; ?>
+            });
+            
+            // Автосохранение толщины
+            <?php if(filter_input(INPUT_GET, 'mode') != 'recalc'): ?>
+            $('#thickness').change(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&thickness=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении толщины');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении толщины');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Автосохранение флажка "Сырьё заказчика"
+            <?php if(filter_input(INPUT_GET, 'mode') != 'recalc'): ?>
+            $('#customers_material').click(function() {
+                var result = $(this).is(':checked') ? '1' : '0';
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&customers_material=" + result })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении флажка Сырьё заказчика');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении флажка Сырьё заказчика');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Обработка выбора типа плёнки ламинации1: перерисовка списка толщин
+            $('#lamination1_brand_name').change(function(){
+                SetBrandFieldsVisibility($(this).val(), $('#lamination1_customers_material').is(':checked'), 'lamination1_');
+                
+                if($(this).val() == "") {
+                    $('#lamination1_thickness').html("<option value=''>Толщина...</option>");
+                }
+                else {
+                    $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
+                            .done(function(data) {
+                                $('#lamination1_thickness').html(data);
+                    })
+                            .fail(function() {
+                                alert('Ошибка при выборе марки пленки');
+                    });
+                }
+            });
+            
+            // Обработка выбора типа плёнки ламинации2: перерисовка списка толщин
+            $('#lamination2_brand_name').change(function(){
+                SetBrandFieldsVisibility($(this).val(), $('#lamination2_customers_material').is(':checked'), 'lamination2_');
+                
+                if($(this).val() == "") {
+                    $('#lamination2_thickness').html("<option value=''>Толщина...</option>");
+                }
+                else {
+                    $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
+                            .done(function(data) {
+                                $('#lamination2_thickness').html(data);
+                    })
+                            .fail(function() {
+                                alert('Ошибка при выборе марки пленки');
+                    });
+                }
+            });
             
             // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
             $('#streams_number').keydown(function(e) {
@@ -2103,25 +2216,6 @@ for ($i=1; $i<=8; $i++) {
             
             SetFieldsVisibility($('#work_type_id').val());
             
-            
-            
-            // Обработка выбора машины, заполнение списка рапортов
-            $('#machine_type').change(function(){
-                if($(this).val() == "") {
-                    $('#raport').html("<option value=''>Рапорт...</option>")
-                }
-                else {
-                    // Заполняем список рапортов
-                    $.ajax({ url: "../ajax/raport.php?machine_type=" + $(this).val() })
-                            .done(function(data) {
-                                $('#raport').html(data);
-                            })
-                            .fail(function() {
-                                alert('Ошиибка при выборе машины');
-                            });
-                }
-            });
-            
             // Установка видимости полей для ручного ввода при выборе марки плёнки "Другая"
             function SetBrandFieldsVisibility(value, isCustomers, prefix) {
                 if(isCustomers) {
@@ -2165,60 +2259,6 @@ for ($i=1; $i<=8; $i++) {
             });
             
             SetBrandFieldsVisibility($('#brand_name').val(), $('#customers_material').is(':checked'), '');
-            
-            // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин и установка видимости полей
-            $('#brand_name').change(function(){
-                SetBrandFieldsVisibility($(this).val(), $('#customers_material').is(':checked'), '');
-                
-                if($(this).val() == "") {
-                    $('#thickness').html("<option value=''>Толщина...</option>");
-                }
-                else {
-                    $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
-                            .done(function(data) {
-                                $('#thickness').html(data);
-                    })
-                            .fail(function() {
-                                alert('Ошибка при выборе марки пленки');
-                    });
-                }
-            });
-            
-            // Обработка выбора типа плёнки ламинации1: перерисовка списка толщин
-            $('#lamination1_brand_name').change(function(){
-                SetBrandFieldsVisibility($(this).val(), $('#lamination1_customers_material').is(':checked'), 'lamination1_');
-                
-                if($(this).val() == "") {
-                    $('#lamination1_thickness').html("<option value=''>Толщина...</option>");
-                }
-                else {
-                    $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
-                            .done(function(data) {
-                                $('#lamination1_thickness').html(data);
-                    })
-                            .fail(function() {
-                                alert('Ошибка при выборе марки пленки');
-                    });
-                }
-            });
-            
-            // Обработка выбора типа плёнки ламинации2: перерисовка списка толщин
-            $('#lamination2_brand_name').change(function(){
-                SetBrandFieldsVisibility($(this).val(), $('#lamination2_customers_material').is(':checked'), 'lamination2_');
-                
-                if($(this).val() == "") {
-                    $('#lamination2_thickness').html("<option value=''>Толщина...</option>");
-                }
-                else {
-                    $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
-                            .done(function(data) {
-                                $('#lamination2_thickness').html(data);
-                    })
-                            .fail(function() {
-                                alert('Ошибка при выборе марки пленки');
-                    });
-                }
-            });
             
             // Показ марки плёнки и толщины для ламинации 1
             function ShowLamination1() {
