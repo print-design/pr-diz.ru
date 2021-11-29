@@ -28,11 +28,12 @@ const WHITE = "white";
 const LACQUER = "lacquer";
 
 // Статусы
-const NO_COLOR = 1;
-const NO_CALCULATION = 2;
-const CALCULATION = 3;
-const CONFIRM = 4;
-const TECHMAP = 5;
+const UNFINISHED = 1;
+const NO_COLOR = 2;
+const NO_CALCULATION = 3;
+const CALCULATION = 4;
+const CONFIRM = 5;
+const TECHMAP = 6;
 
 $form_valid = true;
 

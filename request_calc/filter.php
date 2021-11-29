@@ -1,10 +1,11 @@
 <?php
 // Статусы
-const NO_COLOR = 1;
-const NO_CALCULATION = 2;
-const CALCULATION = 3;
-const CONFIRM = 4;
-const TECHMAP = 5;
+const UNFINISHED = 1;
+const NO_COLOR = 2;
+const NO_CALCULATION = 3;
+const CALCULATION = 4;
+const CONFIRM = 5;
+const TECHMAP = 6;
 ?>
 <form class="form-inline ml-auto mr-3" method="get">
     <?php if(null !== filter_input(INPUT_GET, 'order')): ?>
@@ -73,6 +74,7 @@ const TECHMAP = 5;
     </select>
     <select id="status" name="status" class="form-control form-control-sm" multiple="multiple" onchange="javascript: this.form.submit();">
         <option value="">Статус...</option>
+        <option value="<?=UNFINISHED ?>"<?=(filter_input(INPUT_GET, 'status') == UNFINISHED) ? " selected='selected'" : "" ?>>Не заполнено</option>
         <option value="<?=NO_COLOR ?>"<?=(filter_input(INPUT_GET, 'status') == NO_COLOR) ? " selected='selected'" : "" ?>>Требуется красочность</option>
         <option value="<?=NO_CALCULATION ?>"<?=(filter_input(INPUT_GET, 'status') == NO_CALCULATION) ? " selected='selected'" : "" ?>>Требуется расчёт</option>
         <option value="<?=CALCULATION ?>"<?=(filter_input(INPUT_GET, 'status') == CALCULATION) ? " selected='selected'" : "" ?>>Сделан расчёт</option>
