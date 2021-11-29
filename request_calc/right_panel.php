@@ -721,14 +721,47 @@ if(!empty ($id) && !empty ($date)) {
             <div class="param-name mt-2">Площадь печатной формы</div>
             <div class="value"><?=rtrim(rtrim(number_format($cliche_area, 3, ",", " "), "0"), ",") ?> м<sup>2</sup></div>
             
-            <div class="param-name mt-2">Стоимость 1 новой формы Флинт</div>
-            <div class="value"><?=rtrim(rtrim(number_format($cliche_flint_price, 3, ",", " "), "0"), ",") ?> руб</div>
+            <?php
+            $flint_class = " d-none";
             
-            <div class="param-name mt-2">Стоимость 1 новой формы Кодак</div>
-            <div class="value"><?=rtrim(rtrim(number_format($cliche_kodak_price, 3, ",", " "), "0"), ",") ?> руб</div>
+            for($i=1; $i<=8; $i++) {
+                $cliche_var = "cliche_$i";
+                
+                if(isset($$cliche_var) && $$cliche_var == "flint") {
+                    $flint_class = "";
+                }
+            }
+            ?>
+            <div class="param-name mt-2<?=$flint_class ?>">Стоимость 1 новой формы Флинт</div>
+            <div class="value<?=$flint_class ?>"><?=rtrim(rtrim(number_format($cliche_flint_price, 3, ",", " "), "0"), ",") ?> руб</div>
             
-            <div class="param-name mt-2">Стоимость 1 новой формы Тверь</div>
-            <div class="value"><?=rtrim(rtrim(number_format($cliche_tver_price, 3, ",", " "), "0"), ",") ?> руб</div>
+            <?php
+            $kodak_class = " d-none";
+            
+            for($i=1; $i<=8; $i++) {
+                $cliche_var = "cliche_$i";
+                
+                if(isset($$cliche_var) && $$cliche_var == "kodak") {
+                    $kodak_class = "";
+                }
+            }
+            ?>
+            <div class="param-name mt-2<?=$kodak_class ?>">Стоимость 1 новой формы Кодак</div>
+            <div class="value<?=$kodak_class ?>"><?=rtrim(rtrim(number_format($cliche_kodak_price, 3, ",", " "), "0"), ",") ?> руб</div>
+            
+            <?php
+            $tver_class = " d-none";
+            
+            for($i=1; $i<=8; $i++) {
+                $cliche_var = "cliche_$i";
+                
+                if(isset($$cliche_var) && $$cliche_var == "tver") {
+                    $tver_class;
+                }
+            }
+            ?>
+            <div class="param-name mt-2<?=$tver_class ?>">Стоимость 1 новой формы Тверь</div>
+            <div class="value<?=$tver_class ?>"><?=rtrim(rtrim(number_format($cliche_tver_price, 3, ",", " "), "0"), ",") ?> руб</div>
             
             <div class="param-name mt-2">Стоимость комплекта печатных форм</div>
             <div class="value"><?=rtrim(rtrim(number_format($cliche_price, 3, ",", " "), "0"), ",") ?> руб</div>
