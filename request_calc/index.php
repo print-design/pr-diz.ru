@@ -201,7 +201,7 @@ function OrderLink($param) {
                     
                     if(!empty($row['status_id'])) {
                         if(!$row['finished']) {
-                            $status = "Не законч. редакт.";
+                            $status = "Не закончено редактирование";
                             $colour = "red";
                             $colour_style = " color: $colour";
                         }

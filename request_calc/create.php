@@ -6,6 +6,15 @@ if(!IsInRole(array('technologist', 'dev', 'manager', 'administrator'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+$id = filter_input(INPUT_GET, 'id');
+
+if(empty($id)) {
+    $sql = "insert into request_calc (finished) values(0)";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    $id = $executer->insert_id;
+}
+
 // Машины
 const ZBS = "zbs";
 const COMIFLEX = "comiflex";
@@ -814,9 +823,8 @@ for ($i=1; $i<=8; $i++) {
             ?>
             <?php
             if(null !== filter_input(INPUT_GET, 'id')):
-            $id = filter_input(INPUT_GET, 'id');
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/request_calc/request_calc.php?id=<?=$id ?>">Назад</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/request_calc/request_calc.php?id=<?= filter_input(INPUT_GET, 'id') ?>">Назад</a>
             <?php else: ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/request_calc/<?= IsInRole('manager') ? BuildQueryAddRemove('manager', GetUserId(), 'id') : BuildQueryRemove('id') ?>">К списку</a>
             <?php endif; ?>

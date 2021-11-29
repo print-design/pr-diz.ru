@@ -1536,7 +1536,7 @@ $num_for_customer = $row['num_for_customer'];
                     </form>
                     <?php
                     endif; // if(!$confirm):
-                    endif; // if(!empty($request_calc_result_id)):            
+                    endif; // if($finished && !empty($request_calc_result_id)):         
                     endif; // if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))):
                     ?>
                 </div>
