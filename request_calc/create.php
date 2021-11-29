@@ -893,7 +893,19 @@ for ($i=1; $i<=8; $i++) {
                                    onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                    onkeyup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название заказа');" 
                                    onfocusout="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название заказа');" />
-                            <datalist id="request_names"></datalist>
+                            <datalist id="request_names">
+                                <?php
+                                if(!empty($customer_id)):
+                                $sql = "select distinct name from request_calc where customer_id=$customer_id order by name";
+                                $fetcher = new Fetcher($sql);
+                                while($row = $fetcher->Fetch()):
+                                ?>
+                                <option value="<?= htmlentities($row['name']) ?>" />
+                                <?php
+                                endwhile;
+                                endif;
+                                ?>
+                            </datalist>
                             <div class="invalid-feedback">Название заказа обязательно</div>
                         </div>
                         <!-- Тип работы -->
@@ -1804,29 +1816,6 @@ for ($i=1; $i<=8; $i++) {
         <script src="<?=APPLICATION ?>/js/select2.min.js"></script>
         <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
         <script>
-            // Список заказчиков с поиском
-            $('#customer_id').select2({
-                placeholder: "Заказчик...",
-                maximumSelectionLength: 1,
-                language: "ru"
-            });
-            
-            // При изменении заказчика значение заказа устанавливается в пустое
-            $('#customer_id').change(function() {
-                if($(this).val() == '') {
-                    $('#request_names').html("");
-                }
-                else {
-                    $.ajax({ url: "../ajax/requests.php?customer_id=" + $(this).val() })
-                            .done(function(data) {
-                                $('#request_names').html(data);
-                            })
-                            .fail(function() {
-                                alert('Ошибка при загрузке названий заказов');
-                            });
-                }
-            });
-            
             // Всплывающая подсказка
             $(function() {
                 $("i.fa-info-circle").tooltip({
@@ -1870,6 +1859,57 @@ for ($i=1; $i<=8; $i++) {
                             });
                 }
             });
+            
+            // Список заказчиков с поиском
+            $('#customer_id').select2({
+                placeholder: "Заказчик...",
+                maximumSelectionLength: 1,
+                language: "ru"
+            });
+            
+            // При изменении заказчика значение заказа устанавливается в пустое
+            $('#customer_id').change(function() {
+                if($(this).val() == '') {
+                    $('#request_names').html("");
+                }
+                else {
+                    $.ajax({ url: "../ajax/requests.php?customer_id=" + $(this).val() })
+                            .done(function(data) {
+                                $('#request_names').html(data);
+                            })
+                            .fail(function() {
+                                alert('Ошибка при загрузке названий заказов');
+                            });
+                }
+                
+                // Автосохранение заказчика
+                <?php if(filter_input(INPUT_GET, 'mode') != 'recalc'): ?>
+                    $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&customer_id=" + $(this).val() })
+                            .done(function(data) {
+                                if(data != 'OK') {
+                                    alert('Ошибка при автосохранении заказчика');
+                                }
+                            })
+                            .fail(function() {
+                                alert('Ошибка при автосохранении заказчика');
+                            });
+                <?php endif; ?>
+            });
+            
+            // Автосохранение названия заказа
+            <?php if(filter_input(INPUT_GET, 'mode') != 'recalc'): ?>
+            $('#name').keyup(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&name=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении названия заказа');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении названия заказа');
+                        });
+            });
+            <?php endif; ?>
             
             // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
             $('#streams_number').keydown(function(e) {
