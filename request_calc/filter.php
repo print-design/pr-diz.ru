@@ -34,7 +34,7 @@ const TECHMAP = 6;
         $where = "";
         $customer_id = filter_input(INPUT_GET, 'customer');
         if(!empty($customer_id)) {
-            $where = "where customer_id = $customer_id ";
+            $where = "where c.customer_id = $customer_id ";
         }
         $sql = "select distinct c.name, (select id from request_calc where name=c.name limit 1) id from request_calc c $where";
         $sql .= "order by name";
