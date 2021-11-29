@@ -424,7 +424,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         // Сохранение в базу
         if(empty($error_message)) {
             // Если mode = recalc или пустой id, то создаём новый объект
-            if(filter_input(INPUT_GET, 'mode') == 'recalc' || empty(filter_input(INPUT_GET, 'id'))) {
+            if(filter_input(INPUT_GET, 'mode') == 'recalc') {
                 $sql = "insert into request_calc (customer_id, name, work_type_id, unit, machine_type, raport_resize, "
                         . "brand_name, thickness, individual_brand_name, individual_price, individual_thickness, individual_density, customers_material, "
                         . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
