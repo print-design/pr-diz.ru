@@ -1353,7 +1353,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
         . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
         . "c.cliche_1, c.cliche_2, c.cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8, "
-        . "c.comment, c.confirm, c.status_id, "
+        . "c.comment, c.confirm, c.status_id, c.finished, "
         . "(select id from techmap where request_calc_id = $id order by id desc limit 1) techmap_id, "
         . "(select id from request_calc_result where request_calc_id = $id order by id desc limit 1) request_calc_result_id, "
         . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
@@ -1432,6 +1432,7 @@ for($i=1; $i<=$ink_number; $i++) {
 $comment = $row['comment'];
 $confirm = $row['confirm'];
 $status_id = $row['status_id'];
+$finished = $row['finished'];
 
 $customer = $row['customer'];
 $customer_phone = $row['customer_phone'];
@@ -1478,6 +1479,7 @@ $num_for_customer = $row['num_for_customer'];
                 </div>
                 <div class="p-1 text-nowrap">
                     <?php if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))): ?>
+                    <?php if($finished): ?>
                     <?php if(!empty($request_calc_result_id)): ?>
                     <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-outline-dark ml-2 topbutton" style="width: 200px;">Пересчитать</a>
                     <?php elseif(empty($row['ink_number'])): ?>
@@ -1504,6 +1506,7 @@ $num_for_customer = $row['num_for_customer'];
                     <?php 
                     endif; // if($percents_exist):
                     endif; // if(!empty($request_calc_result_id)):
+                    endif; // if($finished):
                     ?>
                             
                     <?php if(empty($request_calc_result_id)): ?>
@@ -1511,7 +1514,7 @@ $num_for_customer = $row['num_for_customer'];
                     <?php endif; ?>
             
                     <?php
-                    if(!empty($request_calc_result_id)):
+                    if($finished && !empty($request_calc_result_id)):
                     if(!$confirm):
                     ?>
                     <?php if(IsInRole('administrator')): ?>
@@ -1546,7 +1549,14 @@ $num_for_customer = $row['num_for_customer'];
                     <?php
                     $real_status_id = null;
                     
-                    if(!empty($techmap_id)):
+                    if(!$finished):
+                        $real_status_id = UNFINISHED;
+                    ?>
+                    <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px red; color: red;">
+                        <i class="fas fa-edit"></i>&nbsp;&nbsp;&nbsp;Не закончено редактирование
+                    </div>
+                    <?php
+                    elseif(!empty($techmap_id)):
                         $real_status_id = TECHMAP;
                     ?>
                     <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px green; color: green;">
