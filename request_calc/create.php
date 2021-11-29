@@ -9,7 +9,7 @@ if(!IsInRole(array('technologist', 'dev', 'manager', 'administrator'))) {
 $id = filter_input(INPUT_GET, 'id');
 
 if(empty($id)) {
-    $sql = "insert into request_calc (finished) values(0)";
+    $sql = "insert into request_calc (status_id, finished) values(1, 0)";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     $id = $executer->insert_id;

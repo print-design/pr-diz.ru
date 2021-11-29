@@ -187,9 +187,9 @@ function OrderLink($param) {
                             . "wt.name work_type, u.last_name, u.first_name, "
                             . "(select count(id) from request_calc where customer_id = c.customer_id and id <= c.id) num_for_customer "
                             . "from request_calc c "
-                            . "inner join customer cus on c.customer_id = cus.id "
-                            . "inner join work_type wt on c.work_type_id = wt.id "
-                            . "inner join user u on cus.manager_id = u.id$where "
+                            . "left join customer cus on c.customer_id = cus.id "
+                            . "left join work_type wt on c.work_type_id = wt.id "
+                            . "left join user u on cus.manager_id = u.id$where "
                             . "$orderby limit $pager_skip, $pager_take";
                     $fetcher = new Fetcher($sql);
                     
@@ -251,11 +251,18 @@ function OrderLink($param) {
                     <tr>
                         <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['num_for_customer'] ?></td>
                         <td class="text-nowrap"><?= DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y') ?></td>
-                        <td><?=$row['customer'] ?>&nbsp;<a href="javascript: void(0);" class="customer" data-toggle="modal" data-target="#customerModal" data-customer-id="<?=$row['customer_id'] ?>"><i class="fa fa-question-circle" data-customer-id="<?=$row['customer_id'] ?>"></i></a>
+                        <td>
+                            <?php if(!empty($row['customer'])): ?>
+                            <?=$row['customer'] ?>&nbsp;<a href="javascript: void(0);" class="customer" data-toggle="modal" data-target="#customerModal" data-customer-id="<?=$row['customer_id'] ?>"><i class="fa fa-question-circle" data-customer-id="<?=$row['customer_id'] ?>"></i></a>
+                            <?php endif; ?>
                         </td>
                         <td><?= htmlentities($row['name']) ?></td>
                         <td><a href="request_calc.php<?= BuildQuery("id", $row['id']) ?>"><img src="../images/icons/vertical-dots.svg" /></a></td>
-                        <td class="text-right text-nowrap"><?=number_format($row['quantity'], 0, ",", " ") ?>&nbsp;<?=$row['unit'] == 'kg' ? 'кг' : 'шт' ?></td>
+                        <td class="text-right text-nowrap">
+                            <?php if(!empty($row['quantity'])): ?>
+                            <?=number_format($row['quantity'], 0, ",", " ") ?>&nbsp;<?=$row['unit'] == 'kg' ? 'кг' : 'шт' ?>
+                            <?php endif; ?>
+                        </td>
                         <td><?=$row['work_type'] ?></td>
                         <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
                         <td><?=$row['comment'] ?></td>
