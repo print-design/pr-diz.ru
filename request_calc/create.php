@@ -867,7 +867,8 @@ for ($i=1; $i<=8; $i++) {
                         <!-- Название заказа -->
                         <div class="form-group">
                             <label for="name">Название заказа</label>
-                            <input type="text" 
+                            <input list="request_names"
+                                   type="text" 
                                    id="name" 
                                    name="name" 
                                    class="form-control<?=$name_valid ?>" 
@@ -880,6 +881,7 @@ for ($i=1; $i<=8; $i++) {
                                    onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                    onkeyup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название заказа');" 
                                    onfocusout="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название заказа');" />
+                            <datalist id="request_names"></datalist>
                             <div class="invalid-feedback">Название заказа обязательно</div>
                         </div>
                         <!-- Тип работы -->
@@ -1790,11 +1792,27 @@ for ($i=1; $i<=8; $i++) {
         <script src="<?=APPLICATION ?>/js/select2.min.js"></script>
         <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
         <script>
-            // Список с  поиском
+            // Список заказчиков с поиском
             $('#customer_id').select2({
                 placeholder: "Заказчик...",
                 maximumSelectionLength: 1,
                 language: "ru"
+            });
+            
+            // При изменении заказчика значение заказа устанавливается в пустое
+            $('#customer_id').change(function() {
+                if($(this).val() == '') {
+                    $('#request_names').html("");
+                }
+                else {
+                    $.ajax({ url: "../ajax/requests.php?customer_id=" + $(this).val() })
+                            .done(function(data) {
+                                $('#request_names').html(data);
+                            })
+                            .fail(function() {
+                                alert('Ошибка при загрузке названий заказов');
+                            });
+                }
             });
             
             // Всплывающая подсказка
