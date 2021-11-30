@@ -2664,9 +2664,17 @@ $finished = $row['finished'];
             });
             <?php endif; ?>
             
-            // Автосохранение ширины лыж
-            <?php if(!$finished): ?>
+            // Если ширина лыж устанавливается в 0, то устанавливается флажок "Печать без лыж"
             $('#ski_width').keyup(function() {
+                ski_width = $(this).val();
+                
+                if(ski_width == '0' || ski_width == '') {
+                    $('#no_ski').prop( "checked", true );
+                    $('#no_ski').trigger('change');
+                }
+                
+                // Автосохранение ширины лыж
+                <?php if(!$finished): ?>
                 $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&ski_width=" + $(this).val() })
                         .done(function(data) {
                             if(data != 'OK') {
@@ -2676,8 +2684,9 @@ $finished = $row['finished'];
                         .fail(function() {
                             alert('Ошибка при автосохранении ширины лыж');
                         });
+            
+                <?php endif; ?>
             });
-            <?php endif; ?>
             
             // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
             $('#streams_number').keydown(function(e) {
@@ -2710,6 +2719,11 @@ $finished = $row['finished'];
                 }
                 else {
                     $('#ski_width').removeAttr('disabled');
+                }
+                
+                // Если флажок снят, а ширина лыж пустая или равна 0, устанавливаем её в 20
+                if(!no_ski_checked && ($('#ski_width').val() == 0 || $('#ski_width').val() == '')) {
+                    $('#ski_width').val(20);
                 }
                 
                 // Автосохранение
