@@ -2424,18 +2424,59 @@ $finished = $row['finished'];
             });
             <?php endif; ?>
             
+            // Автосохранение количества ручьёв
+            <?php if(!$finished): ?>
+            $('#streams_number').keyup(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&streams_number=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении количества ручьёв');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении количества ручьёв');
+                        });
+            });
+            <?php endif; ?>
+            
             // При изменении значения рапорта или количества этикеток на ручье
             // автоматически вычисляем длину этикетки вдоль рапорта вала
-            $('#raport').change(function() {
-                CalculateLength()
-            });
-            
             $('#number_on_raport').change(function() {
                 CalculateLength()
             });
             
             $('#number_on_raport').keyup(function() {
                 CalculateLength()
+                
+                // Автосохранение
+                <?php if(!$finished): ?>
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&number_on_raport=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении количества этикеток на рапорте');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении количества количества этикеток на рапорте');
+                        });
+                <?php endif; ?>
+            });
+            
+            $('#raport').change(function() {
+                CalculateLength()
+                
+                // Автосохранение
+                <?php if(!$finished): ?>
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&raport=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении рапорта');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении рапорта');
+                        });
+                <?php endif; ?>
             });
             
             function CalculateLength() {
@@ -2444,8 +2485,66 @@ $finished = $row['finished'];
                 
                 if(raport && number_on_raport) {
                     $('#label_length').val(Math.round(parseFloat(raport) / parseFloat(number_on_raport) * 10000, -4) / 10000);
+                    
+                    // Автосохранение
+                    <?php if(!$finished): ?>
+                    $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&label_length=" + $('#label_length').val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении длины этикетки');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении длины этикетки');
+                        });
+                    <?php endif; ?>
                 }
             }
+            
+            // Автосохранение длины этикетки
+            <?php if(!$finished): ?>
+            $('#label_length').keyup(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&label_length=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении длины этикетки');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении длины этикетки');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Автосохранение ширины вала ламинации
+            <?php if(!$finished): ?>
+            $('#lamination_roller_width').change(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&lamination_roller_width=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении ширины вала ламинации');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении ширины вала ламинации');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Автосохранение ширины лыж
+            <?php if(!$finished): ?>
+            $('#ski_width').keyup(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&ski_width=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении ширины лыж');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении ширины лыж');
+                        });
+            });
+            <?php endif; ?>
             
             // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
             $('#streams_number').keydown(function(e) {
@@ -2479,6 +2578,20 @@ $finished = $row['finished'];
                 else {
                     $('#ski_width').removeAttr('disabled');
                 }
+                
+                // Автосохранение
+                <?php if(!$finished): ?>
+                var result = $(this).is(':checked') ? '1' : '0';
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&no_ski=" + result })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении флажка Печать без лыж');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении флажка Печать без лыж');
+                        });
+                <?php endif; ?>
             });
             
             // Показываем или скрываем поля в зависимости от работы с печатью / без печати и наличия / отсутствия ламинации
