@@ -2181,7 +2181,111 @@ $finished = $row['finished'];
                                 alert('Ошибка при выборе марки пленки');
                     });
                 }
+                
+                // Автосохранение марки плёнки.
+                <?php if(!$finished): ?>
+                    $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&lamination1_brand_name=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении марки плёнки');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении марки плёнки');
+                        });
+                <?php endif; ?>
             });
+            
+            // Автосохранение толщины ламинации 1
+            <?php if(!$finished): ?>
+            $('#lamination1_thickness').change(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&lamination1_thickness=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении толщины');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении толщины');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Автосохранение флажка "Сырьё заказчика" ламинации 1
+            <?php if(!$finished): ?>
+            $('#lamination1_customers_material').click(function() {
+                var result = $(this).is(':checked') ? '1' : '0';
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&lamination1_customers_material=" + result })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении флажка Сырьё заказчика');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении флажка Сырьё заказчика');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Автосохранение пользовательской марки плёнки ламинации 1
+            <?php if(!$finished): ?>
+            $('#lamination1_individual_brand_name').keyup(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&lamination1_individual_brand_name=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении пользовательской марки плёнки');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении пользовательской марки плёнки');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Автосохранение пользовательской стоимости плёнки ламинации 1
+            <?php if(!$finished): ?>
+            $('#lamination1_individual_price').keyup(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&lamination1_individual_price=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении пользовательской стоимости плёнки');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении пользовательской стоимости плёнки');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Автосохранение пользовательской толщины плёнки ламинации 1
+            <?php if(!$finished): ?>
+            $('#lamination1_individual_thickness').keyup(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&lamination1_individual_thickness=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении пользовательской толщины плёнки');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении пользовательской толщины плёнки');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Автосохранение пользовательского удельного веса плёнки ламинации 1
+            <?php if(!$finished): ?>
+            $('#lamination1_individual_density').keyup(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&lamination1_individual_density=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении пользовательского удельного веса плёнки');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении пользовательского удельного веса плёнки');
+                        });
+            });
+            <?php endif; ?>
             
             // Обработка выбора типа плёнки ламинации2: перерисовка списка толщин
             $('#lamination2_brand_name').change(function(){
@@ -2199,7 +2303,111 @@ $finished = $row['finished'];
                                 alert('Ошибка при выборе марки пленки');
                     });
                 }
+                
+                // Автосохранение марки плёнки.
+                <?php if(!$finished): ?>
+                    $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&lamination2_brand_name=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении марки плёнки');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении марки плёнки');
+                        });
+                <?php endif; ?>
             });
+            
+            // Автосохранение толщины ламинации 2
+            <?php if(!$finished): ?>
+            $('#lamination2_thickness').change(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&lamination2_thickness=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении толщины');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении толщины');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Автосохранение флажка "Сырьё заказчика" ламинации 2
+            <?php if(!$finished): ?>
+            $('#lamination2_customers_material').click(function() {
+                var result = $(this).is(':checked') ? '1' : '0';
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&lamination2_customers_material=" + result })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении флажка Сырьё заказчика');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении флажка Сырьё заказчика');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Автосохранение пользовательской марки плёнки ламинации 2
+            <?php if(!$finished): ?>
+            $('#lamination2_individual_brand_name').keyup(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&lamination2_individual_brand_name=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении пользовательской марки плёнки');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении пользовательской марки плёнки');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Автосохранение пользовательской стоимости плёнки ламинации 2
+            <?php if(!$finished): ?>
+            $('#lamination2_individual_price').keyup(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&lamination2_individual_price=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении пользовательской стоимости плёнки');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении пользовательской стоимости плёнки');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Автосохранение пользовательской толщины плёнки ламинации 2
+            <?php if(!$finished): ?>
+            $('#lamination2_individual_thickness').keyup(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&lamination2_individual_thickness=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении пользовательской толщины плёнки');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении пользовательской толщины плёнки');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Автосохранение пользовательского удельного веса плёнки ламинации 2
+            <?php if(!$finished): ?>
+            $('#lamination2_individual_density').keyup(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&lamination2_individual_density=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении пользовательского удельного веса плёнки');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении пользовательского удельного веса плёнки');
+                        });
+            });
+            <?php endif; ?>
             
             // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
             $('#streams_number').keydown(function(e) {

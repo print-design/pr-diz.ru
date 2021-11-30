@@ -172,6 +172,154 @@ if($individual_density !== null) {
     }
 }
 
+// Автосохранение марки плёнки ЛАМИНАЦИЯ 1
+$lamination1_brand_name = filter_input(INPUT_GET, 'lamination1_brand_name');
+if($lamination1_brand_name !== null) {
+    $lamination1_brand_name = addslashes($lamination1_brand_name);
+    $error_message = (new Executer("update request_calc set lamination1_brand_name='$lamination1_brand_name' where id=$id"))->error;
+    
+    // Если плёнка пользовательская, то сохраняем пустую толщину
+    // Иначе сохраняем пустые пользовательские значения
+    if($lamination1_brand_name == INDIVIDUAL) {
+        $error_message = (new Executer("update request_calc set lamination1_thickness=NULL where id=$id"))->error;
+    }
+    else {
+        $error_message = (new Executer("update request_calc set lamination1_individual_brand_name='', lamination1_individual_price=NULL, lamination1_individual_thickness=NULL, lamination1_individual_density=NULL where id=$id"))->error;
+    }
+    
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение толщины плёнки ЛАМИНАЦИЯ 1
+$lamination1_thickness = filter_input(INPUT_GET, 'lamination1_thickness');
+if($lamination1_thickness !== null) {
+    $error_message = (new Executer("update request_calc set lamination1_thickness='$lamination1_thickness' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение флажка "Сырьё заказчика" ЛАМИНАЦИЯ 1
+$lamination1_customers_material = filter_input(INPUT_GET, 'lamination1_customers_material');
+if($lamination1_customers_material !== null) {
+    $error_message = (new Executer("update request_calc set lamination1_customers_material=$lamination1_customers_material where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение пользовательской марки плёнки ЛАМИНАЦИЯ 1
+$lamination1_individual_brand_name = filter_input(INPUT_GET, 'lamination1_individual_brand_name');
+if($lamination1_individual_brand_name !== null) {
+    $error_message = (new Executer("update request_calc set lamination1_individual_brand_name='$lamination1_individual_brand_name' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение пользовательской стоимости плёнки ЛАМИНАЦИЯ 1
+$lamination1_individual_price = filter_input(INPUT_GET, 'lamination1_individual_price');
+if($lamination1_individual_price !== null) {
+    $error_message = (new Executer("update request_calc set lamination1_individual_price='$lamination1_individual_price' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение пользовательской толщины плёнки ЛАМИНАЦИЯ 1
+$lamination1_individual_thickness = filter_input(INPUT_GET, 'lamination1_individual_thickness');
+if($lamination1_individual_thickness !== null) {
+    $error_message = (new Executer("update request_calc set lamination1_individual_thickness='$lamination1_individual_thickness' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение пользовательского удельного веса плёнки ЛАМИНАЦИЯ 1
+$lamination1_individual_density = filter_input(INPUT_GET, 'lamination1_individual_density');
+if($lamination1_individual_density !== null) {
+    $error_message = (new Executer("update request_calc set lamination1_individual_density='$lamination1_individual_density' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение марки плёнки ЛАМИНАЦИЯ 2
+$lamination2_brand_name = filter_input(INPUT_GET, 'lamination2_brand_name');
+if($lamination2_brand_name !== null) {
+    $lamination2_brand_name = addslashes($lamination2_brand_name);
+    $error_message = (new Executer("update request_calc set lamination2_brand_name='$lamination2_brand_name' where id=$id"))->error;
+    
+    // Если плёнка пользовательская, то сохраняем пустую толщину
+    // Иначе сохраняем пустые пользовательские значения
+    if($lamination2_brand_name == INDIVIDUAL) {
+        $error_message = (new Executer("update request_calc set lamination2_thickness=NULL where id=$id"))->error;
+    }
+    else {
+        $error_message = (new Executer("update request_calc set lamination2_individual_brand_name='', lamination2_individual_price=NULL, lamination2_individual_thickness=NULL, lamination2_individual_density=NULL where id=$id"))->error;
+    }
+    
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение толщины плёнки ЛАМИНАЦИЯ 2
+$lamination2_thickness = filter_input(INPUT_GET, 'lamination2_thickness');
+if($lamination2_thickness !== null) {
+    $error_message = (new Executer("update request_calc set lamination2_thickness='$lamination2_thickness' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение флажка "Сырьё заказчика" ЛАМИНАЦИЯ 2
+$lamination2_customers_material = filter_input(INPUT_GET, 'lamination2_customers_material');
+if($lamination2_customers_material !== null) {
+    $error_message = (new Executer("update request_calc set lamination2_customers_material=$lamination2_customers_material where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение пользовательской марки плёнки
+$lamination2_individual_brand_name = filter_input(INPUT_GET, 'lamination2_individual_brand_name');
+if($lamination2_individual_brand_name !== null) {
+    $error_message = (new Executer("update request_calc set lamination2_individual_brand_name='$lamination2_individual_brand_name' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение пользовательской стоимости плёнки
+$lamination2_individual_price = filter_input(INPUT_GET, 'lamination2_individual_price');
+if($lamination2_individual_price !== null) {
+    $error_message = (new Executer("update request_calc set lamination2_individual_price='$lamination2_individual_price' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение пользовательской толщины плёнки
+$lamination2_individual_thickness = filter_input(INPUT_GET, 'lamination2_individual_thickness');
+if($lamination2_individual_thickness !== null) {
+    $error_message = (new Executer("update request_calc set lamination2_individual_thickness='$lamination2_individual_thickness' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение пользовательского удельного веса плёнки
+$lamination2_individual_density = filter_input(INPUT_GET, 'lamination2_individual_density');
+if($lamination2_individual_density !== null) {
+    $error_message = (new Executer("update request_calc set lamination2_individual_density='$lamination2_individual_density' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
 // Вывод сообщения об ошибке
 if(!empty($error_message)) {
     echo $error_message;
