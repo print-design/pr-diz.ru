@@ -1725,6 +1725,7 @@ $finished = $row['finished'];
                                                id="color_<?=$i ?>" 
                                                name="color_<?=$i ?>" 
                                                class="form-control panton color<?=$$color_var_valid ?>" 
+                                               data-id="<?=$i ?>" 
                                                placeholder="Номер пантона..." 
                                                value="<?= empty($$color_var) ? "" : $$color_var?>" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -1770,6 +1771,7 @@ $finished = $row['finished'];
                                             id="percent_<?=$i ?>" 
                                             name="percent_<?=$i ?>" 
                                             class="form-control int-only percent<?=$$percent_var_valid ?>" 
+                                            data-id="<?=$i ?>" 
                                             style="width: 80px;" 
                                             value="<?= empty($$percent_var) ? "" : $$percent_var ?>" 
                                             placeholder="Процент..." 
@@ -1786,7 +1788,7 @@ $finished = $row['finished'];
                                 </div>
                                 <div class="form-group<?=$cliche_class ?>" id="cliche_group_<?=$i ?>">
                                     <label for="cliche_<?=$i ?>">Форма</label>
-                                    <select id="cliche_<?=$i ?>" name="cliche_<?=$i ?>" class="form-control form">
+                                    <select id="cliche_<?=$i ?>" name="cliche_<?=$i ?>" class="form-control cliche" data-id="<?=$i ?>">
                                         <?php
                                         $old_selected = "";
                                         $flint_selected = "";
@@ -2782,7 +2784,7 @@ $finished = $row['finished'];
             });
             
             // Обработка выбора краски
-            $('.ink').change(function(){
+            $('.ink').change(function() {
                 ink = $(this).val();
                 var data_id = $(this).attr('data-id');
                 
@@ -2848,7 +2850,88 @@ $finished = $row['finished'];
                 else {
                     $('#ink_group_' + data_id).addClass('col-12');
                 }
+                
+                // Автосохранение
+                <?php if(!$finished): ?>
+                    $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&ink=" + ink + "&data_id=" + data_id })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении типа краски');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении типа краски');
+                        });
+                <?php endif; ?>
             });
+            
+            // Автосохранение пантона
+            <?php if(!$finished): ?>
+            $('.color').keyup(function() {
+                color = $(this).val();
+                data_id = $(this).attr('data-id');
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&color=" + color + "&data_id=" + data_id })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении пантона');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении пантона');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Автосохранение CMYK
+            <?php if(!$finished): ?>
+            $('.cmyk').keyup(function() {
+                cmyk = $(this).val();
+                data_id = $(this).attr('data-id');
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&cmyk=" + cmyk + "&data_id=" + data_id })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении пантона');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении пантона');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Автосохранение процента
+            <?php if(!$finished): ?>
+            $('.percent').keyup(function() {
+                percent = $(this).val();
+                data_id = $(this).attr('data-id');
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&percent=" + percent + "&data_id=" + data_id })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении пантона');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении пантона');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Автосохранение формы
+            <?php if(!$finished): ?>
+            $('.cliche').change(function() {
+                cliche = $(this).val();
+                data_id = $(this).attr('data-id');
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&cliche=" + cliche + "&data_id=" + data_id })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении пантона');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении пантона');
+                        });
+            });
+            <?php endif; ?>
             
             // Показ расходов
             function ShowCosts() {

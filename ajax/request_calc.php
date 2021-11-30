@@ -401,52 +401,53 @@ if($ink_number !== null) {
     }
 }
 
-for($i=1; $i<=8; $i++) {
-    // Автосохранение цвета
-    $ink_var = "ink_$i";
-    $$ink_var = filter_input(INPUT_GET, $ink_var);
-    if($$ink_var !== null) {
-        $error_message = (new Executer("update request_calc set $ink_var='".$$ink_var."' where id=$id"))->error;
-        if(empty($error_message)) {
-            echo 'OK';
-        }
+// Автосохранение цвета
+$ink = filter_input(INPUT_GET, 'ink');
+$data_id = filter_input(INPUT_GET, 'data_id');
+if($ink !== null && $data_id !== null) {
+    $error_message = (new Executer("update request_calc set ink_$data_id='$ink' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
     }
-    
-    // Автосохранение пантона
-    $color_var = "color_$i";
-    $$color_var = filter_input(INPUT_GET, $color_var);
-    if($$color_var !== null) {
-        $error_message = (new Executer("update request_calc set $color_var=".$$color_var." where id=$id"))->error;
-        if(empty($error_message)) {
-            echo 'OK';
-        }
+}
+
+// Автосохранение пантона
+$color = filter_input(INPUT_GET, 'color');
+$data_id = filter_input(INPUT_GET, 'data_id');
+if($color !== null && $data_id !== null) {
+    $error_message = (new Executer("update request_calc set color_$data_id=$color where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
     }
-    
-    // Автосохранение CMYK
-    $cmyk_var = "cmyk_$i";
-    $$cmyk_var = filter_input(INPUT_GET, $cmyk_var);
-    if($$cmyk_var !== null) {
-        $error_message = (new Executer("update request_calc set $cmyk_var='".$$cmyk_var."' where id=$id"))->error;
-        if(empty($error_message)) {
-            echo 'OK';
-        }
+}
+
+// Автосохранение CMYK
+$cmyk = filter_input(INPUT_GET, 'cmyk');
+$data_id = filter_input(INPUT_GET, 'data_id');
+if($cmyk !== null && $data_id !== null) {
+    $error_message = (new Executer("update request_calc set cmyk_$data_id='$cmyk' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
     }
-    
-    // Автосохранение процента
-    $percent_var = "percent_$i";
-    $$percent_var = filter_input(INPUT_GET, $percent_var);
-    if($$percent_var !== null) {
-        $error_message = (new Executer("update request_calc set $percent_var=".$$percent_var." where id=$id"))->error;
-        if(empty($error_message)) {
-            echo 'OK';
-        }
+}
+
+// Автосохранение процента
+$percent = filter_input(INPUT_GET, 'percent');
+$data_id = filter_input(INPUT_GET, 'data_id');
+if($percent !== null && $data_id !== null) {
+    $error_message = (new Executer("update request_calc set percent_$data_id=$percent where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
     }
-    
-    // Автосохранение форм
-    $cliche_var = "cliche_$i";
-    $$cliche_var = filter_input(INPUT_GET, $cliche_var);
-    if($$cliche_var !== null) {
-        $error_message = (new Executer("update request_calc set $cliche_var='".$$cliche_var."' where id=$id"))->error;
+}
+
+// Автосохранение форм
+$cliche = filter_input(INPUT_GET, 'cliche');
+$data_id = filter_input(INPUT_GET, 'data_id');
+if($cliche !== null && $data_id !== null) {
+    $error_message = (new Executer("update request_calc set cliche_$data_id='$cliche' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
     }
 }
 
