@@ -426,7 +426,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                         . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                         . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
                         . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
-                        . "cliche_1, cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8), finished "
+                        . "cliche_1, cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8, finished) "
                         . "values($customer_id, '$name', $work_type_id, '$unit', '$machine_type', $raport_resize, "
                         . "'$brand_name', $thickness, '$individual_brand_name', $individual_price, $individual_thickness, $individual_density, $customers_material, "
                         . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_individual_brand_name', $lamination1_individual_price, $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, "
@@ -2895,7 +2895,7 @@ $finished = $row['finished'];
             
             // Автосохранение CMYK
             <?php if(!$finished): ?>
-            $('.cmyk').keyup(function() {
+            $('.cmyk').change(function() {
                 cmyk = $(this).val();
                 data_id = $(this).attr('data-id');
                 $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&cmyk=" + cmyk + "&data_id=" + data_id })
