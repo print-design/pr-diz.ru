@@ -2105,6 +2105,66 @@ $finished = $row['finished'];
             });
             <?php endif; ?>
             
+            // Автосохранение пользовательской марки плёнки
+            <?php if(!$finished): ?>
+            $('#individual_brand_name').keyup(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&individual_brand_name=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении пользовательской марки плёнки');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении пользовательской марки плёнки');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Автосохранение пользовательской стоимости плёнки
+            <?php if(!$finished): ?>
+            $('#individual_price').keyup(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&individual_price=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении пользовательской стоимости плёнки');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении пользовательской стоимости плёнки');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Автосохранение пользовательской толщины плёнки
+            <?php if(!$finished): ?>
+            $('#individual_thickness').keyup(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&individual_thickness=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении пользовательской толщины плёнки');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении пользовательской толщины плёнки');
+                        });
+            });
+            <?php endif; ?>
+            
+            // Автосохранение пользовательского удельного веса плёнки
+            <?php if(!$finished): ?>
+            $('#individual_density').keyup(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&individual_density=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении пользовательского удельного веса плёнки');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении пользовательского удельного веса плёнки');
+                        });
+            });
+            <?php endif; ?>
+            
             // Обработка выбора типа плёнки ламинации1: перерисовка списка толщин
             $('#lamination1_brand_name').change(function(){
                 SetBrandFieldsVisibility($(this).val(), $('#lamination1_customers_material').is(':checked'), 'lamination1_');

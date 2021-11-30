@@ -1,6 +1,9 @@
 <?php
 include '../include/topscripts.php';
 
+// Значение марки плёнки "другая"
+const INDIVIDUAL = "individual";
+
 $error_message = '';
 $id = filter_input(INPUT_GET, 'id');
 
@@ -100,6 +103,16 @@ $brand_name = filter_input(INPUT_GET, 'brand_name');
 if($brand_name !== null) {
     $brand_name = addslashes($brand_name);
     $error_message = (new Executer("update request_calc set brand_name='$brand_name' where id=$id"))->error;
+    
+    // Если плёнка пользовательская, то сохраняем пустую толщину
+    // Иначе сохраняем пустые пользовательские значения
+    if($brand_name == INDIVIDUAL) {
+        $error_message = (new Executer("update request_calc set thickness=NULL where id=$id"))->error;
+    }
+    else {
+        $error_message = (new Executer("update request_calc set individual_brand_name='', individual_price=NULL, individual_thickness=NULL, individual_density=NULL where id=$id"))->error;
+    }
+    
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -118,6 +131,42 @@ if($thickness !== null) {
 $customers_material = filter_input(INPUT_GET, 'customers_material');
 if($customers_material !== null) {
     $error_message = (new Executer("update request_calc set customers_material=$customers_material where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение пользовательской марки плёнки
+$individual_brand_name = filter_input(INPUT_GET, 'individual_brand_name');
+if($individual_brand_name !== null) {
+    $error_message = (new Executer("update request_calc set individual_brand_name='$individual_brand_name' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение пользовательской стоимости плёнки
+$individual_price = filter_input(INPUT_GET, 'individual_price');
+if($individual_price !== null) {
+    $error_message = (new Executer("update request_calc set individual_price='$individual_price' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение пользовательской толщины плёнки
+$individual_thickness = filter_input(INPUT_GET, 'individual_thickness');
+if($individual_thickness !== null) {
+    $error_message = (new Executer("update request_calc set individual_thickness='$individual_thickness' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение пользовательского удельного веса плёнки
+$individual_density = filter_input(INPUT_GET, 'individual_density');
+if($individual_density !== null) {
+    $error_message = (new Executer("update request_calc set individual_density='$individual_density' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
