@@ -2862,6 +2862,17 @@ $finished = $row['finished'];
                         .fail(function() {
                             alert('Ошибка при автосохранении типа краски');
                         });
+                    
+                    // Поскольку форму не меняли, то сохраняем её сразу
+                    $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&cliche=" + $('#cliche_' + data_id).val() + "&data_id=" + data_id })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении формы');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении формы');
+                        });
                 <?php endif; ?>
             });
             
