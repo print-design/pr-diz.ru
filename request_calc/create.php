@@ -488,7 +488,7 @@ if(empty($id)) {
 }
 
 if(empty($id)) {
-    $sql = "insert into request_calc (status_id, finished) values(1, 0)";
+    $sql = "insert into request_calc (ski_width, status_id, finished) values(20, 1, 0)";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     $id = $executer->insert_id;
@@ -2409,6 +2409,44 @@ $finished = $row['finished'];
             });
             <?php endif; ?>
             
+            // Автосохранение ширины ручья
+            <?php if(!$finished): ?>
+            $('#stream_width').keyup(function() {
+                $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&stream_width=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении ширины ручья');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении ширины ручья');
+                        });
+            });
+            <?php endif; ?>
+            
+            // При изменении значения рапорта или количества этикеток на ручье
+            // автоматически вычисляем длину этикетки вдоль рапорта вала
+            $('#raport').change(function() {
+                CalculateLength()
+            });
+            
+            $('#number_on_raport').change(function() {
+                CalculateLength()
+            });
+            
+            $('#number_on_raport').keyup(function() {
+                CalculateLength()
+            });
+            
+            function CalculateLength() {
+                var raport = $('#raport').val();
+                var number_on_raport = $('#number_on_raport').val();
+                
+                if(raport && number_on_raport) {
+                    $('#label_length').val(Math.round(parseFloat(raport) / parseFloat(number_on_raport) * 10000, -4) / 10000);
+                }
+            }
+            
             // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
             $('#streams_number').keydown(function(e) {
                 if(!KeyDownLimitIntValue($(e.target), e, 50)) {
@@ -2599,29 +2637,6 @@ $finished = $row['finished'];
                 $('#form_lamination_2 select').removeAttr('required');
                 $('#form_lamination_2 input').removeAttr('disabled');
                 $('#form_lamination_2 select').removeAttr('disabled');
-            }
-            
-            // При изменении значения рапорта или количества этикеток на ручье
-            // автоматически вычисляем длину этикетки вдоль рапорта вала
-            $('#raport').change(function() {
-                CalculateLength()
-            });
-            
-            $('#number_on_raport').change(function() {
-                CalculateLength()
-            });
-            
-            $('#number_on_raport').keyup(function() {
-                CalculateLength()
-            });
-            
-            function CalculateLength() {
-                var raport = $('#raport').val();
-                var number_on_raport = $('#number_on_raport').val();
-                
-                if(raport && number_on_raport) {
-                    $('#label_length').val(Math.round(parseFloat(raport) / parseFloat(number_on_raport) * 10000, -4) / 10000);
-                }
             }
             
             // Обработка выбора количества красок

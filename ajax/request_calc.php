@@ -284,7 +284,7 @@ if($lamination2_customers_material !== null) {
     }
 }
 
-// Автосохранение пользовательской марки плёнки
+// Автосохранение пользовательской марки плёнки ЛАМИНАЦИЯ 2
 $lamination2_individual_brand_name = filter_input(INPUT_GET, 'lamination2_individual_brand_name');
 if($lamination2_individual_brand_name !== null) {
     $error_message = (new Executer("update request_calc set lamination2_individual_brand_name='$lamination2_individual_brand_name' where id=$id"))->error;
@@ -293,7 +293,7 @@ if($lamination2_individual_brand_name !== null) {
     }
 }
 
-// Автосохранение пользовательской стоимости плёнки
+// Автосохранение пользовательской стоимости плёнки ЛАМИНАЦИЯ 2
 $lamination2_individual_price = filter_input(INPUT_GET, 'lamination2_individual_price');
 if($lamination2_individual_price !== null) {
     $error_message = (new Executer("update request_calc set lamination2_individual_price='$lamination2_individual_price' where id=$id"))->error;
@@ -302,7 +302,7 @@ if($lamination2_individual_price !== null) {
     }
 }
 
-// Автосохранение пользовательской толщины плёнки
+// Автосохранение пользовательской толщины плёнки ЛАМИНАЦИЯ 2
 $lamination2_individual_thickness = filter_input(INPUT_GET, 'lamination2_individual_thickness');
 if($lamination2_individual_thickness !== null) {
     $error_message = (new Executer("update request_calc set lamination2_individual_thickness='$lamination2_individual_thickness' where id=$id"))->error;
@@ -311,10 +311,82 @@ if($lamination2_individual_thickness !== null) {
     }
 }
 
-// Автосохранение пользовательского удельного веса плёнки
+// Автосохранение пользовательского удельного веса плёнки ЛАМИНАЦИЯ 2
 $lamination2_individual_density = filter_input(INPUT_GET, 'lamination2_individual_density');
 if($lamination2_individual_density !== null) {
     $error_message = (new Executer("update request_calc set lamination2_individual_density='$lamination2_individual_density' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение ширины ручья
+$stream_width = filter_input(INPUT_GET, 'stream_width');
+if($stream_width !== null) {
+    $error_message = (new Executer("update request_calc set stream_width=$stream_width where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение количества ручьёв
+$streams_number = filter_input(INPUT_GET, 'streams_number');
+if($streams_number !== null) {
+    $error_message = (new Executer("update request_calc set streams_number=$streams_number where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение количества этикеток на валу
+$number_on_raport = filter_input(INPUT_GET, 'number_on_raport');
+if($number_on_raport !== null) {
+    $error_message = (new Executer("update request_calc set number_on_raport=$number_on_raport where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение рапорта
+$raport = filter_input(INPUT_GET, 'raport');
+if($raport !== null) {
+    $error_message = (new Executer("update request_calc set raport=$raport where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение длины этикетки вдоль рапорта
+$label_length = filter_input(INPUT_GET, 'label_length');
+if($label_length !== null) {
+    $error_message = (new Executer("update request_calc set label_length=$label_length where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение ширины вала ламинации
+$lamination_roller_width = filter_input(INPUT_GET, 'lamination_roller_width');
+if($lamination_roller_width !== null) {
+    $error_message = (new Executer("update request_calc set lamination_roller_width='$lamination_roller_width' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение ширины лыж
+$ski_width = filter_input(INPUT_GET, 'ski_width');
+if($ski_width !== null) {
+    $error_message = (new Executer("update request_calc set ski_width='$ski_width' where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+// Автосохранение флажка "Печать без лыж"
+$no_ski = filter_input(INPUT_GET, 'no_ski');
+if($no_ski !== null) {
+    $error_message = (new Executer("update request_calc set no_ski=$no_ski where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
