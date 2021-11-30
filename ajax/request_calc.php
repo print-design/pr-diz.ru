@@ -402,7 +402,52 @@ if($ink_number !== null) {
 }
 
 for($i=1; $i<=8; $i++) {
-    // Автосохранение
+    // Автосохранение цвета
+    $ink_var = "ink_$i";
+    $$ink_var = filter_input(INPUT_GET, $ink_var);
+    if($$ink_var !== null) {
+        $error_message = (new Executer("update request_calc set $ink_var='".$$ink_var."' where id=$id"))->error;
+        if(empty($error_message)) {
+            echo 'OK';
+        }
+    }
+    
+    // Автосохранение пантона
+    $color_var = "color_$i";
+    $$color_var = filter_input(INPUT_GET, $color_var);
+    if($$color_var !== null) {
+        $error_message = (new Executer("update request_calc set $color_var=".$$color_var." where id=$id"))->error;
+        if(empty($error_message)) {
+            echo 'OK';
+        }
+    }
+    
+    // Автосохранение CMYK
+    $cmyk_var = "cmyk_$i";
+    $$cmyk_var = filter_input(INPUT_GET, $cmyk_var);
+    if($$cmyk_var !== null) {
+        $error_message = (new Executer("update request_calc set $cmyk_var='".$$cmyk_var."' where id=$id"))->error;
+        if(empty($error_message)) {
+            echo 'OK';
+        }
+    }
+    
+    // Автосохранение процента
+    $percent_var = "percent_$i";
+    $$percent_var = filter_input(INPUT_GET, $percent_var);
+    if($$percent_var !== null) {
+        $error_message = (new Executer("update request_calc set $percent_var=".$$percent_var." where id=$id"))->error;
+        if(empty($error_message)) {
+            echo 'OK';
+        }
+    }
+    
+    // Автосохранение форм
+    $cliche_var = "cliche_$i";
+    $$cliche_var = filter_input(INPUT_GET, $cliche_var);
+    if($$cliche_var !== null) {
+        $error_message = (new Executer("update request_calc set $cliche_var='".$$cliche_var."' where id=$id"))->error;
+    }
 }
 
 // Вывод сообщения об ошибке
