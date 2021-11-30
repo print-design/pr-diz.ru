@@ -6,15 +6,6 @@ if(!IsInRole(array('technologist', 'dev', 'manager', 'administrator'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-$id = filter_input(INPUT_GET, 'id');
-
-if(empty($id)) {
-    $sql = "insert into request_calc (status_id, finished) values(1, 0)";
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
-    $id = $executer->insert_id;
-}
-
 // Машины
 const ZBS = "zbs";
 const COMIFLEX = "comiflex";
@@ -80,6 +71,7 @@ for($i=1; $i<=8; $i++) {
 // Обработка нажатия кнопки "Сохранить расчёт"
 if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     $id = filter_input(INPUT_POST, 'id');
+    $mode = filter_input(INPUT_POST, 'mode');
     
     // Если тип работы "Пленка без печати", то обязательно требуем добавить хотя бы одну ламинацию
     if(filter_input(INPUT_POST, 'work_type_id') == 1 && empty(filter_input(INPUT_POST, 'lamination1_brand_name'))) {
@@ -423,8 +415,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
        
         // Сохранение в базу
         if(empty($error_message)) {
-            // Если mode = recalc или пустой id, то создаём новый объект
-            if(filter_input(INPUT_GET, 'mode') == 'recalc') {
+            // Если mode = recalc, то создаём новый объект
+            if($mode == 'recalc') {
                 $sql = "insert into request_calc (customer_id, name, work_type_id, unit, machine_type, raport_resize, "
                         . "brand_name, thickness, individual_brand_name, individual_price, individual_thickness, individual_density, customers_material, "
                         . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
@@ -490,8 +482,16 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
 
 // Получение объекта
 $id = filter_input(INPUT_POST, 'id');
+
 if(empty($id)) {
     $id = filter_input(INPUT_GET, 'id');
+}
+
+if(empty($id)) {
+    $sql = "insert into request_calc (status_id, finished) values(1, 0)";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    $id = $executer->insert_id;
 }
 
 if(!empty($id)) {
@@ -505,7 +505,7 @@ if(!empty($id)) {
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
             . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
             . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
-            . "cliche_1, cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8 "
+            . "cliche_1, cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8, finished "
             . "from request_calc where id=$id";
     $row = (new Fetcher($sql))->Fetch();
 }
@@ -788,6 +788,8 @@ for ($i=1; $i<=8; $i++) {
         else $$cliche_var = null;
     }
 }
+
+$finished = $row['finished'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -832,7 +834,8 @@ for ($i=1; $i<=8; $i++) {
                 <!-- Левая половина -->
                 <div class="col-5" id="left_side">
                     <form method="post">
-                        <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                        <input type="hidden" id="id" name="id" value="<?=$id ?>" />
+                        <input type="hidden" id="mode" name="mode" value="<?= filter_input(INPUT_GET, 'mode') ?>" />
                         <input type="hidden" id="scroll" name="scroll" />
                         <?php if(null === filter_input(INPUT_GET, 'id') || filter_input(INPUT_GET, 'mode') == 'recalc'): ?>
                         <h1>Новый расчет</h1>
@@ -1883,7 +1886,7 @@ for ($i=1; $i<=8; $i++) {
                 }
                 
                 // Автосохранение заказчика
-                <?php if(filter_input(INPUT_GET, 'mode') != 'recalc'): ?>
+                <?php if(!$finished): ?>
                     $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&customer_id=" + $(this).val() })
                             .done(function(data) {
                                 if(data != 'OK') {
@@ -1897,7 +1900,7 @@ for ($i=1; $i<=8; $i++) {
             });
             
             // Автосохранение названия заказа
-            <?php if(filter_input(INPUT_GET, 'mode') != 'recalc'): ?>
+            <?php if(!$finished): ?>
             $('#name').keyup(function() {
                 $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&name=" + $(this).val() })
                         .done(function(data) {
@@ -1927,7 +1930,7 @@ for ($i=1; $i<=8; $i++) {
                 SetFieldsVisibility($(this).val());
                 
                 // Автосохранение типа работы
-                <?php if(filter_input(INPUT_GET, 'mode') != 'recalc'): ?>
+                <?php if(!$finished): ?>
                     $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&work_type_id=" + $(this).val() })
                         .done(function(data) {
                             if(data != 'OK') {
@@ -1941,7 +1944,7 @@ for ($i=1; $i<=8; $i++) {
             });
             
             // Автосохранение объёма заказа
-            <?php if(filter_input(INPUT_GET, 'mode') != 'recalc'): ?>
+            <?php if(!$finished): ?>
             $('#quantity').keyup(function() {
                 $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&quantity=" + $(this).val() })
                         .done(function(data) {
@@ -1973,7 +1976,7 @@ for ($i=1; $i<=8; $i++) {
                 }
                 
                 // Автосохранение единицы объёма
-                <?php if(filter_input(INPUT_GET, 'mode') != 'recalc'): ?>
+                <?php if(!$finished): ?>
                     $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&unit=" + $(this).val() })
                         .done(function(data) {
                             if(data != 'OK') {
@@ -2011,7 +2014,7 @@ for ($i=1; $i<=8; $i++) {
                 }
                 
                 // Автосохранение типа машины
-                <?php if(filter_input(INPUT_GET, 'mode') != 'recalc'): ?>
+                <?php if(!$finished): ?>
                     $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&machine_type=" + $(this).val() })
                         .done(function(data) {
                             if(data != 'OK') {
@@ -2025,7 +2028,7 @@ for ($i=1; $i<=8; $i++) {
             });
             
             // Автосохранение расширения/сжатия
-            <?php if(filter_input(INPUT_GET, 'mode') != 'recalc'): ?>
+            <?php if(!$finished): ?>
             $('#raport_resize').click(function() {
                 var result = $(this).is(':checked') ? '1' : '0';
                 $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&raport_resize=" + result })
@@ -2058,7 +2061,7 @@ for ($i=1; $i<=8; $i++) {
                 }
                 
                 // Автосохранение марки плёнки.
-                <?php if(filter_input(INPUT_GET, 'mode') != 'recalc'): ?>
+                <?php if(!$finished): ?>
                     $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&brand_name=" + $(this).val() })
                         .done(function(data) {
                             if(data != 'OK') {
@@ -2072,7 +2075,7 @@ for ($i=1; $i<=8; $i++) {
             });
             
             // Автосохранение толщины
-            <?php if(filter_input(INPUT_GET, 'mode') != 'recalc'): ?>
+            <?php if(!$finished): ?>
             $('#thickness').change(function() {
                 $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&thickness=" + $(this).val() })
                         .done(function(data) {
@@ -2087,7 +2090,7 @@ for ($i=1; $i<=8; $i++) {
             <?php endif; ?>
             
             // Автосохранение флажка "Сырьё заказчика"
-            <?php if(filter_input(INPUT_GET, 'mode') != 'recalc'): ?>
+            <?php if(!$finished): ?>
             $('#customers_material').click(function() {
                 var result = $(this).is(':checked') ? '1' : '0';
                 $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&customers_material=" + result })
