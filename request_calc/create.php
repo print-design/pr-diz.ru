@@ -68,7 +68,42 @@ for($i=1; $i<=8; $i++) {
     $$percent_valid_var = '';
 }
 
-// Обработка нажатия кнопки "Сохранить расчёт"
+// Создание заказчика
+if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
+    if(!empty(filter_input(INPUT_POST, 'customer_name'))) {
+        $id = filter_input(INPUT_POST, 'id');
+        $customer_name = addslashes(filter_input(INPUT_POST, 'customer_name'));
+        $customer_person = addslashes(filter_input(INPUT_POST, 'customer_person'));
+        $customer_phone = filter_input(INPUT_POST, 'customer_phone');
+        $customer_extension = filter_input(INPUT_POST, 'customer_extension');
+        $customer_email = filter_input(INPUT_POST, 'customer_email');
+        $customer_manager_id = GetUserId();
+        
+        $customer_id = null;
+        
+        // Если такой заказчик уже есть, просто получаем его ID
+        $sql = "select id from customer where name = '$customer_name' and manager_id = $customer_manager_id limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $customer_id = $row[0];
+        }
+        
+        // Если такого заказчика нет, создаём его
+        if(empty($customer_id)) {
+            $sql = "insert into customer (name, person, phone, extension, email, manager_id) values ('$customer_name', '$customer_person', '$customer_phone', '$customer_extension', '$customer_email', $customer_manager_id)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+            $customer_id = $executer->insert_id;
+        }
+        
+        // Прикрепляем заказчика к расчёту
+        $sql = "update request_calc set customer_id = $customer_id where id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+}
+
+// Сохранение расчёта
 if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $mode = filter_input(INPUT_POST, 'mode');
@@ -818,6 +853,101 @@ $finished = $row['finished'];
         <?php
         include '../include/header_zakaz.php';
         ?>
+        <!-- Форма создания заказчика -->
+        <div id="new_customer" class="modal fade show">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post">
+                        <input type="hidden" name="id" value="<?=$id ?>" />
+                        <div class="modal-header">
+                            <i class="fas fa-user"></i>&nbsp;&nbsp;Новый заказчик
+                            <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="text-danger d-none" id="customer_exists" style="font-size: x-large;">Такой заказчик есть</div>
+                            <div class="form-group">
+                                <input type="text" 
+                                       id="customer_name" 
+                                       name="customer_name" 
+                                       class="form-control" 
+                                       placeholder="Название компании" 
+                                       required="required" 
+                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onmouseup="javascript: $(this).attr('id', 'customer_name'); $(this).attr('name', 'customer_name'); $(this).attr('placeholder', 'Название компании');" 
+                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                       onkeyup="javascript: $(this).attr('id', 'customer_name'); $(this).attr('name', 'customer_name'); $(this).attr('placeholder', 'Название компании');" 
+                                       onfocusout="javascript: $(this).attr('id', 'customer_name'); $(this).attr('name', 'customer_name'); $(this).attr('placeholder', 'Название компании');" />
+                                <div class="invalid-feedback">Название компании обязательно</div>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" 
+                                       id="customer_person" 
+                                       name="customer_person" 
+                                       class="form-control" 
+                                       placeholder="Имя представителя" 
+                                       required="required" 
+                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onmouseup="javascript: $(this).attr('id', 'customer_person'); $(this).attr('name', 'customer_person'); $(this).attr('placeholder', 'Имя представителя');" 
+                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                       onkeyup="javascript: $(this).attr('id', 'customer_person'); $(this).attr('name', 'customer_person'); $(this).attr('placeholder', 'Имя представителя');"
+                                       onfocusout="javascript: $(this).attr('id', 'customer_person'); $(this).attr('name', 'customer_person'); $(this).attr('placeholder', 'Имя представителя');" />
+                                <div class="invalid-feedback">Имя представителя обязательно</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="form-group">
+                                        <input type="tel" 
+                                               id="customer_phone" 
+                                               name="customer_phone" 
+                                               class="form-control" 
+                                               placeholder="Номер телефона" 
+                                               required="required" 
+                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onmouseup="javascript: $(this).attr('id', 'customer_phone'); $(this).attr('name', 'customer_phone'); $(this).attr('placeholder', 'Номер телефона');" 
+                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                               onkeyup="javascript: $(this).attr('id', 'customer_phone'); $(this).attr('name', 'customer_phone'); $(this).attr('placeholder', 'Номер телефона');" 
+                                               onfocusout="javascript: $(this).attr('id', 'customer_phone'); $(this).attr('name', 'customer_phone'); $(this).attr('placeholder', 'Номер телефона');" />
+                                        <div class="invalid-feedback">Номер телефона обязательно</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <input type="tel" 
+                                               id="customer_extension" 
+                                               name="customer_extension" 
+                                               class="form-control" 
+                                               placeholder="Добавочный" 
+                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onmouseup="javascript: $(this).attr('id', 'customer_extension'); $(this).attr('name', 'customer_extension'); $(this).attr('placeholder', 'Добавочный');" 
+                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                               onkeyup="javascript: $(this).attr('id', 'customer_extension'); $(this).attr('name', 'customer_extension'); $(this).attr('placeholder', 'Добавочный');" 
+                                               onfocusout="javascript: $(this).attr('id', 'customer_extension'); $(this).attr('name', 'customer_extension'); $(this).attr('placeholder', 'Добавочный');" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" 
+                                       id="customer_email" 
+                                       name="customer_email" 
+                                       class="form-control" 
+                                       placeholder="E-Mail" 
+                                       required="required" 
+                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onmouseup="javascript: $(this).attr('id', 'customer_email'); $(this).attr('name', 'customer_email'); $(this).attr('placeholder', 'E-Mail');" 
+                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                       onkeyup="javascript: $(this).attr('id', 'customer_email'); $(this).attr('name', 'customer_email'); $(this).attr('placeholder', 'E-Mail');" 
+                                       onfocusout="javascript: $(this).attr('id', 'customer_email'); $(this).attr('name', 'customer_email'); $(this).attr('placeholder', 'E-Mail');" />
+                                <div class="invalid-feedback">E-Mail обязательно</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-dark mt-3" data-dismiss="modal">Отмена</button>
+                            <button type="submit" id="create_customer_submit" name="create_customer_submit" class="btn btn-dark mt-3">Создать</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
