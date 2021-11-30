@@ -488,7 +488,8 @@ if(empty($id)) {
 }
 
 if(empty($id)) {
-    $sql = "insert into request_calc (ski_width, status_id, finished) values(20, 1, 0)";
+    $manager_id = GetUserId();
+    $sql = "insert into request_calc (ski_width, manager_id, status_id, finished) values(20, $manager_id, 1, 0)";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     $id = $executer->insert_id;
