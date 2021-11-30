@@ -2766,6 +2766,19 @@ $finished = $row['finished'];
                         $('#ink_' + i).attr('required', 'required');
                     }
                 }
+                
+                // Автосохранение
+                <?php if(!$finished): ?>
+                    $.ajax({ url: "../ajax/request_calc.php?id=" + <?=$id ?> + "&ink_number=" + $(this).val() })
+                        .done(function(data) {
+                            if(data != 'OK') {
+                                alert('Ошибка при автосохранении количества красок');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при автосохранении количества красок');
+                        });
+                <?php endif; ?>
             });
             
             // Обработка выбора краски

@@ -392,6 +392,19 @@ if($no_ski !== null) {
     }
 }
 
+// Автосохранение количества красок
+$ink_number = filter_input(INPUT_GET, 'ink_number');
+if($ink_number !== null) {
+    $error_message = (new Executer("update request_calc set ink_number=$ink_number where id=$id"))->error;
+    if(empty($error_message)) {
+        echo 'OK';
+    }
+}
+
+for($i=1; $i<=8; $i++) {
+    // Автосохранение
+}
+
 // Вывод сообщения об ошибке
 if(!empty($error_message)) {
     echo $error_message;
