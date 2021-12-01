@@ -1687,7 +1687,7 @@ $num_for_customer = $row['num_for_customer'];
                         <tr><th>Количество этикеток на валу (1 ручей)</th><td class="param-value"><?=$number_on_raport ?></td></tr>
                             <?php
                             endif;
-                            if(!empty($label_length)):
+                            if(!empty($label_length) && $label_length != 0):
                             ?>
                         <tr><th>Длина этикетки вдоль рапорта вала</th><td class="param-value"><?= rtrim(rtrim(number_format($label_length, 4, ",", ""), "0"), ",") ?> мм</td></tr>
                             <?php

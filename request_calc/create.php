@@ -345,26 +345,39 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     
     // Длина этикетки вдоль рапорта, умноженная на количество этикеток на валу (1 ручей)
     // Должна соответствовать рапорту
-    if(!empty($raport) && !empty($number_on_raport) && !empty($label_length)) {
-        $label_length_min = $label_length;
-        $label_length_max = $label_length;
-        
-        // Если имеется расширение / сжатие рапорта, то сумма длин этикеток
-        // равна длине рапорта плюс/минус 10 мм
-        if($raport_resize) {
-            $label_length_min = $label_length - 10;
-            $label_length_max = $label_length + 10;
+    if(!empty($raport)) {
+        // Количество этикеток и длина этикетки должны быть установлены
+        if(!is_numeric($label_length)) {
+            $error_message = "Не заданы длина этикетки";
+            $form_valid = false;
         }
         
-        if(round($raport / $number_on_raport, 4) < $label_length_min ||
-                round($raport / $number_on_raport, 4) > $label_length_max) {
-            $raport_valid = ISINVALID;
-            $label_length_valid = ISINVALID;
-            $number_on_raport_valid = ISINVALID;
-            $raport_message = "Сумма длин не соответствует рапорту";
-            $label_length_message = $raport_message;
-            $number_on_raport_message = $raport_message;
+        if(!is_numeric($number_on_raport)) {
+            $error_message = "Не задано количество этикеток на рапорте";
             $form_valid = false;
+        }
+        
+        if(empty($error_message)) {
+            // Если имеется расширение / сжатие рапорта, то сумма длин этикеток
+            // равна длине рапорта плюс/минус 10 мм
+            $label_length_min = $label_length;
+            $label_length_max = $label_length;
+        
+            if($raport_resize) {
+                $label_length_min = $label_length - 10;
+                $label_length_max = $label_length + 10;
+            }
+        
+            if(round($raport / $number_on_raport, 4) < $label_length_min ||
+                    round($raport / $number_on_raport, 4) > $label_length_max) {
+                $raport_valid = ISINVALID;
+                $label_length_valid = ISINVALID;
+                $number_on_raport_valid = ISINVALID;
+                $raport_message = "Сумма длин не соответствует рапорту";
+                $label_length_message = $raport_message;
+                $number_on_raport_message = $raport_message;
+                $form_valid = false;
+            }
         }
     }
     
