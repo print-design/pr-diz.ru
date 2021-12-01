@@ -80,7 +80,7 @@ function OrderLink($param) {
                     }
 
                     // Общее количество расчётов для установления количества страниц в постраничном выводе
-                    $sql = "select count(c.id) from request_calc c inner join customer cus on c.customer_id=cus.id$where";
+                    $sql = "select count(c.id) from request_calc c left join customer cus on c.customer_id=cus.id$where";
                     $fetcher = new Fetcher($sql);
                     
                     if($row = $fetcher->Fetch()) {
