@@ -26,6 +26,10 @@ if($extracharge !== null) {
 // Автосохранение заказчика
 $customer_id = filter_input(INPUT_GET, 'customer_id');
 if($customer_id !== null) {
+    if(empty($customer_id)) {
+        $customer_id = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set customer_id=$customer_id where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -45,7 +49,10 @@ if($name !== null) {
 // Автосохранение типа работы
 $work_type_id = filter_input(INPUT_GET, 'work_type_id');
 if($work_type_id !== null) {
-    $work_type_id = addslashes($work_type_id);
+    if(empty($work_type_id)) {
+        $work_type_id = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set work_type_id=$work_type_id where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -56,6 +63,10 @@ if($work_type_id !== null) {
 $quantity = filter_input(INPUT_GET, 'quantity');
 if($quantity !== null) {
     $quantity = preg_replace("/\D/", "", $quantity);
+    if(empty($quantity)) {
+        $quantity = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set quantity=$quantity where id=$id"))->error;
     
     $sql = "select unit from request_calc where id=$id";
@@ -121,6 +132,10 @@ if($brand_name !== null) {
 // Автосохранение толщины плёнки
 $thickness = filter_input(INPUT_GET, 'thickness');
 if($thickness !== null) {
+    if(empty($thickness)) {
+        $thickness = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set thickness='$thickness' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -139,6 +154,7 @@ if($customers_material !== null) {
 // Автосохранение пользовательской марки плёнки
 $individual_brand_name = filter_input(INPUT_GET, 'individual_brand_name');
 if($individual_brand_name !== null) {
+    $individual_brand_name = addslashes($individual_brand_name);
     $error_message = (new Executer("update request_calc set individual_brand_name='$individual_brand_name' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -148,6 +164,10 @@ if($individual_brand_name !== null) {
 // Автосохранение пользовательской стоимости плёнки
 $individual_price = filter_input(INPUT_GET, 'individual_price');
 if($individual_price !== null) {
+    if(empty($individual_price)) {
+        $individual_price = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set individual_price='$individual_price' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -157,6 +177,10 @@ if($individual_price !== null) {
 // Автосохранение пользовательской толщины плёнки
 $individual_thickness = filter_input(INPUT_GET, 'individual_thickness');
 if($individual_thickness !== null) {
+    if(empty($individual_thickness)) {
+        $individual_thickness = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set individual_thickness='$individual_thickness' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -166,6 +190,10 @@ if($individual_thickness !== null) {
 // Автосохранение пользовательского удельного веса плёнки
 $individual_density = filter_input(INPUT_GET, 'individual_density');
 if($individual_density !== null) {
+    if(empty($individual_density)) {
+        $individual_density = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set individual_density='$individual_density' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -195,6 +223,10 @@ if($lamination1_brand_name !== null) {
 // Автосохранение толщины плёнки ЛАМИНАЦИЯ 1
 $lamination1_thickness = filter_input(INPUT_GET, 'lamination1_thickness');
 if($lamination1_thickness !== null) {
+    if(empty($lamination1_thickness)) {
+        $lamination1_thickness = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set lamination1_thickness='$lamination1_thickness' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -213,6 +245,7 @@ if($lamination1_customers_material !== null) {
 // Автосохранение пользовательской марки плёнки ЛАМИНАЦИЯ 1
 $lamination1_individual_brand_name = filter_input(INPUT_GET, 'lamination1_individual_brand_name');
 if($lamination1_individual_brand_name !== null) {
+    $lamination1_brand_name = addslashes($lamination1_individual_brand_name);
     $error_message = (new Executer("update request_calc set lamination1_individual_brand_name='$lamination1_individual_brand_name' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -222,6 +255,10 @@ if($lamination1_individual_brand_name !== null) {
 // Автосохранение пользовательской стоимости плёнки ЛАМИНАЦИЯ 1
 $lamination1_individual_price = filter_input(INPUT_GET, 'lamination1_individual_price');
 if($lamination1_individual_price !== null) {
+    if(empty($lamination1_individual_price)) {
+        $lamination1_individual_price = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set lamination1_individual_price='$lamination1_individual_price' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -231,6 +268,10 @@ if($lamination1_individual_price !== null) {
 // Автосохранение пользовательской толщины плёнки ЛАМИНАЦИЯ 1
 $lamination1_individual_thickness = filter_input(INPUT_GET, 'lamination1_individual_thickness');
 if($lamination1_individual_thickness !== null) {
+    if(empty($lamination1_individual_thickness)) {
+        $lamination1_individual_thickness = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set lamination1_individual_thickness='$lamination1_individual_thickness' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -240,6 +281,10 @@ if($lamination1_individual_thickness !== null) {
 // Автосохранение пользовательского удельного веса плёнки ЛАМИНАЦИЯ 1
 $lamination1_individual_density = filter_input(INPUT_GET, 'lamination1_individual_density');
 if($lamination1_individual_density !== null) {
+    if(empty($lamination1_individual_density)) {
+        $lamination1_individual_density = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set lamination1_individual_density='$lamination1_individual_density' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -269,6 +314,10 @@ if($lamination2_brand_name !== null) {
 // Автосохранение толщины плёнки ЛАМИНАЦИЯ 2
 $lamination2_thickness = filter_input(INPUT_GET, 'lamination2_thickness');
 if($lamination2_thickness !== null) {
+    if(empty($lamination2_thickness)) {
+        $lamination2_thickness = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set lamination2_thickness='$lamination2_thickness' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -287,6 +336,7 @@ if($lamination2_customers_material !== null) {
 // Автосохранение пользовательской марки плёнки ЛАМИНАЦИЯ 2
 $lamination2_individual_brand_name = filter_input(INPUT_GET, 'lamination2_individual_brand_name');
 if($lamination2_individual_brand_name !== null) {
+    $lamination2_individual_brand_name = addslashes($lamination2_brand_name);
     $error_message = (new Executer("update request_calc set lamination2_individual_brand_name='$lamination2_individual_brand_name' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -296,6 +346,10 @@ if($lamination2_individual_brand_name !== null) {
 // Автосохранение пользовательской стоимости плёнки ЛАМИНАЦИЯ 2
 $lamination2_individual_price = filter_input(INPUT_GET, 'lamination2_individual_price');
 if($lamination2_individual_price !== null) {
+    if(empty($lamination2_individual_price)) {
+        $lamination2_individual_price = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set lamination2_individual_price='$lamination2_individual_price' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -305,6 +359,10 @@ if($lamination2_individual_price !== null) {
 // Автосохранение пользовательской толщины плёнки ЛАМИНАЦИЯ 2
 $lamination2_individual_thickness = filter_input(INPUT_GET, 'lamination2_individual_thickness');
 if($lamination2_individual_thickness !== null) {
+    if(empty($lamination2_individual_thickness)) {
+        $lamination2_individual_thickness = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set lamination2_individual_thickness='$lamination2_individual_thickness' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -314,6 +372,10 @@ if($lamination2_individual_thickness !== null) {
 // Автосохранение пользовательского удельного веса плёнки ЛАМИНАЦИЯ 2
 $lamination2_individual_density = filter_input(INPUT_GET, 'lamination2_individual_density');
 if($lamination2_individual_density !== null) {
+    if(empty($lamination2_individual_density)) {
+        $lamination2_individual_density = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set lamination2_individual_density='$lamination2_individual_density' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -323,6 +385,10 @@ if($lamination2_individual_density !== null) {
 // Автосохранение ширины ручья
 $stream_width = filter_input(INPUT_GET, 'stream_width');
 if($stream_width !== null) {
+    if(empty($stream_width)) {
+        $stream_width = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set stream_width=$stream_width where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -332,6 +398,10 @@ if($stream_width !== null) {
 // Автосохранение количества ручьёв
 $streams_number = filter_input(INPUT_GET, 'streams_number');
 if($streams_number !== null) {
+    if(empty($streams_number)) {
+        $streams_number = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set streams_number=$streams_number where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -341,6 +411,10 @@ if($streams_number !== null) {
 // Автосохранение количества этикеток на валу
 $number_on_raport = filter_input(INPUT_GET, 'number_on_raport');
 if($number_on_raport !== null) {
+    if(empty($number_on_raport)) {
+        $number_on_raport = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set number_on_raport=$number_on_raport where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -350,6 +424,10 @@ if($number_on_raport !== null) {
 // Автосохранение рапорта
 $raport = filter_input(INPUT_GET, 'raport');
 if($raport !== null) {
+    if(empty($raport)) {
+        $raport = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set raport=$raport where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -359,6 +437,10 @@ if($raport !== null) {
 // Автосохранение длины этикетки вдоль рапорта
 $label_length = filter_input(INPUT_GET, 'label_length');
 if($label_length !== null) {
+    if(empty($label_length)) {
+        $label_length = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set label_length=$label_length where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -368,6 +450,10 @@ if($label_length !== null) {
 // Автосохранение ширины вала ламинации
 $lamination_roller_width = filter_input(INPUT_GET, 'lamination_roller_width');
 if($lamination_roller_width !== null) {
+    if(empty($lamination_roller_width)) {
+        $lamination_roller_width = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set lamination_roller_width='$lamination_roller_width' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -377,6 +463,10 @@ if($lamination_roller_width !== null) {
 // Автосохранение ширины лыж
 $ski_width = filter_input(INPUT_GET, 'ski_width');
 if($ski_width !== null) {
+    if(empty($ski_width)) {
+        $ski_width = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set ski_width='$ski_width' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -395,6 +485,10 @@ if($no_ski !== null) {
 // Автосохранение количества красок
 $ink_number = filter_input(INPUT_GET, 'ink_number');
 if($ink_number !== null) {
+    if(empty($ink_number)) {
+        $ink_number = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set ink_number=$ink_number where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -415,6 +509,10 @@ if($ink !== null && $data_id !== null) {
 $color = filter_input(INPUT_GET, 'color');
 $data_id = filter_input(INPUT_GET, 'data_id');
 if($color !== null && $data_id !== null) {
+    if(empty($color)) {
+        $color = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set color_$data_id=$color where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
@@ -435,6 +533,10 @@ if($cmyk !== null && $data_id !== null) {
 $percent = filter_input(INPUT_GET, 'percent');
 $data_id = filter_input(INPUT_GET, 'data_id');
 if($percent !== null && $data_id !== null) {
+    if(empty($percent)) {
+        $percent = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set percent_$data_id=$percent where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
