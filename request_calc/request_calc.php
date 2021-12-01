@@ -1097,7 +1097,7 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
         $price_lam1_glue = null;
             
-        if(stripos($brand_name, 'pet') === 0 || stripos($lamination1_brand_name, 'pet') === 0) {
+        if(stripos($brand_name, 'pet') === 0 || stripos($lamination1_brand_name, 'pet') === 0 || stripos($individual_brand_name, 'pet') === 0 || stripos($lamination1_individual_brand_name, 'pet') === 0) {
             $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense_pet * (($pure_length_lam ?? 0) * $lamination_roller_width / 1000 + $laminator_tuning_length);
         }
         else {
@@ -1146,8 +1146,8 @@ if(null !== filter_input(INPUT_POST, 'calculate-submit')) {
         // Если марка плёнки начинается на pet
         // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
         $price_lam2_glue = null;
-            
-        if(stripos($lamination2_brand_name, 'pet') === 0) {
+        
+        if(stripos($lamination2_brand_name, 'pet') === 0 || stripos($lamination2_individual_brand_name, 'pet') === 0) {
             $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense_pet * (($pure_length_lam ?? 0) * $lamination_roller_width / 1000 + $laminator_tuning_length);
         }
         else {
