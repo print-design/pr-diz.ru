@@ -313,7 +313,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     $brand_type_final = 0;
     
     if(!empty($brand_name)) {
-        if(stripos($brand_name, 'pet') === 0) {
+        if(stripos($brand_name, 'pet') === 0 || stripos($individual_brand_name, 'pet') === 0) {
             $brand_name_final = "ПЭТ";
             $brand_type_final = 5;
         }
@@ -328,7 +328,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     $lamination1_brand_type_final = 0;
     
     if(!empty($lamination1_brand_name)) {
-        if(stripos($lamination1_brand_name, 'pet') === 0) {
+        if(stripos($lamination1_brand_name, 'pet') === 0 || stripos($lamination1_individual_brand_name, 'pet') === 0) {
             $lamination1_brand_name_final = "ПЭТ";
             $lamination1_brand_type_final = 5;
         }
@@ -343,7 +343,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     $lamination2_brand_type_final = 0;
     
     if(!empty($lamination2_brand_name)) {
-        if(stripos($lamination2_brand_name, 'pet') === 0) {
+        if(stripos($lamination2_brand_name, 'pet') === 0 || stripos($lamination2_individual_brand_name, 'pet') === 0) {
             $lamination2_brand_name_final = "ПЭТ";
             $lamination2_brand_type_final = 5;
         }
