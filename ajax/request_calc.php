@@ -10,6 +10,10 @@ $id = filter_input(INPUT_GET, 'id');
 // Автозаполнение наценки
 $extracharge = filter_input(INPUT_GET, 'extracharge');
 if($extracharge !== null) {
+    if(empty($extracharge)) {
+        $extracharge = "NULL";
+    }
+    
     $error_message = (new Executer("update request_calc set extracharge=$extracharge where id=$id"))->error;
     
     if(empty($error_message)) {
@@ -245,7 +249,7 @@ if($lamination1_customers_material !== null) {
 // Автосохранение пользовательской марки плёнки ЛАМИНАЦИЯ 1
 $lamination1_individual_brand_name = filter_input(INPUT_GET, 'lamination1_individual_brand_name');
 if($lamination1_individual_brand_name !== null) {
-    $lamination1_brand_name = addslashes($lamination1_individual_brand_name);
+    $lamination1_individual_brand_name = addslashes($lamination1_individual_brand_name);
     $error_message = (new Executer("update request_calc set lamination1_individual_brand_name='$lamination1_individual_brand_name' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
