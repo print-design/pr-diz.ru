@@ -84,7 +84,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
                         // Ищем такой среди свободных роликов
                         $roll_id = mb_substr($source, 1);
             
-                        $sql = "select fb.name film_brand, r.thickness, r.width, r.length, rsh.status_id "
+                        $sql = "select fb.name film_brand, r.thickness, r.width, r.length "
                                 . "from roll r "
                                 . "inner join film_brand fb on r.film_brand_id = fb.id "
                                 . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
@@ -101,7 +101,6 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
                                 $cut_source['is_from_pallet'] = 0;
                                 $cut_source['roll_id'] = $roll_id;
                                 $cut_source['length'] = $row['length'];
-                                $cut_source['status_id'] = $row['status_id'];
                                 array_push($cut_sources, $cut_source);
                             }
                             else {
@@ -123,7 +122,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
                             $pallet_id = $substrings[0];
                             $ordinal = $substrings[1];
                 
-                            $sql = "select pr.id roll_id, fb.name film_brand, p.thickness, p.width, pr.length, prsh.status_id "
+                            $sql = "select pr.id roll_id, fb.name film_brand, p.thickness, p.width, pr.length "
                                     . "from pallet p "
                                     . "inner join pallet_roll pr on pr.pallet_id = p.id "
                                     . "inner join film_brand fb on p.film_brand_id = fb.id "
@@ -141,7 +140,6 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
                                     $cut_source['is_from_pallet'] = 1;
                                     $cut_source['roll_id'] = $row['roll_id'];
                                     $cut_source['length'] = $row['length'];
-                                    $cut_source['status_id'] = $row['status_id'];
                                     array_push($cut_sources, $cut_source);
                                 }
                                 else {
@@ -227,21 +225,6 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
                 }
             
                 array_push($existing_rolls, $source);
-            }
-        }
-    }
-    
-    // Если у исходных роликов были неправильные статусы, записываем это в таблицу error
-    if($form_valid) {
-        foreach ($cut_sources as $cut_source) {
-            if($cut_source['status_id'] != $free_status_id) {
-                $state_id = $cut_source['status_id'];
-                $roll_id = $cut_source['roll_id'];
-                $is_from_pallet = $cut_source['is_from_pallet'] == 1 ? "из паллета" : "НЕ из паллета";
-                $message = addslashes("Неправильный статус исходного ролика: статус $state_id, ID $roll_id, $is_from_pallet");
-                $sql = "insert into error (user_id, message) values ($user_id, '$message')";
-                $executer = new Executer($sql);
-                $error_message = $executer->error;
             }
         }
     }
