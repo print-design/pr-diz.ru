@@ -78,7 +78,7 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
             <div class="value mb-2">8 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">192 000 м</span></div>
         </div>
         <?php if(!empty($lamination1_brand_name)): ?>
-        <div class="col-4 pr-4" style="border-left: solid 2px black;">
+        <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
             <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></h3>
             <div>Закупочная стоимость</div>
             <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
@@ -93,7 +93,7 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
         <div class="col-4" style="width: 250px;"></div>
         <?php endif; ?>
         <?php if(!empty($lamination2_brand_name)): ?>
-        <div class="col-4 pr-4" style="border-left: solid 2px black;">
+        <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
             <h3>Ламинация 2&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></h3>
             <div>Закупочная стоимость</div>
             <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
@@ -117,10 +117,10 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
                 <button type="button" class="btn btn-light" onclick="javascript: ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать расходы</button>
             </div>
             <?php if(!empty($lamination1_brand_name)): ?>
-            <div class="col-4 pr-4" style="border-left: solid 2px black;"></div>
+            <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
             <?php endif; ?>
             <?php if(!empty($lamination2_brand_name)): ?>
-            <div class="col-4 pr-4" style="border-left: solid 2px black;"></div>
+            <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
             <?php endif; ?>
         </div>
     </div>
@@ -131,10 +131,10 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
                 <h2 class="mt-2">Расходы</h2>
             </div>
             <?php if(!empty($lamination1_brand_name)): ?>
-            <div class="col-4 pr-4" style="border-left: solid 2px black;"></div>
+            <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
             <?php endif; ?>
             <?php if(!empty($lamination2_brand_name)): ?>
-            <div class="col-4 pr-4" style="border-left: solid 2px black;"></div>
+            <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
             <?php endif; ?>
         </div>
         <div class="row text-nowrap">
@@ -165,7 +165,7 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
                 <?php endif; ?>
             </div>
             <?php if(!empty($lamination1_brand_name)): ?>
-            <div class="col-4 pr-4" style="border-left: solid 2px black;">
+            <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
                 <div class="value mb-2">1 280 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">4,5 кг</span></div>
                 <?php if($work_type_id == 2): ?>
@@ -195,7 +195,7 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
             <div class="col-4" style="width: 250px;"></div>
             <?php endif; ?>
             <?php if(!empty($lamination2_brand_name)): ?>
-            <div class="col-4 pr-4" style="border-left: solid 2px black;">
+            <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
                 <div class="value mb-2">1 280 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">4,5 кг</span></div>
                 <?php if($work_type_id == 2): ?>
