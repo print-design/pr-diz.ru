@@ -1,39 +1,10 @@
 <?php
 include '../include/topscripts.php';
+include './status_ids.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
-}
-
-// Смена статуса
-if(null !== filter_input(INPUT_POST, 'change_status_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $status_id = filter_input(INPUT_POST, 'status_id');
-    $extracharge = filter_input(INPUT_POST, 'extracharge');
-    if(empty($extracharge)) {
-        $sql = "update request_calc set status_id=$status_id where id=$id";
-    }
-    else {
-        $sql = "update request_calc set status_id=$status_id, extracharge=$extracharge where id=$id";
-    }
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
-    
-    
-    
-    if(empty($error_message)) {
-        // Составление технологической карты
-        if($status_id == 6) {
-            $sql = "insert into techmap set request_calc_id = $id";
-            $executer = new Executer($sql);
-            $error_message = $executer->error;
-        }
-        
-        if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/request_calc/request_calc.php'. BuildQuery('id', $id));
-        }
-    }
 }
 
 // Получение объекта
@@ -53,8 +24,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
         . "c.form_1, c.form_2, c.form_3, form_4, form_5, form_6, form_7, form_8, "
         . "c.status_id, c.extracharge, c.no_ski, "
-        . "(select count(id) from techmap where request_calc_id = $id) techmaps_count, "
-        . "cs.name status, cs.colour, cs.colour2, cs.image, "
+        . "(select id from techmap where request_calc_id = $id order by id desc limit 1) techmap_id, "
         . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
         . "wt.name work_type, "
         . "mt.name machine, mt.colorfulness, "
@@ -64,7 +34,6 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_weight "
         . "from request_calc c "
-        . "left join request_calc_status cs on c.status_id = cs.id "
         . "left join customer cu on c.customer_id = cu.id "
         . "left join work_type wt on c.work_type_id = wt.id "
         . "left join machine mt on c.machine_id = mt.id "
@@ -128,12 +97,6 @@ for($i=1; $i<=$paints_count; $i++) {
 $status_id = $row['status_id'];
 $extracharge = $row['extracharge'];
 $no_ski = $row['no_ski'];
-$techmaps_count = $row['techmaps_count'];
-
-$status = $row['status'];
-$colour = $row['colour'];
-$colour2 = $row['colour2'];
-$image = $row['image'];
 
 $customer = $row['customer'];
 $customer_phone = $row['customer_phone'];
@@ -146,7 +109,7 @@ $work_type = $row['work_type'];
 $machine = $row['machine'];
 $colorfulness = $row['colorfulness'];
 
-$techmaps_count = $row['techmaps_count'];
+$techmap_id = $row['techmap_id'];
 $num_for_customer = $row['num_for_customer'];
 ?>
 <!DOCTYPE html>
@@ -169,27 +132,6 @@ $num_for_customer = $row['num_for_customer'];
         include './right_panel.php';
         include '../include/header_zakaz.php';
         ?>
-        <div id="calculation_cancel" class="modal fade show">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form method="post">
-                        <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-                        <input type="hidden" id="change_status_submit" name="change_status_submit" />
-                        <div class="modal-header">
-                            <div style="font-size: x-large;">Отмена заказа</div>
-                            <button type="button" class="close calculation_cancel_dismiss" data-dismiss="modal"><i class="fas fa-times"></i></button>
-                        </div>
-                        <div class="modal-body">
-                            Вы уверены, что хотите отменить заказ?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-dark" style="width: 120px;" data-dismiss="modal">Нет</button>
-                            <button type="submit" class="btn btn-dark" style="width: 120px;" name="status_id" value="8">Да</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
         <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
@@ -202,9 +144,31 @@ $num_for_customer = $row['num_for_customer'];
                 <div class="col-5" id="left_side">
                     <h1 style="font-size: 32px; font-weight: 600;"><?= htmlentities($name) ?></h1>
                     <h2 style="font-size: 26px;">№<?=$customer_id."-".$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
-                    <div style="width: 100%; padding: 12px; margin-top: 40px; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; background-color: <?=$colour2 ?>; border: solid 2px <?=$colour ?>; color: <?=$colour ?>">
-                        <?=$image ?>&nbsp;&nbsp;&nbsp;<?=$status ?>
+                    <?php
+                    $real_status_id = null;
+                    
+                    if(!empty($techmap_id)):
+                        $real_status_id = TECHMAP;
+                    ?>
+                    <div style="width: 100%; padding: 12px; margin-top: 40p; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px green; color: green;">
+                        <i class="fas fa-file"></i>&nbsp;&nbsp;&nbsp;Составлена технологическая карта
                     </div>
+                    <?php
+                    else:
+                        $real_status_id = CALCULATION;
+                    ?>
+                    <div style="width: 100%; padding: 12px; margin-top: 40p; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px blue; color: blue;">
+                        <i class="fas fa-calculator"></i>&nbsp;&nbsp;&nbsp;Сделан расчёт
+                    </div>
+                    <?php
+                    endif;
+                    
+                    // Обновляем поле status_id (оно нужно для сортировки по статусу на странице списка)
+                    if(!empty($real_status_id) && $status_id != $real_status_id) {
+                        $sql = "update request_calc set status_id = $real_status_id where id = $id";
+                        $executer = new Executer($sql);
+                    }
+                    ?>
                     <table class="w-100 calculation-table">
                         <tr>
                             <th>Заказчик</th>
