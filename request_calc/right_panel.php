@@ -72,14 +72,14 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
         </div>
     </div>
     <div class="mt-3">
-        <h2>Материалы</h2>
+        <h2>Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></h2>
     </div>
     <div class="d-table w-100">
         <div class="d-table-row">
-            <div class="d-table-cell pb-2 pt-2" style="width: 33%;">
-                <h3>Основная пленка</h3>
+            <div class="d-table-cell mb-2 mt-2" style="width: 33%;">
+                <h3>Основная пленка&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></h3>
                 <div>Закупочная стоимость</div>
-                <div class="value mb-2">800 000 &#8381;</div>
+                <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
                 <div>Минимальная ширина</div>
                 <div class="value mb-2">800 000 мм</div>
                 <div>Масса без приладки</div>
@@ -87,30 +87,34 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
                 <div>Масса с приладкой</div>
                 <div class="value mb-2">8 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">192 000 м</span></div>
             </div>
-            <div class="d-table-cell pb-2 pt-2 pl-3" style="width: 33%;">
+            <div class="d-table-cell" style="width: 33%;">
                 <?php if(!empty($lamination1_brand_name)): ?>
-                <h3>Ламинация 1</h3>
-                <div>Закупочная стоимость</div>
-                <div class="value mb-2">800 000 &#8381;</div>
-                <div>Минимальная ширина</div>
-                <div class="value mb-2">800 000 мм</div>
-                <div>Масса без приладки</div>
-                <div class="value mb-2">7 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">172 000 м</span></div>
-                <div>Масса с приладкой</div>
-                <div class="value mb-2">8 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">192 000 м</span></div>
+                <div class=" mb-2 mt-2 pl-3" style=" border-left: solid 2px black;">
+                    <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></h3>
+                    <div>Закупочная стоимость</div>
+                    <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
+                    <div>Минимальная ширина</div>
+                    <div class="value mb-2">800 000 мм</div>
+                    <div>Масса без приладки</div>
+                    <div class="value mb-2">7 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">172 000 м</span></div>
+                    <div>Масса с приладкой</div>
+                    <div class="value mb-2">8 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">192 000 м</span></div>
+                </div>
                 <?php endif; ?>
             </div>
-            <div class="d-table-cell pb-2 pt-2 pl-3" style="width: 33%;">
+            <div class="d-table-cell" style="width: 33%;">
                 <?php if(!empty($lamination2_brand_name)): ?>
-                <h3>Ламинация 2</h3>
-                <div>Закупочная стоимость</div>
-                <div class="value mb-2">800 000 &#8381;</div>
-                <div>Минимальная ширина</div>
-                <div class="value mb-2">800 000 мм</div>
-                <div>Масса без приладки</div>
-                <div class="value mb-2">7 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">172 000 м</span></div>
-                <div>Масса с приладкой</div>
-                <div class="value mb-2">8 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">192 000 м</span></div>
+                <div class=" mb-2 mt-2 pl-3" style=" border-left: solid 2px black;">
+                    <h3>Ламинация 2&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></h3>
+                    <div>Закупочная стоимость</div>
+                    <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
+                    <div>Минимальная ширина</div>
+                    <div class="value mb-2">800 000 мм</div>
+                    <div>Масса без приладки</div>
+                    <div class="value mb-2">7 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">172 000 м</span></div>
+                    <div>Масса с приладкой</div>
+                    <div class="value mb-2">8 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">192 000 м</span></div>
+                </div>
                 <?php endif; ?>
             </div>
         </div>
