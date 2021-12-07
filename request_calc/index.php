@@ -1,5 +1,6 @@
 <?php
 include '../include/topscripts.php';
+include './status_ids.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'manager'))) {
@@ -63,8 +64,8 @@ function OrderLink($param) {
                     
                     $manager = filter_input(INPUT_GET, 'manager');
                     if(!empty($manager)) {
-                        if(empty($where)) $where = " where c.manager_id=$manager";
-                        else $where .= " and c.manager_id=$manager";
+                        if(empty($where)) $where = " where cus.manager_id=$manager";
+                        else $where .= " and cus.manager_id=$manager";
                     }
                     
                     $customer = filter_input(INPUT_GET, 'customer');
@@ -74,7 +75,7 @@ function OrderLink($param) {
                     }
 
                     // Общее количество расчётов для установления количества страниц в постраничном выводе
-                    $sql = "select count(c.id) from request_calc c$where";
+                    $sql = "select count(c.id) from request_calc c left join customer cus on c.customer_id=cus.id$where";
                     $fetcher = new Fetcher($sql);
                     
                     if($row = $fetcher->Fetch()) {
@@ -96,16 +97,8 @@ function OrderLink($param) {
                         </select>
                         <select id="status" name="status" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Статус...</option>
-                            <?php
-                            $sql = "select distinct cs.id, cs.name from request_calc c inner join request_calc_status cs on c.status_id = cs.id order by cs.name";
-                            $fetcher = new Fetcher($sql);
-                            
-                            while ($row = $fetcher->Fetch()):
-                            ?>
-                            <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'status') ? " selected='selected'" : "") ?>><?=$row['name'] ?></option>
-                            <?php
-                            endwhile;
-                            ?>
+                            <option value="<?=CALCULATION ?>"<?=(filter_input(INPUT_GET, 'status') == CALCULATION) ? " selected='selected'" : "" ?>>Сделан расчёт</option>
+                            <option value="<?=TECHMAP ?>"<?=(filter_input(INPUT_GET, 'status') == TECHMAP) ? " selected='selected'" : "" ?>>Составлена тех.карта</option>
                         </select>
                         <select id="work_type" name="work_type" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Тип работы...</option>
@@ -123,7 +116,7 @@ function OrderLink($param) {
                         <select id="manager" name="manager" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Менеджер...</option>
                             <?php
-                            $sql = "select distinct u.id, u.last_name, u.first_name from request_calc c inner join user u on c.manager_id = u.id order by u.last_name";
+                            $sql = "select distinct u.id, u.last_name, u.first_name from request_calc c inner join customer cus on c.customer_id = cus.id inner join user u on cus.manager_id = u.id order by u.last_name";
                             $fetcher = new Fetcher($sql);
                             
                             while ($row = $fetcher->Fetch()):
@@ -206,11 +199,12 @@ function OrderLink($param) {
                     }
                     
                     $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.quantity, c.unit, wt.name work_type, u.last_name, u.first_name, c.status_id, "
+                            . "(select id from techmap where request_calc_id = c.id order by id desc limit 1) techmap_id, "
                             . "(select count(id) from request_calc where customer_id = c.customer_id and id <= c.id) num_for_customer "
                             . "from request_calc c "
-                            . "inner join customer cus on c.customer_id = cus.id "
-                            . "inner join work_type wt on c.work_type_id = wt.id "
-                            . "inner join user u on c.manager_id = u.id$where "
+                            . "left join customer cus on c.customer_id = cus.id "
+                            . "left join work_type wt on c.work_type_id = wt.id "
+                            . "left join user u on c.manager_id = u.id$where "
                             . "$orderby limit $pager_skip, $pager_take";
                     $fetcher = new Fetcher($sql);
                     
@@ -220,13 +214,13 @@ function OrderLink($param) {
                     $status = '';
                     $colour_style = '';
                     
-                    if(!empty($statuses[$row['status_id']]['name'])) {
-                        $status = $statuses[$row['status_id']]['name'];
+                    if(!empty($row['techmap_id'])) {
+                        $status = "Составлена тех. карта";
+                        $colour_style = " color: green";
                     }
-                    
-                    if(!empty($statuses[$row['status_id']]['colour'])) {
-                        $colour = $statuses[$row['status_id']]['colour'];
-                        $colour_style = " color: $colour";
+                    else {
+                        $status = "Сделан расчёт";
+                        $colour_style = " color: blue";
                     }
                     ?>
                     <tr>
@@ -237,7 +231,7 @@ function OrderLink($param) {
                         <td class="text-right text-nowrap"><?=number_format($row['quantity'], 0, ",", " ") ?>&nbsp;<?=$row['unit'] == 'kg' ? 'кг' : 'шт' ?></td>
                         <td><?=$row['work_type'] ?></td>
                         <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
-                        <td class="text-nowrap"><i class="fas fa-circle" style="color: <?=$colour ?>;"></i>&nbsp;&nbsp;<?=$status ?></td>
+                        <td class="text-nowrap"><i class="fas fa-circle" style="<?=$colour_style ?>;"></i>&nbsp;&nbsp;<?=$status ?></td>
                         <td><a href="request_calc.php<?= BuildQuery("id", $row['id']) ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a></td>
                     </tr>
                     <?php
