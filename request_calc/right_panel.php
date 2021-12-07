@@ -46,7 +46,7 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
         <h2>Стоимость</h2>
     </div>
     <div class="row text-nowrap">
-        <div class="col-4 pr-5">
+        <div class="col-4 pr-4">
             <h3>Себестоимость</h3>
             <div>Себестоимость</div>
             <div class="value mb-2">860 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
@@ -55,17 +55,18 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
             <div class="value mb-2">800 000 &#8381;</div>
             <?php endif; ?>
         </div>
-        <div class="col-4 pr-5">
+        <div class="col-4 pr-4">
             <h3>Отгрузочная стоимость</h3>
             <div>Отгрузочная стоимость</div>
             <div class="value">1 200 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
         </div>
+        <div class="col-4" style="width: 250px;"></div>
     </div>
     <div class="mt-3">
         <h2>Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></h2>
     </div>
     <div class="row text-nowrap">
-        <div class="col-4 pr-5">
+        <div class="col-4 pr-4">
             <h3>Основная пленка&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></h3>
             <div>Закупочная стоимость</div>
             <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
@@ -77,7 +78,7 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
             <div class="value mb-2">8 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">192 000 м</span></div>
         </div>
         <?php if(!empty($lamination1_brand_name)): ?>
-        <div class="col-4 pr-5" style="border-left: solid 2px black;">
+        <div class="col-4 pr-4" style="border-left: solid 2px black;">
             <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></h3>
             <div>Закупочная стоимость</div>
             <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
@@ -88,9 +89,11 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
             <div>Масса с приладкой</div>
             <div class="value mb-2">8 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">192 000 м</span></div>
         </div>
+        <?php else: ?>
+        <div class="col-4" style="width: 250px;"></div>
         <?php endif; ?>
         <?php if(!empty($lamination2_brand_name)): ?>
-        <div class="col-4 pr-5" style="border-left: solid 2px black;">
+        <div class="col-4 pr-4" style="border-left: solid 2px black;">
             <h3>Ламинация 2&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></h3>
             <div>Закупочная стоимость</div>
             <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
@@ -101,6 +104,8 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
             <div>Масса с приладкой</div>
             <div class="value mb-2">8 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">192 000 м</span></div>
         </div>
+        <?php else: ?>
+        <div class="col-4" style="width: 250px;"></div>
         <?php endif; ?>
     </div>
     <?php
@@ -108,32 +113,32 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
     ?>
     <div id="show_costs">
         <div class="row text-nowrap">
-            <div class="col-4 pr-5">
+            <div class="col-4 pr-4">
                 <button type="button" class="btn btn-light" onclick="javascript: ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать расходы</button>
             </div>
             <?php if(!empty($lamination1_brand_name)): ?>
-            <div class="col-4 pr-5" style="border-left: solid 2px black;"></div>
+            <div class="col-4 pr-4" style="border-left: solid 2px black;"></div>
             <?php endif; ?>
             <?php if(!empty($lamination2_brand_name)): ?>
-            <div class="col-4 pr-5" style="border-left: solid 2px black;"></div>
+            <div class="col-4 pr-4" style="border-left: solid 2px black;"></div>
             <?php endif; ?>
         </div>
     </div>
     <div id="costs" class="d-none">
         <div class="row text-nowrap">
-            <div class="col-4 pr-5">
+            <div class="col-4 pr-4">
                 <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
                 <h2 class="mt-2">Расходы</h2>
             </div>
             <?php if(!empty($lamination1_brand_name)): ?>
-            <div class="col-4 pr-5" style="border-left: solid 2px black;"></div>
+            <div class="col-4 pr-4" style="border-left: solid 2px black;"></div>
             <?php endif; ?>
             <?php if(!empty($lamination2_brand_name)): ?>
-            <div class="col-4 pr-5" style="border-left: solid 2px black;"></div>
+            <div class="col-4 pr-4" style="border-left: solid 2px black;"></div>
             <?php endif; ?>
         </div>
         <div class="row text-nowrap">
-            <div class="col-4 pr-5">
+            <div class="col-4 pr-4">
                 <div>Отходы</div>
                 <div class="value mb-2">1 280 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">4,5 кг</span></div>
                 <?php if($work_type_id == 2): ?>
@@ -160,7 +165,7 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
                 <?php endif; ?>
             </div>
             <?php if(!empty($lamination1_brand_name)): ?>
-            <div class="col-4 pr-5" style="border-left: solid 2px black;">
+            <div class="col-4 pr-4" style="border-left: solid 2px black;">
                 <div>Отходы</div>
                 <div class="value mb-2">1 280 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">4,5 кг</span></div>
                 <?php if($work_type_id == 2): ?>
@@ -186,9 +191,11 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
                 <div class="value mb-2">1 500 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">3 часа</span></div>
                 <?php endif; ?>
             </div>
+            <?php else: ?>
+            <div class="col-4" style="width: 250px;"></div>
             <?php endif; ?>
             <?php if(!empty($lamination2_brand_name)): ?>
-            <div class="col-4 pr-5" style="border-left: solid 2px black;">
+            <div class="col-4 pr-4" style="border-left: solid 2px black;">
                 <div>Отходы</div>
                 <div class="value mb-2">1 280 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">4,5 кг</span></div>
                 <?php if($work_type_id == 2): ?>
@@ -214,6 +221,8 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
                 <div class="value mb-2">1 500 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">3 часа</span></div>
                 <?php endif; ?>
             </div>
+            <?php else: ?>
+            <div class="col-4" style="width: 250px;"></div>
             <?php endif; ?>
         </div>
     </div>
