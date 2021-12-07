@@ -39,7 +39,7 @@ for($i=1; $i<=8; $i++) {
 const OTHER = "other";
 
 // Сохранение в базу расчёта
-if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
+if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     if(empty(filter_input(INPUT_POST, "customer_id"))) {
         $customer_id_valid = ISINVALID;
         $form_valid = false;
@@ -230,7 +230,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $$form_var = filter_input(INPUT_POST, "form_$i");
         }
         
-        $sql = "insert into calculation (customer_id, name, work_type_id, unit, machine_id, "
+        $sql = "insert into request_calc (customer_id, name, work_type_id, unit, machine_id, "
                 . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
                 . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
                 . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
@@ -255,7 +255,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $insert_id = $executer->insert_id;
         
         if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/calculation/create.php?id='.$insert_id);
+            header('Location: '.APPLICATION.'/request_calc/create.php?id='.$insert_id);
         }
     }
 }
@@ -266,16 +266,16 @@ if(null !== filter_input(INPUT_POST, 'change_status_submit')) {
     $status_id = filter_input(INPUT_POST, 'status_id');
     $extracharge = filter_input(INPUT_POST, 'extracharge');
     if(empty($extracharge)) {
-        $sql = "update calculation set status_id=$status_id where id=$id";
+        $sql = "update request_calc set status_id=$status_id where id=$id";
     }
     else {
-        $sql = "update calculation set status_id=$status_id, extracharge=$extracharge where id=$id";
+        $sql = "update request_calc set status_id=$status_id, extracharge=$extracharge where id=$id";
     }
     $executer = new Executer($sql);
     $error_message = $executer->error;
     
     if(empty($error_message)) {
-        header('Location: '.APPLICATION.'/calculation/calculation.php'. BuildQuery('id', $id));
+        header('Location: '.APPLICATION.'/request_calc/request_calc.php'. BuildQuery('id', $id));
     }
 }
 
@@ -291,13 +291,13 @@ if(!empty($id)) {
             . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
             . "quantity, width, streams_count, length, stream_width, raport, paints_count, status_id, extracharge, no_ski, "
-            . "(select count(id) from techmap where calculation_id = $id) techmaps_count, "
+            . "(select count(id) from techmap where request_calc_id = $id) techmaps_count, "
             . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
             . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
             . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
             . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8 "
-            . "from calculation where id=$id";
+            . "from request_calc where id=$id";
     $row = (new Fetcher($sql))->Fetch();
 }
 
@@ -358,7 +358,7 @@ if(null === $other_weight) {
     else $other_weight = null;
 }
 
-if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
+if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     $customers_material = filter_input(INPUT_POST, 'customers_material') == 'on' ? 1 : 0;
 }
 else {
@@ -414,7 +414,7 @@ if(null === $lamination1_other_weight) {
     else $lamination1_other_weight = null;
 }
 
-if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
+if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     $lamination1_customers_material = filter_input(INPUT_POST, 'lamination1_customers_material') == 'on' ? 1 : 0;
 }
 else {
@@ -458,7 +458,7 @@ if(null === $lamination2_other_weight) {
     else $lamination2_other_weight = null;
 }
 
-if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
+if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     $lamination2_customers_material = filter_input(INPUT_POST, 'lamination2_customers_material') == 'on' ? 1 : 0;
 }
 else {
@@ -511,7 +511,7 @@ if(null === $paints_count) {
     else $paints_count = null;
 }
 
-if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
+if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     $no_ski = filter_input(INPUT_POST, 'no_ski') == 'on' ? 1 : 0;
 }
 else {
@@ -572,12 +572,12 @@ for ($i=1; $i<=8; $i++) {
 // 3. При невалидной форме
 // Если показываем рассчёт, то не показываем кнопку отправки.
 // И наоборот.
-$create_calculation_submit_class = " d-none";
+$create_request_calc_submit_class = " d-none";
 
 if(null !== filter_input(INPUT_POST, 'create_customer_submit') || 
         null === filter_input(INPUT_GET, 'id') ||
         !$form_valid) {
-    $create_calculation_submit_class = "";
+    $create_request_calc_submit_class = "";
 }
 
 // Список красочностей каждой машины
@@ -616,7 +616,7 @@ $colorfulnesses = array();
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= filter_input(INPUT_GET, "mode") == "recalc" ? "calculation.php".BuildQueryRemove("mode") : "" ?>">Назад</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/request_calc/<?= filter_input(INPUT_GET, "mode") == "recalc" ? "request_calc.php".BuildQueryRemove("mode") : "" ?>">Назад</a>
             <div class="row">
                 <!-- Левая половина -->
                 <div class="col-5" id="left_side">
@@ -1486,7 +1486,7 @@ $colorfulnesses = array();
                             endfor;
                             ?>
                         </div>
-                        <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark mt-3<?=$create_calculation_submit_class ?>">Рассчитать</button>
+                        <button type="submit" id="create_request_calc_submit" name="create_request_calc_submit" class="btn btn-dark mt-3<?=$create_request_calc_submit_class ?>">Рассчитать</button>
                     </form>
                 </div>
             </div>
@@ -1924,7 +1924,7 @@ $colorfulnesses = array();
             // Скрытие расчёта
             function HideCalculation() {
                 $("#calculation").addClass("d-none");
-                $("#create_calculation_submit").removeClass("d-none");
+                $("#create_request_calc_submit").removeClass("d-none");
             }
             
             // Ограницение значений наценки

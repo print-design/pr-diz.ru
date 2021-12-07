@@ -7,4 +7,4 @@ include '../include/style_mobile.php';
 <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
 <script src="<?=APPLICATION ?>/js/popper.min.js"></script>
 <script src="<?=APPLICATION ?>/js/jquery.maskedinput.js"></script>
-<script src="<?=APPLICATION ?>/js/calculation.js?version=100"></script>
+<script src="<?=APPLICATION ?>/js/request_calc.js?version=100"></script>

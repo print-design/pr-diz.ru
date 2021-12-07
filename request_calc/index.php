@@ -6,17 +6,7 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Получение всех статусов
-$fetcher = (new Fetcher("select id, name, colour from calculation_status"));
-$statuses = array();
-
-while ($row = $fetcher->Fetch()) {
-    $status = array();
-    $status['name'] = $row['name'];
-    $status['colour'] = $row['colour'];
-    $statuses[$row['id']] = $status;
-}
-
+// Формирование ссылки для сортировки по столбцу
 function OrderLink($param) {
     if(array_key_exists('order', $_REQUEST) && $_REQUEST['order'] == $param) {
         echo "<strong><i class='fas fa-arrow-down' style='color: black; font-size: small;'></i></strong>";
@@ -84,7 +74,7 @@ function OrderLink($param) {
                     }
 
                     // Общее количество расчётов для установления количества страниц в постраничном выводе
-                    $sql = "select count(c.id) from calculation c$where";
+                    $sql = "select count(c.id) from request_calc c$where";
                     $fetcher = new Fetcher($sql);
                     
                     if($row = $fetcher->Fetch()) {
@@ -107,7 +97,7 @@ function OrderLink($param) {
                         <select id="status" name="status" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Статус...</option>
                             <?php
-                            $sql = "select distinct cs.id, cs.name from calculation c inner join calculation_status cs on c.status_id = cs.id order by cs.name";
+                            $sql = "select distinct cs.id, cs.name from request_calc c inner join request_calc_status cs on c.status_id = cs.id order by cs.name";
                             $fetcher = new Fetcher($sql);
                             
                             while ($row = $fetcher->Fetch()):
@@ -120,7 +110,7 @@ function OrderLink($param) {
                         <select id="work_type" name="work_type" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Тип работы...</option>
                             <?php
-                            $sql = "select distinct wt.id, wt.name from calculation c inner join work_type wt on c.work_type_id = wt.id order by wt.name";
+                            $sql = "select distinct wt.id, wt.name from request_calc c inner join work_type wt on c.work_type_id = wt.id order by wt.name";
                             $fetcher = new Fetcher($sql);
                             
                             while ($row = $fetcher->Fetch()):
@@ -133,7 +123,7 @@ function OrderLink($param) {
                         <select id="manager" name="manager" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Менеджер...</option>
                             <?php
-                            $sql = "select distinct u.id, u.last_name, u.first_name from calculation c inner join user u on c.manager_id = u.id order by u.last_name";
+                            $sql = "select distinct u.id, u.last_name, u.first_name from request_calc c inner join user u on c.manager_id = u.id order by u.last_name";
                             $fetcher = new Fetcher($sql);
                             
                             while ($row = $fetcher->Fetch()):
@@ -146,7 +136,7 @@ function OrderLink($param) {
                         <select id="customer" name="customer" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Заказчик...</option>
                             <?php
-                            $sql = "select distinct cus.id, cus.name from calculation c inner join customer cus on c.customer_id = cus.id order by cus.name";
+                            $sql = "select distinct cus.id, cus.name from request_calc c inner join customer cus on c.customer_id = cus.id order by cus.name";
                             $fetcher = new Fetcher($sql);
                             
                             while ($row = $fetcher->Fetch()):
@@ -216,8 +206,8 @@ function OrderLink($param) {
                     }
                     
                     $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.quantity, c.unit, wt.name work_type, u.last_name, u.first_name, c.status_id, "
-                            . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
-                            . "from calculation c "
+                            . "(select count(id) from request_calc where customer_id = c.customer_id and id <= c.id) num_for_customer "
+                            . "from request_calc c "
                             . "inner join customer cus on c.customer_id = cus.id "
                             . "inner join work_type wt on c.work_type_id = wt.id "
                             . "inner join user u on c.manager_id = u.id$where "
@@ -248,7 +238,7 @@ function OrderLink($param) {
                         <td><?=$row['work_type'] ?></td>
                         <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
                         <td class="text-nowrap"><i class="fas fa-circle" style="color: <?=$colour ?>;"></i>&nbsp;&nbsp;<?=$status ?></td>
-                        <td><a href="calculation.php<?= BuildQuery("id", $row['id']) ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a></td>
+                        <td><a href="request_calc.php<?= BuildQuery("id", $row['id']) ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a></td>
                     </tr>
                     <?php
                     endwhile;

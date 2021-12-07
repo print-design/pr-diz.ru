@@ -12,10 +12,10 @@ if(null !== filter_input(INPUT_POST, 'change_status_submit')) {
     $status_id = filter_input(INPUT_POST, 'status_id');
     $extracharge = filter_input(INPUT_POST, 'extracharge');
     if(empty($extracharge)) {
-        $sql = "update calculation set status_id=$status_id where id=$id";
+        $sql = "update request_calc set status_id=$status_id where id=$id";
     }
     else {
-        $sql = "update calculation set status_id=$status_id, extracharge=$extracharge where id=$id";
+        $sql = "update request_calc set status_id=$status_id, extracharge=$extracharge where id=$id";
     }
     $executer = new Executer($sql);
     $error_message = $executer->error;
@@ -25,13 +25,13 @@ if(null !== filter_input(INPUT_POST, 'change_status_submit')) {
     if(empty($error_message)) {
         // Составление технологической карты
         if($status_id == 6) {
-            $sql = "insert into techmap set calculation_id = $id";
+            $sql = "insert into techmap set request_calc_id = $id";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
         
         if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/calculation/calculation.php'. BuildQuery('id', $id));
+            header('Location: '.APPLICATION.'/request_calc/request_calc.php'. BuildQuery('id', $id));
         }
     }
 }
@@ -53,18 +53,18 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
         . "c.form_1, c.form_2, c.form_3, form_4, form_5, form_6, form_7, form_8, "
         . "c.status_id, c.extracharge, c.no_ski, "
-        . "(select count(id) from techmap where calculation_id = $id) techmaps_count, "
+        . "(select count(id) from techmap where request_calc_id = $id) techmaps_count, "
         . "cs.name status, cs.colour, cs.colour2, cs.image, "
         . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
         . "wt.name work_type, "
         . "mt.name machine, mt.colorfulness, "
         . "(select name from raport where value = c.raport and machine_id = c.machine_id) raport_name, "
-        . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
+        . "(select count(id) from request_calc where customer_id = c.customer_id and id <= c.id) num_for_customer, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) weight, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_weight "
-        . "from calculation c "
-        . "left join calculation_status cs on c.status_id = cs.id "
+        . "from request_calc c "
+        . "left join request_calc_status cs on c.status_id = cs.id "
         . "left join customer cu on c.customer_id = cu.id "
         . "left join work_type wt on c.work_type_id = wt.id "
         . "left join machine mt on c.machine_id = mt.id "
@@ -196,7 +196,7 @@ $num_for_customer = $row['num_for_customer'];
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemove("id") ?>">Назад</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/request_calc/<?= BuildQueryRemove("id") ?>">Назад</a>
             <div class="row">
                 <!-- Левая половина -->
                 <div class="col-5" id="left_side">

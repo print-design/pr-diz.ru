@@ -19,7 +19,7 @@ const PANTON = "panton";
 const WHITE = "white";
 const LACQUER = "lacquer";
 
-if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
+if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $file_name = "calculation_$id.txm";
     DownloadSendHeaders($file_name);
@@ -41,7 +41,7 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
             . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) weight, "
             . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
             . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_weight "
-            . "from calculation c "
+            . "from request_calc c "
             . "left join customer cu on c.customer_id = cu.id "
             . "left join work_type wt on c.work_type_id = wt.id "
             . "left join user u on c.manager_id = u.id "
@@ -505,7 +505,7 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
             . "price_lam1_material, price_lam1_glue, price_lam1_work, pure_weight_lam2, dirty_weight_lam2, price_lam2_material, "
             . "price_lam2_glue, price_lam2_work, price_lam_total, pure_weight_total, dirty_weight_total, cost_no_cliche, "
             . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_thing, cost_with_cliche_thing"
-            . " from calculation_result where calculation_id = $id order by id desc limit 1";
+            . " from request_calc_result where request_calc_id = $id order by id desc limit 1";
     $fetcher = new Fetcher($sql);
 
     if($row = $fetcher->Fetch()) {
