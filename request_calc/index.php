@@ -92,7 +92,7 @@ function OrderLink($param) {
                         <?php endif; ?>
                         <select id="unit" name="unit" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Шт/кг...</option>
-                            <option value="thing"<?= filter_input(INPUT_GET, 'unit') == 'thing' ? " selected='selected'" : "" ?>>Шт</option>
+                            <option value="pieces"<?= filter_input(INPUT_GET, 'unit') == 'pieces' ? " selected='selected'" : "" ?>>Шт</option>
                             <option value="kg"<?= filter_input(INPUT_GET, 'unit') == 'kg' ? " selected='selected'" : "" ?>>Кг</option>
                         </select>
                         <select id="status" name="status" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">

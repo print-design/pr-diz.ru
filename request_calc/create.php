@@ -1,5 +1,6 @@
 <?php
 include '../include/topscripts.php';
+include './status_ids.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'manager'))) {
@@ -18,15 +19,15 @@ $brand_name_valid = '';
 $thickness_valid = '';
 $quantity_valid = '';
 
-$other_brand_name_valid = '';
-$other_price_valid = '';
-$other_thickness_valid = '';
-$other_weight_valid = '';
+$individual_brand_name_valid = '';
+$individual_price_valid = '';
+$individual_thickness_valid = '';
+$individual_density_valid = '';
 
 // Переменные для валидации цвета, CMYK и процента
 for($i=1; $i<=8; $i++) {
-    $color_valid_var = 'color_'.$i.'_valid';
-    $$color_valid_var = '';
+    $ink_valid_var = 'ink_'.$i.'_valid';
+    $$ink_valid_var = '';
     
     $cmyk_valid_var = 'cmyk_'.$i.'_valid';
     $$cmyk_valid_var = '';
@@ -36,7 +37,7 @@ for($i=1; $i<=8; $i++) {
 }
 
 // Значение марки плёнки "другая"
-const OTHER = "other";
+const INDIVIDUAL = "individual";
 
 // Сохранение в базу расчёта
 if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
@@ -65,25 +66,25 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $form_valid = false;
     }
     
-    if(filter_input(INPUT_POST, 'brand_name') == OTHER) {
+    if(filter_input(INPUT_POST, 'brand_name') == INDIVIDUAL) {
         // Проверка валидности параметров, введённых вручную при выборе марки плёнки "Другая"
-        if(empty(filter_input(INPUT_POST, 'other_brand_name'))) {
-            $other_brand_name_valid = ISINVALID;
+        if(empty(filter_input(INPUT_POST, 'individual_brand_name'))) {
+            $individual_brand_name_valid = ISINVALID;
             $form_valid = false;
         }
         
-        if(filter_input(INPUT_POST, 'customers_material') != 'on' && empty(filter_input(INPUT_POST, 'other_price'))) {
-            $other_price_valid = ISINVALID;
+        if(filter_input(INPUT_POST, 'customers_material') != 'on' && empty(filter_input(INPUT_POST, 'individual_price'))) {
+            $individual_price_valid = ISINVALID;
             $form_valid = false;
         }
         
-        if(empty(filter_input(INPUT_POST, 'other_thickness'))) {
-            $other_thickness_valid = ISINVALID;
+        if(empty(filter_input(INPUT_POST, 'individual_thickness'))) {
+            $individual_thickness_valid = ISINVALID;
             $form_valid = false;
         }
         
-        if(empty(filter_input(INPUT_POST, 'other_weight'))) {
-            $other_weight_valid = ISINVALID;
+        if(empty(filter_input(INPUT_POST, 'individual_density'))) {
+            $individual_density_valid = ISINVALID;
             $form_valid = false;
         }
     }
@@ -96,12 +97,12 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
     }
     
     // Проверка валидности цвета, CMYK и процента
-    $paints_count = filter_input(INPUT_POST, 'paints_count');
+    $ink_number = filter_input(INPUT_POST, 'ink_number');
     
     for($i=1; $i<=8; $i++) {
-        if(!empty($paints_count) && is_numeric($paints_count) && $i <= $paints_count) {
-            $paint_var = "paint_".$i;
-            $$paint_var = filter_input(INPUT_POST, 'paint_'.$i);
+        if(!empty($ink_number) && is_numeric($ink_number) && $i <= $ink_number) {
+            $ink_var = "ink_".$i;
+            $$ink_var = filter_input(INPUT_POST, 'ink_'.$i);
             
             $color_var = "color_".$i;
             $$color_var = filter_input(INPUT_POST, 'color_'.$i);
@@ -139,13 +140,13 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $brand_name = addslashes(filter_input(INPUT_POST, 'brand_name'));
         $thickness = filter_input(INPUT_POST, 'thickness');
         if(empty($thickness)) $thickness = "NULL";
-        $other_brand_name = filter_input(INPUT_POST, 'other_brand_name');
-        $other_price = filter_input(INPUT_POST, 'other_price');
-        if(empty($other_price)) $other_price = "NULL";
-        $other_thickness = filter_input(INPUT_POST, 'other_thickness');
-        if(empty($other_thickness)) $other_thickness = "NULL";
-        $other_weight = filter_input(INPUT_POST, 'other_weight');
-        if(empty($other_weight)) $other_weight = "NULL";
+        $individual_brand_name = filter_input(INPUT_POST, 'individual_brand_name');
+        $individual_price = filter_input(INPUT_POST, 'individual_price');
+        if(empty($individual_price)) $individual_price = "NULL";
+        $individual_thickness = filter_input(INPUT_POST, 'individual_thickness');
+        if(empty($individual_thickness)) $individual_thickness = "NULL";
+        $individual_density = filter_input(INPUT_POST, 'individual_density');
+        if(empty($individual_density)) $individual_density = "NULL";
         $customers_material = 0;
         if(filter_input(INPUT_POST, 'customers_material') == 'on') {
             $customers_material = 1;
@@ -158,13 +159,13 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $lamination1_brand_name = addslashes(filter_input(INPUT_POST, 'lamination1_brand_name'));
         $lamination1_thickness = filter_input(INPUT_POST, 'lamination1_thickness');
         if(empty($lamination1_thickness)) $lamination1_thickness = "NULL";
-        $lamination1_other_brand_name = filter_input(INPUT_POST, 'lamination1_other_brand_name');
-        $lamination1_other_price = filter_input(INPUT_POST, 'lamination1_other_price');
-        if(empty($lamination1_other_price)) $lamination1_other_price = "NULL";
-        $lamination1_other_thickness = filter_input(INPUT_POST, 'lamination1_other_thickness');
-        if(empty($lamination1_other_thickness)) $lamination1_other_thickness = "NULL";
-        $lamination1_other_weight = filter_input(INPUT_POST, 'lamination1_other_weight');
-        if(empty($lamination1_other_weight)) $lamination1_other_weight = "NULL";
+        $lamination1_individual_brand_name = filter_input(INPUT_POST, 'lamination1_individual_brand_name');
+        $lamination1_individual_price = filter_input(INPUT_POST, 'lamination1_individual_price');
+        if(empty($lamination1_individual_price)) $lamination1_individual_price = "NULL";
+        $lamination1_individual_thickness = filter_input(INPUT_POST, 'lamination1_individual_thickness');
+        if(empty($lamination1_individual_thickness)) $lamination1_individual_thickness = "NULL";
+        $lamination1_individual_weight = filter_input(INPUT_POST, 'lamination1_individual_weight');
+        if(empty($lamination1_individual_weight)) $lamination1_individual_weight = "NULL";
         $lamination1_customers_material = 0;
         if(filter_input(INPUT_POST, 'lamination1_customers_material') == 'on') {
             $lamination1_customers_material = 1;
@@ -173,13 +174,13 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $lamination2_brand_name = addslashes(filter_input(INPUT_POST, 'lamination2_brand_name'));
         $lamination2_thickness = filter_input(INPUT_POST, 'lamination2_thickness');
         if(empty($lamination2_thickness)) $lamination2_thickness = "NULL";
-        $lamination2_other_brand_name = filter_input(INPUT_POST, 'lamination2_other_brand_name');
-        $lamination2_other_price = filter_input(INPUT_POST, 'lamination2_other_price');
-        if(empty($lamination2_other_price)) $lamination2_other_price = "NULL";
-        $lamination2_other_thickness = filter_input(INPUT_POST, 'lamination2_other_thickness');
-        if(empty($lamination2_other_thickness)) $lamination2_other_thickness = "NULL";
-        $lamination2_other_weight = filter_input(INPUT_POST, 'lamination2_other_weight');
-        if(empty($lamination2_other_weight)) $lamination2_other_weight = "NULL";
+        $lamination2_individual_brand_name = filter_input(INPUT_POST, 'lamination2_individual_brand_name');
+        $lamination2_individual_price = filter_input(INPUT_POST, 'lamination2_individual_price');
+        if(empty($lamination2_individual_price)) $lamination2_individual_price = "NULL";
+        $lamination2_individual_thickness = filter_input(INPUT_POST, 'lamination2_individual_thickness');
+        if(empty($lamination2_individual_thickness)) $lamination2_individual_thickness = "NULL";
+        $lamination2_individual_weight = filter_input(INPUT_POST, 'lamination2_individual_weight');
+        if(empty($lamination2_individual_weight)) $lamination2_individual_weight = "NULL";
         $lamination2_customers_material = 0;
         if(filter_input(INPUT_POST, 'lamination2_customers_material') == 'on') {
             $lamination2_customers_material = 1;
@@ -192,12 +193,12 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         if(empty($length)) $length = "NULL";
         $stream_width = filter_input(INPUT_POST, 'stream_width');
         if(empty($stream_width)) $stream_width = "NULL";
-        $streams_count = filter_input(INPUT_POST, 'streams_count');
-        if(empty($streams_count)) $streams_count = "NULL";
+        $streams_number = filter_input(INPUT_POST, 'streams_number');
+        if(empty($streams_number)) $streams_number = "NULL";
         $raport = filter_input(INPUT_POST, 'raport');
         if(empty($raport)) $raport = "NULL";
-        $paints_count = filter_input(INPUT_POST, 'paints_count');
-        if(empty($paints_count)) $paints_count = "NULL";
+        $ink_number = filter_input(INPUT_POST, 'ink_number');
+        if(empty($ink_number)) $ink_number = "NULL";
         
         $no_ski = 0;
         if(filter_input(INPUT_POST, 'no_ski') == 'on') {
@@ -205,15 +206,15 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         }
         
         $manager_id = GetUserId();
-        $status_id = 1; // Статус "Расчёт"
+        $status_id = CALCULATION; // Статус "Расчёт"
         
         $extracharge = filter_input(INPUT_POST, 'h_extracharge');
         if(empty($extracharge)) $extracharge = 35; // Наценка по умолчанию 35
         
         // Данные о цвете
         for($i=1; $i<=8; $i++) {
-            $paint_var = "paint_$i";
-            $$paint_var = filter_input(INPUT_POST, "paint_$i");
+            $ink_var = "ink_$i";
+            $$ink_var = filter_input(INPUT_POST, "ink_$i");
             
             $color_var = "color_$i";
             $$color_var = filter_input(INPUT_POST, "color_$i");
@@ -226,30 +227,30 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
             $$percent_var = filter_input(INPUT_POST, "percent_$i");
             if(empty($$percent_var)) $$percent_var = "NULL";
             
-            $form_var = "form_$i";
-            $$form_var = filter_input(INPUT_POST, "form_$i");
+            $cliche_var = "cliche_$i";
+            $$cliche_var = filter_input(INPUT_POST, "cliche_$i");
         }
         
         $sql = "insert into request_calc (customer_id, name, work_type_id, unit, machine_id, "
-                . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
-                . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
-                . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
-                . "width, quantity, streams_count, length, stream_width, raport, paints_count, manager_id, status_id, extracharge, no_ski, "
-                . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
+                . "brand_name, thickness, individual_brand_name, individual_price, individual_thickness, individual_density, customers_material, "
+                . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
+                . "lamination2_brand_name, lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
+                . "width, quantity, streams_number, length, stream_width, raport, ink_number, manager_id, status_id, extracharge, no_ski, "
+                . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
                 . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                 . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
                 . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
-                . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8) "
+                . "cliche_1, cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8) "
                 . "values($customer_id, '$name', $work_type_id, '$unit', $machine_id, "
-                . "'$brand_name', $thickness, '$other_brand_name', $other_price, $other_thickness, $other_weight, $customers_material, "
-                . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_other_brand_name', $lamination1_other_price, $lamination1_other_thickness, $lamination1_other_weight, $lamination1_customers_material, "
-                . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_other_brand_name', $lamination2_other_price, $lamination2_other_thickness, $lamination2_other_weight, $lamination2_customers_material, "
-                . "$width, $quantity, $streams_count, $length, $stream_width, $raport, $paints_count, $manager_id, $status_id, $extracharge, $no_ski, "
-                . "'$paint_1', '$paint_2', '$paint_3', '$paint_4', '$paint_5', '$paint_6', '$paint_7', '$paint_8', "
+                . "'$brand_name', $thickness, '$individual_brand_name', $individual_price, $individual_thickness, $individual_density, $customers_material, "
+                . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_individual_brand_name', $lamination1_individual_price, $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, "
+                . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_individual_brand_name', $lamination2_individual_price, $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, "
+                . "$width, $quantity, $streams_number, $length, $stream_width, $raport, $ink_number, $manager_id, $status_id, $extracharge, $no_ski, "
+                . "'$ink_1', '$ink_2', '$ink_3', '$ink_4', '$ink_5', '$ink_6', '$ink_7', '$ink_8', "
                 . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                 . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
                 . "'$percent_1', '$percent_2', '$percent_3', '$percent_4', '$percent_5', '$percent_6', '$percent_7', '$percent_8', "
-                . "'$form_1', '$form_2', '$form_3', '$form_4', '$form_5', '$form_6', '$form_7', '$form_8')";
+                . "'$cliche_1', '$cliche_2', '$cliche_3', '$cliche_4', '$cliche_5', '$cliche_6', '$cliche_7', '$cliche_8')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $insert_id = $executer->insert_id;
@@ -257,25 +258,6 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         if(empty($error_message)) {
             header('Location: '.APPLICATION.'/request_calc/create.php?id='.$insert_id);
         }
-    }
-}
-
-// Смена статуса
-if(null !== filter_input(INPUT_POST, 'change_status_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $status_id = filter_input(INPUT_POST, 'status_id');
-    $extracharge = filter_input(INPUT_POST, 'extracharge');
-    if(empty($extracharge)) {
-        $sql = "update request_calc set status_id=$status_id where id=$id";
-    }
-    else {
-        $sql = "update request_calc set status_id=$status_id, extracharge=$extracharge where id=$id";
-    }
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
-    
-    if(empty($error_message)) {
-        header('Location: '.APPLICATION.'/request_calc/request_calc.php'. BuildQuery('id', $id));
     }
 }
 
@@ -287,16 +269,16 @@ if(empty($id)) {
 
 if(!empty($id)) {
     $sql = "select date, customer_id, name, work_type_id, unit, machine_id, "
-            . "brand_name, thickness, other_brand_name, other_price, other_thickness, other_weight, customers_material, "
-            . "lamination1_brand_name, lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, lamination1_customers_material, "
-            . "lamination2_brand_name, lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, lamination2_customers_material, "
-            . "quantity, width, streams_count, length, stream_width, raport, paints_count, status_id, extracharge, no_ski, "
-            . "(select count(id) from techmap where request_calc_id = $id) techmaps_count, "
-            . "paint_1, paint_2, paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
+            . "brand_name, thickness, individual_brand_name, individual_price, individual_thickness, individual_density, customers_material, "
+            . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
+            . "lamination2_brand_name, lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
+            . "quantity, width, streams_number, length, stream_width, raport, ink_number, status_id, extracharge, no_ski, "
+            . "(select id from techmap where request_calc_id = $id order by id desc limit 1) techmap_id, "
+            . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
             . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
             . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
-            . "form_1, form_2, form_3, form_4, form_5, form_6, form_7, form_8 "
+            . "cliche_1, cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8 "
             . "from request_calc where id=$id";
     $row = (new Fetcher($sql))->Fetch();
 }
@@ -334,28 +316,28 @@ if(null === $thickness) {
     else $thickness = null;
 }
 
-$other_brand_name = filter_input(INPUT_POST, 'other_brand_name');
-if(null === $other_brand_name) {
-    if(isset($row['other_brand_name'])) $other_brand_name = $row['other_brand_name'];
-    else $other_brand_name = null;
+$individual_brand_name = filter_input(INPUT_POST, 'individual_brand_name');
+if(null === $individual_brand_name) {
+    if(isset($row['individual_brand_name'])) $individual_brand_name = $row['individual_brand_name'];
+    else $individual_brand_name = null;
 }
 
-$other_price = filter_input(INPUT_POST, 'other_price');
-if(null === $other_price) {
-    if(isset($row['other_price'])) $other_price = $row['other_price'];
-    else $other_price = null;
+$individual_price = filter_input(INPUT_POST, 'individual_price');
+if(null === $individual_price) {
+    if(isset($row['individual_price'])) $individual_price = $row['individual_price'];
+    else $individual_price = null;
 }
 
-$other_thickness = filter_input(INPUT_POST, 'other_thickness');
-if(null === $other_thickness) {
-    if(isset($row['other_thickness'])) $other_thickness = $row['other_thickness'];
-    else $other_thickness = null;
+$individual_thickness = filter_input(INPUT_POST, 'individual_thickness');
+if(null === $individual_thickness) {
+    if(isset($row['individual_thickness'])) $individual_thickness = $row['individual_thickness'];
+    else $individual_thickness = null;
 }
 
-$other_weight = filter_input(INPUT_POST, 'other_weight');
-if(null === $other_weight) {
-    if(isset($row['other_weight'])) $other_weight = $row['other_weight'];
-    else $other_weight = null;
+$individual_density = filter_input(INPUT_POST, 'individual_density');
+if(null === $individual_density) {
+    if(isset($row['individual_density'])) $individual_density = $row['individual_density'];
+    else $individual_density = null;
 }
 
 if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
@@ -390,28 +372,28 @@ if(null === $lamination1_thickness) {
     else $lamination1_thickness = null;
 }
 
-$lamination1_other_brand_name = filter_input(INPUT_POST, 'lamination1_other_brand_name');
-if(null === $lamination1_other_brand_name) {
-    if(isset($row['lamination1_other_brand_name'])) $lamination1_other_brand_name = $row['lamination1_other_brand_name'];
-    else $lamination1_other_brand_name = null;
+$lamination1_individual_brand_name = filter_input(INPUT_POST, 'lamination1_individual_brand_name');
+if(null === $lamination1_individual_brand_name) {
+    if(isset($row['lamination1_individual_brand_name'])) $lamination1_individual_brand_name = $row['lamination1_individual_brand_name'];
+    else $lamination1_individual_brand_name = null;
 }
 
-$lamination1_other_price = filter_input(INPUT_POST, 'lamination1_other_price');
-if(null === $lamination1_other_price) {
-    if(isset($row['lamination1_other_price'])) $lamination1_other_price = $row['lamination1_other_price'];
-    else $lamination1_other_price = null;
+$lamination1_individual_price = filter_input(INPUT_POST, 'lamination1_individual_price');
+if(null === $lamination1_individual_price) {
+    if(isset($row['lamination1_individual_price'])) $lamination1_individual_price = $row['lamination1_individual_price'];
+    else $lamination1_individual_price = null;
 }
 
-$lamination1_other_thickness = filter_input(INPUT_POST, 'lamination1_other_thickness');
-if(null === $lamination1_other_thickness) {
-    if(isset($row['lamination1_other_thickness'])) $lamination1_other_thickness = $row['lamination1_other_thickness'];
-    else $lamination1_other_thickness = null;
+$lamination1_individual_thickness = filter_input(INPUT_POST, 'lamination1_individual_thickness');
+if(null === $lamination1_individual_thickness) {
+    if(isset($row['lamination1_individual_thickness'])) $lamination1_individual_thickness = $row['lamination1_individual_thickness'];
+    else $lamination1_individual_thickness = null;
 }
 
-$lamination1_other_weight = filter_input(INPUT_POST, 'lamination1_other_weight');
-if(null === $lamination1_other_weight) {
-    if(isset($row['lamination1_other_weight'])) $lamination1_other_weight = $row['lamination1_other_weight'];
-    else $lamination1_other_weight = null;
+$lamination1_individual_density = filter_input(INPUT_POST, 'lamination1_individual_density');
+if(null === $lamination1_individual_density) {
+    if(isset($row['lamination1_individual_density'])) $lamination1_individual_density = $row['lamination1_individual_density'];
+    else $lamination1_individual_density = null;
 }
 
 if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
@@ -434,28 +416,28 @@ if(null === $lamination2_thickness) {
     else $lamination2_thickness = null;
 }
 
-$lamination2_other_brand_name = filter_input(INPUT_POST, 'lamination2_other_brand_name');
-if(null === $lamination2_other_brand_name) {
-    if(isset($row['lamination2_other_brand_name'])) $lamination2_other_brand_name = $row['lamination2_other_brand_name'];
-    else $lamination2_other_brand_name = null;
+$lamination2_individual_brand_name = filter_input(INPUT_POST, 'lamination2_individual_brand_name');
+if(null === $lamination2_individual_brand_name) {
+    if(isset($row['lamination2_individual_brand_name'])) $lamination2_individual_brand_name = $row['lamination2_individual_brand_name'];
+    else $lamination2_individual_brand_name = null;
 }
 
-$lamination2_other_price = filter_input(INPUT_POST, 'lamination2_other_price');
-if(null === $lamination2_other_price) {
-    if(isset($row['lamination2_other_price'])) $lamination2_other_price = $row['lamination2_other_price'];
-    else $lamination2_other_price = null;
+$lamination2_individual_price = filter_input(INPUT_POST, 'lamination2_individual_price');
+if(null === $lamination2_individual_price) {
+    if(isset($row['lamination2_individual_price'])) $lamination2_individual_price = $row['lamination2_individual_price'];
+    else $lamination2_individual_price = null;
 }
 
-$lamination2_other_thickness = filter_input(INPUT_POST, 'lamination2_other_thickness');
-if(null === $lamination2_other_thickness) {
-    if(isset($row['lamination2_other_thickness'])) $lamination2_other_thickness = $row['lamination2_other_thickness'];
-    else $lamination2_other_thickness = null;
+$lamination2_individual_thickness = filter_input(INPUT_POST, 'lamination2_individual_thickness');
+if(null === $lamination2_individual_thickness) {
+    if(isset($row['lamination2_individual_thickness'])) $lamination2_individual_thickness = $row['lamination2_individual_thickness'];
+    else $lamination2_individual_thickness = null;
 }
 
-$lamination2_other_weight = filter_input(INPUT_POST, 'lamination2_other_weight');
-if(null === $lamination2_other_weight) {
-    if(isset($row['lamination2_other_weight'])) $lamination2_other_weight = $row['lamination2_other_weight'];
-    else $lamination2_other_weight = null;
+$lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density');
+if(null === $lamination2_individual_density) {
+    if(isset($row['lamination2_individual_density'])) $lamination2_individual_density = $row['lamination2_individual_density'];
+    else $lamination2_individual_density = null;
 }
 
 if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
@@ -481,10 +463,10 @@ if(null === $width) {
     else $width = null;
 }
 
-$streams_count = filter_input(INPUT_POST, 'streams_count');
-if(null === $streams_count) {
-    if(isset($row['streams_count'])) $streams_count = $row['streams_count'];
-    else $streams_count = null;
+$streams_number = filter_input(INPUT_POST, 'streams_number');
+if(null === $streams_number) {
+    if(isset($row['streams_number'])) $streams_number = $row['streams_number'];
+    else $streams_number = null;
 }
 
 $length = filter_input(INPUT_POST, 'length');
@@ -505,10 +487,10 @@ if(null === $raport) {
     else $raport = null;
 }
 
-$paints_count = filter_input(INPUT_POST, 'paints_count');
-if(null === $paints_count) {
-    if(isset($row['paints_count'])) $paints_count = $row['paints_count'];
-    else $paints_count = null;
+$ink_number = filter_input(INPUT_POST, 'ink_number');
+if(null === $ink_number) {
+    if(isset($row['ink_number'])) $ink_number = $row['ink_number'];
+    else $ink_number = null;
 }
 
 if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
@@ -519,8 +501,8 @@ else {
     else $no_ski = null;
 }
 
-if(isset($row['techmaps_count'])) $techmaps_count = $row['techmaps_count'];
-else $techmaps_count = null;
+if(isset($row['techmap_id'])) $techmap_id = $row['techmap_id'];
+else $techmap_id = null;
 
 if(isset($row['status_id'])) $status_id = $row['status_id'];
 else $status_id = null;
@@ -530,11 +512,11 @@ else $extracharge = 0;
 
 // Данные о цветах
 for ($i=1; $i<=8; $i++) {
-    $paint_var = "paint_$i";
-    $$paint_var = filter_input(INPUT_POST, "paint_$i");
-    if(null === $$paint_var) {
-        if(isset($row["paint_$i"])) $$paint_var = $row["paint_$i"];
-        else $$paint_var = null;
+    $ink_var = "ink_$i";
+    $$ink_var = filter_input(INPUT_POST, "ink_$i");
+    if(null === $$ink_var) {
+        if(isset($row["ink_$i"])) $$ink_var = $row["ink_$i"];
+        else $$ink_var = null;
     }
     
     $color_var = "color_$i";
@@ -558,11 +540,11 @@ for ($i=1; $i<=8; $i++) {
         else $$percent_var = null;
     }
     
-    $form_var = "form_$i";
-    $$form_var = filter_input(INPUT_POST, "form_$i");
-    if(null === $$form_var) {
-        if(isset($row["form_$i"])) $$form_var = $row["form_$i"];
-        else $$form_var = null;
+    $cliche_var = "cliche_$i";
+    $$cliche_var = filter_input(INPUT_POST, "cliche_$i");
+    if(null === $$cliche_var) {
+        if(isset($row["cliche_$i"])) $$cliche_var = $row["cliche_$i"];
+        else $$cliche_var = null;
     }
 }
 
@@ -699,7 +681,7 @@ $colorfulnesses = array();
                         <!-- Единица заказа -->
                         <?php
                         $kg_checked = ($unit == "kg" || empty($unit)) ? " checked='checked'" : "";
-                        $thing_checked = $unit == "thing" ? " checked='checked'" : "";
+                        $pieces_checked = $unit == "pieces" ? " checked='checked'" : "";
                         ?>
                         <div class="print-only justify-content-start mt-2 mb-1 d-none">
                             <div class="form-check-inline">
@@ -709,7 +691,7 @@ $colorfulnesses = array();
                             </div>
                             <div class="form-check-inline">
                                 <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="unit" value="thing"<?=$thing_checked ?> />Штуки
+                                    <input type="radio" class="form-check-input" name="unit" value="pieces"<?=$pieces_checked ?> />Штуки
                                 </label>
                             </div>
                         </div>
@@ -787,12 +769,12 @@ $colorfulnesses = array();
                                             <?php
                                             endforeach;
                                             
-                                            $other_selected = '';
-                                            if(!empty($other_brand_name)) {
-                                                $other_selected = " selected='selected'";
+                                            $individual_selected = '';
+                                            if(!empty($individual_brand_name)) {
+                                                $individual_selected = " selected='selected'";
                                             }
                                             ?>
-                                        <option value="<?=OTHER ?>"<?=$other_selected ?>>Другая</option>
+                                        <option value="<?=INDIVIDUAL ?>"<?=$individual_selected ?>>Другая</option>
                                     </select>
                                 </div>
                             </div>
@@ -821,72 +803,72 @@ $colorfulnesses = array();
                                 </div>
                             </div>
                         </div>
-                        <div class="row other_only">
+                        <div class="row individual_only">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="other_brand_name">Название пленки</label>
+                                    <label for="individual_brand_name">Название пленки</label>
                                     <input type="text" 
-                                           id="other_brand_name" 
-                                           name="other_brand_name" 
+                                           id="individual_brand_name" 
+                                           name="individual_brand_name" 
                                            class="form-control" 
                                            placeholder="Название пленки" 
-                                           value="<?=$other_brand_name ?>" 
+                                           value="<?=$individual_brand_name ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'other_brand_name'); $(this).attr('name', 'other_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
+                                           onmouseup="javascript: $(this).attr('id', 'individual_brand_name'); $(this).attr('name', 'individual_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'other_brand_name'); $(this).attr('name', 'other_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
-                                           onfocusout="javascript: $(this).attr('id', 'other_brand_name'); $(this).attr('name', 'other_brand_name'); $(this).attr('placeholder', 'Название пленки')" />
+                                           onkeyup="javascript: $(this).attr('id', 'individual_brand_name'); $(this).attr('name', 'individual_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
+                                           onfocusout="javascript: $(this).attr('id', 'individual_brand_name'); $(this).attr('name', 'individual_brand_name'); $(this).attr('placeholder', 'Название пленки')" />
                                     <div class="invalid-feedback">Название пленки обязательно</div>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="other_price">Цена</label>
+                                    <label for="individual_price">Цена</label>
                                     <input type="text" 
-                                           id="other_price" 
-                                           name="other_price" 
+                                           id="individual_price" 
+                                           name="individual_price" 
                                            class="form-control float-only" 
                                            placeholder="Цена" 
-                                           value="<?= empty($other_price) ? '' : floatval($other_price) ?>" 
+                                           value="<?= empty($individual_price) ? '' : floatval($individual_price) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'other_price'); $(this).attr('name', 'other_price'); $(this).attr('placeholder', 'Цена')" 
+                                           onmouseup="javascript: $(this).attr('id', 'individual_price'); $(this).attr('name', 'individual_price'); $(this).attr('placeholder', 'Цена')" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'other_price'); $(this).attr('name', 'other_price'); $(this).attr('placeholder', 'Цена')" 
-                                           onfocusout="javascript: $(this).attr('id', 'other_price'); $(this).attr('name', 'other_price'); $(this).attr('placeholder', 'Цена')" />
+                                           onkeyup="javascript: $(this).attr('id', 'individual_price'); $(this).attr('name', 'individual_price'); $(this).attr('placeholder', 'Цена')" 
+                                           onfocusout="javascript: $(this).attr('id', 'individual_price'); $(this).attr('name', 'individual_price'); $(this).attr('placeholder', 'Цена')" />
                                     <div class="invalid-feedback">Цена обязательно</div>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="other_thickness">Толщина, мкм</label>
+                                    <label for="individual_thickness">Толщина, мкм</label>
                                     <input type="text" 
-                                           id="other_thickness" 
-                                           name="other_thickness" 
+                                           id="individual_thickness" 
+                                           name="individual_thickness" 
                                            class="form-control int-only" 
                                            placeholder="Толщина" 
-                                           value="<?= $other_thickness ?>" 
+                                           value="<?= $individual_thickness ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'other_thickness'); $(this).attr('name', 'other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
+                                           onmouseup="javascript: $(this).attr('id', 'individual_thickness'); $(this).attr('name', 'individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'other_thickness'); $(this).attr('name', 'other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
-                                           onfocusout="javascript: $(this).attr('id', 'other_thickness'); $(this).attr('name', 'other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" />
+                                           onkeyup="javascript: $(this).attr('id', 'individual_thickness'); $(this).attr('name', 'individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
+                                           onfocusout="javascript: $(this).attr('id', 'individual_thickness'); $(this).attr('name', 'individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" />
                                     <div class="invalid-feedback">Толщина обязательно</div>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="other_weight">Удельный вес</label>
+                                    <label for="individual_density">Удельный вес</label>
                                     <input type="text" 
-                                           id="other_weight" 
-                                           name="other_weight" 
+                                           id="individual_density" 
+                                           name="individual_density" 
                                            class="form-control float-only" 
                                            placeholder="Удельный вес" 
-                                           value="<?= empty($other_weight) ? '' : floatval($other_weight) ?>" 
+                                           value="<?= empty($individual_density) ? '' : floatval($individual_density) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'other_weight'); $(this).attr('name', 'other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
+                                           onmouseup="javascript: $(this).attr('id', 'individual_density'); $(this).attr('name', 'individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'other_weight'); $(this).attr('name', 'other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
-                                           onfocusout="javascript: $(this).attr('id', 'other_weight'); $(this).attr('name', 'other_weight'); $(this).attr('placeholder', 'Удельный вес')" />
+                                           onkeyup="javascript: $(this).attr('id', 'individual_density'); $(this).attr('name', 'individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
+                                           onfocusout="javascript: $(this).attr('id', 'individual_density'); $(this).attr('name', 'individual_density'); $(this).attr('placeholder', 'Удельный вес')" />
                                     <div class="invalid-feedback">Удельный вес обязательно</div>
                                 </div>
                             </div>
@@ -928,12 +910,12 @@ $colorfulnesses = array();
                                                 <?php
                                                 endforeach;
                                                 
-                                                $lamination1_other_selected = '';
-                                                if(!empty($lamination1_other_brand_name)) {
-                                                    $lamination1_other_selected = " selected='selected'";
+                                                $lamination1_individual_selected = '';
+                                                if(!empty($lamination1_individual_brand_name)) {
+                                                    $lamination1_individual_selected = " selected='selected'";
                                                 }
                                                 ?>
-                                            <option value="<?=OTHER ?>"<?=$lamination1_other_selected ?>>Другая</option>
+                                            <option value="<?=INDIVIDUAL ?>"<?=$lamination1_individual_selected ?>>Другая</option>
                                         </select>
                                     </div>
                                 </div>
@@ -973,73 +955,73 @@ $colorfulnesses = array();
                                     </div>
                                 </div>
                             </div>
-                            <div class="row lamination1_other_only">
+                            <div class="row lamination1_individual_only">
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label for="lamination1_other_brand_name">Название пленки</label>
+                                        <label for="lamination1_individual_brand_name">Название пленки</label>
                                         <input type="text" 
-                                               id="lamination1_other_brand_name" 
-                                               name="lamination1_other_brand_name" 
+                                               id="lamination1_individual_brand_name" 
+                                               name="lamination1_individual_brand_name" 
                                                class="form-control" 
                                                placeholder="Название пленки" 
-                                               value="<?=$lamination1_other_brand_name ?>" 
+                                               value="<?=$lamination1_individual_brand_name ?>" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'lamination1_other_brand_name'); $(this).attr('name', 'lamination1_other_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
+                                               onmouseup="javascript: $(this).attr('id', 'lamination1_individual_brand_name'); $(this).attr('name', 'lamination1_individual_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'lamination1_other_brand_name'); $(this).attr('name', 'lamination1_other_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
-                                               onfocusout="javascript: $(this).attr('id', 'lamination1_other_brand_name'); $(this).attr('name', 'lamination1_other_brand_name'); $(this).attr('placeholder', 'Название пленки')" />
+                                               onkeyup="javascript: $(this).attr('id', 'lamination1_individual_brand_name'); $(this).attr('name', 'lamination1_individual_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
+                                               onfocusout="javascript: $(this).attr('id', 'lamination1_individual_brand_name'); $(this).attr('name', 'lamination1_individual_brand_name'); $(this).attr('placeholder', 'Название пленки')" />
                                         <div class="invalid-feedback">Название пленки обязательно</div>
                                     </div>
                                 </div>
                                 <div class="col-5">
                                     <div class="form-group">
-                                        <label for="lamination1_other_price">Цена</label>
+                                        <label for="lamination1_individual_price">Цена</label>
                                         <input type="text" 
-                                               id="lamination1_other_price" 
-                                               name="lamination1_other_price" 
+                                               id="lamination1_individual_price" 
+                                               name="lamination1_individual_price" 
                                                class="form-control float-only" 
                                                placeholder="Цена" 
-                                               value="<?= empty($lamination1_other_price) ? '' : floatval($lamination1_other_price) ?>" 
+                                               value="<?= empty($lamination1_individual_price) ? '' : floatval($lamination1_individual_price) ?>" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'lamination1_other_price'); $(this).attr('name', 'lamination1_other_price'); $(this).attr('placeholder', 'Цена')" 
+                                               onmouseup="javascript: $(this).attr('id', 'lamination1_individual_price'); $(this).attr('name', 'lamination1_individual_price'); $(this).attr('placeholder', 'Цена')" 
                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'lamination1_other_price'); $(this).attr('name', 'lamination1_other_price'); $(this).attr('placeholder', 'Цена')" 
-                                               onfocusout="javascript: $(this).attr('id', 'lamination1_other_price'); $(this).attr('name', 'lamination1_other_price'); $(this).attr('placeholder', 'Цена')" />
+                                               onkeyup="javascript: $(this).attr('id', 'lamination1_individual_price'); $(this).attr('name', 'lamination1_individual_price'); $(this).attr('placeholder', 'Цена')" 
+                                               onfocusout="javascript: $(this).attr('id', 'lamination1_individual_price'); $(this).attr('name', 'lamination1_individual_price'); $(this).attr('placeholder', 'Цена')" />
                                         <div class="invalid-feedback">Цена обязательно</div>
                                     </div>
                                 </div>
                                 <div class="col-1"></div>
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label for="lamination1_other_thickness">Толщина, мкм</label>
+                                        <label for="lamination1_individual_thickness">Толщина, мкм</label>
                                         <input type="text" 
-                                               id="lamination1_other_thickness" 
-                                               name="lamination1_other_thickness" 
+                                               id="lamination1_individual_thickness" 
+                                               name="lamination1_individual_thickness" 
                                                class="form-control int-only" 
                                                placeholder="Толщина" 
-                                               value="<?= $lamination1_other_thickness ?>" 
+                                               value="<?= $lamination1_individual_thickness ?>" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'lamination1_other_thickness'); $(this).attr('name', 'lamination1_other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
+                                               onmouseup="javascript: $(this).attr('id', 'lamination1_individual_thickness'); $(this).attr('name', 'lamination1_individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'lamination1_other_thickness'); $(this).attr('name', 'lamination1_other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
-                                               onfocusout="javascript: $(this).attr('id', 'lamination1_other_thickness'); $(this).attr('name', 'lamination1_other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" />
+                                               onkeyup="javascript: $(this).attr('id', 'lamination1_individual_thickness'); $(this).attr('name', 'lamination1_individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
+                                               onfocusout="javascript: $(this).attr('id', 'lamination1_individual_thickness'); $(this).attr('name', 'lamination1_individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" />
                                         <div class="invalid-feedback">Толщина обязательно</div>
                                     </div>
                                 </div>
                                 <div class="col-5">
                                     <div class="form-group">
-                                        <label for="lamination1_other_weight">Удельный вес</label>
+                                        <label for="lamination1_individual_density">Удельный вес</label>
                                         <input type="text" 
-                                               id="lamination1_other_weight" 
-                                               name="lamination1_other_weight" 
+                                               id="lamination1_individual_density" 
+                                               name="lamination1_individual_density" 
                                                class="form-control float-only" 
                                                placeholder="Удельный вес" 
-                                               value="<?= empty($lamination1_other_weight) ? '' : floatval($lamination1_other_weight) ?>" 
+                                               value="<?= empty($lamination1_individual_density) ? '' : floatval($lamination1_individual_density) ?>" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'lamination1_other_weight'); $(this).attr('name', 'lamination1_other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
+                                               onmouseup="javascript: $(this).attr('id', 'lamination1_individual_density'); $(this).attr('name', 'lamination1_individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'lamination1_other_weight'); $(this).attr('name', 'lamination1_other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
-                                               onfocusout="javascript: $(this).attr('id', 'lamination1_other_weight'); $(this).attr('name', 'lamination1_other_weight'); $(this).attr('placeholder', 'Удельный вес')" />
+                                               onkeyup="javascript: $(this).attr('id', 'lamination1_individual_density'); $(this).attr('name', 'lamination1_individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
+                                               onfocusout="javascript: $(this).attr('id', 'lamination1_individual_density'); $(this).attr('name', 'lamination1_individual_density'); $(this).attr('placeholder', 'Удельный вес')" />
                                         <div class="invalid-feedback">Удельный вес обязательно</div>
                                     </div>
                                 </div>
@@ -1082,12 +1064,12 @@ $colorfulnesses = array();
                                                     <?php
                                                     endforeach;
                                                     
-                                                    $lamination2_other_selected = '';
-                                                    if(!empty($lamination2_other_brand_name)) {
-                                                        $lamination2_other_selected = " selected='selected'";
+                                                    $lamination2_individual_selected = '';
+                                                    if(!empty($lamination2_individual_brand_name)) {
+                                                        $lamination2_individual_selected = " selected='selected'";
                                                     }
                                                     ?>
-                                                <option value="<?=OTHER ?>"<?=$lamination2_other_selected ?>>Другая</option>
+                                                <option value="<?=INDIVIDUAL ?>"<?=$lamination2_individual_selected ?>>Другая</option>
                                             </select>
                                         </div>
                                     </div>
@@ -1121,73 +1103,73 @@ $colorfulnesses = array();
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row lamination2_other_only">
+                                <div class="row lamination2_individual_only">
                                     <div class="col-6">
                                         <div class="form-group">
-                                            <label for="lamination2_other_brand_name">Название пленки</label>
+                                            <label for="lamination2_individual_brand_name">Название пленки</label>
                                             <input type="text" 
-                                                   id="lamination2_other_brand_name" 
-                                                   name="lamination2_other_brand_name" 
+                                                   id="lamination2_individual_brand_name" 
+                                                   name="lamination2_individual_brand_name" 
                                                    class="form-control" 
                                                    placeholder="Название пленки" 
-                                                   value="<?=$lamination2_other_brand_name ?>" 
+                                                   value="<?=$lamination2_individual_brand_name ?>" 
                                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_other_brand_name'); $(this).attr('name', 'lamination2_other_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
+                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_individual_brand_name'); $(this).attr('name', 'lamination2_individual_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
                                                    onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_other_brand_name'); $(this).attr('name', 'lamination2_other_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
-                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_other_brand_name'); $(this).attr('name', 'lamination2_other_brand_name'); $(this).attr('placeholder', 'Название пленки')" />
+                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_individual_brand_name'); $(this).attr('name', 'lamination2_individual_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
+                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_individual_brand_name'); $(this).attr('name', 'lamination2_individual_brand_name'); $(this).attr('placeholder', 'Название пленки')" />
                                             <div class="invalid-feedback">Название пленки обязательно</div>
                                         </div>
                                     </div>
                                     <div class="col-5">
                                         <div class="form-group">
-                                            <label for="lamination2_other_price">Цена</label>
+                                            <label for="lamination2_individual_price">Цена</label>
                                             <input type="text" 
-                                                   id="lamination2_other_price" 
-                                                   name="lamination2_other_price" 
+                                                   id="lamination2_individual_price" 
+                                                   name="lamination2_individual_price" 
                                                    class="form-control float-only" 
                                                    placeholder="Цена" 
-                                                   value="<?= empty($lamination2_other_price) ? '' : floatval($lamination2_other_price) ?>" 
+                                                   value="<?= empty($lamination2_individual_price) ? '' : floatval($lamination2_individual_price) ?>" 
                                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_other_price'); $(this).attr('name', 'lamination2_other_price'); $(this).attr('placeholder', 'Цена')" 
+                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_individual_price'); $(this).attr('name', 'lamination2_individual_price'); $(this).attr('placeholder', 'Цена')" 
                                                    onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_other_price'); $(this).attr('name', 'lamination2_other_price'); $(this).attr('placeholder', 'Цена')" 
-                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_other_price'); $(this).attr('name', 'lamination2_other_price'); $(this).attr('placeholder', 'Цена')" />
+                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_individual_price'); $(this).attr('name', 'lamination2_individual_price'); $(this).attr('placeholder', 'Цена')" 
+                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_individual_price'); $(this).attr('name', 'lamination2_individual_price'); $(this).attr('placeholder', 'Цена')" />
                                             <div class="invalid-feedback">Цена обязательно</div>
                                         </div>
                                     </div>
                                     <div class="col-1"></div>
                                     <div class="col-6">
                                         <div class="form-group">
-                                            <label for="lamination2_other_thickness">Толщина, мкм</label>
+                                            <label for="lamination2_individual_thickness">Толщина, мкм</label>
                                             <input type="text" 
-                                                   id="lamination2_other_thickness" 
-                                                   name="lamination2_other_thickness" 
+                                                   id="lamination2_individual_thickness" 
+                                                   name="lamination2_individual_thickness" 
                                                    class="form-control int-only" 
                                                    placeholder="Толщина" 
-                                                   value="<?= $lamination2_other_thickness ?>" 
+                                                   value="<?= $lamination2_individual_thickness ?>" 
                                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_other_thickness'); $(this).attr('name', 'lamination2_other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
+                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_individual_thickness'); $(this).attr('name', 'lamination2_individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
                                                    onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_other_thickness'); $(this).attr('name', 'lamination2_other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
-                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_other_thickness'); $(this).attr('name', 'lamination2_other_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" />
+                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_individual_thickness'); $(this).attr('name', 'lamination2_individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
+                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_individual_thickness'); $(this).attr('name', 'lamination2_individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" />
                                             <div class="invalid-feedback">Толщина обязательно</div>
                                         </div>
                                     </div>
                                     <div class="col-5">
                                         <div class="form-group">
-                                            <label for="lamination2_other_weight">Удельный вес</label>
+                                            <label for="lamination2_individual_density">Удельный вес</label>
                                             <input type="text" 
-                                                   id="lamination2_other_weight" 
-                                                   name="lamination2_other_weight" 
+                                                   id="lamination2_individual_density" 
+                                                   name="lamination2_individual_density" 
                                                    class="form-control float-only" 
                                                    placeholder="Удельный вес" 
-                                                   value="<?= empty($lamination2_other_weight) ? '' : floatval($lamination2_other_weight) ?>" 
+                                                   value="<?= empty($lamination2_individual_density) ? '' : floatval($lamination2_individual_density) ?>" 
                                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_other_weight'); $(this).attr('name', 'lamination2_other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
+                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_individual_density'); $(this).attr('name', 'lamination2_individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
                                                    onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_other_weight'); $(this).attr('name', 'lamination2_other_weight'); $(this).attr('placeholder', 'Удельный вес')" 
-                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_other_weight'); $(this).attr('name', 'lamination2_other_weight'); $(this).attr('placeholder', 'Удельный вес')" />
+                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_individual_density'); $(this).attr('name', 'lamination2_individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
+                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_individual_density'); $(this).attr('name', 'lamination2_individual_density'); $(this).attr('placeholder', 'Удельный вес')" />
                                             <div class="invalid-feedback">Удельный вес обязательно</div>
                                         </div>
                                     </div>
@@ -1266,18 +1248,18 @@ $colorfulnesses = array();
                             <!-- Количество ручьёв -->
                             <div class="col-6 lam-only print-no-print d-none">
                                 <div class="form-group">
-                                    <label for="streams_count">Количество ручьев</label>
+                                    <label for="streams_number">Количество ручьев</label>
                                     <input type="text" 
-                                           id="streams_count" 
-                                           name="streams_count" 
+                                           id="streams_number" 
+                                           name="streams_number" 
                                            class="form-control int-only lam-only print-no-print d-none" 
                                            placeholder="Количество ручьев" 
-                                           value="<?=$streams_count ?>" 
+                                           value="<?=$streams_number ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'streams_count'); $(this).attr('name', 'streams_count'); $(this).attr('placeholder', 'Количество ручьев');" 
+                                           onmouseup="javascript: $(this).attr('id', 'streams_number'); $(this).attr('name', 'streams_number'); $(this).attr('placeholder', 'Количество ручьев');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'streams_count'); $(this).attr('name', 'streams_count'); $(this).attr('placeholder', 'Количество ручьев');" 
-                                           onfocusout="javascript: $(this).attr('id', 'streams_count'); $(this).attr('name', 'streams_count'); $(this).attr('placeholder', 'Количество ручьев');" />
+                                           onkeyup="javascript: $(this).attr('id', 'streams_number'); $(this).attr('name', 'streams_number'); $(this).attr('placeholder', 'Количество ручьев');" 
+                                           onfocusout="javascript: $(this).attr('id', 'streams_number'); $(this).attr('name', 'streams_number'); $(this).attr('placeholder', 'Количество ручьев');" />
                                     <div class="invalid-feedback">Количество ручьев обязательно</div>
                                 </div>
                             </div>
@@ -1318,14 +1300,14 @@ $colorfulnesses = array();
                         <!-- Количество красок -->
                         <div class="print-only d-none">
                             <div class="form-group">
-                                <label for="paints_count">Количество красок</label>
-                                <select id="paints_count" name="paints_count" class="form-control print-only d-none">
+                                <label for="ink_number">Количество красок</label>
+                                <select id="ink_number" name="ink_number" class="form-control print-only d-none">
                                     <option value="" hidden="hidden">Количество красок...</option>
                                         <?php
-                                        if(!empty($paints_count) || !empty($machine_id)):
+                                        if(!empty($ink_number) || !empty($machine_id)):
                                         for($i = 1; $i <= $colorfulnesses[$machine_id]; $i++):
                                             $selected = "";
-                                        if($paints_count == $i) {
+                                        if($ink_number == $i) {
                                             $selected = " selected='selected'";
                                         }
                                         ?>
@@ -1340,44 +1322,44 @@ $colorfulnesses = array();
                             <?php
                             for($i=1; $i<=8; $i++):
                             $block_class = " d-none";
-                            $paint_required = "";
+                            $ink_required = "";
 
-                            if(!empty($paints_count) && is_numeric($paints_count) && $i <= $paints_count) {
+                            if(!empty($ink_number) && is_numeric($ink_number) && $i <= $ink_number) {
                                 $block_class = "";
-                                $paint_required = " required='required'";
+                                $ink_required = " required='required'";
                             }
                             ?>
-                            <div class="row paint_block<?=$block_class ?>" id="paint_block_<?=$i ?>">
+                            <div class="row ink_block<?=$ink_class ?>" id="ink_block_<?=$i ?>">
                                 <?php
-                                $paint_class = " col-12";
+                                $ink_class = " col-12";
                                 $cmyk_class = " d-none";
                                 $color_class = " d-none";
                                 $percent_class = " d-none";
-                                $form_class = " d-none";
+                                $cliche_class = " d-none";
                             
-                                $paint_var_name = "paint_$i";
+                                $ink_var_name = "ink_$i";
                             
-                                if($$paint_var_name == "white" || $$paint_var_name == "lacquer") {
-                                    $paint_class = " col-6";
+                                if($$ink_var_name == "white" || $$ink_var_name == "lacquer") {
+                                    $ink_class = " col-6";
                                     $percent_class = " col-3";
-                                    $form_class = " col-3";
+                                    $cliche_class = " col-3";
                                 }
-                                else if($$paint_var_name == "panton") {
-                                    $paint_class = " col-3";
+                                else if($$ink_var_name == "panton") {
+                                    $ink_class = " col-3";
                                     $color_class = " col-3";
                                     $percent_class = " col-3";
-                                    $form_class = " col-3";
+                                    $cliche_class = " col-3";
                                 }
-                                else if($$paint_var_name == "cmyk") {
-                                    $paint_class = " col-3";
+                                else if($$ink_var_name == "cmyk") {
+                                    $ink_class = " col-3";
                                     $cmyk_class = " col-3";
                                     $percent_class = " col-3";
-                                    $form_class = " col-3";
+                                    $cliche_class = " col-3";
                                 }
                                 ?>
-                                <div class="form-group<?=$paint_class ?>" id="paint_group_<?=$i ?>">
-                                    <label for="paint_<?=$i ?>"><?=$i ?> цвет</label>
-                                    <select id="paint_<?=$i ?>" name="paint_<?=$i ?>" class="form-control paint" data-id="<?=$i ?>"<?=$paint_required ?>>
+                                <div class="form-group<?=$ink_class ?>" id="ink_group_<?=$i ?>">
+                                    <label for="ink_<?=$i ?>"><?=$i ?> цвет</label>
+                                    <select id="ink_<?=$i ?>" name="ink_<?=$i ?>" class="form-control ink" data-id="<?=$i ?>"<?=$ink_required ?>>
                                         <option value="" hidden="hidden" selected="selected">Цвет...</option>
                                         <?php
                                         $cmyk_selected = "";
@@ -1385,7 +1367,7 @@ $colorfulnesses = array();
                                         $white_selected = "";
                                         $lacquer_selected = "";
                                     
-                                        $selected_var_name = $$paint_var_name."_selected";
+                                        $selected_var_name = $$ink_var_name."_selected";
                                         $$selected_var_name = " selected='selected'";
                                         ?>
                                         <option value="cmyk"<?=$cmyk_selected ?>>CMYK</option>
@@ -1466,18 +1448,18 @@ $colorfulnesses = array();
                                         <div class="invalid-feedback">Процент обязательно</div>
                                     </div>
                                 </div>
-                                <div class="form-group<?=$form_class ?>" id="form_group_<?=$i ?>">
-                                    <label for="form_<?=$i ?>">Форма</label>
-                                    <select id="form_<?=$i ?>" name="form_<?=$i ?>" class="form-control form">
+                                <div class="form-group<?=$form_class ?>" id="cliche_group_<?=$i ?>">
+                                    <label for="cliche_<?=$i ?>">Форма</label>
+                                    <select id="cliche_<?=$i ?>" name="form_<?=$i ?>" class="form-control cliche">
                                         <?php
                                         $old_selected = "";
                                         $flint_selected = "";
                                         $kodak_selected = "";
                                         $tver_selected = "";
                                     
-                                        $form_var = "form_$i";
-                                        $form_selected_var = $$form_var."_selected";
-                                        $$form_selected_var = " selected='selected'";
+                                        $cliche_var = "cliche_$i";
+                                        $cliche_selected_var = $$cliche_var."_selected";
+                                        $$cliche_selected_var = " selected='selected'";
                                         ?>
                                         <option value="old"<?=$old_selected ?>>Старая</option>
                                         <option value="flint"<?=$flint_selected ?>>Новая Флинт</option>
@@ -1532,13 +1514,13 @@ $colorfulnesses = array();
             });
             
             // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
-            $('#streams_count').keydown(function(e) {
+            $('#streams_number').keydown(function(e) {
                 if(!KeyDownLimitIntValue($(e.target), e, 50)) {
                     return false;
                 }
             });
     
-            $("#streams_count").change(function(){
+            $("#streams_number").change(function(){
                 ChangeLimitIntValue($(this), 50);
             });
             
@@ -1605,7 +1587,7 @@ $colorfulnesses = array();
                 $('#label_quantity').text('Объем заказа, кг');
             }
             
-            if($('input[value=thing]').is(':checked')) {
+            if($('input[value=pieces]').is(':checked')) {
                 $('#label_quantity').text('Объем заказа, шт');
             }
                 
@@ -1631,15 +1613,15 @@ $colorfulnesses = array();
                 }
                 else {
                     // Заполняем список количеств цветов
-                    $('.paint_block').addClass('d-none');
-                    $('.paint').removeAttr('required');
+                    $('.ink_block').addClass('d-none');
+                    $('.ink').removeAttr('required');
                                 
                     colorfulness = parseInt(colorfulnesses[$(this).val()]);
                     var colorfulness_list = "<option value='' hidden='hidden'>Количество красок...</option>";
                     for(var i=1; i<=colorfulness; i++) {
                         colorfulness_list = colorfulness_list + "<option>" + i + "</option>";
                     }
-                    $('#paints_count').html(colorfulness_list);
+                    $('#ink_number').html(colorfulness_list);
                     
                     // Заполняем список рапортов
                     $.ajax({ url: "../ajax/raport.php?machine_id=" + $(this).val() })
@@ -1655,30 +1637,30 @@ $colorfulnesses = array();
             // Установка видимости полей для ручного ввода при выборе марки плёнки "Другая"
             function SetBrandFieldsVisibility(value, isCustomers, prefix) {
                 if(isCustomers) {
-                    $('#' + prefix + 'other_price').val('');
-                    $('#' + prefix + 'other_price').attr('disabled', 'disabled');
+                    $('#' + prefix + 'individual_price').val('');
+                    $('#' + prefix + 'individual_price').attr('disabled', 'disabled');
                 }
                 else {
-                    $('#' + prefix + 'other_price').removeAttr('disabled');
+                    $('#' + prefix + 'individual_price').removeAttr('disabled');
                 }
                 
-                if(value == '<?=OTHER ?>') {
+                if(value == '<?=INDIVIDUAL ?>') {
                     $('#' + prefix + 'thickness').removeAttr('required');
                     $('#' + prefix + 'thickness').addClass('d-none');
                     $('#' + prefix + 'thickness').prev('label').addClass('d-none');
-                    $('.' + prefix + 'other_only').removeClass('d-none');
-                    $('.' + prefix + 'other_only input').attr('required', 'required');
+                    $('.' + prefix + 'individual_only').removeClass('d-none');
+                    $('.' + prefix + 'individual_only input').attr('required', 'required');
                 }
                 else {
                     $('#' + prefix + 'thickness').attr('required', 'required');
                     $('#' + prefix + 'thickness').removeClass('d-none');
                     $('#' + prefix + 'thickness').prev('label').removeClass('d-none');
-                    $('.' + prefix + 'other_only').addClass('d-none');
-                    $('.' + prefix + 'other_only input').removeAttr('required');
+                    $('.' + prefix + 'individual_only').addClass('d-none');
+                    $('.' + prefix + 'individual_only input').removeAttr('required');
                 }
                 
-                if($('#' + prefix + 'other_price').attr('disabled') == 'disabled') {
-                    $('#' + prefix + 'other_price').removeAttr('required');
+                if($('#' + prefix + 'individual_price').attr('disabled') == 'disabled') {
+                    $('#' + prefix + 'individual_price').removeAttr('required');
                 }
             }
             
@@ -1821,30 +1803,30 @@ $colorfulnesses = array();
             }
             
             // Обработка выбора количества красок
-            $('#paints_count').change(function(){
+            $('#ink_number').change(function(){
                 var count = $(this).val();
-                $('.paint_block').addClass('d-none');
-                $('.paint').removeAttr('required');
+                $('.ink_block').addClass('d-none');
+                $('.ink').removeAttr('required');
                 
                 if(count != '') {
                     iCount = parseInt(count);
                     
                     for(var i=1; i<=iCount; i++) {
-                        $('#paint_block_' + i).removeClass('d-none');
-                        $('#paint_' + i).attr('required', 'required');
+                        $('#ink_block_' + i).removeClass('d-none');
+                        $('#ink_' + i).attr('required', 'required');
                     }
                 }
             });
             
             // Обработка выбора краски
-            $('.paint').change(function(){
-                paint = $(this).val();
+            $('.ink').change(function(){
+                ink = $(this).val();
                 var data_id = $(this).attr('data-id');
                 
                 // Устанавливаем видимость всех элементов по умолчанию, как если бы выбрали пустое значение
-                $('#paint_group_' + data_id).removeClass('col-12');
-                $('#paint_group_' + data_id).removeClass('col-6');
-                $('#paint_group_' + data_id).removeClass('col-3');
+                $('#ink_group_' + data_id).removeClass('col-12');
+                $('#ink_group_' + data_id).removeClass('col-6');
+                $('#ink_group_' + data_id).removeClass('col-3');
                 
                 $('#color_group_' + data_id).removeClass('col-3');
                 $('#color_group_' + data_id).addClass('d-none');
@@ -1855,8 +1837,8 @@ $colorfulnesses = array();
                 $('#percent_group_' + data_id).removeClass('col-3');
                 $('#percent_group_' + data_id).addClass('d-none');
                 
-                $('#form_group_' + data_id).removeClass('col-3');
-                $('#form_group_' + data_id).addClass('d-none');
+                $('#cliche_group_' + data_id).removeClass('col-3');
+                $('#cliche_group_' + data_id).addClass('d-none');
                 
                 // Снимаем атрибут required с кода цвета, CMYK и процента
                 $('#color_' + data_id).removeAttr('required');
@@ -1864,50 +1846,50 @@ $colorfulnesses = array();
                 $('#percent_' + data_id).removeAttr('required');
                 
                 // Затем, в зависимости от выбранного значения, устанавливаем видимость нужного элемента для этого значения
-                if(paint == 'lacquer')  {
-                    $('#paint_group_' + data_id).addClass('col-6');
+                if(ink == 'lacquer')  {
+                    $('#ink_group_' + data_id).addClass('col-6');
                     $('#percent_group_' + data_id).addClass('col-3');
                     $('#percent_group_' + data_id).removeClass('d-none');
-                    $('#form_group_' + data_id).addClass('col-3');
-                    $('#form_group_' + data_id).removeClass('d-none');
+                    $('#cliche_group_' + data_id).addClass('col-3');
+                    $('#cliche_group_' + data_id).removeClass('d-none');
                     
                     $('#percent_' + data_id).attr('required', 'required');
                 }
-                else if(paint == 'white') {
-                    $('#paint_group_' + data_id).addClass('col-6');
+                else if(ink == 'white') {
+                    $('#ink_group_' + data_id).addClass('col-6');
                     $('#percent_group_' + data_id).addClass('col-3');
                     $('#percent_group_' + data_id).removeClass('d-none');
-                    $('#form_group_' + data_id).addClass('col-3');
-                    $('#form_group_' + data_id).removeClass('d-none');
+                    $('#cliche_group_' + data_id).addClass('col-3');
+                    $('#cliche_group_' + data_id).removeClass('d-none');
                     
                     $('#percent_' + data_id).attr('required', 'required');
                 }
-                else if(paint == 'cmyk') {
-                    $('#paint_group_' + data_id).addClass('col-3');
+                else if(ink == 'cmyk') {
+                    $('#ink_group_' + data_id).addClass('col-3');
                     $('#cmyk_group_' + data_id).addClass('col-3');
                     $('#cmyk_group_' + data_id).removeClass('d-none');
                     $('#percent_group_' + data_id).addClass('col-3');
                     $('#percent_group_' + data_id).removeClass('d-none');
-                    $('#form_group_' + data_id).addClass('col-3');
-                    $('#form_group_' + data_id).removeClass('d-none');
+                    $('#cliche_group_' + data_id).addClass('col-3');
+                    $('#cliche_group_' + data_id).removeClass('d-none');
                     
                     $('#percent_' + data_id).attr('required', 'required');
                     $('#cmyk_' + data_id).attr('required', 'required');
                 }
-                else if(paint == 'panton') {
-                    $('#paint_group_' + data_id).addClass('col-3');
+                else if(ink == 'panton') {
+                    $('#ink_group_' + data_id).addClass('col-3');
                     $('#color_group_' + data_id).addClass('col-3');
                     $('#color_group_' + data_id).removeClass('d-none');
                     $('#percent_group_' + data_id).addClass('col-3');
                     $('#percent_group_' + data_id).removeClass('d-none');
-                    $('#form_group_' + data_id).addClass('col-3');
-                    $('#form_group_' + data_id).removeClass('d-none');
+                    $('#cliche_group_' + data_id).addClass('col-3');
+                    $('#cliche_group_' + data_id).removeClass('d-none');
                     
                     $('#percent_' + data_id).attr('required', 'required');
                     $('#color_' + data_id).attr('required', 'required');
                 }
                 else {
-                    $('#paint_group_' + data_id).addClass('col-12');
+                    $('#ink_group_' + data_id).addClass('col-12');
                 }
             });
             
