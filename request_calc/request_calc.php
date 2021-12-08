@@ -232,7 +232,7 @@ $num_for_customer = $row['num_for_customer'];
                             <th>Пленка</th>
                             <td><?=$individual_brand_name ?></td>
                             <td><?= number_format($individual_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($individual_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                            <td class="w-25"><?=$customers_material == 1 ? "Сырье заказчика" : "" ?></td>
+                            <td><?=$customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                         </tr>
                             <?php
                             else:
@@ -241,7 +241,7 @@ $num_for_customer = $row['num_for_customer'];
                             <th>Пленка</th>
                             <td><?=$brand_name ?></td>
                             <td><?= number_format($thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                            <td class="w-25"><?=$customers_material == 1 ? "Сырье заказчика" : "" ?></td>
+                            <td><?=$customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                         </tr>
                             <?php
                             endif;
@@ -255,7 +255,7 @@ $num_for_customer = $row['num_for_customer'];
                             <th<?=(empty($lamination2_brand_name) ? "" : " rowspan='2'") ?>>Ламинация: <?=$lamination ?></th>
                             <td><?=$lamination1_individual_brand_name ?></td>
                             <td><?= number_format($lamination1_individual_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_individual_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                            <td class="w-25"><?=$lamination1_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
+                            <td><?=$lamination1_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                         </tr>
                             <?php
                             elseif(!empty($lamination1_brand_name)):
@@ -264,7 +264,7 @@ $num_for_customer = $row['num_for_customer'];
                             <th rowspan="2">Ламинация: <?=$lamination ?></th>
                             <td><?=$lamination1_brand_name ?></td>
                             <td><?= number_format($lamination1_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                            <td class="w-25"><?=$lamination1_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
+                            <td><?=$lamination1_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                         </tr>
                             <?php
                             endif;
@@ -273,7 +273,7 @@ $num_for_customer = $row['num_for_customer'];
                         <tr>
                             <td><?=$lamination2_individual_brand_name ?></td>
                             <td><?= number_format($lamination2_individual_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_individual_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                            <td class="w-25"><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
+                            <td><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                         </tr>
                             <?php
                             elseif(!empty($lamination2_brand_name)):
@@ -281,7 +281,7 @@ $num_for_customer = $row['num_for_customer'];
                         <tr>
                             <td><?=$lamination2_brand_name ?></td>
                             <td><?= number_format($lamination2_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                            <td class="w-25"><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
+                            <td><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                         </tr>
                             <?php
                             endif;
