@@ -1751,7 +1751,7 @@ $num_for_customer = $row['num_for_customer'];
                         <tr>
                             <th<?=(empty($lamination2_brand_name) ? "" : " rowspan='2'") ?>>Ламинация: <?=$lamination ?></th>
                             <td class="param-value"><?=$lamination1_brand_name ?></td>
-                            <td class="param-value"><?= number_format($lamination1_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                            <td class="param-value"><?= number_format($lamination1_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                             <td class="param-value"><?=$lamination1_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                         </tr>
                             <?php
@@ -1767,9 +1767,9 @@ $num_for_customer = $row['num_for_customer'];
                             elseif(!empty($lamination2_brand_name)):
                             ?>
                         <tr>
-                            <td><?=$lamination2_brand_name ?></td>
-                            <td><?= number_format($lamination2_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                            <td class="w-25"><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
+                            <td class="param-value"><?=$lamination2_brand_name ?></td>
+                            <td class="param-value"><?= number_format($lamination2_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                            <td class="param-value"><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                         </tr>
                             <?php
                             endif;
