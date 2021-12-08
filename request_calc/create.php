@@ -1470,15 +1470,19 @@ $colorfulnesses = array();
                                     <label for="form_<?=$i ?>">Форма</label>
                                     <select id="form_<?=$i ?>" name="form_<?=$i ?>" class="form-control form">
                                         <?php
+                                        $old_selected = "";
                                         $flint_selected = "";
                                         $kodak_selected = "";
+                                        $tver_selected = "";
                                     
                                         $form_var = "form_$i";
                                         $form_selected_var = $$form_var."_selected";
                                         $$form_selected_var = " selected='selected'";
                                         ?>
-                                        <option value="flint"<?=$flint_selected ?>>Флинт</option>
-                                        <option value="kodak"<?=$kodak_selected ?>>Кодак</option>
+                                        <option value="old"<?=$old_selected ?>>Старая</option>
+                                        <option value="flint"<?=$flint_selected ?>>Новая Флинт</option>
+                                        <option value="kodak"<?=$kodak_selected ?>>Новая Кодак</option>
+                                        <option value="tver"<?=$tver_selected ?>>Новая Тверь</option>
                                     </select>
                                 </div>
                             </div>

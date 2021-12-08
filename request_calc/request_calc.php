@@ -363,7 +363,24 @@ $num_for_customer = $row['num_for_customer'];
                                             ?>
                                         </td>
                                         <td><?=$$percent_var ?>%</td>
-                                        <td><?=$$form_var ?></td>
+                                        <td>
+                                            <?php
+                                            switch ($$form_var) {
+                                                case 'old':
+                                                    echo 'Старая';
+                                                    break;
+                                                case 'flint':
+                                                    echo 'Флинт';
+                                                    break;
+                                                case 'kodak';
+                                                    echo 'Кодак';
+                                                    break;
+                                                case 'tver';
+                                                    echo 'Тверь';
+                                                    break;
+                                            }
+                                            ?>
+                                        </td>
                                     </tr>
                                         <?php
                                         endfor;
