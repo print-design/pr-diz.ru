@@ -245,7 +245,6 @@ $num_for_customer = $row['num_for_customer'];
                         </tr>
                             <?php
                             endif;
-                            
                             $lamination = "нет";
                             if(!empty($lamination1_brand_name)) $lamination = "1";
                             if(!empty($lamination2_brand_name)) $lamination = "2";
