@@ -10,15 +10,6 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
 // Значение марки плёнки "другая"
 const INDIVIDUAL = "individual";
 
-// Составление технологической карты
-if(null !== filter_input(INPUT_POST, 'create_techmap_submit')) {
-    $request_calc_id = filter_input(INPUT_POST, 'request_calc_id');
-    
-    $sql = "insert into techmap (request_calc_id) values ($request_calc_id)";
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
-}
-
 // Получение объекта
 $id = filter_input(INPUT_POST, 'id');
 if(empty($id)) {

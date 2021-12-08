@@ -187,10 +187,7 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
     <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
     <input type="hidden" id="change_status_submit" name="change_status_submit" />
         <?php if (empty($techmap_id)): ?>
-        <form method="post" class="d-inline-block">
-            <input type="hidden" name="request_calc_id" value="<?=$id ?>" />
-            <button type="submit" name="create_techmap_submit" class="btn btn-outline-dark mt-3 mr-2 topbutton" style="width: 200px;">Составить тех. карту</button>
-        </form>
+    <a href="create_techmap.php?id=<?=$id ?>" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Составить тех. карту</a>
         <?php else: ?>
     <a href="javascript: void(0);" class="btn btn-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
         <?php endif; ?>
