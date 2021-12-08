@@ -146,50 +146,22 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
                 <div class="value mb-2">17 500 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">17,5 кг</span></div>
                 <?php
                 endif;
-                if(!empty($lamination1_brand_name) || !empty($lamination2_brand_name)):
-                ?>
-                <div>Клей</div>
-                <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">1,0 кг</span></div>
-                <?php
-                endif;
                 if($work_type_id == 2):
                 ?>
                 <div>Печать тиража</div>
                 <div class="value mb-2">470 500 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">6 ч. 30 мин.</span></div>
                 <?php
                 endif;
-                if(!empty($lamination1_brand_name) || !empty($lamination2_brand_name)):
                 ?>
-                <div>Работа ламинатора</div>
-                <div class="value mb-2">1 500 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">3 часа</span></div>
-                <?php endif; ?>
             </div>
             <?php if(!empty($lamination1_brand_name)): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
                 <div class="value mb-2">1 280 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">4,5 кг</span></div>
-                <?php if($work_type_id == 2): ?>
-                <div>Краска</div>
-                <div class="value mb-2">17 500 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">17,5 кг</span></div>
-                <?php
-                endif;
-                if(!empty($lamination1_brand_name) || !empty($lamination2_brand_name)):
-                ?>
                 <div>Клей</div>
                 <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">1,0 кг</span></div>
-                <?php
-                endif;
-                if($work_type_id == 2):
-                ?>
-                <div>Печать тиража</div>
-                <div class="value mb-2">470 500 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">6 ч. 30 мин.</span></div>
-                <?php
-                endif;
-                if(!empty($lamination1_brand_name) || !empty($lamination2_brand_name)):
-                ?>
                 <div>Работа ламинатора</div>
                 <div class="value mb-2">1 500 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">3 часа</span></div>
-                <?php endif; ?>
             </div>
             <?php else: ?>
             <div class="col-4" style="width: 250px;"></div>
@@ -198,28 +170,10 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
                 <div class="value mb-2">1 280 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">4,5 кг</span></div>
-                <?php if($work_type_id == 2): ?>
-                <div>Краска</div>
-                <div class="value mb-2">17 500 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">17,5 кг</span></div>
-                <?php
-                endif;
-                if(!empty($lamination1_brand_name) || !empty($lamination2_brand_name)):
-                ?>
                 <div>Клей</div>
                 <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">1,0 кг</span></div>
-                <?php
-                endif;
-                if($work_type_id == 2):
-                ?>
-                <div>Печать тиража</div>
-                <div class="value mb-2">470 500 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">6 ч. 30 мин.</span></div>
-                <?php
-                endif;
-                if(!empty($lamination1_brand_name) || !empty($lamination2_brand_name)):
-                ?>
                 <div>Работа ламинатора</div>
                 <div class="value mb-2">1 500 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">3 часа</span></div>
-                <?php endif; ?>
             </div>
             <?php else: ?>
             <div class="col-4" style="width: 250px;"></div>
