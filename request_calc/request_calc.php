@@ -7,6 +7,9 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Значение марки плёнки "другая"
+const INDIVIDUAL = "individual";
+
 // Составление технологической карты
 if(null !== filter_input(INPUT_POST, 'create_techmap_submit')) {
     $request_calc_id = filter_input(INPUT_POST, 'request_calc_id');
@@ -179,150 +182,115 @@ $num_for_customer = $row['num_for_customer'];
                     }
                     ?>
                     <table class="w-100 calculation-table">
-                        <tr>
-                            <th>Заказчик</th>
-                            <td><?=$customer ?></td>
-                        </tr>
-                        <tr>
-                            <th>Название заказа</th>
-                            <td><?=$name ?></td>
-                        </tr>
-                        <tr><th>Тип работы</th><td><?=$work_type ?></td></tr>
+                        <tr><th>Заказчик</th><td colspan="3"><?=$customer ?></td></tr>
+                        <tr><th>Название заказа</th><td colspan="3"><?=$name ?></td></tr>
+                        <tr><th>Тип работы</th><td colspan="3"><?=$work_type ?></td></tr>
                             <?php
                             if(!empty($quantity) && !empty($unit)):
                             ?>
-                        <tr><th>Объем заказа</th><td><?= rtrim(rtrim(number_format($quantity, 2, ",", " "), "0"), ",") ?> <?=$unit == 'kg' ? "кг" : "шт" ?></td></tr>
+                        <tr><th>Объем заказа</th><td colspan="3"><?= rtrim(rtrim(number_format($quantity, 2, ",", " "), "0"), ",") ?> <?=$unit == 'kg' ? "кг" : "шт" ?></td></tr>
                             <?php
                             endif;
                             if(!empty($machine)):
                             ?>
-                        <tr><th>Печатная машина</th><td><?=$machine.' ('.$colorfulness.' красок)' ?></td></tr>
+                        <tr><th>Печатная машина</th><td colspan="3"><?=$machine.' ('.$colorfulness.' красок)' ?></td></tr>
                             <?php
                             endif;
                             if(!empty($width)):
                             ?>
-                        <tr><th>Обрезная ширина</th><td><?= rtrim(rtrim(number_format($width, 2, ",", " "), "0"), ",") ?></td></tr>
+                        <tr><th>Обрезная ширина</th><td colspan="3"><?= rtrim(rtrim(number_format($width, 2, ",", " "), "0"), ",") ?></td></tr>
                             <?php
                             endif;
                             if(!empty($length)):
                             ?>
-                        <tr><th>Длина от метки до метки</th><td><?= rtrim(rtrim(number_format($length, 2, ",", ""), "0"), ",") ?></td></tr>
+                        <tr><th>Длина от метки до метки</th><td colspan="3"><?= rtrim(rtrim(number_format($length, 2, ",", ""), "0"), ",") ?></td></tr>
                             <?php
                             endif;
                             if(!empty($stream_width)):
                             ?>
-                        <tr><th>Ширина ручья</th><td><?= rtrim(rtrim(number_format($stream_width, 2, ",", ""), "0"), ",") ?></td></tr>
+                        <tr><th>Ширина ручья</th><td colspan="3"><?= rtrim(rtrim(number_format($stream_width, 2, ",", ""), "0"), ",") ?></td></tr>
                             <?php
                             endif;
                             if(!empty($raport)):
                             ?>
-                        <tr><th>Рапорт</th><td><?= $raport ?></td></tr>
+                        <tr><th>Рапорт</th><td colspan="3"><?= $raport ?></td></tr>
                             <?php
                             endif;
                             if(!empty($streams_count)):
                             ?>
-                        <tr><th>Количество ручьев</th><td><?= $streams_number ?></td></tr>
+                        <tr><th>Количество ручьев</th><td colspan="3"><?= $streams_number ?></td></tr>
                             <?php
                             endif;
                             if(!empty($machine)):
                             ?>
+                        <tr><th>Печать без лыж</th><td colspan="3"><?=$no_ski == 1 ? "ДА" : "НЕТ" ?></td></tr>
+                            <?php
+                            endif;
+                            if($brand_name == INDIVIDUAL):
+                            ?>
                         <tr>
-                            <th>Печать без лыж</th>
-                            <td><?=$no_ski == 1 ? "ДА" : "НЕТ" ?></td>
+                            <th>Пленка</th>
+                            <td><?=$individual_brand_name ?></td>
+                            <td><?= number_format($individual_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($individual_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                            <td class="w-25"><?=$customers_material == 1 ? "Сырье заказчика" : "" ?></td>
+                        </tr>
+                            <?php
+                            else:
+                            ?>
+                        <tr>
+                            <th>Пленка</th>
+                            <td><?=$brand_name ?></td>
+                            <td><?= number_format($thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                            <td class="w-25"><?=$customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                         </tr>
                             <?php
                             endif;
-                            if(!empty($brand_name) && !empty($thickness)):
-                            ?>
-                        <tr>
-                            <th>Пленка</th>
-                            <td>
-                                <table class="w-100">
-                                    <tr>
-                                        <td><?=$brand_name ?></td>
-                                        <td><?= number_format($thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                                        <td class="w-25"><?=$customers_material == 1 ? "Сырье заказчика" : "" ?></td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                            <?php elseif(!empty($individual_brand_name)): ?>
-                        <tr>
-                            <th>Пленка</th>
-                            <td>
-                                <table class="w-100">
-                                    <tr>
-                                        <td><?=$individual_brand_name ?></td>
-                                        <td><?= number_format($individual_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($individual_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                                        <td class="w-25"><?=$customers_material == 1 ? "Сырье заказчика" : "" ?></td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                            <?php endif; ?>
-                        <tr>
-                            <?php
+                            
                             $lamination = "нет";
                             if(!empty($lamination1_brand_name)) $lamination = "1";
                             if(!empty($lamination2_brand_name)) $lamination = "2";
+                            
+                            if(!empty($lamination1_brand_name) && $lamination1_brand_name == INDIVIDUAL):
                             ?>
-                            <th>Ламинация: <?=$lamination ?></th>
-                            <td>
-                                <?php if(!empty($lamination1_brand_name) && !empty($lamination1_thickness)): ?>
-                                <table class="w-100">
-                                    <tr>
-                                        <td><?=$lamination1_brand_name ?></td>
-                                        <td><?= number_format($lamination1_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                                        <td class="w-25"><?=$lamination1_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
-                                    </tr>
-                                    <?php
-                                    if(!empty($lamination2_brand_name) && !empty($lamination2_thickness)):
-                                    ?>
-                                    <tr>
-                                        <td><?=$lamination2_brand_name ?></td>
-                                        <td><?= number_format($lamination2_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                                        <td class="w-25"><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
-                                    </tr>
-                                    <?php elseif(!empty($lamination2_other_brand_name)): ?>
-                                    <tr>
-                                        <td><?=$lamination2_individual_brand_name ?></td>
-                                        <td><?= number_format($lamination2_individual_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_individual_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                                        <td class="w-25"><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
-                                    </tr>
-                                    <?php endif; ?>
-                                </table>
-                                <?php elseif(!empty($lamination1_individual_brand_name)): ?>
-                                <table class="w-100">
-                                    <tr>
-                                        <td><?=$lamination1_individual_brand_name ?></td>
-                                        <td><?= number_format($lamination1_individual_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_individual_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                                        <td class="w-25"><?=$lamination1_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
-                                    </tr>
-                                    <?php
-                                    if(!empty($lamination2_brand_name) && !empty($lamination2_thickness)):
-                                    ?>
-                                    <tr>
-                                        <td><?=$lamination2_brand_name ?></td>
-                                        <td><?= number_format($lamination2_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                                        <td class="w-25"><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
-                                    </tr>
-                                    <?php elseif(!empty($lamination2_other_brand_name)): ?>
-                                    <tr>
-                                        <td><?=$lamination2_individual_brand_name ?></td>
-                                        <td><?= number_format($lamination2_individual_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_individual_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                                        <td class="w-25"><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
-                                    </tr>
-                                    <?php endif; ?>
-                                </table>
-                                <?php endif; ?>
-                            </td>
+                        <tr>
+                            <th<?=(empty($lamination2_brand_name) ? "" : " rowspan='2'") ?>>Ламинация: <?=$lamination ?></th>
+                            <td><?=$lamination1_individual_brand_name ?></td>
+                            <td><?= number_format($lamination1_individual_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_individual_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                            <td class="w-25"><?=$lamination1_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                         </tr>
                             <?php
+                            elseif(!empty($lamination1_brand_name)):
+                            ?>
+                        <tr>
+                            <th rowspan="2">Ламинация: <?=$lamination ?></th>
+                            <td><?=$lamination1_brand_name ?></td>
+                            <td><?= number_format($lamination1_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                            <td class="w-25"><?=$lamination1_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
+                        </tr>
+                            <?php
+                            endif;
+                            if(!empty($lamination2_brand_name) && $lamination2_brand_name == INDIVIDUAL):
+                            ?>
+                        <tr>
+                            <td><?=$lamination2_individual_brand_name ?></td>
+                            <td><?= number_format($lamination2_individual_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_individual_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                            <td class="w-25"><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
+                        </tr>
+                            <?php
+                            elseif(!empty($lamination2_brand_name)):
+                            ?>
+                        <tr>
+                            <td><?=$lamination2_brand_name ?></td>
+                            <td><?= number_format($lamination2_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                            <td class="w-25"><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
+                        </tr>
+                            <?php
+                            endif;
                             if(!empty($ink_number)):
                             ?>
                         <tr>
                             <th>Красочность: <?=$ink_number ?></th>
-                            <td>
+                            <td colspan="3">
                                 <table class="w-100">
                                     <?php
                                     for($i=1; $i<=$ink_number; $i++):
