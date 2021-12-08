@@ -164,8 +164,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         if(empty($lamination1_individual_price)) $lamination1_individual_price = "NULL";
         $lamination1_individual_thickness = filter_input(INPUT_POST, 'lamination1_individual_thickness');
         if(empty($lamination1_individual_thickness)) $lamination1_individual_thickness = "NULL";
-        $lamination1_individual_weight = filter_input(INPUT_POST, 'lamination1_individual_weight');
-        if(empty($lamination1_individual_weight)) $lamination1_individual_weight = "NULL";
+        $lamination1_individual_density = filter_input(INPUT_POST, 'lamination1_individual_density');
+        if(empty($lamination1_individual_density)) $lamination1_individual_density = "NULL";
         $lamination1_customers_material = 0;
         if(filter_input(INPUT_POST, 'lamination1_customers_material') == 'on') {
             $lamination1_customers_material = 1;
@@ -179,8 +179,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         if(empty($lamination2_individual_price)) $lamination2_individual_price = "NULL";
         $lamination2_individual_thickness = filter_input(INPUT_POST, 'lamination2_individual_thickness');
         if(empty($lamination2_individual_thickness)) $lamination2_individual_thickness = "NULL";
-        $lamination2_individual_weight = filter_input(INPUT_POST, 'lamination2_individual_weight');
-        if(empty($lamination2_individual_weight)) $lamination2_individual_weight = "NULL";
+        $lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density');
+        if(empty($lamination2_individual_density)) $lamination2_individual_density = "NULL";
         $lamination2_customers_material = 0;
         if(filter_input(INPUT_POST, 'lamination2_customers_material') == 'on') {
             $lamination2_customers_material = 1;
