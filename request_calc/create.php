@@ -1448,9 +1448,9 @@ $colorfulnesses = array();
                                         <div class="invalid-feedback">Процент обязательно</div>
                                     </div>
                                 </div>
-                                <div class="form-group<?=$form_class ?>" id="cliche_group_<?=$i ?>">
+                                <div class="form-group<?=$cliche_class ?>" id="cliche_group_<?=$i ?>">
                                     <label for="cliche_<?=$i ?>">Форма</label>
-                                    <select id="cliche_<?=$i ?>" name="form_<?=$i ?>" class="form-control cliche">
+                                    <select id="cliche_<?=$i ?>" name="cliche_<?=$i ?>" class="form-control cliche">
                                         <?php
                                         $old_selected = "";
                                         $flint_selected = "";
