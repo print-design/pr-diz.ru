@@ -119,13 +119,13 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                 $form_valid = false;
             }
             
-            if($$paint_var == 'panton' && empty($$color_var)) {
+            if($$ink_var == 'panton' && empty($$color_var)) {
                 $color_valid_var = 'color_'.$i.'_valid';
                 $$color_valid_var = ISINVALID;
                 $form_valid = false;
             }
             
-            if($$paint_var == 'cmyk' && empty($$cmyk_var)) {
+            if($$ink_var == 'cmyk' && empty($$cmyk_var)) {
                 $cmyk_valid_var = 'cmyk_'.$i.'_valid';
                 $$cmyk_valid_var = ISINVALID;
                 $form_valid = false;
@@ -1329,7 +1329,7 @@ $colorfulnesses = array();
                                 $ink_required = " required='required'";
                             }
                             ?>
-                            <div class="row ink_block<?=$ink_class ?>" id="ink_block_<?=$i ?>">
+                            <div class="row ink_block<?=$block_class ?>" id="ink_block_<?=$i ?>">
                                 <?php
                                 $ink_class = " col-12";
                                 $cmyk_class = " d-none";
