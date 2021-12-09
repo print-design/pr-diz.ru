@@ -20,7 +20,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.brand_name, c.thickness, c.individual_brand_name, c.individual_price, c.individual_thickness, c.individual_density, c.customers_material, "
         . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_individual_brand_name, c.lamination1_individual_price, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, "
         . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_individual_brand_name, c.lamination2_individual_price, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, "
-        . "c.width, c.length, c.stream_width, c.streams_number, c.raport raport_value, c.ink_number, "
+        . "c.width, c.length, c.stream_width, c.streams_number, c.raport, c.ink_number, "
         . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
         . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
@@ -31,7 +31,6 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
         . "wt.name work_type, "
         . "mt.name machine, mt.colorfulness, "
-        . "(select name from raport where value = c.raport and machine_id = c.machine_id) raport_name, "
         . "(select count(id) from request_calc where customer_id = c.customer_id and id <= c.id) num_for_customer, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) weight, "
         . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
@@ -77,7 +76,7 @@ $width = $row['width'];
 $length = $row['length'];
 $stream_width = $row['stream_width'];
 $streams_number = $row['streams_number'];
-$raport = (empty($row['raport_name']) ? "" : $row['raport_name']." ").(rtrim(rtrim(number_format($row['raport_value'], 3, ",", " "), "0"), ","));
+$raport = rtrim(rtrim(number_format($row['raport'], 3, ",", " "), "0"), ",");
 $ink_number = $row['ink_number'];
 
 for($i=1; $i<=$ink_number; $i++) {

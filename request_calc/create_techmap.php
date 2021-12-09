@@ -31,7 +31,8 @@ if(empty($id)) {
     $id = filter_input(INPUT_GET, 'id');
 }
 
-$sql = "select c.date, c.name, c.quantity, c.unit, c.stream_width, c.brand_name, c.thickness, c.individual_brand_name, c.individual_thickness, "
+$sql = "select c.date, c.name, c.quantity, c.unit, c.stream_width, c.streams_number, c.length, c.raport, "
+        . "c.brand_name, c.thickness, c.individual_brand_name, c.individual_thickness, "
         . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_individual_brand_name, c.lamination1_individual_thickness, "
         . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_individual_brand_name, c.lamination2_individual_thickness, "
         . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
@@ -51,6 +52,9 @@ $name = $row['name'];
 $quantity = $row['quantity'];
 $unit = $row['unit'];
 $stream_width = $row['stream_width'];
+$streams_number = $row['streams_number'];
+$length = $row['length'];
+$raport = $row['raport'];
 
 $brand_name = $row['brand_name'];
 $thickness = $row['thickness'];
@@ -228,7 +232,7 @@ $last_name = $row['last_name'];
                         </tr>
                         <tr>
                             <th>Ширина</th>
-                            <td><?=$stream_width ?> мм</td>
+                            <td></td>
                         </tr>
                         <tr>
                             <th>Метраж на приладку</th>
@@ -254,7 +258,7 @@ $last_name = $row['last_name'];
                         </tr>
                         <tr>
                             <th>Ширина</th>
-                            <td><?=$stream_width ?> мм</td>
+                            <td></td>
                         </tr>
                         <tr>
                             <th>Метраж на приладку</th>
@@ -283,7 +287,7 @@ $last_name = $row['last_name'];
                         </tr>
                         <tr>
                             <th>Ширина</th>
-                            <td><?=$stream_width ?> мм</td>
+                            <td></td>
                         </tr>
                         <tr>
                             <th>Метраж на приладку</th>
@@ -358,6 +362,31 @@ $last_name = $row['last_name'];
                         endif;
                         endfor;
                         ?>
+                    </table>
+                </div>
+                <div class="col-3">
+                    <div class="table_title">Красочность</div>
+                    <table class="w-75">
+                        <tr>
+                            <th>Рапорт</th>
+                            <td><?=rtrim(rtrim(number_format($raport, 3, ",", ""), "0"), ",") ?> мм</td>
+                        </tr>
+                        <tr>
+                            <th>Растяг</th>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th>Длина <span style="font-size: smaller;">(от метки до метки)</span></th>
+                            <td><?=$length ?> мм</td>
+                        </tr>
+                        <tr>
+                            <th>Ширина ручья</th>
+                            <td><?=$stream_width ?> мм</td>
+                        </tr>
+                        <tr>
+                            <th>Количество ручьёв</th>
+                            <td><?=$streams_number ?></td>
+                        </tr>
                     </table>
                 </div>
             </div>

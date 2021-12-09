@@ -1271,16 +1271,14 @@ $colorfulnesses = array();
                                         <option value="" hidden="hidden" selected="selected">Рапорт...</option>
                                         <?php
                                         if(!empty($machine_id)) {
-                                            $sql = "select name, value from raport where machine_id = $machine_id order by value";
+                                            $sql = "select value from raport where machine_id = $machine_id order by value";
                                             $fetcher = new Fetcher($sql);
                                             
                                             while($row = $fetcher->Fetch()) {
-                                                $raport_name = $row['name'];
                                                 $raport_value = floatval($row['value']);
-                                                $display_value = (empty($raport_name) ? "" : $raport_name." ").$raport_value;
                                                 $selected = "";
                                                 if($raport_value == $raport) $selected = " selected='selected'";
-                                                echo "<option value='$raport_value'$selected>$display_value</option>";
+                                                echo "<option value='$raport_value'$selected>$raport_value</option>";
                                             }
                                         }
                                         ?>
