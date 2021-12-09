@@ -102,6 +102,28 @@ $last_name = $row['last_name'];
             #params_top table tr td {
                 padding-bottom: 10px;
             }
+            
+            .table_title {
+                font-weight: 700;
+                font-size: 18px;
+                line-height: 32px;
+                margin-bottom: 18px;
+            }
+            
+            .params_main table tr th {
+                font-weight: 400;
+                padding-right: 20px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #E3E3E3;
+            }
+            
+            .params_main table tr td {
+                font-weight: 700;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #E3E3E3;
+            }
         </style>
     </head>
     <body>
