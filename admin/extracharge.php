@@ -2,12 +2,9 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev'))) {
+if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
-
-// Номер ламинатора
-const MACHINE_LAMINATOR = 5;
 
 // Список типов наценки
 $sql = "select id, name from extracharge_type";
@@ -25,9 +22,10 @@ if(null !== filter_input(INPUT_POST, 'create_extracharge_submit')) {
     $extracharge_type_id = filter_input(INPUT_POST, 'extracharge_type_id');
     $from_weight = filter_input(INPUT_POST, 'from_weight');
     $to_weight = filter_input(INPUT_POST, 'to_weight');
+    if(empty($to_weight)) $to_weight = "NULL";
     $value = filter_input(INPUT_POST, 'value');
     
-    if(!empty($from_weight) && !empty($to_weight) && !empty($value)) {
+    if(!empty($value)) {
         $sql = "insert into extracharge (extracharge_type_id, from_weight, to_weight, value) values ($extracharge_type_id, $from_weight, $to_weight, $value)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
@@ -89,31 +87,9 @@ if(empty($error_message)) {
                     ?>
                 </div>
             </div>
-            <hr class="pb-0 mb-0" />
-            <div class="d-flex justify-content-start">
-                <div class="p-1">
-                    <div class="text-nowrap nav2">
-                        <?php
-                        $sql = "select id, name from machine";
-                        $fetcher = new Fetcher($sql);
-                        
-                        while ($row = $fetcher->Fetch()):
-                        if($row['id'] == MACHINE_LAMINATOR):
-                        ?>
-                        <a href="glue.php<?= BuildQuery('machine_id', $row['id']) ?>" class="mr-4"><?=$row['name'] ?></a>
-                        <?php
-                        else:
-                        ?>
-                        <a href="characteristics.php<?= BuildQuery('machine_id', $row['id']) ?>" class="mr-4"><?=$row['name'] ?></a>
-                        <?php
-                        endif;
-                        endwhile;
-                        ?>
-                        <a href="currency.php" class="mr-4">Курсы валют</a>
-                        <a href="extracharge.php" class="mr-4 active">Наценка</a>
-                    </div>
-                </div>
-            </div>
+            <?php
+            include '../include/subheader_norm.php';
+            ?>
             <hr />
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
@@ -133,7 +109,7 @@ if(empty($error_message)) {
                         foreach ($extracharges_of_type as $row):
                         ?>
                         <tr>
-                            <td class="pl-0"><?= floatval($row['from_weight']).' кг &ndash; '.floatval($row['to_weight']).' кг' ?></td>
+                            <td class="pl-0"><?= (empty($row['to_weight']) ? 'от ' : '').floatval($row['from_weight']).' кг'.(empty($row['to_weight']) ? '' : ' &ndash; '.floatval($row['to_weight']).' кг') ?></td>
                             <td class="pl-0"><?= floatval($row['value']).'%' ?></td>
                             <td class="text-right">
                                 <form method="post">
@@ -167,7 +143,6 @@ if(empty($error_message)) {
                                name="to_weight" 
                                class="form-control float-only ml-2 w-25" 
                                placeholder="До, кг" 
-                               required="required" 
                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                onmouseup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
@@ -207,7 +182,7 @@ if(empty($error_message)) {
                         foreach ($extracharges_of_type as $row):
                         ?>
                         <tr>
-                            <td class="pl-0"><?= floatval($row['from_weight']).' кг &ndash; '.floatval($row['to_weight']).' кг' ?></td>
+                            <td class="pl-0"><?= (empty($row['to_weight']) ? 'от ' : '').floatval($row['from_weight']).' кг'.(empty($row['to_weight']) ? '' : ' &ndash; '.floatval($row['to_weight']).' кг') ?></td>
                             <td class="pl-0"><?= floatval($row['value']).'%' ?></td>
                             <td class="text-right">
                                 <form method="post">
@@ -241,7 +216,6 @@ if(empty($error_message)) {
                                name="to_weight" 
                                class="form-control float-only ml-2 w-25" 
                                placeholder="До, кг" 
-                               required="required" 
                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                onmouseup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
@@ -281,7 +255,7 @@ if(empty($error_message)) {
                         foreach ($extracharges_of_type as $row):
                         ?>
                         <tr>
-                            <td class="pl-0"><?= floatval($row['from_weight']).' кг &ndash; '.floatval($row['to_weight']).' кг' ?></td>
+                            <td class="pl-0"><?= (empty($row['to_weight']) ? 'от ' : '').floatval($row['from_weight']).' кг'.(empty($row['to_weight']) ? '' : ' &ndash; '.floatval($row['to_weight']).' кг') ?></td>
                             <td class="pl-0"><?= floatval($row['value']).'%' ?></td>
                             <td class="text-right">
                                 <form method="post">
@@ -315,7 +289,6 @@ if(empty($error_message)) {
                                name="to_weight" 
                                class="form-control float-only ml-2 w-25" 
                                placeholder="До, кг" 
-                               required="required" 
                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                onmouseup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
@@ -355,7 +328,7 @@ if(empty($error_message)) {
                         foreach ($extracharges_of_type as $row):
                         ?>
                         <tr>
-                            <td class="pl-0"><?= floatval($row['from_weight']).' кг &ndash; '.floatval($row['to_weight']).' кг' ?></td>
+                            <td class="pl-0"><?= (empty($row['to_weight']) ? 'от ' : '').floatval($row['from_weight']).' кг'.(empty($row['to_weight']) ? '' : ' &ndash; '.floatval($row['to_weight']).' кг') ?></td>
                             <td class="pl-0"><?= floatval($row['value']).'%' ?></td>
                             <td class="text-right">
                                 <form method="post">
@@ -389,7 +362,6 @@ if(empty($error_message)) {
                                name="to_weight" 
                                class="form-control float-only ml-2 w-25" 
                                placeholder="До, кг" 
-                               required="required" 
                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                onmouseup="javascript: $(this).attr('name', 'to_weight'); $(this).attr('placeholder', 'До, кг');" 
                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 

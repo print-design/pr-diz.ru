@@ -2,19 +2,8 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev'))) {
+if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
-}
-
-// Машина
-$machine_id = filter_input(INPUT_GET, 'machine_id');
-
-// Номер ламинатора
-const MACHINE_LAMINATOR = 5;
-
-// Страница предназначена только для ламинатора
-if($machine_id != MACHINE_LAMINATOR) {
-    header("Location: ".APPLICATION."/admin/characteristics.php".BuildQuery("machine_id", $machine_id));
 }
 
 // Валидация формы
@@ -24,8 +13,10 @@ $error_message = '';
 
 $glue_valid = '';
 $glue_expense_valid = '';
+$glue_expense_pet_valid = '';
 $solvent_valid = '';
-$glue_solvent_valid = '';
+$glue_part_valid = '';
+$solvent_part_valid = '';
 
 // Сохранение введённых значений
 if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
@@ -39,28 +30,38 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
         $form_valid = false;
     }
     
+    if(empty(filter_input(INPUT_POST, 'glue_expense_pet'))) {
+        $glue_expense_pet_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
     if(empty(filter_input(INPUT_POST, 'solvent')) || empty(filter_input(INPUT_POST, 'solvent_currency'))) {
         $solvent_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'glue_solvent'))) {
-        $glue_solvent_valid = ISINVALID;
+    if(empty(filter_input(INPUT_POST, 'glue_part'))) {
+        $glue_part_valid = ISINVALID;
         $form_valid = false;
     }
     
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    if(empty(filter_input(INPUT_POST, 'solvent_part'))) {
+        $solvent_part_valid = ISINVALID;
+        $form_valid = false;
+    }
     
     if($form_valid) {
         // Старый объект
         $old_glue = '';
         $old_glue_currency = '';
         $old_glue_expense = '';
+        $old_glue_expense_pet = '';
         $old_solvent = '';
         $old_solvent_currency = '';
-        $old_glue_solvent = '';
+        $old_glue_part = '';
+        $old_solvent_part = '';
         
-        $sql = "select glue, glue_currency, glue_expense, solvent, solvent_currency, glue_solvent from norm_glue where machine_id = $machine_id order by date desc limit 1";
+        $sql = "select glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, glue_part, solvent_part from norm_glue order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -68,26 +69,32 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
             $old_glue = $row['glue'];
             $old_glue_currency = $row['glue_currency'];
             $old_glue_expense = $row['glue_expense'];
+            $old_glue_expense_pet = $row['glue_expense_pet'];
             $old_solvent = $row['solvent'];
             $old_solvent_currency = $row['solvent_currency'];
-            $old_glue_solvent = $row['glue_solvent'];
+            $old_glue_part = $row['glue_part'];
+            $old_solvent_part = $row['solvent_part'];
         }
         
         // Новый объект
         $new_glue = filter_input(INPUT_POST, 'glue');
         $new_glue_currency = filter_input(INPUT_POST, 'glue_currency');
         $new_glue_expense = filter_input(INPUT_POST, 'glue_expense');
+        $new_glue_expense_pet = filter_input(INPUT_POST, 'glue_expense_pet');
         $new_solvent = filter_input(INPUT_POST, 'solvent');
         $new_solvent_currency = filter_input(INPUT_POST, 'solvent_currency');
-        $new_glue_solvent = filter_input(INPUT_POST, 'glue_solvent');
+        $new_glue_part = filter_input(INPUT_POST, 'glue_part');
+        $new_solvent_part = filter_input(INPUT_POST, 'solvent_part');
         
         if($old_glue != $new_glue || 
                 $old_glue_currency != $new_glue_currency || 
-                $old_glue_expense != $new_glue_expense ||
+                $old_glue_expense != $new_glue_expense || 
+                $old_glue_expense_pet != $new_glue_expense_pet || 
                 $old_solvent != $new_solvent || 
                 $old_solvent_currency != $new_solvent_currency || 
-                $old_glue_solvent != $new_glue_solvent) {
-            $sql = "insert into norm_glue (machine_id, glue, glue_currency, glue_expense, solvent, solvent_currency, glue_solvent) values ($machine_id, $new_glue, '$new_glue_currency', $new_glue_expense, $new_solvent, '$new_solvent_currency', $new_glue_solvent)";
+                $old_glue_part != $new_glue_part || 
+                $old_solvent_part != $new_solvent_part) {
+            $sql = "insert into norm_glue (glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, glue_part, solvent_part) values ($new_glue, '$new_glue_currency', $new_glue_expense, $new_glue_expense_pet, $new_solvent, '$new_solvent_currency', $new_glue_part, $new_solvent_part)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -101,11 +108,13 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
 $glue = '';
 $glue_currency = '';
 $glue_expense = '';
+$glue_expense_pet = '';
 $solvent = '';
 $solvent_currency = '';
-$glue_solvent = '';
+$glue_part = '';
+$solvent_part = '';
 
-$sql = "select glue, glue_currency, glue_expense, solvent, solvent_currency, glue_solvent from norm_glue where machine_id = $machine_id order by date desc limit 1";
+$sql = "select glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, glue_part, solvent_part from norm_glue order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -116,8 +125,10 @@ if($row = $fetcher->Fetch()) {
     $solvent = $row['solvent'];
     $glue_currency = $row['glue_currency'];
     $glue_expense = $row['glue_expense'];
+    $glue_expense_pet = $row['glue_expense_pet'];
     $solvent_currency = $row['solvent_currency'];
-    $glue_solvent = $row['glue_solvent'];
+    $glue_part = $row['glue_part'];
+    $solvent_part = $row['solvent_part'];
 }
 ?>
 <!DOCTYPE html>
@@ -157,7 +168,6 @@ if($row = $fetcher->Fetch()) {
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
-                        <input type="hidden" id="machine_id" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
                         <div class="form-group">
                             <label for="glue">Стоимость клея (за кг)</label>
                             <div class="input-group">
@@ -198,7 +208,23 @@ if($row = $fetcher->Fetch()) {
                                    onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                    onkeyup="javascript: $(this).attr('id', 'glue_expense'); $(this).attr('name', 'glue_expense'); $(this).attr('placeholder', 'Расход клея, г/м2');" 
                                    onfocusout="javascript: $(this).attr('id', 'glue_expense'); $(this).attr('name', 'glue_expense'); $(this).attr('placeholder', 'Расход клея, г/м2');" />
-                            <div class="invalid-feedback">Стоимость клея обязательно</div>
+                            <div class="invalid-feedback">Расход клея обязательно</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="glue">Расход клея при ламинации ПЭТ, г/м<sup>2</sup></label>
+                            <input type="text" 
+                                   class="form-control float-only" 
+                                   id="glue_expense_pet" 
+                                   name="glue_expense_pet" 
+                                   value="<?= empty($glue_expense_pet) ? "" : floatval($glue_expense_pet) ?>" 
+                                   placeholder="Расход клея при ламинации ПЭТ, г/м2" 
+                                   required="required" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onmouseup="javascript: $(this).attr('id', 'glue_expense_pet'); $(this).attr('name', 'glue_expense_pet'); $(this).attr('placeholder', 'Расход клея при ламинации ПЭТ, г/м2');" 
+                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                   onkeyup="javascript: $(this).attr('id', 'glue_expense_pet'); $(this).attr('name', 'glue_expense_pet'); $(this).attr('placeholder', 'Расход клея при ламинации ПЭТ, г/м2');" 
+                                   onfocusout="javascript: $(this).attr('id', 'glue_expense_pet'); $(this).attr('name', 'glue_expense_pet'); $(this).attr('placeholder', 'Расход клея при ламинации ПЭТ, г/м2');" />
+                            <div class="invalid-feedback">Расход клея при ламинации ПЭТ обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="solvent">Стоимость растворителя для клея (за кг)</label>
@@ -226,24 +252,39 @@ if($row = $fetcher->Fetch()) {
                             </div>
                             <div class="invalid-feedback">Стоимость растворителя для клея обязательно</div>
                         </div>
-                        <div class="form-group">
-                            <label for="glue_solvent">Соотношение клея и растворителя (в процентах)</label>
-                            <div class="input-group">
-                            <input type="text" 
-                                   class="form-control" 
-                                   id="glue_solvent" 
-                                   name="glue_solvent" 
-                                   value="<?= empty($glue_solvent) ? "" : floatval($glue_solvent) ?>" 
-                                   placeholder="В процентах" 
-                                   required="required" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'glue_solvent'); $(this).attr('name', 'glue_solvent'); $(this).attr('placeholder', 'В процентах');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'glue_solvent'); $(this).attr('name', 'glue_solvent'); $(this).attr('placeholder', 'В процентах');" 
-                                   onfocusout="javascript: $(this).attr('id', 'glue_solvent'); $(this).attr('name', 'glue_solvent'); $(this).attr('placeholder', 'В процентах');" />
-                            <div class="input-group-append"><span class="input-group-text">%</span></div>
+                        <div class="row">
+                            <div class="form-group col-6">
+                                <label for="glue_part">Доля клея</label>
+                                <input type="text" 
+                                       class="form-control int-only" 
+                                       id="glue_part" 
+                                       name="glue_part" 
+                                       value="<?= empty($glue_part) ? "" : $glue_part ?>" 
+                                       placeholder="Клей" 
+                                       required="required" 
+                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onmouseup="javascript: $(this).attr('id', 'glue_part'); $(this).attr('name', 'glue_part'); $(this).attr('placeholder', 'Клей');" 
+                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                       onkeyup="javascript: $(this).attr('id', 'glue_part'); $(this).attr('name', 'glue_part'); $(this).attr('placeholder', 'Клей');" 
+                                       onfocusout="javascript: $(this).attr('id', 'glue_part'); $(this).attr('name', 'glue_part'); $(this).attr('placeholder', 'Клей');" />
+                                <div class="invalid-feedback">Доля клея обязательно</div>
                             </div>
-                            <div class="invalid-feedback">Соотношение клея и растворителя обязательно</div>
+                            <div class="form-group col-6">
+                                <label for="solvent_part">Доля растворителя</label>
+                                <input type="text" 
+                                       class="form-control int-only" 
+                                       id="solvent_part" 
+                                       name="solvent_part" 
+                                       value="<?= empty($solvent_part) ? "" : $solvent_part ?>" 
+                                       placeholder="Растворитель" 
+                                       required="required" 
+                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onmouseup="javascript: $(this).attr('id', 'solvent_part'); $(this).attr('name', 'solvent_part'); $(this).attr('placeholder', 'Растворитель');" 
+                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                       onkeyup="javascript: $(this).attr('id', 'solvent_part'); $(this).attr('name', 'solvent_part'); $(this).attr('placeholder', 'Растворитель');" 
+                                       onfocusout="javascript: $(this).attr('id', 'solvent_part'); $(this).attr('name', 'solvent_part'); $(this).attr('placeholder', 'Растворитель');" />
+                                <div class="invalid-feedback">Доля растворителя обязательно</div>
+                            </div>
                         </div>
                         <button type="submit" id="norm_glue_submit" name="norm_glue_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
                     </form>
@@ -254,14 +295,25 @@ if($row = $fetcher->Fetch()) {
         include '../include/footer.php';
         ?>
         <script>
-            // В поле "процент" ограничиваем значения: целые числа от 1 до 100
-            $('#glue_solvent').keydown(function(e) {
+            // В поле "Доля клея" ограничиваем значения: целые числа от 1 до 100
+            $('#glue_part').keydown(function(e) {
                 if(!KeyDownLimitFloatValue($(e.target), e, 100)) {
                     return false;
                 }
             });
     
-            $("#glue_solvent").change(function(){
+            $("#glue_part").change(function(){
+                ChangeLimitFloatValue($(this), 100);
+            });
+            
+            // В поле "Доля растворителя" ограничиваем значения: целые числа от 1 до 100
+            $('#solvent_part').keydown(function(e) {
+                if(!KeyDownLimitFloatValue($(e.target), e, 100)) {
+                    return false;
+                }
+            });
+    
+            $("#solvent_part").change(function(){
                 ChangeLimitFloatValue($(this), 100);
             });
         </script>

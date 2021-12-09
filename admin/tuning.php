@@ -2,9 +2,12 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'top_manager'))) {
+if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
+
+// Машина
+$machine_id = filter_input(INPUT_GET, 'machine_id');
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -16,7 +19,7 @@ $length_valid = '';
 $waste_percent_valid = '';
 
 // Сохранение введённых значений
-if(null !== filter_input(INPUT_POST, 'norm_laminator_fitting_submit')) {
+if(null !== filter_input(INPUT_POST, 'norm_tuning_submit')) {
     if(empty(filter_input(INPUT_POST, 'time'))) {
         $time_valid = ISINVALID;
         $form_valid = false;
@@ -40,7 +43,7 @@ if(null !== filter_input(INPUT_POST, 'norm_laminator_fitting_submit')) {
         $old_length = '';
         $old_waste_percent = '';
         
-        $sql = "select time, length, waste_percent from norm_laminator_fitting order by date desc limit 1";
+        $sql = "select time, length, waste_percent from norm_tuning where machine_id = $machine_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -56,7 +59,7 @@ if(null !== filter_input(INPUT_POST, 'norm_laminator_fitting_submit')) {
         $new_waste_percent = filter_input(INPUT_POST, 'waste_percent');
         
         if($old_time != $new_time || $old_length != $new_length || $old_waste_percent != $new_waste_percent) {
-            $sql = "insert into norm_laminator_fitting (time, length, waste_percent) values ($new_time, $new_length, $new_waste_percent)";
+            $sql = "insert into norm_tuning (machine_id, time, length, waste_percent) values ($machine_id, $new_time, $new_length, $new_waste_percent)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -71,7 +74,7 @@ $time = '';
 $length = '';
 $waste_percent = '';
 
-$sql = "select time, length, waste_percent from norm_laminator_fitting order by date desc limit 1";
+$sql = "select time, length, waste_percent from norm_tuning where machine_id = $machine_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -100,7 +103,7 @@ if($row = $fetcher->Fetch()) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             
-            if(null !== filter_input(INPUT_POST, 'norm_laminator_fitting_submit') && empty($error_message)):
+            if(null !== filter_input(INPUT_POST, 'norm_tuning_submit') && empty($error_message)):
             ?>
             <div class="alert alert-success">Данные сохранены</div>
             <?php
@@ -120,8 +123,9 @@ if($row = $fetcher->Fetch()) {
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
+                        <input type="hidden" id="machine_id" name="machine_id" value="<?= $machine_id ?>" />
                         <div class="form-group">
-                            <label for="time">Время приладки (мин)</label>
+                            <label for="time">Время приладки 1 краски (мин)</label>
                             <input type="text" 
                                    class="form-control float-only" 
                                    id="time" 
@@ -137,7 +141,7 @@ if($row = $fetcher->Fetch()) {
                             <div class="invalid-feedback">Время обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="length">Метраж приладки (метры)</label>
+                            <label for="length">Метраж приладки 1 краски (метры)</label>
                             <input type="text" 
                                    class="form-control float-only" 
                                    id="length" 
@@ -171,7 +175,7 @@ if($row = $fetcher->Fetch()) {
                             </div>
                             <div class="invalid-feedback">Метраж обязательно</div>
                         </div>
-                        <button type="submit" id="norm_laminator_fitting_submit" name="norm_laminator_fitting_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
+                        <button type="submit" id="norm_tuning_submit" name="norm_tuning_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
                     </form>
                 </div>
             </div>

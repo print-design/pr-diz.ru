@@ -2,12 +2,9 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev'))) {
+if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
-
-// Номер ламинатора
-const MACHINE_LAMINATOR = 5;
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -103,31 +100,9 @@ if($row = $fetcher->Fetch()) {
                     ?>
                 </div>
             </div>
-            <hr class="pb-0 mb-0" />
-            <div class="d-flex justify-content-start">
-                <div class="p-1">
-                    <div class="text-nowrap nav2">
-                        <?php
-                        $sql = "select id, name from machine";
-                        $fetcher = new Fetcher($sql);
-                        
-                        while ($row = $fetcher->Fetch()):
-                        if($row['id'] == MACHINE_LAMINATOR):
-                        ?>
-                        <a href="glue.php<?= BuildQuery('machine_id', $row['id']) ?>" class="mr-4"><?=$row['name'] ?></a>
-                        <?php
-                        else:
-                        ?>
-                        <a href="characteristics.php<?= BuildQuery('machine_id', $row['id']) ?>" class="mr-4"><?=$row['name'] ?></a>
-                        <?php
-                        endif;
-                        endwhile;
-                        ?>
-                        <a href="currency.php" class="mr-4 active">Курсы валют</a>
-                        <a href="extracharge.php" class="mr-4">Наценка</a>
-                    </div>
-                </div>
-            </div>
+            <?php
+            include '../include/subheader_norm.php';
+            ?>
             <hr />
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-2">
@@ -170,7 +145,7 @@ if($row = $fetcher->Fetch()) {
                             </div>
                             <div class="invalid-feedback">Евро обязательно</div>
                         </div>
-                        <button type="submit" id="norm_fitting_submit" name="currency_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
+                        <button type="submit" id="currency_submit" name="currency_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
                     </form>
                 </div>
             </div>
