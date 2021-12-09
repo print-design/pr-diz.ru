@@ -397,15 +397,46 @@ $last_name = $row['last_name'];
                 </div>
             </div>
             <br />
-            <div class="params_main">
-                <div class="table_title">Печать</div>
-                <div class="form-group">
-                    <input type="radio" class="form-check-inline" id="reverse_print_0" name="reverse_print" value="0" />
-                    <label for="reverse_print_0" class="form-check-label">Лицевая</label>
-                    <input type="radio" class="form-check-inline ml-3" id="reverse_print_1" name="reverse_print" value="1" />
-                    <label for="reverse_print_1" class="form-check-label">Обратная</label>
+            <form method="post">
+                <input type="hidden" name="scroll" />
+                <div class="params_main">
+                    <div class="table_title">Печать</div>
+                    <div class="form-group">
+                        <input type="radio" class="form-check-inline" id="reverse_print_0" name="reverse_print" value="0"<?= filter_input(INPUT_POST, 'reverse_print') === '0' ? " checked='checked'" : "" ?> />
+                        <label for="reverse_print_0" class="form-check-label">Лицевая</label>
+                        <input type="radio" class="form-check-inline ml-3" id="reverse_print_1" name="reverse_print" value="1"<?= filter_input(INPUT_POST, 'reverse_print') === '1' ? " checked='checked'" : "" ?> />
+                        <label for="reverse_print_1" class="form-check-label">Обратная</label>
+                    </div>
                 </div>
-            </div>
+                <br />
+                <div class="params_main">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="table_title">Информация для резчика</div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <input type="text" name="shipment" class="form-control int-only" placeholder="Отгрузка, кг" value="<?= filter_input(INPUT_POST, 'shipment') ?>" />
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <input type="text" name="winding" class="form-control int-only" placeholder="Намотка" value="<?= filter_input(INPUT_POST, 'winding') ?>" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <button type="submit" class="btn btn-dark w-100" name="techmap_submit">OK</button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-outline-dark w-100">Печать</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
         <?php
         // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
