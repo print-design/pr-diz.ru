@@ -10,6 +10,18 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
 // Значение марки плёнки "другая"
 const INDIVIDUAL = "individual";
 
+// Виды красок
+const CMYK = 'cmyk';
+const PANTON = 'panton';
+const WHITE = 'white';
+const LACQUER = 'lacquer';
+
+// Виды форм
+const OLD = 'old';
+const FLINT = 'flint';
+const KODAK = 'kodak';
+const TVER = 'tver';
+
 // Текущее время
 $current_date_time = date("dmYHis");
 
@@ -22,6 +34,10 @@ if(empty($id)) {
 $sql = "select c.date, c.name, c.quantity, c.unit, c.stream_width, c.brand_name, c.thickness, c.individual_brand_name, c.individual_thickness, "
         . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_individual_brand_name, c.lamination1_individual_thickness, "
         . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_individual_brand_name, c.lamination2_individual_thickness, "
+        . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
+        . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
+        . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
+        . "c.cliche_1, c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
         . "cus.name customer, wt.name work_type, u.first_name, u.last_name "
         . "from request_calc c "
         . "inner join customer cus on c.customer_id=cus.id "
@@ -51,6 +67,20 @@ $lamination2_individual_thickness = $row['lamination2_individual_thickness'];
 
 $lamination1_brand_name = $row['lamination1_brand_name'];
 $lamination2_brand_name = $row['lamination2_brand_name'];
+
+for($i=1; $i<=8; $i++) {
+    $ink_var = "ink_$i";
+    $$ink_var = $row[$ink_var];
+    
+    $color_var = "color_$i";
+    $$color_var = $row[$color_var];
+    
+    $cmyk_var = "cmyk_$i";
+    $$cmyk_var = $row[$cmyk_var];
+    
+    $cliche_var = "cliche_$i";
+    $$cliche_var = $row[$cliche_var];
+}
 
 $customer = $row['customer'];
 $work_type = $row['work_type'];
@@ -107,6 +137,7 @@ $last_name = $row['last_name'];
                 font-weight: 700;
                 font-size: 18px;
                 line-height: 32px;
+                margin-top: 25px;
                 margin-bottom: 18px;
             }
             
@@ -186,7 +217,7 @@ $last_name = $row['last_name'];
             <div class="row params_main">
                 <div class="col-3">
                     <div class="table_title">Пленка</div>
-                    <table>
+                    <table class="w-75">
                         <tr>
                             <th>Марка пленки</th>
                             <td><?=($brand_name == INDIVIDUAL ? $individual_brand_name : $brand_name) ?></td>
@@ -212,7 +243,7 @@ $last_name = $row['last_name'];
                 <?php if(!empty($lamination1_brand_name)): ?>
                 <div class="col-3">
                     <div class="table_title">Ламинация 1</div>
-                    <table>
+                    <table class="w-75">
                         <tr>
                             <th>Марка пленки</th>
                             <td><?=($lamination1_brand_name == INDIVIDUAL ? $lamination1_individual_brand_name : $lamination1_brand_name) ?></td>
@@ -241,7 +272,7 @@ $last_name = $row['last_name'];
                 ?>
                 <div class="col-3">
                     <div class="table_title">Ламинация 2</div>
-                    <table>
+                    <table class="w-75">
                         <tr>
                             <th>Марка пленки</th>
                             <td><?=($lamination2_brand_name == INDIVIDUAL ? $lamination2_individual_brand_name : $lamination2_brand_name) ?></td>
@@ -265,6 +296,70 @@ $last_name = $row['last_name'];
                     </table>
                 </div>
                 <?php endif; ?>
+            </div>
+            <br />
+            <div class="row params_main">
+                <div class="col-3">
+                    <div class="table_title">Красочность</div>
+                    <table class="w-75">
+                        <?php
+                        for($i=1; $i<=8; $i++):
+                        $ink_var = "ink_$i";
+                        $cmyk_var = "cmyk_$i";
+                        $color_var = "color_$i";
+                        $cliche_var = "cliche_$i";
+                        if(!empty($$ink_var)):
+                        ?>
+                        <tr>
+                            <th>
+                                <?php
+                                switch ($$ink_var) {
+                                case CMYK:
+                                    echo ucfirst($$cmyk_var);
+                                    break;
+                                
+                                case PANTON:
+                                    echo $$color_var;
+                                    break;
+                                
+                                case WHITE:
+                                    echo "Белая";
+                                    break;
+                                
+                                case LACQUER:
+                                    echo 'Лак';
+                                    break;
+                                }
+                                ?>
+                            </th>
+                            <td>
+                                <?php
+                                switch ($$cliche_var) {
+                                case OLD:
+                                    echo "Старая";
+                                    break;
+                                
+                                case FLINT:
+                                    echo "Новая Флинт";
+                                    break;
+                                
+                                case KODAK:
+                                    echo "Новая Кодак";
+                                    break;
+                                
+                                case TVER:
+                                    echo "Новая Тверь";
+                                    break;
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <?php
+                        endif;
+                        endfor;
+                        ?>
+                    </table>
+                </div>
             </div>
         </div>
         <?php
