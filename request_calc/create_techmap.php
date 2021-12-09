@@ -159,6 +159,12 @@ $last_name = $row['last_name'];
                 padding-bottom: 10px;
                 border-bottom: 1px solid #E3E3E3;
             }
+            
+            .form-check-label {
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 20px;
+            }
         </style>
     </head>
     <body>
@@ -365,7 +371,7 @@ $last_name = $row['last_name'];
                     </table>
                 </div>
                 <div class="col-3">
-                    <div class="table_title">Красочность</div>
+                    <div class="table_title">&nbsp;</div>
                     <table class="w-75">
                         <tr>
                             <th>Рапорт</th>
@@ -388,6 +394,16 @@ $last_name = $row['last_name'];
                             <td><?=$streams_number ?></td>
                         </tr>
                     </table>
+                </div>
+            </div>
+            <br />
+            <div class="params_main">
+                <div class="table_title">Печать</div>
+                <div class="form-group">
+                    <input type="radio" class="form-check-inline" id="reverse_print_0" name="reverse_print" value="0" />
+                    <label for="reverse_print_0" class="form-check-label">Лицевая</label>
+                    <input type="radio" class="form-check-inline ml-3" id="reverse_print_1" name="reverse_print" value="1" />
+                    <label for="reverse_print_1" class="form-check-label">Обратная</label>
                 </div>
             </div>
         </div>
