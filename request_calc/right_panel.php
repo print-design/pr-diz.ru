@@ -189,6 +189,6 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
         <?php if (empty($techmap_id)): ?>
     <a href="create_techmap.php?id=<?=$id ?>" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Составить тех. карту</a>
         <?php else: ?>
-    <a href="javascript: void(0);" class="btn btn-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
+    <a href="techmap.php?id=<?=$techmap_id ?>" class="btn btn-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
         <?php endif; ?>
 </div>
