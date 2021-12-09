@@ -22,6 +22,47 @@ const FLINT = 'flint';
 const KODAK = 'kodak';
 const TVER = 'tver';
 
+// Создание технологической карты
+if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
+    $request_calc_id = filter_input(INPUT_POST, 'request_calc_id');
+            
+    $reverse_print = filter_input(INPUT_POST, 'reverse_print');
+    if(empty($reverse_print)) $reverse_print = "NULL";
+    
+    $shipment = filter_input(INPUT_POST, 'shipment');
+    if(empty($shipment)) $shipment = "NULL";
+    
+    $spool = filter_input(INPUT_POST, 'spool');
+    if(empty($spool)) $spool = "NULL";
+    
+    $winding = filter_input(INPUT_POST, 'winding');
+    if(empty($winding)) $winding = "NULL";
+    
+    $sign = filter_input(INPUT_POST, 'sign');
+    if(empty($sign)) $sign = "NULL";
+    
+    $label = filter_input(INPUT_POST, 'label');
+    if(empty($label)) $label = "NULL";
+    
+    $package = filter_input(INPUT_POST, 'package');
+    if(empty($package)) $package = "NULL";
+    
+    $roll_type = filter_input(INPUT_POST, 'roll_type');
+    if(empty($roll_type)) $roll_type = "NULL";
+    
+    $comment = addslashes(filter_input(INPUT_POST, 'comment'));
+    
+    $sql = "insert into techmap (request_calc_id, reverse_print, shipment, spool, winding, sign, label, package, roll_type, comment) "
+            . "values ($request_calc_id, $reverse_print, $shipment, $spool, $winding, $sign, $label, $package, $roll_type, '$comment')";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    $insert_id = $executer->insert_id;
+    
+    if(empty($error_message)) {
+        header("Location: techmap.php?id=$insert_id");
+    }
+}
+
 // Текущее время
 $current_date_time = date("dmYHis");
 
@@ -407,6 +448,7 @@ $last_name = $row['last_name'];
             <br />
             <form method="post">
                 <input type="hidden" name="scroll" />
+                <input type="hidden" name="request_calc_id" value="<?=$id ?>" />
                 <div class="params_main">
                     <div class="table_title">Печать</div>
                     <div class="form-group">
