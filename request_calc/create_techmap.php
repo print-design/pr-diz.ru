@@ -425,12 +425,43 @@ $last_name = $row['last_name'];
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <select name="spool" class="form-control">
+                                    <option value="" hidden="hidden">Шпуля</option>
+                                    <option<?= filter_input(INPUT_POST, 'spool') == 40 ? " selected='selected'" : "" ?>>40</option>
+                                    <option<?= filter_input(INPUT_POST, 'spool') == 50 ? " selected='selected'" : "" ?>>50</option>
+                                    <option<?= filter_input(INPUT_POST, 'spool') == 76 ? " selected='selected'" : "" ?>>76</option>
+                                    <option<?= filter_input(INPUT_POST, 'spool') == 152 ? " selected='selected'" : "" ?>>152</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <select name="sign" class="form-control">
+                                    <option value="" hidden="hidden">Фотометка</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <select name="label" class="form-control">
+                                    <option value="" hidden="hidden">Бирки</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <select name="package" class="form-control">
+                                    <option value="" hidden="hidden">Упаковка</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control" rows="4" name="comment" placeholder="Комментарий"><?= filter_input(INPUT_POST, 'comment') ?></textarea>
+                            </div>
                             <div class="row">
                                 <div class="col-6">
-                                    <button type="submit" class="btn btn-dark w-100" name="techmap_submit">OK</button>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-dark w-100" name="techmap_submit">OK</button>
+                                    </div>
                                 </div>
                                 <div class="col-6">
-                                    <button type="button" class="btn btn-outline-dark w-100">Печать</button>
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-outline-dark w-100">Печать</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
