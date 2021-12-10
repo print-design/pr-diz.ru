@@ -25,6 +25,7 @@ const TVER = 'tver';
 // Создание технологической карты
 if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     $request_calc_id = filter_input(INPUT_POST, 'request_calc_id');
+    $id = filter_input(INPUT_POST, 'id');
             
     $reverse_print = filter_input(INPUT_POST, 'reverse_print');
     if(empty($reverse_print)) $reverse_print = "NULL";
@@ -52,14 +53,28 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     
     $comment = addslashes(filter_input(INPUT_POST, 'comment'));
     
-    $sql = "insert into techmap (request_calc_id, reverse_print, shipment, spool, winding, sign, label, package, roll_type, comment) "
-            . "values ($request_calc_id, $reverse_print, $shipment, $spool, $winding, $sign, $label, $package, $roll_type, '$comment')";
+    $sql = "";
+    
+    if(!empty($request_calc_id)) {
+        $sql = "insert into techmap (request_calc_id, reverse_print, shipment, spool, winding, sign, label, package, roll_type, comment) "
+                . "values ($request_calc_id, $reverse_print, $shipment, $spool, $winding, $sign, $label, $package, $roll_type, '$comment')";
+    }
+    elseif(!empty ($id)) {
+        $sql = "update techmap set reverse_print=$reverse_print, shipment=$shipment, spool=$spool, winding=$winding, sign=$sign, label=$label, "
+                . "package=$package, roll_type=$roll_type, comment='$comment'";
+    }
+    
     $executer = new Executer($sql);
     $error_message = $executer->error;
     $insert_id = $executer->insert_id;
     
     if(empty($error_message)) {
-        $created_message = "ok";
+        if(!empty($insert_id)) {
+            $created_message = "ok";
+        }
+        else {
+            $edited_message = "ok";
+        }
     }
 }
 
@@ -499,8 +514,8 @@ if(!empty($id)) {
             </div>
             <br />
             <form method="post">
-                <input type="hidden" name="scroll" />
-                <input type="hidden" name="request_calc_id" value="<?=$id ?>" />
+                <input type="hidden" name="request_calc_id" value="<?= empty($request_calc_id) ? '' : $request_calc_id ?>" />
+                <input type="hidden" name="id" value="<?= empty($id) ? '' : $id ?>" />
                 <div class="params_main">
                     <div class="table_title">Печать</div>
                     <div class="form-group">
