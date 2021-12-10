@@ -1697,7 +1697,13 @@ $colorfulnesses = array();
             
             // Обработка выбора толщины основной плёнки: отображение цены
             $('#thickness').change(function(){
-                $('.main_film_info').html('(200&nbsp;USD&nbsp;&nbsp;&nbsp;34&nbsp;кг&nbsp;&nbsp;&nbsp;600&nbsp;мм)');
+                $.ajax({ url: "../ajax/film_price.php?brand_name=" + $("#brand_name").val() + "&thickness=" + $(this).val() })
+                        .done(function(data) {
+                            $('.main_film_info').html(data);
+                        })
+                        .fail(function() {
+                            alert('Ошибка при выборе толщины пленки');
+                        });
             });
             
             // Обработка выбора типа плёнки ламинации1: перерисовка списка толщин
