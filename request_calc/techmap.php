@@ -22,34 +22,101 @@ const FLINT = 'flint';
 const KODAK = 'kodak';
 const TVER = 'tver';
 
+// Создание технологической карты
+if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
+    $request_calc_id = filter_input(INPUT_POST, 'request_calc_id');
+            
+    $reverse_print = filter_input(INPUT_POST, 'reverse_print');
+    if(empty($reverse_print)) $reverse_print = "NULL";
+    
+    $shipment = filter_input(INPUT_POST, 'shipment');
+    if(empty($shipment)) $shipment = "NULL";
+    
+    $spool = filter_input(INPUT_POST, 'spool');
+    if(empty($spool)) $spool = "NULL";
+    
+    $winding = filter_input(INPUT_POST, 'winding');
+    if(empty($winding)) $winding = "NULL";
+    
+    $sign = filter_input(INPUT_POST, 'sign');
+    if(empty($sign)) $sign = "NULL";
+    
+    $label = filter_input(INPUT_POST, 'label');
+    if(empty($label)) $label = "NULL";
+    
+    $package = filter_input(INPUT_POST, 'package');
+    if(empty($package)) $package = "NULL";
+    
+    $roll_type = filter_input(INPUT_POST, 'roll_type');
+    if(empty($roll_type)) $roll_type = "NULL";
+    
+    $comment = addslashes(filter_input(INPUT_POST, 'comment'));
+    
+    $sql = "insert into techmap (request_calc_id, reverse_print, shipment, spool, winding, sign, label, package, roll_type, comment) "
+            . "values ($request_calc_id, $reverse_print, $shipment, $spool, $winding, $sign, $label, $package, $roll_type, '$comment')";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    $insert_id = $executer->insert_id;
+    
+    if(empty($error_message)) {
+        $created_message = "ok";
+    }
+}
+
 // Текущее время
 $current_date_time = date("dmYHis");
 
 // Получение объекта
+$sql = "";
+
+$request_calc_id = filter_input(INPUT_POST, 'request_calc_id');
+if(empty($request_calc_id)) {
+    $request_calc_id = filter_input(INPUT_GET, 'request_calc_id');
+}
+
 $id = filter_input(INPUT_POST, 'id');
 if(empty($id)) {
     $id = filter_input(INPUT_GET, 'id');
 }
 
-$sql = "select c.date calc_date, c.name, c.quantity, c.unit, c.stream_width, c.streams_number, c.length, c.raport, "
-        . "c.brand_name, c.thickness, c.individual_brand_name, c.individual_thickness, "
-        . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_individual_brand_name, c.lamination1_individual_thickness, "
-        . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_individual_brand_name, c.lamination2_individual_thickness, "
-        . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
-        . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
-        . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
-        . "c.cliche_1, c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
-        . "t.request_calc_id, t.date techmap_date, t.reverse_print, t.shipment, t.spool, t.winding, t.sign, t.label, t.package, t.roll_type, t.comment, "
-        . "cus.name customer, wt.name work_type, u.first_name, u.last_name "
-        . "from request_calc c "
-        . "inner join techmap t on t.request_calc_id = c.id "
-        . "inner join customer cus on c.customer_id=cus.id "
-        . "inner join work_type wt on c.work_type_id = wt.id "
-        . "inner join user u on c.manager_id = u.id "
-        . "where t.id=$id";
+if(!empty($request_calc_id)) {
+    $sql = "select c.id request_calc_id, c.date, c.name, c.quantity, c.unit, c.stream_width, c.streams_number, c.length, c.raport, "
+            . "c.brand_name, c.thickness, c.individual_brand_name, c.individual_thickness, "
+            . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_individual_brand_name, c.lamination1_individual_thickness, "
+            . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_individual_brand_name, c.lamination2_individual_thickness, "
+            . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
+            . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
+            . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
+            . "c.cliche_1, c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
+            . "cus.name customer, wt.name work_type, u.first_name, u.last_name "
+            . "from request_calc c "
+            . "inner join customer cus on c.customer_id=cus.id "
+            . "inner join work_type wt on c.work_type_id = wt.id "
+            . "inner join user u on c.manager_id = u.id "
+            . "where c.id=$request_calc_id";
+}
+elseif (!empty($id)) {
+    $sql = "select c.id request_calc_id, c.date, c.name, c.quantity, c.unit, c.stream_width, c.streams_number, c.length, c.raport, "
+            . "c.brand_name, c.thickness, c.individual_brand_name, c.individual_thickness, "
+            . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_individual_brand_name, c.lamination1_individual_thickness, "
+            . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_individual_brand_name, c.lamination2_individual_thickness, "
+            . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
+            . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
+            . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
+            . "c.cliche_1, c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
+            . "t.request_calc_id, t.date techmap_date, t.reverse_print, t.shipment, t.spool, t.winding, t.sign, t.label, t.package, t.roll_type, t.comment, "
+            . "cus.name customer, wt.name work_type, u.first_name, u.last_name "
+            . "from request_calc c "
+            . "inner join techmap t on t.request_calc_id = c.id "
+            . "inner join customer cus on c.customer_id=cus.id "
+            . "inner join work_type wt on c.work_type_id = wt.id "
+            . "inner join user u on c.manager_id = u.id "
+            . "where t.id=$id";
+}
 $row = (new Fetcher($sql))->Fetch();
 
-$calc_date = $row['calc_date'];
+$request_calc_id = $row['request_calc_id'];
+$date = $row['date'];
 $name = $row['name'];
 $quantity = $row['quantity'];
 $unit = $row['unit'];
@@ -88,22 +155,24 @@ for($i=1; $i<=8; $i++) {
     $$cliche_var = $row[$cliche_var];
 }
 
-$request_calc_id = $row['request_calc_id'];
-$techmap_date = $row['techmap_date'];
-$reverse_print = $row['reverse_print'];
-$shipment = $row['shipment'];
-$spool = $row['spool'];
-$winding = $row['winding'];
-$sign = $row['sign'];
-$label = $row['label'];
-$package = $row['package'];
-$roll_type = $row['roll_type'];
-$comment = $row['comment'];
-
 $customer = $row['customer'];
 $work_type = $row['work_type'];
 $first_name = $row['first_name'];
 $last_name = $row['last_name'];
+
+if(!empty($id)) {
+    $request_calc_id = $row['request_calc_id'];
+    $techmap_date = $row['techmap_date'];
+    $reverse_print = $row['reverse_print'];
+    $shipment = $row['shipment'];
+    $spool = $row['spool'];
+    $winding = $row['winding'];
+    $sign = $row['sign'];
+    $label = $row['label'];
+    $package = $row['package'];
+    $roll_type = $row['roll_type'];
+    $comment = $row['comment'];
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -195,9 +264,21 @@ $last_name = $row['last_name'];
         ?>
         <div class="container-fluid">
             <?php
-            if(!empty($error_message)) {
-                echo "<div class='alert alert-danger'>$error_message</div>";
-            }
+            if(!empty($error_message)):
+            ?>
+            <div class='alert alert-danger'><?=$error_message ?></div>
+            <?php
+            endif;
+            if(!empty($created_message)):
+            ?>
+            <div class='alert alert-info'>Карта создана</div>
+            <?php
+            endif;
+            if(!empty($edited_message)):
+            ?>
+            <div class='alert alert-info'>Карта отредактирована</div>
+            <?php
+            endif;
             ?>
             <a class="btn btn-outline-dark backlink" href="request_calc.php?id=<?=$request_calc_id ?>">Назад</a>
             <div id="title_zone">
@@ -216,7 +297,7 @@ $last_name = $row['last_name'];
                 <div id="title_text">
                     <div id="title_customer"><?=$customer ?></div>
                     <div id="title_name"><?=$name ?></div>
-                    <div id="title_date">№<?=$id ?> от <?=$techmap_date ?></div>
+                    <div id="title_date">№<?=$id ?> от <?= empty($date) ? DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') : $date ?></div>
                 </div>
             </div>
             <div id="params_top">
@@ -415,136 +496,130 @@ $last_name = $row['last_name'];
                         </tr>
                     </table>
                 </div>
-                <div class="col-3">
-                    <table class="w-75">
-                        <tr>
-                            <th>Печать</th>
-                            <td><?=$reverse_print ? "Обратная" : "Прямая" ?></td>
-                        </tr>
-                    </table>
-                </div>
             </div>
             <br />
-            <div class="params_main">
-                <div class="table_title">Информация для резчика</div>
+            <form method="post">
+                <input type="hidden" name="scroll" />
+                <input type="hidden" name="request_calc_id" value="<?=$id ?>" />
+                <div class="params_main">
+                    <div class="table_title">Печать</div>
+                    <div class="form-group">
+                        <input type="radio" class="form-check-inline" id="reverse_print_0" name="reverse_print" value="0"<?= isset($reverse_print) && $reverse_print == 0 ? " checked='checked'" : "" ?> />
+                        <label for="reverse_print_0" class="form-check-label">Лицевая</label>
+                        <input type="radio" class="form-check-inline ml-3" id="reverse_print_1" name="reverse_print" value="1"<?= isset($reverse_print) && $reverse_print == 1 ? " checked='checked'" : "" ?> />
+                        <label for="reverse_print_1" class="form-check-label">Обратная</label>
+                    </div>
+                </div>
+                <br />
                 <div class="row">
-                    <div class="col-3">
-                        <table class="w-75">
+                    <div class="col-4">
+                        <div class="table_title">Информация для резчика</div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <input type="text" name="shipment" class="form-control int-only" placeholder="Отгрузка, кг" value="<?= empty($shipment) ? '' : $shipment ?>" />
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <input type="text" name="winding" class="form-control int-only" placeholder="Намотка" value="<?= empty($winding) ? '' : $winding ?>" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <select name="spool" class="form-control">
+                                <option value="" hidden="hidden">Шпуля</option>
+                                <option<?= !empty($spool) && $spool == 40 ? " selected='selected'" : "" ?>>40</option>
+                                <option<?= !empty($spool) && $spool == 50 ? " selected='selected'" : "" ?>>50</option>
+                                <option<?= !empty($spool) && $spool == 76 ? " selected='selected'" : "" ?>>76</option>
+                                <option<?= !empty($spool) && $spool == 152 ? " selected='selected'" : "" ?>>152</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select name="sign" class="form-control">
+                                <option value="" hidden="hidden">Фотометка</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select name="label" class="form-control">
+                                <option value="" hidden="hidden">Бирки</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select name="package" class="form-control">
+                                <option value="" hidden="hidden">Упаковка</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" rows="4" name="comment" placeholder="Комментарий"><?= empty($comment) ? '' : $comment ?></textarea>
+                        </div>
+                        <table class="w-100" id="roll_type_table">
                             <tr>
-                                <th>Отгрузка</th>
-                                <td><?=$shipment ?> кг</td>
-                            </tr>
-                            <tr>
-                                <th>Намотка</th>
-                                <td><?=$winding ?> м</td>
-                            </tr>
-                            <tr>
-                                <th>Шпуля</th>
-                                <td><?=$spool ?> см</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col-3">
-                        <table class="w-75">
-                            <tr>
-                                <th>Фотометка</th>
-                                <td><?=$sign ?></td>
-                            </tr>
-                            <tr>
-                                <th>Бирки</th>
-                                <td><?=$label ?></td>
-                            </tr>
-                            <tr>
-                                <th>Упаковка</th>
-                                <td><?=$package ?></td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col-3">
-                        <table class="w-75">
-                            <tr>
-                                <th>Комментарий</th>
-                            </tr>
-                            <tr>
-                                <td><?=$comment ?></td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <br />
-            <div class="row">
-                <div class="col-4">
-                    <table class="w-100" id="roll_type_table">
-                        <tr>
                                 <td style="text-align: center;">
                                     <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_1.png" style="margin-top: 5px;" />
-                                    <div style="width: 100%; text-align: end; padding-right: 5px;">
-                                        <?php if($roll_type == 1): ?>
-                                        <i class="fas fa-check"></i>
-                                        <?php else: echo "&nbsp;"; endif; ?>
+                                    <div style="width: 100%; text-align: end;">
+                                        <input type="checkbox" class="roll_type" name="roll_type" value="1" style="margin-right: 5px; margin-top: 5px;"<?= !empty($roll_type) && $roll_type == 1 ? " checked='checked'" : "" ?> />
                                     </div>
                                 </td>
                                 <td style="text-align: center;">
                                     <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_2.png" style="margin-top: 5px;" />
-                                    <div style="width: 100%; text-align: end; padding-right: 5px;">
-                                        <?php if($roll_type == 2): ?>
-                                        <i class="fas fa-check"></i>
-                                        <?php else: echo "&nbsp;"; endif; ?>
+                                    <div style="width: 100%; text-align: end;">
+                                        <input type="checkbox" class="roll_type" name="roll_type" value="2" style="margin-right: 5px; margin-top: 5px;"<?= !empty($roll_type) && $roll_type == 2 ? " checked='checked'" : "" ?> />
                                     </div>
                                 </td>
                                 <td style="text-align: center;">
                                     <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_3.png" style="margin-top: 5px;" />
-                                    <div style="width: 100%; text-align: end; padding-right: 5px;">
-                                        <?php if($roll_type == 3): ?>
-                                        <i class="fas fa-check"></i>
-                                        <?php else: echo "&nbsp;"; endif; ?>
+                                    <div style="width: 100%; text-align: end;">
+                                        <input type="checkbox" class="roll_type" name="roll_type" value="3" style="margin-right: 5px; margin-top: 5px;"<?= !empty($roll_type) && $roll_type == 3 ? " checked='checked'" : "" ?> />
                                     </div>
                                 </td>
                                 <td style="text-align: center;">
                                     <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_4.png" style="margin-top: 5px;" />
-                                    <div style="width: 100%; text-align: end; padding-right: 5px;">
-                                        <?php if($roll_type == 4): ?>
-                                        <i class="fas fa-check"></i>
-                                        <?php else: echo "&nbsp;"; endif; ?>
+                                    <div style="width: 100%; text-align: end;">
+                                        <input type="checkbox" class="roll_type" name="roll_type" value="4" style="margin-right: 5px; margin-top: 5px;"<?= !empty($roll_type) && $roll_type == 4 ? " checked='checked'" : "" ?> />
                                     </div>
                                 </td>
                                 <td style="text-align: center;">
                                     <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_5.png" style="margin-top: 5px;" />
-                                    <div style="width: 100%; text-align: end; padding-right: 5px;">&nbsp;
-                                        <?php if($roll_type == 5): ?>
-                                        <i class="fas fa-check"></i>
-                                        <?php else: echo "&nbsp;"; endif; ?>
+                                    <div style="width: 100%; text-align: end;">
+                                        <input type="checkbox" class="roll_type" name="roll_type" value="5" style="margin-right: 5px; margin-top: 5px;"<?= !empty($roll_type) && $roll_type == 5 ? " checked='checked'" : "" ?> />
                                     </div>
                                 </td>
                                 <td style="text-align: center;">
                                     <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_6.png" style="margin-top: 5px;" />
-                                    <div style="width: 100%; text-align: end; padding-right: 5px;">
-                                        <?php if($roll_type == 6): ?>
-                                        <i class="fas fa-check"></i>
-                                        <?php else: echo "&nbsp;"; endif; ?>
+                                    <div style="width: 100%; text-align: end;">
+                                        <input type="checkbox" class="roll_type" name="roll_type" value="6" style="margin-right: 5px; margin-top: 5px;"<?= !empty($roll_type) && $roll_type == 6 ? " checked='checked'" : "" ?> />
                                     </div>
                                 </td>
                                 <td style="text-align: center;">
                                     <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_7.png" style="margin-top: 5px;" />
-                                    <div style="width: 100%; text-align: end; padding-right: 5px;">
-                                        <?php if($roll_type == 7): ?>
-                                        <i class="fas fa-check"></i>
-                                        <?php else: echo "&nbsp;"; endif; ?>
+                                    <div style="width: 100%; text-align: end;">
+                                        <input type="checkbox" class="roll_type" name="roll_type" value="7" style="margin-right: 5px; margin-top: 5px;"<?= !empty($roll_type) && $roll_type == 7 ? " checked='checked'" : "" ?> />
                                     </div>
                                 </td>
                                 <td style="text-align: center;">
                                     <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_8.png" style="margin-top: 5px;" />
-                                    <div style="width: 100%; text-align: end; padding-right: 5px;">
-                                        <?php if($roll_type == 8): ?>
-                                        <i class="fas fa-check"></i>
-                                        <?php else: echo "&nbsp;"; endif; ?>
+                                    <div style="width: 100%; text-align: end;">
+                                        <input type="checkbox" class="roll_type" name="roll_type" value="8" style="margin-right: 5px; margin-top: 5px;"<?= !empty($roll_type) && $roll_type == 8 ? " checked='checked'" : "" ?> />
                                     </div>
                                 </td>
                             </tr>
-                    </table>
+                        </table>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-dark w-100" name="techmap_submit">OK</button>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-outline-dark w-100">Печать</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
         <?php
         // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
@@ -563,5 +638,11 @@ $last_name = $row['last_name'];
         
         include '../include/footer.php';
         ?>
+        <script>
+            $('input.roll_type').change(function() {
+                val = $(this).val();
+                $('input.roll_type[value!=' + val + ']').prop( "checked", false);
+            });
+        </script>
     </body>
 </html>
