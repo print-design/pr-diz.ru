@@ -1592,6 +1592,10 @@ $colorfulnesses = array();
                         });
             });
             
+            <?php if(!empty($brand_name) && $brand_name != INDIVIDUAL): ?>
+            $('#thickness').change();
+            <?php endif; ?>
+            
             // Обработка выбора типа плёнки ламинации1: перерисовка списка толщин
             $('#lamination1_brand_name').change(function(){
                 $('.lam1_film_info').html('');
@@ -1622,6 +1626,10 @@ $colorfulnesses = array();
                         });
             });
             
+            <?php if(!empty($lamination1_brand_name) && $lamination1_brand_name != INDIVIDUAL): ?>
+            $('#lamination1_thickness').change();
+            <?php endif; ?>
+            
             // Обработка выбора типа плёнки ламинации2: перерисовка списка толщин
             $('#lamination2_brand_name').change(function(){
                 $('.lam2_film_info').html('');
@@ -1651,6 +1659,10 @@ $colorfulnesses = array();
                             alert('Ошибка при выборе толщины пленки');
                         });
             });
+            
+            <?php if(!empty($lamination2_brand_name) && $lamination2_brand_name != INDIVIDUAL): ?>
+            $('#lamination2_thickness').change();
+            <?php endif; ?>
             
             // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
             $('#streams_number').keydown(function(e) {
