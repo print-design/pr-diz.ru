@@ -239,7 +239,6 @@ $last_name = $row['last_name'];
                     } while (!file_exists($filename));
                     ?>
                     <img src='<?=$filename ?>' style="height: 136px; width: 136px;" />
-                    <!--img src='<?=$filename ?>' /-->
                 </div>
                 <div id="title_text">
                     <div id="title_customer"><?=$customer ?></div>
@@ -357,9 +356,9 @@ $last_name = $row['last_name'];
                 <?php endif; ?>
             </div>
             <br />
+            <div class="table_title">Красочность</div>
             <div class="row params_main">
                 <div class="col-3">
-                    <div class="table_title">Красочность</div>
                     <table class="w-75">
                         <?php
                         for($i=1; $i<=8; $i++):
@@ -420,7 +419,6 @@ $last_name = $row['last_name'];
                     </table>
                 </div>
                 <div class="col-3">
-                    <div class="table_title">&nbsp;</div>
                     <table class="w-75">
                         <tr>
                             <th>Рапорт</th>
@@ -459,111 +457,109 @@ $last_name = $row['last_name'];
                     </div>
                 </div>
                 <br />
-                <div>
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="table_title">Информация для резчика</div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <input type="text" name="shipment" class="form-control int-only" placeholder="Отгрузка, кг" value="<?= filter_input(INPUT_POST, 'shipment') ?>" />
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <input type="text" name="winding" class="form-control int-only" placeholder="Намотка" value="<?= filter_input(INPUT_POST, 'winding') ?>" />
-                                    </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="table_title">Информация для резчика</div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <input type="text" name="shipment" class="form-control int-only" placeholder="Отгрузка, кг" value="<?= filter_input(INPUT_POST, 'shipment') ?>" />
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <select name="spool" class="form-control">
-                                    <option value="" hidden="hidden">Шпуля</option>
-                                    <option<?= filter_input(INPUT_POST, 'spool') == 40 ? " selected='selected'" : "" ?>>40</option>
-                                    <option<?= filter_input(INPUT_POST, 'spool') == 50 ? " selected='selected'" : "" ?>>50</option>
-                                    <option<?= filter_input(INPUT_POST, 'spool') == 76 ? " selected='selected'" : "" ?>>76</option>
-                                    <option<?= filter_input(INPUT_POST, 'spool') == 152 ? " selected='selected'" : "" ?>>152</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <select name="sign" class="form-control">
-                                    <option value="" hidden="hidden">Фотометка</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <select name="label" class="form-control">
-                                    <option value="" hidden="hidden">Бирки</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <select name="package" class="form-control">
-                                    <option value="" hidden="hidden">Упаковка</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <textarea class="form-control" rows="4" name="comment" placeholder="Комментарий"><?= filter_input(INPUT_POST, 'comment') ?></textarea>
-                            </div>
-                            <table class="w-100" id="roll_type_table">
-                                <tr>
-                                    <td style="text-align: center;">
-                                        <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_1.png" style="margin-top: 5px;" />
-                                        <div style="width: 100%; text-align: end;">
-                                            <input type="checkbox" class="roll_type" name="roll_type" value="1" style="margin-right: 5px; margin-top: 5px;"<?= filter_input(INPUT_POST, 'roll_type') == 1 ? " checked='checked'" : "" ?> />
-                                        </div>
-                                    </td>
-                                    <td style="text-align: center;">
-                                        <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_2.png" style="margin-top: 5px;" />
-                                        <div style="width: 100%; text-align: end;">
-                                            <input type="checkbox" class="roll_type" name="roll_type" value="2" style="margin-right: 5px; margin-top: 5px;"<?= filter_input(INPUT_POST, 'roll_type') == 2 ? " checked='checked'" : "" ?> />
-                                        </div>
-                                    </td>
-                                    <td style="text-align: center;">
-                                        <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_3.png" style="margin-top: 5px;" />
-                                        <div style="width: 100%; text-align: end;">
-                                            <input type="checkbox" class="roll_type" name="roll_type" value="3" style="margin-right: 5px; margin-top: 5px;"<?= filter_input(INPUT_POST, 'roll_type') == 3 ? " checked='checked'" : "" ?> />
-                                        </div>
-                                    </td>
-                                    <td style="text-align: center;">
-                                        <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_4.png" style="margin-top: 5px;" />
-                                        <div style="width: 100%; text-align: end;">
-                                            <input type="checkbox" class="roll_type" name="roll_type" value="4" style="margin-right: 5px; margin-top: 5px;"<?= filter_input(INPUT_POST, 'roll_type') == 4 ? " checked='checked'" : "" ?> />
-                                        </div>
-                                    </td>
-                                    <td style="text-align: center;">
-                                        <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_5.png" style="margin-top: 5px;" />
-                                        <div style="width: 100%; text-align: end;">
-                                            <input type="checkbox" class="roll_type" name="roll_type" value="5" style="margin-right: 5px; margin-top: 5px;"<?= filter_input(INPUT_POST, 'roll_type') == 5 ? " checked='checked'" : "" ?> />
-                                        </div>
-                                    </td>
-                                    <td style="text-align: center;">
-                                        <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_6.png" style="margin-top: 5px;" />
-                                        <div style="width: 100%; text-align: end;">
-                                            <input type="checkbox" class="roll_type" name="roll_type" value="6" style="margin-right: 5px; margin-top: 5px;"<?= filter_input(INPUT_POST, 'roll_type') == 6 ? " checked='checked'" : "" ?> />
-                                        </div>
-                                    </td>
-                                    <td style="text-align: center;">
-                                        <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_7.png" style="margin-top: 5px;" />
-                                        <div style="width: 100%; text-align: end;">
-                                            <input type="checkbox" class="roll_type" name="roll_type" value="7" style="margin-right: 5px; margin-top: 5px;"<?= filter_input(INPUT_POST, 'roll_type') == 7 ? " checked='checked'" : "" ?> />
-                                        </div>
-                                    </td>
-                                    <td style="text-align: center;">
-                                        <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_8.png" style="margin-top: 5px;" />
-                                        <div style="width: 100%; text-align: end;">
-                                            <input type="checkbox" class="roll_type" name="roll_type" value="8" style="margin-right: 5px; margin-top: 5px;"<?= filter_input(INPUT_POST, 'roll_type') == 8 ? " checked='checked'" : "" ?> />
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-dark w-100" name="techmap_submit">OK</button>
-                                    </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <input type="text" name="winding" class="form-control int-only" placeholder="Намотка" value="<?= filter_input(INPUT_POST, 'winding') ?>" />
                                 </div>
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <button type="button" class="btn btn-outline-dark w-100">Печать</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <select name="spool" class="form-control">
+                                <option value="" hidden="hidden">Шпуля</option>
+                                <option<?= filter_input(INPUT_POST, 'spool') == 40 ? " selected='selected'" : "" ?>>40</option>
+                                <option<?= filter_input(INPUT_POST, 'spool') == 50 ? " selected='selected'" : "" ?>>50</option>
+                                <option<?= filter_input(INPUT_POST, 'spool') == 76 ? " selected='selected'" : "" ?>>76</option>
+                                <option<?= filter_input(INPUT_POST, 'spool') == 152 ? " selected='selected'" : "" ?>>152</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select name="sign" class="form-control">
+                                <option value="" hidden="hidden">Фотометка</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select name="label" class="form-control">
+                                <option value="" hidden="hidden">Бирки</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select name="package" class="form-control">
+                                <option value="" hidden="hidden">Упаковка</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" rows="4" name="comment" placeholder="Комментарий"><?= filter_input(INPUT_POST, 'comment') ?></textarea>
+                        </div>
+                        <table class="w-100" id="roll_type_table">
+                            <tr>
+                                <td style="text-align: center;">
+                                    <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_1.png" style="margin-top: 5px;" />
+                                    <div style="width: 100%; text-align: end;">
+                                        <input type="checkbox" class="roll_type" name="roll_type" value="1" style="margin-right: 5px; margin-top: 5px;"<?= filter_input(INPUT_POST, 'roll_type') == 1 ? " checked='checked'" : "" ?> />
                                     </div>
+                                </td>
+                                <td style="text-align: center;">
+                                    <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_2.png" style="margin-top: 5px;" />
+                                    <div style="width: 100%; text-align: end;">
+                                        <input type="checkbox" class="roll_type" name="roll_type" value="2" style="margin-right: 5px; margin-top: 5px;"<?= filter_input(INPUT_POST, 'roll_type') == 2 ? " checked='checked'" : "" ?> />
+                                    </div>
+                                </td>
+                                <td style="text-align: center;">
+                                    <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_3.png" style="margin-top: 5px;" />
+                                    <div style="width: 100%; text-align: end;">
+                                        <input type="checkbox" class="roll_type" name="roll_type" value="3" style="margin-right: 5px; margin-top: 5px;"<?= filter_input(INPUT_POST, 'roll_type') == 3 ? " checked='checked'" : "" ?> />
+                                    </div>
+                                </td>
+                                <td style="text-align: center;">
+                                    <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_4.png" style="margin-top: 5px;" />
+                                    <div style="width: 100%; text-align: end;">
+                                        <input type="checkbox" class="roll_type" name="roll_type" value="4" style="margin-right: 5px; margin-top: 5px;"<?= filter_input(INPUT_POST, 'roll_type') == 4 ? " checked='checked'" : "" ?> />
+                                    </div>
+                                </td>
+                                <td style="text-align: center;">
+                                    <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_5.png" style="margin-top: 5px;" />
+                                    <div style="width: 100%; text-align: end;">
+                                        <input type="checkbox" class="roll_type" name="roll_type" value="5" style="margin-right: 5px; margin-top: 5px;"<?= filter_input(INPUT_POST, 'roll_type') == 5 ? " checked='checked'" : "" ?> />
+                                    </div>
+                                </td>
+                                <td style="text-align: center;">
+                                    <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_6.png" style="margin-top: 5px;" />
+                                    <div style="width: 100%; text-align: end;">
+                                        <input type="checkbox" class="roll_type" name="roll_type" value="6" style="margin-right: 5px; margin-top: 5px;"<?= filter_input(INPUT_POST, 'roll_type') == 6 ? " checked='checked'" : "" ?> />
+                                    </div>
+                                </td>
+                                <td style="text-align: center;">
+                                    <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_7.png" style="margin-top: 5px;" />
+                                    <div style="width: 100%; text-align: end;">
+                                        <input type="checkbox" class="roll_type" name="roll_type" value="7" style="margin-right: 5px; margin-top: 5px;"<?= filter_input(INPUT_POST, 'roll_type') == 7 ? " checked='checked'" : "" ?> />
+                                    </div>
+                                </td>
+                                <td style="text-align: center;">
+                                    <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_8.png" style="margin-top: 5px;" />
+                                    <div style="width: 100%; text-align: end;">
+                                        <input type="checkbox" class="roll_type" name="roll_type" value="8" style="margin-right: 5px; margin-top: 5px;"<?= filter_input(INPUT_POST, 'roll_type') == 8 ? " checked='checked'" : "" ?> />
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-dark w-100" name="techmap_submit">OK</button>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-outline-dark w-100">Печать</button>
                                 </div>
                             </div>
                         </div>
