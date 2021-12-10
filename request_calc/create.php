@@ -1725,6 +1725,17 @@ $colorfulnesses = array();
                 }
             });
             
+            // Обработка выбора толщины ламинации 1: отображение цены
+            $('#lamination1_thickness').change(function(){
+                $.ajax({ url: "../ajax/film_price.php?brand_name=" + $("#lamination1_brand_name").val() + "&thickness=" + $(this).val() })
+                        .done(function(data) {
+                            $('.lam1_film_info').html(data);
+                        })
+                        .fail(function() {
+                            alert('Ошибка при выборе толщины пленки');
+                        });
+            });
+            
             // Обработка выбора типа плёнки ламинации2: перерисовка списка толщин
             $('#lamination2_brand_name').change(function(){
                 $('.lam2_film_info').html('');
@@ -1742,6 +1753,17 @@ $colorfulnesses = array();
                                 alert('Ошибка при выборе марки пленки');
                     });
                 }
+            });
+            
+            // Обработка выбора толщины ламинации 2: отображение цены
+            $('#lamination2_thickness').change(function(){
+                $.ajax({ url: "../ajax/film_price.php?brand_name=" + $("#lamination2_brand_name").val() + "&thickness=" + $(this).val() })
+                        .done(function(data) {
+                            $('.lam2_film_info').html(data);
+                        })
+                        .fail(function() {
+                            alert('Ошибка при выборе толщины пленки');
+                        });
             });
             
             // Показ марки плёнки и толщины для ламинации 1
