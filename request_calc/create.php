@@ -1246,13 +1246,13 @@ $colorfulnesses = array();
                                 </div>
                             </div>
                             <!-- Количество ручьёв -->
-                            <div class="col-6 lam-only print-no-print d-none">
+                            <div class="col-6 lam-only print-only d-none">
                                 <div class="form-group">
                                     <label for="streams_number">Количество ручьев</label>
                                     <input type="text" 
                                            id="streams_number" 
                                            name="streams_number" 
-                                           class="form-control int-only lam-only print-no-print d-none" 
+                                           class="form-control int-only lam-only print-only d-none" 
                                            placeholder="Количество ручьев" 
                                            value="<?=$streams_number ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -1676,41 +1676,43 @@ $colorfulnesses = array();
             
             // Показываем или скрываем поля в зависимости от работы с печатью / без печати и наличия / отсутствия ламинации
             function SetFieldsVisibility(work_type_id) {
-                if (work_type_id == 2) {
-                    // Скрываем поля "только без печати"
-                    $('.no-print-only').addClass('d-none');
-                    $('.no-print-only').removeAttr('required');
-                    
-                    // Показываем поля "только с печатью"
-                    $('.print-only').removeClass('d-none');
-                    $('input.print-only').attr('required', 'required');
-                    $('select.print-only').attr('required', 'required');
-                }
-                else {
-                    // Скрываем поля "только с печатью"
-                    $('.print-only').addClass('d-none');
-                    $('.print-only').removeAttr('required');
-                    
-                    // Показываем поля "только без печати"
-                    $('.no-print-only').removeClass('d-none');
-                    $('.no-print-only').attr('required', 'required');
-                }
-                
                 // Если видима ламинация, то показываем поля "только с ламинацией"
                 // Иначе скрываем эти поля
                 if($('#form_lamination_1').is(':visible')) {
                     $('.lam-only').removeClass('d-none');
                     $('input.lam-only').attr('required', 'required');
                     $('select.lam-only').attr('required', 'required');
-                }
-                else {
+                    
                     if (work_type_id == 2) {
+                        // Показываем поля "только с печатью"
+                        $('.print-only').removeClass('d-none');
+                        $('input.print-only').attr('required', 'required');
+                        $('select.print-only').attr('required', 'required');
+                        
+                        // Скрываем поля "только с ламинацией", но не "только с печатью"
                         $('.lam-only').not('.print-only').addClass('d-none');
                         $('.lam-only').not('.print-only').removeAttr('required');
                     }
                     else {
-                        $('.lam-only').addClass('d-none');
-                        $('.lam-only').removeAttr('required');
+                        // Скрываем поля "только с печатью"
+                        $('.print-only').not('.lam-only').addClass('d-none');
+                        $('.print-only').not('.lam-only').removeAttr('required');
+                    }
+                }
+                else {
+                    $('.lam-only').addClass('d-none');
+                    $('.lam-only').removeAttr('required');
+                    
+                    if (work_type_id == 2) {
+                        // Показываем поля "только с печатью"
+                        $('.print-only').removeClass('d-none');
+                        $('input.print-only').attr('required', 'required');
+                        $('select.print-only').attr('required', 'required');
+                    }
+                    else {
+                        // Скрываем поля "только с печатью"
+                        $('.print-only').addClass('d-none');
+                        $('.print-only').removeAttr('required');
                     }
                 }
             }
