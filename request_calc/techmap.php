@@ -28,7 +28,7 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     $id = filter_input(INPUT_POST, 'id');
             
     $reverse_print = filter_input(INPUT_POST, 'reverse_print');
-    if(empty($reverse_print)) $reverse_print = "NULL";
+    if($reverse_print === null) $reverse_print = "NULL";
     
     $shipment = filter_input(INPUT_POST, 'shipment');
     if(empty($shipment)) $shipment = "NULL";
@@ -70,10 +70,10 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     
     if(empty($error_message)) {
         if(!empty($insert_id)) {
-            $created_message = "ok";
+            header("Location: techmap.php?id=$insert_id&created=ok");
         }
         else {
-            $edited_message = "ok";
+            header("Location: techmap.php?id=$id&edited=ok");
         }
     }
 }
@@ -284,12 +284,12 @@ if(!empty($id)) {
             <div class='alert alert-danger'><?=$error_message ?></div>
             <?php
             endif;
-            if(!empty($created_message)):
+            if(filter_input(INPUT_GET, 'created') == 'ok'):
             ?>
             <div class='alert alert-info'>Карта создана</div>
             <?php
             endif;
-            if(!empty($edited_message)):
+            if(filter_input(INPUT_GET, 'edited') == 'ok'):
             ?>
             <div class='alert alert-info'>Карта отредактирована</div>
             <?php
@@ -514,8 +514,8 @@ if(!empty($id)) {
             </div>
             <br />
             <form method="post">
-                <input type="hidden" name="request_calc_id" value="<?= empty($request_calc_id) ? '' : $request_calc_id ?>" />
-                <input type="hidden" name="id" value="<?= empty($id) ? '' : $id ?>" />
+                <input type="hidden" name="request_calc_id" value="<?= empty(filter_input(INPUT_GET, 'request_calc_id')) ? '' : filter_input(INPUT_GET, 'request_calc_id') ?>" />
+                <input type="hidden" name="id" value="<?= empty(filter_input(INPUT_GET, 'id')) ? '' : filter_input(INPUT_GET, 'id') ?>" />
                 <div class="params_main">
                     <div class="table_title">Печать</div>
                     <div class="form-group">
