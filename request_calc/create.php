@@ -744,10 +744,10 @@ $colorfulnesses = array();
                         </div>
                         <!-- Основная плёнка -->
                         <div id="film_title">
-                            <p><span class="font-weight-bold">Пленка</span></p>
+                            <p><span class="font-weight-bold">Пленка</span> <span class="main_film_info" style="color: gray;"></span></p>
                         </div>
                         <div id="main_film_title" class="d-none">
-                            <p><span class="font-weight-bold">Основная пленка</span></p>
+                            <p><span class="font-weight-bold">Основная пленка</span> <span class="main_film_info" style="color: gray;"></span></p>
                         </div>
                         <div class="row">
                             <div class="col-6">
@@ -892,7 +892,7 @@ $colorfulnesses = array();
                         </div>
                         <!-- Ламинация 1 -->
                         <div id="form_lamination_1" class="d-none">
-                            <p><span class="font-weight-bold">Ламинация 1</span></p>
+                            <p><span class="font-weight-bold">Ламинация 1</span> <span class="lam1_film_info" style="color: gray;"></span></p>
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group">
@@ -1046,7 +1046,7 @@ $colorfulnesses = array();
                             </div>
                             <!-- Ламинация 2 -->
                             <div id="form_lamination_2" class="d-none">
-                                <p><span class="font-weight-bold">Ламинация 2</span></p>
+                                <p><span class="font-weight-bold">Ламинация 2</span> <span class="lam2_film_info" style="color: gray;"></span></p>
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
@@ -1678,6 +1678,7 @@ $colorfulnesses = array();
             
             // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин и установка видимости полей
             $('#brand_name').change(function(){
+                $('.main_film_info').html('');
                 SetBrandFieldsVisibility($(this).val(), $('#customers_material').is(':checked'), '');
                 
                 if($(this).val() == "") {
@@ -1694,8 +1695,14 @@ $colorfulnesses = array();
                 }
             });
             
+            // Обработка выбора толщины основной плёнки: отображение цены
+            $('#thickness').change(function(){
+                $('.main_film_info').html('(200&nbsp;USD&nbsp;&nbsp;&nbsp;34&nbsp;кг&nbsp;&nbsp;&nbsp;600&nbsp;мм)');
+            });
+            
             // Обработка выбора типа плёнки ламинации1: перерисовка списка толщин
             $('#lamination1_brand_name').change(function(){
+                $('.lam1_film_info').html('');
                 SetBrandFieldsVisibility($(this).val(), $('#lamination1_customers_material').is(':checked'), 'lamination1_');
                 
                 if($(this).val() == "") {
@@ -1714,6 +1721,7 @@ $colorfulnesses = array();
             
             // Обработка выбора типа плёнки ламинации2: перерисовка списка толщин
             $('#lamination2_brand_name').change(function(){
+                $('.lam2_film_info').html('');
                 SetBrandFieldsVisibility($(this).val(), $('#lamination2_customers_material').is(':checked'), 'lamination2_');
                 
                 if($(this).val() == "") {
@@ -1748,6 +1756,8 @@ $colorfulnesses = array();
             
             // Скрытие марки плёнки и толщины для ламинации 1
             function HideLamination1() {
+                $('.lam1_film_info').html('');
+                
                 $('#form_lamination_1 select').val('');
                 $('#form_lamination_1 input').val('');
                 $('#lamination1_brand_name').change();
@@ -1784,6 +1794,8 @@ $colorfulnesses = array();
             
             // Скрытие марки плёнки и толщины для ламинации 2
             function HideLamination2() {
+                $('.lam2_film_info').html('');
+                
                 $('#form_lamination_2 select').val('');
                 $('#form_lamination_2 input').val('');
                 $('#lamination2_brand_name').change();
