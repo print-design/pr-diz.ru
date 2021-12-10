@@ -1481,13 +1481,6 @@ $colorfulnesses = array();
         <script src="<?=APPLICATION ?>/js/select2.min.js"></script>
         <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
         <script>
-            // Список с  поиском
-            $('#customer_id').select2({
-                placeholder: "Заказчик...",
-                maximumSelectionLength: 1,
-                language: "ru"
-            });
-            
             // Всплывающая подсказка
             $(function() {
                 $("i.fa-info-circle").tooltip({
@@ -1511,74 +1504,17 @@ $colorfulnesses = array();
                 }
             });
             
-            // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
-            $('#streams_number').keydown(function(e) {
-                if(!KeyDownLimitIntValue($(e.target), e, 50)) {
-                    return false;
-                }
-            });
-    
-            $("#streams_number").change(function(){
-                ChangeLimitIntValue($(this), 50);
-            });
-            
-            // В поле "процент" ограничиваем значения: целые числа от 1 до 100
-            $('.percent').keydown(function(e) {
-                if(!KeyDownLimitIntValue($(e.target), e, 100)) {
-                    return false;
-                }
-            });
-    
-            $(".percent").change(function(){
-                ChangeLimitIntValue($(this), 100);
+            // Список заказчиков с поиском
+            $('#customer_id').select2({
+                placeholder: "Заказчик...",
+                maximumSelectionLength: 1,
+                language: "ru"
             });
             
             // При смене типа работы: если тип работы "плёнка с печатью", показываем поля, предназначенные только для плёнки с печатью
             $('#work_type_id').change(function() {
                 SetFieldsVisibility($(this).val());
             });
-            
-            // Показываем или скрываем поля в зависимости от работы с печатью / без печати и наличия / отсутствия ламинации
-            function SetFieldsVisibility(work_type_id) {
-                if (work_type_id == 2) {
-                    // Скрываем поля "только без печати"
-                    $('.no-print-only').addClass('d-none');
-                    $('.no-print-only').removeAttr('required');
-                    
-                    // Показываем поля "только с печатью"
-                    $('.print-only').removeClass('d-none');
-                    $('.print-only').attr('required', 'required');
-                
-                    // Показываем поля "с печатью и без печати"
-                    $('.print-no-print').removeClass('d-none');
-                    $('.print-no-print').attr('required', 'required');
-                }
-                else {
-                    // Скрываем поля "только с печатью"
-                    $('.print-only').addClass('d-none');
-                    $('.print-only').removeAttr('required');
-                    
-                    // Показываем поля "только без печати"
-                    $('.no-print-only').removeClass('d-none');
-                    $('.no-print-only').attr('required', 'required');
-                
-                    // Показываем поля "с печатью и без печати"
-                    $('.print-no-print').removeClass('d-none');
-                    $('.print-no-print').attr('required', 'required');
-                
-                    // Скрываем поля "только с ламинацией"
-                    $('.lam-only').addClass('d-none');
-                    $('.lam-only').removeAttr('required');
-                
-                    // Если видима ламинация, то показываем поля "только с ламинацией"
-                    if($('#form_lamination_1').is(':visible')) {
-                        $('.lam-only').not('.print-only').removeClass('d-none');
-                        $('.lam-only').not('.print-only').attr('required', 'required');
-                    }
-                }
-            }
-            
-            SetFieldsVisibility($('#work_type_id').val());
             
             // Если единица объёма - кг, то в поле "Объём" пишем "Объём, кг", иначе "Объем, шт"
             if($('input[value=kg]').is(':checked')) {
@@ -1597,12 +1533,6 @@ $colorfulnesses = array();
                     $('#label_quantity').text('Объем заказа, шт');
                 }
             });
-            
-            // Заполняем список красочностей
-            var colorfulnesses = {};
-            <?php foreach (array_keys($colorfulnesses) as $key): ?>
-                colorfulnesses[<?=$key ?>] = <?=$colorfulnesses[$key] ?>;
-            <?php endforeach; ?>
             
             // Обработка выбора машины, заполнение списка рапортов
             $('#machine_id').change(function(){
@@ -1631,50 +1561,6 @@ $colorfulnesses = array();
                             });
                 }
             });
-            
-            // Установка видимости полей для ручного ввода при выборе марки плёнки "Другая"
-            function SetBrandFieldsVisibility(value, isCustomers, prefix) {
-                if(isCustomers) {
-                    $('#' + prefix + 'individual_price').val('');
-                    $('#' + prefix + 'individual_price').attr('disabled', 'disabled');
-                }
-                else {
-                    $('#' + prefix + 'individual_price').removeAttr('disabled');
-                }
-                
-                if(value == '<?=INDIVIDUAL ?>') {
-                    $('#' + prefix + 'thickness').removeAttr('required');
-                    $('#' + prefix + 'thickness').addClass('d-none');
-                    $('#' + prefix + 'thickness').prev('label').addClass('d-none');
-                    $('.' + prefix + 'individual_only').removeClass('d-none');
-                    $('.' + prefix + 'individual_only input').attr('required', 'required');
-                }
-                else {
-                    $('#' + prefix + 'thickness').attr('required', 'required');
-                    $('#' + prefix + 'thickness').removeClass('d-none');
-                    $('#' + prefix + 'thickness').prev('label').removeClass('d-none');
-                    $('.' + prefix + 'individual_only').addClass('d-none');
-                    $('.' + prefix + 'individual_only input').removeAttr('required');
-                }
-                
-                if($('#' + prefix + 'individual_price').attr('disabled') == 'disabled') {
-                    $('#' + prefix + 'individual_price').removeAttr('required');
-                }
-            }
-            
-            $('#customers_material').change(function(e) {
-                SetBrandFieldsVisibility($('#brand_name').val(), $(e.target).is(':checked'), '');
-            });
-            
-            $('#lamination1_customers_material').change(function(e) {
-                SetBrandFieldsVisibility($('#lamination1_brand_name').val(), $(e.target).is(':checked'), 'lamination1_');
-            });
-            
-            $('#lamination2_customers_material').change(function(e) {
-                SetBrandFieldsVisibility($('#lamination2_brand_name').val(), $(e.target).is(':checked'), 'lamination2_');
-            });
-            
-            SetBrandFieldsVisibility($('#brand_name').val(), $('#customers_material').is(':checked'), '');
             
             // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин и установка видимости полей
             $('#brand_name').change(function(){
@@ -1766,6 +1652,115 @@ $colorfulnesses = array();
                         });
             });
             
+            // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
+            $('#streams_number').keydown(function(e) {
+                if(!KeyDownLimitIntValue($(e.target), e, 50)) {
+                    return false;
+                }
+            });
+    
+            $("#streams_number").change(function(){
+                ChangeLimitIntValue($(this), 50);
+            });
+            
+            // В поле "процент" ограничиваем значения: целые числа от 1 до 100
+            $('.percent').keydown(function(e) {
+                if(!KeyDownLimitIntValue($(e.target), e, 100)) {
+                    return false;
+                }
+            });
+    
+            $(".percent").change(function(){
+                ChangeLimitIntValue($(this), 100);
+            });
+            
+            // Показываем или скрываем поля в зависимости от работы с печатью / без печати и наличия / отсутствия ламинации
+            function SetFieldsVisibility(work_type_id) {
+                if (work_type_id == 2) {
+                    // Скрываем поля "только без печати"
+                    $('.no-print-only').addClass('d-none');
+                    $('.no-print-only').removeAttr('required');
+                    
+                    // Показываем поля "только с печатью"
+                    $('.print-only').removeClass('d-none');
+                    $('input.print-only').attr('required', 'required');
+                    $('select.print-only').attr('required', 'required');
+                }
+                else {
+                    // Скрываем поля "только с печатью"
+                    $('.print-only').addClass('d-none');
+                    $('.print-only').removeAttr('required');
+                    
+                    // Показываем поля "только без печати"
+                    $('.no-print-only').removeClass('d-none');
+                    $('.no-print-only').attr('required', 'required');
+                }
+                
+                // Если видима ламинация, то показываем поля "только с ламинацией"
+                // Иначе скрываем эти поля
+                if($('#form_lamination_1').is(':visible')) {
+                    $('.lam-only').removeClass('d-none');
+                    $('input.lam-only').attr('required', 'required');
+                    $('select.lam-only').attr('required', 'required');
+                }
+                else {
+                    if (work_type_id == 2) {
+                        $('.lam-only').not('.print-only').addClass('d-none');
+                        $('.lam-only').not('.print-only').removeAttr('required');
+                    }
+                    else {
+                        $('.lam-only').addClass('d-none');
+                        $('.lam-only').removeAttr('required');
+                    }
+                }
+            }
+            
+            SetFieldsVisibility($('#work_type_id').val());
+            
+            // Установка видимости полей для ручного ввода при выборе марки плёнки "Другая"
+            function SetBrandFieldsVisibility(value, isCustomers, prefix) {
+                if(isCustomers) {
+                    $('#' + prefix + 'individual_price').val('');
+                    $('#' + prefix + 'individual_price').attr('disabled', 'disabled');
+                }
+                else {
+                    $('#' + prefix + 'individual_price').removeAttr('disabled');
+                }
+                
+                if(value == '<?=INDIVIDUAL ?>') {
+                    $('#' + prefix + 'thickness').removeAttr('required');
+                    $('#' + prefix + 'thickness').addClass('d-none');
+                    $('#' + prefix + 'thickness').prev('label').addClass('d-none');
+                    $('.' + prefix + 'individual_only').removeClass('d-none');
+                    $('.' + prefix + 'individual_only input').attr('required', 'required');
+                }
+                else {
+                    $('#' + prefix + 'thickness').attr('required', 'required');
+                    $('#' + prefix + 'thickness').removeClass('d-none');
+                    $('#' + prefix + 'thickness').prev('label').removeClass('d-none');
+                    $('.' + prefix + 'individual_only').addClass('d-none');
+                    $('.' + prefix + 'individual_only input').removeAttr('required');
+                }
+                
+                if($('#' + prefix + 'individual_price').attr('disabled') == 'disabled') {
+                    $('#' + prefix + 'individual_price').removeAttr('required');
+                }
+            }
+            
+            $('#customers_material').change(function(e) {
+                SetBrandFieldsVisibility($('#brand_name').val(), $(e.target).is(':checked'), '');
+            });
+            
+            $('#lamination1_customers_material').change(function(e) {
+                SetBrandFieldsVisibility($('#lamination1_brand_name').val(), $(e.target).is(':checked'), 'lamination1_');
+            });
+            
+            $('#lamination2_customers_material').change(function(e) {
+                SetBrandFieldsVisibility($('#lamination2_brand_name').val(), $(e.target).is(':checked'), 'lamination2_');
+            });
+            
+            SetBrandFieldsVisibility($('#brand_name').val(), $('#customers_material').is(':checked'), '');
+            
             // Показ марки плёнки и толщины для ламинации 1
             function ShowLamination1() {
                 $('#form_lamination_1').removeClass('d-none');
@@ -1839,6 +1834,12 @@ $colorfulnesses = array();
                 $('#form_lamination_2 input').removeAttr('disabled');
                 $('#form_lamination_2 select').removeAttr('disabled');
             }
+            
+            // Заполняем список красочностей
+            var colorfulnesses = {};
+            <?php foreach (array_keys($colorfulnesses) as $key): ?>
+                colorfulnesses[<?=$key ?>] = <?=$colorfulnesses[$key] ?>;
+            <?php endforeach; ?>
             
             // Обработка выбора количества красок
             $('#ink_number').change(function(){
