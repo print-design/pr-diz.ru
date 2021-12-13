@@ -537,18 +537,21 @@ if(!empty($id)) {
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <input type="text" name="shipment" class="form-control int-only" placeholder="Отгрузка, кг" value="<?= empty($shipment) ? '' : $shipment ?>" />
+                                    <label for="shipment">Отгрузка, кг</label>
+                                    <input type="text" id="shipment" name="shipment" class="form-control int-only" value="<?= empty($shipment) ? '' : $shipment ?>" />
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <input type="text" name="winding" class="form-control int-only" placeholder="Намотка" value="<?= empty($winding) ? '' : $winding ?>" />
+                                    <label for="winding">Намотка, мм</label>
+                                    <input type="text" id="winding" name="winding" class="form-control int-only" placeholder="" value="<?= empty($winding) ? '' : $winding ?>" />
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <select name="spool" class="form-control">
-                                <option value="" hidden="hidden">Шпуля</option>
+                            <label for="spool">Шпуля, мм</label>
+                            <select id="spool" name="spool" class="form-control">
+                                <option value="" hidden="hidden">Шпуля...</option>
                                 <option<?= !empty($spool) && $spool == 40 ? " selected='selected'" : "" ?>>40</option>
                                 <option<?= !empty($spool) && $spool == 50 ? " selected='selected'" : "" ?>>50</option>
                                 <option<?= !empty($spool) && $spool == 76 ? " selected='selected'" : "" ?>>76</option>
@@ -557,23 +560,27 @@ if(!empty($id)) {
                         </div>
                         <?php if($work_type_id == 2): ?>
                         <div class="form-group">
-                            <select name="sign" class="form-control">
-                                <option value="" hidden="hidden">Фотометка</option>
+                            <label for="sign">Фотометка</label>
+                            <select id="sign" name="sign" class="form-control">
+                                <option value="" hidden="hidden">Фотометка...</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <select name="label" class="form-control">
-                                <option value="" hidden="hidden">Бирки</option>
+                            <label for="label">Бирки</label>
+                            <select id="label" name="label" class="form-control">
+                                <option value="" hidden="hidden">Бирки...</option>
                             </select>
                         </div>
                         <?php endif; ?>
                         <div class="form-group">
-                            <select name="package" class="form-control">
-                                <option value="" hidden="hidden">Упаковка</option>
+                            <label for="package">Упаковка</label>
+                            <select id="package" name="package" class="form-control">
+                                <option value="" hidden="hidden">Упаковка...</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <textarea class="form-control" rows="4" name="comment" placeholder="Комментарий"><?= empty($comment) ? '' : $comment ?></textarea>
+                            <label for="comment">Комментарий</label>
+                            <textarea class="form-control" rows="4" id="comment" name="comment"><?= empty($comment) ? '' : $comment ?></textarea>
                         </div>
                         <?php if($work_type_id == 2): ?>
                         <table class="w-100" id="roll_type_table">
