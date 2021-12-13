@@ -132,8 +132,8 @@ $comment = $row['comment'];
             }
             
             #params_top {
-                margin-top: 40px;
-                margin-bottom: 40px;
+                margin-top: 30px;
+                margin-bottom: 30px;
             }
             
             #params_top table tr th {
@@ -149,8 +149,8 @@ $comment = $row['comment'];
                 font-weight: 700;
                 font-size: 18px;
                 line-height: 32px;
-                margin-top: 25px;
-                margin-bottom: 18px;
+                margin-top: 15px;
+                margin-bottom: 10px;
             }
             
             .params_main table tr th {
@@ -163,8 +163,8 @@ $comment = $row['comment'];
             
             .params_main table tr td {
                 font-weight: 700;
-                padding-top: 10px;
-                padding-bottom: 10px;
+                padding-top: 5px;
+                padding-bottom: 5px;
                 border-bottom: 1px solid #E3E3E3;
             }
             
@@ -230,7 +230,7 @@ $comment = $row['comment'];
         </div>
         <hr />
         <div class="row params_main">
-            <div class="col-3">
+            <div class="col-4">
                 <div class="table_title">Пленка</div>
                 <table class="w-75">
                     <tr>
@@ -256,7 +256,7 @@ $comment = $row['comment'];
                 </table>
             </div>
                 <?php if(!empty($lamination1_brand_name)): ?>
-            <div class="col-3">
+            <div class="col-4">
                 <div class="table_title">Ламинация 1</div>
                 <table class="w-75">
                     <tr>
@@ -285,7 +285,7 @@ $comment = $row['comment'];
                 endif;
                 if(!empty($lamination2_brand_name)):
                 ?>
-            <div class="col-3">
+            <div class="col-4">
                 <div class="table_title">Ламинация 2</div>
                 <table class="w-75">
                     <tr>
@@ -316,7 +316,7 @@ $comment = $row['comment'];
             <?php if($work_type_id == 2): ?>
         <div class="table_title">Красочность</div>
         <div class="row params_main">
-            <div class="col-3">
+            <div class="col-4">
                 <table class="w-75">
                     <?php
                     for($i=1; $i<=8; $i++):
@@ -376,7 +376,7 @@ $comment = $row['comment'];
                         ?>
                 </table>
             </div>
-            <div class="col-3">
+            <div class="col-4">
                 <table class="w-75">
                     <tr>
                         <th>Рапорт</th>
@@ -421,15 +421,11 @@ $comment = $row['comment'];
             <?php endif; ?>
         <div class="table_title">Информация для резчика</div>
         <div class="row params_main">
-            <div class="col-3">
+            <div class="col-4">
                 <table class="w-75">
                     <tr>
                         <th>Отгрузка, кг</th>
                         <td><?= empty($shipment) ? '' : $shipment ?></td>
-                    </tr>
-                    <tr>
-                        <th>Намотка</th>
-                        <td><?= empty($winding) ? '' : $winding ?></td>
                     </tr>
                     <tr>
                         <th>Шпуля</th>
@@ -440,24 +436,35 @@ $comment = $row['comment'];
                         <th>Фотометка</th>
                         <td></td>
                     </tr>
+                        <?php endif; ?>
+                    
+                </table>
+            </div>
+            <div class="col-4">
+                <table class="w-75">
+                    <tr>
+                        <th>Намотка</th>
+                        <td><?= empty($winding) ? '' : $winding ?></td>
+                    </tr>
+                    <tr>
+                        <th>Упаковка</th>
+                        <td></td>
+                    </tr>
+                    <?php if($work_type_id == 2): ?>
                     <tr>
                         <th>Бирки</th>
                         <td></td>
                     </tr>
                         <?php endif; ?>
-                    <tr>
-                        <th>Упаковка</th>
-                        <td></td>
-                    </tr>
                 </table>
             </div>
-            <div class="col-3">
+            <div class="col-4">
                 <p><?=$comment ?></p>
             </div>
         </div>
             <?php if($work_type_id == 2): ?>
         <div class="row">
-            <div class="col-6">
+            <div class="col-8">
                 <table class="w-100" id="roll_type_table">
                     <tr>
                         <td style="text-align: center;">
@@ -544,5 +551,23 @@ $comment = $row['comment'];
                 }
             }
             ?>
+        <script>
+            var css = '@page { size: portrait; margin: 8mm; }',
+                    head = document.head || document.getElementsByTagName('head')[0],
+                    style = document.createElement('style');
+            
+            style.type = 'text/css';
+            style.media = 'print';
+            
+            if (style.styleSheet){
+                style.styleSheet.cssText = css;
+            } else {
+                style.appendChild(document.createTextNode(css));
+            }
+            
+            head.appendChild(style);
+            
+            window.print();
+        </script>
     </body>
 </html>
