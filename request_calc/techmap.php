@@ -95,7 +95,7 @@ if(empty($id)) {
 }
 
 if(!empty($request_calc_id)) {
-    $sql = "select c.id request_calc_id, c.date, c.name, c.quantity, c.unit, c.stream_width, c.streams_number, c.length, c.raport, "
+    $sql = "select c.id request_calc_id, c.date, c.name, c.unit, c.quantity, c.work_type_id, c.stream_width, c.streams_number, c.length, c.raport, "
             . "c.brand_name, c.thickness, c.individual_brand_name, c.individual_thickness, "
             . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_individual_brand_name, c.lamination1_individual_thickness, "
             . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_individual_brand_name, c.lamination2_individual_thickness, "
@@ -111,7 +111,7 @@ if(!empty($request_calc_id)) {
             . "where c.id=$request_calc_id";
 }
 elseif (!empty($id)) {
-    $sql = "select c.id request_calc_id, c.date, c.name, c.quantity, c.unit, c.stream_width, c.streams_number, c.length, c.raport, "
+    $sql = "select c.id request_calc_id, c.date, c.name, c.unit, c.quantity, c.work_type_id, c.stream_width, c.streams_number, c.length, c.raport, "
             . "c.brand_name, c.thickness, c.individual_brand_name, c.individual_thickness, "
             . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_individual_brand_name, c.lamination1_individual_thickness, "
             . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_individual_brand_name, c.lamination2_individual_thickness, "
@@ -133,8 +133,9 @@ $row = (new Fetcher($sql))->Fetch();
 $request_calc_id = $row['request_calc_id'];
 $date = $row['date'];
 $name = $row['name'];
-$quantity = $row['quantity'];
 $unit = $row['unit'];
+$quantity = $row['quantity'];
+$work_type_id = $row['work_type_id'];
 $stream_width = $row['stream_width'];
 $streams_number = $row['streams_number'];
 $length = $row['length'];
@@ -425,6 +426,7 @@ if(!empty($id)) {
                 <?php endif; ?>
             </div>
             <br />
+            <?php if($work_type_id == 2): ?>
             <div class="table_title">Красочность</div>
             <div class="row params_main">
                 <div class="col-3">
@@ -513,9 +515,11 @@ if(!empty($id)) {
                 </div>
             </div>
             <br />
+            <?php endif; ?>
             <form method="post">
                 <input type="hidden" name="request_calc_id" value="<?= empty(filter_input(INPUT_GET, 'request_calc_id')) ? '' : filter_input(INPUT_GET, 'request_calc_id') ?>" />
                 <input type="hidden" name="id" value="<?= empty(filter_input(INPUT_GET, 'id')) ? '' : filter_input(INPUT_GET, 'id') ?>" />
+                <?php if($work_type_id == 2): ?>
                 <div class="params_main">
                     <div class="table_title">Печать</div>
                     <div class="form-group">
@@ -526,6 +530,7 @@ if(!empty($id)) {
                     </div>
                 </div>
                 <br />
+                <?php endif; ?>
                 <div class="row">
                     <div class="col-4">
                         <div class="table_title">Информация для резчика</div>
@@ -550,6 +555,7 @@ if(!empty($id)) {
                                 <option<?= !empty($spool) && $spool == 152 ? " selected='selected'" : "" ?>>152</option>
                             </select>
                         </div>
+                        <?php if($work_type_id == 2): ?>
                         <div class="form-group">
                             <select name="sign" class="form-control">
                                 <option value="" hidden="hidden">Фотометка</option>
@@ -560,6 +566,7 @@ if(!empty($id)) {
                                 <option value="" hidden="hidden">Бирки</option>
                             </select>
                         </div>
+                        <?php endif; ?>
                         <div class="form-group">
                             <select name="package" class="form-control">
                                 <option value="" hidden="hidden">Упаковка</option>
@@ -568,6 +575,7 @@ if(!empty($id)) {
                         <div class="form-group">
                             <textarea class="form-control" rows="4" name="comment" placeholder="Комментарий"><?= empty($comment) ? '' : $comment ?></textarea>
                         </div>
+                        <?php if($work_type_id == 2): ?>
                         <table class="w-100" id="roll_type_table">
                             <tr>
                                 <td style="text-align: center;">
@@ -620,6 +628,7 @@ if(!empty($id)) {
                                 </td>
                             </tr>
                         </table>
+                        <?php endif; ?>
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
