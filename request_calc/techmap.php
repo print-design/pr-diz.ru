@@ -635,11 +635,13 @@ if(!empty($id)) {
                                     <button type="submit" class="btn btn-dark w-100" name="techmap_submit">OK</button>
                                 </div>
                             </div>
+                            <?php if(!empty($id)): ?>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <button type="button" class="btn btn-outline-dark w-100">Печать</button>
+                                    <a href="print.php?id=<?=$id ?>" target="_blank" class="btn btn-outline-dark w-100">Печать</a>
                                 </div>
                             </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
