@@ -312,7 +312,7 @@ if(!empty($id)) {
                 <div id="title_text">
                     <div id="title_customer"><?=$customer ?></div>
                     <div id="title_name"><?=$name ?></div>
-                    <div id="title_date">№<?=$id ?> от <?= empty($date) ? DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') : $date ?></div>
+                    <div id="title_date"><?= empty($id) ? "" : "№$id" ?> от <?= empty($date) ? DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') : $date ?></div>
                 </div>
             </div>
             <div id="params_top">
