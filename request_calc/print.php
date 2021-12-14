@@ -205,11 +205,11 @@ $comment = $row['comment'];
             <table>
                 <tr>
                     <th>Объем заказа</th>
-                    <td><?=$quantity.' '.($unit == 'kg' ? 'кг' : 'шт') ?></td>
+                    <td><?=$quantity.'&nbsp;'.($unit == 'kg' ? 'кг' : 'шт') ?></td>
                 </tr>
                 <tr>
                     <th>Менеджер</th>
-                    <td><?=$first_name.' '.$last_name ?></td>
+                    <td><?=$first_name.'&nbsp;'.$last_name ?></td>
                 </tr>
                 <tr>
                     <th>Тип работы</th>
@@ -237,7 +237,7 @@ $comment = $row['comment'];
                     </tr>
                     <tr>
                         <th>Толщина</th>
-                        <td><?=($brand_name == INDIVIDUAL ? $individual_thickness : $thickness) ?> мкм</td>
+                        <td><?=($brand_name == INDIVIDUAL ? $individual_thickness : $thickness) ?>&nbsp;мкм</td>
                     </tr>
                     <tr>
                         <th>Ширина</th>
@@ -263,7 +263,7 @@ $comment = $row['comment'];
                     </tr>
                     <tr>
                         <th>Толщина</th>
-                        <td><?=($lamination1_brand_name == INDIVIDUAL ? $lamination1_individual_thickness : $lamination1_thickness) ?> мкм</td>
+                        <td><?=($lamination1_brand_name == INDIVIDUAL ? $lamination1_individual_thickness : $lamination1_thickness) ?>&nbsp;мкм</td>
                     </tr>
                     <tr>
                         <th>Ширина</th>
@@ -292,7 +292,7 @@ $comment = $row['comment'];
                     </tr>
                     <tr>
                         <th>Толщина</th>
-                        <td><?=($lamination2_brand_name == INDIVIDUAL ? $lamination2_individual_thickness : $lamination2_thickness) ?> мкм</td>
+                        <td><?=($lamination2_brand_name == INDIVIDUAL ? $lamination2_individual_thickness : $lamination2_thickness) ?>&nbsp;мкм</td>
                     </tr>
                     <tr>
                         <th>Ширина</th>
@@ -378,7 +378,7 @@ $comment = $row['comment'];
                 <table class="w-75">
                     <tr>
                         <th>Рапорт</th>
-                        <td><?=rtrim(rtrim(number_format($raport, 3, ",", ""), "0"), ",") ?> мм</td>
+                        <td><?=rtrim(rtrim(number_format($raport, 3, ",", ""), "0"), ",") ?>&nbsp;мм</td>
                     </tr>
                     <tr>
                         <th>Растяг</th>
@@ -386,11 +386,11 @@ $comment = $row['comment'];
                     </tr>
                     <tr>
                         <th>Длина <span style="font-size: smaller;">(от метки до метки)</span></th>
-                        <td><?=$length ?> мм</td>
+                        <td><?=$length ?>&nbsp;мм</td>
                     </tr>
                     <tr>
                         <th>Ширина ручья</th>
-                        <td><?=$stream_width ?> мм</td>
+                        <td><?=$stream_width ?>&nbsp;мм</td>
                     </tr>
                     <tr>
                         <th>Количество ручьёв</th>
@@ -423,11 +423,11 @@ $comment = $row['comment'];
                 <table class="w-75">
                     <tr>
                         <th>Масса одной намотки</th>
-                        <td><?= empty($shipment) ? '' : $shipment.' кг' ?></td>
+                        <td><?= empty($shipment) ? '' : $shipment.'&nbsp;кг' ?></td>
                     </tr>
                     <tr>
                         <th>Шпуля</th>
-                        <td><?= empty($spool) ? '' : $spool.' мм' ?></td>
+                        <td><?= empty($spool) ? '' : $spool.'&nbsp;мм' ?></td>
                     </tr>
                         <?php if($work_type_id == 2): ?>
                     <tr>
@@ -442,7 +442,7 @@ $comment = $row['comment'];
                 <table class="w-75">
                     <tr>
                         <th>Намотка</th>
-                        <td><?= empty($winding) ? '' : $winding.' мм' ?></td>
+                        <td><?= empty($winding) ? '' : $winding.'&nbsp;мм' ?></td>
                     </tr>
                     <tr>
                         <th>Упаковка</th>
@@ -533,7 +533,7 @@ $comment = $row['comment'];
                 </table>
             </div>
         </div>
-            <?php endif; ?>        
+            <?php endif; ?>
             <?php
             // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
             $files = scandir("../temp/");

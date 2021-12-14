@@ -318,11 +318,11 @@ if(!empty($id)) {
                 <table>
                     <tr>
                         <th>Объем заказа</th>
-                        <td><?=$quantity.' '.($unit == 'kg' ? 'кг' : 'шт') ?></td>
+                        <td><?=$quantity.'&nbsp;'.($unit == 'kg' ? 'кг' : 'шт') ?></td>
                     </tr>
                     <tr>
                         <th>Менеджер</th>
-                        <td><?=$first_name.' '.$last_name ?></td>
+                        <td><?=$first_name.'&nbsp;'.$last_name ?></td>
                     </tr>
                     <tr>
                         <th>Тип работы</th>
