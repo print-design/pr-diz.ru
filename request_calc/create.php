@@ -1308,7 +1308,7 @@ $colorfulnesses = array();
                                             $selected = "";
                                             if($row[0] == $lamination_roller_width) $selected = " selected='selected'";
                                         ?>
-                                        <option><?=$row[0] ?></option>
+                                        <option<?=$selected ?>><?=$row[0] ?></option>
                                         <?php
                                         endwhile;
                                         ?>
