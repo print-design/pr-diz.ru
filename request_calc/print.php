@@ -446,12 +446,12 @@ $comment = $row['comment'];
                     </tr>
                     <tr>
                         <th>Упаковка</th>
-                        <td></td>
+                        <td><?=$package ?></td>
                     </tr>
                     <?php if($work_type_id == 2): ?>
                     <tr>
                         <th>Бирки</th>
-                        <td></td>
+                        <td><?=$label ?></td>
                     </tr>
                         <?php endif; ?>
                 </table>

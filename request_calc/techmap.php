@@ -42,11 +42,9 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     $sign = filter_input(INPUT_POST, 'sign');
     if(empty($sign)) $sign = "NULL";
     
-    $label = filter_input(INPUT_POST, 'label');
-    if(empty($label)) $label = "NULL";
+    $label = addslashes(filter_input(INPUT_POST, 'label'));
     
-    $package = filter_input(INPUT_POST, 'package');
-    if(empty($package)) $package = "NULL";
+    $package = addslashes(filter_input(INPUT_POST, 'package'));
     
     $roll_type = filter_input(INPUT_POST, 'roll_type');
     if(empty($roll_type)) $roll_type = "NULL";
@@ -57,11 +55,11 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     
     if(!empty($request_calc_id)) {
         $sql = "insert into techmap (request_calc_id, reverse_print, shipment, spool, winding, sign, label, package, roll_type, comment) "
-                . "values ($request_calc_id, $reverse_print, $shipment, $spool, $winding, $sign, $label, $package, $roll_type, '$comment')";
+                . "values ($request_calc_id, $reverse_print, $shipment, $spool, $winding, $sign, '$label', '$package', $roll_type, '$comment')";
     }
     elseif(!empty ($id)) {
-        $sql = "update techmap set reverse_print=$reverse_print, shipment=$shipment, spool=$spool, winding=$winding, sign=$sign, label=$label, "
-                . "package=$package, roll_type=$roll_type, comment='$comment'";
+        $sql = "update techmap set reverse_print=$reverse_print, shipment=$shipment, spool=$spool, winding=$winding, sign=$sign, label='$label', "
+                . "package='$package', roll_type=$roll_type, comment='$comment'";
     }
     
     $executer = new Executer($sql);
@@ -567,6 +565,8 @@ if(!empty($id)) {
                             <label for="label">Бирки</label>
                             <select id="label" name="label" class="form-control">
                                 <option value="" hidden="hidden">Бирки...</option>
+                                <option<?= !empty($label) && $label == "Принт дизайн" ? " selected='selected'" : "" ?>>Принт дизайн</option>
+                                <option<?= !empty($label) && $label == "Безликие" ? " selected='selected'" : "" ?>>Безликие</option>
                             </select>
                         </div>
                         <?php endif; ?>
@@ -574,6 +574,8 @@ if(!empty($id)) {
                             <label for="package">Упаковка</label>
                             <select id="package" name="package" class="form-control">
                                 <option value="" hidden="hidden">Упаковка...</option>
+                                <option<?= !empty($package) && $package == "Паллетирование" ? " selected='selected'" : "" ?>>Паллетирование</option>
+                                <option<?= !empty($package) && $package == "Россыпью" ? " selected='selected'" : "" ?>>Россыпью</option>
                             </select>
                         </div>
                         <div class="form-group">
