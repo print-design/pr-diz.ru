@@ -99,7 +99,7 @@ if(!empty($request_calc_id)) {
             . "c.brand_name, c.thickness, c.individual_brand_name, c.individual_thickness, "
             . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_individual_brand_name, c.lamination1_individual_thickness, "
             . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_individual_brand_name, c.lamination2_individual_thickness, "
-            . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
+            . "c.ink_number, c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
             . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
             . "c.cliche_1, c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
@@ -425,7 +425,7 @@ if(!empty($id)) {
             </div>
             <br />
             <?php if($work_type_id == 2): ?>
-            <div class="table_title">Красочность (<?=$ink_number ?>)</div>
+            <div class="table_title">Красочность <?=$ink_number ?></div>
             <div class="row params_main">
                 <div class="col-3">
                     <table class="w-75">
@@ -535,7 +535,7 @@ if(!empty($id)) {
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="shipment">Отгрузка, кг</label>
+                                    <label for="shipment">Масса одной намотки, кг</label>
                                     <input type="text" id="shipment" name="shipment" class="form-control int-only" value="<?= empty($shipment) ? '' : $shipment ?>" />
                                 </div>
                             </div>

@@ -422,12 +422,12 @@ $comment = $row['comment'];
             <div class="col-4">
                 <table class="w-75">
                     <tr>
-                        <th>Отгрузка, кг</th>
-                        <td><?= empty($shipment) ? '' : $shipment ?></td>
+                        <th>Масса одной намотки</th>
+                        <td><?= empty($shipment) ? '' : $shipment.' кг' ?></td>
                     </tr>
                     <tr>
                         <th>Шпуля</th>
-                        <td><?=$spool ?></td>
+                        <td><?= empty($spool) ? '' : $spool.' мм' ?></td>
                     </tr>
                         <?php if($work_type_id == 2): ?>
                     <tr>
@@ -442,7 +442,7 @@ $comment = $row['comment'];
                 <table class="w-75">
                     <tr>
                         <th>Намотка</th>
-                        <td><?= empty($winding) ? '' : $winding ?></td>
+                        <td><?= empty($winding) ? '' : $winding.' мм' ?></td>
                     </tr>
                     <tr>
                         <th>Упаковка</th>
