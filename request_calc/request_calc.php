@@ -20,7 +20,7 @@ $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c
         . "c.brand_name, c.thickness, c.individual_brand_name, c.individual_price, c.individual_thickness, c.individual_density, c.customers_material, "
         . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_individual_brand_name, c.lamination1_individual_price, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, "
         . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_individual_brand_name, c.lamination2_individual_price, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, "
-        . "c.width, c.length, c.stream_width, c.streams_number, c.raport, c.ink_number, "
+        . "c.width, c.length, c.stream_width, c.streams_number, c.raport, c.lamination_roller_width, c.ink_number, "
         . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
         . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
@@ -77,6 +77,7 @@ $length = $row['length'];
 $stream_width = $row['stream_width'];
 $streams_number = $row['streams_number'];
 $raport = rtrim(rtrim(number_format($row['raport'], 3, ",", " "), "0"), ",");
+$lamination_roller_width = $row['lamination_roller_width'];
 $ink_number = $row['ink_number'];
 
 for($i=1; $i<=$ink_number; $i++) {
@@ -188,22 +189,27 @@ $num_for_customer = $row['num_for_customer'];
                             endif;
                             if(!empty($width)):
                             ?>
-                        <tr><th>Обрезная ширина</th><td colspan="3"><?= rtrim(rtrim(number_format($width, 2, ",", " "), "0"), ",") ?></td></tr>
+                        <tr><th>Обрезная ширина</th><td colspan="3"><?= rtrim(rtrim(number_format($width, 2, ",", " "), "0"), ",") ?> мм</td></tr>
                             <?php
                             endif;
                             if(!empty($length)):
                             ?>
-                        <tr><th>Длина от метки до метки</th><td colspan="3"><?= rtrim(rtrim(number_format($length, 2, ",", ""), "0"), ",") ?></td></tr>
+                        <tr><th>Длина от метки до метки</th><td colspan="3"><?= rtrim(rtrim(number_format($length, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                             <?php
                             endif;
                             if(!empty($stream_width)):
                             ?>
-                        <tr><th>Ширина ручья</th><td colspan="3"><?= rtrim(rtrim(number_format($stream_width, 2, ",", ""), "0"), ",") ?></td></tr>
+                        <tr><th>Ширина ручья</th><td colspan="3"><?= rtrim(rtrim(number_format($stream_width, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                             <?php
                             endif;
                             if(!empty($raport)):
                             ?>
-                        <tr><th>Рапорт</th><td colspan="3"><?= $raport ?></td></tr>
+                        <tr><th>Рапорт</th><td colspan="3"><?= $raport ?> мм</td></tr>
+                            <?php
+                            endif;
+                            if(!empty($lamination_roller_width)):
+                            ?>
+                        <tr><th>Ширина ламинирующего вала</th><td colspan="3"><?= $lamination_roller_width ?> мм</td></tr>
                             <?php
                             endif;
                             if(!empty($streams_count)):
