@@ -197,6 +197,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         if(empty($streams_number)) $streams_number = "NULL";
         $raport = filter_input(INPUT_POST, 'raport');
         if(empty($raport)) $raport = "NULL";
+        $lamination_roller_width = filter_input(INPUT_POST, 'lamination_roller_width');
+        if(empty($lamination_roller_width)) $lamination_roller_width = "NULL";
         $ink_number = filter_input(INPUT_POST, 'ink_number');
         if(empty($ink_number)) $ink_number = "NULL";
         
@@ -235,7 +237,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                 . "brand_name, thickness, individual_brand_name, individual_price, individual_thickness, individual_density, customers_material, "
                 . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
                 . "lamination2_brand_name, lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
-                . "width, quantity, streams_number, length, stream_width, raport, ink_number, manager_id, status_id, extracharge, no_ski, "
+                . "width, quantity, streams_number, length, stream_width, raport, lamination_roller_width, ink_number, manager_id, status_id, extracharge, no_ski, "
                 . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
                 . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                 . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -245,7 +247,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                 . "'$brand_name', $thickness, '$individual_brand_name', $individual_price, $individual_thickness, $individual_density, $customers_material, "
                 . "'$lamination1_brand_name', $lamination1_thickness, '$lamination1_individual_brand_name', $lamination1_individual_price, $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, "
                 . "'$lamination2_brand_name', $lamination2_thickness, '$lamination2_individual_brand_name', $lamination2_individual_price, $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, "
-                . "$width, $quantity, $streams_number, $length, $stream_width, $raport, $ink_number, $manager_id, $status_id, $extracharge, $no_ski, "
+                . "$width, $quantity, $streams_number, $length, $stream_width, $raport, $lamination_roller_width, $ink_number, $manager_id, $status_id, $extracharge, $no_ski, "
                 . "'$ink_1', '$ink_2', '$ink_3', '$ink_4', '$ink_5', '$ink_6', '$ink_7', '$ink_8', "
                 . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                 . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
@@ -272,7 +274,7 @@ if(!empty($id)) {
             . "brand_name, thickness, individual_brand_name, individual_price, individual_thickness, individual_density, customers_material, "
             . "lamination1_brand_name, lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
             . "lamination2_brand_name, lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
-            . "quantity, width, streams_number, length, stream_width, raport, ink_number, status_id, extracharge, no_ski, "
+            . "quantity, width, streams_number, length, stream_width, raport, lamination_roller_width, ink_number, status_id, extracharge, no_ski, "
             . "(select id from techmap where request_calc_id = $id order by id desc limit 1) techmap_id, "
             . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -485,6 +487,12 @@ $raport = filter_input(INPUT_POST, 'raport');
 if(null === $raport) {
     if(isset($row['raport'])) $raport = $row['raport'];
     else $raport = null;
+}
+
+$lamination_roller_width = filter_input(INPUT_POST, 'lamination_roller_width');
+if(null === $lamination_roller_width) {
+    if(isset($row['lamination_roller_width'])) $lamination_roller_width = $row['lamination_roller_width'];
+    else $lamination_roller_width = null;
 }
 
 $ink_number = filter_input(INPUT_POST, 'ink_number');
@@ -1192,13 +1200,13 @@ $colorfulnesses = array();
                         </div>
                         <div class="row mt-3">
                             <!-- Обрезная ширина -->
-                            <div class="col-6 lam-only no-print-only d-none">
+                            <div class="col-6 no-print-only d-none">
                                 <div class="form-group">
                                     <label for="width">Обрезная ширина</label>
                                     <input type="text" 
                                            id="width" 
                                            name="width" 
-                                           class="form-control int-only lam-only no-print-only d-none" 
+                                           class="form-control int-only no-print-only d-none" 
                                            placeholder="Обрезная ширина, мм" 
                                            value="<?=$width ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -1246,13 +1254,14 @@ $colorfulnesses = array();
                                 </div>
                             </div>
                             <!-- Количество ручьёв -->
-                            <div class="col-6 lam-only print-only d-none">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="streams_number">Количество ручьев</label>
                                     <input type="text" 
                                            id="streams_number" 
                                            name="streams_number" 
-                                           class="form-control int-only lam-only print-only d-none" 
+                                           class="form-control int-only" 
+                                           required="required"
                                            placeholder="Количество ручьев" 
                                            value="<?=$streams_number ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -1281,6 +1290,27 @@ $colorfulnesses = array();
                                                 echo "<option value='$raport_value'$selected>$raport_value</option>";
                                             }
                                         }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Ширина ламинирующего вала -->
+                            <div class="col-6 lam-only d-none">
+                                <div class="form-group">
+                                    <label for="lamination_roller_width">Ширина ламинирующего вала</label>
+                                    <select id="lamination_roller_width" name="lamination_roller_width" class="form-control lam-only d-none">
+                                        <option value="" hidden="hidden">Ширина ламинирующего вала...</option>
+                                        <?php
+                                        $sql = "select value from norm_laminator_roller order by value";
+                                        $fetcher = new Fetcher($sql);
+                                        
+                                        while ($row = $fetcher->Fetch()):
+                                            $selected = "";
+                                            if($row[0] == $lamination_roller_width) $selected = " selected='selected'";
+                                        ?>
+                                        <option><?=$row[0] ?></option>
+                                        <?php
+                                        endwhile;
                                         ?>
                                     </select>
                                 </div>
