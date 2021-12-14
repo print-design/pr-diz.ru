@@ -17,6 +17,12 @@ const FLINT = 'flint';
 const KODAK = 'kodak';
 const TVER = 'tver';
 
+// Фотометки
+const LEFT_SIGN = "left";
+const RIGHT_SIGN = "right";
+const BOTH_SIGN = "both";
+const NO_SIGN = "no";
+
 // Текущее время
 $current_date_time = date("dmYHis");
 
@@ -432,7 +438,27 @@ $comment = $row['comment'];
                         <?php if($work_type_id == 2): ?>
                     <tr>
                         <th>Фотометка</th>
-                        <td></td>
+                        <td>
+                            <?php
+                            switch ($sign) {
+                                case LEFT_SIGN:
+                                    echo "Левая фотометка";
+                                    break;
+                                
+                                case RIGHT_SIGN:
+                                    echo 'Правая фотометка';
+                                    break;
+                                    
+                                case BOTH_SIGN:
+                                    echo 'Две фотометки';
+                                    break;
+                                
+                                case NO_SIGN:
+                                    echo 'Без фотометки';
+                                    break;
+                            }
+                            ?>
+                        </td>
                     </tr>
                         <?php endif; ?>
                     
