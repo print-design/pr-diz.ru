@@ -49,7 +49,7 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
         <div class="col-4 pr-4">
             <h3>Себестоимость</h3>
             <div>Себестоимость</div>
-            <div class="value mb-2">860 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 &#8381; за кг</span></div>
+            <div class="value mb-2">860 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
             <?php if($work_type_id == 2): ?>
             <div>Себестоимость форм</div>
             <div class="value mb-2">800 000 &#8381;</div>
@@ -58,18 +58,18 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
         <div class="col-4 pr-4">
             <h3>Отгрузочная стоимость</h3>
             <div>Отгрузочная стоимость</div>
-            <div class="value">1 200 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за кг</span></div>
+            <div class="value">1 200 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
         </div>
         <div class="col-4" style="width: 250px;"></div>
     </div>
     <div class="mt-3">
-        <h2>Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 кг</span></h2>
+        <h2>Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></h2>
     </div>
     <div class="row text-nowrap">
         <div class="col-4 pr-4">
-            <h3>Основная пленка&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 кг</span></h3>
+            <h3>Основная пленка&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></h3>
             <div>Закупочная стоимость</div>
-            <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за кг</span></div>
+            <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
             <div>Минимальная ширина</div>
             <div class="value mb-2">800 000 мм</div>
             <div>Масса без приладки</div>
@@ -79,9 +79,9 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
         </div>
         <?php if(!empty($lamination1_brand_name)): ?>
         <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
-            <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 кг</span></h3>
+            <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></h3>
             <div>Закупочная стоимость</div>
-            <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за кг</span></div>
+            <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
             <div>Минимальная ширина</div>
             <div class="value mb-2">800 000 мм</div>
             <div>Масса без приладки</div>
@@ -94,9 +94,9 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
         <?php endif; ?>
         <?php if(!empty($lamination2_brand_name)): ?>
         <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
-            <h3>Ламинация 2&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 кг</span></h3>
+            <h3>Ламинация 2&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></h3>
             <div>Закупочная стоимость</div>
-            <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за кг</span></div>
+            <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
             <div>Минимальная ширина</div>
             <div class="value mb-2">800 000 мм</div>
             <div>Масса без приладки</div>
