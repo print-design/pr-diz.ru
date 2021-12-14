@@ -1317,7 +1317,7 @@ $colorfulnesses = array();
                             </div>
                         </div>
                         <!-- Печать без лыж -->
-                        <div class="form-check mb-2 print-only d-none">
+                        <div class="form-check mb-2 print-only no-lam-only d-none">
                             <label class="form-check-label text-nowrap" style="line-height: 25px;">
                                 <?php
                                 $checked = $no_ski == 1 ? " checked='checked'" : "";
@@ -1733,8 +1733,17 @@ $colorfulnesses = array();
                         $('.lam-only').not('.no-print-only').removeClass('d-none');
                         $('input.lam-only').not('.no-print-only').attr('required', 'required');
                         $('select.lam-only').not('.no-print-only').attr('required', 'required');
+                        
+                        // Скрываем поля "только без ламинации"
+                        $('.no-lam-only').addClass('d-none');
+                        $('.no-lam-only').removeAttr('required');
                     }
                     else {
+                        // Показываем поля "только без ламинации"
+                        $('.no-lam-only').not('.no-print-only').removeClass('d-none');
+                        $('input.no-lam-only').not('.no-print-only').attr('required', 'required');
+                        $('select.no-lam-only').not('.no-print-only').attr('required', 'required');
+                        
                         // Скрываем поля "только с ламинацией"
                         $('.lam-only').addClass('d-none');
                         $('.lam-only').removeAttr('required');
@@ -1755,8 +1764,17 @@ $colorfulnesses = array();
                         $('.lam-only').not('.print-only').removeClass('d-none');
                         $('input.lam-only').not('.print-only').attr('required', 'required');
                         $('select.lam-only').not('.print-only').attr('required', 'required');
+                        
+                        // Скрываем поля "только без ламинации"
+                        $('.no-lam-only').addClass('d-none');
+                        $('.no-lam-only').removeAttr('required');
                     }
                     else {
+                        // Показываем поля "только без ламинации"
+                        $('.no-lam-only').not('.print-only').removeClass('d-none');
+                        $('input.no-lam-only').not('.print-only').attr('required', 'required');
+                        $('select.no-lam-only').not('.print-only').attr('required', 'required');
+                        
                         // Скрываем поля "только с ламинацией"
                         $('.lam-only').addClass('d-none');
                         $('.lam-only').removeAttr('required');
