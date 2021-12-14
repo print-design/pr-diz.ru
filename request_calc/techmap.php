@@ -274,6 +274,22 @@ if(!empty($id)) {
         <?php
         include '../include/header_zakaz.php';
         ?>
+        <div id="reverse_print_message" class="modal fade show">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div style="font-size: xx-large;" class="text-primary">Внимание!</div>
+                        <button type="button" class="close user_change_password_dismiss" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <p style="font-size: xx-large;">При наличии ламинации печать всегда обратная</p>
+                    </div>
+                    <div class="modal-footer" style="justify-content: flex-start;">
+                        <button type="button" class="btn btn-primary w-25" data-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="container-fluid">
             <?php
             if(!empty($error_message)):
@@ -521,6 +537,11 @@ if(!empty($id)) {
                     <div class="form-group">
                         <input type="radio" class="form-check-inline" id="reverse_print_0" name="reverse_print" value="0"<?= isset($reverse_print) && $reverse_print == 0 ? " checked='checked'" : "" ?> />
                         <label for="reverse_print_0" class="form-check-label">Лицевая</label>
+                        <?php
+                        if(!empty($lamination1_brand_name) && !isset($reverse_print)) {
+                            $reverse_print = 1;
+                        }
+                        ?>
                         <input type="radio" class="form-check-inline ml-3" id="reverse_print_1" name="reverse_print" value="1"<?= isset($reverse_print) && $reverse_print == 1 ? " checked='checked'" : "" ?> />
                         <label for="reverse_print_1" class="form-check-label">Обратная</label>
                     </div>
@@ -676,6 +697,13 @@ if(!empty($id)) {
                 val = $(this).val();
                 $('input.roll_type[value!=' + val + ']').prop( "checked", false);
             });
+            
+            <?php if(!empty($lamination1_brand_name)): ?>
+                $('#reverse_print_0').click(function() {
+                    $('#reverse_print_message').modal('show');
+                    $('#reverse_print_1').click();
+                });
+            <?php endif; ?>
         </script>
     </body>
 </html>
