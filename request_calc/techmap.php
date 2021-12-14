@@ -682,6 +682,95 @@ if(!empty($id)) {
                 </div>
             </form>
         </div>
+        
+        <h2>DELETE</h2>
+        <table class="w-100" id="roll_type_table">
+                            <tr>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_left/roll_type_1.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_left/roll_type_2.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_left/roll_type_3.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_left/roll_type_4.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_left/roll_type_5.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_left/roll_type_6.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_left/roll_type_7.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_left/roll_type_8.png" style="margin-top: 5px;" />
+                                </td>
+                            </tr>
+                        </table>
+        <table class="w-100" id="roll_type_table">
+                            <tr>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_right/roll_type_1.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_right/roll_type_2.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_right/roll_type_3.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_right/roll_type_4.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_right/roll_type_5.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_right/roll_type_6.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_right/roll_type_7.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_right/roll_type_8.png" style="margin-top: 5px;" />
+                                </td>
+                            </tr>
+                        </table>
+        <table class="w-100" id="roll_type_table">
+                            <tr>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_both/roll_type_1.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_both/roll_type_2.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_both/roll_type_3.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_both/roll_type_4.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_both/roll_type_5.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_both/roll_type_6.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_both/roll_type_7.png" style="margin-top: 5px;" />
+                                </td>
+                                <td class="roll_type_zone" style="text-align: center;">
+                                    <image src="<?=APPLICATION ?>/images/roll_both/roll_type_8.png" style="margin-top: 5px;" />
+                                </td>
+                            </tr>
+                        </table>
+        <h2>DELETE</h2>
+        
+        
         <?php
         // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
         $files = scandir("../temp/");
