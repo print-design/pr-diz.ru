@@ -312,7 +312,7 @@ $comment = $row['comment'];
         </div>
         <br />
             <?php if($work_type_id == 2): ?>
-        <div class="table_title">Красочность (<?=$ink_number ?>)</div>
+        <div class="table_title">Красочность <?=$ink_number ?></div>
         <div class="row params_main">
             <div class="col-4">
                 <table class="w-75">
