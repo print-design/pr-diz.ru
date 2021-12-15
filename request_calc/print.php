@@ -382,7 +382,7 @@ $num_for_customer = $row['num_for_customer'];
                 <h2 style="font-size: 20px; margin: 0; padding: 0;">Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 кг</span></h2>
                 <div class="row text-nowrap">
                     <div class="col-4 pr-4">
-                        <h3>Основная пленка&nbsp;<span style="font-weight: normal; font-size: small;">765 кг</span></h3>
+                        <h3>Основная&nbsp;<span style="font-weight: normal; font-size: small;">765 кг</span></h3>
                         <div>Закупочная стоимость</div>
                         <div class="value mb-2">800 000 &#8381;&nbsp;<span style="font-weight: normal; font-size: small;">236 &#8381; за кг</span></div>
                         <div>Минимальная ширина</div>
