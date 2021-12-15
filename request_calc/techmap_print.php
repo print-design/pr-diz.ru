@@ -158,7 +158,6 @@ $comment = $row['comment'];
             
             #params_top {
                 margin-top: 30px;
-                margin-bottom: 30px;
             }
             
             #params_top table tr th {
@@ -174,8 +173,6 @@ $comment = $row['comment'];
                 font-weight: 700;
                 font-size: 18px;
                 line-height: 32px;
-                margin-top: 15px;
-                margin-bottom: 10px;
             }
             
             .params_main table tr th {
@@ -453,8 +450,8 @@ $comment = $row['comment'];
                         <td><?= empty($winding) ? '' : $winding ?>&nbsp;<?php if(isset($winding_unit) && $winding_unit == 'kg') echo 'кг'; elseif(isset ($winding_unit) && $winding_unit == 'm') echo 'м'; ?></td>
                     </tr>
                     <tr>
-                        <th>Шпуля</th>
-                        <td><?= empty($spool) ? '' : $spool.'&nbsp;мм' ?></td>
+                        <th>Бирки</th>
+                        <td><?=$label ?></td>
                     </tr>
                         <?php if($work_type_id == 2): ?>
                     <tr>
@@ -488,8 +485,8 @@ $comment = $row['comment'];
             <div class="col-4">
                 <table class="w-75">
                     <tr>
-                        <th>Бирки</th>
-                        <td><?=$label ?></td>
+                        <th>Шпуля</th>
+                        <td><?= empty($spool) ? '' : $spool.'&nbsp;мм' ?></td>
                     </tr>
                     <tr>
                         <th>Упаковка</th>
@@ -505,6 +502,7 @@ $comment = $row['comment'];
             if($work_type_id == 2):
                 $roll_image_folder = GetRollImageFolderName(isset($sign) ? $sign : "");
             ?>
+        <br />
         <div class="row">
             <div class="col-8">
                 <table class="w-100" id="roll_type_table">

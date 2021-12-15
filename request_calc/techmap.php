@@ -573,31 +573,59 @@ if(!empty($id)) {
                 <div class="row">
                     <div class="col-4">
                         <div class="table_title">Информация для резчика</div>
-                        <div class="form-group">
-                            <label for="winding">Намотка</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">До</div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="winding">Намотка</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">До</div>
+                                        </div>
+                                        <input type="text" id="winding" name="winding" class="form-control int-only" value="<?= empty($winding) ? '' : $winding ?>" />
+                                        <div class="input-group-append">
+                                            <select name="winding_unit">
+                                                <option value="" hidden="hidden">...</option>
+                                                <option value="kg"<?= !empty($winding_unit) && $winding_unit == 'kg' ? " selected='selected'" : "" ?>>кг</option>
+                                                <option value="m"<?= !empty($winding_unit) && $winding_unit == 'm' ? " selected='selected'" : "" ?>>м</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
-                                <input type="text" id="winding" name="winding" class="form-control int-only" value="<?= empty($winding) ? '' : $winding ?>" />
-                                <div class="input-group-append">
-                                    <select name="winding_unit">
-                                        <option value="" hidden="hidden">...</option>
-                                        <option value="kg"<?= !empty($winding_unit) && $winding_unit == 'kg' ? " selected='selected'" : "" ?>>кг</option>
-                                        <option value="m"<?= !empty($winding_unit) && $winding_unit == 'm' ? " selected='selected'" : "" ?>>м</option>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="spool">Шпуля, мм</label>
+                                    <select id="spool" name="spool" class="form-control">
+                                        <option value="" hidden="hidden">Шпуля...</option>
+                                        <option<?= !empty($spool) && $spool == 40 ? " selected='selected'" : "" ?>>40</option>
+                                        <option<?= !empty($spool) && $spool == 50 ? " selected='selected'" : "" ?>>50</option>
+                                        <option<?= !empty($spool) && $spool == 76 ? " selected='selected'" : "" ?>>76</option>
+                                        <option<?= !empty($spool) && $spool == 152 ? " selected='selected'" : "" ?>>152</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="spool">Шпуля, мм</label>
-                            <select id="spool" name="spool" class="form-control">
-                                <option value="" hidden="hidden">Шпуля...</option>
-                                <option<?= !empty($spool) && $spool == 40 ? " selected='selected'" : "" ?>>40</option>
-                                <option<?= !empty($spool) && $spool == 50 ? " selected='selected'" : "" ?>>50</option>
-                                <option<?= !empty($spool) && $spool == 76 ? " selected='selected'" : "" ?>>76</option>
-                                <option<?= !empty($spool) && $spool == 152 ? " selected='selected'" : "" ?>>152</option>
-                            </select>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="label">Бирки</label>
+                                    <select id="label" name="label" class="form-control">
+                                        <option value="" hidden="hidden">Бирки...</option>
+                                        <option<?= !empty($label) && $label == "Принт дизайн" ? " selected='selected'" : "" ?>>Принт дизайн</option>
+                                        <option<?= !empty($label) && $label == "Безликие" ? " selected='selected'" : "" ?>>Безликие</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="package">Упаковка</label>
+                                    <select id="package" name="package" class="form-control">
+                                        <option value="" hidden="hidden">Упаковка...</option>
+                                        <option<?= !empty($package) && $package == "Паллетирование" ? " selected='selected'" : "" ?>>Паллетирование</option>
+                                        <option<?= !empty($package) && $package == "Россыпью" ? " selected='selected'" : "" ?>>Россыпью</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <?php if($work_type_id == 2): ?>
                         <div class="form-group">
@@ -611,22 +639,6 @@ if(!empty($id)) {
                             </select>
                         </div>
                         <?php endif; ?>
-                        <div class="form-group">
-                            <label for="label">Бирки</label>
-                            <select id="label" name="label" class="form-control">
-                                <option value="" hidden="hidden">Бирки...</option>
-                                <option<?= !empty($label) && $label == "Принт дизайн" ? " selected='selected'" : "" ?>>Принт дизайн</option>
-                                <option<?= !empty($label) && $label == "Безликие" ? " selected='selected'" : "" ?>>Безликие</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="package">Упаковка</label>
-                            <select id="package" name="package" class="form-control">
-                                <option value="" hidden="hidden">Упаковка...</option>
-                                <option<?= !empty($package) && $package == "Паллетирование" ? " selected='selected'" : "" ?>>Паллетирование</option>
-                                <option<?= !empty($package) && $package == "Россыпью" ? " selected='selected'" : "" ?>>Россыпью</option>
-                            </select>
-                        </div>
                         <div class="form-group">
                             <label for="comment">Комментарий</label>
                             <textarea class="form-control" rows="4" id="comment" name="comment"><?= empty($comment) ? '' : $comment ?></textarea>
