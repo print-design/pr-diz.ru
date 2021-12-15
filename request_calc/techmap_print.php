@@ -447,7 +447,7 @@ $comment = $row['comment'];
                 <table class="w-75">
                     <tr>
                         <th>Намотка</th>
-                        <td><?= empty($winding) ? '' : $winding ?>&nbsp;<?php if(isset($winding_unit) && $winding_unit == 'kg') echo 'кг'; elseif(isset ($winding_unit) && $winding_unit == 'm') echo 'м'; ?></td>
+                        <td><?= empty($winding) ? '' : $winding ?>&nbsp;<?php if(isset($winding_unit) && $winding_unit == 'kg') echo 'кг'; elseif(isset ($winding_unit) && $winding_unit == 'mm') echo 'мм'; ?></td>
                     </tr>
                     <tr>
                         <th>Бирки</th>

@@ -586,7 +586,7 @@ if(!empty($id)) {
                                             <select name="winding_unit">
                                                 <option value="" hidden="hidden">...</option>
                                                 <option value="kg"<?= !empty($winding_unit) && $winding_unit == 'kg' ? " selected='selected'" : "" ?>>кг</option>
-                                                <option value="m"<?= !empty($winding_unit) && $winding_unit == 'm' ? " selected='selected'" : "" ?>>м</option>
+                                                <option value="mm"<?= !empty($winding_unit) && $winding_unit == 'mm' ? " selected='selected'" : "" ?>>мм</option>
                                             </select>
                                         </div>
                                     </div>
