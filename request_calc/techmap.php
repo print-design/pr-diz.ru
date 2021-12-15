@@ -585,8 +585,8 @@ if(!empty($id)) {
                                         <div class="input-group-append">
                                             <select name="winding_unit">
                                                 <option value="" hidden="hidden">...</option>
-                                                <option value="kg"<?= $winding_unit == 'kg' ? " selected='selected'" : "" ?>>кг</option>
-                                                <option value="m"<?= $winding_unit == 'm' ? " selected='selected'" : "" ?>>м</option>
+                                                <option value="kg"<?= !empty($winding_unit) && $winding_unit == 'kg' ? " selected='selected'" : "" ?>>кг</option>
+                                                <option value="m"<?= !empty($winding_unit) && $winding_unit == 'm' ? " selected='selected'" : "" ?>>м</option>
                                             </select>
                                         </div>
                                     </div>
