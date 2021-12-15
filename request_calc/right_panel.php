@@ -6,6 +6,9 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
 }
 ?>
 <div id="calculation"<?=$calculation_class ?> style="position: absolute; top: 0px; bottom: auto;">
+    <div style="position: absolute; right: 30px; top: -80px;">
+        <a class="btn btn-outline-dark" target="_blank" style="margin-top: 20px;" href="print.php?id=<?=$id ?>"><i class="fa fa-print"></i></a>
+    </div>
     <h1>Расчет</h1>
     <div class="row text-nowrap">
         <div class="col-3">
