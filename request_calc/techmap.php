@@ -57,15 +57,13 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     $reverse_print = filter_input(INPUT_POST, 'reverse_print');
     if($reverse_print === null) $reverse_print = "NULL";
     
-    $shipment = filter_input(INPUT_POST, 'shipment');
-    if(empty($shipment)) $shipment = "NULL";
-    
     $spool = filter_input(INPUT_POST, 'spool');
     if(empty($spool)) $spool = "NULL";
     
     $winding = filter_input(INPUT_POST, 'winding');
     if(empty($winding)) $winding = "NULL";
     
+    $winding_unit = filter_input(INPUT_POST, 'winding_unit');
     $sign = addslashes(filter_input(INPUT_POST, 'sign'));
     $label = addslashes(filter_input(INPUT_POST, 'label'));
     $package = addslashes(filter_input(INPUT_POST, 'package'));
@@ -78,12 +76,12 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     $sql = "";
     
     if(!empty($request_calc_id)) {
-        $sql = "insert into techmap (request_calc_id, reverse_print, shipment, spool, winding, sign, label, package, roll_type, comment) "
-                . "values ($request_calc_id, $reverse_print, $shipment, $spool, $winding, '$sign', '$label', '$package', $roll_type, '$comment')";
+        $sql = "insert into techmap (request_calc_id, reverse_print, spool, winding, winding_unit, sign, label, package, roll_type, comment) "
+                . "values ($request_calc_id, $reverse_print, $spool, $winding, '$winding_unit', '$sign', '$label', '$package', $roll_type, '$comment')";
     }
     elseif(!empty ($id)) {
-        $sql = "update techmap set reverse_print=$reverse_print, shipment=$shipment, spool=$spool, winding=$winding, sign='$sign', label='$label', "
-                . "package='$package', roll_type=$roll_type, comment='$comment'";
+        $sql = "update techmap set reverse_print=$reverse_print, spool=$spool, winding=$winding, winding_unit='$winding_unit', sign='$sign', label='$label', "
+                . "package='$package', roll_type=$roll_type, comment='$comment' where id=$id";
     }
     
     $executer = new Executer($sql);
@@ -141,7 +139,7 @@ elseif (!empty($id)) {
             . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
             . "c.cliche_1, c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
-            . "t.request_calc_id, t.date techmap_date, t.reverse_print, t.shipment, t.spool, t.winding, t.sign, t.label, t.package, t.roll_type, t.comment, "
+            . "t.request_calc_id, t.date techmap_date, t.reverse_print, t.spool, t.winding, t.winding_unit, t.sign, t.label, t.package, t.roll_type, t.comment, "
             . "cus.name customer, wt.name work_type, u.first_name, u.last_name "
             . "from request_calc c "
             . "inner join techmap t on t.request_calc_id = c.id "
@@ -200,9 +198,9 @@ if(!empty($id)) {
     $request_calc_id = $row['request_calc_id'];
     $techmap_date = $row['techmap_date'];
     $reverse_print = $row['reverse_print'];
-    $shipment = $row['shipment'];
     $spool = $row['spool'];
     $winding = $row['winding'];
+    $winding_unit = $row['winding_unit'];
     $sign = $row['sign'];
     $label = $row['label'];
     $package = $row['package'];
@@ -578,14 +576,20 @@ if(!empty($id)) {
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="shipment">Масса одной намотки, кг</label>
-                                    <input type="text" id="shipment" name="shipment" class="form-control int-only" value="<?= empty($shipment) ? '' : $shipment ?>" />
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="winding">Намотка, мм</label>
-                                    <input type="text" id="winding" name="winding" class="form-control int-only" placeholder="" value="<?= empty($winding) ? '' : $winding ?>" />
+                                    <label for="winding">Намотка</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">До</div>
+                                        </div>
+                                        <input type="text" id="winding" name="winding" class="form-control int-only" value="<?= empty($winding) ? '' : $winding ?>" />
+                                        <div class="input-group-append">
+                                            <select name="winding_unit">
+                                                <option value="" hidden="hidden">...</option>
+                                                <option value="kg"<?= $winding_unit == 'kg' ? " selected='selected'" : "" ?>>кг</option>
+                                                <option value="m"<?= $winding_unit == 'm' ? " selected='selected'" : "" ?>>м</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -697,7 +701,7 @@ if(!empty($id)) {
                             <?php if(!empty($id)): ?>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <a href="print.php?id=<?=$id ?>" target="_blank" class="btn btn-outline-dark w-100">Печать</a>
+                                    <a href="techmap_print.php?id=<?=$id ?>" target="_blank" class="btn btn-outline-dark w-100">Печать</a>
                                 </div>
                             </div>
                             <?php endif; ?>
