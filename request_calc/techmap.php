@@ -579,7 +579,7 @@ if(!empty($id)) {
                                     <label for="winding">Размер намотки</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <div class="input-group-text">До</div>
+                                            <div class="input-group-text">до</div>
                                         </div>
                                         <input type="text" id="winding" name="winding" class="form-control int-only" value="<?= empty($winding) ? '' : $winding ?>" />
                                         <div class="input-group-append">
