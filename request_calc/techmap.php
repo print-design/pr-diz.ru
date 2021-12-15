@@ -610,6 +610,7 @@ if(!empty($id)) {
                                 <option value="<?=NO_SIGN ?>"<?=!empty($sign) && $sign == NO_SIGN ? " selected='selected'" : "" ?>>Без фотометки</option>
                             </select>
                         </div>
+                        <?php endif; ?>
                         <div class="form-group">
                             <label for="label">Бирки</label>
                             <select id="label" name="label" class="form-control">
@@ -618,7 +619,6 @@ if(!empty($id)) {
                                 <option<?= !empty($label) && $label == "Безликие" ? " selected='selected'" : "" ?>>Безликие</option>
                             </select>
                         </div>
-                        <?php endif; ?>
                         <div class="form-group">
                             <label for="package">Упаковка</label>
                             <select id="package" name="package" class="form-control">

@@ -495,12 +495,10 @@ $comment = $row['comment'];
                         <th>Упаковка</th>
                         <td><?=$package ?></td>
                     </tr>
-                    <?php if($work_type_id == 2): ?>
                     <tr>
                         <th>Бирки</th>
                         <td><?=$label ?></td>
                     </tr>
-                        <?php endif; ?>
                 </table>
             </div>
             <div class="col-4">
