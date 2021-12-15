@@ -724,17 +724,22 @@ if(!empty($id)) {
         include '../include/footer.php';
         ?>
         <script>
+            // При выборе типа ролика, с остальных типов выбор снимается
             $('input.roll_type').change(function() {
                 val = $(this).val();
                 $('input.roll_type[value!=' + val + ']').prop( "checked", false);
             });
             
+            // Чекбокс с типом ролика выбирается не только при щелчке на чекбоксе, но и при щелчке на всей ячейке
             $('.roll_type_zone').click(function() {
                 chk = $(this).find('input.roll_type');
-                chk.change();
-                chk.prop( "checked", true);
+                if(chk.attr('disabled') != 'disabled') {
+                    chk.change();
+                    chk.prop("checked", true);
+                }
             });
             
+            // При выборе фотометки меняются картинки типов роликов
             $('select#sign').change(function() {
                 switch($(this).val()) {
                     case '<?=LEFT_SIGN ?>':
@@ -781,8 +786,23 @@ if(!empty($id)) {
                         $('img#img_8').attr('src', '<?=APPLICATION ?>/images/roll/roll_type_8.png');
                         break;
                 }
+                
+                SetRollTypeCheckboxEnabled($(this).val());
             });
             
+            // Тип ролика можно выбирать только при выбранной фотометке
+            function SetRollTypeCheckboxEnabled(sign) {
+                if(sign == '') {
+                    $('input.roll_type').attr('disabled', 'disabled');
+                }
+                else {
+                    $('input.roll_type').removeAttr('disabled');
+                }
+            }
+            
+            SetRollTypeCheckboxEnabled($('select#sign').val());
+            
+            // При наличии ламинации запрещается выбор прямой печати
             <?php if(!empty($lamination1_brand_name)): ?>
                 $('#reverse_print_0').click(function() {
                     $('#reverse_print_message').modal('show');
