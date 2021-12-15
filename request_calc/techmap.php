@@ -585,7 +585,7 @@ if(!empty($id)) {
                                 <option value="" hidden="hidden">Фотометка...</option>
                                 <option value="<?=LEFT_SIGN ?>"<?=!empty($sign) && $sign == LEFT_SIGN ? " selected='selected'" : "" ?>>Левая фотометка</option>
                                 <option value="<?=RIGHT_SIGN ?>"<?=!empty($sign) && $sign == RIGHT_SIGN ? " selected='selected'" : "" ?>>Правая фотометка</option>
-                                <option value="<?=BOTH_SIGN ?>"<?=!empty($sign) && $sign == BOTH_SIGN ? " selected='selected'" : "" ?>>Два фотометки</option>
+                                <option value="<?=BOTH_SIGN ?>"<?=!empty($sign) && $sign == BOTH_SIGN ? " selected='selected'" : "" ?>>Две фотометки</option>
                                 <option value="<?=NO_SIGN ?>"<?=!empty($sign) && $sign == NO_SIGN ? " selected='selected'" : "" ?>>Без фотометки</option>
                             </select>
                         </div>
@@ -682,95 +682,6 @@ if(!empty($id)) {
                 </div>
             </form>
         </div>
-        
-        <h2>DELETE</h2>
-        <table class="w-100" id="roll_type_table">
-                            <tr>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_left/roll_type_1.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_left/roll_type_2.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_left/roll_type_3.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_left/roll_type_4.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_left/roll_type_5.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_left/roll_type_6.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_left/roll_type_7.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_left/roll_type_8.png" style="margin-top: 5px;" />
-                                </td>
-                            </tr>
-                        </table>
-        <table class="w-100" id="roll_type_table">
-                            <tr>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_right/roll_type_1.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_right/roll_type_2.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_right/roll_type_3.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_right/roll_type_4.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_right/roll_type_5.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_right/roll_type_6.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_right/roll_type_7.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_right/roll_type_8.png" style="margin-top: 5px;" />
-                                </td>
-                            </tr>
-                        </table>
-        <table class="w-100" id="roll_type_table">
-                            <tr>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_both/roll_type_1.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_both/roll_type_2.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_both/roll_type_3.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_both/roll_type_4.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_both/roll_type_5.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_both/roll_type_6.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_both/roll_type_7.png" style="margin-top: 5px;" />
-                                </td>
-                                <td class="roll_type_zone" style="text-align: center;">
-                                    <image src="<?=APPLICATION ?>/images/roll_both/roll_type_8.png" style="margin-top: 5px;" />
-                                </td>
-                            </tr>
-                        </table>
-        <h2>DELETE</h2>
-        
-        
         <?php
         // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
         $files = scandir("../temp/");
@@ -798,6 +709,54 @@ if(!empty($id)) {
                 chk = $(this).find('input.roll_type');
                 chk.change();
                 chk.prop( "checked", true);
+            });
+            
+            $('select#sign').change(function() {
+                switch($(this).val()) {
+                    case '<?=LEFT_SIGN ?>':
+                        $('img#img_1').attr('src', '<?=APPLICATION ?>/images/roll_left/roll_type_1.png');
+                        $('img#img_2').attr('src', '<?=APPLICATION ?>/images/roll_left/roll_type_2.png');
+                        $('img#img_3').attr('src', '<?=APPLICATION ?>/images/roll_left/roll_type_3.png');
+                        $('img#img_4').attr('src', '<?=APPLICATION ?>/images/roll_left/roll_type_4.png');
+                        $('img#img_5').attr('src', '<?=APPLICATION ?>/images/roll_left/roll_type_5.png');
+                        $('img#img_6').attr('src', '<?=APPLICATION ?>/images/roll_left/roll_type_6.png');
+                        $('img#img_7').attr('src', '<?=APPLICATION ?>/images/roll_left/roll_type_7.png');
+                        $('img#img_8').attr('src', '<?=APPLICATION ?>/images/roll_left/roll_type_8.png');
+                        break;
+                        
+                    case '<?=RIGHT_SIGN ?>':
+                        $('img#img_1').attr('src', '<?=APPLICATION ?>/images/roll_right/roll_type_1.png');
+                        $('img#img_2').attr('src', '<?=APPLICATION ?>/images/roll_right/roll_type_2.png');
+                        $('img#img_3').attr('src', '<?=APPLICATION ?>/images/roll_right/roll_type_3.png');
+                        $('img#img_4').attr('src', '<?=APPLICATION ?>/images/roll_right/roll_type_4.png');
+                        $('img#img_5').attr('src', '<?=APPLICATION ?>/images/roll_right/roll_type_5.png');
+                        $('img#img_6').attr('src', '<?=APPLICATION ?>/images/roll_right/roll_type_6.png');
+                        $('img#img_7').attr('src', '<?=APPLICATION ?>/images/roll_right/roll_type_7.png');
+                        $('img#img_8').attr('src', '<?=APPLICATION ?>/images/roll_right/roll_type_8.png');
+                        break;
+        
+                    case '<?=BOTH_SIGN ?>':
+                        $('img#img_1').attr('src', '<?=APPLICATION ?>/images/roll_both/roll_type_1.png');
+                        $('img#img_2').attr('src', '<?=APPLICATION ?>/images/roll_both/roll_type_2.png');
+                        $('img#img_3').attr('src', '<?=APPLICATION ?>/images/roll_both/roll_type_3.png');
+                        $('img#img_4').attr('src', '<?=APPLICATION ?>/images/roll_both/roll_type_4.png');
+                        $('img#img_5').attr('src', '<?=APPLICATION ?>/images/roll_both/roll_type_5.png');
+                        $('img#img_6').attr('src', '<?=APPLICATION ?>/images/roll_both/roll_type_6.png');
+                        $('img#img_7').attr('src', '<?=APPLICATION ?>/images/roll_both/roll_type_7.png');
+                        $('img#img_8').attr('src', '<?=APPLICATION ?>/images/roll_both/roll_type_8.png');
+                        break;
+            
+                    case '<?=NO_SIGN ?>':
+                        $('img#img_1').attr('src', '<?=APPLICATION ?>/images/roll/roll_type_1.png');
+                        $('img#img_2').attr('src', '<?=APPLICATION ?>/images/roll/roll_type_2.png');
+                        $('img#img_3').attr('src', '<?=APPLICATION ?>/images/roll/roll_type_3.png');
+                        $('img#img_4').attr('src', '<?=APPLICATION ?>/images/roll/roll_type_4.png');
+                        $('img#img_5').attr('src', '<?=APPLICATION ?>/images/roll/roll_type_5.png');
+                        $('img#img_6').attr('src', '<?=APPLICATION ?>/images/roll/roll_type_6.png');
+                        $('img#img_7').attr('src', '<?=APPLICATION ?>/images/roll/roll_type_7.png');
+                        $('img#img_8').attr('src', '<?=APPLICATION ?>/images/roll/roll_type_8.png');
+                        break;
+                }
             });
             
             <?php if(!empty($lamination1_brand_name)): ?>
