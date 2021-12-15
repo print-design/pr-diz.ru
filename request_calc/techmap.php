@@ -576,7 +576,7 @@ if(!empty($id)) {
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="winding">Намотка</label>
+                                    <label for="winding">Размер намотки</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">До</div>
