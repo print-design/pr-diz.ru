@@ -28,6 +28,27 @@ const RIGHT_SIGN = "right";
 const BOTH_SIGN = "both";
 const NO_SIGN = "no";
 
+// Папка, из которой читаются картинки рулонов
+function GetRollImageFolderName($sign) {
+    $result = "roll";
+    
+    switch ($sign) {
+        case LEFT_SIGN:
+            $result = "roll_left";
+            break;
+        
+        case RIGHT_SIGN:
+            $result = "roll_right";
+            break;
+        
+        case BOTH_SIGN:
+            $result = "roll_both";
+            break;
+    }
+    
+    return $result;
+}
+
 // Создание технологической карты
 if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     $request_calc_id = filter_input(INPUT_POST, 'request_calc_id');
@@ -610,53 +631,56 @@ if(!empty($id)) {
                             <label for="comment">Комментарий</label>
                             <textarea class="form-control" rows="4" id="comment" name="comment"><?= empty($comment) ? '' : $comment ?></textarea>
                         </div>
-                        <?php if($work_type_id == 2): ?>
+                        <?php
+                        if($work_type_id == 2):
+                            $roll_image_folder = GetRollImageFolderName(isset($sign) ? $sign : "");
+                        ?>
                         <table class="w-100" id="roll_type_table">
                             <tr>
                                 <td class="roll_type_zone" style="text-align: center;">
-                                    <image id="img_1" src="<?=APPLICATION ?>/images/roll/roll_type_1.png" style="margin-top: 5px;" />
+                                    <image id="img_1" src="<?=APPLICATION ?>/images/<?= $roll_image_folder ?>/roll_type_1.png" style="margin-top: 5px;" />
                                     <div style="width: 100%; text-align: end;">
                                         <input type="checkbox" class="roll_type" name="roll_type" value="1" style="margin-right: 5px; margin-top: 5px;"<?= !empty($roll_type) && $roll_type == 1 ? " checked='checked'" : "" ?> />
                                     </div>
                                 </td>
                                 <td class="roll_type_zone" style="text-align: center;">
-                                    <image id="img_2" src="<?=APPLICATION ?>/images/roll/roll_type_2.png" style="margin-top: 5px;" />
+                                    <image id="img_2" src="<?=APPLICATION ?>/images/<?= $roll_image_folder ?>/roll_type_2.png" style="margin-top: 5px;" />
                                     <div style="width: 100%; text-align: end;">
                                         <input type="checkbox" class="roll_type" name="roll_type" value="2" style="margin-right: 5px; margin-top: 5px;"<?= !empty($roll_type) && $roll_type == 2 ? " checked='checked'" : "" ?> />
                                     </div>
                                 </td>
                                 <td class="roll_type_zone" style="text-align: center;">
-                                    <image id="img_3" src="<?=APPLICATION ?>/images/roll/roll_type_3.png" style="margin-top: 5px;" />
+                                    <image id="img_3" src="<?=APPLICATION ?>/images/<?= $roll_image_folder ?>/roll_type_3.png" style="margin-top: 5px;" />
                                     <div style="width: 100%; text-align: end;">
                                         <input type="checkbox" class="roll_type" name="roll_type" value="3" style="margin-right: 5px; margin-top: 5px;"<?= !empty($roll_type) && $roll_type == 3 ? " checked='checked'" : "" ?> />
                                     </div>
                                 </td>
                                 <td class="roll_type_zone" style="text-align: center;">
-                                    <image id="img_4" src="<?=APPLICATION ?>/images/roll/roll_type_4.png" style="margin-top: 5px;" />
+                                    <image id="img_4" src="<?=APPLICATION ?>/images/<?= $roll_image_folder ?>/roll_type_4.png" style="margin-top: 5px;" />
                                     <div style="width: 100%; text-align: end;">
                                         <input type="checkbox" class="roll_type" name="roll_type" value="4" style="margin-right: 5px; margin-top: 5px;"<?= !empty($roll_type) && $roll_type == 4 ? " checked='checked'" : "" ?> />
                                     </div>
                                 </td>
                                 <td class="roll_type_zone" style="text-align: center;">
-                                    <image id="img_5" src="<?=APPLICATION ?>/images/roll/roll_type_5.png" style="margin-top: 5px;" />
+                                    <image id="img_5" src="<?=APPLICATION ?>/images/<?= $roll_image_folder ?>/roll_type_5.png" style="margin-top: 5px;" />
                                     <div style="width: 100%; text-align: end;">
                                         <input type="checkbox" class="roll_type" name="roll_type" value="5" style="margin-right: 5px; margin-top: 5px;"<?= !empty($roll_type) && $roll_type == 5 ? " checked='checked'" : "" ?> />
                                     </div>
                                 </td>
                                 <td class="roll_type_zone" style="text-align: center;">
-                                    <image id="img_6" src="<?=APPLICATION ?>/images/roll/roll_type_6.png" style="margin-top: 5px;" />
+                                    <image id="img_6" src="<?=APPLICATION ?>/images/<?= $roll_image_folder ?>/roll_type_6.png" style="margin-top: 5px;" />
                                     <div style="width: 100%; text-align: end;">
                                         <input type="checkbox" class="roll_type" name="roll_type" value="6" style="margin-right: 5px; margin-top: 5px;"<?= !empty($roll_type) && $roll_type == 6 ? " checked='checked'" : "" ?> />
                                     </div>
                                 </td>
                                 <td class="roll_type_zone" style="text-align: center;">
-                                    <image id="img_7" src="<?=APPLICATION ?>/images/roll/roll_type_7.png" style="margin-top: 5px;" />
+                                    <image id="img_7" src="<?=APPLICATION ?>/images/<?= $roll_image_folder ?>/roll_type_7.png" style="margin-top: 5px;" />
                                     <div style="width: 100%; text-align: end;">
                                         <input type="checkbox" class="roll_type" name="roll_type" value="7" style="margin-right: 5px; margin-top: 5px;"<?= !empty($roll_type) && $roll_type == 7 ? " checked='checked'" : "" ?> />
                                     </div>
                                 </td>
                                 <td class="roll_type_zone" style="text-align: center;">
-                                    <image id="img_8" src="<?=APPLICATION ?>/images/roll/roll_type_8.png" style="margin-top: 5px;" />
+                                    <image id="img_8" src="<?=APPLICATION ?>/images/<?= $roll_image_folder ?>/roll_type_8.png" style="margin-top: 5px;" />
                                     <div style="width: 100%; text-align: end;">
                                         <input type="checkbox" class="roll_type" name="roll_type" value="8" style="margin-right: 5px; margin-top: 5px;"<?= !empty($roll_type) && $roll_type == 8 ? " checked='checked'" : "" ?> />
                                     </div>

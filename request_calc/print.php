@@ -23,6 +23,27 @@ const RIGHT_SIGN = "right";
 const BOTH_SIGN = "both";
 const NO_SIGN = "no";
 
+// Папка, из которой читаются картинки рулонов
+function GetRollImageFolderName($sign) {
+    $result = "roll";
+    
+    switch ($sign) {
+        case LEFT_SIGN:
+            $result = "roll_left";
+            break;
+        
+        case RIGHT_SIGN:
+            $result = "roll_right";
+            break;
+        
+        case BOTH_SIGN:
+            $result = "roll_both";
+            break;
+    }
+    
+    return $result;
+}
+
 // Текущее время
 $current_date_time = date("dmYHis");
 
@@ -486,13 +507,16 @@ $comment = $row['comment'];
                 <p><?=$comment ?></p>
             </div>
         </div>
-            <?php if($work_type_id == 2): ?>
+            <?php
+            if($work_type_id == 2):
+                $roll_image_folder = GetRollImageFolderName(isset($sign) ? $sign : "");
+            ?>
         <div class="row">
             <div class="col-8">
                 <table class="w-100" id="roll_type_table">
                     <tr>
                         <td style="text-align: center;">
-                            <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_1.png" style="margin-top: 5px;" />
+                            <image class="align-self-end" src="<?=APPLICATION ?>/images/<?= $roll_image_folder ?>/roll_type_1.png" style="margin-top: 5px;" />
                             <div style="width: 100%; text-align: end; padding-right: 5px;">
                                 <?php if(!empty($roll_type) && $roll_type == 1): ?>
                                 <i class="fa fa-check" aria-hidden="true"></i>
@@ -500,7 +524,7 @@ $comment = $row['comment'];
                             </div>
                         </td>
                         <td style="text-align: center;">
-                            <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_2.png" style="margin-top: 5px;" />
+                            <image class="align-self-end" src="<?=APPLICATION ?>/images/<?= $roll_image_folder ?>/roll_type_2.png" style="margin-top: 5px;" />
                             <div style="width: 100%; text-align: end; padding-right: 5px;">
                                 <?php if(!empty($roll_type) && $roll_type == 2): ?>
                                 <i class="fa fa-check" aria-hidden="true"></i>
@@ -508,7 +532,7 @@ $comment = $row['comment'];
                             </div>
                         </td>
                         <td style="text-align: center;">
-                            <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_3.png" style="margin-top: 5px;" />
+                            <image class="align-self-end" src="<?=APPLICATION ?>/images/<?= $roll_image_folder ?>/roll_type_3.png" style="margin-top: 5px;" />
                             <div style="width: 100%; text-align: end; padding-right: 5px;">
                                 <?php if(!empty($roll_type) && $roll_type == 3): ?>
                                 <i class="fa fa-check" aria-hidden="true"></i>
@@ -516,7 +540,7 @@ $comment = $row['comment'];
                             </div>
                         </td>
                         <td style="text-align: center;">
-                            <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_4.png" style="margin-top: 5px;" />
+                            <image class="align-self-end" src="<?=APPLICATION ?>/images/<?= $roll_image_folder ?>/roll_type_4.png" style="margin-top: 5px;" />
                             <div style="width: 100%; text-align: end; padding-right: 5px;">
                                 <?php if(!empty($roll_type) && $roll_type == 4): ?>
                                 <i class="fa fa-check" aria-hidden="true"></i>
@@ -524,7 +548,7 @@ $comment = $row['comment'];
                             </div>
                         </td>
                         <td style="text-align: center;">
-                            <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_5.png" style="margin-top: 5px;" />
+                            <image class="align-self-end" src="<?=APPLICATION ?>/images/<?= $roll_image_folder ?>/roll_type_5.png" style="margin-top: 5px;" />
                             <div style="width: 100%; text-align: end; padding-right: 5px;">
                                 <?php if(!empty($roll_type) && $roll_type == 5): ?>
                                 <i class="fa fa-check" aria-hidden="true"></i>
@@ -532,7 +556,7 @@ $comment = $row['comment'];
                             </div>
                         </td>
                         <td style="text-align: center;">
-                            <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_6.png" style="margin-top: 5px;" />
+                            <image class="align-self-end" src="<?=APPLICATION ?>/images/<?= $roll_image_folder ?>/roll_type_6.png" style="margin-top: 5px;" />
                             <div style="width: 100%; text-align: end; padding-right: 5px;">
                                 <?php if(!empty($roll_type) && $roll_type == 6): ?>
                                 <i class="fa fa-check" aria-hidden="true"></i>
@@ -540,7 +564,7 @@ $comment = $row['comment'];
                             </div>
                         </td>
                         <td style="text-align: center;">
-                            <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_7.png" style="margin-top: 5px;" />
+                            <image class="align-self-end" src="<?=APPLICATION ?>/images/<?= $roll_image_folder ?>/roll_type_7.png" style="margin-top: 5px;" />
                             <div style="width: 100%; text-align: end; padding-right: 5px;">
                                 <?php if(!empty($roll_type) && $roll_type == 7): ?>
                                 <i class="fa fa-check" aria-hidden="true"></i>
@@ -548,7 +572,7 @@ $comment = $row['comment'];
                             </div>
                         </td>
                         <td style="text-align: center;">
-                            <image class="align-self-end" src="<?=APPLICATION ?>/images/roll/roll_type_8.png" style="margin-top: 5px;" />
+                            <image class="align-self-end" src="<?=APPLICATION ?>/images/<?= $roll_image_folder ?>/roll_type_8.png" style="margin-top: 5px;" />
                             <div style="width: 100%; text-align: end; padding-right: 5px;">
                                 <?php if(!empty($roll_type) && $roll_type == 8): ?>
                                 <i class="fa fa-check" aria-hidden="true"></i>
