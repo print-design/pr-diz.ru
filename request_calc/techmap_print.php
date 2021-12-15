@@ -58,7 +58,7 @@ $sql = "select c.id request_calc_id, c.date, c.name, c.unit, c.quantity, c.work_
         . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
         . "c.cliche_1, c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
-        . "t.request_calc_id, t.date techmap_date, t.reverse_print, t.shipment, t.spool, t.winding, t.sign, t.label, t.package, t.roll_type, t.comment, "
+        . "t.request_calc_id, t.date techmap_date, t.reverse_print, t.spool, t.winding, t.winding_unit, t.sign, t.label, t.package, t.roll_type, t.comment, "
         . "cus.name customer, wt.name work_type, u.first_name, u.last_name "
         . "from request_calc c "
         . "inner join techmap t on t.request_calc_id = c.id "
@@ -115,9 +115,9 @@ $last_name = $row['last_name'];
 $request_calc_id = $row['request_calc_id'];
 $techmap_date = $row['techmap_date'];
 $reverse_print = $row['reverse_print'];
-$shipment = $row['shipment'];
 $spool = $row['spool'];
 $winding = $row['winding'];
+$winding_unit = $row['winding_unit'];
 $sign = $row['sign'];
 $label = $row['label'];
 $package = $row['package'];
@@ -449,8 +449,8 @@ $comment = $row['comment'];
             <div class="col-4">
                 <table class="w-75">
                     <tr>
-                        <th>Масса одной намотки</th>
-                        <td><?= empty($shipment) ? '' : $shipment.'&nbsp;кг' ?></td>
+                        <th>Намотка</th>
+                        <td><?= empty($winding) ? '' : $winding ?>&nbsp;<?php if(isset($winding_unit) && $winding_unit == 'kg') echo 'кг'; elseif(isset ($winding_unit) && $winding_unit == 'm') echo 'м'; ?></td>
                     </tr>
                     <tr>
                         <th>Шпуля</th>
@@ -488,16 +488,12 @@ $comment = $row['comment'];
             <div class="col-4">
                 <table class="w-75">
                     <tr>
-                        <th>Намотка</th>
-                        <td><?= empty($winding) ? '' : $winding.'&nbsp;мм' ?></td>
+                        <th>Бирки</th>
+                        <td><?=$label ?></td>
                     </tr>
                     <tr>
                         <th>Упаковка</th>
                         <td><?=$package ?></td>
-                    </tr>
-                    <tr>
-                        <th>Бирки</th>
-                        <td><?=$label ?></td>
                     </tr>
                 </table>
             </div>
