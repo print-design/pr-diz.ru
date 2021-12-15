@@ -573,23 +573,19 @@ if(!empty($id)) {
                 <div class="row">
                     <div class="col-4">
                         <div class="table_title">Информация для резчика</div>
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="winding">Намотка</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">До</div>
-                                        </div>
-                                        <input type="text" id="winding" name="winding" class="form-control int-only" value="<?= empty($winding) ? '' : $winding ?>" />
-                                        <div class="input-group-append">
-                                            <select name="winding_unit">
-                                                <option value="" hidden="hidden">...</option>
-                                                <option value="kg"<?= !empty($winding_unit) && $winding_unit == 'kg' ? " selected='selected'" : "" ?>>кг</option>
-                                                <option value="m"<?= !empty($winding_unit) && $winding_unit == 'm' ? " selected='selected'" : "" ?>>м</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                        <div class="form-group">
+                            <label for="winding">Намотка</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">До</div>
+                                </div>
+                                <input type="text" id="winding" name="winding" class="form-control int-only" value="<?= empty($winding) ? '' : $winding ?>" />
+                                <div class="input-group-append">
+                                    <select name="winding_unit">
+                                        <option value="" hidden="hidden">...</option>
+                                        <option value="kg"<?= !empty($winding_unit) && $winding_unit == 'kg' ? " selected='selected'" : "" ?>>кг</option>
+                                        <option value="m"<?= !empty($winding_unit) && $winding_unit == 'm' ? " selected='selected'" : "" ?>>м</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
