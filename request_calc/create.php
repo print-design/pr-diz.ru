@@ -1021,7 +1021,16 @@ $colorfulnesses = array();
                         </div>
                         <!-- Ламинация 1 -->
                         <div id="form_lamination_1" class="d-none">
-                            <p><span class="font-weight-bold">Ламинация 1</span> <span class="lam1_film_info" style="color: gray;"></span></p>
+                            <span class="font-weight-bold">Ламинация 1</span> <span class="lam1_film_info" style="color: gray;"></span>
+                            <?php
+                            $hide_lamination1_class = "d-inline";
+                            if(!empty($lamination2_brand_name)) {
+                                $hide_lamination1_class = "d-none";
+                            }
+                            ?>
+                            <div class="<?=$hide_lamination1_class ?>">
+                                <button type="button" class="btn btn-light" onclick="javascript: HideLamination1();"><i class="fas fa-trash-alt"></i></button>
+                            </div>
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group">
@@ -1048,39 +1057,58 @@ $colorfulnesses = array();
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-5">
-                                    <div class="form-group">
-                                        <label for="lamination1_thickness">Толщина, мкм</label>
-                                        <select id="lamination1_thickness" name="lamination1_thickness" class="form-control">
-                                            <option value="" hidden="hidden" selected="selected">Толщина...</option>
-                                            <?php
-                                            if(!empty($lamination1_brand_name)) {
-                                                $sql = "select distinct fbv.thickness, fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name='$lamination1_brand_name' order by thickness";
-                                                $thicknesses = (new Grabber($sql))->result;
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <div class="form-group">
+                                                <label for="lamination1_thickness">Толщина, мкм</label>
+                                                <select id="lamination1_thickness" name="lamination1_thickness" class="form-control">
+                                                    <option value="" hidden="hidden" selected="selected">Толщина...</option>
+                                                    <?php
+                                                    if(!empty($lamination1_brand_name)) {
+                                                        $sql = "select distinct fbv.thickness, fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name='$lamination1_brand_name' order by thickness";
+                                                        $thicknesses = (new Grabber($sql))->result;
                                                 
-                                                foreach ($thicknesses as $row):
-                                                $selected = '';
-                                                if($row['thickness'] == $lamination1_thickness) {
-                                                    $selected = " selected='selected'";
-                                                }
-                                            ?>
-                                            <option value="<?=$row['thickness'] ?>"<?=$selected ?>><?=$row['thickness'] ?> мкм <?=$row['weight'] ?> г/м<sup>2</sup></option>
-                                            <?php
-                                                endforeach;
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <?php
-                                $hide_lamination1_class = "d-flex";
-                                if(!empty($lamination2_brand_name)) {
-                                    $hide_lamination1_class = "d-none";
-                                }
-                                ?>
-                                <div class="col-1 <?=$hide_lamination1_class ?> flex-column justify-content-end" id="hide_lamination_1">
-                                    <div class="form-group">
-                                        <button type="button" class="btn btn-light" onclick="javascript: HideLamination1();"><i class="fas fa-trash-alt"></i></button>
+                                                        foreach ($thicknesses as $row):
+                                                        $selected = '';
+                                                        if($row['thickness'] == $lamination1_thickness) {
+                                                            $selected = " selected='selected'";
+                                                        }
+                                                    ?>
+                                                    <option value="<?=$row['thickness'] ?>"<?=$selected ?>><?=$row['thickness'] ?> мкм <?=$row['weight'] ?> г/м<sup>2</sup></option>
+                                                    <?php
+                                                    endforeach;
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="form-group">
+                                                <label for="lamination1_price">Цена</label>
+                                                <div class="input-group">
+                                                    <input type="text" 
+                                                           id="lamination1_price" 
+                                                           name="lamination1_price" 
+                                                           class="form-control float-only film-price " 
+                                                           placeholder="Цена" style="width: 80px;" 
+                                                           value="<?=$lamination1_price ?>" 
+                                                           onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                           onmouseup="javascript: $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" 
+                                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                                           onkeyup="javascript: $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" 
+                                                           onfocusout="javascript: $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" />
+                                                    <div class="input-group-append">
+                                                        <select id="lamination1_currency" name="lamination1_currency" class="film-currency">
+                                                            <option value="" hidden="">...</option>
+                                                            <option value="rub"<?=$lamination1_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
+                                                            <option value="usd"<?=$lamination1_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
+                                                            <option value="euro"<?=$lamination1_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
