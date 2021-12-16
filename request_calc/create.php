@@ -2056,6 +2056,17 @@ $colorfulnesses = array();
                 ChangeLimitIntValue($(this), 99999);
             });
             
+            // Ограничение значения поля "Обрезная ширина" до 1600
+            $('input#width').keydown(function(e) {
+                if(!KeyDownLimitIntValue($(e.target), e, 1600)) {
+                    return false;
+                }
+            });
+            
+            $('input#width').change(function(){
+                ChangeLimitIntValue($(this), 1600);
+            });
+            
             // Ограничение значения поля "Длина от метки до метки" до 3 цифр
             $('input#length').keydown(function(e) {
                 if(!KeyDownLimitIntValue($(e.target), e, 999)) {
