@@ -615,9 +615,6 @@ if(!empty($id)) {
                                         <option<?= !empty($label) && $label == "Принт дизайн" ? " selected='selected'" : "" ?>>Принт дизайн</option>
                                         <option<?= !empty($label) && $label == "Безликие" ? " selected='selected'" : "" ?>>Безликие</option>
                                     </select>
-                                    <?php if(!empty($unit) && $unit != 'kg'): ?>
-                                    <div style="font-size: small; color: gray;">1 метр = 6,00013 этикеток</div>
-                                    <?php endif; ?>
                                 </div>
                             </div>
                             <div class="col-6">
@@ -631,6 +628,9 @@ if(!empty($id)) {
                                 </div>
                             </div>
                         </div>
+                        <?php if(!empty($unit) && $unit != 'kg'): ?>
+                        <p>1 метр = 6,00013 этикеток</p>
+                        <?php endif; ?>
                         <?php if($work_type_id == 2): ?>
                         <div class="form-group">
                             <label for="sign">Фотометка</label>
