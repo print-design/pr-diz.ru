@@ -7,6 +7,12 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Формы
+const OLD = "old";
+const FLINT = "flint";
+const KODAK = "kodak";
+const TVER = "tver";
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -518,6 +524,8 @@ else $status_id = null;
 if(isset($row['extracharge'])) $extracharge = $row['extracharge'];
 else $extracharge = 0;
 
+$new_forms_number = 0;
+
 // Данные о цветах
 for ($i=1; $i<=8; $i++) {
     $ink_var = "ink_$i";
@@ -553,6 +561,10 @@ for ($i=1; $i<=8; $i++) {
     if(null === $$cliche_var) {
         if(isset($row["cliche_$i"])) $$cliche_var = $row["cliche_$i"];
         else $$cliche_var = null;
+    }
+    
+    if(!empty($$cliche_var) && $$cliche_var != OLD) {
+        $new_forms_number++;
     }
 }
 
@@ -1489,10 +1501,10 @@ $colorfulnesses = array();
                                         $cliche_selected_var = $$cliche_var."_selected";
                                         $$cliche_selected_var = " selected='selected'";
                                         ?>
-                                        <option value="old"<?=$old_selected ?>>Старая</option>
-                                        <option value="flint"<?=$flint_selected ?>>Новая Флинт</option>
-                                        <option value="kodak"<?=$kodak_selected ?>>Новая Кодак</option>
-                                        <option value="tver"<?=$tver_selected ?>>Новая Тверь</option>
+                                        <option value="<?=OLD ?>"<?=$old_selected ?>>Старая</option>
+                                        <option value="<?=FLINT ?>"<?=$flint_selected ?>>Новая Флинт</option>
+                                        <option value="<?=KODAK ?>"<?=$kodak_selected ?>>Новая Кодак</option>
+                                        <option value="<?=TVER ?>"<?=$tver_selected ?>>Новая Тверь</option>
                                     </select>
                                 </div>
                             </div>

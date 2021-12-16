@@ -53,10 +53,6 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
             <h3>Себестоимость</h3>
             <div>Себестоимость</div>
             <div class="value mb-2">860 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
-            <?php if($work_type_id == 2): ?>
-            <div>Себестоимость форм</div>
-            <div class="value mb-2">800 000 &#8381;</div>
-            <?php endif; ?>
         </div>
         <div class="col-4 pr-4">
             <h3>Отгрузочная стоимость</h3>
@@ -65,6 +61,14 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
         </div>
         <div class="col-4" style="width: 250px;"></div>
     </div>
+    <?php if($work_type_id == 2): ?>
+    <div class="row text-nowrap">
+        <div class="col-12">
+            <div>Себестоимость форм</div>
+            <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;420&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;329,5&nbsp;мм</span></div>    
+        </div>
+    </div>
+    <?php endif; ?>
     <div class="mt-3">
         <h2>Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 кг</span></h2>
     </div>

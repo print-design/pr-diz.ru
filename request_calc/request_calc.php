@@ -7,6 +7,12 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Формы
+const OLD = "old";
+const FLINT = "flint";
+const KODAK = "kodak";
+const TVER = "tver";
+
 // Значение марки плёнки "другая"
 const INDIVIDUAL = "individual";
 
@@ -79,6 +85,7 @@ $streams_number = $row['streams_number'];
 $raport = rtrim(rtrim(number_format($row['raport'], 3, ",", " "), "0"), ",");
 $lamination_roller_width = $row['lamination_roller_width'];
 $ink_number = $row['ink_number'];
+$new_forms_number = 0;
 
 for($i=1; $i<=$ink_number; $i++) {
     $ink_var = "ink_$i";
@@ -95,6 +102,10 @@ for($i=1; $i<=$ink_number; $i++) {
     
     $cliche_var = "cliche_$i";
     $$cliche_var = $row[$cliche_var];
+    
+    if(!empty($$cliche_var) && $$cliche_var != OLD) {
+        $new_forms_number++;
+    }
 }
 
 $status_id = $row['status_id'];
@@ -329,16 +340,16 @@ $num_for_customer = $row['num_for_customer'];
                                         <td>
                                             <?php
                                             switch ($$cliche_var) {
-                                                case 'old':
+                                                case OLD:
                                                     echo 'Старая';
                                                     break;
-                                                case 'flint':
+                                                case FLINT:
                                                     echo 'Флинт';
                                                     break;
-                                                case 'kodak';
+                                                case KODAK;
                                                     echo 'Кодак';
                                                     break;
-                                                case 'tver';
+                                                case TVER;
                                                     echo 'Тверь';
                                                     break;
                                             }

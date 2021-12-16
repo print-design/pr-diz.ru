@@ -2,6 +2,12 @@
 include '../include/topscripts.php';
 include './status_ids.php';
 
+// Формы
+const OLD = "old";
+const FLINT = "flint";
+const KODAK = "kodak";
+const TVER = "tver";
+
 // Значение марки плёнки "другая"
 const INDIVIDUAL = "individual";
 
@@ -71,6 +77,7 @@ $streams_number = $row['streams_number'];
 $raport = rtrim(rtrim(number_format($row['raport'], 3, ",", " "), "0"), ",");
 $lamination_roller_width = $row['lamination_roller_width'];
 $ink_number = $row['ink_number'];
+$new_forms_number = 0;
 
 for($i=1; $i<=$ink_number; $i++) {
     $ink_var = "ink_$i";
@@ -87,6 +94,10 @@ for($i=1; $i<=$ink_number; $i++) {
     
     $cliche_var = "cliche_$i";
     $$cliche_var = $row[$cliche_var];
+    
+    if(!empty($$cliche_var) && $$cliche_var != OLD) {
+        $new_forms_number++;
+    }
 }
 
 $status_id = $row['status_id'];
@@ -367,10 +378,6 @@ $num_for_customer = $row['num_for_customer'];
                         <h3>Себестоимость</h3>
                         <div>Себестоимость</div>
                         <div class="value mb-2">860 000 &#8381;&nbsp;<span style="font-weight: normal; font-size: small;">765 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
-                            <?php if($work_type_id == 2): ?>
-                        <div>Себестоимость форм</div>
-                        <div class="value mb-2">800 000 &#8381;</div>
-                            <?php endif; ?>
                     </div>
                     <div class="col-4 pr-4">
                         <h3>Отгрузочная стоимость</h3>
@@ -379,6 +386,14 @@ $num_for_customer = $row['num_for_customer'];
                     </div>
                     <div class="col-4" style="width: 250px;"></div>
                 </div>
+                <?php if($work_type_id == 2): ?>
+                <div class="row text-nowrap">
+                    <div class="col-12">
+                        <div>Себестоимость форм</div>
+                        <div class="value mb-2">800 000 &#8381;&nbsp;<span style="font-weight: normal; font-size: small;"><?=$new_forms_number ?>&nbsp;шт&nbsp;420&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;329,5&nbsp;мм</span></div>
+                    </div>
+                </div>
+                <?php endif; ?>
                 <h2 style="font-size: 20px; margin: 0; padding: 0;">Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 кг</span></h2>
                 <div class="row text-nowrap">
                     <div class="col-4 pr-4">
