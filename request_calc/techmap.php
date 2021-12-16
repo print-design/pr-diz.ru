@@ -629,7 +629,7 @@ if(!empty($id)) {
                             </div>
                         </div>
                         <?php if(!empty($unit) && $unit != 'kg'): ?>
-                        <p>1 метр = 6,00013 этикеток</p>
+                        <label>1 метр = 6,00013 этикеток</label>
                         <?php endif; ?>
                         <?php if($work_type_id == 2): ?>
                         <div class="form-group">
