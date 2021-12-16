@@ -898,6 +898,7 @@ $colorfulnesses = array();
                                             <label for="price">Цена</label>
                                             <div class="input-group">
                                                 <input type="text" 
+                                                       id="price" 
                                                        name="price" 
                                                        class="form-control float-only film-price" 
                                                        placeholder="Цена" style="width: 80px;" 
@@ -908,7 +909,7 @@ $colorfulnesses = array();
                                                        onkeyup="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
                                                        onfocusout="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" />
                                                 <div class="input-group-append">
-                                                    <select name="currency" class="film-currency">
+                                                    <select id="currency" name="currency" class="film-currency">
                                                         <option value="" hidden="">...</option>
                                                         <option value="rub"<?=$currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
                                                         <option value="usd"<?=$currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
@@ -1941,6 +1942,12 @@ $colorfulnesses = array();
                     $('#' + prefix + 'thickness').removeAttr('required');
                     $('#' + prefix + 'thickness').addClass('d-none');
                     $('#' + prefix + 'thickness').prev('label').addClass('d-none');
+                    $('#' + prefix + 'price').removeAttr('required');
+                    $('#' + prefix + 'price').val('');
+                    $('#' + prefix + 'currency').removeAttr('required');
+                    $('#' + prefix + 'currency').val('');
+                    $('#' + prefix + 'price').parent('.input-group').addClass('d-none');
+                    $('#' + prefix + 'price').parent('.input-group').prev('label').addClass('d-none');
                     $('.' + prefix + 'individual_only').removeClass('d-none');
                     $('.' + prefix + 'individual_only input').attr('required', 'required');
                     $('.' + prefix + 'individual_only select').attr('required', 'required');
@@ -1949,6 +1956,9 @@ $colorfulnesses = array();
                     $('#' + prefix + 'thickness').attr('required', 'required');
                     $('#' + prefix + 'thickness').removeClass('d-none');
                     $('#' + prefix + 'thickness').prev('label').removeClass('d-none');
+                    $('#' + prefix + 'price').attr('required', 'required');
+                    $('#' + prefix + 'price').parent('.input-group').removeClass('d-none');
+                    $('#' + prefix + 'price').parent('.input-group').prev('label').removeClass('d-none');
                     $('.' + prefix + 'individual_only').addClass('d-none');
                     $('.' + prefix + 'individual_only input').removeAttr('required');
                     $('.' + prefix + 'individual_only select').removeAttr('required');
