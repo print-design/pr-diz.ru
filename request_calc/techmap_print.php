@@ -447,7 +447,11 @@ $comment = $row['comment'];
                 <table class="w-75">
                     <tr>
                         <th>Размер намотки</th>
-                        <td>до <?= empty($winding) ? '' : $winding ?>&nbsp;<?php if(isset($winding_unit) && $winding_unit == 'kg') echo 'кг'; elseif(isset ($winding_unit) && $winding_unit == 'mm') echo 'мм'; ?></td>
+                        <td>
+                            до <?= empty($winding) ? '' : $winding ?>&nbsp;<?php if(isset($winding_unit) && $winding_unit == 'kg') echo 'кг'; elseif(isset ($winding_unit) && $winding_unit == 'mm') echo 'мм'; ?>
+                            <br />
+                            <span style="font-size: x-small; color: gray; white-space: nowrap;">Примерно: 2213 м</span>
+                        </td>
                     </tr>
                     <tr>
                         <th>Бирки</th>

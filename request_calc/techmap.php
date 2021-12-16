@@ -590,6 +590,7 @@ if(!empty($id)) {
                                             </select>
                                         </div>
                                     </div>
+                                    <div style="font-size: small; color: gray;">Примерно: 2213 метров</div>
                                 </div>
                             </div>
                             <div class="col-6">
