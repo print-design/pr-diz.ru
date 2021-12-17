@@ -27,11 +27,15 @@ if(!empty($brand_name) && !empty($thickness) && empty($price) && empty($currency
                 $currency_final = "EUR";
                 break;
         }
-        echo "($price_final&nbsp;$currency_final&nbsp;&nbsp;&nbsp;34&nbsp;кг&nbsp;&nbsp;&nbsp;23&nbsp;000&nbsp;м)";
+        $result = array("text" => "($price_final&nbsp;$currency_final&nbsp;&nbsp;&nbsp;34&nbsp;кг&nbsp;&nbsp;&nbsp;23&nbsp;000&nbsp;м)",
+            "currency" => $row['currency']);
     }
     else {
-        echo "Нет данных";
+        $result = array("text" => "Нет данных",
+            "currency" => "");
     }
+    
+    echo json_encode($result);
 }
 
 if(!empty($brand_name) && !empty($thickness) && !empty($price) && !empty($currency)) {

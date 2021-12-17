@@ -1792,6 +1792,7 @@ $colorfulnesses = array();
             // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин и установка видимости полей
             $('#brand_name').change(function(){
                 $('.main_film_info').html('');
+                $('#currency').val('');
                 SetBrandFieldsVisibility($(this).val(), $('#customers_material').is(':checked'), '');
                 
                 if($(this).val() == "") {
@@ -1810,9 +1811,10 @@ $colorfulnesses = array();
             
             // Обработка выбора толщины основной плёнки: отображение цены
             $('#thickness').change(function(){
-                $.ajax({ url: "../ajax/film_price.php?brand_name=" + $("#brand_name").val() + "&thickness=" + $(this).val() })
+                $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?brand_name=" + $("#brand_name").val() + "&thickness=" + $(this).val() })
                         .done(function(data) {
-                            $('.main_film_info').html(data);
+                            $('.main_film_info').html(data.text);
+                            $('#currency').val(data.currency);
                         })
                         .fail(function() {
                             alert('Ошибка при выборе толщины пленки');
@@ -1826,6 +1828,7 @@ $colorfulnesses = array();
             // Обработка выбора типа плёнки ламинации1: перерисовка списка толщин
             $('#lamination1_brand_name').change(function(){
                 $('.lam1_film_info').html('');
+                $('#lamination1_currency').val('');
                 SetBrandFieldsVisibility($(this).val(), $('#lamination1_customers_material').is(':checked'), 'lamination1_');
                 
                 if($(this).val() == "") {
@@ -1844,9 +1847,10 @@ $colorfulnesses = array();
             
             // Обработка выбора толщины ламинации 1: отображение цены
             $('#lamination1_thickness').change(function(){
-                $.ajax({ url: "../ajax/film_price.php?brand_name=" + $("#lamination1_brand_name").val() + "&thickness=" + $(this).val() })
+                $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?brand_name=" + $("#lamination1_brand_name").val() + "&thickness=" + $(this).val() })
                         .done(function(data) {
-                            $('.lam1_film_info').html(data);
+                            $('.lam1_film_info').html(data.text);
+                            $('#lamination1_currency').val(data.currency);
                         })
                         .fail(function() {
                             alert('Ошибка при выборе толщины пленки');
@@ -1860,6 +1864,7 @@ $colorfulnesses = array();
             // Обработка выбора типа плёнки ламинации2: перерисовка списка толщин
             $('#lamination2_brand_name').change(function(){
                 $('.lam2_film_info').html('');
+                $('#lamination2_currency').val('');
                 SetBrandFieldsVisibility($(this).val(), $('#lamination2_customers_material').is(':checked'), 'lamination2_');
                 
                 if($(this).val() == "") {
@@ -1878,9 +1883,10 @@ $colorfulnesses = array();
             
             // Обработка выбора толщины ламинации 2: отображение цены
             $('#lamination2_thickness').change(function(){
-                $.ajax({ url: "../ajax/film_price.php?brand_name=" + $("#lamination2_brand_name").val() + "&thickness=" + $(this).val() })
+                $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?brand_name=" + $("#lamination2_brand_name").val() + "&thickness=" + $(this).val() })
                         .done(function(data) {
-                            $('.lam2_film_info').html(data);
+                            $('.lam2_film_info').html(data.text);
+                            $('#lamination2_currency').val(data.currency);
                         })
                         .fail(function() {
                             alert('Ошибка при выборе толщины пленки');
