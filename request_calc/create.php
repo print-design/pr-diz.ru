@@ -1028,7 +1028,7 @@ $colorfulnesses = array();
                                 $hide_lamination1_class = "d-none";
                             }
                             ?>
-                            <div class="<?=$hide_lamination1_class ?>">
+                            <div class="<?=$hide_lamination1_class ?>" id="hide_lamination_1">
                                 <button type="button" class="btn btn-light" onclick="javascript: HideLamination1();"><i class="fas fa-trash-alt"></i></button>
                             </div>
                             <div class="row">
@@ -2059,7 +2059,7 @@ $colorfulnesses = array();
                 $('#form_lamination_2').removeClass('d-none');
                 $('#show_lamination_2').addClass('d-none');
                 $('#hide_lamination_1').addClass('d-none');
-                $('#hide_lamination_1').removeClass('d-flex');
+                $('#hide_lamination_1').removeClass('d-inline');
                 $('#lamination2_brand_name').attr('required', 'required');
                 $('#lamination2_thickness').attr('required', 'required');
                 SetBrandFieldsVisibility($('#lamination2_brand_name').val(), $('#lamination2_customers_material').is(':checked'), 'lamination2_');
@@ -2081,7 +2081,7 @@ $colorfulnesses = array();
                 $('#form_lamination_2').addClass('d-none');
                 $('#show_lamination_2').removeClass('d-none');
                 $('#hide_lamination_1').removeClass('d-none');
-                $('#hide_lamination_1').addClass('d-flex');
+                $('#hide_lamination_1').addClass('d-inline');
                 
                 $('#form_lamination_2 input').removeAttr('required');
                 $('#form_lamination_2 select').removeAttr('required');
