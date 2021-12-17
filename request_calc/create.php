@@ -481,10 +481,10 @@ if(null === $lamination2_price) {
     else $lamination2_price = null;
 }
 
-$lamination1_currency = filter_input(INPUT_POST, 'lamination1_currency');
-if(null === $lamination1_currency) {
-    if(isset($row['lamination1_currency'])) $lamination1_currency = $row['lamination1_currency'];
-    else $lamination1_currency = null;
+$lamination2_currency = filter_input(INPUT_POST, 'lamination2_currency');
+if(null === $lamination2_currency) {
+    if(isset($row['lamination2_currency'])) $lamination2_currency = $row['lamination2_currency'];
+    else $lamination2_currency = null;
 }
 
 $lamination2_individual_brand_name = filter_input(INPUT_POST, 'lamination2_individual_brand_name');
