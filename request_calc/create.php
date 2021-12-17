@@ -1792,7 +1792,9 @@ $colorfulnesses = array();
             // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин и установка видимости полей
             $('#brand_name').change(function(){
                 $('.main_film_info').html('');
+                <?php if(empty($currency)): ?>
                 $('#currency').val('');
+                <?php endif; ?>
                 SetBrandFieldsVisibility($(this).val(), $('#customers_material').is(':checked'), '');
                 
                 if($(this).val() == "") {
@@ -1830,7 +1832,9 @@ $colorfulnesses = array();
             // Обработка выбора типа плёнки ламинации1: перерисовка списка толщин
             $('#lamination1_brand_name').change(function(){
                 $('.lam1_film_info').html('');
+                <?php if(empty($lamination1_currency)): ?>
                 $('#lamination1_currency').val('');
+                <?php endif; ?>
                 SetBrandFieldsVisibility($(this).val(), $('#lamination1_customers_material').is(':checked'), 'lamination1_');
                 
                 if($(this).val() == "") {
@@ -1868,7 +1872,9 @@ $colorfulnesses = array();
             // Обработка выбора типа плёнки ламинации2: перерисовка списка толщин
             $('#lamination2_brand_name').change(function(){
                 $('.lam2_film_info').html('');
+                <?php if(empty($lamination2_currency)): ?>
                 $('#lamination2_currency').val('');
+                <?php endif; ?>
                 SetBrandFieldsVisibility($(this).val(), $('#lamination2_customers_material').is(':checked'), 'lamination2_');
                 
                 if($(this).val() == "") {
