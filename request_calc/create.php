@@ -775,12 +775,12 @@ $colorfulnesses = array();
                         <div class="print-only justify-content-start mt-2 mb-1 d-none">
                             <div class="form-check-inline">
                                 <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="unit" value="kg"<?=$kg_checked ?> />Килограммы
+                                    <input type="radio" class="form-check-input" id="unit_kg" name="unit" value="kg"<?=$kg_checked ?> />Килограммы
                                 </label>
                             </div>
                             <div class="form-check-inline">
                                 <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="unit" value="pieces"<?=$pieces_checked ?> />Штуки
+                                    <input type="radio" class="form-check-input" id="unit_pieces" name="unit" value="pieces"<?=$pieces_checked ?> />Штуки
                                 </label>
                             </div>
                         </div>
@@ -1814,7 +1814,9 @@ $colorfulnesses = array();
                 $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?brand_name=" + $("#brand_name").val() + "&thickness=" + $(this).val() })
                         .done(function(data) {
                             $('.main_film_info').html(data.text);
+                            <?php if(empty($currency)): ?>
                             $('#currency').val(data.currency);
+                            <?php endif; ?>
                         })
                         .fail(function() {
                             alert('Ошибка при выборе толщины пленки');
@@ -1850,7 +1852,9 @@ $colorfulnesses = array();
                 $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?brand_name=" + $("#lamination1_brand_name").val() + "&thickness=" + $(this).val() })
                         .done(function(data) {
                             $('.lam1_film_info').html(data.text);
+                            <?php if(empty($lamination1_currency)): ?>
                             $('#lamination1_currency').val(data.currency);
+                            <?php endif; ?>
                         })
                         .fail(function() {
                             alert('Ошибка при выборе толщины пленки');
@@ -1886,7 +1890,9 @@ $colorfulnesses = array();
                 $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?brand_name=" + $("#lamination2_brand_name").val() + "&thickness=" + $(this).val() })
                         .done(function(data) {
                             $('.lam2_film_info').html(data.text);
+                            <?php if(empty($lamination2_currency)): ?>
                             $('#lamination2_currency').val(data.currency);
+                            <?php endif; ?>
                         })
                         .fail(function() {
                             alert('Ошибка при выборе толщины пленки');
