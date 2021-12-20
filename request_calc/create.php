@@ -2033,6 +2033,7 @@ $colorfulnesses = array();
                     $('#' + prefix + 'price').attr('required', 'required');
                     $('#' + prefix + 'price').parent('.input-group').removeClass('d-none');
                     $('#' + prefix + 'price').parent('.input-group').prev('label').removeClass('d-none');
+                    $('#' + prefix + 'currency').attr('required', 'required');
                     $('.' + prefix + 'individual_only').addClass('d-none');
                     $('.' + prefix + 'individual_only input').removeAttr('required');
                     $('.' + prefix + 'individual_only select').removeAttr('required');
