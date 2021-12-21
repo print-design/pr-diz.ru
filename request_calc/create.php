@@ -2062,17 +2062,6 @@ $finished = $row['finished'];
             
             // При смене типа работы: если тип работы "плёнка с печатью", показываем поля, предназначенные только для плёнки с печатью
             $('#work_type_id').change(function() {
-                // При типе "Плёнка без печати" количество возможно только в килограммах
-                if($(this).val() == 1) {
-                    $('#unit_kg').prop('checked', true);
-                    $('#unit_pieces').addClass('d-none');
-                    $('#unit_pieces_label').addClass('d-none');
-                }
-                else {
-                    $('#unit_pieces').removeClass('d-none');
-                    $('#unit_pieces_label').removeClass('d-none');
-                }
-                
                 SetFieldsVisibility($(this).val());
                 
                 // Автосохранение типа работы
@@ -2767,6 +2756,9 @@ $finished = $row['finished'];
                     $('select.print-only').attr('required', 'required');
                 }
                 else {
+                    // Если тип работы "Плёнка без печати", то объём заказа всегда в килограммах
+                    $('#unit_kg').click();
+                    
                     // Скрываем поля "только с печатью"
                     $('.print-only').addClass('d-none');
                     $('.print-only').removeAttr('required');
