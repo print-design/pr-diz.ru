@@ -18,6 +18,16 @@ const INDIVIDUAL = "individual";
 const USD = "usd";
 const EURO = "euro";
 
+// Краски
+const CMYK = "cmyk";
+const CYAN = "cyan";
+const MAGENTA = "magenta";
+const YELLOW = "yellow";
+const KONTUR = "kontur";
+const PANTON = "panton";
+const WHITE = "white";
+const LACQUER = "lacquer";
+
 // Формы
 const OLD = "old";
 const FLINT = "flint";
@@ -917,548 +927,602 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         // длина тиража чистая * (процент отходов для ламинатора + 100) / 100;
         $pure_length_lam = ($pure_length ?? 0) * ($laminator_tuning_waste_percent + 100) / 100;
         
-        //*****************************************
-        // ПРОДОЛЖЕНИЕ СЛЕДУЕТ
-        //*****************************************
+        // Длина тиража с отходами, м
+        // если есть печать: длина тиража чистая + (длина тиража чистая * процент отхода машины) / 100 + длина приладки для машины * число красок
+        // если нет печати, но есть ламинация: длина тиража чистая с ламинацией + длина приладки ламинации
+        $dirty_length = 0;
         
-    // Длина тиража с отходами, м
-    // если есть печать: длина тиража чистая + (длина тиража чистая * процент отхода машины) / 100 + длина приладки для машины * число красок
-    // если нет печати, но есть ламинация: длина тиража чистая с ламинацией + длина приладки ламинации
-    $dirty_length = 0;
-        
-    if(!empty($machine_id) && !empty($ink_number)) {
-        $dirty_length = ($pure_length ?? 0) + (($pure_length ?? 0) * $tuning_waste_percents[$machine_id] / 100 + $tuning_lengths[$machine_id] * $ink_number);
-    }
-    elseif(!empty ($lamination1_brand_name)) {
-        $dirty_length = ($pure_length_lam ?? 0) + $laminator_tuning_length;
-    }
-    else {
-        $error_message = "Если не указана печатная машина, должна быть добавлена хоть одна ламинация";
-    }
-        
-    // Ширина тиража с отходами, мм
-    // с лыжами: ширина лыж + ширина тиража обрезная
-    // без лыж: ширина тиража обрезная
-    // затем отругляем ширину тиража с отходами до возможности деления на 5 без остатка
-    $dirty_width = null;
-    
-    if($no_ski) {
-        $dirty_width = $pure_width / 1000;
-    }
-    elseif(!empty ($ski_width)) {
-        $dirty_width = ($pure_width + $ski_width) / 1000;
-    }
-    else {
-        $error_message = "Отсутствуют данные о ширине лыж";
-    }
-    
-    if(!empty($dirty_width)) {
-        $vari = intval($dirty_width * 1000);
-        $varcc = $vari % 5;
-        $numiterazij = 0;
-            
-        if($varcc > 0) {
-            while ($varcc > 0) {
-                $vari++;
-                $varcc = $vari % 5;
-                $numiterazij++;
-                if($numiterazij > 500) break;
-            }
-            
-            $varid = doubleval($vari);
-            
-            if($varid !== null) {
-                $dirty_width = $varid / 1000;
-            }
+        if(!empty($machine_id) && !empty($ink_number)) {
+            $dirty_length = ($pure_length ?? 0) + (($pure_length ?? 0) * $tuning_waste_percents[$machine_id] / 100 + $tuning_lengths[$machine_id] * $ink_number);
         }
-        
-        if($dirty_width !== null) {
-            $dirty_width *= 1000;
-        }
-    }
-    else {
-        $error_message = "Отсутствуют данные о ширине тиража с отходами";
-    }
-    
-    // Площадь тиража с отходами, м2
-    // длина тиража с отходами * ширина тиража с отходами
-    $dirty_area = 0;
-    
-    if(!empty($dirty_width)) {
-        $dirty_area = ($dirty_length ?? 0) * $dirty_width / 1000;
-    }
-    else {
-        $error_message = "Отсутствуют данные о ширине тиража с отходами";
-    }
-    
-    // Вес материала печати чистый, кг
-    // площадь тиража чистая * удельный вес материала / 1000
-    $pure_weight = 0;
-    
-    if(!empty($c_density)) {
-        $pure_weight = ($pure_area ?? 0) * $c_density / 1000;
-    }
-    else {
-        $error_message = "Отсутствуют данные об удельном весе материала";
-    }
-    
-    // Вес материала печати с отходами, кг
-    // площадь тиража с отходами * удельный вес материала / 1000
-    $dirty_weight = 0;
-    
-    if(!empty($c_density)) {
-        $dirty_weight = ($dirty_area ?? 0) * $c_density / 1000;
-    }
-    else {
-        $error_message = "Отсутствуют данные об удельном весе материала";
-    }
-    
-    // Стоимость материала печати, руб
-    // если сырьё заказчика, то стоимость материала равна 0
-    // иначе: вес материала печати с отходами * цена материала за 1 кг
-    $material_price = null;
-        
-    if($customers_material) {
-        $material_price = 0;
-    }
-    elseif(!empty($c_price)) {
-        $material_price = ($dirty_weight ?? 0) * $c_price;
-    }
-    else {
-        $error_message = "Отсутствуют данные о стоимости материала";
-    }
-    
-    //***************************************************************************
-    // СТОИМОСТЬ ПЕЧАТИ
-    
-    $print_time = null; // Время печати тиража без приладки, ч
-    $tuning_time = null; // Время приладки, ч
-    $print_tuning_time = null; // Время печати с приладкой, ч
-    $print_price = null; // Стоимость печати, руб
-    
-    $cliche_area = null; // Площадь печатной формы, см2
-    $cliche_flint_price = null; // Стоимость 1 новой формы Флинт, руб
-    $cliche_kodak_price = null; // Стоимость 1 новой формы Кодак, руб
-    $cliche_tver_price = null; // Стоимость 1 новой формы Тверь, руб
-    $cliche_price = null; // Стоимость комплекта печатных форм
-    
-    $ink_price = null; // Стоимость краски + лака + растворителя, руб
-    
-    if(!empty($machine_id)) {
-        // Время печати тиража без приладки, ч
-        // длина тиража чистая / 1000 / скорость работы флекс машины
-        $print_time = ($pure_length ?? 0) / 1000 / $machine_speeds[$machine_id];
-    
-        // Время приладки, ч
-        // время приладки каждой краски * число красок
-        if(!empty($ink_number)) {
-            $tuning_time = $tuning_times[$machine_id] / 60 * $ink_number;
+        elseif(!empty ($lamination1_brand_name)) {
+            $dirty_length = ($pure_length_lam ?? 0) + $laminator_tuning_length;
         }
         else {
-            $error_message = "Отсутствуют данные о количестве красок";
+            $error_message = "Если не указана печатная машина, должна быть добавлена хоть одна ламинация";
         }
+        
+        // Ширина тиража с отходами, мм
+        // с лыжами: ширина лыж + ширина тиража обрезная
+        // без лыж: ширина тиража обрезная
+        // затем отругляем ширину тиража с отходами до возможности деления на 5 без остатка
+        $dirty_width = null;
     
-        // Время печати с приладкой, ч
-        // время печати + время приладки
-        $print_tuning_time = ($print_time ?? 0) + ($tuning_time ?? 0);
-        
-        // Стоимость печати, руб
-        // время печати с приладкой * стоимость работы машины
-        $print_price = ($print_tuning_time ?? 0) * $machine_prices[$machine_id];
-        
-        //***************************************************************
-        
-        // Площадь печатной формы, см2
-        // (припуск * 2 + ширина тиража с отходами * 100) * (припуск * 2 + рапорт вала / 10)
-        if(!empty($raport)) {
-            $cliche_area = (($cliche_additional_size ?? 0) * 2 + ($dirty_width ?? 0) / 1000 * 100) * (($cliche_additional_size ?? 0) * 2 + $raport / 10);
+        if($no_ski) {
+            $dirty_width = $pure_width / 1000;
+        }
+        elseif(!empty ($ski_width)) {
+            $dirty_width = ($pure_width + $ski_width) / 1000;
         }
         else {
-            $error_message = "Отсутствуют данные о рапорте";
+            $error_message = "Отсутствуют данные о ширине лыж";
         }
+    
+        if(!empty($dirty_width)) {
+            $vari = intval($dirty_width * 1000);
+            $varcc = $vari % 5;
+            $numiterazij = 0;
+            
+            if($varcc > 0) {
+                while ($varcc > 0) {
+                    $vari++;
+                    $varcc = $vari % 5;
+                    $numiterazij++;
+                    if($numiterazij > 500) break;
+                }
+            
+                $varid = doubleval($vari);
+            
+                if($varid !== null) {
+                    $dirty_width = $varid / 1000;
+                }
+            }
         
-        // Стоимость 1 новой формы Флинт, руб
-        // площадь печатной формы * стоимость 1 см2 формы
-        $cliche_flint_price = ($cliche_area ?? 0) * ($cliche_flint ?? 0);
+            if($dirty_width !== null) {
+                $dirty_width *= 1000;
+            }
+        }
+        else {
+            $error_message = "Отсутствуют данные о ширине тиража с отходами";
+        }
+    
+        // Площадь тиража с отходами, м2
+        // длина тиража с отходами * ширина тиража с отходами
+        $dirty_area = 0;
+    
+        if(!empty($dirty_width)) {
+            $dirty_area = ($dirty_length ?? 0) * $dirty_width / 1000;
+        }
+        else {
+            $error_message = "Отсутствуют данные о ширине тиража с отходами";
+        }
+    
+        // Вес материала печати чистый, кг
+        // площадь тиража чистая * удельный вес материала / 1000
+        $pure_weight = 0;
+    
+        if(!empty($c_density)) {
+            $pure_weight = ($pure_area ?? 0) * $c_density / 1000;
+        }
+        else {
+            $error_message = "Отсутствуют данные об удельном весе материала";
+        }
+    
+        // Вес материала печати с отходами, кг
+        // площадь тиража с отходами * удельный вес материала / 1000
+        $dirty_weight = 0;
+    
+        if(!empty($c_density)) {
+            $dirty_weight = ($dirty_area ?? 0) * $c_density / 1000;
+        }
+        else {
+            $error_message = "Отсутствуют данные об удельном весе материала";
+        }
+    
+        // Стоимость материала печати, руб
+        // если сырьё заказчика, то стоимость материала равна 0
+        // иначе: вес материала печати с отходами * цена материала за 1 кг
+        $material_price = null;
         
-        // Стоимость 1 новой формы Кодак, руб
-        // площадь печатной формы * стоимость 1 см2 формы 
-        $cliche_kodak_price = ($cliche_area ?? 0) * ($cliche_kodak ?? 0);
+        if($customers_material) {
+            $material_price = 0;
+        }
+        elseif(!empty($c_price)) {
+            $material_price = ($dirty_weight ?? 0) * $c_price;
+        }
+        else {
+            $error_message = "Отсутствуют данные о стоимости материала";
+        }
+    
+        //***************************************************************************
+        // СТОИМОСТЬ ПЕЧАТИ
+    
+        $print_time = null; // Время печати тиража без приладки, ч
+        $tuning_time = null; // Время приладки, ч
+        $print_tuning_time = null; // Время печати с приладкой, ч
+        $print_price = null; // Стоимость печати, руб
+    
+        $cliche_area = null; // Площадь печатной формы, см2
+        $cliche_flint_price = null; // Стоимость 1 новой формы Флинт, руб
+        $cliche_kodak_price = null; // Стоимость 1 новой формы Кодак, руб
+        $cliche_tver_price = null; // Стоимость 1 новой формы Тверь, руб
+        $cliche_price = null; // Стоимость комплекта печатных форм
+    
+        $ink_price = null; // Стоимость краски + лака + растворителя, руб
+    
+        if(!empty($machine_id)) {
+            // Время печати тиража без приладки, ч
+            // длина тиража чистая / 1000 / скорость работы флекс машины
+            $print_time = ($pure_length ?? 0) / 1000 / $machine_speeds[$machine_id];
+    
+            // Время приладки, ч
+            // время приладки каждой краски * число красок
+            if(!empty($ink_number)) {
+                $tuning_time = $tuning_times[$machine_id] / 60 * $ink_number;
+            }
+            else {
+                $error_message = "Отсутствуют данные о количестве красок";
+            }
+    
+            // Время печати с приладкой, ч
+            // время печати + время приладки
+            $print_tuning_time = ($print_time ?? 0) + ($tuning_time ?? 0);
         
-        // Стоимость 1 новой формы Тверь, руб
-        // площадь печатной формы * (стоимость 1 см2 формы + стоимость 1 см2 плёнок * коэфф. удорожания для тверских форм)
-        $cliche_tver_price = ($cliche_area ?? 0) * (($cliche_tver ?? 0) + ($cliche_film ?? 0) * ($cliche_tver_coeff ?? 0));
+            // Стоимость печати, руб
+            // время печати с приладкой * стоимость работы машины
+            $print_price = ($print_tuning_time ?? 0) * $machine_prices[$machine_id];
         
-        // Стоимость комплекта печатных форм
-        // сумма стоимости форм для каждой краски
-        if(!empty($cliche_flint_price) && !empty($cliche_kodak_price) && !empty($cliche_tver_price)) {
-            // Перебираем все используемые краски
-            if(!empty($ink_number)){
+            //***************************************************************
+        
+            // Площадь печатной формы, см2
+            // (припуск * 2 + ширина тиража с отходами * 100) * (припуск * 2 + рапорт вала / 10)
+            if(!empty($raport)) {
+                $cliche_area = (($cliche_additional_size ?? 0) * 2 + ($dirty_width ?? 0) / 1000 * 100) * (($cliche_additional_size ?? 0) * 2 + $raport / 10);
+            }
+            else {
+                $error_message = "Отсутствуют данные о рапорте";
+            }
+        
+            // Стоимость 1 новой формы Флинт, руб
+            // площадь печатной формы * стоимость 1 см2 формы
+            $cliche_flint_price = ($cliche_area ?? 0) * ($cliche_flint ?? 0);
+        
+            // Стоимость 1 новой формы Кодак, руб
+            // площадь печатной формы * стоимость 1 см2 формы 
+            $cliche_kodak_price = ($cliche_area ?? 0) * ($cliche_kodak ?? 0);
+        
+            // Стоимость 1 новой формы Тверь, руб
+            // площадь печатной формы * (стоимость 1 см2 формы + стоимость 1 см2 плёнок * коэфф. удорожания для тверских форм)
+            $cliche_tver_price = ($cliche_area ?? 0) * (($cliche_tver ?? 0) + ($cliche_film ?? 0) * ($cliche_tver_coeff ?? 0));
+        
+            // Стоимость комплекта печатных форм
+            // сумма стоимости форм для каждой краски
+            if(!empty($cliche_flint_price) && !empty($cliche_kodak_price) && !empty($cliche_tver_price)) {
+                // Перебираем все используемые краски
+                if(!empty($ink_number)){
+                    for($i=1; $i<=8; $i++) {
+                        if($ink_number >= $i) {
+                            $ink_var = "ink_$i";
+                            $cliche_var = "cliche_$i";
+                            if(!empty($$ink_var)) {        
+                                if($$cliche_var == 'old') {
+                                    $cliche_price += 0;
+                                }
+                                elseif($$cliche_var == 'flint') {
+                                    $cliche_price += $cliche_flint_price;
+                                }
+                                elseif($$cliche_var == 'kodak') {
+                                    $cliche_price += $cliche_kodak_price;
+                                }
+                                elseif($$cliche_var == 'tver') {
+                                    $cliche_price += $cliche_tver_price;
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    $error_message = "Отсутствуют данные о количестве красок";
+                }
+            }
+            else {
+                $error_message = "Отсутствуют или неполные данные о стоимости форм";
+            }
+        
+            // Стоимость краски + лака + растворителя, руб
+            if(!empty($dirty_area)) {
+                $ink_price = 0;
+            
+                // Перебираем все используемые краски
                 for($i=1; $i<=8; $i++) {
-                    if($ink_number >= $i) {
+                    if(!empty($ink_number) && $ink_number >= $i) {
                         $ink_var = "ink_$i";
-                        $cliche_var = "cliche_$i";
-                        if(!empty($$ink_var)) {        
-                            if($$cliche_var == 'old') {
-                                $cliche_price += 0;
+                        $percent_var = "percent_$i";
+                        $cmyk_var = "cmyk_$i";
+                
+                        if(!empty($$ink_var)) {
+                            // Площадь запечатки, м2
+                            // площадь тиража с отходами * процент краски / 100
+                            $ink_area = $dirty_area * $$percent_var / 100;
+                    
+                            // Расход краски, г/м2
+                            $ink_expense_final = 0;
+                    
+                            // Стоимость краски за 1 кг, руб
+                            $ink_price_final = 0;
+                    
+                            // Стоимость растворителя за 1 кг, руб
+                            $solvent_price_final = 0;
+                    
+                            // Процент краски по отношению к растворителю
+                            $ink_solvent_final = 0;
+                    
+                            switch ($$ink_var) {
+                                case CMYK:
+                                    switch ($$cmyk_var) {
+                                        case CYAN:
+                                            $ink_expense_final = $ink_c_expense;
+                                            $ink_price_final = $ink_c;
+                                            $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
+                                            $ink_solvent_final = $ink_ink_solvent;
+                                            break;
+                                        case MAGENTA:
+                                            $ink_expense_final = $ink_m_expense;
+                                            $ink_price_final = $ink_m;
+                                            $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
+                                            $ink_solvent_final = $ink_ink_solvent;
+                                            break;
+                                        case YELLOW:
+                                            $ink_expense_final = $ink_y_expense;
+                                            $ink_price_final = $ink_y;
+                                            $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
+                                            $ink_solvent_final = $ink_ink_solvent;
+                                            break;
+                                        case KONTUR:
+                                            $ink_expense_final = $ink_k_expense;
+                                            $ink_price_final = $ink_k;
+                                            $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
+                                            $ink_solvent_final = $ink_ink_solvent;
+                                            break;
+                                    };
+                                    break;
+                                case PANTON:
+                                    $ink_expense_final = $ink_panton_expense;
+                                    $ink_price_final = $ink_panton;
+                                    $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
+                                    $ink_solvent_final = $ink_ink_solvent;
+                                    break;
+                                case WHITE:
+                                    $ink_expense_final = $ink_white_expense;
+                                    $ink_price_final = $ink_white;
+                                    $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
+                                    $ink_solvent_final = $ink_ink_solvent;
+                                    break;
+                                case LACQUER:
+                                    $ink_expense_final = $ink_lacquer_expense;
+                                    $ink_price_final = $ink_lacquer;
+                                    $solvent_price_final = $ink_solvent_flexol82;
+                                    $ink_solvent_final = $ink_lacquer_solvent;
+                                    break;
                             }
-                            elseif($$cliche_var == 'flint') {
-                                $cliche_price += $cliche_flint_price;
+                
+                            // Количество краски, кг
+                            // площадь запечатки * расход краски / 1000
+                            $ink_quantity = $ink_area * $ink_expense_final / 1000;
+                    
+                            // Стоимость неразведённой краски, руб
+                            // количество краски * стоимость краски за 1 кг
+                            $ink_price_sum = $ink_quantity * $ink_price_final;
+                    
+                            // Проверяем, чтобы стоимость была не меньше минимальной стоимости
+                            // Если меньше, то присваиваем стоимости значение минимальной стоимости
+                            if($ink_price_sum < $ink_min_price) {
+                                $ink_price_sum = $ink_min_price;
                             }
-                            elseif($$cliche_var == 'kodak') {
-                                $cliche_price += $cliche_kodak_price;
-                            }
-                            elseif($$cliche_var == 'tver') {
-                                $cliche_price += $cliche_tver_price;
-                            }
+                    
+                            // Стоимость растворителя
+                            // количество краски * стоимость растворителя за 1 кг
+                            $solvent_price_sum = $ink_quantity * $solvent_price_final;
+                    
+                            // Стоимость разведённой краски
+                            // (стоимость краски * процент краски / 100) + (стоимость краски * (100 - процент краски) / 100)
+                            $ink_solvent_price_sum = ($ink_price_sum * $ink_solvent_final / 100) + ($solvent_price_sum * (100 - $ink_solvent_final) / 100);
+                    
+                            // Итого стоимость краски + лака + растворителя, руб
+                            $ink_price += $ink_solvent_price_sum;
                         }
                     }
                 }
             }
             else {
-                $error_message = "Отсутствуют данные о количестве красок";
+                $error_message = "Отсутствуют данные о площади тиража с отходами";
+            }
+        }
+        
+        //***************************************************
+        // СТОИМОСТЬ ЛАМИНАЦИИ
+    
+        $price_lam_total = 0; // Итого стоимость ламинации, руб
+        
+        $pure_weight_lam1 = null; // Вес материала ламинации 1 чистый, кг
+        $dirty_weight_lam1 = null; // Вес материала ламинации 1 с отходами, кг
+        $price_lam1_material = null; // Стоимость материала ламинации 1, руб
+        $price_lam1_glue = null; // Стоимость клеевого раствора 1, руб
+        $price_lam1_work = null; // Стоимость процесса ламинации 1, руб
+                    
+        if(!empty($lamination1_brand_name)) {
+            // Вес материала ламинации 1 чистый, кг
+            // площадь тиража чистая * удельный вес ламинации 1 / 1000
+            $pure_weight_lam1 = ($pure_area ?? 0) * ($c_density_lam1 ?? 0) / 1000;
+                        
+            // Вес материала ламинации 1 с отходами, кг
+            // (длина тиража с ламинацией + длина материала для приладки при ламинации) * ширина тиража с отходами (в метрах) * удельный вес ламинации 1 / 1000
+            $dirty_weight_lam1 = (($pure_length_lam ?? 0) + $laminator_tuning_length) * ($dirty_width ?? 0) / 1000 * ($c_density_lam1 ?? 0) / 1000;
+            
+            // Стоимость материала ламинации 1, руб
+            // если материал заказчика, то стоимость равна 0
+            // иначе удельная стоимость материала ламинации * вес материала с отходами
+            if($lamination1_customers_material) {
+                $price_lam1_material = 0;
+            }
+            else {
+                $price_lam1_material = ($c_price_lam1 ?? 0) * ($dirty_weight_lam1 ?? 0);
+            }
+            
+            // Удельная стоимость клеевого раствора 1, руб
+            // (стоимость клея * доля клея / (доля клея + доля раствора)) + (стоимость растворителя для клея * доля раствора / (доля клея + доля раствора))
+            $glue_solvent_g = ($glue_price * $glue_glue_part / ($glue_glue_part + $glue_solvent_part)) + ($glue_solvent_price * $glue_solvent_part / ($glue_glue_part + $glue_solvent_part));
+            
+            // Стоимость клеевого раствора 1, руб
+            // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
+            // Если марка плёнки начинается на pet
+            // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
+            $price_lam1_glue = null;
+            
+            if(stripos($brand_name, 'pet') === 0 || stripos($lamination1_brand_name, 'pet') === 0 || stripos($individual_brand_name, 'pet') === 0 || stripos($lamination1_individual_brand_name, 'pet') === 0) {
+                $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense_pet * (($pure_length_lam ?? 0) * $lamination_roller_width / 1000 + $laminator_tuning_length);
+            }
+            else {
+                $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense * (($pure_length_lam ?? 0) * $lamination_roller_width / 1000 + $laminator_tuning_length);
+            }
+            
+            // Стоимость процесса ламинации 1, руб
+            // стоимость работы оборудования + (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования
+            $price_lam1_work = $laminator_price + (($pure_length_lam ?? 0) / 1000 / $laminator_speed) * $laminator_price;
+            
+            // Итого стоимость ламинации 1, руб
+            // материал1 + клей1 + процесс1
+            $price_lam_total += ($price_lam1_material ?? 0) + ($price_lam1_glue ?? 0) + ($price_lam1_work ?? 0);
+        }
+        
+        $pure_weight_lam2 = null; // Вес материала ламинации 2 чистый, кг
+        $dirty_weight_lam2 = null; // Вес материала ламинации 2 с отходами 2, кг
+        $price_lam2_material = null; // Стоимость материала ламинации 2, руб
+        $price_lam2_glue = null; // Стоимость клеевого раствора 2, руб
+        $price_lam2_work = null; // Стоимость процесса ламинации 2, руб
+        
+        if(!empty($lamination2_brand_name)) {
+            // Вес материала ламинации 2 чистый, кг
+            // площадь тиража чистая * удельный вес ламинации 1 / 1000
+            $pure_weight_lam2 = ($pure_area ?? 0) * ($c_density_lam2 ?? 0) / 1000;
+                        
+            // Вес материала ламинации 2 с отходами 2, кг
+            // (длина тиража с ламинацией + длина материала для приладки при ламинации) * ширина тиража с отходами (в метрах) * удельный вес ламинации 1 / 1000
+            $dirty_weight_lam2 = (($pure_length_lam ?? 0) + $laminator_tuning_length) * $dirty_width / 1000 * $c_density_lam2 / 1000;
+            
+            // Стоимость материала ламинации 2, руб
+            // удельная стоимость материала ламинации * вес материала с отходами
+            if($lamination2_customers_material) {
+                $price_lam2_material = 0;
+            }
+            else {
+                $price_lam2_material = ($c_price_lam2 ?? 0) * ($dirty_weight_lam2 ?? 0);
+            }
+            
+            // Удельная стоимость клеевого раствора 2, руб
+            // (стоимость клея * соотношение кл/раст / 100) + (стоимость растворителя для клея * (100 - соотношение кл/раст) / 100)
+            $glue_solvent_g = ($glue_price * $glue_glue_part / ($glue_glue_part + $glue_solvent_part)) + ($glue_solvent_price * $glue_solvent_part / ($glue_glue_part + $glue_solvent_part));
+            
+            // Стоимость клеевого раствора 2, руб
+            // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
+            // Если марка плёнки начинается на pet
+            // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
+            $price_lam2_glue = null;
+        
+            if(stripos($lamination2_brand_name, 'pet') === 0 || stripos($lamination2_individual_brand_name, 'pet') === 0) {
+                $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense_pet * (($pure_length_lam ?? 0) * $lamination_roller_width / 1000 + $laminator_tuning_length);
+            }
+            else {
+                $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense * (($pure_length_lam ?? 0) * $lamination_roller_width / 1000 + $laminator_tuning_length);
+            }
+            
+            // Стоимость процесса ламинации 2, руб
+            // стоимость работы оборудования + (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования
+            $price_lam2_work = $laminator_price + (($pure_length_lam ?? 0) / 1000 / $laminator_speed) * $laminator_price;
+            
+            // Итого стоимость ламинации, руб
+            // материал1 + материал2 + клей1 + клей2 + процесс1 + процесс2
+            $price_lam_total += ($price_lam2_material ?? 0) + ($price_lam2_glue ?? 0) + ($price_lam2_work ?? 0);
+        }
+        
+        //***************************************************************************
+        
+        // Вес материала готовой продукции чистый
+        // площадь тиража чистая * удельный вес материала + удельный вес ламинации 1 + удельный вес ламинации 2 / 1000
+        $pure_weight_total = ($pure_area ?? 0) * (($c_density ?? 0) + ($c_density_lam1 ?? 0) + ($c_density_lam2 ?? 0)) / 1000;
+        
+        // Вес материала готовой продукции с отходами
+        // площадь тиража с отходами * удельный вес материала + удельный вес ламинации 1 + удельный вес ламинации 2 / 1000
+        $dirty_weight_total = ($dirty_area ?? 0) * (($c_density ?? 0) + ($c_density_lam1 ?? 0) + ($c_density_lam2 ?? 0)) / 1000;
+        
+        //***************************************************************************
+        
+        // Итого себестоимость без форм, руб
+        // m_dbEdit42 = m_pY10 + m_pY3 + m_dbEdit6 + dbEdit7 + CostScothF
+        // стоимость материала печати + стоимость печати + стоимость красок, лака и растворителя + итого себестоимость ламинации + (стоимость скотча для наклейки форм * число красок * площадь печатной формы / 10000)
+        $cost_no_cliche = ($material_price ?? 0) + ($print_price ?? 0) + ($ink_price ?? 0) + ($price_lam_total ?? 0) + (($cliche_scotch ?? 0) * (empty($ink_number) ? 0 : intval($ink_number)) * ($cliche_area ?? 0) / 10000);
+        
+        // Итого себестоимость с формами, руб
+        // итого стоимость без форм + стоимость комплекта печатных форм
+        $cost_with_cliche = ($cost_no_cliche ?? 0) + ($cliche_price ?? 0);
+        
+        // Итого себестоимость за 1 кг без форм, руб
+        // итого себестоимость без форм / j,]`v заказа
+        $cost_no_cliche_kg = null;
+    
+        if($unit == "kg") {
+            if(!empty($quantity)) {
+                $cost_no_cliche_kg = ($cost_no_cliche ?? 0) / $quantity;
+            }
+            else {
+                $error_message = "Отсутствуют данные об объёме заказа";
             }
         }
         else {
-            $error_message = "Отсутствуют или неполные данные о стоимости форм";
+            $cost_no_cliche_kg = 0;
         }
         
-        // Стоимость краски + лака + растворителя, руб
-        if(!empty($dirty_area)) {
-            $ink_price = 0;
-            
-            // Перебираем все используемые краски
-            for($i=1; $i<=8; $i++) {
-                if(!empty($ink_number) && $ink_number >= $i) {
-                    $ink_var = "ink_$i";
-                    $percent_var = "percent_$i";
-                    $cmyk_var = "cmyk_$i";
-                
-                    if(!empty($$ink_var)) {
-                        // Площадь запечатки, м2
-                        // площадь тиража с отходами * процент краски / 100
-                        $ink_area = $dirty_area * $$percent_var / 100;
-                    
-                        // Расход краски, г/м2
-                        $ink_expense_final = 0;
-                    
-                        // Стоимость краски за 1 кг, руб
-                        $ink_price_final = 0;
-                    
-                        // Стоимость растворителя за 1 кг, руб
-                        $solvent_price_final = 0;
-                    
-                        // Процент краски по отношению к растворителю
-                        $ink_solvent_final = 0;
-                    
-                        switch ($$ink_var) {
-                            case CMYK:
-                                switch ($$cmyk_var) {
-                                    case CYAN:
-                                        $ink_expense_final = $ink_c_expense;
-                                        $ink_price_final = $ink_c;
-                                        $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
-                                        $ink_solvent_final = $ink_ink_solvent;
-                                        break;
-                                    case MAGENTA:
-                                        $ink_expense_final = $ink_m_expense;
-                                        $ink_price_final = $ink_m;
-                                        $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
-                                        $ink_solvent_final = $ink_ink_solvent;
-                                        break;
-                                    case YELLOW:
-                                        $ink_expense_final = $ink_y_expense;
-                                        $ink_price_final = $ink_y;
-                                        $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
-                                        $ink_solvent_final = $ink_ink_solvent;
-                                        break;
-                                    case KONTUR:
-                                        $ink_expense_final = $ink_k_expense;
-                                        $ink_price_final = $ink_k;
-                                        $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
-                                        $ink_solvent_final = $ink_ink_solvent;
-                                        break;
-                                };
-                                break;
-                            case PANTON:
-                                $ink_expense_final = $ink_panton_expense;
-                                $ink_price_final = $ink_panton;
-                                $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
-                                $ink_solvent_final = $ink_ink_solvent;
-                                break;
-                            case WHITE:
-                                $ink_expense_final = $ink_white_expense;
-                                $ink_price_final = $ink_white;
-                                $solvent_price_final = $machine_shortnames[$machine_id] == COMIFLEX ? $ink_solvent_flexol82 : $ink_solvent_etoxipropanol;
-                                $ink_solvent_final = $ink_ink_solvent;
-                                break;
-                            case LACQUER:
-                                $ink_expense_final = $ink_lacquer_expense;
-                                $ink_price_final = $ink_lacquer;
-                                $solvent_price_final = $ink_solvent_flexol82;
-                                $ink_solvent_final = $ink_lacquer_solvent;
-                                break;
-                        }
-                
-                        // Количество краски, кг
-                        // площадь запечатки * расход краски / 1000
-                        $ink_quantity = $ink_area * $ink_expense_final / 1000;
-                    
-                        // Стоимость неразведённой краски, руб
-                        // количество краски * стоимость краски за 1 кг
-                        $ink_price_sum = $ink_quantity * $ink_price_final;
-                    
-                        // Проверяем, чтобы стоимость была не меньше минимальной стоимости
-                        // Если меньше, то присваиваем стоимости значение минимальной стоимости
-                        if($ink_price_sum < $ink_min_price) {
-                            $ink_price_sum = $ink_min_price;
-                        }
-                    
-                        // Стоимость растворителя
-                        // количество краски * стоимость растворителя за 1 кг
-                        $solvent_price_sum = $ink_quantity * $solvent_price_final;
-                    
-                        // Стоимость разведённой краски
-                        // (стоимость краски * процент краски / 100) + (стоимость краски * (100 - процент краски) / 100)
-                        $ink_solvent_price_sum = ($ink_price_sum * $ink_solvent_final / 100) + ($solvent_price_sum * (100 - $ink_solvent_final) / 100);
-                    
-                        // Итого стоимость краски + лака + растворителя, руб
-                        $ink_price += $ink_solvent_price_sum;
-                    }
-                }
+        // Итого себестоимость за 1 кг с формами, руб
+        // итого стоимость с формами / объём заказа
+        $cost_with_cliche_kg = null;
+    
+        if($unit == "kg") {
+            if(!empty($quantity)) {
+                $cost_with_cliche_kg = ($cost_with_cliche ?? 0) / $quantity;
+            }
+            else {
+                $error_message = "Отсутствуют данные об объёме заказа";
             }
         }
         else {
-            $error_message = "Отсутствуют данные о площади тиража с отходами";
+            $cost_with_cliche_kg = 0;
         }
-    }
         
-    //***************************************************
-    // СТОИМОСТЬ ЛАМИНАЦИИ
+        // Итого себестоимость за 1 шт без форм, руб
+        // итого себестоимость без форм / объём заказа
+        $cost_no_cliche_pieces = null;
     
-    $price_lam_total = 0; // Итого стоимость ламинации, руб
-        
-    $pure_weight_lam1 = null; // Вес материала ламинации 1 чистый, кг
-    $dirty_weight_lam1 = null; // Вес материала ламинации 1 с отходами, кг
-    $price_lam1_material = null; // Стоимость материала ламинации 1, руб
-    $price_lam1_glue = null; // Стоимость клеевого раствора 1, руб
-    $price_lam1_work = null; // Стоимость процесса ламинации 1, руб
-                    
-    if(!empty($lamination1_brand_name)) {
-        // Вес материала ламинации 1 чистый, кг
-        // площадь тиража чистая * удельный вес ламинации 1 / 1000
-        $pure_weight_lam1 = ($pure_area ?? 0) * ($c_density_lam1 ?? 0) / 1000;
-                        
-        // Вес материала ламинации 1 с отходами, кг
-        // (длина тиража с ламинацией + длина материала для приладки при ламинации) * ширина тиража с отходами (в метрах) * удельный вес ламинации 1 / 1000
-        $dirty_weight_lam1 = (($pure_length_lam ?? 0) + $laminator_tuning_length) * ($dirty_width ?? 0) / 1000 * ($c_density_lam1 ?? 0) / 1000;
-            
-        // Стоимость материала ламинации 1, руб
-        // если материал заказчика, то стоимость равна 0
-        // иначе удельная стоимость материала ламинации * вес материала с отходами
-        if($lamination1_customers_material) {
-            $price_lam1_material = 0;
+        if($unit == "pieces") {
+            if(!empty($quantity)) {
+                $cost_no_cliche_pieces = ($cost_no_cliche ?? 0) / $quantity;
+            }
+            else {
+                $error_message = "Отсутствуют данные об объёме заказа";
+            }
         }
         else {
-            $price_lam1_material = ($c_price_lam1 ?? 0) * ($dirty_weight_lam1 ?? 0);
+            $cost_no_cliche_pieces = 0;
         }
-            
-        // Удельная стоимость клеевого раствора 1, руб
-        // (стоимость клея * доля клея / (доля клея + доля раствора)) + (стоимость растворителя для клея * доля раствора / (доля клея + доля раствора))
-        $glue_solvent_g = ($glue_price * $glue_glue_part / ($glue_glue_part + $glue_solvent_part)) + ($glue_solvent_price * $glue_solvent_part / ($glue_glue_part + $glue_solvent_part));
-            
-        // Стоимость клеевого раствора 1, руб
-        // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
-        // Если марка плёнки начинается на pet
-        // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
-        $price_lam1_glue = null;
-            
-        if(stripos($brand_name, 'pet') === 0 || stripos($lamination1_brand_name, 'pet') === 0 || stripos($individual_brand_name, 'pet') === 0 || stripos($lamination1_individual_brand_name, 'pet') === 0) {
-            $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense_pet * (($pure_length_lam ?? 0) * $lamination_roller_width / 1000 + $laminator_tuning_length);
-        }
-        else {
-            $price_lam1_glue = $glue_solvent_g / 1000 * $glue_expense * (($pure_length_lam ?? 0) * $lamination_roller_width / 1000 + $laminator_tuning_length);
-        }
-            
-        // Стоимость процесса ламинации 1, руб
-        // стоимость работы оборудования + (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования
-        $price_lam1_work = $laminator_price + (($pure_length_lam ?? 0) / 1000 / $laminator_speed) * $laminator_price;
-            
-        // Итого стоимость ламинации 1, руб
-        // материал1 + клей1 + процесс1
-        $price_lam_total += ($price_lam1_material ?? 0) + ($price_lam1_glue ?? 0) + ($price_lam1_work ?? 0);
-    }
         
-    $pure_weight_lam2 = null; // Вес материала ламинации 2 чистый, кг
-    $dirty_weight_lam2 = null; // Вес материала ламинации 2 с отходами 2, кг
-    $price_lam2_material = null; // Стоимость материала ламинации 2, руб
-    $price_lam2_glue = null; // Стоимость клеевого раствора 2, руб
-    $price_lam2_work = null; // Стоимость процесса ламинации 2, руб
-        
-    if(!empty($lamination2_brand_name)) {
-        // Вес материала ламинации 2 чистый, кг
-        // площадь тиража чистая * удельный вес ламинации 1 / 1000
-        $pure_weight_lam2 = ($pure_area ?? 0) * ($c_density_lam2 ?? 0) / 1000;
-                        
-        // Вес материала ламинации 2 с отходами 2, кг
-        // (длина тиража с ламинацией + длина материала для приладки при ламинации) * ширина тиража с отходами (в метрах) * удельный вес ламинации 1 / 1000
-        $dirty_weight_lam2 = (($pure_length_lam ?? 0) + $laminator_tuning_length) * $dirty_width / 1000 * $c_density_lam2 / 1000;
-            
-        // Стоимость материала ламинации 2, руб
-        // удельная стоимость материала ламинации * вес материала с отходами
-        if($lamination2_customers_material) {
-            $price_lam2_material = 0;
-        }
-        else {
-            $price_lam2_material = ($c_price_lam2 ?? 0) * ($dirty_weight_lam2 ?? 0);
-        }
-            
-        // Удельная стоимость клеевого раствора 2, руб
-        // (стоимость клея * соотношение кл/раст / 100) + (стоимость растворителя для клея * (100 - соотношение кл/раст) / 100)
-        $glue_solvent_g = ($glue_price * $glue_glue_part / ($glue_glue_part + $glue_solvent_part)) + ($glue_solvent_price * $glue_solvent_part / ($glue_glue_part + $glue_solvent_part));
-            
-        // Стоимость клеевого раствора 2, руб
-        // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
-        // Если марка плёнки начинается на pet
-        // удельная стоимость клеевого раствора кг/м2 * расход клея кг/м2 * (чистая длина с ламинацией * ширина вала / 1000 + длина материала для приладки при ламинации)
-        $price_lam2_glue = null;
-        
-        if(stripos($lamination2_brand_name, 'pet') === 0 || stripos($lamination2_individual_brand_name, 'pet') === 0) {
-            $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense_pet * (($pure_length_lam ?? 0) * $lamination_roller_width / 1000 + $laminator_tuning_length);
-        }
-        else {
-            $price_lam2_glue = $glue_solvent_g / 1000 * $glue_expense * (($pure_length_lam ?? 0) * $lamination_roller_width / 1000 + $laminator_tuning_length);
-        }
-            
-        // Стоимость процесса ламинации 2, руб
-        // стоимость работы оборудования + (длина чистая с ламинацией / скорость работы оборудования) * стоимость работы оборудования
-        $price_lam2_work = $laminator_price + (($pure_length_lam ?? 0) / 1000 / $laminator_speed) * $laminator_price;
-            
-        // Итого стоимость ламинации, руб
-        // материал1 + материал2 + клей1 + клей2 + процесс1 + процесс2
-        $price_lam_total += ($price_lam2_material ?? 0) + ($price_lam2_glue ?? 0) + ($price_lam2_work ?? 0);
-    }
-        
-    //***************************************************************************
-        
-    // Вес материала готовой продукции чистый
-    // площадь тиража чистая * удельный вес материала + удельный вес ламинации 1 + удельный вес ламинации 2 / 1000
-    $pure_weight_total = ($pure_area ?? 0) * (($c_density ?? 0) + ($c_density_lam1 ?? 0) + ($c_density_lam2 ?? 0)) / 1000;
-        
-    // Вес материала готовой продукции с отходами
-    // площадь тиража с отходами * удельный вес материала + удельный вес ламинации 1 + удельный вес ламинации 2 / 1000
-    $dirty_weight_total = ($dirty_area ?? 0) * (($c_density ?? 0) + ($c_density_lam1 ?? 0) + ($c_density_lam2 ?? 0)) / 1000;
-        
-    //***************************************************************************
-        
-    // Итого себестоимость без форм, руб
-    // m_dbEdit42 = m_pY10 + m_pY3 + m_dbEdit6 + dbEdit7 + CostScothF
-    // стоимость материала печати + стоимость печати + стоимость красок, лака и растворителя + итого себестоимость ламинации + (стоимость скотча для наклейки форм * число красок * площадь печатной формы / 10000)
-    $cost_no_cliche = ($material_price ?? 0) + ($print_price ?? 0) + ($ink_price ?? 0) + ($price_lam_total ?? 0) + (($cliche_scotch ?? 0) * (empty($ink_number) ? 0 : intval($ink_number)) * ($cliche_area ?? 0) / 10000);
-        
-    // Итого себестоимость с формами, руб
-    // итого стоимость без форм + стоимость комплекта печатных форм
-    $cost_with_cliche = ($cost_no_cliche ?? 0) + ($cliche_price ?? 0);
-        
-    // Итого себестоимость за 1 кг без форм, руб
-    // итого себестоимость без форм / j,]`v заказа
-    $cost_no_cliche_kg = null;
+        // Итого себестоимость за 1 шт с формами, руб
+        // итого стоимость с формами / объём заказа
+        $cost_with_cliche_pieces = null;
     
-    if($unit == "kg") {
-        if(!empty($quantity)) {
-            $cost_no_cliche_kg = ($cost_no_cliche ?? 0) / $quantity;
+        if($unit == "pieces") {
+            if(!empty($quantity)) {
+                $cost_with_cliche_pieces = ($cost_with_cliche ?? 0) / $quantity;
+            }
+            else {
+                $error_message = "Отсутствуют данные об объёме заказа";
+            }
         }
         else {
-            $error_message = "Отсутствуют данные об объёме заказа";
+            $cost_with_cliche_pieces = 0;
         }
-    }
-    else {
-        $cost_no_cliche_kg = 0;
-    }
-        
-    // Итого себестоимость за 1 кг с формами, руб
-    // итого стоимость с формами / объём заказа
-    $cost_with_cliche_kg = null;
     
-    if($unit == "kg") {
-        if(!empty($quantity)) {
-            $cost_with_cliche_kg = ($cost_with_cliche ?? 0) / $quantity;
-        }
-        else {
-            $error_message = "Отсутствуют данные об объёме заказа";
-        }
-    }
-    else {
-        $cost_with_cliche_kg = 0;
-    }
-        
-    // Итого себестоимость за 1 шт без форм, руб
-    // итого себестоимость без форм / объём заказа
-    $cost_no_cliche_pieces = null;
+        // Наценка
+        $extracharge = 35;
     
-    if($unit == "pieces") {
-        if(!empty($quantity)) {
-            $cost_no_cliche_pieces = ($cost_no_cliche ?? 0) / $quantity;
-        }
-        else {
-            $error_message = "Отсутствуют данные об объёме заказа";
-        }
-    }
-    else {
-        $cost_no_cliche_pieces = 0;
-    }
-        
-    // Итого себестоимость за 1 шт с формами, руб
-    // итого стоимость с формами / объём заказа
-    $cost_with_cliche_pieces = null;
-    
-    if($unit == "pieces") {
-        if(!empty($quantity)) {
-            $cost_with_cliche_pieces = ($cost_with_cliche ?? 0) / $quantity;
-        }
-        else {
-            $error_message = "Отсутствуют данные об объёме заказа";
-        }
-    }
-    else {
-        $cost_with_cliche_pieces = 0;
-    }
-    
-    // Наценка
-    $extracharge = 35;
-    
-    // Тип наценки:
-    $extracharge_type_id = 0;
+        // Тип наценки:
+        $extracharge_type_id = 0;
                 
-    if($work_type_id == 1) {
-        // 1 - без печати
-        $extracharge_type_id = 1;
-    }
-    elseif(empty ($lamination1_brand_name)) {
-        // 2 - печать без ламинации
-        $extracharge_type_id = 2;
-    }
-    elseif(empty ($lamination2_brand_name)) {
-        // 3 - печать с одной ламинацией
-        $extracharge_type_id = 3;
-    }
-    else {
-        // 4 - печать с двумя ламинациями
-        $extracharge_type_id = 4;
-    }
+        if($work_type_id == 1) {
+            // 1 - без печати
+            $extracharge_type_id = 1;
+        }
+        elseif(empty ($lamination1_brand_name)) {
+            // 2 - печать без ламинации
+            $extracharge_type_id = 2;
+        }
+        elseif(empty ($lamination2_brand_name)) {
+            // 3 - печать с одной ламинацией
+            $extracharge_type_id = 3;
+        }
+        else {
+            // 4 - печать с двумя ламинациями
+            $extracharge_type_id = 4;
+        }
        
-    $sql_ec = "select value from extracharge where ((from_weight <= $pure_weight_total and to_weight >= $pure_weight_total) or (from_weight <= $pure_weight_total and to_weight is null)) and extracharge_type_id = $extracharge_type_id order by id limit 1";
-    $fetcher_ec = new Fetcher($sql_ec);
+        $sql_ec = "select value from extracharge where ((from_weight <= $pure_weight_total and to_weight >= $pure_weight_total) or (from_weight <= $pure_weight_total and to_weight is null)) and extracharge_type_id = $extracharge_type_id order by id limit 1";
+        $fetcher_ec = new Fetcher($sql_ec);
                 
-    if($row_ec = $fetcher_ec->Fetch()) {
-        $extracharge = $row_ec[0];
-    }
+        if($row_ec = $fetcher_ec->Fetch()) {
+            $extracharge = $row_ec[0];
+        }
     
-    // *************************************
-    // Сохранение расчёта в базу
+        // *************************************
+        // Сохранение расчёта в базу
+        if(empty($error_message)) {
+            if($pure_area === null) $pure_area = "NULL";
+            if($pure_width === null) $pure_width = "NULL";
+            if($pure_length === null) $pure_length = "NULL";
+            if($pure_length_lam === null) $pure_length_lam = "NULL";
+            if($dirty_length === null) $dirty_length = "NULL";
+            if($dirty_width === null) $dirty_width = "NULL";
+            if($dirty_area === null) $dirty_area = "NULL";
+            if($pure_weight === null) $pure_weight = "NULL";
+            if($dirty_weight === null) $dirty_weight = "NULL";
+            if($material_price === null) $material_price = "NULL";
+            if($print_time === null) $print_time = "NULL";
+            if($tuning_time === null) $tuning_time = "NULL";
+            if($print_tuning_time === null) $print_tuning_time = "NULL";
+            if($print_price === null) $print_price = "NULL";
+            if($cliche_area === null) $cliche_area = "NULL";
+            if($cliche_flint_price === null) $cliche_flint_price = "NULL";
+            if($cliche_kodak_price === null) $cliche_kodak_price = "NULL";
+            if($cliche_tver_price === null) $cliche_tver_price = "NULL";
+            if($cliche_price === null) $cliche_price = "NULL";
+            if($ink_price === null) $ink_price = "NULL";
+            if($pure_weight_lam1 === null) $pure_weight_lam1 = "NULL";
+            if($dirty_weight_lam1 === null) $dirty_weight_lam1 = "NULL";
+            if($price_lam1_material === null) $price_lam1_material = "NULL";
+            if($price_lam1_glue === null) $price_lam1_glue = "NULL";
+            if($price_lam1_work === null) $price_lam1_work = "NULL";
+            if($pure_weight_lam2 === null) $pure_weight_lam2 = "NULL";
+            if($dirty_weight_lam2 === null) $dirty_weight_lam2 = "NULL";
+            if($price_lam2_material === null) $price_lam2_material = "NULL";
+            if($price_lam2_glue === null) $price_lam2_glue = "NULL";
+            if($price_lam2_work === null) $price_lam2_work = "NULL";
+            if($price_lam_total === null) $price_lam_total = "NULL";
+            if($pure_weight_total === null) $pure_weight_total = "NULL";
+            if($dirty_weight_total === null) $dirty_weight_total = "NULL";
+            if($cost_no_cliche === null) $cost_no_cliche = "NULL";
+            if($cost_with_cliche === null) $cost_with_cliche = "NULL";
+            if($cost_no_cliche_kg === null) $cost_no_cliche_kg = "NULL";
+            if($cost_with_cliche_kg === null) $cost_with_cliche_kg = "NULL";
+            if($cost_no_cliche_pieces === null) $cost_no_cliche_pieces = "NULL";
+            if($cost_with_cliche_pieces === null) $cost_with_cliche_pieces = "NULL";
+            
+            $sql = "insert into request_calc_result (request_calc_id, pure_area, pure_width, pure_length, pure_length_lam, "
+                    . "dirty_length, dirty_width, dirty_area, pure_weight, dirty_weight, material_price, print_time, tuning_time, "
+                    . "print_tuning_time, print_price, cliche_area, cliche_flint_price, cliche_kodak_price, cliche_tver_price, cliche_price, "
+                    . "ink_price, pure_weight_lam1, dirty_weight_lam1, "
+                    . "price_lam1_material, price_lam1_glue, price_lam1_work, pure_weight_lam2, dirty_weight_lam2, price_lam2_material, "
+                    . "price_lam2_glue, price_lam2_work, price_lam_total, pure_weight_total, dirty_weight_total, cost_no_cliche, "
+                    . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_pieces, cost_with_cliche_pieces, extracharge) "
+                    . "values ($id, $pure_area, $pure_width, $pure_length, $pure_length_lam, "
+                    . "$dirty_length, $dirty_width, $dirty_area, $pure_weight, $dirty_weight, $material_price, $print_time, $tuning_time, "
+                    . "$print_tuning_time, $print_price, $cliche_area, $cliche_flint_price, $cliche_kodak_price, $cliche_tver_price, $cliche_price, "
+                    . "$ink_price, $pure_weight_lam1, $dirty_weight_lam1, "
+                    . "$price_lam1_material, $price_lam1_glue, $price_lam1_work, $pure_weight_lam2, $dirty_weight_lam2, $price_lam2_material, "
+                    . "$price_lam2_glue, $price_lam2_work, $price_lam_total, $pure_weight_total, $dirty_weight_total, $cost_no_cliche, "
+                    . "$cost_with_cliche, $cost_no_cliche_kg, $cost_with_cliche_kg, $cost_no_cliche_pieces, $cost_with_cliche_pieces, $extracharge)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
         
         if(empty($error_message)) {
-            // header('Location: '.APPLICATION.'/request_calc/create.php?id='.$insert_id);
+            header('Location: '.APPLICATION.'/request_calc/create.php?id='.$insert_id);
         }
     }
 }
