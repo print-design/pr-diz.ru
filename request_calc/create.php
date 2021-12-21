@@ -346,7 +346,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
             $width = $row['width']; // Ширина
             $quantity = $row['quantity']; // Объём заказа (в рублях или штуках)
             $streams_number = $row['streams_number']; // Количество ручьёв
-            $length = $row['length']; // Длина
+            $label_length = $row['length']; // Длина
             $stream_width = $row['stream_width']; // Ширина ручья
             $raport = $row['raport']; // Рапорт
             $lamination_roller_width = $row['lamination_roller_width']; // Ширина вала ламинации
@@ -886,7 +886,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         if($unit == 'kg' && !empty($quantity) && !empty($c_density)) {
             $pure_area = 1000 * $quantity / ($c_density + (empty($c_density_lam1) ? 0 : $c_density_lam1) + (empty($c_density_lam2) ? 0 : $c_density_lam2));
         }
-        else if($unit == 'pieces' && !empty ($stream_width) && !empty ($label_length) && !empty ($quantity)) {
+        elseif($unit == 'pieces' && !empty ($stream_width) && !empty ($label_length) && !empty ($quantity)) {
             $pure_area = $stream_width / 1000 * $label_length / 1000 * $quantity;
         }
         else {
@@ -915,7 +915,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         
         // Длина тиража чистая с ламинацией, м
         // длина тиража чистая * (процент отходов для ламинатора + 100) / 100;
-        $pure_length_lam = ($pure_length ?? 0) * ($laminator_tuning_waste_percent + 100) / 100; echo "VAL ".$pure_length_lam; exit();
+        $pure_length_lam = ($pure_length ?? 0) * ($laminator_tuning_waste_percent + 100) / 100;
         
         //*****************************************
         // ПРОДОЛЖЕНИЕ СЛЕДУЕТ
