@@ -1965,6 +1965,9 @@ $colorfulnesses = array();
                     }
                 }
                 else {
+                    // Если тип работы "Плёнка без печати", то объём заказа всегда в килограммах
+                    $('#unit_kg').click();
+                    
                     // Показываем поля "только без печати"
                     $('.no-print-only').not('.lam-only').removeClass('d-none');
                     $('input.no-print-only').not('.lam-only').attr('required', 'required');
