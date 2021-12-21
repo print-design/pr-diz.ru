@@ -2005,12 +2005,18 @@ $colorfulnesses = array();
             // Установка видимости полей для ручного ввода при выборе марки плёнки "Другая"
             function SetBrandFieldsVisibility(value, isCustomers, prefix) {
                 if(isCustomers) {
+                    $('#' + prefix + 'price').val('');
+                    $('#' + prefix + 'price').attr('disabled', 'disabled');
+                    $('#' + prefix + 'currency').val('');
+                    $('#' + prefix + 'currency').attr('disabled', 'disabled');
                     $('#' + prefix + 'individual_price').val('');
                     $('#' + prefix + 'individual_price').attr('disabled', 'disabled');
                     $('#' + prefix + 'individual_currency').val('');
                     $('#' + prefix + 'individual_currency').attr('disabled', 'disabled');
                 }
                 else {
+                    $('#' + prefix + 'price').removeAttr('disabled');
+                    $('#' + prefix + 'currency').removeAttr('disabled');
                     $('#' + prefix + 'individual_price').removeAttr('disabled');
                     $('#' + prefix + 'individual_currency').removeAttr('disabled');
                 }
