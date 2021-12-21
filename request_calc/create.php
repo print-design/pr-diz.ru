@@ -1813,7 +1813,8 @@ $colorfulnesses = array();
             
             // Обработка выбора толщины основной плёнки: отображение цены
             $('#thickness').change(function(){
-                $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?brand_name=" + $("#brand_name").val() + "&thickness=" + $(this).val() })
+                if($(this).val() != '') {
+                    $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?brand_name=" + $("#brand_name").val() + "&thickness=" + $(this).val() })
                         .done(function(data) {
                             $('.main_film_info').html(data.text);
                             <?php if(empty($currency)): ?>
@@ -1823,9 +1824,10 @@ $colorfulnesses = array();
                         .fail(function() {
                             alert('Ошибка при выборе толщины пленки');
                         });
+                }
             });
             
-            <?php if(!empty($brand_name) && $brand_name != INDIVIDUAL): ?>
+            <?php if(!empty($brand_name) && $brand_name != INDIVIDUAL && $customers_material != 1): ?>
             $('#thickness').change();
             <?php endif; ?>
             
@@ -1853,7 +1855,8 @@ $colorfulnesses = array();
             
             // Обработка выбора толщины ламинации 1: отображение цены
             $('#lamination1_thickness').change(function(){
-                $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?brand_name=" + $("#lamination1_brand_name").val() + "&thickness=" + $(this).val() })
+                if($(this).val() != '') {
+                    $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?brand_name=" + $("#lamination1_brand_name").val() + "&thickness=" + $(this).val() })
                         .done(function(data) {
                             $('.lam1_film_info').html(data.text);
                             <?php if(empty($lamination1_currency)): ?>
@@ -1863,9 +1866,10 @@ $colorfulnesses = array();
                         .fail(function() {
                             alert('Ошибка при выборе толщины пленки');
                         });
+                }
             });
             
-            <?php if(!empty($lamination1_brand_name) && $lamination1_brand_name != INDIVIDUAL): ?>
+            <?php if(!empty($lamination1_brand_name) && $lamination1_brand_name != INDIVIDUAL && $lamination1_customers_material != 1): ?>
             $('#lamination1_thickness').change();
             <?php endif; ?>
             
@@ -1893,7 +1897,8 @@ $colorfulnesses = array();
             
             // Обработка выбора толщины ламинации 2: отображение цены
             $('#lamination2_thickness').change(function(){
-                $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?brand_name=" + $("#lamination2_brand_name").val() + "&thickness=" + $(this).val() })
+                if($(this).val() != '') {
+                    $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?brand_name=" + $("#lamination2_brand_name").val() + "&thickness=" + $(this).val() })
                         .done(function(data) {
                             $('.lam2_film_info').html(data.text);
                             <?php if(empty($lamination2_currency)): ?>
@@ -1903,9 +1908,10 @@ $colorfulnesses = array();
                         .fail(function() {
                             alert('Ошибка при выборе толщины пленки');
                         });
+                }
             });
             
-            <?php if(!empty($lamination2_brand_name) && $lamination2_brand_name != INDIVIDUAL): ?>
+            <?php if(!empty($lamination2_brand_name) && $lamination2_brand_name != INDIVIDUAL && $lamination2_customers_material != 1): ?>
             $('#lamination2_thickness').change();
             <?php endif; ?>
             
@@ -2019,6 +2025,7 @@ $colorfulnesses = array();
                     $('#' + prefix + 'currency').removeAttr('disabled');
                     $('#' + prefix + 'individual_price').removeAttr('disabled');
                     $('#' + prefix + 'individual_currency').removeAttr('disabled');
+                    $('#' + prefix + 'thickness').change();
                 }
                 
                 if(value == '<?=INDIVIDUAL ?>') {
