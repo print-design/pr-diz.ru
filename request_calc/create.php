@@ -1510,7 +1510,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                     . "price_lam1_material, price_lam1_glue, price_lam1_work, pure_weight_lam2, dirty_weight_lam2, price_lam2_material, "
                     . "price_lam2_glue, price_lam2_work, price_lam_total, pure_weight_total, dirty_weight_total, cost_no_cliche, "
                     . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_pieces, cost_with_cliche_pieces, extracharge) "
-                    . "values ($id, $pure_area, $pure_width, $pure_length, $pure_length_lam, "
+                    . "values ($insert_id, $pure_area, $pure_width, $pure_length, $pure_length_lam, "
                     . "$dirty_length, $dirty_width, $dirty_area, $pure_weight, $dirty_weight, $material_price, $print_time, $tuning_time, "
                     . "$print_tuning_time, $print_price, $cliche_area, $cliche_flint_price, $cliche_kodak_price, $cliche_tver_price, $cliche_price, "
                     . "$ink_price, $pure_weight_lam1, $dirty_weight_lam1, "
