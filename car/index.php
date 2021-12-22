@@ -140,10 +140,10 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
             ?>
             <div class="d-flex justify-content-between">
                 <div class="pr-2 w-100">
-                    <button type="button" class="btn btn-outline-dark w-100" id="btn_scan">Сканировать</button>
+                    <button type="button" class="btn btn-outline-dark w-100" id="btn_scan" disabled="disabled">Сканировать</button>
                 </div>
                 <div class="pl-2 w-100">
-                    <button type="button" class="btn btn-outline-dark w-100" id="btn_stop">Стоп</button>
+                    <button type="button" class="btn btn-outline-dark w-100" id="btn_stop" disabled="disabled">Стоп</button>
                 </div>
             </div>
             <br />
@@ -163,13 +163,26 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
             
             // This method will trigger user permissions
             Html5Qrcode.getCameras().then(devices => {
+                $('#btn_scan').removeAttr('disabled');
+                $('#btn_stop').removeAttr('disabled');
                 /**
                 * devices would be an array of objects of type:
                 * { id: "id", label: "label" }
                 */
                 if (devices && devices.length) {
-                   cameraId = devices[0].id;
-                   // .. use this to start scanning.
+                    for(i=0; i<devices.length; i++) {
+                        if(devices[0].label.indexOf('back') != -1) {
+                            cameraId = devices[i].id;
+                        }
+                    }
+                    
+                    if(cameraId == null && devices.length > 1) {
+                        cameraId = devices[1].id;
+                    }
+                    else if (cameraId == null) {
+                        cameraId = devices[0].id;
+                    }
+                    // .. use this to start scanning.
                 }
             }).catch(err => {
                 // handle err
