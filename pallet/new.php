@@ -353,7 +353,8 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     </div>
                     <?php
                     if(null === filter_input(INPUT_POST, 'create-pallet-submit')) {
-                        $checked = " checked='checked'";
+                        $checked = '';
+                        // $checked = " checked='checked'"; // Отменяем включённый флажок по умолчанию
                     }
                     else {
                         $checked = '';
