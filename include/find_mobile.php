@@ -36,11 +36,7 @@ elseif (IsInRole(array('cutter'))) {
                 <div class="d-flex">
                     <div class="input-group" id="find-group">
                         <input type="text" id="id" name="id" class="form-control no-latin" required="required" value="<?=$find_value ?>" autocomplete="off" />
-                        <?php if(!empty($find_value)): ?>
-                        <div class='input-group-append'>
-                            <button type='button' class='btn' id='find-clear'><i class='fas fa-times'></i></button>
-                        </div>
-                        <?php endif; ?>
+                        <div class='input-group-append'></div>
                     </div>
                     <button type="submit" class="btn btn-sm btn-primary ml-1<?=$find_btn_class ?>" id="find-submit" name="find-submit">Найти</button>
                 </div>
