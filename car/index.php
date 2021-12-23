@@ -129,6 +129,11 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
         <?php
         include '../include/style_mobile.php';
         ?>
+        <style>
+            .detected {
+                border: solid 3px yellow;
+            }
+        </style>
     </head>
     <body>
         <?php
@@ -187,6 +192,7 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
                                 $('#scan_result').val('');
                                 codeReader.decodeOnceFromVideoDevice(selectedDeviceId, 'video')
                                         .then((result) => {
+                                            $('#video').addClass('detected');
                                             $('#scan_result').val(result.text);
                                         })
                                         .catch((err) => {
@@ -195,6 +201,7 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
                             });
                         
                             $('#btn_stop').click(function() {
+                                $('#video').removeClass('detected');
                                 $('#scan_result').val('');
                                 codeReader.reset();
                             });
