@@ -129,11 +129,6 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
         <?php
         include '../include/style_mobile.php';
         ?>
-        <style>
-            .detected {
-                border: solid 3px yellow;
-            }
-        </style>
     </head>
     <body>
         <?php
@@ -143,73 +138,10 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
             <?php
             include '../include/find_mobile.php';
             ?>
-            <div class="d-flex justify-content-between">
-                <div class="pr-2 w-100">
-                    <button type="button" class="btn btn-outline-dark w-100" id="btn_scan" disabled="disabled">Сканировать</button>
-                </div>
-                <div class="pl-2 w-100">
-                    <button type="button" class="btn btn-outline-dark w-100" id="btn_stop" disabled="disabled">Стоп</button>
-                </div>
-            </div>
-            <br />
-            <input type="text" class="form-control" readonly="readonly" id="scan_result" />
-            <br />
-            <div class="w-100">
-                <video id="video" class="w-100"></video>
-            </div>
         </div>
         <?php
         include '../include/footer.php';
         include '../include/footer_mobile.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/zxing-js.umd.min.js"></script>
-        <script>
-            // Create instance of the object. The only argument is the "id" of HTML element created above.
-            const codeReader = new ZXing.BrowserBarcodeReader();
-            let selectedDeviceId = null;
-            
-            // This method will trigger user permissions
-            codeReader.getVideoInputDevices()
-                    .then((videoInputDevices) => {
-                        if (videoInputDevices.length > 0) {
-                            videoInputDevices.forEach((element) => {
-                                if(element.label.indexOf('back') != -1) {
-                                    selectedDeviceId = element.id;
-                                }
-                            });
-
-                            if(selectedDeviceId == null && videoInputDevices.length > 1) {
-                                selectedDeviceId = videoInputDevices[1].id;
-                            }
-                            else if(selectedDeviceId == null) {
-                                selectedDeviceId = videoInputDevices[0].id;
-                            }
-                            
-                            $('#btn_scan').removeAttr('disabled');
-                            $('#btn_stop').removeAttr('disabled');
-                        
-                            $('#btn_scan').click(function() {
-                                $('#scan_result').val('');
-                                codeReader.decodeOnceFromVideoDevice(selectedDeviceId, 'video')
-                                        .then((result) => {
-                                            $('#video').addClass('detected');
-                                            $('#scan_result').val(result.text);
-                                        })
-                                        .catch((err) => {
-                                            console.error(err);
-                                        });                
-                            });
-                        
-                            $('#btn_stop').click(function() {
-                                $('#video').removeClass('detected');
-                                $('#scan_result').val('');
-                                codeReader.reset();
-                            });
-                        }
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                    });
-        </script>
     </body>
 </html>

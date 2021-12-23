@@ -1,4 +1,40 @@
+<script src="<?=APPLICATION ?>/js/zxing-js.umd.min.js"></script>
 <script>
+    // Create instance of the object. The only argument is the "id" of HTML element created above.
+    const codeReader = new ZXing.BrowserBarcodeReader();
+    let selectedDeviceId = null;
+            
+    $(document).ready(function() {
+        // This method will trigger user permissions
+        codeReader.getVideoInputDevices()
+                .then((videoInputDevices) => {
+                    if (videoInputDevices.length > 0) {
+                        videoInputDevices.forEach((element) => {
+                            if(element.label.indexOf('back') != -1) {
+                                selectedDeviceId = element.id;
+                            }
+                        });
+
+                        if(selectedDeviceId == null && videoInputDevices.length > 1) {
+                            selectedDeviceId = videoInputDevices[1].id;
+                        }
+                        else if(selectedDeviceId == null) {
+                            selectedDeviceId = videoInputDevices[0].id;
+                        }
+                        
+                        $('#close_video').click(function() {
+                            $('#video').removeClass('detected');
+                            codeReader.reset();
+                        });
+                    }
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+                    
+        SetFindClearVisibility($('input#id'));
+    });
+    
     $('input#id').focusin(function (){
         $('#find-submit').removeClass('d-none');
     });
@@ -13,11 +49,20 @@
     
     function AddFindCameraListener() {
         $('button#find-camera').click(function() {
-            alert('MOTOR');
+            $('#codeReaderWrapper').modal('show');
+            
+            codeReader.decodeOnceFromVideoDevice(selectedDeviceId, 'video')
+                    .then((result) => {
+                        $('input#id').val(result.text);
+                        $('input#id').change();
+                        codeReader.reset();
+                        $('#codeReaderWrapper').modal('hide');
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    });
         });
     }
-    
-    SetFindClearVisibility($('input#id'));
 
     function SetFindClearVisibility(obj) {
         if(obj.val() == '' && obj.parent().children('.input-group-append').children('#find-camera').length == 0) {

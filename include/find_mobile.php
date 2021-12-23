@@ -45,6 +45,19 @@ elseif (IsInRole(array('cutter'))) {
         </form>
     </div>
 </div>
+<div id="codeReaderWrapper" class="modal fade show">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Штрих-код / QR-код
+                <button type="button" class="close" data-dismiss="modal" id="close_video"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <video id="video" class="w-100"></video>
+            </div>
+        </div>
+    </div>
+</div>
 <?php
 if(!empty($error_message)) {
     echo "<div class='alert alert-danger'>$error_message</div>";

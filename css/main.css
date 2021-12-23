@@ -589,3 +589,8 @@ textarea#editable {
 .switch input:checked[type="checkbox"]:before {
     left: 30px;
 }
+
+/* Распознавание штрих-кода */
+.detected {
+    border: solid 4px yellow;
+}
