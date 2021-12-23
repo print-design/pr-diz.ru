@@ -190,7 +190,7 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
                                             $('#scan_result').val(result.text);
                                         })
                                         .catch((err) => {
-                                            $('#scan_result').val(err);
+                                            console.error(err);
                                         });                
                             });
                         
