@@ -11,10 +11,10 @@ if(empty($id)) {
 }
 
 // Получение данных
-$sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, s.name supplier, p.id_from_supplier, "
+$sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, s.name supplier, "
         . "p.film_brand_id, fb.name film_brand, p.width, p.thickness, p.cell, "
         . "(select name from roll_status where id = ifnull(prsh.status_id, $free_status_id)) status, "
-        . "p.comment, pr.id pallet_roll_id, pr.pallet_id pallet_roll_pallet_id, pr.weight pallet_roll_weight, pr.length pallet_roll_length, pr.ordinal pallet_roll_ordinal "
+        . "p.comment, pr.id pallet_roll_id, pr.pallet_id pallet_roll_pallet_id, pr.weight pallet_roll_weight, pr.length pallet_roll_length, pr.ordinal pallet_roll_ordinal, pr.id_from_supplier "
         . "from pallet p "
         . "inner join pallet_roll pr on pr.pallet_id = p.id "
         . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
@@ -29,7 +29,6 @@ $storekeeper_id = $row['storekeeper_id'];
 $storekeeper = $row['last_name'].' '.$row['first_name'];
 $supplier_id = $row['supplier_id'];
 $supplier = $row['supplier'];
-$id_from_supplier = $row['id_from_supplier'];
 $film_brand_id = $row['film_brand_id'];
 $film_brand = $row['film_brand'];
 $width = $row['width'];
@@ -42,6 +41,7 @@ $weight = $row['pallet_roll_weight'];
 $pallet_id = $row['pallet_roll_pallet_id'];
 $length = $row['pallet_roll_length'];
 $ordinal = $row['pallet_roll_ordinal'];
+$id_from_supplier = $row['id_from_supplier'];
 
 // Определяем удельный вес
 $ud_ves = null;

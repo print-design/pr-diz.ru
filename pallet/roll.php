@@ -93,8 +93,8 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
 }
 
 // Получение данных
-$sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, DATE_FORMAT(p.date, '%H:%i') time, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.id_from_supplier, p.film_brand_id, p.width, p.thickness, pr.length, "
-        . "pr.weight, pr.pallet_id, pr.ordinal, p.cell, "
+$sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, DATE_FORMAT(p.date, '%H:%i') time, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.film_brand_id, p.width, p.thickness, pr.length, "
+        . "pr.weight, pr.pallet_id, pr.ordinal, pr.id_from_supplier, p.cell, "
         . "prsh.status_id status_id, DATE_FORMAT(prsh.date, '%d.%m.%Y') status_date, DATE_FORMAT(prsh.date, '%H.%i') status_time, "
         . "p.comment "
         . "from pallet p "
@@ -111,9 +111,6 @@ $storekeeper = $row['last_name'].' '.$row['first_name'];
 
 $supplier_id = filter_input(INPUT_POST, 'supplier_id');
 if(null === $supplier_id) $supplier_id = $row['supplier_id'];
-
-$id_from_supplier = filter_input(INPUT_POST, 'id_from_supplier');
-if(null === $id_from_supplier) $id_from_supplier = $row['id_from_supplier'];
 
 $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
 if(null === $film_brand_id) $film_brand_id = $row['film_brand_id'];
@@ -135,6 +132,9 @@ if(null === $pallet_id) $pallet_id = $row['pallet_id'];
 
 $ordinal = filter_input(INPUT_POST, 'ordinal');
 if(null === $ordinal) $ordinal = $row['ordinal'];
+
+$id_from_supplier = filter_input(INPUT_POST, 'id_from_supplier');
+if(null === $id_from_supplier) $id_from_supplier = $row['id_from_supplier'];
 
 $cell = filter_input(INPUT_POST, 'cell');
 if(null === $cell) $cell = $row['cell'];

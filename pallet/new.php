@@ -112,12 +112,20 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
     $rolls_valid_data = array();
     $roll_number = 1;
     $rolls_weight = 0;
-    while (filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") !== null) {
+    while (filter_input(INPUT_POST, "id_from_supplier_roll$roll_number") !== null && filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") !== null) {
         $roll_valid_data = array();
+        $roll_id_from_supplier_valid_data['id_from_supplier_valid'] = '';
+        $roll_id_from_supplier_valid_data['id_from_supplier_message'] = 'ID от поставщика обязательно';
         $roll_valid_data['length_valid'] = '';
         $roll_valid_data['length_message'] = 'Длина обязательно';
         $roll_valid_data['weight_valid'] = '';
         $roll_valid_data['weight_message'] = 'Масса нетто обязательно';
+        
+        $roll_id_from_supplier = filter_input(INPUT_POST, "id_from_supplier_roll$roll_number");
+        if(empty($roll_id_from_supplier)) {
+            $roll_id_from_supplier_valid_data['id_from_supplier_valid'] = ISINVALID;
+            $roll_valid_data = false;
+        }
         
         $roll_length = filter_input(INPUT_POST, "length_roll$roll_number");
         if(empty($roll_length)) {
@@ -184,11 +192,12 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
             // Заполнение роликов этого паллета
             $roll_number = 1;
             
-            while (filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") !== null && filter_input(INPUT_POST, "ordinal_roll$roll_number") != null) {
+            while (filter_input(INPUT_POST, "id_from_supplier_roll$roll_number") !== null && filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") !== null && filter_input(INPUT_POST, "ordinal_roll$roll_number") != null) {
+                $id_from_supplier = addslashes(filter_input(INPUT_POST, "id_from_supplier_roll$roll_number"));
                 $weight = filter_input(INPUT_POST, "weight_roll$roll_number");
                 $length = filter_input(INPUT_POST, "length_roll$roll_number");
                 $ordinal = filter_input(INPUT_POST, "ordinal_roll$roll_number");
-                $sql = "insert into pallet_roll (pallet_id, weight, length, ordinal) values ($pallet_id, $weight, $length, $ordinal)";
+                $sql = "insert into pallet_roll (pallet_id, weight, length, ordinal, id_from_supplier) values ($pallet_id, $weight, $length, $ordinal, '$id_from_supplier')";
                 $executer = new Executer($sql);
                 $error_message = $executer->error;
                 $roll_number++;
@@ -380,6 +389,13 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         ?>
                         <div class='mt-1'><?=$roll_number ?> рулон</div>
                         <input type='hidden' id='ordinal_roll<?=$roll_number ?>' name='ordinal_roll<?=$roll_number ?>' value='<?=$roll_number ?>' />
+                        <div class="row">
+                            <div class="col-12 form-group">
+                                <label for="id_from_supplier_roll<?=$roll_number ?>">ID от поставщика</label>
+                                <input type="text" id="id_from_supplier_roll<?=$roll_number ?>" name="id_from_supplier_roll<?=$roll_number ?>" class="form-control int-only<?=$rolls_valid_data[$roll_number]['id_from_supplier_valid'] ?>" placeholder="ID от поставщика" value="<?= filter_input(INPUT_POST, "id_from_supplier_roll$roll_number") ?>" required="required" autocomplete="off" />
+                                <div class="invalid-feedback"><?=$roll_valid_data[$roll_number]['id_from_supplier_message'] ?></div>
+                            </div>
+                        </div>
                         <div class='row'>
                             <div class='col-6 form-group'>
                                 <label for='weight_roll<?=$roll_number ?>'>Масса нетто, кг</label>
