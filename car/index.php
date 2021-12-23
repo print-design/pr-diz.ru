@@ -149,80 +149,60 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
             <br />
             <input type="text" class="form-control" readonly="readonly" id="scan_result" />
             <br />
-            <div id="reader"></div>
+            <div class="w-100">
+                <video id="video" class="w-100"></video>
+            </div>
         </div>
         <?php
         include '../include/footer.php';
         include '../include/footer_mobile.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/html5-qrcode.min.js"></script>
+        <script src="<?=APPLICATION ?>/js/zxing-js.umd.min.js"></script>
         <script>
             // Create instance of the object. The only argument is the "id" of HTML element created above.
-            const html5QrCode = new Html5Qrcode("reader");
-            var cameraId = null;
+            const codeReader = new ZXing.BrowserBarcodeReader();
+            let selectedDeviceId = null;
             
             // This method will trigger user permissions
-            Html5Qrcode.getCameras().then(devices => {
-                $('#btn_scan').removeAttr('disabled');
-                $('#btn_stop').removeAttr('disabled');
-                /**
-                * devices would be an array of objects of type:
-                * { id: "id", label: "label" }
-                */
-                if (devices && devices.length) {
-                    for(i=0; i<devices.length; i++) {
-                        if(devices[0].label.indexOf('back') != -1) {
-                            cameraId = devices[i].id;
+            codeReader.getVideoInputDevices()
+                    .then((videoInputDevices) => {
+                        if (videoInputDevices.length > 0) {
+                            videoInputDevices.forEach((element) => {
+                                if(element.label.indexOf('back') != -1) {
+                                    selectedDeviceId = element.id;
+                                }
+                            });
+
+                            if(selectedDeviceId == null && videoInputDevices.length > 1) {
+                                selectedDeviceId = videoInputDevices[1].id;
+                            }
+                            else if(selectedDeviceId == null) {
+                                selectedDeviceId = videoInputDevices[0].id;
+                            }
+                            
+                            $('#btn_scan').removeAttr('disabled');
+                            $('#btn_stop').removeAttr('disabled');
+                        
+                            $('#btn_scan').click(function() {
+                                $('#scan_result').val('');
+                                codeReader.decodeOnceFromVideoDevice(selectedDeviceId, 'video')
+                                        .then((result) => {
+                                            $('#scan_result').val(result.text);
+                                        })
+                                        .catch((err) => {
+                                            $('#scan_result').val(err);
+                                        });                
+                            });
+                        
+                            $('#btn_stop').click(function() {
+                                $('#scan_result').val('');
+                                codeReader.reset();
+                            });
                         }
-                    }
-                    
-                    if(cameraId == null && devices.length > 1) {
-                        cameraId = devices[1].id;
-                    }
-                    else if (cameraId == null) {
-                        cameraId = devices[0].id;
-                    }
-                    // .. use this to start scanning.
-                }
-            }).catch(err => {
-                // handle err
-            });
-            
-            $('#btn_scan').click(function() {
-                $('#scan_result').val('');
-                
-                html5QrCode.start(
-                        cameraId,     // retreived in the previous step.
-                        {
-                            fps: 10,    // sets the framerate to 10 frame per second
-                            qrbox: 250  // sets only 250 X 250 region of viewfinder to scannable, rest shaded.
-                        },
-                        qrCodeMessage => {
-                            // do something when code is read. For example:
-                            // console.log(`QR Code detected: ${qrCodeMessage}`);
-                            $('#scan_result').val(qrCodeMessage);
-                        },
-                        errorMessage => {
-                            // parse error, ideally ignore it. For example:
-                            // console.log(`QR Code no longer in front of camera.`);
-                        })
-                        .catch(err => {
-                            // Start failed, handle it. For example,
-                            console.log(`Unable to start scanning, error: ${err}`);
-                        });
-            });
-            
-            $('#btn_stop').click(function() {
-                $('#scan_result').val('');
-                
-                html5QrCode.stop().then(ignore => {
-                    // QR Code scanning is stopped.
-                    console.log("QR Code scanning stopped.");
-                }).catch(err => {
-                    // Stop failed, handle it.
-                    console.log("Unable to stop scanning.");
-                });
-            });
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    });
         </script>
     </body>
 </html>
