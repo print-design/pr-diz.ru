@@ -114,8 +114,8 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
     $rolls_weight = 0;
     while (filter_input(INPUT_POST, "id_from_supplier_roll$roll_number") !== null && filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") !== null) {
         $roll_valid_data = array();
-        $roll_id_from_supplier_valid_data['id_from_supplier_valid'] = '';
-        $roll_id_from_supplier_valid_data['id_from_supplier_message'] = 'ID от поставщика обязательно';
+        $roll_valid_data['id_from_supplier_valid'] = '';
+        $roll_valid_data['id_from_supplier_message'] = 'ID от поставщика обязательно';
         $roll_valid_data['length_valid'] = '';
         $roll_valid_data['length_message'] = 'Длина обязательно';
         $roll_valid_data['weight_valid'] = '';
@@ -123,8 +123,8 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         
         $roll_id_from_supplier = filter_input(INPUT_POST, "id_from_supplier_roll$roll_number");
         if(empty($roll_id_from_supplier)) {
-            $roll_id_from_supplier_valid_data['id_from_supplier_valid'] = ISINVALID;
-            $roll_valid_data = false;
+            $roll_valid_data['id_from_supplier_valid'] = ISINVALID;
+            $form_valid = false;
         }
         
         $roll_length = filter_input(INPUT_POST, "length_roll$roll_number");
@@ -392,7 +392,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         <div class="row">
                             <div class="col-12 form-group">
                                 <label for="id_from_supplier_roll<?=$roll_number ?>">ID от поставщика</label>
-                                <input type="text" id="id_from_supplier_roll<?=$roll_number ?>" name="id_from_supplier_roll<?=$roll_number ?>" class="form-control int-only<?=$rolls_valid_data[$roll_number]['id_from_supplier_valid'] ?>" placeholder="ID от поставщика" value="<?= filter_input(INPUT_POST, "id_from_supplier_roll$roll_number") ?>" required="required" autocomplete="off" />
+                                <input type="text" id="id_from_supplier_roll<?=$roll_number ?>" name="id_from_supplier_roll<?=$roll_number ?>" class="form-control<?=$rolls_valid_data[$roll_number]['id_from_supplier_valid'] ?>" placeholder="ID от поставщика" value="<?= filter_input(INPUT_POST, "id_from_supplier_roll$roll_number") ?>" required="required" autocomplete="off" />
                                 <div class="invalid-feedback"><?=$roll_valid_data[$roll_number]['id_from_supplier_message'] ?></div>
                             </div>
                         </div>
@@ -517,6 +517,12 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     for(var i=1; i<=num_val; i++) {
                         var form_row = "<div class='mt-1'>" + i + " рулон</div>";
                         form_row += "<input type='hidden' id='ordinal_roll" + i + "' name='ordinal_roll" + i + "' value='" + i + "' />";
+                        form_row += "<div class='row'>";
+                        form_row += "<div class='col-12 form-group'>";
+                        form_row += "<label for='id_from_supplier_roll" + i + "'>ID от поставщика</label>";
+                        form_row += "<input type='text' id='id_from_supplier_roll" + i + "' name='id_from_supplier_roll" + i + "' class='form-control' placeholder='ID от поставщика' required='required' autocomplete='off' />";
+                        form_row += "</div>";
+                        form_row += "</div>";
                         form_row += "<div class='row'>";
                         form_row += "<div class='col-6 form-group'>";
                         form_row += "<label for='weight_roll" + i + "'>Масса нетто, кг</label>";
