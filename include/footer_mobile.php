@@ -23,8 +23,11 @@
                         }
                         
                         $('#close_video').click(function() {
-                            $('#video').removeClass('detected');
                             codeReader.reset();
+                        });
+                        
+                        $('#video').on("play", function() {
+                            $('#waiting2').addClass('d-none');
                         });
                     }
                 })
@@ -37,6 +40,10 @@
     
     $('input#id').focusin(function (){
         $('#find-submit').removeClass('d-none');
+    });
+    
+    $('#codeReaderWrapper').on('hidden.bs.modal', function() {
+        $('#waiting2').removeClass('d-none');
     });
     
     function AddFindClearListener() {
@@ -56,7 +63,7 @@
                         $('input#id').val(result.text);
                         $('input#id').change();
                         codeReader.reset();
-                        $('#codeReaderWrapper').modal('hide');
+                        $('#close_video').click();
                     })
                     .catch((err) => {
                         console.error(err);
