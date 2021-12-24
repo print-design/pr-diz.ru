@@ -200,7 +200,7 @@ $current_date_time = date("dmYHis");
         </div>
         
         <?php
-        $sql = "select pr.id pallet_roll_id, pr.weight, pr.length, pr.ordinal, ifnull(prsh.status_id, $free_status_id) status_id, "
+        $sql = "select pr.id pallet_roll_id, pr.weight, pr.length, pr.ordinal, pr.id_from_supplier pr_id_from_supplier, ifnull(prsh.status_id, $free_status_id) status_id, "
                 . "(select name from roll_status where id = ifnull(prsh.status_id, $free_status_id)) status "
                 . "from pallet_roll pr left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
                 . "where pr.pallet_id = ". filter_input(INPUT_GET, 'id')." and (prsh.status_id is null or prsh.status_id = $free_status_id)";
@@ -212,6 +212,7 @@ $current_date_time = date("dmYHis");
         $weight = $pallet_roll['weight'];
         $length = $pallet_roll['length'];
         $ordinal = $pallet_roll['ordinal'];
+        $pr_id_from_supplier = $pallet_roll['pr_id_from_supplier'];
         $status_id = $pallet_roll['status_id'];
         $status = $pallet_roll['status'];
         
@@ -289,7 +290,7 @@ $current_date_time = date("dmYHis");
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-nowrap pb-5">ID от поставщика<br /><span class="text-nowrap font-weight-bold"><?=$id_from_supplier ?></span></td>
+                        <td class="text-nowrap pb-5">ID от поставщика<br /><span class="text-nowrap font-weight-bold"><?=$pr_id_from_supplier ?></span></td>
                         <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></span></td>
                     </tr>
                     <tr>
