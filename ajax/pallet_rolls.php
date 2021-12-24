@@ -26,13 +26,13 @@ if(!empty($pallet_id)) {
     }
 
     // Получение объекта
-    $sql = "select 0 utilized,  p.width, p.thickness, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, IFNULL(prsh.status_id, $free_status_id) status_id "
+    $sql = "select 0 utilized,  p.width, p.thickness, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, pr.id_from_supplier, IFNULL(prsh.status_id, $free_status_id) status_id "
             . "from pallet_roll pr "
             . "inner join pallet p on pr.pallet_id = p.id "
             . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
             . "where pr.pallet_id = $pallet_id and (prsh.status_id is null or prsh.status_id = $free_status_id) "
             . "union "
-            . "select 1 utilized,  p.width, p.thickness, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, IFNULL(prsh.status_id, $free_status_id) status_id "
+            . "select 1 utilized,  p.width, p.thickness, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, pr.id_from_supplier, IFNULL(prsh.status_id, $free_status_id) status_id "
             . "from pallet_roll pr "
             . "inner join pallet p on pr.pallet_id = p.id "
             . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
@@ -71,27 +71,31 @@ if(!empty($pallet_id)) {
     <tbody>
     <tr>
         <td style="text-align: right; padding-bottom: 10px; width: 20%;"><input type="checkbox" /></td>
-        <td style="padding-bottom: 10px; width: 40%;">Рулон <?=$row['ordinal'] ?></td>
+        <td style="padding-bottom: 10px; width: 30%;">Рулон <?=$row['ordinal'] ?></td>
         <td style="padding-bottom: 10px; width: 17%;"><a href="roll.php<?=$previous_params_string ?>id=<?=$row['id'] ?>"><i class="fas fa-ellipsis-h"></i></a></td>
-        <td></td>
+        <td style="padding-bottom: 10px;"></td>
     </tr>
     <tr>
         <td style="padding-bottom: 10px;">Ширина</td>
         <td style="padding-bottom: 10px;"><?=$row['width'] ?> мм</td>
         <td style="padding-bottom: 10px;">Толщина</td>
-        <td><?=$row['thickness'] ?> мкм</td>
+        <td style="padding-bottom: 10px;"><?=$row['thickness'] ?> мкм</td>
     </tr>
     <tr>
         <td style="padding-bottom: 10px;">Масса</td>
         <td style="padding-bottom: 10px;"><?=$row['weight'] ?> кг</td>
         <td style="padding-bottom: 10px;">Длина</td>
-        <td><?=$row['length'] ?> м</td>
+        <td style="padding-bottom: 10px;"><?=$row['length'] ?> м</td>
     </tr>
     <tr>
         <td style="padding-bottom: 10px;">ID</td>
         <td style="padding-bottom: 10px;"><?="П".$row['pallet_id']."Р".$row['ordinal'] ?></td>
         <td style="padding-bottom: 10px;">Статус</td>
-        <td style="font-size: 10px;<?=$colour_style ?>"><?=mb_strtoupper($status) ?></td>
+        <td style="padding-bottom: 10px; font-size: 10px;<?=$colour_style ?>"><?=mb_strtoupper($status) ?></td>
+    </tr>
+    <tr>
+        <td style="padding-bottom: 10px;">ID от поставщ.</td>
+        <td colspan="3" style="padding-bottom: 10px;"><?=$row['id_from_supplier'] ?></td>
     </tr>
     <tr>
         <td style="padding-bottom: 10px; padding-right: 10px;">Комментарий</td>
