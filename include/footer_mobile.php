@@ -34,9 +34,46 @@
     });
     
     $(document).on("decode", function(e) {
-        $('input#id').val(e.detail.value);
-        $('input#id').change();
-        $('#close_video').click();
+        if(e.detail.type == 'ZBAR_QRCODE') {
+            substrings = e.detail.value.split("?id=");
+            
+            if(substrings.length != 2 && isNaN(substrings[1])) {
+                $('input#id').val("Неправильный код");
+                $('input#id').change();
+                $('#close_video').click();
+            }
+            else if(e.detail.value.includes('pallet/pallet.php?id=')) {
+                $('input#id').val("П" + substrings[1]);
+                $('input#id').change();
+                $('#close_video').click();
+            }
+            else if(e.detail.value.includes('roll/roll.php?id=')) {
+                $('input#id').val("Р" + substrings[1]);
+                $('input#id').change();
+                $('#close_video').click();
+            }
+            else if(e.detail.value.includes('pallet/roll.php?id=')) {
+                $.ajax({ url: "../ajax/roll_id_to_number.php?id=" + substrings[1] })
+                    .done(function(data) {
+                        $('input#id').val(data);
+                        $('input#id').change();
+                        $('#close_video').click();
+                    })
+                    .fail(function() {
+                        alert('Ошибка при определении номера ролика');
+                    });
+            }
+            else {
+                $('input#id').val("Неправильный код");
+                $('input#id').change();
+                $('#close_video').click();
+            }
+        }
+        else {
+            $('input#id').val(e.detail.value);
+            $('input#id').change();
+            $('#close_video').click();
+        }
     });
     
     $(document).on("play", function() {
