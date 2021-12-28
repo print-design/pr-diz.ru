@@ -49,7 +49,7 @@ elseif (IsInRole(array('cutter'))) {
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                Штрих-код
+                Штрих-код / QR-код
                 <button type="button" class="close" data-dismiss="modal" id="close_video"><i class="fas fa-times"></i></button>
             </div>
             <div class="modal-body">
