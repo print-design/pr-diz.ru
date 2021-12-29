@@ -312,6 +312,22 @@ if($row = $fetcher->Fetch()) {
         </div>
         <div id="topmost"></div>
         <div class="container-fluid">
+            <div id="codeReaderWrapper" class="modal fade show">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            ID от поставщика
+                            <button type="button" class="close" data-dismiss="modal" id="close_video"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="waiting2" style="position: absolute; top: 20px; left: 20px;">
+                                <img src="<?=APPLICATION ?>/images/waiting2.gif" />
+                            </div>
+                            <video id="video" class="w-100"></video>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <h1>Нарезка <?=$cut_id ?> / <?=$date ?></h1>
             <p class="mb-3 mt-3" style="font-size: large;">Введите ID исходных ролей</p>
             <form method="post" id="sources_form">
@@ -343,7 +359,7 @@ if($row = $fetcher->Fetch()) {
                     <label for="source_<?=$i ?>">ID <?=$i ?>-го исходного роля</label>
                     <div class="input-group find-group" id="source_<?=$i ?>_group">
                         <input type="text" class="form-control<?=$$source_valid ?>" id="source_<?=$i ?>" name="source_<?=$i ?>" value="<?= filter_input(INPUT_POST, "source_$i") ?>" autocomplete="off"<?=$$source_required ?> />
-                        <div class='input-group-append'><button type='button' class='btn' id='find_camera_<?=$i ?>'><i class='fas fa-camera'></i></button></div>
+                        <div class='input-group-append'><button type='button' class='btn find-btn' id='find_camera_<?=$i ?>'><i class='fas fa-camera'></i></button></div>
                     </div>
                     <div class="invalid-feedback invalid-source" id="invalid-source-<?=$i ?>"><?=$$source_message ?></div>
                 </div>
@@ -377,6 +393,77 @@ if($row = $fetcher->Fetch()) {
                     }
                 }
             }
+            
+            source_input_id = '';
+     
+            $(document).ready(function() {
+                // Открываем форму чтения штрих коду по нажатию кнопки с камерой
+                $('button.find-btn').click(function() {
+                    source_input_id = $(this).parent('.input-group-append').prev('input').attr('id');
+                    $('#codeReaderWrapper').modal('show');
+                });
+                
+                // При показе формы посылаем сигнал "Сканируй"
+                $('#codeReaderWrapper').on('shown.bs.modal', function() {
+                    document.dispatchEvent(new Event('scan'));
+                });
+                
+                // При скрытии формы делаем видимыми песочные часы (чтобы при следующем открытии они были видны)
+                $('#codeReaderWrapper').on('hidden.bs.modal', function() {
+                    $('#waiting2').removeClass('d-none');
+                });
+            });
+            
+            $(document).on("play", function() {
+                // При появлении картинки делаем невидимыми песочные часы
+                $('#waiting2').addClass('d-none');
+        
+                // При закрытии формы посылаем сигнал "Останови поток видео"
+                $('#close_video').click(function() {
+                    document.dispatchEvent(new Event('stop'));
+                });
+            });
+            
+            $(document).on("decode", function(e) {
+                if(e.detail.type == 'ZBAR_QRCODE') {
+                    substrings = e.detail.value.split("?id=");
+                    
+                    if(substrings.length != 2 && isNaN(substrings[1])) {
+                        $('input#' + source_input_id).val("Неправильный код");
+                        $('#close_video').click();
+                    }
+                    else if(e.detail.value.includes('pallet/pallet.php?id=')) {
+                        $('input#' + source_input_id).val("П" + substrings[1]);
+                        $('#close_video').click();
+                    }
+                    else if(e.detail.value.includes('roll/roll.php?id=')) {
+                        $('input#' + source_input_id).val("Р" + substrings[1]);
+                        $('#close_video').click();
+                    }
+                    else if(e.detail.value.includes('pallet/roll.php?id=')) {
+                        $.ajax({ url: "../ajax/roll_id_to_number.php?id=" + substrings[1] })
+                                .done(function(data) {
+                                    $('input#' + source_input_id).val(data);
+                            $('#close_video').click();
+                        })
+                                .fail(function() {
+                                    $('input#' + source_input_id).val("Ошибка");
+                            $('#close_video').click();
+                        });
+                    }
+                    else {
+                        $('input#' + source_input_id).val("Неправильный код");
+                        $('#close_video').click();
+                    }
+                }
+                else {
+                    $('input#' + source_input_id).val(e.detail.value);
+                    $('#close_video').click();
+                }
+            });
         </script>
+        <script>!function(e){function r(r){for(var n,l,f=r[0],i=r[1],a=r[2],p=0,s=[];p<f.length;p++)l=f[p],Object.prototype.hasOwnProperty.call(o,l)&&o[l]&&s.push(o[l][0]),o[l]=0;for(n in i)Object.prototype.hasOwnProperty.call(i,n)&&(e[n]=i[n]);for(c&&c(r);s.length;)s.shift()();return u.push.apply(u,a||[]),t()}function t(){for(var e,r=0;r<u.length;r++){for(var t=u[r],n=!0,f=1;f<t.length;f++){var i=t[f];0!==o[i]&&(n=!1)}n&&(u.splice(r--,1),e=l(l.s=t[0]))}return e}var n={},o={1:0},u=[];function l(r){if(n[r])return n[r].exports;var t=n[r]={i:r,l:!1,exports:{}};return e[r].call(t.exports,t,t.exports,l),t.l=!0,t.exports}l.m=e,l.c=n,l.d=function(e,r,t){l.o(e,r)||Object.defineProperty(e,r,{enumerable:!0,get:t})},l.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},l.t=function(e,r){if(1&r&&(e=l(e)),8&r)return e;if(4&r&&"object"==typeof e&&e&&e.__esModule)return e;var t=Object.create(null);if(l.r(t),Object.defineProperty(t,"default",{enumerable:!0,value:e}),2&r&&"string"!=typeof e)for(var n in e)l.d(t,n,function(r){return e[r]}.bind(null,n));return t},l.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return l.d(r,"a",r),r},l.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},l.p="<?=APPLICATION ?>/zbar/";var f=this.webpackJsonpsrc=this.webpackJsonpsrc||[],i=f.push.bind(f);f.push=r,f=f.slice();for(var a=0;a<f.length;a++)r(f[a]);var c=i;t()}([])</script>
+        <script src="<?=APPLICATION ?>/zbar/js/2.8358c4d7.chunk.js"></script>
+        <script src="<?=APPLICATION ?>/zbar/js/main.73d75875.chunk.js"></script>
     </body>
 </html>
