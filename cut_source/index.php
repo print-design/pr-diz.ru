@@ -42,34 +42,34 @@ $cut_status_id = 3;
 
 // Фильтр для данных
 $wherefindpallet = "prsh.status_id = $cut_status_id";
-                    
+
 $wherefindroll = "rsh.status_id = $cut_status_id";
-                    
+
 $film_brand_name = filter_input(INPUT_GET, 'film_brand_name');
 if(!empty($film_brand_name)) {
     $film_brand_name = addslashes($film_brand_name);
     $wherefindpallet .= " and fb.name = '$film_brand_name'";
     $wherefindroll .= " and fb.name = '$film_brand_name'";
 }
-                    
+
 $thickness = filter_input(INPUT_GET, 'thickness');
 if(!empty($thickness)) {
     $wherefindpallet .= " and p.thickness = ".$thickness;
     $wherefindroll .= " and r.thickness = ".$thickness;
 }
-                    
+
 $width_from = filter_input(INPUT_GET, 'width_from');
 if(!empty($width_from)) {
     $wherefindpallet .= " and p.width >= $width_from";
     $wherefindroll .= " and r.width >= $width_from";
 }
-                    
+
 $width_to = filter_input(INPUT_GET, 'width_to');
 if(!empty($width_to)) {
     $wherefindpallet .= " and p.width <= $width_to";
     $wherefindroll .= " and r.width <= $width_to";
 }
-                    
+
 $find = filter_input(INPUT_GET, 'find');
 $findtrim = $find;
 if(mb_strlen($find) > 1) {
@@ -78,21 +78,21 @@ if(mb_strlen($find) > 1) {
 $findpallet = '';
 $findroll = '';
 $findtrimsubstrings = mb_split("\D", $findtrim);
-                    
+
 if(count($findtrimsubstrings) == 2 && mb_strlen($findtrimsubstrings[0]) > 0 && mb_strlen($findtrimsubstrings[1]) > 0) {
     $findpallet = $findtrimsubstrings[0];
     $findroll = $findtrimsubstrings[1];
 }
-                    
+
 if(!empty($find)) {
-    $wherefindpallet .= " and (p.id='$find' or p.id='$findtrim' or p.cell='$find' or p.comment like '%$find%' or (p.id='$findpallet' and pr.ordinal='$findroll'))";
-    $wherefindroll .= " and (r.id='$find' or r.id='$findtrim' or r.cell='$find' or r.comment like '%$find%')";
+    $wherefindpallet .= " and (p.id='$find' or p.id='$findtrim' or p.id_from_supplier='$find' or p.cell='$find' or p.comment like '%$find%' or (p.id='$findpallet' and pr.ordinal='$findroll'))";
+    $wherefindroll .= " and (r.id='$find' or r.id='$findtrim' or r.id_from_supplier='$find' or r.cell='$find' or r.comment like '%$find%')";
 }
-                    
+
 if(!empty($wherefindpallet)) {
     $wherefindpallet = "where $wherefindpallet";
 }
-                    
+
 if(!empty($wherefindroll)) {
     $wherefindroll = "where $wherefindroll";
 }
