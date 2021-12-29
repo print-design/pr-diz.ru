@@ -359,9 +359,9 @@ if($row = $fetcher->Fetch()) {
                     <label for="source_<?=$i ?>">ID <?=$i ?>-го исходного роля</label>
                     <div class="input-group find-group" id="source_<?=$i ?>_group">
                         <input type="text" class="form-control<?=$$source_valid ?>" id="source_<?=$i ?>" name="source_<?=$i ?>" value="<?= filter_input(INPUT_POST, "source_$i") ?>" autocomplete="off"<?=$$source_required ?> />
+                        <div class="invalid-feedback invalid-source order-last" id="invalid-source-<?=$i ?>"><?=$$source_message ?></div>
                         <div class='input-group-append'><button type='button' class='btn find-btn' id='find_camera_<?=$i ?>'><i class='fas fa-camera'></i></button></div>
                     </div>
-                    <div class="invalid-feedback invalid-source" id="invalid-source-<?=$i ?>"><?=$$source_message ?></div>
                 </div>
                     <?php endfor; ?>
                 <div class="form-group">
