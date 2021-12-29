@@ -52,7 +52,7 @@ if(mb_strlen($find) > 1) {
     $findtrim = mb_substr($find, 1);
 }
 if(!empty($find)) {
-    $where .= " and (r.id='$find' or r.id='$findtrim' or r.cell='$find' or r.comment like '%$find%')";
+    $where .= " and (r.id='$find' or r.id='$findtrim' or r.id_from_supplier='$find' or r.cell='$find' or r.comment like '%$find%')";
 }
     
 // Получение общей массы рулонов
