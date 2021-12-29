@@ -34,7 +34,7 @@ elseif (IsInRole(array('cutter'))) {
             <div class="form-group">
                 <label for="id">Введите ID</label>
                 <div class="d-flex">
-                    <div class="input-group" id="find-group">
+                    <div class="input-group find-group">
                         <input type="text" id="id" name="id" class="form-control" required="required" value="<?=$find_value ?>" autocomplete="off" />
                         <div class='input-group-append'></div>
                     </div>

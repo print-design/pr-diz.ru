@@ -341,7 +341,10 @@ if($row = $fetcher->Fetch()) {
                     ?>
                 <div class="form-group source_group<?=$$source_d_none ?>" id="source_<?=$i ?>_group">
                     <label for="source_<?=$i ?>">ID <?=$i ?>-го исходного роля</label>
-                    <input type="text" class="form-control no-latin<?=$$source_valid ?>" id="source_<?=$i ?>" name="source_<?=$i ?>" value="<?= filter_input(INPUT_POST, "source_$i") ?>" autocomplete="off"<?=$$source_required ?> />
+                    <div class="input-group find-group" id="source_<?=$i ?>_group">
+                        <input type="text" class="form-control<?=$$source_valid ?>" id="source_<?=$i ?>" name="source_<?=$i ?>" value="<?= filter_input(INPUT_POST, "source_$i") ?>" autocomplete="off"<?=$$source_required ?> />
+                        <div class='input-group-append'><button type='button' class='btn' id='find_camera_<?=$i ?>'><i class='fas fa-camera'></i></button></div>
+                    </div>
                     <div class="invalid-feedback invalid-source" id="invalid-source-<?=$i ?>"><?=$$source_message ?></div>
                 </div>
                     <?php endfor; ?>
