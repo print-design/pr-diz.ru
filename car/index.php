@@ -98,16 +98,33 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
     }
     else {
         // Ищем среди паллетов и рулонов
-        $sql = "select (select count(p.id) "
+        $sql = "select "
+            . "(select count(p.id) "
             . "from pallet p "
             . "where p.id='$id' "
+            . "and p.id in (select pr1.pallet_id from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id "
+            . "and (prsh1.status_id is null or prsh1.status_id = ".FREE_ROLL_STATUS_ID."))) "
+            . "+ "
+            . "(select count(p.id) "
+            . "from pallet p "
+            . "where p.id_from_supplier='$id' "
             . "and p.id in (select pr1.pallet_id from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id "
             . "and (prsh1.status_id is null or prsh1.status_id = ".FREE_ROLL_STATUS_ID."))) "
             . "+ "
             . "(select count(r.id) "
             . "from roll r "
             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-            . "where r.id='$id' and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID."))";
+            . "where r.id='$id' and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID.")) "
+            . "+ "
+            ."(select count(r.id) "
+            . "from roll r "
+            . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+            . "where r.id_from_supplier='$id' and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID.")) "
+            . "+ "
+            . "(select count(pr.id) "
+            . "from pallet_roll pr "
+            . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+            . "where pr.id_from_supplier='$id' and (prsh.status_id is null or prsh.status_id = ".FREE_ROLL_STATUS_ID."))";
         $fetcher = new Fetcher($sql);
         $row = $fetcher->Fetch();
         if($row[0] != 0) {

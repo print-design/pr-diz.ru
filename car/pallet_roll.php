@@ -32,7 +32,7 @@ $free_status_id = 1;
         ?>
         <div class="container-fluid">
             <?php
-            $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, pr.weight, pr.length, p.cell, p.comment, "
+            $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, fb.name film_brand, pr.id_from_supplier, p.width, p.thickness, pr.weight, pr.length, p.cell, p.comment, "
                     . "p.id pallet_id, pr.ordinal "
                     . "from pallet_roll pr "
                     . "inner join pallet p on pr.pallet_id = p.id "
