@@ -399,7 +399,7 @@ if($row = $fetcher->Fetch()) {
             $(document).ready(function() {
                 // Открываем форму чтения штрих коду по нажатию кнопки с камерой
                 $('button.find-btn').click(function() {
-                    source_input_id = $(this).parent('.input-group-append').prev('input').attr('id');
+                    source_input_id = $(this).parent('.input-group-append').prev().prev('input').attr('id');
                     $('#codeReaderWrapper').modal('show');
                 });
                 
@@ -430,34 +430,41 @@ if($row = $fetcher->Fetch()) {
                     
                     if(substrings.length != 2 && isNaN(substrings[1])) {
                         $('input#' + source_input_id).val("Неправильный код");
+                        $('input#' + source_input_id).removeClass('is-invalid')
                         $('#close_video').click();
                     }
                     else if(e.detail.value.includes('pallet/pallet.php?id=')) {
                         $('input#' + source_input_id).val("П" + substrings[1]);
+                        $('input#' + source_input_id).removeClass('is-invalid')
                         $('#close_video').click();
                     }
                     else if(e.detail.value.includes('roll/roll.php?id=')) {
                         $('input#' + source_input_id).val("Р" + substrings[1]);
+                        $('input#' + source_input_id).removeClass('is-invalid')
                         $('#close_video').click();
                     }
                     else if(e.detail.value.includes('pallet/roll.php?id=')) {
                         $.ajax({ url: "../ajax/roll_id_to_number.php?id=" + substrings[1] })
                                 .done(function(data) {
                                     $('input#' + source_input_id).val(data);
-                            $('#close_video').click();
-                        })
+                                    $('input#' + source_input_id).removeClass('is-invalid')
+                                    $('#close_video').click();
+                                })
                                 .fail(function() {
                                     $('input#' + source_input_id).val("Ошибка");
-                            $('#close_video').click();
-                        });
+                                    $('input#' + source_input_id).removeClass('is-invalid')
+                                    $('#close_video').click();
+                                });
                     }
                     else {
                         $('input#' + source_input_id).val("Неправильный код");
+                        $('input#' + source_input_id).removeClass('is-invalid')
                         $('#close_video').click();
                     }
                 }
                 else {
                     $('input#' + source_input_id).val(e.detail.value);
+                    $('input#' + source_input_id).removeClass('is-invalid')
                     $('#close_video').click();
                 }
             });
