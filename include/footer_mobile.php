@@ -1,4 +1,3 @@
-
 <script>
     function AddFindClearListener() {
         $('button#find-clear').click(function() {
@@ -60,7 +59,9 @@
                         $('#close_video').click();
                     })
                     .fail(function() {
-                        alert('Ошибка при определении номера ролика');
+                        $('input#id').val("Ошибка");
+                        $('input#id').change();
+                        $('#close_video').click();
                     });
             }
             else {
