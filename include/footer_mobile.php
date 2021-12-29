@@ -44,11 +44,13 @@
             else if(e.detail.value.includes('pallet/pallet.php?id=')) {
                 $('input#id').val("П" + substrings[1]);
                 $('input#id').change();
+                $('input#id').focusin();
                 $('#close_video').click();
             }
             else if(e.detail.value.includes('roll/roll.php?id=')) {
                 $('input#id').val("Р" + substrings[1]);
                 $('input#id').change();
+                $('input#id').focusin();
                 $('#close_video').click();
             }
             else if(e.detail.value.includes('pallet/roll.php?id=')) {
@@ -56,6 +58,7 @@
                     .done(function(data) {
                         $('input#id').val(data);
                         $('input#id').change();
+                        $('input#id').focusin();
                         $('#close_video').click();
                     })
                     .fail(function() {
@@ -73,6 +76,7 @@
         else {
             $('input#id').val(e.detail.value);
             $('input#id').change();
+            $('input#id').focusin();
             $('#close_video').click();
         }
     });
