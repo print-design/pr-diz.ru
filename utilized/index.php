@@ -88,7 +88,7 @@ if(count($findtrimsubstrings) == 2 && mb_strlen($findtrimsubstrings[0]) > 0 && m
 }
 
 if(!empty($find)) {
-    $wherefindpallet .= " and (p.id='$find' or p.id='$findtrim' or p.id_from_supplier='$find' or p.cell='$find' or p.comment like '%$find%' or (p.id='$findpallet' and pr.ordinal='$findroll'))";
+    $wherefindpallet .= " and (p.id='$find' or p.id='$findtrim' or pr.id_from_supplier='$find' or p.cell='$find' or p.comment like '%$find%' or (p.id='$findpallet' and pr.ordinal='$findroll'))";
     $wherefindroll .= " and (r.id='$find' or r.id='$findtrim' or r.id_from_supplier='$find' or r.cell='$find' or r.comment like '%$find%')";
 }
 
@@ -222,7 +222,7 @@ foreach ($roll_statuses as $status) {
                     
                     $sql = "select 'pallet_roll' type, pr.id id, pr.pallet_id pallet_id, pr.ordinal ordinal, prsh.date timestamp, DATE_FORMAT(prsh.date, '%d.%m.%Y') date, fb.name film_brand, "
                             . "p.width width, p.thickness thickness, p.cell cell, pr.weight net_weight, pr.length length, "
-                            . "s.name supplier, p.id_from_supplier id_from_supplier, "
+                            . "s.name supplier, pr.id_from_supplier id_from_supplier, "
                             . "prsh.status_id status_id, p.comment comment, "
                             . "(select weight from film_brand_variation where film_brand_id=fb.id and thickness=p.thickness limit 1) density "
                             . "from pallet_roll pr "

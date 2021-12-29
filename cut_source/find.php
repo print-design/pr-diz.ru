@@ -23,7 +23,7 @@ if(filter_input(INPUT_GET, "find") != '') {
         <div class="position-absolute px-2 align-text-bottom <?=$string_class ?>" style="top: 3px; left: 5px; bottom: 3px; background-color: gray; color: white; border-radius: 4px; padding-top: .4rem;">
         <?= filter_input(INPUT_GET, "find") ?>
             &nbsp;&nbsp;
-            <a href="<?=APPLICATION.'/utilized/' ?>"><i class="fas fa-times" style="color: white;"></i></a>
+            <a href="<?=APPLICATION.'/cut_source/' ?>"><i class="fas fa-times" style="color: white;"></i></a>
         </div>
     </div>
 </form>
