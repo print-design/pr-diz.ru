@@ -48,7 +48,7 @@ if(mb_strlen($find) > 1) {
     $findtrim = mb_substr($find, 1);
 }
 if(!empty($find)) {
-    $where .= " and (p.id='$find' or p.id='$findtrim' or p.cell='$find' or p.comment like '%$find%')";
+    $where .= " and (p.id='$find' or p.id='$findtrim' or p.id_from_supplier='$find' or p.id in (select pallet_id from pallet_roll where id_from_supplier='$find') or p.cell='$find' or p.comment like '%$find%')";
 }
 
 // Получение общей массы паллетов
