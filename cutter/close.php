@@ -394,9 +394,15 @@ if($row = $fetcher->Fetch()) {
                 <div class="form-group source_group<?=$$source_d_none ?>" id="source_<?=$i ?>_group">
                     <label for="source_<?=$i ?>">ID <?=$i ?>-го исходного роля</label>
                     <div class="input-group find-group" id="source_<?=$i ?>_group">
-                        <input type="text" class="form-control<?=$$source_valid ?>" id="source_<?=$i ?>" name="source_<?=$i ?>" value="<?= filter_input(INPUT_POST, "source_$i") ?>" autocomplete="off"<?=$$source_required ?> />
+                        <input type="text" class="form-control source_control<?=$$source_valid ?>" id="source_<?=$i ?>" name="source_<?=$i ?>" value="<?= filter_input(INPUT_POST, "source_$i") ?>" autocomplete="off"<?=$$source_required ?> />
                         <div class="invalid-feedback invalid-source order-last" id="invalid-source-<?=$i ?>"><?=$$source_message ?></div>
-                        <div class='input-group-append'><button type='button' class='btn find-btn' id='find_camera_<?=$i ?>'><i class='fas fa-camera'></i></button></div>
+                        <div class='input-group-append'>
+                            <?php if(empty(filter_input(INPUT_POST, "source_$i"))): ?>
+                            <button type='button' class='btn find-btn'><i class='fas fa-camera'></i></button>
+                            <?php else: ?>
+                            <button type="button" class="btn clear-btn"><i class="fas fa-times"></i></button>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
                     <?php endfor; ?>
@@ -431,13 +437,48 @@ if($row = $fetcher->Fetch()) {
             }
             
             source_input_id = '';
-     
-            $(document).ready(function() {
-                // Открываем форму чтения штрих коду по нажатию кнопки с камерой
+            
+            // Очищаем поле по нажатию крестика
+            function AddFindClearListener() {
+                $('button.clear-btn').click(function() {
+                    source_input_id = $(this).parent('.input-group-append').prev().prev('input').attr('id');
+                    $("input#" + source_input_id).val('');
+                    $("input#" + source_input_id).change();
+                    $("input#" + source_input_id).focus();
+                });
+            }
+    
+            // Открываем форму чтения штрих коду по нажатию кнопки с камерой
+            function AddFindCameraListener() {
                 $('button.find-btn').click(function() {
                     source_input_id = $(this).parent('.input-group-append').prev().prev('input').attr('id');
                     $('#codeReaderWrapper').modal('show');
                 });
+            }
+            
+            function SetFindClearVisibility(obj) {
+                obj.removeClass('is-invalid');
+                
+                if(obj.val() == '' && obj.parent().children('.input-group-append').children('.find-btn').length == 0) {
+                    obj.parent().children('.input-group-append').html('');
+                    var btn = $("<button type='button' class='btn find-btn'><i class='fas fa-camera'></i></button>");
+                    obj.parent().children('.input-group-append').append(btn);
+                    AddFindCameraListener();
+                }
+                else if(obj.val() != '' && obj.parent().children('.input-group-append').children('.clear-btn').length == 0) {
+                    obj.parent().children('.input-group-append').html('');
+                    var btn = $("<button type='button' class='btn clear-btn'><i class='fas fa-times'></i></button>");
+                    obj.parent().children('.input-group-append').append(btn);
+                    AddFindClearListener();
+                }
+            }
+     
+            $(document).ready(function() {
+                // Открываем форму чтения штрих коду по нажатию кнопки с камерой
+                AddFindCameraListener();
+                
+                // Очищаем поле по нажатию крестика
+                AddFindClearListener();
                 
                 // При показе формы посылаем сигнал "Сканируй"
                 $('#codeReaderWrapper').on('shown.bs.modal', function() {
@@ -448,6 +489,19 @@ if($row = $fetcher->Fetch()) {
                 $('#codeReaderWrapper').on('hidden.bs.modal', function() {
                     $('#waiting2').removeClass('d-none');
                 });
+                
+                // При вводе текста, отображаем крестик "стереть". Если поле пустое, отображаем кнопку с камерой.
+                $('input.source_control').keyup(function(e) {
+                    SetFindClearVisibility($(e.target));
+                });
+    
+                $('input.source_control').keypress(function(e) {
+                    SetFindClearVisibility($(e.target));
+                });
+    
+                $('input.source_control').change(function(e) {
+                    SetFindClearVisibility($(e.target));
+                });    
             });
             
             $(document).on("play", function() {
@@ -466,41 +520,41 @@ if($row = $fetcher->Fetch()) {
                     
                     if(substrings.length != 2 && isNaN(substrings[1])) {
                         $('input#' + source_input_id).val("Неправильный код");
-                        $('input#' + source_input_id).removeClass('is-invalid');
+                        $('input#' + source_input_id).change();
                         $('#close_video').click();
                     }
                     else if(e.detail.value.includes('pallet/pallet.php?id=')) {
                         $('input#' + source_input_id).val("П" + substrings[1]);
-                        $('input#' + source_input_id).removeClass('is-invalid');
+                        $('input#' + source_input_id).change();
                         $('#close_video').click();
                     }
                     else if(e.detail.value.includes('roll/roll.php?id=')) {
                         $('input#' + source_input_id).val("Р" + substrings[1]);
-                        $('input#' + source_input_id).removeClass('is-invalid');
+                        $('input#' + source_input_id).change();
                         $('#close_video').click();
                     }
                     else if(e.detail.value.includes('pallet/roll.php?id=')) {
                         $.ajax({ url: "../ajax/roll_id_to_number.php?id=" + substrings[1] })
                                 .done(function(data) {
                                     $('input#' + source_input_id).val(data);
-                                    $('input#' + source_input_id).removeClass('is-invalid');
+                                    $('input#' + source_input_id).change();
                                     $('#close_video').click();
                                 })
                                 .fail(function() {
                                     $('input#' + source_input_id).val("Ошибка");
-                                    $('input#' + source_input_id).removeClass('is-invalid');
+                                    $('input#' + source_input_id).change();
                                     $('#close_video').click();
                                 });
                     }
                     else {
                         $('input#' + source_input_id).val("Неправильный код");
-                        $('input#' + source_input_id).removeClass('is-invalid');
+                        $('input#' + source_input_id).change();
                         $('#close_video').click();
                     }
                 }
                 else {
                     $('input#' + source_input_id).val(e.detail.value);
-                    $('input#' + source_input_id).removeClass('is-invalid');
+                    $('input#' + source_input_id).change();
                     $('#close_video').click();
                 }
             });
