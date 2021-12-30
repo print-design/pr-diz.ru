@@ -251,7 +251,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
         for($i=1; $i<=19; $i++) {
             $source = filter_input(INPUT_POST, 'source_'.$i);
         
-            if(!empty($source)) {
+            if($i <= $sources_count && !empty($source)) {
                 if(in_array($source, $existing_rolls)) {
                     $source_message = 'source_'.$i.'_message';
                     $$source_message = "Ролик введён два раза";
