@@ -76,7 +76,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
             for($i=1; $i<=19; $i++) {
                 $source = filter_input(INPUT_POST, 'source_'.$i);
     
-                if(!empty($source)) {
+                if($i <= $sources_count && !empty($source)) {
                     $message = "";
         
                     // Проверяем, чтобы номер рулона соответствовал реальному рулону и имел такие же параметры
