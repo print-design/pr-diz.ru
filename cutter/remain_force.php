@@ -22,64 +22,71 @@ $form_valid = true;
 $error_message = '';
 
 $radius_valid = '';
+$radius_message = "Число, макс. 999";
 
 if(null !== filter_input(INPUT_POST, 'close-submit')) {
     $radius = filter_input(INPUT_POST, 'radius');
     if(filter_input(INPUT_POST, 'remains') && (empty($radius) || intval($radius) > 999)) {
         $radius_valid = ISINVALID;
+        $radius_message = "Число, макс. 999";
+        $form_valid = false;
+    }
+    
+    // Проверяем, чтобы длина соответствовала радиусу
+    $length = floatval(filter_input(INPUT_POST, 'length'));
+    $length_min = $length - ($length * 15.0 / 100.0);
+    $length_max = $length + ($length * 15.0 / 100.0);
+    
+    $sum_diff = floatval(filter_input(INPUT_POST, 'sum_diff'));
+    if($sum_diff < $length_min || $sum_diff > $length_max) {
+        $radius_valid = ISINVALID;
+        $radius_message = "Длина оставшегося ролика не соответствует радиусу";
         $form_valid = false;
     }
     
     if($form_valid) {
-        if(filter_input(INPUT_POST, 'remains') != 'on') {
-            // Переходим к странице "заявка закрыта, молодец."
-            header("Location: finish.php");
-        }
-        else {
-            // Создаём остаточный ролик
-            $supplier_id = filter_input(INPUT_POST, 'supplier_id');
-            $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
-            $thickness = filter_input(INPUT_POST, 'thickness');
-            $width = filter_input(INPUT_POST, 'width');
-            $net_weight = filter_input(INPUT_POST, 'net_weight');
-            $length = filter_input(INPUT_POST, 'length');
-            $spool = filter_input(INPUT_POST, 'spool');
-            $id_from_supplier = "Из раскроя";
-            $cell = "Цех";
-            $comment = "";
+        // Создаём остаточный ролик
+        $supplier_id = filter_input(INPUT_POST, 'supplier_id');
+        $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
+        $thickness = filter_input(INPUT_POST, 'thickness');
+        $width = filter_input(INPUT_POST, 'width');
+        $net_weight = filter_input(INPUT_POST, 'net_weight');
+        $spool = filter_input(INPUT_POST, 'spool');
+        $id_from_supplier = "Из раскроя";
+        $cell = "Цех";
+        $comment = "";
             
-            $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id) "
-                    . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$user_id')";
+        $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id) "
+                . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$user_id')";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+        $roll_id = $executer->insert_id;
+        
+        // Устанавливаем этому ролику статус "Свободный"
+        if(empty($error_message)) {
+            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, $free_status_id, $user_id)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
-            $roll_id = $executer->insert_id;
+        }
             
-            // Устанавливаем этому ролику статус "Свободный"
-            if(empty($error_message)) {
-                $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, $free_status_id, $user_id)";
-                $executer = new Executer($sql);
-                $error_message = $executer->error;
-            }
+        // Получаем ID последней закрытой нарезки данного пользователя
+        $cut_id = null;
+        $sql = "select id from cut where cutter_id = $user_id and id in (select cut_id from cut_source) order by id desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $cut_id = $row[0];
+        }
             
-            // Получаем ID последней закрытой нарезки данного пользователя
-            $cut_id = null;
-            $sql = "select id from cut where cutter_id = $user_id and id in (select cut_id from cut_source) order by id desc limit 1";
-            $fetcher = new Fetcher($sql);
-            if($row = $fetcher->Fetch()) {
-                $cut_id = $row[0];
-            }
+        // Добавляем остаточный ролик к последней закрытой нарезке данного пользователя
+        if(empty($error_message)) {
+            $sql = "update cut set remain = $roll_id where id = $cut_id";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
             
-            // Добавляем остаточный ролик к последней закрытой нарезке данного пользователя
-            if(empty($error_message)) {
-                $sql = "update cut set remain = $roll_id where id = $cut_id";
-                $executer = new Executer($sql);
-                $error_message = $executer->error;
-            }
-            
-            if(empty($error_message)) {
-                // Переходим к странице "печать остаточного ролика."
-                header("Location: print_remain.php");
-            }
+        if(empty($error_message)) {
+            // Переходим к странице "печать остаточного ролика."
+            header("Location: print_remain.php");
         }
     }
 }
@@ -129,6 +136,51 @@ if($row = $fetcher->Fetch()) {
         <div id="topmost"></div>
         <div class="container-fluid">
             <h1>Закрытие заявки</h1>
+            <p class="font-weight-bold mt-2" style="font-size: large;">Исходные ролики</p>
+            <?php
+            $sum_source = 0;
+            $i_source = 0;
+            $sql = "select concat('П', r.id) nomer, r.length "
+                    . "from cut_source cs "
+                    . "inner join roll r on cs.roll_id = r.id "
+                    . "where cs.cut_id = $cut_id "
+                    . "and cs.is_from_pallet = 0 "
+                    . "union "
+                    . "select concat('П', pr.pallet_id, 'Р', pr.ordinal) nomer, pr.length "
+                    . "from cut_source cs "
+                    . "inner join pallet_roll pr on cs.roll_id = pr.id "
+                    . "where cs.cut_id = $cut_id "
+                    . "and cs.is_from_pallet = 1";
+            $fetcher = new Fetcher($sql);
+            while ($row = $fetcher->Fetch()) {
+                ?>
+            <p><?=(++$i_source).'. '.$row['nomer'].' &ndash; '.$row['length'].' м.' ?></p>
+                <?php
+                $sum_source += intval($row['length']);
+            }
+            ?>
+            <p class="font-weight-bold">Всего: <?=$sum_source ?> м.</p>
+            <p class="font-weight-bold mt-2" style="font-size: large;">Длины намоток</p>
+            <?php
+            $sum_wind = 0;
+            $i_wind = 0;
+            $sql = "select length from cut_wind where cut_id = $cut_id";
+            $fetcher = new Fetcher($sql);
+            while ($row = $fetcher->Fetch()) {
+                ?>
+            <p><?=(++$i_wind).'. '.$row['length'].' м.' ?></p>
+                <?php
+                $sum_wind += intval($row['length']);
+            }
+            ?>
+            <p class="font-weight-bold">Всего: <?=$sum_wind ?> м.</p>
+            <?php
+            $sum_diff = intval($sum_source) - intval($sum_wind);
+            
+            if($sum_diff > 300):
+            ?>
+            <hr />
+            <p class="font-weight-bold mt-2" style="font-size: large;">Остался исходный ролик <?=$sum_diff ?> м.</p>
             <form method="post">
                 <input type="hidden" id="supplier_id" name="supplier_id" value="<?=$supplier_id ?>" />
                 <input type="hidden" id="film_brand_id" name="film_brand_id" value="<?=$film_brand_id ?>" />
@@ -136,27 +188,13 @@ if($row = $fetcher->Fetch()) {
                 <input type="hidden" id="width" name="width" value="<?=$width ?>" />
                 <input type="hidden" id="net_weight" name="net_weight" />
                 <input type="hidden" id="length" name="length" />
-                <?php
-                $remains_checked = " checked='checked'";
-                $remainder_group_none = "";
-                $radius_required = " required='required'";
-                
-                if(null !== filter_input(INPUT_POST, 'close-submit') && filter_input(INPUT_POST, 'remains') != 'on') {
-                    $remains_checked = "";
-                    $remainder_group_none = " d-none";
-                    $radius_required = "";
-                }
-                ?>
-                <div class="form-group">
-                    <input type="checkbox" id="remains" name="remains"<?=$remains_checked ?> />
-                    <label class="form-check-label" for="remains">Остался исходный ролик</label>
-                </div>
-                <div class="form-group remainder-group<?=$remainder_group_none ?>">
+                <input type="hidden" id="sum_diff" name="sum_diff" value="<?=$sum_diff ?>" />
+                <div class="form-group remainder-group">
                     <label for="radius">Введите радиус от вала исходного роля</label>
                     <div class="input-group">
-                        <input type="text" class="form-control int-only<?=$radius_valid ?>" data-max="999" id="radius" name="radius" value="<?= filter_input(INPUT_POST, 'radius') ?>" autocomplete="off"<?=$radius_required ?> />
+                        <input type="text" class="form-control int-only<?=$radius_valid ?>" data-max="999" id="radius" name="radius" value="<?= filter_input(INPUT_POST, 'radius') ?>" autocomplete="off" required='required' />
                         <div class="input-group-append"><span class="input-group-text">мм</span></div>
-                        <div class="invalid-feedback">Число, макс. 999</div>
+                        <div class="invalid-feedback"><?=$radius_message ?></div>
                     </div>
                 </div>
                 <div class="form-group remainder-group<?=$remainder_group_none ?>">
@@ -192,23 +230,18 @@ if($row = $fetcher->Fetch()) {
                     <button type="submit" class="btn btn-dark form-control" style="height: 5rem;" id="close-submit" name="close-submit">Распечатать исходный роль<br /> и закрыть заявку</button>
                 </div>
             </form>
+            <?php
+            else:
+            ?>
+            <a type="submit" href="finish.php" class="btn btn-dark form-control">Закрыть заявку</a>
+            <?php
+            endif;
+            ?>
         </div>
         <?php
         include '_footer.php';
         ?>
         <script>
-            // Скрытие/показ элементов формы в зависимости от того, остался ли исходный ролик
-            $('#remains').change(function() {
-                if($(this).is(':checked')) {
-                    $('.remainder-group').removeClass('d-none');
-                    $('input#radius').attr('required', 'required');
-                }
-                else {
-                    $('.remainder-group').addClass('d-none');
-                    $('input#radius').removeAttr('required');
-                }
-            });
-    
             // Все марки плёнки с их вариациями
             var films = new Map();
             
