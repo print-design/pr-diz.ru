@@ -159,7 +159,43 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
                         }
                     }
                     else {
-                        $message = "Нет ролика с таким номером";
+                        // Если нет букв ни "П", ни "Р", то ищем по ID от поставщика
+                        $sql = "select 0 is_from_pallet, r.id roll_id, fb.name film_brand, r.thickness, r.width, r.length, rsh.status_id "
+                                . "from roll r "
+                                . "inner join film_brand fb on r.film_brand_id = fb.id "
+                                . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+                                . "where r.id_from_supplier = '$source' " // проверку статусов временно отключаем // and (rsh.status_id is null or rsh.status_id = $free_status_id) "
+                                . "union "
+                                . "select 1 is_from_pallet, pr.id roll_id, fb.name film_brand, p.thickness, p.width, pr.length, prsh.status_id "
+                                . "from pallet p "
+                                . "inner join pallet_roll pr on pr.pallet_id = p.id "
+                                . "inner join film_brand fb on p.film_brand_id = fb.id "
+                                . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+                                . "where pr.id_from_supplier = '$source'"; // проверку статусов временно отключаем // and (prsh.status_id is null or prsh.status_id = $free_status_id)";
+                        $fetcher = new Fetcher($sql);
+                        $error_message = $fetcher->error;
+                        
+                        if($row = $fetcher->Fetch()) {
+                            if($row['film_brand'] == $film_brand && $row['thickness'] == $thickness && $row['width'] == $width) {
+                                // Валидацию по ширине временно отключаем
+                                // if($row['film_brand'] == $film_brand && $row['thickness'] == $thickness) {
+                                $cut_source = array();
+                                $cut_source['cut_id'] = $cut_id;
+                                $cut_source['is_from_pallet'] = $row['is_from_pallet'];
+                                $cut_source['roll_id'] = $row['roll_id'];
+                                $cut_source['length'] = $row['length'];
+                                $cut_source['status_id'] = $row['status_id'];
+                                array_push($cut_sources, $cut_source);
+                            }
+                            else {
+                                $message = "Марка/толщина/ширина не совпадают";
+                                // Валидацию по ширине временно отключаем
+                                // $message = "Марка/толщина не совпадают";
+                            }
+                        }
+                        else {
+                            $message = "Нет ролика с таким номером";
+                        }
                     }
         
                     if(!empty($message)) {
