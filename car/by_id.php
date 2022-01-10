@@ -84,7 +84,8 @@ $free_roll_status_id = 1;
                             . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
                             . "inner join supplier s on p.supplier_id=s.id "
                             . "inner join film_brand fb on p.film_brand_id=fb.id "
-                            . "where pr.id_from_supplier='$id' and (prsh.status_id is null or prsh.status_id = $free_roll_status_id)";
+                            . "where pr.id_from_supplier='$id' and (prsh.status_id is null or prsh.status_id = $free_roll_status_id) "
+                            . "order by id desc";
                     $fetcher = new Fetcher($sql);
                     while ($row = $fetcher->Fetch()):
                     $type = $row['type'];

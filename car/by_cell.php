@@ -54,7 +54,7 @@ $free_roll_status_id = 1;
                             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
                             . "inner join supplier s on r.supplier_id=s.id "
                             . "inner join film_brand fb on r.film_brand_id=fb.id "
-                            . "where r.cell='$cell' and (rsh.status_id is null or rsh.status_id = $free_roll_status_id)";
+                            . "where r.cell='$cell' and (rsh.status_id is null or rsh.status_id = $free_roll_status_id) order by id desc";
                     $fetcher = new Fetcher($sql);
                     while ($row = $fetcher->Fetch()):
                     $type = $row['type'];
