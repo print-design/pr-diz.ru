@@ -18,19 +18,10 @@ elseif(!empty (filter_input(INPUT_GET, 'id'))) {
     $find_value = filter_input(INPUT_GET, 'id');
     $find_btn_class = '';
 }
-
-$action = '';
-
-if(IsInRole(array('electrocarist'))) {
-    $action = APPLICATION.'/car/';
-}
-elseif (IsInRole(array('cutter'))) {
-    $action = APPLICATION.'/cut/';
-}
 ?>
 <div class="row">
     <div class="col-12 col-md-6 col-lg-4">
-        <form method="post" action="<?=$action ?>">
+        <form method="post" action="index.php">
             <div class="form-group">
                 <label for="id">Введите ID</label>
                 <div class="d-flex">
@@ -41,7 +32,7 @@ elseif (IsInRole(array('cutter'))) {
                     <button type="submit" class="btn btn-sm btn-primary ml-1<?=$find_btn_class ?>" id="find-submit" name="find-submit">Найти</button>
                 </div>
             </div>
-            <p id="id-valid" class="text-danger d-none">Только цифры и русские буквы</p>
+            <p id="id-valid" class="text-danger d-none">ID обязательно</p>
         </form>
     </div>
 </div>
