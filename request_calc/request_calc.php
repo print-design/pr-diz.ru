@@ -1707,7 +1707,7 @@ $num_for_customer = $row['num_for_customer'];
                                     echo "Без лыж";
                                 }
                                 else {
-                                    echo rtrim(rtrim(number_format($ski_width, 2, ",", " "), "0"), ",")." м";
+                                    echo rtrim(rtrim(number_format($ski_width, 2, ",", " "), "0"), ",")." мм";
                                 }
                                 ?>
                             </td>
