@@ -13,6 +13,13 @@ $user_id = GetUserId();
 include '_check_cuts.php';
 CheckCuts($user_id);
 
+// Если cutting_id пустой, то переходим на первую страницу
+$cutting_id = filter_input(INPUT_GET, 'cutting_id');
+
+if(empty($cutting_id)) {
+    header('Location: '.APPLICATION.'/cutter/');
+}
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -34,7 +41,7 @@ $source_id_valid_message = 'ID рулона обязательно';
             <nav class="navbar navbar-expand-sm justify-content-between">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=APPLICATION."/cutter/" ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <a class="nav-link" href="<?=APPLICATION."/cutter/material.php?cutting_id=".$cutting_id ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">

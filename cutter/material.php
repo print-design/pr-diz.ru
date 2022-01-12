@@ -24,6 +24,8 @@ $thickness_valid = '';
 $width_valid = '';
 
 if(null !== filter_input(INPUT_POST, 'next-submit')) {
+    $cutting_id = filter_input(INPUT_POST, 'cutting_id');
+    
     $supplier_id = filter_input(INPUT_POST, 'supplier_id');
     if(empty($supplier_id)) {
         $supplier_id_valid = ISINVALID;
@@ -49,14 +51,40 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
-        $sql = "insert into cutting (supplier_id, film_brand_id, thickness, width, cutter_id) values ($supplier_id, $film_brand_id, $thickness, $width, $user_id)";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
-        $cutting_id = $executer->insert_id;
+        if(empty($cutting_id)) {
+            $sql = "insert into cutting (supplier_id, film_brand_id, thickness, width, cutter_id) values ($supplier_id, $film_brand_id, $thickness, $width, $user_id)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+            $cutting_id = $executer->insert_id;
+        }
+        else {
+            $sql = "update cutting set supplier_id = $supplier_id, film_brand_id = $film_brand_id, thickness = $thickness, width = $width where id = $cutting_id";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
         
         if(empty($error_message) && !empty($cutting_id)) {
             header("Location: source.php?cutting_id=$cutting_id");
         }
+    }
+}
+
+// Получение объекта
+$cutting_id = filter_input(INPUT_GET, 'cutting_id');
+
+$supplier_id = null;
+$film_brand_id = null;
+$thickness = null;
+$width = null;
+
+if(!empty($cutting_id)) {
+    $sql = "select supplier_id, film_brand_id, thickness, width from cutting where id = $cutting_id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $supplier_id = $row['supplier_id'];
+        $film_brand_id = $row['film_brand_id'];
+        $thickness = $row['thickness'];
+        $width = $row['width'];
     }
 }
 ?>
@@ -73,7 +101,9 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             <nav class="navbar navbar-expand-sm justify-content-between">
                 <ul class="navbar-nav">
                     <li class="nav-item">
+                        <?php if(empty(filter_input(INPUT_GET, 'cutting_id'))): ?>
                         <a class="nav-link" href="<?=APPLICATION."/cutter/" ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <?php endif; ?>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
@@ -94,6 +124,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
                     <form method="post">
+                        <input type="hidden" id="cutting_id" name="cutting_id" value="<?=$cutting_id ?>" />
                         <div class="form-group">
                             <label for="supplier_id">Поставщик</label>
                             <select class="form-control<?=$supplier_id_valid ?>" id="supplier_id" name="supplier_id" required="required">
@@ -104,7 +135,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                                         $id = $supplier['id'];
                                         $name = $supplier['name'];
                                         $selected = '';
-                                        if(isset($_REQUEST['supplier_id']) && $_REQUEST['supplier_id'] == $supplier['id']) $selected = " selected='selected'";
+                                        if($supplier_id == $supplier['id']) $selected = " selected='selected'";
                                         echo "<option value='$id'$selected>$name</option>";
                                     }
                                     ?>
@@ -116,14 +147,13 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                             <select class="form-control<?=$film_brand_id_valid ?>" id="film_brand_id" name="film_brand_id" required="required">
                                 <option value="" hidden="hidden">Выберите марку</option>
                                     <?php
-                                    if(isset($_REQUEST['supplier_id'])) {
-                                        $supplier_id = $_REQUEST['supplier_id'];
+                                    if(!empty($supplier_id)) {
                                         $film_brands = (new Grabber("select id, name from film_brand where supplier_id = $supplier_id"))->result;
                                         foreach ($film_brands as $film_brand) {
                                             $id = $film_brand['id'];
                                             $name = $film_brand['name'];
                                             $selected = '';
-                                            if($_REQUEST['film_brand_id'] == $film_brand['id']) $selected = " selected='selected'";
+                                            if($film_brand_id == $film_brand['id']) $selected = " selected='selected'";
                                             echo "<option value='$id'$selected>$name</option>";
                                         }
                                     }
@@ -136,15 +166,14 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                             <select class="form-control<?=$thickness_valid ?>" id="thickness" name="thickness" required="required">
                                 <option value="" hidden="hidden">Выберите толщину</option>
                                     <?php
-                                    if(isset($_REQUEST['film_brand_id'])) {
-                                        $film_brand_id = $_REQUEST['film_brand_id'];
+                                    if(!empty($supplier_id) && !empty($film_brand_id)) {
                                         $film_brand_variations = (new Grabber("select thickness, weight from film_brand_variation where film_brand_id = $film_brand_id order by thickness"))->result;
                                         foreach ($film_brand_variations as $film_brand_variation) {
-                                            $thickness = $film_brand_variation['thickness'];
-                                            $weight = $film_brand_variation['weight'];
+                                            $current_thickness = $film_brand_variation['thickness'];
+                                            $current_weight = $film_brand_variation['weight'];
                                             $selected = '';
-                                            if($_REQUEST['thickness'] == $film_brand_variation['thickness']) $selected = " selected='selected'";
-                                            echo "<option value='$thickness'$selected>$thickness мкм $weight г/м<sup>2</sup></option>";
+                                            if($thickness == $film_brand_variation['thickness']) $selected = " selected='selected'";
+                                            echo "<option value='$current_thickness'$selected>$current_thickness мкм $current_weight г/м<sup>2</sup></option>";
                                         }
                                     }
                                     ?>
@@ -153,7 +182,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                         </div>
                         <div class="form-group">
                             <label for="width">Ширина, мм</label>
-                            <input type="text" id="width" name="width" value="<?= $_REQUEST['width'] ?? '' ?>" class="form-control int-only<?=$width_valid ?>" data-max="1600" placeholder="Введите ширину" required="required" autocomplete="off" />
+                            <input type="text" id="width" name="width" value="<?= $width ?>" class="form-control int-only<?=$width_valid ?>" data-max="1600" placeholder="Введите ширину" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Число, макс. 1600</div>
                         </div>
                         <div class="form-group d-none d-lg-block">
