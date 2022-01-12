@@ -149,11 +149,14 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                             <input type="text" id="width" name="width" value="<?= $_REQUEST['width'] ?? '' ?>" class="form-control int-only<?=$width_valid ?>" data-max="1600" placeholder="Введите ширину" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Число, макс. 1600</div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group d-none d-lg-block">
                             <button type="submit" id="next-submit" name="next-submit" class="btn btn-dark form-control mt-4">Далее</button>
                         </div>
                     </form>
                 </div>
+            </div>
+            <div class="d-block d-lg-none w-100 pl-4 pr-4 pb-4" style="position: absolute; bottom: 0; left: 0;">
+                <button type="button" class="btn btn-dark form-control" onclick="javascript: $('#next-submit').click();">Далее</button>
             </div>
         </div>
         <?php
