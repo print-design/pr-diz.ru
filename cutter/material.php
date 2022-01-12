@@ -49,7 +49,14 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
-        header("Location: cut.php?supplier_id=$supplier_id&film_brand_id=$film_brand_id&thickness=$thickness&width=$width");
+        $sql = "insert into cutting (supplier_id, film_brand_id, thickness, width, cutter_id) values ($supplier_id, $film_brand_id, $thickness, $width, $user_id)";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+        $cutting_id = $executer->insert_id;
+        
+        if(empty($error_message) && !empty($cutting_id)) {
+            header("Location: source.php?cutting_id=$cutting_id");
+        }
     }
 }
 ?>
