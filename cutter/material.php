@@ -9,10 +9,6 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 // Текущий пользователь
 $user_id = GetUserId();
 
-// Проверяем, имеются ли незакрытые нарезки
-include '_check_cuts.php';
-CheckCuts($user_id);
-
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -64,13 +60,20 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         }
         
         if(empty($error_message) && !empty($cutting_id)) {
-            header("Location: source.php?cutting_id=$cutting_id");
+            header("Location: source.php");
         }
     }
 }
 
 // Получение объекта
-$cutting_id = filter_input(INPUT_GET, 'cutting_id');
+$cutting_id = null;
+
+include '_check_rolls.php';
+$opened_roll = CheckOpenedRolls($user_id);
+
+if(!empty($opened_roll['id']) && empty($opened_roll['is_from_pallet']) && empty($opened_roll['roll_id'])) {
+    $cutting_id = $opened_roll['id'];
+}
 
 $supplier_id = null;
 $film_brand_id = null;
@@ -101,7 +104,7 @@ if(!empty($cutting_id)) {
             <nav class="navbar navbar-expand-sm justify-content-between">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <?php if(empty(filter_input(INPUT_GET, 'cutting_id'))): ?>
+                        <?php if(empty($cutting_id)): ?>
                         <a class="nav-link" href="<?=APPLICATION."/cutter/" ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                         <?php endif; ?>
                     </li>

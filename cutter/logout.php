@@ -8,10 +8,6 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 
 // Текущий пользователь
 $user_id = GetUserId();
-
-// Проверяем, имеются ли незакрытые нарезки
-include '_check_cuts.php';
-CheckCuts($user_id);
 ?>
 <!DOCTYPE html>
 <html>

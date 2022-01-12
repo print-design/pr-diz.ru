@@ -9,15 +9,13 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 // Текущий пользователь
 $user_id = GetUserId();
 
-// Проверяем, имеются ли незакрытые нарезки
-include '_check_cuts.php';
-CheckCuts($user_id);
+$cutting_id = null;
 
-// Если cutting_id пустой, то переходим на первую страницу
-$cutting_id = filter_input(INPUT_GET, 'cutting_id');
+include '_check_rolls.php';
+$opened_roll = CheckOpenedRolls($user_id);
 
-if(empty($cutting_id)) {
-    header('Location: '.APPLICATION.'/cutter/');
+if(!empty($opened_roll['id'])) {
+    $cutting_id = $opened_roll['id'];
 }
 
 // Валидация формы
@@ -41,7 +39,7 @@ $source_id_valid_message = 'ID рулона обязательно';
             <nav class="navbar navbar-expand-sm justify-content-between">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=APPLICATION."/cutter/material.php?cutting_id=".$cutting_id ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <a class="nav-link" href="<?=APPLICATION."/cutter/material.php" ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">

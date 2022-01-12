@@ -9,9 +9,15 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 // Текущий пользователь
 $user_id = GetUserId();
 
-// Проверяем, имеются ли незакрытые нарезки
-include '_check_cuts.php';
-CheckCuts($user_id);
+// Проверяем, имеются ли незакрытые нарезки.
+// Если есть незакрытая нарезка, где нет ни одного исходного ролика,
+// перенаправляем на страницу создания исходного ролика
+include '_check_rolls.php';
+$opened_roll = CheckOpenedRolls($user_id);
+
+if(!empty($opened_roll['id']) && empty($opened_roll['is_from_pallet']) && empty($opened_roll['roll_id'])) {
+    header("Location: ".APPLICATION.'/cutter/source.php');
+}
 ?>
 <!DOCTYPE html>
 <html>
