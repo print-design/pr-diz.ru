@@ -49,6 +49,95 @@ $length_message = 'Обязательно, не более 30 000';
 $radius_valid = '';
 $radius_message = 'Обязательно, не более 999';
 
+if(null !== filter_input(INPUT_POST, 'next-submit')) {
+    $length = preg_replace("/\D/", "", filter_input(INPUT_POST, 'length'));
+    if(empty($length) || intval($length) > 30000) {
+        $length_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $radius = filter_input(INPUT_POST, 'radius');
+    if(empty($radius) || intval($radius) > 999) {
+        $radius_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if($form_valid) {
+        // Валидация длины
+        $normal_length = filter_input(INPUT_POST, 'normal_length');
+        $max_length = floatval($normal_length) * 1.2;
+        $min_length = floatval($normal_length) * 0.8;
+        $my_length = floatval($length);
+        
+        if($my_length > $max_length || $my_length < $min_length) {
+            $length_valid = ISINVALID;
+            $length_message = "Длина не соответствует радиусу";
+            $radius_valid = ISINVALID;
+            $radius_message = "Длина не соответствует радиусу";
+            $form_valid = false;
+        }
+    }
+    
+    if($form_valid) {
+        // Создание намотки
+        $cut_id = filter_input(INPUT_POST, 'cut_id');
+        $net_weight = filter_input(INPUT_POST, 'net_weight');
+        $cell = "Цех";
+        
+        $sql = "insert into cut_wind (cut_id, length, radius) values($cut_id, $length, $radius)";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+        $cut_wind_id = $executer->insert_id;
+        
+        // Получение данных о материале
+        $supplier_id = 0;
+        $film_brand_id = 0;
+        $thickness = 0;
+        
+        if(empty($error_message)) {
+            $sql = "select supplier_id, film_brand_id, thickness from cut where id=$cut_id";
+            $fetcher = new Fetcher($sql);
+            $error_message = $fetcher->error;
+            
+            if($row = $fetcher->Fetch()) {
+                $supplier_id = $row['supplier_id'];
+                $film_brand_id = $row['film_brand_id'];
+                $thickness = $row['thickness'];
+            }
+        }
+    
+        // Создание рулона на каждый ручей
+        $id_from_supplier = "Из раскроя";
+        
+        if(empty($error_message)) {
+            for($i=1; $i<=19; $i++) {
+                if(key_exists('stream_'.$i, $_POST)) {
+                    $width = filter_input(INPUT_POST, 'stream_'.$i);
+                    $comment = filter_input(INPUT_POST, 'comment_'.$i);
+                    $net_weight = filter_input(INPUT_POST, 'net_weight_'.$i);
+        
+                    $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id, cut_wind_id) "
+                            . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$user_id', $cut_wind_id)";
+                    $executer = new Executer($sql);
+                    $error_message = $executer->error;
+                    $roll_id = $executer->insert_id;
+    
+                    if(empty($error_message)) {
+                        $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($roll_id, $free_status_id, $user_id)";
+                        $executer = new Executer($sql);
+                        $error_message = $executer->error;
+                    }
+                }
+            }
+        }
+        
+        // Переход на страницу печати рулонов
+        if(empty($error_message)) {
+            header("Location: print.php");
+        }
+    }
+}
+
 // Получение объекта
 $supplier_id = null;
 $film_brand_id = null;
@@ -143,10 +232,10 @@ while ($row = $fetcher->Fetch()) {
                         <div class="invalid-feedback invalid-radius"><?=$radius_message ?></div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="next_source_group">
                     <a href="javascript: void(0);" class="btn btn-outline-dark form-control mt-3">След. исх. рулон</a>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="next_wind_group">
                     <button type="submit" class="btn btn-outline-dark form-control mt-3" id="next-submit" name="next-submit">След. намотка</button>
                 </div>
                 <div class="form-group">
@@ -205,6 +294,20 @@ while ($row = $fetcher->Fetch()) {
                             $('#net_weight_' + i).val(weight.toFixed(2));
                         }
                     }
+                }
+                
+                // Меняем видимость кнопок "Следующий исх. рулон" и "След. намотка"
+                if(length == '' && radius == '') {
+                    $('#next_source_group').removeClass('d-none');
+                    $('#next_source_group').addClass('d-block');
+                    $('#next_wind_group').removeClass('d-block');
+                    $('#next_wind_group').addClass('d-none');
+                }
+                else {
+                    $('#next_source_group').removeClass('d-block');
+                    $('#next_source_group').addClass('d-none');
+                    $('#next_wind_group').removeClass('d-none');
+                    $('#next_wind_group').addClass('d-block');
                 }
             }
             
