@@ -18,7 +18,7 @@ if(!empty($opened_roll['id']) && empty($opened_roll['is_from_pallet']) && empty(
     header("Location: source.php");
 }
 // Если есть незакрытая заявка, где есть исходный ролик без ручьёв, переводим на страницу "Как резать"
-elseif (!empty ($opened_roll['id']) && !empty ($opened_roll['sources_no_streams_count'])) {
+elseif (!empty ($opened_roll['id']) && !empty ($opened_roll['no_streams_source'])) {
     header("Location: streams.php");
 }
 ?>

@@ -13,21 +13,16 @@ $user_id = GetUserId();
 const  FREE_ROLL_STATUS_ID = 1;
 
 $cutting_id = null;
+$no_streams_source = null;
 
 include '_check_rolls.php';
 $opened_roll = CheckOpenedRolls($user_id);
 
-if(!empty($opened_roll['id'])) {
-    $cutting_id = $opened_roll['id'];
-}
+$cutting_id = $opened_roll['id'];
+$no_streams_source = $opened_roll['no_streams_source'];
 
 if(empty($cutting_id)) {
     header("Location: ".APPLICATION.'/cutter/');
-}
-
-// Если есть незакрытая заявка, где есть исходный ролик без ручьёв, переводим на страницу "Как резать"
-elseif (!empty ($opened_roll['id']) && !empty ($opened_roll['sources_no_streams_count'])) {
-    header("Location: streams.php");
 }
 
 // Валидация формы
@@ -106,12 +101,19 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         }
         
         if(!empty($id) && $is_from_pallet !== null) {
-            $sql = "insert into cutting_source (cutting_id, is_from_pallet, roll_id) values($cutting_id, $is_from_pallet, $id)";
-            $executer = new Executer($sql);
-            $error_message = $executer->error;
-            $insert_id = $executer->insert_id;
+            if(empty($no_streams_source)) {
+                $sql = "insert into cutting_source (cutting_id, is_from_pallet, roll_id) values($cutting_id, $is_from_pallet, $id)";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+                $insert_id = $executer->insert_id;
+            }
+            else {
+                $sql = "update cutting_source set is_from_pallet = $is_from_pallet, roll_id = $id where id = $no_streams_source";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+            }
             
-            if(empty($error_message) && !empty($insert_id)) {
+            if(empty($error_message)) {
                 header("Location: streams.php");
             }
         }
@@ -119,6 +121,26 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             $source_id_valid_message = "Объект отсутствует в базе";
             $source_id_valid = ISINVALID;
             $form_valid = false;
+        }
+    }
+}
+
+// Получение объекта
+$source_id = filter_input(INPUT_POST, 'source_id');
+
+if(empty($source_id) && !empty($no_streams_source)) {
+    $sql = "select cs.is_from_pallet, r.id roll_id, pr.id pallet_roll_id, pr.pallet_id, pr.ordinal "
+            . "from cutting_source cs "
+            . "left join roll r on r.id = cs.roll_id "
+            . "left join pallet_roll pr on pr.id = cs.roll_id "
+            . "where cs.id = $no_streams_source";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        if($row['is_from_pallet'] == 1) {
+            $source_id = "П".$row['pallet_id'].'Р'.$row['ordinal'];
+        }
+        else {
+            $source_id = 'Р'.$row['roll_id'];
         }
     }
 }
@@ -136,7 +158,9 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             <nav class="navbar navbar-expand-sm justify-content-between">
                 <ul class="navbar-nav">
                     <li class="nav-item">
+                        <?php if(empty($no_streams_source)): ?>
                         <a class="nav-link" href="<?=APPLICATION."/cutter/material.php" ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <?php endif; ?>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
@@ -177,10 +201,10 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                         <div class="form-group">
                             <label for="source_id">ID рулона</label>
                             <div class="input-group find-group">
-                                <input type="text" id="source_id" name="source_id" value="<?= filter_input(INPUT_POST, 'source_id') ?>" class="form-control<?=$source_id_valid ?>" required="required" autocomplete="off" />
+                                <input type="text" id="source_id" name="source_id" value="<?= $source_id ?>" class="form-control<?=$source_id_valid ?>" required="required" autocomplete="off" />
                                 <div class="invalid-feedback order-last"><?=$source_id_valid_message ?></div>
                                 <div class='input-group-append'>
-                                    <?php if(empty(filter_input(INPUT_POST, "source_id"))): ?>
+                                    <?php if(empty($source_id)): ?>
                                     <button type='button' class='btn find-btn'><i class='fas fa-camera'></i></button>
                                     <?php else: ?>
                                     <button type="button" class="btn clear-btn"><i class="fas fa-times"></i></button>
