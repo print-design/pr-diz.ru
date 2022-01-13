@@ -45,6 +45,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     if($form_valid) {
         // Распознавание исходного ролика
         $source_id = trim($source_id);
+        $is_from_pallet = null;
         $id = null;
     
         // Если первый символ р или Р, ищем среди рулонов
@@ -56,6 +57,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     . "where r.id='$roll_id' and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID.") limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
+                $is_from_pallet = 0;
                 $id = $row['id'];
             }
         }
@@ -75,29 +77,38 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                         . "and (prsh.status_id is null or prsh.status_id = ".FREE_ROLL_STATUS_ID.")";
                 $fetcher = new Fetcher($sql);
                 if($row = $fetcher->Fetch()) {
+                    $is_from_pallet = 1;
                     $id = $row['id'];
                 }
             }
         }
         // Если букв нет, ищем среди ID от поставщика
         else {
-            $sql = "select r.id "
+            $sql = "select r.id, 0 is_from_pallet "
                     . "from roll r "
                     . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
                     . "where r.id_from_supplier='$source_id' and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID.") "
                     . "union "
-                    . "select pr.id "
+                    . "select pr.id, 1 is_from_pallet "
                     . "from pallet_roll pr "
                     . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
                     . "where pr.id_from_supplier='$source_id' and (prsh.status_id is null or prsh.status_id = ".FREE_ROLL_STATUS_ID.")";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
+                $is_from_pallet = $row['is_from_pallet'];
                 $id = $row['id'];
             }
         }
         
-        if(!empty($id)) {
-            echo $id;
+        if(!empty($id) && $is_from_pallet !== null) {
+            $sql = "insert into cutting_source (cutting_id, is_from_pallet, roll_id) values($cutting_id, $is_from_pallet, $id)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+            $insert_id = $executer->insert_id;
+            
+            if(empty($error_message) && !empty($insert_id)) {
+                header("Location: streams.php");
+            }
         }
         else {
             $source_id_valid_message = "Объект отсутствует в базе";
