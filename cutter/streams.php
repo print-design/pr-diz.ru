@@ -81,7 +81,9 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             }
         }
         
-        header("Location: $link");
+        if(empty($error_message)) {
+            header("Location: wind.php");
+        }
     }
 }
 ?>
