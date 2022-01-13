@@ -9,6 +9,9 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 // Текущий пользователь
 $user_id = GetUserId();
 
+// СТАТУС "СВОБОДНЫЙ"
+const  FREE_ROLL_STATUS_ID = 1;
+
 $cutting_id = null;
 
 include '_check_rolls.php';
@@ -18,6 +21,10 @@ if(!empty($opened_roll['id'])) {
     $cutting_id = $opened_roll['id'];
 }
 
+if(empty($cutting_id)) {
+    header("Location: ".APPLICATION.'/cutter/');
+}
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -25,6 +32,80 @@ $error_message = '';
 
 $source_id_valid = '';
 $source_id_valid_message = 'ID рулона обязательно';
+
+if(null !== filter_input(INPUT_POST, 'next-submit')) {
+    $cutting_id = filter_input(INPUT_POST, 'cutting_id');
+    
+    $source_id = filter_input(INPUT_POST, 'source_id');
+    if(empty($source_id)) {
+        $source_id_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if($form_valid) {
+        // Распознавание исходного ролика
+        $source_id = trim($source_id);
+        $id = null;
+    
+        // Если первый символ р или Р, ищем среди рулонов
+        if(mb_substr($source_id, 0, 1) == "р" || mb_substr($source_id, 0, 1) == "Р") {
+            $roll_id = mb_substr($source_id, 1);
+            $sql = "select r.id "
+                    . "from roll r "
+                    . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+                    . "where r.id='$roll_id' and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID.") limit 1";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $id = $row['id'];
+            }
+        }
+        // Если первый символ п или П
+        elseif(mb_substr($source_id, 0, 1) == "п" || mb_substr ($source_id, 0, 1) == "П") {
+            $pallet_trim = mb_substr($source_id, 1);
+            $substrings = mb_split("\D", $pallet_trim);
+        
+            // Если внутри имеется буква, ищем среди рулонов, которые в паллетах
+            if(count($substrings) == 2 && mb_strlen($substrings[0]) > 0 && mb_strlen($substrings[1]) > 0) {
+                $pallet_id = $substrings[0];
+                $ordinal = $substrings[1];
+                $sql = "select pr.id "
+                        . "from pallet_roll pr "
+                        . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+                        . "where pr.pallet_id=$pallet_id and pr.ordinal=$ordinal "
+                        . "and (prsh.status_id is null or prsh.status_id = ".FREE_ROLL_STATUS_ID.")";
+                $fetcher = new Fetcher($sql);
+                if($row = $fetcher->Fetch()) {
+                    $id = $row['id'];
+                }
+            }
+        }
+        // Если букв нет, ищем среди ID от поставщика
+        else {
+            $sql = "select r.id "
+                    . "from roll r "
+                    . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+                    . "where r.id_from_supplier='$source_id' and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID.") "
+                    . "union "
+                    . "select pr.id "
+                    . "from pallet_roll pr "
+                    . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+                    . "where pr.id_from_supplier='$source_id' and (prsh.status_id is null or prsh.status_id = ".FREE_ROLL_STATUS_ID.")";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $id = $row['id'];
+            }
+        }
+        
+        if(!empty($id)) {
+            echo $id;
+        }
+        else {
+            $source_id_valid_message = "Объект отсутствует в базе";
+            $source_id_valid = ISINVALID;
+            $form_valid = false;
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -76,6 +157,7 @@ $source_id_valid_message = 'ID рулона обязательно';
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
                     <form method="post">
+                        <input type="hidden" name="cutting_id" value="<?=$cutting_id ?>" />
                         <div class="form-group">
                             <label for="source_id">ID рулона</label>
                             <div class="input-group find-group">
