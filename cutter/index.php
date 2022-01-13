@@ -21,6 +21,10 @@ if(!empty($opened_roll['id']) && empty($opened_roll['is_from_pallet']) && empty(
 elseif (!empty ($opened_roll['id']) && !empty ($opened_roll['no_streams_source'])) {
     header("Location: streams.php");
 }
+// Если есть незакрытая заявка, где есть исходный ролик в ручьями, переводим на страницу намотки
+elseif (!empty ($opened_roll['id']) && !empty ($opened_roll['last_source'])) {
+    header("Location: wind.php");
+}
 ?>
 <!DOCTYPE html>
 <html>
