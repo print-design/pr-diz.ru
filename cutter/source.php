@@ -25,6 +25,11 @@ if(empty($cutting_id)) {
     header("Location: ".APPLICATION.'/cutter/');
 }
 
+// Если есть незакрытая заявка, где есть исходный ролик без ручьёв, переводим на страницу "Как резать"
+elseif (!empty ($opened_roll['id']) && !empty ($opened_roll['sources_no_streams_count'])) {
+    header("Location: streams.php");
+}
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
