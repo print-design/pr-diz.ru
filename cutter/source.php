@@ -58,7 +58,7 @@ $source_id = filter_input(INPUT_POST, 'source_id');
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            ID от поставщика
+                            ID наш или от поставщика
                             <button type="button" class="close" data-dismiss="modal" id="close_video"><i class="fas fa-times"></i></button>
                         </div>
                         <div class="modal-body">
