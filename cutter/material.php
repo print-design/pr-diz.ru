@@ -9,6 +9,16 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 // Текущий пользователь
 $user_id = GetUserId();
 
+// Проверяем, есть ли незакрытые нарезки
+include '_check_rolls.php';
+$opened_roll = CheckOpenedRolls($user_id);
+$cutting_id = $opened_roll['id'];
+
+// Если есть незакрытая заявка, где есть исходный ролик без ручьёв, переводим на страницу "Как резать"
+if (!empty ($opened_roll['id']) && !empty ($opened_roll['no_streams_source'])) {
+    header("Location: streams.php");
+}
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -66,20 +76,6 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
 }
 
 // Получение объекта
-$cutting_id = null;
-
-include '_check_rolls.php';
-$opened_roll = CheckOpenedRolls($user_id);
-
-// Если есть незакрытая заявка, где есть исходный ролик без ручьёв, переводим на страницу "Как резать"
-if (!empty ($opened_roll['id']) && !empty ($opened_roll['no_streams_source'])) {
-    header("Location: streams.php");
-}
-
-if(!empty($opened_roll['id']) && empty($opened_roll['is_from_pallet']) && empty($opened_roll['roll_id'])) {
-    $cutting_id = $opened_roll['id'];
-}
-
 $supplier_id = null;
 $film_brand_id = null;
 $thickness = null;
