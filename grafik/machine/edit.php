@@ -21,10 +21,31 @@ if($machine_edit_submit !== null) {
         $form_valid = false;
     }
     
+    $user1_name = filter_input(INPUT_POST, 'user1_name');
+    $user2_name = filter_input(INPUT_POST, 'user2_name');
+    $role_id = filter_input(INPUT_POST, 'role_id');
+    $has_edition = filter_input(INPUT_POST, 'has_edition') == 'on' ? 1 : 0;
+    $has_organization = filter_input(INPUT_POST, 'has_organization') == 'on' ? 1 : 0;
+    $has_length = filter_input(INPUT_POST, 'has_length') == 'on' ? 1 : 0;
+    $has_status = filter_input(INPUT_POST, 'has_status') == 'on' ? 1 : 0;
+    $has_roller = filter_input(INPUT_POST, 'has_roller') == 'on' ? 1 : 0;
+    $has_lamination = filter_input(INPUT_POST, 'has_lamination') == 'on' ? 1 : 0;
+    $has_coloring = filter_input(INPUT_POST, 'has_coloring') == 'on' ? 1 : 0;
+    $coloring = filter_input(INPUT_POST, 'coloring');
+    $has_manager = filter_input(INPUT_POST, 'has_manager') == 'on' ? 1 : 0;
+    $has_comment = filter_input(INPUT_POST, 'has_comment') == 'on' ? 1 : 0;
+    $is_cutter = filter_input(INPUT_POST, 'is_cutter') == 'on' ? 1 : 0;
+    
     if($form_valid) {
         $id = filter_input(INPUT_POST, 'id');
         $name = addslashes($name);
-        $error_message = (new Executer("update machine set name='$name' where id=$id"))->error;
+        $user1_name = addslashes($user1_name);
+        $user2_name = addslashes($user2_name);
+        $error_message = (new Executer("update machine set name='$name', user1_name='$user1_name', user2_name='$user2_name', "
+                . "role_id=$role_id, has_edition=$has_edition, has_organization=$has_organization, has_length=$has_length, "
+                . "has_status=$has_status, has_roller=$has_roller, has_lamination=$has_lamination, has_coloring=$has_coloring, "
+                . "coloring=$coloring, has_manager=$has_manager, has_comment=$has_comment, is_cutter=$is_cutter "
+                . "where id=$id"))->error;
                 
         if($error_message == '') {
             header('Location: '.APPLICATION."/machine/details.php?id=$id");
@@ -45,18 +66,18 @@ $row = (new Fetcher("select name, user1_name, user2_name, role_id, "
 $name = htmlentities($row['name']);
 $user1_name = htmlentities($row['user1_name']);
 $user2_name = htmlentities($row['user2_name']);
-$role_id = htmlentities($row['role_id']);
-$has_edition = htmlentities($row['has_edition']);
-$has_organization = htmlentities($row['has_organization']);
-$has_length = htmlentities($row['has_length']);
-$has_status = htmlentities($row['has_status']);
-$has_roller = htmlentities($row['has_roller']);
-$has_lamination = htmlentities($row['has_lamination']);
-$has_coloring = htmlentities($row['has_coloring']);
-$coloring = htmlentities($row['coloring']);
-$has_manager = htmlentities($row['has_manager']);
-$has_comment = htmlentities($row['has_comment']);
-$is_cutter = htmlentities($row['is_cutter']);
+$role_id = $row['role_id'];
+$has_edition = $row['has_edition'];
+$has_organization = $row['has_organization'];
+$has_length = $row['has_length'];
+$has_status = $row['has_status'];
+$has_roller = $row['has_roller'];
+$has_lamination = $row['has_lamination'];
+$has_coloring = $row['has_coloring'];
+$coloring = $row['coloring'];
+$has_manager = $row['has_manager'];
+$has_comment = $row['has_comment'];
+$is_cutter = $row['is_cutter'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -116,19 +137,6 @@ $is_cutter = htmlentities($row['is_cutter']);
                                 <?php endwhile; ?>
                             </select>
                         </div>
-                        <!--
-                        Есть организация	
-Есть тираж	
-Есть длина	
-Есть статус	
-Есть вал	
-Есть ламинация	
-Есть красочность	
-Красочность	
-Есть менеджер	
-Есть комментарий	
-Это резка?
-                        -->
                         <div class="form-check">
                             <?php
                             $has_organization_checked = "";
