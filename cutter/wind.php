@@ -12,7 +12,7 @@ $user_id = GetUserId();
 include '_check_rolls.php';
 $opened_roll = CheckOpenedRolls($user_id);
 
-$cutting_id = $opened_roll['id'];
+$cutting_id = 1; //$opened_roll['id'];
 $is_from_pallet = $opened_roll['is_from_pallet'];
 $roll_id = $opened_roll['roll_id'];
 $no_streams_source = $opened_roll['no_streams_source'];
