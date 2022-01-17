@@ -12,12 +12,28 @@ $user_id = GetUserId();
 include '_check_rolls.php';
 $opened_roll = CheckOpenedRolls($user_id);
 
-$cutting_id = 1; //$opened_roll['id'];
+$cutting_id = $opened_roll['id'];
 $is_from_pallet = $opened_roll['is_from_pallet'];
 $roll_id = $opened_roll['roll_id'];
 $no_streams_source = $opened_roll['no_streams_source'];
 $last_source = $opened_roll['last_source'];
 $last_wind = $opened_roll['last_wind'];
+
+// Если нет незакрытой нарезки, переводим на главную
+if(empty($cutting_id)) {
+    header("Location: ".APPLICATION.'/cutter/');
+}
+// Если есть незакрытая нарезка, где нет ни одного исходного ролика, переводим на страницу создания исходного ролика.
+elseif(!empty($cutting_id) && empty($is_from_pallet) && empty($roll_id)) {
+    header("Location: source.php");
+}
+// Если есть незакрытая нарезка, где есть исходный ролик без ручьёв, переводим на страницу "Как резать"
+elseif (!empty ($cutting_id) && !empty ($no_streams_source)) {
+    header("Location: streams.php");
+}
+
+// СТАТУС "СВОБОДНЫЙ"
+$free_status_id = 1;
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -30,7 +46,93 @@ $radius_valid = '';
 $radius_message = 'Обязательно, не более 999';
 
 if(null !== filter_input(INPUT_POST, 'next-submit')) {
-    header("Location: print.php");
+    $length = preg_replace("/\D/", "", filter_input(INPUT_POST, 'length'));
+    if(empty($length) || intval($length) > 30000) {
+        $length_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $radius = filter_input(INPUT_POST, 'radius');
+    if(empty($radius) || intval($radius) > 999) {
+        $radius_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if($form_valid) {
+        // Валидация длины
+        $normal_length = filter_input(INPUT_POST, 'normal_length');
+        $max_length = floatval($normal_length) * 1.2;
+        $min_length = floatval($normal_length) * 0.8;
+        $my_length = floatval($length);
+        
+        if($my_length > $max_length || $my_length < $min_length) {
+            $length_valid = ISINVALID;
+            $length_message = "Длина не соответствует радиусу";
+            $radius_valid = ISINVALID;
+            $radius_message = "Длина не соответствует радиусу";
+            $form_valid = false;
+        }
+    }
+    
+    if($form_valid) {
+        // Создание намотки
+        $last_source = filter_input(INPUT_POST, 'last_source');
+        $net_weight = filter_input(INPUT_POST, 'net_weight');
+        $cell = "Цех";
+        
+        $sql = "insert into cutting_wind (cutting_source_id, length, radius) values($last_source, $length, $radius)";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+        $cut_wind_id = $executer->insert_id;
+        
+        // Получение данных о материале
+        $cutting_id = filter_input(INPUT_POST, 'cutting_id');
+        $supplier_id = 0;
+        $film_brand_id = 0;
+        $thickness = 0;
+        
+        if(empty($error_message)) {
+            $sql = "select supplier_id, film_brand_id, thickness from cutting where id=$cutting_id";
+            $fetcher = new Fetcher($sql);
+            $error_message = $fetcher->error;
+            
+            if($row = $fetcher->Fetch()) {
+                $supplier_id = $row['supplier_id'];
+                $film_brand_id = $row['film_brand_id'];
+                $thickness = $row['thickness'];
+            }
+        }
+    
+        // Создание рулона на каждый ручей
+        $id_from_supplier = "Из раскроя";
+        
+        if(empty($error_message)) {
+            for($i=1; $i<=19; $i++) {
+                if(key_exists('stream_'.$i, $_POST)) {
+                    $width = filter_input(INPUT_POST, 'stream_'.$i);
+                    $comment = filter_input(INPUT_POST, 'comment_'.$i);
+                    $net_weight = filter_input(INPUT_POST, 'net_weight_'.$i);
+        
+                    $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id, cut_wind_id) "
+                            . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$user_id', $cut_wind_id)";
+                    $executer = new Executer($sql);
+                    $error_message = $executer->error;
+                    $roll_id = $executer->insert_id;
+    
+                    if(empty($error_message)) {
+                        $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($roll_id, $free_status_id, $user_id)";
+                        $executer = new Executer($sql);
+                        $error_message = $executer->error;
+                    }
+                }
+            }
+        }
+        
+        // Переход на страницу печати рулонов
+        if(empty($error_message)) {
+            header("Location: print.php");
+        }
+    }
 }
 
 // Получение объекта
@@ -39,6 +141,25 @@ $film_brand_id = null;
 $thickness = null;
 $width = null;
 $winds_count = 0;
+$sql = "select c.supplier_id, c.film_brand_id, c.thickness, c.width, "
+        . "(select count(id) from cutting_wind where cutting_source_id in (select id from cutting_source where cutting_id = $cutting_id)) winds_count "
+        . "from cutting c where c.id = $cutting_id";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $supplier_id = $row['supplier_id'];
+    $film_brand_id = $row['film_brand_id'];
+    $thickness = $row['thickness'];
+    $width = $row['width'];
+    $winds_count = $row['winds_count'];
+}
+
+$sql = "select width from cutting_stream where cutting_source_id=$last_source order by id";
+$fetcher = new Fetcher($sql);
+$i = 0;
+while ($row = $fetcher->Fetch()) {
+    $stream = 'stream_'.++$i;
+    $$stream = $row['width'];
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -51,11 +172,6 @@ $winds_count = 0;
     <body>
         <div class="container-fluid header">
             <nav class="navbar navbar-expand-sm justify-content-end">
-                <ul class="navbar-nav mr-4">
-                    <li class="nav-item dropdown no-dropdown-arrow-after">
-                        <a class="nav-link mr-0" href="javascript: void(0);" data-toggle="modal" data-target="#infoModal"><img src="<?=APPLICATION ?>/images/icons/info.svg" /></a>
-                    </li>
-                </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown no-dropdown-arrow-after">
                         <a class="nav-link mr-0" id="logout-submit" href="logout.php?link=<?= urlencode($_SERVER['REQUEST_URI']) ?>"><i class="fa fa-user-alt" aria-hidden="true""></i></a>
@@ -115,16 +231,16 @@ $winds_count = 0;
                     </div>
                 </div>
                 <div class="form-group next_source_group d-none">
-                    <a href="source1.php" class="btn btn-outline-dark form-control mt-3">Новый исходный рулон</a>
+                    <a href="javascript: void(0);" class="btn btn-outline-dark form-control mt-3">След. исх. рулон</a>
                 </div>
                 <div class="form-group next_wind_group">
-                    <button type="submit" class="btn btn-outline-dark form-control mt-3" id="next-submit" name="next-submit">Следующая намотка</button>
+                    <button type="submit" class="btn btn-outline-dark form-control mt-3" id="next-submit" name="next-submit">Сохранить</button>
                 </div>
-                <?php /*if(!empty($last_wind)):*/ ?>
+                <?php if(!empty($last_wind)): ?>
                 <div class="form-group">
-                    <a href="remain.php" class="btn btn-dark form-control mt-3">Заявка выполнена</a>
+                    <a href="close.php" class="btn btn-dark form-control mt-3">Заявка выполнена</a>
                 </div>
-                <?php /*endif;*/ ?>
+                <?php endif; ?>
             </form>
         </div>
         <?php
@@ -180,7 +296,7 @@ $winds_count = 0;
                     }
                 }
                 
-                <?php /*if(!empty($last_wind)):*/ ?>
+                <?php if(!empty($last_wind)): ?>
                 // Меняем видимость кнопок "Следующий исх. рулон" и "След. намотка"
                 if(length == '' && radius == '') {
                     $('.next_source_group').removeClass('d-none');
@@ -194,7 +310,7 @@ $winds_count = 0;
                     $('.next_wind_group').removeClass('d-none');
                     $('.next_wind_group').addClass('d-block');
                 }
-                <?php /*endif;*/ ?>
+                <?php endif; ?>
             }
             
             $(document).ready(CalculateByRadius);

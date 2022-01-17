@@ -9,6 +9,16 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 // Текущий пользователь
 $user_id = GetUserId();
 
+// Проверяем, есть ли незакрытые нарезки
+include '_check_rolls.php';
+$opened_roll = CheckOpenedRolls($user_id);
+$cutting_id = $opened_roll['id'];
+
+// Если есть незакрытая заявка, где есть исходный ролик без ручьёв, переводим на страницу "Как резать"
+if (!empty ($opened_roll['id']) && !empty ($opened_roll['no_streams_source'])) {
+    header("Location: streams.php");
+}
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -20,7 +30,49 @@ $thickness_valid = '';
 $width_valid = '';
 
 if(null !== filter_input(INPUT_POST, 'next-submit')) {
-    header("Location: source.php");
+    $cutting_id = filter_input(INPUT_POST, 'cutting_id');
+    
+    $supplier_id = filter_input(INPUT_POST, 'supplier_id');
+    if(empty($supplier_id)) {
+        $supplier_id_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
+    if(empty($film_brand_id)) {
+        $film_brand_id_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $thickness = filter_input(INPUT_POST, 'thickness');
+    if(empty($thickness)) {
+        $thickness_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $width = filter_input(INPUT_POST, 'width');
+    if(empty($width) || intval($width) > 1600) {
+        $width_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if($form_valid) {
+        if(empty($cutting_id)) {
+            $sql = "insert into cutting (supplier_id, film_brand_id, thickness, width, cutter_id) values ($supplier_id, $film_brand_id, $thickness, $width, $user_id)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+            $cutting_id = $executer->insert_id;
+        }
+        else {
+            $sql = "update cutting set supplier_id = $supplier_id, film_brand_id = $film_brand_id, thickness = $thickness, width = $width where id = $cutting_id";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
+        
+        if(empty($error_message) && !empty($cutting_id)) {
+            header("Location: source.php");
+        }
+    }
 }
 
 // Получение объекта
@@ -28,6 +80,17 @@ $supplier_id = null;
 $film_brand_id = null;
 $thickness = null;
 $width = null;
+
+if(!empty($cutting_id)) {
+    $sql = "select supplier_id, film_brand_id, thickness, width from cutting where id = $cutting_id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $supplier_id = $row['supplier_id'];
+        $film_brand_id = $row['film_brand_id'];
+        $thickness = $row['thickness'];
+        $width = $row['width'];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>

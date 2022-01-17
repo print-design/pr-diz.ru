@@ -12,19 +12,6 @@ $user_id = GetUserId();
 // СТАТУС "СВОБОДНЫЙ"
 const  FREE_ROLL_STATUS_ID = 1;
 
-$cutting_id = null;
-$no_streams_source = null;
-
-include '_check_rolls.php';
-$opened_roll = CheckOpenedRolls($user_id);
-
-$cutting_id = $opened_roll['id'];
-$no_streams_source = $opened_roll['no_streams_source'];
-
-if(empty($cutting_id)) {
-    header("Location: ".APPLICATION.'/cutter/');
-}
-
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -34,116 +21,11 @@ $source_id_valid = '';
 $source_id_valid_message = 'ID рулона обязательно';
 
 if(null !== filter_input(INPUT_POST, 'next-submit')) {
-    $cutting_id = filter_input(INPUT_POST, 'cutting_id');
-    
-    $source_id = filter_input(INPUT_POST, 'source_id');
-    if(empty($source_id)) {
-        $source_id_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
-    if($form_valid) {
-        // Распознавание исходного ролика
-        $source_id = trim($source_id);
-        $is_from_pallet = null;
-        $id = null;
-    
-        // Если первый символ р или Р, ищем среди рулонов
-        if(mb_substr($source_id, 0, 1) == "р" || mb_substr($source_id, 0, 1) == "Р") {
-            $roll_id = mb_substr($source_id, 1);
-            $sql = "select r.id "
-                    . "from roll r "
-                    . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                    . "where r.id='$roll_id' and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID.") limit 1";
-            $fetcher = new Fetcher($sql);
-            if($row = $fetcher->Fetch()) {
-                $is_from_pallet = 0;
-                $id = $row['id'];
-            }
-        }
-        // Если первый символ п или П
-        elseif(mb_substr($source_id, 0, 1) == "п" || mb_substr ($source_id, 0, 1) == "П") {
-            $pallet_trim = mb_substr($source_id, 1);
-            $substrings = mb_split("\D", $pallet_trim);
-        
-            // Если внутри имеется буква, ищем среди рулонов, которые в паллетах
-            if(count($substrings) == 2 && mb_strlen($substrings[0]) > 0 && mb_strlen($substrings[1]) > 0) {
-                $pallet_id = $substrings[0];
-                $ordinal = $substrings[1];
-                $sql = "select pr.id "
-                        . "from pallet_roll pr "
-                        . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                        . "where pr.pallet_id=$pallet_id and pr.ordinal=$ordinal "
-                        . "and (prsh.status_id is null or prsh.status_id = ".FREE_ROLL_STATUS_ID.")";
-                $fetcher = new Fetcher($sql);
-                if($row = $fetcher->Fetch()) {
-                    $is_from_pallet = 1;
-                    $id = $row['id'];
-                }
-            }
-        }
-        // Если букв нет, ищем среди ID от поставщика
-        else {
-            $sql = "select r.id, 0 is_from_pallet "
-                    . "from roll r "
-                    . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                    . "where r.id_from_supplier='$source_id' and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID.") "
-                    . "union "
-                    . "select pr.id, 1 is_from_pallet "
-                    . "from pallet_roll pr "
-                    . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                    . "where pr.id_from_supplier='$source_id' and (prsh.status_id is null or prsh.status_id = ".FREE_ROLL_STATUS_ID.")";
-            $fetcher = new Fetcher($sql);
-            if($row = $fetcher->Fetch()) {
-                $is_from_pallet = $row['is_from_pallet'];
-                $id = $row['id'];
-            }
-        }
-        
-        if(!empty($id) && $is_from_pallet !== null) {
-            if(empty($no_streams_source)) {
-                $sql = "insert into cutting_source (cutting_id, is_from_pallet, roll_id) values($cutting_id, $is_from_pallet, $id)";
-                $executer = new Executer($sql);
-                $error_message = $executer->error;
-                $insert_id = $executer->insert_id;
-            }
-            else {
-                $sql = "update cutting_source set is_from_pallet = $is_from_pallet, roll_id = $id where id = $no_streams_source";
-                $executer = new Executer($sql);
-                $error_message = $executer->error;
-            }
-            
-            if(empty($error_message)) {
-                header("Location: streams.php");
-            }
-        }
-        else {
-            $source_id_valid_message = "Объект отсутствует в базе";
-            $source_id_valid = ISINVALID;
-            $form_valid = false;
-        }
-    }
+    header("Location: streams.php");
 }
 
 // Получение объекта
 $source_id = filter_input(INPUT_POST, 'source_id');
-
-if(empty($source_id) && !empty($no_streams_source)) {
-    $sql = "select cs.is_from_pallet, r.id roll_id, pr.id pallet_roll_id, pr.pallet_id, pr.ordinal "
-            . "from cutting_source cs "
-            . "left join roll r on r.id = cs.roll_id "
-            . "left join pallet_roll pr on pr.id = cs.roll_id "
-            . "where cs.id = $no_streams_source";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        if($row['is_from_pallet'] == 1) {
-            $source_id = "П".$row['pallet_id'].'Р'.$row['ordinal'];
-        }
-        else {
-            $source_id = 'Р'.$row['roll_id'];
-        }
-    }
-}
 ?>
 <!DOCTYPE html>
 <html>

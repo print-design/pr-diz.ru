@@ -134,8 +134,11 @@ if($row = $fetcher->Fetch()) {
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group remainder-group">
                     <button type="submit" class="btn btn-dark form-control" style="height: 5rem;" id="close-submit" name="close-submit">Распечатать исходный роль<br /> и закрыть заявку</button>
+                </div>
+                <div class="form-group no-remainder-group d-none">
+                    <a href="finish.php" type="submit" class="btn btn-dark form-control">Закрыть заявку</a>
                 </div>
             </form>
         </div>
@@ -148,10 +151,14 @@ if($row = $fetcher->Fetch()) {
                 if($(this).is(':checked')) {
                     $('.remainder-group').removeClass('d-none');
                     $('input#radius').attr('required', 'required');
+                    
+                    $('.no-remainder-group').addClass('d-none');
                 }
                 else {
                     $('.remainder-group').addClass('d-none');
                     $('input#radius').removeAttr('required');
+                    
+                    $('.no-remainder-group').removeClass('d-none');
                 }
             });
     
