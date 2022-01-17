@@ -115,16 +115,16 @@ $winds_count = 0;
                     </div>
                 </div>
                 <div class="form-group next_source_group d-none">
-                    <a href="source.php" class="btn btn-outline-dark form-control mt-3">След. исх. рулон</a>
+                    <a href="source.php" class="btn btn-outline-dark form-control mt-3">Новый исходный рулон</a>
                 </div>
                 <div class="form-group next_wind_group">
-                    <button type="submit" class="btn btn-outline-dark form-control mt-3" id="next-submit" name="next-submit">Сохранить</button>
+                    <button type="submit" class="btn btn-outline-dark form-control mt-3" id="next-submit" name="next-submit">Следующая намотка</button>
                 </div>
-                <?php if(!empty($last_wind)): ?>
+                <?php /*if(!empty($last_wind)):*/ ?>
                 <div class="form-group">
                     <a href="remain.php" class="btn btn-dark form-control mt-3">Заявка выполнена</a>
                 </div>
-                <?php endif; ?>
+                <?php /*endif;*/ ?>
             </form>
         </div>
         <?php
@@ -180,7 +180,7 @@ $winds_count = 0;
                     }
                 }
                 
-                <?php if(!empty($last_wind)): ?>
+                <?php /*if(!empty($last_wind)):*/ ?>
                 // Меняем видимость кнопок "Следующий исх. рулон" и "След. намотка"
                 if(length == '' && radius == '') {
                     $('.next_source_group').removeClass('d-none');
@@ -194,7 +194,7 @@ $winds_count = 0;
                     $('.next_wind_group').removeClass('d-none');
                     $('.next_wind_group').addClass('d-block');
                 }
-                <?php endif; ?>
+                <?php /*endif;*/ ?>
             }
             
             $(document).ready(CalculateByRadius);
