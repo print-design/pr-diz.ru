@@ -74,7 +74,8 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         for($i=1; $i<19; $i++) {
             if(!empty(filter_input(INPUT_POST, 'stream_'.$i)) && empty($error_message)) {
                 $width = filter_input(INPUT_POST, 'stream_'.$i);
-                $sql = "insert into cutting_stream (cutting_source_id, width) values ($no_streams_source, $width)";
+                $comment = addslashes(filter_input(INPUT_POST, 'comment_'.$i));
+                $sql = "insert into cutting_stream (cutting_source_id, width, comment) values ($no_streams_source, $width, '$comment')";
                 $executer = new Executer($sql);
                 $error_message = $executer->error;
                 $insert_id = $executer->insert_id;
@@ -145,6 +146,9 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                         <div class="invalid-feedback invalid-stream"><?=$$stream_message ?></div>                        
                     </div>
                 </div>
+                <div class="form-group stream_group<?=$stream_group_display_class ?>" id="comment_<?=$i ?>_group">
+                    <input type="text" id="comment_<?=$i ?>" name="comment_<?=$i ?>" class="form-control" value="<?= isset($_REQUEST['comment_'.$i]) ? $_REQUEST['comment_'.$i] : '' ?>" placeholder="Комментарий" autocomplete="off" />
+                </div>
                     <?php endfor; ?>
                 <div class="form-group">
                     <button type="submit" class="btn btn-dark form-control mt-4" id="next-submit" name="next-submit">Приступить к раскрою</button>
@@ -176,6 +180,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     if(!isNaN(iStreamsCount)) {
                         for(i=1; i<=iStreamsCount; i++) {
                             $('#stream_' + i + '_group').removeClass('d-none');
+                            $('#comment_' + i + '_group').removeClass('d-none');
                             $('#stream_' + i + '_group .input-group input').attr('required', 'required');
                         }
                     }

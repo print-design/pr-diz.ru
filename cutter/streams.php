@@ -71,6 +71,9 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                         <div class="invalid-feedback invalid-stream"><?=$$stream_message ?></div>                        
                     </div>
                 </div>
+                <div class="form-group stream_group<?=$stream_group_display_class ?>" id="comment_<?=$i ?>_group">
+                    <input type="text" id="comment_<?=$i ?>" name="comment_<?=$i ?>" class="form-control" value="<?= isset($_REQUEST['comment_'.$i]) ? $_REQUEST['comment_'.$i] : '' ?>" placeholder="Комментарий" autocomplete="off" />
+                </div>
                     <?php endfor; ?>
                 <div class="form-group">
                     <button type="submit" class="btn btn-dark form-control mt-4" id="next-submit" name="next-submit">Приступить к раскрою</button>
@@ -102,6 +105,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     if(!isNaN(iStreamsCount)) {
                         for(i=1; i<=iStreamsCount; i++) {
                             $('#stream_' + i + '_group').removeClass('d-none');
+                            $('#comment_' + i + '_group').removeClass('d-none');
                             $('#stream_' + i + '_group .input-group input').attr('required', 'required');
                         }
                     }
