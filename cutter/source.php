@@ -183,9 +183,16 @@ $source_id = filter_input(INPUT_POST, 'source_id');
     </head>
     <body>
         <div class="container-fluid header">
-            <nav class="navbar navbar-expand-sm justify-content-end">
+            <nav class="navbar navbar-expand-sm justify-content-between">
                 <ul class="navbar-nav">
-                    <li class="nav-item dropdown no-dropdown-arrow-after">
+                    <li class="nav-item">
+                        <?php if(empty($last_source)): ?>
+                        <a class="nav-link" href="<?=APPLICATION."/cutter/material.php" ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <?php endif; ?>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
                         <a class="nav-link mr-0" id="logout-submit" href="logout.php?link=<?= urlencode($_SERVER['REQUEST_URI']) ?>"><i class="fa fa-user-alt" aria-hidden="true""></i></a>
                     </li>
                 </ul>

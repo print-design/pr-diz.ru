@@ -12,19 +12,22 @@ $user_id = GetUserId();
 // Проверяем, имеются ли незакрытые нарезки.
 include '_check_rolls.php';
 $opened_roll = CheckOpenedRolls($user_id);
+$cutting_id = $opened_roll['id'];
+$last_source = $opened_roll['last_source'];
+$streams_count = $opened_roll['streams_count'];
 
-// Если есть незакрытая нарезка, где нет ни одного исходного ролика, переводим на страницу создания исходного ролика.
-/*if(!empty($opened_roll['id']) && empty($opened_roll['last_source'])) {
+// Если есть незакрытая нарезка, но нет ни одного исходного ролика, переводим на страницу создания исходного ролика.
+if(!empty($cutting_id) && empty($last_source)) {
     header("Location: source.php");
 }
-// Если есть незакрытая заявка, где нет ручьёв, переводим на страницу "Как резать"
-elseif (!empty ($opened_roll['id']) && empty ($opened_roll['streams_count'])) {
+// Если есть незакрытая нарезка, но нет ручьёв, переводим на страницу "Как резать"
+elseif (!empty($cutting_id) && empty($streams_count)) {
     header("Location: streams.php");
 }
 // Если есть незакрытая заявка, где есть исходный ролик и ручьи, переводим на страницу намотки
-elseif (!empty ($opened_roll['id']) && !empty ($opened_roll['last_source'])) {
-    //header("Location: wind.php");
-}*/
+elseif (!empty ($cutting_id)) {
+    header("Location: wind.php");
+}
 ?>
 <!DOCTYPE html>
 <html>

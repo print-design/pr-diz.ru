@@ -11,8 +11,9 @@ $user_id = GetUserId();
 
 include '_check_rolls.php';
 $opened_roll = CheckOpenedRolls($user_id);
-
 $cutting_id = $opened_roll['id'];
+$last_source = $opened_roll['last_source'];
+$streams_count = $opened_roll['streams_count'];
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -139,18 +140,18 @@ $winds_count = 0;
                         <div class="invalid-feedback invalid-radius"><?=$radius_message ?></div>
                     </div>
                 </div>
-                <div class="form-group next_source_group d-none">
-                    <a href="source.php" class="btn btn-outline-dark form-control mt-3">Новый исходный рулон</a>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-outline-dark form-control mt-3 next_wind" id="next-submit" name="next-submit">Следующая намотка</button>
                 </div>
-                <div class="form-group next_wind_group">
-                    <button type="submit" class="btn btn-outline-dark form-control mt-3" id="next-submit" name="next-submit">Следующая намотка</button>
+            </form>
+            <div class="d-block d-lg-none w-100 pl-4 pr-4 pb-4" style="position: absolute; bottom: 0; left: 0;">
+                <div class="form-group">
+                    <a href="source.php" class="btn btn-outline-dark form-control next_source mt-3">Новый исходный рулон</a>
                 </div>
-                <?php /*if(!empty($last_wind)):*/ ?>
                 <div class="form-group">
                     <a href="remain.php" class="btn btn-dark form-control mt-3">Заявка выполнена</a>
                 </div>
-                <?php /*endif;*/ ?>
-            </form>
+            </div>
         </div>
         <?php
         include '_footer.php';
@@ -205,21 +206,15 @@ $winds_count = 0;
                     }
                 }
                 
-                <?php /*if(!empty($last_wind)):*/ ?>
                 // Меняем видимость кнопок "Следующий исх. рулон" и "След. намотка"
                 if(length == '' && radius == '') {
-                    $('.next_source_group').removeClass('d-none');
-                    $('.next_source_group').addClass('d-block');
-                    $('.next_wind_group').removeClass('d-block');
-                    $('.next_wind_group').addClass('d-none');
+                    $('.next_source').removeClass('disabled');
+                    $('.next_wind').addClass('disabled');
                 }
                 else {
-                    $('.next_source_group').removeClass('d-block');
-                    $('.next_source_group').addClass('d-none');
-                    $('.next_wind_group').removeClass('d-none');
-                    $('.next_wind_group').addClass('d-block');
+                    $('.next_source').addClass('disabled');
+                    $('.next_wind').removeClass('disabled');
                 }
-                <?php /*endif;*/ ?>
             }
             
             $(document).ready(CalculateByRadius);
