@@ -50,7 +50,7 @@ if(null !== filter_input(INPUT_POST, 'no-remain-submit')) {
     $error_message = CloseCutting($cutting_id);
     
     if(empty($error_message)) {
-        header("finish.php");
+        header("Location: finish.php");
     }
 }
 
