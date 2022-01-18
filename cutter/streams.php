@@ -9,6 +9,11 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 // Текущий пользователь
 $user_id = GetUserId();
 
+include '_check_rolls.php';
+$opened_roll = CheckOpenedRolls($user_id);
+
+$cutting_id = $opened_roll['id'];
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -23,7 +28,20 @@ for($i=1; $i<=19; $i++) {
 }
 
 if(null !== filter_input(INPUT_POST, 'next-submit')) {
-    header("Location: wind.php");
+    for($i=1; $i<19; $i++) {
+        if(!empty(filter_input(INPUT_POST, 'stream_'.$i)) && empty($error_message)) {
+            $width = filter_input(INPUT_POST, 'stream_'.$i);
+            $comment = addslashes(filter_input(INPUT_POST, 'comment_'.$i));
+            $sql = "insert into cutting_stream (cutting_id, width, comment) values ($cutting_id, $width, '$comment')";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+            $insert_id = $executer->insert_id;
+        }
+    }
+        
+    if(empty($error_message)) {
+        header("Location: wind.php");
+    }
 }
 ?>
 <!DOCTYPE html>

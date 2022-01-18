@@ -8,6 +8,23 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 
 // Текущий пользователь
 $user_id = GetUserId();
+
+// Проверяем, имеются ли незакрытые нарезки.
+include '_check_rolls.php';
+$opened_roll = CheckOpenedRolls($user_id);
+
+// Если есть незакрытая нарезка, где нет ни одного исходного ролика, переводим на страницу создания исходного ролика.
+/*if(!empty($opened_roll['id']) && empty($opened_roll['last_source'])) {
+    header("Location: source.php");
+}
+// Если есть незакрытая заявка, где нет ручьёв, переводим на страницу "Как резать"
+elseif (!empty ($opened_roll['id']) && empty ($opened_roll['streams_count'])) {
+    header("Location: streams.php");
+}
+// Если есть незакрытая заявка, где есть исходный ролик и ручьи, переводим на страницу намотки
+elseif (!empty ($opened_roll['id']) && !empty ($opened_roll['last_source'])) {
+    //header("Location: wind.php");
+}*/
 ?>
 <!DOCTYPE html>
 <html>

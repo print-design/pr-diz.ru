@@ -108,18 +108,16 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         $sql = "";
         
         if($is_from_pallet == 0) {
-            $sql = "select fb.name, fbv.thickness "
+            $sql = "select fb.name, r.thickness "
                     . "from  film_brand fb "
                     . "inner join roll r on r.film_brand_id=fb.id "
-                    . "inner join film_brand_variation fbv on fbv.film_brand_id=fb.id "
                     . "where r.id=$id";
         }
         else {
-            $sql = "select fb.name, fbv.thickness "
+            $sql = "select fb.name, p.thickness "
                     . "from  film_brand fb "
                     . "inner join pallet p on p.film_brand_id=fb.id "
                     . "inner join pallet_roll pr on pr.pallet_id=p.id "
-                    . "inner join film_brand_variation fbv on fbv.film_brand_id=fb.id "
                     . "where pr.id=$id";
         }
         
@@ -128,6 +126,11 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             $source_film_brand_name = $row['name'];
             $source_thickness = $row['thickness'];
         }
+        else {
+            $source_id_valid_message = "Параметры исходного ролика не найдены";
+            $source_id_valid = ISINVALID;
+            $form_valid = false;
+        }
     }
     else {
         $source_id_valid_message = "Объект отсутствует в базе";
@@ -135,10 +138,39 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         $form_valid = false;
     }
     
-    echo 'SOURCE--- '.$source_film_brand_name." --- ".$source_thickness;
+    $cutting_film_brand_name = '';
+    $cutting_thickness = 0;
     
     if($form_valid) {
-        //header("Location: streams.php");
+        $sql = "select fb.name, c.thickness "
+                . "from film_brand fb "
+                . "inner join cutting c on c.film_brand_id=fb.id "
+                . "where c.id=$cutting_id";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $cutting_film_brand_name = $row['name'];
+            $cutting_thickness = $row['thickness'];
+        }
+        else {
+            $source_id_valid_message = "Параметры нарезки не найдены";
+            $source_id_valid = ISINVALID;
+            $form_valid = false;
+        }
+    }
+    
+    if($source_film_brand_name != $cutting_film_brand_name || $source_thickness != $cutting_thickness) {
+        $source_id_valid_message = "Не совпадают характеристики";
+        $source_id_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if($form_valid) {
+        if(empty($streams_count)) {
+            header("Location: streams.php");
+        }
+        else {
+            header("Location: wind.php");
+        }
     }
 }
 

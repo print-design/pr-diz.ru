@@ -25,6 +25,10 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
     header("Location: print_remain.php");
 }
 
+if(null !== filter_input(INPUT_POST, 'no-remain-submit')) {
+    header("finish.php")
+}
+
 // Находим id раскроя
 $cut_id = 4;
 $sql = "select id from cut where cutter_id = $user_id and id in (select cut_id from cut_source) order by id desc limit 1";
@@ -138,7 +142,7 @@ if($row = $fetcher->Fetch()) {
                     <button type="submit" class="btn btn-dark form-control" style="height: 5rem;" id="close-submit" name="close-submit">Распечатать исходный роль<br /> и закрыть заявку</button>
                 </div>
                 <div class="form-group no-remainder-group d-none">
-                    <a href="finish.php" type="submit" class="btn btn-dark form-control">Закрыть заявку</a>
+                    <button type="submit" class="btn btn-dark form-control" id="no-remain-submit" name="no-remain-submit">Закрыть заявку</button>
                 </div>
             </form>
         </div>

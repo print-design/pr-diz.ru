@@ -12,12 +12,7 @@ $user_id = GetUserId();
 include '_check_rolls.php';
 $opened_roll = CheckOpenedRolls($user_id);
 
-$cutting_id = 1; //$opened_roll['id'];
-$is_from_pallet = $opened_roll['is_from_pallet'];
-$roll_id = $opened_roll['roll_id'];
-$no_streams_source = $opened_roll['no_streams_source'];
-$last_source = $opened_roll['last_source'];
-$last_wind = $opened_roll['last_wind'];
+$cutting_id = $opened_roll['id'];
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -30,7 +25,37 @@ $radius_valid = '';
 $radius_message = 'Обязательно, не более 999';
 
 if(null !== filter_input(INPUT_POST, 'next-submit')) {
-    header("Location: print.php");
+    $length = preg_replace("/\D/", "", filter_input(INPUT_POST, 'length'));
+    if(empty($length) || intval($length) > 30000) {
+        $length_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $radius = filter_input(INPUT_POST, 'radius');
+    if(empty($radius) || intval($radius) > 999) {
+        $radius_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    /*if($form_valid) {
+        // Валидация длины
+        $normal_length = filter_input(INPUT_POST, 'normal_length');
+        $max_length = floatval($normal_length) * 1.2;
+        $min_length = floatval($normal_length) * 0.8;
+        $my_length = floatval($length);
+        
+        if($my_length > $max_length || $my_length < $min_length) {
+            $length_valid = ISINVALID;
+            $length_message = "Длина не соответствует радиусу";
+            $radius_valid = ISINVALID;
+            $radius_message = "Длина не соответствует радиусу";
+            $form_valid = false;
+        }
+    }*/
+    
+    if($form_valid) {
+        header("Location: print.php");
+    }
 }
 
 // Получение объекта
