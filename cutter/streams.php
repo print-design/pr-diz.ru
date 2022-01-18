@@ -9,6 +9,19 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 // Текущий пользователь
 $user_id = GetUserId();
 
+// Валидация формы
+define('ISINVALID', ' is-invalid');
+$form_valid = true;
+$error_message = '';
+
+$streams_count_valid = '';
+for($i=1; $i<=19; $i++) {
+    $stream_message = 'stream_'.$i.'_valid';
+    $$stream_message = 'Ширина ручья обязательно';
+    $stream_valid_name = 'stream_'.$i.'_valid';
+    $$stream_valid_name = '';
+}
+
 if(null !== filter_input(INPUT_POST, 'next-submit')) {
     header("Location: wind.php");
 }

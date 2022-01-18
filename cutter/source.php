@@ -58,7 +58,7 @@ $source_id = filter_input(INPUT_POST, 'source_id');
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            ID наш или от поставщика
+                            ID рулона (внутренний или поставщика)
                             <button type="button" class="close" data-dismiss="modal" id="close_video"><i class="fas fa-times"></i></button>
                         </div>
                         <div class="modal-body">
@@ -81,7 +81,7 @@ $source_id = filter_input(INPUT_POST, 'source_id');
                     <form method="post">
                         <input type="hidden" name="cutting_id" value="<?=$cutting_id ?>" />
                         <div class="form-group">
-                            <label for="source_id">ID рулона</label>
+                            <label for="source_id">ID рулона (внутренний или поставщика)</label>
                             <div class="input-group find-group">
                                 <input type="text" id="source_id" name="source_id" value="<?= $source_id ?>" class="form-control<?=$source_id_valid ?>" required="required" autocomplete="off" />
                                 <div class="invalid-feedback order-last"><?=$source_id_valid_message ?></div>
