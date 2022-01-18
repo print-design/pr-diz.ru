@@ -10,6 +10,14 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 $user_id = GetUserId();
 
 // Проверяем, имеются ли незакрытые нарезки
+include '_check_rolls.php';
+$opened_roll = CheckOpenedRolls($user_id);
+
+$cutting_id = $opened_roll['id'];
+
+if(empty($cutting_id)) {
+    header("Location: ".APPLICATION.'/cutter/');
+}
 
 // СТАТУС "СВОБОДНЫЙ"
 $free_status_id = 1;
@@ -21,12 +29,29 @@ $error_message = '';
 
 $radius_valid = '';
 
+function CloseCutting($cutting_id) {
+    $sql = "update cutting set date=now() where id=$cutting_id";
+    $fetcher = new Fetcher($sql);
+    $error = $fetcher->error;
+    return $error;
+}
+
 if(null !== filter_input(INPUT_POST, 'close-submit')) {
-    header("Location: print_remain.php");
+    $cutting_id = filter_input(INPUT_POST, 'cutting_id');
+    $error_message = CloseCutting($cutting_id);
+    
+    if(empty($error_message)) {
+        header("Location: print_remain.php");
+    }
 }
 
 if(null !== filter_input(INPUT_POST, 'no-remain-submit')) {
-    header("finish.php");
+    $cutting_id = filter_input(INPUT_POST, 'cutting_id');
+    $error_message = CloseCutting($cutting_id);
+    
+    if(empty($error_message)) {
+        header("finish.php");
+    }
 }
 
 // Находим id раскроя
@@ -78,8 +103,14 @@ if($row = $fetcher->Fetch()) {
         </div>
         <div id="topmost"></div>
         <div class="container-fluid">
+            <?php
+            if(!empty($error_message)) {
+                echo "<div class='alert alert-danger'>$error_message</div>";
+            }
+            ?>
             <h1>Закрытие заявки</h1>
             <form method="post">
+                <input type="hidden" id="cutting_id" name="cutting_id" value="<?=$cutting_id ?>" />
                 <input type="hidden" id="supplier_id" name="supplier_id" value="<?=$supplier_id ?>" />
                 <input type="hidden" id="film_brand_id" name="film_brand_id" value="<?=$film_brand_id ?>" />
                 <input type="hidden" id="thickness" name="thickness" value="<?=$thickness ?>" />
