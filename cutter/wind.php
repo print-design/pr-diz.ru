@@ -140,7 +140,7 @@ $winds_count = 0;
                     </div>
                 </div>
                 <div class="form-group next_source_group d-none">
-                    <a href="source1.php" class="btn btn-outline-dark form-control mt-3">Новый исходный рулон</a>
+                    <a href="source.php" class="btn btn-outline-dark form-control mt-3">Новый исходный рулон</a>
                 </div>
                 <div class="form-group next_wind_group">
                     <button type="submit" class="btn btn-outline-dark form-control mt-3" id="next-submit" name="next-submit">Следующая намотка</button>

@@ -12,18 +12,14 @@ $user_id = GetUserId();
 // СТАТУС "СВОБОДНЫЙ"
 const  FREE_ROLL_STATUS_ID = 1;
 
-$cutting_id = null;
-$no_streams_source = null;
-
 include '_check_rolls.php';
 $opened_roll = CheckOpenedRolls($user_id);
 
 $cutting_id = $opened_roll['id'];
-$streams_count = $opened_roll['streams_count'];
 
-/*if(empty($cutting_id)) {
+if(empty($cutting_id)) {
     header("Location: ".APPLICATION.'/cutter/');
-}*/
+}
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -187,14 +183,7 @@ $source_id = filter_input(INPUT_POST, 'source_id');
     </head>
     <body>
         <div class="container-fluid header">
-            <nav class="navbar navbar-expand-sm justify-content-between">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <?php if(empty($no_streams_source)): ?>
-                        <a class="nav-link" href="<?=APPLICATION."/cutter/material.php" ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
-                        <?php endif; ?>
-                    </li>
-                </ul>
+            <nav class="navbar navbar-expand-sm justify-content-end">
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown no-dropdown-arrow-after">
                         <a class="nav-link mr-0" id="logout-submit" href="logout.php?link=<?= urlencode($_SERVER['REQUEST_URI']) ?>"><i class="fa fa-user-alt" aria-hidden="true""></i></a>

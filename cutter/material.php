@@ -14,11 +14,6 @@ include '_check_rolls.php';
 $opened_roll = CheckOpenedRolls($user_id);
 $cutting_id = $opened_roll['id'];
 
-// Если есть незакрытая заявка, где есть исходный ролик без ручьёв, переводим на страницу "Как резать"
-/*if (!empty ($opened_roll['id']) && !empty ($opened_roll['no_streams_source'])) {
-    header("Location: streams.php");
-}*/
-
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -80,6 +75,17 @@ $supplier_id = null;
 $film_brand_id = null;
 $thickness = null;
 $width = null;
+
+if(!empty($cutting_id)) {
+    $sql = "select supplier_id, film_brand_id, thickness, width from cutting where id=$cutting_id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $supplier_id = $row['supplier_id'];
+        $film_brand_id = $row['film_brand_id'];
+        $thickness = $row['thickness'];
+        $width = $row['width'];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
