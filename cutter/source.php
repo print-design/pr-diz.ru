@@ -14,8 +14,9 @@ const  FREE_ROLL_STATUS_ID = 1;
 
 include '_check_rolls.php';
 $opened_roll = CheckOpenedRolls($user_id);
-
 $cutting_id = $opened_roll['id'];
+$last_source = $opened_roll['last_source'];
+$streams_count = $opened_roll['streams_count'];
 
 if(empty($cutting_id)) {
     header("Location: ".APPLICATION.'/cutter/');
