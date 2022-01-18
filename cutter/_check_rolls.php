@@ -9,18 +9,18 @@ function CheckOpenedRolls($user_id) {
     // Материал - ID плёнки
     $roll_id = null;
     
-    // Исходный ролик без ручьёв
-    $no_streams_source = null;
+    // Количество ручьёв
+    $streams_count = 0;
     
-    // Последний исходный ролик с ручьями
+    // Последний исходный ролик
     $last_source = null;
     
     // Последняя намотка последнего исходного ролика
     $last_wind = null;
     
     $sql = "select c.id, cs.is_from_pallet, cs.roll_id, "
-            . "(select cs1.id from cutting_source cs1 where cs1.cutting_id=c.id and cs1.id not in (select cutting_source_id from cutting_stream) limit 1) no_streams_source, "
-            . "(select cs2.id from cutting_source cs2 where cs2.cutting_id=c.id and cs2.id in (select cutting_source_id from cutting_stream) order by cs2.id desc limit 1) last_source, "
+            . "(select count(id) from cutting_stream where cutting_id=c.id) streams_count, "
+            . "(select cs2.id from cutting_source cs2 where cs2.cutting_id=c.id order by cs2.id desc limit 1) last_source, "
             . "(select cw.id from cutting_wind cw where cw.cutting_source_id=(select cutting_source_id from cutting_source where cutting_id=c.id order by id desc limit 1) order by cw.id desc limit 1) last_wind "
             . "from cutting c "
             . "left join cutting_source cs on cs.cutting_id = c.id "
@@ -31,7 +31,7 @@ function CheckOpenedRolls($user_id) {
         $id = $row['id'];
         $is_from_pallet = $row['is_from_pallet'];
         $roll_id = $row['roll_id'];
-        $no_streams_source = $row['no_streams_source'];
+        $streams_count = $row['streams_count'];
         $last_source = $row['last_source'];
         $last_wind = $row['last_wind'];
     }
@@ -40,7 +40,7 @@ function CheckOpenedRolls($user_id) {
     $result['id'] = $id;
     $result['is_from_pallet'] = $is_from_pallet;
     $result['roll_id'] = $roll_id;
-    $result['no_streams_source'] = $no_streams_source;
+    $result['streams_count'] = $streams_count;
     $result['last_source'] = $last_source;
     $result['last_wind'] = $last_wind;
     
