@@ -26,7 +26,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
 }
 
 if(null !== filter_input(INPUT_POST, 'no-remain-submit')) {
-    header("finish.php")
+    header("finish.php");
 }
 
 // Находим id раскроя
