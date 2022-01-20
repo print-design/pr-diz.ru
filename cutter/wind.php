@@ -111,6 +111,17 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     $roll_id = $executer->insert_id;
     
                     if(empty($error_message)) {
+                        // Присвоение полю "ID от поставщика" значения "ID от поставщика исходного ролика + "Р" + наш ID текущего ролика"
+                        $source_id_from_supplier = '';
+                        $sql = "select id_from_supplier "
+                                . "from pallet_roll "
+                                . "where id in (select roll_id from cutting_source where id=$last_source and is_from_pallet=1) "
+                                . "union "
+                                . "select id_from_supplier "
+                                . "from roll "
+                                . "where id in (select roll_id from cutting_source where id=$last_source and is_from_pallet=0)";
+                        
+                        // Заполнение истории статусов
                         $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($roll_id, $free_status_id, $user_id)";
                         $executer = new Executer($sql);
                         $error_message = $executer->error;
