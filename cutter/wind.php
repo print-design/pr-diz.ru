@@ -108,11 +108,12 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                             . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$user_id', $cutting_wind_id)";
                     $executer = new Executer($sql);
                     $error_message = $executer->error;
-                    $roll_id = $executer->insert_id;
+                    $insert_id = $executer->insert_id;
     
+                    // Получение ID от поставщика
+                    $source_id_from_supplier = '';
+                    
                     if(empty($error_message)) {
-                        // Присвоение полю "ID от поставщика" значения "ID от поставщика исходного ролика + "Р" + наш ID текущего ролика"
-                        $source_id_from_supplier = '';
                         $sql = "select id_from_supplier "
                                 . "from pallet_roll "
                                 . "where id in (select roll_id from cutting_source where id=$last_source and is_from_pallet=1) "
@@ -120,9 +121,24 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                                 . "select id_from_supplier "
                                 . "from roll "
                                 . "where id in (select roll_id from cutting_source where id=$last_source and is_from_pallet=0)";
-                        
-                        // Заполнение истории статусов
-                        $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($roll_id, $free_status_id, $user_id)";
+                        $fetcher = new Fetcher($sql);
+                        if($row = $fetcher->Fetch()) {
+                            $source_id_from_supplier = $row[0];
+                        }
+                        $error_message = $fetcher->error;
+                    }
+                    
+                    // Присвоение полю "ID от поставщика" значения "ID от поставщика исходного ролика + "Р" + наш ID текущего ролика"
+                    if(empty($error_message)) {
+                        $id_from_supplier = $source_id_from_supplier.'Р'.$insert_id;
+                        $sql = "update roll set id_from_supplier=$id_from_supplier where id=$insert_id";
+                        $executer = new Executer($sql);
+                        $error_message = $executer->error;
+                    }
+                    
+                    // Заполнение истории статусов
+                    if(empty($error_message)) {
+                        $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($insert_id, $free_status_id, $user_id)";
                         $executer = new Executer($sql);
                         $error_message = $executer->error;
                     }
