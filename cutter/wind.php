@@ -68,8 +68,61 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
+        // Создание намотки
+        $net_weight = filter_input(INPUT_POST, 'net_weight');
+        $cell = "Цех";
+        
         $sql = "insert into cutting_wind (cutting_source_id, length, radius) values ($last_source, $length, $radius)";
-        //header("Location: print.php");
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+        $cutting_wind_id = $executer->insert_id;
+        
+        // Получение данных о материале
+        $supplier_id = 0;
+        $film_brand_id = 0;
+        $thickness = 0;
+        
+        if(empty($error_message)) {
+            $sql = "select supplier_id, film_brand_id, thickness from cutting where id=$cutting_id";
+            $fetcher = new Fetcher($sql);
+            $error_message = $fetcher->error;
+            
+            if($row = $fetcher->Fetch()) {
+                $supplier_id = $row['supplier_id'];
+                $film_brand_id = $row['film_brand_id'];
+                $thickness = $row['thickness'];
+            }
+        }
+        
+        // Создание рулона на каждый ручей
+        $id_from_supplier = "Из раскроя";
+        
+        if(empty($error_message)) {
+            for($i=1; $i<=19; $i++) {
+                if(key_exists('stream_'.$i, $_POST)) {
+                    $width = filter_input(INPUT_POST, 'stream_'.$i);
+                    $comment = filter_input(INPUT_POST, 'comment_'.$i);
+                    $net_weight = filter_input(INPUT_POST, 'net_weight_'.$i);
+        
+                    $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id, cut_wind_id) "
+                            . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$user_id', $cutting_wind_id)";
+                    $executer = new Executer($sql);
+                    $error_message = $executer->error;
+                    $roll_id = $executer->insert_id;
+    
+                    if(empty($error_message)) {
+                        $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($roll_id, $free_status_id, $user_id)";
+                        $executer = new Executer($sql);
+                        $error_message = $executer->error;
+                    }
+                }
+            }
+        }
+        
+        // Переход на страницу печати рулонов
+        if(empty($error_message)) {
+            header("Location: print.php");
+        }
     }
 }
 
