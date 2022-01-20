@@ -38,7 +38,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         $form_valid = false;
     }
     
-    /*if($form_valid) {
+    if($form_valid) {
         // Валидация длины
         $normal_length = filter_input(INPUT_POST, 'normal_length');
         $max_length = floatval($normal_length) * 1.2;
@@ -52,7 +52,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             $radius_message = "Длина не соответствует радиусу";
             $form_valid = false;
         }
-    }*/
+    }
     
     if($form_valid) {
         header("Location: print.php");
@@ -65,6 +65,27 @@ $film_brand_id = null;
 $thickness = null;
 $width = null;
 $winds_count = 0;
+
+$sql = "select c.supplier_id, c.film_brand_id, c.thickness, c.width, (select count(id) from cutting_wind where cutting_source_id in (select id from cutting_source where cutting_id=c.id)) winds_count "
+        . "from cutting c where c.id=$cutting_id";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $supplier_id = $row['supplier_id'];
+    $film_brand_id = $row['film_brand_id'];
+    $thickness = $row['thickness'];
+    $width = $row['width'];
+    $winds_count = $row['winds_count'];
+}
+
+$sql = "select width, comment from cutting_stream where cutting_id=$cutting_id order by id";
+$fetcher = new Fetcher($sql);
+$i = 0;
+while ($row = $fetcher->Fetch()) {
+    $stream = 'stream_'.++$i;
+    $$stream = $row['width'];
+    $comment = 'comment_'.$i;
+    $$comment = $row['comment'];
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -72,6 +93,7 @@ $winds_count = 0;
         <?php
         include '../include/head.php';
         include '_head.php';
+        include '_info.php';
         ?>
     </head>
     <body>
@@ -116,9 +138,11 @@ $winds_count = 0;
                     <?php
                     for($i=1; $i<=19; $i++):
                     $stream = 'stream_'.$i;
+                    $comment = 'comment_'.$i;
                     if(isset($$stream)):
                     ?>
                 <input type="hidden" id="stream_<?=$i ?>" name="stream_<?=$i ?>" value="<?=$$stream ?>" />
+                <input type="hidden" id="comment_<?=$i ?>" name="comment_<?=$i ?>" value="<?=$$comment ?>" />
                 <input type="hidden" id="net_weight_<?=$i ?>" name="net_weight_<?=$i ?>" />
                     <?php
                     endif;
