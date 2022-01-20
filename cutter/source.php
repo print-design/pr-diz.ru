@@ -18,8 +18,17 @@ $cutting_id = $opened_roll['id'];
 $last_source = $opened_roll['last_source'];
 $streams_count = $opened_roll['streams_count'];
 
+// Если нет незакрытой нарезки, переходим на первую страницу
 if(empty($cutting_id)) {
     header("Location: ".APPLICATION.'/cutter/');
+}
+// Если есть исходный ролик, но нет ручьёв, переходим на страницу "Как режем"
+elseif(!empty ($last_source) && empty ($streams_count)) {
+    header("Location: streams.php");
+}
+// Если есть исходный ролик, но нет нарезок, переходим на страницу создания нарезки
+elseif(!empty ($last_source) && empty ($last_wind)) {
+    header("Location: wind.php");
 }
 
 // Валидация формы
@@ -42,7 +51,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     // Распознавание исходного ролика
     $source_id = trim($source_id);
     $is_from_pallet = null;
-    $id = null;
+    $roll_id = null;
     
     // Если первый символ р или Р, ищем среди рулонов
     if(mb_substr($source_id, 0, 1) == "р" || mb_substr($source_id, 0, 1) == "Р") {
@@ -54,7 +63,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $is_from_pallet = 0;
-            $id = $row['id'];
+            $roll_id = $row['id'];
         }
     }
     // Если первый символ п или П
@@ -74,7 +83,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 $is_from_pallet = 1;
-                $id = $row['id'];
+                $roll_id = $row['id'];
             }
         }
     }
@@ -92,7 +101,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $is_from_pallet = $row['is_from_pallet'];
-            $id = $row['id'];
+            $roll_id = $row['id'];
         }
     }
     
@@ -101,21 +110,21 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     $source_film_brand_name = "";
     $source_thickness = 0;
         
-    if(!empty($id) && $is_from_pallet !== null) {
+    if(!empty($roll_id) && $is_from_pallet !== null) {
         $sql = "";
         
         if($is_from_pallet == 0) {
             $sql = "select fb.name, r.thickness "
                     . "from  film_brand fb "
                     . "inner join roll r on r.film_brand_id=fb.id "
-                    . "where r.id=$id";
+                    . "where r.id=$roll_id";
         }
         else {
             $sql = "select fb.name, p.thickness "
                     . "from  film_brand fb "
                     . "inner join pallet p on p.film_brand_id=fb.id "
                     . "inner join pallet_roll pr on pr.pallet_id=p.id "
-                    . "where pr.id=$id";
+                    . "where pr.id=$roll_id";
         }
         
         $fetcher = new Fetcher($sql);
@@ -162,11 +171,12 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
-        if(empty($streams_count)) {
-            header("Location: streams.php");
-        }
-        else {
-            header("Location: wind.php");
+        $sql = "insert into cutting_source (cutting_id, is_from_pallet, roll_id) values ($cutting_id, $is_from_pallet, $roll_id)";
+        $executer = new Executer($sql);
+        $error_message == $executer->error;
+        
+        if(empty($error_message)) {
+            header("Location: source.php"); // А уже отсюда будет автоматическое перенаправление
         }
     }
 }

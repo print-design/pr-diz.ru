@@ -16,17 +16,9 @@ $cutting_id = $opened_roll['id'];
 $last_source = $opened_roll['last_source'];
 $streams_count = $opened_roll['streams_count'];
 
-// Если есть незакрытая нарезка, но нет ни одного исходного ролика, переводим на страницу создания исходного ролика.
-if(!empty($cutting_id) && empty($last_source)) {
+// Если есть незакрытая нарезка, переходим на страницу создания исходного ролика.
+if(!empty($cutting_id)) {
     header("Location: source.php");
-}
-// Если есть незакрытая нарезка, но нет ручьёв, переводим на страницу "Как резать"
-elseif (!empty($cutting_id) && empty($streams_count)) {
-    header("Location: streams.php");
-}
-// Если есть незакрытая заявка, где есть исходный ролик и ручьи, переводим на страницу намотки
-elseif (!empty ($cutting_id)) {
-    header("Location: wind.php");
 }
 ?>
 <!DOCTYPE html>
