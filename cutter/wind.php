@@ -15,6 +15,19 @@ $cutting_id = $opened_roll['id'];
 $last_source = $opened_roll['last_source'];
 $streams_count = $opened_roll['streams_count'];
 
+// Если нет незакрытой нарезки, переходим на первую страницу
+if(empty($cutting_id)) {
+    header("Location: ".APPLICATION.'/cutter/');
+}
+// Если нет исходного ролика, переходим на страницу создания исходного ролика
+elseif(empty ($last_source)) {
+    header("Location: source.php");
+}
+// Если нет ручьёв, переходим на страницу "Как режем"
+elseif(empty ($streams_count)) {
+    header("Location: streams.php");
+}
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -55,7 +68,8 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
-        header("Location: print.php");
+        $sql = "insert into cutting_wind (cutting_source_id, length, radius) values ($last_source, $length, $radius)";
+        //header("Location: print.php");
     }
 }
 
