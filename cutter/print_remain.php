@@ -20,7 +20,7 @@ $sql = "select id, remain from cutting where cutter_id=$user_id and date is not 
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $cutting_id = $row['cutting_id'];
-    $remain = $row['remain'];
+    $id = $row['remain'];
 }
 
 // Получение данных
