@@ -9,7 +9,7 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 // Текущий пользователь
 $user_id = GetUserId();
 
-// Проверяем, имеются ли незакрытые нарезки
+$cutting_id = filter_input(INPUT_GET, 'cutting_id');
 ?>
 <!DOCTYPE html>
 <html>
@@ -17,7 +17,6 @@ $user_id = GetUserId();
         <?php
         include '../include/head.php';
         include '_head.php';
-        include '_info.php';
         ?>
     </head>
     <body>
@@ -37,6 +36,12 @@ $user_id = GetUserId();
         </div>
         <div id="topmost"></div>
         <div class="container-fluid">
+            <?php
+            include '_info.php';
+            if(!empty($error_message)) {
+                echo "<div class='alert alert-danger'>$error_message</div>";
+            }
+            ?>
             <h1 class="text-center">Заявка закрыта</h1>
             <p class="text-center" style="font-size: x-large; color: green;">Молодец:)</p>
             <div style="height: 22rem;"></div>

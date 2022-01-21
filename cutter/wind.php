@@ -190,7 +190,6 @@ while ($row = $fetcher->Fetch()) {
         <?php
         include '../include/head.php';
         include '_head.php';
-        include '_info.php';
         ?>
     </head>
     <body>
@@ -210,6 +209,12 @@ while ($row = $fetcher->Fetch()) {
         </div>
         <div id="topmost"></div>
         <div class="container-fluid">
+            <?php
+            include '_info.php';
+            if(!empty($error_message)) {
+                echo "<div class='alert alert-danger'>$error_message</div>";
+            }
+            ?>
             <h1>Нарезка <?=$cutting_id ?> / <?=date('d.m.Y') ?></h1>
             <p class="mb-3 mt-3" style="font-size: xx-large;">Намотка <?=($winds_count + 1) ?></p>
                 <?php

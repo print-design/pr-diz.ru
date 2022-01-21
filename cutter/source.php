@@ -191,7 +191,6 @@ $source_id = filter_input(INPUT_POST, 'source_id');
         <?php
         include '../include/head.php';
         include '_head.php';
-        include '_info.php';
         ?>
     </head>
     <body>
@@ -237,6 +236,7 @@ $source_id = filter_input(INPUT_POST, 'source_id');
                 </div>
             </div>
             <?php
+            include '_info.php';
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }

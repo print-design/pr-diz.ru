@@ -50,7 +50,7 @@ if(null !== filter_input(INPUT_POST, 'no-remain-submit')) {
     $error_message = CloseCutting($cutting_id);
     
     if(empty($error_message)) {
-        header("Location: finish.php");
+        header("Location: finish.php?id=$cutting_id");
     }
 }
 
@@ -83,7 +83,6 @@ if($row = $fetcher->Fetch()) {
         <?php
         include '../include/head.php';
         include '_head.php';
-        include '_info.php';
         ?>
     </head>
     <body>
@@ -104,6 +103,7 @@ if($row = $fetcher->Fetch()) {
         <div id="topmost"></div>
         <div class="container-fluid">
             <?php
+            include '_info.php';
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }

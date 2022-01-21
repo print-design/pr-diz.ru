@@ -21,7 +21,7 @@ if(null !== $cutting_id) {
         $thickness = $row['thickness'];
         $width = $row['width'];
     }
-}
+} 
 ?>
 <div class="modal fade" id="infoModal">
     <div class="modal-dialog" style="width: 100%; height: 100%; margin: 0;">
