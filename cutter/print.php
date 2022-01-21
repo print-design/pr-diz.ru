@@ -188,7 +188,7 @@ elseif (empty ($last_wind)) {
         <script>
             $(document).ready(function (){
                 let myShareData = {
-                    url: '<?=APPLICATION ?>/cutter/_print.php?cut_wind_id=<?=$cut_wind_id ?>'
+                    url: '<?=APPLICATION ?>/cutter/_print.php?cut_wind_id=<?=$last_wind ?>'
                 };
         
                 const sharelink = document.getElementById("sharelink");
@@ -198,7 +198,7 @@ elseif (empty ($last_wind)) {
         
                 setTimeout(function() { 
                     document.getElementById('new_wind_link').removeAttribute('class');
-                    document.cookie = '<?='cut_wind_id_'.$cut_wind_id ?>=1; Path=/;';
+                    document.cookie = '<?='cut_wind_id_'.$last_wind ?>=1; Path=/;';
                 }, 30000);
             });
         </script>
