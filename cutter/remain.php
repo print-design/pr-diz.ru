@@ -32,7 +32,7 @@ $error_message = '';
 
 $radius_valid = '';
 
-function CloseCutting($cutting_id, $cut_status_id) {
+function CloseCutting($cutting_id, $cut_status_id, $user_id) {
     // Закрываем нарезку
     $sql = "update cutting set date=now() where id=$cutting_id";
     $fetcher = new Fetcher($sql);
@@ -103,7 +103,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
     
     // Закрываем нарезку
     if(empty($error_message)) {
-        $error_message = CloseCutting($cutting_id, $cut_status_id);
+        $error_message = CloseCutting($cutting_id, $cut_status_id, $user_id);
     }
     
     if(empty($error_message)) {
@@ -113,7 +113,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
 
 if(null !== filter_input(INPUT_POST, 'no-remain-submit')) {
     $cutting_id = filter_input(INPUT_POST, 'cutting_id');
-    $error_message = CloseCutting($cutting_id, $cut_status_id);
+    $error_message = CloseCutting($cutting_id, $cut_status_id, $user_id);
     
     if(empty($error_message)) {
         header("Location: finish.php?id=$cutting_id");
