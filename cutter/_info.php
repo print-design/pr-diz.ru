@@ -59,24 +59,42 @@ if(null !== $cutting_id) {
                     <p>Ручей <?=++$i ?> &ndash; <?=$row['width'] ?> мм<?= empty($row['comment']) ? '' : ' ('.$row['comment'].')' ?></p>
                     <?php
                     endwhile;
-                    
                     ?>
                     <p class="font-weight-bold mt-2" style="font-size: large;">Сколько нарезали?</p>
                     <?php
-                    $sql = "select length from cutting_wind where cutting_source_id in (select id from cutting_source where cutting_id = $cutting_id)";
-                    $fetcher = new Fetcher($sql);
+                    $sql = "select cs.id, cs.roll_id, cs.is_from_pallet, concat('Р', r.id) name, r.length "
+                            . "from cutting_source cs "
+                            . "inner join roll r on cs.roll_id = r.id "
+                            . "where cs.cutting_id=$cutting_id and cs.is_from_pallet = 0 "
+                            . "union "
+                            . "select cs.id, cs.roll_id, cs.is_from_pallet, concat('П', p.id, 'Р', pr.ordinal) name, pr.length "
+                            . "from cutting_source cs "
+                            . "inner join pallet_roll pr on cs.roll_id = pr.id "
+                            . "inner join pallet p on pr.pallet_id = p.id "
+                            . "where cs.cutting_id=$cutting_id and cs.is_from_pallet = 1";
+                    $grabber = new Grabber($sql);
+                    $sources = $grabber->result;
+                    
                     $i=0;
+                    foreach($sources as $source):
+                    ?>
+                    <p class="font-weight-bold font-italic">Исходный ролик <?=$source['name'] ?> (<?=$source['length'] ?> метров)</p>
+                    <?php
+                    $sql = "select length from cutting_wind where cutting_source_id=".$source['id'];
+                    $fetcher = new Fetcher($sql);
+                    
                     while ($row = $fetcher->Fetch()):
                     ?>
                     <p>Намотка <?=++$i ?> &ndash; <?=$row['length'] ?> метров</p>
                     <?php
                     endwhile;
+                    endforeach;
                     
                     $sql = "select ifnull(sum(length), 0) from cutting_wind where cutting_source_id in (select id from cutting_source where cutting_id = $cutting_id)";
                     $fetcher = new Fetcher($sql);
                     if($row = $fetcher->Fetch()):
                     ?>
-                    <p class="font-weight-bold">Всего нарезали: <?=$row[0] ?> метров</p>
+                    <p class="font-weight-bold" style="font-size: large;">Всего нарезали: <?=$row[0] ?> метров</p>
                     <?php
                     endif;
                     endif;
