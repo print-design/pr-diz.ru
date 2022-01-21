@@ -13,12 +13,14 @@ $user_id = GetUserId();
 $current_date_time = date("dmYHis");
 
 // Находим id остаточного ролика последней закрытой нарезки данного пользователя
+$cutting_id = null;
 $id = null;
 
-$sql = "select remain from cutting where cutter_id=$user_id and date is not null and remain is not null order by id desc limit 1";
+$sql = "select id, remain from cutting where cutter_id=$user_id and date is not null and remain is not null order by id desc limit 1";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
-    $id = $row[0];
+    $cutting_id = $row['cutting_id'];
+    $remain = $row['remain'];
 }
 
 // Получение данных
@@ -77,7 +79,7 @@ if($row = $fetcher->Fetch()) {
             <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
         </div>
         <div id="new_wind_link"<?=$class_attr ?> style="float: right;">
-            <a class="btn btn-dark" href="finish.php" style="font-size: 20px;">Закрыть заявку</a>
+            <a class="btn btn-dark" href="finish.php?id=<?=$cutting_id ?>" style="font-size: 20px;">Закрыть заявку</a>
         </div>
 
         <table class="table table-bordered compact" style="writing-mode: vertical-rl;">

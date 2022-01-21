@@ -61,7 +61,7 @@ function CloseCutting($cutting_id, $cut_status_id, $user_id) {
             $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values($roll_id, $cut_status_id, $user_id)";
             $executer = new Executer($sql);
             $error = $executer->error;
-        }       
+        }
     }
     
     return $error;
