@@ -6,6 +6,9 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// СТАТУС "СВОБОДНЫЙ"
+$free_status_id = 1;
+
 // Текущий пользователь
 $user_id = GetUserId();
 
@@ -131,7 +134,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     // Присвоение полю "ID от поставщика" значения "ID от поставщика исходного ролика + "Р" + наш ID текущего ролика"
                     if(empty($error_message)) {
                         $id_from_supplier = $source_id_from_supplier.'Р'.$insert_id;
-                        $sql = "update roll set id_from_supplier=$id_from_supplier where id=$insert_id";
+                        $sql = "update roll set id_from_supplier='$id_from_supplier' where id=$insert_id";
                         $executer = new Executer($sql);
                         $error_message = $executer->error;
                     }
