@@ -9,18 +9,13 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 // Текущий пользователь
 $user_id = GetUserId();
 
-// Проверяем, имеются ли незакрытые нарезки
-include '_check_rolls.php';
-$opened_roll = CheckOpenedRolls($user_id);
-$cutting_id = $opened_roll['id'];
-
 // Текущее время
 $current_date_time = date("dmYHis");
 
 // Находим id остаточного ролика последней закрытой нарезки данного пользователя
 $id = null;
 
-$sql = "select remain from cutting where id=$cutting_id";
+$sql = "select remain from cutting where cutter_id=$user_id and date is not null and remain is not null order by id desc limit 1";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $id = $row[0];
