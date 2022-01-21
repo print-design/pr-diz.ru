@@ -19,8 +19,11 @@ if(empty($cutting_id)) {
     header("Location: ".APPLICATION.'/cutter/');
 }
 
-// СТАТУС "СВОБОДНЫЙ"
+// Статус "СВОБОДНЫЙ"
 $free_status_id = 1;
+
+// Статус "РАСКРОИЛИ"
+$cut_status_id = 3;
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -29,10 +32,38 @@ $error_message = '';
 
 $radius_valid = '';
 
-function CloseCutting($cutting_id) {
+function CloseCutting($cutting_id, $cut_status_id) {
+    // Закрываем нарезку
     $sql = "update cutting set date=now() where id=$cutting_id";
     $fetcher = new Fetcher($sql);
     $error = $fetcher->error;
+    
+    // Меняем статусы исходных роликов
+    $cut_sources = null;
+    
+    if(empty($error)) {
+        $sql = "select is_from_pallet, roll_id from cutting_source where cutting_id=$cutting_id";
+        $grabber = new Grabber($sql);
+        $cut_sources = $grabber->result;
+        $error = $grabber->error;
+    }
+    
+    foreach($cut_sources as $cut_source) {
+        $is_from_pallet = $cut_source['is_from_pallet'];
+        $roll_id = $cut_source['roll_id'];
+        
+        if($is_from_pallet == 0) {
+            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($roll_id, $cut_status_id, $user_id)";
+            $executer = new Executer($sql);
+            $error = $executer->error;
+        }
+        else {
+            $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values($roll_id, $cut_status_id, $user_id)";
+            $executer = new Executer($sql);
+            $error = $executer->error;
+        }       
+    }
+    
     return $error;
 }
 
@@ -72,7 +103,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
     
     // Закрываем нарезку
     if(empty($error_message)) {
-        $error_message = CloseCutting($cutting_id);
+        $error_message = CloseCutting($cutting_id, $cut_status_id);
     }
     
     if(empty($error_message)) {
@@ -82,7 +113,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
 
 if(null !== filter_input(INPUT_POST, 'no-remain-submit')) {
     $cutting_id = filter_input(INPUT_POST, 'cutting_id');
-    $error_message = CloseCutting($cutting_id);
+    $error_message = CloseCutting($cutting_id, $cut_status_id);
     
     if(empty($error_message)) {
         header("Location: finish.php?id=$cutting_id");
