@@ -107,7 +107,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     $comment = filter_input(INPUT_POST, 'comment_'.$i);
                     $net_weight = filter_input(INPUT_POST, 'net_weight_'.$i);
         
-                    $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id, cut_wind_id) "
+                    $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id, cutting_wind_id) "
                             . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$user_id', $cutting_wind_id)";
                     $executer = new Executer($sql);
                     $error_message = $executer->error;

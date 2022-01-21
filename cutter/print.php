@@ -48,7 +48,7 @@ elseif (empty ($last_wind)) {
     <body>
         <?php
         $class_attr = " class='d-none'";
-        if(isset($_COOKIE['cut_wind_id_'.$last_wind]) && $_COOKIE['cut_wind_id_'.$last_wind] == 1) {
+        if(isset($_COOKIE['cutting_wind_id_'.$last_wind]) && $_COOKIE['cutting_wind_id_'.$last_wind] == 1) {
             $class_attr = "";
         }
         ?>
@@ -71,7 +71,7 @@ elseif (empty ($last_wind)) {
                 . "left join user u on r.storekeeper_id = u.id "
                 . "left join supplier s on r.supplier_id = s.id "
                 . "left join film_brand fb on r.film_brand_id = fb.id "
-                . "where r.cut_wind_id=$last_wind";
+                . "where r.cutting_wind_id=$last_wind";
         $current_roll = 0;
         $fetcher = new Fetcher($sql);
 
@@ -188,7 +188,7 @@ elseif (empty ($last_wind)) {
         <script>
             $(document).ready(function (){
                 let myShareData = {
-                    url: '<?=APPLICATION ?>/cutter/_print.php?cut_wind_id=<?=$last_wind ?>'
+                    url: '<?=APPLICATION ?>/cutter/_print.php?cutting_wind_id=<?=$last_wind ?>'
                 };
         
                 const sharelink = document.getElementById("sharelink");
@@ -198,7 +198,7 @@ elseif (empty ($last_wind)) {
         
                 setTimeout(function() { 
                     document.getElementById('new_wind_link').removeAttribute('class');
-                    document.cookie = '<?='cut_wind_id_'.$last_wind ?>=1; Path=/;';
+                    document.cookie = '<?='cutting_wind_id_'.$last_wind ?>=1; Path=/;';
                 }, 30000);
             });
         </script>

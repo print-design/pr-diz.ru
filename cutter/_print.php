@@ -2,9 +2,9 @@
 include '../include/topscripts.php';
 include '../qr/qrlib.php';
 
-// Если не задано значение cut_wind_id, перенаправляем на список
-$cut_wind_id = filter_input(INPUT_GET, 'cut_wind_id');
-if(empty($cut_wind_id)) {
+// Если не задано значение cutting_wind_id, перенаправляем на список
+$cutting_wind_id = filter_input(INPUT_GET, 'cutting_wind_id');
+if(empty($cutting_wind_id)) {
     header('Location: '.APPLICATION.'/cutter/');
 }
 
@@ -13,7 +13,7 @@ $current_date_time = date("dmYHis");
 
 // Находим id раскроя
 $cut_id = 0;
-$sql = "select cut_id from cut_wind where id=$cut_wind_id";
+$sql = "select cut_id from cut_wind where id=$cutting_wind_id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $cut_id = $row[0];
@@ -48,7 +48,7 @@ if($row = $fetcher->Fetch()) {
                 . "left join user u on r.storekeeper_id = u.id "
                 . "left join supplier s on r.supplier_id = s.id "
                 . "left join film_brand fb on r.film_brand_id = fb.id "
-                . "where r.cut_wind_id=$cut_wind_id";
+                . "where r.cutting_wind_id=$cutting_wind_id";
         $current_roll = 0;
         $fetcher = new Fetcher($sql);
 
