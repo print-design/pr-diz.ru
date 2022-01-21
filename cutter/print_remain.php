@@ -19,7 +19,7 @@ $id = null;
 $sql = "select id, remain from cutting where cutter_id=$user_id and date is not null and remain is not null order by id desc limit 1";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
-    $cutting_id = $row['cutting_id'];
+    $cutting_id = $row['id'];
     $id = $row['remain'];
 }
 
