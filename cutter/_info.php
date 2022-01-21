@@ -56,7 +56,7 @@ if(null !== $cutting_id) {
                     $i = 0;
                     while ($row = $fetcher->Fetch()):
                     ?>
-                    <p>Ручей <?=++$i ?> &ndash; <?=$row['width'] ?> мм<?= empty($row['comment']) ? '' : ' ('.$comment.')' ?></p>
+                    <p>Ручей <?=++$i ?> &ndash; <?=$row['width'] ?> мм<?= empty($row['comment']) ? '' : ' ('.$row['comment'].')' ?></p>
                     <?php
                     endwhile;
                     
