@@ -13,6 +13,8 @@ $user_id = GetUserId();
 
 // Текущее время
 $current_date_time = date("dmYHis");
+
+// Проверяем, имеются ли незакрытые нарезки
 include '_check_rolls.php';
 $opened_roll = CheckOpenedRolls($user_id);
 $cutting_id = $opened_roll['id'];

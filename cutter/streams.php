@@ -103,9 +103,14 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     <body>
         <div class="container-fluid header">
             <nav class="navbar navbar-expand-sm justify-content-between">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav w-75">
                     <li class="nav-item">
                         <a class="nav-link" href="<?=APPLICATION."/cutter/source.php" ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav mr-4">
+                    <li class="nav-item dropdown no-dropdown-arrow-after">
+                        <a class="nav-link mr-0" href="javascript: void(0);" data-toggle="modal" data-target="#infoModal"><img src="<?=APPLICATION ?>/images/icons/info.svg" /></a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
@@ -118,6 +123,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         <div id="topmost"></div>
         <div class="container-fluid">
             <?php
+            include '_info.php';
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
