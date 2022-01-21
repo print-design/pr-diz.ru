@@ -13,16 +13,28 @@ $user_id = GetUserId();
 
 // Текущее время
 $current_date_time = date("dmYHis");
+include '_check_rolls.php';
+$opened_roll = CheckOpenedRolls($user_id);
+$cutting_id = $opened_roll['id'];
+$last_source = $opened_roll['last_source'];
+$streams_count = $opened_roll['streams_count'];
+$last_wind = $opened_roll['last_wind'];
 
-// Находим id раскроя
-$cut_id = 4;
-        
-// Находим id последней намотки
-$cut_wind_id = null;
-$sql = "select id from cut_wind where cut_id = $cut_id order by id desc limit 1";
-$fetcher = new Fetcher($sql);
-if($row = $fetcher->Fetch()) {
-    $cut_wind_id = $row[0];
+// Если нет незакрытой нарезки, переходим на первую страницу
+if(empty($cutting_id)) {
+    header("Location: ".APPLICATION.'/cutter/');
+}
+// Если нет исходного ролика, переходим на страницу создания исходного ролика
+elseif(empty ($last_source)) {
+    header("Location: source.php");
+}
+// Если нет ручьёв, переходим на страницу "Как режем"
+elseif(empty ($streams_count)) {
+    header("Location: streams.php");
+}
+// Если есть исходные ролики и ручьи, но у последнего исходного ролика нет намоток, переходим на страницу создания намотки
+elseif (empty ($last_wind)) {
+    header("Location: wind.php");
 }
 ?>
 <!DOCTYPE html>
@@ -36,7 +48,7 @@ if($row = $fetcher->Fetch()) {
     <body>
         <?php
         $class_attr = " class='d-none'";
-        if(isset($_COOKIE['cut_wind_id_'.$cut_wind_id]) && $_COOKIE['cut_wind_id_'.$cut_wind_id] == 1) {
+        if(isset($_COOKIE['cut_wind_id_'.$last_wind]) && $_COOKIE['cut_wind_id_'.$last_wind] == 1) {
             $class_attr = "";
         }
         ?>
@@ -59,7 +71,7 @@ if($row = $fetcher->Fetch()) {
                 . "left join user u on r.storekeeper_id = u.id "
                 . "left join supplier s on r.supplier_id = s.id "
                 . "left join film_brand fb on r.film_brand_id = fb.id "
-                . "where r.cut_wind_id=$cut_wind_id";
+                . "where r.cut_wind_id=$last_wind";
         $current_roll = 0;
         $fetcher = new Fetcher($sql);
 
