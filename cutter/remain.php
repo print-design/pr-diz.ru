@@ -37,8 +37,43 @@ function CloseCutting($cutting_id) {
 }
 
 if(null !== filter_input(INPUT_POST, 'close-submit')) {
+    // Создаём остаточный ролик
     $cutting_id = filter_input(INPUT_POST, 'cutting_id');
-    $error_message = CloseCutting($cutting_id);
+    $supplier_id = filter_input(INPUT_POST, 'supplier_id');
+    $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
+    $thickness = filter_input(INPUT_POST, 'thickness');
+    $width = filter_input(INPUT_POST, 'width');
+    $net_weight = filter_input(INPUT_POST, 'net_weight');
+    $length = filter_input(INPUT_POST, 'length');
+    $spool = filter_input(INPUT_POST, 'spool');
+    $id_from_supplier = "Из раскроя";
+    $cell = "Цех";
+    $comment = "";
+            
+    $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id) "
+            . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$user_id')";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    $roll_id = $executer->insert_id;
+            
+    // Устанавливаем этому ролику статус "Свободный"
+    if(empty($error_message)) {
+        $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, $free_status_id, $user_id)";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+            
+    // Добавляем остаточный ролик к последней закрытой нарезке данного пользователя
+    if(empty($error_message)) {
+        $sql = "update cutting set remain = $roll_id where id = $cutting_id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
+    // Закрываем нарезку
+    if(empty($error_message)) {
+        $error_message = CloseCutting($cutting_id);
+    }
     
     if(empty($error_message)) {
         header("Location: print_remain.php");
@@ -54,21 +89,13 @@ if(null !== filter_input(INPUT_POST, 'no-remain-submit')) {
     }
 }
 
-// Находим id раскроя
-$cut_id = 4;
-$sql = "select id from cut where cutter_id = $user_id and id in (select cut_id from cut_source) order by id desc limit 1";
-$fetcher = new Fetcher($sql);
-if($row = $fetcher->Fetch()) {
-    $cut_id = $row[0];
-}
-
 // Получение объекта
 $supplier_id = null;
 $film_brand_id = null;
 $thickness = null;
 $width = null;
 
-$sql = "select supplier_id, film_brand_id, thickness, width from cut where id = $cut_id";
+$sql = "select supplier_id, film_brand_id, thickness, width from cutting where id = $cutting_id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $supplier_id = $row['supplier_id'];
