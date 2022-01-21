@@ -17,6 +17,7 @@ $opened_roll = CheckOpenedRolls($user_id);
 $cutting_id = $opened_roll['id'];
 $last_source = $opened_roll['last_source'];
 $streams_count = $opened_roll['streams_count'];
+$last_wind = $opened_roll['last_wind'];
 
 // Если нет незакрытой нарезки, переходим на первую страницу
 if(empty($cutting_id)) {
@@ -190,16 +191,24 @@ $source_id = filter_input(INPUT_POST, 'source_id');
         <?php
         include '../include/head.php';
         include '_head.php';
+        include '_info.php';
         ?>
     </head>
     <body>
         <div class="container-fluid header">
             <nav class="navbar navbar-expand-sm justify-content-between">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav w-75">
                     <li class="nav-item">
                         <?php if(empty($last_source)): ?>
                         <a class="nav-link" href="<?=APPLICATION."/cutter/material.php" ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <?php else: ?>
+                        <a class="nav-link" href="<?=APPLICATION."/cutter/wind.php" ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                         <?php endif; ?>
+                    </li>
+                </ul>
+                <ul class="navbar-nav mr-4">
+                    <li class="nav-item dropdown no-dropdown-arrow-after">
+                        <a class="nav-link mr-0" href="javascript: void(0);" data-toggle="modal" data-target="#infoModal"><img src="<?=APPLICATION ?>/images/icons/info.svg" /></a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">

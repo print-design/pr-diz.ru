@@ -15,7 +15,7 @@ function CheckOpenedRolls($user_id) {
     $sql = "select c.id, "
             . "(select count(id) from cutting_stream where cutting_id=c.id) streams_count, "
             . "(select cs.id from cutting_source cs where cs.cutting_id=c.id order by cs.id desc limit 1) last_source, "
-            . "(select cw.id from cutting_wind cw where cw.cutting_source_id=(select cutting_source_id from cutting_source where cutting_id=c.id order by id desc limit 1) order by cw.id desc limit 1) last_wind "
+            . "(select cw.id from cutting_wind cw where cw.cutting_source_id=(select id from cutting_source where cutting_id=c.id order by id desc limit 1) order by cw.id desc limit 1) last_wind "
             . "from cutting c "
             . "where c.date is null and c.cutter_id = $user_id "
             . "order by c.id desc";
