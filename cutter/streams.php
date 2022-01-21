@@ -75,7 +75,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
-        for($i=1; $i<$streams_count; $i++) {
+        for($i=1; $i<=$streams_count; $i++) {
             if(!empty(filter_input(INPUT_POST, 'stream_'.$i)) && empty($error_message)) {
                 $width = filter_input(INPUT_POST, 'stream_'.$i);
                 $comment = addslashes(filter_input(INPUT_POST, 'comment_'.$i));
