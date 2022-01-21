@@ -71,7 +71,8 @@ if(null !== $cutting_id) {
                             . "from cutting_source cs "
                             . "inner join pallet_roll pr on cs.roll_id = pr.id "
                             . "inner join pallet p on pr.pallet_id = p.id "
-                            . "where cs.cutting_id=$cutting_id and cs.is_from_pallet = 1";
+                            . "where cs.cutting_id=$cutting_id and cs.is_from_pallet = 1 "
+                            . "order by id";
                     $grabber = new Grabber($sql);
                     $sources = $grabber->result;
                     

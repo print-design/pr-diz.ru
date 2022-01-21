@@ -71,6 +71,40 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
+        // Валидация, чтобы сумма длин намоток не превышала исходный ролик
+        $source_length = 0;
+        
+        $sql = "select r.length "
+                . "from cutting_source cs "
+                . "inner join roll r on cs.roll_id = r.id "
+                . "where cs.id = $last_source and cs.is_from_pallet = 0 "
+                . "union "
+                . "select pr.length from cutting_source cs "
+                . "inner join pallet_roll pr on cs.roll_id = pr.id "
+                . "where cs.id = $last_source and cs.is_from_pallet=1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $source_length = $row[0];
+        }
+        
+        $wind_lengths = 0;
+        
+        $sql = "select sum(length) from cutting_wind where cutting_source_id = $last_source";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $wind_lengths = $row[0];
+        }
+        
+        $reserve_length = 1;
+        
+        if($length + $wind_lengths > $source_length + $reserve_length) {
+            $length_valid = ISINVALID;
+            $length_message = "Превышена длина исходного ролика";
+            $form_valid = false;
+        }
+    }
+    
+    if($form_valid) {
         // Создание намотки
         $net_weight = filter_input(INPUT_POST, 'net_weight');
         $cell = "Цех";
