@@ -70,7 +70,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     // Если первый символ п или П
     elseif(mb_substr($source_id, 0, 1) == "п" || mb_substr ($source_id, 0, 1) == "П") {
         $pallet_trim = mb_substr($source_id, 1);
-        $substrings = mb_split("\D", $pallet_trim);
+        $substrings = mb_split("[Рр]", $pallet_trim);
         
         // Если внутри имеется буква, ищем среди рулонов, которые в паллетах
         if(count($substrings) == 2 && mb_strlen($substrings[0]) > 0 && mb_strlen($substrings[1]) > 0) {
@@ -88,8 +88,9 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             }
         }
     }
-    // Если первая не Р и не П, ищем среди ID от поставщика
-    else {
+    
+    // Если ролик не найден, ищем среди ID от поставщика
+    if(empty($roll_id)) {
         $sql = "select r.id, 0 is_from_pallet "
                 . "from roll r "
                 . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
