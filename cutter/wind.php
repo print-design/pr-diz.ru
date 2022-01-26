@@ -311,7 +311,7 @@ while ($row = $fetcher->Fetch()) {
                     if(isset($$stream)):
                     ?>
                 <input type="hidden" id="stream_<?=$i ?>" name="stream_<?=$i ?>" value="<?=$$stream ?>" />
-                <input type="hidden" id="comment_<?=$i ?>" name="comment_<?=$i ?>" value="<?=$$comment ?>" />
+                <input type="hidden" id="comment_<?=$i ?>" name="comment_<?=$i ?>" value="<?= addslashes($$comment) ?>" />
                 <input type="hidden" id="net_weight_<?=$i ?>" name="net_weight_<?=$i ?>" />
                     <?php
                     endif;
