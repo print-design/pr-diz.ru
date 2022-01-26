@@ -190,6 +190,29 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
 }
 
+if(null !== filter_input(INPUT_POST, 'previous-submit')) {
+    $cutting_id = filter_input(INPUT_POST, 'cutting_id');
+    
+    $query_string = '';
+    $sql = "select width, comment from cutting_stream where cutting_id = $cutting_id";
+    $fetcher = new Fetcher($sql);
+    $i = 0;
+    
+    while ($row = $fetcher->Fetch()) {
+        $query_string .= "&stream_".(++$i)."=".$row['width']."&comment_".$i."=".urlencode($row['comment']);
+    }
+    
+    $query_string = "?streams_count=".$i.$query_string;
+    
+    $sql = "delete from cutting_stream where cutting_id = $cutting_id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    if(empty($error_message)) {
+        header("Location: streams.php$query_string");
+    }
+}
+
 // Получение объекта
 $supplier_id = null;
 $film_brand_id = null;
@@ -228,7 +251,17 @@ while ($row = $fetcher->Fetch()) {
     </head>
     <body>
         <div class="container-fluid header">
-            <nav class="navbar navbar-expand-sm justify-content-end">
+            <nav class="navbar navbar-expand-sm justify-content-between">
+                <ul class="navbar-nav w-75">
+                    <li class="nav-item">
+                        <?php if($winds_count == 0): ?>
+                        <form method="post">
+                            <input type="hidden" id="cutting_id" name="cutting_id" value="<?=$cutting_id ?>" />
+                            <button type="submit" id="previous-submit" name="previous-submit" class="btn btn-link nav-link"><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
+                        </form>
+                        <?php endif; ?>
+                    </li>
+                </ul>
                 <ul class="navbar-nav mr-4">
                     <li class="nav-item dropdown no-dropdown-arrow-after">
                         <a class="nav-link mr-0" href="javascript: void(0);" data-toggle="modal" data-target="#infoModal"><img src="<?=APPLICATION ?>/images/icons/info.svg" /></a>
@@ -308,9 +341,11 @@ while ($row = $fetcher->Fetch()) {
                 <div class="form-group">
                     <a href="source.php" class="btn btn-outline-dark form-control next_source mt-3">Новый исходный рулон</a>
                 </div>
+                <?php if($winds_count > 0): ?>
                 <div class="form-group">
                     <a href="remain.php" class="btn btn-dark form-control mt-3">Заявка выполнена</a>
                 </div>
+                <?php endif; ?>
             </div>
         </div>
         <?php

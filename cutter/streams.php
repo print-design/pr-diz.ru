@@ -181,7 +181,7 @@ if(null !== filter_input(INPUT_POST, 'previous-submit')) {
                     </div>
                 </div>
                 <div class="form-group stream_group<?=$stream_group_display_class ?>" id="comment_<?=$i ?>_group">
-                    <input type="text" id="comment_<?=$i ?>" name="comment_<?=$i ?>" class="form-control" value="<?= isset($_REQUEST['comment_'.$i]) ? $_REQUEST['comment_'.$i] : '' ?>" placeholder="Комментарий" autocomplete="off" />
+                    <input type="text" id="comment_<?=$i ?>" name="comment_<?=$i ?>" class="form-control" value="<?= isset($_REQUEST['comment_'.$i]) ? urldecode(htmlentities($_REQUEST['comment_'.$i])) : '' ?>" placeholder="Комментарий" autocomplete="off" />
                 </div>
                     <?php endfor; ?>
                 <div class="form-group">
