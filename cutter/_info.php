@@ -44,7 +44,7 @@ if(null !== $cutting_id) {
                     for($i=1; $i<=19; $i++):
                     if(null !== filter_input(INPUT_GET, 'stream_'.$i)):
                     ?>
-                    <p>Ручей <?=$i ?> &ndash; <?= filter_input(INPUT_GET, 'stream_'.$i) ?> мм</p>
+                    <p>Ручей <?=$i ?> &ndash; <?= filter_input(INPUT_GET, 'stream_'.$i) ?> мм<?= empty(filter_input(INPUT_GET, 'comment_'.$i)) ? '' : ' ('. urldecode(filter_input(INPUT_GET, 'comment_'.$i)).')' ?></p>
                     <?php
                     endif;
                     endfor;
