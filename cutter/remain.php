@@ -43,11 +43,11 @@ function CloseCutting($cutting_id, $cut_status_id, $user_id) {
         $sql = "select id from cutting_source where cutting_id = $cutting_id and id not in (select cutting_source_id from cutting_wind)";
         $grabber = new Grabber($sql);
         $error = $grabber->error;
-        $empty_sources = $grabber->result;        print_r($empty_sources);
+        $empty_sources = $grabber->result;
         
         if(empty($error)) {
             foreach($empty_sources as $empty_source) {
-                $sql = "delete from cutting_source where id = ".$empty_source[0];
+                $sql = "delete from cutting_source where id = ".$empty_source['id'];
                 $executer = new Executer($sql);
                 $error = $executer->error;
             }
