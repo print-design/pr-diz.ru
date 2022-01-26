@@ -38,6 +38,22 @@ function CloseCutting($cutting_id, $cut_status_id, $user_id) {
     $fetcher = new Fetcher($sql);
     $error = $fetcher->error;
     
+    // Удаляем исходный ролик, у которого не было ни одной намотки
+    if(empty($error)) {
+        $sql = "select id from cutting_source where cutting_id = $cutting_id and id not in (select cutting_source_id from cutting_wind)";
+        $grabber = new Grabber($sql);
+        $error = $grabber->error;
+        $empty_sources = $grabber->result;        print_r($empty_sources);
+        
+        if(empty($error)) {
+            foreach($empty_sources as $empty_source) {
+                $sql = "delete from cutting_source where id = ".$empty_source[0];
+                $executer = new Executer($sql);
+                $error = $executer->error;
+            }
+        }
+    }
+    
     // Меняем статусы исходных роликов
     $cut_sources = null;
     
@@ -48,19 +64,21 @@ function CloseCutting($cutting_id, $cut_status_id, $user_id) {
         $error = $grabber->error;
     }
     
-    foreach($cut_sources as $cut_source) {
-        $is_from_pallet = $cut_source['is_from_pallet'];
-        $roll_id = $cut_source['roll_id'];
+    if($cut_sources !== null) {
+        foreach($cut_sources as $cut_source) {
+            $is_from_pallet = $cut_source['is_from_pallet'];
+            $roll_id = $cut_source['roll_id'];
         
-        if($is_from_pallet == 0) {
-            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($roll_id, $cut_status_id, $user_id)";
-            $executer = new Executer($sql);
-            $error = $executer->error;
-        }
-        else {
-            $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values($roll_id, $cut_status_id, $user_id)";
-            $executer = new Executer($sql);
-            $error = $executer->error;
+            if($is_from_pallet == 0) {
+                $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($roll_id, $cut_status_id, $user_id)";
+                $executer = new Executer($sql);
+                $error = $executer->error;
+            }
+            else {
+                $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values($roll_id, $cut_status_id, $user_id)";
+                $executer = new Executer($sql);
+                $error = $executer->error;
+            }
         }
     }
     

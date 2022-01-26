@@ -88,7 +88,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             }
         }
     }
-    // Если букв нет, ищем среди ID от поставщика
+    // Если первая не Р и не П, ищем среди ID от поставщика
     else {
         $sql = "select r.id, 0 is_from_pallet "
                 . "from roll r "
