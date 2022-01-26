@@ -27,7 +27,7 @@ else if($file == "grafik.php") {
 <div id="left_bar">
     <a href="<?=APPLICATION ?>/" class="left_bar_item logo" title="На главную" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/logo.svg" /></a>
     <?php
-    if(IsInRole(array('technologist', 'dev', 'manager', 'administrator', 'designer'))):
+    if(IsInRole(array('technologist', 'dev', 'manager', 'administrator', 'designer')) && false):
     ?>
     <a href="<?=APPLICATION ?>/request_calc/<?= IsInRole('manager') ? BuildQuery("manager", GetUserId()) : "" ?>" class="left_bar_item<?=$zakaz_class ?>" title="Заказы"><img src="<?=APPLICATION ?>/images/nav_clock.svg" /></a>
     <?php
