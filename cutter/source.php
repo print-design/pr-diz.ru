@@ -23,12 +23,16 @@ $last_wind = $opened_roll['last_wind'];
 if(empty($cutting_id)) {
     header("Location: ".APPLICATION.'/cutter/');
 }
+// Если нет исходного ролика, переходим на страницу создания исходного ролика
+elseif(empty ($last_source)) {
+    header("Location: source.php");
+}
 // Если есть исходный ролик, но нет ручьёв, переходим на страницу "Как режем"
-elseif(!empty ($last_source) && empty ($streams_count)) {
+elseif(empty ($streams_count)) {
     header("Location: streams.php");
 }
-// Если есть исходный ролик, но нет нарезок, переходим на страницу создания нарезки
-elseif(!empty ($last_source) && empty ($last_wind)) {
+// Если есть исходный ролик, но нет намоток, переходим на страницу создания намотки
+elseif(empty ($last_wind)) {
     header("Location: wind.php");
 }
 
@@ -177,7 +181,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         $error_message == $executer->error;
         
         if(empty($error_message)) {
-            header("Location: source.php"); // А уже отсюда будет автоматическое перенаправление
+            header("Location: streams.php"); // А отсюда, если понадобится, будет перенаправление
         }
     }
 }

@@ -12,9 +12,20 @@ $user_id = GetUserId();
 include '_check_rolls.php';
 $opened_roll = CheckOpenedRolls($user_id);
 $cutting_id = $opened_roll['id'];
+$last_source = $opened_roll['last_source'];
+$streams_count = $opened_roll['streams_count'];
 
+// Если нет незакрытой нарезки, переходим на первую страницу
 if(empty($cutting_id)) {
     header("Location: ",APPLICATION.'/cutter/');
+}
+// Если нет исходного ролика, переходим на страницу создания исходного ролика
+elseif(empty ($last_source)) {
+    header("Location: source.php");
+}
+// Если есть исходный ролик и есть ручьи, переходим на страницу "Создание намотки"
+elseif(!empty ($streams_count)) {
+    header("Location: wind.php");
 }
 
 // Валидация формы
@@ -91,6 +102,10 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         }
     }
 }
+
+if(null !== filter_input(INPUT_POST, 'previous_submit')) {
+    //
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -105,7 +120,9 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             <nav class="navbar navbar-expand-sm justify-content-between">
                 <ul class="navbar-nav w-75">
                     <li class="nav-item">
-                        <a class="nav-link" href="<?=APPLICATION."/cutter/source.php" ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <form method="post">
+                            <button type="submit" id="previous_submit" name="previous_submit" class="btn btn-link nav-link"><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
+                        </form>
                     </li>
                 </ul>
                 <ul class="navbar-nav mr-4">
