@@ -72,6 +72,20 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
 }
 
+if(null !== filter_input(INPUT_POST, 'previous-submit')) {
+    $cutting_id = filter_input(INPUT_POST, 'cutting_id');
+    
+    if(!empty($cutting_id)) {
+        $sql = "delete from cutting where id = $cutting_id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
+    if(empty($error_message)) {
+        header("Location: ".APPLICATION.'/cutter/');
+    }
+}
+
 // Получение объекта
 $supplier_id = null;
 $film_brand_id = null;
@@ -102,9 +116,12 @@ if(!empty($cutting_id)) {
             <nav class="navbar navbar-expand-sm justify-content-between">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <?php if(empty($cutting_id)): ?>
-                        <a class="nav-link" href="<?=APPLICATION."/cutter/" ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
-                        <?php endif; ?>
+                        <form method="post">
+                            <?php if(!empty($cutting_id)): ?>
+                            <input type="hidden" id="cutting_id" name="cutting_id" value="<?=$cutting_id ?>" />
+                            <?php endif; ?>
+                            <button type="submit" id="previous-submit" name="previous-submit" class="btn btn-link nav-link"><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
+                        </form>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
