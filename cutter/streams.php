@@ -103,8 +103,14 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
 }
 
-if(null !== filter_input(INPUT_POST, 'previous_submit')) {
-    //
+if(null !== filter_input(INPUT_POST, 'previous-submit')) {
+    $sql = "delete from cutting_source where id = $last_source";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    if(empty($error_message)) {
+        header("Location: source.php");
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -121,7 +127,7 @@ if(null !== filter_input(INPUT_POST, 'previous_submit')) {
                 <ul class="navbar-nav w-75">
                     <li class="nav-item">
                         <form method="post">
-                            <button type="submit" id="previous_submit" name="previous_submit" class="btn btn-link nav-link"><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
+                            <button type="submit" id="previous-submit" name="previous-submit" class="btn btn-link nav-link"><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
                         </form>
                     </li>
                 </ul>
