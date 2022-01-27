@@ -26,7 +26,7 @@ if(filter_input(INPUT_GET, "find") != '') {
             <a href="<?=APPLICATION.'/roll/' ?>"><i class="fas fa-times" style="color: white;"></i></a>
         </div>
         <div class="position-absolute" style="top: 0px; right: 70px; z-index: 10;">
-            <button type="btn" class="btn btn-link" id="find-camera"><i class='fas fa-camera'></i></button>
+            <button type="button" type="btn" class="btn btn-link" id="find-camera"><i class='fas fa-camera'></i></button>
         </div>
     </div>
 </form>

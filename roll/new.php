@@ -183,6 +183,8 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
+            
+            include '../include/find_camera.php';
             ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/roll/">Назад</a>
             <h1 style="font-size: 32px; font-weight: 600; margin-bottom: 20px;">Новый рулон</h1>
@@ -364,6 +366,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
         </div>
         <?php
         include '../include/footer.php';
+        include '../include/footer_find.php';
         ?>
         <script>
             $('#supplier_id').change(function(){

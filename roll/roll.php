@@ -310,6 +310,8 @@ $cut_wind_id = $row['cut_wind_id'];
                 echo "<div class='alert alert-danger>$error_message</div>";
             }
             
+            include '../include/find_camera.php';
+            
             // Если плёнка сработанная, то кнопка "Назад" переводит нас в раздел "Сработанная плёнка",
             // иначе - в раздел "Рулоны".
             if(isset($status_id) && $status_id == $utilized_status_id):
@@ -611,6 +613,7 @@ $cut_wind_id = $row['cut_wind_id'];
         </div>
         <?php
         include '../include/footer.php';
+        include '../include/footer_find.php';
         ?>
         <script>
             if($('.is-invalid').first() != null) {
