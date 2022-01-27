@@ -14,6 +14,14 @@ if(!empty($decoded)) {
 }
 
 if(!empty($pallet_id)) {
+    // Получение марки плёнки
+    $film_brand = '';
+    $sql = "select fb.name from film_brand fb inner join pallet p on p.film_brand_id = fb.id where p.id = $pallet_id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $film_brand = $row['name'];
+    }
+    
     // Получение всех статусов
     $fetcher = (new Fetcher("select id, name, colour from roll_status"));
     $statuses = array();
@@ -67,42 +75,46 @@ if(!empty($pallet_id)) {
     }
     ?>
 <div style="padding: 10px;<?=$utilized_style ?>">
-<table style="margin-top: 25px; margin-bottom: 25px; font-size: 14px;">
-    <tbody>
-    <tr>
-        <td style="text-align: right; padding-bottom: 10px; width: 20%;"><input type="checkbox" /></td>
-        <td style="padding-bottom: 10px; width: 30%;">Рулон <?=$row['ordinal'] ?></td>
-        <td style="padding-bottom: 10px; width: 17%;"><a href="roll.php<?=$previous_params_string ?>id=<?=$row['id'] ?>"><i class="fas fa-ellipsis-h"></i></a></td>
-        <td style="padding-bottom: 10px;"></td>
-    </tr>
-    <tr>
-        <td style="padding-bottom: 10px;">Ширина</td>
-        <td style="padding-bottom: 10px;"><?=$row['width'] ?> мм</td>
-        <td style="padding-bottom: 10px;">Толщина</td>
-        <td style="padding-bottom: 10px;"><?=$row['thickness'] ?> мкм</td>
-    </tr>
-    <tr>
-        <td style="padding-bottom: 10px;">Масса</td>
-        <td style="padding-bottom: 10px;"><?=$row['weight'] ?> кг</td>
-        <td style="padding-bottom: 10px;">Длина</td>
-        <td style="padding-bottom: 10px;"><?=$row['length'] ?> м</td>
-    </tr>
-    <tr>
-        <td style="padding-bottom: 10px;">ID</td>
-        <td style="padding-bottom: 10px;"><?="П".$row['pallet_id']."Р".$row['ordinal'] ?></td>
-        <td style="padding-bottom: 10px;">Статус</td>
-        <td style="padding-bottom: 10px; font-size: 10px;<?=$colour_style ?>"><?=mb_strtoupper($status) ?></td>
-    </tr>
-    <tr>
-        <td style="padding-bottom: 10px;">ID от поставщ.</td>
-        <td colspan="3" style="padding-bottom: 10px;"><?=$row['id_from_supplier'] ?></td>
-    </tr>
-    <tr>
-        <td style="padding-bottom: 10px; padding-right: 10px;">Комментарий</td>
-        <td colspan="3" style="padding-bottom: 10px;"><?=$row['comment'] ?></td>
-    </tr>
-    </tbody>
-</table>
+    <table style="margin-top: 25px; margin-bottom: 25px; font-size: 14px;">
+        <tbody>
+            <tr>
+                <td style="text-align: right; padding-bottom: 10px; padding-right: 10px; width: 20%;"><input type="checkbox" /></td>
+                <td style="padding-bottom: 10px; width: 30%;">Рулон <?=$row['ordinal'] ?></td>
+                <td style="padding-bottom: 10px; width: 17%;"><a href="roll.php<?=$previous_params_string ?>id=<?=$row['id'] ?>"><i class="fas fa-ellipsis-h"></i></a></td>
+                <td style="padding-bottom: 10px;"></td>
+            </tr>
+            <tr>
+                <td style="padding-bottom: 10px; padding-right: 10px; white-space: nowrap;">Марка пленки</td>
+                <td colspan="3" style="padding-bottom: 10px;"><?=$film_brand ?></td>
+            </tr>
+            <tr>
+                <td style="padding-bottom: 10px;">Ширина</td>
+                <td style="padding-bottom: 10px;"><?=$row['width'] ?> мм</td>
+                <td style="padding-bottom: 10px;">Толщина</td>
+                <td style="padding-bottom: 10px;"><?=$row['thickness'] ?> мкм</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom: 10px;">Масса</td>
+                <td style="padding-bottom: 10px;"><?=$row['weight'] ?> кг</td>
+                <td style="padding-bottom: 10px;">Длина</td>
+                <td style="padding-bottom: 10px;"><?=$row['length'] ?> м</td>
+            </tr>
+            <tr>
+                <td style="padding-bottom: 10px;">ID</td>
+                <td style="padding-bottom: 10px;"><?="П".$row['pallet_id']."Р".$row['ordinal'] ?></td>
+                <td style="padding-bottom: 10px;">Статус</td>
+                <td style="padding-bottom: 10px; font-size: 10px;<?=$colour_style ?>"><?=mb_strtoupper($status) ?></td>
+            </tr>
+            <tr>
+                <td style="padding-bottom: 10px;">ID от поставщ.</td>
+                <td colspan="3" style="padding-bottom: 10px;"><?=$row['id_from_supplier'] ?></td>
+            </tr>
+            <tr>
+                <td style="padding-bottom: 10px; padding-right: 10px;">Комментарий</td>
+                <td colspan="3" style="padding-bottom: 10px;"><?=$row['comment'] ?></td>
+            </tr>
+        </tbody>
+    </table>
 </div>
     <?php
     endwhile;
