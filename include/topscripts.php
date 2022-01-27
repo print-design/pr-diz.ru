@@ -99,6 +99,21 @@ function BuildQueryRemove($key) {
     return $result;
 }
 
+function BuildQueryRemoveArray($array) {
+    $result = '';
+    $get_params = $_GET;
+    foreach($array as $key) {
+        unset($get_params[$key]);
+    }
+    $result = http_build_query($get_params);
+
+    if(!empty($result)) {
+        $result = "?$result";
+    }
+    
+    return $result;
+}
+
 function BuildQueryAddRemove($key, $value, $remove) {
     $result = '';
     $get_params = $_GET;

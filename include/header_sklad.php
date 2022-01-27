@@ -56,16 +56,16 @@ include 'left_bar.php';
             if(IsInRole(array('technologist', 'dev', 'storekeeper', 'manager', 'administrator'))):
             ?>
             <li class='nav-item'>
-                <a class="nav-link<?=$rolls_status ?>" href="<?=APPLICATION ?>/roll/<?= BuildQueryRemove('page') ?>">Рулоны</a>
+                <a class="nav-link<?=$rolls_status ?>" href="<?=APPLICATION ?>/roll/<?= BuildQueryRemoveArray(array('page', 'id')) ?>">Рулоны</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$pallets_status ?>" href="<?=APPLICATION ?>/pallet/<?= BuildQueryRemove('page') ?>">Паллеты</a>
+                <a class="nav-link<?=$pallets_status ?>" href="<?=APPLICATION ?>/pallet/<?= BuildQueryRemoveArray(array('page', 'id')) ?>">Паллеты</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$cut_sources_status ?>" href="<?=APPLICATION ?>/cut_source/<?= BuildQueryRemove('page') ?>">Раскроили</a>
+                <a class="nav-link<?=$cut_sources_status ?>" href="<?=APPLICATION ?>/cut_source/<?= BuildQueryRemoveArray(array('page', 'id')) ?>">Раскроили</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$utilized_status ?> text-nowrap" href="<?=APPLICATION ?>/utilized/<?= BuildQueryRemove('page') ?>">Сработанная пленка</a>
+                <a class="nav-link<?=$utilized_status ?> text-nowrap" href="<?=APPLICATION ?>/utilized/<?= BuildQueryRemoveArray(array('page', 'id')) ?>">Сработанная пленка</a>
             </li>
             <?php
             endif;
