@@ -18,12 +18,15 @@ if(filter_input(INPUT_GET, "find") != '') {
     <div class="input-group input-group-sm<?=$group_class ?>" id="find-group">
         <input type="text" class="form-control" id="find" name="find" placeholder="<?=$placeholder ?>" />
         <div class="input-group-append">
-            <button type="submit" class="btn btn-outline-dark form-control" id="find-submit" style="border-top-right-radius: 5px; border-bottom-right-radius: 5px; height: 35px;">Найти</button>
+            <button type="submit" class="btn btn-outline-dark form-control" id="find-submit" style="border-top-right-radius: 5px; border-bottom-right-radius: 5px; height: 35px; width: 70px;">Найти</button>
         </div>
         <div class="position-absolute px-2 align-text-bottom <?=$string_class ?>" style="top: 3px; left: 5px; bottom: 3px; background-color: gray; color: white; border-radius: 4px; padding-top: .4rem;">
         <?= filter_input(INPUT_GET, "find") ?>
             &nbsp;&nbsp;
             <a href="<?=APPLICATION.'/roll/' ?>"><i class="fas fa-times" style="color: white;"></i></a>
+        </div>
+        <div class="position-absolute" style="top: 0px; right: 70px; z-index: 10;">
+            <button type="btn" class="btn btn-link" id="find-camera"><i class='fas fa-camera'></i></button>
         </div>
     </div>
 </form>
