@@ -49,7 +49,7 @@
     
     // Открываем форму чтения кода по нажатию кнопки с камерой
     $('#find-camera').click(function() {
-        source_input_id = $('input#find');
+        source_input_id = 'find';
         $('#findCameraWrapper').modal('show');
     });
     

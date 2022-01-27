@@ -311,6 +311,8 @@ if(null === $comment) $comment = $row['comment'];
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger>$error_message</div>";
             }
+            
+            include '../include/find_camera.php';
             ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/pallet/<?= BuildQueryRemove('id') ?>">Назад</a>
             <h1 style="font-size: 24px; font-weight: 600;">Информация о паллете № <?="П".$id ?> от <?= $date ?></h1>
@@ -512,6 +514,7 @@ if(null === $comment) $comment = $row['comment'];
         </div>
         <?php
         include '../include/footer.php';
+        include '../include/footer_find.php';
         ?>
         <script>
             if($('.is-invalid').first() != null) {
