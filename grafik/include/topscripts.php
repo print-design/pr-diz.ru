@@ -12,6 +12,8 @@ $weekdays[4] = 'Чт';
 $weekdays[5] = 'Пт';
 $weekdays[6] = 'Сб';
 
+const TECHNOLOGIST = "technologist";
+
 // Функции
 function LoggedIn() {
     $username = filter_input(INPUT_COOKIE, USERNAME);

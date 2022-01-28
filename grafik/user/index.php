@@ -51,7 +51,15 @@ include '../include/restrict_admin.php';
                     ?>
                     <tr<?=$row['quit'] == 0 ? "" : " class='bg-warning'" ?>>
                         <td><?=$row['date'] ?></td>
-                        <td><a href='<?=APPLICATION."/user/details.php?id=".$row['id'] ?>'><?=$row['username'] ?></a></td>
+                        <td>
+                            <?php
+                            if($row['username'] == TECHNOLOGIST):
+                            echo $row['username'];
+                            else:
+                            ?>
+                            <a href='<?=APPLICATION."/user/details.php?id=".$row['id'] ?>'><?=$row['username'] ?></a>
+                            <?php endif; ?>
+                        </td>
                         <td><?=$row['fio'] ?></td>
                         <td><?=$row['roles'] ?></td>
                         <td class="font-weight-bold text-danger"><?=($row['quit'] == 0 ? '' : 'Уволился') ?></td>
