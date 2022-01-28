@@ -5,20 +5,6 @@ include 'left_bar.php';
     <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
             <?php
-            $comiflex_status = filter_input(INPUT_GET, 'id') == 1 ? ' disabled' : '';
-            $zbs1_status = filter_input(INPUT_GET, 'id') == 2 ? ' disabled' : '';
-            $zbs2_status = filter_input(INPUT_GET, 'id') == 3 ? ' disabled' : '';
-            $zbs3_status = filter_input(INPUT_GET, 'id') == 4 ? ' disabled' : '';
-            $atlas_status = filter_input(INPUT_GET, 'id') == 5 ? ' disabled' : '';
-            $laminators1_status = filter_input(INPUT_GET, 'id') == 6 ? ' disabled' : '';
-            $laminators2_status = filter_input(INPUT_GET, 'id') == 13 ? ' disabled' : '';
-            $cutters1_status = filter_input(INPUT_GET, 'id') == 7 ? ' disabled' : '';
-            $cutters2_status = filter_input(INPUT_GET, 'id') == 9 ? ' disabled' : '';
-            $cutters3_status = filter_input(INPUT_GET, 'id') == 10 ? ' disabled' : '';
-            $cutters4_status = filter_input(INPUT_GET, 'id') == 14 ? ' disabled' : '';
-            $cutters_atlas_status = filter_input(INPUT_GET, 'id') == 11 ? ' disabled' : '';
-            $cutters_soma_status = filter_input(INPUT_GET, 'id') == 12 ? ' disabled' : '';
-            
             $query_string = '';
             $period = array();
             
