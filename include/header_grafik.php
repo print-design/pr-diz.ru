@@ -34,47 +34,16 @@ include 'left_bar.php';
                 $query_string = '?'.http_build_query($period);
             
             if(IsInRole(array('technologist', 'dev', 'manager', 'storekeeper'))):
+            $sql = "select id, name from machine order by name";
+            $fetcher = new FetcherGrafik($sql);
+            while ($row = $fetcher->Fetch()):
+            $status = filter_input(INPUT_GET, 'id') == $row['id'] ? ' disabled' : '';
             ?>
             <li class="nav-item">
-                <a class="nav-link<?=$comiflex_status ?>" href="<?=APPLICATION ?>/grafik.php?id=1<?=$query_string ?>">Comiflex</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link<?=$zbs1_status ?>" href="<?=APPLICATION ?>/grafik.php?id=2<?=$query_string ?>">ZBS-1</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link<?=$zbs2_status ?>" href="<?=APPLICATION ?>/grafik.php?id=3<?=$query_string ?>">ZBS-2</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link<?=$zbs3_status ?>" href="<?=APPLICATION ?>/grafik.php?id=4<?=$query_string ?>">ZBS-3</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link<?=$atlas_status ?>" href="<?=APPLICATION ?>/grafik.php?id=5<?=$query_string ?>">Атлас</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link<?=$laminators1_status ?>" href="<?=APPLICATION ?>/grafik.php?id=6<?=$query_string ?>">Ламинатор 1</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link<?=$laminators2_status ?>" href="<?=APPLICATION ?>/grafik.php?id=13<?=$query_string ?>">Ламинатор 2</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link<?=$cutters1_status ?>" href="<?=APPLICATION ?>/grafik.php?id=7<?=$query_string ?>">Резка 1</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link<?=$cutters2_status ?>" href="<?=APPLICATION ?>/grafik.php?id=9<?=$query_string ?>">Резка 2</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link<?=$cutters3_status ?>" href="<?=APPLICATION ?>/grafik.php?id=10<?=$query_string ?>">Резка 3</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link<?=$cutters4_status ?>" href="<?=APPLICATION ?>/grafik.php?id=14<?=$query_string ?>">Резка 4</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link<?=$cutters_atlas_status ?>" href="<?=APPLICATION ?>/grafik.php?id=11<?=$query_string ?>">Резка &laquo;Атлас&raquo;</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link<?=$cutters_soma_status ?>" href="<?=APPLICATION ?>/grafik.php?id=12<?=$query_string ?>">Резка &laquo;Сома&raquo;</a>
+                <a class="nav-link<?=$status ?>" href="<?=APPLICATION ?>/grafik.php?id=<?=$row['id'] ?>"><?=$row['name'] ?></a>
             </li>
             <?php
+            endwhile;
             endif;
             ?>
         </ul>
