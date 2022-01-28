@@ -138,7 +138,7 @@ $rollers_count = $row['rollers_count'];
                             </form>
                         </div>
                     </div>
-                    <table class="table table-striped table-bordered">
+                    <table class="table table-hover">
                         <tbody>
                             <tr>
                                 <th></th>
@@ -148,27 +148,32 @@ $rollers_count = $row['rollers_count'];
                                 <th></th>
                             </tr>
                             <?php
-                            $rollers = (new Grabber("select id, name, position from roller where machine_id=$id order by position, name"))->result;
+                            $sql = "select r.id, r.name, r.position, (select count(id) from edition where roller_id = r.id) editions_count "
+                                    . "from roller r where r.machine_id=$id order by r.position, r.name";
+                            $grabber = new Grabber($sql);
+                            $rollers = $grabber->result;
                             $roller_num = 0;
                             
-                            foreach ($rollers as $row) {
-                                $roller_id = $row['id'];
-                                echo "<tr>"
-                                        ."<td>".(++$roller_num)."</td>"
-                                        ."<td>".htmlentities($row['name'])."</td>"
-                                        . "<td>".$row['position']."</td>"
-                                        ."<td class='text-right'>"
-                                        . "<a class='btn btn-outline-dark' title='Редактировать' href='edit_roller.php?id=".$row['id']."'><i class='fas fa-edit'></i>&nbsp;Редактировать</a>"
-                                        . "</td>"
-                                        . "<td class='text-right'>"
-                                        . "<form method='post'>"
-                                        . "<input type='hidden' id='roller_id' name='roller_id' value='$roller_id' />"
-                                        . "<button type='submit' class='btn btn-outline-dark confirmable' id='delete_roller_submit' name='delete_roller_submit'><i class='fas fa-trash-alt'></i>&nbsp;Удалить</button>"
-                                        . "</form>"
-                                        . "</td>"
-                                        ."</tr>";
-                            }
+                            foreach($rollers as $roller):
                             ?>
+                            <tr>
+                                <td><?=(++$roller_num) ?></td>
+                                <td><?=$roller['name'] ?></td>
+                                <td><?=$roller['position'] ?></td>
+                                <td class='text-right'>
+                                    <a class='btn btn-outline-dark' title='Редактировать' href='edit_roller.php?id=<?=$roller['id'] ?>'><i class='fas fa-edit'></i>&nbsp;Редактировать</a>
+                                </td>
+                                <td class='text-right'>
+                                    <?php if($roller['editions_count'] == 0): ?>
+                                    <form method='post'><input type='hidden' id='roller_id' name='roller_id' value='<?=$roller['id'] ?>' />
+                                        <button type='submit' class='btn btn-outline-dark confirmable' id='delete_roller_submit' name='delete_roller_submit'><i class='fas fa-trash-alt'></i>&nbsp;Удалить</button>
+                                    </form>
+                                    <?php else: ?>
+                                    <p><?=$roller['editions_count'] ?> тир.</p>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
