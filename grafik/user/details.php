@@ -191,7 +191,7 @@ $myroles = (new Grabber("select ur.user_id, ur.role_id, r.local_name from role r
                             </div>
                         </div>
                     </div>
-                    <table class="table table-bordered">
+                    <table class="table table-bordered table-hover">
                         <?php foreach($user_info_array as $user_info): ?>
                         <tr>
                             <th>ФИО</th>
