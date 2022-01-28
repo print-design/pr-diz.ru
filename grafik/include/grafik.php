@@ -57,8 +57,23 @@ class Grafik {
     private $rollers = [];
     private $laminations = [];
     private $managers = [];
+    
+    public $allow_edit = false;
 
     function ShowPage() {
+        // Смотрим настройки
+        $allow_edit = 0;
+        
+        $sql = "select name, bool_value from settings";
+        $fetcher = new Fetcher($sql);
+        while($row = $fetcher->Fetch()) {
+            if($row['name'] == "allow_edit") {
+                $allow_edit = $row['bool_value'];
+            }
+        }
+        
+        
+        
         // Проверяем, имеется ли что-нибудь в буфере обмена
         $clipboard_db = false;
         $sql = "select count(id) from clipboard";
@@ -199,7 +214,7 @@ class Grafik {
         $dateshift['my_rowspan'] = $dateshift['shift'] == 'day' ? $day_rowspan : $night_rowspan;
     }
 
-    private function ShowEdition($edition, $top, $clipboard_db) {
+    private function ShowEdition($edition, $top, $clipboard_db, $allow_edit_disabled) {
         $date = $edition['date'];
         $shift = $edition['shift'];
         $position = $edition['position'];

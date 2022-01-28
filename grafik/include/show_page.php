@@ -28,7 +28,16 @@ include 'show_top.php';
         </tr>
     </thead>
     <tbody id="grafik-tbody">
-        <?php foreach ($dateshifts as $dateshift): ?>
+        <?php
+        foreach ($dateshifts as $dateshift):
+        
+        $date_diff_from_now = date_diff(new DateTime(), $dateshift['date']);
+        
+        $allow_edit_disabled = '';
+        if(!$allow_edit && $date_diff_from_now->days < 1) {
+            $allow_edit_disabled = " disabled='disabled'";
+        }
+        ?>
         <tr>
             <?php if($dateshift['shift'] == 'day'): ?>
             <td class='<?=$dateshift['top'] ?> <?= $dateshift['shift'] ?>' rowspan='<?= $dateshift['rowspan'] ?>'><?= $GLOBALS['weekdays'][$dateshift['date']->format('w')] ?></td>
@@ -104,7 +113,7 @@ include 'show_top.php';
             <?php if(IsInRole('admin')): ?>
                 <?php if(count($dateshift['editions']) == 0): ?>
                     <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?> align-bottom' rowspan='<?=$dateshift['my_rowspan'] ?>'>
-                        <button type='button' class='btn btn-outline-dark btn-sm' style='display: block;' data-toggle='tooltip' data-machine='<?=$this->machineId ?>' data-from='<?=$this->dateFrom->format("Y-m-d") ?>' data-to='<?=$this->dateTo->format("Y-m-d") ?>' data-date='<?=$dateshift['date']->format('Y-m-d') ?>' data-shift='<?=$dateshift['shift'] ?>' data-workshift='<?=(empty($dateshift['row']['id']) ? '' : $dateshift['row']['id']) ?>' onclick='javascript: CreateEdition($(this))' title='Добавить тираж'><i class='fas fa-plus'></i></button>
+                        <button type='button' class='btn btn-outline-dark btn-sm'<?=$allow_edit_disabled ?> style='display: block;' data-toggle='tooltip' data-machine='<?=$this->machineId ?>' data-from='<?=$this->dateFrom->format("Y-m-d") ?>' data-to='<?=$this->dateTo->format("Y-m-d") ?>' data-date='<?=$dateshift['date']->format('Y-m-d') ?>' data-shift='<?=$dateshift['shift'] ?>' data-workshift='<?=(empty($dateshift['row']['id']) ? '' : $dateshift['row']['id']) ?>' onclick='javascript: CreateEdition($(this))' title='Добавить тираж'><i class='fas fa-plus'></i></button>
                     </td>
                 <?php endif; ?>
             <?php endif; ?>
@@ -139,14 +148,14 @@ include 'show_top.php';
                     <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?>'></td>
                     <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?>'>
                     <?php if(isset($dateshift['row']['id'])): ?>
-                        <button type='button' class='btn btn-outline-dark btn-sm' data-id='<?=$dateshift['row']['id'] ?>' data-machine='<?=$this->machineId ?>' data-from='<?=$this->dateFrom->format("Y-m-d") ?>' data-to='<?=$this->dateTo->format("Y-m-d") ?>' onclick='javascript: if(confirm("Действительно удалить?")){ DeleteShift($(this)); }' data-toggle='tooltip' title='Удалить смену'><i class='fas fa-trash-alt'></i></button>
+                        <button type='button' class='btn btn-outline-dark btn-sm'<?=$allow_edit_disabled ?> data-id='<?=$dateshift['row']['id'] ?>' data-machine='<?=$this->machineId ?>' data-from='<?=$this->dateFrom->format("Y-m-d") ?>' data-to='<?=$this->dateTo->format("Y-m-d") ?>' onclick='javascript: if(confirm("Действительно удалить?")){ DeleteShift($(this)); }' data-toggle='tooltip' title='Удалить смену'><i class='fas fa-trash-alt'></i></button>
                     <?php endif; ?>
                     </td>
                 <?php endif; ?>
             <?php else: ?>
                 <?php
                 $edition = array_shift($dateshift['editions']);
-                $this->ShowEdition($edition, $dateshift['top'], $clipboard_db);
+                $this->ShowEdition($edition, $dateshift['top'], $clipboard_db, $allow_edit_disabled);
                 ?>
             <?php endif; ?>
         </tr>
@@ -157,7 +166,7 @@ include 'show_top.php';
             
         while ($edition != null) {
             echo '<tr>';
-            $this->ShowEdition($edition, 'nottop', $clipboard_db);
+            $this->ShowEdition($edition, 'nottop', $clipboard_db, $allow_edit_disabled);
             echo '</tr>';
             $edition = array_shift($dateshift['editions']);
         }

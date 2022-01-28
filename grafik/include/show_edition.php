@@ -3,7 +3,7 @@ if($is_admin) {
     // Кнопки добавления нового тиража
     ?>
 <td class='<?=$top ?> <?=$shift ?>' style="position: relative;">
-    <button type='button' class='btn btn-outline-dark btn-sm open_add_edition_buttons' style='display: block;' data-toggle='tooltip' title='Добавить тираж' onclick="javascript: $(this).next('.add_edition_buttons').removeClass('d-none');"><i class='fas fa-plus'></i></button>
+    <button type='button' class='btn btn-outline-dark btn-sm open_add_edition_buttons'<?=$allow_edit_disabled ?> style='display: block;' data-toggle='tooltip' title='Добавить тираж' onclick="javascript: $(this).next('.add_edition_buttons').removeClass('d-none');"><i class='fas fa-plus'></i></button>
     <div class="add_edition_buttons d-none">
         <button type='button' class='btn btn-outline-dark btn-sm' style='display: inline;' data-workshift='<?=$workshift_id ?>' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-machine='<?=$machine_id ?>' data-from='<?=$from ?>' data-to='<?=$to ?>' data-position='<?=$position ?>' data-direction='up' onclick='javascript: CreateEdition($(this));' data-toggle='tooltip' title='Добавить тираж выше'><i class='fas fa-plus'></i><i class='fas fa-long-arrow-alt-up'></i></button>
         <button type='button' class='btn btn-outline-dark btn-sm' style='display: inline;' data-workshift='<?=$workshift_id ?>' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-machine='<?=$machine_id ?>' data-from='<?=$from ?>' data-to='<?=$to ?>' data-position='<?=$position ?>' data-direction='down' onclick="javascript: CreateEdition($(this));" data-toggle='tooltip' title='Добавить тираж ниже'><i class='fas fa-plus'></i><i class='fas fa-long-arrow-alt-down'></i></button>
@@ -33,7 +33,7 @@ if($is_admin) {
         ?>
 <td class='<?=$top ?> <?=$shift ?>'>
         <?php if($is_admin): ?>
-    <input type="text" value="<?=(isset($edition['organization']) ? htmlentities($edition['organization']) : '') ?>" onfocusout='javascript: EditOrganization($(this))' class="editable organizations" data-id='<?=$edition['id'] ?>' style="width:140px;" />
+    <input type="text"<?=$allow_edit_disabled ?> value="<?=(isset($edition['organization']) ? htmlentities($edition['organization']) : '') ?>" onfocusout='javascript: EditOrganization($(this))' class="editable organizations" data-id='<?=$edition['id'] ?>' style="width:140px;" />
         <?php
         else:
             echo (isset($edition['organization']) ? htmlentities($edition['organization']) : '');
@@ -50,7 +50,7 @@ if($is_admin) {
         <?php
         if($is_admin) {
             ?>
-    <input type="text" value="<?=(isset($edition['edition']) ? htmlentities($edition['edition']) : '') ?>" onfocusout="javascript: EditEdition($(this))" class="editable editions" data-id='<?=$edition['id'] ?>' style="width:140px;" />
+    <input type="text"<?=$allow_edit_disabled ?> value="<?=(isset($edition['edition']) ? htmlentities($edition['edition']) : '') ?>" onfocusout="javascript: EditEdition($(this))" class="editable editions" data-id='<?=$edition['id'] ?>' style="width:140px;" />
         <?php
         }
         else {
@@ -189,7 +189,7 @@ if($is_admin) {
     <?php
         if($is_admin) {
         ?>
-    <select data-id='<?=$edition['id'] ?>' onfocusout="javascript: EditManager($(this))" style='width:120px;'>
+    <select data-id='<?=$edition['id'] ?>'<?=$allow_edit_disabled ?> onfocusout="javascript: EditManager($(this))" style='width:120px;'>
         <optgroup>
             <option value="">...</option>
             <?php
@@ -233,7 +233,7 @@ if($is_admin) {
     if($is_admin):
         ?>
 <td class='<?=$top ?> <?=$shift ?>'>
-    <button class='btn btn-outline-dark btn-sm clipboard_copy' data='<?=$edition['id'] ?>' title='Копировать тираж' data-toggle='tooltip' onclick="javascript: CopyEditionDb(<?=$edition['id'] ?>, $(this));"><i class='fas fa-copy'></i><div class='alert alert-info clipboard_alert'>Скопировано</div></button>
+    <button class='btn btn-outline-dark btn-sm clipboard_copy' data='<?=$edition['id'] ?>'<?=$allow_edit_disabled ?> title='Копировать тираж' data-toggle='tooltip' onclick="javascript: CopyEditionDb(<?=$edition['id'] ?>, $(this));"><i class='fas fa-copy'></i><div class='alert alert-info clipboard_alert'>Скопировано</div></button>
 </td>
     <?php
     endif;
@@ -251,7 +251,7 @@ if($is_admin) {
     if($is_admin):
         ?>
 <td class='<?=$top ?> <?=$shift ?>'>
-    <button type='button' class='btn btn-outline-dark btn-sm' data-id="<?=$edition['id'] ?>" data-machine="<?=$machine_id ?>" data-from="<?=$from ?>" data-to="<?=$to ?>" onclick="javascript: if(confirm('Действительно удалить?')) { DeleteEdition($(this)); }" title='Удалить тираж' data-toggle="tooltip"><i class='fas fa-trash-alt'></i></button>
+    <button type='button'<?=$allow_edit_disabled ?> class='btn btn-outline-dark btn-sm' data-id="<?=$edition['id'] ?>" data-machine="<?=$machine_id ?>" data-from="<?=$from ?>" data-to="<?=$to ?>" onclick="javascript: if(confirm('Действительно удалить?')) { DeleteEdition($(this)); }" title='Удалить тираж' data-toggle="tooltip"><i class='fas fa-trash-alt'></i></button>
 </td>
     <?php
     endif;
