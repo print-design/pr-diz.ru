@@ -38,8 +38,7 @@ if($id === null) {
 }
         
 // Получение объекта
-$username = '';
-$fio = '';
+
         
 $comiflex_typographer = 0;
 $comiflex_assistant = 0;
@@ -110,20 +109,17 @@ $error_message = $grabber->error;
 $machines = $grabber->result;
 
 // Полная информация о пользователе, включая все отработанные смены
+$username = '';
 $user_info_array = array();
 
 if(empty($error_message)) {
     $sql = "select u.username, u.fio, u.quit";
     foreach($machines as $machine) {
-        if(!empty($machine['user1_name'])) {
-            $sql .= ", (select count(id) from workshift where machine_id = ".$machine['id']." and user1_id = u.id) user1_".$machine['id'];
-        }
+        $sql .= ", (select count(id) from workshift where machine_id = ".$machine['id']." and user1_id = u.id) user1_".$machine['id'];
         if(!empty($machine['user2_name'])) {
             $sql .= ", (select count(id) from workshift where machine_id = ".$machine['id']." and user2_id = u.id) user2_".$machine['id'];
         }
-        if(!empty($machine['user1_name'])) {
-            $sql .= ", (select count(e.id) from workshift ws inner join edition e on e.workshift_id = ws.id where ws.machine_id = ".$machine['id']." and e.manager_id = u.id) manager_".$machine['id'];
-        }
+        $sql .= ", (select count(e.id) from workshift ws inner join edition e on e.workshift_id = ws.id where ws.machine_id = ".$machine['id']." and e.manager_id = u.id) manager_".$machine['id'];
     }
     $sql .= " from user u where u.id = $id";
     $grabber = new Grabber($sql);
@@ -135,16 +131,13 @@ if(empty($error_message)) {
 $shifts_count = 0;
 
 foreach($user_info_array as $user_info) {
+    $username = $user_info['username'];
     foreach ($machines as $machine) {
-        if(!empty($machine['user1_name'])) {
-            $shifts_count += intval($user_info['user1_'.$machine['id']]);
-        }
+        $shifts_count += intval($user_info['user1_'.$machine['id']]);
         if(!empty($machine['user2_name'])) {
             $shifts_count += intval($user_info['user2_'.$machine['id']]);
         }
-        if(!empty($machine['user1_name'])) {
-            $shifts_count += intval($user_info['manager_'.$machine['id']]);
-        }
+        $shifts_count += intval($user_info['manager_'.$machine['id']]);
     }
 }
 
@@ -206,24 +199,20 @@ $myroles = (new Grabber("select ur.user_id, ur.role_id, r.local_name from role r
                             <td><?=($user_info['quit'] == 0 ? 'Нет' : 'Да') ?></td>
                         </tr>
                         <?php foreach($machines as $machine): ?>
-                        <?php if(!empty($machine['user1_name'])): ?>
                         <tr>
                             <th><?=$machine['name'].', '.$machine['user1_name'] ?></th>
                             <td><?=$user_info['user1_'.$machine['id']] ?></td>
                         </tr>
-                        <?php endif; ?>
                         <?php if(!empty($machine['user2_name'])): ?>
                         <tr>
                             <th><?=$machine['name'].', '.$machine['user2_name'] ?></th>
                             <td><?=$user_info['user2_'.$machine['id']] ?></td>
                         </tr>
                         <?php endif; ?>
-                        <?php if(!empty($machine['user1_name'])): ?>
                         <tr>
                             <th><?=$machine['name'].', Менеджер' ?></th>
                             <td><?=$user_info['manager_'.$machine['id']] ?></td>
                         </tr>
-                        <?php endif; ?>
                         <?php endforeach; ?>
                         <?php endforeach; ?>
                     </table>
