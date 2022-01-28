@@ -42,7 +42,9 @@ if($id === null) {
 }
         
 // Получение объекта
-$sql = "select m.name, m.user1_name, m.user2_name, m.role_id, m.has_organization, m.has_edition, m.has_length, m.has_status, m.has_roller, m.has_lamination, m.has_coloring, m.coloring, m.has_manager, m.has_comment, m.is_cutter, r.local_name role "
+$sql = "select m.name, m.user1_name, m.user2_name, m.role_id, m.has_organization, m.has_edition, m.has_length, m.has_status, m.has_roller, m.has_lamination, m.has_coloring, m.coloring, m.has_manager, m.has_comment, m.is_cutter, r.local_name role, "
+        . "(select count(id) from workshift where machine_id = m.id) workshifts_count, "
+        . "(select count(id) from roller where machine_id = m.id) rollers_count "
         . "from machine m "
         . "left join role r on m.role_id = r.id "
         . "where m.id=$id";
@@ -63,6 +65,8 @@ $has_manager = $row['has_manager'];
 $has_comment = $row['has_comment'];
 $is_cutter = $row['is_cutter'];
 $role = $row['role'];
+$workshifts_count = $row['workshifts_count'];
+$rollers_count = $row['rollers_count'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -86,12 +90,15 @@ $role = $row['role'];
                     <div class="d-flex justify-content-between mb-2">
                         <div class="p-1">
                             <h1><?=$name ?></h1>
+                            <p>Отработанных смен: <?=$workshifts_count ?>. Валов: <?=$rollers_count ?>.</p>
                         </div>
                         <div class="p-1">
                             <div class="btn-group">
                                 <a href="<?=APPLICATION ?>/machine/" class="btn btn-outline-dark"><i class="fas fa-undo-alt"></i>&nbsp;К списку</a>
                                 <a href="<?=APPLICATION ?>/machine/edit.php?id=<?=$id ?>" class="btn btn-outline-dark"><i class="fas fa-edit"></i>&nbsp;Редактировать</a>
+                                <?php if($rollers_count == 0 && $workshifts_count == 0): ?>
                                 <a href="<?=APPLICATION ?>/machine/delete.php?id=<?=$id ?>" class="btn btn-outline-dark"><i class="fas fa-trash-alt"></i>&nbsp;Удалить</a>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
