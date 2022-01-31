@@ -334,10 +334,10 @@ while ($row = $fetcher->Fetch()) {
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-outline-dark form-control mt-3 next_wind" id="next-submit" name="next-submit">Следующая намотка</button>
+                    <button type="submit" class="btn btn-outline-dark form-control mt-3 mb-5 next_wind" id="next-submit" name="next-submit">Следующая намотка</button>
                 </div>
             </form>
-            <div class="d-block d-lg-none w-100 pl-4 pr-4 pb-4" style="position: absolute; bottom: 0; left: 0;">
+            <div class="d-block d-lg-none w-100 pb-4" id="bottom_buttons">
                 <div class="form-group">
                     <a href="source.php" class="btn btn-outline-dark form-control next_source mt-3">Новый исходный рулон</a>
                 </div>
@@ -412,7 +412,28 @@ while ($row = $fetcher->Fetch()) {
                 }
             }
             
-            $(document).ready(CalculateByRadius);
+            function AdjustButtons() {
+                //alert($('#next-submit').offset().top + ' ' + ' ' + $('#bottom_buttons').outerHeight() + ' ' + $(window).height());
+                if($('#next-submit').offset().top + $('#bottom_buttons').outerHeight() + 100 < $(window).height()) {
+                    $('#bottom_buttons').removeClass('sticky-top');
+                    $('#bottom_buttons').addClass('fixed-bottom');
+                    $('#bottom_buttons').addClass('container-fluid');
+                }
+                else {
+                    $('#bottom_buttons').addClass('sticky-top');
+                    $('#bottom_buttons').removeClass('fixed-bottom');
+                    $('#bottom_buttons').removeClass('container-fluid');
+                }
+            }
+            
+            $(document).ready(function() {
+                CalculateByRadius();
+                AdjustButtons();
+            });
+            
+            $(window).on('resize', function() {
+                AdjustButtons();
+            });
             
             // Рассчитываем ширину и массу плёнки при изменении значений радиуса
             $('#radius').keypress(CalculateByRadius);
