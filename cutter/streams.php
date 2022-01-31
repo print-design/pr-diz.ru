@@ -40,6 +40,11 @@ for($i=1; $i<=19; $i++) {
     $$stream_message = 'Ширина ручья обязательно';
     $stream_valid_name = 'stream_'.$i.'_valid';
     $$stream_valid_name = '';
+    
+    $comment_message = 'comment_'.$i.'_valid';
+    $$comment_message = 'Комментарий к ручью обязательно';
+    $comment_valid_name = 'comment_'.$i.'_valid';
+    $$comment_valid_name = '';
 }
 
 if(null !== filter_input(INPUT_POST, 'next-submit')) {
@@ -47,6 +52,24 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     if(empty($streams_count) || intval($streams_count) > 19) {
         $streams_count_valid = ISINVALID;
         $form_valid = false;
+    }
+    
+    for($i=1; $i<=$streams_count; $i++) {
+        if(empty(filter_input(INPUT_POST, 'stream_'.$i))) {
+            $stream_valid_name = 'stream_'.$i.'_valid';
+            $$stream_valid_name = ISINVALID;
+            $stream_message = 'stream_'.$i.'_message';
+            $$stream_message = "Ручей $i обязательно, больше нуля";
+            $form_valid = false;
+        }
+        
+        if(empty(filter_input(INPUT_POST, 'comment_'.$i))) {
+            $comment_valid_name = 'comment_'.$i.'_valid';
+            $$comment_valid_name = ISINVALID;
+            $comment_message = 'comment_'.$i.'_message';
+            $$comment_message = "Комментарий к ручью $i обязательно";
+            $form_valid = false;
+        }
     }
     
     $width = 0;
@@ -165,11 +188,16 @@ if(null !== filter_input(INPUT_POST, 'previous-submit')) {
                     $stream_valid_name = 'stream_'.$i.'_valid';
                     $stream_group_display_class = ' d-none';
                     $stream_message = 'stream_'.$i.'_message';
+                    
+                    $comment_valid_name = 'comment_'.$i.'_valid';
+                    $comment_group_display_class = ' d-none';
+                    $comment_message = 'comment_'.$i.'_message';
                 
                     $streams_count = isset($_REQUEST['streams_count']) ? $_REQUEST['streams_count'] : null;
                 
                     if(null !== $streams_count && intval($streams_count) >= intval($i)) {
                         $stream_group_display_class = '';
+                        $comment_group_display_class = '';
                     }
                     ?>
                 <div class="form-group stream_group<?=$stream_group_display_class ?>" id="stream_<?=$i ?>_group">
@@ -177,11 +205,12 @@ if(null !== filter_input(INPUT_POST, 'previous-submit')) {
                     <div class="input-group">
                         <input type="text" id="stream_<?=$i ?>" name="stream_<?=$i ?>" class="form-control int-only<?=$$stream_valid_name ?>" value="<?= isset($_REQUEST['stream_'.$i]) ? $_REQUEST['stream_'.$i] : '' ?>" placeholder="Ширина" autocomplete="off" />
                         <div class="input-group-append"><span class="input-group-text">мм</span></div>
-                        <div class="invalid-feedback invalid-stream"><?=$$stream_message ?></div>                        
+                        <div class="invalid-feedback"><?=$$stream_message ?></div>                        
                     </div>
                 </div>
-                <div class="form-group stream_group<?=$stream_group_display_class ?>" id="comment_<?=$i ?>_group">
-                    <input type="text" id="comment_<?=$i ?>" name="comment_<?=$i ?>" class="form-control" value="<?= isset($_REQUEST['comment_'.$i]) ? urldecode(htmlentities($_REQUEST['comment_'.$i])) : '' ?>" placeholder="Комментарий" autocomplete="off" />
+                <div class="form-group comment_group<?=$comment_group_display_class ?>" id="comment_<?=$i ?>_group">
+                    <input type="text" id="comment_<?=$i ?>" name="comment_<?=$i ?>" class="form-control<?=$$comment_valid_name ?>" value="<?= isset($_REQUEST['comment_'.$i]) ? urldecode(htmlentities($_REQUEST['comment_'.$i])) : '' ?>" placeholder="Комментарий" autocomplete="off" />
+                    <div class="invalid-feedback"><?=$$comment_message ?></div>
                 </div>
                     <?php endfor; ?>
                 <div class="form-group">
@@ -197,11 +226,13 @@ if(null !== filter_input(INPUT_POST, 'previous-submit')) {
             $('#streams_count').keyup(function() {
                 SetStreams($(this).val());
             });
-    
+            
             // Показ и заполнение каждого ручья
             function SetStreams(streams_count) {
                 $('.stream_group').addClass('d-none');
                 $('.stream_group .input-group input').removeAttr('required');
+                $('.comment_group').addClass('d-none');
+                $('.comment_group input').removeAttr('required');
                 
                 if(streams_count != '') {
                     iStreamsCount = parseInt(streams_count);
@@ -216,6 +247,7 @@ if(null !== filter_input(INPUT_POST, 'previous-submit')) {
                             $('#stream_' + i + '_group').removeClass('d-none');
                             $('#comment_' + i + '_group').removeClass('d-none');
                             $('#stream_' + i + '_group .input-group input').attr('required', 'required');
+                            $('#comment_' + i + '_group input').attr('required', 'required');
                         }
                     }
                 }
