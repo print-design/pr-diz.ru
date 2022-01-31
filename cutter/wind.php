@@ -16,6 +16,8 @@ include '_check_rolls.php';
 $opened_roll = CheckOpenedRolls($user_id);
 $cutting_id = $opened_roll['id'];
 $last_source = $opened_roll['last_source'];
+$last_wind = $opened_roll['last_wind'];
+
 $streams_count = $opened_roll['streams_count'];
 
 // Если нет незакрытой нарезки, переходим на первую страницу
@@ -338,9 +340,11 @@ while ($row = $fetcher->Fetch()) {
                 </div>
             </form>
             <div class="d-block d-lg-none w-100 pb-4" id="bottom_buttons">
+                <?php if(!empty($last_wind)): ?>
                 <div class="form-group">
                     <a href="source.php" class="btn btn-outline-dark form-control next_source mt-3">Новый исходный рулон</a>
                 </div>
+                <?php endif; ?>
                 <?php if($winds_count > 0): ?>
                 <div class="form-group">
                     <a href="remain.php" class="btn btn-dark form-control mt-3">Заявка выполнена</a>

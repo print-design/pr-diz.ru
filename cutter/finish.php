@@ -43,17 +43,32 @@ $cutting_id = filter_input(INPUT_GET, 'id');
             }
             ?>
             <h1 class="text-center">Заявка закрыта</h1>
-            <p class="text-center" style="font-size: x-large; color: green;">Молодец:)</p>
-            <div style="height: 22rem;"></div>
-            <div class="d-none d-lg-block">
-                <a class="btn btn-dark form-control" href="<?=APPLICATION ?>/cutter/">Вернуться в заявки</a>
-            </div>
-            <div class="d-block d-lg-none w-100 pl-4 pr-4 pb-4" style="position: absolute; bottom: 0; left: 0;">
+            <p class="text-center" style="font-size: x-large; color: green;" id="molotok">Молодец:)</p>
+            <div id="bottom_buttons" class="pb-4">
                 <a class="btn btn-dark form-control" href="<?=APPLICATION ?>/cutter/">Вернуться в заявки</a>
             </div>
         </div>
         <?php
         include '_footer.php';
         ?>
+        <script>
+            // Позиционируем кнопку "Вернуться в заявки" относительно нижнего края экрана только если она не перекроет другие элементы
+            function AdjustButtons() {
+                if($('#molotok').offset().top + $('#bottom_buttons').outerHeight() + 30 < $(window).height()) {
+                    $('#bottom_buttons').removeClass('sticky-top');
+                    $('#bottom_buttons').addClass('fixed-bottom');
+                    $('#bottom_buttons').addClass('container-fluid');
+                }
+                else {
+                    $('#bottom_buttons').addClass('sticky-top');
+                    $('#bottom_buttons').removeClass('fixed-bottom');
+                    $('#bottom_buttons').removeClass('container-fluid');
+                }
+            }
+            
+            $(document).ready(AdjustButtons);
+            
+            $(window).on('resize', AdjustButtons);
+        </script>
     </body>
 </html>
