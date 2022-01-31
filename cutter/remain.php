@@ -163,7 +163,12 @@ if($row = $fetcher->Fetch()) {
     </head>
     <body>
         <div class="container-fluid header">
-            <nav class="navbar navbar-expand-sm justify-content-end">
+            <nav class="navbar navbar-expand-sm justify-content-between">
+                <ul class="navbar-nav w-75">
+                    <li class="nav-item">
+                        <a href="wind.php" class="nav-link"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                    </li>
+                </ul>
                 <ul class="navbar-nav mr-4">
                     <li class="nav-item dropdown no-dropdown-arrow-after">
                         <a class="nav-link mr-0" href="javascript: void(0);" data-toggle="modal" data-target="#infoModal"><img src="<?=APPLICATION ?>/images/icons/info.svg" /></a>
