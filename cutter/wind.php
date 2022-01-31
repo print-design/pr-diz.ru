@@ -97,7 +97,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             $wind_lengths = $row[0];
         }
         
-        $reserve_length = 1;
+        $reserve_length = 1000;
         
         if($length + $wind_lengths > $source_length + $reserve_length) {
             $length_valid = ISINVALID;
