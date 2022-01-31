@@ -538,22 +538,18 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         <br />
                         <div style="font-size: 1rem;">
                         <?php
-                        $sql = "select cstr.width, DATE_FORMAT(c.date, '%d.%m.%Y') date, DATE_FORMAT(c.date, '%H:%i') time "
+                        $sql = "select cstr.width "
                                 . "from cut_wind cw "
                                 . "inner join cut c on cw.cut_id = c.id "
                                 . "inner join cut_stream cstr on cw.cut_id = cstr.cut_id "
                                 . "where cw.id = $cut_wind_id";
                         $fetcher = new Fetcher($sql);
                         $result = "";
-                        $date = "";
-                        $time = "";
                         while ($row = $fetcher->Fetch()) {
                             if($result != "") {
                                 $result .= " - ";
                             }
                             $result .= $row['width'].' мм';
-                            $date = $row['date'];
-                            $time = $row['time'];
                         }
                         echo "$date в $time<br />";
                         echo $result;
@@ -569,7 +565,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         <br />
                         <div style="font-size: 1rem;">
                             <?php
-                            $sql = "select cstr.width, DATE_FORMAT(c.date, '%d.%m.%Y') date, DATE_FORMAT(c.date, '%H:%i') time "
+                            $sql = "select cstr.width "
                                     . "from cutting_wind cw "
                                     . "inner join cutting_source cs on cw.cutting_source_id = cs.id "
                                     . "inner join cutting c on cs.cutting_id = c.id "
@@ -577,15 +573,11 @@ $cutting_wind_id = $row['cutting_wind_id'];
                                     . "where cw.id = $cutting_wind_id";
                             $fetcher = new Fetcher($sql);
                             $result = "";
-                            $date = "";
-                            $time = "";
                             while ($row = $fetcher->Fetch()) {
                                 if($result != "") {
                                     $result .= " - ";
                                 }
                                 $result .= $row['width'].' мм';
-                                $date = $row['date'];
-                                $time = $row['time'];
                             }
                             echo "$date в $time<br />";
                             echo $result;
@@ -595,7 +587,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
                     <?php
                     endif;
                     // Если этот рулон появился в результате нарезки (старая версия)
-                    $sql = "select cs.width, DATE_FORMAT(c.date, '%d.%m.%Y') date, DATE_FORMAT(c.date, '%H:%i') time "
+                    $sql = "select cs.width "
                             . "from cut c "
                             . "inner join cut_stream cs on cs.cut_id = c.id "
                             . "where c.remain = ". filter_input(INPUT_GET, 'id');
@@ -608,15 +600,11 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         <div style="font-size: 1rem;">
                         <?php
                         $result = "";
-                        $date = "";
-                        $time = "";
                         foreach($grabber->result as $row) {
                             if($result != "") {
                                 $result .= " - ";
                             }
                             $result .= $row['width'].' мм';
-                            $date = $row['date'];
-                            $time = $row['time'];
                         }
                         echo "$date в $time<br />";
                         echo $result;
@@ -625,8 +613,8 @@ $cutting_wind_id = $row['cutting_wind_id'];
                     </div>
                     <?php
                     endif;
-                    // Если этот рулон появился в результате нарезки (старая версия)
-                    $sql = "select cs.width, DATE_FORMAT(c.date, '%d.%m.%Y') date, DATE_FORMAT(c.date, '%H:%i') time "
+                    // Если этот рулон появился в результате нарезки (новая версия)
+                    $sql = "select cs.width "
                             . "from cutting c "
                             . "inner join cutting_stream cs on cs.cutting_id = c.id "
                             . "where c.remain = ". filter_input(INPUT_GET, 'id');
@@ -639,15 +627,11 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         <div style="font-size: 1rem;">
                             <?php
                             $result = "";
-                            $date = "";
-                            $time = "";
                             foreach($grabber->result as $row) {
                                 if($result != "") {
                                     $result .= " - ";
                                 }
                                 $result .= $row['width'].' мм';
-                                $date = $row['date'];
-                                $time = $row['time'];
                             }
                             echo "$date в $time<br />";
                             echo $result;
