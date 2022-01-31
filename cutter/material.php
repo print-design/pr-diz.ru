@@ -217,6 +217,7 @@ if(!empty($cutting_id)) {
         include '_footer.php';
         ?>
         <script>
+            // Позиционируем кнопку "Далее" относительно нижнего края экрана только если она не перекроет другие элементы
             function AdjustButtons() {
                 if($('#width').offset().top + $('#bottom_buttons').outerHeight() + 50 < $(window).height()) {
                     $('#bottom_buttons').removeClass('sticky-top');

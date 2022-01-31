@@ -267,7 +267,7 @@ $source_id = filter_input(INPUT_POST, 'source_id');
                     </form>
                 </div>
             </div>
-            <div class="d-block d-lg-none w-100 pl-4 pr-4 pb-4" style="position: absolute; bottom: 0; left: 0;">
+            <div class="d-block d-lg-none w-100 pb-4" id="bottom_buttons">
                 <button type="button" class="btn btn-dark form-control" onclick="javascript: $('#next-submit').click();">Далее</button>
             </div>
         </div>
@@ -295,6 +295,7 @@ $source_id = filter_input(INPUT_POST, 'source_id');
                 });
             }
             
+            // Показываем либо кнопку открытия сканера либо кнопку очистки поля
             function SetFindClearVisibility(obj) {
                 obj.removeClass('is-invalid');
                 
@@ -309,6 +310,20 @@ $source_id = filter_input(INPUT_POST, 'source_id');
                     var btn = $("<button type='button' class='btn clear-btn'><i class='fas fa-times'></i></button>");
                     obj.parent().children('.input-group-append').append(btn);
                     AddFindClearListener();
+                }
+            }
+            
+            // Позиционируем кнопку "Далее" относительно нижнего края экрана только если она не перекроет другие элементы
+            function AdjustButtons() {
+                if($('#source_id').offset().top + $('#bottom_buttons').outerHeight() + 80 < $(window).height()) {
+                    $('#bottom_buttons').removeClass('sticky-top');
+                    $('#bottom_buttons').addClass('fixed-bottom');
+                    $('#bottom_buttons').addClass('container-fluid');
+                }
+                else {
+                    $('#bottom_buttons').addClass('sticky-top');
+                    $('#bottom_buttons').removeClass('fixed-bottom');
+                    $('#bottom_buttons').removeClass('container-fluid');
                 }
             }
             
@@ -340,8 +355,12 @@ $source_id = filter_input(INPUT_POST, 'source_id');
     
                 $('input#source_id').change(function(e) {
                     SetFindClearVisibility($(e.target));
-                });    
+                });
+                
+                AdjustButtons();
             });
+            
+            $(window).on('resize', AdjustButtons);
             
             $(document).on("play", function() {
                 // При появлении картинки делаем невидимыми песочные часы

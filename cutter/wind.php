@@ -412,6 +412,7 @@ while ($row = $fetcher->Fetch()) {
                 }
             }
             
+            // Позиционируем кнопки "Следующий исходный ролик" и "Закрытие заявки" только если они не перекроют другие элементы
             function AdjustButtons() {
                 if($('#next-submit').offset().top + $('#bottom_buttons').outerHeight() + 100 < $(window).height()) {
                     $('#bottom_buttons').removeClass('sticky-top');
