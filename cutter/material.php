@@ -209,12 +209,30 @@ if(!empty($cutting_id)) {
                     </form>
                 </div>
             </div>
-            <div class="d-block d-lg-none w-100 pl-4 pr-4 pb-4" style="position: absolute; bottom: 0; left: 0;">
+            <div class="d-block d-lg-none w-100 pb-4" id="bottom_buttons">
                 <button type="button" class="btn btn-dark form-control" onclick="javascript: $('#next-submit').click();">Далее</button>
             </div>
         </div>
         <?php
         include '_footer.php';
         ?>
+        <script>
+            function AdjustButtons() {
+                if($('#width').offset().top + $('#bottom_buttons').outerHeight() + 50 < $(window).height()) {
+                    $('#bottom_buttons').removeClass('sticky-top');
+                    $('#bottom_buttons').addClass('fixed-bottom');
+                    $('#bottom_buttons').addClass('container-fluid');
+                }
+                else {
+                    $('#bottom_buttons').addClass('sticky-top');
+                    $('#bottom_buttons').removeClass('fixed-bottom');
+                    $('#bottom_buttons').removeClass('container-fluid');
+                }
+            }
+            
+            $(document).ready(AdjustButtons);
+            
+            $(window).on('resize', AdjustButtons);
+        </script>
     </body>
 </html>

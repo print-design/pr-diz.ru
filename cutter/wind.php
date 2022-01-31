@@ -413,7 +413,6 @@ while ($row = $fetcher->Fetch()) {
             }
             
             function AdjustButtons() {
-                //alert($('#next-submit').offset().top + ' ' + ' ' + $('#bottom_buttons').outerHeight() + ' ' + $(window).height());
                 if($('#next-submit').offset().top + $('#bottom_buttons').outerHeight() + 100 < $(window).height()) {
                     $('#bottom_buttons').removeClass('sticky-top');
                     $('#bottom_buttons').addClass('fixed-bottom');
