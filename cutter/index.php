@@ -13,12 +13,21 @@ $user_id = GetUserId();
 include '_check_rolls.php';
 $opened_roll = CheckOpenedRolls($user_id);
 $cutting_id = $opened_roll['id'];
-$last_source = $opened_roll['last_source'];
 $streams_count = $opened_roll['streams_count'];
+$last_source = $opened_roll['last_source'];
+$last_wind = $opened_roll['last_wind'];
 
 // Если есть незакрытая нарезка, переходим на страницу создания исходного ролика.
 if(!empty($cutting_id)) {
-    header("Location: source.php");
+    if(empty($last_source) && empty($streams_count)) {
+        header("Location: source.php");
+    }
+    elseif (!empty ($last_source) && empty ($streams_count)) {
+        header("Location: streams.php");
+    }
+    elseif(!empty ($last_source) && !empty ($streams_count)) {
+        header("Location: wind.php");
+    }
 }
 ?>
 <!DOCTYPE html>
