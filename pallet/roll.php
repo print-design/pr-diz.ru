@@ -342,10 +342,24 @@ if(null === $comment) $comment = $row['comment'];
                         $sql = "select cstr.width "
                                 . "from cut_source cs "
                                 . "inner join cut_stream cstr on cs.cut_id = cstr.cut_id "
-                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id')." and is_from_pallet = 1";
+                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id')." and cs.is_from_pallet = 1";
                         $fetcher = new Fetcher($sql);
                         $result = "";
                         while ($row = $fetcher->Fetch()) {
+                            if($result != "") {
+                                $result .= " - ";
+                            }
+                            $result .= $row[0].' мм';
+                        }
+                        echo $result;
+                        
+                        $sql = "select cstr.width "
+                                . "from cutting_source cs "
+                                . "inner join cutting_stream cstr on cs.cutting_id = cstr.cutting_id "
+                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id')." and cs.is_from_pallet = 1";
+                        $fetcher = new Fetcher($sql);
+                        $result = "";
+                        while($row = $fetcher->Fetch()) {
                             if($result != "") {
                                 $result .= " - ";
                             }
