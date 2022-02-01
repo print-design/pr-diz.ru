@@ -326,6 +326,23 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
                 }
             }
             
+            // Рассчитываем ширину и массу плёнки при изменении значений каждого поля, участвующего в вычислении
+            $('#spool').change(CalculateByRadius);
+            
+            $('#radius').keypress(CalculateByRadius);
+            
+            $('#radius').keyup(CalculateByRadius);
+            
+            $('#radius').change(CalculateByRadius);
+            
+            $('#thickness').change(CalculateByRadius);
+            
+            $('#width').keypress(CalculateByRadius);
+            
+            $('#width').keyup(CalculateByRadius);
+            
+            $('#width').change(CalculateByRadius);
+            
             $(document).ready(function() { 
                 AdjustButtons();
                 CalculateByRadius();
