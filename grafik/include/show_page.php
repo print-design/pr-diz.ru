@@ -34,7 +34,7 @@ include 'show_top.php';
         $date_diff_from_now = date_diff(new DateTime(), $dateshift['date']);
         
         $allow_edit_disabled = '';
-        if(!$allow_edit && $date_diff_from_now->days < 1) {
+        if(!$allow_edit && $date_diff_from_now->days < 1 && !$this->isCutter) {
             $allow_edit_disabled = " disabled='disabled'";
         }
         ?>
@@ -131,7 +131,11 @@ include 'show_top.php';
                             $disabled = '';
                         }
                         ?>
+                        <?php if(!empty($allow_edit_disabled)): ?>
+                        <button type="button" class="btn btn-outline-dark btn-sm" style="display: block;"<?=$allow_edit_disabled ?>><i class="fas fa-paste"></i></button>
+                        <?php else: ?>
                         <button type='button' class='btn btn-outline-dark btn-sm btn_clipboard_paste' style='display: block;' data-toggle='tooltip' data-machine='<?=$this->machineId ?>' data-from='<?=$this->dateFrom->format("Y-m-d") ?>' data-to='<?=$this->dateTo->format("Y-m-d") ?>' data-date='<?=$dateshift['date']->format('Y-m-d') ?>' data-shift='<?=$dateshift['shift'] ?>' data-workshift='<?=(empty($dateshift['row']['id']) ? '' : $dateshift['row']['id']) ?>' onclick='javascript: PasteEditionDb($(this))' title='Вставить тираж'<?=$disabled ?>><i class='fas fa-paste'></i></button>
+                        <?php endif; ?>
                     </td>
                 <?php endif; ?>
                 <?php if($this->hasOrganization): ?> <td class='<?=$dateshift['top']." ".$dateshift['shift'] ?>'></td> <?php endif; ?>
