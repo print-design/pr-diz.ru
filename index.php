@@ -10,6 +10,11 @@ if(IsInRole(array('electrocarist'))) {
 if(IsInRole(array('cutter'))) {
     header('Location: '.APPLICATION.'/cutter/');
 }
+
+// Маркиратора перенаправляем в раздел marker
+if(IsInRole(array('marker'))) {
+    header('Location: '.APPLICATION.'/marker/');
+}
 ?>
 <!DOCTYPE html>
 <!--
