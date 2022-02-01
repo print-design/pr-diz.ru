@@ -237,7 +237,7 @@ if($is_admin) {
     if($is_admin):
         ?>
 <td class='<?=$top ?> <?=$shift ?>'>
-    <button class='btn btn-outline-dark btn-sm clipboard_copy' data='<?=$edition['id'] ?>' title='Копировать тираж' data-toggle='tooltip' onclick="javascript: CopyEditionDb(<?=$edition['id'] ?>, $(this));"><i class='fas fa-copy'></i><div class='alert alert-info clipboard_alert'>Скопировано</div></button>
+    <button type="button"<?=$allow_edit_disabled ?> class='btn btn-outline-dark btn-sm clipboard_copy' data='<?=$edition['id'] ?>' title='Копировать тираж' data-toggle='tooltip' onclick="javascript: CopyEditionDb(<?=$edition['id'] ?>, $(this));"><i class='fas fa-copy'></i><div class='alert alert-info clipboard_alert'>Скопировано</div></button>
 </td>
     <?php
     endif;
@@ -246,7 +246,7 @@ if($is_admin) {
     if($is_admin):
         ?>
 <td class='<?=$top ?> <?=$shift ?>'>
-    <button class="btn btn-outline-dark btn-sm" onclick="javascript: ShowMoveForm($(this))" title="Сдвинуть несколько тиражей" data-toggle='tooltip' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-position='<?=$position ?>' data-machine='<?=$machine_id ?>' data-workshift='<?=$workshift_id ?>' data-from="<?=$from ?>" data-to="<?=$to ?>"><i class="fas fa-table"></i></button>
+    <button type="button" class="btn btn-outline-dark btn-sm" onclick="javascript: ShowMoveForm($(this))" title="Сдвинуть несколько тиражей" data-toggle='tooltip' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-position='<?=$position ?>' data-machine='<?=$machine_id ?>' data-workshift='<?=$workshift_id ?>' data-from="<?=$from ?>" data-to="<?=$to ?>"><i class="fas fa-table"></i></button>
 </td>
     <?php
     endif;
