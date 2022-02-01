@@ -31,7 +31,7 @@ if($row = $fetcher->Fetch()) {
     <body>
         <?php
         $class_attr = " class='d-none'";
-        if(isset($_COOKIE['roll_id'.$roll_id]) && $_COOKIE['roll_id_'.$roll_id] == 1) {
+        if(isset($_COOKIE['roll_id_'.$roll_id]) && $_COOKIE['roll_id_'.$roll_id] == 1) {
             $class_attr = "";
         }
         ?>
@@ -85,6 +85,55 @@ if($row = $fetcher->Fetch()) {
         }
         
         $current_roll++;
+        ?>
+        <table class="table table-bordered compact" style="writing-mode: vertical-rl;">
+            <tbody>
+                <tr>
+                    <td colspan="2" class="font-weight-bold font-italic text-left">ООО &laquo;Принт-дизайн&raquo;</td>
+                    <td class="text-center text-nowrap">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></td>
+                </tr>
+                <tr>
+                    <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
+                    <td>Ширина<br /><strong><?=$width ?> мм</strong></td>
+                    <td rowspan="6" class="qr">
+                        <?php
+                        include_once '../qr/qrlib.php';
+                        $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
+                        $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/roll/roll.php?id='.$id;
+                        $filename = "../temp/".$current_roll."_".$current_date_time.".png";
+                            
+                        do {
+                            QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
+                        } while (!file_exists($filename));
+                        ?>
+                        <img src='<?=$filename ?>' style="width: 200px; height: 200px;" />
+                        <br /><br />
+                        <div class="text-nowrap">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">ID от поставщика<br /><span class="text-nowrap font-weight-bold"><?=$id_from_supplier ?></span></td>
+                    <td class="text-nowrap">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></span></td>
+                </tr>
+                <tr>
+                    <td>Кладовщик<br /><strong><?=$storekeeper ?></strong></td>
+                    <td>Длина<br /><strong><?=$length ?> м</strong></td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">Марка пленки<br /><strong><?=$film_brand ?></strong></td>
+                    <td class="text-nowrap">Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
+                </tr>
+                <tr>
+                    <td>Статус<br /><strong><?=$status ?></strong></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="white-space: normal;">Комментарий<br /><strong><?= $comment ?></strong></td>
+                </tr>
+            </tbody>
+        </table>
+        <?php
+        $sticker_top = 1700;
         ?>
         <table class="table table-bordered compact" style="writing-mode: vertical-rl;">
             <tbody>
