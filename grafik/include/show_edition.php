@@ -18,12 +18,16 @@ if($is_admin) {
     }
     ?>
 <td class='<?=$top ?> <?=$shift ?>' style="position: relative;">
+    <?php if(!empty($allow_edit_disabled)): ?>
+    <button type="button" class="btn btn-outline-dark btn-sm" style="display: block;"<?=$allow_edit_disabled ?>><i class="fas fa-paste"></i></button>
+    <?php else: ?>
     <button type="button" class="btn btn-outline-dark btn-sm open_add_edition_buttons btn_clipboard_paste" style="display: block;" data-toggle="tooltip" title="Вставить тираж"<?=$disabled ?> onclick="javascript: $(this).next('.add_edition_buttons').removeClass('d-none');"><i class="fas fa-paste"></i></button>
     <div class="add_edition_buttons d-none">
         <button type="button" class='btn btn-outline-dark btn-sm btn_clipboard_paste' style='display: inline;' data-toggle='tooltip' data-machine='<?=$machine_id ?>' data-from='<?=$from ?>' data-to='<?=$to ?>' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-workshift='<?=$workshift_id ?>' data-direction='up' data-position='<?=$position ?>' onclick="javascript: PasteEditionDb($(this))" title='Вставить тираж выше'<?=$disabled ?>><i class='fas fa-paste'></i><i class='fas fa-long-arrow-alt-up'></i></button>
         <button type="button" class='btn btn-outline-dark btn-sm btn_clipboard_paste' style="display: inline;" data-toggle='tooltip' data-machine='<?=$machine_id ?>' data-from='<?=$from ?>' data-to='<?=$to ?>' data-date='<?=$date ?>' data-shift='<?=$shift ?>' data-workshift='<?=$workshift_id ?>' data-direction='down' data-position='<?=$position ?>' onclick="javascript: PasteEditionDb($(this))" title='Вставить тираж ниже'<?=$disabled ?>><i class='fas fa-paste'></i><i class='fas fa-long-arrow-alt-down'></i></button>
         <a href="javascript: void(0);" class="add_edition_buttons_close" onclick="javascript: $(this).parent().addClass('d-none');"><i class="fa fa-window-close"></i></a>
     </div>
+    <?php endif; ?>
 </td>
     <?php
     }
@@ -233,7 +237,7 @@ if($is_admin) {
     if($is_admin):
         ?>
 <td class='<?=$top ?> <?=$shift ?>'>
-    <button class='btn btn-outline-dark btn-sm clipboard_copy' data='<?=$edition['id'] ?>'<?=$allow_edit_disabled ?> title='Копировать тираж' data-toggle='tooltip' onclick="javascript: CopyEditionDb(<?=$edition['id'] ?>, $(this));"><i class='fas fa-copy'></i><div class='alert alert-info clipboard_alert'>Скопировано</div></button>
+    <button class='btn btn-outline-dark btn-sm clipboard_copy' data='<?=$edition['id'] ?>' title='Копировать тираж' data-toggle='tooltip' onclick="javascript: CopyEditionDb(<?=$edition['id'] ?>, $(this));"><i class='fas fa-copy'></i><div class='alert alert-info clipboard_alert'>Скопировано</div></button>
 </td>
     <?php
     endif;
