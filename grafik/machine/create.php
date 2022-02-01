@@ -31,6 +31,7 @@ if(null !== filter_input(INPUT_POST, 'machine_create_submit')) {
     $has_lamination = filter_input(INPUT_POST, 'has_lamination') == 'on' ? 1 : 0;
     $has_coloring = filter_input(INPUT_POST, 'has_coloring') == 'on' ? 1 : 0;
     $coloring = filter_input(INPUT_POST, 'coloring');
+    if(empty($coloring)) $coloring = 0;
     $has_manager = filter_input(INPUT_POST, 'has_manager') == 'on' ? 1 : 0;
     $has_comment = filter_input(INPUT_POST, 'has_comment') == 'on' ? 1 : 0;
     $is_cutter = filter_input(INPUT_POST, 'is_cutter') == 'on' ? 1 : 0;
