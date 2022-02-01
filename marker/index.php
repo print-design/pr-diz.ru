@@ -39,7 +39,7 @@ $user_id = GetUserId();
                 echo "<div class='alert alert-danger'>$error_message</div";
             }
             ?>
-            <a class="btn btn-dark w-100 mt-5" href="roll.php">Приступить к маркирации</a>
+            <a class="btn btn-dark w-100 mt-5" href="roll.php">Приступить к маркировке</a>
         </div>
         <?php
         include '_footer.php';
