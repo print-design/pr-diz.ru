@@ -6,17 +6,16 @@ include '../include/restrict_admin.php';
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
 $error_message = '';
-        
+
 $name_valid = '';
 $user1_name_valid = '';
 $user2_name_valid = '';
 $role_valid = '';
         
 // Обработка отправки формы
-$machine_edit_submit = filter_input(INPUT_POST, 'machine_edit_submit');
-if($machine_edit_submit !== null) {
+if(null !== filter_input(INPUT_POST, 'machine_edit_submit')) {
     $name = filter_input(INPUT_POST, 'name');
-    if($name == '') {
+    if(empty($name)) {
         $name_valid = ISINVALID;
         $form_valid = false;
     }
@@ -47,7 +46,7 @@ if($machine_edit_submit !== null) {
                 . "coloring=$coloring, has_manager=$has_manager, has_comment=$has_comment, is_cutter=$is_cutter "
                 . "where id=$id"))->error;
                 
-        if($error_message == '') {
+        if(empty($error_message)) {
             header('Location: '.APPLICATION."/machine/details.php?id=$id");
         }
     }
