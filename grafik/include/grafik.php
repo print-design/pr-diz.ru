@@ -72,8 +72,6 @@ class Grafik {
             }
         }
         
-        
-        
         // Проверяем, имеется ли что-нибудь в буфере обмена
         $clipboard_db = false;
         $sql = "select count(id) from clipboard";
