@@ -18,6 +18,7 @@ $form_valid = true;
 $error_message = '';
 
 $cell_valid = '';
+$comment_valid = '';
 
 // Обработка формы смены ячейки
 if(null !== filter_input(INPUT_POST, 'cell-submit')) {
@@ -31,6 +32,35 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
     
     if($form_valid) {
         $sql = "update pallet set cell='$cell' where id=$id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+        
+        if(empty($error_message)) {
+            if(empty(filter_input(INPUT_GET, 'link'))) {
+                header('Location: '.APPLICATION.'/car/pallet.php?id='.$id);
+            }
+            else {
+                header('Location: '.urldecode(filter_input(INPUT_GET, 'link')));
+            }
+        }
+    }
+}
+
+// Обработка формы добавления комментария
+if(null !== filter_input(INPUT_POST, 'comment-submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $old_comment = addslashes(filter_input(INPUT_POST, 'old_comment'));
+    $comment = addslashes(filter_input(INPUT_POST, 'comment'));
+    
+    if(empty($comment)) {
+        $comment_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(!empty($old_comment)) $comment = $old_comment.'\n'.$comment;
+    
+    if($form_valid) {
+        $sql = "update pallet set comment='$comment' where id=$id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         
@@ -134,6 +164,7 @@ $free_roll_status_id = 1;
                         <?php elseif(IsInRole(array('auditor'))): ?>
                         <form method="post" class="mt-2">
                             <input type="hidden" id="id" name="id" value="<?=$id ?>" />
+                            <input type="hidden" id="old_comment" name="old_comment" value="<?=$comment ?>" />
                             <div class="form-group">
                                 <label for="comment"><strong>Новый комментарий:</strong></label>
                                 <input type="text" id="comment" name="comment" class="form-control" style="font-size: 26px;" required="required" autocomplete="off" />

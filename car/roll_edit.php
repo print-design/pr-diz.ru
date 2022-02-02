@@ -128,6 +128,7 @@ $free_status_id = 1;
                         <?php elseif(IsInRole(array('auditor'))): ?>
                         <form method="post" class="mt-2">
                             <input type="hidden" id="id" name="id" value="<?=$id ?>" />
+                            <input type="hidden" id="old_comment" name="old_comment" value="<?=$comment ?>" />
                             <div class="form-group">
                                 <label for="comment"><strong>Новый комментарий:</strong></label>
                                 <input type="text" id="comment" name="comment" class="form-control" style="font-size: 26px;" required="required" autocomplete="off" />
