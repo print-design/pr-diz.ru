@@ -18,6 +18,7 @@ $form_valid = true;
 $error_message = '';
 
 $cell_valid = '';
+$comment_valid = '';
 
 // Обработка формы смены ячейки
 if(null !== filter_input(INPUT_POST, 'cell-submit')) {
@@ -31,6 +32,35 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
     
     if($form_valid) {
         $sql = "update roll set cell='$cell' where id=$id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+        
+        if(empty($error_message)) {
+            if(empty(filter_input(INPUT_GET, 'link'))) {
+                header('Location: '.APPLICATION.'/car/roll.php?id='.$id);
+            }
+            else {
+                header('Location: '.urldecode(filter_input(INPUT_GET, 'link')));
+            }
+        }
+    }
+}
+
+// Обработка формы добавления комментария
+if(null !== filter_input(INPUT_POST, 'comment-submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $old_comment = addslashes(filter_input(INPUT_POST, 'old_comment'));
+    $comment = addslashes(filter_input(INPUT_POST, 'comment'));
+    
+    if(empty($comment)) {
+        $comment_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(!empty($old_comment)) $comment = $old_comment.'\n'.$comment;
+    
+    if($form_valid) {
+        $sql = "update roll set comment='$comment' where id=$id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         
