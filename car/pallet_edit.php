@@ -120,6 +120,7 @@ $free_roll_status_id = 1;
                         <p><strong>Количество рулонов:</strong> <?=$rolls_number ?></p>
                         <p><strong>Комментарий:</strong></p>
                         <div><?=$comment ?></div>
+                        <?php if(IsInRole(array('electrocarist'))): ?>
                         <form method="post" class="mt-2">
                             <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                             <div class="form-group">
@@ -130,6 +131,7 @@ $free_roll_status_id = 1;
                                 <button type="submit" class="btn btn-dark form-control" id="cell-submit" name="cell-submit">Сменить ячейку</button>
                             </div>
                         </form>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

@@ -76,7 +76,15 @@ $free_roll_status_id = 1;
                         <p><strong>Комментарий:</strong></p>
                         <div><?=$comment ?></div>
                         <p style="font-size: 32px; line-height: 48px;">Ячейка&nbsp;&nbsp;&nbsp;&nbsp;<?=$cell ?></p>
-                        <a href="pallet_edit.php?id=<?=$id ?>&link=<?= urlencode($_SERVER['REQUEST_URI']) ?>" class="btn btn-outline-dark w-100 mt-4">Сменить ячейку</a>
+                        <a href="pallet_edit.php?id=<?=$id ?>&link=<?= urlencode($_SERVER['REQUEST_URI']) ?>" class="btn btn-outline-dark w-100 mt-4">
+                            <?php if(IsInRole(array('electrocarist'))): ?>
+                            Сменить ячейку
+                            <?php elseif (IsInRole(array('auditor'))): ?>
+                            Оставить комментарий
+                            <?php else: ?>
+                            Редактировать
+                            <?php endif; ?>
+                        </a>
                     </div>
                 </div>
             </div>
