@@ -143,7 +143,7 @@ $free_status_id = 1;
                         <p><strong>Масса нетто:</strong> <?=$weight ?> кг</p>
                         <p><strong>Длина:</strong> <?=$length ?> м</p>
                         <p><strong>Комментарий:</strong></p>
-                        <div><?=$comment ?></div>
+                        <div style="white-space: pre-wrap;"><?=$comment ?></div>
                         <?php if(IsInRole(array('electrocarist'))): ?>
                         <form method="post" class="mt-2">
                             <input type="hidden" id="id" name="id" value="<?=$id ?>" />
