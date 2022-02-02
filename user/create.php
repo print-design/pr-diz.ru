@@ -70,9 +70,20 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
         $phone = addslashes($phone);
         $username = addslashes($username);
         
-        $executer = new Executer("insert into user (username, password, first_name, last_name, role_id, email, phone) values ('$username', password('$password'), '$first_name', '$last_name', $role_id, '$email', '$phone')");
-        $error_message = $executer->error;
-        $id = $executer->insert_id;
+        $sql = "select count(id) from user where username = '$username'";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            if($row[0] != 0) {
+                $error_message = "Такой логин уже имеется в базе";
+            }
+        }
+        
+        if(empty($error_message)) {
+            $sql = "insert into user (username, password, first_name, last_name, role_id, email, phone) values ('$username', password('$password'), '$first_name', '$last_name', $role_id, '$email', '$phone')";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+            $id = $executer->insert_id;
+        }
         
         if(empty($error_message)) {
             header('Location: '.APPLICATION."/user/");
