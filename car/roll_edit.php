@@ -125,6 +125,17 @@ $free_status_id = 1;
                                 <button type="submit" class="btn btn-dark form-control" id="cell-submit" name="cell-submit">Сменить ячейку</button>
                             </div>
                         </form>
+                        <?php elseif(IsInRole(array('auditor'))): ?>
+                        <form method="post" class="mt-2">
+                            <input type="hidden" id="id" name="id" value="<?=$id ?>" />
+                            <div class="form-group">
+                                <label for="comment"><strong>Новый комментарий:</strong></label>
+                                <input type="text" id="comment" name="comment" class="form-control" style="font-size: 26px;" required="required" autocomplete="off" />
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-dark form-control" id="comment-submit" name="comment-submit">Добавить комментарий</button>
+                            </div>
+                        </form>
                         <?php endif; ?>
                     </div>
                 </div>

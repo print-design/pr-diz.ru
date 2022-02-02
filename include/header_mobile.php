@@ -26,7 +26,7 @@
     </nav>
     <nav class="navbar navbar-expand-sm justify-content-between d-flex d-lg-none pr-0">
         <ul class="navbar-nav">
-            <?php if(IsInRole(array('electrocarist'))): ?>
+            <?php if(IsInRole(array('electrocarist', 'auditor'))): ?>
             <li class="nav-item">
                 <a class="nav-link" href="<?=APPLICATION ?>/car/">Склад</a>
             </li>
