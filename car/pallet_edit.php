@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
+if(!IsInRole(array('technologist', 'dev', 'electrocarist', 'auditor'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -119,7 +119,7 @@ $free_roll_status_id = 1;
                         <p><strong>Длина:</strong> <?=$length ?> м</p>
                         <p><strong>Количество рулонов:</strong> <?=$rolls_number ?></p>
                         <p><strong>Комментарий:</strong></p>
-                        <p><?=$comment ?></p>
+                        <div><?=$comment ?></div>
                         <form method="post" class="mt-2">
                             <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                             <div class="form-group">

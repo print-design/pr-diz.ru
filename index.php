@@ -1,8 +1,8 @@
 <?php
 include 'include/topscripts.php';
 
-// Карщика перенаправляем в раздел car
-if(IsInRole(array('electrocarist'))) {
+// Карщика и ревизора перенаправляем в раздел car
+if(IsInRole(array('electrocarist', 'auditor'))) {
     header('Location: '.APPLICATION.'/car/');
 }
 
