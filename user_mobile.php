@@ -2,7 +2,7 @@
 include 'include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'electrocarist', 'cutter'))) {
+if(!IsInRole(array('technologist', 'dev', 'electrocarist', 'cutter', 'marker', 'auditor'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 ?>
@@ -40,6 +40,9 @@ if(!IsInRole(array('technologist', 'dev', 'electrocarist', 'cutter'))) {
             }
             elseif(IsInRole('cutter')) {
                 $position = "Резчик раскрой";
+            }
+            elseif(IsInRole('auditor')) {
+                $position = "Ревизор";
             }
             ?>
             <p class="mt-4" style="font-size: 18px; line-height: 24px; font-weight: 600;"><?=$position ?>:</p>
