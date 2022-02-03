@@ -9,6 +9,9 @@ if(!IsInRole(array('technologist', 'dev', 'electrocarist', 'auditor'))) {
 // СТАТУС "СВОБОДНЫЙ"
 const  FREE_ROLL_STATUS_ID = 1;
 
+// РОЛЬ "РЕВИЗОР"
+const AUDITOR = 'auditor';
+
 // Обработка отправки формы
 function FindByCell($id) {
     $sql = "select (select count(p.id) "

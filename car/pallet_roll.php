@@ -14,6 +14,9 @@ if(empty($id)) {
 
 // СТАТУС "СВОБОДНЫЙ"
 $free_status_id = 1;
+
+// РОЛЬ "РЕВИЗОР"
+const AUDITOR = 'auditor';
 ?>
 <!DOCTYPE html>
 <html>

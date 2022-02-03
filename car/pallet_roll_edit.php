@@ -79,6 +79,9 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
 
 // СТАТУС "СВОБОДНЫЙ"
 $free_status_id = 1;
+
+// РОЛЬ "РЕВИЗОР"
+const AUDITOR = 'auditor';
 ?>
 <!DOCTYPE html>
 <html>
