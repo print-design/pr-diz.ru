@@ -3,7 +3,7 @@ include '../include/topscripts.php';
 include '../include/database_grafik.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'manager'))) {
+if(!IsInRole(array('technologist', 'dev', 'manager', 'administrator'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -180,11 +180,10 @@ $sql = "select t.id, t.work_date, t.work_shift, t.grafik_id, "
         . "c.brand_name, c.thickness, c.individual_brand_name, c.individual_thickness, "
         . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_individual_brand_name, c.lamination1_individual_thickness, "
         . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_individual_brand_name, c.lamination2_individual_thickness, "
-        . "c.machine_id, cus.name customer, m.name machine "
+        . "c.machine_type, cus.name customer "
         . "from techmap t "
         . "inner join request_calc c on t.request_calc_id = c.id "
         . "inner join customer cus on c.customer_id = cus.id "
-        . "left join machine m on c.machine_id = m.id "
         . "where t.work_date >='".$date_from->format('Y-m-d')."' and t.work_date <= '".$date_to->format('Y-m-d')."' "
         . "order by t.id";
 $fetcher = new Fetcher($sql);

@@ -23,7 +23,7 @@ include 'left_bar.php';
             </li>
             <?php
             endif;
-            if(IsInRole(array('technologist', 'dev', 'manager', 'administrator')) && false):
+            if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))):
             ?>
             <li class="nav-item">
                 <a class="nav-link<?=$schedule_status ?>" href="<?=APPLICATION ?>/schedule/">Расписание</a>
@@ -31,7 +31,7 @@ include 'left_bar.php';
             <?php endif; ?>
         </ul>
         <?php
-        if(substr(filter_input(INPUT_SERVER, 'PHP_SELF'), (strlen(filter_input(INPUT_SERVER, 'PHP_SELF')) - strlen('index.php'))) == 'index.php') {
+        if(substr(filter_input(INPUT_SERVER, 'PHP_SELF'), (strlen(filter_input(INPUT_SERVER, 'PHP_SELF')) - strlen('index.php'))) == 'index.php' && file_exists('filter.php')) {
             include 'filter.php';
         }
         else {

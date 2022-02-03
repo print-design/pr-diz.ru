@@ -34,9 +34,9 @@ else {
 <td class="<?=$top.' '.$dateshift['shift'] ?>"><?=$techmap['name'] ?></td>
 <td class="<?=$top.' '.$dateshift['shift'] ?>"><?=$material ?></td>
 <td class="<?=$top.' '.$dateshift['shift'] ?>"><?=$quantity ?></td>
-<td class="<?=$top.' '.$dateshift['shift'] ?>"><?=$techmap['machine'] ?></td>
+<td class="<?=$top.' '.$dateshift['shift'] ?>"><?=$techmap['machine_type'] ?></td>
 <td class="<?=$top.' '.$dateshift['shift'] ?>">
-    <?php if(!empty($techmap['grafik_id']) && !empty($techmap['machine_id'])): ?>
+    <?php if(!empty($techmap['grafik_id'])): ?>
     <div class="text-nowrap">
         В графике
         <form method="post" class="d-inline">
