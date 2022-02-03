@@ -41,18 +41,30 @@ const AUDITOR = 'auditor';
                 <div class="col-12 col-md-6 col-lg-4">
                     <?php
                     $sql = "select 'pallet' type, DATE_FORMAT(p.date, '%d.%m.%Y') date, p.id, 0 pallet_id, 0 ordinal, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, p.cell, p.comment, "
-                            . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)) length, "
-                            . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)) weight, "
-                            . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)) rolls_number "
+                            . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
+                            . (IsInRole(AUDITOR) ? '' : " and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)")
+                            . ") length, "
+                            . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
+                            . (IsInRole(AUDITOR) ? '' : " and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)")
+                            . ") weight, "
+                            . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
+                            . (IsInRole(AUDITOR) ? '' : " and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)")
+                            . ") rolls_number "
                             . "from pallet p "
                             . "inner join supplier s on p.supplier_id=s.id "
                             . "inner join film_brand fb on p.film_brand_id=fb.id "
                             . "where p.id='$id' "
                             . "union "
                             . "select 'pallet' type, DATE_FORMAT(p.date, '%d.%m.%Y') date, p.id, 0 pallet_id, 0 ordinal, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, p.cell, p.comment, "
-                            . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)) length, "
-                            . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)) weight, "
-                            . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)) rolls_number "
+                            . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
+                            . (IsInRole(AUDITOR) ? '' : " and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)")
+                            . ") length, "
+                            . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
+                            . (IsInRole(AUDITOR) ? '' : " and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)")
+                            . ") weight, "
+                            . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
+                            . (IsInRole(AUDITOR) ? '' : " and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)")
+                            . ") rolls_number "
                             . "from pallet p "
                             . "inner join supplier s on p.supplier_id=s.id "
                             . "inner join film_brand fb on p.film_brand_id=fb.id "
@@ -66,7 +78,8 @@ const AUDITOR = 'auditor';
                             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
                             . "inner join supplier s on r.supplier_id=s.id "
                             . "inner join film_brand fb on r.film_brand_id=fb.id "
-                            . "where r.id='$id' and (rsh.status_id is null or rsh.status_id = $free_roll_status_id)"
+                            . "where r.id='$id'"
+                            . (IsInRole(AUDITOR) ? '' : " and (rsh.status_id is null or rsh.status_id = $free_roll_status_id)")
                             . "union "
                             . "select 'roll' type, DATE_FORMAT(r.date, '%d.%m.%Y') date, r.id, 0 pallet_id, 0 ordinal, s.name supplier, fb.name film_brand, r.id_from_supplier, r.width, r.thickness, r.cell, r.comment, "
                             . "r.length length, "
@@ -76,7 +89,8 @@ const AUDITOR = 'auditor';
                             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
                             . "inner join supplier s on r.supplier_id=s.id "
                             . "inner join film_brand fb on r.film_brand_id=fb.id "
-                            . "where r.id_from_supplier='$id' and (rsh.status_id is null or rsh.status_id = $free_roll_status_id)"
+                            . "where r.id_from_supplier='$id'"
+                            . (IsInRole(AUDITOR) ? '' : " and (rsh.status_id is null or rsh.status_id = $free_roll_status_id)")
                             . "union "
                             . "select 'pallet_roll' type, DATE_FORMAT(p.date, '%d.%m.%Y') date, pr.id, pr.pallet_id, pr.ordinal, s.name supplier, fb.name film_brand, pr.id_from_supplier, p.width, p.thickness, p.cell, p.comment, "
                             . "pr.length length, "
@@ -87,7 +101,8 @@ const AUDITOR = 'auditor';
                             . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
                             . "inner join supplier s on p.supplier_id=s.id "
                             . "inner join film_brand fb on p.film_brand_id=fb.id "
-                            . "where pr.id_from_supplier='$id' and (prsh.status_id is null or prsh.status_id = $free_roll_status_id) "
+                            . "where pr.id_from_supplier='$id' "
+                            . (IsInRole(AUDITOR) ? '' : "and (prsh.status_id is null or prsh.status_id = $free_roll_status_id) ")
                             . "order by id desc";
                     $fetcher = new Fetcher($sql);
                     while ($row = $fetcher->Fetch()):

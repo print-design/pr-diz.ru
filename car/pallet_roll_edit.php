@@ -122,7 +122,8 @@ const AUDITOR = 'auditor';
                     . "inner join supplier s on p.supplier_id=s.id "
                     . "inner join film_brand fb on p.film_brand_id=fb.id "
                     . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                    . "where pr.id=$id and (prsh.status_id is null or prsh.status_id = $free_status_id)";
+                    . "where pr.id=$id"
+                    . (IsInRole(AUDITOR) ? '' : " and (prsh.status_id is null or prsh.status_id = $free_status_id)");
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()):
             $date = $row['date'];
