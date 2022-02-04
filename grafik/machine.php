@@ -18,7 +18,7 @@ $error_message = $grafik->error_message;
 <!DOCTYPE html>
 <html>
     <head>
-        <title>График - Comiflex</title>
+        <title>График - <?=$grafik->name ?></title>
         <?php
         include 'include/head.php';
         ?>
