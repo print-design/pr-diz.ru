@@ -59,7 +59,7 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
         $form_valid = false;
     }
     
-    if(!empty($old_comment)) $comment = $old_comment.'\n'.$comment;
+    if(!empty($old_comment)) $comment = $old_comment.' '.$comment;
     
     if($form_valid) {
         $sql = "update pallet set comment='$comment' where id=$pallet_id";
