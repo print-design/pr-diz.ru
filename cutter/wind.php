@@ -73,35 +73,39 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
-        // Валидация, чтобы сумма длин намоток не превышала исходный ролик
+        // Валидация, чтобы сумма длин всех намоток не превышала сумму длин исходных роликов (с запасом 1000 м для каждого исходного ролика)
         $source_length = 0;
+        $source_count = 0;
         
-        $sql = "select r.length "
+        $sql = "select sum(r.length) length, count(r.id) count "
                 . "from cutting_source cs "
                 . "inner join roll r on cs.roll_id = r.id "
-                . "where cs.id = $last_source and cs.is_from_pallet = 0 "
+                . "where cs.cutting_id = $cutting_id and cs.is_from_pallet = 0 "
                 . "union "
-                . "select pr.length from cutting_source cs "
+                . "select sum(pr.length) length, count(pr.id) count "
+                . "from cutting_source cs "
                 . "inner join pallet_roll pr on cs.roll_id = pr.id "
-                . "where cs.id = $last_source and cs.is_from_pallet=1";
+                . "where cs.cutting_id = $cutting_id and cs.is_from_pallet = 1";
         $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            $source_length = $row[0];
+        
+        while($row = $fetcher->Fetch()) {
+            $source_length += $row['length'];
+            $source_count += $row['count'];
         }
         
         $wind_lengths = 0;
         
-        $sql = "select sum(length) from cutting_wind where cutting_source_id = $last_source";
+        $sql = "select sum(length) from cutting_wind where cutting_source_id in (select id from cutting_source where cutting_id = $cutting_id)";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $wind_lengths = $row[0];
         }
         
-        $reserve_length = 1000;
+        $reserve_length = 1000 * $source_count;
         
         if($length + $wind_lengths > $source_length + $reserve_length) {
             $length_valid = ISINVALID;
-            $length_message = "Превышена длина исходного ролика";
+            $length_message = "Превышенна сумма длин исходных роликов";
             $form_valid = false;
         }
     }
