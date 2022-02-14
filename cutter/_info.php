@@ -62,12 +62,12 @@ if(null !== $cutting_id) {
                     ?>
                     <p class="font-weight-bold mt-2" style="font-size: large;">Сколько нарезали?</p>
                     <?php
-                    $sql = "select cs.id, cs.roll_id, cs.is_from_pallet, concat('Р', r.id) name, r.length "
+                    $sql = "select cs.id, cs.roll_id, cs.is_from_pallet, concat('Р', r.id) name, r.length, r.id_from_supplier "
                             . "from cutting_source cs "
                             . "inner join roll r on cs.roll_id = r.id "
                             . "where cs.cutting_id=$cutting_id and cs.is_from_pallet = 0 "
                             . "union "
-                            . "select cs.id, cs.roll_id, cs.is_from_pallet, concat('П', p.id, 'Р', pr.ordinal) name, pr.length "
+                            . "select cs.id, cs.roll_id, cs.is_from_pallet, concat('П', p.id, 'Р', pr.ordinal) name, pr.length, pr.id_from_supplier "
                             . "from cutting_source cs "
                             . "inner join pallet_roll pr on cs.roll_id = pr.id "
                             . "inner join pallet p on pr.pallet_id = p.id "
@@ -79,7 +79,8 @@ if(null !== $cutting_id) {
                     $i=0;
                     foreach($sources as $source):
                     ?>
-                    <p class="font-weight-bold font-italic">Исходный ролик <?=$source['name'] ?> (<?=$source['length'] ?> метров)</p>
+                    <p class="font-weight-bold font-italic" style="color: #888888;">Исходный ролик <?=$source['name'] ?> (<?=$source['length'] ?> метров)</p>
+                    <p class="font-weight-bold font-italic" style="color: #888888;">id: <?=$source['id_from_supplier'] ?></p>
                     <?php
                     $sql = "select length from cutting_wind where cutting_source_id=".$source['id'];
                     $fetcher = new Fetcher($sql);
