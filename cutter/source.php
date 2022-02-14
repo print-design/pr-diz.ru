@@ -175,7 +175,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         $form_valid = false;
     }
     
-    if($form_valid) {
+    if($form_valid && !empty($last_source)) {
         // Если исходный ролик тот же, что и предыдущий, запрещаем его использовать
         $last_is_from_pallet = null;
         $last_roll_id = null;
