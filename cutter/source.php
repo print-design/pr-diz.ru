@@ -176,6 +176,25 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
+        // Если исходный ролик тот же, что и предыдущий, запрещаем его использовать
+        $last_is_from_pallet = null;
+        $last_roll_id = null;
+            
+        $sql = "select is_from_pallet, roll_id from cutting_source where id = $last_source";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $last_is_from_pallet = $row['is_from_pallet'];
+            $last_roll_id = $row['roll_id'];
+        }
+        
+        if($last_is_from_pallet !== null && $last_roll_id !== null && $last_is_from_pallet == $is_from_pallet && $last_roll_id == $roll_id) {
+            $source_id_valid_message = "Этот ролик уже использован";
+            $source_id_valid = ISINVALID;
+            $form_valid = false;
+        }
+    }
+    
+    if($form_valid) {
         // Меняем статусы предыдущих исходных роликов на "Раскроили" (если он уже не установлен)
         $cut_sources = null;
     
