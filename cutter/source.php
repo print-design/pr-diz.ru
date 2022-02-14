@@ -12,6 +12,9 @@ $user_id = GetUserId();
 // СТАТУС "СВОБОДНЫЙ"
 const  FREE_ROLL_STATUS_ID = 1;
 
+// Статус "РАСКРОИЛИ"
+$cut_status_id = 3;
+
 include '_check_rolls.php';
 $opened_roll = CheckOpenedRolls($user_id);
 $cutting_id = $opened_roll['id'];
@@ -173,6 +176,47 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
+        // Меняем статусы предыдущих исходных роликов на "Раскроили" (если он уже не установлен)
+        $cut_sources = null;
+    
+        if(empty($error)) {
+            $sql = "select is_from_pallet, roll_id from cutting_source where cutting_id=$cutting_id";
+            $grabber = new Grabber($sql);
+            $cut_sources = $grabber->result;
+            $error_message = $grabber->error;
+        }
+    
+        if($cut_sources !== null) {
+            foreach($cut_sources as $cut_source) {
+                $source_is_from_pallet = $cut_source['is_from_pallet'];
+                $source_roll_id = $cut_source['roll_id'];
+        
+                if($source_is_from_pallet == 0) {
+                    $sql = "select status_id from roll_status_history where roll_id = $source_roll_id order by id desc limit 1";
+                    $fetcher = new Fetcher($sql);
+                    $row = $fetcher->Fetch();
+                
+                    if(!$row || $row['status_id'] != $cut_status_id) {
+                        $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($source_roll_id, $cut_status_id, $user_id)";
+                        $executer = new Executer($sql);
+                        $error = $executer->error;
+                    }
+                }
+                else {
+                    $sql = "select status_id from pallet_roll_status_history where pallet_roll_id = $source_roll_id order by id desc limit 1";
+                    $fetcher = new Fetcher($sql);
+                    $row = $fetcher->Fetch();
+                
+                    if(!$row || $row['status_id'] != $cut_status_id) {
+                        $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values($source_roll_id, $cut_status_id, $user_id)";
+                        $executer = new Executer($sql);
+                        $error = $executer->error;
+                    }
+                }
+            }
+        }
+        
+        // Добавляем новый исходный ролик
         $sql = "insert into cutting_source (cutting_id, is_from_pallet, roll_id) values ($cutting_id, $is_from_pallet, $roll_id)";
         $executer = new Executer($sql);
         $error_message == $executer->error;

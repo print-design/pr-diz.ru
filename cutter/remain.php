@@ -12,8 +12,9 @@ $user_id = GetUserId();
 // Проверяем, имеются ли незакрытые нарезки
 include '_check_rolls.php';
 $opened_roll = CheckOpenedRolls($user_id);
-
 $cutting_id = $opened_roll['id'];
+$last_source = $opened_roll['last_source'];
+$last_wind = $opened_roll['last_wind'];
 
 if(empty($cutting_id)) {
     header("Location: ".APPLICATION.'/cutter/');
@@ -54,7 +55,7 @@ function CloseCutting($cutting_id, $cut_status_id, $user_id) {
         }
     }
     
-    // Меняем статусы исходных роликов
+    // Меняем статусы исходных роликов на "Раскроили" (если он уже не установлен)
     $cut_sources = null;
     
     if(empty($error)) {
@@ -66,18 +67,30 @@ function CloseCutting($cutting_id, $cut_status_id, $user_id) {
     
     if($cut_sources !== null) {
         foreach($cut_sources as $cut_source) {
-            $is_from_pallet = $cut_source['is_from_pallet'];
-            $roll_id = $cut_source['roll_id'];
+            $source_is_from_pallet = $cut_source['is_from_pallet'];
+            $source_roll_id = $cut_source['roll_id'];
         
-            if($is_from_pallet == 0) {
-                $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($roll_id, $cut_status_id, $user_id)";
-                $executer = new Executer($sql);
-                $error = $executer->error;
+            if($source_is_from_pallet == 0) {
+                $sql = "select status_id from roll_status_history where roll_id = $source_roll_id order by id desc limit 1";
+                $fetcher = new Fetcher($sql);
+                $row = $fetcher->Fetch();
+                
+                if(!$row || $row['status_id'] != $cut_status_id) {
+                    $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($source_roll_id, $cut_status_id, $user_id)";
+                    $executer = new Executer($sql);
+                    $error = $executer->error;
+                }
             }
             else {
-                $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values($roll_id, $cut_status_id, $user_id)";
-                $executer = new Executer($sql);
-                $error = $executer->error;
+                $sql = "select status_id from pallet_roll_status_history where pallet_roll_id = $source_roll_id order by id desc limit 1";
+                $fetcher = new Fetcher($sql);
+                $row = $fetcher->Fetch();
+                
+                if(!$row || $row['status_id'] != $cut_status_id) {
+                    $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values($source_roll_id, $cut_status_id, $user_id)";
+                    $executer = new Executer($sql);
+                    $error = $executer->error;
+                }
             }
         }
     }
