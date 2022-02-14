@@ -1,5 +1,6 @@
 <?php
 include 'database_grafik.php';
+include 'grafik_dateshift_readonly.php';
 
 class GrafikReadonly {
     public function __construct(DateTime $from, DateTime $to, $machine_id) {
@@ -61,42 +62,6 @@ class GrafikReadonly {
     private $managers = [];
 
     function ShowPage() {
-        ?>
-<div class="d-flex justify-content-between mb-2">
-    <h1><?= $this->name ?></h1>
-</div>
-<table class="table table-bordered typography">
-    <thead id="grafik-thead">
-        <tr>
-            <th></th>
-            <th>Дата</th>
-            <th>Смена</th>
-            <?php
-            if($this->user1Name != '') echo '<th>'.$this->user1Name.'</th>';
-            if($this->user2Name != '') echo '<th>'.$this->user2Name.'</th>';
-            if(IsInRole('admin')) echo '<th></th>';
-            if(IsInRole('admin')) echo '<th></th>';
-            if($this->hasOrganization) echo '<th>Заказчик</th>';
-            if($this->hasEdition) echo '<th>Наименование</th>';
-            if($this->hasLength) echo '<th>Метраж</th>';
-            if(IsInRole('admin')) {
-                if($this->hasStatus) echo '<th>Статус</th>';
-            }
-            if($this->hasRoller) echo '<th>Вал</th>';
-            if($this->hasLamination) echo '<th>Ламинация</th>';
-            if($this->hasColoring) echo '<th>Кр-ть</th>';
-            if($this->hasManager) echo '<th>Менеджер</th>'; 
-            if($this->hasComment) echo '<th>Комментарий</th>';
-            if(IsInRole('admin')) {
-                echo '<th></th>';
-                echo '<th></th>';
-                echo '<th></th>';
-            }
-            ?>
-        </tr>
-    </thead>
-    <tbody id="grafik-tbody">
-        <?php
         // Список рабочих смен
         $all = array();
         $sql = "select ws.id, ws.date date, date_format(ws.date, '%d.%m.%Y') fdate, ws.shift, ws.machine_id, u1.id u1_id, u1.fio u1_fio, u2.id u2_id, u2.fio u2_fio, "
@@ -155,7 +120,59 @@ class GrafikReadonly {
             $dateshift['shift'] = 'night';
             array_push($dateshifts, $dateshift);
         }
-        
+        ?>
+<div class="d-flex justify-content-between mb-2">
+    <h1><?= $this->name ?></h1>
+</div>
+<!-- Новая версия -->
+<table class="table table-bordered typography">
+    <thead id="grafik-thead">
+        <tr>
+            <th></th>
+            <th>Дата</th>
+            <th>Смена</th>
+        </tr>
+    </thead>
+        <?php
+        foreach($dateshifts as $dateshift) {
+            $grafik_dateshift = new GrafikDateshiftReadonly($dateshift['date'], $dateshift['shift']);
+            $grafik_dateshift->Show();
+        }
+        ?>
+</table>
+<!-- Конец новой версии -->
+<table class="table table-bordered typography">
+    <thead id="grafik-thead1">
+        <tr>
+            <th></th>
+            <th>Дата</th>
+            <th>Смена</th>
+            <?php
+            if($this->user1Name != '') echo '<th>'.$this->user1Name.'</th>';
+            if($this->user2Name != '') echo '<th>'.$this->user2Name.'</th>';
+            if(IsInRole('admin')) echo '<th></th>';
+            if(IsInRole('admin')) echo '<th></th>';
+            if($this->hasOrganization) echo '<th>Заказчик</th>';
+            if($this->hasEdition) echo '<th>Наименование</th>';
+            if($this->hasLength) echo '<th>Метраж</th>';
+            if(IsInRole('admin')) {
+                if($this->hasStatus) echo '<th>Статус</th>';
+            }
+            if($this->hasRoller) echo '<th>Вал</th>';
+            if($this->hasLamination) echo '<th>Ламинация</th>';
+            if($this->hasColoring) echo '<th>Кр-ть</th>';
+            if($this->hasManager) echo '<th>Менеджер</th>'; 
+            if($this->hasComment) echo '<th>Комментарий</th>';
+            if(IsInRole('admin')) {
+                echo '<th></th>';
+                echo '<th></th>';
+                echo '<th></th>';
+            }
+            ?>
+        </tr>
+    </thead>
+    <tbody id="grafik-tbody">
+        <?php
         foreach ($dateshifts as $dateshift) {
             $formatted_date = $dateshift['date']->format('Y-m-d');
             $key = $formatted_date.$dateshift['shift'];
