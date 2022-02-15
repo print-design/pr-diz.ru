@@ -139,7 +139,7 @@ class GrafikReadonly {
     </thead>
         <?php
         foreach($period as $date) {
-            $str_date = $dateshift['date']->format('Y-m-d');
+            $str_date = $date->format('Y-m-d');
             
             $day_editions = array();
             if(isset($all_editions[$str_date]['day'])) {

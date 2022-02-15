@@ -1,18 +1,20 @@
 <?php
-include 'grafik_edition_readonly.php';
+include 'GrafikEditionReadonly.php';
 
 class GrafikDateshiftReadonly {
-    public function __construct(DateTime $date, $shift, GrafikReadonly $grafik, $editions) {
+    public function __construct(DateTime $date, $shift, GrafikReadonly $grafik, $editions, $date_editions_count) {
         $this->date = $date;
         $this->shift = $shift;
         $this->grafik = $grafik;
         $this->editions = $editions;
+        $this->date_editions_count = $date_editions_count;
     }
     
     private DateTime $date;
     private $shift;
     private GrafikReadonly $grafik;
     private $editions;
+    private $date_editions_count;
 
     function Show() {
         $formatted_date = $this->date->format('Y-m-d');
@@ -26,11 +28,8 @@ class GrafikDateshiftReadonly {
             include 'grafik_dateshift_readonly.php';
         }
         else {
-            $day_shifts_count = count(array_filter($this->editions, function($edition){ return $edition['shift'] == 'day'; })); echo $day_shifts_count."<br />";
-            $night_shifts_count = count(array_filter($this->editions, function($edition) { return $edition['shift'] == 'night'; })); echo $night_shifts_count."<br /><br />";
-            
             foreach($this->editions as $key => $value) {
-                $edition = new GrafikEditionReadonly($this->date, $this->shift, $this->grafik, $day_shifts_count, $night_shifts_count, $key, $value);
+                $edition = new GrafikEditionReadonly($this->date, $this->shift, $this->grafik, $key, $value, $this->date_editions_count);
                 $edition->Show();
             }
         }

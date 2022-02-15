@@ -15,9 +15,10 @@ class GrafikDateReadonly {
     private $night_editions;
     
     function Show() {
-        $day_shift = new GrafikDateshiftReadonly($this->date, 'day', $this->grafik, $this->day_editions);
+        $date_editionts_count = count($this->day_editions) + count($this->night_editions);
+        $day_shift = new GrafikDateshiftReadonly($this->date, 'day', $this->grafik, $this->day_editions, $date_editionts_count);
         $day_shift->Show();
-        $night_shift = new GrafikDateshiftReadonly($this->date, 'night', $this->grafik, $this->night_editions);
+        $night_shift = new GrafikDateshiftReadonly($this->date, 'night', $this->grafik, $this->night_editions, $date_editionts_count);
         $night_shift->Show();
     }
 }
