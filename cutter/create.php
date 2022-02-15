@@ -72,7 +72,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     $thickness = filter_input(INPUT_POST, 'thickness');
     $width = filter_input(INPUT_POST, 'width');
     $cell = '';
-    $comment = '';
+    $comment = addslashes('!');
     $storekeeper_id = $user_id;
     $status_id = FREE_ROLL_STATUS_ID;
     
