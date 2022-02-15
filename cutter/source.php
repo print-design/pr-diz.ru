@@ -325,13 +325,23 @@ $source_id = filter_input(INPUT_POST, 'source_id');
                             </div>
                         </div>
                         <div class="form-group d-none d-lg-block">
-                            <button type="submit" id="next-submit" name="next-submit" class="btn btn-dark form-control mt-4">Далее</button>
+                            <div class="form-group">
+                                <button type="submit" id="next-submit" name="next-submit" class="btn btn-dark form-control mt-4">Далее</button>
+                            </div>
+                            <div class="form-group">
+                                <a href="create.php" class="btn btn-dark form-control">Добавить в базу</a>
+                            </div>
                         </div>
                     </form>
                 </div>
             </div>
             <div class="d-block d-lg-none w-100 pb-4" id="bottom_buttons">
-                <button type="button" class="btn btn-dark form-control" onclick="javascript: $('#next-submit').click();">Далее</button>
+                <div class="form-group">
+                    <button type="button" class="btn btn-dark form-control" onclick="javascript: $('#next-submit').click();">Далее</button>
+                </div>
+                <div class="form-group">
+                    <a href="create.php" class="btn btn-dark form-control">Добавить в базу</a>
+                </div>
             </div>
         </div>
         <?php
