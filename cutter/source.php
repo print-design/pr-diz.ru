@@ -198,12 +198,10 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         // Меняем статусы предыдущих исходных роликов на "Раскроили" (если он уже не установлен)
         $cut_sources = null;
     
-        if(empty($error)) {
-            $sql = "select is_from_pallet, roll_id from cutting_source where cutting_id=$cutting_id";
-            $grabber = new Grabber($sql);
-            $cut_sources = $grabber->result;
-            $error_message = $grabber->error;
-        }
+        $sql = "select is_from_pallet, roll_id from cutting_source where cutting_id=$cutting_id";
+        $grabber = new Grabber($sql);
+        $cut_sources = $grabber->result;
+        $error_message = $grabber->error;
     
         if($cut_sources !== null) {
             foreach($cut_sources as $cut_source) {
@@ -218,7 +216,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     if(!$row || $row['status_id'] != $cut_status_id) {
                         $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($source_roll_id, $cut_status_id, $user_id)";
                         $executer = new Executer($sql);
-                        $error = $executer->error;
+                        $error_message = $executer->error;
                     }
                 }
                 else {
@@ -229,16 +227,18 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     if(!$row || $row['status_id'] != $cut_status_id) {
                         $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values($source_roll_id, $cut_status_id, $user_id)";
                         $executer = new Executer($sql);
-                        $error = $executer->error;
+                        $error_message = $executer->error;
                     }
                 }
             }
         }
         
         // Добавляем новый исходный ролик
-        $sql = "insert into cutting_source (cutting_id, is_from_pallet, roll_id) values ($cutting_id, $is_from_pallet, $roll_id)";
-        $executer = new Executer($sql);
-        $error_message == $executer->error;
+        if(empty($error_message)) {
+            $sql = "insert into cutting_source (cutting_id, is_from_pallet, roll_id) values ($cutting_id, $is_from_pallet, $roll_id)";
+            $executer = new Executer($sql);
+            $error_message == $executer->error;
+        }
         
         if(empty($error_message)) {
             header("Location: streams.php"); // А отсюда, если понадобится, будет перенаправление
@@ -329,7 +329,7 @@ $source_id = filter_input(INPUT_POST, 'source_id');
                                 <button type="submit" id="next-submit" name="next-submit" class="btn btn-dark form-control mt-4">Далее</button>
                             </div>
                             <div class="form-group">
-                                <a href="create.php" class="btn btn-dark form-control">Добавить в базу</a>
+                                <a href="create.php" class="btn btn-outline-dark form-control">Добавить в базу</a>
                             </div>
                         </div>
                     </form>
@@ -340,7 +340,7 @@ $source_id = filter_input(INPUT_POST, 'source_id');
                     <button type="button" class="btn btn-dark form-control" onclick="javascript: $('#next-submit').click();">Далее</button>
                 </div>
                 <div class="form-group">
-                    <a href="create.php" class="btn btn-dark form-control">Добавить в базу</a>
+                    <a href="create.php" class="btn btn-outline-dark form-control">Добавить в базу</a>
                 </div>
             </div>
         </div>

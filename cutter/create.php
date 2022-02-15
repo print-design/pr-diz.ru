@@ -42,6 +42,109 @@ $error_message = '';
 
 $radius_valid = '';
 
+if(null !== filter_input(INPUT_POST, 'next-submit')) {
+    $supplier_id = filter_input(INPUT_POST, 'supplier_id');
+    if(empty($supplier_id)) {
+        $error_message = "Не указан производитель плёнки";
+        $form_valid = false;
+    }
+    
+    $radius = filter_input(INPUT_POST, 'radius');
+    if(empty($radius)) {
+        $radius_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $length = filter_input(INPUT_POST, 'length');
+    if(empty($length)) {
+        $error_message = "Длина обязательно";
+        $form_valid = false;
+    }
+    
+    $net_weight = filter_input(INPUT_POST, 'net_weight');
+    if(empty($net_weight)) {
+        $error_message = "Масса нетто обязательно";
+        $form_valid = false;
+    }
+    
+    $id_from_supplier = rand(1000000, 9999999);
+    $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
+    $thickness = filter_input(INPUT_POST, 'thickness');
+    $width = filter_input(INPUT_POST, 'width');
+    $cell = '';
+    $comment = '';
+    $storekeeper_id = $user_id;
+    $status_id = FREE_ROLL_STATUS_ID;
+    
+    if($form_valid) {
+        // Создаём новый рулон
+        $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id) "
+                . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$storekeeper_id')";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+        $roll_id = $executer->insert_id;
+        $is_from_pallet = 0;
+        
+        // Устанавливаем ему статус "Свободный"
+        if(empty($error_message)) {
+            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, $status_id, $user_id)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
+        
+        // Меняем статусы предыдущих исходных роликов на "Раскроили" (если он уже не установлен)
+        if(empty($error_message)) {
+            $cut_sources = null;
+    
+            $sql = "select is_from_pallet, roll_id from cutting_source where cutting_id=$cutting_id";
+            $grabber = new Grabber($sql);
+            $cut_sources = $grabber->result;
+            $error_message = $grabber->error;
+    
+            if($cut_sources !== null) {
+                foreach($cut_sources as $cut_source) {
+                    $source_is_from_pallet = $cut_source['is_from_pallet'];
+                    $source_roll_id = $cut_source['roll_id'];
+        
+                    if($source_is_from_pallet == 0) {
+                        $sql = "select status_id from roll_status_history where roll_id = $source_roll_id order by id desc limit 1";
+                        $fetcher = new Fetcher($sql);
+                        $row = $fetcher->Fetch();
+                
+                        if(!$row || $row['status_id'] != $cut_status_id) {
+                            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($source_roll_id, $cut_status_id, $user_id)";
+                            $executer = new Executer($sql);
+                            $error_message = $executer->error;
+                        }
+                    }
+                    else {
+                        $sql = "select status_id from pallet_roll_status_history where pallet_roll_id = $source_roll_id order by id desc limit 1";
+                        $fetcher = new Fetcher($sql);
+                        $row = $fetcher->Fetch();
+                
+                        if(!$row || $row['status_id'] != $cut_status_id) {
+                            $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values($source_roll_id, $cut_status_id, $user_id)";
+                            $executer = new Executer($sql);
+                            $error_message = $executer->error;
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Добавляем новый исходный ролик
+        if(empty($error_message)) {
+            $sql = "insert into cutting_source (cutting_id, is_from_pallet, roll_id) values ($cutting_id, $is_from_pallet, $roll_id)";
+            $executer = new Executer($sql);
+            $error_message == $executer->error;
+        }
+        
+        if(empty($error_message)) {
+            header("Location: streams.php"); // А отсюда, если понадобится, будет перенаправление
+        }
+    }
+}
+
 // Получение объекта
 $supplier_id = null;
 $film_brand_id = null;
@@ -92,7 +195,13 @@ if($row = $fetcher->Fetch()) {
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
                     <form method="post">
-                        <input type="hidden" name="cutting_id" value="<?=$cutting_id ?>" />
+                        <input type="hidden" id="cutting_id" name="cutting_id" value="<?=$cutting_id ?>" />
+                        <input type="hidden" id="supplier_id" name="supplier_id" value="<?=$supplier_id ?>" />
+                        <input type="hidden" id="film_brand_id" name="film_brand_id" value="<?=$film_brand_id ?>" />
+                        <input type="hidden" id="thickness" name="thickness" value="<?=$thickness ?>" />
+                        <input type="hidden" id="width" name="width" value="<?=$width ?>" />
+                        <input type="hidden" id="length" id="length" name="length" />
+                        <input type="hidden" id="net_weight" id="net_weight" name="net_weight" />
                         <div class="form-group">
                             <label for="supplier_id">Поставщик</label>
                             <select class="form-control" disabled="disabled">
@@ -150,6 +259,35 @@ if($row = $fetcher->Fetch()) {
                             <input type="text" id="width" name="width" value="<?= $width ?>" class="form-control" disabled="disabled" />
                         </div>
                         <div class="form-group">
+                            <label for="spool">Шпуля, мм</label>
+                            <div class="d-block">
+                                <?php
+                                $checked76 = " checked='checked'";
+                                $checked152 = "";
+                                
+                                if(filter_input(INPUT_POST, 'spool') == 76) {
+                                    $checked76 = " checked='checked'";
+                                    $checked152 = "";
+                                }
+                                
+                                if(filter_input(INPUT_POST, 'spool') == 152) {
+                                    $checked76 = "";
+                                    $checked152 = " checked='checked'";
+                                }
+                                ?>
+                                <div class="form-check-inline">
+                                    <label class="form-check-label">
+                                        <input type="radio" class="form-check-input" id="spool" name="spool" value="76"<?=$checked76 ?> />76 мм
+                                    </label>
+                                </div>
+                                <div class="form-check-inline">
+                                    <label class="form-check-label">
+                                        <input type="radio" class="form-check-input" id="spool" name="spool" value="152"<?=$checked152 ?> />152 мм
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="radius">Радиус от вала, мм</label>
                             <input type="text" name="radius" id="radius" class="form-control int-only<?=$radius_valid ?>" value="<?= filter_input(INPUT_POST, 'radius') ?>" placeholder="Введите радиус от вала" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Радиус от вала обязательно</div>
@@ -186,8 +324,59 @@ if($row = $fetcher->Fetch()) {
                 }
             }
             
+            // Все марки плёнки с их вариациями
+            var films = new Map();
+            
+            <?php
+            $sql = "SELECT fbv.film_brand_id, fbv.thickness, fbv.weight FROM film_brand_variation fbv";
+            $fetcher = new Fetcher($sql);
+            while ($row = $fetcher->Fetch()) {
+                echo "if(films.get(".$row['film_brand_id'].") == undefined) {\n";
+                echo "films.set(".$row['film_brand_id'].", new Map());\n";
+                echo "}\n";
+                echo "films.get(".$row['film_brand_id'].").set(".$row['thickness'].", ".$row['weight'].");\n";
+            }
+            ?>
+            
+            // Расчёт длины и массы плёнки по шпуле, толщине, радиусу, ширине, удельному весу
+            function CalculateByRadius() {
+                film_brand_id = $('#film_brand_id').val();
+                spool = $('#spool:checked').val();
+                thickness = $('#thickness').val();
+                width = $('#width').val();
+                radius = $('#radius').val();
+                
+                if(!isNaN(spool) && !isNaN(thickness) && !isNaN(radius) && !isNaN(width) 
+                        && spool != '' && thickness != '' && radius != '' && width != '') {
+                    density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
+                    
+                    result = GetFilmLengthWeightBySpoolThicknessRadiusWidth(spool, thickness, radius, width, density);
+                    
+                    $('#length').val(result.length.toFixed(2));
+                    $('#net_weight').val(result.weight.toFixed(2));
+                }
+            }
+            
+            // Рассчитываем ширину и массу плёнки при изменении значений каждого поля, участвующего в вычислении
+            $('#spool').change(CalculateByRadius);
+            
+            $('#radius').keypress(CalculateByRadius);
+            
+            $('#radius').keyup(CalculateByRadius);
+            
+            $('#radius').change(CalculateByRadius);
+            
+            $('#thickness').change(CalculateByRadius);
+            
+            $('#width').keypress(CalculateByRadius);
+            
+            $('#width').keyup(CalculateByRadius);
+            
+            $('#width').change(CalculateByRadius);
+            
             $(document).ready(function() {
                 AdjustButtons();
+                CalculateByRadius();
             });
             
             $(window).on('resize', AdjustButtons);
