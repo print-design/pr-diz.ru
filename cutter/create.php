@@ -34,6 +34,29 @@ elseif(!empty ($last_source) && empty ($streams_count)) {
 elseif(!empty ($last_source) && empty ($last_wind)) {
     header("Location: wind.php");
 }
+
+// Валидация формы
+define('ISINVALID', ' is-invalid');
+$form_valid = true;
+$error_message = '';
+
+$radius_valid = '';
+
+// Получение объекта
+$supplier_id = null;
+$film_brand_id = null;
+$thickness = null;
+$width = null;
+
+$sql = "select supplier_id, film_brand_id, thickness, width from cutting where id = $cutting_id";
+$fetcher = new Fetcher($sql);
+
+if($row = $fetcher->Fetch()) {
+    $supplier_id = $row['supplier_id'];
+    $film_brand_id = $row['film_brand_id'];
+    $thickness = $row['thickness'];
+    $width = $row['width'];
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -71,8 +94,64 @@ elseif(!empty ($last_source) && empty ($last_wind)) {
                     <form method="post">
                         <input type="hidden" name="cutting_id" value="<?=$cutting_id ?>" />
                         <div class="form-group">
+                            <label for="supplier_id">Поставщик</label>
+                            <select class="form-control" disabled="disabled">
+                                <option value="" hidden="hidden">Выберите поставщика</option>
+                                <?php
+                                $suppliers = (new Grabber("select id, name from supplier order by name"))->result;
+                                foreach($suppliers as $supplier) {
+                                    $id = $supplier['id'];
+                                    $name = $supplier['name'];
+                                    $selected = '';
+                                    if($supplier_id == $supplier['id']) $selected = " selected='selected'";
+                                    echo "<option value='$id'$selected>$name</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="film_brand_id">Марка плёнки</label>
+                            <select class="form-control" disabled="disabled">
+                                <option value="" hidden="hidden">Выберите марку</option>
+                                <?php
+                                if(!empty($supplier_id)) {
+                                    $film_brands = (new Grabber("select id, name from film_brand where supplier_id = $supplier_id"))->result;
+                                    foreach($film_brands as $film_brand) {
+                                        $id = $film_brand['id'];
+                                        $name = $film_brand['name'];
+                                        $selected = '';
+                                        if($film_brand_id == $film_brand['id']) $selected = " selected='selected'";
+                                        echo "<option value='$id'$selected>$name</option>";
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="thickness">Толщина, мкм</label>
+                            <select class="form-control" disabled="disabled">
+                                <option value="" hidden="hidden">Выберите толщину</option>
+                                <?php
+                                if(!empty($supplier_id) && !empty($film_brand_id)) {
+                                    $film_brand_variations = (new Grabber("select thickness, weight from film_brand_variation where film_brand_id = $film_brand_id order by thickness"))->result;
+                                    foreach($film_brand_variations as $film_brand_variation) {
+                                        $current_thickness = $film_brand_variation['thickness'];
+                                        $current_weight = $film_brand_variation['weight'];
+                                        $selected = '';
+                                        if($thickness == $current_thickness) $selected = " selected='selected'";
+                                        echo "<option value='$current_thickness'$selected>$current_thickness мкм $current_weight г/м<sup>2</sup></option>";
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="width">Ширина, мм</label>
+                            <input type="text" id="width" name="width" value="<?= $width ?>" class="form-control" disabled="disabled" />
+                        </div>
+                        <div class="form-group">
                             <label for="radius">Радиус от вала, мм</label>
-                            <input type="text" name="radius" id="radius" class="form-control int-only" value="<?= filter_input(INPUT_POST, 'radius') ?>" placeholder="Введите радиус от вала" required="required" autocomplete="off" />
+                            <input type="text" name="radius" id="radius" class="form-control int-only<?=$radius_valid ?>" value="<?= filter_input(INPUT_POST, 'radius') ?>" placeholder="Введите радиус от вала" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Радиус от вала обязательно</div>
                         </div>
                         <div class="form-group d-none d-lg-block">
