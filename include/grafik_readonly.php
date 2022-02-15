@@ -131,11 +131,17 @@ class GrafikReadonly {
             <th></th>
             <th>Дата</th>
             <th>Смена</th>
+            <?php if($this->user1Name): ?><th><?= $this->user1Name ?></th><?php endif; ?>
         </tr>
     </thead>
         <?php
         foreach($dateshifts as $dateshift) {
-            $grafik_dateshift = new GrafikDateshiftReadonly($dateshift['date'], $dateshift['shift']);
+            $editions = array();
+            $str_date = $dateshift['date']->format('Y-m-d');
+            if(array_key_exists($str_date, $all_editions) && array_key_exists($dateshift['shift'], $all_editions[$str_date])) {
+                $editions = $all_editions[$str_date][$dateshift['shift']];
+            }
+            $grafik_dateshift = new GrafikDateshiftReadonly($dateshift['date'], $dateshift['shift'], $this, $editions);
             $grafik_dateshift->Show();
         }
         ?>
