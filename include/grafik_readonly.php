@@ -1,6 +1,6 @@
 <?php
 include 'database_grafik.php';
-include 'grafik_dateshift_readonly.php';
+include 'GrafikDateReadonly.php';
 
 class GrafikReadonly {
     public function __construct(DateTime $from, DateTime $to, $machine_id) {
@@ -132,17 +132,27 @@ class GrafikReadonly {
             <th>Дата</th>
             <th>Смена</th>
             <?php if($this->user1Name): ?><th><?= $this->user1Name ?></th><?php endif; ?>
+            <?php if($this->user2Name): ?><th><?= $this->user2Name ?></th><?php endif; ?>
+            <?php if($this->hasOrganization): ?><th>Заказчик</th><?php endif; ?>
+            <?php if($this->hasEdition): ?><th>Наименование</th><?php endif; ?>
         </tr>
     </thead>
         <?php
-        foreach($dateshifts as $dateshift) {
-            $editions = array();
+        foreach($period as $date) {
             $str_date = $dateshift['date']->format('Y-m-d');
-            if(array_key_exists($str_date, $all_editions) && array_key_exists($dateshift['shift'], $all_editions[$str_date])) {
-                $editions = $all_editions[$str_date][$dateshift['shift']];
+            
+            $day_editions = array();
+            if(isset($all_editions[$str_date]['day'])) {
+                $day_editions = $all_editions[$str_date]['day'];
             }
-            $grafik_dateshift = new GrafikDateshiftReadonly($dateshift['date'], $dateshift['shift'], $this, $editions);
-            $grafik_dateshift->Show();
+            
+            $night_editions = array();
+            if(isset($all_editions[$str_date]['night'])) {
+                $night_editions = $all_editions[$str_date]['night'];
+            }
+            
+            $grafik_date = new GrafikDateReadonly($date, $this, $day_editions, $night_editions);
+            $grafik_date->Show();
         }
         ?>
 </table>

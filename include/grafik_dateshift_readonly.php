@@ -1,30 +1,11 @@
-<?php
-class GrafikDateshiftReadonly {
-    public function __construct(DateTime $date, $shift, GrafikReadonly $grafik, $editions) {
-        $this->date = $date;
-        $this->shift = $shift;
-        $this->grafik = $grafik;
-        $this->editions = $editions;
-    }
-    
-    private DateTime $date;
-    private $shift;
-    private GrafikReadonly $grafik;
-    private $editions;
-            
-    function Show() {
-        $formatted_date = $this->date->format('Y-m-d');
-        $key = $formatted_date. $this->shift;
-        
-        $day_shifts_count = 1;
-        $night_shifts_count = 1;
-        $total_shifts_count = $day_shifts_count + $night_shifts_count;
-        
-        $top = 'nottop';
-        if($this->shift == 'day') {
-            $top = 'top';
-        }
-        include 'show_grafik_dateshift_readonly.php';
-    }
-}
-?>
+<tr>
+    <?php if($this->shift == 'day'): ?>
+    <td class="<?=$top ?>" rowspan="2"><?=$GLOBALS['weekdays'][$this->date->format('w')] ?></td>
+    <td class="<?=$top ?>" rowspan="2"><?=$this->date->format('d.m').".".$this->date->format('Y') ?></td>
+    <?php endif; ?>
+    <td class="<?=$top.' '.$this->shift ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?></td>
+    <?php if($this->grafik->user1Name): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->grafik->user2Name): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->grafik->hasOrganization): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->grafik->hasEdition): ?><td class="<?=$top.' '.$this->shift ?>"><?php print_r($this->editions); ?></td><?php endif; ?>
+</tr>
