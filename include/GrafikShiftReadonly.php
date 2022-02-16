@@ -1,7 +1,7 @@
 <?php
 include 'GrafikEditionReadonly.php';
 
-class GrafikDateshiftReadonly {
+class GrafikShiftReadonly {
     public function __construct(DateTime $date, $shift, GrafikReadonly $grafik, $editions, $date_editions_count, $shift_editions_count) {
         $this->date = $date;
         $this->shift = $shift;
@@ -27,7 +27,7 @@ class GrafikDateshiftReadonly {
             if($this->shift == 'day') {
                 $top = 'top';
             }
-            include 'grafik_dateshift_readonly.php';
+            include 'grafik_shift_readonly.php';
         }
         else {
             foreach($this->editions as $key => $value) {

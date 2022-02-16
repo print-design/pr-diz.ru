@@ -1,5 +1,5 @@
 <?php
-include 'GrafikDateshiftReadonly.php';
+include 'GrafikShiftReadonly.php';
 
 class GrafikDateReadonly {
     public function __construct(DateTime $date, GrafikReadonly $grafik, $day_editions, $night_editions) {
@@ -18,9 +18,9 @@ class GrafikDateReadonly {
         $day_editions_count = count($this->day_editions);
         $night_editions_count = count($this->night_editions);
         $date_editionts_count = $day_editions_count + $night_editions_count;
-        $day_shift = new GrafikDateshiftReadonly($this->date, 'day', $this->grafik, $this->day_editions, $date_editionts_count, $day_editions_count);
+        $day_shift = new GrafikShiftReadonly($this->date, 'day', $this->grafik, $this->day_editions, $date_editionts_count, $day_editions_count);
         $day_shift->Show();
-        $night_shift = new GrafikDateshiftReadonly($this->date, 'night', $this->grafik, $this->night_editions, $date_editionts_count, $night_editions_count);
+        $night_shift = new GrafikShiftReadonly($this->date, 'night', $this->grafik, $this->night_editions, $date_editionts_count, $night_editions_count);
         $night_shift->Show();
     }
 }
