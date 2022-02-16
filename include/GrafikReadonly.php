@@ -53,13 +53,6 @@ class GrafikReadonly {
     public $isCutter = false;
 
     public $error_message = '';
-    
-    private $users1 = [];
-    private $users2 = [];
-    private $statuses = [];
-    private $rollers = [];
-    private $laminations = [];
-    private $managers = [];
 
     function ShowPage() {
         // Список рабочих смен
@@ -109,40 +102,8 @@ class GrafikReadonly {
             array_push($period, $this->dateFrom);
         }
         
-        $dateshifts = array();
+        $grafik_dates = array();
         
-        foreach ($period as $date) {
-            $dateshift['date'] = $date;
-            $dateshift['shift'] = 'day';
-            array_push($dateshifts, $dateshift);
-            
-            $dateshift['date'] = $date;
-            $dateshift['shift'] = 'night';
-            array_push($dateshifts, $dateshift);
-        }
-        ?>
-<div class="d-flex justify-content-between mb-2">
-    <h1><?= $this->name ?></h1>
-</div>
-<table class="table table-bordered typography">
-    <thead id="grafik-thead">
-        <tr>
-            <th></th>
-            <th>Дата</th>
-            <th>Смена</th>
-            <?php if($this->user1Name): ?><th><?= $this->user1Name ?></th><?php endif; ?>
-            <?php if($this->user2Name): ?><th><?= $this->user2Name ?></th><?php endif; ?>
-            <?php if($this->hasOrganization): ?><th>Заказчик</th><?php endif; ?>
-            <?php if($this->hasEdition): ?><th>Наименование</th><?php endif; ?>
-            <?php if($this->hasLength): ?><th>Метраж</th><?php endif; ?>
-            <?php if($this->hasRoller): ?><th>Вал</th><?php endif; ?>
-            <?php if($this->hasLamination): ?><th>Ламинация</th><?php endif; ?>
-            <?php if($this->hasColoring): ?><th>Кр-ть</th><?php endif; ?>
-            <?php if($this->hasManager): ?><th>Менеджер</th><?php endif; ?>
-            <?php if($this->hasComment): ?><th>Комментарий</th><?php endif; ?>
-        </tr>
-    </thead>
-        <?php
         foreach($period as $date) {
             $str_date = $date->format('Y-m-d');
             
@@ -167,6 +128,32 @@ class GrafikReadonly {
             }
             
             $grafik_date = new GrafikDateReadonly($date, $this, $day_data, $night_data, $day_editions, $night_editions);
+            array_push($grafik_dates, $grafik_date);
+        }
+        ?>
+<div class="d-flex justify-content-between mb-2">
+    <h1><?= $this->name ?></h1>
+</div>
+<table class="table table-bordered typography">
+    <thead id="grafik-thead">
+        <tr>
+            <th></th>
+            <th>Дата</th>
+            <th>Смена</th>
+            <?php if($this->user1Name): ?><th><?= $this->user1Name ?></th><?php endif; ?>
+            <?php if($this->user2Name): ?><th><?= $this->user2Name ?></th><?php endif; ?>
+            <?php if($this->hasOrganization): ?><th>Заказчик</th><?php endif; ?>
+            <?php if($this->hasEdition): ?><th>Наименование</th><?php endif; ?>
+            <?php if($this->hasLength): ?><th>Метраж</th><?php endif; ?>
+            <?php if($this->hasRoller): ?><th>Вал</th><?php endif; ?>
+            <?php if($this->hasLamination): ?><th>Ламинация</th><?php endif; ?>
+            <?php if($this->hasColoring): ?><th>Кр-ть</th><?php endif; ?>
+            <?php if($this->hasManager): ?><th>Менеджер</th><?php endif; ?>
+            <?php if($this->hasComment): ?><th>Комментарий</th><?php endif; ?>
+        </tr>
+    </thead>
+        <?php
+        foreach($grafik_dates as $grafik_date) {
             $grafik_date->Show();
         }
         ?>
