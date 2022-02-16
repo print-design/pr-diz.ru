@@ -34,7 +34,7 @@ include 'show_top.php';
         $date_diff_from_now = date_diff(new DateTime(), $dateshift['date']);
         
         $allow_edit_disabled = '';
-        if(!$allow_edit && $date_diff_from_now->days < 1 && !$this->isCutter) {
+        if(!$allow_edit && $date_diff_from_now->days < 2 && !$this->isCutter) {
             $allow_edit_disabled = " disabled='disabled'";
         }
         ?>
