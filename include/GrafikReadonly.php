@@ -141,6 +141,16 @@ class GrafikReadonly {
         foreach($period as $date) {
             $str_date = $date->format('Y-m-d');
             
+            $day_data = array();
+            if(isset($all[$str_date.'day'])) {
+                $day_data = $all[$str_date.'day'];
+            }
+            
+            $night_data = array();
+            if(isset($all[$str_date.'night'])) {
+                $night_data = $all[$str_date.'night'];
+            }
+            
             $day_editions = array();
             if(isset($all_editions[$str_date]['day'])) {
                 $day_editions = $all_editions[$str_date]['day'];
@@ -151,7 +161,7 @@ class GrafikReadonly {
                 $night_editions = $all_editions[$str_date]['night'];
             }
             
-            $grafik_date = new GrafikDateReadonly($date, $this, $day_editions, $night_editions);
+            $grafik_date = new GrafikDateReadonly($date, $this, $day_data, $night_data, $day_editions, $night_editions);
             $grafik_date->Show();
         }
         ?>
