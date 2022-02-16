@@ -344,11 +344,11 @@ while ($row = $fetcher->Fetch()) {
                 </div>
             </form>
             <div class="w-100 pb-4" id="bottom_buttons">
-                <?php if(!empty($last_wind)): ?>
+                <!--?php if(!empty($last_wind)): ?-->
                 <div class="form-group">
                     <a href="source.php" class="btn btn-outline-dark form-control next_source mt-3">Новый исходный рулон</a>
                 </div>
-                <?php endif; ?>
+                <!--?php endif; ?-->
                 <?php if($winds_count > 0): ?>
                 <div class="form-group">
                     <a href="remain.php" class="btn btn-dark form-control mt-3">Заявка выполнена</a>

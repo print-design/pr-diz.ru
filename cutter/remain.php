@@ -40,7 +40,8 @@ function CloseCutting($cutting_id, $cut_status_id, $user_id) {
     $error = $fetcher->error;
     
     // Удаляем исходный ролик, у которого не было ни одной намотки
-    if(empty($error)) {
+    // (!!! Всё-таки не надо его удалять, потому что может быть одна намотка из нескольких исходных роликов)
+    /*if(empty($error)) {
         $sql = "select id from cutting_source where cutting_id = $cutting_id and id not in (select cutting_source_id from cutting_wind)";
         $grabber = new Grabber($sql);
         $error = $grabber->error;
@@ -53,7 +54,7 @@ function CloseCutting($cutting_id, $cut_status_id, $user_id) {
                 $error = $executer->error;
             }
         }
-    }
+    }*/
     
     // Меняем статусы исходных роликов на "Раскроили" (если он уже не установлен)
     $cut_sources = null;

@@ -31,9 +31,9 @@ elseif(!empty ($last_source) && empty ($streams_count)) {
     header("Location: streams.php");
 }
 // Если есть исходный ролик, но нет нарезок, переходим на страницу создания нарезки
-elseif(!empty ($last_source) && empty ($last_wind)) {
+/*elseif(!empty ($last_source) && empty ($last_wind)) {
     header("Location: wind.php");
-}
+}*/
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
