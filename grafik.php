@@ -1,6 +1,6 @@
 <?php
 include 'include/topscripts.php';
-include 'include/grafik_readonly.php';
+include 'include/GrafikReadonly.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'storekeeper', 'dev', 'manager', 'administrator'))) {
