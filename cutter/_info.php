@@ -21,7 +21,7 @@ if(null !== $cutting_id) {
         $thickness = $row['thickness'];
         $width = $row['width'];
     }
-} 
+}
 ?>
 <div class="modal fade" id="infoModal">
     <div class="modal-dialog" style="width: 100%; height: 100%; margin: 0;">
@@ -80,7 +80,7 @@ if(null !== $cutting_id) {
                     foreach($sources as $source):
                     ?>
                     <p class="font-weight-bold font-italic" style="color: #888888;">Исходный ролик <?=$source['name'] ?> (<?=$source['length'] ?> метров)</p>
-                    <p class="font-weight-bold font-italic" style="color: #888888;">id: <?=$source['id_from_supplier'] ?></p>
+                    <p class="font-weight-bold font-italic" style="color: #888888;">id поставщика: <?=$source['id_from_supplier'] ?></p>
                     <?php
                     $sql = "select length from cutting_wind where cutting_source_id=".$source['id'];
                     $fetcher = new Fetcher($sql);
