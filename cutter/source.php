@@ -304,6 +304,16 @@ $source_id = filter_input(INPUT_POST, 'source_id');
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
+            
+            $next_submit_disabled = '';
+            $create_submit_disabled = '';
+            
+            if(empty($source_id)) {
+                $next_submit_disabled = " disabled";
+            }
+            else {
+                $create_submit_disabled = " disabled";
+            }
             ?>
             <h1>Исходный рулон</h1>
             <div class="row">
@@ -326,10 +336,10 @@ $source_id = filter_input(INPUT_POST, 'source_id');
                         </div>
                         <div class="form-group d-none d-lg-block">
                             <div class="form-group">
-                                <button type="submit" id="next-submit" name="next-submit" class="btn btn-dark form-control mt-4">Далее</button>
+                                <button type="submit" id="next-submit" name="next-submit" class="btn btn-dark form-control mt-4 next-submit<?=$next_submit_disabled ?>">Далее</button>
                             </div>
                             <div class="form-group">
-                                <a href="create.php" class="btn btn-outline-dark form-control">Добавить в базу</a>
+                                <a href="create.php" class="btn btn-outline-dark form-control create-submit<?=$create_submit_disabled ?>">Добавить в базу</a>
                             </div>
                         </div>
                     </form>
@@ -337,10 +347,10 @@ $source_id = filter_input(INPUT_POST, 'source_id');
             </div>
             <div class="d-block d-lg-none w-100 pb-4" id="bottom_buttons">
                 <div class="form-group">
-                    <button type="button" class="btn btn-dark form-control" onclick="javascript: $('#next-submit').click();">Далее</button>
+                    <button type="button" class="btn btn-dark form-control next-submit<?=$next_submit_disabled ?>" onclick="javascript: $('#next-submit').click();">Далее</button>
                 </div>
                 <div class="form-group">
-                    <a href="create.php" class="btn btn-outline-dark form-control">Добавить в базу</a>
+                    <a href="create.php" class="btn btn-outline-dark form-control create-submit<?=$create_submit_disabled ?>">Добавить в базу</a>
                 </div>
             </div>
         </div>
@@ -369,6 +379,8 @@ $source_id = filter_input(INPUT_POST, 'source_id');
             }
             
             // Показываем либо кнопку открытия сканера либо кнопку очистки поля
+            // ... прибавление 16.02.2022 ...
+            // а также либо кнопку "Далее" либо кнопку "Добавить в базу"
             function SetFindClearVisibility(obj) {
                 obj.removeClass('is-invalid');
                 
@@ -377,12 +389,20 @@ $source_id = filter_input(INPUT_POST, 'source_id');
                     var btn = $("<button type='button' class='btn find-btn'><i class='fas fa-camera'></i></button>");
                     obj.parent().children('.input-group-append').append(btn);
                     AddFindCameraListener();
+                    
+                    // ... прибавление 16.02.2022 ...
+                    $('.next-submit').addClass('disabled');
+                    $('.create-submit').removeClass('disabled');
                 }
                 else if(obj.val() != '' && obj.parent().children('.input-group-append').children('.clear-btn').length == 0) {
                     obj.parent().children('.input-group-append').html('');
                     var btn = $("<button type='button' class='btn clear-btn'><i class='fas fa-times'></i></button>");
                     obj.parent().children('.input-group-append').append(btn);
                     AddFindClearListener();
+                    
+                    // ... прибавление 16.02.2022 ...
+                    $('.next-submit').removeClass('disabled');
+                    $('.create-submit').addClass('disabled');
                 }
             }
             
