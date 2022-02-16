@@ -33,28 +33,21 @@ $error_message = '';
 
 $radius_valid = '';
 
-function CloseCutting($cutting_id, $cut_status_id, $user_id) {
+function CloseCutting($cutting_id, $last_source, $last_wind, $cut_status_id, $user_id) {
     // Закрываем нарезку
     $sql = "update cutting set date=now() where id=$cutting_id";
     $fetcher = new Fetcher($sql);
     $error = $fetcher->error;
     
-    // Удаляем исходный ролик, у которого не было ни одной намотки
-    // (!!! Всё-таки не надо его удалять, потому что может быть одна намотка из нескольких исходных роликов)
-    /*if(empty($error)) {
-        $sql = "select id from cutting_source where cutting_id = $cutting_id and id not in (select cutting_source_id from cutting_wind)";
-        $grabber = new Grabber($sql);
-        $error = $grabber->error;
-        $empty_sources = $grabber->result;
-        
-        if(empty($error)) {
-            foreach($empty_sources as $empty_source) {
-                $sql = "delete from cutting_source where id = ".$empty_source['id'];
-                $executer = new Executer($sql);
-                $error = $executer->error;
-            }
+    // Удаляем последний исходный ролик, если у него не было ни одной намотки.
+    // (то есть если его ввели и сразу стали закрывать заявку)
+    if(empty($error)) {
+        if(!empty($last_source) && empty($last_wind)) {
+            $sql = "delete from cutting_source where id = $last_source";
+            $executer = new Executer($sql);
+            $error = $executer->error;
         }
-    }*/
+    }
     
     // Меняем статусы исходных роликов на "Раскроили" (если он уже не установлен)
     $cut_sources = null;
@@ -102,6 +95,8 @@ function CloseCutting($cutting_id, $cut_status_id, $user_id) {
 if(null !== filter_input(INPUT_POST, 'close-submit')) {
     // Создаём остаточный ролик
     $cutting_id = filter_input(INPUT_POST, 'cutting_id');
+    $last_source = filter_input(INPUT_POST, 'last_source');
+    $last_wind = filter_input(INPUT_POST, 'last_wind');
     $supplier_id = filter_input(INPUT_POST, 'supplier_id');
     $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
     $thickness = filter_input(INPUT_POST, 'thickness');
@@ -135,7 +130,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
     
     // Закрываем нарезку
     if(empty($error_message)) {
-        $error_message = CloseCutting($cutting_id, $cut_status_id, $user_id);
+        $error_message = CloseCutting($cutting_id, $last_source, $last_wind, $cut_status_id, $user_id);
     }
     
     if(empty($error_message)) {
@@ -145,7 +140,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
 
 if(null !== filter_input(INPUT_POST, 'no-remain-submit')) {
     $cutting_id = filter_input(INPUT_POST, 'cutting_id');
-    $error_message = CloseCutting($cutting_id, $cut_status_id, $user_id);
+    $error_message = CloseCutting($cutting_id, $last_source, $last_wind, $cut_status_id, $user_id);
     
     if(empty($error_message)) {
         header("Location: finish.php?id=$cutting_id");
@@ -206,6 +201,8 @@ if($row = $fetcher->Fetch()) {
             <h1>Закрытие заявки</h1>
             <form method="post">
                 <input type="hidden" id="cutting_id" name="cutting_id" value="<?=$cutting_id ?>" />
+                <input type="hidden" id="last_source" name="last_source" value="<?=$last_source ?>" />
+                <input type="hidden" id="last_wind" name="last_wind" value="<?=$last_wind ?>" />
                 <input type="hidden" id="supplier_id" name="supplier_id" value="<?=$supplier_id ?>" />
                 <input type="hidden" id="film_brand_id" name="film_brand_id" value="<?=$film_brand_id ?>" />
                 <input type="hidden" id="thickness" name="thickness" value="<?=$thickness ?>" />
