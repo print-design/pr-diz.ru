@@ -87,7 +87,10 @@ class GrafikReadonly {
         $fetcher = new FetcherGrafik($sql);
         
         while ($item = $fetcher->Fetch()) {
-            if(!array_key_exists($item['date'], $all_editions) || !array_key_exists($item['shift'], $all_editions[$item['date']])) $all_editions[$item['date']][$item['shift']] = [];
+            if(!array_key_exists($item['date'], $all_editions) || !array_key_exists($item['shift'], $all_editions[$item['date']])) {
+                $all_editions[$item['date']][$item['shift']] = []; 
+            }
+            
             array_push($all_editions[$item['date']][$item['shift']], $item);
         }
         
@@ -130,35 +133,8 @@ class GrafikReadonly {
             $grafik_date = new GrafikDateReadonly($date, $this, $day_data, $night_data, $day_editions, $night_editions);
             array_push($grafik_dates, $grafik_date);
         }
-        ?>
-<div class="d-flex justify-content-between mb-2">
-    <h1><?= $this->name ?></h1>
-</div>
-<table class="table table-bordered typography">
-    <thead id="grafik-thead">
-        <tr>
-            <th></th>
-            <th>Дата</th>
-            <th>Смена</th>
-            <?php if($this->user1Name): ?><th><?= $this->user1Name ?></th><?php endif; ?>
-            <?php if($this->user2Name): ?><th><?= $this->user2Name ?></th><?php endif; ?>
-            <?php if($this->hasOrganization): ?><th>Заказчик</th><?php endif; ?>
-            <?php if($this->hasEdition): ?><th>Наименование</th><?php endif; ?>
-            <?php if($this->hasLength): ?><th>Метраж</th><?php endif; ?>
-            <?php if($this->hasRoller): ?><th>Вал</th><?php endif; ?>
-            <?php if($this->hasLamination): ?><th>Ламинация</th><?php endif; ?>
-            <?php if($this->hasColoring): ?><th>Кр-ть</th><?php endif; ?>
-            <?php if($this->hasManager): ?><th>Менеджер</th><?php endif; ?>
-            <?php if($this->hasComment): ?><th>Комментарий</th><?php endif; ?>
-        </tr>
-    </thead>
-        <?php
-        foreach($grafik_dates as $grafik_date) {
-            $grafik_date->Show();
-        }
-        ?>
-</table>
-<?php
+        
+        include 'grafik_readonly.php';
     }
 }
 ?>
