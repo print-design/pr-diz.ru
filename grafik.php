@@ -36,7 +36,7 @@ $error_message = $grafik->error_message;
             if(!empty($error_message)) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
-            $grafik->ShowPage();
+            $grafik->Show();
             ?>
         </div>
         <?php

@@ -54,7 +54,7 @@ class GrafikReadonly {
 
     public $error_message = '';
 
-    function ShowPage() {
+    function Show() {
         // Список рабочих смен
         $all = array();
         $sql = "select ws.id, ws.date date, date_format(ws.date, '%d.%m.%Y') fdate, ws.shift, ws.machine_id, u1.id u1_id, u1.fio u1_fio, u2.id u2_id, u2.fio u2_fio, "
