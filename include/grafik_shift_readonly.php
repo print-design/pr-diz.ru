@@ -7,5 +7,5 @@
     <?php if($this->grafik->user1Name): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     <?php if($this->grafik->user2Name): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     <?php if($this->grafik->hasOrganization): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
-    <?php if($this->grafik->hasEdition): ?><td class="<?=$top.' '.$this->shift ?>"><?php print_r($this->editions); ?></td><?php endif; ?>
+    <?php if($this->grafik->hasEdition): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
 </tr>

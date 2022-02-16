@@ -20,7 +20,7 @@ class GrafikEditionReadonly {
             
     function Show() {
         $top = 'nottop';
-        if($this->shift == 'day') {
+        if($this->shift == 'day' && $this->edition_key == 0) {
             $top = 'top';
         }
         
