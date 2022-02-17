@@ -61,26 +61,26 @@ class GrafikMachine {
     public $laminations = [];
     public $managers = [];
     
-    public $allow_edit = false;
+    public $allow_edit = 0;
+    public $clipboard_db = false;
     
     function Show() {
         // Смотрим настройки
-        $allow_edit = 0;
-        
+        $this->allow_edit = 0;    
         $sql = "select name, bool_value from settings";
         $fetcher = new Fetcher($sql);
         while($row = $fetcher->Fetch()) {
             if($row['name'] == "allow_edit") {
-                $allow_edit = $row['bool_value'];
+                $this->allow_edit = $row['bool_value'];
             }
         }
         
         // Проверяем, имеется ли что-нибудь в буфере обмена
-        $clipboard_db = false;
+        $this->clipboard_db = false;
         $sql = "select count(id) from clipboard";
         $row = (new Fetcher($sql))->Fetch();
         if($row[0] > 0) {
-            $clipboard_db = true;
+            $this->clipboard_db = true;
         }
         
         // Список работников №1

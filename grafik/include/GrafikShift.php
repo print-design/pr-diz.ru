@@ -25,7 +25,7 @@ class GrafikShift {
     private $date_editions_count;
     private $shift_editions_count;
     private $allow_edit_disabled;
-            
+    
     function Show() {
         if(count($this->editions) == 0) {
             $top = 'nottop';
