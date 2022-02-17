@@ -26,14 +26,10 @@ $last_wind = $opened_roll['last_wind'];
 if(empty($cutting_id)) {
     header("Location: ".APPLICATION.'/cutter/');
 }
-// Если есть исходный ролик, но нет ручьёв, переходим на страницу "Как режем"
-elseif(!empty ($last_source) && empty ($streams_count)) {
+// Если нет ручьёв, переходим на страницу "Как режем"
+elseif(empty ($streams_count)) {
     header("Location: streams.php");
 }
-// Если есть исходный ролик, но нет нарезок, переходим на страницу создания нарезки
-/*elseif(!empty ($last_source) && empty ($last_wind)) {
-    header("Location: wind.php");
-}*/
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -263,9 +259,9 @@ $source_id = filter_input(INPUT_POST, 'source_id');
                 <ul class="navbar-nav w-75">
                     <li class="nav-item">
                         <?php if(empty($last_source)): ?>
-                        <a class="nav-link" href="<?=APPLICATION."/cutter/material.php" ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <a class="nav-link" href="streams.php"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                         <?php else: ?>
-                        <a class="nav-link" href="<?=APPLICATION."/cutter/wind.php" ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <a class="nav-link" href="wind.php"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                         <?php endif; ?>
                     </li>
                 </ul>

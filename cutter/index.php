@@ -17,15 +17,15 @@ $streams_count = $opened_roll['streams_count'];
 $last_source = $opened_roll['last_source'];
 $last_wind = $opened_roll['last_wind'];
 
-// Если есть незакрытая нарезка, переходим на страницу создания исходного ролика.
+// Если есть незакрытая нарезка, переходим на другие страницы.
 if(!empty($cutting_id)) {
-    if(empty($last_source) && empty($streams_count)) {
-        header("Location: source.php");
-    }
-    elseif (!empty ($last_source) && empty ($streams_count)) {
+    if(empty($streams_count)) {
         header("Location: streams.php");
     }
-    elseif(!empty ($last_source) && !empty ($streams_count)) {
+    elseif(empty ($last_source)) {
+        header("Location: source.php");
+    }
+    else {
         header("Location: wind.php");
     }
 }

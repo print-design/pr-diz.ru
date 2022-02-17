@@ -19,14 +19,6 @@ $streams_count = $opened_roll['streams_count'];
 if(empty($cutting_id)) {
     header("Location: ",APPLICATION.'/cutter/');
 }
-// Если нет исходного ролика, переходим на страницу создания исходного ролика
-elseif(empty ($last_source)) {
-    header("Location: source.php");
-}
-// Если есть исходный ролик и есть ручьи, переходим на страницу "Создание намотки"
-elseif(!empty ($streams_count)) {
-    header("Location: wind.php");
-}
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -72,8 +64,9 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         }
     }
     
-    $width = 0;
     $cutting_id = filter_input(INPUT_POST, 'cutting_id');
+    $width = 0;
+    
     $sql = "select width from cutting where id=$cutting_id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
@@ -86,6 +79,8 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         if(null !== filter_input(INPUT_POST, 'stream_'.$i)) {
             $stream = 'stream_'.$i;
             $$stream = filter_input(INPUT_POST, $stream);
+            $comment = 'comment_'.$i;
+            $$comment = filter_input(INPUT_POST, $comment);
             if(empty($$stream)) {
                 $stream_valid = 'stream_'.$i.'_valid';
             }
@@ -109,31 +104,38 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
-        for($i=1; $i<=$streams_count; $i++) {
-            if(!empty(filter_input(INPUT_POST, 'stream_'.$i)) && empty($error_message)) {
-                $width = filter_input(INPUT_POST, 'stream_'.$i);
-                $comment = addslashes(filter_input(INPUT_POST, 'comment_'.$i));
-                $sql = "insert into cutting_stream (cutting_id, width, comment) values ($cutting_id, $width, '$comment')";
-                $executer = new Executer($sql);
-                $error_message = $executer->error;
-                $insert_id = $executer->insert_id;
+        $sql = "delete from cutting_stream where cutting_id = $cutting_id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    
+        if(empty($error_message)) {
+            for($i=1; $i<=$streams_count; $i++) {
+                if(!empty(filter_input(INPUT_POST, 'stream_'.$i)) && empty($error_message)) {
+                    $width = filter_input(INPUT_POST, 'stream_'.$i);
+                    $comment = addslashes(filter_input(INPUT_POST, 'comment_'.$i));
+                    $sql = "insert into cutting_stream (cutting_id, width, comment) values ($cutting_id, $width, '$comment')";
+                    $executer = new Executer($sql);
+                    $error_message = $executer->error;
+                    $insert_id = $executer->insert_id;
+                }
             }
         }
         
         if(empty($error_message)) {
-            header("Location: wind.php");
+            header("Location: source.php");
         }
     }
 }
 
-if(null !== filter_input(INPUT_POST, 'previous-submit')) {
-    $sql = "delete from cutting_source where id = $last_source";
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
-    
-    if(empty($error_message)) {
-        header("Location: source.php");
-    }
+// Получение объекта
+$sql = "select width, comment from cutting_stream where cutting_id = $cutting_id";
+$fetcher = new Fetcher($sql);
+$i = 0;
+while($row = $fetcher->Fetch()) {
+    $stream_name = "stream_".(++$i);
+    $$stream_name = $row['width'];
+    $comment_name = "comment_$i";
+    $$comment_name = $row['comment'];
 }
 ?>
 <!DOCTYPE html>
@@ -149,9 +151,7 @@ if(null !== filter_input(INPUT_POST, 'previous-submit')) {
             <nav class="navbar navbar-expand-sm justify-content-between">
                 <ul class="navbar-nav w-75">
                     <li class="nav-item">
-                        <form method="post">
-                            <button type="submit" id="previous-submit" name="previous-submit" class="btn btn-link nav-link"><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
-                        </form>
+                        <a class="nav-link" href="material.php"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav mr-4">
@@ -180,20 +180,20 @@ if(null !== filter_input(INPUT_POST, 'previous-submit')) {
                 <input type="hidden" id="cutting_id" name="cutting_id" value="<?=$cutting_id ?>" />
                 <div class="form-group">
                     <label for="streams_count">Кол-во ручьев</label>
-                    <input type="text" id="streams_count" name="streams_count" class="form-control int-only w-50<?=$streams_count_valid ?>" data-max="19" value="<?= isset($_REQUEST['streams_count']) ? $_REQUEST['streams_count'] : '' ?>" required="required" autocomplete="off" />
+                    <input type="text" id="streams_count" name="streams_count" class="form-control int-only w-50<?=$streams_count_valid ?>" data-max="19" value="<?= empty($streams_count) ? '' : $streams_count ?>" required="required" autocomplete="off" />
                     <div class="invalid-feedback">Число, макс. 19</div>
                 </div>
                     <?php
                     for($i=1; $i<=19; $i++):
+                    $stream_name = "stream_$i";
                     $stream_valid_name = 'stream_'.$i.'_valid';
                     $stream_group_display_class = ' d-none';
                     $stream_message = 'stream_'.$i.'_message';
                     
+                    $comment_name = "comment_$i";
                     $comment_valid_name = 'comment_'.$i.'_valid';
                     $comment_group_display_class = ' d-none';
                     $comment_message = 'comment_'.$i.'_message';
-                
-                    $streams_count = isset($_REQUEST['streams_count']) ? $_REQUEST['streams_count'] : null;
                 
                     if(null !== $streams_count && intval($streams_count) >= intval($i)) {
                         $stream_group_display_class = '';
@@ -203,13 +203,13 @@ if(null !== filter_input(INPUT_POST, 'previous-submit')) {
                 <div class="form-group stream_group<?=$stream_group_display_class ?>" id="stream_<?=$i ?>_group">
                     <label for="stream_<?=$i ?>">Ручей <?=$i ?></label>
                     <div class="input-group">
-                        <input type="text" id="stream_<?=$i ?>" name="stream_<?=$i ?>" class="form-control int-only<?=$$stream_valid_name ?>" value="<?= isset($_REQUEST['stream_'.$i]) ? $_REQUEST['stream_'.$i] : '' ?>" placeholder="Ширина" autocomplete="off" />
+                        <input type="text" id="stream_<?=$i ?>" name="stream_<?=$i ?>" class="form-control int-only<?=$$stream_valid_name ?>" value="<?= isset($$stream_name) ? $$stream_name : '' ?>" placeholder="Ширина" autocomplete="off" />
                         <div class="input-group-append"><span class="input-group-text">мм</span></div>
                         <div class="invalid-feedback"><?=$$stream_message ?></div>                        
                     </div>
                 </div>
                 <div class="form-group comment_group<?=$comment_group_display_class ?>" id="comment_<?=$i ?>_group">
-                    <input type="text" id="comment_<?=$i ?>" name="comment_<?=$i ?>" class="form-control<?=$$comment_valid_name ?>" value="<?= isset($_REQUEST['comment_'.$i]) ? urldecode(htmlentities($_REQUEST['comment_'.$i])) : '' ?>" placeholder="Комментарий" autocomplete="off" />
+                    <input type="text" id="comment_<?=$i ?>" name="comment_<?=$i ?>" class="form-control<?=$$comment_valid_name ?>" value="<?= isset($$comment_name) ? urldecode(htmlentities($$comment_name)) : '' ?>" placeholder="Комментарий" autocomplete="off" />
                     <div class="invalid-feedback"><?=$$comment_message ?></div>
                 </div>
                     <?php endfor; ?>
@@ -252,6 +252,8 @@ if(null !== filter_input(INPUT_POST, 'previous-submit')) {
                     }
                 }
             }
+            
+            SetStreams($('#streams_count').val());
         </script>
     </body>
 </html>

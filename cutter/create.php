@@ -26,26 +26,35 @@ $last_wind = $opened_roll['last_wind'];
 if(empty($cutting_id)) {
     header("Location: ".APPLICATION.'/cutter/');
 }
-// Если есть исходный ролик, но нет ручьёв, переходим на страницу "Как режем"
-elseif(!empty ($last_source) && empty ($streams_count)) {
+// Если нет ручьёв, переходим на страницу "Как режем"
+elseif(empty ($streams_count)) {
     header("Location: streams.php");
 }
-// Если есть исходный ролик, но нет нарезок, переходим на страницу создания нарезки
-/*elseif(!empty ($last_source) && empty ($last_wind)) {
-    header("Location: wind.php");
-}*/
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
 $error_message = '';
 
+$width_valid = '';
+$width_message = "Ширина обязательно";
 $radius_valid = '';
 
 if(null !== filter_input(INPUT_POST, 'next-submit')) {
     $supplier_id = filter_input(INPUT_POST, 'supplier_id');
     if(empty($supplier_id)) {
         $error_message = "Не указан производитель плёнки";
+        $form_valid = false;
+    }
+    
+    $width = filter_input(INPUT_POST, 'width');
+    if(empty($width)) {
+        $width_valid = ISINVALID;
+        $form_valid = false;
+    }
+    elseif($width < 50 || $width > 1600) {
+        $width_valid = ISINVALID;
+        $width_message = "От 50 до 1600";
         $form_valid = false;
     }
     
@@ -140,7 +149,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         }
         
         if(empty($error_message)) {
-            header("Location: streams.php"); // А отсюда, если понадобится, будет перенаправление
+            header("Location: wind.php"); // А отсюда, если понадобится, будет перенаправление
         }
     }
 }
@@ -157,8 +166,14 @@ $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $supplier_id = $row['supplier_id'];
     $film_brand_id = $row['film_brand_id'];
-    $thickness = $row['thickness'];
-    $width = $row['width'];
+    $thickness = $row['thickness']; echo $width;
+    
+    if(null !== filter_input(INPUT_POST, 'width')) {
+        $width = filter_input(INPUT_POST, 'width');
+    }
+    else {
+        $width = $row['width'];
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -256,7 +271,8 @@ if($row = $fetcher->Fetch()) {
                         </div>
                         <div class="form-group">
                             <label for="width">Ширина, мм</label>
-                            <input type="text" id="width" name="width" value="<?= $width ?>" class="form-control" disabled="disabled" />
+                            <input type="text" id="width" name="width" value="<?= $width ?>" class="form-control int-only<?=$width_valid ?>" required="required" />
+                            <div class="invalid-feedback"><?=$width_message ?></div>
                         </div>
                         <div class="form-group">
                             <label for="spool">Шпуля, мм</label>

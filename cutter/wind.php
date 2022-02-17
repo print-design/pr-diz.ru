@@ -197,25 +197,13 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
 }
 
 if(null !== filter_input(INPUT_POST, 'previous-submit')) {
-    $cutting_id = filter_input(INPUT_POST, 'cutting_id');
-    
-    $query_string = '';
-    $sql = "select width, comment from cutting_stream where cutting_id = $cutting_id";
-    $fetcher = new Fetcher($sql);
-    $i = 0;
-    
-    while ($row = $fetcher->Fetch()) {
-        $query_string .= "&stream_".(++$i)."=".$row['width']."&comment_".$i."=".urlencode($row['comment']);
-    }
-    
-    $query_string = "?streams_count=".$i.$query_string;
-    
-    $sql = "delete from cutting_stream where cutting_id = $cutting_id";
+    $last_source = filter_input(INPUT_POST, 'last_source');
+    $sql = "delete from cutting_source where id = $last_source";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     
     if(empty($error_message)) {
-        header("Location: streams.php$query_string");
+        header("Location: source.php");
     }
 }
 
@@ -260,10 +248,10 @@ while ($row = $fetcher->Fetch()) {
             <nav class="navbar navbar-expand-sm justify-content-between">
                 <ul class="navbar-nav w-75">
                     <li class="nav-item">
-                        <?php if($winds_count == 0): ?>
+                        <?php if(empty($last_wind)): ?>
                         <form method="post">
-                            <input type="hidden" id="cutting_id" name="cutting_id" value="<?=$cutting_id ?>" />
-                            <button type="submit" id="previous-submit" name="previous-submit" class="btn btn-link nav-link"><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
+                            <input type="hidden" name="last_source" value="<?=$last_source ?>" />
+                            <button class="btn btn-link nav-link" type="submit" name="previous-submit"><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
                         </form>
                         <?php endif; ?>
                     </li>

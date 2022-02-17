@@ -67,7 +67,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         }
         
         if(empty($error_message) && !empty($cutting_id)) {
-            header("Location: source.php");
+            header("Location: streams.php");
         }
     }
 }
