@@ -1,6 +1,6 @@
 <?php
-class GrafikEditionReadonly {
-    public function __construct(DateTime $date, $shift, $shift_data, GrafikMachineReadonly $machine, $edition_key, $edition, $date_editions_count, $shift_editions_count) {
+class GrafikEdition {
+    public function __construct(DateTime $date, $shift, $shift_data, GrafikMachine $machine, $edition_key, $edition, $date_editions_count, $shift_editions_count) {    
         $this->date = $date;
         $this->shift = $shift;
         $this->shift_data = $shift_data;
@@ -14,19 +14,19 @@ class GrafikEditionReadonly {
     private DateTime $date;
     private $shift;
     private $shift_data;
-    private GrafikMachineReadonly $machine;
+    private GrafikMachine $machine;
     private $edition_key;
     private $edition;
     private $date_editions_count;
     private $shift_editions_count;
-            
+    
     function Show() {
         $top = 'nottop';
         if($this->shift == 'day' && $this->edition_key == 0) {
             $top = 'top';
         }
         
-        include 'grafik_edition_readonly.php';
+        include 'grafik_edition.php';
     }
 }
 ?>

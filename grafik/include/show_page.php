@@ -1,8 +1,5 @@
-<?php
-include 'show_top.php';
-?>
 <table class="table table-bordered typography">
-    <thead id="grafik-thead">
+    <thead id="grafik1-thead1">
         <tr>
             <th></th>
             <th>Дата</th>
@@ -27,7 +24,7 @@ include 'show_top.php';
             <?php endif; ?>
         </tr>
     </thead>
-    <tbody id="grafik-tbody">
+    <tbody id="grafik1-tbody1">
         <?php
         foreach ($dateshifts as $dateshift):
         
