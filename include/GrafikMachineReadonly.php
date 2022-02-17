@@ -2,7 +2,7 @@
 include 'database_grafik.php';
 include 'GrafikDateReadonly.php';
 
-class GrafikReadonly {
+class GrafikMachineReadonly {
     public function __construct(DateTime $from, DateTime $to, $machine_id) {
         $this->dateFrom = $from;
         $this->dateTo = $to;
@@ -134,7 +134,7 @@ class GrafikReadonly {
             array_push($grafik_dates, $grafik_date);
         }
         
-        include 'grafik_readonly.php';
+        include 'grafik_machine_readonly.php';
     }
 }
 ?>
