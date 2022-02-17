@@ -214,7 +214,6 @@ if($row = $fetcher->Fetch()) {
                         <input type="hidden" id="supplier_id" name="supplier_id" value="<?=$supplier_id ?>" />
                         <input type="hidden" id="film_brand_id" name="film_brand_id" value="<?=$film_brand_id ?>" />
                         <input type="hidden" id="thickness" name="thickness" value="<?=$thickness ?>" />
-                        <input type="hidden" id="width" name="width" value="<?=$width ?>" />
                         <input type="hidden" id="length" id="length" name="length" />
                         <input type="hidden" id="net_weight" id="net_weight" name="net_weight" />
                         <div class="form-group">
