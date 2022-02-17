@@ -32,6 +32,14 @@
         ?>
     </td>
     <?php endif; ?>
+    
+    <!-- Создание тиража -->
+    <?php if(IsInRole('admin')): if($this->shift_editions_count == 0): ?>
+    <td class='<?=$top." ".$this->shift ?> align-bottom'>
+        <button type='button' class='btn btn-outline-dark btn-sm'<?=$this->allow_edit_disabled ?> style='display: block;' data-toggle='tooltip' data-machine='<?=$this->machine->machineId ?>' data-from='<?=$this->machine->dateFrom->format("Y-m-d") ?>' data-to='<?=$this->machine->dateTo->format("Y-m-d") ?>' data-date='<?=$this->date->format('Y-m-d') ?>' data-shift='<?=$this->shift ?>' data-workshift='<?=(empty($this->shift_data['id']) ? '' : $this->shift_data['id']) ?>' onclick='javascript: CreateEdition($(this))' title='Добавить тираж'><i class='fas fa-plus'></i></button>
+    </td>
+    <?php endif; endif; ?>
+    
     <?php if($this->machine->hasOrganization): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     <?php if($this->machine->hasEdition): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     <?php if($this->machine->hasLength): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
