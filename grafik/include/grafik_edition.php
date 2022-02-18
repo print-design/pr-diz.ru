@@ -11,7 +11,7 @@
     <?php if($this->machine->user1Name): ?>
     <td class="<?=$top.' '.$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>">
         <?php
-        if(IsInRole('admin')) {
+        if($is_admin) {
             include 'grafik_select_user1.php';
         }
         elseif(array_key_exists('u1_fio', $this->shift_data)) {
@@ -25,7 +25,7 @@
     <?php if($this->machine->user2Name): ?>
     <td class="<?=$top.' '.$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>">
         <?php
-        if(IsInRole('admin')) {
+        if($is_admin) {
             include 'grafik_select_user2.php';
         }
         elseif(array_key_exists('u2_fio', $this->shift_data)) {
@@ -37,8 +37,7 @@
     
     <?php endif; ?>
     
-    <?php if(IsInRole('admin')): ?>
-    
+    <?php if($is_admin): ?>
     <!-- Создание тиража -->
     <td class='<?=$top.' '.$this->shift ?>' style="position: relative;">
         <button type='button' class='btn btn-outline-dark btn-sm open_add_edition_buttons'<?=$this->allow_edit_disabled ?> style='display: block;' data-toggle='tooltip' title='Добавить тираж' onclick="javascript: $(this).next('.add_edition_buttons').removeClass('d-none');"><i class='fas fa-plus'></i></button>
@@ -62,20 +61,39 @@
         </div>
         <?php endif; ?>
     </td>
-    
     <?php endif; ?>
     
     <!-- Заказчик -->
-    <?php if($this->machine->hasOrganization): ?><td class="<?=$top.' '.$this->shift ?>"><?=$this->edition['organization'] ?></td><?php endif; ?>
+    <?php if($this->machine->hasOrganization): ?>
+    <td class='<?=$top.' '.$this->shift ?>'>
+        <?php if($is_admin): ?>
+        <input type="text"<?=$this->allow_edit_disabled ?> value="<?=htmlentities($this->edition['organization']) ?>" onfocusout='javascript: EditOrganization($(this))' class="editable organizations" data-id='<?=$this->edition['id'] ?>' style="width:140px;" />
+        <?php
+        else:
+            echo $this->edition['organization'];
+        endif;
+        ?>
+    </td>
+    <?php endif; ?>
     
     <!-- Наименование -->
-    <?php if($this->machine->hasEdition): ?><td class="<?=$top.' '.$this->shift ?>"><?=$this->edition['edition'] ?></td><?php endif; ?>
+    <?php if($this->machine->hasEdition): ?>
+    <td class="<?=$top.' '.$this->shift ?>">
+        <?php if($is_admin): ?>
+        <input type="text"<?=$this->allow_edit_disabled ?> value="<?=htmlentities($this->edition['edition']) ?>" onfocusout="javascript: EditEdition($(this))" class="editable editions" data-id='<?=$this->edition['id'] ?>' style="width:140px;" />
+        <?php
+        else:
+            echo $this->edition['edition'];
+        endif;
+        ?>
+    </td>
+    <?php endif; ?>
     
     <!-- Метраж -->
     <?php if($this->machine->hasLength): ?><td class="<?=$top.' '.$this->shift ?>"><?= empty($this->edition['status']) ? $this->edition['length'] : $this->edition['status'] ?></td><?php endif; ?>
     
     <!-- Статус -->
-    <?php if(IsInRole('admin')): if($this->machine->hasStatus): ?>
+    <?php if($is_admin): if($this->machine->hasStatus): ?>
     <?php endif; endif; ?>
     
     <!-- Вал -->
@@ -93,7 +111,7 @@
     <!-- Комментарий -->
     <?php if($this->machine->hasComment): ?><td class="<?=$top.' '.$this->shift ?>"><?=$this->edition['comment'] ?></td><?php endif; ?>
     
-    <?php if(IsInRole('admin')): ?>
+    <?php if($is_admin): ?>
     
     <!-- Копирование тиража -->
     

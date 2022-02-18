@@ -9,7 +9,7 @@
     <?php if($this->machine->user1Name): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php
-        if(IsInRole('admin')) {
+        if($is_admin) {
             include 'grafik_select_user1.php';
         }
         elseif(array_key_exists('u1_fio', $this->shift_data)) {
@@ -23,7 +23,7 @@
     <?php if($this->machine->user2Name): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php
-        if(IsInRole('admin')) {
+        if($is_admin) {
             include 'grafik_select_user2.php';
         }
         elseif(array_key_exists('u2_fio', $this->shift_data)) {
@@ -33,8 +33,7 @@
     </td>
     <?php endif; ?>
     
-    <?php if(IsInRole('admin')): ?>
-    
+    <?php if($is_admin): ?>
     <!-- Создание тиража -->
     <td class='<?=$top." ".$this->shift ?> align-bottom'>
         <button type='button' class='btn btn-outline-dark btn-sm'<?=$this->allow_edit_disabled ?> style='display: block;' data-toggle='tooltip' data-machine='<?=$this->machine->machineId ?>' data-from='<?=$this->machine->dateFrom->format("Y-m-d") ?>' data-to='<?=$this->machine->dateTo->format("Y-m-d") ?>' data-date='<?=$this->date->format('Y-m-d') ?>' data-shift='<?=$this->shift ?>' data-workshift='<?=(empty($this->shift_data['id']) ? '' : $this->shift_data['id']) ?>' onclick='javascript: CreateEdition($(this))' title='Добавить тираж'><i class='fas fa-plus'></i></button>
@@ -54,7 +53,6 @@
         <button type='button' class='btn btn-outline-dark btn-sm btn_clipboard_paste' style='display: block;' data-toggle='tooltip' data-machine='<?=$this->machine->machineId ?>' data-from='<?=$this->machine->dateFrom->format("Y-m-d") ?>' data-to='<?=$this->machine->dateTo->format("Y-m-d") ?>' data-date='<?=$this->date->format('Y-m-d') ?>' data-shift='<?=$this->shift ?>' data-workshift='<?=(empty($this->shift_data['id']) ? '' : $this->shift_data['id']) ?>' onclick='javascript: PasteEditionDb($(this))' title='Вставить тираж'<?=$disabled ?>><i class='fas fa-paste'></i></button>
         <?php endif; ?>
     </td>
-    
     <?php endif; ?>
     
     <!-- Заказчик -->
@@ -67,7 +65,7 @@
     <?php if($this->machine->hasLength): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     
     <!-- Статус -->
-    <?php if(IsInRole('admin')): if($this->machine->hasStatus): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; endif; ?>
+    <?php if($is_admin): if($this->machine->hasStatus): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; endif; ?>
     
     <!-- Вал -->
     <?php if($this->machine->hasRoller): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
@@ -84,7 +82,7 @@
     <!-- Комментарий -->
     <?php if($this->machine->hasComment): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     
-    <?php if(IsInRole('admin')): ?>
+    <?php if($is_admin): ?>
     
     <!-- Копирование тиража -->
     <td class="<?=$top.' '.$this->shift ?>"></td>

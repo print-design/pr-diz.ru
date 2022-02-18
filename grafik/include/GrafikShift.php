@@ -32,6 +32,9 @@ class GrafikShift {
             if($this->shift == 'day') {
                 $top = 'top';
             }
+            
+            $is_admin = IsInRole('admin');
+            
             include 'grafik_shift.php';
         }
         else {

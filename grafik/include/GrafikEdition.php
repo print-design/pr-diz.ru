@@ -36,6 +36,8 @@ class GrafikEdition {
             $disabled = '';
         }
         
+        $is_admin = IsInRole('admin');
+        
         include 'grafik_edition.php';
     }
 }
