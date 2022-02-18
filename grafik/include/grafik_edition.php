@@ -37,8 +37,9 @@
     
     <?php endif; ?>
     
-    <!-- Создание тиража -->
     <?php if(IsInRole('admin')): ?>
+    
+    <!-- Создание тиража -->
     <td class='<?=$top.' '.$this->shift ?>' style="position: relative;">
         <button type='button' class='btn btn-outline-dark btn-sm open_add_edition_buttons'<?=$this->allow_edit_disabled ?> style='display: block;' data-toggle='tooltip' title='Добавить тираж' onclick="javascript: $(this).next('.add_edition_buttons').removeClass('d-none');"><i class='fas fa-plus'></i></button>
         <div class="add_edition_buttons d-none">
@@ -47,10 +48,21 @@
             <a href="javascript: void(0);" class="add_edition_buttons_close" onclick="javascript: $(this).parent().addClass('d-none');"><i class="fa fa-window-close"></i></a>
         </div>
     </td>
-    <?php endif; ?>
     
     <!-- Вставка тиража -->
-    <?php if(IsInRole('admin')): ?>
+    <td class='<?=$top.' '.$this->shift ?>' style="position: relative;">
+        <?php if(!empty($this->allow_edit_disabled)): ?>
+        <button type="button" class="btn btn-outline-dark btn-sm" style="display: block;"<?=$this->allow_edit_disabled ?>><i class="fas fa-paste"></i></button>
+        <?php else: ?>
+        <button type="button" class="btn btn-outline-dark btn-sm open_add_edition_buttons btn_clipboard_paste" style="display: block;" data-toggle="tooltip" title="Вставить тираж"<?=$disabled ?> onclick="javascript: $(this).next('.add_edition_buttons').removeClass('d-none');"><i class="fas fa-paste"></i></button>
+        <div class="add_edition_buttons d-none">
+            <button type="button" class='btn btn-outline-dark btn-sm btn_clipboard_paste' style='display: inline;' data-toggle='tooltip' data-machine='<?=$this->edition['machine_id'] ?>' data-from='<?=$from ?>' data-to='<?=$to ?>' data-date='<?=$this->shift_data['date'] ?>' data-shift='<?=$this->shift ?>' data-workshift='<?=$this->shift_data['id'] ?>' data-direction='up' data-position='<?=$this->edition['position'] ?>' onclick="javascript: PasteEditionDb($(this))" title='Вставить тираж выше'<?=$disabled ?>><i class='fas fa-paste'></i><i class='fas fa-long-arrow-alt-up'></i></button>
+            <button type="button" class='btn btn-outline-dark btn-sm btn_clipboard_paste' style="display: inline;" data-toggle='tooltip' data-machine='<?=$this->edition['machine_id'] ?>' data-from='<?=$from ?>' data-to='<?=$to ?>' data-date='<?=$this->shift_data['date'] ?>' data-shift='<?=$this->shift ?>' data-workshift='<?=$this->shift_data['id'] ?>' data-direction='down' data-position='<?=$this->edition['position'] ?>' onclick="javascript: PasteEditionDb($(this))" title='Вставить тираж ниже'<?=$disabled ?>><i class='fas fa-paste'></i><i class='fas fa-long-arrow-alt-down'></i></button>
+            <a href="javascript: void(0);" class="add_edition_buttons_close" onclick="javascript: $(this).parent().addClass('d-none');"><i class="fa fa-window-close"></i></a>
+        </div>
+        <?php endif; ?>
+    </td>
+    
     <?php endif; ?>
     
     <!-- Заказчик -->

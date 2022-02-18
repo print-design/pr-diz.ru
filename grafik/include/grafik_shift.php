@@ -33,15 +33,14 @@
     </td>
     <?php endif; ?>
     
-    <!-- Создание тиража -->
     <?php if(IsInRole('admin')): ?>
+    
+    <!-- Создание тиража -->
     <td class='<?=$top." ".$this->shift ?> align-bottom'>
         <button type='button' class='btn btn-outline-dark btn-sm'<?=$this->allow_edit_disabled ?> style='display: block;' data-toggle='tooltip' data-machine='<?=$this->machine->machineId ?>' data-from='<?=$this->machine->dateFrom->format("Y-m-d") ?>' data-to='<?=$this->machine->dateTo->format("Y-m-d") ?>' data-date='<?=$this->date->format('Y-m-d') ?>' data-shift='<?=$this->shift ?>' data-workshift='<?=(empty($this->shift_data['id']) ? '' : $this->shift_data['id']) ?>' onclick='javascript: CreateEdition($(this))' title='Добавить тираж'><i class='fas fa-plus'></i></button>
     </td>
-    <?php endif; ?>
     
     <!-- Вставка тиража -->
-    <?php if(IsInRole('admin')): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php
         $disabled = " disabled='disabled'";
@@ -55,6 +54,7 @@
         <button type='button' class='btn btn-outline-dark btn-sm btn_clipboard_paste' style='display: block;' data-toggle='tooltip' data-machine='<?=$this->machine->machineId ?>' data-from='<?=$this->machine->dateFrom->format("Y-m-d") ?>' data-to='<?=$this->machine->dateTo->format("Y-m-d") ?>' data-date='<?=$this->date->format('Y-m-d') ?>' data-shift='<?=$this->shift ?>' data-workshift='<?=(empty($this->shift_data['id']) ? '' : $this->shift_data['id']) ?>' onclick='javascript: PasteEditionDb($(this))' title='Вставить тираж'<?=$disabled ?>><i class='fas fa-paste'></i></button>
         <?php endif; ?>
     </td>
+    
     <?php endif; ?>
     
     <!-- Заказчик -->

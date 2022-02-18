@@ -31,6 +31,11 @@ class GrafikEdition {
         $from = $this->machine->dateFrom->format("Y-m-d");
         $to = $this->machine->dateTo->format("Y-m-d");
         
+        $disabled = " disabled='disabled'";
+        if($this->machine->clipboard_db) {
+            $disabled = '';
+        }
+        
         include 'grafik_edition.php';
     }
 }
