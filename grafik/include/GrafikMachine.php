@@ -29,8 +29,87 @@ class GrafikMachine {
             $this->hasComment = $row['has_comment'];
             $this->isCutter = $row['is_cutter'];
         }
+        
+        // Список рабочих смен
+        $all = array();
+        $sql = "select ws.id, ws.date date, date_format(ws.date, '%d.%m.%Y') fdate, ws.shift, ws.machine_id, u1.id u1_id, u1.fio u1_fio, u2.id u2_id, u2.fio u2_fio, "
+                . "(select count(id) from edition where workshift_id=ws.id) editions_count "
+                . "from workshift ws "
+                . "left join user u1 on ws.user1_id = u1.id "
+                . "left join user u2 on ws.user2_id = u2.id "
+                . "where ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."' and ws.machine_id = ". $this->machineId;
+        $fetcher = new Fetcher($sql);
+        
+        while ($item = $fetcher->Fetch()) {
+            $all[$item['date'].$item['shift']] = $item;
+        }
+        
+        // Список тиражей
+        $all_editions = [];
+        $sql = "select ws.date, ws.shift, ws.machine_id, e.id, e.workshift_id, e.name edition, e.organization, e.length, e.coloring, e.comment, e.position, "
+                . "e.status_id, s.name status, "
+                . "e.roller_id, r.name roller, "
+                . "e.lamination_id, lam.name lamination, "
+                . "e.manager_id, m.fio manager "
+                . "from edition e "
+                . "left join edition_status s on e.status_id = s.id "
+                . "left join roller r on e.roller_id = r.id "
+                . "left join lamination lam on e.lamination_id = lam.id "
+                . "left join user m on e.manager_id = m.id "
+                . "inner join workshift ws on e.workshift_id = ws.id "
+                . "where ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."' and ws.machine_id = ". $this->machineId." order by e.position";
+        
+        $fetcher = new Fetcher($sql);
+        
+        while ($item = $fetcher->Fetch()) {
+            if(!array_key_exists($item['date'], $all_editions) || !array_key_exists($item['shift'], $all_editions[$item['date']])) {
+                $all_editions[$item['date']][$item['shift']] = []; 
+            }
+            
+            array_push($all_editions[$item['date']][$item['shift']], $item);
+        }
+        
+        // Список дат и смен
+        if($this->dateFrom < $this->dateTo) {
+            $date_diff = $this->dateFrom->diff($this->dateTo);
+            $interval = DateInterval::createFromDateString("1 day");
+            $period = new DatePeriod($this->dateFrom, $interval, $date_diff->days);
+        }
+        else {
+            $period = array();
+            array_push($period, $this->dateFrom);
+        }
+        
+        foreach($period as $date) {
+            $str_date = $date->format('Y-m-d');
+            
+            $day_data = array();
+            if(isset($all[$str_date.'day'])) {
+                $day_data = $all[$str_date.'day'];
+            }
+            
+            $night_data = array();
+            if(isset($all[$str_date.'night'])) {
+                $night_data = $all[$str_date.'night'];
+            }
+            
+            $day_editions = array();
+            if(isset($all_editions[$str_date]['day'])) {
+                $day_editions = $all_editions[$str_date]['day'];
+            }
+            
+            $night_editions = array();
+            if(isset($all_editions[$str_date]['night'])) {
+                $night_editions = $all_editions[$str_date]['night'];
+            }
+            
+            $grafik_date = new GrafikDate($date, $this, $day_data, $night_data, $day_editions, $night_editions);
+            array_push($this->grafik_dates, $grafik_date);
+        }
     }
     
+    private $grafik_dates = [];
+
     public $dateFrom;
     public $dateTo;
     public $machineId;
@@ -118,86 +197,11 @@ class GrafikMachine {
             $this->managers = (new Grabber("select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where ur.role_id = 2 order by u.fio"))->result;
         }
         
-        // Список рабочих смен
-        $all = array();
-        $sql = "select ws.id, ws.date date, date_format(ws.date, '%d.%m.%Y') fdate, ws.shift, ws.machine_id, u1.id u1_id, u1.fio u1_fio, u2.id u2_id, u2.fio u2_fio, "
-                . "(select count(id) from edition where workshift_id=ws.id) editions_count "
-                . "from workshift ws "
-                . "left join user u1 on ws.user1_id = u1.id "
-                . "left join user u2 on ws.user2_id = u2.id "
-                . "where ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."' and ws.machine_id = ". $this->machineId;
-        $fetcher = new Fetcher($sql);
-        
-        while ($item = $fetcher->Fetch()) {
-            $all[$item['date'].$item['shift']] = $item;
-        }
-        
-        // Список тиражей
-        $all_editions = [];
-        $sql = "select ws.date, ws.shift, ws.machine_id, e.id, e.workshift_id, e.name edition, e.organization, e.length, e.coloring, e.comment, e.position, "
-                . "e.status_id, s.name status, "
-                . "e.roller_id, r.name roller, "
-                . "e.lamination_id, lam.name lamination, "
-                . "e.manager_id, m.fio manager "
-                . "from edition e "
-                . "left join edition_status s on e.status_id = s.id "
-                . "left join roller r on e.roller_id = r.id "
-                . "left join lamination lam on e.lamination_id = lam.id "
-                . "left join user m on e.manager_id = m.id "
-                . "inner join workshift ws on e.workshift_id = ws.id "
-                . "where ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."' and ws.machine_id = ". $this->machineId." order by e.position";
-        
-        $fetcher = new Fetcher($sql);
-        
-        while ($item = $fetcher->Fetch()) {
-            if(!array_key_exists($item['date'], $all_editions) || !array_key_exists($item['shift'], $all_editions[$item['date']])) {
-                $all_editions[$item['date']][$item['shift']] = []; 
-            }
-            
-            array_push($all_editions[$item['date']][$item['shift']], $item);
-        }
-        
-        // Список дат и смен
-        if($this->dateFrom < $this->dateTo) {
-            $date_diff = $this->dateFrom->diff($this->dateTo);
-            $interval = DateInterval::createFromDateString("1 day");
-            $period = new DatePeriod($this->dateFrom, $interval, $date_diff->days);
-        }
-        else {
-            $period = array();
-            array_push($period, $this->dateFrom);
-        }
-        
-        $grafik_dates = array();
-        
-        foreach($period as $date) {
-            $str_date = $date->format('Y-m-d');
-            
-            $day_data = array();
-            if(isset($all[$str_date.'day'])) {
-                $day_data = $all[$str_date.'day'];
-            }
-            
-            $night_data = array();
-            if(isset($all[$str_date.'night'])) {
-                $night_data = $all[$str_date.'night'];
-            }
-            
-            $day_editions = array();
-            if(isset($all_editions[$str_date]['day'])) {
-                $day_editions = $all_editions[$str_date]['day'];
-            }
-            
-            $night_editions = array();
-            if(isset($all_editions[$str_date]['night'])) {
-                $night_editions = $all_editions[$str_date]['night'];
-            }
-            
-            $grafik_date = new GrafikDate($date, $this, $day_data, $night_data, $day_editions, $night_editions);
-            array_push($grafik_dates, $grafik_date);
-        }
-        
         include 'grafik_machine.php';
+    }
+    
+    function Print() {
+        include 'grafik_print_machine.php';
     }
 }
 ?>

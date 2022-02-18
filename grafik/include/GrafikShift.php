@@ -39,5 +39,9 @@ class GrafikShift {
             }
         }
     }
+    
+    function Print() {
+        include 'grafik_print_shift.php';
+    }
 }
 ?>

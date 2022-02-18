@@ -37,5 +37,18 @@ class GrafikDate {
         $night_shift = new GrafikShift($this->date, 'night', $this->night_data, $this->machine, $this->night_editions, $date_editions_count, $night_editions_count, $allow_edit_disabled);
         $night_shift->Show();
     }
+    
+    function Print() {
+        // Количество тиражей в день, в ночь и в целые сутки
+        $day_editions_count = count($this->day_editions);
+        $night_editions_count = count($this->night_editions);
+        $date_editions_count = $day_editions_count + $night_editions_count;
+        
+        $day_shift = new GrafikShift($this->date, 'day', $this->day_data, $this->machine, $this->day_editions, $date_editions_count, $day_editions_count, 0);
+        $day_shift->Print();
+        
+        $night_shift = new GrafikShift($this->date, 'night', $this->night_data, $this->machine, $this->night_editions, $date_editions_count, $night_editions_count, 0);
+        $night_shift->Print();
+    }
 }
 ?>

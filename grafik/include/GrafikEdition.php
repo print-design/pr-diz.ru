@@ -40,5 +40,9 @@ class GrafikEdition {
         
         include 'grafik_edition.php';
     }
+    
+    function Print() {
+        include 'grafik_print_edition.php';
+    }
 }
 ?>

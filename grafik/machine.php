@@ -18,7 +18,7 @@ $error_message = $machine->error_message;
 <!DOCTYPE html>
 <html>
     <head>
-        <title>График - <?=$grafik->name ?></title>
+        <title>График - <?=$machine->name ?></title>
         <?php
         include 'include/head.php';
         ?>

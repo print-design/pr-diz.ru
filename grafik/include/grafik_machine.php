@@ -29,7 +29,7 @@ include 'grafik_top.php';
     </thead>
     <tbody id="grafik-tbody">
         <?php
-        foreach($grafik_dates as $grafik_date) {
+        foreach($this->grafik_dates as $grafik_date) {
             $grafik_date->Show();
         }
         ?>
