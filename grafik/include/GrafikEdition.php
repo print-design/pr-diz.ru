@@ -28,6 +28,9 @@ class GrafikEdition {
             $top = 'top';
         }
         
+        $from = $this->machine->dateFrom->format("Y-m-d");
+        $to = $this->machine->dateTo->format("Y-m-d");
+        
         include 'grafik_edition.php';
     }
 }
