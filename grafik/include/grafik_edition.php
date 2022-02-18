@@ -222,9 +222,18 @@
     
     <?php if($is_admin): ?>
     <!-- Копирование тиража -->
+    <td class='<?=$top.' '.$this->shift ?>'>
+        <button type="button"<?=$this->allow_edit_disabled ?> class='btn btn-outline-dark btn-sm clipboard_copy' data='<?=$this->edition['id'] ?>' title='Копировать тираж' data-toggle='tooltip' onclick="javascript: CopyEditionDb(<?=$this->edition['id'] ?>, $(this));"><i class='fas fa-copy'></i><div class='alert alert-info clipboard_alert'>Скопировано</div></button>
+    </td>
     
     <!-- Сдвиг тиража -->
+    <td class='<?=$top.' '.$this->shift ?>'>
+        <button type="button" class="btn btn-outline-dark btn-sm" onclick="javascript: ShowMoveForm($(this))" title="Сдвинуть несколько тиражей" data-toggle='tooltip' data-date='<?=$this->shift_data['date'] ?>' data-shift='<?=$this->shift ?>' data-position='<?=$this->edition['position'] ?>' data-machine='<?=$this->edition['machine_id'] ?>' data-workshift='<?=$this->shift_data['id'] ?>' data-from="<?=$from ?>" data-to="<?=$to ?>"><i class="fas fa-table"></i></button>
+    </td>
     
     <!-- Удаление смены -->
+    <td class='<?=$top.' '.$this->shift ?>'>
+        <button type='button'<?=$this->allow_edit_disabled ?> class='btn btn-outline-dark btn-sm' data-id="<?=$this->edition['id'] ?>" data-machine="<?=$this->edition['machine_id'] ?>" data-from="<?=$from ?>" data-to="<?=$to ?>" onclick="javascript: if(confirm('Действительно удалить?')) { DeleteEdition($(this)); }" title='Удалить тираж' data-toggle="tooltip"><i class='fas fa-trash-alt'></i></button>
+    </td>
     <?php endif; ?>
 </tr>
