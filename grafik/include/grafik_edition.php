@@ -95,10 +95,10 @@
         <?php if($is_admin): ?>
         <input type="number" min="0" pattern="\d*" value="<?=$this->edition['length'] ?>" onfocusout="javascript: EditLength($(this))" data-id='<?=$this->edition['id'] ?>' class="editable" style="width:65px;" />
         <?php
-        elseif(!empty($edition['status'])):
-            echo $edition['status'];
+        elseif(!empty($this->edition['status'])):
+            echo $this->edition['status'];
         else:
-            echo $edition['length'];
+            echo $this->edition['length'];
         endif;
         ?>
     </td>
