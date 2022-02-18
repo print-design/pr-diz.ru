@@ -171,21 +171,60 @@
     <?php endif; ?>
     
     <!-- Красочность -->
-    <?php if($this->machine->hasColoring): ?><td class="<?=$top.' '.$this->shift ?>"><?=$this->edition['coloring'] ?></td><?php endif; ?>
+    <?php if($this->machine->hasColoring): ?>
+    <td class="<?=$top.' '.$this->shift ?>">
+        <?php if($is_admin): ?>
+        <input type="number" min="0" max="<?=$this->machine->coloring ?>" pattern="\d*" value="<?=$this->edition['coloring'] ?>" data-id='<?=$this->edition['id'] ?>' onfocusout="EditColoring($(this))" class="editable" style="width:35px;" />
+        <?php
+        else:
+            echo $this->edition['coloring'];
+        endif;
+    ?>
+    </td>
+    <?php endif; ?>
     
     <!-- Менеджер -->
-    <?php if($this->machine->hasManager): ?><td class="<?=$top.' '.$this->shift ?>"><?=$this->edition['manager'] ?></td><?php endif; ?>
+    <?php if($this->machine->hasManager): ?>
+    <td class="<?=$top.' '.$this->shift ?>">
+        <?php if($is_admin): ?>
+        <select data-id='<?=$this->edition['id'] ?>'<?=$this->allow_edit_disabled ?> onfocusout="javascript: EditManager($(this))" style='width:120px;'>
+            <optgroup>
+                <option value="">...</option>
+                <?php
+                foreach ($this->machine->managers as $value) {
+                    $selected = '';
+                    if($this->edition['manager_id'] == $value['id']) $selected = " selected = 'selected'";
+                    echo "<option$selected value='".$value['id']."'>".$value['fio']."</option>";
+                }
+                ?>
+            </optgroup>
+        </select>    
+        <?php
+        else:
+            echo $this->edition['manager'];
+        endif;
+        ?>
+    </td>
+    <?php endif; ?>
     
     <!-- Комментарий -->
-    <?php if($this->machine->hasComment): ?><td class="<?=$top.' '.$this->shift ?>"><?=$this->edition['comment'] ?></td><?php endif; ?>
+    <?php if($this->machine->hasComment): ?>
+    <td class="<?=$top.' '.$this->shift ?>">
+        <?php if($is_admin): ?>
+        <textarea rows="5" cols="30" wrap="hard" data-id='<?=$this->edition['id'] ?>' onfocusout="EditComment($(this))" class="editable"><?=htmlentities($this->edition['comment']) ?></textarea>
+        <?php
+        else:
+            echo $this->edition['comment'];
+        endif;
+        ?>
+    </td>
+    <?php endif; ?>
     
     <?php if($is_admin): ?>
-    
     <!-- Копирование тиража -->
     
     <!-- Сдвиг тиража -->
     
     <!-- Удаление смены -->
-    
     <?php endif; ?>
 </tr>
