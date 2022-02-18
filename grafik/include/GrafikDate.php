@@ -19,14 +19,22 @@ class GrafikDate {
     private $night_editions;
     
     function Show() {
+        // Количество тиражей в день, в ночь и в целые сутки
         $day_editions_count = count($this->day_editions);
         $night_editions_count = count($this->night_editions);
         $date_editions_count = $day_editions_count + $night_editions_count;
         
-        $day_shift = new GrafikShift($this->date, 'day', $this->day_data, $this->machine, $this->day_editions, $date_editions_count, $day_editions_count);
+        // Можно ли редактировать сегодня и завтра
+        $date_diff_from_now = date_diff(new DateTime(), $this->date);
+        $allow_edit_disabled = '';
+        if(!$this->machine->allow_edit && $date_diff_from_now->days < 2 && !$this->machine->isCutter) {
+            $allow_edit_disabled = " disabled='disabled'";
+        }
+        
+        $day_shift = new GrafikShift($this->date, 'day', $this->day_data, $this->machine, $this->day_editions, $date_editions_count, $day_editions_count, $allow_edit_disabled);
         $day_shift->Show();
         
-        $night_shift = new GrafikShift($this->date, 'night', $this->night_data, $this->machine, $this->night_editions, $date_editions_count, $night_editions_count);
+        $night_shift = new GrafikShift($this->date, 'night', $this->night_data, $this->machine, $this->night_editions, $date_editions_count, $night_editions_count, $allow_edit_disabled);
         $night_shift->Show();
     }
 }

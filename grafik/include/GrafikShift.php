@@ -2,7 +2,7 @@
 include 'GrafikEdition.php';
 
 class GrafikShift {
-    public function __construct(DateTime $date, $shift, $shift_data, GrafikMachine $machine, $editions, $date_editions_count, $shift_editions_count) {
+    public function __construct(DateTime $date, $shift, $shift_data, GrafikMachine $machine, $editions, $date_editions_count, $shift_editions_count, $allow_edit_disabled) {
         $this->date = $date;
         $this->shift = $shift;
         $this->shift_data = $shift_data;
@@ -10,12 +10,7 @@ class GrafikShift {
         $this->editions = $editions;
         $this->date_editions_count = $date_editions_count;
         $this->shift_editions_count = $shift_editions_count;
-        
-        $date_diff_from_now = date_diff(new DateTime(), $this->date);
-        $this->allow_edit_disabled = '';
-        if($this->machine->allow_edit && $date_diff_from_now->days < 2 && !$this->machine->isCutter) {
-            $this->allow_edit_disabled = " disabled='disabled'";
-        }
+        $this->allow_edit_disabled = $allow_edit_disabled;
     }
     private DateTime $date;
     private $shift;
@@ -25,7 +20,7 @@ class GrafikShift {
     private $date_editions_count;
     private $shift_editions_count;
     private $allow_edit_disabled;
-    
+            
     function Show() {
         if(count($this->editions) == 0) {
             $top = 'nottop';
