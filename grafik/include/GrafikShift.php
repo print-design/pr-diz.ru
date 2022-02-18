@@ -41,7 +41,20 @@ class GrafikShift {
     }
     
     function Print() {
-        include 'grafik_print_shift.php';
+        if(count($this->editions) == 0) {
+            $top = 'nottop';
+            if($this->shift == 'day') {
+                $top = 'top';
+            }
+            
+            include 'grafik_print_shift.php';
+        }
+        else {
+            foreach($this->editions as $key => $value) {
+                $edition = new GrafikEdition($this->date, $this->shift, $this->shift_data, $this->machine, $key, $value, $this->date_editions_count, $this->shift_editions_count, $this->allow_edit_disabled);
+                $edition->Print();
+            }
+        }
     }
 }
 ?>
