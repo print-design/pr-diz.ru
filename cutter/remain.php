@@ -49,7 +49,7 @@ function CloseCutting($cutting_id, $last_source, $last_wind, $cut_status_id, $us
         }
     }
     
-    // Меняем статусы исходных роликов на "Раскроили" (если он уже не установлен)
+    // Меняем статусы исходных роликов на "Раскроили" (если он ещё не установлен)
     $cut_sources = null;
     
     if(empty($error)) {

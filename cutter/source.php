@@ -191,7 +191,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
-        // Меняем статусы предыдущих исходных роликов на "Раскроили" (если он уже не установлен)
+        // Меняем статусы предыдущих исходных роликов на "Раскроили" (если он ещё не установлен)
         $cut_sources = null;
     
         $sql = "select is_from_pallet, roll_id from cutting_source where cutting_id=$cutting_id";
@@ -237,7 +237,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         }
         
         if(empty($error_message)) {
-            header("Location: streams.php"); // А отсюда, если понадобится, будет перенаправление
+            header("Location: wind.php");
         }
     }
 }
