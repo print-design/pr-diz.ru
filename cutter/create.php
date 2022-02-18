@@ -276,7 +276,7 @@ if($row = $fetcher->Fetch()) {
                         </div>
                         <div class="form-group">
                             <label for="width">Ширина, мм</label>
-                            <input type="text" id="width" name="width" value="<?= $width ?>" class="form-control int-only<?=$width_valid ?>" required="required" />
+                            <input type="text" id="width" name="width" value="<?= filter_input(INPUT_POST, 'width') ?>" class="form-control int-only<?=$width_valid ?>" required="required" />
                             <div class="invalid-feedback"><?=$width_message ?></div>
                         </div>
                         <div class="form-group">
