@@ -2,7 +2,6 @@
 include 'include/topscripts.php';
 include 'include/restrict_logged_in.php';
 include 'include/GrafikMachine.php';
-include 'include/grafik.php';
 
 // Если не указан параметр id, переводим на начальную страницу
 if(empty(filter_input(INPUT_GET, 'id'))) {
@@ -15,9 +14,6 @@ GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to')
 
 $machine = new GrafikMachine($date_from, $date_to, filter_input(INPUT_GET, 'id'));
 $error_message = $machine->error_message;
-
-$grafik = new Grafik($date_from, $date_to, filter_input(INPUT_GET, 'id'));
-$error_message = $grafik->error_message;
 ?>
 <!DOCTYPE html>
 <html>
@@ -38,7 +34,6 @@ $error_message = $grafik->error_message;
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             $machine->Show();
-            //$grafik->ShowPage();
             ?>
         </div>
         <?php
