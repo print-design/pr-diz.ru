@@ -43,9 +43,54 @@ function CloseCutting($cutting_id, $last_source, $last_wind, $cut_status_id, $us
     // (то есть если его ввели и сразу стали закрывать заявку)
     if(empty($error)) {
         if(!empty($last_source) && empty($last_wind)) {
-            $sql = "delete from cutting_source where id = $last_source";
-            $executer = new Executer($sql);
-            $error = $executer->error;
+            // Удаляем запись о статусе "Раскроили"
+            $last_source_roll_id = null;
+            $last_source_is_from_pallet = null;
+            $last_source_history_id = null;
+            $last_source_status_id = null;
+            
+            $sql = "select roll_id, is_from_pallet from cutting_source where id = $last_source";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $last_source_roll_id = $row['roll_id'];
+                $last_source_is_from_pallet = $row['is_from_pallet'];
+            }
+            
+            if(!empty($last_source_roll_id) && $last_source_is_from_pallet == 0) {
+                $sql = "select id, status_id from roll_status_history where roll_id = $last_source_roll_id order by id desc limit 1";
+                $fetcher = new Fetcher($sql);
+                if($row = $fetcher->Fetch()) {
+                    $last_source_history_id = $row['id'];
+                    $last_source_status_id = $row['status_id'];
+                }
+                
+                if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == $cut_status_id) {
+                    $sql = "delete from roll_status_history where id = $last_source_history_id";
+                    $executer = new Executer($sql);
+                    $error = $executer->error;
+                }
+            }
+            elseif(!empty ($last_source_roll_id) && $last_source_is_from_pallet == 1) {
+                $sql = "select id, status_id from pallet_roll_status_history where pallet_roll_id = $last_source_roll_id order by id desc limit 1";
+                $fetcher = new Fetcher($sql);
+                if($row = $fetcher->Fetch()) {
+                    $last_source_history_id = $row['id'];
+                    $last_source_status_id = $row['status_id'];
+                }
+                
+                if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == $cut_status_id) {
+                    $sql = "delete from pallet_roll_status_history where id = $last_source_history_id";
+                    $executer = new Executer($sql);
+                    $error = $executer->error;
+                }
+            }
+            
+            // Удаляем запись об исходном ролике
+            if(empty($error)) {
+                $sql = "delete from cutting_source where id = $last_source";
+                $executer = new Executer($sql);
+                $error = $executer->error;
+            }
         }
     }
     

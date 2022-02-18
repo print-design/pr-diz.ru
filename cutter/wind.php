@@ -9,6 +9,9 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 // СТАТУС "СВОБОДНЫЙ"
 $free_status_id = 1;
 
+// Статус "РАСКРОИЛИ"
+$cut_status_id = 3;
+
 // Текущий пользователь
 $user_id = GetUserId();
 
@@ -197,10 +200,55 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
 }
 
 if(null !== filter_input(INPUT_POST, 'previous-submit')) {
-    $last_source = filter_input(INPUT_POST, 'last_source');
-    $sql = "delete from cutting_source where id = $last_source";
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
+    // Удаляем запись о статусе "Рескроили" последнего исходного ролика
+    $last_source_roll_id = null;
+    $last_source_is_from_pallet = null;
+    $last_source_history_id = null;
+    $last_source_status_id = null;
+    
+    $sql = "select roll_id, is_from_pallet from cutting_source where id = $last_source";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $last_source_roll_id = $row['roll_id'];
+        $last_source_is_from_pallet = $row['is_from_pallet'];
+    }
+            
+    if(!empty($last_source_roll_id) && $last_source_is_from_pallet == 0) {
+        $sql = "select id, status_id from roll_status_history where roll_id = $last_source_roll_id order by id desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $last_source_history_id = $row['id'];
+            $last_source_status_id = $row['status_id'];
+        }
+                
+        if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == $cut_status_id) {
+            $sql = "delete from roll_status_history where id = $last_source_history_id";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
+    }
+    elseif(!empty ($last_source_roll_id) && $last_source_is_from_pallet == 1) {
+        $sql = "select id, status_id from pallet_roll_status_history where pallet_roll_id = $last_source_roll_id order by id desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $last_source_history_id = $row['id'];
+            $last_source_status_id = $row['status_id'];
+        }
+                
+        if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == $cut_status_id) {
+            $sql = "delete from pallet_roll_status_history where id = $last_source_history_id";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
+    }
+    
+    // Удаляем запись о последнем исходном ролике
+    if(empty($error_message)) {
+        $last_source = filter_input(INPUT_POST, 'last_source');
+        $sql = "delete from cutting_source where id = $last_source";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
     
     if(empty($error_message)) {
         header("Location: source.php");

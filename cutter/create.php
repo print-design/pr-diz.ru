@@ -10,7 +10,7 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 $user_id = GetUserId();
 
 // СТАТУС "СВОБОДНЫЙ"
-const  FREE_ROLL_STATUS_ID = 1;
+$free_status_id = 1;
 
 // Статус "РАСКРОИЛИ"
 $cut_status_id = 3;
@@ -83,7 +83,6 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     $cell = 'Цех';
     $comment = addslashes('!');
     $storekeeper_id = $user_id;
-    $status_id = FREE_ROLL_STATUS_ID;
     
     if($form_valid) {
         // Создаём новый рулон
@@ -96,12 +95,19 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         
         // Устанавливаем ему статус "Свободный"
         if(empty($error_message)) {
-            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, $status_id, $user_id)";
+            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, $free_status_id, $user_id)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
         
-        // Меняем статусы предыдущих исходных роликов на "Раскроили" (если он уже не установлен)
+        // Устанавливаем ему статус "Раскроили"
+        if(empty($error_message)) {
+            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, $cut_status_id, $user_id)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
+        
+        // Меняем статусы предыдущих исходных роликов на "Раскроили" (если он ещё не установлен)
         if(empty($error_message)) {
             $cut_sources = null;
     
@@ -149,7 +155,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         }
         
         if(empty($error_message)) {
-            header("Location: wind.php"); // А отсюда, если понадобится, будет перенаправление
+            header("Location: wind.php");
         }
     }
 }
