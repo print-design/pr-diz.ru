@@ -80,7 +80,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
     $thickness = filter_input(INPUT_POST, 'thickness');
     $width = filter_input(INPUT_POST, 'width');
-    $cell = '';
+    $cell = 'Цех';
     $comment = addslashes('!');
     $storekeeper_id = $user_id;
     $status_id = FREE_ROLL_STATUS_ID;
