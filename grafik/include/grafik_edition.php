@@ -90,17 +90,85 @@
     <?php endif; ?>
     
     <!-- Метраж -->
-    <?php if($this->machine->hasLength): ?><td class="<?=$top.' '.$this->shift ?>"><?= empty($this->edition['status']) ? $this->edition['length'] : $this->edition['status'] ?></td><?php endif; ?>
+    <?php if($this->machine->hasLength): ?>
+    <td class="<?=$top.' '.$this->shift ?>">
+        <?php if($is_admin): ?>
+        <input type="number" min="0" pattern="\d*" value="<?=$this->edition['length'] ?>" onfocusout="javascript: EditLength($(this))" data-id='<?=$this->edition['id'] ?>' class="editable" style="width:65px;" />
+        <?php
+        elseif(!empty($edition['status'])):
+            echo $edition['status'];
+        else:
+            echo $edition['length'];
+        endif;
+        ?>
+    </td>
+    <?php endif; ?>
     
     <!-- Статус -->
     <?php if($is_admin): if($this->machine->hasStatus): ?>
+    <td class="<?=$top.' '.$this->shift ?>">
+        <select data-id='<?=$this->edition['id'] ?>' onfocusout="javascript: EditStatus($(this))" style='width:85px;'>
+            <optgroup>
+                <option value="">...</option>
+                    <?php
+                    foreach ($this->machine->statuses as $value) {
+                        $selected = '';
+                        if($this->edition['status_id'] == $value['id']) $selected = " selected = 'selected'";
+                        echo "<option$selected value='".$value['id']."'>".$value['name']."</option>";
+                    }
+                    ?>
+            </optgroup>
+        </select>
+    </td>
     <?php endif; endif; ?>
     
     <!-- Вал -->
-    <?php if($this->machine->hasRoller): ?><td class="<?=$top.' '.$this->shift ?>"><?=$this->edition['roller'] ?></td><?php endif; ?>
+    <?php if($this->machine->hasRoller): ?>
+    <td class="<?=$top.' '.$this->shift ?>">
+        <?php if($is_admin): ?>
+        <select data-id='<?=$this->edition['id'] ?>' onfocusout="javascript: EditRoller($(this))">
+            <optgroup>
+                <option value="">...</option>
+                <?php
+                foreach ($this->machine->rollers as $value) {
+                    $selected = '';
+                    if($this->edition['roller_id'] == $value['id']) $selected = " selected = 'selected'";
+                    echo "<option$selected value='".$value['id']."'>".$value['name']."</option>";
+                }
+                ?>
+            </optgroup>
+        </select>
+        <?php
+        else:
+            echo $this->edition['roller'];
+        endif;
+        ?>
+    </td>
+    <?php endif; ?>
     
     <!-- Ламинация -->
-    <?php if($this->machine->hasLamination): ?><td class="<?=$top.' '.$this->shift ?>"><?=$this->edition['lamination'] ?></td><?php endif; ?>
+    <?php if($this->machine->hasLamination): ?>
+    <td class="<?=$top.' '.$this->shift ?>">
+        <?php if($is_admin): ?>
+        <select data-id='<?=$this->edition['id'] ?>' onfocusout="javascript: EditLamination($(this))" style='width:55px;'>
+            <optgroup>
+                <option value="">...</option>
+                <?php
+                foreach ($this->machine->laminations as $value) {
+                    $selected = '';
+                    if($this->edition['lamination_id'] == $value['id']) $selected = " selected = 'selected'";
+                    echo "<option$selected value='".$value['id']."'>".$value['name']."</option>";
+                }
+                ?>
+            </optgroup>
+        </select>
+        <?php
+        else:
+            echo $this->edition['lamination'];
+        endif;
+        ?>
+    </td>
+    <?php endif; ?>
     
     <!-- Красочность -->
     <?php if($this->machine->hasColoring): ?><td class="<?=$top.' '.$this->shift ?>"><?=$this->edition['coloring'] ?></td><?php endif; ?>
