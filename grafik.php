@@ -1,6 +1,6 @@
 <?php
 include 'include/topscripts.php';
-include 'include/grafik_readonly.php';
+include 'include/GrafikTimetableReadonly.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'storekeeper', 'dev', 'manager', 'administrator'))) {
@@ -16,8 +16,8 @@ $date_from = null;
 $date_to = null;
 GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);
 
-$grafik = new GrafikReadonly($date_from, $date_to, filter_input(INPUT_GET, 'id'));
-$error_message = $grafik->error_message;
+$grafik_machine = new GrafikTimetableReadonly($date_from, $date_to, filter_input(INPUT_GET, 'id'));
+$error_message = $grafik_machine->error_message;
 ?>
 <!DOCTYPE html>
 <html>
@@ -36,7 +36,7 @@ $error_message = $grafik->error_message;
             if(!empty($error_message)) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
-            $grafik->ShowPage();
+            $grafik_machine->Show();
             ?>
         </div>
         <?php

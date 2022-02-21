@@ -1,6 +1,5 @@
 <?php
 include 'include/topscripts.php';
-include 'include/grafik.php';
 
 $export_submit = filter_input(INPUT_POST, 'export_submit');
 if($export_submit !== null) {
