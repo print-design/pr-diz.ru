@@ -42,6 +42,11 @@ class GrafikEdition {
     }
     
     function Print() {
+        $top = 'nottop';
+        if($this->shift == 'day' && $this->edition_key == 0) {
+            $top = 'top';
+        }
+        
         include 'grafik_print_edition.php';
     }
 }

@@ -1,7 +1,6 @@
 <?php
 include 'include/topscripts.php';
 include 'include/GrafikMachine.php';
-include 'include/grafik.php';
 
 $error_message = '';
 
@@ -23,24 +22,6 @@ if(null !== filter_input(INPUT_POST, 'print_submit')) {
     $date_to->add($diff3Days);
     
     $machine = new GrafikMachine($date_from, $date_to, $machine_id);
-    
-    //----------------------------
-    // Удалить
-    $grafik = new Grafik($date_from, $date_to, $machine_id);
-    
-    $grafik->name = filter_input(INPUT_POST, 'name');
-    $grafik->user1Name = filter_input(INPUT_POST, 'user1Name');
-    $grafik->user2Name = filter_input(INPUT_POST, 'user2Name');
-    $grafik->userRole = filter_input(INPUT_POST, 'userRole');
-    $grafik->hasEdition = filter_input(INPUT_POST, 'hasEdition');
-    $grafik->hasOrganization = filter_input(INPUT_POST, 'hasOrganization');
-    $grafik->hasLength = filter_input(INPUT_POST, 'hasLength');
-    $grafik->hasRoller = filter_input(INPUT_POST, 'hasRoller');
-    $grafik->hasLamination = filter_input(INPUT_POST, 'hasLamination');
-    $grafik->hasColoring = filter_input(INPUT_POST, 'hasColoring');
-    $grafik->hasManager = filter_input(INPUT_POST, 'hasManager');
-    $grafik->hasComment = filter_input(INPUT_POST, 'hasComment');
-    //-------------------------------------------------
 }
 else {
     $error_message = 'Для печати нажмите кнопку &nbsp;Печать&nbsp; в верхней правой части графика';
@@ -60,10 +41,8 @@ else {
             if(isset($error_message) && $error_message != '') {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
-            if(isset($grafik)) {
-                $machine->Print();
-                $grafik->Print();
-            }
+            
+            $machine->Print();
             ?>
         </div>
         <script>
