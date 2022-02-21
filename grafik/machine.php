@@ -18,7 +18,7 @@ $error_message = $timetable->error_message;
 <!DOCTYPE html>
 <html>
     <head>
-        <title>График - <?=$machine->name ?></title>
+        <title>График - <?=$timetable->name ?></title>
         <?php
         include 'include/head.php';
         ?>
