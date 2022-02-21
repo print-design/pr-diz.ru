@@ -1,6 +1,6 @@
 <?php
 include 'include/topscripts.php';
-include 'include/GrafikMachine.php';
+include 'include/GrafikTimetable.php';
 
 $error_message = '';
 
@@ -21,7 +21,7 @@ if(null !== filter_input(INPUT_POST, 'print_submit')) {
     $date_to = clone $date_from;
     $date_to->add($diff3Days);
     
-    $machine = new GrafikMachine($date_from, $date_to, $machine_id);
+    $timetable = new GrafikTimetable($date_from, $date_to, $machine_id);
 }
 else {
     $error_message = 'Для печати нажмите кнопку &nbsp;Печать&nbsp; в верхней правой части графика';
@@ -42,7 +42,7 @@ else {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             
-            $machine->Print();
+            $timetable->Print();
             ?>
         </div>
         <script>
