@@ -1,7 +1,7 @@
 <?php
 include 'include/topscripts.php';
 include 'include/restrict_logged_in.php';
-include 'include/GrafikMachine.php';
+include 'include/GrafikTimetable.php';
 
 // Если не указан параметр id, переводим на начальную страницу
 if(empty(filter_input(INPUT_GET, 'id'))) {
@@ -12,8 +12,8 @@ $date_from = null;
 $date_to = null;
 GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);
 
-$machine = new GrafikMachine($date_from, $date_to, filter_input(INPUT_GET, 'id'));
-$error_message = $machine->error_message;
+$timetable = new GrafikTimetable($date_from, $date_to, filter_input(INPUT_GET, 'id'));
+$error_message = $timetable->error_message;
 ?>
 <!DOCTYPE html>
 <html>
@@ -33,7 +33,7 @@ $error_message = $machine->error_message;
             if(isset($error_message) && $error_message != '') {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
-            $machine->Show();
+            $timetable->Show();
             ?>
         </div>
         <?php

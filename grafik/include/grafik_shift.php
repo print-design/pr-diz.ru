@@ -6,7 +6,7 @@
     <td class="<?=$top.' '.$this->shift ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?></td>
     
     <!-- Работник №1 -->
-    <?php if($this->machine->user1Name): ?>
+    <?php if($this->timetable->user1Name): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php
         if($is_admin) {
@@ -20,7 +20,7 @@
     <?php endif; ?>
     
     <!-- Работник №2 -->
-    <?php if($this->machine->user2Name): ?>
+    <?php if($this->timetable->user2Name): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php
         if($is_admin) {
@@ -43,7 +43,7 @@
     <td class="<?=$top.' '.$this->shift ?>">
         <?php
         $disabled = " disabled='disabled'";
-        if($this->machine->clipboard_db) {
+        if($this->timetable->clipboard_db) {
             $disabled = '';
         }
         ?>
@@ -56,31 +56,31 @@
     <?php endif; ?>
     
     <!-- Заказчик -->
-    <?php if($this->machine->hasOrganization): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->hasOrganization): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     
     <!-- Наименование -->
-    <?php if($this->machine->hasEdition): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->hasEdition): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     
     <!-- Метраж -->
-    <?php if($this->machine->hasLength): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->hasLength): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     
     <!-- Статус -->
-    <?php if($is_admin): if($this->machine->hasStatus): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; endif; ?>
+    <?php if($is_admin): if($this->timetable->hasStatus): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; endif; ?>
     
     <!-- Вал -->
-    <?php if($this->machine->hasRoller): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->hasRoller): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     
     <!-- Ламинация -->
-    <?php if($this->machine->hasLamination): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->hasLamination): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     
     <!-- Красочность -->
-    <?php if($this->machine->hasColoring): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->hasColoring): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     
     <!-- Менеджер -->
-    <?php if($this->machine->hasManager): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->hasManager): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     
     <!-- Комментарий -->
-    <?php if($this->machine->hasComment): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->hasComment): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     
     <?php if($is_admin): ?>
     

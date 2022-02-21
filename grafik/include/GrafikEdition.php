@@ -1,10 +1,10 @@
 <?php
 class GrafikEdition {
-    public function __construct(DateTime $date, $shift, $shift_data, GrafikMachine $machine, $edition_key, $edition, $date_editions_count, $shift_editions_count, $allow_edit_disabled) {
+    public function __construct(DateTime $date, $shift, $shift_data, GrafikTimetable $timetable, $edition_key, $edition, $date_editions_count, $shift_editions_count, $allow_edit_disabled) {
         $this->date = $date;
         $this->shift = $shift;
         $this->shift_data = $shift_data;
-        $this->machine = $machine;
+        $this->timetable = $timetable;
         $this->edition_key = $edition_key;
         $this->edition = $edition;
         $this->date_editions_count = $date_editions_count;
@@ -15,7 +15,7 @@ class GrafikEdition {
     private DateTime $date;
     private $shift;
     private $shift_data;
-    private GrafikMachine $machine;
+    private GrafikTimetable $timetable;
     private $edition_key;
     private $edition;
     private $date_editions_count;
@@ -28,11 +28,11 @@ class GrafikEdition {
             $top = 'top';
         }
         
-        $from = $this->machine->dateFrom->format("Y-m-d");
-        $to = $this->machine->dateTo->format("Y-m-d");
+        $from = $this->timetable->dateFrom->format("Y-m-d");
+        $to = $this->timetable->dateTo->format("Y-m-d");
         
         $disabled = " disabled='disabled'";
-        if($this->machine->clipboard_db) {
+        if($this->timetable->clipboard_db) {
             $disabled = '';
         }
         

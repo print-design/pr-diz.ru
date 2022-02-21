@@ -8,7 +8,7 @@
     <td class="<?=$top.' '.$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?></td>
     
     <!-- Работник №1 -->
-    <?php if($this->machine->user1Name): ?>
+    <?php if($this->timetable->user1Name): ?>
     <td class="<?=$top.' '.$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>">
         <?php
         if($is_admin) {
@@ -22,7 +22,7 @@
     <?php endif; ?>
     
     <!-- Работник №2 -->
-    <?php if($this->machine->user2Name): ?>
+    <?php if($this->timetable->user2Name): ?>
     <td class="<?=$top.' '.$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>">
         <?php
         if($is_admin) {
@@ -64,7 +64,7 @@
     <?php endif; ?>
     
     <!-- Заказчик -->
-    <?php if($this->machine->hasOrganization): ?>
+    <?php if($this->timetable->hasOrganization): ?>
     <td class='<?=$top.' '.$this->shift ?>'>
         <?php if($is_admin): ?>
         <input type="text"<?=$this->allow_edit_disabled ?> value="<?=htmlentities($this->edition['organization']) ?>" onfocusout='javascript: EditOrganization($(this))' class="editable organizations" data-id='<?=$this->edition['id'] ?>' style="width:140px;" />
@@ -77,7 +77,7 @@
     <?php endif; ?>
     
     <!-- Наименование -->
-    <?php if($this->machine->hasEdition): ?>
+    <?php if($this->timetable->hasEdition): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
         <input type="text"<?=$this->allow_edit_disabled ?> value="<?=htmlentities($this->edition['edition']) ?>" onfocusout="javascript: EditEdition($(this))" class="editable editions" data-id='<?=$this->edition['id'] ?>' style="width:140px;" />
@@ -90,7 +90,7 @@
     <?php endif; ?>
     
     <!-- Метраж -->
-    <?php if($this->machine->hasLength): ?>
+    <?php if($this->timetable->hasLength): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
         <input type="number" min="0" pattern="\d*" value="<?=$this->edition['length'] ?>" onfocusout="javascript: EditLength($(this))" data-id='<?=$this->edition['id'] ?>' class="editable" style="width:65px;" />
@@ -105,7 +105,7 @@
     <?php endif; ?>
     
     <!-- Статус -->
-    <?php if($is_admin): if($this->machine->hasStatus): ?>
+    <?php if($is_admin): if($this->timetable->hasStatus): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <select data-id='<?=$this->edition['id'] ?>' onfocusout="javascript: EditStatus($(this))" style='width:85px;'>
             <optgroup>
@@ -123,7 +123,7 @@
     <?php endif; endif; ?>
     
     <!-- Вал -->
-    <?php if($this->machine->hasRoller): ?>
+    <?php if($this->timetable->hasRoller): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
         <select data-id='<?=$this->edition['id'] ?>' onfocusout="javascript: EditRoller($(this))">
@@ -147,7 +147,7 @@
     <?php endif; ?>
     
     <!-- Ламинация -->
-    <?php if($this->machine->hasLamination): ?>
+    <?php if($this->timetable->hasLamination): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
         <select data-id='<?=$this->edition['id'] ?>' onfocusout="javascript: EditLamination($(this))" style='width:55px;'>
@@ -171,7 +171,7 @@
     <?php endif; ?>
     
     <!-- Красочность -->
-    <?php if($this->machine->hasColoring): ?>
+    <?php if($this->timetable->hasColoring): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
         <input type="number" min="0" max="<?=$this->machine->coloring ?>" pattern="\d*" value="<?=$this->edition['coloring'] ?>" data-id='<?=$this->edition['id'] ?>' onfocusout="EditColoring($(this))" class="editable" style="width:35px;" />
@@ -184,7 +184,7 @@
     <?php endif; ?>
     
     <!-- Менеджер -->
-    <?php if($this->machine->hasManager): ?>
+    <?php if($this->timetable->hasManager): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
         <select data-id='<?=$this->edition['id'] ?>'<?=$this->allow_edit_disabled ?> onfocusout="javascript: EditManager($(this))" style='width:120px;'>
@@ -208,7 +208,7 @@
     <?php endif; ?>
     
     <!-- Комментарий -->
-    <?php if($this->machine->hasComment): ?>
+    <?php if($this->timetable->hasComment): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
         <textarea rows="5" cols="30" wrap="hard" data-id='<?=$this->edition['id'] ?>' onfocusout="EditComment($(this))" class="editable"><?=htmlentities($this->edition['comment']) ?></textarea>

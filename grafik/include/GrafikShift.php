@@ -2,11 +2,11 @@
 include 'GrafikEdition.php';
 
 class GrafikShift {
-    public function __construct(DateTime $date, $shift, $shift_data, GrafikMachine $machine, $editions, $date_editions_count, $shift_editions_count, $allow_edit_disabled) {
+    public function __construct(DateTime $date, $shift, $shift_data, GrafikTimetable $timetable, $editions, $date_editions_count, $shift_editions_count, $allow_edit_disabled) {
         $this->date = $date;
         $this->shift = $shift;
         $this->shift_data = $shift_data;
-        $this->machine = $machine;
+        $this->timetable = $timetable;
         $this->editions = $editions;
         $this->date_editions_count = $date_editions_count;
         $this->shift_editions_count = $shift_editions_count;
@@ -15,7 +15,7 @@ class GrafikShift {
     private DateTime $date;
     private $shift;
     private $shift_data;
-    private GrafikMachine $machine;
+    private GrafikTimetable $timetable;
     private $editions;
     private $date_editions_count;
     private $shift_editions_count;
@@ -34,7 +34,7 @@ class GrafikShift {
         }
         else {
             foreach($this->editions as $key => $value) {
-                $edition = new GrafikEdition($this->date, $this->shift, $this->shift_data, $this->machine, $key, $value, $this->date_editions_count, $this->shift_editions_count, $this->allow_edit_disabled);
+                $edition = new GrafikEdition($this->date, $this->shift, $this->shift_data, $this->timetable, $key, $value, $this->date_editions_count, $this->shift_editions_count, $this->allow_edit_disabled);
                 $edition->Show();
             }
         }
@@ -51,7 +51,7 @@ class GrafikShift {
         }
         else {
             foreach($this->editions as $key => $value) {
-                $edition = new GrafikEdition($this->date, $this->shift, $this->shift_data, $this->machine, $key, $value, $this->date_editions_count, $this->shift_editions_count, $this->allow_edit_disabled);
+                $edition = new GrafikEdition($this->date, $this->shift, $this->shift_data, $this->timetable, $key, $value, $this->date_editions_count, $this->shift_editions_count, $this->allow_edit_disabled);
                 $edition->Print();
             }
         }

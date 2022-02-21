@@ -1,8 +1,7 @@
 <?php
-//include 'define.php';
 include 'GrafikDate.php';
 
-class GrafikMachine {
+class GrafikTimetable {
     public function __construct(DateTime $from, DateTime $to, $machine_id) {
         $this->dateFrom = $from;
         $this->dateTo = $to;
@@ -197,11 +196,11 @@ class GrafikMachine {
             $this->managers = (new Grabber("select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where ur.role_id = 2 order by u.fio"))->result;
         }
         
-        include 'grafik_machine.php';
+        include 'grafik_timetable.php';
     }
     
     function Print() {
-        include 'grafik_print_machine.php';
+        include 'grafik_print_timetable.php';
     }
 }
 ?>

@@ -2,7 +2,7 @@
     <optgroup>
         <option value="">...</option>
         <?php
-        foreach ($this->machine->users2 as $value) {
+        foreach ($this->timetable->users2 as $value) {
             $selected = '';
             if(isset($this->shift_data['u2_id']) && $this->shift_data['u2_id'] == $value['id']) $selected = " selected = 'selected'";
             echo "<option$selected value='".$value['id']."'>".$value['fio']."</option>";
