@@ -36,7 +36,7 @@
     <?php if($is_admin): ?>
     <!-- Создание тиража -->
     <td class='<?=$top." ".$this->shift ?> align-bottom'>
-        <button type='button' class='btn btn-outline-dark btn-sm'<?=$this->allow_edit_disabled ?> style='display: block;' data-toggle='tooltip' data-machine='<?=$this->machine->machineId ?>' data-from='<?=$this->machine->dateFrom->format("Y-m-d") ?>' data-to='<?=$this->machine->dateTo->format("Y-m-d") ?>' data-date='<?=$this->date->format('Y-m-d') ?>' data-shift='<?=$this->shift ?>' data-workshift='<?=(empty($this->shift_data['id']) ? '' : $this->shift_data['id']) ?>' onclick='javascript: CreateEdition($(this))' title='Добавить тираж'><i class='fas fa-plus'></i></button>
+        <button type='button' class='btn btn-outline-dark btn-sm'<?=$this->allow_edit_disabled ?> style='display: block;' data-toggle='tooltip' data-machine='<?=$this->timetable->machineId ?>' data-from='<?=$this->timetable->dateFrom->format("Y-m-d") ?>' data-to='<?=$this->timetable->dateTo->format("Y-m-d") ?>' data-date='<?=$this->date->format('Y-m-d') ?>' data-shift='<?=$this->shift ?>' data-workshift='<?=(empty($this->shift_data['id']) ? '' : $this->shift_data['id']) ?>' onclick='javascript: CreateEdition($(this))' title='Добавить тираж'><i class='fas fa-plus'></i></button>
     </td>
     
     <!-- Вставка тиража -->
@@ -50,7 +50,7 @@
         <?php if(!empty($this->allow_edit_disabled)): ?>
         <button type="button" class="btn btn-outline-dark btn-sm" style="display: block;"<?=$this->allow_edit_disabled ?>><i class="fas fa-paste"></i></button>
         <?php else: ?>
-        <button type='button' class='btn btn-outline-dark btn-sm btn_clipboard_paste' style='display: block;' data-toggle='tooltip' data-machine='<?=$this->machine->machineId ?>' data-from='<?=$this->machine->dateFrom->format("Y-m-d") ?>' data-to='<?=$this->machine->dateTo->format("Y-m-d") ?>' data-date='<?=$this->date->format('Y-m-d') ?>' data-shift='<?=$this->shift ?>' data-workshift='<?=(empty($this->shift_data['id']) ? '' : $this->shift_data['id']) ?>' onclick='javascript: PasteEditionDb($(this))' title='Вставить тираж'<?=$disabled ?>><i class='fas fa-paste'></i></button>
+        <button type='button' class='btn btn-outline-dark btn-sm btn_clipboard_paste' style='display: block;' data-toggle='tooltip' data-machine='<?=$this->timetable->machineId ?>' data-from='<?=$this->timetable->dateFrom->format("Y-m-d") ?>' data-to='<?=$this->timetable->dateTo->format("Y-m-d") ?>' data-date='<?=$this->date->format('Y-m-d') ?>' data-shift='<?=$this->shift ?>' data-workshift='<?=(empty($this->shift_data['id']) ? '' : $this->shift_data['id']) ?>' onclick='javascript: PasteEditionDb($(this))' title='Вставить тираж'<?=$disabled ?>><i class='fas fa-paste'></i></button>
         <?php endif; ?>
     </td>
     <?php endif; ?>
