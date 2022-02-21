@@ -1,7 +1,7 @@
 <tr>
     <?php if($this->shift == 'day'): ?>
-    <td class="<?=$top.' '.$this->shift ?>" rowspan="2"><?=$GLOBALS['weekdays'][$this->date->format('w')] ?></td>
-    <td class="<?=$top.' '.$this->shift ?>" rowspan="2"><?=$this->date->format('d.m.Y') ?></td>
+    <td class="<?=$top.' '.$this->shift ?>" rowspan="<?=$this->date_editions_count ?>"><?=$GLOBALS['weekdays'][$this->date->format('w')] ?></td>
+    <td class="<?=$top.' '.$this->shift ?>" rowspan="<?=$this->date_editions_count ?>"><?=$this->date->format('d.m.Y') ?></td>
     <?php endif; ?>
     <td class="<?=$top.' '.$this->shift ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?></td>
     
