@@ -29,32 +29,7 @@ class GrafikTimetableReadonly {
             $this->hasComment = $row['has_comment'];
             $this->isCutter = $row['is_cutter'];
         }
-    }
-    
-    private $dateFrom;
-    private $dateTo;
-    private $machineId;
-    
-    public $name = '';
-    public $user1Name = '';
-    public $user2Name = '';
-    public $userRole = 0;
-    
-    public $hasEdition = false;
-    public $hasOrganization = false;
-    public $hasLength = false;
-    public $hasStatus = false;
-    public $hasRoller = false;
-    public $hasLamination = false;
-    public $hasColoring = false;
-    public $coloring = 0;
-    public $hasManager = false;
-    public $hasComment = false;
-    public $isCutter = false;
-
-    public $error_message = '';
-
-    function Show() {
+        
         // Список рабочих смен
         $all = array();
         $sql = "select ws.id, ws.date date, date_format(ws.date, '%d.%m.%Y') fdate, ws.shift, ws.machine_id, u1.id u1_id, u1.fio u1_fio, u2.id u2_id, u2.fio u2_fio, "
@@ -131,9 +106,36 @@ class GrafikTimetableReadonly {
             }
             
             $grafik_date = new GrafikDateReadonly($date, $this, $day_data, $night_data, $day_editions, $night_editions);
-            array_push($grafik_dates, $grafik_date);
+            array_push($this->grafik_dates, $grafik_date);
         }
-        
+    }
+    
+    private $dateFrom;
+    private $dateTo;
+    private $machineId;
+    
+    public $name = '';
+    public $user1Name = '';
+    public $user2Name = '';
+    public $userRole = 0;
+    
+    public $hasEdition = false;
+    public $hasOrganization = false;
+    public $hasLength = false;
+    public $hasStatus = false;
+    public $hasRoller = false;
+    public $hasLamination = false;
+    public $hasColoring = false;
+    public $coloring = 0;
+    public $hasManager = false;
+    public $hasComment = false;
+    public $isCutter = false;
+
+    public $error_message = '';
+    
+    private $grafik_dates = [];
+
+    function Show() {
         include 'grafik_timetable_readonly.php';
     }
 }

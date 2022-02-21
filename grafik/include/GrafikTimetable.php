@@ -29,6 +29,59 @@ class GrafikTimetable {
             $this->isCutter = $row['is_cutter'];
         }
         
+        // Смотрим настройки
+        $this->allow_edit = 0;    
+        $sql = "select name, bool_value from settings";
+        $fetcher = new Fetcher($sql);
+        while($row = $fetcher->Fetch()) {
+            if($row['name'] == "allow_edit") {
+                $this->allow_edit = $row['bool_value'];
+            }
+        }
+        
+        // Проверяем, имеется ли что-нибудь в буфере обмена
+        $this->clipboard_db = false;
+        $sql = "select count(id) from clipboard";
+        $row = (new Fetcher($sql))->Fetch();
+        if($row[0] > 0) {
+            $this->clipboard_db = true;
+        }
+        
+        // Список работников №1
+        if(IsInRole('admin') && $this->user1Name != '') {
+            $this->users1 = (new Grabber('select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where quit = 0 and ur.role_id = '. $this->userRole.' order by u.fio'))->result;
+        }
+        
+        // Список работников №2
+        if(IsInRole('admin') && $this->user2Name != '') {
+            $this->users2 = (new Grabber('select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where quit = 0 and ur.role_id = '. $this->userRole.' order by u.fio'))->result;
+        }
+        
+        // Список статусов
+        if(IsInRole('admin')) {
+            $this->statuses = (new Grabber("select id, name from edition_status order by name"))->result;
+        }
+        
+        // Список валов
+        if(IsInRole('admin')) {
+            $machine_id = $this->machineId;
+            $this->rollers = (new Grabber("select id, name from roller where machine_id=$machine_id order by position, name"))->result;
+        }
+        
+        // Список ламинаций
+        if(IsInRole('admin')) {
+            $sql = "select id, name from lamination where common = 1 order by sort";
+            if($this->isCutter) {
+                $sql = "select id, name from lamination where cutter = 1 order by sort";
+            }
+            $this->laminations = (new Grabber($sql))->result;
+        }
+        
+        // Список менеджеров
+        if(IsInRole('admin')) {
+            $this->managers = (new Grabber("select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where ur.role_id = 2 order by u.fio"))->result;
+        }
+        
         // Список рабочих смен
         $all = array();
         $sql = "select ws.id, ws.date date, date_format(ws.date, '%d.%m.%Y') fdate, ws.shift, ws.machine_id, u1.id u1_id, u1.fio u1_fio, u2.id u2_id, u2.fio u2_fio, "
@@ -107,8 +160,6 @@ class GrafikTimetable {
         }
     }
     
-    private $grafik_dates = [];
-
     public $dateFrom;
     public $dateTo;
     public $machineId;
@@ -132,6 +183,9 @@ class GrafikTimetable {
 
     public $error_message = '';
     
+    public $allow_edit = 0;
+    public $clipboard_db = false;
+    
     public $users1 = [];
     public $users2 = [];
     public $statuses = [];
@@ -139,63 +193,9 @@ class GrafikTimetable {
     public $laminations = [];
     public $managers = [];
     
-    public $allow_edit = 0;
-    public $clipboard_db = false;
+    private $grafik_dates = [];
     
     function Show() {
-        // Смотрим настройки
-        $this->allow_edit = 0;    
-        $sql = "select name, bool_value from settings";
-        $fetcher = new Fetcher($sql);
-        while($row = $fetcher->Fetch()) {
-            if($row['name'] == "allow_edit") {
-                $this->allow_edit = $row['bool_value'];
-            }
-        }
-        
-        // Проверяем, имеется ли что-нибудь в буфере обмена
-        $this->clipboard_db = false;
-        $sql = "select count(id) from clipboard";
-        $row = (new Fetcher($sql))->Fetch();
-        if($row[0] > 0) {
-            $this->clipboard_db = true;
-        }
-        
-        // Список работников №1
-        if(IsInRole('admin') && $this->user1Name != '') {
-            $this->users1 = (new Grabber('select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where quit = 0 and ur.role_id = '. $this->userRole.' order by u.fio'))->result;
-        }
-        
-        // Список работников №2
-        if(IsInRole('admin') && $this->user2Name != '') {
-            $this->users2 = (new Grabber('select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where quit = 0 and ur.role_id = '. $this->userRole.' order by u.fio'))->result;
-        }
-        
-        // Список статусов
-        if(IsInRole('admin')) {
-            $this->statuses = (new Grabber("select id, name from edition_status order by name"))->result;
-        }
-        
-        // Список валов
-        if(IsInRole('admin')) {
-            $machine_id = $this->machineId;
-            $this->rollers = (new Grabber("select id, name from roller where machine_id=$machine_id order by position, name"))->result;
-        }
-        
-        // Список ламинаций
-        if(IsInRole('admin')) {
-            $sql = "select id, name from lamination where common = 1 order by sort";
-            if($this->isCutter) {
-                $sql = "select id, name from lamination where cutter = 1 order by sort";
-            }
-            $this->laminations = (new Grabber($sql))->result;
-        }
-                    
-        // Список менеджеров
-        if(IsInRole('admin')) {
-            $this->managers = (new Grabber("select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where ur.role_id = 2 order by u.fio"))->result;
-        }
-        
         include 'grafik_timetable.php';
     }
     

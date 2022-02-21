@@ -21,7 +21,7 @@ class GrafikDateReadonly {
     function Show() {
         $day_editions_count = count($this->day_editions);
         $night_editions_count = count($this->night_editions);
-        $date_editionts_count = $day_editions_count + $night_editions_count;
+        $date_editionts_count = ($day_editions_count == 0 ? 1 : $day_editions_count) + ($night_editions_count == 0 ? 1 : $night_editions_count);
         
         $day_shift = new GrafikShiftReadonly($this->date, 'day', $this->day_data, $this->timetable, $this->day_editions, $date_editionts_count, $day_editions_count);
         $day_shift->Show();
