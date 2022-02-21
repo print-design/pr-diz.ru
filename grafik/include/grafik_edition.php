@@ -111,7 +111,7 @@
             <optgroup>
                 <option value="">...</option>
                     <?php
-                    foreach ($this->machine->statuses as $value) {
+                    foreach ($this->timetable->statuses as $value) {
                         $selected = '';
                         if($this->edition['status_id'] == $value['id']) $selected = " selected = 'selected'";
                         echo "<option$selected value='".$value['id']."'>".$value['name']."</option>";
@@ -130,7 +130,7 @@
             <optgroup>
                 <option value="">...</option>
                 <?php
-                foreach ($this->machine->rollers as $value) {
+                foreach ($this->timetable->rollers as $value) {
                     $selected = '';
                     if($this->edition['roller_id'] == $value['id']) $selected = " selected = 'selected'";
                     echo "<option$selected value='".$value['id']."'>".$value['name']."</option>";
@@ -154,7 +154,7 @@
             <optgroup>
                 <option value="">...</option>
                 <?php
-                foreach ($this->machine->laminations as $value) {
+                foreach ($this->timetable->laminations as $value) {
                     $selected = '';
                     if($this->edition['lamination_id'] == $value['id']) $selected = " selected = 'selected'";
                     echo "<option$selected value='".$value['id']."'>".$value['name']."</option>";
@@ -174,7 +174,7 @@
     <?php if($this->timetable->hasColoring): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
-        <input type="number" min="0" max="<?=$this->machine->coloring ?>" pattern="\d*" value="<?=$this->edition['coloring'] ?>" data-id='<?=$this->edition['id'] ?>' onfocusout="EditColoring($(this))" class="editable" style="width:35px;" />
+        <input type="number" min="0" max="<?=$this->timetable->coloring ?>" pattern="\d*" value="<?=$this->edition['coloring'] ?>" data-id='<?=$this->edition['id'] ?>' onfocusout="EditColoring($(this))" class="editable" style="width:35px;" />
         <?php
         else:
             echo $this->edition['coloring'];
@@ -191,7 +191,7 @@
             <optgroup>
                 <option value="">...</option>
                 <?php
-                foreach ($this->machine->managers as $value) {
+                foreach ($this->timetable->managers as $value) {
                     $selected = '';
                     if($this->edition['manager_id'] == $value['id']) $selected = " selected = 'selected'";
                     echo "<option$selected value='".$value['id']."'>".$value['fio']."</option>";

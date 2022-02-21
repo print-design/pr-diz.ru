@@ -8,14 +8,14 @@
     <td class="<?=$top.' '.$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?></td>
     
     <!-- Работник №1 -->
-    <?php if($this->machine->user1Name): ?>
+    <?php if($this->timetable->user1Name): ?>
     <td class="<?=$top.' '.$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>">
         <?php echo(array_key_exists('u1_fio', $this->shift_data) ? $this->shift_data['u1_fio'] : ''); ?>
     </td>
     <?php endif; ?>
     
     <!-- Работник №2 -->
-    <?php if($this->machine->user2Name): ?>
+    <?php if($this->timetable->user2Name): ?>
     <td class="<?=$top.' '.$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>">
         <?php echo (array_key_exists('u2_fio', $this->shift_data) ? $this->shift_data['u2_fio'] : ''); ?>
     </td>
@@ -24,56 +24,56 @@
     <?php endif; ?>
     
     <!-- Заказчик -->
-    <?php if($this->machine->hasOrganization): ?>
+    <?php if($this->timetable->hasOrganization): ?>
     <td class='<?=$top.' '.$this->shift ?>'>
         <?=$this->edition['organization'] ?>
     </td>
     <?php endif; ?>
     
     <!-- Наименование -->
-    <?php if($this->machine->hasEdition): ?>
+    <?php if($this->timetable->hasEdition): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?=$this->edition['edition'] ?>
     </td>
     <?php endif; ?>
     
     <!-- Метраж -->
-    <?php if($this->machine->hasLength): ?>
+    <?php if($this->timetable->hasLength): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?=(empty($this->edition['status']) ? $this->edition['length'] : $this->edition['status']) ?>
     </td>
     <?php endif; ?>
     
     <!-- Вал -->
-    <?php if($this->machine->hasRoller): ?>
+    <?php if($this->timetable->hasRoller): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?=$this->edition['roller'] ?>
     </td>
     <?php endif; ?>
     
     <!-- Ламинация -->
-    <?php if($this->machine->hasLamination): ?>
+    <?php if($this->timetable->hasLamination): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?=$this->edition['lamination'] ?>
     </td>
     <?php endif; ?>
     
     <!-- Красочность -->
-    <?php if($this->machine->hasColoring): ?>
+    <?php if($this->timetable->hasColoring): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?=$this->edition['coloring'] ?>
     </td>
     <?php endif; ?>
     
     <!-- Менеджер -->
-    <?php if($this->machine->hasManager): ?>
+    <?php if($this->timetable->hasManager): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?=$this->edition['manager'] ?>
     </td>
     <?php endif; ?>
     
     <!-- Комментарий -->
-    <?php if($this->machine->hasComment): ?>
+    <?php if($this->timetable->hasComment): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?=$this->edition['comment'] ?>
     </td>

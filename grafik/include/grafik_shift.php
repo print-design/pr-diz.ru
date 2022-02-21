@@ -93,7 +93,7 @@
     <!-- Удаление смены -->
     <td class="<?=$top.' '.$this->shift ?>">
     <?php if(isset($this->shift_data['id'])): ?>
-    <button type='button' class='btn btn-outline-dark btn-sm'<?=$this->allow_edit_disabled ?> data-id='<?=$this->shift_data['id'] ?>' data-machine='<?=$this->machine->machineId ?>' data-from='<?=$this->machine->dateFrom->format("Y-m-d") ?>' data-to='<?=$this->machine->dateTo->format("Y-m-d") ?>' onclick='javascript: if(confirm("Действительно удалить?")){ DeleteShift($(this)); }' data-toggle='tooltip' title='Удалить смену'><i class='fas fa-trash-alt'></i></button>
+    <button type='button' class='btn btn-outline-dark btn-sm'<?=$this->allow_edit_disabled ?> data-id='<?=$this->shift_data['id'] ?>' data-machine='<?=$this->timetable->machineId ?>' data-from='<?=$this->timetable->dateFrom->format("Y-m-d") ?>' data-to='<?=$this->timetable->dateTo->format("Y-m-d") ?>' onclick='javascript: if(confirm("Действительно удалить?")){ DeleteShift($(this)); }' data-toggle='tooltip' title='Удалить смену'><i class='fas fa-trash-alt'></i></button>
     <?php endif; ?>
     </td>
     
