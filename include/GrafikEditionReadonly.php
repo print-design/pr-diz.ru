@@ -1,10 +1,10 @@
 <?php
 class GrafikEditionReadonly {
-    public function __construct(DateTime $date, $shift, $shift_data, GrafikMachineReadonly $machine, $edition_key, $edition, $date_editions_count, $shift_editions_count) {
+    public function __construct(DateTime $date, $shift, $shift_data, GrafikTimetableReadonly $timetable, $edition_key, $edition, $date_editions_count, $shift_editions_count) {
         $this->date = $date;
         $this->shift = $shift;
         $this->shift_data = $shift_data;
-        $this->machine = $machine;
+        $this->timetable = $timetable;
         $this->edition_key = $edition_key;
         $this->edition = $edition;
         $this->date_editions_count = $date_editions_count;
@@ -14,7 +14,7 @@ class GrafikEditionReadonly {
     private DateTime $date;
     private $shift;
     private $shift_data;
-    private GrafikMachineReadonly $machine;
+    private GrafikTimetableReadonly $timetable;
     private $edition_key;
     private $edition;
     private $date_editions_count;

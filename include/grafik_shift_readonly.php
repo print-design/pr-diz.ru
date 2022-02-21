@@ -4,14 +4,14 @@
     <td class="<?=$top ?>" rowspan="2"><?=$this->date->format('d.m').".".$this->date->format('Y') ?></td>
     <?php endif; ?>
     <td class="<?=$top.' '.$this->shift ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?></td>
-    <?php if($this->machine->user1Name): ?><td class="<?=$top.' '.$this->shift ?>"><?= array_key_exists('u1_fio', $this->shift_data) ? $this->shift_data['u1_fio'] : '' ?></td><?php endif; ?>
-    <?php if($this->machine->user2Name): ?><td class="<?=$top.' '.$this->shift ?>"><?= array_key_exists('u2_fio', $this->shift_data) ? $this->shift_data['u2_fio'] : '' ?></td><?php endif; ?>
-    <?php if($this->machine->hasOrganization): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
-    <?php if($this->machine->hasEdition): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
-    <?php if($this->machine->hasLength): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
-    <?php if($this->machine->hasRoller): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
-    <?php if($this->machine->hasLamination): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
-    <?php if($this->machine->hasColoring): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
-    <?php if($this->machine->hasManager): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
-    <?php if($this->machine->hasComment): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->user1Name): ?><td class="<?=$top.' '.$this->shift ?>"><?= array_key_exists('u1_fio', $this->shift_data) ? $this->shift_data['u1_fio'] : '' ?></td><?php endif; ?>
+    <?php if($this->timetable->user2Name): ?><td class="<?=$top.' '.$this->shift ?>"><?= array_key_exists('u2_fio', $this->shift_data) ? $this->shift_data['u2_fio'] : '' ?></td><?php endif; ?>
+    <?php if($this->timetable->hasOrganization): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->hasEdition): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->hasLength): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->hasRoller): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->hasLamination): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->hasColoring): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->hasManager): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->hasComment): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
 </tr>

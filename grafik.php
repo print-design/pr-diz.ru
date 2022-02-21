@@ -1,6 +1,6 @@
 <?php
 include 'include/topscripts.php';
-include 'include/GrafikMachineReadonly.php';
+include 'include/GrafikTimetableReadonly.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'storekeeper', 'dev', 'manager', 'administrator'))) {
@@ -16,7 +16,7 @@ $date_from = null;
 $date_to = null;
 GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);
 
-$grafik_machine = new GrafikMachineReadonly($date_from, $date_to, filter_input(INPUT_GET, 'id'));
+$grafik_machine = new GrafikTimetableReadonly($date_from, $date_to, filter_input(INPUT_GET, 'id'));
 $error_message = $grafik_machine->error_message;
 ?>
 <!DOCTYPE html>
