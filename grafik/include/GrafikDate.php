@@ -12,7 +12,7 @@ class GrafikDate {
     }
     
     private $date;
-    private GrafikTimetable $timetable;
+    private $timetable;
     private $day_data;
     private $night_data;
     private $day_editions;
