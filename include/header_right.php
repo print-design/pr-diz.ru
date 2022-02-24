@@ -9,15 +9,6 @@
 if(!empty(filter_input(INPUT_COOKIE, USERNAME))):
 ?>
 <ul class="navbar-nav">
-    <?php
-    if(IsInRole(array('technologist', 'dev', 'administrator'))):
-    ?>
-    <li class="nav-item">
-        <a class="nav-link" href="<?=APPLICATION ?>/user/">Админка</a>
-    </li>
-    <?php
-    endif;
-    ?>
     <li class="nav-item dropdown" id="nav-user" style="padding-left: 10px;">
         <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><?= Initials() ?></a>
         <div class="dropdown-menu" id="user-dropdown">

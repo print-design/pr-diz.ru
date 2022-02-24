@@ -1,14 +1,36 @@
 <?php
 include 'left_bar.php';
+
+$php_self = $_SERVER['PHP_SELF'];
+$substrings = mb_split("/", $php_self);
+$count = count($substrings);
+$folder = '';
+$file = '';
+
+if($count > 1) {
+    $folder = $substrings[$count - 2];
+    $file = $substrings[$count - 1];
+}
+
+$request_calc_status = '';
+$techmap_status = '';
+$schedule_status = '';
+
+if($folder == 'request_calc') {
+    $request_calc_status = ' disabled';
+}
+elseif($folder == 'techmap') {
+    $techmap_status = ' disabled';
+}
+elseif($folder == 'schedule') {
+    $schedule_status = ' disabled';
+}
+            
 ?>
 <div class="container-fluid header">
     <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
             <?php
-            $request_calc_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/request_calc')) == APPLICATION.'/request_calc' ? ' disabled' : '';
-            $techmap_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/techmap')) == APPLICATION.'/techmap' ? ' disabled' : '';
-            $schedule_status = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/schedule')) == APPLICATION.'/schedule' ? ' disabled' : '';
-            
             if(IsInRole(array('technologist', 'dev', 'manager', 'administrator', 'designer'))):
             ?>
             <li class="nav-item">

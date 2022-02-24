@@ -13,15 +13,19 @@ if($count > 1) {
 $zakaz_class = '';
 $sklad_class = '';
 $grafik_class = '';
+$admin_class = '';
 
 if($folder == "request_calc" || $folder == "techmap" || $folder == "schedule") {
     $zakaz_class = " active";
 }
-else if($folder == "pallet" || $folder == "roll" || $folder == "cut_source" || $folder == "utilized") {
+elseif($folder == "pallet" || $folder == "roll" || $folder == "cut_source" || $folder == "utilized") {
     $sklad_class = " active";
 }
-else if($file == "grafik.php") {
+elseif($file == "grafik.php") {
     $grafik_class = " active";
+}
+elseif($folder == "user" || $folder == "supplier") {
+    $admin_class = " active";
 }
 ?>
 <div id="left_bar">
@@ -36,6 +40,11 @@ else if($file == "grafik.php") {
     ?>
     <a href="<?=APPLICATION ?>/roll/" class="left_bar_item<?=$sklad_class ?>" title="Склад" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_sklad.svg" /></a>
     <a href="<?=APPLICATION ?>/grafik.php?id=1" class="left_bar_item<?=$grafik_class ?>" title="График" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_grafik.svg" /></a>
+    <?php
+    endif;
+    if(IsInRole(array('technologist', 'dev', 'administrator'))):
+    ?>
+    <a href="<?=APPLICATION ?>/user/" class="left_bar_item<?=$admin_class ?>" title="Админка" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_admin.svg" /></a>
     <?php
     endif;
     ?>

@@ -21,7 +21,7 @@ if(null !== filter_input(INPUT_POST, 'delete_supplier_submit')) {
     </head>
     <body>
         <?php
-        include '../include/header.php';
+        include '../include/header_admin.php';
         ?>
         <div class="container-fluid">
             <?php

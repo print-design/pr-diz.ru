@@ -53,7 +53,7 @@ if(empty($name)) {
     </head>
     <body>
         <?php
-        include '../include/header.php';
+        include '../include/header_admin.php';
         ?>
         <div class="container-fluid">
             <?php

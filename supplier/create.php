@@ -101,7 +101,7 @@ if(null !== filter_input(INPUT_POST, 'supplier_create_submit')) {
     </head>
     <body>
         <?php
-        include '../include/header.php';
+        include '../include/header_admin.php';
         ?>
         <div class="container-fluid">
             <?php
