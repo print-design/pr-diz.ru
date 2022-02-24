@@ -9,8 +9,9 @@
 if(!empty(filter_input(INPUT_COOKIE, USERNAME))):
 ?>
 <ul class="navbar-nav">
-    <li class="nav-item dropdown" id="nav-user" style="padding-left: 10px;">
-        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><?= Initials() ?></a>
+    <li class="nav-item dropdown" id="nav-user">
+        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><?= filter_input(INPUT_COOKIE, LAST_NAME).' '.filter_input(INPUT_COOKIE, FIRST_NAME) ?></a>
+        <div id="nav-role"><?= filter_input(INPUT_COOKIE, ROLE_LOCAL) ?></div>
         <div class="dropdown-menu" id="user-dropdown">
             <a href="<?=APPLICATION ?>/personal/" class="btn btn-link dropdown-item"><i class="fas fa-user"></i>&nbsp;Мои настройки</a>
             <form method="post">

@@ -137,21 +137,24 @@ a.black:active, a.black:hover, .black a:active, .black a:hover {
     border-bottom: solid 2px #EC3A7A;
 }
 
-li#nav-user {
-    background-color: #E6E7EB;
-    width: 36px;
-    height: 36px;
-    text-align: center;
-    border-radius: 50%;
-}
-
 #user-dropdown {
     right: 0;
     left: auto;
 }
 
+li#nav-user a {
+    color: #EC3A7A;
+}
+
 li#nav-user a.dropdown-toggle::after {
     display: none;
+}
+
+#nav-role {
+    position: absolute;
+    top: 25px;
+    left: 0px;
+    font-size: smaller;
 }
 
 li.no-dropdown-arrow-after a.dropdown-toggle::after {
