@@ -228,7 +228,7 @@
     
     <!-- Сдвиг тиража -->
     <td class='<?=$top.' '.$this->shift ?>'>
-        <button type="button" class="btn btn-outline-dark btn-sm" onclick="javascript: ShowMoveForm($(this))" title="Сдвинуть несколько тиражей" data-toggle='tooltip' data-date='<?=$this->shift_data['date'] ?>' data-shift='<?=$this->shift ?>' data-position='<?=$this->edition['position'] ?>' data-machine='<?=$this->edition['machine_id'] ?>' data-workshift='<?=$this->shift_data['id'] ?>' data-from="<?=$from ?>" data-to="<?=$to ?>"><i class="fas fa-table"></i></button>
+        <button type="button" class="btn btn-outline-dark btn-sm" onclick="javascript: ShowMoveForm($(this))" title="Сдвинуть несколько тиражей" data-toggle='tooltip' data-date='<?=$this->shift_data['date'] ?>' data-shift='<?=$this->shift ?>' data-position='<?=$this->edition['position'] ?>' data-machine='<?=$this->edition['machine_id'] ?>' data-workshift='<?=$this->shift_data['id'] ?>' data-from="<?=$from ?>" data-to="<?=$to ?>"><i class="fas fa-long-arrow-alt-up"></i><i class="fas fa-long-arrow-alt-down"></i></button>
     </td>
     
     <!-- Удаление смены -->
