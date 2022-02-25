@@ -5,15 +5,6 @@ include '../include/topscripts.php';
 if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
-
-function OrderLink($param) {
-    if(array_key_exists('order', $_REQUEST) && $_REQUEST['order'] == $param) {
-        echo "<strong><i class='fas fa-arrow-down' style='color: black; font-size: small;'></i></strong>";
-    }
-    else {
-        echo "<a class='gray' href='".BuildQueryAddRemove("order", $param, "page")."' style='font-size: x-small;'><i class='fas fa-arrow-down'></i></a>";
-    }
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -132,70 +123,52 @@ function OrderLink($param) {
             <h2>HGPL</h2>
             <table class="table table-hover">
                 <tr>
-                    <th width="30%" style="border-top: 0;">Название пленки&nbsp;&nbsp;<?= OrderLink('id') ?></th>
-                    <th width="30%" style="border-top: 0;">Тип&nbsp;&nbsp;<?= OrderLink('id') ?></th>
-                    <th style="border-top: 0;">Толщина&nbsp;&nbsp;<?= OrderLink('id') ?></th>
-                    <th style="border-top: 0;">Удельный вес&nbsp;&nbsp;<?= OrderLink('id') ?></th>
-                    <th style="border-top: 0;"></th>
+                    <th width="50%" style="border-top: 0;">Название пленки</th>
+                    <th style="border-top: 0;">Толщина</th>
+                    <th style="border-top: 0;">Удельный вес</th>
                 </tr>
                 <tr>
                     <td>HGPL</td>
-                    <td>Прозрачка</td>
                     <td>15 мкм</td>
                     <td>13.65 г/м<sup>2</sup></td>
-                    <td class="text-right pr-4"><img src="../images/icons/trash2.svg" /></td>
                 </tr>
                 <tr>
                     <td>HGPL</td>
-                    <td>Прозрачка</td>
                     <td>15 мкм</td>
                     <td>13.65 г/м<sup>2</sup></td>
-                    <td class="text-right pr-4"><img src="../images/icons/trash2.svg" /></td>
                 </tr>
                 <tr>
                     <td>HGPL</td>
-                    <td>Прозрачка</td>
                     <td>15 мкм</td>
                     <td>13.65 г/м<sup>2</sup></td>
-                    <td class="text-right pr-4"><img src="../images/icons/trash2.svg" /></td>
                 </tr>
                 <tr>
                     <td>HGPL</td>
-                    <td>Прозрачка</td>
                     <td>15 мкм</td>
                     <td>13.65 г/м<sup>2</sup></td>
-                    <td class="text-right pr-4"><img src="../images/icons/trash2.svg" /></td>
                 </tr>
             </table>
             <h2>HMIL.ML</h2>
             <table class="table table-hover">
                 <tr>
-                    <td width="30%" style="border-top: 0;">HMIL.ML</td>
-                    <td width="30%" style="border-top: 0;"></td>
+                    <td width="50%" style="border-top: 0;">HMIL.ML</td>
                     <td style="border-top: 0;">15 мкм</td>
                     <td style="border-top: 0;">27.3 г/м<sup>2</sup></td>
-                    <td class="text-right pr-4" style="border-top: 0;"><img src="../images/icons/trash2.svg" /></td>
                 </tr>
                 <tr>
                     <td>HMIL.ML</td>
-                    <td></td>
                     <td>15 мкм</td>
                     <td>27.3 г/м<sup>2</sup></td>
-                    <td class="text-right pr-4"><img src="../images/icons/trash2.svg" /></td>
                 </tr>
                 <tr>
                     <td>HMIL.ML</td>
-                    <td></td>
                     <td>15 мкм</td>
                     <td>27.3 г/м<sup>2</sup></td>
-                    <td class="text-right pr-4"><img src="../images/icons/trash2.svg" /></td>
                 </tr>
                 <tr>
                     <td>HMIL.ML</td>
-                    <td></td>
                     <td>15 мкм</td>
                     <td>27.3 г/м<sup>2</sup></td>
-                    <td class="text-right pr-4"><img src="../images/icons/trash2.svg" /></td>
                 </tr>
             </table>
         </div>
