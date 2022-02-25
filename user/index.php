@@ -133,13 +133,11 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
             ?>
             <div class="d-flex justify-content-between mb-auto">
                 <div class="p-1">
-                    <?php
-                    include '../include/subheader_admin.php';
-                    ?>
+                    <h1>Сотрудники</h1>
                 </div>
                 <div class="p-1">
-                    <a href="create.php" title="Добавить пользователя" class="btn btn-outline-dark">
-                        <i class="fas fa-plus" style="font-size: 12px;"></i>&nbsp;&nbsp;Добавить сотрудника
+                    <a href="create.php" title="Добавить пользователя" class="btn btn-dark">
+                        <i class="fas fa-plus" style="font-size: 12px;"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить сотрудника
                     </a>
                 </div>
             </div>

@@ -108,14 +108,6 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <div class="d-flex justify-content-start">
-                <div class="p-1">
-                    <?php
-                    include '../include/subheader_admin.php';
-                    ?>
-                </div>
-            </div>
-            <hr />
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/user/">Назад</a>
             <div style="width:387px;">
                 <h1 style="font-size: 24px; font-weight: 600;">Добавление сотрудника</h1>

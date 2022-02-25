@@ -25,13 +25,11 @@ if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
             ?>
             <div class="d-flex justify-content-between mb-auto">
                 <div class="p-1">
-                    <?php
-                    include '../include/subheader_admin.php';
-                    ?>
+                    <h1>Пленка</h1>
                 </div>
                 <div class="p-1">
-                    <a href="create.php" title="Добавить поставщика" class="btn btn-outline-dark">
-                        <i class="fas fa-plus"></i>&nbsp;Добавить поставщика
+                    <a href="create.php" title="Добавить поставщика" class="btn btn-dark">
+                        <i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить тип пленки
                     </a>
                 </div>
             </div>

@@ -135,13 +135,6 @@ if(empty($role_id)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <div class="d-flex justify-content-start">
-                <div class="p-1">
-                    <?php
-                    include '../include/subheader_admin.php';
-                    ?>
-                </div>
-            </div>
             <div class="row">
                 <div class="col-12 col-md-6">
                     <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/user/">Назад</a>

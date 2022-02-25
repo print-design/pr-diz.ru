@@ -173,14 +173,6 @@ $name = htmlentities($row['name']);
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <div class="d-flex justify-content-start">
-                <div class="p-1">
-                    <?php
-                    include '../include/subheader_admin.php';
-                    ?>
-                </div>
-            </div>
-            <hr />
             <div class="supplier-page">
                 <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/supplier/">Назад</a>
                 <h1 style="font-size: 24px; font-weight: 600;"><?=$name ?></h1>
