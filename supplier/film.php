@@ -67,20 +67,19 @@ function OrderLink($param) {
                                     <option>HOHL</option>
                                     <option>HWHL</option>
                                     <option>LOBA</option>
-                                    <optgroup>
-                                        <option value="+">+&nbsp;Новая марка</option>
-                                    </optgroup>
+                                    <option disabled="disabled">  </option>
+                                    <option value="+">+&nbsp;Новая марка</option>
                                 </select>
                             </div>
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <input type="text" name="thickness" class="form-control" placeholder="Толщина" />
+                                        <input type="text" name="thickness" class="form-control int-only" placeholder="Толщина" />
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <input type="text" name="weight" class="form-control" placeholder="Удельный вес" />
+                                        <input type="text" name="weight" class="form-control float-only" placeholder="Удельный вес" />
                                     </div>
                                 </div>
                             </div>
