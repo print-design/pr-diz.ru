@@ -132,10 +132,10 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
             }
             ?>
             <div class="d-flex justify-content-between mb-auto">
-                <div class="p-1">
+                <div class="p-0">
                     <h1>Сотрудники</h1>
                 </div>
-                <div class="p-1">
+                <div class="p-0">
                     <a href="create.php" title="Добавить пользователя" class="btn btn-dark">
                         <i class="fas fa-plus" style="font-size: 12px;"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить сотрудника
                     </a>

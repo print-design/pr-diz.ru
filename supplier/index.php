@@ -30,10 +30,10 @@ if(null !== filter_input(INPUT_POST, 'delete_supplier_submit')) {
             }
             ?>
             <div class="d-flex justify-content-between mb-auto">
-                <div class="p-1">
+                <div class="p-0">
                     <h1>Поставщики</h1>
                 </div>
-                <div class="p-1">
+                <div class="p-0">
                     <a href="create.php" title="Добавить поставщика" class="btn btn-dark">
                         <i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить поставщика
                     </a>
