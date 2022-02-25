@@ -5,6 +5,20 @@ include '../include/topscripts.php';
 if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
+
+// Получение объекта
+$sql = "select distinct fb.name, fbv.thickness, fbv.weight "
+        . "from film_brand fb inner join film_brand_variation fbv "
+        . "order by fb.name, fbv.thickness, fbv.weight";
+$fetcher = new Fetcher($sql);
+$film_brand_variations = array();
+while($row = $fetcher->Fetch()) {
+    if(!isset($film_brand_variations[$row['name']])) {
+        $film_brand_variations[$row['name']] = array();
+    }
+    
+    array_push($film_brand_variations[$row['name']], array('thickness' => $row['thickness'], 'weight' => $row['weight']));
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -120,57 +134,37 @@ if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
                     </button>
                 </div>
             </div>
-            <h2>HGPL</h2>
+            <?php
+            $show_table_header = true;
+            foreach(array_keys($film_brand_variations) as $key):
+            ?>
+            <h2><?=$key ?></h2>
             <table class="table table-hover">
+                <?php if($show_table_header): ?>
                 <tr>
                     <th width="50%" style="border-top: 0;">Название пленки</th>
                     <th style="border-top: 0;">Толщина</th>
                     <th style="border-top: 0;">Удельный вес</th>
                 </tr>
+                <?php
+                endif;
+                $no_border_top = $show_table_header ? '' : " style = 'border-top: 0;'";
+                foreach($film_brand_variations[$key] as $film_brand_variation):
+                ?>
                 <tr>
-                    <td>HGPL</td>
-                    <td>15 мкм</td>
-                    <td>13.65 г/м<sup>2</sup></td>
+                    <td width="50%"<?=$no_border_top ?>><?=$key ?></td>
+                    <td<?=$no_border_top ?>><?=$film_brand_variation['thickness'] ?> мкм</td>
+                    <td<?=$no_border_top ?>><?=$film_brand_variation['weight'] ?> г/м<sup>2</sup></td>
                 </tr>
-                <tr>
-                    <td>HGPL</td>
-                    <td>15 мкм</td>
-                    <td>13.65 г/м<sup>2</sup></td>
-                </tr>
-                <tr>
-                    <td>HGPL</td>
-                    <td>15 мкм</td>
-                    <td>13.65 г/м<sup>2</sup></td>
-                </tr>
-                <tr>
-                    <td>HGPL</td>
-                    <td>15 мкм</td>
-                    <td>13.65 г/м<sup>2</sup></td>
-                </tr>
+                <?php
+                $no_border_top = '';
+                endforeach;
+                ?>
             </table>
-            <h2>HMIL.ML</h2>
-            <table class="table table-hover">
-                <tr>
-                    <td width="50%" style="border-top: 0;">HMIL.ML</td>
-                    <td style="border-top: 0;">15 мкм</td>
-                    <td style="border-top: 0;">27.3 г/м<sup>2</sup></td>
-                </tr>
-                <tr>
-                    <td>HMIL.ML</td>
-                    <td>15 мкм</td>
-                    <td>27.3 г/м<sup>2</sup></td>
-                </tr>
-                <tr>
-                    <td>HMIL.ML</td>
-                    <td>15 мкм</td>
-                    <td>27.3 г/м<sup>2</sup></td>
-                </tr>
-                <tr>
-                    <td>HMIL.ML</td>
-                    <td>15 мкм</td>
-                    <td>27.3 г/м<sup>2</sup></td>
-                </tr>
-            </table>
+            <?php
+            $show_table_header = false;
+            endforeach;
+            ?>
         </div>
         <?php
         include '../include/footer.php';
