@@ -7,17 +7,22 @@ if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
 }
 
 // Получение объекта
-$sql = "select distinct fb.name, fbv.thickness, fbv.weight "
+$sql = "select distinct fb.name, fb.id, fbv.thickness, fbv.weight "
         . "from film_brand fb inner join film_brand_variation fbv "
         . "order by fb.name, fbv.thickness, fbv.weight";
 $fetcher = new Fetcher($sql);
+$film_brand_names = array();
 $film_brand_variations = array();
 while($row = $fetcher->Fetch()) {
-    if(!isset($film_brand_variations[$row['name']])) {
-        $film_brand_variations[$row['name']] = array();
+    if(!isset($film_brand_names[$row['id']])) {
+        $film_brand_names[$row['id']] = $row['name'];
     }
     
-    array_push($film_brand_variations[$row['name']], array('thickness' => $row['thickness'], 'weight' => $row['weight']));
+    if(!isset($film_brand_variations[$row['id']])) {
+        $film_brand_variations[$row['id']] = array();
+    }
+    
+    array_push($film_brand_variations[$row['id']], array('thickness' => $row['thickness'], 'weight' => $row['weight']));
 }
 ?>
 <!DOCTYPE html>
@@ -67,11 +72,9 @@ while($row = $fetcher->Fetch()) {
                             <div class="form-group">
                                 <select class="form-control" name="film_brand" id="film_brand">
                                     <option value="" hidden="hidden">Марка пленки</option>
-                                    <option>HDPL</option>
-                                    <option>HMIL.M</option>
-                                    <option>HOHL</option>
-                                    <option>HWHL</option>
-                                    <option>LOBA</option>
+                                    <?php foreach($film_brand_names as $key => $value): ?>
+                                    <option value="<?=$key ?>"><?=$value ?></option>
+                                    <?php endforeach; ?>
                                     <option disabled="disabled">  </option>
                                     <option value="+">+&nbsp;Новая марка</option>
                                 </select>
@@ -138,7 +141,7 @@ while($row = $fetcher->Fetch()) {
             $show_table_header = true;
             foreach(array_keys($film_brand_variations) as $key):
             ?>
-            <h2><?=$key ?></h2>
+            <h2><?=$film_brand_names[$key] ?></h2>
             <table class="table table-hover">
                 <?php if($show_table_header): ?>
                 <tr>
@@ -152,7 +155,7 @@ while($row = $fetcher->Fetch()) {
                 foreach($film_brand_variations[$key] as $film_brand_variation):
                 ?>
                 <tr>
-                    <td width="50%"<?=$no_border_top ?>><?=$key ?></td>
+                    <td width="50%"<?=$no_border_top ?>><?=$film_brand_names[$key] ?></td>
                     <td<?=$no_border_top ?>><?=$film_brand_variation['thickness'] ?> мкм</td>
                     <td<?=$no_border_top ?>><?=$film_brand_variation['weight'] ?> г/м<sup>2</sup></td>
                 </tr>
