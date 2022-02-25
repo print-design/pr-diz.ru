@@ -33,6 +33,16 @@ function OrderLink($param) {
             .modal-content {
                 border-radius: 20px;
             }
+            
+            .modal-header {
+                border-bottom: 0;
+                padding-bottom: 0;
+            }
+            
+            .modal-footer {
+                border-top: 0;
+                padding-top: 0;
+            }
         </style>
     </head>
     <body>
@@ -50,7 +60,13 @@ function OrderLink($param) {
                         <div class="modal-body">
                             <div class="form-group">
                                 <select name="film_brand" class="form-control">
-                                    <option value="">Марка пленки</option>
+                                    <option value="" hidden="hidden">Марка пленки</option>
+                                    <option>HDPL</option>
+                                    <option>HMIL.M</option>
+                                    <option>HOHL</option>
+                                    <option>HWHL</option>
+                                    <option>LOBA</option>
+                                    <option>+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Новая марка</option>
                                 </select>
                             </div>
                             <div class="row">
