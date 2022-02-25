@@ -142,10 +142,6 @@ a.black:active, a.black:hover, .black a:active, .black a:hover {
     left: auto;
 }
 
-li#nav-user a:link {
-    color: #EC3A7A;
-}
-
 li#nav-user a.dropdown-toggle::after {
     display: none;
 }
