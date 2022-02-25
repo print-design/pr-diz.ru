@@ -177,6 +177,10 @@ li.no-dropdown-arrow-after a.dropdown-toggle::after {
     border-radius: 8px;
 }
 
+.btn-light {
+    border-radius: 8px;
+}
+
 .btn-dark:hover, .btn-dark:active {
     color: #EC3A7A;
     background-color: white;

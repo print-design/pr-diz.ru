@@ -29,12 +29,51 @@ function OrderLink($param) {
             table.table tr th, table.table tr td {
                 height: 55px;
             }
+            
+            .modal-content {
+                border-radius: 20px;
+            }
         </style>
     </head>
     <body>
         <?php
         include '../include/header_admin.php';
         ?>
+        <div id="create_film_variation" class="modal fade show">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post">
+                        <div class="modal-header">
+                            <p class="font-weight-bold" style="font-size: x-large;">Добавить пленку</p>
+                            <button type="button" class="close user_change_password_dismiss" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <select name="film_brand" class="form-control">
+                                    <option value="">Марка пленки</option>
+                                </select>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <input type="text" name="thickness" class="form-control" placeholder="Толщина" />
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <input type="text" name="weight" class="form-control" placeholder="Удельный вес" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="justify-content: flex-start;">
+                            <button type="submit" class="btn btn-dark" id="create_film_variation_submit" name="create_film_variation_submit">Добавить</button>
+                            <button type="button" class="btn btn-light user_change_password_dismiss" data-dismiss="modal">Отменить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
@@ -46,9 +85,9 @@ function OrderLink($param) {
                     <h1>Пленка</h1>
                 </div>
                 <div class="p-0">
-                    <a href="create.php" title="Добавить поставщика" class="btn btn-dark">
+                    <button class="btn btn-dark" data-toggle="modal" data-target="#create_film_variation">
                         <i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить тип пленки
-                    </a>
+                    </button>
                 </div>
             </div>
             <h2>HGPL</h2>
