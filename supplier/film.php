@@ -9,6 +9,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
 // Получение объекта
 $sql = "select distinct fb.name, fb.id, fbv.thickness, fbv.weight "
         . "from film_brand fb inner join film_brand_variation fbv "
+        . "where fb.id in (select min(id) from film_brand where name = fb.name group by name) "
         . "order by fb.name, fbv.thickness, fbv.weight";
 $fetcher = new Fetcher($sql);
 $film_brand_names = array();
