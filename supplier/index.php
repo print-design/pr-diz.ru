@@ -6,10 +6,29 @@ if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Обработка отправки формы
-if(null !== filter_input(INPUT_POST, 'delete_supplier_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $error_message = (new Executer("delete from supplier where id=$id"))->error;
+// Получение объекта
+$sql = "select s.id supplier_id, s.name supplier, fb.id film_brand_id, fb.name film_brand, fbv.id film_brand_variation_id, fbv.thickness, fbv.weight "
+        . "from supplier s "
+        . "inner join film_brand fb on fb.supplier_id = s.id "
+        . "inner join film_brand_variation fbv on fbv.film_brand_id = fb.id "
+        . "order by s.name, fb.name, fbv.thickness, fbv.weight";
+$fetcher = new Fetcher($sql);
+$suppliers = array();
+while($row = $fetcher->Fetch()) {
+    $supplier_id = $row['supplier_id'];
+    if(!isset($suppliers[$supplier_id])) {
+        $suppliers[$supplier_id] = array('name' => $row['supplier'], 'film_brands' => array());
+    }
+    
+    $film_brand_id = $row['film_brand_id'];
+    if(!isset($suppliers[$supplier_id]['film_brands'][$film_brand_id])) {
+        $suppliers[$supplier_id]['film_brands'][$film_brand_id] = array('name' => $row['film_brand'], 'film_brand_variations' => array());
+    }
+    
+    $film_brand_variation_id = $row['film_brand_variation_id'];
+    if(!isset($suppliers[$supplier_id]['film_brands'][$film_brand_id]['film_brand_variations'][$film_brand_variation_id])) {
+        $suppliers[$supplier_id]['film_brands'][$film_brand_id]['film_brand_variations'][$film_brand_variation_id] = array('thickness' => $row['thickness'], 'weight' => $row['weight']);
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -39,53 +58,15 @@ if(null !== filter_input(INPUT_POST, 'delete_supplier_submit')) {
                     </a>
                 </div>
             </div>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Название поставщика</th>
-                        <th>Типы пленок</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $sql = "select s.id, s.name, "
-                            . "(select count(id) from film_brand where supplier_id=s.id) count, "
-                            . "(select name from film_brand where supplier_id=s.id limit 1) first "
-                            . "from supplier s order by s.name";
-                    $fetcher = new Fetcher($sql);
-                    $error_message = $fetcher->error;
-                    
-                    while ($row = $fetcher->Fetch()) {
-                        $id = $row['id'];
-                        $name = htmlentities($row['name']);
-                        $count = $row['count'];
-                        $first = $row['first'];
-                        $products = '';
-                        if($first != null) {
-                            $products = htmlentities($first);
-                            
-                            if($count > 1) {
-                                $products .= " и еще ".(intval($count) - 1);
-                            }
-                        }
-                        echo "<tr>"
-                        . "<td>$name</td>"
-                                . "<td>$products</td>"
-                                . "<td class='text-right'><a href='".APPLICATION."/supplier/details.php?id=$id'><image src='../images/icons/edit.svg' /></a></td>";
-                        /*echo "<td class='text-right'>";
-                        if($first == null) {
-                            echo "<form method='post'>";
-                            echo "<input type='hidden' id='id' name='id' value='$id' />";
-                            echo "<button type='submit' class='btn btn-link confirmable' id='delete_supplier_submit' name='delete_supplier_submit'><i class='fas fa-trash-alt'></i></button>";
-                            echo '</form>';
-                        }
-                        echo '</td>';*/
-                        echo "</tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
+            <?php foreach(array_keys($suppliers) as $key): ?>
+            <h2><?=$suppliers[$key]['name'] ?></h2>
+            <?php foreach ($suppliers[$key]['film_brands'] as $film_brand): ?>
+            <h3><?=$film_brand['name'] ?></h3>
+            <?php foreach(array_keys($film_brand['film_brand_variations']) as $fbv_key): ?>
+            <p><?=$film_brand['film_brand_variations'][$fbv_key]['thickness'] ?> &ndash; <?=$film_brand['film_brand_variations'][$fbv_key]['weight'] ?></p>
+            <?php endforeach; ?>
+            <?php endforeach; ?>
+            <?php endforeach; ?>
         </div>
         <?php
         include '../include/footer.php';

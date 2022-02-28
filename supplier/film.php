@@ -7,23 +7,22 @@ if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
 }
 
 // Получение объекта
-$sql = "select distinct fb.name, fb.id, fbv.thickness, fbv.weight "
-        . "from film_brand fb inner join film_brand_variation fbv "
+$sql = "select distinct fb.id film_brand_id, fb.name film_brand, fbv.id film_brand_variation_id, fbv.thickness, fbv.weight "
+        . "from film_brand fb inner join film_brand_variation fbv on fbv.film_brand_id = fb.id "
         . "where fb.id in (select min(id) from film_brand where name = fb.name group by name) "
         . "order by fb.name, fbv.thickness, fbv.weight";
 $fetcher = new Fetcher($sql);
-$film_brand_names = array();
-$film_brand_variations = array();
+$film_brands = array();
 while($row = $fetcher->Fetch()) {
-    if(!isset($film_brand_names[$row['id']])) {
-        $film_brand_names[$row['id']] = $row['name'];
+    $film_brand_id = $row['film_brand_id'];
+    if(!isset($film_brands[$film_brand_id])) {
+        $film_brands[$film_brand_id] = array('name' => $row['film_brand'], 'film_brand_variations' => array());
     }
     
-    if(!isset($film_brand_variations[$row['id']])) {
-        $film_brand_variations[$row['id']] = array();
+    $film_brand_variation_id = $row['film_brand_variation_id'];
+    if(!isset($film_brands[$film_brand_id]['film_brand_variations'][$film_brand_variation_id])) {
+        $film_brands[$film_brand_id]['film_brand_variations'][$film_brand_variation_id] = array('thickness' => $row['thickness'], 'weight' => $row['weight']);
     }
-    
-    array_push($film_brand_variations[$row['id']], array('thickness' => $row['thickness'], 'weight' => $row['weight']));
 }
 ?>
 <!DOCTYPE html>
@@ -140,9 +139,9 @@ while($row = $fetcher->Fetch()) {
             </div>
             <?php
             $show_table_header = true;
-            foreach(array_keys($film_brand_variations) as $key):
+            foreach(array_keys($film_brands) as $key):
             ?>
-            <h2><?=$film_brand_names[$key] ?></h2>
+            <h2><?=$film_brands[$key]['name'] ?></h2>
             <table class="table table-hover">
                 <?php if($show_table_header): ?>
                 <tr>
@@ -153,12 +152,12 @@ while($row = $fetcher->Fetch()) {
                 <?php
                 endif;
                 $no_border_top = $show_table_header ? '' : " style = 'border-top: 0;'";
-                foreach($film_brand_variations[$key] as $film_brand_variation):
+                foreach(array_keys($film_brands[$key]['film_brand_variations']) as $fbv_key):
                 ?>
                 <tr>
-                    <td width="50%"<?=$no_border_top ?>><?=$film_brand_names[$key] ?></td>
-                    <td<?=$no_border_top ?>><?=$film_brand_variation['thickness'] ?> мкм</td>
-                    <td<?=$no_border_top ?>><?=$film_brand_variation['weight'] ?> г/м<sup>2</sup></td>
+                    <td width="50%"<?=$no_border_top ?>><?=$film_brands[$key]['name'] ?></td>
+                    <td<?=$no_border_top ?>><?=$film_brands[$key]['film_brand_variations'][$fbv_key]['thickness'] ?> мкм</td>
+                    <td<?=$no_border_top ?>><?=$film_brands[$key]['film_brand_variations'][$fbv_key]['weight'] ?> г/м<sup>2</sup></td>
                 </tr>
                 <?php
                 $no_border_top = '';
