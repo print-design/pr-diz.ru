@@ -77,14 +77,14 @@ while($row = $fetcher->Fetch()) {
                         <table class="table table-hover">
                             <tr style="border-top: 0;">
                                 <th style="border-top: 0;">Толщина</th>
-                                <th>Удельный вес</th>
-                                <th></th>
+                                <th style="border-top: 0;">Удельный вес</th>
+                                <th style="border-top: 0;"></th>
                             </tr>
                             <?php foreach(array_keys($film_brand['film_brand_variations']) as $fbv_key): ?>
                             <tr>
                                 <td><?=$film_brand['film_brand_variations'][$fbv_key]['thickness'] ?></td>
                                 <td><?=$film_brand['film_brand_variations'][$fbv_key]['weight'] ?></td>
-                                <td><img src="../images/icons/trash2.svg" title="Удалить" /></td>
+                                <td class="text-right"><img src="../images/icons/trash2.svg" title="Удалить" /></td>
                             </tr>
                             <?php endforeach; ?>
                         </table>
