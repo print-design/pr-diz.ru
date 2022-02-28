@@ -107,7 +107,7 @@ while ($row = $fetcher->Fetch()) {
             ?>
             <div class="d-flex justify-content-between mb-auto">
                 <div class="p-0">
-                    <h1><?=$name ?></h1>
+                    <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/supplier/">Назад</a>
                 </div>
                 <div class="p-0">
                     <button class="btn btn-dark" data-toggle="modal" data-target="#create_film_brand">
@@ -115,6 +115,7 @@ while ($row = $fetcher->Fetch()) {
                     </button>
                 </div>
             </div>
+            <h1><?=$name ?></h1>
             <h2>Пленки</h2>
             <div class="row">
                 <div class="col-12 col-md-8 col-lg-6">
