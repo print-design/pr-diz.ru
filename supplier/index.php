@@ -69,9 +69,9 @@ while($row = $fetcher->Fetch()) {
             </div>
             <div class="row">
                 <div class="col-12 col-md-8 col-lg-6">
-                    <?php foreach(array_keys($suppliers) as $key): ?>
-                    <h2><?=$suppliers[$key]['name'] ?></h2>
-                    <?php foreach ($suppliers[$key]['film_brands'] as $film_brand): ?>
+                    <?php foreach($suppliers as $key => $supplier): ?>
+                    <h2><?=$supplier['name'] ?></h2>
+                    <?php foreach ($supplier['film_brands'] as $fb_key => $film_brand): ?>
                     <div class="film_brand">
                         <h3><?=$film_brand['name'] ?></h3>
                         <table class="table table-hover">
@@ -80,14 +80,31 @@ while($row = $fetcher->Fetch()) {
                                 <th style="border-top: 0;">Удельный вес</th>
                                 <th style="border-top: 0;"></th>
                             </tr>
-                            <?php foreach(array_keys($film_brand['film_brand_variations']) as $fbv_key): ?>
+                            <?php foreach($film_brand['film_brand_variations'] as $fbv_key => $film_brand_variation): ?>
                             <tr>
-                                <td><?=$film_brand['film_brand_variations'][$fbv_key]['thickness'] ?></td>
-                                <td><?=$film_brand['film_brand_variations'][$fbv_key]['weight'] ?></td>
+                                <td><?=$film_brand_variation['thickness'] ?></td>
+                                <td><?=$film_brand_variation['weight'] ?></td>
                                 <td class="text-right"><img src="../images/icons/trash2.svg" title="Удалить" /></td>
                             </tr>
                             <?php endforeach; ?>
                         </table>
+                        <form class="form-inline">
+                            <input type="hidden" name="film_brand_id" value="<?=$fb_key ?>" />
+                            <input type="hidden" id="scroll" name="scroll" />
+                            <div class="d-flex justify-content-between mb-2 w-100">
+                                <div class="form-group w-75">
+                                    <select class="form-control w-100" name="film_brand_variation_id">
+                                        <option hidden="hidden" value="">Выберите пленку для добавления</option>
+                                        <?php foreach($film_brand['film_brand_variations'] as $fbv_key => $film_brand_variation): ?>
+                                        <option value="<?=$fbv_key ?>">Толщина <?=$film_brand_variation['thickness'] ?> мкм, Удельный вес <?=$film_brand_variation['weight'] ?> г/м<sup>2</sup></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" name="film_brand_variation_submit" id="film_brand_variation_submit" class="btn btn-dark"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                     <?php endforeach; ?>
                     <?php endforeach; ?>
