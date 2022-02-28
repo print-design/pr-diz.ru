@@ -81,9 +81,9 @@ function OrderLink($param) {
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>Название поставщика&nbsp;&nbsp;<?= OrderLink('id') ?></th>
-                        <th>Пленки&nbsp;&nbsp;<?= OrderLink('id') ?></th>
-                        <th></th>
+                        <th style="border-top: 0;">Название поставщика&nbsp;&nbsp;<?= OrderLink('id') ?></th>
+                        <th style="border-top: 0;">Пленки&nbsp;&nbsp;<?= OrderLink('id') ?></th>
+                        <th style="border-top: 0;"></th>
                     </tr>
                 </thead>
                 <tbody>
