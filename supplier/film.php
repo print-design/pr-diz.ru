@@ -7,6 +7,26 @@ if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
 }
 
 // Получение объекта
+$sql = "select f.id film_id, f.name film, fv.id film_variation_id, fv.thickness, fv.weight "
+        . "from film f "
+        . "inner join film_variation fv on fv.film_id = f.id "
+        . "order by f.name, fv.thickness, fv.weight";
+$fetcher = new Fetcher($sql);
+$films = array();
+while($row = $fetcher->Fetch()) {
+    $film_id = $row['film_id'];
+    if(!isset($films[$film_id])) {
+        $films[$film_id] = array('name' => $row['film'], 'film_variations' => array());
+    }
+    
+    $film_variation_id = $row['film_variation_id'];
+    if(!isset($films[$film_id]['film_variations'][$film_variation_id])) {
+        $films[$film_id]['film_variations'][$film_variation_id] = array('thickness' => $row['thickness'], 'weight' => $row['weight']);
+    }
+}
+
+//----------------------------
+// DELETE !!!
 $sql = "select distinct fb.id film_brand_id, fb.name film_brand, fbv.id film_brand_variation_id, fbv.thickness, fbv.weight "
         . "from film_brand fb inner join film_brand_variation fbv on fbv.film_brand_id = fb.id "
         . "where fb.id in (select min(id) from film_brand where name = fb.name group by name) "
@@ -24,6 +44,7 @@ while($row = $fetcher->Fetch()) {
         $film_brands[$film_brand_id]['film_brand_variations'][$film_brand_variation_id] = array('thickness' => $row['thickness'], 'weight' => $row['weight']);
     }
 }
+//-------------------------------------
 ?>
 <!DOCTYPE html>
 <html>
@@ -138,6 +159,8 @@ while($row = $fetcher->Fetch()) {
                 </div>
             </div>
             <?php
+            //-------------------------
+            // DELETE !!!!!
             $show_table_header = true;
             foreach(array_keys($film_brands) as $key):
             ?>
@@ -167,6 +190,7 @@ while($row = $fetcher->Fetch()) {
             <?php
             $show_table_header = false;
             endforeach;
+            //--------------------------------
             ?>
         </div>
         <?php
