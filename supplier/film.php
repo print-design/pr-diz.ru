@@ -72,8 +72,8 @@ while($row = $fetcher->Fetch()) {
                             <div class="form-group">
                                 <select class="form-control" name="film_brand" id="film_brand">
                                     <option value="" hidden="hidden">Марка пленки</option>
-                                    <?php foreach($film_brand_names as $key => $value): ?>
-                                    <option value="<?=$key ?>"><?=$value ?></option>
+                                    <?php foreach($film_brands as $key => $value): ?>
+                                    <option value="<?=$key ?>"><?=$value['name'] ?></option>
                                     <?php endforeach; ?>
                                     <option disabled="disabled">  </option>
                                     <option value="+">+&nbsp;Новая марка</option>

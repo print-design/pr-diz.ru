@@ -45,12 +45,47 @@ while($row = $fetcher->Fetch()) {
                 margin-top: 30px;
                 margin-bottom: 40px;
             }
+            
+            .modal-content {
+                border-radius: 20px;
+            }
+            
+            .modal-header {
+                border-bottom: 0;
+                padding-bottom: 0;
+            }
+            
+            .modal-footer {
+                border-top: 0;
+                padding-top: 0;
+            }
         </style>
     </head>
     <body>
         <?php
         include '../include/header_admin.php';
         ?>
+        <div id="create_supplier" class="modal fade show">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post">
+                        <div class="modal-header">
+                            <p class="font-weight-bold" style="font-size: x-large;">Поставщик</p>
+                            <button type="button" class="close create_supplier_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="text" name="supplier" id="supplier" class="form-control" placeholder="Поставщик" />
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="justify-content: flex-start;">
+                            <button type="submit" class="btn btn-dark" id="create_supplier" name="create_supplier">Добавить</button>
+                            <button type="button" class="btn btn-light create_supplier_dismiss" data-dismiss="modal">Отменить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
@@ -62,9 +97,9 @@ while($row = $fetcher->Fetch()) {
                     <h1>Поставщики</h1>
                 </div>
                 <div class="p-0">
-                    <a href="create.php" title="Добавить поставщика" class="btn btn-dark">
+                    <button class="btn btn-dark" data-toggle="modal" data-target="#create_supplier">
                         <i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить поставщика
-                    </a>
+                    </button>
                 </div>
             </div>
             <div class="row">
