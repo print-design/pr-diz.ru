@@ -37,6 +37,15 @@ while($row = $fetcher->Fetch()) {
         <?php
         include '../include/head.php';
         ?>
+        <style>
+            .film_brand {
+                border-radius: 15px;
+                box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                padding: 30px;
+                margin-top: 30px;
+                margin-bottom: 40px;
+            }
+        </style>
     </head>
     <body>
         <?php
@@ -58,15 +67,32 @@ while($row = $fetcher->Fetch()) {
                     </a>
                 </div>
             </div>
-            <?php foreach(array_keys($suppliers) as $key): ?>
-            <h2><?=$suppliers[$key]['name'] ?></h2>
-            <?php foreach ($suppliers[$key]['film_brands'] as $film_brand): ?>
-            <h3><?=$film_brand['name'] ?></h3>
-            <?php foreach(array_keys($film_brand['film_brand_variations']) as $fbv_key): ?>
-            <p><?=$film_brand['film_brand_variations'][$fbv_key]['thickness'] ?> &ndash; <?=$film_brand['film_brand_variations'][$fbv_key]['weight'] ?></p>
-            <?php endforeach; ?>
-            <?php endforeach; ?>
-            <?php endforeach; ?>
+            <div class="row">
+                <div class="col-12 col-md-8 col-lg-6">
+                    <?php foreach(array_keys($suppliers) as $key): ?>
+                    <h2><?=$suppliers[$key]['name'] ?></h2>
+                    <?php foreach ($suppliers[$key]['film_brands'] as $film_brand): ?>
+                    <div class="film_brand">
+                        <h3><?=$film_brand['name'] ?></h3>
+                        <table class="table table-hover">
+                            <tr style="border-top: 0;">
+                                <th style="border-top: 0;">Толщина</th>
+                                <th>Удельный вес</th>
+                                <th></th>
+                            </tr>
+                            <?php foreach(array_keys($film_brand['film_brand_variations']) as $fbv_key): ?>
+                            <tr>
+                                <td><?=$film_brand['film_brand_variations'][$fbv_key]['thickness'] ?></td>
+                                <td><?=$film_brand['film_brand_variations'][$fbv_key]['weight'] ?></td>
+                                <td><img src="../images/icons/trash2.svg" title="Удалить" /></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </table>
+                    </div>
+                    <?php endforeach; ?>
+                    <?php endforeach; ?>
+                </div>
+            </div>
         </div>
         <?php
         include '../include/footer.php';
