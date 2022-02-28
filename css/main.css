@@ -352,7 +352,6 @@ table.print tr td, table.print tr th {
     font-size: 14px;
     font-weight: bold;
     display: inline-block;
-    margin-top: 20px;
     margin-bottom: 20px;
     padding-left: 48px;
 }

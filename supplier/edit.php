@@ -19,7 +19,7 @@ $sql = "select s.name, fb.id film_brand_id, fb.name film_brand, fbv.id film_bran
         . "from supplier s "
         . "inner join film_brand fb on fb.supplier_id = s.id "
         . "inner join film_brand_variation fbv on fbv.film_brand_id = fb.id "
-        . "where s.id = $supplier_id";
+        . "where s.id = $supplier_id order by fb.name, fbv.thickness, fbv.weight";
 $fetcher = new Fetcher($sql);
 while ($row = $fetcher->Fetch()) {
     $name = $row['name'];
@@ -137,6 +137,7 @@ while ($row = $fetcher->Fetch()) {
                             <?php endforeach; ?>
                         </table>
                         <form class="form-inline">
+                            <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                             <input type="hidden" name="film_brand_id" value="<?=$fb_key ?>" />
                             <input type="hidden" id="scroll" name="scroll" />
                             <div class="d-flex justify-content-between mb-2 w-100">
