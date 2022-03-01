@@ -6,12 +6,33 @@ if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-function OrderLink($param) {
-    if(array_key_exists('order', $_REQUEST) && $_REQUEST['order'] == $param) {
-        echo "<strong><i class='fas fa-arrow-down' style='color: black; font-size: small;'></i></strong>";
+// Обработка создания поставщика
+$form_valid = true;
+$supplier_insert_id = null;
+
+if(null !== filter_input(INPUT_POST, 'create_supplier_submit')) {
+    $name = filter_input(INPUT_POST, 'name');
+    
+    if(empty($name)) {
+        $error_message = "Не указано название поставщика";
+        $form_valid = false;
     }
-    else {
-        echo "<a class='gray' href='".BuildQueryAddRemove("order", $param, "page")."' style='font-size: x-small;'><i class='fas fa-arrow-down'></i></a>";
+    
+    $name = addslashes($name);
+    $sql = "select count(id) from supplier where name = '$name'";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        if($row[0] != 0) {
+            $error_message = "Такой поставщик уже есть";
+            $form_valid = false;
+        }
+    }
+    
+    if($form_valid) {
+        $sql = "insert into supplier(name) values('$name')";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+        $supplier_insert_id = $executer->insert_id;
     }
 }
 ?>
@@ -51,11 +72,11 @@ function OrderLink($param) {
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <input type="text" name="supplier" id="supplier" class="form-control" placeholder="Поставщик" />
+                                <input type="text" name="name" id="name" class="form-control" placeholder="Поставщик" required="required" />
                             </div>
                         </div>
                         <div class="modal-footer" style="justify-content: flex-start;">
-                            <button type="submit" class="btn btn-dark" id="create_supplier" name="create_supplier">Добавить</button>
+                            <button type="submit" class="btn btn-dark" id="create_supplier_submit" name="create_supplier_submit">Добавить</button>
                             <button type="button" class="btn btn-light create_supplier_dismiss" data-dismiss="modal">Отменить</button>
                         </div>
                     </form>
@@ -81,13 +102,42 @@ function OrderLink($param) {
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th style="border-top: 0;">Название поставщика&nbsp;&nbsp;<?= OrderLink('id') ?></th>
-                        <th style="border-top: 0;">Пленки&nbsp;&nbsp;<?= OrderLink('id') ?></th>
+                        <th style="border-top: 0;">Название поставщика</th>
+                        <th style="border-top: 0;">Пленки</th>
                         <th style="border-top: 0;"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
+                    $sql = "select s.id, s.name, "
+                            . "(select count(id) from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = s.id))) count, "
+                            . "(select name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = s.id)) limit 1) first "
+                            . "from supplier s order by s.name";
+                    $fetcher = new Fetcher($sql);
+                    
+                    while($row = $fetcher->Fetch()):
+                        $id = $row['id'];
+                        $name = htmlentities($row['name']);
+                        $count = $row['count'];
+                        $first = $row['first'];
+                        $products = '';
+                        if($first != null) {
+                            $products = htmlentities($first);
+                            
+                            if($count > 1) {
+                                $products .= " и еще ".(intval($count) - 1);
+                            }
+                        }
+                    ?>
+                    <tr id="s_<?=$id ?>">
+                        <td><?=$name ?></td>
+                        <td><?=$products ?></td>
+                        <td class="text-right"><a href="edit.php?id=<?=$id ?>" title="Редактировать"><img src="../images/icons/edit1.svg" /></a></td>
+                    </tr>
+                    <?php endwhile; ?>
+                    <?php
+                    //-----------------------------------------------------
+                    // Удалить
                     $sql = "select s.id, s.name, "
                             . "(select count(id) from film_brand where supplier_id=s.id) count, "
                             . "(select name from film_brand where supplier_id=s.id limit 1) first "
@@ -120,5 +170,18 @@ function OrderLink($param) {
         <?php
         include '../include/footer.php';
         ?>
+        <script>
+            $('#create_supplier').on('shown.bs.modal', function() {
+                $('input:text:visible:first').focus();
+            });
+            
+            $('#create_supplier').on('hidden.bs.modal', function() {
+                $('input#name').val('');
+            });
+            
+            <?php if(null !== filter_input(INPUT_POST, 'create_supplier_submit') && empty($error_message) && !empty($supplier_insert_id)): ?>
+            window.scrollTo(0, $('#s_<?= $supplier_insert_id ?>').offset().top - $('#topmost').height());
+            <?php endif; ?>
+        </script>
     </body>
 </html>
