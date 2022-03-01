@@ -14,6 +14,45 @@ if(empty(filter_input(INPUT_GET, 'id'))) {
 // Получение объекта
 $supplier_id = filter_input(INPUT_GET, 'id');
 $name = '';
+$films = array();
+$sql = "select s.name, f.id film_id, f.name film, fv.id film_variation_id, fv.thickness, fv.weight "
+        . "from supplier s "
+        . "inner join supplier_film_variation sfv on sfv.supplier_id = s.id "
+        . "inner join film_variation fv on sfv.film_variation_id = fv.id "
+        . "inner join film f on fv.film_id = f.id "
+        . "where fv.id not in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id) ";
+
+if(null !== filter_input(INPUT_POST, 'create_film_submit')) {
+    $post_film_id = filter_input(INPUT_POST, 'film_id');
+    
+    if(!empty($post_film_id)) {
+        $sql .= "union "
+                . "select (select name from supplier where id = $supplier_id) name, f.id film_id, f.name film, fv.id film_variation_id, fv.thickness, fv.weight "
+                . "from film f "
+                . "inner join film_variation fv on fv.film_id = f.id "
+                . "where f.id = $post_film_id ";
+    }
+}
+
+$sql .= "order by name, thickness, weight";
+
+$fetcher = new Fetcher($sql);
+while($row = $fetcher->Fetch()) {
+    $name = $row['name'];
+    
+    $film_id = $row['film_id'];
+    if(!isset($films[$film_id])) {
+        $films[$film_id] = array('name' => $row['film'], 'film_variations' => array(), 'my_film_variations' => array());
+    }
+    
+    $film_variation_id = $row['film_variation_id'];
+    if(!isset($films[$film_id]['film_variations'][$film_variation_id])) {
+        $films[$film_id]['film_variations'][$film_variation_id] = array('thickness' => $row['thickness'], 'weight' => $row['weight']);
+    }
+}
+
+//--------------------------------------
+// УДАЛИТЬ
 $film_brands = array();
 $sql = "select s.name, fb.id film_brand_id, fb.name film_brand, fbv.id film_brand_variation_id, fbv.thickness, fbv.weight "
         . "from supplier s "
@@ -34,6 +73,7 @@ while ($row = $fetcher->Fetch()) {
         $film_brands[$film_brand_id]['film_brand_variations'][$film_brand_variation_id] = array('thickness' => $row['thickness'], 'weight' => $row['weight']);
     }
 }
+//----------------------------------------
 ?>
 <!DOCTYPE html>
 <html>
@@ -69,20 +109,23 @@ while ($row = $fetcher->Fetch()) {
         <?php
         include '../include/header_admin.php';
         ?>
-        <div id="create_film_brand" class="modal fade show">
+        <div id="create_film" class="modal fade show">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="post">
                         <div class="modal-header">
                             <p class="font-weight-bold" style="font-size: x-large;">Выберите марку пленки</p>
-                            <button type="button" class="close create_create_film_brand_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>
+                            <button type="button" class="close create_create_film_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <select class="form-control" id="film_brand_id" name="film_brand_id">
+                                <select class="form-control" id="film_id" name="film_id" required="required">
                                     <option value="" hidden="hidden">Новая пленка</option>
                                     <?php
-                                    $sql = "select id, name from film_brand where supplier_id = $supplier_id order by name";
+                                    $sql = "select id, name "
+                                            . "from film "
+                                            . "where id not in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id)) "
+                                            . "order by name";
                                     $fetcher = new Fetcher($sql);
                                     while($row = $fetcher->Fetch()):
                                     ?>
@@ -92,8 +135,8 @@ while ($row = $fetcher->Fetch()) {
                             </div>
                         </div>
                         <div class="modal-footer" style="justify-content: flex-start;">
-                            <button type="submit" class="btn btn-dark" id="create_create_film_brand" name="create_supplier">Добавить</button>
-                            <button type="button" class="btn btn-light create_create_film_brand_dismiss" data-dismiss="modal">Отменить</button>
+                            <button type="submit" class="btn btn-dark" id="create_film_submit" name="create_film_submit">Добавить</button>
+                            <button type="button" class="btn btn-light create_create_film_dismiss" data-dismiss="modal">Отменить</button>
                         </div>
                     </form>
                 </div>
@@ -110,7 +153,7 @@ while ($row = $fetcher->Fetch()) {
                     <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/supplier/">Назад</a>
                 </div>
                 <div class="p-0">
-                    <button class="btn btn-dark" data-toggle="modal" data-target="#create_film_brand">
+                    <button class="btn btn-dark" data-toggle="modal" data-target="#create_film">
                         <i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить пленку
                     </button>
                 </div>
@@ -119,7 +162,49 @@ while ($row = $fetcher->Fetch()) {
             <h2>Пленки</h2>
             <div class="row">
                 <div class="col-12 col-md-8 col-lg-6">
-                    <?php foreach($film_brands as $fb_key => $film_brand): ?>
+                    <?php foreach($films as $f_key => $film): ?>
+                    <div class="film_brand">
+                        <h3 id="f_<?=$f_key ?>"><?=$film['name'] ?></h3>
+                        <table class="table table-hover">
+                            <tr style="border-top: 0;">
+                                <th style="border-top: 0;">Толщина</th>
+                                <th style="border-top: 0;">Удельный вес</th>
+                                <th style="border-top: 0;"></th>
+                            </tr>
+                            <?php foreach($film['my_film_variations'] as $fv_key => $film_variation): ?>
+                            <tr>
+                                <td><?=$film_variation['thickness'] ?></td>
+                                <td><?=$film_variation['weight'] ?></td>
+                                <td class="text-right"><img src="../images/icons/trash2.svg" title="Удалить" /></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </table>
+                        <form class="form-inline">
+                            <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                            <input type="hidden" name="film_id" value="<?=$f_key ?>" />
+                            <input type="hidden" id="scroll" name="scroll" />
+                            <div class="d-flex justify-content-between mb-2 w-100">
+                                <div class="form-group w-75">
+                                    <select class="form-control w-100" name="film_variation_id">
+                                        <option hidden="hidden" value="">Выберите пленку для добавления</option>
+                                        <?php foreach($film['film_variations'] as $fv_key => $film_variation): ?>
+                                        <option value="<?=$fv_key ?>">Толщина <?=$film_variation['thickness'] ?> мкм, Удельный вес <?=$film_variation['weight'] ?> г/м<sup>2</sup></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" name="film_variation_submit" id="film_variation_submit" class="btn btn-dark"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <?php endforeach; ?>
+                    
+                    <?php
+                    //----------------------------------------------------------------
+                    // УДАЛИТЬ
+                    echo "<hr />";
+                    foreach($film_brands as $fb_key => $film_brand): ?>
                     <div class="film_brand">
                         <h3><?=$film_brand['name'] ?></h3>
                         <table class="table table-hover">
@@ -155,12 +240,19 @@ while ($row = $fetcher->Fetch()) {
                             </div>
                         </form>
                     </div>
-                    <?php endforeach; ?>
+                    <?php
+                    //------------------------------------------------------------------
+                    endforeach; ?>
                 </div>
             </div>
         </div>
         <?php
         include '../include/footer.php';
         ?>
+        <script>
+            $('#create_film').on('hidden.bs.modal', function() {
+                $('select#film_id').val('');
+            });
+        </script>
     </body>
 </html>
