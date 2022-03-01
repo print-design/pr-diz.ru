@@ -7,13 +7,28 @@ if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
 }
 
 // Обработка создания марки плёнки
+$form_valid = true;
 $film_insert_id = null;
 
 if(null !== filter_input(INPUT_POST, 'create_film_submit')) {
     $name = filter_input(INPUT_POST, 'name');
     
-    if(!empty($name)) {
-        $name = addslashes($name);
+    if(empty($name)) {
+        $error_message = "Не указано название марки пленки";
+        $form_valid = false;
+    }
+    
+    $name = addslashes($name);
+    $sql = "select count(id) from film where name = '$name'";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        if($row[0] != 0) {
+            $error_message = "Такая марка пленки уже есть";
+            $form_valid = false;
+        }
+    }
+    
+    if($form_valid) {
         $sql = "insert into film(name) values('$name')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
@@ -24,10 +39,33 @@ if(null !== filter_input(INPUT_POST, 'create_film_submit')) {
 // Обработка создания вариации плёнки
 if(null !== filter_input(INPUT_POST, 'create_film_variation_submit')) {
     $film_id = filter_input(INPUT_POST, 'film_id');
-    $thickness = filter_input(INPUT_POST, 'thickness');
-    $weight = filter_input(INPUT_POST, 'weight');
+    if(empty($film_id)) {
+        $error_message = "Не указана марка пленки";
+        $form_valid = false;
+    }
     
-    if(!empty($film_id) && !empty($thickness) && !empty($weight)) {
+    $thickness = filter_input(INPUT_POST, 'thickness');
+    if(empty($thickness)) {
+        $error_message = "Не указана толщина";
+        $form_valid = false;
+    }
+    
+    $weight = filter_input(INPUT_POST, 'weight');
+    if(empty($weight)) {
+        $error_message = "Не указан удельный вес";
+        $form_valid = false;
+    }
+    
+    $sql = "select count(id) from film_variation where film_id = $film_id and thickness = $thickness and round(weight, 4) = $weight";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        if($row[0] != 0) {
+            $error_message = "Для этой марки пленки уже есть такие параметры";
+            $form_valid = false;
+        }
+    }
+    
+    if($form_valid) {
         $sql = "insert into film_variation(film_id, thickness, weight) values($film_id, $thickness, $weight)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
@@ -52,27 +90,6 @@ while($row = $fetcher->Fetch()) {
         $films[$film_id]['film_variations'][$film_variation_id] = array('thickness' => $row['thickness'], 'weight' => $row['weight']);
     }
 }
-
-//----------------------------
-// DELETE !!!
-$sql = "select distinct fb.id film_brand_id, fb.name film_brand, fbv.id film_brand_variation_id, fbv.thickness, fbv.weight "
-        . "from film_brand fb inner join film_brand_variation fbv on fbv.film_brand_id = fb.id "
-        . "where fb.id in (select min(id) from film_brand where name = fb.name group by name) "
-        . "order by fb.name, fbv.thickness, fbv.weight";
-$fetcher = new Fetcher($sql);
-$film_brands = array();
-while($row = $fetcher->Fetch()) {
-    $film_brand_id = $row['film_brand_id'];
-    if(!isset($film_brands[$film_brand_id])) {
-        $film_brands[$film_brand_id] = array('name' => $row['film_brand'], 'film_brand_variations' => array());
-    }
-    
-    $film_brand_variation_id = $row['film_brand_variation_id'];
-    if(!isset($film_brands[$film_brand_id]['film_brand_variations'][$film_brand_variation_id])) {
-        $film_brands[$film_brand_id]['film_brand_variations'][$film_brand_variation_id] = array('thickness' => $row['thickness'], 'weight' => $row['weight']);
-    }
-}
-//-------------------------------------
 ?>
 <!DOCTYPE html>
 <html>
@@ -217,41 +234,6 @@ while($row = $fetcher->Fetch()) {
             <?php
             endforeach;
             ?>
-            <?php
-            //-------------------------
-            // DELETE !!!!!
-            echo "<hr />";
-            $show_table_header = true;
-            foreach(array_keys($film_brands) as $key):
-            ?>
-            <h2 id="fb_<?=$key ?>"><?=$film_brands[$key]['name'] ?></h2>
-            <table class="table table-hover">
-                <?php if($show_table_header): ?>
-                <tr>
-                    <th width="50%" style="border-top: 0;">Название пленки</th>
-                    <th style="border-top: 0;">Толщина</th>
-                    <th style="border-top: 0;">Удельный вес</th>
-                </tr>
-                <?php
-                endif;
-                $no_border_top = $show_table_header ? '' : " style = 'border-top: 0;'";
-                foreach(array_keys($film_brands[$key]['film_brand_variations']) as $fbv_key):
-                ?>
-                <tr id="fbv_<?=$fbv_key ?>">
-                    <td width="50%"<?=$no_border_top ?>><?=$film_brands[$key]['name'] ?></td>
-                    <td<?=$no_border_top ?>><?=$film_brands[$key]['film_brand_variations'][$fbv_key]['thickness'] ?> мкм</td>
-                    <td<?=$no_border_top ?>><?=$film_brands[$key]['film_brand_variations'][$fbv_key]['weight'] ?> г/м<sup>2</sup></td>
-                </tr>
-                <?php
-                $no_border_top = '';
-                endforeach;
-                ?>
-            </table>
-            <?php
-            $show_table_header = false;
-            endforeach;
-            //--------------------------------
-            ?>
         </div>
         <?php
         include '../include/footer.php';
@@ -282,8 +264,14 @@ while($row = $fetcher->Fetch()) {
                 $('input:text:visible:first').focus();
             });
             
+            $('#create_film_variation').on('shown.bs.modal', function() {
+                if($('select#film_id').val() != '') {
+                    $('input:text:visible:first').focus();
+                }
+            });
+            
             <?php
-            if(null !== filter_input(INPUT_POST, 'create_film_submit')):
+            if(null !== filter_input(INPUT_POST, 'create_film_submit') && empty($error_message)):
                 if(!empty($film_insert_id)):
                 ?>
                 $('select#film_id').val(<?=$film_insert_id ?>);
@@ -291,7 +279,7 @@ while($row = $fetcher->Fetch()) {
             $('#create_film_variation').modal('show');
             <?php endif; ?>
             
-            <?php if(null !== filter_input(INPUT_POST, 'film_id')): ?>
+            <?php if(null !== filter_input(INPUT_POST, 'film_id') && empty($error_message)): ?>
             window.scrollTo(0, $('#f_<?= filter_input(INPUT_POST, 'film_id') ?>').offset().top - $('#topmost').height());
             <?php endif; ?>
         </script>
