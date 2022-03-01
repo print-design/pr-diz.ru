@@ -81,20 +81,20 @@ while($row = $fetcher->Fetch()) {
         <?php
         include '../include/header_admin.php';
         ?>
-        <div id="create_film_brand_variation" class="modal fade show">
+        <div id="create_film_variation" class="modal fade show">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="post">
                         <div class="modal-header">
                             <p class="font-weight-bold" style="font-size: x-large;">Добавить пленку</p>
-                            <button type="button" class="close create_film_brand_variation_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>
+                            <button type="button" class="close create_film_variation_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <select class="form-control" name="film_brand" id="film_brand">
+                                <select class="form-control" name="film" id="film" required="required">
                                     <option value="" hidden="hidden">Марка пленки</option>
-                                    <?php foreach($film_brands as $key => $value): ?>
-                                    <option value="<?=$key ?>"><?=$value['name'] ?></option>
+                                    <?php foreach($films as $f_key => $film): ?>
+                                    <option value="<?=$f_key ?>"><?=$film['name'] ?></option>
                                     <?php endforeach; ?>
                                     <option disabled="disabled">  </option>
                                     <option value="+">+&nbsp;Новая марка</option>
@@ -103,40 +103,40 @@ while($row = $fetcher->Fetch()) {
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <input type="text" name="thickness" class="form-control int-only" placeholder="Толщина" />
+                                        <input type="text" name="thickness" class="form-control int-only" placeholder="Толщина" required="required" />
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <input type="text" name="weight" class="form-control float-only" placeholder="Удельный вес" />
+                                        <input type="text" name="weight" class="form-control float-only" placeholder="Удельный вес" required="required" />
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer" style="justify-content: flex-start;">
                             <button type="submit" class="btn btn-dark" id="create_film_variation_submit" name="create_film_variation_submit">Добавить</button>
-                            <button type="button" class="btn btn-light create_film_brand_variation_dismiss" data-dismiss="modal">Отменить</button>
+                            <button type="button" class="btn btn-light create_film_variation_dismiss" data-dismiss="modal">Отменить</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-        <div id="create_film_brand" class="modal fade show">
+        <div id="create_film" class="modal fade show">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="post">
                         <div class="modal-header">
                             <p class="font-weight-bold" style="font-size: x-large;">Введите марку пленки</p>
-                            <button type="button" class="close create_film_brand_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>
+                            <button type="button" class="close create_film_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <input type="text" name="film_brand" id="film_brand" class="form-control" placeholder="Марка пленки" />
+                                <input type="text" name="film" id="film" class="form-control" placeholder="Марка пленки" required="required" />
                             </div>
                         </div>
                         <div class="modal-footer" style="justify-content: flex-start;">
-                            <button type="submit" class="btn btn-dark" id="create_film_brand" name="create_film_brand">Добавить</button>
-                            <button type="button" class="btn btn-light create_film_brand_dismiss" data-dismiss="modal">Отменить</button>
+                            <button type="submit" class="btn btn-dark" id="create_film" name="create_film">Добавить</button>
+                            <button type="button" class="btn btn-light create_film_dismiss" data-dismiss="modal">Отменить</button>
                         </div>
                     </form>
                 </div>
@@ -153,18 +153,49 @@ while($row = $fetcher->Fetch()) {
                     <h1>Пленка</h1>
                 </div>
                 <div class="p-0">
-                    <button class="btn btn-dark" data-toggle="modal" data-target="#create_film_brand_variation">
+                    <button class="btn btn-dark" data-toggle="modal" data-target="#create_film_variation">
                         <i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить тип пленки
                     </button>
                 </div>
             </div>
             <?php
+            $show_table_header = true;
+            foreach($films as $f_key => $film):
+            ?>
+            <h2><?=$film['name'] ?></h2>
+            <table class="table table-hover">
+                <?php if($show_table_header): ?>
+                <tr>
+                    <th width="50%" style="border-top: 0;">Название пленки</th>
+                    <th style="border-top: 0;">Толщина</th>
+                    <th style="border-top: 0;">Удельный вес</th>
+                </tr>
+                <?php
+                endif;
+                $no_border_top = $show_table_header ? '' : " style='border-top: 0;'";
+                foreach($film['film_variations'] as $fv_key => $film_variation):
+                ?>
+                <tr>
+                    <td width="50%"<?=$no_border_top ?>><?=$film['name'] ?></td>
+                    <td<?=$no_border_top ?>><?=$film_variation['thickness'] ?> мкм</td>
+                    <td<?=$no_border_top ?>><?=$film_variation['weight'] ?> г/м<sup>2</sup></td>
+                </tr>
+                <?php
+                $no_border_top = '';
+                endforeach;
+                ?>
+            </table>
+            <?php
+            endforeach;
+            ?>
+            <?php
             //-------------------------
             // DELETE !!!!!
+            echo "<hr />";
             $show_table_header = true;
             foreach(array_keys($film_brands) as $key):
             ?>
-            <h2><?=$film_brands[$key]['name'] ?></h2>
+            <h2 id="fb_<?=$key ?>"><?=$film_brands[$key]['name'] ?></h2>
             <table class="table table-hover">
                 <?php if($show_table_header): ?>
                 <tr>
@@ -177,7 +208,7 @@ while($row = $fetcher->Fetch()) {
                 $no_border_top = $show_table_header ? '' : " style = 'border-top: 0;'";
                 foreach(array_keys($film_brands[$key]['film_brand_variations']) as $fbv_key):
                 ?>
-                <tr>
+                <tr id="fbv_<?=$fbv_key ?>">
                     <td width="50%"<?=$no_border_top ?>><?=$film_brands[$key]['name'] ?></td>
                     <td<?=$no_border_top ?>><?=$film_brands[$key]['film_brand_variations'][$fbv_key]['thickness'] ?> мкм</td>
                     <td<?=$no_border_top ?>><?=$film_brands[$key]['film_brand_variations'][$fbv_key]['weight'] ?> г/м<sup>2</sup></td>
@@ -197,26 +228,28 @@ while($row = $fetcher->Fetch()) {
         include '../include/footer.php';
         ?>
         <script>
-            $('#film_brand').change(function() {
+            $('select#film').change(function() {
                 if($(this).val() == '+') {
-                    $('#create_film_brand_variation').modal('hide');
+                    $('#create_film_variation').modal('hide');
                 }
             });
             
-            $('#create_film_brand').on('hidden.bs.modal', function() {
-                $('#film_brand').val('');
-                $('#create_film_brand_variation').modal('show');
+            $('#create_film').on('hidden.bs.modal', function() {
+                $('select#film').val('');
+                $('#create_film_variation').modal('show');
             });
             
-            $('#create_film_brand_variation').on('hidden.bs.modal', function() {
-                if($('#film_brand').val() == '+') {
-                    $('#create_film_brand').modal('show');
+            $('#create_film_variation').on('hidden.bs.modal', function() {
+                if($('select#film').val() == '+') {
+                    $('#create_film').modal('show');
                 }
             });
             
-            $('#create_film_brand').on('shown.bs.modal', function() {
+            $('#create_film').on('shown.bs.modal', function() {
                 $('input:text:visible:first').focus();
             });
+            
+            window.scrollTo(0, $('#fb_77').offset().top - $('#topmost').height());
         </script>
     </body>
 </html>
