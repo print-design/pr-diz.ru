@@ -30,6 +30,15 @@ if(null !== filter_input(INPUT_POST, 'film_variation_submit')) {
     }
 }
 
+// Обработка удаления вариации плёнки
+if(null !== filter_input(INPUT_POST, 'delete_submit')) {
+    $supplier_id = filter_input(INPUT_POST, 'supplier_id');
+    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+    $sql = "delete from supplier_film_variation where supplier_id = $supplier_id and film_variation_id = $film_variation_id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+}
+
 // Получение объекта
 $supplier_id = filter_input(INPUT_GET, 'id');
 
@@ -195,7 +204,14 @@ while($row = $fetcher->Fetch()) {
                             <tr>
                                 <td><?=$film_variation['thickness'] ?></td>
                                 <td><?=$film_variation['weight'] ?></td>
-                                <td class="text-right"><img src="../images/icons/trash2.svg" title="Удалить" /></td>
+                                <td class="text-right">
+                                    <form method="post">
+                                        <input type="hidden" name="supplier_id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                                        <input type="hidden" name="film_variation_id" value="<?=$fv_key ?>" />
+                                        <input type="hidden" name="scroll" id="scroll" />
+                                        <button type="submit" name="delete_submit" id="delete_submit" class="btn btn-link confirmable"><img src="../images/icons/trash2.svg" title="Удалить" /></button>
+                                    </form>
+                                </td>
                             </tr>
                             <?php endforeach; ?>
                         </table>
