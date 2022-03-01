@@ -135,35 +135,6 @@ if(null !== filter_input(INPUT_POST, 'create_supplier_submit')) {
                         <td class="text-right"><a href="edit.php?id=<?=$id ?>" title="Редактировать"><img src="../images/icons/edit1.svg" /></a></td>
                     </tr>
                     <?php endwhile; ?>
-                    <?php
-                    //-----------------------------------------------------
-                    // Удалить
-                    $sql = "select s.id, s.name, "
-                            . "(select count(id) from film_brand where supplier_id=s.id) count, "
-                            . "(select name from film_brand where supplier_id=s.id limit 1) first "
-                            . "from supplier s order by s.name";
-                    $fetcher = new Fetcher($sql);
-                    
-                    while($row = $fetcher->Fetch()):
-                        $id = $row['id'];
-                        $name = htmlentities($row['name']);
-                        $count = $row['count'];
-                        $first = $row['first'];
-                        $products = '';
-                        if($first != null) {
-                            $products = htmlentities($first);
-                            
-                            if($count > 1) {
-                                $products .= " и еще ".(intval($count) - 1);
-                            }
-                        }
-                    ?>
-                    <tr>
-                        <td><?=$name ?></td>
-                        <td><?=$products ?></td>
-                        <td class="text-right"><a href="edit.php?id=<?=$id ?>" title="Редактировать"><img src="../images/icons/edit1.svg" /></a></td>
-                    </tr>
-                    <?php endwhile; ?>
                 </tbody>
             </table>
         </div>
