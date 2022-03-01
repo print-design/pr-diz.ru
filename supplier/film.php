@@ -212,7 +212,7 @@ while($row = $fetcher->Fetch()) {
                 <?php if($show_table_header): ?>
                 <tr>
                     <th width="50%" style="border-top: 0;">Название пленки</th>
-                    <th style="border-top: 0;">Толщина</th>
+                    <th width="25%" style="border-top: 0;">Толщина</th>
                     <th style="border-top: 0;">Удельный вес</th>
                 </tr>
                 <?php
@@ -223,7 +223,7 @@ while($row = $fetcher->Fetch()) {
                 ?>
                 <tr>
                     <td width="50%"<?=$no_border_top ?>><?=$film['name'] ?></td>
-                    <td<?=$no_border_top ?>><?=$film_variation['thickness'] ?> мкм</td>
+                    <td width="25%"<?=$no_border_top ?>><?=$film_variation['thickness'] ?> мкм</td>
                     <td<?=$no_border_top ?>><?=$film_variation['weight'] ?> г/м<sup>2</sup></td>
                 </tr>
                 <?php
