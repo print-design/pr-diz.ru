@@ -21,6 +21,19 @@ if(null !== filter_input(INPUT_POST, 'create_film_submit')) {
     }
 }
 
+// Обработка создания вариации плёнки
+if(null !== filter_input(INPUT_POST, 'create_film_variation_submit')) {
+    $film_id = filter_input(INPUT_POST, 'film_id');
+    $thickness = filter_input(INPUT_POST, 'thickness');
+    $weight = filter_input(INPUT_POST, 'weight');
+    
+    if(!empty($film_id) && !empty($thickness) && !empty($weight)) {
+        $sql = "insert into film_variation(film_id, thickness, weight) values($film_id, $thickness, $weight)";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+}
+
 // Получение объекта
 $sql = "select f.id film_id, f.name film, fv.id film_variation_id, fv.thickness, fv.weight "
         . "from film f "
@@ -177,7 +190,7 @@ while($row = $fetcher->Fetch()) {
             $show_table_header = true;
             foreach($films as $f_key => $film):
             ?>
-            <h2><?=$film['name'] ?></h2>
+            <h2 id="f_<?=$f_key ?>"><?=$film['name'] ?></h2>
             <table class="table table-hover">
                 <?php if($show_table_header): ?>
                 <tr>
@@ -278,7 +291,9 @@ while($row = $fetcher->Fetch()) {
             $('#create_film_variation').modal('show');
             <?php endif; ?>
             
-            window.scrollTo(0, $('#fb_77').offset().top - $('#topmost').height());
+            <?php if(null !== filter_input(INPUT_POST, 'film_id')): ?>
+            window.scrollTo(0, $('#f_<?= filter_input(INPUT_POST, 'film_id') ?>').offset().top - $('#topmost').height());
+            <?php endif; ?>
         </script>
     </body>
 </html>
