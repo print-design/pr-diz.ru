@@ -6,10 +6,25 @@ if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Обработка создания марки плёнки
+$film_insert_id = null;
+
+if(null !== filter_input(INPUT_POST, 'create_film_submit')) {
+    $name = filter_input(INPUT_POST, 'name');
+    
+    if(!empty($name)) {
+        $name = addslashes($name);
+        $sql = "insert into film(name) values('$name')";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+        $film_insert_id = $executer->insert_id;
+    }
+}
+
 // Получение объекта
 $sql = "select f.id film_id, f.name film, fv.id film_variation_id, fv.thickness, fv.weight "
         . "from film f "
-        . "inner join film_variation fv on fv.film_id = f.id "
+        . "left join film_variation fv on fv.film_id = f.id "
         . "order by f.name, fv.thickness, fv.weight";
 $fetcher = new Fetcher($sql);
 $films = array();
@@ -20,7 +35,7 @@ while($row = $fetcher->Fetch()) {
     }
     
     $film_variation_id = $row['film_variation_id'];
-    if(!isset($films[$film_id]['film_variations'][$film_variation_id])) {
+    if(!isset($films[$film_id]['film_variations'][$film_variation_id]) && !empty($row['thickness']) && !empty($row['weight'])) {
         $films[$film_id]['film_variations'][$film_variation_id] = array('thickness' => $row['thickness'], 'weight' => $row['weight']);
     }
 }
@@ -91,7 +106,7 @@ while($row = $fetcher->Fetch()) {
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <select class="form-control" name="film" id="film" required="required">
+                                <select class="form-control" name="film_id" id="film_id" required="required">
                                     <option value="" hidden="hidden">Марка пленки</option>
                                     <?php foreach($films as $f_key => $film): ?>
                                     <option value="<?=$f_key ?>"><?=$film['name'] ?></option>
@@ -103,12 +118,12 @@ while($row = $fetcher->Fetch()) {
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <input type="text" name="thickness" class="form-control int-only" placeholder="Толщина" required="required" />
+                                        <input type="text" id="thickness" name="thickness" class="form-control int-only" placeholder="Толщина" required="required" />
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <input type="text" name="weight" class="form-control float-only" placeholder="Удельный вес" required="required" />
+                                        <input type="text" id="weight" name="weight" class="form-control float-only" placeholder="Удельный вес" required="required" />
                                     </div>
                                 </div>
                             </div>
@@ -131,11 +146,11 @@ while($row = $fetcher->Fetch()) {
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <input type="text" name="film" id="film" class="form-control" placeholder="Марка пленки" required="required" />
+                                <input type="text" name="name" id="name" class="form-control" placeholder="Марка пленки" required="required" />
                             </div>
                         </div>
                         <div class="modal-footer" style="justify-content: flex-start;">
-                            <button type="submit" class="btn btn-dark" id="create_film" name="create_film">Добавить</button>
+                            <button type="submit" class="btn btn-dark" id="create_film_submit" name="create_film_submit">Добавить</button>
                             <button type="button" class="btn btn-light create_film_dismiss" data-dismiss="modal">Отменить</button>
                         </div>
                     </form>
@@ -171,6 +186,7 @@ while($row = $fetcher->Fetch()) {
                     <th style="border-top: 0;">Удельный вес</th>
                 </tr>
                 <?php
+                $show_table_header = false;
                 endif;
                 $no_border_top = $show_table_header ? '' : " style='border-top: 0;'";
                 foreach($film['film_variations'] as $fv_key => $film_variation):
@@ -228,26 +244,39 @@ while($row = $fetcher->Fetch()) {
         include '../include/footer.php';
         ?>
         <script>
-            $('select#film').change(function() {
+            $('select#film_id').change(function() {
                 if($(this).val() == '+') {
                     $('#create_film_variation').modal('hide');
                 }
             });
             
             $('#create_film').on('hidden.bs.modal', function() {
-                $('select#film').val('');
+                $('input#name').val('');
                 $('#create_film_variation').modal('show');
             });
             
             $('#create_film_variation').on('hidden.bs.modal', function() {
-                if($('select#film').val() == '+') {
+                if($('select#film_id').val() == '+') {
                     $('#create_film').modal('show');
                 }
+                
+                $('select#film_id').val('');
+                $('input#thickness').val('');
+                $('input#weight').val('');
             });
             
             $('#create_film').on('shown.bs.modal', function() {
                 $('input:text:visible:first').focus();
             });
+            
+            <?php
+            if(null !== filter_input(INPUT_POST, 'create_film_submit')):
+                if(!empty($film_insert_id)):
+                ?>
+                $('select#film_id').val(<?=$film_insert_id ?>);
+                <?php endif; ?>
+            $('#create_film_variation').modal('show');
+            <?php endif; ?>
             
             window.scrollTo(0, $('#fb_77').offset().top - $('#topmost').height());
         </script>
