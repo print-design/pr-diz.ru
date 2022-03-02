@@ -111,7 +111,7 @@ if(null !== filter_input(INPUT_POST, 'create_supplier_submit')) {
                     <?php
                     $sql = "select s.id, s.name, "
                             . "(select count(id) from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = s.id))) count, "
-                            . "(select name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = s.id)) limit 1) first "
+                            . "(select name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = s.id)) order by name limit 1) first "
                             . "from supplier s order by s.name";
                     $fetcher = new Fetcher($sql);
                     

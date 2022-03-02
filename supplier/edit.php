@@ -52,6 +52,37 @@ if($row = $fetcher->Fetch()) {
 
 $films = array();
 
+// Вариации, относящиеся к данному поставщику
+$sql = "select f.id film_id, f.name film, fv.id film_variation_id, fv.thickness, fv.weight "
+        . "from film f "
+        . "inner join film_variation fv on fv.film_id = f.id "
+        . "where fv.id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id) ";
+
+if(null !== filter_input(INPUT_POST, 'create_film_submit')) {
+    $post_film_id = filter_input(INPUT_POST, 'film_id');
+    
+    if(!empty($post_film_id)) {
+        $sql .= "union "
+                . "select f.id film_id, f.name film, null film_variation_id, null thickness, null weight "
+                . "from film f "
+                . "where f.id = $post_film_id ";
+    }
+}
+
+$sql .= "order by film, thickness, weight";
+$fetcher = new Fetcher($sql);
+while($row = $fetcher->Fetch()) {
+    $film_id = $row['film_id'];
+    if(!isset($films[$film_id])) {
+        $films[$film_id] = array('name' => $row['film'], 'film_variations' => array(), 'my_film_variations' => array());
+    }
+    
+    $film_variation_id = $row['film_variation_id'];
+    if(!empty($film_variation_id) && !isset($films[$film_id]['my_film_variations'][$film_variation_id])) {
+        $films[$film_id]['my_film_variations'][$film_variation_id] = array('thickness' => $row['thickness'], 'weight' => $row['weight']);
+    }
+}
+
 // Вариации, не относящиеся к данному поставщику (для выбора из списка)
 $sql = "select f.id film_id, f.name film, fv.id film_variation_id, fv.thickness, fv.weight "
         . "from film f "
@@ -83,24 +114,6 @@ while($row = $fetcher->Fetch()) {
     $film_variation_id = $row['film_variation_id'];
     if(!isset($films[$film_id]['film_variations'][$film_variation_id])) {
         $films[$film_id]['film_variations'][$film_variation_id] = array('thickness' => $row['thickness'], 'weight' => $row['weight']);
-    }
-}
-
-// Вариации, относящиеся к данному поставщику
-$sql = "select f.id film_id, f.name film, fv.id film_variation_id, fv.thickness, fv.weight "
-        . "from film f "
-        . "inner join film_variation fv on fv.film_id = f.id "
-        . "where fv.id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id)";
-$fetcher = new Fetcher($sql);
-while($row = $fetcher->Fetch()) {
-    $film_id = $row['film_id'];
-    if(!isset($films[$film_id])) {
-        $films[$film_id] = array('name' => $row['film'], 'film_variations' => array(), 'my_film_variations' => array());
-    }
-    
-    $film_variation_id = $row['film_variation_id'];
-    if(!isset($films[$film_id]['my_film_variations'][$film_variation_id])) {
-        $films[$film_id]['my_film_variations'][$film_variation_id] = array('thickness' => $row['thickness'], 'weight' => $row['weight']);
     }
 }
 ?>
