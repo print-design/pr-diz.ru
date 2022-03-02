@@ -58,6 +58,8 @@ if(!empty($find)) {
 // Получение общей массы рулонов
 $sql = "select sum(r.net_weight) total_weight "
         . "from roll r "
+        . "left join film_variation fv on r.film_variation_id = fv.id "
+        . "left join film f on fv.film_id = f.id "
         . "left join film_brand fb on r.film_brand_id = fb.id "
         . "left join supplier s on r.supplier_id = s.id "
         . "left join user u on r.storekeeper_id = u.id "
@@ -137,8 +139,11 @@ while ($row = $fetcher->Fetch()) {
                         <th class="d-none" style="padding-left: 5px; padding-right: 5px;"></th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 8%;">Дата<br />создания</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 16%;">Марка пленки</th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 16%;">Марка пленки(УД)</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Толщина</th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Толщина(УД)</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Плотность</th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Плотность(УД)</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Ширина</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Вес</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Длина</th>
@@ -160,6 +165,8 @@ while ($row = $fetcher->Fetch()) {
                     
                     $sql = "select count(r.id) "
                             . "from roll r "
+                            . "left join film_variation fv on r.film_variation_id = fv.id "
+                            . "left join film f on fv.film_id = f.id "
                             . "left join film_brand fb on r.film_brand_id = fb.id "
                             . "left join supplier s on r.supplier_id = s.id "
                             . "left join user u on r.storekeeper_id = u.id "
@@ -171,11 +178,13 @@ while ($row = $fetcher->Fetch()) {
                         $pager_total_count = $row[0];
                     }
                     
-                    $sql = "select r.id, DATE_FORMAT(r.date, '%d.%m.%Y') date, fb.name film_brand, r.width, r.thickness, r.net_weight, r.length, "
+                    $sql = "select r.id, DATE_FORMAT(r.date, '%d.%m.%Y') date, f.name film, fv.thickness, fv.weight density, fb.name film_brand, r.width, r.thickness thickness_old, r.net_weight, r.length, "
                             . "s.name supplier, r.id_from_supplier, r.cell, u.first_name, u.last_name, "
                             . "rsh.status_id status_id, r.comment, "
-                            . "(select weight from film_brand_variation where film_brand_id=fb.id and thickness=r.thickness limit 1) density "
+                            . "(select weight from film_brand_variation where film_brand_id=fb.id and thickness=r.thickness limit 1) density_old "
                             . "from roll r "
+                            . "left join film_variation fv on r.film_variation_id = fv.id "
+                            . "left join film f on fv.film_id = f.id "
                             . "left join film_brand fb on r.film_brand_id = fb.id "
                             . "left join supplier s on r.supplier_id = s.id "
                             . "left join user u on r.storekeeper_id = u.id "
@@ -202,9 +211,12 @@ while ($row = $fetcher->Fetch()) {
                     <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
                         <td class="d-none" style="padding-left: 5px; padding-right: 5px;"><input type="checkbox" id="chk<?=$row['id'] ?>" name="chk<?=$row['id'] ?>" data-id="<?=$row['id'] ?>" class="form-check chkRoll" /></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['date'] ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['film'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['film_brand'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['thickness'] ?> мкм</td>
+                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['thickness_old'] ?> мкм</td>
                         <td style="padding-left: 5px; padding-right: 5px;" class="text-nowrap"><?= round($row['density'], 2) ?> г/м<sup>2</sup></td>
+                        <td style="padding-left: 5px; padding-right: 5px;" class="text-nowrap"><?= round($row['density_old'], 2) ?> г/м<sup>2</sup></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['width'] ?> мм</td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['net_weight'] ?> кг</td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['length'] ?> м</td>
