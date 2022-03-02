@@ -24,18 +24,18 @@ $utilized_status_id = 2;
 
 // Фильтр для данных
 $where = "(rsh.status_id is null or rsh.status_id = $free_status_id)";
-    
-$film_brand_name = filter_input(INPUT_GET, 'film_brand_name');
-if(!empty($film_brand_name)) {
-    $film_brand_name = addslashes($film_brand_name);
-    $where .= " and fb.name = '$film_brand_name'";
+
+$film_name = filter_input(INPUT_GET, 'film_name');
+if(!empty($film_name)) {
+    $film_name = addslashes($film_name);
+    $where .= " and f.name = '$film_name'";
 }
-    
+
 $thickness = filter_input(INPUT_GET, 'thickness');
 if(!empty($thickness)) {
-    $where .= " and r.thickness = ".$thickness;
+    $where .= " and fv.thickness = ".$thickness;
 }
-    
+
 $width_from = filter_input(INPUT_GET, 'width_from');
 if(!empty($width_from)) {
     $where .= " and r.width >= $width_from";
@@ -60,7 +60,6 @@ $sql = "select sum(r.net_weight) total_weight "
         . "from roll r "
         . "left join film_variation fv on r.film_variation_id = fv.id "
         . "left join film f on fv.film_id = f.id "
-        . "left join film_brand fb on r.film_brand_id = fb.id "
         . "left join supplier s on r.supplier_id = s.id "
         . "left join user u on r.storekeeper_id = u.id "
         . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
@@ -139,11 +138,8 @@ while ($row = $fetcher->Fetch()) {
                         <th class="d-none" style="padding-left: 5px; padding-right: 5px;"></th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 8%;">Дата<br />создания</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 16%;">Марка пленки</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 16%;">Марка пленки(УД)</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Толщина</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Толщина(УД)</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Плотность</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Плотность(УД)</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Ширина</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Вес</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Длина</th>
@@ -167,7 +163,6 @@ while ($row = $fetcher->Fetch()) {
                             . "from roll r "
                             . "left join film_variation fv on r.film_variation_id = fv.id "
                             . "left join film f on fv.film_id = f.id "
-                            . "left join film_brand fb on r.film_brand_id = fb.id "
                             . "left join supplier s on r.supplier_id = s.id "
                             . "left join user u on r.storekeeper_id = u.id "
                             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
@@ -178,14 +173,12 @@ while ($row = $fetcher->Fetch()) {
                         $pager_total_count = $row[0];
                     }
                     
-                    $sql = "select r.id, DATE_FORMAT(r.date, '%d.%m.%Y') date, f.name film, fv.thickness, fv.weight density, fb.name film_brand, r.width, r.thickness thickness_old, r.net_weight, r.length, "
+                    $sql = "select r.id, DATE_FORMAT(r.date, '%d.%m.%Y') date, f.name film, fv.thickness, fv.weight density, r.width, r.net_weight, r.length, "
                             . "s.name supplier, r.id_from_supplier, r.cell, u.first_name, u.last_name, "
-                            . "rsh.status_id status_id, r.comment, "
-                            . "(select weight from film_brand_variation where film_brand_id=fb.id and thickness=r.thickness limit 1) density_old "
+                            . "rsh.status_id status_id, r.comment "
                             . "from roll r "
                             . "left join film_variation fv on r.film_variation_id = fv.id "
                             . "left join film f on fv.film_id = f.id "
-                            . "left join film_brand fb on r.film_brand_id = fb.id "
                             . "left join supplier s on r.supplier_id = s.id "
                             . "left join user u on r.storekeeper_id = u.id "
                             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
@@ -212,11 +205,8 @@ while ($row = $fetcher->Fetch()) {
                         <td class="d-none" style="padding-left: 5px; padding-right: 5px;"><input type="checkbox" id="chk<?=$row['id'] ?>" name="chk<?=$row['id'] ?>" data-id="<?=$row['id'] ?>" class="form-check chkRoll" /></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['date'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['film'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['film_brand'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['thickness'] ?> мкм</td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['thickness_old'] ?> мкм</td>
                         <td style="padding-left: 5px; padding-right: 5px;" class="text-nowrap"><?= round($row['density'], 2) ?> г/м<sup>2</sup></td>
-                        <td style="padding-left: 5px; padding-right: 5px;" class="text-nowrap"><?= round($row['density_old'], 2) ?> г/м<sup>2</sup></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['width'] ?> мм</td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['net_weight'] ?> кг</td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['length'] ?> м</td>
@@ -262,13 +252,13 @@ while ($row = $fetcher->Fetch()) {
         </div>
         
         <?php
-        $film_brand_name = addslashes(filter_input(INPUT_GET, 'film_brand_name'));
+        $film_name = addslashes(filter_input(INPUT_GET, 'film_name'));
         $thicknesses = array();
         $slider_value = 0;
         $slider_index = 0;
         
-        if(!empty($film_brand_name)) {
-            $grabber = (new Grabber("select distinct fbv.thickness from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name='$film_brand_name' order by thickness"))->result;
+        if(!empty($film_name)) {
+            $grabber = (new Grabber("select distinct fv.thickness from film_variation fv inner join film f on fv.film_id = f.id where f.name='$film_name' order by thickness"))->result;
             
             foreach ($grabber as $row) {
                 $slider_index++;
@@ -289,14 +279,14 @@ while ($row = $fetcher->Fetch()) {
                     <h1 style="margin-top: 53px; margin-bottom: 20px; font-size: 32px; font-weight: 600;">Фильтр</h1>
                     <form method="get">
                         <div class="form-group">
-                            <select id="film_brand_name" name="film_brand_name" class="form-control" style="margin-top: 30px; margin-bottom: 30px;">
+                            <select id="film_name" name="film_name" class="form-control" style="margin-top: 30px; margin-bottom: 30px;">
                                 <option value="">МАРКА ПЛЕНКИ</option>
                                 <?php
-                                $film_brands = (new Grabber("select distinct name from film_brand order by name"))->result;
-                                foreach ($film_brands as $film_brand) {
-                                    $name = $film_brand['name'];
+                                $films = (new Grabber("select distinct name from film order by name"))->result;
+                                foreach ($films as $film) {
+                                    $name = $film['name'];
                                     $selected = '';
-                                    if(filter_input(INPUT_GET, 'film_brand_name') == $film_brand['name']) $selected = " selected='selected'";
+                                    if(filter_input(INPUT_GET, 'film_name') == $film['name']) $selected = " selected='selected'";
                                     echo "<option value='$name'$selected>$name</option>";
                                 }
                                 ?>
@@ -363,7 +353,7 @@ while ($row = $fetcher->Fetch()) {
                 }
             });
             
-            $('#film_brand_name').change(function(){
+            $('#film_name').change(function(){
                 if($(this).val() == '') {
                     $('#width_slider_values').html("<div class='p-1'>все</div>");
                     $("#slider").slider({
@@ -375,7 +365,7 @@ while ($row = $fetcher->Fetch()) {
                     $("#thickness").val('');
                 }
                 else {
-                    $.ajax({ url: "../ajax/thickness.php?film_brand_name="+$(this).val() })
+                    $.ajax({ url: "../ajax/thickness.php?film_name="+$(this).val() })
                             .done(function(data){
                                 var thicknesses = JSON.parse(data);
                         

@@ -15,11 +15,12 @@ if(!empty($decoded)) {
 
 if(!empty($pallet_id)) {
     // Получение марки плёнки
-    $film_brand = '';
-    $sql = "select fb.name from film_brand fb inner join pallet p on p.film_brand_id = fb.id where p.id = $pallet_id";
+    $film = '';
+    $sql = "select f.name, fv.thickness from film f inner join film_variation fv on fv.film_id = f.id inner join pallet p on p.film_variation_id = fv.id where p.id = $pallet_id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
-        $film_brand = $row['name'];
+        $film = $row['name'];
+        $thickness = $row['thickness'];
     }
     
     // Получение всех статусов
@@ -34,13 +35,13 @@ if(!empty($pallet_id)) {
     }
 
     // Получение объекта
-    $sql = "select 0 utilized,  p.width, p.thickness, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, pr.id_from_supplier, IFNULL(prsh.status_id, $free_status_id) status_id "
+    $sql = "select 0 utilized,  p.width, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, pr.id_from_supplier, IFNULL(prsh.status_id, $free_status_id) status_id "
             . "from pallet_roll pr "
             . "inner join pallet p on pr.pallet_id = p.id "
             . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
             . "where pr.pallet_id = $pallet_id and (prsh.status_id is null or prsh.status_id = $free_status_id) "
             . "union "
-            . "select 1 utilized,  p.width, p.thickness, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, pr.id_from_supplier, IFNULL(prsh.status_id, $free_status_id) status_id "
+            . "select 1 utilized,  p.width, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, pr.id_from_supplier, IFNULL(prsh.status_id, $free_status_id) status_id "
             . "from pallet_roll pr "
             . "inner join pallet p on pr.pallet_id = p.id "
             . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
@@ -85,13 +86,13 @@ if(!empty($pallet_id)) {
             </tr>
             <tr>
                 <td style="padding-bottom: 10px; padding-right: 10px; white-space: nowrap;">Марка пленки</td>
-                <td colspan="3" style="padding-bottom: 10px;"><?=$film_brand ?></td>
+                <td colspan="3" style="padding-bottom: 10px;"><?=$film ?></td>
             </tr>
             <tr>
                 <td style="padding-bottom: 10px;">Ширина</td>
                 <td style="padding-bottom: 10px;"><?=$row['width'] ?> мм</td>
                 <td style="padding-bottom: 10px;">Толщина</td>
-                <td style="padding-bottom: 10px;"><?=$row['thickness'] ?> мкм</td>
+                <td style="padding-bottom: 10px;"><?=$thickness ?> мкм</td>
             </tr>
             <tr>
                 <td style="padding-bottom: 10px;">Масса</td>

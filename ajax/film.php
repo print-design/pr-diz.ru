@@ -8,7 +8,7 @@ if(!empty($supplier_id)) {
     $supplier_name = $row['name'];
     echo "<option value='' hidden='hidden' selected='selected'>Выберите марку от $supplier_name</option>";
     
-    $film_brands = (new Grabber("select id, name from film_brand where supplier_id=$supplier_id order by name"))->result;
+    $film_brands = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id)) order by name"))->result;
     
     foreach ($film_brands as $film_brand) {
         $id = $film_brand['id'];
