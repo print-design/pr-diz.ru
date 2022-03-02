@@ -2,11 +2,11 @@
 include '../include/topscripts.php';
 
 // Получение толщин плёнки по ID марки для раскрывающегося списка
-$film_brand_id = filter_input(INPUT_GET, 'film_brand_id');
+$film_id = filter_input(INPUT_GET, 'film_id');
 
-if(!empty($film_brand_id)) {
+if(!empty($film_id)) {
     echo "<option value='' hidden='hidden' selected='selected'>Выберите толщину</option>";
-    $grabber = (new Grabber("select thickness, weight from film_variation where film_brand_id = $film_id order by thickness"))->result;
+    $grabber = (new Grabber("select thickness, weight from film_variation where film_id = $film_id order by thickness"))->result;
     
     foreach ($grabber as $row) {
         $thickness = intval($row['thickness']);
@@ -16,10 +16,10 @@ if(!empty($film_brand_id)) {
 }
 
 // Получение толщин плёнки по названию марки для ползунка
-$film_brand_name = addslashes(filter_input(INPUT_GET, 'film_brand_name'));
+$film = addslashes(filter_input(INPUT_GET, 'film'));
 
-if(!empty($film_brand_name)) {
-    $grabber = (new Grabber("select distinct fv.thickness from film_variation fbv inner join film f on fv.film_id = f.id where f.name='$film_name' order by thickness"))->result;
+if(!empty($film)) {
+    $grabber = (new Grabber("select distinct fv.thickness from film_variation fv inner join film f on fv.film_id = f.id where f.name='$film' order by thickness"))->result;
     $result = array();
     
     foreach ($grabber as $row) {

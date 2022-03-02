@@ -365,7 +365,7 @@ while ($row = $fetcher->Fetch()) {
                     $("#thickness").val('');
                 }
                 else {
-                    $.ajax({ url: "../ajax/thickness.php?film_name="+$(this).val() })
+                    $.ajax({ url: "../ajax/thickness.php?film="+$(this).val() })
                             .done(function(data){
                                 var thicknesses = JSON.parse(data);
                         
