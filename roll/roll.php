@@ -33,9 +33,9 @@ $error_message = '';
 
 $supplier_id_valid = '';
 $id_from_supplier_valid = '';
-$film_brand_id_valid = '';
+$film_id_valid = '';
 $width_valid = '';
-$thickness_valid = '';
+$film_variation_id_valid = '';
 $length_valid = '';
 $net_weight_valid = '';
 $cell_valid = '';
@@ -65,9 +65,9 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     }
     
     if(IsInRole(array('dev'))) {
-        $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
-        if(empty($film_brand_id)) {
-            $film_brand_id_valid = ISINVALID;
+        $film_id = filter_input(INPUT_POST, 'film_id');
+        if(empty($film_id)) {
+            $film_id_valid = ISINVALID;
             $form_valid = false;
         }
     }
@@ -86,9 +86,9 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     }
     
     if(IsInRole(array('dev'))) {
-        $thickness = filter_input(INPUT_POST, 'thickness');
-        if(empty($thickness)) {
-            $thickness_valid = ISINVALID;
+        $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+        if(empty($film_variation_id)) {
+            $film_variation_id_valid = ISINVALID;
             $form_valid = false;
         }
     }
@@ -111,20 +111,16 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     
     // Проверяем правильность веса, для всех ролей
     // Определяем имеющуюся длину и ширину
-    $sql = "select film_brand_id, thickness, length, width, net_weight from roll where id=$id";
+    $sql = "select film_variation_id, length, width, net_weight from roll where id=$id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
-        $old_film_brand_id = $row['film_brand_id'];
-        $old_thickness = $row['thickness'];
+        $old_film_variation_id = $row['film_variation_id'];
         $old_length = $row['length'];
         $old_width = $row['width'];
         $old_net_weight = $row['net_weight'];
         
-        $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
-        if(empty($film_brand_id)) $film_brand_id = $old_film_brand_id;
-        
-        $thickness = filter_input(INPUT_POST, 'thickness');
-        if(empty($thickness)) $thickness = $old_thickness;
+        $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+        if(empty($film_variation_id)) $film_variation_id = $old_film_variation_id;
         
         $length = filter_input(INPUT_POST, 'length');
         if(empty($length)) $length = $old_length;
@@ -194,17 +190,13 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
             }
             
             if(IsInRole(array('dev'))) {
-                $sql .= "film_brand_id = $film_brand_id, ";
+                $sql .= "film_variation_id = $film_variation_id, ";
             }
             
             if(IsInRole(array('dev'))) {
                 $sql .= "width = $width, ";
             }
-            
-            if(IsInRole(array('dev'))) {
-                $sql .= "thickness = $thickness, ";
-            }
-            
+                        
             if(IsInRole(array('dev'))) {
                 $sql .= "length = $length, ";
             }
@@ -243,7 +235,8 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
 }
 
 // Получение данных
-$sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, DATE_FORMAT(r.date, '%H:%i') time, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, r.id_from_supplier, r.film_brand_id, r.width, r.thickness, r.length, "
+$sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, DATE_FORMAT(r.date, '%H:%i') time, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, r.id_from_supplier, r.width, r.film_variation_id, r.length, "
+        . "(select film_id from film_variation where id = r.film_variation_id) film_id, "
         . "r.net_weight, r.cell, "
         . "rsh.status_id status_id, DATE_FORMAT(rsh.date, '%d.%m.%Y') status_date, DATE_FORMAT(rsh.date, '%H.%i') status_time, "
         . "r.comment, r.cut_wind_id, r.cutting_wind_id "
@@ -264,14 +257,14 @@ if(null === $supplier_id) $supplier_id = $row['supplier_id'];
 $id_from_supplier = filter_input(INPUT_POST, 'id_from_supplier');
 if(null === $id_from_supplier) $id_from_supplier = $row['id_from_supplier'];
 
-$film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
-if(null === $film_brand_id) $film_brand_id = $row['film_brand_id'];
+$film_id = filter_input(INPUT_POST, 'film_id');
+if(null === $film_id) $film_id = $row['film_id'];
 
 $width = filter_input(INPUT_POST, 'width');
 if(null === $width) $width = $row['width'];
 
-$thickness = filter_input(INPUT_POST, 'thickness');
-if(null === $thickness) $thickness = $row['thickness'];
+$film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+if(null === $film_variation_id) $film_variation_id = $row['film_variation_id'];
 
 $length = filter_input(INPUT_POST, 'length');
 if(null === $length) $length = $row['length'];
@@ -369,18 +362,18 @@ $cutting_wind_id = $row['cutting_wind_id'];
                     </div>
                     <div class="form-group">
                         <?php
-                        $film_brand_id_disabled = " disabled='disabled'";
+                        $film_id_disabled = " disabled='disabled'";
                         ?>
-                        <label for="film_brand_id">Марка пленки</label>
-                        <select id="film_brand_id" name="film_brand_id" class="form-control<?=$film_brand_id_valid ?>"<?=$film_brand_id_disabled ?>>
+                        <label for="film_id">Марка пленки</label>
+                        <select id="film_id" name="film_id" class="form-control<?=$film_id_valid ?>"<?=$film_id_disabled ?>>
                             <option value="">Выберите марку</option>
                             <?php
-                            $film_brands = (new Grabber("select id, name from film_brand where supplier_id = $supplier_id"))->result;
-                            foreach ($film_brands as $film_brand) {
-                                $id = $film_brand['id'];
-                                $name = $film_brand['name'];
+                            $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id))"))->result;
+                            foreach ($films as $film) {
+                                $id = $film['id'];
+                                $name = $film['name'];
                                 $selected = '';
-                                if($film_brand_id == $film_brand['id']) $selected = " selected='selected'";
+                                if($film_id == $film['id']) $selected = " selected='selected'";
                                 echo "<option value='$id'$selected>$name</option>";
                             }
                             ?>
@@ -398,18 +391,20 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         </div>
                         <div class="col-6 form-group">
                             <?php
-                            $thickness_disabled = " disabled='disabled'";
+                            $film_variation_id_disabled = " disabled='disabled'";
                             ?>
-                            <label for="thickness">Толщина, мкм</label>
-                            <select id="thickness" name="thickness" class="form-control<?=$thickness_valid ?>"<?=$thickness_disabled ?>>
+                            <label for="film_variation_id">Толщина, мкм</label>
+                            <select id="film_variation_id" name="film_variation_id" class="form-control<?=$film_variation_id_valid ?>"<?=$film_variation_id_disabled ?>>
                                 <option value="">Выберите толщину</option>
                                 <?php
-                                $film_brand_variations = (new Grabber("select thickness, weight from film_brand_variation where film_brand_id = $film_brand_id order by thickness"))->result;
-                                foreach ($film_brand_variations as $film_brand_variation) {
-                                    $weight = $film_brand_variation['weight'];
+                                $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = $film_id order by thickness"))->result;
+                                foreach ($film_variations as $film_variation) {
+                                    $_id = $film_variation['id'];
+                                    $thickness = $film_variation['thickness'];
+                                    $weight = $film_variation['weight'];
                                     $selected = '';
-                                    if($thickness == $film_brand_variation['thickness']) $selected = " selected='selected'";
-                                    echo "<option value='$thickness'$selected>$thickness мкм $weight г/м<sup>2</sup></option>";
+                                    if($film_variation_id == $_id) $selected = " selected='selected'";
+                                    echo "<option value='$_id'$selected>$thickness мкм $weight г/м<sup>2</sup></option>";
                                 }
                                 ?>
                             </select>
@@ -686,27 +681,28 @@ $cutting_wind_id = $row['cutting_wind_id'];
             var films = new Map();
             
             <?php
-            $sql = "SELECT fbv.film_brand_id, fbv.thickness, fbv.weight FROM film_brand_variation fbv";
+            $sql = "SELECT fv.film_id, fv.id, fv.thickness, fv.weight FROM film_variation fv";
             $fetcher = new Fetcher($sql);
             while ($row = $fetcher->Fetch()):
             ?>
-            if(films.get(<?= $row['film_brand_id'] ?>) == undefined) {
-                films.set(<?= $row['film_brand_id'] ?>, new Map());
+            if(films.get(<?= $row['film_id'] ?>) == undefined) {
+                films.set(<?= $row['film_id'] ?>, new Map());
             }
-            films.get(<?= $row['film_brand_id'] ?>).set(<?= $row['thickness'] ?>, <?= $row['weight'] ?>);
+            films.get(<?= $row['film_id'] ?>).set(<?= $row['id'] ?>, [<?=$row['thickness'] ?>, <?= $row['weight'] ?>]);
             <?php        
             endwhile;
             ?>
                 
             // Расчёт длины и массы плёнки по шпуле, толщине, радиусу, ширине, удельному весу
             function CalculateWeight() {
-                film_brand_id = $('#film_brand_id').val();
+                film_id = $('#film_id').val();
                 length = $('#length').val();
                 width = $('#width').val();
-                thickness = $('#thickness').val();
+                film_variation_id = $('#film_variation_id').val();
                 
-                if(!isNaN(length) && !isNaN(width) && !isNaN(thickness) && length != '' && width != '' && thickness != '') {
-                    density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
+                if(!isNaN(length) && !isNaN(width) && !isNaN(film_variation_id) && length != '' && width != '' && film_variation_id != '') {
+                    thickness = films.get(parseInt($('#film_id').val())).get(parseInt(film_variation_id))[0];
+                    density = films.get(parseInt($('#film_id').val())).get(parseInt(film_variation_id))[1];
                     weight = GetFilmWeightByLengthWidth(length, width, density);
                     $('#net_weight_normal').val(weight.toFixed(2));
                 }
