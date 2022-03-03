@@ -32,7 +32,7 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager', 'administrat
                     $sql = "select c.id, f.name film, c.brand_name film_old, fv.thickness, c.thickness thickness_old "
                             . "from calculation c "
                             . "left join film_variation fv on c.film_variation_id = fv.id "
-                            . "left join film f on fv.film_id = f.id";
+                            . "left join film f on fv.film_id = f.id where c.brand_name != 'other'";
                     $fetcher = new Fetcher($sql);
                     while ($row = $fetcher->Fetch()):
                     ?>

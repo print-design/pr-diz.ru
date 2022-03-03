@@ -8,7 +8,7 @@ if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager', 'administrat
 
 // Общего количества рулонов
 $total_count = 0;
-$sql = "select count(id) from calculation";
+$sql = "select count(id) from calculation where brand_name != 'other'";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $total_count = $row[0];

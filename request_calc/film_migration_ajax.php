@@ -11,7 +11,7 @@ $sql = "select c.id, c.brand_name film_brand_name, c.thickness "
         . "from calculation c "
         . "left join film_variation fv on c.film_variation_id = fv.id "
         . "left join film f on fv.film_id = f.id "
-        . "where f.name is null or fv.thickness is null or f.name != c.brand_name or fv.thickness != c.thickness "
+        . "where c.brand_name != 'other' and (f.name is null or fv.thickness is null or f.name != c.brand_name or fv.thickness != c.thickness) "
         . "limit 1";
 $fetcher = new Fetcher($sql);
 $error_message = $fetcher->error;
