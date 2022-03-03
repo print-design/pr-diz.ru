@@ -20,7 +20,7 @@ if(!empty($film_id)) {
 $film = addslashes(filter_input(INPUT_GET, 'film'));
 
 if(!empty($film)) {
-    $grabber = (new Grabber("select distinct fv.thickness from film_variation fv inner join film f on fv.film_id = f.id where f.name='$film' order by thickness"))->result;
+    $grabber = (new Grabber("select distinct fv.thickness from film_variation fv inner join film f on fv.film_id = f.id where f.id='$film' order by thickness"))->result;
     $result = array();
     
     foreach ($grabber as $row) {

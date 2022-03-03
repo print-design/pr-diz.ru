@@ -25,10 +25,10 @@ $utilized_status_id = 2;
 // Фильтр для данных
 $where = "(rsh.status_id is null or rsh.status_id = $free_status_id)";
 
-$film_name = filter_input(INPUT_GET, 'film_name');
-if(!empty($film_name)) {
-    $film_name = addslashes($film_name);
-    $where .= " and f.name = '$film_name'";
+$film_id = filter_input(INPUT_GET, 'film_id');
+if(!empty($film_id)) {
+    $film_id = addslashes($film_id);
+    $where .= " and f.id = '$film_id'";
 }
 
 $thickness = filter_input(INPUT_GET, 'thickness');
@@ -252,13 +252,13 @@ while ($row = $fetcher->Fetch()) {
         </div>
         
         <?php
-        $film_name = addslashes(filter_input(INPUT_GET, 'film_name'));
+        $film_id = addslashes(filter_input(INPUT_GET, 'film_id'));
         $thicknesses = array();
         $slider_value = 0;
         $slider_index = 0;
         
-        if(!empty($film_name)) {
-            $grabber = (new Grabber("select distinct fv.thickness from film_variation fv inner join film f on fv.film_id = f.id where f.name='$film_name' order by thickness"))->result;
+        if(!empty($film_id)) {
+            $grabber = (new Grabber("select distinct fv.thickness from film_variation fv inner join film f on fv.film_id = f.id where f.id='$film_id' order by thickness"))->result;
             
             foreach ($grabber as $row) {
                 $slider_index++;
@@ -279,15 +279,16 @@ while ($row = $fetcher->Fetch()) {
                     <h1 style="margin-top: 53px; margin-bottom: 20px; font-size: 32px; font-weight: 600;">Фильтр</h1>
                     <form method="get">
                         <div class="form-group">
-                            <select id="film_name" name="film_name" class="form-control" style="margin-top: 30px; margin-bottom: 30px;">
+                            <select id="film_id" name="film_id" class="form-control" style="margin-top: 30px; margin-bottom: 30px;">
                                 <option value="">МАРКА ПЛЕНКИ</option>
                                 <?php
-                                $films = (new Grabber("select distinct name from film order by name"))->result;
+                                $films = (new Grabber("select id, name from film order by name"))->result;
                                 foreach ($films as $film) {
+                                    $film_id = $film['id'];
                                     $name = $film['name'];
                                     $selected = '';
-                                    if(filter_input(INPUT_GET, 'film_name') == $film['name']) $selected = " selected='selected'";
-                                    echo "<option value='$name'$selected>$name</option>";
+                                    if(filter_input(INPUT_GET, 'film_id') == $film_id) $selected = " selected='selected'";
+                                    echo "<option value='$film_id'$selected>$name</option>";
                                 }
                                 ?>
                             </select>
@@ -353,7 +354,7 @@ while ($row = $fetcher->Fetch()) {
                 }
             });
             
-            $('#film_name').change(function(){
+            $('#film_id').change(function(){
                 if($(this).val() == '') {
                     $('#width_slider_values').html("<div class='p-1'>все</div>");
                     $("#slider").slider({
@@ -362,7 +363,7 @@ while ($row = $fetcher->Fetch()) {
                         max: 0,
                         step: 1
                     });
-                    $("#thickness").val('');
+                    $("#film_variation_id").val('');
                 }
                 else {
                     $.ajax({ url: "../ajax/thickness.php?film="+$(this).val() })
