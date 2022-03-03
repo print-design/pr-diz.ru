@@ -108,7 +108,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
     // Определяем толщину и удельный вес
     $thickness = null;
     $ud_ves = null;
-    $sql = "select thickness, weight from film_variation where film_variation_id = $film_variation_id";
+    $sql = "select thickness, weight from film_variation where id = $film_variation_id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $thickness = $row['thickness'];
@@ -226,8 +226,8 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                                 $supplier_id = filter_input(INPUT_POST, 'supplier_id');
                                 $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id))"))->result;
                                 foreach ($films as $film) {
-                                    $id = $film_brand['id'];
-                                    $name = $film_brand['name'];
+                                    $id = $film['id'];
+                                    $name = $film['name'];
                                     $selected = '';
                                     if(filter_input(INPUT_POST, 'film_id') == $film['id']) $selected = " selected='selected'";
                                     echo "<option value='$id'$selected>$name</option>";
