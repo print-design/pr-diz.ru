@@ -23,7 +23,7 @@ $status_id_valid = '';
 $radius_valid = '';
 
 $invalid_radius_message = '';
-$invalid_message = '';
+$net_weight_invalid_message = '';
 $length_invalid_message = '';
 
 // Обработка отправки формы
@@ -123,7 +123,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
         $net_weight_valid = ISINVALID;
         $length_valid = ISINVALID;
         $form_valid = false;
-        $invalid_message = "Неверное значение";
+        $net_weight_invalid_message = "Неверное значение";
         $length_invalid_message = "Неверное значение";
     }
     
@@ -226,11 +226,11 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                                 $supplier_id = filter_input(INPUT_POST, 'supplier_id');
                                 $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id))"))->result;
                                 foreach ($films as $film) {
-                                    $id = $film['id'];
+                                    $film_id = $film['id'];
                                     $name = $film['name'];
                                     $selected = '';
-                                    if(filter_input(INPUT_POST, 'film_id') == $film['id']) $selected = " selected='selected'";
-                                    echo "<option value='$id'$selected>$name</option>";
+                                    if(filter_input(INPUT_POST, 'film_id') == $film_id) $selected = " selected='selected'";
+                                    echo "<option value='$film_id'$selected>$name</option>";
                                 }
                             }
                             ?>
@@ -302,7 +302,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                             <label for="net_weight">Масса нетто, кг</label>
                             <input type="text" id="net_weight" name="net_weight" value="<?= filter_input(INPUT_POST, 'net_weight') ?>" class="form-control int-only<?=$net_weight_valid ?>" placeholder="Введите массу нетто" required="required" autocomplete="off" />
                             <input type="hidden" id="net_weight_hidden" name="net_weight_hidden" />
-                            <div class="invalid-feedback"><?= empty($invalid_message) ? "Масса нетто обязательно" : $invalid_message ?></div>
+                            <div class="invalid-feedback"><?= empty($net_weight_invalid_message) ? "Масса нетто обязательно" : $net_weight_invalid_message ?></div>
                         </div>
                         <div class="col-6 form-group">
                             <label for="length">Длина, м</label>

@@ -13,17 +13,16 @@ $error_message = '';
 
 $supplier_id_valid = '';
 $id_from_supplier_valid = '';
-$film_brand_id_valid = '';
+$film_variation_id_valid = '';
 $width_valid = '';
-$thickness_valid = '';
 $length_valid = '';
 $net_weight_valid = '';
 $rolls_number_valid = '';
 $cell_valid = '';
 $status_id_valid = '';
 
-$length_message = '';
-$net_weight_message = '';
+$length_invalid_message = '';
+$net_weight_invalid_message = '';
 
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
@@ -39,9 +38,9 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         $form_valid = false;
     }
     
-    $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
-    if(empty($film_brand_id)) {
-        $film_brand_id_valid = ISINVALID;
+    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+    if(empty($film_variation_id)) {
+        $film_variation_id = ISINVALID;
         $form_valid = false;
     }
     
@@ -55,13 +54,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         $width_valid = ISINVALID;
         $form_valid = false;
     }
-    
-    $thickness = filter_input(INPUT_POST, 'thickness');
-    if(empty($thickness)) {
-        $thickness_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
+        
     $length = filter_input(INPUT_POST, 'length');
     if(empty($length)) {
         $length_valid = ISINVALID;
@@ -74,26 +67,26 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         $form_valid = false;
     }
     
-    // Определяем удельный вес
+    // Определяем толщину и удельный вес
+    $thickness = null;
     $ud_ves = null;
-    $sql = "select weight from film_brand_variation where film_brand_id=$film_brand_id and thickness=$thickness";
+    $sql = "select thickness, weight from film_variation where id=$film_variation_id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
-        $ud_ves = $row[0];
+        $thickness = $row['thickness'];
+        $ud_ves = $row['weight'];
     }
     
-    if(empty($length_valid) && empty($net_weight_valid)) {
-        $weight_result = floatval($ud_ves) * floatval($length) * floatval($width) / 1000.0 / 1000.0;
-        $weight_result_high = $weight_result + ($weight_result * 15.0 / 100.0);
-        $weight_result_low = $weight_result - ($weight_result * 15.0 / 100.0);
+    $weight_result = floatval($ud_ves) * floatval($length) * floatval($width) / 1000.0 / 1000.0;
+    $weight_result_high = $weight_result + ($weight_result * 15.0 / 100.0);
+    $weight_result_low = $weight_result - ($weight_result * 15.0 / 100.0);
         
-        if($net_weight < $weight_result_low || $net_weight > $weight_result_high) {
-            $net_weight_valid = ISINVALID;
-            $length_valid = ISINVALID;
-            $form_valid = false;
-            $net_weight_message = "Неверное значение";
-            $length_message = "Неверное значение";
-        }
+    if($net_weight < $weight_result_low || $net_weight > $weight_result_high) {
+        $net_weight_valid = ISINVALID;
+        $length_valid = ISINVALID;
+        $form_valid = false;
+        $net_weight_invalid_message = "Неверное значение";
+        $length_invalid_message = "Неверное значение";
     }
     
     $rolls_number = filter_input(INPUT_POST, 'rolls_number');
@@ -167,7 +160,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
     if($net_weight > $rolls_weight_high || $net_weight < $rolls_weight_low) {
         $net_weight_valid = ISINVALID;
         $form_valid = false;
-        $net_weight_message = "Не равно сумме роликов";
+        $net_weight_invalid_message = "Не равно сумме роликов";
     }
     
     // Выбор менеджера пока не обязательный.
@@ -181,8 +174,8 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
     $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id');
     
     if($form_valid) {
-        $sql = "insert into pallet (supplier_id, id_from_supplier, film_brand_id, width, thickness, cell, comment, storekeeper_id) "
-                . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, '$cell', '$comment', '$storekeeper_id')";
+        $sql = "insert into pallet (supplier_id, id_from_supplier, film_variation_id, width, cell, comment, storekeeper_id) "
+                . "values ($supplier_id, '$id_from_supplier', $film_variation_id, $width, '$cell', '$comment', '$storekeeper_id')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $pallet_id = $executer->insert_id;
@@ -259,8 +252,8 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         <div class="invalid-feedback">ID паллета от поставщика обязательно</div>
                     </div>
                     <div class="form-group">
-                        <label for="film_brand_id">Марка пленки</label>
-                        <select id="film_brand_id" name="film_brand_id" class="form-control" required="required">
+                        <label for="film_id">Марка пленки</label>
+                        <select id="film_id" name="film_brand_id" class="form-control" required="required">
                             <option value="">Выберите марку</option>
                             <?php
                             if(null !== filter_input(INPUT_POST, 'supplier_id')) {
@@ -333,12 +326,12 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         <div class="col-6 form-group">
                             <label for="net_weight">Масса нетто, кг</label>
                             <input type="text" id="net_weight" name="net_weight" value="<?= filter_input(INPUT_POST, 'net_weight') ?>" class="form-control int-only<?=$net_weight_valid ?>" placeholder="Введите массу нетто" required="required" autocomplete="off" />
-                            <div class="invalid-feedback"><?= empty($net_weight_message) ? "Масса нетто обязательно" : $net_weight_message ?></div>
+                            <div class="invalid-feedback"><?= empty($net_weight_invalid_message) ? "Масса нетто обязательно" : $net_weight_invalid_message ?></div>
                         </div>
                         <div class="col-6 form-group">
                             <label for="length">Длина, м</label>
                             <input type="text" id="length" name="length" value="<?= filter_input(INPUT_POST, 'length') ?>" class="form-control int-only<?=$length_valid ?>" placeholder="Введите длину" required="required" autocomplete="off" />
-                            <div class="invalid-feedback"><?= empty($length_message) ? "Длина обязательно" : $length_message ?></div>
+                            <div class="invalid-feedback"><?= empty($length_invalid_message) ? "Длина обязательно" : $length_invalid_message ?></div>
                         </div>
                     </div>
                     <div class="row">
