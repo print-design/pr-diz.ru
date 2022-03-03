@@ -24,12 +24,12 @@ $where = "p.id in (select pr1.pallet_id from pallet_roll pr1 left join (select *
 $film_id = filter_input(INPUT_GET, 'film_id');
 if(!empty($film_id)) {
     $film_id = $film_id;
-    $where .= " and fb.name = '$film_brand_name'";
+    $where .= " and f.id = '$film_brand_name'";
 }
     
 $thickness = filter_input(INPUT_GET, 'thickness');
 if(!empty($thickness)) {
-    $where .= " and p.thickness = ".$thickness;
+    $where .= " and fv.thickness = ".$thickness;
 }
     
 $width_from = filter_input(INPUT_GET, 'width_from');
@@ -58,7 +58,6 @@ $sql = "select sum(pr.weight) total_weight "
         . "left join pallet p on pr.pallet_id = p.id "
         . "left join film_variation fv on p.film_variation_id = fv.id "
         . "left join film f on fv.film_id = f.id "
-        . "left join film_brand fb on p.film_brand_id = fb.id "
         . "where (prsh.status_id is null or prsh.status_id = $free_status_id) and $where";
 
 $row = (new Fetcher($sql))->Fetch();
@@ -134,11 +133,8 @@ while ($row = $fetcher->Fetch()) {
                         <th class="d-none" style="padding-left: 5px; padding-right: 6px; width: 20%;"></th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 8%;">Дата<br />прихода</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 16%;">Марка пленки</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 16%;">Марка пленки (УД)</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Толщина</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Толщина (УД)</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Плотность</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Плотность (УД)</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Ширина</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Вес</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Длина</th>
@@ -163,7 +159,6 @@ while ($row = $fetcher->Fetch()) {
                             . "from pallet p "
                             . "left join film_variation fv on p.film_variation_id = fv.id "
                             . "left join film f on fv.film_id = f.id "
-                            . "left join film_brand fb on p.film_brand_id = fb.id "
                             . "left join supplier s on p.supplier_id = s.id "
                             . "left join user u on p.storekeeper_id = u.id "
                             . $where;
@@ -184,7 +179,6 @@ while ($row = $fetcher->Fetch()) {
                             . "from pallet p "
                             . "left join film_variation fv on p.film_variation_id = fv.id "
                             . "left join film f on fv.film_id = f.id "
-                            . "left join film_brand fb on p.film_brand_id = fb.id "
                             . "left join supplier s on p.supplier_id = s.id "
                             . "left join user u on p.storekeeper_id = u.id "
                             . "$where "
@@ -209,11 +203,8 @@ while ($row = $fetcher->Fetch()) {
                     <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;" class="pallet_tr" data-pallet-id="<?=$row['id'] ?>" data-get="<?= rawurlencode(BuildQueryRemove("id")) ?>">
                         <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= $row['date'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= $row['film'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= $row['film_brand'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= $row['thickness'] ?> мкм</td>
-                        <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= $row['thickness_old'] ?> мкм</td>
                         <td style="padding-left: 5px; padding-right: 5px;" class="text-nowrap" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= round($row['density'], 2) ?> г/м<sup>2</sup></td>
-                        <td style="padding-left: 5px; padding-right: 5px;" class="text-nowrap" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= round($row['density_old'], 2) ?> г/м<sup>2</sup></td>
                         <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= $row['width'] ?> мм</td>
                         <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= $row['net_weight'] ?> кг</td>
                         <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= $row['length'] ?> м</td>
@@ -259,7 +250,7 @@ while ($row = $fetcher->Fetch()) {
         </div>
         
         <?php
-        $film_brand_name = addslashes(filter_input(INPUT_GET, 'film_brand_name'));
+        $film_id = filter_input(INPUT_GET, 'film_id');
         $thicknesses = array();
         $slider_value = 0;
         $slider_index = 0;

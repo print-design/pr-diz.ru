@@ -252,7 +252,7 @@ while ($row = $fetcher->Fetch()) {
         </div>
         
         <?php
-        $film_id = addslashes(filter_input(INPUT_GET, 'film_id'));
+        $film_id = filter_input(INPUT_GET, 'film_id');
         $thicknesses = array();
         $slider_value = 0;
         $slider_index = 0;
