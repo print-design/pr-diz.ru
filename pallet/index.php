@@ -22,8 +22,8 @@ $utilized_status_id = 2;
 $where = "p.id in (select pr1.pallet_id from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_status_id))";
 
 $film_id = filter_input(INPUT_GET, 'film_id');
-if(!empty($film_name)) {
-    $film_name = addslashes($film_brand_name);
+if(!empty($film_id)) {
+    $film_id = $film_id;
     $where .= " and fb.name = '$film_brand_name'";
 }
     
