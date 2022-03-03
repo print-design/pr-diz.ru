@@ -258,7 +258,7 @@ while ($row = $fetcher->Fetch()) {
         $slider_index = 0;
         
         if(!empty($film_id)) {
-            $grabber = (new Grabber("select distinct fv.thickness from film_variation fv inner join film f on fv.film_id = f.id where f.id='$film_id' order by thickness"))->result;
+            $grabber = (new Grabber("select thickness from film_variation where film_id='$film_id' order by thickness"))->result;
             
             foreach ($grabber as $row) {
                 $slider_index++;
