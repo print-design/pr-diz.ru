@@ -253,18 +253,18 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     </div>
                     <div class="form-group">
                         <label for="film_id">Марка пленки</label>
-                        <select id="film_id" name="film_brand_id" class="form-control" required="required">
+                        <select id="film_id" name="film_id" class="form-control" required="required">
                             <option value="">Выберите марку</option>
                             <?php
                             if(null !== filter_input(INPUT_POST, 'supplier_id')) {
                                 $supplier_id = filter_input(INPUT_POST, 'supplier_id');
-                                $film_brands = (new Grabber("select id, name from film_brand where supplier_id = $supplier_id"))->result;
-                                foreach ($film_brands as $film_brand) {
-                                    $id = $film_brand['id'];
-                                    $name = $film_brand['name'];
+                                $films = (new Grabber("select id, name from film where supplier_id = $supplier_id"))->result;
+                                foreach ($films as $film) {
+                                    $film_id = $film['id'];
+                                    $name = $film['name'];
                                     $selected = '';
-                                    if(filter_input(INPUT_POST, 'film_brand_id') == $film_brand['id']) $selected = " selected='selected'";
-                                    echo "<option value='$id'$selected>$name</option>";
+                                    if(filter_input(INPUT_POST, 'film_id') == $film_id) $selected = " selected='selected'";
+                                    echo "<option value='$film_id'$selected>$name</option>";
                                 }
                             }
                             ?>
@@ -278,48 +278,25 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                             <div class="invalid-feedback">От 50 до 1600</div>
                         </div>
                         <div class="col-6 form-group">
-                            <label for="thickness">Толщина, мкм</label>
-                            <select id="thickness" name="thickness" class="form-control" required="required">
+                            <label for="film_variation_id">Толщина, мкм</label>
+                            <select id="film_variation_id" name="film_variation_id" class="form-control" required="required">
                                 <option value="">Выберите толщину</option>
                                 <?php
-                                if(null !== filter_input(INPUT_POST, 'film_brand_id')) {
-                                    $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
-                                    $film_brand_variations = (new Grabber("select thickness, weight from film_brand_variation where film_brand_id = $film_brand_id order by thickness"))->result;
-                                    foreach ($film_brand_variations as $film_brand_variation) {
-                                        $thickness = $film_brand_variation['thickness'];
-                                        $weight = $film_brand_variation['weight'];
+                                if(null !== filter_input(INPUT_POST, 'film_id')) {
+                                    $film_id = filter_input(INPUT_POST, 'film_id');
+                                    $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = $film_id order by thickness"))->result;
+                                    foreach ($film_variations as $film_variation) {
+                                        $film_variation_id = $film_variation['id'];
+                                        $thickness = $film_variation['thickness'];
+                                        $weight = $film_variation['weight'];
                                         $selected = '';
-                                        if(filter_input(INPUT_POST, 'thickness') == $film_brand_variation['thickness']) $selected = " selected='selected'";
-                                        echo "<option value='$thickness'$selected>$thickness мкм $weight г/м<sup>2</sup></option>";
+                                        if(filter_input(INPUT_POST, 'film_variation_id') == $film_variation_id) $selected = " selected='selected'";
+                                        echo "<option value='$film_variation_id'$selected>$thickness мкм $weight г/м<sup>2</sup></option>";
                                     }
                                 }
                                 ?>
                             </select>
                             <div class="invalid-feedback">Толщина обязательно</div>
-                        </div>
-                    </div>
-                    <?php
-                    $checked = '';
-                    if(filter_input(INPUT_POST, 'caclulate_by_diameter') == 'on') {
-                        $checked = " checked='checked'";
-                    }
-                    ?>
-                    <div class="form-group d-none">
-                        <input type='checkbox' id='caclulate_by_diameter' name="caclulate_by_diameter"<?=$checked ?> />
-                        <label class="form-check-label" for="caclulate_by_diameter">Рассчитать по радиусу</label>
-                    </div>
-                    <div class='row' id="controls-for-calculation">
-                        <div class="col-6 form-group">
-                            <label for="shpulya">Шпуля</label>
-                            <select id="shpulya" name="shpulya" class="form-control">
-                                <option value="">Выберите шпулю</option>
-                                <option value="76">76</option>
-                                <option value="152">152</option>
-                            </select>
-                        </div>
-                        <div class="col-6 form-group">
-                            <label for="diameter">Расчет по радиусу (от вала), мм</label>
-                            <input type="text" id="diameter" name="diameter" class="form-control int-only" autocomplete="off" />
                         </div>
                     </div>
                     <div class="row">
@@ -356,16 +333,10 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         </div>
                     </div>
                     <?php
-                    if(null === filter_input(INPUT_POST, 'create-pallet-submit')) {
-                        $checked = '';
-                        // $checked = " checked='checked'"; // Отменяем включённый флажок по умолчанию
-                    }
-                    else {
-                        $checked = '';
+                    $checked = '';
                         
-                        if(filter_input(INPUT_POST, 'equal_rolls') == 'on') {
-                            $checked = " checked='checked'";
-                        }
+                    if(filter_input(INPUT_POST, 'equal_rolls') == 'on') {
+                        $checked = " checked='checked'";
                     }
                     ?>
                     <div class="row">
@@ -408,24 +379,6 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         endwhile;
                         ?>
                     </div>
-                    <div class="form-group d-none">
-                        <label for="manager_id">Менеджер</label>
-                        <select id="manager_id" name="manager_id" class="form-control" disabled="true">
-                            <option value="">Выберите менеджера</option>
-                            <?php
-                            $managers = (new Grabber("select u.id, u.first_name, u.last_name from user u inner join role r on u.role_id = r.id where r.name in ('manager', 'seniormanager') order by u.last_name"))->result;
-                            foreach ($managers as $manager) {
-                                $id = $manager['id'];
-                                $first_name = $manager['first_name'];
-                                $last_name = $manager['last_name'];
-                                $selected = '';
-                                if(filter_input(INPUT_POST, 'manager_id') == $manager['id']) $selected = " selected='selected'";
-                                echo "<option value='$id'$selected>$last_name $first_name</option>";
-                            }
-                            ?>
-                        </select>
-                        <div class="invalid-feedback">Менеджер обязательно</div>
-                    </div>
                     <div class="form-group">
                         <label for="comment">Комментарий</label>
                         <textarea id="comment" name="comment" rows="4" class="form-control no-latin"><?= htmlentities(filter_input(INPUT_POST, 'comment')) ?></textarea>
@@ -446,13 +399,13 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         <script>
             $('#supplier_id').change(function(){
                 if($(this).val() == "") {
-                    $('#film_brand_id').html("<option value=''>Выберите марку</option>");
+                    $('#film_id').html("<option value=''>Выберите марку</option>");
                 }
                 else {
-                    $.ajax({ url: "../ajax/film_brand.php?supplier_id=" + $(this).val() })
+                    $.ajax({ url: "../ajax/film.php?supplier_id=" + $(this).val() })
                             .done(function(data) {
-                                $('#film_brand_id').html(data);
-                                $('#film_brand_id').change();
+                                $('#film_id').html(data);
+                                $('#film_id').change();
                             })
                             .fail(function() {
                                 alert('Ошибка при выборе поставщика');
@@ -460,42 +413,18 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     }
                 });
                 
-            $('#film_brand_id').change(function(){
+            $('#film_id').change(function(){
                 if($(this).val() == "") {
-                    $('#thickness').html("<option value=''>Выберите толщину</option>");
+                    $('#film_variation_id').html("<option value=''>Выберите толщину</option>");
                 }
                 else {
-                    $.ajax({ url: "../ajax/thickness.php?film_brand_id=" + $(this).val() })
+                    $.ajax({ url: "../ajax/thickness.php?film_id=" + $(this).val() })
                             .done(function(data) {
-                                $('#thickness').html(data);
+                                $('#film_variation_id').html(data);
                             })
                             .fail(function() {
                                 alert('Ошибка при выборе марки пленки');
                             });
-                }
-            });
-            
-            if($('#caclulate_by_diameter').prop('checked') == true) {
-                $('#controls-for-calculation').show();
-                $('#length').prop('disabled', true);
-                $('#net_weight').prop('disabled', true);
-            }
-            else {
-                $('#controls-for-calculation').hide();
-                $('#length').prop('disabled', false);
-                $('#net_weight').prop('disabled', false);
-            }
-            
-            $('#caclulate_by_diameter').change(function(e){
-                if(e.target.checked) {
-                    $('#controls-for-calculation').show();
-                    $('#length').prop('disabled', true);
-                    $('#net_weight').prop('disabled', true);
-                }
-                else {
-                    $('#controls-for-calculation').hide();
-                    $('#length').prop('disabled', false);
-                    $('#net_weight').prop('disabled', false);
                 }
             });
             
