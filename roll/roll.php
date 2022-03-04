@@ -131,11 +131,11 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         $net_weight = filter_input(INPUT_POST, 'net_weight');
         if(empty($net_weight)) $net_weight = $old_net_weight;
     }
-        
+    
     $weight_result = filter_input(INPUT_POST, 'net_weight_normal');
     $weight_result_high = $weight_result + ($weight_result * 15.0 / 100.0);
     $weight_result_low = $weight_result - ($weight_result * 15.0 / 100.0);
-        
+    
     if($net_weight < $weight_result_low || $net_weight > $weight_result_high) {
         $net_weight_valid = ISINVALID;
         $length_valid = ISINVALID;
@@ -397,7 +397,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
                             <select id="film_variation_id" name="film_variation_id" class="form-control<?=$film_variation_id_valid ?>"<?=$film_variation_id_disabled ?>>
                                 <option value="">Выберите толщину</option>
                                 <?php
-                                $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = $film_id order by thickness"))->result;
+                                $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = $film_id and id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id) order by thickness"))->result;
                                 foreach ($film_variations as $film_variation) {
                                     $_id = $film_variation['id'];
                                     $thickness = $film_variation['thickness'];

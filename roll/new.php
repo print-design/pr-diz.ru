@@ -250,7 +250,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                                 <?php
                                 if(null !== filter_input(INPUT_POST, 'film_id')) {
                                     $film_id = filter_input(INPUT_POST, 'film_id');
-                                    $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = $film_id order by thickness"))->result;
+                                    $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = $film_id and id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id) order by thickness"))->result;
                                     foreach ($film_variations as $film_variation) {
                                         $film_variation_id = $film_variation['id'];
                                         $thickness = $film_variation['thickness'];
@@ -393,7 +393,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                     $('#film_variation_id').html("<option value=''>Выберите толщину</option>");
                 }
                 else {
-                    $.ajax({ url: "../ajax/thickness.php?film_id=" + $(this).val() })
+                    $.ajax({ url: "../ajax/thickness.php?film_id=" + $(this).val() + "&supplier_id=" + $('#supplier_id').val() })
                             .done(function(data) {
                                 $('#film_variation_id').html(data);
                             })
