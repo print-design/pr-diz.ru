@@ -40,7 +40,7 @@ const AUDITOR = 'auditor';
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
                     <?php
-                    $sql = "select 'pallet' type, DATE_FORMAT(p.date, '%d.%m.%Y') date, p.id, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, p.cell, p.comment, "
+                    $sql = "select 'pallet' type, DATE_FORMAT(p.date, '%d.%m.%Y') date, p.id, s.name supplier, f.name film, p.id_from_supplier, p.width, fv.thickness, p.cell, p.comment, "
                             . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
                             . (IsInRole(AUDITOR) ? '' : " and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)")
                             . ") length, "
@@ -52,17 +52,19 @@ const AUDITOR = 'auditor';
                             . ") rolls_number "
                             . "from pallet p "
                             . "inner join supplier s on p.supplier_id=s.id "
-                            . "inner join film_brand fb on p.film_brand_id=fb.id "
+                            . "inner join film_variation fv on p.film_variation_id=fv.id "
+                            . "inner join film f on fv.film_id = f.id "
                             . "where p.cell='$cell' "
                             . "union "
-                            . "select 'roll' type, DATE_FORMAT(r.date, '%d.%m.%Y') date, r.id, s.name supplier, fb.name film_brand, r.id_from_supplier, r.width, r.thickness, r.cell, r.comment, "
+                            . "select 'roll' type, DATE_FORMAT(r.date, '%d.%m.%Y') date, r.id, s.name supplier, f.name film, r.id_from_supplier, r.width, fv.thickness, r.cell, r.comment, "
                             . "r.length length, "
                             . "r.net_weight weight, "
                             . "0 rolls_number "
                             . "from roll r "
                             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
                             . "inner join supplier s on r.supplier_id=s.id "
-                            . "inner join film_brand fb on r.film_brand_id=fb.id "
+                            . "inner join film_variation fv on r.film_variation_id=fv.id "
+                            . "inner join film f on fv.film_id = f.id "
                             . "where r.cell='$cell' "
                             . (IsInRole(AUDITOR) ? '' : "and (rsh.status_id is null or rsh.status_id = $free_roll_status_id) ")
                             . "order by id desc";
@@ -73,7 +75,7 @@ const AUDITOR = 'auditor';
                     $id = $row['id'];
                     $supplier = $row['supplier'];
                     $id_from_supplier = $row['id_from_supplier'];
-                    $film_brand = $row['film_brand'];
+                    $film_brand = $row['film'];
                     $width = $row['width'];
                     $thickness = $row['thickness'];
                     $weight = $row['weight'];
