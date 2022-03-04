@@ -258,7 +258,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                             <?php
                             if(null !== filter_input(INPUT_POST, 'supplier_id')) {
                                 $supplier_id = filter_input(INPUT_POST, 'supplier_id');
-                                $films = (new Grabber("select id, name from film where supplier_id = $supplier_id"))->result;
+                                $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id))"))->result;
                                 foreach ($films as $film) {
                                     $film_id = $film['id'];
                                     $name = $film['name'];
