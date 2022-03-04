@@ -363,7 +363,7 @@ while ($row = $fetcher->Fetch()) {
                         max: 0,
                         step: 1
                     });
-                    $("#film_variation_id").val('');
+                    $("#thickness").val('');
                 }
                 else {
                     $.ajax({ url: "../ajax/thickness.php?film="+$(this).val() })
