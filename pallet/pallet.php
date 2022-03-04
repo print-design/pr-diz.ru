@@ -103,7 +103,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     
     // Проверяем правильность веса, для всех ролей
     // Определяем имеющуюся длину и ширину
-    $sql = "select p.film_variation_id, p.weight, p.width, "
+    $sql = "select p.film_variation_id, p.width, "
             . "(select sum(length) from pallet_roll where pallet_id = p.id) length, "
             . "(select sum(weight) from pallet_roll where pallet_id = p.id) net_weight "
             . "from pallet p where p.id=$id";
@@ -129,7 +129,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     
     // Определяем удельный вес
     $ud_ves = null;
-    $sql = "select weight from film_variation where film_variation_id=$film_variation_id";
+    $sql = "select weight from film_variation where id=$film_variation_id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $ud_ves = $row[0];
@@ -238,7 +238,7 @@ $utilized_status_id = 2;
 // Получение данных
 $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, DATE_FORMAT(p.date, '%H:%i') time, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.id_from_supplier, p.film_variation_id, p.width, "
         . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_status_id)) length, "
-        . "(select film_id from film_variation where id = r.film_variation_id) film_id, "
+        . "(select film_id from film_variation where id = p.film_variation_id) film_id, "
         . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_status_id)) net_weight, "
         . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id <> $utilized_status_id)) rolls_number, "
         . "p.cell, "
@@ -388,12 +388,14 @@ if(null === $comment) $comment = $row['comment'];
                             <select id="film_variation_id" name="film_variation_id" class="form-control<?=$film_variation_id_valid ?>"<?=$film_variation_id_disabled ?>>
                                 <option value="">Выберите толщину</option>
                                 <?php
-                                $film_variations = (new Grabber("select thickness, weight from film_variation where film_id = $film_id order by thickness"))->result;
-                                foreach ($film_brand_variations as $film_brand_variation) {
-                                    $weight = $film_brand_variation['weight'];
+                                $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = $film_id and id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id) order by thickness"))->result;
+                                foreach ($film_variations as $film_variation) {
+                                    $_id = $film_variation['id'];
+                                    $thickness = $film_variation['thickness'];
+                                    $weight = $film_variation['weight'];
                                     $selected = '';
-                                    if($thickness == $film_brand_variation['thickness']) $selected = " selected='selected'";
-                                    echo "<option value='$thickness'$selected>$thickness мкм $weight г/м<sup>2</sup></option>";
+                                    if($film_variation_id == $_id) $selected = " selected='selected'";
+                                    echo "<option value='$_id'$selected>$thickness мкм $weight г/м<sup>2</sup></option>";
                                 }
                                 ?>
                             </select>
