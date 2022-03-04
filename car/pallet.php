@@ -38,7 +38,7 @@ const AUDITOR = 'auditor';
             $title = "П".filter_input(INPUT_GET, 'id');
             include '../include/find_mobile.php';
             
-            $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, p.cell, p.comment, "
+            $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, f.name film, p.id_from_supplier, p.width, fv.thickness, p.cell, p.comment, "
                     . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
                     . (IsInRole(AUDITOR) ? '' : " and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)")
                     . ") length, "
@@ -50,7 +50,8 @@ const AUDITOR = 'auditor';
                     . ") rolls_number "
                     . "from pallet p "
                     . "inner join supplier s on p.supplier_id=s.id "
-                    . "inner join film_brand fb on p.film_brand_id=fb.id "
+                    . "inner join film_variation fv on p.film_variation_id=fv.id "
+                    . "inner join film f on fv.film_id = f.id "
                     . "where p.id=$id";
             $fetcher = new Fetcher($sql);
             $row = $fetcher->Fetch();
@@ -59,7 +60,7 @@ const AUDITOR = 'auditor';
                 $date = $row['date'];
                 $supplier = $row['supplier'];
                 $id_from_supplier = $row['id_from_supplier'];
-                $film_brand = $row['film_brand'];
+                $film = $row['film'];
                 $width = $row['width'];
                 $thickness = $row['thickness'];
                 $weight = $row['weight'];
@@ -76,7 +77,7 @@ const AUDITOR = 'auditor';
                         <p><strong>Поставщик:</strong> <?=$supplier ?></p>
                         <p><strong>ID поставщика:</strong> <?=$id_from_supplier ?></p>
                         <p class="mt-3"><strong>Характеристики</strong></p>
-                        <p><strong>Марка пленки:</strong> <?=$film_brand ?></p>
+                        <p><strong>Марка пленки:</strong> <?=$film ?></p>
                         <p><strong>Ширина:</strong> <?=$width ?> мм</p>
                         <p><strong>Толщина:</strong> <?=$thickness ?> мкм</p>
                         <p><strong>Масса нетто:</strong> <?=$weight ?> кг</p>
