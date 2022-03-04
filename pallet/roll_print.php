@@ -12,7 +12,7 @@ if(empty($id)) {
 
 // Получение данных
 $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, s.name supplier, "
-        . "p.film_brand_id, fb.name film_brand, p.width, p.thickness, p.cell, "
+        . "p.film_variation_id, f.name film, p.width, fv.thickness, fv.weight, p.cell, "
         . "(select name from roll_status where id = ifnull(prsh.status_id, $free_status_id)) status, "
         . "p.comment, pr.id pallet_roll_id, pr.pallet_id pallet_roll_pallet_id, pr.weight pallet_roll_weight, pr.length pallet_roll_length, pr.ordinal pallet_roll_ordinal, pr.id_from_supplier "
         . "from pallet p "
@@ -20,7 +20,8 @@ $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_na
         . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
         . "left join user u on p.storekeeper_id = u.id "
         . "left join supplier s on p.supplier_id = s.id "
-        . "left join film_brand fb on p.film_brand_id = fb.id "
+        . "left join film_variation fv on p.film_variation_id = fv.id "
+        . "left join film f on fv.film_id = f.id "
         . "where pr.id=$id";
 
 $row = (new Fetcher($sql))->Fetch();
@@ -29,10 +30,11 @@ $storekeeper_id = $row['storekeeper_id'];
 $storekeeper = $row['last_name'].' '.$row['first_name'];
 $supplier_id = $row['supplier_id'];
 $supplier = $row['supplier'];
-$film_brand_id = $row['film_brand_id'];
-$film_brand = $row['film_brand'];
+$film_variation_id = $row['film_variation_id'];
+$film = $row['film'];
 $width = $row['width'];
 $thickness = $row['thickness'];
+$ud_ves = $row['weight'];
 $cell = $row['cell'];
 $status = $row['status'];
 $comment = $row['comment'];
@@ -42,14 +44,6 @@ $pallet_id = $row['pallet_roll_pallet_id'];
 $length = $row['pallet_roll_length'];
 $ordinal = $row['pallet_roll_ordinal'];
 $id_from_supplier = $row['id_from_supplier'];
-
-// Определяем удельный вес
-$ud_ves = null;
-$sql = "select weight from film_brand_variation where film_brand_id=$film_brand_id and thickness=$thickness";
-$fetcher = new Fetcher($sql);
-if($row = $fetcher->Fetch()) {
-    $ud_ves = $row[0];
-}
 
 // Вертикальное положение бирки
 $sticker_top = 0;
@@ -116,7 +110,7 @@ $current_date_time = date("dmYHis");
                         <td>Длина<br /><strong><?=$length ?> м</strong></td>
                     </tr>
                     <tr>
-                        <td>Марка пленки<br /><strong><?=$film_brand ?></strong></td>
+                        <td>Марка пленки<br /><strong><?=$film ?></strong></td>
                         <td>Масса нетто<br /><strong><?=$weight ?> кг</strong></td>
                     </tr>
                     <tr>
