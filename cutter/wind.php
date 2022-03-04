@@ -125,18 +125,16 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         
         // Получение данных о материале
         $supplier_id = 0;
-        $film_brand_id = 0;
-        $thickness = 0;
+        $film_variation_id = 0;
         
         if(empty($error_message)) {
-            $sql = "select supplier_id, film_brand_id, thickness from cutting where id=$cutting_id";
+            $sql = "select supplier_id, film_variation_id from cutting where id=$cutting_id";
             $fetcher = new Fetcher($sql);
             $error_message = $fetcher->error;
             
             if($row = $fetcher->Fetch()) {
                 $supplier_id = $row['supplier_id'];
-                $film_brand_id = $row['film_brand_id'];
-                $thickness = $row['thickness'];
+                $film_variation_id = $row['film_variation_id'];
             }
         }
         
@@ -150,8 +148,8 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     $comment = addslashes(filter_input(INPUT_POST, 'comment_'.$i));
                     $net_weight = filter_input(INPUT_POST, 'net_weight_'.$i);
         
-                    $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id, cutting_wind_id) "
-                            . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$user_id', $cutting_wind_id)";
+                    $sql = "insert into roll (supplier_id, id_from_supplier, film_variation_id, width, length, net_weight, cell, comment, storekeeper_id, cutting_wind_id) "
+                            . "values ($supplier_id, '$id_from_supplier', $film_variation_id, $width, $length, $net_weight, '$cell', '$comment', '$user_id', $cutting_wind_id)";
                     $executer = new Executer($sql);
                     $error_message = $executer->error;
                     $insert_id = $executer->insert_id;
@@ -257,18 +255,16 @@ if(null !== filter_input(INPUT_POST, 'previous-submit')) {
 
 // Получение объекта
 $supplier_id = null;
-$film_brand_id = null;
-$thickness = null;
+$film_variation_id = null;
 $width = null;
 $winds_count = 0;
 
-$sql = "select c.supplier_id, c.film_brand_id, c.thickness, c.width, (select count(id) from cutting_wind where cutting_source_id in (select id from cutting_source where cutting_id=c.id)) winds_count "
+$sql = "select c.supplier_id, c.film_variation_id, c.width, (select count(id) from cutting_wind where cutting_source_id in (select id from cutting_source where cutting_id=c.id)) winds_count "
         . "from cutting c where c.id=$cutting_id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $supplier_id = $row['supplier_id'];
-    $film_brand_id = $row['film_brand_id'];
-    $thickness = $row['thickness'];
+    $film_variation_id = $row['film_variation_id'];
     $width = $row['width'];
     $winds_count = $row['winds_count'];
 }
@@ -338,8 +334,7 @@ while ($row = $fetcher->Fetch()) {
                 ?>
             <form method="post" class="mt-3">
                 <input type="hidden" id="supplier_id" name="supplier_id" value="<?=$supplier_id ?>" />
-                <input type="hidden" id="film_brand_id" name="film_brand_id" value="<?=$film_brand_id ?>" />
-                <input type="hidden" id="thickness" name="thickness" value="<?=$thickness ?>" />
+                <input type="hidden" id="film_variation_id" name="film_variation_id" value="<?=$film_variation_id ?>" />
                 <input type="hidden" id="width" name="width" value="<?=$width ?>" />
                 <input type="hidden" id="spool" name="spool" value="76" />
                 <input type="hidden" id="net_weight" name="net_weight" />
@@ -400,34 +395,33 @@ while ($row = $fetcher->Fetch()) {
             var films = new Map();
             
             <?php
-            $sql = "SELECT fbv.film_brand_id, fbv.thickness, fbv.weight FROM film_brand_variation fbv";
+            $sql = "SELECT id, thickness, weight FROM film_variation";
             $fetcher = new Fetcher($sql);
-            while ($row = $fetcher->Fetch()) {
-                echo "if(films.get(".$row['film_brand_id'].") == undefined) {\n";
-                echo "films.set(".$row['film_brand_id'].", new Map());\n";
-                echo "}\n";
-                echo "films.get(".$row['film_brand_id'].").set(".$row['thickness'].", ".$row['weight'].");\n";
-            }
+            while ($row = $fetcher->Fetch()):
             ?>
+                if(films.get(<?=$row['id'] ?>) == undefined) {
+                    films.set(<?=$row['id'] ?>, [<?=$row['thickness'] ?>, <?=$row['weight'] ?>]);
+                }
+            <?php endwhile; ?>
                 
             // Расчёт длины и массы плёнки по шпуле, толщине, радиусу, ширине, удельному весу
             function CalculateByRadius() {
                 $('#normal_length').val('');
                 $('#net_weight').val('');
                 
-                film_brand_id = $('#film_brand_id').val();
                 spool = $('#spool').val();
-                thickness = $('#thickness').val();
+                film_variation_id = $('#film_variation_id').val();
                 radius = $('#radius').val();
                 width = $('#width').val();
                 length = $('#length').val().replaceAll(/\D/g, '');
                 
-                if(!isNaN(spool) && !isNaN(thickness) && !isNaN(radius) && !isNaN(width) 
-                        && spool != '' && thickness != '' && radius != '' && width != '') {
-                    density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
-                        
+                if(!isNaN(spool) && !isNaN(film_variation_id) && !isNaN(radius) && !isNaN(width) 
+                        && spool != '' && film_variation_id != '' && radius != '' && width != '') {
+                    thickness = films.get(parseInt(film_variation_id))[0];
+                    density = films.get(parseInt(film_variation_id))[1];
+                    
                     result = GetFilmLengthWeightBySpoolThicknessRadiusWidth(spool, thickness, radius, width, density);
-                        
+                    
                     $('#normal_length').val(result.length.toFixed(2));
                     $('#net_weight').val(result.weight.toFixed(2));
                 }
@@ -436,9 +430,9 @@ while ($row = $fetcher->Fetch()) {
                     if($('#stream_' + i).length > 0) {
                         width = $('#stream_' + i).val();
                 
-                        if(!isNaN(spool) && !isNaN(thickness) && !isNaN(radius) && !isNaN(width) 
-                                && spool != '' && thickness != '' && radius != '' && width != '') {
-                            density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
+                        if(!isNaN(length) && !isNaN(film_variation_id) && !isNaN(width) 
+                                && length != '' && film_variation_id != '' && width != '') {
+                            density = films.get(parseInt(film_variation_id))[1];
                             weight = GetFilmWeightByLengthWidth(length, width, density);
                             $('#net_weight_' + i).val(weight.toFixed(2));
                         }

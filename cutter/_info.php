@@ -7,16 +7,16 @@ $ud_ves = '';
 $width = '';
 
 if(null !== $cutting_id) {
-    $sql = "select s.name supplier, fb.name film_brand, fbv.weight, c.thickness, c.width "
+    $sql = "select s.name supplier, f.name film, fv.weight, fv.thickness, c.width "
             . "from cutting c "
             . "inner join supplier s on c.supplier_id = s.id "
-            . "inner join film_brand fb on c.film_brand_id = fb.id "
-            . "inner join film_brand_variation fbv on fbv.film_brand_id = fb.id "
-            . "where c.id = $cutting_id and fb.id = c.film_brand_id and fbv.thickness = c.thickness";
+            . "inner join film_variation fv on c.film_variation_id = fv.id "
+            . "inner join film f on fv.film_id = f.id "
+            . "where c.id = $cutting_id and fv.id = c.film_variation_id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $supplier = $row['supplier'];
-        $film_brand = $row['film_brand'];
+        $film = $row['film'];
         $ud_ves = $row['weight'];
         $thickness = $row['thickness'];
         $width = $row['width'];
@@ -35,7 +35,7 @@ if(null !== $cutting_id) {
                 <!-- Modal body -->
                 <div class="modal-body">
                     <p>Поставщик: <?=$supplier ?></p>
-                    <p>Марка пленки: <?=$film_brand ?></p>
+                    <p>Марка пленки: <?=$film ?></p>
                     <p>Толщина: <?=$thickness ?> мкм <?=$ud_ves ?> г/м<sup>2</sup></p>
                     <p>Ширина: <?=$width ?> мм</p>
                     <p class="font-weight-bold mt-2" style="font-size: large;">Как режем?</p>

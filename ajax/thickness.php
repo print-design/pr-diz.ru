@@ -32,7 +32,7 @@ if(!empty($film)) {
     echo json_encode($result);
 }
 
-// Получение толщин плёнки по названию марки для раскрывающегося списка
+// Получение толщин плёнки для раскрывающегося списка
 $film_name = addslashes(filter_input(INPUT_GET, 'film_name'));
 
 if(!empty($film_name) && !empty($supplier_id)) {
