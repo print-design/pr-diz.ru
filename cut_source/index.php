@@ -45,17 +45,16 @@ $wherefindpallet = "prsh.status_id = $cut_status_id";
 
 $wherefindroll = "rsh.status_id = $cut_status_id";
 
-$film_brand_name = filter_input(INPUT_GET, 'film_brand_name');
-if(!empty($film_brand_name)) {
-    $film_brand_name = addslashes($film_brand_name);
-    $wherefindpallet .= " and fb.name = '$film_brand_name'";
-    $wherefindroll .= " and fb.name = '$film_brand_name'";
+$film_id = filter_input(INPUT_GET, 'film_id');
+if(!empty($film_id)) {
+    $wherefindpallet .= " and f.id = '$film_id'";
+    $wherefindroll .= " and f.id = '$film_id'";
 }
 
 $thickness = filter_input(INPUT_GET, 'thickness');
 if(!empty($thickness)) {
-    $wherefindpallet .= " and p.thickness = ".$thickness;
-    $wherefindroll .= " and r.thickness = ".$thickness;
+    $wherefindpallet .= " and fv.thickness = ".$thickness;
+    $wherefindroll .= " and fv.thickness = ".$thickness;
 }
 
 $width_from = filter_input(INPUT_GET, 'width_from');
@@ -430,7 +429,7 @@ foreach ($roll_statuses as $status) {
                     $("#thickness").val('');
                 }
                 else {
-                    $.ajax({ url: "../ajax/thickness.php?film_brand_name="+$(this).val() })
+                    $.ajax({ url: "../ajax/thickness.php?film="+$(this).val() })
                             .done(function(data){
                                 var thicknesses = JSON.parse(data);
                         

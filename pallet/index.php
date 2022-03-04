@@ -23,7 +23,6 @@ $where = "p.id in (select pr1.pallet_id from pallet_roll pr1 left join (select *
 
 $film_id = filter_input(INPUT_GET, 'film_id');
 if(!empty($film_id)) {
-    $film_id = $film_id;
     $where .= " and f.id = '$film_id'";
 }
     

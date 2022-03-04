@@ -19,10 +19,10 @@ if(!empty($film_id) && !empty($supplier_id)) {
 }
 
 // Получение толщин плёнки по названию марки для ползунка
-$film = addslashes(filter_input(INPUT_GET, 'film'));
+$film = filter_input(INPUT_GET, 'film');
 
-if(!empty($film) && !empty($supplier_id)) {
-    $grabber = (new Grabber("select distinct fv.thickness from film_variation fv inner join film f on fv.film_id = f.id where f.id='$film' and id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id) order by thickness"))->result;
+if(!empty($film)) {
+    $grabber = (new Grabber("select distinct fv.thickness from film_variation fv inner join film f on fv.film_id = f.id where f.id='$film' order by thickness"))->result;
     $result = array();
     
     foreach ($grabber as $row) {

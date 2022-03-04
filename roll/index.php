@@ -27,7 +27,6 @@ $where = "(rsh.status_id is null or rsh.status_id = $free_status_id)";
 
 $film_id = filter_input(INPUT_GET, 'film_id');
 if(!empty($film_id)) {
-    $film_id = $film_id;
     $where .= " and f.id = $film_id";
 }
 
