@@ -217,7 +217,7 @@ if($row = $fetcher->Fetch()) {
                     <form method="post">
                         <input type="hidden" id="cutting_id" name="cutting_id" value="<?=$cutting_id ?>" />
                         <input type="hidden" id="supplier_id" name="supplier_id" value="<?=$supplier_id ?>" />
-                        <input type="hidden" id="film_brand_id" name="film_variation_id" value="<?=$film_variation_id ?>" />
+                        <input type="hidden" id="film_variation_id" name="film_variation_id" value="<?=$film_variation_id ?>" />
                         <input type="hidden" id="length" id="length" name="length" />
                         <input type="hidden" id="net_weight" id="net_weight" name="net_weight" />
                         <div class="form-group">
