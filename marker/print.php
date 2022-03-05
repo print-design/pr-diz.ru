@@ -46,14 +46,15 @@ if($row = $fetcher->Fetch()) {
         <?php
         // Получение данных
         $sql = "select r.id, DATE_FORMAT(r.date, '%d.%m.%Y') date, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, s.name supplier, r.id_from_supplier, "
-                . "r.film_brand_id, fb.name film_brand, r.width, r.thickness, r.length, "
+                . "r.film_variation_id, f.name film, r.width, fv.thickness, fv.weight, r.length, "
                 . "r.net_weight, r.cell, "
                 . "(select rs.name status from roll_status_history rsh left join roll_status rs on rsh.status_id = rs.id where rsh.roll_id = r.id order by rsh.id desc limit 0, 1) status, "
                 . "r.comment "
                 . "from roll r "
                 . "left join user u on r.storekeeper_id = u.id "
                 . "left join supplier s on r.supplier_id = s.id "
-                . "left join film_brand fb on r.film_brand_id = fb.id "
+                . "left join film_variation fv on r.film_variation_id = fv.id "
+                . "left join film f on fv.film_id = f.id "
                 . "where r.id=$roll_id";
         $current_roll = 0;
         $fetcher = new Fetcher($sql);
@@ -66,23 +67,16 @@ if($row = $fetcher->Fetch()) {
         $supplier_id = $row['supplier_id'];
         $supplier = $row['supplier'];
         $id_from_supplier = $row['id_from_supplier'];
-        $film_brand_id = $row['film_brand_id'];
-        $film_brand = $row['film_brand'];
+        $film_variation_id = $row['film_variation_id'];
+        $film = $row['film'];
         $width = $row['width'];
         $thickness = $row['thickness'];
+        $ud_ves = $row['weight'];
         $length = $row['length'];
         $net_weight = $row['net_weight'];
         $cell = $row['cell'];
         $status = $row['status'];
         $comment = $row['comment'];
-        
-        // Определяем удельный вес
-        $ud_ves = null;
-        $ud_ves_sql = "select weight from film_brand_variation where film_brand_id=$film_brand_id and thickness=$thickness";
-        $ud_ves_fetcher = new Fetcher($ud_ves_sql);
-        if($ud_ves_row = $ud_ves_fetcher->Fetch()) {
-            $ud_ves = $ud_ves_row[0];
-        }
         
         $current_roll++;
         ?>
@@ -120,7 +114,7 @@ if($row = $fetcher->Fetch()) {
                     <td>Длина<br /><strong><?=$length ?> м</strong></td>
                 </tr>
                 <tr>
-                    <td class="text-nowrap">Марка пленки<br /><strong><?=$film_brand ?></strong></td>
+                    <td class="text-nowrap">Марка пленки<br /><strong><?=$film ?></strong></td>
                     <td class="text-nowrap">Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
                 </tr>
                 <tr>
@@ -169,7 +163,7 @@ if($row = $fetcher->Fetch()) {
                     <td>Длина<br /><strong><?=$length ?> м</strong></td>
                 </tr>
                 <tr>
-                    <td class="text-nowrap">Марка пленки<br /><strong><?=$film_brand ?></strong></td>
+                    <td class="text-nowrap">Марка пленки<br /><strong><?=$film ?></strong></td>
                     <td class="text-nowrap">Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
                 </tr>
                 <tr>
