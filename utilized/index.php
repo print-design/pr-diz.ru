@@ -153,7 +153,7 @@ foreach ($roll_statuses as $status) {
             include '../include/find_camera.php';
             ?>
             <div class="d-flex justify-content-between mb-auto">
-                <div class="p-1">
+                <div class="p-0">
                     <table>
                         <tr>
                             <td><h1 style="font-size: 32px; font-weight: 600;">Сработанная пленка</h1></td>
@@ -161,7 +161,7 @@ foreach ($roll_statuses as $status) {
                         </tr>
                     </table>
                 </div>
-                <div class="p-1">
+                <div class="pt-1">
                     <button class="btn btn-outline-dark disabled d-none" data-toggle="modal" data-target="#filterModal" data-text="Фильтр"><img src="../images/icons/filter.svg" style="margin-right: 20px;" />Фильтр</button>
                     <div style="display: inline-block; position: relative; margin-right: 55px; margin-left: 80px;">
                         <a href="javascript: void(0);"><img src="../images/icons/filter1.svg" data-toggle="modal" data-target="#filterModal" data-text="Фильтр" /></a>

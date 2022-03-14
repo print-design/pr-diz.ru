@@ -214,7 +214,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         <?php
         include '../include/header_sklad.php';
         ?>
-        <div class="container-fluid" style="padding-left: 40px;">
+        <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";

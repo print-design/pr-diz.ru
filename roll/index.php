@@ -99,7 +99,7 @@ while ($row = $fetcher->Fetch()) {
             include '../include/find_camera.php';
             ?>
             <div class="d-flex justify-content-between mb-auto">
-                <div class="p-1">
+                <div class="p-0">
                     <table>
                         <tr>
                             <td><h1 style="font-size: 32px; font-weight: 600;">Рулоны</h1></td>
@@ -107,7 +107,7 @@ while ($row = $fetcher->Fetch()) {
                         </tr>
                     </table>
                 </div>
-                <div class="p-1">
+                <div class="pt-1">
                     <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
                     <a href="new.php" class="btn btn-outline-dark"><i class="fas fa-plus"></i>&nbsp;Новый ролик</a>
                     <?php endif; ?>
