@@ -234,7 +234,7 @@ while($row = $fetcher->Fetch()) {
                             <input type="hidden" id="scroll" name="scroll" />
                             <div class="d-flex justify-content-between mb-2 w-100">
                                 <div class="form-group w-75">
-                                    <select class="form-control w-100" name="film_variation_id">
+                                    <select class="form-control w-100" name="film_variation_id" required="required">
                                         <option hidden="hidden" value="">Выберите пленку для добавления</option>
                                         <?php foreach($film['film_variations'] as $fv_key => $film_variation): ?>
                                         <option value="<?=$fv_key ?>">Толщина <?=$film_variation['thickness'] ?> мкм, Удельный вес <?=$film_variation['weight'] ?> г/м<sup>2</sup></option>
