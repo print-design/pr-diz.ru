@@ -12,10 +12,10 @@ class GrafikShiftReadonly {
         $this->shift_editions_count = $shift_editions_count;
     }
     
-    private DateTime $date;
+    private $date;
     private $shift;
     private $shift_data;
-    private GrafikTimetableReadonly $timetable;
+    private $timetable;
     private $editions;
     private $date_editions_count;
     private $shift_editions_count;
