@@ -194,7 +194,7 @@ while($row = $fetcher->Fetch()) {
                 <div class="p-0">
                     <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/supplier/">Назад</a>
                 </div>
-                <div class="p-0">
+                <div class="pt-1">
                     <button class="btn btn-dark" data-toggle="modal" data-target="#create_film">
                         <i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить пленку
                     </button>
@@ -207,7 +207,7 @@ while($row = $fetcher->Fetch()) {
                     <?php foreach($films as $f_key => $film): ?>
                     <div class="film_brand">
                         <h3 id="f_<?=$f_key ?>"><?=$film['name'] ?></h3>
-                        <table class="table table-hover">
+                        <table class="table">
                             <tr style="border-top: 0;">
                                 <th style="border-top: 0;">Толщина</th>
                                 <th style="border-top: 0;">Удельный вес</th>

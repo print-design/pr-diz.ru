@@ -197,7 +197,7 @@ while($row = $fetcher->Fetch()) {
                 <div class="p-0">
                     <h1>Пленка</h1>
                 </div>
-                <div class="p-0">
+                <div class="pt-1">
                     <button class="btn btn-dark" data-toggle="modal" data-target="#create_film_variation">
                         <i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить тип пленки
                     </button>
@@ -208,7 +208,7 @@ while($row = $fetcher->Fetch()) {
             foreach($films as $f_key => $film):
             ?>
             <h2 id="f_<?=$f_key ?>"><?=$film['name'] ?></h2>
-            <table class="table table-hover">
+            <table class="table">
                 <?php if($show_table_header): ?>
                 <tr>
                     <th width="50%" style="border-top: 0;">Название пленки</th>

@@ -93,13 +93,13 @@ if(null !== filter_input(INPUT_POST, 'create_supplier_submit')) {
                 <div class="p-0">
                     <h1>Поставщики</h1>
                 </div>
-                <div class="p-0">
+                <div class="pt-1">
                     <button class="btn btn-dark" data-toggle="modal" data-target="#create_supplier">
                         <i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить поставщика
                     </button>
                 </div>
             </div>
-            <table class="table table-hover">
+            <table class="table">
                 <thead>
                     <tr>
                         <th style="border-top: 0;">Название поставщика</th>
