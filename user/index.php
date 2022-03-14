@@ -141,7 +141,7 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                     </a>
                 </div>
             </div>
-            <table class="table table-hover">
+            <table class="table">
                 <thead>
                     <tr>
                         <th>ФИО</th>
