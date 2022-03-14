@@ -26,7 +26,7 @@ include 'left_bar.php';
             $status = filter_input(INPUT_GET, 'id') == $row['id'] ? ' disabled' : '';
             ?>
             <li class="nav-item">
-                <a class="nav-link<?=$status ?>" href="<?=APPLICATION ?>/grafik.php?id=<?=$row['id'] ?>"><?=$row['name'] ?></a>
+                <a class="nav-link<?=$status ?>" href="<?= BuildQuery("id", $row['id']) ?>"><?=$row['name'] ?></a>
             </li>
             <?php
             endwhile;
