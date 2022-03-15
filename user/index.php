@@ -144,13 +144,13 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
             <table class="table">
                 <thead>
                     <tr>
-                        <th>ФИО</th>
-                        <th>Должность</th>
-                        <th>Логин</th>
-                        <th>E-Mail</th>
-                        <th>Телефон</th>
-                        <th style="width: 80px;">Пароль</th>
-                        <th style="width: 80px;">Активный</th>
+                        <th style="border-top: 0;">ФИО</th>
+                        <th style="border-top: 0;">Должность</th>
+                        <th style="border-top: 0;">Логин</th>
+                        <th style="border-top: 0;">E-Mail</th>
+                        <th style="border-top: 0;">Телефон</th>
+                        <th style="width: 80px; border-top: 0;">Пароль</th>
+                        <th style="width: 80px; border-top: 0;">Активный</th>
                     </tr>
                 </thead>
                 <tbody>
