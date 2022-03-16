@@ -38,7 +38,7 @@ and open the template in the editor.
                echo "<div class='alert alert-danger mt-3'>$error_message</div>";
             }
             ?>
-            <h1 class="mt-4">Принт-Дизайн</h1>
+            <h1>Принт-Дизайн</h1>
             <h2>Управление ресурсами предприятия</h2>
         </div>
         <?php
