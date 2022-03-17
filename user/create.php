@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev'))) {
+if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -70,9 +70,20 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
         $phone = addslashes($phone);
         $username = addslashes($username);
         
-        $executer = new Executer("insert into user (username, password, first_name, last_name, role_id, email, phone) values ('$username', password('$password'), '$first_name', '$last_name', $role_id, '$email', '$phone')");
-        $error_message = $executer->error;
-        $id = $executer->insert_id;
+        $sql = "select count(id) from user where username = '$username'";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            if($row[0] != 0) {
+                $error_message = "Такой логин уже имеется в базе";
+            }
+        }
+        
+        if(empty($error_message)) {
+            $sql = "insert into user (username, password, first_name, last_name, role_id, email, phone) values ('$username', password('$password'), '$first_name', '$last_name', $role_id, '$email', '$phone')";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+            $id = $executer->insert_id;
+        }
         
         if(empty($error_message)) {
             header('Location: '.APPLICATION."/user/");
@@ -89,7 +100,7 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
     </head>
     <body>
         <?php
-        include '../include/header.php';
+        include '../include/header_admin.php';
         ?>
         <div class="container-fluid">
             <?php
@@ -97,14 +108,6 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <div class="d-flex justify-content-start">
-                <div class="p-1">
-                    <?php
-                    include '../include/subheader_admin.php';
-                    ?>
-                </div>
-            </div>
-            <hr />
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/user/">Назад</a>
             <div style="width:387px;">
                 <h1 style="font-size: 24px; font-weight: 600;">Добавление сотрудника</h1>

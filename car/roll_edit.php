@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
+if(!IsInRole(array('technologist', 'dev', 'electrocarist', 'auditor'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -18,6 +18,7 @@ $form_valid = true;
 $error_message = '';
 
 $cell_valid = '';
+$comment_valid = '';
 
 // Обработка формы смены ячейки
 if(null !== filter_input(INPUT_POST, 'cell-submit')) {
@@ -45,8 +46,40 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
     }
 }
 
+// Обработка формы добавления комментария
+if(null !== filter_input(INPUT_POST, 'comment-submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $old_comment = addslashes(filter_input(INPUT_POST, 'old_comment'));
+    $comment = addslashes(filter_input(INPUT_POST, 'comment'));
+    
+    if(empty($comment)) {
+        $comment_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(!empty($old_comment)) $comment = $old_comment.' '.$comment;
+    
+    if($form_valid) {
+        $sql = "update roll set comment='$comment' where id=$id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+        
+        if(empty($error_message)) {
+            if(empty(filter_input(INPUT_GET, 'link'))) {
+                header('Location: '.APPLICATION.'/car/roll.php?id='.$id);
+            }
+            else {
+                header('Location: '.urldecode(filter_input(INPUT_GET, 'link')));
+            }
+        }
+    }
+}
+
 // СТАТУС "СВОБОДНЫЙ"
 $free_status_id = 1;
+
+// РОЛЬ "РЕВИЗОР"
+const AUDITOR = 'auditor';
 ?>
 <!DOCTYPE html>
 <html>
@@ -80,18 +113,20 @@ $free_status_id = 1;
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             
-            $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, s.name supplier, fb.name film_brand, r.id_from_supplier, r.width, r.thickness, r.net_weight, r.length, r.cell, r.comment "
+            $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, s.name supplier, f.name film, r.id_from_supplier, r.width, fv.thickness, r.net_weight, r.length, r.cell, r.comment "
                     . "from roll r "
                     . "inner join supplier s on r.supplier_id=s.id "
-                    . "inner join film_brand fb on r.film_brand_id=fb.id "
+                    . "inner join film_variation fv on r.film_variation_id=fv.id "
+                    . "inner join film f on fv.film_id = f.id "
                     . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                    . "where r.id=$id and (rsh.status_id is null or rsh.status_id = $free_status_id)";
+                    . "where r.id=$id"
+                    . (IsInRole(AUDITOR) ? '' : " and (rsh.status_id is null or rsh.status_id = $free_status_id)");
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()):
             $date = $row['date'];
             $supplier = $row['supplier'];
             $id_from_supplier = $row['id_from_supplier'];
-            $film_brand = $row['film_brand'];
+            $film = $row['film'];
             $width = $row['width'];
             $thickness = $row['thickness'];
             $weight = $row['net_weight'];
@@ -107,13 +142,14 @@ $free_status_id = 1;
                         <p><strong>Поставщик:</strong> <?=$supplier ?></p>
                         <p><strong>ID поставщика:</strong> <?=$id_from_supplier ?></p>
                         <p class="mt-3"><strong>Характеристики</strong></p>
-                        <p><strong>Марка пленки:</strong> <?=$film_brand ?></p>
+                        <p><strong>Марка пленки:</strong> <?=$film ?></p>
                         <p><strong>Ширина:</strong> <?=$width ?> мм</p>
                         <p><strong>Толщина:</strong> <?=$thickness ?> мкм</p>
                         <p><strong>Масса нетто:</strong> <?=$weight ?> кг</p>
                         <p><strong>Длина:</strong> <?=$length ?> м</p>
                         <p><strong>Комментарий:</strong></p>
-                        <p><?=$comment ?></p>
+                        <div style="white-space: pre-wrap;"><?=$comment ?></div>
+                        <?php if(IsInRole(array('electrocarist'))): ?>
                         <form method="post" class="mt-2">
                             <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                             <div class="form-group">
@@ -124,6 +160,19 @@ $free_status_id = 1;
                                 <button type="submit" class="btn btn-dark form-control" id="cell-submit" name="cell-submit">Сменить ячейку</button>
                             </div>
                         </form>
+                        <?php elseif(IsInRole(array('auditor'))): ?>
+                        <form method="post" class="mt-2">
+                            <input type="hidden" id="id" name="id" value="<?=$id ?>" />
+                            <input type="hidden" id="old_comment" name="old_comment" value="<?=$comment ?>" />
+                            <div class="form-group">
+                                <label for="comment"><strong>Новый комментарий:</strong></label>
+                                <input type="text" id="comment" name="comment" class="form-control" style="font-size: 26px;" required="required" autocomplete="off" />
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-dark form-control" id="comment-submit" name="comment-submit">Добавить комментарий</button>
+                            </div>
+                        </form>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

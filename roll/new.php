@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'storekeeper'))) {
+if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'administrator'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -13,17 +13,17 @@ $error_message = '';
 
 $supplier_id_valid = '';
 $id_from_supplier_valid = '';
-$film_brand_id_valid = '';
+$film_id_valid = '';
+$film_variation_id_valid = '';
 $width_valid = '';
-$thickness_valid = '';
 $length_valid = '';
 $net_weight_valid = '';
 $cell_valid = '';
 $status_id_valid = '';
-$diameter_valid = '';
+$radius_valid = '';
 
-$invalid_diameter_message = '';
-$invalid_message = '';
+$invalid_radius_message = '';
+$net_weight_invalid_message = '';
 $length_invalid_message = '';
 
 // Обработка отправки формы
@@ -40,9 +40,15 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
         $form_valid = false;
     }
     
-    $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
-    if(empty($film_brand_id)) {
-        $film_brand_id = ISINVALID;
+    $film_id = filter_input(INPUT_POST, 'film_id');
+    if(empty($film_id)) {
+        $film_id_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+    if(empty($film_variation_id)) {
+        $film_variation_id_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -57,19 +63,13 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
         $form_valid = false;
     }
     
-    $thickness = filter_input(INPUT_POST, 'thickness');
-    if(empty($thickness)) {
-        $thickness_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
     $length = filter_input(INPUT_POST, 'length');
-    if(filter_input(INPUT_POST, 'caclulate_by_diameter') != 'on' && empty($length)) {
+    if(filter_input(INPUT_POST, 'caclulate_by_radius') != 'on' && empty($length)) {
         $length_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(filter_input(INPUT_POST, 'caclulate_by_diameter') == 'on') {
+    if(filter_input(INPUT_POST, 'caclulate_by_radius') == 'on') {
         $length = filter_input(INPUT_POST, 'length_hidden');
         if(empty($length)) {
             $length_valid = false;
@@ -78,12 +78,12 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
     }
     
     $net_weight = filter_input(INPUT_POST, 'net_weight');
-    if(filter_input(INPUT_POST, 'caclulate_by_diameter') != 'on' && empty($net_weight)) {
+    if(filter_input(INPUT_POST, 'caclulate_by_radius') != 'on' && empty($net_weight)) {
         $net_weight_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(filter_input(INPUT_POST, 'caclulate_by_diameter') == 'on') {
+    if(filter_input(INPUT_POST, 'caclulate_by_radius') == 'on') {
         $net_weight = filter_input(INPUT_POST, 'net_weight_hidden');
         if(empty($net_weight)) {
             $net_weight_valid = false;
@@ -91,26 +91,28 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
         }
     }
     
-    if(filter_input(INPUT_POST, 'caclulate_by_diameter') == 'on') {
+    if(filter_input(INPUT_POST, 'caclulate_by_radius') == 'on') {
         // Валидация диаметра
-        $diameter = filter_input(INPUT_POST, 'diameter');
-        if(empty($diameter)) {
-            $diameter_valid = ISINVALID;
+        $radius = filter_input(INPUT_POST, 'radius');
+        if(empty($radius)) {
+            $radius_valid = ISINVALID;
             $form_valid = false;
         }
-        else if(intval($diameter) < 20 || intval($diameter) > 500) {
-            $diameter_valid = ISINVALID;
+        else if(intval($radius) < 20 || intval($radius) > 500) {
+            $radius_valid = ISINVALID;
             $form_valid = false;
-            $invalid_diameter_message = "От 20 до 500";
+            $invalid_radius_message = "От 20 до 500";
         }
     }
     
-    // Определяем удельный вес
+    // Определяем толщину и удельный вес
+    $thickness = null;
     $ud_ves = null;
-    $sql = "select weight from film_brand_variation where film_brand_id=$film_brand_id and thickness=$thickness";
+    $sql = "select thickness, weight from film_variation where id = $film_variation_id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
-        $ud_ves = $row[0];
+        $thickness = $row['thickness'];
+        $ud_ves = $row['weight'];
     }
     
     $weight_result = floatval($ud_ves) * floatval($length) * floatval($width) / 1000.0 / 1000.0;
@@ -121,7 +123,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
         $net_weight_valid = ISINVALID;
         $length_valid = ISINVALID;
         $form_valid = false;
-        $invalid_message = "Неверное значение";
+        $net_weight_invalid_message = "Неверное значение";
         $length_invalid_message = "Неверное значение";
     }
     
@@ -144,16 +146,12 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
     }
     
     $comment = addslashes(filter_input(INPUT_POST, 'comment'));
-    $is_unknown = 0;
-    if(filter_input(INPUT_POST, 'is_unknown') == 'on') {
-        $is_unknown = 1;
-    }
     $date = filter_input(INPUT_POST, 'date');
     $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id');
     
     if($form_valid) {
-        $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, is_unknown, storekeeper_id) "
-                . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', $is_unknown, '$storekeeper_id')";
+        $sql = "insert into roll (supplier_id, id_from_supplier, film_variation_id, width, length, net_weight, cell, comment, storekeeper_id) "
+                . "values ($supplier_id, '$id_from_supplier', $film_variation_id, $width, $length, $net_weight, '$cell', '$comment', '$storekeeper_id')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $roll_id = $executer->insert_id;
@@ -182,11 +180,13 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
         <?php
         include '../include/header_sklad.php';
         ?>
-        <div class="container-fluid" style="padding-left: 40px;">
+        <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
+            
+            include '../include/find_camera.php';
             ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/roll/">Назад</a>
             <h1 style="font-size: 32px; font-weight: 600; margin-bottom: 20px;">Новый рулон</h1>
@@ -218,19 +218,19 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                         <div class="invalid-feedback">ID рулона от поставщика обязательно</div>
                     </div>
                     <div class="form-group">
-                        <label for="film_brand_id">Марка пленки</label>
-                        <select id="film_brand_id" name="film_brand_id" class="form-control" required="required">
+                        <label for="film_id">Марка пленки</label>
+                        <select id="film_id" name="film_id" class="form-control" required="required">
                             <option value="">Выберите марку</option>
                             <?php
                             if(null !== filter_input(INPUT_POST, 'supplier_id')) {
                                 $supplier_id = filter_input(INPUT_POST, 'supplier_id');
-                                $film_brands = (new Grabber("select id, name from film_brand where supplier_id = $supplier_id"))->result;
-                                foreach ($film_brands as $film_brand) {
-                                    $id = $film_brand['id'];
-                                    $name = $film_brand['name'];
+                                $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id))"))->result;
+                                foreach ($films as $film) {
+                                    $film_id = $film['id'];
+                                    $name = $film['name'];
                                     $selected = '';
-                                    if(filter_input(INPUT_POST, 'film_brand_id') == $film_brand['id']) $selected = " selected='selected'";
-                                    echo "<option value='$id'$selected>$name</option>";
+                                    if(filter_input(INPUT_POST, 'film_id') == $film_id) $selected = " selected='selected'";
+                                    echo "<option value='$film_id'$selected>$name</option>";
                                 }
                             }
                             ?>
@@ -244,19 +244,20 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                             <div class="invalid-feedback">От 50 до 1600</div>
                         </div>
                         <div class="col-6 form-group">
-                            <label for="thickness" id="label_thickness">Толщина, мкм</label>
-                            <select id="thickness" name="thickness" class="form-control" required="required">
+                            <label for="film_variation_id">Толщина, мкм</label>
+                            <select id="film_variation_id" name="film_variation_id" class="form-control" required="required">
                                 <option value="">Выберите толщину</option>
                                 <?php
-                                if(null !== filter_input(INPUT_POST, 'film_brand_id')) {
-                                    $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
-                                    $film_brand_variations = (new Grabber("select thickness, weight from film_brand_variation where film_brand_id = $film_brand_id order by thickness"))->result;
-                                    foreach ($film_brand_variations as $film_brand_variation) {
-                                        $thickness = $film_brand_variation['thickness'];
-                                        $weight = $film_brand_variation['weight'];
+                                if(null !== filter_input(INPUT_POST, 'film_id')) {
+                                    $film_id = filter_input(INPUT_POST, 'film_id');
+                                    $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = $film_id and id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id) order by thickness"))->result;
+                                    foreach ($film_variations as $film_variation) {
+                                        $film_variation_id = $film_variation['id'];
+                                        $thickness = $film_variation['thickness'];
+                                        $weight = $film_variation['weight'];
                                         $selected = '';
-                                        if(filter_input(INPUT_POST, 'thickness') == $film_brand_variation['thickness']) $selected = " selected='selected'";
-                                        echo "<option value='$thickness'$selected>$thickness мкм $weight г/м<sup>2</sup></option>";
+                                        if(filter_input(INPUT_POST, 'film_variation_id') == $film_variation_id) $selected = " selected='selected'";
+                                        echo "<option value='$film_variation_id'$selected>$thickness мкм $weight г/м<sup>2</sup></option>";
                                     }
                                 }
                                 ?>
@@ -266,34 +267,34 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                     </div>
                     <?php
                     $checked = '';
-                    if(filter_input(INPUT_POST, 'caclulate_by_diameter') == 'on') {
+                    if(filter_input(INPUT_POST, 'caclulate_by_radius') == 'on') {
                         $checked = " checked='checked'";
                     }
                     ?>
                     <div class="form-group">
-                        <input type="checkbox" id="caclulate_by_diameter" name="caclulate_by_diameter"<?=$checked ?> />
-                        <label class="form-check-label" for="caclulate_by_diameter">Рассчитать по радиусу</label>
+                        <input type="checkbox" id="caclulate_by_radius" name="caclulate_by_radius"<?=$checked ?> />
+                        <label class="form-check-label" for="caclulate_by_radius">Рассчитать по радиусу</label>
                     </div>
                     <div class="row" id="controls-for-calculation">
                         <div class="col-6 form-group">
-                            <label for="shpulya">Шпуля</label>
-                            <select id="shpulya" name="shpulya" class="form-control">
+                            <label for="spool">Шпуля</label>
+                            <select id="spool" name="spool" class="form-control">
                                 <?php
-                                $shpulya_selected_76 = '';
-                                $shpulya_selected_152 = '';
-                                $shpulya = filter_input(INPUT_POST, 'shpulya');
-                                if($shpulya == 76) $shpulya_selected_76 = " selected='selected'";
-                                if($shpulya == 152) $shpulya_selected_152 = " selected='selected'";
+                                $spool_selected_76 = '';
+                                $spool_selected_152 = '';
+                                $spool = filter_input(INPUT_POST, 'spool');
+                                if($spool == 76) $spool_selected_76 = " selected='selected'";
+                                if($spool == 152) $spool_selected_152 = " selected='selected'";
                                 ?>
                                 <option value="" hidden="hidden">Выберите шпулю</option>
-                                <option value="76"<?=$shpulya_selected_76 ?>">76</option>
-                                <option value="152"<?=$shpulya_selected_152 ?>">152</option>
+                                <option value="76"<?=$spool_selected_76 ?>">76</option>
+                                <option value="152"<?=$spool_selected_152 ?>">152</option>
                             </select>
                         </div>
                         <div class="col-6 form-group">
-                            <label for="diameter">Расчет по радиусу (от вала), мм</label>
-                            <input type="text" id="diameter" name="diameter" class="form-control int-only<?=$diameter_valid ?>" value="<?= filter_input(INPUT_POST, 'diameter') ?>" autocomplete="off" />
-                            <div class="invalid-feedback"><?= empty($invalid_diameter_message) ? "Радиус обязательно" : $invalid_diameter_message ?></div>
+                            <label for="radius">Расчет по радиусу (от вала), мм</label>
+                            <input type="text" id="radius" name="radius" class="form-control int-only<?=$radius_valid ?>" value="<?= filter_input(INPUT_POST, 'radius') ?>" autocomplete="off" />
+                            <div class="invalid-feedback"><?= empty($invalid_radius_message) ? "Радиус обязательно" : $invalid_radius_message ?></div>
                         </div>
                     </div>
                     <div class="row">
@@ -301,7 +302,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                             <label for="net_weight">Масса нетто, кг</label>
                             <input type="text" id="net_weight" name="net_weight" value="<?= filter_input(INPUT_POST, 'net_weight') ?>" class="form-control int-only<?=$net_weight_valid ?>" placeholder="Введите массу нетто" required="required" autocomplete="off" />
                             <input type="hidden" id="net_weight_hidden" name="net_weight_hidden" />
-                            <div class="invalid-feedback"><?= empty($invalid_message) ? "Масса нетто обязательно" : $invalid_message ?></div>
+                            <div class="invalid-feedback"><?= empty($net_weight_invalid_message) ? "Масса нетто обязательно" : $net_weight_invalid_message ?></div>
                         </div>
                         <div class="col-6 form-group">
                             <label for="length">Длина, м</label>
@@ -358,16 +359,6 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                         <textarea id="comment" name="comment" rows="4" class="form-control no-latin"><?= htmlentities(filter_input(INPUT_POST, 'comment')) ?></textarea>
                         <div class="invalid-feedback"></div>
                     </div>
-                    <?php
-                    $is_unknown_checked = '';
-                    if(filter_input(INPUT_POST, 'is_unknown') == 'on') {
-                        $is_unknown_checked = " checked='checked'";
-                    }
-                    ?>
-                    <div class="form-group d-none">
-                        <input type="checkbox" id="is_unknown" name="is_unknown"<?=$is_unknown_checked ?> />
-                        <label class="form-check-label" for="is_unknown">Неизвестный новый рулон</label>
-                    </div>
                     <div class="d-flex justify-content-start mt-4">
                         <div class="p-0">
                             <button type="submit" id="create-roll-submit" name="create-roll-submit" class="btn btn-dark">Распечатать бирку</button>
@@ -378,17 +369,18 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
         </div>
         <?php
         include '../include/footer.php';
+        include '../include/footer_find.php';
         ?>
         <script>
             $('#supplier_id').change(function(){
                 if($(this).val() == "") {
-                    $('#film_brand_id').html("<option value=''>Выберите марку</option>");
+                    $('#film_id').html("<option value=''>Выберите марку</option>");
                 }
                 else {
-                    $.ajax({ url: "../ajax/film_brand.php?supplier_id=" + $(this).val() })
+                    $.ajax({ url: "../ajax/film.php?supplier_id=" + $(this).val() })
                             .done(function(data) {
-                                $('#film_brand_id').html(data);
-                                $('#film_brand_id').change();
+                                $('#film_id').html(data);
+                                $('#film_id').change();
                             })
                             .fail(function() {
                                 alert('Ошибка при выборе поставщика');
@@ -396,14 +388,14 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                 }
             });
             
-            $('#film_brand_id').change(function(){
+            $('#film_id').change(function(){
                 if($(this).val() == "") {
-                    $('#thickness').html("<option value=''>Выберите толщину</option>");
+                    $('#film_variation_id').html("<option value=''>Выберите толщину</option>");
                 }
                 else {
-                    $.ajax({ url: "../ajax/thickness.php?film_brand_id=" + $(this).val() })
+                    $.ajax({ url: "../ajax/thickness.php?film_id=" + $(this).val() + "&supplier_id=" + $('#supplier_id').val() })
                             .done(function(data) {
-                                $('#thickness').html(data);
+                                $('#film_variation_id').html(data);
                             })
                             .fail(function() {
                                 alert('Ошибка при выборе марки пленки');
@@ -411,7 +403,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                 }
             });
             
-            if($('#caclulate_by_diameter').prop('checked') == true) {
+            if($('#caclulate_by_radius').prop('checked') == true) {
                 $('#controls-for-calculation').show();
                 $('#length').prop('disabled', true);
                 $('#net_weight').prop('disabled', true);
@@ -422,7 +414,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                 $('#net_weight').prop('disabled', false);
             }
             
-            $('#caclulate_by_diameter').change(function(e){
+            $('#caclulate_by_radius').change(function(e){
                 if(e.target.checked) {
                     $('#controls-for-calculation').show();
                     $('#length').prop('disabled', true);
@@ -439,15 +431,16 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
             var films = new Map();
             
             <?php
-            $sql = "SELECT fbv.film_brand_id, fbv.thickness, fbv.weight FROM film_brand_variation fbv";
+            $sql = "SELECT fv.film_id, fv.id, fv.thickness, fv.weight FROM film_variation fv";
             $fetcher = new Fetcher($sql);
-            while ($row = $fetcher->Fetch()) {
-                echo "if(films.get(".$row['film_brand_id'].") == undefined) {\n";
-                echo "films.set(".$row['film_brand_id'].", new Map());\n";
-                echo "}\n";
-                echo "films.get(".$row['film_brand_id'].").set(".$row['thickness'].", ".$row['weight'].");\n";
-            }
+            while ($row = $fetcher->Fetch()):
             ?>
+                if(films.get(<?=$row['film_id'] ?>) == undefined) {
+                    films.set(<?=$row['film_id'] ?>, new Map());
+                }
+                
+                films.get(<?=$row['film_id'] ?>).set(<?=$row['id'] ?>, [<?=$row['thickness'] ?>, <?=$row['weight'] ?>]);
+            <?php endwhile; ?>
             
             // Расчёт длины и массы плёнки по шпуле, толщине, радиусу, ширине, удельному весу
             function CalculateByRadius() {
@@ -457,15 +450,16 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                 $('#length').val('');
                 $('#net_weight').val('');
                 
-                film_brand_id = $('#film_brand_id').val();
-                spool = $('#shpulya').val();
-                thickness = $('#thickness').val();
-                radius = $('#diameter').val();
+                film_id = $('#film_id').val();
+                spool = $('#spool').val();
+                film_variation_id = $('#film_variation_id').val();
+                radius = $('#radius').val();
                 width = $('#width').val();
                 
-                if(!isNaN(spool) && !isNaN(thickness) && !isNaN(radius) && !isNaN(width) 
-                        && spool != '' && thickness != '' && radius != '' && width != '') {
-                    density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
+                if(!isNaN(spool) && !isNaN(film_variation_id) && !isNaN(radius) && !isNaN(width) 
+                        && spool != '' && film_variation_id != '' && radius != '' && width != '') {
+                    thickness = films.get(parseInt($('#film_id').val())).get(parseInt(film_variation_id))[0];
+                    density = films.get(parseInt($('#film_id').val())).get(parseInt(film_variation_id))[1];
                     
                     result = GetFilmLengthWeightBySpoolThicknessRadiusWidth(spool, thickness, radius, width, density);
                     
@@ -477,15 +471,15 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
             }
     
             // Рассчитываем ширину и массу плёнки при изменении значений каждого поля, участвующего в вычислении
-            $('#shpulya').change(CalculateByRadius);
+            $('#spool').change(CalculateByRadius);
             
-            $('#diameter').keypress(CalculateByRadius);
+            $('#radius').keypress(CalculateByRadius);
             
-            $('#diameter').keyup(CalculateByRadius);
+            $('#radius').keyup(CalculateByRadius);
             
-            $('#diameter').change(CalculateByRadius);
+            $('#radius').change(CalculateByRadius);
             
-            $('#thickness').change(CalculateByRadius);
+            $('#film_variation_id').change(CalculateByRadius);
             
             $('#width').keypress(CalculateByRadius);
             
@@ -494,7 +488,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
             $('#width').change(CalculateByRadius);
             
             <?php
-            if(filter_input(INPUT_POST, 'caclulate_by_diameter') == 'on'):
+            if(filter_input(INPUT_POST, 'caclulate_by_radius') == 'on'):
             ?>
             $(document).ready(CalculateByRadius);
             <?php

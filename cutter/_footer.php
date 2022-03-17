@@ -54,13 +54,13 @@
     // Загрузка списка марок пленки
     $('#supplier_id').change(function(){
         if($(this).val() == "") {
-            $('#film_brand_id').html("<option value=''>Выберите марку</option>");
+            $('#film_id').html("<option value=''>Выберите марку</option>");
         }
         else {
-            $.ajax({ url: "../ajax/film_brand.php?supplier_id=" + $(this).val() })
+            $.ajax({ url: "../ajax/film.php?supplier_id=" + $(this).val() })
                     .done(function(data) {
-                        $('#film_brand_id').html(data);
-                        $('#film_brand_id').change();
+                        $('#film_id').html(data);
+                        $('#film_id').change();
                     })
                     .fail(function() {
                         alert('Ошибка при выборе поставщика');
@@ -69,14 +69,14 @@
     });
     
     // Загрузка списка толщин
-    $('#film_brand_id').change(function(){
+    $('#film_id').change(function(){
         if($(this).val() == "") {
-            $('#thickness').html("<option value=''>Выберите толщину</option>");
+            $('#film_variation_id').html("<option value=''>Выберите толщину</option>");
         }
         else {
-            $.ajax({ url: "../ajax/thickness.php?film_brand_id=" + $(this).val() })
+            $.ajax({ url: "../ajax/thickness.php?film_id=" + $(this).val() + "&supplier_id=" + $('#supplier_id').val() })
                     .done(function(data) {
-                        $('#thickness').html(data);
+                        $('#film_variation_id').html(data);
                     })
                     .fail(function() {
                         alert('Ошибка при выборе марки пленки');

@@ -6,27 +6,35 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// СТАТУС "СВОБОДНЫЙ"
+$free_status_id = 1;
+
+// Статус "РАСКРОИЛИ"
+$cut_status_id = 3;
+
 // Текущий пользователь
 $user_id = GetUserId();
 
-// Проверяем, имеются ли незакрытые нарезки
-include '_check_cuts.php';
-CheckCuts($user_id);
+include '_check_rolls.php';
+$opened_roll = CheckOpenedRolls($user_id);
+$cutting_id = $opened_roll['id'];
+$last_source = $opened_roll['last_source'];
+$last_wind = $opened_roll['last_wind'];
 
-// Параметры нарезаемого материала и количество ручьёв
-$supplier_id = filter_input(INPUT_GET, 'supplier_id');
-$film_brand_id = filter_input(INPUT_GET, 'film_brand_id');
-$thickness = filter_input(INPUT_GET, 'thickness');
-$width = filter_input(INPUT_GET, 'width');
-$streams_count = filter_input(INPUT_GET, 'streams_count');
+$streams_count = $opened_roll['streams_count'];
 
-// Проверяем, чтобы были переданы все параметры материала и количество ручьёв
-if(empty($supplier_id) || empty($film_brand_id) || empty($thickness) || empty($width) || empty($streams_count)) {
-    header("Location: ".APPLICATION."/cutter/");
+// Если нет незакрытой нарезки, переходим на первую страницу
+if(empty($cutting_id)) {
+    header("Location: ".APPLICATION.'/cutter/');
 }
-
-// СТАТУС "СВОБОДНЫЙ"
-$free_status_id = 1;
+// Если нет исходного ролика, переходим на страницу создания исходного ролика
+elseif(empty ($last_source)) {
+    header("Location: source.php");
+}
+// Если нет ручьёв, переходим на страницу "Как режем"
+elseif(empty ($streams_count)) {
+    header("Location: streams.php");
+}
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -68,58 +76,117 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
-        // Создание нарезки
-        $sql = "insert into cut (supplier_id, film_brand_id, thickness, width, cutter_id) values($supplier_id, $film_brand_id, $thickness, $width, $user_id)";
+        // Валидация, чтобы сумма длин всех намоток не превышала сумму длин исходных роликов (с запасом 1000 м для каждого исходного ролика)
+        $source_length = 0;
+        $source_count = 0;
+        
+        $sql = "select sum(r.length) length, count(r.id) count "
+                . "from cutting_source cs "
+                . "inner join roll r on cs.roll_id = r.id "
+                . "where cs.cutting_id = $cutting_id and cs.is_from_pallet = 0 "
+                . "union "
+                . "select sum(pr.length) length, count(pr.id) count "
+                . "from cutting_source cs "
+                . "inner join pallet_roll pr on cs.roll_id = pr.id "
+                . "where cs.cutting_id = $cutting_id and cs.is_from_pallet = 1";
+        $fetcher = new Fetcher($sql);
+        
+        while($row = $fetcher->Fetch()) {
+            $source_length += $row['length'];
+            $source_count += $row['count'];
+        }
+        
+        $wind_lengths = 0;
+        
+        $sql = "select sum(length) from cutting_wind where cutting_source_id in (select id from cutting_source where cutting_id = $cutting_id)";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $wind_lengths = $row[0];
+        }
+        
+        $reserve_length = 1000 * $source_count;
+        
+        if($length + $wind_lengths > $source_length + $reserve_length) {
+            $length_valid = ISINVALID;
+            $length_message = "Превышенна сумма длин исходных роликов";
+            $form_valid = false;
+        }
+    }
+    
+    if($form_valid) {
+        // Создание намотки
+        $net_weight = filter_input(INPUT_POST, 'net_weight');
+        $cell = "Цех";
+        
+        $sql = "insert into cutting_wind (cutting_source_id, length, radius) values ($last_source, $length, $radius)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
-        $cut_id = $executer->insert_id;
+        $cutting_wind_id = $executer->insert_id;
         
-        // Создание ручьёв
+        // Получение данных о материале
+        $supplier_id = 0;
+        $film_variation_id = 0;
+        
+        if(empty($error_message)) {
+            $sql = "select supplier_id, film_variation_id from cutting where id=$cutting_id";
+            $fetcher = new Fetcher($sql);
+            $error_message = $fetcher->error;
+            
+            if($row = $fetcher->Fetch()) {
+                $supplier_id = $row['supplier_id'];
+                $film_variation_id = $row['film_variation_id'];
+            }
+        }
+        
+        // Создание рулона на каждый ручей
+        $id_from_supplier = "Из раскроя";
+        
         if(empty($error_message)) {
             for($i=1; $i<=19; $i++) {
                 if(key_exists('stream_'.$i, $_POST)) {
                     $width = filter_input(INPUT_POST, 'stream_'.$i);
                     $comment = addslashes(filter_input(INPUT_POST, 'comment_'.$i));
-                    $sql = "insert into cut_stream (cut_id, width, comment) values($cut_id, $width, '$comment')";
-                    $executer = new Executer($sql);
-                    $error_message = $executer->error;
-                }    
-            }
-        }
-        
-        // Создание намотки
-        if(empty($error_message)) {
-            $net_weight = filter_input(INPUT_POST, 'net_weight');
-            
-            $sql = "insert into cut_wind (cut_id, length, radius) values($cut_id, $length, $radius)";
-            $executer = new Executer($sql);
-            $error_message = $executer->error;
-            $cut_wind_id = $executer->insert_id;
-        }
-        
-        // Создание рулона на каждый ручей
-        if(empty($error_message)) {
-            $id_from_supplier = "Из раскроя";
-            $cell = "Цех";
-            
-            for($i=1; $i<=19; $i++) {
-                if(key_exists('stream_'.$i, $_POST)) {
-                    $width = filter_input(INPUT_POST, 'stream_'.$i);
                     $net_weight = filter_input(INPUT_POST, 'net_weight_'.$i);
-                    $comment = filter_input(INPUT_POST, 'comment_'.$i);
-    
-                    $sql = "insert into roll (supplier_id, id_from_supplier, film_brand_id, width, thickness, length, net_weight, cell, comment, storekeeper_id, cut_wind_id) "
-                            . "values ($supplier_id, '$id_from_supplier', $film_brand_id, $width, $thickness, $length, $net_weight, '$cell', '$comment', '$user_id', $cut_wind_id)";
+        
+                    $sql = "insert into roll (supplier_id, id_from_supplier, film_variation_id, width, length, net_weight, cell, comment, storekeeper_id, cutting_wind_id) "
+                            . "values ($supplier_id, '$id_from_supplier', $film_variation_id, $width, $length, $net_weight, '$cell', '$comment', '$user_id', $cutting_wind_id)";
                     $executer = new Executer($sql);
                     $error_message = $executer->error;
-                    $roll_id = $executer->insert_id;
+                    $insert_id = $executer->insert_id;
+    
+                    // Получение ID от поставщика
+                    $source_id_from_supplier = '';
                     
                     if(empty($error_message)) {
-                        $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, $free_status_id, $user_id)";
+                        $sql = "select id_from_supplier "
+                                . "from pallet_roll "
+                                . "where id in (select roll_id from cutting_source where id=$last_source and is_from_pallet=1) "
+                                . "union "
+                                . "select id_from_supplier "
+                                . "from roll "
+                                . "where id in (select roll_id from cutting_source where id=$last_source and is_from_pallet=0)";
+                        $fetcher = new Fetcher($sql);
+                        if($row = $fetcher->Fetch()) {
+                            $source_id_from_supplier = $row[0];
+                        }
+                        $error_message = $fetcher->error;
+                    }
+                    
+                    // Присвоение полю "ID от поставщика" значения "ID от поставщика исходного ролика + "Р" + наш ID текущего ролика"
+                    if(empty($error_message)) {
+                        $id_from_supplier = $source_id_from_supplier.'Р'.$insert_id;
+                        $sql = "update roll set id_from_supplier='$id_from_supplier' where id=$insert_id";
                         $executer = new Executer($sql);
                         $error_message = $executer->error;
                     }
-                }    
+                    
+                    // Заполнение истории статусов
+                    if(empty($error_message)) {
+                        $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($insert_id, $free_status_id, $user_id)";
+                        $executer = new Executer($sql);
+                        $error_message = $executer->error;
+                    }
+                }
             }
         }
         
@@ -129,6 +196,88 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         }
     }
 }
+
+if(null !== filter_input(INPUT_POST, 'previous-submit')) {
+    // Удаляем запись о статусе "Рескроили" последнего исходного ролика
+    $last_source_roll_id = null;
+    $last_source_is_from_pallet = null;
+    $last_source_history_id = null;
+    $last_source_status_id = null;
+    
+    $sql = "select roll_id, is_from_pallet from cutting_source where id = $last_source";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $last_source_roll_id = $row['roll_id'];
+        $last_source_is_from_pallet = $row['is_from_pallet'];
+    }
+            
+    if(!empty($last_source_roll_id) && $last_source_is_from_pallet == 0) {
+        $sql = "select id, status_id from roll_status_history where roll_id = $last_source_roll_id order by id desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $last_source_history_id = $row['id'];
+            $last_source_status_id = $row['status_id'];
+        }
+                
+        if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == $cut_status_id) {
+            $sql = "delete from roll_status_history where id = $last_source_history_id";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
+    }
+    elseif(!empty ($last_source_roll_id) && $last_source_is_from_pallet == 1) {
+        $sql = "select id, status_id from pallet_roll_status_history where pallet_roll_id = $last_source_roll_id order by id desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $last_source_history_id = $row['id'];
+            $last_source_status_id = $row['status_id'];
+        }
+                
+        if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == $cut_status_id) {
+            $sql = "delete from pallet_roll_status_history where id = $last_source_history_id";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
+    }
+    
+    // Удаляем запись о последнем исходном ролике
+    if(empty($error_message)) {
+        $last_source = filter_input(INPUT_POST, 'last_source');
+        $sql = "delete from cutting_source where id = $last_source";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
+    if(empty($error_message)) {
+        header("Location: source.php");
+    }
+}
+
+// Получение объекта
+$supplier_id = null;
+$film_variation_id = null;
+$width = null;
+$winds_count = 0;
+
+$sql = "select c.supplier_id, c.film_variation_id, c.width, (select count(id) from cutting_wind where cutting_source_id in (select id from cutting_source where cutting_id=c.id)) winds_count "
+        . "from cutting c where c.id=$cutting_id";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $supplier_id = $row['supplier_id'];
+    $film_variation_id = $row['film_variation_id'];
+    $width = $row['width'];
+    $winds_count = $row['winds_count'];
+}
+
+$sql = "select width, comment from cutting_stream where cutting_id=$cutting_id order by id";
+$fetcher = new Fetcher($sql);
+$i = 0;
+while ($row = $fetcher->Fetch()) {
+    $stream = 'stream_'.++$i;
+    $$stream = $row['width'];
+    $comment = 'comment_'.$i;
+    $$comment = $row['comment'];
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -136,61 +285,70 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         <?php
         include '../include/head.php';
         include '_head.php';
-        include '_info.php';
         ?>
     </head>
     <body>
         <div class="container-fluid header">
             <nav class="navbar navbar-expand-sm justify-content-between">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav w-75">
                     <li class="nav-item">
-                        <?php
-                        $backlink = "cut.php?supplier_id=$supplier_id&film_brand_id=$film_brand_id&thickness=$thickness&width=$width&streams_count=$streams_count";
-                        for($i=1; $i<=19; $i++) {
-                            if(!empty(filter_input(INPUT_GET, 'stream_'.$i))) {
-                                $backlink .= '&stream_'.$i.'='.filter_input(INPUT_GET, 'stream_'.$i);
-                                $backlink .= '&comment_'.$i.'='.filter_input(INPUT_GET, 'comment_'.$i);
-                            }
-                        }
-                        ?>
-                        <a class="nav-link" href="<?=$backlink ?>"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <?php if(empty($last_wind)): ?>
+                        <form method="post">
+                            <input type="hidden" name="last_source" value="<?=$last_source ?>" />
+                            <button class="btn btn-link nav-link" type="submit" name="previous-submit"><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
+                        </form>
+                        <?php endif; ?>
+                    </li>
+                </ul>
+                <ul class="navbar-nav mr-4">
+                    <li class="nav-item dropdown no-dropdown-arrow-after">
+                        <a class="nav-link mr-0" href="javascript: void(0);" data-toggle="modal" data-target="#infoModal"><img src="<?=APPLICATION ?>/images/icons/info.svg" /></a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown no-dropdown-arrow-after">
-                        <a class="nav-link mr-0" href="javascript: void(0);" data-toggle="modal" data-target="#infoModal"><img src="<?=APPLICATION ?>/images/icons/info.svg" /></a>
+                        <a class="nav-link mr-0" id="logout-submit" href="logout.php?link=<?= urlencode($_SERVER['REQUEST_URI']) ?>"><i class="fa fa-user-alt" aria-hidden="true""></i></a>
                     </li>
                 </ul>
             </nav>
         </div>
         <div id="topmost"></div>
         <div class="container-fluid">
-            <h1>Нарезка / <?=date('d.m.Y') ?></h1>
-            <p class="mb-3 mt-3" style="font-size: xx-large;">Намотка 1</p>
+            <?php
+            include '_info.php';
+            if(!empty($error_message)) {
+                echo "<div class='alert alert-danger'>$error_message</div>";
+            }
+            ?>
+            <h1>Нарезка <?=$cutting_id ?> / <?=date('d.m.Y') ?></h1>
+            <p class="mb-3 mt-3" style="font-size: xx-large;">Намотка <?=($winds_count + 1) ?></p>
                 <?php
                 for($i=1; $i<=19; $i++):
-                if(isset($_GET['stream_'.$i])):
+                    $stream = 'stream_'.$i;
+                if(isset($$stream)):
                 ?>
-            <p>Ручей <?=$i ?> - <?=$_GET['stream_'.$i] ?> мм</p>
+            <p>Ручей <?=$i ?> - <?=$$stream ?> мм</p>
                 <?php
                 endif;
                 endfor;
                 ?>
             <form method="post" class="mt-3">
-                <input type="hidden" id="supplier_id" name="supplier_id" value="<?=$_GET['supplier_id'] ?>" />
-                <input type="hidden" id="film_brand_id" name="film_brand_id" value="<?=$_GET['film_brand_id'] ?>" />
-                <input type="hidden" id="thickness" name="thickness" value="<?=$_GET['thickness'] ?>" />
-                <input type="hidden" id="width" name="width" value="<?=$_GET['width'] ?>" />
-                <input type="hidden" id="streams_count" name="streams_count" value="<?=$_GET['streams_count'] ?>" />
+                <input type="hidden" id="supplier_id" name="supplier_id" value="<?=$supplier_id ?>" />
+                <input type="hidden" id="film_variation_id" name="film_variation_id" value="<?=$film_variation_id ?>" />
+                <input type="hidden" id="width" name="width" value="<?=$width ?>" />
                 <input type="hidden" id="spool" name="spool" value="76" />
                 <input type="hidden" id="net_weight" name="net_weight" />
                 <input type="hidden" id="normal_length" name="normal_length" />
+                <input type="hidden" name="cutting_id" value="<?=$cutting_id ?>" />
+                <input type="hidden" name="last_source" value="<?=$last_source ?>" />
                     <?php
                     for($i=1; $i<=19; $i++):
-                    if(key_exists('stream_'.$i, $_GET)):
+                    $stream = 'stream_'.$i;
+                    $comment = 'comment_'.$i;
+                    if(isset($$stream)):
                     ?>
-                <input type="hidden" id="stream_<?=$i ?>" name="stream_<?=$i ?>" value="<?=$_GET['stream_'.$i] ?>" />
-                <input type="hidden" id="comment_<?=$i ?>" name="comment_<?=$i ?>" value="<?= urldecode($_GET['comment_'.$i]) ?>" />
+                <input type="hidden" id="stream_<?=$i ?>" name="stream_<?=$i ?>" value="<?=$$stream ?>" />
+                <input type="hidden" id="comment_<?=$i ?>" name="comment_<?=$i ?>" value="<?= htmlspecialchars($$comment) ?>" />
                 <input type="hidden" id="net_weight_<?=$i ?>" name="net_weight_<?=$i ?>" />
                     <?php
                     endif;
@@ -213,17 +371,21 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     </div>
                 </div>
                 <div class="form-group">
-                    <?php
-                    $data_sources = "";
-                    for($i=1; $i<=19; $i++) {
-                        if(!empty(filter_input(INPUT_GET, 'stream_'.$i))) {
-                            $data_sources .= " data-stream".$i."=".filter_input(INPUT_GET, 'stream_'.$i);
-                        }
-                    }
-                    ?>
-                    <button type="submit" class="btn btn-outline-dark form-control mt-3" id="next-submit" name="next-submit" data-supplier_id="<?= filter_input(INPUT_GET, 'supplier_id') ?>" data-film_brand_id="<?= filter_input(INPUT_GET, 'film_brand_id') ?>" data-thickness="<?= filter_input(INPUT_GET, 'thickness') ?>" data-width="<?= filter_input(INPUT_GET, 'width') ?>" data-streams-count="<?= filter_input(INPUT_GET, 'streams_count') ?>"<?=$data_sources ?>>След. намотка</button>
+                    <button type="submit" class="btn btn-outline-dark form-control mt-3 mb-5 next_wind" id="next-submit" name="next-submit">Следующая намотка</button>
                 </div>
-            </form> 
+            </form>
+            <div class="w-100 pb-4" id="bottom_buttons">
+                <!--?php if(!empty($last_wind)): ?-->
+                <div class="form-group">
+                    <a href="source.php" class="btn btn-outline-dark form-control next_source mt-3">Новый исходный рулон</a>
+                </div>
+                <!--?php endif; ?-->
+                <?php if($winds_count > 0): ?>
+                <div class="form-group">
+                    <a href="remain.php" class="btn btn-dark form-control mt-3">Заявка выполнена</a>
+                </div>
+                <?php endif; ?>
+            </div>
         </div>
         <?php
         include '_footer.php';
@@ -233,34 +395,33 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             var films = new Map();
             
             <?php
-            $sql = "SELECT fbv.film_brand_id, fbv.thickness, fbv.weight FROM film_brand_variation fbv";
+            $sql = "SELECT id, thickness, weight FROM film_variation";
             $fetcher = new Fetcher($sql);
-            while ($row = $fetcher->Fetch()) {
-                echo "if(films.get(".$row['film_brand_id'].") == undefined) {\n";
-                echo "films.set(".$row['film_brand_id'].", new Map());\n";
-                echo "}\n";
-                echo "films.get(".$row['film_brand_id'].").set(".$row['thickness'].", ".$row['weight'].");\n";
-            }
+            while ($row = $fetcher->Fetch()):
             ?>
+                if(films.get(<?=$row['id'] ?>) == undefined) {
+                    films.set(<?=$row['id'] ?>, [<?=$row['thickness'] ?>, <?=$row['weight'] ?>]);
+                }
+            <?php endwhile; ?>
                 
             // Расчёт длины и массы плёнки по шпуле, толщине, радиусу, ширине, удельному весу
             function CalculateByRadius() {
                 $('#normal_length').val('');
                 $('#net_weight').val('');
                 
-                film_brand_id = $('#film_brand_id').val();
                 spool = $('#spool').val();
-                thickness = $('#thickness').val();
+                film_variation_id = $('#film_variation_id').val();
                 radius = $('#radius').val();
                 width = $('#width').val();
                 length = $('#length').val().replaceAll(/\D/g, '');
                 
-                if(!isNaN(spool) && !isNaN(thickness) && !isNaN(radius) && !isNaN(width) 
-                        && spool != '' && thickness != '' && radius != '' && width != '') {
-                    density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
-                        
+                if(!isNaN(spool) && !isNaN(film_variation_id) && !isNaN(radius) && !isNaN(width) 
+                        && spool != '' && film_variation_id != '' && radius != '' && width != '') {
+                    thickness = films.get(parseInt(film_variation_id))[0];
+                    density = films.get(parseInt(film_variation_id))[1];
+                    
                     result = GetFilmLengthWeightBySpoolThicknessRadiusWidth(spool, thickness, radius, width, density);
-                        
+                    
                     $('#normal_length').val(result.length.toFixed(2));
                     $('#net_weight').val(result.weight.toFixed(2));
                 }
@@ -269,17 +430,48 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     if($('#stream_' + i).length > 0) {
                         width = $('#stream_' + i).val();
                 
-                        if(!isNaN(spool) && !isNaN(thickness) && !isNaN(radius) && !isNaN(width) 
-                                && spool != '' && thickness != '' && radius != '' && width != '') {
-                            density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
+                        if(!isNaN(length) && !isNaN(film_variation_id) && !isNaN(width) 
+                                && length != '' && film_variation_id != '' && width != '') {
+                            density = films.get(parseInt(film_variation_id))[1];
                             weight = GetFilmWeightByLengthWidth(length, width, density);
                             $('#net_weight_' + i).val(weight.toFixed(2));
                         }
                     }
                 }
+                
+                // Меняем видимость кнопок "Следующий исх. рулон" и "След. намотка"
+                if(length == '' && radius == '') {
+                    $('.next_source').removeClass('disabled');
+                    $('.next_wind').addClass('disabled');
+                }
+                else {
+                    $('.next_source').addClass('disabled');
+                    $('.next_wind').removeClass('disabled');
+                }
             }
-
-            $(document).ready(CalculateByRadius);
+            
+            // Позиционируем кнопки "Следующий исходный ролик" и "Закрытие заявки" только если они не перекроют другие элементы
+            function AdjustButtons() {
+                if($('#next-submit').offset().top + $('#bottom_buttons').outerHeight() + 100 < $(window).height()) {
+                    $('#bottom_buttons').removeClass('sticky-top');
+                    $('#bottom_buttons').addClass('fixed-bottom');
+                    $('#bottom_buttons').addClass('container-fluid');
+                }
+                else {
+                    $('#bottom_buttons').addClass('sticky-top');
+                    $('#bottom_buttons').removeClass('fixed-bottom');
+                    $('#bottom_buttons').removeClass('container-fluid');
+                }
+            }
+            
+            $(document).ready(function() {
+                CalculateByRadius();
+                AdjustButtons();
+            });
+            
+            $(window).on('resize', function() {
+                AdjustButtons();
+            });
             
             // Рассчитываем ширину и массу плёнки при изменении значений радиуса
             $('#radius').keypress(CalculateByRadius);

@@ -8,10 +8,6 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 
 // Текущий пользователь
 $user_id = GetUserId();
-
-// Проверяем, имеются ли незакрытые нарезки
-include '_check_cuts.php';
-CheckCuts($user_id);
 ?>
 <!DOCTYPE html>
 <html>
@@ -26,7 +22,7 @@ CheckCuts($user_id);
             <nav class="navbar navbar-expand-sm justify-content-start">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a href="<?=APPLICATION."/cutter/" ?>" class="nav-link"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
+                        <a href="<?= filter_input(INPUT_GET, 'link') ?>" class="nav-link"><i class="fas fa-chevron-left"></i>&nbsp;Назад</a>
                     </li>
                 </ul>
             </nav>

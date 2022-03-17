@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
+if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager', 'administrator'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -42,34 +42,33 @@ $cut_status_id = 3;
 
 // Фильтр для данных
 $wherefindpallet = "prsh.status_id = $cut_status_id";
-                    
+
 $wherefindroll = "rsh.status_id = $cut_status_id";
-                    
-$film_brand_name = filter_input(INPUT_GET, 'film_brand_name');
-if(!empty($film_brand_name)) {
-    $film_brand_name = addslashes($film_brand_name);
-    $wherefindpallet .= " and fb.name = '$film_brand_name'";
-    $wherefindroll .= " and fb.name = '$film_brand_name'";
+
+$film_id = filter_input(INPUT_GET, 'film_id');
+if(!empty($film_id)) {
+    $wherefindpallet .= " and f.id = '$film_id'";
+    $wherefindroll .= " and f.id = '$film_id'";
 }
-                    
+
 $thickness = filter_input(INPUT_GET, 'thickness');
 if(!empty($thickness)) {
-    $wherefindpallet .= " and p.thickness = ".$thickness;
-    $wherefindroll .= " and r.thickness = ".$thickness;
+    $wherefindpallet .= " and fv.thickness = ".$thickness;
+    $wherefindroll .= " and fv.thickness = ".$thickness;
 }
-                    
+
 $width_from = filter_input(INPUT_GET, 'width_from');
 if(!empty($width_from)) {
     $wherefindpallet .= " and p.width >= $width_from";
     $wherefindroll .= " and r.width >= $width_from";
 }
-                    
+
 $width_to = filter_input(INPUT_GET, 'width_to');
 if(!empty($width_to)) {
     $wherefindpallet .= " and p.width <= $width_to";
     $wherefindroll .= " and r.width <= $width_to";
 }
-                    
+
 $find = filter_input(INPUT_GET, 'find');
 $findtrim = $find;
 if(mb_strlen($find) > 1) {
@@ -78,21 +77,21 @@ if(mb_strlen($find) > 1) {
 $findpallet = '';
 $findroll = '';
 $findtrimsubstrings = mb_split("\D", $findtrim);
-                    
+
 if(count($findtrimsubstrings) == 2 && mb_strlen($findtrimsubstrings[0]) > 0 && mb_strlen($findtrimsubstrings[1]) > 0) {
     $findpallet = $findtrimsubstrings[0];
     $findroll = $findtrimsubstrings[1];
 }
-                    
+
 if(!empty($find)) {
-    $wherefindpallet .= " and (p.id='$find' or p.id='$findtrim' or p.cell='$find' or p.comment like '%$find%' or (p.id='$findpallet' and pr.ordinal='$findroll'))";
-    $wherefindroll .= " and (r.id='$find' or r.id='$findtrim' or r.cell='$find' or r.comment like '%$find%')";
+    $wherefindpallet .= " and (p.id='$find' or p.id='$findtrim' or pr.id_from_supplier='$find' or p.cell='$find' or p.comment like '%$find%' or (p.id='$findpallet' and pr.ordinal='$findroll'))";
+    $wherefindroll .= " and (r.id='$find' or r.id='$findtrim' or r.id_from_supplier='$find' or r.cell='$find' or r.comment like '%$find%')";
 }
-                    
+
 if(!empty($wherefindpallet)) {
     $wherefindpallet = "where $wherefindpallet";
 }
-                    
+
 if(!empty($wherefindroll)) {
     $wherefindroll = "where $wherefindroll";
 }
@@ -101,14 +100,16 @@ if(!empty($wherefindroll)) {
 $sql = "select ifnull((select sum(pr.weight) total_weight "
         . "from pallet_roll pr "
         . "inner join pallet p on pr.pallet_id = p.id "
-        . "left join film_brand fb on p.film_brand_id = fb.id "
+        . "left join film_variation fv on p.film_variation_id = fv.id "
+        . "left join film f on fv.film_id = f.id "
         . "left join supplier s on p.supplier_id = s.id "
         . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
         . "$wherefindpallet), 0)"
         . "+"
         . "ifnull((select sum(r.net_weight) total_weight "
         . "from roll r "
-        . "left join film_brand fb on r.film_brand_id = fb.id "
+        . "left join film_variation fv on r.film_variation_id = fv.id "
+        . "left join film f on fv.film_id = f.id "
         . "left join supplier s on r.supplier_id = s.id "
         . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
         . "$wherefindroll), 0)";
@@ -121,7 +122,7 @@ $sql = "select distinct id, name, colour from roll_status";
 $grabber = (new Grabber($sql));
 $error_message = $grabber->error;
 $roll_statuses = $grabber->result;
-
+                    
 $roll_statuses1 = array();
 foreach ($roll_statuses as $status) {
     $roll_statuses1[$status['id']] = $status;
@@ -145,9 +146,11 @@ foreach ($roll_statuses as $status) {
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
+            
+            include '../include/find_camera.php';
             ?>
             <div class="d-flex justify-content-between mb-auto">
-                <div class="p-1">
+                <div class="p-0">
                     <table>
                         <tr>
                             <td><h1 style="font-size: 32px; font-weight: 600;">Раскроили</h1></td>
@@ -155,7 +158,7 @@ foreach ($roll_statuses as $status) {
                         </tr>
                     </table>
                 </div>
-                <div class="p-1">
+                <div class="pt-1">
                     <button class="btn btn-outline-dark disabled d-none" data-toggle="modal" data-target="#filterModal" data-text="Фильтр"><img src="../images/icons/filter.svg" style="margin-right: 20px;" />Фильтр</button>
                     <div style="display: inline-block; position: relative; margin-right: 55px; margin-left: 80px;">
                         <a href="javascript: void(0);"><img src="../images/icons/filter1.svg" data-toggle="modal" data-target="#filterModal" data-text="Фильтр" /></a>
@@ -201,14 +204,16 @@ foreach ($roll_statuses as $status) {
                     $sql = "select (select count(pr.id) total_count "
                             . "from pallet_roll pr "
                             . "inner join pallet p on pr.pallet_id = p.id "
-                            . "left join film_brand fb on p.film_brand_id = fb.id "
+                            . "left join film_variation fv on p.film_variation_id = fv.id "
+                            . "left join film f on fv.film_id = f.id "
                             . "left join supplier s on p.supplier_id = s.id "
                             . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
                             . "$wherefindpallet)"
                             . "+"
                             . "(select count(r.id) total_count "
                             . "from roll r "
-                            . "left join film_brand fb on r.film_brand_id = fb.id "
+                            . "left join film_variation fv on r.film_variation_id = fv.id "
+                            . "left join film f on fv.film_id = f.id "
                             . "left join supplier s on r.supplier_id = s.id "
                             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
                             . "$wherefindroll)";
@@ -218,25 +223,25 @@ foreach ($roll_statuses as $status) {
                         $pager_total_count = $row[0];
                     }
                     
-                    $sql = "select 'pallet_roll' type, pr.id id, pr.pallet_id pallet_id, pr.ordinal ordinal, prsh.date timestamp, DATE_FORMAT(prsh.date, '%d.%m.%Y') date, fb.name film_brand, "
-                            . "p.width width, p.thickness thickness, p.cell cell, pr.weight net_weight, pr.length length, "
-                            . "s.name supplier, p.id_from_supplier id_from_supplier, "
-                            . "prsh.status_id status_id, p.comment comment, "
-                            . "(select weight from film_brand_variation where film_brand_id=fb.id and thickness=p.thickness limit 1) density "
+                    $sql = "select 'pallet_roll' type, pr.id id, pr.pallet_id pallet_id, pr.ordinal ordinal, prsh.date timestamp, DATE_FORMAT(prsh.date, '%d.%m.%Y') date, f.name film, "
+                            . "p.width width, fv.thickness thickness, fv.weight density, p.cell cell, pr.weight net_weight, pr.length length, "
+                            . "s.name supplier, pr.id_from_supplier id_from_supplier, "
+                            . "prsh.status_id status_id, p.comment comment "
                             . "from pallet_roll pr "
                             . "inner join pallet p on pr.pallet_id = p.id "
-                            . "left join film_brand fb on p.film_brand_id = fb.id "
+                            . "left join film_variation fv on p.film_variation_id = fv.id "
+                            . "left join film f on fv.film_id = f.id "
                             . "left join supplier s on p.supplier_id = s.id "
                             . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
                             . "$wherefindpallet "
                             . "union "
-                            . "select 'roll' type, r.id id, 0 pallet_id, 0 ordinal, rsh.date timestamp, DATE_FORMAT(rsh.date, '%d.%m.%Y') date, fb.name film_brand, "
-                            . "r.width width, r.thickness thickness, r.cell cell, r.net_weight net_weight, r.length length, "
+                            . "select 'roll' type, r.id id, 0 pallet_id, 0 ordinal, rsh.date timestamp, DATE_FORMAT(rsh.date, '%d.%m.%Y') date, f.name film, "
+                            . "r.width width, fv.thickness thickness, fv.weight density, r.cell cell, r.net_weight net_weight, r.length length, "
                             . "s.name supplier, r.id_from_supplier id_from_supplier, "
-                            . "rsh.status_id status_id, r.comment comment, "
-                            . "(select weight from film_brand_variation where film_brand_id=fb.id and thickness=r.thickness limit 1) density "
+                            . "rsh.status_id status_id, r.comment comment "
                             . "from roll r "
-                            . "left join film_brand fb on r.film_brand_id = fb.id "
+                            . "left join film_variation fv on r.film_variation_id = fv.id "
+                            . "left join film f on fv.film_id = f.id "
                             . "left join supplier s on r.supplier_id = s.id "
                             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
                             . "$wherefindroll "
@@ -262,7 +267,7 @@ foreach ($roll_statuses as $status) {
                     <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
                         <td style="padding-left: 5px; padding-right: 5px;" class="d-none"><input type="checkbox" id="chk<?=$row['id'] ?>" name="chk<?=$row['id'] ?>" class="form-check chkFilm" /></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['date'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?=$row['film_brand'] ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px;"><?=$row['film'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['thickness'] ?> мкм</td>
                         <td style="padding-left: 5px; padding-right: 5px;" class="text-nowrap"><?= round($row['density'], 2) ?> г/м<sup>2</sup></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['width'] ?> мм</td>
@@ -310,13 +315,13 @@ foreach ($roll_statuses as $status) {
         </div>
         
         <?php
-        $film_brand_name = addslashes(filter_input(INPUT_GET, 'film_brand_name'));
+        $film_id = filter_input(INPUT_GET, 'film_id');
         $thicknesses = array();
         $slider_value = 0;
         $slider_index = 0;
         
-        if(!empty($film_brand_name)) {
-            $grabber = (new Grabber("select distinct fbv.thickness from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name='$film_brand_name' order by thickness"))->result;
+        if(!empty($film_id)) {
+            $grabber = (new Grabber("select thickness from film_variation where film_id='$film_id' order by thickness"))->result;
             
             foreach ($grabber as $row) {
                 $slider_index++;
@@ -337,15 +342,16 @@ foreach ($roll_statuses as $status) {
                     <h1 style="margin-top: 53px; margin-bottom: 20px; font-size: 32px; font-weight: 600;">Фильтр</h1>
                     <form method="get">
                         <div class="form-group">
-                            <select id="film_brand_name" name="film_brand_name" class="form-control" style="margin-top: 30px; margin-bottom: 30px;">
+                            <select id="film_id" name="film_id" class="form-control" style="margin-top: 30px; margin-bottom: 30px;">
                                 <option value="">МАРКА ПЛЕНКИ</option>
                                 <?php
-                                $film_brands = (new Grabber("select distinct name from film_brand order by name"))->result;
-                                foreach ($film_brands as $film_brand) {
-                                    $name = $film_brand['name'];
+                                $films = (new Grabber("select id, name from film order by name"))->result;
+                                foreach ($films as $film) {
+                                    $film_id = $film['id'];
+                                    $name = $film['name'];
                                     $selected = '';
-                                    if(filter_input(INPUT_GET, 'film_brand_name') == $film_brand['name']) $selected = " selected='selected'";
-                                    echo "<option value='$name'$selected>$name</option>";
+                                    if(filter_input(INPUT_GET, 'film_id') == $film_id) $selected = " selected='selected'";
+                                    echo "<option value='$film_id'$selected>$name</option>";
                                 }
                                 ?>
                             </select>
@@ -381,15 +387,16 @@ foreach ($roll_statuses as $status) {
                                 </td>
                             </tr>
                         </table>
-                        <a href="<?=APPLICATION ?>/utilized/" type="button" class="btn" name="filter_clear" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #E4E1ED;"><img src="../images/icons/white-times.svg" />&nbsp;&nbsp;Очистить</a>
-                        <button type="button" class="btn" data-dismiss="modal" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #EEEEEE;">Отменить</button>
-                        <button type="submit" class="btn" style="margin-top: 20px; margin-bottom: 35px; padding: 10px; border-radius: 8px; background-color: #CECACA;">Применить</button>
+                        <a href="<?=APPLICATION ?>/cut_source/" type="button" class="btn" name="filter_clear" style="margin-top: 20px; margin-bottom: 35px; padding: 5px; border-radius: 8px; background-color: #E4E1ED;"><img src="../images/icons/white-times.svg" />&nbsp;&nbsp;Очистить</a>
+                        <button type="button" class="btn" data-dismiss="modal" style="margin-top: 20px; margin-bottom: 35px; padding: 5px; border-radius: 8px; background-color: #EEEEEE;">Отменить</button>
+                        <button type="submit" class="btn" style="margin-top: 20px; margin-bottom: 35px; padding: 5px; border-radius: 8px; background-color: #CECACA;">Применить</button>
                     </form>
                 </div>
             </div>
         </div>
         <?php
         include '../include/footer.php';
+        include '../include/footer_find.php';
         ?>
         <script>
             var thicknesses = JSON.parse('<?=$json_thicknesses ?>');
@@ -410,7 +417,7 @@ foreach ($roll_statuses as $status) {
                 }
             });
             
-            $('#film_brand_name').change(function(){
+            $('#film_id').change(function(){
                 if($(this).val() == '') {
                     $('#width_slider_values').html("<div class='p-1'>все</div>");
                     $("#slider").slider({
@@ -422,7 +429,7 @@ foreach ($roll_statuses as $status) {
                     $("#thickness").val('');
                 }
                 else {
-                    $.ajax({ url: "../ajax/thickness.php?film_brand_name="+$(this).val() })
+                    $.ajax({ url: "../ajax/thickness.php?film="+$(this).val() })
                             .done(function(data){
                                 var thicknesses = JSON.parse(data);
                         

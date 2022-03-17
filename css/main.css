@@ -137,14 +137,6 @@ a.black:active, a.black:hover, .black a:active, .black a:hover {
     border-bottom: solid 2px #EC3A7A;
 }
 
-li#nav-user {
-    background-color: #E6E7EB;
-    width: 36px;
-    height: 36px;
-    text-align: center;
-    border-radius: 50%;
-}
-
 #user-dropdown {
     right: 0;
     left: auto;
@@ -152,6 +144,13 @@ li#nav-user {
 
 li#nav-user a.dropdown-toggle::after {
     display: none;
+}
+
+#nav-role {
+    position: absolute;
+    top: 25px;
+    left: 0px;
+    font-size: smaller;
 }
 
 li.no-dropdown-arrow-after a.dropdown-toggle::after {
@@ -175,6 +174,10 @@ li.no-dropdown-arrow-after a.dropdown-toggle::after {
 .btn-dark {
     background-color: #EC3A7A;
     border-color: #EC3A7A;
+    border-radius: 8px;
+}
+
+.btn-light {
     border-radius: 8px;
 }
 
@@ -261,6 +264,7 @@ table.table tr th {
     color: #6D6C70;
     font-style: normal;
     font-weight: 400;
+    vertical-align: middle;
     font-size: 14px;
     line-height: 20px;
     padding-left: 25px;
@@ -348,8 +352,8 @@ table.print tr td, table.print tr th {
     font-size: 14px;
     font-weight: bold;
     display: inline-block;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    margin-top: .25rem;
     padding-left: 48px;
 }
 
@@ -361,6 +365,11 @@ table.print tr td, table.print tr th {
     font-size: 18px;
     vertical-align: top;
     margin-right: 5px;
+}
+
+.topbutton {
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 /*Формы*/
@@ -527,14 +536,26 @@ textarea#editable {
 }
 
 /* Правая панель расчётов */
-#calculation {
-    right: 15px;
-    margin-top: 140px;
+.param-title {
+    font-size: large;
+}
+
+.param-name {
+    font-weight: bold;
+    color: #3794cc;
+}
+
+.param-value {
+    font-size: 18px;
+}
+
+.algorithm {
+    color: #3945af;
 }
 
 #calculation .value {
+    font-weight: bold;
     font-size: 18px;
-    font-weight: 700;
 }
 
 /* Переключатель "активен - не активен" */
@@ -570,4 +591,9 @@ textarea#editable {
 
 .switch input:checked[type="checkbox"]:before {
     left: 30px;
+}
+
+/* Распознавание штрих-кода */
+.detected {
+    border: solid 4px yellow;
 }

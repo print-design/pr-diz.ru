@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
+if(!IsInRole(array('technologist', 'dev', 'electrocarist', 'auditor'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -14,6 +14,9 @@ if(empty($id)) {
 
 // СТАТУС "СВОБОДНЫЙ"
 $free_status_id = 1;
+
+// РОЛЬ "РЕВИЗОР"
+const AUDITOR = 'auditor';
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,18 +38,20 @@ $free_status_id = 1;
             $title = "Р".filter_input(INPUT_GET, 'id');    
             include '../include/find_mobile.php';
             
-            $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, s.name supplier, fb.name film_brand, r.id_from_supplier, r.width, r.thickness, r.net_weight, r.length, r.cell, r.comment "
+            $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, s.name supplier, f.name film, r.id_from_supplier, r.width, fv.thickness, r.net_weight, r.length, r.cell, r.comment "
                     . "from roll r "
                     . "inner join supplier s on r.supplier_id=s.id "
-                    . "inner join film_brand fb on r.film_brand_id=fb.id "
+                    . "inner join film_variation fv on r.film_variation_id=fv.id "
+                    . "inner join film f on fv.film_id = f.id "
                     . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                    . "where r.id=$id and (rsh.status_id is null or rsh.status_id = $free_status_id)";
+                    . "where r.id=$id"
+                    . (IsInRole(AUDITOR) ? '' : " and (rsh.status_id is null or rsh.status_id = $free_status_id)");
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()):
                 $date = $row['date'];
                 $supplier = $row['supplier'];
                 $id_from_supplier = $row['id_from_supplier'];
-                $film_brand = $row['film_brand'];
+                $film = $row['film'];
                 $width = $row['width'];
                 $thickness = $row['thickness'];
                 $weight = $row['net_weight'];
@@ -62,15 +67,23 @@ $free_status_id = 1;
                         <p><strong>Поставщик:</strong> <?=$supplier ?></p>
                         <p><strong>ID поставщика:</strong> <?=$id_from_supplier ?></p>
                         <p class="mt-3"><strong>Характеристики</strong></p>
-                        <p><strong>Марка пленки:</strong> <?=$film_brand ?></p>
+                        <p><strong>Марка пленки:</strong> <?=$film ?></p>
                         <p><strong>Ширина:</strong> <?=$width ?> мм</p>
                         <p><strong>Толщина:</strong> <?=$thickness ?> мкм</p>
                         <p><strong>Масса нетто:</strong> <?=$weight ?> кг</p>
                         <p><strong>Длина:</strong> <?=$length ?> м</p>
                         <p><strong>Комментарий:</strong></p>
-                        <p><?=$comment ?></p>
+                        <div style="white-space: pre-wrap;"><?=$comment ?></div>
                         <p style="font-size: 32px; line-height: 48px;">Ячейка&nbsp;&nbsp;&nbsp;&nbsp;<?=$cell ?></p>
-                        <a href="roll_edit.php?id=<?=$id ?>&link=<?= urlencode($_SERVER['REQUEST_URI']) ?>" class="btn btn-outline-dark w-100 mt-4">Сменить ячейку</a>
+                        <a href="roll_edit.php?id=<?=$id ?>&link=<?= urlencode($_SERVER['REQUEST_URI']) ?>" class="btn btn-outline-dark w-100 mt-4">
+                            <?php if(IsInRole(array('electrocarist'))): ?>
+                            Сменить ячейку
+                            <?php elseif (IsInRole(array('auditor'))): ?>
+                            Оставить комментарий
+                            <?php else: ?>
+                            Редактировать
+                            <?php endif; ?>
+                        </a>
                     </div>
                 </div>
             </div>
