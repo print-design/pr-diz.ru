@@ -2116,12 +2116,12 @@ $colorfulnesses = array();
                                 <div class="row">
                                     <div class="col-7">
                                         <div class="form-group">
-                                            <label for="thickness">Толщина, мкм</label>
-                                            <select id="thickness" name="thickness" class="form-control" required="required">
+                                            <label for="film_variation_id">Толщина, мкм</label>
+                                            <select id="film_variation_id" name="film_variation_id" class="form-control" required="required">
                                                 <option value="" hidden="hidden" selected="selected">Толщина...</option>
                                                 <?php
-                                                if(!empty($brand_name)) {
-                                                    $sql = "select distinct fbv.thickness, fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name='$brand_name' order by thickness";
+                                                if(!empty($film_id)) {
+                                                    $sql = "select thickness, weight from film_variation where film_id='$film_id' order by thickness";
                                                     $thicknesses = (new Grabber($sql))->result;
                                             
                                                     foreach ($thicknesses as $row):
@@ -2170,18 +2170,18 @@ $colorfulnesses = array();
                         <div class="row individual_only">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="individual_brand_name">Название пленки</label>
+                                    <label for="individual_film_name">Название пленки</label>
                                     <input type="text" 
-                                           id="individual_brand_name" 
-                                           name="individual_brand_name" 
+                                           id="individual_film_name" 
+                                           name="individual_film_name" 
                                            class="form-control" 
                                            placeholder="Название пленки" 
-                                           value="<?=$individual_brand_name ?>" 
+                                           value="<?=$individual_film_name ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'individual_brand_name'); $(this).attr('name', 'individual_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
+                                           onmouseup="javascript: $(this).attr('id', 'individual_film_name'); $(this).attr('name', 'individual_film_name'); $(this).attr('placeholder', 'Название пленки')" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'individual_brand_name'); $(this).attr('name', 'individual_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
-                                           onfocusout="javascript: $(this).attr('id', 'individual_brand_name'); $(this).attr('name', 'individual_brand_name'); $(this).attr('placeholder', 'Название пленки')" />
+                                           onkeyup="javascript: $(this).attr('id', 'individual_film_name'); $(this).attr('name', 'individual_film_name'); $(this).attr('placeholder', 'Название пленки')" 
+                                           onfocusout="javascript: $(this).attr('id', 'individual_film_name'); $(this).attr('name', 'individual_film_name'); $(this).attr('placeholder', 'Название пленки')" />
                                     <div class="invalid-feedback">Название пленки обязательно</div>
                                 </div>
                             </div>
