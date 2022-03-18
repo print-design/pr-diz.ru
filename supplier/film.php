@@ -72,10 +72,24 @@ if(null !== filter_input(INPUT_POST, 'create_film_variation_submit')) {
     }
 }
 
+// Редактирование цены за материал
+if(null !== filter_input(INPUT_POST, 'price-submit')) {
+    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+    $price = filter_input(INPUT_POST, 'price');
+    $currency = filter_input(INPUT_POST, 'currency');
+    
+    if(!empty($film_variation_id) && !empty($price) && !empty($currency)) {
+        $sql = "insert into film_price (film_variation_id, price, currency) values ($film_variation_id, $price, '$currency')";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+}
+
 // Получение объекта
-$sql = "select f.id film_id, f.name film, fv.id film_variation_id, fv.thickness, fv.weight "
+$sql = "select f.id film_id, f.name film, fv.id film_variation_id, fv.thickness, fv.weight, fp.price, fp.currency "
         . "from film f "
         . "left join film_variation fv on fv.film_id = f.id "
+        . "left join (select film_variation_id, price, currency from film_price where id in (select max(id) from film_price group by film_variation_id)) fp on fp.film_variation_id = fv.id "
         . "order by f.name, fv.thickness, fv.weight";
 $fetcher = new Fetcher($sql);
 $films = array();
@@ -87,7 +101,7 @@ while($row = $fetcher->Fetch()) {
     
     $film_variation_id = $row['film_variation_id'];
     if(!isset($films[$film_id]['film_variations'][$film_variation_id]) && !empty($row['thickness']) && !empty($row['weight'])) {
-        $films[$film_id]['film_variations'][$film_variation_id] = array('thickness' => $row['thickness'], 'weight' => $row['weight']);
+        $films[$film_id]['film_variations'][$film_variation_id] = array('thickness' => $row['thickness'], 'weight' => $row['weight'], 'price' => $row['price'], 'currency' => $row['currency']);
     }
 }
 ?>
@@ -212,22 +226,54 @@ while($row = $fetcher->Fetch()) {
                 <?php if($show_table_header): ?>
                 <tr>
                     <th width="50%" style="border-top: 0;">Название пленки</th>
-                    <th width="25%" style="border-top: 0;">Толщина</th>
-                    <th style="border-top: 0;">Удельный вес</th>
+                    <th width="15%" style="border-top: 0;">Толщина</th>
+                    <th width="15%" style="border-top: 0;">Удельный вес</th>
+                    <th style="border-top: 0;">Цена</th>
                 </tr>
                 <?php
-                $show_table_header = false;
+                
                 endif;
                 $no_border_top = $show_table_header ? '' : " style='border-top: 0;'";
                 foreach($film['film_variations'] as $fv_key => $film_variation):
                 ?>
                 <tr>
                     <td width="50%"<?=$no_border_top ?>><?=$film['name'] ?></td>
-                    <td width="25%"<?=$no_border_top ?>><?=$film_variation['thickness'] ?> мкм</td>
-                    <td<?=$no_border_top ?>><?=$film_variation['weight'] ?> г/м<sup>2</sup></td>
+                    <td width="15%"<?=$no_border_top ?>><?=$film_variation['thickness'] ?> мкм</td>
+                    <td width="15%"<?=$no_border_top ?>><?=$film_variation['weight'] ?> г/м<sup>2</sup></td>
+                    <td<?=$no_border_top ?>>
+                        <form class="form-inline" method="post">
+                            <input type="hidden" name="scroll" />
+                            <input type="hidden" name="film_variation_id" value="<?=$fv_key ?>" />
+                            <div class="input-group">
+                                <label for="price" style="font-size: 14px;">от&nbsp;</label>
+                                <input type="text" 
+                                       name="price" 
+                                       class="form-control float-only film-price" 
+                                       placeholder="Цена" style="width: 80px;" 
+                                       value="<?=$film_variation['price'] ?>" 
+                                       data-film-variation-id="<?=$fv_key ?>" 
+                                       required="required" 
+                                       onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onmouseup="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
+                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                       onkeyup="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
+                                       onfocusout="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" />
+                                <div class="input-group-append">
+                                    <select name="currency" class="film-currency" required="required">
+                                        <option value="" hidden="">...</option>
+                                        <option value="rub"<?=$film_variation['currency'] == "rub" ? " selected='selected'" : "" ?>>Руб</option>
+                                        <option value="usd"<?=$film_variation['currency'] == "usd" ? " selected='selected'" : "" ?>>USD</option>
+                                        <option value="euro"<?=$film_variation['currency'] == "euro" ? " selected='selected'" : "" ?>>EUR</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline-dark d-none" name="price-submit">OK</button>
+                        </form>
+                    </td>
                 </tr>
                 <?php
                 $no_border_top = '';
+                $show_table_header = false;
                 endforeach;
                 ?>
             </table>
@@ -239,17 +285,24 @@ while($row = $fetcher->Fetch()) {
         include '../include/footer.php';
         ?>
         <script>
+            // Если в списке плёнок выбрано "новая плёнка", 
+            // скрываем форму добавления вариации.
             $('select#film_id').change(function() {
                 if($(this).val() == '+') {
                     $('#create_film_variation').modal('hide');
                 }
             });
             
+            // При скрытии формы добавления плёнки,
+            // показываем форму добавления вариации.
             $('#create_film').on('hidden.bs.modal', function() {
                 $('input#name').val('');
                 $('#create_film_variation').modal('show');
             });
             
+            // При скрытии формы добавления вариации,
+            // если значение плёнки было выбрано "Новая плёнка",
+            // показываем форму добавленния плёнки.
             $('#create_film_variation').on('hidden.bs.modal', function() {
                 if($('select#film_id').val() == '+') {
                     $('#create_film').modal('show');
@@ -260,16 +313,32 @@ while($row = $fetcher->Fetch()) {
                 $('input#weight').val('');
             });
             
+            // При показе формы добавления плёнки,
+            // устанавливаем фокус на текстовом поле.
             $('#create_film').on('shown.bs.modal', function() {
                 $('input:text:visible:first').focus();
             });
             
+            // При показе формы добавления вариации,
+            // устанавливаем фокус на первом текстовом поле.
             $('#create_film_variation').on('shown.bs.modal', function() {
                 if($('select#film_id').val() != '') {
                     $('input:text:visible:first').focus();
                 }
             });
             
+            // При редактировании цены, становится видна кнопка "ОК".
+            $('.film-price').keydown(function() {
+                $(this).parent().next('button').removeClass('d-none');
+            })
+            
+            // При редактировании валюты, становится видна кнопка "ОК".
+            $('.film-currency').change(function() {
+                $(this).parent().parent().next('button').removeClass('d-none');
+            })
+            
+            // Если страница открылась после отправки формы создания новой плёнки,
+            // сразу открываем форму создания вариации, где новая плёнка уже выбрана в списке.
             <?php
             if(null !== filter_input(INPUT_POST, 'create_film_submit') && empty($error_message)):
                 if(!empty($film_insert_id)):

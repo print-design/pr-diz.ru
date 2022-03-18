@@ -93,9 +93,13 @@ if($row = $fetcher->Fetch()) {
     </head>
     <body>
         <?php
-        include '../include/header.php';
+        include '../include/header_admin.php';
         ?>
         <div class="container-fluid">
+            <?php
+            include '../include/subheader_norm.php';
+            ?>
+            <hr />
             <?php
             if(!empty($error_message)) {
                echo "<div class='alert alert-danger'>$error_message</div>";
@@ -107,17 +111,6 @@ if($row = $fetcher->Fetch()) {
             <?php
             endif;
             ?>
-            <div class="d-flex justify-content-start">
-                <div class="p-1">
-                    <?php
-                    include '../include/subheader_admin.php';
-                    ?>
-                </div>
-            </div>
-            <?php
-            include '../include/subheader_norm.php';
-            ?>
-            <hr />
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">

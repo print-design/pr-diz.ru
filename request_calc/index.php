@@ -1,11 +1,13 @@
 <?php
 include '../include/topscripts.php';
+include './status_ids.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'manager', 'administrator', 'designer'))) {
+if(!IsInRole(array('technologist', 'dev', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Формирование ссылки для сортировки по столбцу
 function OrderLink($param) {
     if(array_key_exists('order', $_REQUEST) && $_REQUEST['order'] == $param) {
         echo "<strong><i class='fas fa-arrow-down' style='color: black; font-size: small;'></i></strong>";
@@ -42,22 +44,10 @@ function OrderLink($param) {
                     // Фильтр
                     $where = '';
                     
-                    $customer = filter_input(INPUT_GET, 'customer');
-                    if(!empty($customer)) {
-                        if(empty($where)) $where = " where c.customer_id=$customer";
-                        else $where .= " and c.customer_id=$customer";
-                    }
-                    
-                    $name = addslashes(filter_input(INPUT_GET, 'name'));
-                    if(!empty($name)) {
-                        if(empty($where)) $where = " where c.name=(select name from request_calc where id=$name)";
-                        else $where .= " and c.name=(select name from request_calc where id=$name)";
-                    }
-                    
-                    $manager = filter_input(INPUT_GET, 'manager');
-                    if(!empty($manager)) {
-                        if(empty($where)) $where = " where cus.manager_id=$manager";
-                        else $where .= " and cus.manager_id=$manager";
+                    $unit = filter_input(INPUT_GET, 'unit');
+                    if(!empty($unit)) {
+                        if(empty($where)) $where = " where c.unit='$unit'";
+                        else $where .= " and c.unit='$unit'";
                     }
                     
                     $status = filter_input(INPUT_GET, 'status');
@@ -66,17 +56,22 @@ function OrderLink($param) {
                         else $where .= " and c.status_id=$status";
                     }
                     
-                    $from = filter_input(INPUT_GET, 'from');
-                    if(!empty($from)) {
-                        if(empty($where)) $where = " where c.date >= '$from'";
-                        else $where .= " and c.date >= '$from'";
+                    $work_type = filter_input(INPUT_GET, 'work_type');
+                    if(!empty($work_type)) {
+                        if(empty($where)) $where = " where c.work_type_id=$work_type";
+                        else $where .= " and c.work_type_id=$work_type";
                     }
                     
-                    $to = filter_input(INPUT_GET, 'to');
-                    if(!empty($to)) {
-                        $to = date('Y-m-d', strtotime($to.' +1 days'));
-                        if(empty($where)) $where = " where c.date <= '$to'";
-                        else $where .= " and c.date <= '$to'";
+                    $manager = filter_input(INPUT_GET, 'manager');
+                    if(!empty($manager)) {
+                        if(empty($where)) $where = " where cus.manager_id=$manager";
+                        else $where .= " and cus.manager_id=$manager";
+                    }
+                    
+                    $customer = filter_input(INPUT_GET, 'customer');
+                    if(!empty($customer)) {
+                        if(empty($where)) $where = " where c.customer_id=$customer";
+                        else $where .= " and c.customer_id=$customer";
                     }
 
                     // Общее количество расчётов для установления количества страниц в постраничном выводе
@@ -87,40 +82,65 @@ function OrderLink($param) {
                         $pager_total_count = $row[0];
                     }
                     ?>
+                    <div class="d-inline ml-3" style="color: gray; font-size: x-large;"><?=$pager_total_count ?></div>
                 </div>
                 <div class="p-1 text-nowrap">
                     <?php $order = filter_input(INPUT_GET, 'order'); ?>
                     <form class="form-inline d-inline" method="get">
-                        <?php if(null !== filter_input(INPUT_GET, 'customer')): ?>
-                        <input type="hidden" name="customer" value="<?= filter_input(INPUT_GET, 'customer') ?>" />
+                        <?php if(null !== $order): ?>
+                        <input type="hidden" name="order" value="<?= $order ?>" />
                         <?php endif; ?>
-                        <?php if(null !== filter_input(INPUT_GET, 'name')): ?>
-                        <input type="hidden" name="name" value="<?= filter_input(INPUT_GET, 'name') ?>" />
-                        <?php endif; ?>
-                        <?php if(null !== filter_input(INPUT_GET, 'manager')): ?>
-                        <input type="hidden" name="manager" value="<?= filter_input(INPUT_GET, 'manager') ?>" />
-                        <?php endif; ?>
-                        <?php if(null !== filter_input(INPUT_GET, 'status')): ?>
-                        <input type="hidden" name="status" value="<?= filter_input(INPUT_GET, 'status') ?>" />
-                        <?php endif; ?>
-                        <?php
-                        $from_value = filter_input(INPUT_GET, 'from');
-                        if(empty($from_value)) {
-                            $from_value = date("Y-m-d", strtotime('-6 months'));
-                        }
-                        $to_value = filter_input(INPUT_GET, 'to');
-                        if(empty($to_value)) {
-                            $to_value = date("Y-m-d");
-                        }
-                        ?>
-                        <div class="d-inline ml-3 mr-1">от</div>
-                        <input type="date" id="from" name="from" class="form-control form-control-sm" style="width: 140px;" value="<?=$from_value ?>" onchange="javascript: this.form.submit();"/>
-                        <div class="d-inline ml-1 mr-1">до</div>
-                        <input type="date" id="to" name="to" class="form-control form-control-sm" style="width: 140px;" value="<?= $to_value ?>" onchange="javascript: this.form.submit();"/>
+                        <select id="unit" name="unit" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Шт/кг...</option>
+                            <option value="pieces"<?= filter_input(INPUT_GET, 'unit') == 'pieces' ? " selected='selected'" : "" ?>>Шт</option>
+                            <option value="kg"<?= filter_input(INPUT_GET, 'unit') == 'kg' ? " selected='selected'" : "" ?>>Кг</option>
+                        </select>
+                        <select id="status" name="status" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Статус...</option>
+                            <option value="<?=CALCULATION ?>"<?=(filter_input(INPUT_GET, 'status') == CALCULATION) ? " selected='selected'" : "" ?>>Сделан расчёт</option>
+                            <option value="<?=TECHMAP ?>"<?=(filter_input(INPUT_GET, 'status') == TECHMAP) ? " selected='selected'" : "" ?>>Составлена тех.карта</option>
+                        </select>
+                        <select id="work_type" name="work_type" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Тип работы...</option>
+                            <?php
+                            $sql = "select distinct wt.id, wt.name from request_calc c inner join work_type wt on c.work_type_id = wt.id order by wt.name";
+                            $fetcher = new Fetcher($sql);
+                            
+                            while ($row = $fetcher->Fetch()):
+                            ?>
+                            <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'work_type') ? " selected='selected'" : "") ?>><?=$row['name'] ?></option>
+                            <?php
+                            endwhile;
+                            ?>
+                        </select>
+                        <select id="manager" name="manager" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Менеджер...</option>
+                            <?php
+                            $sql = "select distinct u.id, u.last_name, u.first_name from request_calc c inner join customer cus on c.customer_id = cus.id inner join user u on cus.manager_id = u.id order by u.last_name";
+                            $fetcher = new Fetcher($sql);
+                            
+                            while ($row = $fetcher->Fetch()):
+                            ?>
+                            <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'manager') ? " selected='selected'" : "") ?>><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></option>
+                            <?php
+                            endwhile;
+                            ?>
+                        </select>
+                        <select id="customer" name="customer" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Заказчик...</option>
+                            <?php
+                            $sql = "select distinct cus.id, cus.name from request_calc c inner join customer cus on c.customer_id = cus.id order by cus.name";
+                            $fetcher = new Fetcher($sql);
+                            
+                            while ($row = $fetcher->Fetch()):
+                            ?>
+                            <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'customer') ? " selected='selected'" : "") ?>><?=$row['name'] ?></option>
+                            <?php
+                            endwhile;
+                            ?>
+                        </select>
                     </form>
-                    <?php if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))): ?>
-                    <a href="create.php" class="btn btn-outline-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
-                    <?php endif; ?>
+                    <a href="create.php" class="btn btn-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
                 </div>
             </div>
             <table class="table table-hover" id="content_table">
@@ -130,12 +150,11 @@ function OrderLink($param) {
                         <th>Дата&nbsp;&nbsp;<?= OrderLink('date') ?></th>
                         <th>Заказчик&nbsp;&nbsp;<?= OrderLink('customer') ?></th>
                         <th>Имя заказа&nbsp;&nbsp;<?= OrderLink('name') ?></th>
-                        <th></th>
-                        <th class="text-center">Объем заказа&nbsp;&nbsp;<?= OrderLink('quantity') ?></th>
+                        <th class="text-center">Объем&nbsp;&nbsp;<?= OrderLink('quantity') ?></th>
                         <th>Тип работы&nbsp;&nbsp;<?= OrderLink('work_type') ?></th>
                         <th>Менеджер&nbsp;&nbsp;<?= OrderLink('manager') ?></th>
-                        <th>Комментарий</th>
                         <th>Статус&nbsp;&nbsp;<?= OrderLink('status') ?></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -179,17 +198,13 @@ function OrderLink($param) {
                         }
                     }
                     
-                    $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.unit, c.quantity, c.work_type_id, c.ink_number, "
-                            . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, "
-                            . "c.comment, c.confirm, c.status_id, c.finished, "
-                            . "(select id from request_calc_result where request_calc_id = c.id order by id desc limit 1) request_calc_result_id, "
+                    $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.quantity, c.unit, wt.name work_type, u.last_name, u.first_name, c.status_id, "
                             . "(select id from techmap where request_calc_id = c.id order by id desc limit 1) techmap_id, "
-                            . "wt.name work_type, u.last_name, u.first_name, "
                             . "(select count(id) from request_calc where customer_id = c.customer_id and id <= c.id) num_for_customer "
                             . "from request_calc c "
                             . "left join customer cus on c.customer_id = cus.id "
                             . "left join work_type wt on c.work_type_id = wt.id "
-                            . "left join user u on cus.manager_id = u.id$where "
+                            . "left join user u on c.manager_id = u.id$where "
                             . "$orderby limit $pager_skip, $pager_take";
                     $fetcher = new Fetcher($sql);
                     
@@ -199,74 +214,25 @@ function OrderLink($param) {
                     $status = '';
                     $colour_style = '';
                     
-                    if(!empty($row['status_id'])) {
-                        if(!$row['finished']) {
-                            $status = "Не закончено редактирование";
-                            $colour = "red";
-                            $colour_style = " color: $colour";
-                        }
-                        elseif(!empty($row['techmap_id'])) {
-                            $status = "Составлена тех. карта";
-                            $colour = "green";
-                            $colour_style = " color: $colour";
-                        }
-                        elseif($row['confirm']) {
-                            $status = "Утверждено администратором";
-                            $colour = "navy";
-                            $colour_style = " color: $colour";
-                        }
-                        elseif(!empty ($row['request_calc_result_id'])) {
-                            $status = "Сделан расчёт";
-                            $colour = "blue";
-                            $colour_style = " color: $colour";
-                        }
-                        elseif(empty ($row['ink_number'])) {
-                            $status = "Требуется расчёт";
-                            $colour = "brown";
-                            $colour_style = " color: $colour";
-                        }
-                        else {
-                            $ink_number = $row['ink_number'];
-                            $percents_exist = true;
-                        
-                            for($i=1; $i<=$ink_number; $i++) {
-                                if(empty($row["percent_$i"])) {
-                                    $percents_exist = false;
-                                }
-                            }
-                        
-                            if(!$percents_exist) {
-                                $status = "Требуется красочность";
-                                $colour = "orange";
-                                $colour_style = " color: $colour";
-                            }
-                            else {
-                                $status = "Требуется расчёт";
-                                $colour = "brown";
-                                $colour_style = " color: $colour";
-                            }
-                        }
+                    if(!empty($row['techmap_id'])) {
+                        $status = "Составлена тех. карта";
+                        $colour_style = " color: green";
+                    }
+                    else {
+                        $status = "Сделан расчёт";
+                        $colour_style = " color: blue";
                     }
                     ?>
                     <tr>
                         <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['num_for_customer'] ?></td>
                         <td class="text-nowrap"><?= DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y') ?></td>
-                        <td>
-                            <?php if(!empty($row['customer'])): ?>
-                            <?=$row['customer'] ?>&nbsp;<a href="javascript: void(0);" class="customer" data-toggle="modal" data-target="#customerModal" data-customer-id="<?=$row['customer_id'] ?>"><i class="fa fa-question-circle" data-customer-id="<?=$row['customer_id'] ?>"></i></a>
-                            <?php endif; ?>
-                        </td>
+                        <td><a href="javascript: void(0);" class="customer" data-toggle="modal" data-target="#customerModal" data-customer-id="<?=$row['customer_id'] ?>"><?=$row['customer'] ?></a></td>
                         <td><?= htmlentities($row['name']) ?></td>
-                        <td><a href="request_calc.php<?= BuildQuery("id", $row['id']) ?>"><img src="../images/icons/vertical-dots.svg" /></a></td>
-                        <td class="text-right text-nowrap">
-                            <?php if(!empty($row['quantity'])): ?>
-                            <?=number_format($row['quantity'], 0, ",", " ") ?>&nbsp;<?=$row['unit'] == 'kg' ? 'кг' : 'шт' ?>
-                            <?php endif; ?>
-                        </td>
+                        <td class="text-right text-nowrap"><?=number_format($row['quantity'], 0, ",", " ") ?>&nbsp;<?=$row['unit'] == 'kg' ? 'кг' : 'шт' ?></td>
                         <td><?=$row['work_type'] ?></td>
                         <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
-                        <td><?=$row['comment'] ?></td>
-                        <td class="text-nowrap"><i class="fas fa-circle" style="color: <?=$colour ?>;"></i>&nbsp;&nbsp;<?=$status ?></td>
+                        <td class="text-nowrap"><i class="fas fa-circle" style="<?=$colour_style ?>;"></i>&nbsp;&nbsp;<?=$status ?></td>
+                        <td><a href="request_calc.php<?= BuildQuery("id", $row['id']) ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a></td>
                     </tr>
                     <?php
                     endwhile;
@@ -294,16 +260,24 @@ function OrderLink($param) {
         <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
         <script>
             // Список с  поиском
-            $('#customer').select2({
-                placeholder: "Заказчик...",
+            $('#unit').select2({
+                placeholder: "Шт/кг...",
+                maximumStatusLength: 1,
+                language: "ru",
+                width: '4rem'
+            })
+            
+            $('#status').select2({
+                placeholder: "Статус...",
                 maximumSelectionLength: 1,
                 language: "ru"
             });
             
-            $('#name').select2({
-                placeholder: "Имя заказа...",
+            $('#work_type').select2({
+                placeholder: "Тип работы...",
                 maximumSelectionLength: 1,
-                language: "ru"
+                language: "ru",
+                width: '10rem'
             });
             
             $('#manager').select2({
@@ -312,11 +286,11 @@ function OrderLink($param) {
                 language: "ru"
             });
             
-            $('#status').select2({
-                placeholder: "Статус...",
+            $('#customer').select2({
+                placeholder: "Заказчик...",
                 maximumSelectionLength: 1,
                 language: "ru"
-            })
+            });
             
             // Заполнение информации о заказчике
             $('a.customer').click(function(e) {
@@ -325,9 +299,6 @@ function OrderLink($param) {
                     $.ajax({ url: "../ajax/customer.php?id=" + customer_id })
                             .done(function(data) {
                                 $('#customerModal .modal-dialog .modal-content').html(data);
-                    })
-                            .fail(function() {
-                                alert('Ошибка при получении данных о заказчике');
                     });
                 }
             });
