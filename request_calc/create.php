@@ -42,13 +42,13 @@ $error_message = '';
 $customer_id_valid = '';
 $name_valid = '';
 $work_type_valid = '';
-$brand_name_valid = '';
+$film_id_valid = '';
 $thickness_valid = '';
 $price_val = '';
 $currency_valid = '';
 $quantity_valid = '';
 
-$individual_brand_name_valid = '';
+$individual_film_name_valid = '';
 $individual_price_valid = '';
 $individual_currency_valid = '';
 $individual_thickness_valid = '';
@@ -83,8 +83,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'brand_name'))) {
-        $brand_name_valid = ISINVALID;
+    if(empty(filter_input(INPUT_POST, 'film_id'))) {
+        $film_id_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -93,10 +93,10 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $form_valid = false;
     }
     
-    if(filter_input(INPUT_POST, 'brand_name') == INDIVIDUAL) {
+    if(filter_input(INPUT_POST, 'film_id') == INDIVIDUAL) {
         // Проверка валидности параметров, введённых вручную при выборе марки плёнки "Другая"
-        if(empty(filter_input(INPUT_POST, 'individual_brand_name'))) {
-            $individual_brand_name_valid = ISINVALID;
+        if(empty(filter_input(INPUT_POST, 'individual_film_name'))) {
+            $individual_film_name_valid = ISINVALID;
             $form_valid = false;
         }
         
@@ -1546,7 +1546,9 @@ if(!empty($id)) {
             . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
             . "cliche_1, cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8 "
             . "from request_calc where id=$id";
-    $row = (new Fetcher($sql))->Fetch();
+    $fetcher = new Fetcher($sql);
+    $row = $fetcher->Fetch();
+    $error_message = $fetcher->error;
 }
 
 if(isset($row['date'])) $date = $row['date'];
@@ -1570,10 +1572,10 @@ if(null === $work_type_id) {
     else $work_type_id = null;
 }
 
-$brand_name = filter_input(INPUT_POST, 'brand_name');
-if(null === $brand_name) {
-    if(isset($row['brand_name'])) $brand_name = $row['brand_name'];
-    else $brand_name = null;
+$film_id = filter_input(INPUT_POST, 'film_id');
+if(null === $film_id) {
+    if(isset($row['film_id'])) $film_id = $row['film_id'];
+    else $film_id = null;
 }
 
 $thickness = filter_input(INPUT_POST, 'thickness');
@@ -2084,20 +2086,20 @@ $colorfulnesses = array();
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="brand_name">Марка пленки</label>
-                                    <select id="brand_name" name="brand_name" class="form-control" required="required">
+                                    <label for="film_id">Марка пленки</label>
+                                    <select id="film_id" name="film_id" class="form-control" required="required">
                                         <option value="" hidden="hidden" selected="selected">Марка пленки...</option>
                                             <?php
-                                            $sql = "select distinct name from film_brand order by name";
-                                            $brand_names = (new Grabber($sql))->result;
+                                            $sql = "select id, name from film order by name";
+                                            $film_ids = (new Grabber($sql))->result;
                                             
-                                            foreach ($brand_names as $row):
+                                            foreach ($film_ids as $row):
                                             $selected = '';
-                                            if($row['name'] == $brand_name) {
+                                            if($row['name'] == $film_id) {
                                                 $selected = " selected='selected'";
                                             }
                                             ?>
-                                        <option value="<?=$row['name'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
+                                        <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
                                             <?php
                                             endforeach;
                                             
