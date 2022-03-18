@@ -37,71 +37,49 @@ if($id === null) {
     header('Location: '.APPLICATION.'/user/');
 }
         
-// Получение объекта
+// Список всех машин
+$sql = "select id, name, user1_name, user2_name from machine order by name";
+$grabber = new Grabber($sql);
+$error_message = $grabber->error;
+$machines = $grabber->result;
+
+// Полная информация о пользователе, включая все отработанные смены
 $username = '';
-$fio = '';
-        
-$comiflex_typographer = 0;
-$comiflex_assistant = 0;
-$comiflex_manager = 0;
-$zbs1_typographer = 0;
-$zbs1_manager = 0;
-$zbs2_typographer = 0;
-$zbs2_manager = 0;
-$zbs3_typographer = 0;
-$zbs3_manager = 0;
-$atlas_typographer = 0;
-$atlas_manager = 0;
-$lamination_laminator1 = 0;
-$lamination_laminator2 = 0;
-$lamination_manager = 0;
-$cutting_cutter = 0;
-$cutting_manager = 0;
-        
-$sql = "select u.username, u.fio, u.quit, "
-        . "(select count(id) from workshift where machine_id = 1 and user1_id = u.id) comiflex_typographer, "
-        . "(select count(id) from workshift where machine_id = 1 and user2_id = u.id) comiflex_assistant, "
-        . "(select count(e.id) from workshift ws inner join edition e on e.workshift_id = ws.id where ws.machine_id = 1 and e.manager_id = u.id) comiflex_manager, "
-        . "(select count(id) from workshift where machine_id = 2 and user1_id = u.id) zbs1_typographer, "
-        . "(select count(e.id) from workshift ws inner join edition e on e.workshift_id = ws.id  where ws.machine_id = 2 and e.manager_id = u.id) zbs1_manager, "
-        . "(select count(id) from workshift where machine_id = 3 and user1_id = u.id) zbs2_typographer, "
-        . "(select count(e.id) from workshift ws inner join edition e on e.workshift_id = ws.id  where ws.machine_id = 3 and e.manager_id = u.id) zbs2_manager, "
-        . "(select count(id) from workshift where machine_id = 4 and user1_id = u.id) zbs3_typographer, "
-        . "(select count(e.id) from workshift ws inner join edition e on e.workshift_id = ws.id  where ws.machine_id = 4 and e.manager_id = u.id) zbs3_manager, "
-        . "(select count(id) from workshift where machine_id = 5 and user1_id = u.id) atlas_typographer, "
-        . "(select count(e.id) from workshift ws inner join edition e on e.workshift_id = ws.id  where ws.machine_id = 5 and e.manager_id = u.id) atlas_manager, "
-        . "(select count(id) from workshift where machine_id = 6 and user1_id = u.id) lamination_laminator1, "
-        . "(select count(id) from workshift where machine_id = 6 and user2_id = u.id) lamination_laminator2, "
-        . "(select count(e.id) from workshift ws inner join edition e on e.workshift_id = ws.id  where ws.machine_id = 6 and e.manager_id = u.id) lamination_manager, "
-        . "(select count(id) from workshift where machine_id = 7 and user1_id = u.id) cutting_cutter, "
-        . "(select count(e.id) from workshift ws inner join edition e on e.workshift_id = ws.id  where ws.machine_id = 7 and e.manager_id = u.id) cutting_manager "
-        . "from user u where u.id = $id";
+$user_info_array = array();
 
-$fetcher = new Fetcher($sql);
-$error_message = $fetcher->error;
+if(empty($error_message)) {
+    $sql = "select u.username, u.fio, u.quit";
+    foreach($machines as $machine) {
+        $sql .= ", (select count(id) from workshift where machine_id = ".$machine['id']." and user1_id = u.id) user1_".$machine['id'];
+        if(!empty($machine['user2_name'])) {
+            $sql .= ", (select count(id) from workshift where machine_id = ".$machine['id']." and user2_id = u.id) user2_".$machine['id'];
+        }
+        $sql .= ", (select count(e.id) from workshift ws inner join edition e on e.workshift_id = ws.id where ws.machine_id = ".$machine['id']." and e.manager_id = u.id) manager_".$machine['id'];
+    }
+    $sql .= " from user u where u.id = $id";
+    $grabber = new Grabber($sql);
+    $error_message = $grabber->error;
+    $user_info_array = $grabber->result;
+}
 
-$row = $fetcher->Fetch();
-$username = $row['username'];
-$fio = $row['fio'];
-$quit = $row['quit'];
-$comiflex_typographer = $row['comiflex_typographer'];
-$comiflex_assistant = $row['comiflex_assistant'];
-$comiflex_manager = $row['comiflex_manager'];
-$zbs1_typographer = $row['zbs1_typographer'];
-$zbs1_manager = $row['zbs1_manager'];
-$zbs2_typographer = $row['zbs2_typographer'];
-$zbs2_manager = $row['zbs2_manager'];
-$zbs3_typographer = $row['zbs3_typographer'];
-$zbs3_manager = $row['zbs3_manager'];
-$atlas_typographer = $row['atlas_typographer'];
-$atlas_manager = $row['atlas_manager'];
-$lamination_laminator1 = $row['lamination_laminator1'];
-$lamination_laminator2 = $row['lamination_laminator2'];
-$lamination_manager = $row['lamination_manager'];
-$cutting_cutter = $row['cutting_cutter'];
-$cutting_manager = $row['cutting_manager'];
+// Количество отработанных смен
+$shifts_count = 0;
 
+foreach($user_info_array as $user_info) {
+    $username = $user_info['username'];
+    foreach ($machines as $machine) {
+        $shifts_count += intval($user_info['user1_'.$machine['id']]);
+        if(!empty($machine['user2_name'])) {
+            $shifts_count += intval($user_info['user2_'.$machine['id']]);
+        }
+        $shifts_count += intval($user_info['manager_'.$machine['id']]);
+    }
+}
+
+// Все роли
 $roles = (new Grabber("select id, local_name from role where id not in (select role_id from user_role where user_id = $id) order by local_name"))->result;
+
+// Роли текущего пользователя
 $myroles = (new Grabber("select ur.user_id, ur.role_id, r.local_name from role r inner join user_role ur on r.id = ur.role_id where ur.user_id = $id order by local_name"))->result;
 ?>
 <!DOCTYPE html>
@@ -132,22 +110,6 @@ $myroles = (new Grabber("select ur.user_id, ur.role_id, r.local_name from role r
                                 <a href="<?=APPLICATION ?>/user/" class="btn btn-outline-dark"><i class="fas fa-undo"></i>&nbsp;К списку</a>
                                 <a href="<?=APPLICATION ?>/user/edit.php?id=<?=$id ?>" class="btn btn-outline-dark"><i class="fas fa-edit"></i>&nbsp;Редактировать</a>
                                 <?php
-                                $shifts_count = intval($comiflex_typographer) +
-                                        intval($comiflex_assistant) +
-                                        intval($comiflex_manager) +
-                                        intval($zbs1_typographer) +
-                                        intval($zbs1_manager) +
-                                        intval($zbs2_typographer) +
-                                        intval($zbs2_manager) +
-                                        intval($zbs3_typographer) +
-                                        intval($zbs3_manager) +
-                                        intval($atlas_typographer) +
-                                        intval($atlas_manager) +
-                                        intval($lamination_laminator1) +
-                                        intval($lamination_laminator2) +
-                                        intval($lamination_manager) +
-                                        intval($cutting_cutter) +
-                                        intval($cutting_manager);
                                 if($shifts_count === 0 && filter_input(INPUT_COOKIE, USERNAME) != $username) :
                                 ?>
                                 <a href="<?=APPLICATION ?>/user/delete.php?id=<?=$id ?>" class="btn btn-outline-dark"><i class="fas fa-trash-alt"></i>&nbsp;Удалить</a>
@@ -157,83 +119,37 @@ $myroles = (new Grabber("select ur.user_id, ur.role_id, r.local_name from role r
                             </div>
                         </div>
                     </div>
-                    <table class="table table-bordered">
+                    <table class="table table-bordered table-hover">
+                        <?php foreach($user_info_array as $user_info): ?>
                         <tr>
                             <th>ФИО</th>
-                            <td><?=$fio ?></td>
+                            <td><?=$user_info['fio'] ?></td>
                         </tr>
                         <tr>
                             <th>Логин</th>
-                            <td><?=$username ?></td>
+                            <td><?=$user_info['username'] ?></td>
                         </tr>
                         <tr>
                             <th>Уволился</th>
-                            <td><?=($quit == 0 ? 'Нет' : 'Да') ?></td>
+                            <td><?=($user_info['quit'] == 0 ? 'Нет' : 'Да') ?></td>
                         </tr>
+                        <?php foreach($machines as $machine): ?>
                         <tr>
-                            <th>Comiflex, печатник</th>
-                            <td><?=$comiflex_typographer ?></td>
+                            <th><?=$machine['name'].', '.$machine['user1_name'] ?></th>
+                            <td><?=$user_info['user1_'.$machine['id']] ?></td>
                         </tr>
+                        <?php if(!empty($machine['user2_name'])): ?>
                         <tr>
-                            <th>Comiflex, ассистент</th>
-                            <td><?=$comiflex_assistant ?></td>
+                            <th><?=$machine['name'].', '.$machine['user2_name'] ?></th>
+                            <td><?=$user_info['user2_'.$machine['id']] ?></td>
                         </tr>
+                        <?php endif; ?>
                         <tr>
-                            <th>Comiflex, менеджер</th>
-                            <td><?=$comiflex_manager ?></td>
+                            <th><?=$machine['name'].', Менеджер' ?></th>
+                            <td><?=$user_info['manager_'.$machine['id']] ?></td>
                         </tr>
-                        <tr>
-                            <th>ZBS-1, печатник</th>
-                            <td><?=$zbs1_typographer ?></td>
-                        </tr>
-                        <tr>
-                            <th>ZBS-1, менеджер</th>
-                            <td><?=$zbs1_manager ?></td>
-                        </tr>
-                        <tr>
-                            <th>ZBS-2, печатник</th>
-                            <td><?=$zbs2_typographer ?></td>
-                        </tr>
-                        <tr>
-                            <th>ZBS-2, менеджер</th>
-                            <td><?=$zbs2_manager ?></td>
-                        </tr>
-                        <tr>
-                            <th>ZBS-3, печатник</th>
-                            <td><?=$zbs3_typographer ?></td>
-                        </tr>
-                        <tr>
-                            <th>ZBS-3, менеджер</th>
-                            <td><?=$zbs3_manager ?></td>
-                        </tr>
-                        <tr>
-                            <th>Атлас, печатник</th>
-                            <td><?=$atlas_typographer ?></td>
-                        </tr>
-                        <tr>
-                            <th>Атлас, менеджер</th>
-                            <td><?=$atlas_manager ?></td>
-                        </tr>
-                        <tr>
-                            <th>Ламинация, ламинаторщик 1</th>
-                            <td><?=$lamination_laminator1 ?></td>
-                        </tr>
-                        <tr>
-                            <th>Ламинация, ламинаторщик 2</th>
-                            <td><?=$lamination_laminator2 ?></td>
-                        </tr>
-                        <tr>
-                            <th>Ламинация, менеджер</th>
-                            <td><?=$lamination_manager ?></td>
-                        </tr>
-                        <tr>
-                            <th>Резка, резчик</th>
-                            <td><?=$cutting_cutter ?></td>
-                        </tr>
-                        <tr>
-                            <th>Резка, менеджер</th>
-                            <td><?=$cutting_manager ?></td>
-                        </tr>
+                        <?php endforeach; ?>
+                        <?php endforeach; ?>
                     </table>
                 </div>
                 <div class="col-12 col-md-6">

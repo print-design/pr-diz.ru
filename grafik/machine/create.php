@@ -8,23 +8,44 @@ $form_valid = true;
 $error_message = '';
         
 $name_valid = '';
+$user1_name_valid = '';
+$user2_name_valid = '';
+$role_valid = '';
         
 // Обработка отправки формы
-$machine_create_submit = filter_input(INPUT_POST, 'machine_create_submit');
-if($machine_create_submit !== null) {
+if(null !== filter_input(INPUT_POST, 'machine_create_submit')) {
     $name = filter_input(INPUT_POST, 'name');
-    if($name == '') {
+    if(empty($name)) {
         $name_valid = ISINVALID;
         $form_valid = false;
     }
     
+    $user1_name = filter_input(INPUT_POST, 'user1_name');
+    $user2_name = filter_input(INPUT_POST, 'user2_name');
+    $role_id = filter_input(INPUT_POST, 'role_id');
+    $has_edition = filter_input(INPUT_POST, 'has_edition') == 'on' ? 1 : 0;
+    $has_organization = filter_input(INPUT_POST, 'has_organization') == 'on' ? 1 : 0;
+    $has_length = filter_input(INPUT_POST, 'has_length') == 'on' ? 1 : 0;
+    $has_status = filter_input(INPUT_POST, 'has_status') == 'on' ? 1 : 0;
+    $has_roller = filter_input(INPUT_POST, 'has_roller') == 'on' ? 1 : 0;
+    $has_lamination = filter_input(INPUT_POST, 'has_lamination') == 'on' ? 1 : 0;
+    $has_coloring = filter_input(INPUT_POST, 'has_coloring') == 'on' ? 1 : 0;
+    $coloring = filter_input(INPUT_POST, 'coloring');
+    if(empty($coloring)) $coloring = 0;
+    $has_manager = filter_input(INPUT_POST, 'has_manager') == 'on' ? 1 : 0;
+    $has_comment = filter_input(INPUT_POST, 'has_comment') == 'on' ? 1 : 0;
+    $is_cutter = filter_input(INPUT_POST, 'is_cutter') == 'on' ? 1 : 0;
+    
     if($form_valid) {
         $name = addslashes($name);
-        $executer = new Executer("insert into machine (name) values ('$name')");
+        $user1_name = addslashes($user1_name);
+        $user2_name = addslashes($user2_name);
+        $executer = new Executer("insert into machine (name, user1_name, user2_name, role_id, has_edition, has_organization, has_length, has_status, has_roller, has_lamination, has_coloring, coloring, has_manager, has_comment, is_cutter) "
+                . "values ('$name', '$user1_name', '$user2_name', $role_id, $has_edition, $has_organization, $has_length, $has_status, $has_roller, $has_lamination, $has_coloring, $coloring, $has_manager, $has_comment, $is_cutter)");
         $error_message = $executer->error;
         $id = $executer->insert_id;
         
-        if($error_message == '') {
+        if(empty($error_message)) {
             header('Location: '.APPLICATION."/machine/details.php?id=$id");
         }
     }
@@ -61,11 +82,118 @@ if($machine_create_submit !== null) {
                     <form method="post">
                         <div class="form-group">
                             <label for="name">Наименование</label>
-                            <input type="text" id="name" name="name" class="form-control<?=$name_valid ?>" value="<?= isset($name) ? htmlentities($name) : '' ?>" required="required" autocomplete="off"/>
+                            <input type="text" id="name" name="name" class="form-control<?=$name_valid ?>" value="<?=htmlentities(filter_input(INPUT_POST, 'name')) ?>" required="required" autocomplete="off"/>
                             <div class="invalid-feedback">Наименование обязательно</div>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-outline-dark" id="machine_create_submit" name="machine_create_submit">Сохранить</button>
+                            <label for="user1_name">Пользователь 1</label>
+                            <input type="text" id="user1_name" name="user1_name" class="form-control<?=$user1_name_valid ?>" value="<?= htmlentities(filter_input(INPUT_POST, 'user1_name')) ?>" autocomplete="off" />
+                        </div>
+                        <div class="form-group">
+                            <label for="user2_name">Пользователь 2</label>
+                            <input type="text" id="user2_name" name="user2_name" class="form-control<?=$user2_name_valid ?>" value="<?= htmlentities(filter_input(INPUT_POST, 'user2_name')) ?>" autocomplete="off" />
+                        </div>
+                        <div class="form-group">
+                            <label for="role_id">Роль</label>
+                            <select id="role_id" name="role_id" class="form-control">
+                                <option value="" hidden="hidden">...</option>
+                                <?php
+                                $sql = "select id, local_name from role";
+                                $fetcher = new Fetcher($sql);
+                                while($row = $fetcher->Fetch()):
+                                    $role_id_class = '';
+                                if(filter_input(INPUT_POST, 'role_id') == $row['id']) $role_id_class = " selected='selected'";
+                                ?>
+                                <option value="<?=$row['id'] ?>"<?=$role_id_class ?>><?=$row['local_name'] ?></option>
+                                <?php endwhile; ?>
+                            </select>
+                        </div>
+                        <div class="form-check">
+                            <?php
+                            $has_organization_checked = "";
+                            if(filter_input(INPUT_POST, 'has_organization')) $has_organization_checked = " checked='checked'";
+                            ?>
+                            <input type="checkbox" class="form-check-input" id="has_organization" name="has_organization"<?=$has_organization_checked ?> />
+                            <label class="form-check-label" for="has_organization">Есть организация</label>
+                        </div>
+                        <div class="form-check">
+                            <?php
+                            $has_edition_checked = "";
+                            if(filter_input(INPUT_POST, 'has_edition')) $has_edition_checked = " checked='checked'";
+                            ?>
+                            <input type="checkbox" class="form-check-input" id="has_edition" name="has_edition"<?=$has_edition_checked ?> />
+                            <label class="form-check-label" for="has_edition">Есть тираж</label>
+                        </div>
+                        <div class="form-check">
+                            <?php
+                            $has_length_checked = "";
+                            if(filter_input(INPUT_POST, 'has_length')) $has_length_checked = " checked='checked'";
+                            ?>
+                            <input type="checkbox" class="form-check-input" id="has_length" name="has_length"<?=$has_length_checked ?> />
+                            <label class="form-check-label" for="has_length">Есть длина</label>
+                        </div>
+                        <div class="form-check">
+                            <?php
+                            $has_status_checked = "";
+                            if(filter_input(INPUT_POST, 'has_status')) $has_status_checked = " checked='checked'";
+                            ?>
+                            <input type="checkbox" class="form-check-input" id="has_status" name="has_status"<?=$has_status_checked ?> />
+                            <label class="form-check-label" for="has_status">Есть статус</label>
+                        </div>
+                        <div class="form-check">
+                            <?php
+                            $has_roller_checked = "";
+                            if(filter_input(INPUT_POST, 'has_roller')) $has_roller_checked = " checked='checked'";
+                            ?>
+                            <input type="checkbox" class="form-check-input" id="has_roller" name="has_roller"<?=$has_roller_checked ?> />
+                            <label class="form-check-label" for="has_roller">Есть вал</label>
+                        </div>
+                        <div class="form-check">
+                            <?php
+                            $has_lamination_checked = "";
+                            if(filter_input(INPUT_POST, 'has_lamination')) $has_lamination_checked = " checked='checked'";
+                            ?>
+                            <input type="checkbox" class="form-check-input" id="has_lamination" name="has_lamination"<?=$has_lamination_checked ?> />
+                            <label class="form-check-label" for="has_lamination">Есть ламинация</label>
+                        </div>
+                        <div class="form-check">
+                            <?php
+                            $has_coloring_checked = "";
+                            if(filter_input(INPUT_POST, 'has_coloring')) $has_coloring_checked = " checked='checked'";
+                            ?>
+                            <input type="checkbox" class="form-check-input" id="has_coloring" name="has_coloring"<?=$has_coloring_checked ?> />
+                            <label class="form-check-label" for="has_coloring">Есть красочность</label>
+                        </div>
+                        <div class="form-group form-inline mt-2">
+                            <input type="number" class="form-control mr-2" id="coloring" name="coloring" min="0" value="<?= filter_input(INPUT_POST, 'coloring') ?>" style="width: 70px;" />
+                            <label for="coloring">Красочность</label>
+                        </div>
+                        <div class="form-check">
+                            <?php
+                            $has_manager_checked = "";
+                            if(filter_input(INPUT_POST, 'has_manager')) $has_manager_checked = " checked='checked'";
+                            ?>
+                            <input type="checkbox" class="form-check-input" id="has_manager" name="has_manager"<?=$has_manager_checked ?> />
+                            <label class="form-check-label" for="has_manager">Есть менеджер</label>
+                        </div>
+                        <div class="form-check">
+                            <?php
+                            $has_comment_checked = "";
+                            if(filter_input(INPUT_POST, 'has_comment')) $has_comment_checked = " checked='checked'";
+                            ?>
+                            <input type="checkbox" class="form-check-input" id="has_comment" name="has_comment"<?=$has_comment_checked ?> />
+                            <label class="form-check-label" for="has_comment">Есть комментарий</label>
+                        </div>
+                        <div class="form-check">
+                            <?php
+                            $is_cutter_checked = "";
+                            if(filter_input(INPUT_POST, 'is_cutter')) $is_cutter_checked = " checked='checked'";
+                            ?>
+                            <input type="checkbox" class="form-check-input" id="is_cutter" name="is_cutter"<?=$is_cutter_checked ?> />
+                            <label class="form-check-label" for="is_cutter">Это резка?</label>
+                        </div>
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-outline-dark" id="machine_create_submit" name="machine_create_submit">Создать</button>
                         </div>
                     </form>
                 </div>

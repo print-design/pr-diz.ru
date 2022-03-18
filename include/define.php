@@ -5,7 +5,7 @@ define('APPLICATION', '/pr-diz.ru');
 define('DATABASE_HOST', 'localhost');
 define('DATABASE_USER', 'root');
 define('DATABASE_PASSWORD', '');
-define('DATABASE_NAME', 'erp_copy');
+define('DATABASE_NAME', 'erp_release');
 
 define('USER_ID', '8uh_87HHGyt_675fr_oolkj_u76TY__iju76ggV');
 define('USERNAME', 'kjUhyg-iJJuuggy___--yh7YYTR5412jN-98JIU');

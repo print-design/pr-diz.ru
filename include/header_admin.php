@@ -15,7 +15,6 @@ if($count > 1) {
 $user_class = '';
 $supplier_class = '';
 $film_class = '';
-$norm_class = '';
 
 if($folder == 'user') {
     $user_class = ' disabled';
@@ -25,9 +24,6 @@ elseif($folder == 'supplier' && $file != 'film.php') {
 }
 elseif ($file == 'film.php') {
     $film_class = ' disabled';
-}
-elseif($folder == 'admin') {
-    $norm_class = ' disabled';
 }
 ?>
 <div class="container-fluid header">
@@ -41,9 +37,6 @@ elseif($folder == 'admin') {
             </li>
             <li class="nav-item">
                 <a class="nav-link<?=$film_class ?>" href="<?=APPLICATION ?>/supplier/film.php">Пленка</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link<?=$norm_class ?>" href="<?=APPLICATION ?>/admin/machine.php<?= BuildQuery('machine_id', 1) ?>">Нормы</a>
             </li>
         </ul>
         <div class="ml-auto"></div>

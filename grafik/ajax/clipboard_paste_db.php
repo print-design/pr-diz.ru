@@ -17,7 +17,7 @@ if(empty($workshift_id)) {
     $workshift_id = $ws_executer->insert_id;
 }
 
-$sql = "select 	name, organization, length, status_id, lamination_id, coloring, roller_id, manager_id, comment, origin_id, origin_name from clipboard order by id desc";
+$sql = "select 	name, organization, length, status_id, lamination_id, coloring, roller, manager_id, comment, origin_id, origin_name from clipboard order by id desc";
 $fetcher = new Fetcher($sql);
 $error_message = $fetcher->error;
 
@@ -29,7 +29,7 @@ if($row = $fetcher->Fetch()) {
     $status_id = $row['status_id'] == null ? 'NULL' : $row['status_id'];
     $lamination_id = $row['lamination_id'] == null ? 'NULL' : $row['lamination_id'];
     $coloring = $row['coloring'] == null ? 'NULL' : $row['coloring'];
-    $roller_id = $row['roller_id'] == null ? 'NULL' : $row['roller_id'];
+    $roller = addslashes($row['roller']);
     $manager_id = $row['manager_id'] == null ? 'NULL' : $row['manager_id'];
     $comment = addslashes($row['comment']);
     $origin_id = $row['origin_id'];
@@ -50,7 +50,7 @@ if($row = $fetcher->Fetch()) {
     }
     
     $sql = "insert into edition (name, organization, length, status_id, lamination_id, coloring, roller_id, manager_id, comment, workshift_id, position) "
-            . "values ('$name', '$organization', $length, $status_id, $lamination_id, $coloring, $roller_id, $manager_id, '$comment', $workshift_id, $position)";
+            . "values ('$name', '$organization', $length, $status_id, $lamination_id, $coloring, (select id from roller where name='$roller' and machine_id=$machineId limit 1), $manager_id, '$comment', $workshift_id, $position)";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     $insert_id = $executer->insert_id;

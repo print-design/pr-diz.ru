@@ -36,6 +36,20 @@ elseif($folder == 'schedule') {
             <li class="nav-item">
                 <a class="nav-link<?=$request_calc_status ?>" href="<?=APPLICATION ?>/request_calc/<?= IsInRole('manager') ? BuildQuery("manager", GetUserId()) : "" ?>">Расчеты</a>
             </li>
+            <?php
+            endif;
+            if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))):
+            ?>
+            <li class="nav-item">
+                <a class="nav-link<?=$techmap_status ?>" href="<?=APPLICATION ?>/techmap/<?= IsInRole('manager') ? BuildQuery("manager", GetUserId()) : "" ?>">Технологические карты</a>
+            </li>
+            <?php
+            endif;
+            if(IsInRole(array('technologist', 'dev', 'manager', 'administrator'))):
+            ?>
+            <li class="nav-item">
+                <a class="nav-link<?=$schedule_status ?>" href="<?=APPLICATION ?>/schedule/">Расписание</a>
+            </li>
             <?php endif; ?>
         </ul>
         <?php

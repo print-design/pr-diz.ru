@@ -29,7 +29,7 @@ include '../include/restrict_admin.php';
                     </a>
                 </div>
             </div>
-            <table class="table table-striped">
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>Зарегистрирован</th>
@@ -47,16 +47,24 @@ include '../include/restrict_admin.php';
                     $fetcher = new Fetcher($sql);
                     $error_message = $fetcher->error;
                     
-                    while ($row = $fetcher->Fetch()) {
-                        echo "<tr>"
-                                . "<td>".$row['date']."</td>"
-                                ."<td><a href='".APPLICATION."/user/details.php?id=".$row['id']."'>".$row['username']."</a></td>"
-                                ."<td>".$row['fio']."</td>"
-                                ."<td>".$row['roles']."</td>"
-                                ."<td>".($row['quit'] == 0 ? '' : '<i class="fas fa-check"></i>')."</td>"
-                                ."</tr>";
-                    }
+                    while ($row = $fetcher->Fetch()):
                     ?>
+                    <tr<?=$row['quit'] == 0 ? "" : " class='bg-warning'" ?>>
+                        <td><?=$row['date'] ?></td>
+                        <td>
+                            <?php
+                            if($row['username'] == TECHNOLOGIST):
+                            echo $row['username'];
+                            else:
+                            ?>
+                            <a href='<?=APPLICATION."/user/details.php?id=".$row['id'] ?>'><?=$row['username'] ?></a>
+                            <?php endif; ?>
+                        </td>
+                        <td><?=$row['fio'] ?></td>
+                        <td><?=$row['roles'] ?></td>
+                        <td class="font-weight-bold text-danger"><?=($row['quit'] == 0 ? '' : 'Уволился') ?></td>
+                    </tr>
+                    <?php endwhile; ?>
                 </tbody>
             </table>
         </div>

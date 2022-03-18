@@ -42,7 +42,9 @@ if($id === null) {
 }
         
 // Получение объекта
-$sql = "select m.name, m.user1_name, m.user2_name, m.role_id, m.has_organization, m.has_edition, m.has_length, m.has_status, m.has_roller, m.has_lamination, m.has_coloring, m.coloring, m.has_manager, m.has_comment, m.is_cutter, r.local_name role "
+$sql = "select m.name, m.user1_name, m.user2_name, m.role_id, m.has_organization, m.has_edition, m.has_length, m.has_status, m.has_roller, m.has_lamination, m.has_coloring, m.coloring, m.has_manager, m.has_comment, m.is_cutter, r.local_name role, "
+        . "(select count(id) from workshift where machine_id = m.id) workshifts_count, "
+        . "(select count(id) from roller where machine_id = m.id) rollers_count "
         . "from machine m "
         . "left join role r on m.role_id = r.id "
         . "where m.id=$id";
@@ -63,6 +65,8 @@ $has_manager = $row['has_manager'];
 $has_comment = $row['has_comment'];
 $is_cutter = $row['is_cutter'];
 $role = $row['role'];
+$workshifts_count = $row['workshifts_count'];
+$rollers_count = $row['rollers_count'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -86,12 +90,15 @@ $role = $row['role'];
                     <div class="d-flex justify-content-between mb-2">
                         <div class="p-1">
                             <h1><?=$name ?></h1>
+                            <p>Отработанных смен: <?=$workshifts_count ?>. Валов: <?=$rollers_count ?>.</p>
                         </div>
                         <div class="p-1">
                             <div class="btn-group">
                                 <a href="<?=APPLICATION ?>/machine/" class="btn btn-outline-dark"><i class="fas fa-undo-alt"></i>&nbsp;К списку</a>
                                 <a href="<?=APPLICATION ?>/machine/edit.php?id=<?=$id ?>" class="btn btn-outline-dark"><i class="fas fa-edit"></i>&nbsp;Редактировать</a>
+                                <?php if($rollers_count == 0 && $workshifts_count == 0): ?>
                                 <a href="<?=APPLICATION ?>/machine/delete.php?id=<?=$id ?>" class="btn btn-outline-dark"><i class="fas fa-trash-alt"></i>&nbsp;Удалить</a>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -106,7 +113,7 @@ $role = $row['role'];
                         <tr><th>Есть вал</th><td><?=$has_roller == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
                         <tr><th>Есть ламинация</th><td><?=$has_lamination == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
                         <tr><th>Есть красочность</th><td><?=$has_coloring == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
-                        <tr><th>Красочность</th><td><?=$coloring == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
+                        <tr><th>Красочность</th><td><?=$coloring ?></td></tr>
                         <tr><th>Есть менеджер</th><td><?=$has_manager == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
                         <tr><th>Есть комментарий</th><td><?=$has_comment == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
                         <tr><th>Это резка?</th><td><?=$is_cutter == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
@@ -131,7 +138,7 @@ $role = $row['role'];
                             </form>
                         </div>
                     </div>
-                    <table class="table table-striped table-bordered">
+                    <table class="table table-hover">
                         <tbody>
                             <tr>
                                 <th></th>
@@ -141,27 +148,32 @@ $role = $row['role'];
                                 <th></th>
                             </tr>
                             <?php
-                            $rollers = (new Grabber("select id, name, position from roller where machine_id=$id order by position, name"))->result;
+                            $sql = "select r.id, r.name, r.position, (select count(id) from edition where roller_id = r.id) editions_count "
+                                    . "from roller r where r.machine_id=$id order by r.position, r.name";
+                            $grabber = new Grabber($sql);
+                            $rollers = $grabber->result;
                             $roller_num = 0;
                             
-                            foreach ($rollers as $row) {
-                                $roller_id = $row['id'];
-                                echo "<tr>"
-                                        ."<td>".(++$roller_num)."</td>"
-                                        ."<td>".htmlentities($row['name'])."</td>"
-                                        . "<td>".$row['position']."</td>"
-                                        ."<td class='text-right'>"
-                                        . "<a class='btn btn-outline-dark' title='Редактировать' href='edit_roller.php?id=".$row['id']."'><i class='fas fa-edit'></i>&nbsp;Редактировать</a>"
-                                        . "</td>"
-                                        . "<td class='text-right'>"
-                                        . "<form method='post'>"
-                                        . "<input type='hidden' id='roller_id' name='roller_id' value='$roller_id' />"
-                                        . "<button type='submit' class='btn btn-outline-dark confirmable' id='delete_roller_submit' name='delete_roller_submit'><i class='fas fa-trash-alt'></i>&nbsp;Удалить</button>"
-                                        . "</form>"
-                                        . "</td>"
-                                        ."</tr>";
-                            }
+                            foreach($rollers as $roller):
                             ?>
+                            <tr>
+                                <td><?=(++$roller_num) ?></td>
+                                <td><?=$roller['name'] ?></td>
+                                <td><?=$roller['position'] ?></td>
+                                <td class='text-right'>
+                                    <a class='btn btn-outline-dark' title='Редактировать' href='edit_roller.php?id=<?=$roller['id'] ?>'><i class='fas fa-edit'></i>&nbsp;Редактировать</a>
+                                </td>
+                                <td class='text-right'>
+                                    <?php if($roller['editions_count'] == 0): ?>
+                                    <form method='post'><input type='hidden' id='roller_id' name='roller_id' value='<?=$roller['id'] ?>' />
+                                        <button type='submit' class='btn btn-outline-dark confirmable' id='delete_roller_submit' name='delete_roller_submit'><i class='fas fa-trash-alt'></i>&nbsp;Удалить</button>
+                                    </form>
+                                    <?php else: ?>
+                                    <p><?=$roller['editions_count'] ?> тир.</p>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>

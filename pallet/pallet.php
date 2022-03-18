@@ -107,8 +107,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
             . "(select sum(length) from pallet_roll where pallet_id = p.id) length, "
             . "(select sum(weight) from pallet_roll where pallet_id = p.id) net_weight "
             . "from pallet p where p.id=$id";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
+    $fetcher = new Fetcher($sql);      if($row = $fetcher->Fetch()) {
         $old_film_variation_id = $row['film_variation_id'];
         $old_length = $row['length'];
         $old_width = $row['width'];
