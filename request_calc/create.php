@@ -2279,17 +2279,17 @@ $colorfulnesses = array();
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label for="lamination1_brand_name">Марка пленки</label>
-                                        <select id="lamination1_brand_name" name="lamination1_brand_name" class="form-control">
+                                        <label for="lamination1_film_id">Марка пленки</label>
+                                        <select id="lamination1_film_id" name="lamination1_film_id" class="form-control">
                                             <option value="" hidden="hidden" selected="selected">Марка пленки...</option>
                                                 <?php
-                                                foreach ($brand_names as $row):
+                                                foreach ($film_ids as $row):
                                                 $selected = '';
-                                                if($row['name'] == $lamination1_brand_name) {
+                                                if($row['name'] == $lamination1_film_id) {
                                                     $selected = " selected='selected'";
                                                 }
                                                 ?>
-                                            <option value="<?=$row['name'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
+                                            <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
                                                 <?php
                                                 endforeach;
                                                 
@@ -2310,8 +2310,8 @@ $colorfulnesses = array();
                                                 <select id="lamination1_thickness" name="lamination1_thickness" class="form-control">
                                                     <option value="" hidden="hidden" selected="selected">Толщина...</option>
                                                     <?php
-                                                    if(!empty($lamination1_brand_name)) {
-                                                        $sql = "select distinct fbv.thickness, fbv.weight from film_brand_variation fbv inner join film_brand fb on fbv.film_brand_id = fb.id where fb.name='$lamination1_brand_name' order by thickness";
+                                                    if(!empty($lamination1_film_id)) {
+                                                        $sql = "select thickness, weight from film_variation where film_id='$lamination1_film_id' order by thickness";
                                                         $thicknesses = (new Grabber($sql))->result;
                                                 
                                                         foreach ($thicknesses as $row):
@@ -2360,18 +2360,18 @@ $colorfulnesses = array();
                             <div class="row lamination1_individual_only">
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label for="lamination1_individual_brand_name">Название пленки</label>
+                                        <label for="lamination1_individual_film_name">Название пленки</label>
                                         <input type="text" 
-                                               id="lamination1_individual_brand_name" 
-                                               name="lamination1_individual_brand_name" 
+                                               id="lamination1_individual_film_name" 
+                                               name="lamination1_individual_film_name" 
                                                class="form-control" 
                                                placeholder="Название пленки" 
-                                               value="<?=$lamination1_individual_brand_name ?>" 
+                                               value="<?=$lamination1_individual_film_name ?>" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'lamination1_individual_brand_name'); $(this).attr('name', 'lamination1_individual_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
+                                               onmouseup="javascript: $(this).attr('id', 'lamination1_individual_film_name'); $(this).attr('name', 'lamination1_individual_film_name'); $(this).attr('placeholder', 'Название пленки')" 
                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'lamination1_individual_brand_name'); $(this).attr('name', 'lamination1_individual_brand_name'); $(this).attr('placeholder', 'Название пленки')" 
-                                               onfocusout="javascript: $(this).attr('id', 'lamination1_individual_brand_name'); $(this).attr('name', 'lamination1_individual_brand_name'); $(this).attr('placeholder', 'Название пленки')" />
+                                               onkeyup="javascript: $(this).attr('id', 'lamination1_individual_film_name'); $(this).attr('name', 'lamination1_individual_film_name'); $(this).attr('placeholder', 'Название пленки')" 
+                                               onfocusout="javascript: $(this).attr('id', 'lamination1_individual_film_name'); $(this).attr('name', 'lamination1_individual_film_name'); $(this).attr('placeholder', 'Название пленки')" />
                                         <div class="invalid-feedback">Название пленки обязательно</div>
                                     </div>
                                 </div>
@@ -2465,22 +2465,22 @@ $colorfulnesses = array();
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
-                                            <label for="lamination2_brand_name">Марка пленки</label>
-                                            <select id="lamination2_brand_name" name="lamination2_brand_name" class="form-control">
+                                            <label for="lamination2_film_id">Марка пленки</label>
+                                            <select id="lamination2_film_id" name="lamination2_film_id" class="form-control">
                                                 <option value="" hidden="hidden" selected="selected">Марка пленки...</option>
                                                     <?php
-                                                    foreach ($brand_names as $row):
+                                                    foreach ($film_ids as $row):
                                                     $selected = '';
-                                                    if($row['name'] == $lamination2_brand_name) {
+                                                    if($row['name'] == $lamination2_film_id) {
                                                         $selected = " selected='selected'";
                                                     }
                                                     ?>
-                                                <option value="<?=$row['name'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
+                                                <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
                                                     <?php
                                                     endforeach;
                                                     
                                                     $lamination2_individual_selected = '';
-                                                    if(!empty($lamination2_individual_brand_name)) {
+                                                    if(!empty($lamination2_individual_film_name)) {
                                                         $lamination2_individual_selected = " selected='selected'";
                                                     }
                                                     ?>
