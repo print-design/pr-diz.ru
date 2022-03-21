@@ -3418,9 +3418,9 @@ $colorfulnesses = array();
                     $('.' + prefix + 'individual_only select').attr('required', 'required');
                 }
                 else {
-                    $('#' + prefix + 'film_variaion_id').attr('required', 'required');
-                    $('#' + prefix + 'film_variaion_id').removeClass('d-none');
-                    $('#' + prefix + 'film_variaion_id').prev('label').removeClass('d-none');
+                    $('#' + prefix + 'film_variation_id').attr('required', 'required');
+                    $('#' + prefix + 'film_variation_id').removeClass('d-none');
+                    $('#' + prefix + 'film_variation_id').prev('label').removeClass('d-none');
                     $('#' + prefix + 'price').attr('required', 'required');
                     $('#' + prefix + 'price').parent('.input-group').removeClass('d-none');
                     $('#' + prefix + 'price').parent('.input-group').prev('label').removeClass('d-none');
