@@ -188,8 +188,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         if(empty($machine_id)) $machine_id = "NULL";
         
         $lamination1_brand_name = addslashes(filter_input(INPUT_POST, 'lamination1_brand_name'));
-        $lamination1_thickness = filter_input(INPUT_POST, 'lamination1_thickness');
-        if(empty($lamination1_thickness)) $lamination1_thickness = "NULL";
+        $lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id');
+        if(empty($lamination1_film_variation_id)) $lamination1_film_variation_id = "NULL";
         $lamination1_price = filter_input(INPUT_POST, 'lamination1_price');
         if(empty($lamination1_price)) $lamination1_price = "NULL";
         $lamination1_currency = filter_input(INPUT_POST, 'lamination1_currency');
@@ -207,8 +207,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         }
         
         $lamination2_brand_name = addslashes(filter_input(INPUT_POST, 'lamination2_brand_name'));
-        $lamination2_thickness = filter_input(INPUT_POST, 'lamination2_thickness');
-        if(empty($lamination2_thickness)) $lamination2_thickness = "NULL";
+        $lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id');
+        if(empty($lamination2_film_variation_id)) $lamination2_film_variation_id = "NULL";
         $lamination2_price = filter_input(INPUT_POST, 'lamination2_price');
         if(empty($lamination2_price)) $lamination2_price = "NULL";
         $lamination2_currency = filter_input(INPUT_POST, 'lamination2_currency');
@@ -274,8 +274,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         
         $sql = "insert into request_calc (customer_id, name, work_type_id, unit, machine_id, "
                 . "brand_name, thickness, price, currency, individual_film_name, individual_price, individual_currency, individual_thickness, individual_density, customers_material, "
-                . "lamination1_brand_name, lamination1_thickness, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_price, lamination1_individual_currency, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
-                . "lamination2_brand_name, lamination2_thickness, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_price, lamination2_individual_currency, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
+                . "lamination1_brand_name, lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_price, lamination1_individual_currency, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
+                . "lamination2_brand_name, lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_price, lamination2_individual_currency, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
                 . "width, quantity, streams_number, length, stream_width, raport, lamination_roller_width, ink_number, manager_id, status_id, extracharge, no_ski, "
                 . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
                 . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -284,8 +284,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                 . "cliche_1, cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8) "
                 . "values($customer_id, '$name', $work_type_id, '$unit', $machine_id, "
                 . "'$brand_name', $thickness, $price, '$currency', '$individual_film_name', $individual_price, '$individual_currency', $individual_thickness, $individual_density, $customers_material, "
-                . "'$lamination1_brand_name', $lamination1_thickness, $lamination1_price, '$lamination1_currency', '$lamination1_individual_film_name', $lamination1_individual_price, '$lamination1_individual_currency', $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, "
-                . "'$lamination2_brand_name', $lamination2_thickness, $lamination2_price, '$lamination2_currency', '$lamination2_individual_film_name', $lamination2_individual_price, '$lamination2_individual_currency', $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, "
+                . "'$lamination1_brand_name', $lamination1_film_variation_id, $lamination1_price, '$lamination1_currency', '$lamination1_individual_film_name', $lamination1_individual_price, '$lamination1_individual_currency', $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, "
+                . "'$lamination2_brand_name', $lamination2_film_variation_id, $lamination2_price, '$lamination2_currency', '$lamination2_individual_film_name', $lamination2_individual_price, '$lamination2_individual_currency', $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, "
                 . "$width, $quantity, $streams_number, $length, $stream_width, $raport, $lamination_roller_width, $ink_number, $manager_id, $status_id, $extracharge, $no_ski, "
                 . "'$ink_1', '$ink_2', '$ink_3', '$ink_4', '$ink_5', '$ink_6', '$ink_7', '$ink_8', "
                 . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
@@ -302,8 +302,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         
         $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.unit, c.machine_id, "
                 . "c.brand_name, c.thickness, c.price, c.currency, c.individual_film_name, c.individual_price, c.individual_currency, c.individual_thickness, c.individual_density, c.customers_material, "
-                . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_price, c.lamination1_currency, c.lamination1_individual_film_name, c.lamination1_individual_price, c.lamination1_individual_currency, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, "
-                . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_price, c.lamination2_individual_currency, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, "
+                . "c.lamination1_brand_name, c.lamination1_film_variation_id, c.lamination1_price, c.lamination1_currency, c.lamination1_individual_film_name, c.lamination1_individual_price, c.lamination1_individual_currency, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, "
+                . "c.lamination2_brand_name, c.lamination2_film_variation_id, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_price, c.lamination2_individual_currency, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, "
                 . "c.width, c.quantity, c.streams_number, c.length, c.stream_width, c.raport, c.lamination_roller_width, c.ink_number, c.manager_id, c.extracharge, c.no_ski, "
                 . "c.ink_1, c.ink_2, c.ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
                 . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -311,8 +311,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                 . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
                 . "c.cliche_1, c.cliche_2, c.cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8, "
                 . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) density, "
-                . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_density, "
-                . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_density "
+                . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_film_variation_id limit 1) lamination1_density, "
+                . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_film_variation_id limit 1) lamination2_density "
                 . "from request_calc c "
                 . "where c.id=$insert_id";
         if($row = (new Fetcher($sql))->Fetch())
@@ -334,7 +334,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
             $individual_density = $row['individual_density']; // Удельный вес плёнки (если вводилась вручную)
             $customers_material = $row['customers_material']; // Материал заказчика (ДА/НЕТ)
             $lamination1_brand_name = $row['lamination1_brand_name']; // Марка плёнки ламинации 1 (если выбиралась из списка)
-            $lamination1_thickness = $row['lamination1_thickness']; // Толщина плёнки ламинации 1 (если выбиралась из списка)
+            $lamination1_film_variation_id = $row['lamination1_film_variation_id']; // Толщина плёнки ламинации 1 (если выбиралась из списка)
             $lamination1_price = $row['lamination1_price']; // Цена ламинации 1
             $lamination1_currency = $row['lamination1_currency']; // Валюта ламинации 1
             $lamination1_individual_film_name = $row['lamination1_individual_film_name']; // Марка плёнки ламинации 1 (если вводилась вручную)
@@ -344,7 +344,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
             $lamination1_individual_density = $row['lamination1_individual_density']; // Удельный вес плёнки ламинации 1 (если вводилась вручную)
             $lamination1_customers_material = $row['lamination1_customers_material']; // Ламинация 1 - материал заказчика (ДА/НЕТ)
             $lamination2_brand_name = $row['lamination2_brand_name']; // Марка плёнки ламинации 2 (если выбиралась из списка)
-            $lamination2_thickness = $row['lamination2_thickness']; // Толщина плёнки ламинации 2 (если выбиралась из списка)
+            $lamination2_film_variation_id = $row['lamination2_film_variation_id']; // Толщина плёнки ламинации 2 (если выбиралась из списка)
             $lamination2_price = $row['lamination2_price']; // Цена ламинации 2
             $lamination2_currency = $row['lamination2_currency']; // Валюта ламинации 2
             $lamination2_individual_film_name = $row['lamination2_individual_film_name']; // Марка плёнки ламинации 2 (если вводилась вручную)
@@ -495,16 +495,16 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
             if(!empty($lamination1_individual_density)) {
                 $c_density_lam1 = $lamination1_individual_density;
             }
-            elseif(!empty ($lamination1_brand_name) && !empty ($lamination1_thickness)) {
+            elseif(!empty ($lamination1_brand_name) && !empty ($lamination1_film_variation_id)) {
                 $c_density_lam1 = null;
-                $sql = "select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = '$lamination1_brand_name' and fbw.thickness = $lamination1_thickness limit 1";
+                $sql = "select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = '$lamination1_brand_name' and fbw.thickness = $lamination1_film_variation_id limit 1";
                 $fetcher = new Fetcher($sql);
                 if($row = $fetcher->Fetch()) {
                     $c_density_lam1 = $row[0];
                 }
             }
         
-            if(!empty($lamination1_brand_name) && !empty($lamination1_thickness) && empty($c_density_lam1)) {
+            if(!empty($lamination1_brand_name) && !empty($lamination1_film_variation_id) && empty($c_density_lam1)) {
                 $error_message = "Для данной толщина ламинации 1 не задан удельный вес";
             }
         }
@@ -546,16 +546,16 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
             if(!empty($lamination2_individual_density)) {
                 $c_density_lam2 = $lamination2_individual_density;
             }
-            elseif(!empty ($lamination2_brand_name) && !empty ($lamination2_thickness)) {
+            elseif(!empty ($lamination2_brand_name) && !empty ($lamination2_film_variation_id)) {
                 $c_density_lam2 = null;
-                $sql = "select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = '$lamination2_brand_name' and fbw.thickness = $lamination2_thickness limit 1";
+                $sql = "select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = '$lamination2_brand_name' and fbw.thickness = $lamination2_film_variation_id limit 1";
                 $fetcher = new Fetcher($sql);
                 if($row = $fetcher->Fetch()) {
                     $c_density_lam2 = $row[0];
                 }
             }
             
-            if(!empty($lamination2_brand_name) && !empty($lamination2_thickness) && empty($c_density_lam2)) {
+            if(!empty($lamination2_brand_name) && !empty($lamination2_film_variation_id) && empty($c_density_lam2)) {
                 $error_message = "Для данной толщины ламинации 2 не задан удельный вес";
             }
         }
@@ -1536,8 +1536,8 @@ if(empty($id)) {
 if(!empty($id)) {
     $sql = "select date, customer_id, name, work_type_id, unit, machine_id, "
             . "brand_name, thickness, price, currency, individual_film_name, individual_price, individual_currency, individual_thickness, individual_density, customers_material, "
-            . "lamination1_brand_name, lamination1_thickness, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_price, lamination1_individual_currency, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
-            . "lamination2_brand_name, lamination2_thickness, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_price, lamination2_individual_currency, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
+            . "lamination1_brand_name, lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_price, lamination1_individual_currency, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
+            . "lamination2_brand_name, lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_price, lamination2_individual_currency, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
             . "quantity, width, streams_number, length, stream_width, raport, lamination_roller_width, ink_number, status_id, extracharge, no_ski, "
             . "(select id from techmap where request_calc_id = $id order by id desc limit 1) techmap_id, "
             . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
@@ -1652,10 +1652,10 @@ if(null === $lamination1_brand_name) {
     else $lamination1_brand_name = null;
 }
 
-$lamination1_thickness = filter_input(INPUT_POST, 'lamination1_thickness');
-if(null === $lamination1_thickness) {
-    if(isset($row['lamination1_thickness'])) $lamination1_thickness = $row['lamination1_thickness'];
-    else $lamination1_thickness = null;
+$lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id');
+if(null === $lamination1_film_variation_id) {
+    if(isset($row['lamination1_film_variation_id'])) $lamination1_film_variation_id = $row['lamination1_film_variation_id'];
+    else $lamination1_film_variation_id = null;
 }
 
 $lamination1_price = filter_input(INPUT_POST, 'lamination1_price');
@@ -1714,10 +1714,10 @@ if(null === $lamination2_brand_name) {
     else $lamination2_brand_name = null;
 }
 
-$lamination2_thickness = filter_input(INPUT_POST, 'lamination2_thickness');
-if(null === $lamination2_thickness) {
-    if(isset($row['lamination2_thickness'])) $lamination2_thickness = $row['lamination2_thickness'];
-    else $lamination2_thickness = null;
+$lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id');
+if(null === $lamination2_film_variation_id) {
+    if(isset($row['lamination2_film_variation_id'])) $lamination2_film_variation_id = $row['lamination2_film_variation_id'];
+    else $lamination2_film_variation_id = null;
 }
 
 $lamination2_price = filter_input(INPUT_POST, 'lamination2_price');
@@ -2308,8 +2308,8 @@ $colorfulnesses = array();
                                     <div class="row">
                                         <div class="col-7">
                                             <div class="form-group">
-                                                <label for="lamination1_thickness">Толщина, мкм</label>
-                                                <select id="lamination1_thickness" name="lamination1_thickness" class="form-control">
+                                                <label for="lamination1_film_variation_id">Толщина, мкм</label>
+                                                <select id="lamination1_film_variation_id" name="lamination1_film_variation_id" class="form-control">
                                                     <option value="" hidden="hidden" selected="selected">Толщина...</option>
                                                     <?php
                                                     if(!empty($lamination1_film_id)) {
@@ -2318,7 +2318,7 @@ $colorfulnesses = array();
                                                 
                                                         foreach ($thicknesses as $row):
                                                         $selected = '';
-                                                        if($row['thickness'] == $lamination1_thickness) {
+                                                        if($row['thickness'] == $lamination1_film_variation_id) {
                                                             $selected = " selected='selected'";
                                                         }
                                                     ?>
@@ -2495,8 +2495,8 @@ $colorfulnesses = array();
                                         <div class="row">
                                             <div class="col-7">
                                                 <div class="form-group">
-                                                    <label for="lamination2_thickness">Толщина, мкм</label>
-                                                    <select id="lamination2_thickness" name="lamination2_thickness" class="form-control">
+                                                    <label for="lamination2_film_variation_id">Толщина, мкм</label>
+                                                    <select id="lamination2_film_variation_id" name="lamination2_film_variation_id" class="form-control">
                                                         <option value="" hidden="hidden" selected="selected">Толщина...</option>
                                                         <?php
                                                         if(!empty($lamination2_brand_name)) {
@@ -2505,7 +2505,7 @@ $colorfulnesses = array();
                                                     
                                                             foreach ($thicknesses as $row):
                                                             $selected = "";
-                                                            if($row['thickness'] == $lamination2_thickness) {
+                                                            if($row['thickness'] == $lamination2_film_variation_id) {
                                                                 $selected = " selected='selected'";
                                                             }
                                                         ?>
@@ -3075,12 +3075,12 @@ $colorfulnesses = array();
                 }
             });
             
-            <?php if(!empty($brand_name) && $brand_name != INDIVIDUAL && $customers_material != 1): ?>
-            $('#thickness').change();
+            <?php if(!empty($film_id) && $film_id != INDIVIDUAL && $customers_material != 1): ?>
+            $('#film_variation_id').change();
             <?php endif; ?>
             
             // Обработка выбора типа плёнки ламинации1: перерисовка списка толщин
-            $('#lamination1_brand_name').change(function(){
+            $('#lamination1_film_id').change(function(){
                 $('.lam1_film_info').html('');
                 <?php if(empty($lamination1_currency)): ?>
                 $('#lamination1_currency').val('');
@@ -3088,12 +3088,12 @@ $colorfulnesses = array();
                 SetFilmFieldsVisibility($(this).val(), $('#lamination1_customers_material').is(':checked'), 'lamination1_');
                 
                 if($(this).val() == "") {
-                    $('#lamination1_thickness').html("<option value=''>Толщина...</option>");
+                    $('#lamination1_film_variation_id').html("<option value=''>Толщина...</option>");
                 }
                 else {
-                    $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
+                    $.ajax({ url: "../ajax/thickness.php?film_id=" + $(this).val() })
                             .done(function(data) {
-                                $('#lamination1_thickness').html(data);
+                                $('#lamination1_film_variation_id').html(data);
                     })
                             .fail(function() {
                                 alert('Ошибка при выборе марки пленки');
@@ -3102,9 +3102,9 @@ $colorfulnesses = array();
             });
             
             // Обработка выбора толщины ламинации 1: отображение цены
-            $('#lamination1_thickness').change(function(){
+            $('#lamination1_film_variation_id').change(function(){
                 if($(this).val() != '') {
-                    $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?brand_name=" + $("#lamination1_brand_name").val() + "&thickness=" + $(this).val() })
+                    $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?film_variation_id=" + $(this).val() })
                         .done(function(data) {
                             $('.lam1_film_info').html(data.text);
                             <?php if(empty($lamination1_currency)): ?>
@@ -3117,8 +3117,8 @@ $colorfulnesses = array();
                 }
             });
             
-            <?php if(!empty($lamination1_brand_name) && $lamination1_brand_name != INDIVIDUAL && $lamination1_customers_material != 1): ?>
-            $('#lamination1_thickness').change();
+            <?php if(!empty($lamination1_film_id) && $lamination1_film_id != INDIVIDUAL && $lamination1_customers_material != 1): ?>
+            $('#lamination1_film_variation_id').change();
             <?php endif; ?>
             
             // Обработка выбора типа плёнки ламинации2: перерисовка списка толщин
@@ -3130,12 +3130,12 @@ $colorfulnesses = array();
                 SetFilmFieldsVisibility($(this).val(), $('#lamination2_customers_material').is(':checked'), 'lamination2_');
                 
                 if($(this).val() == "") {
-                    $('#lamination2_thickness').html("<option value=''>Толщина...</option>");
+                    $('#lamination2_film_variation_id').html("<option value=''>Толщина...</option>");
                 }
                 else {
                     $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
                             .done(function(data) {
-                                $('#lamination2_thickness').html(data);
+                                $('#lamination2_film_variation_id').html(data);
                     })
                             .fail(function() {
                                 alert('Ошибка при выборе марки пленки');
@@ -3144,7 +3144,7 @@ $colorfulnesses = array();
             });
             
             // Обработка выбора толщины ламинации 2: отображение цены
-            $('#lamination2_thickness').change(function(){
+            $('#lamination2_film_variation_id').change(function(){
                 if($(this).val() != '') {
                     $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?brand_name=" + $("#lamination2_brand_name").val() + "&thickness=" + $(this).val() })
                         .done(function(data) {
@@ -3160,7 +3160,7 @@ $colorfulnesses = array();
             });
             
             <?php if(!empty($lamination2_brand_name) && $lamination2_brand_name != INDIVIDUAL && $lamination2_customers_material != 1): ?>
-            $('#lamination2_thickness').change();
+            $('#lamination2_film_variation_id').change();
             <?php endif; ?>
             
             // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
@@ -3348,7 +3348,7 @@ $colorfulnesses = array();
                 $('#main_film_title').removeClass('d-none');
                 $('#film_title').addClass('d-none');
                 $('#lamination1_brand_name').attr('required', 'required');
-                $('#lamination1_thickness').attr('required', 'required');
+                $('#lamination1_film_variation_id').attr('required', 'required');
                 SetFieldsVisibility($('#work_type_id').val());
                 SetFilmFieldsVisibility($('#lamination1_brand_name').val(), $('#lamination1_customers_material').is(':checked'), 'lamination1_');
             }
@@ -3387,7 +3387,7 @@ $colorfulnesses = array();
                 $('#hide_lamination_1').addClass('d-none');
                 $('#hide_lamination_1').removeClass('d-inline');
                 $('#lamination2_brand_name').attr('required', 'required');
-                $('#lamination2_thickness').attr('required', 'required');
+                $('#lamination2_film_variation_id').attr('required', 'required');
                 SetFilmFieldsVisibility($('#lamination2_brand_name').val(), $('#lamination2_customers_material').is(':checked'), 'lamination2_');
             }
             
