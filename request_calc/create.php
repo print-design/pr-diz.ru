@@ -2290,8 +2290,10 @@ $colorfulnesses = array();
                                                     </select>
                                                     <div class="input-group-text d-none" id="currency_text"></div>
                                                 </div>
+                                                <div class="invalid-feedback">Цена ниже минимальной</div>
                                             </div>
                                         </div>
+                                        <input type="hidden" id="price_min" />
                                     </div>
                                 </div>
                             </div>
@@ -2482,8 +2484,10 @@ $colorfulnesses = array();
                                                         </select>
                                                         <div class="input-group-text d-none" id="lamination1_currency_text"></div>
                                                     </div>
+                                                    <div class="invalid-feedback">Цена ниже минимальной</div>
                                                 </div>
                                             </div>
+                                            <input type="hidden" id="lamination1_price_min" />
                                         </div>
                                     </div>
                                 </div>
@@ -2670,8 +2674,10 @@ $colorfulnesses = array();
                                                             </select>
                                                             <div class="input-group-text d-none" id="lamination2_currency_text"></div>
                                                         </div>
+                                                        <div class="invalid-feedback">Цена ниже минимальной</div>
                                                     </div>
                                                 </div>
+                                                <input type="hidden" id="lamination2_price_min" />
                                             </div>
                                         </div>
                                     </div>
@@ -3086,6 +3092,18 @@ $colorfulnesses = array();
         <script src="<?=APPLICATION ?>/js/select2.min.js"></script>
         <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
         <script>
+            // Валидация цены
+            function ValidatePrice(this_input, min_value_input) {
+                val = this_input.val();
+                
+                if(val == '') {
+                    this_input.removeClass('is-invalid');
+                }
+                else {
+                    this_input.addClass('is-invalid');
+                }
+            }
+            
             // Всплывающая подсказка
             $(function() {
                 $("i.fa-info-circle").tooltip({
@@ -3215,6 +3233,15 @@ $colorfulnesses = array();
                 }
             });
             
+            // Валидация цены
+            $('#price').keyup(function() {
+                ValidatePrice($(this), $('#price_min'));
+            });
+            
+            $('#price').change(function() {
+                ValidatePrice($(this), $('#price_min'));
+            });
+            
             <?php if(!empty($film_id) && $film_id != INDIVIDUAL && $customers_material != 1): ?>
             $('#film_variation_id').change();
             <?php endif; ?>
@@ -3267,6 +3294,15 @@ $colorfulnesses = array();
                 }
             });
             
+            // Валидация цены
+            $('#lamination1_price').keyup(function() {
+                ValidatePrice($(this), $('#lamination1_price_min'));
+            });
+            
+            $('#lamination1_price').change(function() {
+                ValidatePrice($(this), $('#lamination1_price_min'));
+            });
+            
             <?php if(!empty($lamination1_film_id) && $lamination1_film_id != INDIVIDUAL && $lamination1_customers_material != 1): ?>
             $('#lamination1_film_variation_id').change();
             <?php endif; ?>
@@ -3317,6 +3353,15 @@ $colorfulnesses = array();
                             alert('Ошибка при выборе толщины пленки');
                         });
                 }
+            });
+            
+            // Валидация цены
+            $('#lamination2_price').keyup(function() {
+                ValidatePrice($(this), $('#lamination2_price_min'));
+            });
+            
+            $('#lamination2_price').change(function() {
+                ValidatePrice($(this), $('#lamination2_price_min'));
             });
             
             <?php if(!empty($lamination2_film_id) && $lamination2_film_id != INDIVIDUAL && $lamination2_customers_material != 1): ?>
