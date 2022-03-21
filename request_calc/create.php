@@ -2268,7 +2268,7 @@ $colorfulnesses = array();
                                     </div>
                                     <div class="col-5">
                                         <div class="form-group">
-                                            <label for="price">Цена</label>
+                                            <label for="price" id="for_price">Цена</label>
                                             <div class="input-group">
                                                 <input type="text" 
                                                        id="price" 
@@ -2459,7 +2459,7 @@ $colorfulnesses = array();
                                         </div>
                                         <div class="col-5">
                                             <div class="form-group">
-                                                <label for="lamination1_price">Цена</label>
+                                                <label for="lamination1_price" id="for_lamination1_price">Цена</label>
                                                 <div class="input-group">
                                                     <input type="text" 
                                                            id="lamination1_price" 
@@ -2646,7 +2646,7 @@ $colorfulnesses = array();
                                             </div>
                                             <div class="col-5">
                                                 <div class="form-group">
-                                                    <label for="lamination2_price">Цена</label>
+                                                    <label for="lamination2_price" id="for_lamination2_price">Цена</label>
                                                     <div class="input-group">
                                                         <input type="text" 
                                                                id="lamination2_price" 
@@ -3167,6 +3167,7 @@ $colorfulnesses = array();
             // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин и установка видимости полей
             $('#film_id').change(function(){
                 $('.main_film_info').html('');
+                $('label#for_price').text("Цена");
                 <?php if(empty($currency)): ?>
                 $('#currency').val('');
                 <?php endif; ?>
@@ -3191,7 +3192,8 @@ $colorfulnesses = array();
                 if($(this).val() != '') {
                     $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?film_variation_id=" + $(this).val() })
                         .done(function(data) {
-                            $('.main_film_info').html(data.text);
+                            $('.main_film_info').html(data.text_ext);
+                            $('label#for_price').text("Цена (" + data.text + ")");
                             <?php if(empty($currency)): ?>
                             $('#currency').val(data.currency);
                             <?php endif; ?>
@@ -3209,6 +3211,7 @@ $colorfulnesses = array();
             // Обработка выбора типа плёнки ламинации1: перерисовка списка толщин
             $('#lamination1_film_id').change(function(){
                 $('.lam1_film_info').html('');
+                $('label#for_lamination1_price').text("Цена");
                 <?php if(empty($lamination1_currency)): ?>
                 $('#lamination1_currency').val('');
                 <?php endif; ?>
@@ -3233,7 +3236,8 @@ $colorfulnesses = array();
                 if($(this).val() != '') {
                     $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?film_variation_id=" + $(this).val() })
                         .done(function(data) {
-                            $('.lam1_film_info').html(data.text);
+                            $('.lam1_film_info').html(data.text_ext);
+                            $('label#for_lamination1_price').text("Цена (" + data.text + ")");
                             <?php if(empty($lamination1_currency)): ?>
                             $('#lamination1_currency').val(data.currency);
                             <?php endif; ?>
@@ -3251,6 +3255,7 @@ $colorfulnesses = array();
             // Обработка выбора типа плёнки ламинации2: перерисовка списка толщин
             $('#lamination2_film_id').change(function(){
                 $('.lam2_film_info').html('');
+                $('label#for_lamination2_price').text("Цена");
                 <?php if(empty($lamination2_currency)): ?>
                 $('#lamination2_currency').val('');
                 <?php endif; ?>
@@ -3275,7 +3280,8 @@ $colorfulnesses = array();
                 if($(this).val() != '') {
                     $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?film_variation_id=" + $(this).val() })
                         .done(function(data) {
-                            $('.lam2_film_info').html(data.text);
+                            $('.lam2_film_info').html(data.text_ext);
+                            $('label#for_lamination2_price').text("Цена (" + data.text + ")");
                             <?php if(empty($lamination2_currency)): ?>
                             $('#lamination2_currency').val(data.currency);
                             <?php endif; ?>
