@@ -33,23 +33,23 @@
         height: 1.8rem;
     }
     
-    .input-group.find-group:focus-within {
+    .input-group#find-group:focus-within {
         box-shadow: 0 0 0 .2rem rgba(0,123,255,.25);
         border-color: #80bdff;
     }
     
-    .input-group.find-group:focus-within *:focus {
+    .input-group#find-group:focus-within *:focus {
         box-shadow: none;
         border-right: 0;
     }
     
-    .input-group.find-group .input-group-append button {
+    .input-group#find-group .input-group-append button {
         border: solid 1px #A1A4B1;
         border-left: 0;
         background-color: white;
     }
     
-    .input-group.find-group:focus-within .input-group-append button {
+    .input-group#find-group:focus-within .input-group-append button {
         border-color: #80bdff;
     }
     

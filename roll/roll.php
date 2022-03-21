@@ -33,9 +33,9 @@ $error_message = '';
 
 $supplier_id_valid = '';
 $id_from_supplier_valid = '';
-$film_id_valid = '';
+$film_brand_id_valid = '';
 $width_valid = '';
-$film_variation_id_valid = '';
+$thickness_valid = '';
 $length_valid = '';
 $net_weight_valid = '';
 $cell_valid = '';
@@ -65,9 +65,9 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     }
     
     if(IsInRole(array('dev'))) {
-        $film_id = filter_input(INPUT_POST, 'film_id');
-        if(empty($film_id)) {
-            $film_id_valid = ISINVALID;
+        $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
+        if(empty($film_brand_id)) {
+            $film_brand_id_valid = ISINVALID;
             $form_valid = false;
         }
     }
@@ -86,9 +86,9 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     }
     
     if(IsInRole(array('dev'))) {
-        $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
-        if(empty($film_variation_id)) {
-            $film_variation_id_valid = ISINVALID;
+        $thickness = filter_input(INPUT_POST, 'thickness');
+        if(empty($thickness)) {
+            $thickness_valid = ISINVALID;
             $form_valid = false;
         }
     }
@@ -111,16 +111,20 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     
     // Проверяем правильность веса, для всех ролей
     // Определяем имеющуюся длину и ширину
-    $sql = "select film_variation_id, length, width, net_weight from roll where id=$id";
+    $sql = "select film_brand_id, thickness, length, width, net_weight from roll where id=$id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
-        $old_film_variation_id = $row['film_variation_id'];
+        $old_film_brand_id = $row['film_brand_id'];
+        $old_thickness = $row['thickness'];
         $old_length = $row['length'];
         $old_width = $row['width'];
         $old_net_weight = $row['net_weight'];
         
-        $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
-        if(empty($film_variation_id)) $film_variation_id = $old_film_variation_id;
+        $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
+        if(empty($film_brand_id)) $film_brand_id = $old_film_brand_id;
+        
+        $thickness = filter_input(INPUT_POST, 'thickness');
+        if(empty($thickness)) $thickness = $old_thickness;
         
         $length = filter_input(INPUT_POST, 'length');
         if(empty($length)) $length = $old_length;
@@ -131,11 +135,11 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         $net_weight = filter_input(INPUT_POST, 'net_weight');
         if(empty($net_weight)) $net_weight = $old_net_weight;
     }
-    
+        
     $weight_result = filter_input(INPUT_POST, 'net_weight_normal');
     $weight_result_high = $weight_result + ($weight_result * 15.0 / 100.0);
     $weight_result_low = $weight_result - ($weight_result * 15.0 / 100.0);
-    
+        
     if($net_weight < $weight_result_low || $net_weight > $weight_result_high) {
         $net_weight_valid = ISINVALID;
         $length_valid = ISINVALID;
@@ -190,13 +194,17 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
             }
             
             if(IsInRole(array('dev'))) {
-                $sql .= "film_variation_id = $film_variation_id, ";
+                $sql .= "film_brand_id = $film_brand_id, ";
             }
             
             if(IsInRole(array('dev'))) {
                 $sql .= "width = $width, ";
             }
-                        
+            
+            if(IsInRole(array('dev'))) {
+                $sql .= "thickness = $thickness, ";
+            }
+            
             if(IsInRole(array('dev'))) {
                 $sql .= "length = $length, ";
             }
@@ -235,11 +243,10 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
 }
 
 // Получение данных
-$sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, DATE_FORMAT(r.date, '%H:%i') time, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, r.id_from_supplier, r.width, r.film_variation_id, r.length, "
-        . "(select film_id from film_variation where id = r.film_variation_id) film_id, "
+$sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, DATE_FORMAT(r.date, '%H:%i') time, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, r.id_from_supplier, r.film_brand_id, r.width, r.thickness, r.length, "
         . "r.net_weight, r.cell, "
         . "rsh.status_id status_id, DATE_FORMAT(rsh.date, '%d.%m.%Y') status_date, DATE_FORMAT(rsh.date, '%H.%i') status_time, "
-        . "r.comment, r.cut_wind_id, r.cutting_wind_id "
+        . "r.comment, r.cut_wind_id "
         . "from roll r "
         . "inner join user u on r.storekeeper_id = u.id "
         . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
@@ -257,14 +264,14 @@ if(null === $supplier_id) $supplier_id = $row['supplier_id'];
 $id_from_supplier = filter_input(INPUT_POST, 'id_from_supplier');
 if(null === $id_from_supplier) $id_from_supplier = $row['id_from_supplier'];
 
-$film_id = filter_input(INPUT_POST, 'film_id');
-if(null === $film_id) $film_id = $row['film_id'];
+$film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
+if(null === $film_brand_id) $film_brand_id = $row['film_brand_id'];
 
 $width = filter_input(INPUT_POST, 'width');
 if(null === $width) $width = $row['width'];
 
-$film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
-if(null === $film_variation_id) $film_variation_id = $row['film_variation_id'];
+$thickness = filter_input(INPUT_POST, 'thickness');
+if(null === $thickness) $thickness = $row['thickness'];
 
 $length = filter_input(INPUT_POST, 'length');
 if(null === $length) $length = $row['length'];
@@ -285,7 +292,6 @@ $comment = filter_input(INPUT_POST, 'comment');
 if(null === $comment) $comment = $row['comment'];
 
 $cut_wind_id = $row['cut_wind_id'];
-$cutting_wind_id = $row['cutting_wind_id'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -298,13 +304,11 @@ $cutting_wind_id = $row['cutting_wind_id'];
         <?php
         include '../include/header_sklad.php';
         ?>
-        <div class="container-fluid">
+        <div class="container-fluid" style="padding-left: 40px;">
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger>$error_message</div>";
             }
-            
-            include '../include/find_camera.php';
             
             // Если плёнка сработанная, то кнопка "Назад" переводит нас в раздел "Сработанная плёнка",
             // иначе - в раздел "Рулоны".
@@ -362,18 +366,18 @@ $cutting_wind_id = $row['cutting_wind_id'];
                     </div>
                     <div class="form-group">
                         <?php
-                        $film_id_disabled = " disabled='disabled'";
+                        $film_brand_id_disabled = " disabled='disabled'";
                         ?>
-                        <label for="film_id">Марка пленки</label>
-                        <select id="film_id" name="film_id" class="form-control<?=$film_id_valid ?>"<?=$film_id_disabled ?>>
+                        <label for="film_brand_id">Марка пленки</label>
+                        <select id="film_brand_id" name="film_brand_id" class="form-control<?=$film_brand_id_valid ?>"<?=$film_brand_id_disabled ?>>
                             <option value="">Выберите марку</option>
                             <?php
-                            $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id))"))->result;
-                            foreach ($films as $film) {
-                                $id = $film['id'];
-                                $name = $film['name'];
+                            $film_brands = (new Grabber("select id, name from film_brand where supplier_id = $supplier_id"))->result;
+                            foreach ($film_brands as $film_brand) {
+                                $id = $film_brand['id'];
+                                $name = $film_brand['name'];
                                 $selected = '';
-                                if($film_id == $film['id']) $selected = " selected='selected'";
+                                if($film_brand_id == $film_brand['id']) $selected = " selected='selected'";
                                 echo "<option value='$id'$selected>$name</option>";
                             }
                             ?>
@@ -391,20 +395,18 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         </div>
                         <div class="col-6 form-group">
                             <?php
-                            $film_variation_id_disabled = " disabled='disabled'";
+                            $thickness_disabled = " disabled='disabled'";
                             ?>
-                            <label for="film_variation_id">Толщина, мкм</label>
-                            <select id="film_variation_id" name="film_variation_id" class="form-control<?=$film_variation_id_valid ?>"<?=$film_variation_id_disabled ?>>
+                            <label for="thickness">Толщина, мкм</label>
+                            <select id="thickness" name="thickness" class="form-control<?=$thickness_valid ?>"<?=$thickness_disabled ?>>
                                 <option value="">Выберите толщину</option>
                                 <?php
-                                $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = $film_id and id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id) order by thickness"))->result;
-                                foreach ($film_variations as $film_variation) {
-                                    $_id = $film_variation['id'];
-                                    $thickness = $film_variation['thickness'];
-                                    $weight = $film_variation['weight'];
+                                $film_brand_variations = (new Grabber("select thickness, weight from film_brand_variation where film_brand_id = $film_brand_id order by thickness"))->result;
+                                foreach ($film_brand_variations as $film_brand_variation) {
+                                    $weight = $film_brand_variation['weight'];
                                     $selected = '';
-                                    if($film_variation_id == $_id) $selected = " selected='selected'";
-                                    echo "<option value='$_id'$selected>$thickness мкм $weight г/м<sup>2</sup></option>";
+                                    if($thickness == $film_brand_variation['thickness']) $selected = " selected='selected'";
+                                    echo "<option value='$thickness'$selected>$thickness мкм $weight г/м<sup>2</sup></option>";
                                 }
                                 ?>
                             </select>
@@ -497,24 +499,10 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         $sql = "select cstr.width "
                                 . "from cut_source cs "
                                 . "inner join cut_stream cstr on cs.cut_id = cstr.cut_id "
-                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id')." and cs.is_from_pallet = 0";
+                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id')." and is_from_pallet = 0";
                         $fetcher = new Fetcher($sql);
                         $result = "";
                         while ($row = $fetcher->Fetch()) {
-                            if($result != "") {
-                                $result .= " - ";
-                            }
-                            $result .= $row[0].' мм';
-                        }
-                        echo $result;
-                        
-                        $sql = "select cstr.width "
-                                . "from cutting_source cs "
-                                . "inner join cutting_stream cstr on cs.cutting_id = cstr.cutting_id "
-                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id')." and cs.is_from_pallet = 0";
-                        $fetcher = new Fetcher($sql);
-                        $result = "";
-                        while($row = $fetcher->Fetch()) {
                             if($result != "") {
                                 $result .= " - ";
                             }
@@ -525,7 +513,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         </div>
                     </div>
                     <?php
-                    // Если этот рулон появился в результате нарезки (старая версия)
+                    // Если этот рулон появился в результате нарезки
                     elseif(!empty($cut_wind_id)):
                     ?>
                     <div class="form-group">
@@ -533,18 +521,22 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         <br />
                         <div style="font-size: 1rem;">
                         <?php
-                        $sql = "select cstr.width "
+                        $sql = "select cstr.width, DATE_FORMAT(c.date, '%d.%m.%Y') date, DATE_FORMAT(c.date, '%H:%i') time "
                                 . "from cut_wind cw "
                                 . "inner join cut c on cw.cut_id = c.id "
                                 . "inner join cut_stream cstr on cw.cut_id = cstr.cut_id "
                                 . "where cw.id = $cut_wind_id";
                         $fetcher = new Fetcher($sql);
                         $result = "";
+                        $date = "";
+                        $time = "";
                         while ($row = $fetcher->Fetch()) {
                             if($result != "") {
                                 $result .= " - ";
                             }
                             $result .= $row['width'].' мм';
+                            $date = $row['date'];
+                            $time = $row['time'];
                         }
                         echo "$date в $time<br />";
                         echo $result;
@@ -552,37 +544,9 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         </div>
                     </div>
                     <?php
-                    // Если этот рулон появился в результате нарезки (новая версия)
-                    elseif(!empty($cutting_wind_id)):
-                    ?>
-                    <div class="form-group">
-                        <label>Получился из раскроя:</label>
-                        <br />
-                        <div style="font-size: 1rem;">
-                            <?php
-                            $sql = "select cstr.width "
-                                    . "from cutting_wind cw "
-                                    . "inner join cutting_source cs on cw.cutting_source_id = cs.id "
-                                    . "inner join cutting c on cs.cutting_id = c.id "
-                                    . "inner join cutting_stream cstr on cstr.cutting_id = c.id "
-                                    . "where cw.id = $cutting_wind_id";
-                            $fetcher = new Fetcher($sql);
-                            $result = "";
-                            while ($row = $fetcher->Fetch()) {
-                                if($result != "") {
-                                    $result .= " - ";
-                                }
-                                $result .= $row['width'].' мм';
-                            }
-                            echo "$date в $time<br />";
-                            echo $result;
-                            ?>
-                        </div>
-                    </div>
-                    <?php
                     endif;
-                    // Если этот рулон появился в результате нарезки (старая версия)
-                    $sql = "select cs.width "
+                    // Если этот рулон появился в результате нарезки
+                    $sql = "select cs.width, DATE_FORMAT(c.date, '%d.%m.%Y') date, DATE_FORMAT(c.date, '%H:%i') time "
                             . "from cut c "
                             . "inner join cut_stream cs on cs.cut_id = c.id "
                             . "where c.remain = ". filter_input(INPUT_GET, 'id');
@@ -595,42 +559,19 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         <div style="font-size: 1rem;">
                         <?php
                         $result = "";
+                        $date = "";
+                        $time = "";
                         foreach($grabber->result as $row) {
                             if($result != "") {
                                 $result .= " - ";
                             }
                             $result .= $row['width'].' мм';
+                            $date = $row['date'];
+                            $time = $row['time'];
                         }
                         echo "$date в $time<br />";
                         echo $result;
                         ?>
-                        </div>
-                    </div>
-                    <?php
-                    endif;
-                    // Если этот рулон появился в результате нарезки (новая версия)
-                    $sql = "select cs.width "
-                            . "from cutting c "
-                            . "inner join cutting_stream cs on cs.cutting_id = c.id "
-                            . "where c.remain = ". filter_input(INPUT_GET, 'id');
-                    $grabber = new Grabber($sql);
-                    if(count($grabber->result) > 0):
-                    ?>
-                    <div class="form-group">
-                        <label>Остаток из раскроя:</label>
-                        <br />
-                        <div style="font-size: 1rem;">
-                            <?php
-                            $result = "";
-                            foreach($grabber->result as $row) {
-                                if($result != "") {
-                                    $result .= " - ";
-                                }
-                                $result .= $row['width'].' мм';
-                            }
-                            echo "$date в $time<br />";
-                            echo $result;
-                            ?>
                         </div>
                     </div>
                     <?php
@@ -670,7 +611,6 @@ $cutting_wind_id = $row['cutting_wind_id'];
         </div>
         <?php
         include '../include/footer.php';
-        include '../include/footer_find.php';
         ?>
         <script>
             if($('.is-invalid').first() != null) {
@@ -681,28 +621,27 @@ $cutting_wind_id = $row['cutting_wind_id'];
             var films = new Map();
             
             <?php
-            $sql = "SELECT fv.film_id, fv.id, fv.thickness, fv.weight FROM film_variation fv";
+            $sql = "SELECT fbv.film_brand_id, fbv.thickness, fbv.weight FROM film_brand_variation fbv";
             $fetcher = new Fetcher($sql);
             while ($row = $fetcher->Fetch()):
             ?>
-            if(films.get(<?= $row['film_id'] ?>) == undefined) {
-                films.set(<?= $row['film_id'] ?>, new Map());
+            if(films.get(<?= $row['film_brand_id'] ?>) == undefined) {
+                films.set(<?= $row['film_brand_id'] ?>, new Map());
             }
-            films.get(<?= $row['film_id'] ?>).set(<?= $row['id'] ?>, [<?=$row['thickness'] ?>, <?= $row['weight'] ?>]);
+            films.get(<?= $row['film_brand_id'] ?>).set(<?= $row['thickness'] ?>, <?= $row['weight'] ?>);
             <?php        
             endwhile;
             ?>
                 
             // Расчёт длины и массы плёнки по шпуле, толщине, радиусу, ширине, удельному весу
             function CalculateWeight() {
-                film_id = $('#film_id').val();
+                film_brand_id = $('#film_brand_id').val();
                 length = $('#length').val();
                 width = $('#width').val();
-                film_variation_id = $('#film_variation_id').val();
+                thickness = $('#thickness').val();
                 
-                if(!isNaN(length) && !isNaN(width) && !isNaN(film_variation_id) && length != '' && width != '' && film_variation_id != '') {
-                    thickness = films.get(parseInt($('#film_id').val())).get(parseInt(film_variation_id))[0];
-                    density = films.get(parseInt($('#film_id').val())).get(parseInt(film_variation_id))[1];
+                if(!isNaN(length) && !isNaN(width) && !isNaN(thickness) && length != '' && width != '' && thickness != '') {
+                    density = films.get(parseInt($('#film_brand_id').val())).get(parseInt(thickness));
                     weight = GetFilmWeightByLengthWidth(length, width, density);
                     $('#net_weight_normal').val(weight.toFixed(2));
                 }

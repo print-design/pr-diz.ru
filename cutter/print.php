@@ -10,33 +10,26 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 $user_id = GetUserId();
 
 // Проверяем, имеются ли незакрытые нарезки
+include '_check_cuts.php';
+CheckCuts($user_id);
 
 // Текущее время
 $current_date_time = date("dmYHis");
 
-// Проверяем, имеются ли незакрытые нарезки
-include '_check_rolls.php';
-$opened_roll = CheckOpenedRolls($user_id);
-$cutting_id = $opened_roll['id'];
-$last_source = $opened_roll['last_source'];
-$streams_count = $opened_roll['streams_count'];
-$last_wind = $opened_roll['last_wind'];
-
-// Если нет незакрытой нарезки, переходим на первую страницу
-if(empty($cutting_id)) {
-    header("Location: ".APPLICATION.'/cutter/');
+// Находим id раскроя
+$cut_id = null;
+$sql = "select id from cut where cutter_id = $user_id and id not in (select cut_id from cut_source)";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $cut_id = $row[0];
 }
-// Если нет исходного ролика, переходим на страницу создания исходного ролика
-elseif(empty ($last_source)) {
-    header("Location: source.php");
-}
-// Если нет ручьёв, переходим на страницу "Как режем"
-elseif(empty ($streams_count)) {
-    header("Location: streams.php");
-}
-// Если есть исходные ролики и ручьи, но у последнего исходного ролика нет намоток, переходим на страницу создания намотки
-elseif (empty ($last_wind)) {
-    header("Location: wind.php");
+        
+// Находим id последней намотки
+$cut_wind_id = null;
+$sql = "select id from cut_wind where cut_id = $cut_id order by id desc limit 1";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $cut_wind_id = $row[0];
 }
 ?>
 <!DOCTYPE html>
@@ -50,7 +43,7 @@ elseif (empty ($last_wind)) {
     <body>
         <?php
         $class_attr = " class='d-none'";
-        if(isset($_COOKIE['cutting_wind_id_'.$last_wind]) && $_COOKIE['cutting_wind_id_'.$last_wind] == 1) {
+        if(isset($_COOKIE['cut_wind_id_'.$cut_wind_id]) && $_COOKIE['cut_wind_id_'.$cut_wind_id] == 1) {
             $class_attr = "";
         }
         ?>
@@ -58,23 +51,22 @@ elseif (empty ($last_wind)) {
             <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
         </div>
         <div id="new_wind_link"<?=$class_attr ?> style="float: right;">
-            <a href="wind.php" class="btn btn-dark" style="font-size: 20px;">Новая намотка</a>
+            <a href="next.php" class="btn btn-dark" style="font-size: 20px;">Новая намотка</a>
         </div>
         <div style="clear: both;" />
     
         <?php
         // Получение данных
         $sql = "select r.id, DATE_FORMAT(r.date, '%d.%m.%Y') date, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, s.name supplier, r.id_from_supplier, "
-                . "r.film_variation_id, f.name film, r.width, fv.thickness, fv.weight, r.length, "
+                . "r.film_brand_id, fb.name film_brand, r.width, r.thickness, r.length, "
                 . "r.net_weight, r.cell, "
                 . "(select rs.name status from roll_status_history rsh left join roll_status rs on rsh.status_id = rs.id where rsh.roll_id = r.id order by rsh.id desc limit 0, 1) status, "
                 . "r.comment "
                 . "from roll r "
                 . "left join user u on r.storekeeper_id = u.id "
                 . "left join supplier s on r.supplier_id = s.id "
-                . "left join film_variation fv on r.film_variation_id = fv.id "
-                . "left join film f on fv.film_id = f.id "
-                . "where r.cutting_wind_id=$last_wind";
+                . "left join film_brand fb on r.film_brand_id = fb.id "
+                . "where r.cut_wind_id=$cut_wind_id";
         $current_roll = 0;
         $fetcher = new Fetcher($sql);
 
@@ -86,17 +78,24 @@ elseif (empty ($last_wind)) {
         $supplier_id = $row['supplier_id'];
         $supplier = $row['supplier'];
         $id_from_supplier = $row['id_from_supplier'];
-        $film_variation_id = $row['film_variation_id'];
-        $film = $row['film'];
+        $film_brand_id = $row['film_brand_id'];
+        $film_brand = $row['film_brand'];
         $width = $row['width'];
         $thickness = $row['thickness'];
-        $ud_ves = $row['weight'];
         $length = $row['length'];
         $net_weight = $row['net_weight'];
         $cell = $row['cell'];
         $status = $row['status'];
         $comment = $row['comment'];
-                
+        
+        // Определяем удельный вес
+        $ud_ves = null;
+        $ud_ves_sql = "select weight from film_brand_variation where film_brand_id=$film_brand_id and thickness=$thickness";
+        $ud_ves_fetcher = new Fetcher($ud_ves_sql);
+        if($ud_ves_row = $ud_ves_fetcher->Fetch()) {
+            $ud_ves = $ud_ves_row[0];
+        }
+        
         $current_roll++;
         ?>
         <table class="table table-bordered compact" style="writing-mode: vertical-rl;">
@@ -133,7 +132,7 @@ elseif (empty ($last_wind)) {
                     <td>Длина<br /><strong><?=$length ?> м</strong></td>
                 </tr>
                 <tr>
-                    <td class="text-nowrap">Марка пленки<br /><strong><?=$film ?></strong></td>
+                    <td class="text-nowrap">Марка пленки<br /><strong><?=$film_brand ?></strong></td>
                     <td class="text-nowrap">Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
                 </tr>
                 <tr>
@@ -184,7 +183,7 @@ elseif (empty ($last_wind)) {
         <script>
             $(document).ready(function (){
                 let myShareData = {
-                    url: '<?=APPLICATION ?>/cutter/_print.php?cutting_wind_id=<?=$last_wind ?>'
+                    url: '<?=APPLICATION ?>/cutter/_print.php?cut_wind_id=<?=$cut_wind_id ?>'
                 };
         
                 const sharelink = document.getElementById("sharelink");
@@ -194,7 +193,7 @@ elseif (empty ($last_wind)) {
         
                 setTimeout(function() { 
                     document.getElementById('new_wind_link').removeAttribute('class');
-                    document.cookie = '<?='cutting_wind_id_'.$last_wind ?>=1; Path=/;';
+                    document.cookie = '<?='cut_wind_id_'.$cut_wind_id ?>=1; Path=/;';
                 }, 30000);
             });
         </script>

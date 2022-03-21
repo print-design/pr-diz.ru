@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'electrocarist', 'auditor'))) {
+if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -14,9 +14,6 @@ if(empty($id)) {
 
 // СТАТУС "СВОБОДНЫЙ"
 $free_roll_status_id = 1;
-
-// РОЛЬ "РЕВИЗОР"
-const AUDITOR = 'auditor';
 ?>
 <!DOCTYPE html>
 <html>
@@ -38,20 +35,13 @@ const AUDITOR = 'auditor';
             $title = "П".filter_input(INPUT_GET, 'id');
             include '../include/find_mobile.php';
             
-            $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, f.name film, p.id_from_supplier, p.width, fv.thickness, p.cell, p.comment, "
-                    . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
-                    . (IsInRole(AUDITOR) ? '' : " and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)")
-                    . ") length, "
-                    . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
-                    . (IsInRole(AUDITOR) ? '' : " and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)")
-                    . ") weight, "
-                    . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
-                    . (IsInRole(AUDITOR) ? '' : " and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)")
-                    . ") rolls_number "
+            $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, p.cell, p.comment, "
+                    . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)) length, "
+                    . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)) weight, "
+                    . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)) rolls_number "
                     . "from pallet p "
                     . "inner join supplier s on p.supplier_id=s.id "
-                    . "inner join film_variation fv on p.film_variation_id=fv.id "
-                    . "inner join film f on fv.film_id = f.id "
+                    . "inner join film_brand fb on p.film_brand_id=fb.id "
                     . "where p.id=$id";
             $fetcher = new Fetcher($sql);
             $row = $fetcher->Fetch();
@@ -60,7 +50,7 @@ const AUDITOR = 'auditor';
                 $date = $row['date'];
                 $supplier = $row['supplier'];
                 $id_from_supplier = $row['id_from_supplier'];
-                $film = $row['film'];
+                $film_brand = $row['film_brand'];
                 $width = $row['width'];
                 $thickness = $row['thickness'];
                 $weight = $row['weight'];
@@ -77,24 +67,16 @@ const AUDITOR = 'auditor';
                         <p><strong>Поставщик:</strong> <?=$supplier ?></p>
                         <p><strong>ID поставщика:</strong> <?=$id_from_supplier ?></p>
                         <p class="mt-3"><strong>Характеристики</strong></p>
-                        <p><strong>Марка пленки:</strong> <?=$film ?></p>
+                        <p><strong>Марка пленки:</strong> <?=$film_brand ?></p>
                         <p><strong>Ширина:</strong> <?=$width ?> мм</p>
                         <p><strong>Толщина:</strong> <?=$thickness ?> мкм</p>
                         <p><strong>Масса нетто:</strong> <?=$weight ?> кг</p>
                         <p><strong>Длина:</strong> <?=$length ?> м</p>
                         <p><strong>Количество рулонов:</strong> <?=$rolls_number ?></p>
                         <p><strong>Комментарий:</strong></p>
-                        <div style="white-space: pre-wrap;"><?= $comment ?></div>
+                        <p><?=$comment ?></p>
                         <p style="font-size: 32px; line-height: 48px;">Ячейка&nbsp;&nbsp;&nbsp;&nbsp;<?=$cell ?></p>
-                        <a href="pallet_edit.php?id=<?=$id ?>&link=<?= urlencode($_SERVER['REQUEST_URI']) ?>" class="btn btn-outline-dark w-100 mt-4">
-                            <?php if(IsInRole(array('electrocarist'))): ?>
-                            Сменить ячейку
-                            <?php elseif (IsInRole(array('auditor'))): ?>
-                            Оставить комментарий
-                            <?php else: ?>
-                            Редактировать
-                            <?php endif; ?>
-                        </a>
+                        <a href="pallet_edit.php?id=<?=$id ?>&link=<?= urlencode($_SERVER['REQUEST_URI']) ?>" class="btn btn-outline-dark w-100 mt-4">Сменить ячейку</a>
                     </div>
                 </div>
             </div>

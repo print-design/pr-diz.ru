@@ -56,8 +56,8 @@ function OrderLink($param) {
                     
                     $manager = filter_input(INPUT_GET, 'manager');
                     if(!empty($manager)) {
-                        if(empty($where)) $where = " where cus.manager_id=$manager";
-                        else $where .= " and cus.manager_id=$manager";
+                        if(empty($where)) $where = " where c.manager_id=$manager";
+                        else $where .= " and c.manager_id=$manager";
                     }
                     
                     $customer = filter_input(INPUT_GET, 'customer');
@@ -80,7 +80,7 @@ function OrderLink($param) {
                     }
                     
                     // Общее количество технологических карт для установления количества страниц в постраничном выводе
-                    $sql = "select count(t.id) from techmap t inner join request_calc c on t.request_calc_id = c.id inner join customer cus on c.customer_id=cus.id$where";
+                    $sql = "select count(t.id) from techmap t inner join request_calc c on t.request_calc_id = c.id$where";
                     $fetcher = new Fetcher($sql);
                     
                     if($row = $fetcher->Fetch()) {
@@ -178,7 +178,7 @@ function OrderLink($param) {
                             . "inner join request_calc c on t.request_calc_id = c.id "
                             . "inner join customer cus on c.customer_id = cus.id "
                             . "inner join work_type wt on c.work_type_id = wt.id "
-                            . "inner join user u on cus.manager_id = u.id$where "
+                            . "inner join user u on c.manager_id = u.id$where "
                             . "$orderby limit $pager_skip, $pager_take";
                     $fetcher = new Fetcher($sql);
                     

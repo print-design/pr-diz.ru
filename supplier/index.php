@@ -6,34 +6,10 @@ if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Обработка создания поставщика
-$form_valid = true;
-$supplier_insert_id = null;
-
-if(null !== filter_input(INPUT_POST, 'create_supplier_submit')) {
-    $name = filter_input(INPUT_POST, 'name');
-    
-    if(empty($name)) {
-        $error_message = "Не указано название поставщика";
-        $form_valid = false;
-    }
-    
-    $name = addslashes($name);
-    $sql = "select count(id) from supplier where name = '$name'";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        if($row[0] != 0) {
-            $error_message = "Такой поставщик уже есть";
-            $form_valid = false;
-        }
-    }
-    
-    if($form_valid) {
-        $sql = "insert into supplier(name) values('$name')";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
-        $supplier_insert_id = $executer->insert_id;
-    }
+// Обработка отправки формы
+if(null !== filter_input(INPUT_POST, 'delete_supplier_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $error_message = (new Executer("delete from supplier where id=$id"))->error;
 }
 ?>
 <!DOCTYPE html>
@@ -42,47 +18,11 @@ if(null !== filter_input(INPUT_POST, 'create_supplier_submit')) {
         <?php
         include '../include/head.php';
         ?>
-        <style>
-            .modal-content {
-                border-radius: 20px;
-            }
-            
-            .modal-header {
-                border-bottom: 0;
-                padding-bottom: 0;
-            }
-            
-            .modal-footer {
-                border-top: 0;
-                padding-top: 0;
-            }
-        </style>
     </head>
     <body>
         <?php
-        include '../include/header_admin.php';
+        include '../include/header.php';
         ?>
-        <div id="create_supplier" class="modal fade show">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form method="post">
-                        <div class="modal-header">
-                            <p class="font-weight-bold" style="font-size: x-large;">Поставщик</p>
-                            <button type="button" class="close create_supplier_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <input type="text" name="name" id="name" class="form-control" placeholder="Поставщик" required="required" />
-                            </div>
-                        </div>
-                        <div class="modal-footer" style="justify-content: flex-start;">
-                            <button type="submit" class="btn btn-dark" id="create_supplier_submit" name="create_supplier_submit">Добавить</button>
-                            <button type="button" class="btn btn-light create_supplier_dismiss" data-dismiss="modal">Отменить</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
         <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
@@ -90,32 +30,35 @@ if(null !== filter_input(INPUT_POST, 'create_supplier_submit')) {
             }
             ?>
             <div class="d-flex justify-content-between mb-auto">
-                <div class="p-0">
-                    <h1>Поставщики</h1>
+                <div class="p-1">
+                    <?php
+                    include '../include/subheader_admin.php';
+                    ?>
                 </div>
-                <div class="pt-1">
-                    <button class="btn btn-dark" data-toggle="modal" data-target="#create_supplier">
-                        <i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить поставщика
-                    </button>
+                <div class="p-1">
+                    <a href="create.php" title="Добавить поставщика" class="btn btn-outline-dark">
+                        <i class="fas fa-plus"></i>&nbsp;Добавить поставщика
+                    </a>
                 </div>
             </div>
-            <table class="table">
+            <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th style="border-top: 0;">Название поставщика</th>
-                        <th style="border-top: 0;">Пленки</th>
-                        <th style="border-top: 0;"></th>
+                        <th>Название поставщика</th>
+                        <th>Типы пленок</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     $sql = "select s.id, s.name, "
-                            . "(select count(id) from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = s.id))) count, "
-                            . "(select name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = s.id)) order by name limit 1) first "
+                            . "(select count(id) from film_brand where supplier_id=s.id) count, "
+                            . "(select name from film_brand where supplier_id=s.id limit 1) first "
                             . "from supplier s order by s.name";
                     $fetcher = new Fetcher($sql);
+                    $error_message = $fetcher->error;
                     
-                    while($row = $fetcher->Fetch()):
+                    while ($row = $fetcher->Fetch()) {
                         $id = $row['id'];
                         $name = htmlentities($row['name']);
                         $count = $row['count'];
@@ -128,31 +71,26 @@ if(null !== filter_input(INPUT_POST, 'create_supplier_submit')) {
                                 $products .= " и еще ".(intval($count) - 1);
                             }
                         }
+                        echo "<tr>"
+                        . "<td>$name</td>"
+                                . "<td>$products</td>"
+                                . "<td class='text-right'><a href='".APPLICATION."/supplier/details.php?id=$id'><image src='../images/icons/edit.svg' /></a></td>";
+                        /*echo "<td class='text-right'>";
+                        if($first == null) {
+                            echo "<form method='post'>";
+                            echo "<input type='hidden' id='id' name='id' value='$id' />";
+                            echo "<button type='submit' class='btn btn-link confirmable' id='delete_supplier_submit' name='delete_supplier_submit'><i class='fas fa-trash-alt'></i></button>";
+                            echo '</form>';
+                        }
+                        echo '</td>';*/
+                        echo "</tr>";
+                    }
                     ?>
-                    <tr id="s_<?=$id ?>">
-                        <td><?=$name ?></td>
-                        <td><?=$products ?></td>
-                        <td class="text-right"><a href="edit.php?id=<?=$id ?>" title="Редактировать"><img src="../images/icons/edit1.svg" /></a></td>
-                    </tr>
-                    <?php endwhile; ?>
                 </tbody>
             </table>
         </div>
         <?php
         include '../include/footer.php';
         ?>
-        <script>
-            $('#create_supplier').on('shown.bs.modal', function() {
-                $('input:text:visible:first').focus();
-            });
-            
-            $('#create_supplier').on('hidden.bs.modal', function() {
-                $('input#name').val('');
-            });
-            
-            <?php if(null !== filter_input(INPUT_POST, 'create_supplier_submit') && empty($error_message) && !empty($supplier_insert_id)): ?>
-            window.scrollTo(0, $('#s_<?= $supplier_insert_id ?>').offset().top - $('#topmost').height());
-            <?php endif; ?>
-        </script>
     </body>
 </html>

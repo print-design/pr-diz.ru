@@ -26,7 +26,7 @@
     </nav>
     <nav class="navbar navbar-expand-sm justify-content-between d-flex d-lg-none pr-0">
         <ul class="navbar-nav">
-            <?php if(IsInRole(array('electrocarist', 'auditor'))): ?>
+            <?php if(IsInRole(array('electrocarist'))): ?>
             <li class="nav-item">
                 <a class="nav-link" href="<?=APPLICATION ?>/car/">Склад</a>
             </li>
@@ -58,7 +58,7 @@
         <?php if(!empty(filter_input(INPUT_COOKIE, USERNAME))): ?>
         <ul class="navbar-nav">
             <li class="nav-item dropdown no-dropdown-arrow-after">
-                <a class="nav-link mr-0" href="<?=APPLICATION ?>/user_mobile.php?link=<?= urlencode($_SERVER['REQUEST_URI']) ?>"><i class="fa fa-cog" aria-hidden="true"></i></a>
+                <a class="nav-link mr-0" href="<?=APPLICATION ?>/user_mobile.php?link=<?= urlencode($_SERVER['REQUEST_URI']) ?>"><i class="fa fa-cog" aria-hidden="true""></i></a>
             </li>
         </ul>
         <?php endif; ?>

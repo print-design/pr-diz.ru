@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'electrocarist', 'auditor'))) {
+if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -14,9 +14,6 @@ if(empty($id)) {
 
 // СТАТУС "СВОБОДНЫЙ"
 $free_status_id = 1;
-
-// РОЛЬ "РЕВИЗОР"
-const AUDITOR = 'auditor';
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,23 +32,21 @@ const AUDITOR = 'auditor';
         ?>
         <div class="container-fluid">
             <?php
-            $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, f.name film, pr.id_from_supplier, p.width, fv.thickness, pr.weight, pr.length, p.cell, p.comment, "
+            $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, fb.name film_brand, p.id_from_supplier, p.width, p.thickness, pr.weight, pr.length, p.cell, p.comment, "
                     . "p.id pallet_id, pr.ordinal "
                     . "from pallet_roll pr "
                     . "inner join pallet p on pr.pallet_id = p.id "
                     . "inner join supplier s on p.supplier_id=s.id "
-                    . "inner join film_variation fv on p.film_variation_id=fv.id "
-                    . "inner join film f on fv.film_id = f.id "
+                    . "inner join film_brand fb on p.film_brand_id=fb.id "
                     . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                    . "where pr.id=$id"
-                    . (IsInRole(AUDITOR) ? '' : " and (prsh.status_id is null or prsh.status_id = $free_status_id)");
+                    . "where pr.id=$id and (prsh.status_id is null or prsh.status_id = $free_status_id)";
             $fetcher = new Fetcher($sql);
             
             if($row = $fetcher->Fetch()):
                 $date = $row['date'];
                 $supplier = $row['supplier'];
                 $id_from_supplier = $row['id_from_supplier'];
-                $film = $row['film'];
+                $film_brand = $row['film_brand'];
                 $width = $row['width'];
                 $thickness = $row['thickness'];
                 $weight = $row['weight'];
@@ -72,23 +67,15 @@ const AUDITOR = 'auditor';
                         <p><strong>Поставщик:</strong> <?=$supplier ?></p>
                         <p><strong>ID поставщика:</strong> <?=$id_from_supplier ?></p>
                         <p class="mt-3"><strong>Характеристики</strong></p>
-                        <p><strong>Марка пленки:</strong> <?=$film ?></p>
+                        <p><strong>Марка пленки:</strong> <?=$film_brand ?></p>
                         <p><strong>Ширина:</strong> <?=$width ?> мм</p>
                         <p><strong>Толщина:</strong> <?=$thickness ?> мкм</p>
                         <p><strong>Масса нетто:</strong> <?=$weight ?> кг</p>
                         <p><strong>Длина:</strong> <?=$length ?> м</p>
                         <p><strong>Комментарий:</strong></p>
-                        <div style="white-space: pre-wrap;"><?=$comment ?></div>
+                        <p><?=$comment ?></p>
                         <p style="font-size: 32px; line-height: 48px;">Ячейка&nbsp;&nbsp;&nbsp;&nbsp;<?=$cell ?></p>
-                        <a href="pallet_roll_edit.php?id=<?=$id ?>&link=<?= urlencode($_SERVER['REQUEST_URI']) ?>" class="btn btn-outline-dark w-100 mt-4">
-                            <?php if(IsInRole(array('electrocarist'))): ?>
-                            Сменить ячейку
-                            <?php elseif (IsInRole(array('auditor'))): ?>
-                            Оставить комментарий
-                            <?php else: ?>
-                            Редактировать
-                            <?php endif; ?>
-                        </a>
+                        <a href="pallet_roll_edit.php?id=<?=$id ?>&link=<?= urlencode($_SERVER['REQUEST_URI']) ?>" class="btn btn-outline-dark w-100 mt-4">Сменить ячейку</a>
                     </div>
                 </div>
             </div>

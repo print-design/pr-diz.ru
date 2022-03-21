@@ -9,26 +9,9 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 // Текущий пользователь
 $user_id = GetUserId();
 
-// Проверяем, имеются ли незакрытые нарезки.
-include '_check_rolls.php';
-$opened_roll = CheckOpenedRolls($user_id);
-$cutting_id = $opened_roll['id'];
-$streams_count = $opened_roll['streams_count'];
-$last_source = $opened_roll['last_source'];
-$last_wind = $opened_roll['last_wind'];
-
-// Если есть незакрытая нарезка, переходим на другие страницы.
-if(!empty($cutting_id)) {
-    if(empty($streams_count)) {
-        header("Location: streams.php");
-    }
-    elseif(empty ($last_source)) {
-        header("Location: source.php");
-    }
-    else {
-        header("Location: wind.php");
-    }
-}
+// Проверяем, имеются ли незакрытые нарезки
+include '_check_cuts.php';
+CheckCuts($user_id);
 ?>
 <!DOCTYPE html>
 <html>
@@ -48,7 +31,7 @@ if(!empty($cutting_id)) {
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown no-dropdown-arrow-after">
-                        <a class="nav-link mr-0" id="logout-submit" href="logout.php?link=<?= urlencode($_SERVER['REQUEST_URI']) ?>"><i class="fa fa-user-alt" aria-hidden="true"></i></a>
+                        <a class="nav-link mr-0" id="logout-submit" href="logout.php"><i class="fa fa-cog" aria-hidden="true""></i></a>
                     </li>
                 </ul>
             </nav>
@@ -60,7 +43,7 @@ if(!empty($cutting_id)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-dark w-100 mt-5" href="material.php">Приступить к раскрою</a>
+            <a class="btn btn-dark w-100 mt-4" href="material.php">Приступить к раскрою</a>
         </div>
         <?php
         include '_footer.php';

@@ -99,21 +99,6 @@ function BuildQueryRemove($key) {
     return $result;
 }
 
-function BuildQueryRemoveArray($array) {
-    $result = '';
-    $get_params = $_GET;
-    foreach($array as $key) {
-        unset($get_params[$key]);
-    }
-    $result = http_build_query($get_params);
-
-    if(!empty($result)) {
-        $result = "?$result";
-    }
-    
-    return $result;
-}
-
 function BuildQueryAddRemove($key, $value, $remove) {
     $result = '';
     $get_params = $_GET;
@@ -302,10 +287,9 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
         $last_name = '';
         $first_name = '';
         $role = '';
-        $role_local = '';
         $twofactor = 0;
         
-        $sql = "select u.id, u.username, u.password, u.last_name, u.first_name, u.email, r.name role, r.local_name role_local, r.twofactor "
+        $sql = "select u.id, u.username, u.password, u.last_name, u.first_name, u.email, r.name role, r.twofactor "
                 . "from user u "
                 . "inner join role r on u.role_id=r.id "
                 . "where u.username='$login_username' and u.password=password('$login_password') and u.active=true";
@@ -323,7 +307,6 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
             $last_name = $row['last_name'];
             $first_name = $row['first_name'];
             $role = $row['role'];
-            $role_local = $row['role_local'];
             $email = $row['email'];
             $twofactor = $row['twofactor'];
         }
@@ -346,7 +329,6 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
             setcookie(LAST_NAME, $last_name, time() + 60 * 60 * 24 * 100000, "/");
             setcookie(FIRST_NAME, $first_name, time() + 60 * 60 * 24 * 100000, "/");
             setcookie(ROLE, $role, time() + 60 * 60 * 24 * 100000, "/");
-            setcookie(ROLE_LOCAL, $role_local, time() + 60 * 60 * 24 * 100000, "/");
             setcookie(LOGIN_TIME, (new DateTime())->getTimestamp(), time() + 60 * 60 * 24 * 100000, "/");
             header("Refresh:0");
         }
@@ -356,7 +338,7 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
 // Обработка формы отправки кода безопасности
 if(null !== filter_input(INPUT_POST, 'security_code_submit')) {
     $id = filter_input(INPUT_POST, 'id');
-    $sql = "select u.id, u.username, u.password, u.last_name, u.first_name, u.email, u.code, r.name role, r.local_name role_local "
+    $sql = "select u.id, u.username, u.password, u.last_name, u.first_name, u.email, u.code, r.name role "
             . "from user u inner join role r on u.role_id = r.id "
             . "where u.id=$id";
     $result = (new Grabber($sql))->result;
@@ -371,7 +353,6 @@ if(null !== filter_input(INPUT_POST, 'security_code_submit')) {
         $last_name = $row['last_name'];
         $first_name = $row['first_name'];
         $role = $row['role'];
-        $role_local = $row['role_local'];
         $email = $row['email'];
         $code = $row['code'];
         
@@ -385,7 +366,6 @@ if(null !== filter_input(INPUT_POST, 'security_code_submit')) {
                 setcookie(LAST_NAME, $last_name, time() + 60 * 60 * 24 * 100000, "/");
                 setcookie(FIRST_NAME, $first_name, time() + 60 * 60 * 24 * 100000, "/");
                 setcookie(ROLE, $role, time() + 60 * 60 * 24 * 100000, '/');
-                setcookie(ROLE_LOCAL, $role_local, time() + 60 * 60 * 24 * 100000, '/');
                 setcookie(LOGIN_TIME, (new DateTime())->getTimestamp(), time() + 60 * 60 * 24 * 100000, "/");
                 header("Refresh:0");
             }
@@ -406,7 +386,6 @@ function Logout() {
     setcookie(FIRST_NAME, '', time() + 60 * 60 * 24 * 100000, "/");
     setcookie(LOGIN_TIME, '', time() + 60 * 60 * 24 * 100000, "/");
     setcookie(ROLE, '', time() + 60 * 60 * 24 * 100000, "/");
-    setcookie(ROLE_LOCAL, '', time() + 60 * 60 * 24 * 100000, "/");
     header("Refresh:0");
     header('Location: '.APPLICATION.'/');
 }
@@ -426,21 +405,5 @@ if(LoggedIn()) {
     if($row[0] == 0) {
         Logout();
     }
-    
-    //---------------------------------------------------
-    // ВРЕМЕННЫЙ КОД. ПОТОМ УДАЛИТЬ ЕГО.
-    // Если в куках нет русского названия роли, берём его из базы и помещаем в куки
-    $role = filter_input(INPUT_COOKIE, ROLE);
-    $role_local = filter_input(INPUT_COOKIE, ROLE_LOCAL);
-    
-    if(empty($role_local) && !empty($role)) {
-        $sql = "select local_name from role where name = '$role'";
-        $fetcher = new Fetcher($sql);
-        
-        if($row = $fetcher->Fetch()) {
-            setcookie(ROLE_LOCAL, $row[0], time() + 60 * 60 * 24 * 100000, '/');
-        }
-    }
-    //---------------------------------------------------
 }
 ?>

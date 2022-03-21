@@ -85,7 +85,7 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
     </head>
     <body>
         <?php
-        include '../include/header_admin.php';
+        include '../include/header.php';
         ?>
         <div id="user_change_password" class="modal fade show">
             <div class="modal-dialog">
@@ -132,25 +132,27 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
             }
             ?>
             <div class="d-flex justify-content-between mb-auto">
-                <div class="p-0">
-                    <h1>Сотрудники</h1>
+                <div class="p-1">
+                    <?php
+                    include '../include/subheader_admin.php';
+                    ?>
                 </div>
-                <div class="pt-1">
-                    <a href="create.php" title="Добавить пользователя" class="btn btn-dark">
-                        <i class="fas fa-plus" style="font-size: 12px;"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить сотрудника
+                <div class="p-1">
+                    <a href="create.php" title="Добавить пользователя" class="btn btn-outline-dark">
+                        <i class="fas fa-plus" style="font-size: 12px;"></i>&nbsp;&nbsp;Добавить сотрудника
                     </a>
                 </div>
             </div>
-            <table class="table">
+            <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th style="border-top: 0;">ФИО</th>
-                        <th style="border-top: 0;">Должность</th>
-                        <th style="border-top: 0;">Логин</th>
-                        <th style="border-top: 0;">E-Mail</th>
-                        <th style="border-top: 0;">Телефон</th>
-                        <th style="width: 80px; border-top: 0;">Пароль</th>
-                        <th style="width: 80px; border-top: 0;">Активный</th>
+                        <th>ФИО</th>
+                        <th>Должность</th>
+                        <th>Логин</th>
+                        <th>E-Mail</th>
+                        <th>Телефон</th>
+                        <th style="width: 80px;">Пароль</th>
+                        <th style="width: 80px;">Активный</th>
                     </tr>
                 </thead>
                 <tbody>

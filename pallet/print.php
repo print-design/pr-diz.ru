@@ -23,7 +23,7 @@ $free_status_id = 1;
 
 // Получение данных
 $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, s.name supplier, p.id_from_supplier, "
-        . "p.film_variation_id, f.name film, p.width, fv.thickness, fv.weight, "
+        . "p.film_brand_id, fb.name film_brand, p.width, p.thickness, "
         . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_status_id)) length, "
         . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_status_id)) net_weight, "
         . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_status_id)) rolls_number, "
@@ -32,8 +32,7 @@ $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_na
         . "from pallet p "
         . "left join user u on p.storekeeper_id = u.id "
         . "left join supplier s on p.supplier_id = s.id "
-        . "left join film_variation fv on p.film_variation_id = fv.id "
-        . "left join film f on fv.film_id = f.id "
+        . "left join film_brand fb on p.film_brand_id = fb.id "
         . "where p.id=$id";
 
 $row = (new Fetcher($sql))->Fetch();
@@ -43,11 +42,10 @@ $storekeeper = $row['last_name'].' '.$row['first_name'];
 $supplier_id = $row['supplier_id'];
 $supplier = $row['supplier'];
 $id_from_supplier = $row['id_from_supplier'];
-$film_variation_id = $row['film_variation_id'];
-$film = $row['film'];
+$film_brand_id = $row['film_brand_id'];
+$film_brand = $row['film_brand'];
 $width = $row['width'];
 $thickness = $row['thickness'];
-$ud_ves = $row['weight'];
 $length = $row['length'];
 $net_weight = $row['net_weight'];
 $rolls_number = $row['rolls_number'];
@@ -59,6 +57,14 @@ $status = '';
 
 if(!empty($statuses[$status_id]['name'])) {
     $status = $statuses[$status_id]['name'];
+}
+
+// Определяем удельный вес
+$ud_ves = null;
+$sql = "select weight from film_brand_variation where film_brand_id=$film_brand_id and thickness=$thickness";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $ud_ves = $row[0];
 }
 
 // Вертикальное положение бирки
@@ -126,7 +132,7 @@ $current_date_time = date("dmYHis");
                         <td>Длина<br /><strong><?=$length ?> м</strong></td>
                     </tr>
                     <tr>
-                        <td class="text-nowrap pb-5">Марка пленки<br /><strong><?=$film ?></strong></td>
+                        <td class="text-nowrap pb-5">Марка пленки<br /><strong><?=$film_brand ?></strong></td>
                         <td class="text-nowrap pb-5">Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
                     </tr>
                     <tr>
@@ -179,7 +185,7 @@ $current_date_time = date("dmYHis");
                         <td>Длина<br /><strong><?=$length ?> м</strong></td>
                     </tr>
                     <tr>
-                        <td>Марка пленки<br /><strong><?=$film ?></strong></td>
+                        <td>Марка пленки<br /><strong><?=$film_brand ?></strong></td>
                         <td>Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
                     </tr>
                     <tr>
@@ -194,7 +200,7 @@ $current_date_time = date("dmYHis");
         </div>
         
         <?php
-        $sql = "select pr.id pallet_roll_id, pr.weight, pr.length, pr.ordinal, pr.id_from_supplier pr_id_from_supplier, ifnull(prsh.status_id, $free_status_id) status_id, "
+        $sql = "select pr.id pallet_roll_id, pr.weight, pr.length, pr.ordinal, ifnull(prsh.status_id, $free_status_id) status_id, "
                 . "(select name from roll_status where id = ifnull(prsh.status_id, $free_status_id)) status "
                 . "from pallet_roll pr left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
                 . "where pr.pallet_id = ". filter_input(INPUT_GET, 'id')." and (prsh.status_id is null or prsh.status_id = $free_status_id)";
@@ -206,7 +212,6 @@ $current_date_time = date("dmYHis");
         $weight = $pallet_roll['weight'];
         $length = $pallet_roll['length'];
         $ordinal = $pallet_roll['ordinal'];
-        $pr_id_from_supplier = $pallet_roll['pr_id_from_supplier'];
         $status_id = $pallet_roll['status_id'];
         $status = $pallet_roll['status'];
         
@@ -284,7 +289,7 @@ $current_date_time = date("dmYHis");
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-nowrap pb-5">ID от поставщика<br /><span class="text-nowrap font-weight-bold"><?=$pr_id_from_supplier ?></span></td>
+                        <td class="text-nowrap pb-5">ID от поставщика<br /><span class="text-nowrap font-weight-bold"><?=$id_from_supplier ?></span></td>
                         <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></span></td>
                     </tr>
                     <tr>
@@ -292,7 +297,7 @@ $current_date_time = date("dmYHis");
                         <td>Длина<br /><strong><?=$length ?> м</strong></td>
                     </tr>
                     <tr>
-                        <td>Марка пленки<br /><strong><?=$film ?></strong></td>
+                        <td>Марка пленки<br /><strong><?=$film_brand ?></strong></td>
                         <td>Масса нетто<br /><strong><?=$weight ?> кг</strong></td>
                     </tr>
                     <tr>

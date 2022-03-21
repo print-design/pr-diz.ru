@@ -50,7 +50,7 @@
             }
         }
         
-        $sql = "select distinct u.id, u.last_name, u.first_name from request_calc c inner join customer cus on c.customer_id = cus.id inner join user u on cus.manager_id = u.id inner join techmap t on t.request_calc_id = c.id order by u.last_name";
+        $sql = "select distinct u.id, u.last_name, u.first_name from request_calc c inner join user u on c.manager_id = u.id inner join techmap t on t.request_calc_id = c.id order by u.last_name";
         $fetcher = new Fetcher($sql);
                             
         while ($row = $fetcher->Fetch()):

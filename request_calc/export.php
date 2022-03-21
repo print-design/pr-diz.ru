@@ -21,20 +21,20 @@ const LACQUER = "lacquer";
 
 if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     $id = filter_input(INPUT_POST, 'id');
-    $file_name = "calculation_$id.txm";
+    $file_name = "request_calc_$id.txm";
     DownloadSendHeaders($file_name);
     
     $sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c.unit, "
-            . "c.brand_name, c.thickness, other_brand_name, other_price, other_thickness, other_weight, c.customers_material, "
-            . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_other_brand_name, lamination1_other_price, lamination1_other_thickness, lamination1_other_weight, c.lamination1_customers_material, "
-            . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_other_brand_name, lamination2_other_price, lamination2_other_thickness, lamination2_other_weight, c.lamination2_customers_material, "
-            . "c.length, c.stream_width, c.streams_count, c.machine, c.raport, c.lamination_roller, c.paints_count, "
-            . "c.paint_1, c.paint_2, c.paint_3, paint_4, paint_5, paint_6, paint_7, paint_8, "
+            . "c.brand_name, c.thickness, individual_brand_name, individual_price, individual_thickness, individual_density, c.customers_material, "
+            . "c.lamination1_brand_name, c.lamination1_thickness, lamination1_individual_brand_name, lamination1_individual_price, lamination1_individual_thickness, lamination1_individual_density, c.lamination1_customers_material, "
+            . "c.lamination2_brand_name, c.lamination2_thickness, lamination2_individual_brand_name, lamination2_individual_price, lamination2_individual_thickness, lamination2_individual_density, c.lamination2_customers_material, "
+            . "c.label_length, c.stream_width, c.streams_number, c.machine_type, c.raport, c.lamination_roller_width, c.ink_number, "
+            . "c.ink_1, c.ink_2, c.ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
             . "c.color_1, c.color_2, c.color_3, color_4, color_5, color_6, color_7, color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
             . "c.percent_1, c.percent_2, c.percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
-            . "c.form_1, c.form_2, c.form_3, form_4, form_5, form_6, form_7, form_8, "
-            . "c.extracharge, c.ski, c.no_ski, "
+            . "c.cliche_1, c.cliche_2, c.cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8, "
+            . "c.ski_width, c.no_ski, "
             . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
             . "wt.name work_type, "
             . "u.last_name, u.first_name, "
@@ -57,37 +57,36 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     $brand_name = $row['brand_name'];
     $thickness = $row['thickness'];
     $weight = $row['weight'];
-    $other_brand_name = $row['other_brand_name'];
-    $other_price = $row['other_price'];
-    $other_thickness = $row['other_thickness'];
-    $other_weight = $row['other_weight'];
+    $individual_brand_name = $row['individual_brand_name'];
+    $individual_price = $row['individual_price'];
+    $individual_thickness = $row['individual_thickness'];
+    $individual_density = $row['individual_density'];
     $customers_material = $row['customers_material'];
     $lamination1_brand_name = $row['lamination1_brand_name'];
     $lamination1_thickness = $row['lamination1_thickness'];
     $lamination1_weight = $row['lamination1_weight'];
-    $lamination1_other_brand_name = $row['lamination1_other_brand_name'];
-    $lamination1_other_price = $row['lamination1_other_price'];
-    $lamination1_other_thickness = $row['lamination1_other_thickness'];
-    $lamination1_other_weight = $row['lamination1_other_weight'];
+    $lamination1_individual_brand_name = $row['lamination1_individual_brand_name'];
+    $lamination1_individual_price = $row['lamination1_individual_price'];
+    $lamination1_individual_thickness = $row['lamination1_individual_thickness'];
+    $lamination1_individual_density = $row['lamination1_individual_density'];
     $lamination1_customers_material = $row['lamination1_customers_material'];
     $lamination2_brand_name = $row['lamination2_brand_name'];
     $lamination2_thickness = $row['lamination2_thickness'];
     $lamination2_weight = $row['lamination2_weight'];
-    $lamination2_other_brand_name = $row['lamination2_other_brand_name'];
-    $lamination2_other_price = $row['lamination2_other_price'];
-    $lamination2_other_thickness = $row['lamination2_other_thickness'];
-    $lamination2_other_weight = $row['lamination2_other_weight'];
+    $lamination2_individual_brand_name = $row['lamination2_individual_brand_name'];
+    $lamination2_individual_price = $row['lamination2_individual_price'];
+    $lamination2_individual_thickness = $row['lamination2_individual_thickness'];
+    $lamination2_individual_density = $row['lamination2_individual_density'];
     $lamination2_customers_material = $row['lamination2_customers_material'];
-    $length = $row['length'];
+    $label_length = $row['label_length'];
     $stream_width = $row['stream_width'];
-    $streams_count = $row['streams_count'];
-    $machine = $row['machine'];
+    $streams_number = $row['streams_number'];
+    $machine_type = $row['machine_type'];
     $raport = $row['raport'];
-    $lamination_roller = $row['lamination_roller'];
-    $paints_count = $row['paints_count'];
+    $lamination_roller_width = $row['lamination_roller_width'];
+    $ink_number = $row['ink_number'];
     
-    $extracharge = $row['extracharge'];
-    $ski = $row['ski'];
+    $ski_width = $row['ski_width'];
     $no_ski = $row['no_ski'];
     
     $customer = $row['customer'];
@@ -102,9 +101,9 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     $first_name = $row['first_name'];
     
     // Формы
-    $new_forms_count = 0;
-    $new_forms_vendor = "";
-    $new_forms_vendor_id = 0;
+    $new_cliches_count = 0;
+    $new_cliches_vendor = "";
+    $new_cliches_vendor_id = 0;
     
     // Краски
     $procentc = 0;
@@ -124,9 +123,9 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     $procentp8 = 0;
     $procentlak = 0;
     
-    for($i=1; $i<=$paints_count; $i++) {
-        $paint_var = "paint_$i";
-        $$paint_var = $row[$paint_var];
+    for($i=1; $i<=$ink_number; $i++) {
+        $ink_var = "ink_$i";
+        $$ink_var = $row[$ink_var];
         
         $color_var = "color_$i";
         $$color_var = $row[$color_var];
@@ -137,31 +136,31 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
         $percent_var = "percent_$i";
         $$percent_var = $row[$percent_var];
         
-        $form_var = "form_$i";
-        $$form_var = $row[$form_var];
+        $cliche_var = "cliche_$i";
+        $$cliche_var = $row[$cliche_var];
         
-        if(!empty($$form_var) && $$form_var != "old") {
-            $new_forms_count++;
+        if(!empty($$cliche_var) && $$cliche_var != "old") {
+            $new_cliches_count++;
             
-            switch ($$form_var) {
+            switch ($$cliche_var) {
                 case "flint":
-                    $new_forms_vendor = "Москва Флинт";
-                    $new_forms_vendor_id = 2;
+                    $new_cliches_vendor = "Москва Флинт";
+                    $new_cliches_vendor_id = 2;
                     break;
                 
                 case "kodak":
-                    $new_forms_vendor = "Москва Кодак";
-                    $new_forms_vendor_id = 3;
+                    $new_cliches_vendor = "Москва Кодак";
+                    $new_cliches_vendor_id = 3;
                     break;
                 
                 case "tver":
-                    $new_forms_vendor = "Тверь (наши)";
-                    $new_forms_vendor_id = 1;
+                    $new_cliches_vendor = "Тверь (наши)";
+                    $new_cliches_vendor_id = 1;
                     break;
             }
         }
         
-        switch($$paint_var) {
+        switch($$ink_var) {
             case "cmyk":
                 if($$cmyk_var == "cyan" && empty($procentc)) {
                     $procentc = $$percent_var;
@@ -224,7 +223,23 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
         }
     }
     
-    // Номер машины
+    // Курс доллара и евро
+    $euro = 0;
+    $usd = 0;
+        
+    $sql = "select euro, usd from currency where date <= '$date' order by date desc limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $euro = $row['euro'];
+        $usd = $row['usd'];
+    }
+            
+    if(empty($euro) || empty($usd)) {
+        $error_message = "Не заданы курсы валют";
+    }
+    
+    
+    // Данные о машинах 
     $machine_ids = array();
     $machine_shortnames = array();
     
@@ -237,11 +252,11 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     
     $machine_id = null;
     
-    if(!empty($machine) && !empty($paints_count)) {
-        if($machine == COMIFLEX) {
+    if(!empty($machine_type) && !empty($ink_number)) {
+        if($machine_type == COMIFLEX) {
             $machine_id = $machine_ids[COMIFLEX];
         }
-        elseif($paints_count > 6) {
+        elseif($ink_number > 6) {
             $machine_id = $machine_ids['zbs3'];
         }
         else {
@@ -298,7 +313,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     $brand_type_final = 0;
     
     if(!empty($brand_name)) {
-        if(stripos($brand_name, 'pet') === 0) {
+        if(stripos($brand_name, 'pet') === 0 || stripos($individual_brand_name, 'pet') === 0) {
             $brand_name_final = "ПЭТ";
             $brand_type_final = 5;
         }
@@ -313,7 +328,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     $lamination1_brand_type_final = 0;
     
     if(!empty($lamination1_brand_name)) {
-        if(stripos($lamination1_brand_name, 'pet') === 0) {
+        if(stripos($lamination1_brand_name, 'pet') === 0 || stripos($lamination1_individual_brand_name, 'pet') === 0) {
             $lamination1_brand_name_final = "ПЭТ";
             $lamination1_brand_type_final = 5;
         }
@@ -328,7 +343,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     $lamination2_brand_type_final = 0;
     
     if(!empty($lamination2_brand_name)) {
-        if(stripos($lamination2_brand_name, 'pet') === 0) {
+        if(stripos($lamination2_brand_name, 'pet') === 0 || stripos($lamination2_individual_brand_name, 'pet') === 0) {
             $lamination2_brand_name_final = "ПЭТ";
             $lamination2_brand_type_final = 5;
         }
@@ -344,8 +359,8 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     if(!empty($thickness)) {
         $thickness_final = $thickness;
     }
-    elseif(!empty ($other_thickness)) {
-        $thickness_final = $other_thickness;
+    elseif(!empty ($individual_thickness)) {
+        $thickness_final = $individual_thickness;
     }
     
     // Толщина материала 1 ламинации
@@ -354,8 +369,8 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     if(!empty($lamination1_thickness)) {
         $lamination1_thickness_final = $lamination1_thickness;
     }
-    elseif(!empty ($lamination1_other_thickness)) {
-        $lamination1_thickness_final = $lamination1_other_thickness;
+    elseif(!empty ($lamination1_individual_thickness)) {
+        $lamination1_thickness_final = $lamination1_individual_thickness;
     }
     
     // Толщина материала 2 ламинации
@@ -364,8 +379,8 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     if(!empty($lamination2_thickness)) {
         $lamination2_thickness_final = $lamination2_thickness;
     }
-    elseif(!empty ($lamination2_other_thickness)) {
-        $lamination2_thickness_final = $lamination2_other_thickness;
+    elseif(!empty ($lamination2_individual_thickness)) {
+        $lamination2_thickness_final = $lamination2_individual_thickness;
     }
     
     // Вес материала
@@ -374,8 +389,8 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     if(!empty($weight)) {
         $weight_final = $weight;
     }
-    elseif(!empty ($other_weight)) {
-        $weight_final = $other_weight;
+    elseif(!empty ($individual_density)) {
+        $weight_final = $individual_density;
     }
     
     // Вес материала 1 ламинации
@@ -384,8 +399,8 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     if(!empty($lamination1_weight)) {
         $lamination1_weight_final = $lamination1_weight;
     }
-    elseif(!empty ($lamination1_other_weight)) {
-        $lamination1_weight_final = $lamination1_other_weight;
+    elseif(!empty ($lamination1_individual_density)) {
+        $lamination1_weight_final = $lamination1_individual_density;
     }
     
     // Вес материала 2 ламинации
@@ -394,15 +409,15 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     if(!empty($lamination2_weight)) {
         $lamination2_weight_final = $lamination2_weight;
     }
-    elseif(!empty ($lamination2_other_weight)) {
-        $lamination2_weight_final = $lamination2_other_weight;
+    elseif(!empty ($lamination2_individual_density)) {
+        $lamination2_weight_final = $lamination2_individual_density;
     }
     
     // Цена материала
     $price_final = 0;
     
-    if(!empty($other_price)) {
-        $price_final = $other_price;
+    if(!empty($individual_price)) {
+        $price_final = $individual_price;
     }
     elseif(!empty ($brand_name) && !empty ($thickness)) {
         $sql = "select price, currency from film_price where brand_name = '$brand_name' and thickness = $thickness and date <= '$date' order by date desc limit 1";
@@ -422,8 +437,8 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     // Цена материала 1 ламинации
     $lamination1_price_final = 0;
     
-    if(!empty($lamination1_other_price)) {
-        $lamination1_price_final = $lamination1_other_price;
+    if(!empty($lamination1_individual_price)) {
+        $lamination1_price_final = $lamination1_individual_price;
     }
     elseif(!empty ($lamination1_brand_name) && !empty ($lamination1_thickness)) {
         $sql = "select price, currency from film_price where brand_name = '$lamination1_brand_name' and thickness = $lamination1_thickness and date <= '$date' order by date desc limit 1";
@@ -443,8 +458,8 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     // Цена материала 2 ламинации
     $lamination2_price_final = 0;
     
-    if(!empty($lamination2_other_price)) {
-        $lamination2_price_final = $lamination2_other_price;
+    if(!empty($lamination2_individual_price)) {
+        $lamination2_price_final = $lamination2_individual_price;
     }
     elseif(!empty ($lamination2_brand_name) && !empty ($lamination2_thickness)) {
         $sql = "select price, currency from film_price where brand_name = '$lamination2_brand_name' and thickness = $lamination2_thickness and date <= '$date' order by date desc limit 1";
@@ -461,21 +476,6 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
         }
     }
     
-    // Курс доллара и евро
-    $euro = 0;
-    $usd = 0;
-        
-    $sql = "select euro, usd from currency where date <= '$date' order by date desc limit 1";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        $euro = $row['euro'];
-        $usd = $row['usd'];
-    }
-            
-    if(empty($euro) || empty($usd)) {
-        $error_message = "Не заданы курсы валют";
-    }
-    
     // Печать с лыжами
     $with_ski = 0;
     
@@ -490,21 +490,21 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     $material_price = null;    $print_time = null;    $tuning_time = null;
     $print_tuning_time = null;    $print_price = null;    $cliche_area = null;
     $cliche_flint_price = null;    $cliche_kodak_price = null;    $cliche_tver_price = null;
-    $cliche_price = null;    $paint_price = null;    $pure_weight_lam1 = null;
+    $cliche_price = null;    $ink_price = null;    $pure_weight_lam1 = null;
     $dirty_weight_lam1 = null;    $price_lam1_material = null;    $price_lam1_glue = null;
     $price_lam1_work = null;    $pure_weight_lam2 = null;    $dirty_weight_lam2 = null;
     $price_lam2_material = null;    $price_lam2_glue = null;    $price_lam2_work = null;
     $price_lam_total = null;    $pure_weight_total = null;    $dirty_weight_total = null;
     $cost_no_cliche = null;    $cost_with_cliche = null;    $cost_no_cliche_kg = null;
-    $cost_with_cliche_kg = null;    $cost_no_cliche_thing = null;    $cost_with_cliche_thing = null;
+    $cost_with_cliche_kg = null;    $cost_no_cliche_pieces = null;    $cost_with_cliche_pieces = null;
 
     $sql = "select pure_area, pure_width, pure_length, pure_length_lam, "
             . "dirty_length, dirty_width, dirty_area, pure_weight, dirty_weight, material_price, print_time, tuning_time, "
             . "print_tuning_time, print_price, cliche_area, cliche_flint_price, cliche_kodak_price, cliche_tver_price, "
-            . "cliche_price, paint_price, pure_weight_lam1, dirty_weight_lam1, "
+            . "cliche_price, ink_price, pure_weight_lam1, dirty_weight_lam1, "
             . "price_lam1_material, price_lam1_glue, price_lam1_work, pure_weight_lam2, dirty_weight_lam2, price_lam2_material, "
             . "price_lam2_glue, price_lam2_work, price_lam_total, pure_weight_total, dirty_weight_total, cost_no_cliche, "
-            . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_thing, cost_with_cliche_thing"
+            . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_pieces, cost_with_cliche_pieces"
             . " from request_calc_result where request_calc_id = $id order by id desc limit 1";
     $fetcher = new Fetcher($sql);
 
@@ -528,7 +528,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
         $cliche_kodak_price = $row['cliche_kodak_price'];
         $cliche_tver_price = $row['cliche_tver_price'];
         $cliche_price = $row['cliche_price'];
-        $paint_price = $row['paint_price'];
+        $ink_price = $row['ink_price'];
         $pure_weight_lam1 = $row['pure_weight_lam1'];
         $dirty_weight_lam1 = $row['dirty_weight_lam1'];
         $price_lam1_material = $row['price_lam1_material'];
@@ -546,14 +546,14 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
         $cost_with_cliche = $row['cost_with_cliche'];
         $cost_no_cliche_kg = $row['cost_no_cliche_kg'];
         $cost_with_cliche_kg = $row['cost_with_cliche_kg'];
-        $cost_no_cliche_thing = $row['cost_no_cliche_thing'];
-        $cost_with_cliche_thing = $row['cost_with_cliche_thing'];
+        $cost_no_cliche_pieces = $row['cost_no_cliche_pieces'];
+        $cost_with_cliche_pieces = $row['cost_with_cliche_pieces'];
     }
     
     // Стоимость новой формы
     $new_cliche_price = 0;
     
-    switch($new_forms_vendor_id) {
+    switch($new_cliches_vendor_id) {
         case 1:
             $new_cliche_price = $cliche_tver_price;
             break;
@@ -590,10 +590,10 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     echo mb_convert_encoding("Вес заказа,кг :    $order_weight;\n", "cp1251");
     echo mb_convert_encoding("Количество этикеток в заказе,шт :         $order_number;\n", "cp1251");
     echo mb_convert_encoding("ТИП ЗАКАЗА вес/количество:$quantity_type;\n", "cp1251");
-    echo mb_convert_encoding("Количество ручьев,шт :         $streams_count;\n", "cp1251");
+    echo mb_convert_encoding("Количество ручьев,шт :         $streams_number;\n", "cp1251");
     echo mb_convert_encoding("Количество зтикеток в одном ручье на рапорте,шт :         0;\n", "cp1251");
     echo mb_convert_encoding("Ширина ручья,мм :    $stream_width;\n", "cp1251");
-    echo mb_convert_encoding("Длина этикетки вдоль рапорта вала,мм :      $length;\n", "cp1251");
+    echo mb_convert_encoding("Длина этикетки вдоль рапорта вала,мм :      $label_length;\n", "cp1251");
     echo mb_convert_encoding("Рапорт вала,мм :   $raport;\n", "cp1251");
     echo mb_convert_encoding("Название типа материала :$brand_name_final;\n", "cp1251");
     echo mb_convert_encoding("Тип материала (номер):$brand_type_final;\n", "cp1251");
@@ -601,12 +601,12 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     echo mb_convert_encoding("Удельный вес бумаги,грамм/м2 :     $weight_final;\n", "cp1251");
     echo mb_convert_encoding("Цена материала за 1 кг,руб :    $price_final;\n", "cp1251");
     echo mb_convert_encoding("Средний курс рубля за 1 евро :     $euro;\n", "cp1251");
-    echo mb_convert_encoding("Число красок :         $paints_count;\n", "cp1251");
-    echo mb_convert_encoding("Число новых форм :         $new_forms_count;\n", "cp1251");
-    echo mb_convert_encoding("Название изготовителя новых форм :$new_forms_vendor;\n", "cp1251");
-    echo mb_convert_encoding("Изготовителя новых форм (номер):$new_forms_vendor_id;\n", "cp1251");
+    echo mb_convert_encoding("Число красок :         $ink_number;\n", "cp1251");
+    echo mb_convert_encoding("Число новых форм :         $new_cliches_count;\n", "cp1251");
+    echo mb_convert_encoding("Название изготовителя новых форм :$new_cliches_vendor;\n", "cp1251");
+    echo mb_convert_encoding("Изготовителя новых форм (номер):$new_cliches_vendor_id;\n", "cp1251");
     echo mb_convert_encoding("Печать с лыжами :$with_ski;\n", "cp1251");
-    echo mb_convert_encoding("Ширина лыж,м :      ".($ski / 1000).";\n", "cp1251");
+    echo mb_convert_encoding("Ширина лыж,м :      ".($ski_width / 1000).";\n", "cp1251");
     echo mb_convert_encoding("Расход краски, ProcentC :      $procentc;\n", "cp1251");
     echo mb_convert_encoding("Расход краски, ProcentM :      $procentm;\n", "cp1251");
     echo mb_convert_encoding("Расход краски, ProcentY :      $procenty;\n", "cp1251");
@@ -638,7 +638,7 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     echo mb_convert_encoding("Площадь печатной формы,см2 :   $cliche_area;\n", "cp1251");
     echo mb_convert_encoding("Стоимость 1 печатной формы,руб :   $new_cliche_price;\n", "cp1251");
     echo mb_convert_encoding("Стоимость комплекта печатной формы,руб :      $cliche_price;\n", "cp1251");
-    echo mb_convert_encoding("Стоимость всех красок + лак + растворитель,руб:   $paint_price;\n", "cp1251");
+    echo mb_convert_encoding("Стоимость всех красок + лак + растворитель,руб:   $ink_price;\n", "cp1251");
     echo mb_convert_encoding("Количество ламинаций:$laminations_count;\n", "cp1251");
     echo mb_convert_encoding("ИТОГО, себестоимость без печатных форм,руб : $cost_no_cliche;\n", "cp1251");
     echo mb_convert_encoding("ИТОГО, себестоимость с печатными формами,руб : $cost_with_cliche;\n", "cp1251");
@@ -647,14 +647,14 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     echo mb_convert_encoding("Толщина материала первой ламинации,мкм:      $lamination1_thickness_final;\n", "cp1251");
     echo mb_convert_encoding("Удельный вес материала первой ламинации,грамм/м2:      $lamination1_weight_final;\n", "cp1251");
     echo mb_convert_encoding("Ширина материала первой ламинации,мм:    0.00;\n", "cp1251");
-    echo mb_convert_encoding("Ширина вала первой ламинации,мм:      $lamination_roller;\n", "cp1251");
+    echo mb_convert_encoding("Ширина вала первой ламинации,мм:      $lamination_roller_width;\n", "cp1251");
     echo mb_convert_encoding("Цена материала за 1 кг первой ламинации,руб:      $lamination1_price_final;\n", "cp1251");
     echo mb_convert_encoding("Название типа материала второй ламинации: $lamination2_brand_name_final;\n", "cp1251");
     echo mb_convert_encoding("Тип материала второй ламинации:$lamination2_brand_type_final;\n", "cp1251");
     echo mb_convert_encoding("Толщина материала второй ламинации,мкм:      $lamination2_thickness_final;\n", "cp1251");
     echo mb_convert_encoding("Удельный вес материала второй ламинации,грамм/м2:      $lamination2_weight_final;\n", "cp1251");
     echo mb_convert_encoding("Ширина материала второй ламинации,мм:    0.00;\n", "cp1251");
-    echo mb_convert_encoding("Ширина вала второй ламинации,мм:      $lamination_roller;\n", "cp1251");
+    echo mb_convert_encoding("Ширина вала второй ламинации,мм:      $lamination_roller_width;\n", "cp1251");
     echo mb_convert_encoding("Цена материала за 1 кг второй ламинации,руб:      $lamination2_price_final;\n", "cp1251");
     echo mb_convert_encoding("Вес материала первой ламинации чистый,кг:     $pure_weight_lam1;\n", "cp1251");
     echo mb_convert_encoding("Вес материала первой ламинации с отходами,кг:     $dirty_weight_lam1;\n", "cp1251");
@@ -673,8 +673,8 @@ if(null !== filter_input(INPUT_POST, 'export_request_calc_submit')) {
     echo mb_convert_encoding("Номер вала второй ламинации:1;\n", "cp1251");
     echo mb_convert_encoding("Итого, себестоимость за 1кг без форм, руб :    $cost_no_cliche_kg;\n", "cp1251");
     echo mb_convert_encoding("Итого, себестоимость за 1кг с формами, руб :    $cost_with_cliche_kg;\n", "cp1251");
-    echo mb_convert_encoding("Итого, себестоимость за 1шт без форм, руб :      $cost_no_cliche_thing;\n", "cp1251");
-    echo mb_convert_encoding("Итого, себестоимость за 1шт с формами, руб :      $cost_with_cliche_thing;\n", "cp1251");
+    echo mb_convert_encoding("Итого, себестоимость за 1шт без форм, руб :      $cost_no_cliche_pieces;\n", "cp1251");
+    echo mb_convert_encoding("Итого, себестоимость за 1шт с формами, руб :      $cost_with_cliche_pieces;\n", "cp1251");
     echo mb_convert_encoding("Расход лака, ProcentLak :      $procentlak;\n", "cp1251");
     echo mb_convert_encoding("Расход клея при 1 ламинации, гр на м2:      0.00;\n", "cp1251");
     echo mb_convert_encoding("Расход клея при 2 ламинации, гр на м2:      0.00;\n", "cp1251");

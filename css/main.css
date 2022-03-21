@@ -137,6 +137,14 @@ a.black:active, a.black:hover, .black a:active, .black a:hover {
     border-bottom: solid 2px #EC3A7A;
 }
 
+li#nav-user {
+    background-color: #E6E7EB;
+    width: 36px;
+    height: 36px;
+    text-align: center;
+    border-radius: 50%;
+}
+
 #user-dropdown {
     right: 0;
     left: auto;
@@ -144,13 +152,6 @@ a.black:active, a.black:hover, .black a:active, .black a:hover {
 
 li#nav-user a.dropdown-toggle::after {
     display: none;
-}
-
-#nav-role {
-    position: absolute;
-    top: 25px;
-    left: 0px;
-    font-size: smaller;
 }
 
 li.no-dropdown-arrow-after a.dropdown-toggle::after {
@@ -174,10 +175,6 @@ li.no-dropdown-arrow-after a.dropdown-toggle::after {
 .btn-dark {
     background-color: #EC3A7A;
     border-color: #EC3A7A;
-    border-radius: 8px;
-}
-
-.btn-light {
     border-radius: 8px;
 }
 
@@ -228,7 +225,7 @@ h3 {
 }
 
 .nav2 a {
-    padding-bottom: 13px;
+    padding-bottom: 17px;
 }
 
 .nav2 a:link, .nav2 a:visited {
@@ -352,8 +349,8 @@ table.print tr td, table.print tr th {
     font-size: 14px;
     font-weight: bold;
     display: inline-block;
-    margin-bottom: 15px;
-    margin-top: .25rem;
+    margin-top: 20px;
+    margin-bottom: 20px;
     padding-left: 48px;
 }
 
@@ -591,9 +588,4 @@ textarea#editable {
 
 .switch input:checked[type="checkbox"]:before {
     left: 30px;
-}
-
-/* Распознавание штрих-кода */
-.detected {
-    border: solid 4px yellow;
 }

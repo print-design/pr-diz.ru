@@ -9,31 +9,31 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 // Текущий пользователь
 $user_id = GetUserId();
 
+// Проверяем, имеются ли незакрытые нарезки
+include '_check_cuts.php';
+CheckCuts($user_id);
+
 // Текущее время
 $current_date_time = date("dmYHis");
 
 // Находим id остаточного ролика последней закрытой нарезки данного пользователя
-$cutting_id = null;
 $id = null;
-
-$sql = "select id, remain from cutting where cutter_id=$user_id and date is not null and remain is not null order by id desc limit 1";
+$sql = "select remain from cut where cutter_id = $user_id and id in (select cut_id from cut_source) order by id desc limit 1";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
-    $cutting_id = $row['id'];
-    $id = $row['remain'];
+    $id = $row[0];
 }
 
 // Получение данных
 $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, s.name supplier, r.id_from_supplier, "
-        . "r.film_variation_id, f.name film, r.width, fv.thickness, fv.weight, r.length, "
+        . "r.film_brand_id, fb.name film_brand, r.width, r.thickness, r.length, "
         . "r.net_weight, r.cell, "
         . "(select rs.name status from roll_status_history rsh left join roll_status rs on rsh.status_id = rs.id where rsh.roll_id = r.id order by rsh.id desc limit 0, 1) status, "
         . "r.comment "
         . "from roll r "
         . "left join user u on r.storekeeper_id = u.id "
         . "left join supplier s on r.supplier_id = s.id "
-        . "left join film_variation fv on r.film_variation_id = fv.id "
-        . "left join film f on fv.film_id = f.id "
+        . "left join film_brand fb on r.film_brand_id = fb.id "
         . "where r.id=$id";
 
 $row = (new Fetcher($sql))->Fetch();
@@ -43,16 +43,23 @@ $storekeeper = $row['last_name'].' '.$row['first_name'];
 $supplier_id = $row['supplier_id'];
 $supplier = $row['supplier'];
 $id_from_supplier = $row['id_from_supplier'];
-$film_variation_id = $row['film_variation_id'];
-$film = $row['film'];
+$film_brand_id = $row['film_brand_id'];
+$film_brand = $row['film_brand'];
 $width = $row['width'];
 $thickness = $row['thickness'];
-$ud_ves = $row['weight'];
 $length = $row['length'];
 $net_weight = $row['net_weight'];
 $cell = $row['cell'];
 $status = $row['status'];
 $comment = $row['comment'];
+
+// Определяем удельный вес
+$ud_ves = null;
+$sql = "select weight from film_brand_variation where film_brand_id=$film_brand_id and thickness=$thickness";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $ud_ves = $row[0];
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -73,7 +80,7 @@ $comment = $row['comment'];
             <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
         </div>
         <div id="new_wind_link"<?=$class_attr ?> style="float: right;">
-            <a class="btn btn-dark" href="finish.php?id=<?=$cutting_id ?>" style="font-size: 20px;">Закрыть заявку</a>
+            <a class="btn btn-dark" href="finish.php" style="font-size: 20px;">Закрыть заявку</a>
         </div>
 
         <table class="table table-bordered compact" style="writing-mode: vertical-rl;">
@@ -110,7 +117,7 @@ $comment = $row['comment'];
                     <td>Длина<br /><strong><?=$length ?> м</strong></td>
                 </tr>
                 <tr>
-                    <td class="text-nowrap">Марка пленки<br /><strong><?=$film ?></strong></td>
+                    <td class="text-nowrap">Марка пленки<br /><strong><?=$film_brand ?></strong></td>
                     <td class="text-nowrap">Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
                 </tr>
                 <tr>
@@ -159,7 +166,7 @@ $comment = $row['comment'];
                     <td>Длина<br /><strong><?=$length ?> м</strong></td>
                 </tr>
                 <tr>
-                    <td>Марка пленки<br /><strong><?=$film ?></strong></td>
+                    <td>Марка пленки<br /><strong><?=$film_brand ?></strong></td>
                     <td>Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
                 </tr>
                 <tr>
