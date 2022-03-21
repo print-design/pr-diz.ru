@@ -3057,9 +3057,9 @@ $colorfulnesses = array();
             });
             
             // Обработка выбора толщины основной плёнки: отображение цены
-            $('#thickness').change(function(){
+            $('#film_variation_id').change(function(){
                 if($(this).val() != '') {
-                    $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?brand_name=" + $("#brand_name").val() + "&thickness=" + $(this).val() })
+                    $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?film_variation_id=" + $(this).val() })
                         .done(function(data) {
                             $('.main_film_info').html(data.text);
                             <?php if(empty($currency)): ?>
