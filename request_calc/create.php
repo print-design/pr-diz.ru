@@ -3404,9 +3404,9 @@ $colorfulnesses = array();
                 }
                 
                 if(value == <?=INDIVIDUAL ?>) {
-                    $('#' + prefix + 'film_variaion_id').removeAttr('required');
-                    $('#' + prefix + 'film_variaion_id').addClass('d-none');
-                    $('#' + prefix + 'film_variaion_id').prev('label').addClass('d-none');
+                    $('#' + prefix + 'film_variation_id').removeAttr('required');
+                    $('#' + prefix + 'film_variation_id').addClass('d-none');
+                    $('#' + prefix + 'film_variation_id').prev('label').addClass('d-none');
                     $('#' + prefix + 'price').removeAttr('required');
                     $('#' + prefix + 'price').val('');
                     $('#' + prefix + 'currency').removeAttr('required');
