@@ -2288,6 +2288,7 @@ $colorfulnesses = array();
                                                         <option value="usd"<?=$currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
                                                         <option value="euro"<?=$currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
                                                     </select>
+                                                    <div class="input-group-text d-none" id="currency_text"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -2479,6 +2480,7 @@ $colorfulnesses = array();
                                                             <option value="usd"<?=$lamination1_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
                                                             <option value="euro"<?=$lamination1_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
                                                         </select>
+                                                        <div class="input-group-text d-none" id="lamination1_currency_text"></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -2520,13 +2522,13 @@ $colorfulnesses = array();
                                                    onkeyup="javascript: $(this).attr('id', 'lamination1_individual_price'); $(this).attr('name', 'lamination1_individual_price'); $(this).attr('placeholder', 'Цена')" 
                                                    onfocusout="javascript: $(this).attr('id', 'lamination1_individual_price'); $(this).attr('name', 'lamination1_individual_price'); $(this).attr('placeholder', 'Цена')" />
                                             <div class="input-group-append">
-                                            <select id="lamination1_individual_currency" name="lamination1_individual_currency" class="film-currency">
-                                                <option value="" hidden="">...</option>
-                                                <option value="rub"<?=$lamination1_individual_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
-                                                <option value="usd"<?=$lamination1_individual_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                                <option value="euro"<?=$lamination1_individual_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
-                                            </select>
-                                        </div>
+                                                <select id="lamination1_individual_currency" name="lamination1_individual_currency" class="film-currency">
+                                                    <option value="" hidden="">...</option>
+                                                    <option value="rub"<?=$lamination1_individual_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
+                                                    <option value="usd"<?=$lamination1_individual_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
+                                                    <option value="euro"<?=$lamination1_individual_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
+                                                </select>
+                                            </div>
                                         </div>
                                         <div class="invalid-feedback">Цена обязательно</div>
                                     </div>
@@ -2666,6 +2668,7 @@ $colorfulnesses = array();
                                                                 <option value="usd"<?=$lamination2_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
                                                                 <option value="euro"<?=$lamination2_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
                                                             </select>
+                                                            <div class="input-group-text d-none" id="lamination2_currency_text"></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -3168,9 +3171,9 @@ $colorfulnesses = array();
             $('#film_id').change(function(){
                 $('.main_film_info').html('');
                 $('label#for_price').text("Цена");
-                <?php if(empty($currency)): ?>
                 $('#currency').val('');
-                <?php endif; ?>
+                $('#currency').removeClass('d-none');
+                $('#currency_text').addClass('d-none');
                 SetFilmFieldsVisibility($(this).val(), $('#customers_material').is(':checked'), '');
                 
                 if($(this).val() == "") {
@@ -3194,9 +3197,13 @@ $colorfulnesses = array();
                         .done(function(data) {
                             $('.main_film_info').html(data.text_ext);
                             $('label#for_price').text("Цена (" + data.text + ")");
-                            <?php if(empty($currency)): ?>
                             $('#currency').val(data.currency);
-                            <?php endif; ?>
+                            
+                            if(data.currency_local.length != '') {
+                                $('#currency').addClass('d-none');
+                                $('#currency_text').text(data.currency_local);
+                                $('#currency_text').removeClass('d-none');
+                            }
                         })
                         .fail(function() {
                             alert('Ошибка при выборе толщины пленки');
@@ -3212,9 +3219,9 @@ $colorfulnesses = array();
             $('#lamination1_film_id').change(function(){
                 $('.lam1_film_info').html('');
                 $('label#for_lamination1_price').text("Цена");
-                <?php if(empty($lamination1_currency)): ?>
                 $('#lamination1_currency').val('');
-                <?php endif; ?>
+                $('#lamination1_currency').removeClass('d-none');
+                $('#lamination1_currency_text').addClass('d-none');
                 SetFilmFieldsVisibility($(this).val(), $('#lamination1_customers_material').is(':checked'), 'lamination1_');
                 
                 if($(this).val() == "") {
@@ -3238,9 +3245,13 @@ $colorfulnesses = array();
                         .done(function(data) {
                             $('.lam1_film_info').html(data.text_ext);
                             $('label#for_lamination1_price').text("Цена (" + data.text + ")");
-                            <?php if(empty($lamination1_currency)): ?>
                             $('#lamination1_currency').val(data.currency);
-                            <?php endif; ?>
+                            
+                            if(data.currency_local != '') {
+                                $('#lamination1_currency').addClass('d-none');
+                                $('#lamination1_currency_text').text(data.currency_local);
+                                $('#lamination1_currency_text').removeClass('d-none');
+                            }
                         })
                         .fail(function() {
                             alert('Ошибка при выборе толщины пленки');
@@ -3256,9 +3267,9 @@ $colorfulnesses = array();
             $('#lamination2_film_id').change(function(){
                 $('.lam2_film_info').html('');
                 $('label#for_lamination2_price').text("Цена");
-                <?php if(empty($lamination2_currency)): ?>
                 $('#lamination2_currency').val('');
-                <?php endif; ?>
+                $('#lamination2_currency').removeClass('d-none');
+                $('#lamination2_currency_text').addClass('d-none');
                 SetFilmFieldsVisibility($(this).val(), $('#lamination2_customers_material').is(':checked'), 'lamination2_');
                 
                 if($(this).val() == "") {
@@ -3282,9 +3293,13 @@ $colorfulnesses = array();
                         .done(function(data) {
                             $('.lam2_film_info').html(data.text_ext);
                             $('label#for_lamination2_price').text("Цена (" + data.text + ")");
-                            <?php if(empty($lamination2_currency)): ?>
                             $('#lamination2_currency').val(data.currency);
-                            <?php endif; ?>
+                            
+                            if(data.currency_local.length != '') {
+                                $('#lamination2_currency').addClass('d-none');
+                                $('#lamination2_currency_text').text(data.currency_local);
+                                $('#lamination2_currency_text').removeClass('d-none');
+                            }
                         })
                         .fail(function() {
                             alert('Ошибка при выборе толщины пленки');
