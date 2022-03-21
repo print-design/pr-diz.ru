@@ -3204,6 +3204,10 @@ $colorfulnesses = array();
                                 $('#currency_text').text(data.currency_local);
                                 $('#currency_text').removeClass('d-none');
                             }
+                            else {
+                                $('#currency_text').addClass('d-none');
+                                $('#currency').removeClass('d-none');
+                            }
                         })
                         .fail(function() {
                             alert('Ошибка при выборе толщины пленки');
@@ -3252,6 +3256,10 @@ $colorfulnesses = array();
                                 $('#lamination1_currency_text').text(data.currency_local);
                                 $('#lamination1_currency_text').removeClass('d-none');
                             }
+                            else {
+                                $('#lamination1_currency_text').addClass('d-none');
+                                $('#lamination1_currency').removeClass('d-none');
+                            }
                         })
                         .fail(function() {
                             alert('Ошибка при выборе толщины пленки');
@@ -3299,6 +3307,10 @@ $colorfulnesses = array();
                                 $('#lamination2_currency').addClass('d-none');
                                 $('#lamination2_currency_text').text(data.currency_local);
                                 $('#lamination2_currency_text').removeClass('d-none');
+                            }
+                            else {
+                                $('#lamination2_currency_text').addClass('d-none');
+                                $('#lamination2_currency').removeClass('d-none');
                             }
                         })
                         .fail(function() {
