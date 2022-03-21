@@ -2108,6 +2108,7 @@ $colorfulnesses = array();
                                                 $individual_selected = " selected='selected'";
                                             }
                                             ?>
+                                        <option disabled="disabled">  </option>
                                         <option value="<?=INDIVIDUAL ?>"<?=$individual_selected ?>>Другая</option>
                                     </select>
                                 </div>
@@ -2298,6 +2299,7 @@ $colorfulnesses = array();
                                                     $lamination1_individual_selected = " selected='selected'";
                                                 }
                                                 ?>
+                                            <option disabled="disabled">  </option>
                                             <option value="<?=INDIVIDUAL ?>"<?=$lamination1_individual_selected ?>>Другая</option>
                                         </select>
                                     </div>
@@ -2484,6 +2486,7 @@ $colorfulnesses = array();
                                                         $lamination2_individual_selected = " selected='selected'";
                                                     }
                                                     ?>
+                                                <option disabled="disabled">  </option>
                                                 <option value="<?=INDIVIDUAL ?>"<?=$lamination2_individual_selected ?>>Другая</option>
                                             </select>
                                         </div>
@@ -3310,18 +3313,33 @@ $colorfulnesses = array();
             }
             
             $('#customers_material').change(function(e) {
-                SetFilmFieldsVisibility($('#brand_name').val(), $(e.target).is(':checked'), '');
+                isCustomers = $(e.target).is(':checked');
+                SetFilmFieldsVisibility($('#film_id').val(), isCustomers, '');
+                
+                if(!isCustomers) {
+                    $('#film_variation_id').change();
+                }
             });
             
             $('#lamination1_customers_material').change(function(e) {
-                SetFilmFieldsVisibility($('#lamination1_brand_name').val(), $(e.target).is(':checked'), 'lamination1_');
+                isCustomers = $(e.target).is(':checked');
+                SetFilmFieldsVisibility($('#lamination1_film_id').val(), isCustomers, 'lamination1_');
+                
+                if(!isCustomers) {
+                    $('#lamination1_film_variation_id').change();
+                }
             });
             
             $('#lamination2_customers_material').change(function(e) {
-                SetFilmFieldsVisibility($('#lamination2_brand_name').val(), $(e.target).is(':checked'), 'lamination2_');
+                isCustomers = $(e.target).is(':checked');
+                SetFilmFieldsVisibility($('#lamination2_film_id').val(), isCustomers, 'lamination2_');
+                
+                if(!isCustomers) {
+                    $('#lamination2_film_variation_id').change();
+                }
             });
             
-            SetFilmFieldsVisibility($('#brand_name').val(), $('#customers_material').is(':checked'), '');
+            SetFilmFieldsVisibility($('#film_id').val(), $('#customers_material').is(':checked'), '');
             
             // Показ марки плёнки и толщины для ламинации 1
             function ShowLamination1() {
