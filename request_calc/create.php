@@ -3095,12 +3095,21 @@ $colorfulnesses = array();
             // Валидация цены
             function ValidatePrice(this_input, min_value_input) {
                 val = this_input.val();
+                min_val = min_value_input.val();
                 
-                if(val == '') {
+                if(val == '' || min_val == '') {
                     this_input.removeClass('is-invalid');
                 }
                 else {
-                    this_input.addClass('is-invalid');
+                    i_val = parseFloat(val);
+                    i_min_val = parseFloat(min_val);
+                    
+                    if(i_val < i_min_val) {
+                        this_input.addClass('is-invalid');
+                    }
+                    else {
+                        this_input.removeClass('is-invalid');
+                    }
                 }
             }
             
@@ -3192,6 +3201,8 @@ $colorfulnesses = array();
                 $('#currency').val('');
                 $('#currency').removeClass('d-none');
                 $('#currency_text').addClass('d-none');
+                $('#price_min').val('');
+                $('#price').removeClass('is-invalid');
                 SetFilmFieldsVisibility($(this).val(), $('#customers_material').is(':checked'), '');
                 
                 if($(this).val() == "") {
@@ -3216,6 +3227,8 @@ $colorfulnesses = array();
                             $('.main_film_info').html(data.text_ext);
                             $('label#for_price').text("Цена (" + data.text + ")");
                             $('#currency').val(data.currency);
+                            $('#price_min').val(data.price);
+                            ValidatePrice($('#price'), $('#price_min'));
                             
                             if(data.currency_local.length != '') {
                                 $('#currency').addClass('d-none');
@@ -3253,6 +3266,8 @@ $colorfulnesses = array();
                 $('#lamination1_currency').val('');
                 $('#lamination1_currency').removeClass('d-none');
                 $('#lamination1_currency_text').addClass('d-none');
+                $('#lamination1_price_min').val('');
+                $('#lamination1_price').removeClass('is-invalid');
                 SetFilmFieldsVisibility($(this).val(), $('#lamination1_customers_material').is(':checked'), 'lamination1_');
                 
                 if($(this).val() == "") {
@@ -3277,6 +3292,8 @@ $colorfulnesses = array();
                             $('.lam1_film_info').html(data.text_ext);
                             $('label#for_lamination1_price').text("Цена (" + data.text + ")");
                             $('#lamination1_currency').val(data.currency);
+                            $('#lamination1_price_min').val(data.price);
+                            ValidatePrice($('#lamination1_price'), $('#lamination1_price_min'));
                             
                             if(data.currency_local != '') {
                                 $('#lamination1_currency').addClass('d-none');
@@ -3314,6 +3331,8 @@ $colorfulnesses = array();
                 $('#lamination2_currency').val('');
                 $('#lamination2_currency').removeClass('d-none');
                 $('#lamination2_currency_text').addClass('d-none');
+                $('#lamination2_price_min').val('');
+                $('#lamination2_price').removeClass('is-invalid');
                 SetFilmFieldsVisibility($(this).val(), $('#lamination2_customers_material').is(':checked'), 'lamination2_');
                 
                 if($(this).val() == "") {
@@ -3338,6 +3357,8 @@ $colorfulnesses = array();
                             $('.lam2_film_info').html(data.text_ext);
                             $('label#for_lamination2_price').text("Цена (" + data.text + ")");
                             $('#lamination2_currency').val(data.currency);
+                            $('#lamination2_price_min').val(data.price);
+                            ValidatePrice($('#lamination1_price'), $('#lamination1_price_min'));
                             
                             if(data.currency_local.length != '') {
                                 $('#lamination2_currency').addClass('d-none');
