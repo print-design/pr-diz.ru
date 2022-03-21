@@ -3358,7 +3358,7 @@ $colorfulnesses = array();
                             $('label#for_lamination2_price').text("Цена (" + data.text + ")");
                             $('#lamination2_currency').val(data.currency);
                             $('#lamination2_price_min').val(data.price);
-                            ValidatePrice($('#lamination1_price'), $('#lamination1_price_min'));
+                            ValidatePrice($('#lamination2_price'), $('#lamination2_price_min'));
                             
                             if(data.currency_local.length != '') {
                                 $('#lamination2_currency').addClass('d-none');
