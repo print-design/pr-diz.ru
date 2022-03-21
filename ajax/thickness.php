@@ -6,9 +6,16 @@ $supplier_id = filter_input(INPUT_GET, 'supplier_id');
 // Получение толщин плёнки по ID марки для раскрывающегося списка
 $film_id = filter_input(INPUT_GET, 'film_id');
 
-if(!empty($film_id) && !empty($supplier_id)) {
+if(!empty($film_id)) {
     echo "<option value='' hidden='hidden' selected='selected'>Выберите толщину</option>";
-    $grabber = (new Grabber("select id, thickness, weight from film_variation where film_id = $film_id and id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id) order by thickness"))->result;
+    $sql = "select id, thickness, weight from film_variation where film_id = $film_id";
+    
+    if(!empty($supplier_id)) {
+        $sql .= " and id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id)";
+    }
+    
+    $sql .= " order by thickness";
+    $grabber = (new Grabber($sql))->result;
     
     foreach ($grabber as $row) {
         $film_variation_id = intval($row['id']);

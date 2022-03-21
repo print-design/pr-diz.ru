@@ -3035,7 +3035,7 @@ $colorfulnesses = array();
             });
             
             // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин и установка видимости полей
-            $('#brand_name').change(function(){
+            $('#film_id').change(function(){
                 $('.main_film_info').html('');
                 <?php if(empty($currency)): ?>
                 $('#currency').val('');
@@ -3043,12 +3043,12 @@ $colorfulnesses = array();
                 SetBrandFieldsVisibility($(this).val(), $('#customers_material').is(':checked'), '');
                 
                 if($(this).val() == "") {
-                    $('#thickness').html("<option value=''>Толщина...</option>");
+                    $('#film_variation_id').html("<option value=''>Толщина...</option>");
                 }
                 else {
-                    $.ajax({ url: "../ajax/thickness.php?brand_name=" + $(this).val() })
+                    $.ajax({ url: "../ajax/thickness.php?film_id=" + $(this).val() })
                             .done(function(data) {
-                                $('#thickness').html(data);
+                                $('#film_variation_id').html(data);
                     })
                             .fail(function() {
                                 alert('Ошибка при выборе марки пленки');
