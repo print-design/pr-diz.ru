@@ -76,6 +76,9 @@ $individual_currency_valid = '';
 $individual_thickness_valid = '';
 $individual_density_valid = '';
 
+$lamination1_price_valid = '';
+$lamination2_price_valid = '';
+
 // Переменные для валидации цвета, CMYK и процента
 for($i=1; $i<=8; $i++) {
     $ink_valid_var = 'ink_'.$i.'_valid';
@@ -115,6 +118,20 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $form_valid = false;
     }
     
+    // Валидация цен - они должны быть не меньше минимальных
+    $price_min = filter_input(INPUT_POST, 'price_min');
+    $price = filter_input(INPUT_POST, 'price');
+    
+    if(!empty($price_min) && !empty($price)) {
+        $fPriceMin = floatval($price_min);
+        $fPrice = floatval($price);
+        
+        if($fPrice < $fPriceMin) {
+            $price_valid = ISINVALID;
+            $form_valid = false;
+        }
+    }
+    
     if(filter_input(INPUT_POST, 'film_id') == INDIVIDUAL) {
         // Проверка валидности параметров, введённых вручную при выборе марки плёнки "Другая"
         if(empty(filter_input(INPUT_POST, 'individual_film_name'))) {
@@ -141,6 +158,36 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         // Проверка валидности параметров стандартных плёнок
         if(empty(filter_input(INPUT_POST, 'film_variation_id'))) {
             $film_variation_id_valid = ISINVALID;
+            $form_valid = false;
+        }
+    }
+    
+    // ЛАМИНАЦИЯ 1
+    // Валидация цен ламинации 1 - они должны быть не меньше минимальных
+    $lamination1_price_min = filter_input(INPUT_POST, 'lamination1_price_min');
+    $lamination1_price = filter_input(INPUT_POST, 'lamination1_price');
+    
+    if(!empty($lamination1_price_min) && !empty($lamination1_price)) {
+        $fPriceMin = floatval($lamination1_price_min);
+        $fPrice = floatval($lamination1_price);
+        
+        if($fPrice < $fPriceMin) {
+            $lamination1_price_valid = ISINVALID;
+            $form_valid = false;
+        }
+    }
+    
+    // ЛАМИНАЦИЯ 2
+    // Валидация цен ламинации 2 - они должны быть не меньше минимальных
+    $lamination2_price_min = filter_input(INPUT_POST, 'lamination2_price_min');
+    $lamination2_price = filter_input(INPUT_POST, 'lamination2_price');
+    
+    if(!empty($lamination2_price_min) && !empty($lamination2_price)) {
+        $fPriceMin = floatval($lamination2_price_min);
+        $fPrice = floatval($lamination2_price);
+        
+        if($fPrice < $fPriceMin) {
+            $lamination2_price_valid = ISINVALID;
             $form_valid = false;
         }
     }
@@ -330,8 +377,8 @@ $unit = filter_input(INPUT_POST, 'unit');
 if($unit === null && isset($row[''])) {
     $unit = $row['unit'];
 }
-                
-$quantity = filter_input(INPUT_POST, 'quantity');
+
+$quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity'));
 if($quantity === null && isset($row['quantity'])) {
     $quantity = $row['quantity'];
 }
@@ -605,7 +652,7 @@ for ($i=1; $i<=8; $i++) {
 $create_request_calc_submit_class = " d-none";
 
 if(null !== filter_input(INPUT_POST, 'create_customer_submit') || 
-        null === filter_input(INPUT_GET, 'id') ||
+        null === filter_input(INPUT_GET, 'id') || 
         !$form_valid) {
     $create_request_calc_submit_class = "";
 }
@@ -963,7 +1010,7 @@ $colorfulnesses = array();
                                                         $selected = " selected='selected'";
                                                     }
                                                 ?>
-                                                <option value="<?=$row['thickness'] ?>"<?=$selected ?>><?=$row['thickness'] ?> мкм <?=$row['weight'] ?> г/м<sup>2</sup></option>
+                                                <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['thickness'] ?> мкм <?=$row['weight'] ?> г/м<sup>2</sup></option>
                                                 <?php
                                                 endforeach;
                                                 }
@@ -978,7 +1025,7 @@ $colorfulnesses = array();
                                                 <input type="text" 
                                                        id="price" 
                                                        name="price" 
-                                                       class="form-control float-only film-price" 
+                                                       class="form-control float-only film-price<?=$price_valid ?>" 
                                                        placeholder="Цена" 
                                                        value="<?=$price ?>" 
                                                        onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -998,7 +1045,7 @@ $colorfulnesses = array();
                                                 <div class="invalid-feedback">Цена ниже минимальной</div>
                                             </div>
                                         </div>
-                                        <input type="hidden" id="price_min" />
+                                        <input type="hidden" id="price_min" name="price_min" />
                                     </div>
                                 </div>
                             </div>
@@ -1158,7 +1205,7 @@ $colorfulnesses = array();
                                                             $selected = " selected='selected'";
                                                         }
                                                     ?>
-                                                    <option value="<?=$row['thickness'] ?>"<?=$selected ?>><?=$row['thickness'] ?> мкм <?=$row['weight'] ?> г/м<sup>2</sup></option>
+                                                    <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['thickness'] ?> мкм <?=$row['weight'] ?> г/м<sup>2</sup></option>
                                                     <?php
                                                     endforeach;
                                                     }
@@ -1173,7 +1220,7 @@ $colorfulnesses = array();
                                                     <input type="text" 
                                                         id="lamination1_price" 
                                                         name="lamination1_price" 
-                                                        class="form-control float-only film-price " 
+                                                        class="form-control float-only film-price<?=$lamination1_price_valid ?>" 
                                                         placeholder="Цена" 
                                                         value="<?=$lamination1_price ?>" 
                                                         onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -1194,7 +1241,7 @@ $colorfulnesses = array();
                                             </div>
                                             </div>
                                         </div>
-                                        <input type="hidden" id="lamination1_price_min" />
+                                        <input type="hidden" id="lamination1_price_min" name="lamination1_price_min" />
                                     </div>
                                 </div>
                                 <div class="col-1 d-flex flex-column justify-content-end">
@@ -1366,7 +1413,7 @@ $colorfulnesses = array();
                                                             $selected = " selected='selected'";
                                                         }
                                                         ?>
-                                                        <option value="<?=$row['thickness'] ?>"<?=$selected ?>><?=$row['thickness'] ?> мкм <?=$row['weight'] ?> г/м<sup>2</sup></option>
+                                                        <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['thickness'] ?> мкм <?=$row['weight'] ?> г/м<sup>2</sup></option>
                                                         <?php
                                                         endforeach;
                                                         endif;
@@ -1381,7 +1428,7 @@ $colorfulnesses = array();
                                                         <input type="text" 
                                                             id="lamination2_price" 
                                                             name="lamination2_price" 
-                                                            class="form-control float-only film-price " 
+                                                            class="form-control float-only film-price<?=$lamination2_price_valid ?>" 
                                                             placeholder="Цена" 
                                                             value="<?=$lamination2_price ?>" 
                                                             onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -1402,7 +1449,7 @@ $colorfulnesses = array();
                                                     </div>
                                                 </div>
                                             </div>
-                                            <input type="hidden" id="lamination2_price_min" />
+                                            <input type="hidden" id="lamination2_price_min" name="lamination2_price_min" />
                                         </div>
                                     </div>
                                     <div class="col-1 d-flex flex-column justify-content-end">
