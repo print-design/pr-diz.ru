@@ -7,9 +7,36 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Машины
-const ZBS = "zbs";
-const COMIFLEX = "comiflex";
+// ID заказчика
+$customer_id = null;
+
+// Создание заказчика
+if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
+    if(!empty(filter_input(INPUT_POST, 'customer_name'))) {
+        $id = filter_input(INPUT_POST, 'id');
+        $customer_name = addslashes(filter_input(INPUT_POST, 'customer_name'));
+        $customer_person = addslashes(filter_input(INPUT_POST, 'customer_person'));
+        $customer_phone = filter_input(INPUT_POST, 'customer_phone');
+        $customer_extension = filter_input(INPUT_POST, 'customer_extension');
+        $customer_email = filter_input(INPUT_POST, 'customer_email');
+        $customer_manager_id = GetUserId();
+        
+        // Если такой заказчик уже есть, просто получаем его ID
+        $sql = "select id from customer where name = '$customer_name' and manager_id = $customer_manager_id limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $customer_id = $row[0];
+        }
+        
+        // Если такого заказчика нет, создаём его
+        if(empty($customer_id)) {
+            $sql = "insert into customer (name, person, phone, extension, email, manager_id) values ('$customer_name', '$customer_person', '$customer_phone', '$customer_extension', '$customer_email', $customer_manager_id)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+            $customer_id = $executer->insert_id;
+        }
+    }
+}
 
 // Значение марки плёнки "другая"
 const INDIVIDUAL = -1;
@@ -22,16 +49,6 @@ const NONSTANDARD_SKI = 2;
 // Валюты
 const USD = "usd";
 const EURO = "euro";
-
-// Краски
-const CMYK = "cmyk";
-const CYAN = "cyan";
-const MAGENTA = "magenta";
-const YELLOW = "yellow";
-const KONTUR = "kontur";
-const PANTON = "panton";
-const WHITE = "white";
-const LACQUER = "lacquer";
 
 // Формы
 const OLD = "old";
@@ -69,36 +86,6 @@ for($i=1; $i<=8; $i++) {
     
     $percent_valid_var = 'percent_'.$i.'_valid';
     $$percent_valid_var = '';
-}
-
-// Создание заказчика
-if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
-    if(!empty(filter_input(INPUT_POST, 'customer_name'))) {
-        $id = filter_input(INPUT_POST, 'id');
-        $customer_name = addslashes(filter_input(INPUT_POST, 'customer_name'));
-        $customer_person = addslashes(filter_input(INPUT_POST, 'customer_person'));
-        $customer_phone = filter_input(INPUT_POST, 'customer_phone');
-        $customer_extension = filter_input(INPUT_POST, 'customer_extension');
-        $customer_email = filter_input(INPUT_POST, 'customer_email');
-        $customer_manager_id = GetUserId();
-        
-        $customer_id = null;
-        
-        // Если такой заказчик уже есть, просто получаем его ID
-        $sql = "select id from customer where name = '$customer_name' and manager_id = $customer_manager_id limit 1";
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            $customer_id = $row[0];
-        }
-        
-        // Если такого заказчика нет, создаём его
-        if(empty($customer_id)) {
-            $sql = "insert into customer (name, person, phone, extension, email, manager_id) values ('$customer_name', '$customer_person', '$customer_phone', '$customer_extension', '$customer_email', $customer_manager_id)";
-            $executer = new Executer($sql);
-            $error_message = $executer->error;
-            $customer_id = $executer->insert_id;
-        }
-    }
 }
 
 // Сохранение в базу расчёта
@@ -199,68 +186,44 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $customer_id = filter_input(INPUT_POST, 'customer_id');
         $name = addslashes(filter_input(INPUT_POST, 'name'));
         $work_type_id = filter_input(INPUT_POST, 'work_type_id');
-        $film_id = addslashes(filter_input(INPUT_POST, 'film_id'));
-        $thickness = filter_input(INPUT_POST, 'thickness');
-        if(empty($thickness)) $thickness = "NULL";
-        $price = filter_input(INPUT_POST, 'price');
-        if(empty($price)) $price = "NULL";
+        $unit = filter_input(INPUT_POST, 'unit');
+        $machine_id = filter_input(INPUT_POST, 'machine_id'); if(empty($machine_id)) $machine_id = "NULL";
+        $quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity'));
+        
+        $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+        $price = filter_input(INPUT_POST, 'price'); if(empty($price)) $price = "NULL";
         $currency = filter_input(INPUT_POST, 'currency');
         $individual_film_name = filter_input(INPUT_POST, 'individual_film_name');
-        $individual_price = filter_input(INPUT_POST, 'individual_price');
-        if(empty($individual_price)) $individual_price = "NULL";
+        $individual_price = filter_input(INPUT_POST, 'individual_price'); if(empty($individual_price)) $individual_price = "NULL";
         $individual_currency = filter_input(INPUT_POST, 'individual_currency');
-        $individual_thickness = filter_input(INPUT_POST, 'individual_thickness');
-        if(empty($individual_thickness)) $individual_thickness = "NULL";
-        $individual_density = filter_input(INPUT_POST, 'individual_density');
-        if(empty($individual_density)) $individual_density = "NULL";
-        $customers_material = 0;
-        if(filter_input(INPUT_POST, 'customers_material') == 'on') {
-            $customers_material = 1;
-        }
+        $individual_thickness = filter_input(INPUT_POST, 'individual_thickness'); if(empty($individual_thickness)) $individual_thickness = "NULL";
+        $individual_density = filter_input(INPUT_POST, 'individual_density'); if(empty($individual_density)) $individual_density = "NULL";
+        $customers_material = 0; if(filter_input(INPUT_POST, 'customers_material') == 'on') $customers_material = 1;
+        $ski = filter_input(INPUT_POST, 'ski');
         
-        $unit = filter_input(INPUT_POST, 'unit');
-        $machine_id = filter_input(INPUT_POST, 'machine_id');
-        if(empty($machine_id)) $machine_id = "NULL";
-        
-        $lamination1_film_id = addslashes(filter_input(INPUT_POST, 'lamination1_film_id'));
-        $lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id');
-        if(empty($lamination1_film_variation_id)) $lamination1_film_variation_id = "NULL";
-        $lamination1_price = filter_input(INPUT_POST, 'lamination1_price');
-        if(empty($lamination1_price)) $lamination1_price = "NULL";
+        $lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id'); if(empty($lamination1_film_variation_id)) $lamination1_film_variation_id = "NULL";
+        $lamination1_price = filter_input(INPUT_POST, 'lamination1_price'); if(empty($lamination1_price)) $lamination1_price = "NULL";
         $lamination1_currency = filter_input(INPUT_POST, 'lamination1_currency');
         $lamination1_individual_film_name = filter_input(INPUT_POST, 'lamination1_individual_film_name');
-        $lamination1_individual_price = filter_input(INPUT_POST, 'lamination1_individual_price');
-        if(empty($lamination1_individual_price)) $lamination1_individual_price = "NULL";
+        $lamination1_individual_price = filter_input(INPUT_POST, 'lamination1_individual_price'); if(empty($lamination1_individual_price)) $lamination1_individual_price = "NULL";
         $lamination1_individual_currency = filter_input(INPUT_POST, 'lamination1_individual_currency');
-        $lamination1_individual_thickness = filter_input(INPUT_POST, 'lamination1_individual_thickness');
-        if(empty($lamination1_individual_thickness)) $lamination1_individual_thickness = "NULL";
-        $lamination1_individual_density = filter_input(INPUT_POST, 'lamination1_individual_density');
-        if(empty($lamination1_individual_density)) $lamination1_individual_density = "NULL";
-        $lamination1_customers_material = 0;
-        if(filter_input(INPUT_POST, 'lamination1_customers_material') == 'on') {
-            $lamination1_customers_material = 1;
-        }
+        $lamination1_individual_thickness = filter_input(INPUT_POST, 'lamination1_individual_thickness'); if(empty($lamination1_individual_thickness)) $lamination1_individual_thickness = "NULL";
+        $lamination1_individual_density = filter_input(INPUT_POST, 'lamination1_individual_density'); if(empty($lamination1_individual_density)) $lamination1_individual_density = "NULL";
+        $lamination1_customers_material = 0; if(filter_input(INPUT_POST, 'lamination1_customers_material') == 'on') $lamination1_customers_material = 1;
+        $lamination1_ski = filter_input(INPUT_POST, 'lamination1_ski');
         
-        $lamination2_film_id = addslashes(filter_input(INPUT_POST, 'lamination2_film_id'));
-        $lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id');
-        if(empty($lamination2_film_variation_id)) $lamination2_film_variation_id = "NULL";
-        $lamination2_price = filter_input(INPUT_POST, 'lamination2_price');
-        if(empty($lamination2_price)) $lamination2_price = "NULL";
+        $lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id'); if(empty($lamination2_film_variation_id)) $lamination2_film_variation_id = "NULL";
+        $lamination2_price = filter_input(INPUT_POST, 'lamination2_price'); if(empty($lamination2_price)) $lamination2_price = "NULL";
         $lamination2_currency = filter_input(INPUT_POST, 'lamination2_currency');
         $lamination2_individual_film_name = filter_input(INPUT_POST, 'lamination2_individual_film_name');
-        $lamination2_individual_price = filter_input(INPUT_POST, 'lamination2_individual_price');
+        $lamination2_individual_price = filter_input(INPUT_POST, 'lamination2_individual_price'); if(empty($lamination2_individual_price)) $lamination2_individual_price = "NULL";
         $lamination2_individual_currency = filter_input(INPUT_POST, 'lamination2_individual_currency');
-        if(empty($lamination2_individual_price)) $lamination2_individual_price = "NULL";
-        $lamination2_individual_thickness = filter_input(INPUT_POST, 'lamination2_individual_thickness');
-        if(empty($lamination2_individual_thickness)) $lamination2_individual_thickness = "NULL";
-        $lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density');
-        if(empty($lamination2_individual_density)) $lamination2_individual_density = "NULL";
-        $lamination2_customers_material = 0;
-        if(filter_input(INPUT_POST, 'lamination2_customers_material') == 'on') {
-            $lamination2_customers_material = 1;
-        }
+        $lamination2_individual_thickness = filter_input(INPUT_POST, 'lamination2_individual_thickness'); if(empty($lamination2_individual_thickness)) $lamination2_individual_thickness = "NULL";
+        $lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density'); if(empty($lamination2_individual_density)) $lamination2_individual_density = "NULL";
+        $lamination2_customers_material = 0; if(filter_input(INPUT_POST, 'lamination2_customers_material') == 'on') $lamination2_customers_material = 1;
+        $lamination2_ski = filter_input(INPUT_POST, 'lamination2_ski');
         
-        $quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity'));
+        
         $width = filter_input(INPUT_POST, 'width');
         if(empty($width)) $width = "NULL";
         $length = filter_input(INPUT_POST, 'length');
@@ -279,8 +242,6 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $manager_id = GetUserId();
         $status_id = CALCULATION; // Статус "Расчёт"
         
-        $extracharge = filter_input(INPUT_POST, 'h_extracharge');
-        if(empty($extracharge)) $extracharge = 35; // Наценка по умолчанию 35
         
         // Данные о цвете
         for($i=1; $i<=8; $i++) {
@@ -306,7 +267,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                 . "film_id, thickness, price, currency, individual_film_name, individual_price, individual_currency, individual_thickness, individual_density, customers_material, "
                 . "lamination1_film_id, lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_price, lamination1_individual_currency, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
                 . "lamination2_film_id, lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_price, lamination2_individual_currency, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
-                . "width, quantity, streams_number, length, stream_width, raport, lamination_roller_width, ink_number, manager_id, status_id, extracharge, "
+                . "width, quantity, streams_number, length, stream_width, raport, lamination_roller_width, ink_number, manager_id, status_id, "
                 . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
                 . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                 . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -316,7 +277,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                 . "'$film_id', $thickness, $price, '$currency', '$individual_film_name', $individual_price, '$individual_currency', $individual_thickness, $individual_density, $customers_material, "
                 . "'$lamination1_film_id', $lamination1_film_variation_id, $lamination1_price, '$lamination1_currency', '$lamination1_individual_film_name', $lamination1_individual_price, '$lamination1_individual_currency', $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, "
                 . "'$lamination2_film_id', $lamination2_film_variation_id, $lamination2_price, '$lamination2_currency', '$lamination2_individual_film_name', $lamination2_individual_price, '$lamination2_individual_currency', $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, "
-                . "$width, $quantity, $streams_number, $length, $stream_width, $raport, $lamination_roller_width, $ink_number, $manager_id, $status_id, $extracharge, "
+                . "$width, $quantity, $streams_number, $length, $stream_width, $raport, $lamination_roller_width, $ink_number, $manager_id, $status_id, "
                 . "'$ink_1', '$ink_2', '$ink_3', '$ink_4', '$ink_5', '$ink_6', '$ink_7', '$ink_8', "
                 . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                 . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
@@ -343,7 +304,7 @@ if(!empty($id)) {
             . "film_id, thickness, price, currency, individual_film_name, individual_price, individual_currency, individual_thickness, individual_density, customers_material, "
             . "lamination1_film_id, lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_price, lamination1_individual_currency, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
             . "lamination2_film_id, lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_price, lamination2_individual_currency, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
-            . "quantity, width, streams_number, length, stream_width, raport, lamination_roller_width, ink_number, status_id, extracharge, "
+            . "quantity, width, streams_number, length, stream_width, raport, lamination_roller_width, ink_number, status_id, "
             . "(select id from techmap where request_calc_id = $id order by id desc limit 1) techmap_id, "
             . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -634,11 +595,6 @@ else $techmap_id = null;
 if(isset($row['status_id'])) $status_id = $row['status_id'];
 else $status_id = null;
 
-if(isset($row['extracharge'])) $extracharge = $row['extracharge'];
-else $extracharge = 0;
-
-$new_forms_number = 0;
-
 // Данные о цветах
 for ($i=1; $i<=8; $i++) {
     $ink_var = "ink_$i";
@@ -832,7 +788,6 @@ $colorfulnesses = array();
                 <div class="col-6" id="left_side">
                     <form method="post">
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-                        <input type="hidden" id="h_extracharge" name="h_extracharge" class="extracharge" value="<?=$extracharge ?>" />
                         <input type="hidden" id="scroll" name="scroll" />
                         <?php if(null === filter_input(INPUT_GET, 'id') || filter_input(INPUT_GET, 'mode') == 'recalc'): ?>
                         <h1>Новый расчет</h1>
