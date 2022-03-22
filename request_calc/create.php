@@ -14,6 +14,11 @@ const COMIFLEX = "comiflex";
 // Значение марки плёнки "другая"
 const INDIVIDUAL = -1;
 
+// Лыжи
+const NO_SKI = 0;
+const STANDARD_SKI = 1;
+const NONSTANDARD_SKI = 2;
+
 // Валюты
 const USD = "usd";
 const EURO = "euro";
@@ -271,11 +276,6 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $ink_number = filter_input(INPUT_POST, 'ink_number');
         if(empty($ink_number)) $ink_number = "NULL";
         
-        $no_ski = 0;
-        if(filter_input(INPUT_POST, 'no_ski') == 'on') {
-            $no_ski = 1;
-        }
-        
         $manager_id = GetUserId();
         $status_id = CALCULATION; // Статус "Расчёт"
         
@@ -306,7 +306,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                 . "film_id, thickness, price, currency, individual_film_name, individual_price, individual_currency, individual_thickness, individual_density, customers_material, "
                 . "lamination1_film_id, lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_price, lamination1_individual_currency, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
                 . "lamination2_film_id, lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_price, lamination2_individual_currency, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
-                . "width, quantity, streams_number, length, stream_width, raport, lamination_roller_width, ink_number, manager_id, status_id, extracharge, no_ski, "
+                . "width, quantity, streams_number, length, stream_width, raport, lamination_roller_width, ink_number, manager_id, status_id, extracharge, "
                 . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
                 . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                 . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -316,19 +316,19 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                 . "'$film_id', $thickness, $price, '$currency', '$individual_film_name', $individual_price, '$individual_currency', $individual_thickness, $individual_density, $customers_material, "
                 . "'$lamination1_film_id', $lamination1_film_variation_id, $lamination1_price, '$lamination1_currency', '$lamination1_individual_film_name', $lamination1_individual_price, '$lamination1_individual_currency', $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, "
                 . "'$lamination2_film_id', $lamination2_film_variation_id, $lamination2_price, '$lamination2_currency', '$lamination2_individual_film_name', $lamination2_individual_price, '$lamination2_individual_currency', $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, "
-                . "$width, $quantity, $streams_number, $length, $stream_width, $raport, $lamination_roller_width, $ink_number, $manager_id, $status_id, $extracharge, $no_ski, "
+                . "$width, $quantity, $streams_number, $length, $stream_width, $raport, $lamination_roller_width, $ink_number, $manager_id, $status_id, $extracharge, "
                 . "'$ink_1', '$ink_2', '$ink_3', '$ink_4', '$ink_5', '$ink_6', '$ink_7', '$ink_8', "
                 . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                 . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
                 . "'$percent_1', '$percent_2', '$percent_3', '$percent_4', '$percent_5', '$percent_6', '$percent_7', '$percent_8', "
                 . "'$cliche_1', '$cliche_2', '$cliche_3', '$cliche_4', '$cliche_5', '$cliche_6', '$cliche_7', '$cliche_8')";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
-        $insert_id = $executer->insert_id;
+        //$executer = new Executer($sql);
+        //$error_message = $executer->error;
+        //$insert_id = $executer->insert_id;
         
-        if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/request_calc/create.php?id='.$insert_id);
-        }
+        //if(empty($error_message)) {
+        //    header('Location: create.php?id='.$insert_id);
+        //}
     }
 }
 
@@ -343,7 +343,7 @@ if(!empty($id)) {
             . "film_id, thickness, price, currency, individual_film_name, individual_price, individual_currency, individual_thickness, individual_density, customers_material, "
             . "lamination1_film_id, lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_price, lamination1_individual_currency, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
             . "lamination2_film_id, lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_price, lamination2_individual_currency, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
-            . "quantity, width, streams_number, length, stream_width, raport, lamination_roller_width, ink_number, status_id, extracharge, no_ski, "
+            . "quantity, width, streams_number, length, stream_width, raport, lamination_roller_width, ink_number, status_id, extracharge, "
             . "(select id from techmap where request_calc_id = $id order by id desc limit 1) techmap_id, "
             . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -626,14 +626,6 @@ $ink_number = filter_input(INPUT_POST, 'ink_number');
 if(null === $ink_number) {
     if(isset($row['ink_number'])) $ink_number = $row['ink_number'];
     else $ink_number = null;
-}
-
-if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
-    $no_ski = filter_input(INPUT_POST, 'no_ski') == 'on' ? 1 : 0;
-}
-else {
-    if(isset($row['no_ski'])) $no_ski = $row['no_ski'];
-    else $no_ski = null;
 }
 
 if(isset($row['techmap_id'])) $techmap_id = $row['techmap_id'];
@@ -993,11 +985,21 @@ $colorfulnesses = array();
                             </div>
                         </div>
                         <!-- Основная плёнка -->
-                        <div id="film_title">
-                            <p><span class="font-weight-bold">Пленка</span></p>
-                        </div>
-                        <div id="main_film_title" class="d-none">
-                            <p><span class="font-weight-bold">Основная пленка</span></p>
+                        <div class="d-flex justify-content-start">
+                            <div class="mt-2">
+                                <p id="film_title"><span class="font-weight-bold">Пленка</span></p>
+                                <p id="main_film_title" class="d-none"><span class="font-weight-bold">Основная пленка</span></p>
+                            </div>
+                            <div class="mt-2 ml-2">
+                                <select name="ski" id="ski" class="form-control form-control-sm">
+                                    <?php
+                                    $no_ski_class = "";
+                                    ?>
+                                    <option id="no_ski_option" value="<?=NO_SKI ?>"<?=$no_ski_class ?>>Без лыж</option>
+                                    <option value="<?=STANDARD_SKI ?>">Стандартные лыжи</option>
+                                    <option value="<?=NONSTANDARD_SKI ?>">Нестандартные лыжи</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-5">
@@ -1186,7 +1188,17 @@ $colorfulnesses = array();
                         </div>
                         <!-- Ламинация 1 -->
                         <div id="form_lamination_1" class="d-none">
-                            <span class="font-weight-bold">Ламинация 1</span>
+                            <div class="d-flex justify-content-start">
+                                <div class="mt-2">
+                                    <p class="font-weight-bold">Ламинация 1</p>
+                                </div>
+                                <div class="mt-2 ml-2">
+                                    <select name="lamination1_ski" id="lamination1_ski" class="form-control form-control-sm">
+                                        <option value="<?=STANDARD_SKI ?>">Стандартные лыжи</option>
+                                        <option value="<?=NONSTANDARD_SKI ?>">Нестандартные лыжи</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-5">
                                     <div class="form-group">
@@ -1384,7 +1396,17 @@ $colorfulnesses = array();
                             </div>
                             <!-- Ламинация 2 -->
                             <div id="form_lamination_2" class="d-none">
-                                <span class="font-weight-bold">Ламинация 2</span>
+                                <div class="d-flex justify-content-start">
+                                    <div class="mt-2">
+                                        <p class="font-weight-bold">Ламинация 2</p>
+                                    </div>
+                                    <div class="mt-2 ml-2">
+                                        <select name="lamination2_ski" id="lamination2_ski" class="form-control form-control-sm">
+                                            <option value="<?=STANDARD_SKI ?>">Стандартные лыжи</option>
+                                            <option value="<?=NONSTANDARD_SKI ?>">Нестандартные лыжи</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-5">
                                         <div class="form-group">
@@ -1687,15 +1709,6 @@ $colorfulnesses = array();
                                     </select>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Печать без лыж -->
-                        <div class="form-check mb-2 print-only no-lam-only d-none">
-                            <label class="form-check-label text-nowrap" style="line-height: 25px;">
-                                <?php
-                                $checked = $no_ski == 1 ? " checked='checked'" : "";
-                                ?>
-                                <input type="checkbox" class="form-check-input" id="no_ski" name="no_ski" value="on"<?=$checked ?>>Печать без лыж
-                            </label>
                         </div>
                         <!-- Количество красок -->
                         <div class="print-only row d-none">
@@ -2362,6 +2375,12 @@ $colorfulnesses = array();
                 $('#film_title').addClass('d-none');
                 $('#lamination1_film_id').attr('required', 'required');
                 $('#lamination1_film_variation_id').attr('required', 'required');
+                
+                $('#no_ski_option').addClass('d-none');
+                if($('#ski').val() == <?=NO_SKI ?>) {
+                    $('#ski').val(<?=STANDARD_SKI ?>);
+                }
+                
                 SetFieldsVisibility($('#work_type_id').val());
                 SetFilmFieldsVisibility($('#lamination1_film_id').val(), $('#lamination1_customers_material').is(':checked'), 'lamination1_');
             }
@@ -2386,6 +2405,9 @@ $colorfulnesses = array();
                 $('#form_lamination_1 select').removeAttr('required');
                 $('#form_lamination_1 input').removeAttr('disabled');
                 $('#form_lamination_1 select').removeAttr('disabled');
+                
+                $('#no_ski_option').removeClass('d-none');
+                $('#lamination1_ski').val(<?=STANDARD_SKI ?>);
         
                 SetFieldsVisibility($('#work_type_id').val());
                 HideLamination2();
@@ -2422,6 +2444,8 @@ $colorfulnesses = array();
                 $('#form_lamination_2 select').removeAttr('required');
                 $('#form_lamination_2 input').removeAttr('disabled');
                 $('#form_lamination_2 select').removeAttr('disabled');
+                
+                $('#lamination2_ski').val(<?=STANDARD_SKI ?>);
             }
             
             // Заполняем список красочностей
