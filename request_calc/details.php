@@ -22,69 +22,88 @@ if(empty($id)) {
     $id = filter_input(INPUT_GET, 'id');
 }
 
-$sql = "select c.date, c.customer_id, c.name name, c.work_type_id, c.quantity, c.unit, "
-        . "c.brand_name, c.thickness, c.individual_brand_name, c.individual_price, c.individual_thickness, c.individual_density, c.customers_material, "
-        . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_individual_brand_name, c.lamination1_individual_price, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, "
-        . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_individual_brand_name, c.lamination2_individual_price, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, "
-        . "c.width, c.length, c.stream_width, c.streams_number, c.raport, c.lamination_roller_width, c.ink_number, "
-        . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
-        . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
-        . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
-        . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, "
-        . "c.cliche_1, c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
-        . "c.status_id, c.extracharge, c.no_ski, "
-        . "(select id from techmap where request_calc_id = $id order by id desc limit 1) techmap_id, "
-        . "cu.name customer, cu.phone customer_phone, cu.extension customer_extension, cu.email customer_email, cu.person customer_person, "
-        . "wt.name work_type, "
-        . "mt.name machine, mt.colorfulness, "
-        . "(select count(id) from request_calc where customer_id = c.customer_id and id <= c.id) num_for_customer, "
-        . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.brand_name and fbw.thickness = c.thickness limit 1) weight, "
-        . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination1_brand_name and fbw.thickness = c.lamination1_thickness limit 1) lamination1_weight, "
-        . "(select fbw.weight from film_brand_variation fbw inner join film_brand fb on fbw.film_brand_id = fb.id where fb.name = c.lamination2_brand_name and fbw.thickness = c.lamination2_thickness limit 1) lamination2_weight "
-        . "from request_calc c "
-        . "left join customer cu on c.customer_id = cu.id "
-        . "left join work_type wt on c.work_type_id = wt.id "
-        . "left join machine mt on c.machine_id = mt.id "
-        . "where c.id=$id";
+$sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, wt.name work_type, "
+        . "f.name film_name, fv.thickness thickness, fv.weight weight, rc.price, rc.currency, rc.individual_film_name, rc.individual_price, rc.individual_currency, rc.individual_thickness, rc.individual_density, rc.customers_material, rc.ski, "
+        . "lam1f.name lamination1_film_name, lam1fv.thickness lamination1_thickness, lam1fv.weight lamination1_weight, rc.lamination1_price, rc.lamination1_currency, rc.lamination1_individual_film_name, rc.lamination1_individual_price, rc.lamination1_individual_currency, rc.lamination1_individual_thickness, rc.lamination1_individual_density, rc.lamination1_customers_material, rc.lamination1_ski, "
+        . "lam2f.name lamination2_film_name, lam2fv.thickness lamination2_thickness, lam2fv.weight lamination2_weight, rc.lamination2_price, rc.lamination2_currency, rc.lamination2_individual_film_name, rc.lamination2_individual_price, rc.lamination2_individual_currency, rc.lamination2_individual_thickness, rc.lamination2_individual_density, rc.lamination2_customers_material, rc.lamination2_ski, "
+        . "rc.width, rc.streams_number, m.name machine, m.colorfulness colorfulness, rc.length, rc.stream_width, rc.raport, rc.lamination_roller_width, rc.ink_number, u.first_name, u.last_name, rc.status_id, "
+        . "rc.ink_1, rc.ink_2, rc.ink_3, rc.ink_4, rc.ink_5, rc.ink_6, rc.ink_7, rc.ink_8, "
+        . "rc.color_1, rc.color_2, rc.color_3, rc.color_4, rc.color_5, rc.color_6, rc.color_7, rc.color_8, "
+        . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
+        . "rc.percent_1, rc.percent_2, rc.percent_3, rc.percent_4, rc.percent_5, rc.percent_6, rc.percent_7, rc.percent_8, rc.cliche_1, "
+        . "rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8 "
+        . "from request_calc rc "
+        . "left join film_variation fv on rc.film_variation_id = fv.id "
+        . "left join film f on fv.film_id = f.id "
+        . "left join film_variation lam1fv on rc.lamination1_film_variation_id = lam1fv.id "
+        . "left join film lam1f on lam1fv.film_id = lam1f.id "
+        . "left join film_variation lam2fv on rc.lamination2_film_variation_id = lam2fv.id "
+        . "left join film lam2f on lam2fv.film_id = lam2f.id "
+        . "left join machine m on rc.machine_id = m.id "
+        . "left join user u on rc.manager_id = u.id "
+        . "left join work_type wt on rc.work_type_id = wt.id "
+        . "where rc.id=$id";
 $row = (new Fetcher($sql))->Fetch();
 
 $date = $row['date'];
 $customer_id = $row['customer_id'];
 $name = $row['name'];
-$work_type_id = $row['work_type_id'];
-$quantity = $row['quantity'];
 $unit = $row['unit'];
-$brand_name = $row['brand_name'];
+$quantity = $row['quantity'];
+$work_type = $row['work_type'];
+
+$film_name = $row['film_name'];
 $thickness = $row['thickness'];
 $weight = $row['weight'];
-$individual_brand_name = $row['individual_brand_name'];
+$price = $row['price'];
+$currency = $row['currency'];
+$individual_film_name = $row['individual_film_name'];
 $individual_price = $row['individual_price'];
+$individual_currency = $row['individual_currency'];
 $individual_thickness = $row['individual_thickness'];
 $individual_density = $row['individual_density'];
 $customers_material = $row['customers_material'];
-$lamination1_brand_name = $row['lamination1_brand_name'];
+$ski = $row['ski'];
+
+$lamination1_film_name = $row['lamination1_film_name'];
 $lamination1_thickness = $row['lamination1_thickness'];
 $lamination1_weight = $row['lamination1_weight'];
-$lamination1_individual_brand_name = $row['lamination1_individual_brand_name'];
+$lamination1_price = $row['lamination1_price'];
+$lamination1_currency = $row['lamination1_currency'];
+$lamination1_individual_film_name = $row['lamination1_individual_film_name'];
 $lamination1_individual_price = $row['lamination1_individual_price'];
+$lamination1_individual_currency = $row['lamination1_individual_currency'];
 $lamination1_individual_thickness = $row['lamination1_individual_thickness'];
 $lamination1_individual_density = $row['lamination1_individual_density'];
 $lamination1_customers_material = $row['lamination1_customers_material'];
-$lamination2_brand_name = $row['lamination2_brand_name'];
+$lamination1_ski = $row['lamination1_ski'];
+
+$lamination2_film_name = $row['lamination2_film_name'];
 $lamination2_thickness = $row['lamination2_thickness'];
 $lamination2_weight = $row['lamination2_weight'];
-$lamination2_individual_brand_name = $row['lamination2_individual_brand_name'];
+$lamination2_price = $row['lamination2_price'];
+$lamination2_currency = $row['lamination2_currency'];
+$lamination2_individual_film_name = $row['lamination2_individual_film_name'];
 $lamination2_individual_price = $row['lamination2_individual_price'];
+$lamination2_individual_currency = $row['lamination2_individual_currency'];
 $lamination2_individual_thickness = $row['lamination2_individual_thickness'];
 $lamination2_individual_density = $row['lamination2_individual_density'];
 $lamination2_customers_material = $row['lamination2_customers_material'];
+$lamination2_ski = $row['lamination2_ski'];
+
 $width = $row['width'];
+$streams_number = $row['streams_number'];
+$machine = $row['machine'];
+$colorfulness = $row['colorfulness'];
 $length = $row['length'];
 $stream_width = $row['stream_width'];
-$streams_number = $row['streams_number'];
 $raport = rtrim(rtrim(number_format($row['raport'], 3, ",", " "), "0"), ",");
 $lamination_roller_width = $row['lamination_roller_width'];
 $ink_number = $row['ink_number'];
+$first_name = $row['first_name'];
+$last_name = $row['last_name'];
+$status_id = $row['status_id'];
+
 $new_forms_number = 0;
 
 for($i=1; $i<=$ink_number; $i++) {
@@ -108,23 +127,12 @@ for($i=1; $i<=$ink_number; $i++) {
     }
 }
 
-$status_id = $row['status_id'];
-$extracharge = $row['extracharge'];
-$no_ski = $row['no_ski'];
 
 $customer = $row['customer'];
 $customer_phone = $row['customer_phone'];
 $customer_extension = $row['customer_extension'];
 $customer_email = $row['customer_email'];
 $customer_person = $row['customer_person'];
-
-$work_type = $row['work_type'];
-
-$machine = $row['machine'];
-$colorfulness = $row['colorfulness'];
-
-$techmap_id = $row['techmap_id'];
-$num_for_customer = $row['num_for_customer'];
 ?>
 <!DOCTYPE html>
 <html>
