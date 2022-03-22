@@ -223,7 +223,6 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $lamination2_customers_material = 0; if(filter_input(INPUT_POST, 'lamination2_customers_material') == 'on') $lamination2_customers_material = 1;
         $lamination2_ski = filter_input(INPUT_POST, 'lamination2_ski');
         
-        
         $width = filter_input(INPUT_POST, 'width'); if(empty($width)) $width = "NULL";
         $length = filter_input(INPUT_POST, 'length'); if(empty($length)) $length = "NULL";
         $stream_width = filter_input(INPUT_POST, 'stream_width'); if(empty($stream_width)) $stream_width = "NULL";
@@ -297,8 +296,11 @@ $row = array();
 if(!empty($id)) {
     $sql = "select date, customer_id, name, unit, quantity, work_type_id, "
             . "film_variation_id, price, currency, individual_film_name, individual_price, individual_currency, individual_thickness, individual_density, customers_material, ski, "
+            . "(select film_id from film_variation where id = request_calc.film_variation_id) film_id, "
             . "lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_price, lamination1_individual_currency, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, lamination1_ski, "
+            . "(select film_id from film_variation where id = request_calc.lamination1_film_variation_id) lamination1_film_id, "
             . "lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_price, lamination2_individual_currency, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, lamination2_ski, "
+            . "(select film_id from film_variation where id = request_calc.lamination2_film_variation_id) lamination2_film_id, "
             . "width, streams_number, machine_id, length, stream_width, raport, lamination_roller_width, ink_number, manager_id, status_id, "
             . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -337,6 +339,11 @@ if($quantity === null && isset($row['quantity'])) {
 $work_type_id = filter_input(INPUT_POST, 'work_type_id');
 if($work_type_id === null && isset($row['work_type_id'])) {
     $work_type_id = $row['work_type_id'];
+}
+
+$film_id = filter_input(INPUT_POST, 'film_id');
+if($film_id === null && isset($row['film_id'])) {
+    $film_id = $row['film_id'];
 }
 
 $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
@@ -389,6 +396,11 @@ if($ski === null && isset($row['ski'])) {
     $ski = $row['ski'];
 }
 
+$lamination1_film_id = filter_input(INPUT_POST, 'lamination1_film_id');
+if($lamination1_film_id === null && isset($row['lamination1_film_id'])) {
+    $lamination1_film_id = $row['lamination1_film_id'];
+}
+
 $lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id');
 if($lamination1_film_variation_id === null && isset($row['lamination1_film_variation_id'])) {
     $lamination1_film_variation_id = $row['lamination1_film_variation_id'];
@@ -437,6 +449,11 @@ if($lamination1_customers_material === null && isset($row['lamination1_customers
 $lamination1_ski = filter_input(INPUT_POST, 'lamination1_ski');
 if($lamination1_ski === null && isset($row['lamination1_ski'])) {
     $lamination1_ski = $row['lamination1_ski'];
+}
+
+$lamination2_film_id = filter_input(INPUT_POST, 'lamination2_film_id');
+if($lamination2_film_id === null && isset($row['lamination2_film_id'])) {
+    $lamination2_film_id = $row['lamination2_film_id'];
 }
 
 $lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id');
@@ -910,7 +927,7 @@ $colorfulnesses = array();
                                             
                                             foreach ($film_ids as $row):
                                             $selected = '';
-                                            if($row['name'] == $film_id) {
+                                            if($row['id'] == $film_id) {
                                                 $selected = " selected='selected'";
                                             }
                                             ?>
@@ -937,12 +954,12 @@ $colorfulnesses = array();
                                                 <option value="" hidden="hidden" selected="selected">Толщина...</option>
                                                 <?php
                                                 if(!empty($film_id)) {
-                                                    $sql = "select thickness, weight from film_variation where film_id='$film_id' order by thickness";
+                                                    $sql = "select id, thickness, weight from film_variation where film_id='$film_id' order by thickness";
                                                     $thicknesses = (new Grabber($sql))->result;
                                             
                                                     foreach ($thicknesses as $row):
                                                     $selected = '';
-                                                    if($row['thickness'] == $thickness) {
+                                                    if($row['id'] == $film_variation_id) {
                                                         $selected = " selected='selected'";
                                                     }
                                                 ?>
@@ -1105,7 +1122,7 @@ $colorfulnesses = array();
                                                 <?php
                                                 foreach ($film_ids as $row):
                                                 $selected = '';
-                                                if($row['name'] == $lamination1_film_id) {
+                                                if($row['id'] == $lamination1_film_id) {
                                                     $selected = " selected='selected'";
                                                 }
                                                 ?>
@@ -1132,12 +1149,12 @@ $colorfulnesses = array();
                                                     <option value="" hidden="hidden" selected="selected">Толщина...</option>
                                                     <?php
                                                     if(!empty($lamination1_film_id)) {
-                                                        $sql = "select thickness, weight from film_variation where film_id='$lamination1_film_id' order by thickness";
+                                                        $sql = "select id, thickness, weight from film_variation where film_id='$lamination1_film_id' order by thickness";
                                                         $thicknesses = (new Grabber($sql))->result;
                                                 
                                                         foreach ($thicknesses as $row):
                                                         $selected = '';
-                                                        if($row['thickness'] == $lamination1_film_variation_id) {
+                                                        if($row['id'] == $lamination1_film_variation_id) {
                                                             $selected = " selected='selected'";
                                                         }
                                                     ?>
@@ -1313,7 +1330,7 @@ $colorfulnesses = array();
                                                     <?php
                                                     foreach ($film_ids as $row):
                                                     $selected = '';
-                                                    if($row['name'] == $lamination2_film_id) {
+                                                    if($row['id'] == $lamination2_film_id) {
                                                         $selected = " selected='selected'";
                                                     }
                                                     ?>
@@ -1340,12 +1357,12 @@ $colorfulnesses = array();
                                                         <option value="" hidden="hidden" selected="selected">Толщина...</option>
                                                         <?php
                                                         if(!empty($lamination2_film_id)):
-                                                        $sql = "select thickness, weight from film_variation where film_id='$lamination2_film_id' order by thickness";
+                                                        $sql = "select id, thickness, weight from film_variation where film_id='$lamination2_film_id' order by thickness";
                                                         $variations = (new Grabber($sql))->result;
                                                     
                                                         foreach ($variations as $row):
                                                         $selected = "";
-                                                        if($row['thickness'] == $lamination2_film_variation_id) {
+                                                        if($row['id'] == $lamination2_film_variation_id) {
                                                             $selected = " selected='selected'";
                                                         }
                                                         ?>
