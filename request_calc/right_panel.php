@@ -5,7 +5,7 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
     $calculation_class = " class='d-none'";    
 }
 ?>
-<div id="calculation"<?=$calculation_class ?> style="position: absolute; top: 0px; bottom: auto;">
+<div id="calculation"<?=$calculation_class ?> style="position: absolute; bottom: auto; right: 10px; margin-top: 60px;">
     <div style="position: absolute; right: 30px; top: -80px;">
         <a class="btn btn-outline-dark" target="_blank" style="margin-top: 20px;" href="print.php?id=<?=$id ?>"><i class="fa fa-print"></i></a>
     </div>
@@ -16,13 +16,13 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
                 <div class="text-nowrap" style="font-size: x-small;">Наценка</div>
                 <?php if($status_id == 1 || $status_id == 2): ?>
                 <div class="input-group">
-                    <input type="text" id="extracharge" name="extracharge" data-id="<?=$id ?>" style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" value="<?=$extracharge ?>" required="required" />
+                    <input type="text" id="extracharge" name="extracharge" data-id="<?=$id ?>" style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" value="30" required="required" />
                     <div class="input-group-append" style="height: 28px;">
                         <span class="input-group-text">%</span>
                     </div>
                 </div>
                 <?php else: ?>
-                <span class="text-nowrap"><?=$extracharge ?>%</span>
+                <span class="text-nowrap">30%</span>
                 <?php endif; ?>
             </div>
         </div>
