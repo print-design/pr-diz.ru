@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 $film_variation_id = filter_input(INPUT_GET, 'film_variation_id');
-$result = array("text" => "нет данных", "text_ext" => "(Нет данных)", "price" => "", "currency" => "", "currency_local" => "");
+$result = array("text" => "нет данных", "price" => "", "currency" => "", "currency_local" => "");
 
 if(!empty($film_variation_id)) {
     $sql = "select price, currency from film_price where film_variation_id=$film_variation_id order by id desc limit 1";
@@ -28,7 +28,7 @@ if(!empty($film_variation_id)) {
                 $currency_local = "EUR";
                 break;
         }
-        $result = array("text" => "от $price_final $currency_final", "text_ext" => "($price_final&nbsp;$currency_final&nbsp;&nbsp;&nbsp;34&nbsp;кг&nbsp;&nbsp;&nbsp;&nbsp;23&nbsp;000&nbsp;м)", "price" => $row['price'], "currency" => $row['currency'], "currency_local" => $currency_local);
+        $result = array("text" => "от $price_final $currency_final", "price" => $row['price'], "currency" => $row['currency'], "currency_local" => $currency_local);
     }
 }
 
