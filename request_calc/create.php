@@ -281,7 +281,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $insert_id = $executer->insert_id;
         
         if(empty($error_message)) {
-            header('Location: '.APPLICATION.'/request_calc/');
+            header('Location: create.php?id='.$insert_id);
         }
     }
 }
@@ -293,336 +293,279 @@ if(empty($id)) {
 }
 
 if(!empty($id)) {
-    $sql = "select date, customer_id, name, work_type_id, unit, machine_id, "
-            . "film_id, thickness, price, currency, individual_film_name, individual_price, individual_currency, individual_thickness, individual_density, customers_material, "
-            . "lamination1_film_id, lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_price, lamination1_individual_currency, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, "
-            . "lamination2_film_id, lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_price, lamination2_individual_currency, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, "
-            . "quantity, width, streams_number, length, stream_width, raport, lamination_roller_width, ink_number, status_id, "
-            . "(select id from techmap where request_calc_id = $id order by id desc limit 1) techmap_id, "
+    $sql = "select date, customer_id, name, unit, quantity, work_type_id, "
+            . "film_variation_id, price, currency, individual_film_name, individual_price, individual_currency, individual_thickness, individual_density, customers_material, ski, "
+            . "lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_price, lamination1_individual_currency, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, lamination1_ski, "
+            . "lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_price, lamination2_individual_currency, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, lamination2_ski, "
+            . "width, streams_number, machine_id, length, stream_width, raport, lamination_roller_width, ink_number, manager_id, status_id, "
             . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
             . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
             . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
-            . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
-            . "cliche_1, cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8 "
+            . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, cliche_1, "
+            . "cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8 "
             . "from request_calc where id=$id";
     $fetcher = new Fetcher($sql);
     $row = $fetcher->Fetch();
     $error_message = $fetcher->error;
 }
 
-if(isset($row['date'])) $date = $row['date'];
-else $date = null;
+$date = $row['date'];
 
-if(empty($customer_id)) {
-    $customer_id = filter_input(INPUT_POST, 'customer_id');
+$customer_id = filter_input(INPUT_POST, 'customer_id');
+if($customer_id === null) {
+    $customer_id = $row['customer_id'];
 }
-if(null === $customer_id) {
-    if(isset($row['customer_id'])) $customer_id = $row['customer_id'];
-    else $customer_id = null;
-}
-
+                 
 $name = filter_input(INPUT_POST, 'name');
-if(null === $name) {
-    if(isset($row['name'])) $name = $row['name'];
-    else $name = null;
+if($name === null) {
+    $name = $row['name'];
 }
-
+                
+$unit = filter_input(INPUT_POST, 'unit');
+if($unit === null) {
+    $unit = $row['unit'];
+}
+                
+$quantity = filter_input(INPUT_POST, 'quantity');
+if($quantity === null) {
+    $quantity = $row['quantity'];
+}
+            
 $work_type_id = filter_input(INPUT_POST, 'work_type_id');
-if(null === $work_type_id) {
-    if(isset($row['work_type_id'])) $work_type_id = $row['work_type_id'];
-    else $work_type_id = null;
+if($work_type_id === null) {
+    $work_type_id = $row['work_type_id'];
 }
 
-$film_id = filter_input(INPUT_POST, 'film_id');
-if(null === $film_id) {
-    if(isset($row['film_id'])) $film_id = $row['film_id'];
-    else $film_id = null;
-}
-
-$thickness = filter_input(INPUT_POST, 'thickness');
-if(null === $thickness) {
-    if(isset($row['thickness'])) $thickness = $row['thickness'];
-    else $thickness = null;
+$film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+if($film_variation_id === null) {
+    $film_variation_id = $row['film_variation_id'];
 }
 
 $price = filter_input(INPUT_POST, 'price');
-if(null === $price) {
-    if(isset($row['price'])) $price = $row['price'];
-    else $price = null;
+if($price === null) {
+    $price = $row['price'];
 }
 
 $currency = filter_input(INPUT_POST, 'currency');
-if(null === $currency) {
-    if(isset($row['currency'])) $currency = $row['currency'];
-    else $currency = null;
+if($currency === null) {
+    $currency = $row['currency'];
 }
 
 $individual_film_name = filter_input(INPUT_POST, 'individual_film_name');
-if(null === $individual_film_name) {
-    if(isset($row['individual_film_name'])) $individual_film_name = $row['individual_film_name'];
-    else $individual_film_name = null;
+if($individual_film_name === null) {
+    $individual_film_name = $row['individual_film_name'];
 }
 
 $individual_price = filter_input(INPUT_POST, 'individual_price');
-if(null === $individual_price) {
-    if(isset($row['individual_price'])) $individual_price = $row['individual_price'];
-    else $individual_price = null;
+if($individual_price === null) {
+    $individual_price = $row['individual_price'];
 }
 
 $individual_currency = filter_input(INPUT_POST, 'individual_currency');
-if(null === $individual_currency) {
-    if(isset($row['individual_currency'])) $individual_currency = $row['individual_currency'];
-    else $individual_currency = null;
+if($individual_currency === null) {
+    $individual_currency = $row['individual_currency'];
 }
 
 $individual_thickness = filter_input(INPUT_POST, 'individual_thickness');
-if(null === $individual_thickness) {
-    if(isset($row['individual_thickness'])) $individual_thickness = $row['individual_thickness'];
-    else $individual_thickness = null;
+if($individual_thickness === null) {
+    $individual_thickness = $row['individual_thickness'];
 }
 
 $individual_density = filter_input(INPUT_POST, 'individual_density');
-if(null === $individual_density) {
-    if(isset($row['individual_density'])) $individual_density = $row['individual_density'];
-    else $individual_density = null;
+if($individual_density === null) {
+    $individual_density = $row['individual_density'];
 }
 
-if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
-    $customers_material = filter_input(INPUT_POST, 'customers_material') == 'on' ? 1 : 0;
-}
-else {
-    if(isset($row['customers_material'])) $customers_material = $row['customers_material'];
-    else $customers_material = null;
+$customers_material = filter_input(INPUT_POST, 'customers_material');
+if($customers_material === null) {
+    $customers_material = $row['customers_material'];
 }
 
-$unit = filter_input(INPUT_POST, "unit");
-if(null === $unit) {
-    if(isset($row['unit'])) $unit = $row['unit'];
-    else $unit = null;
-}
-
-$machine_id = filter_input(INPUT_POST, 'machine_id');
-if(null === $machine_id) {
-    if(isset($row['machine_id'])) $machine_id = $row['machine_id'];
-    else $machine_id = null;
-}
-
-$lamination1_film_id = filter_input(INPUT_POST, 'lamination1_film_id');
-if(null === $lamination1_film_id) {
-    if(isset($row['lamination1_film_id'])) $lamination1_film_id = $row['lamination1_film_id'];
-    else $lamination1_film_id = null;
+$ski = filter_input(INPUT_POST, 'ski');
+if($ski === null) {
+    $ski = $row['ski'];
 }
 
 $lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id');
-if(null === $lamination1_film_variation_id) {
-    if(isset($row['lamination1_film_variation_id'])) $lamination1_film_variation_id = $row['lamination1_film_variation_id'];
-    else $lamination1_film_variation_id = null;
+if($lamination1_film_variation_id === null) {
+    $lamination1_film_variation_id = $row['lamination1_film_variation_id'];
 }
 
 $lamination1_price = filter_input(INPUT_POST, 'lamination1_price');
-if(null === $lamination1_price) {
-    if(isset($row['lamination1_price'])) $lamination1_price = $row['lamination1_price'];
-    else $lamination1_price = null;
+if($lamination1_price === null) {
+    $lamination1_price = $row['lamination1_price'];
 }
 
 $lamination1_currency = filter_input(INPUT_POST, 'lamination1_currency');
-if(null === $lamination1_currency) {
-    if(isset($row['lamination1_currency'])) $lamination1_currency = $row['lamination1_currency'];
-    else $lamination1_currency = null;
+if($lamination1_currency === null) {
+    $lamination1_currency = $row['lamination1_currency'];
 }
 
 $lamination1_individual_film_name = filter_input(INPUT_POST, 'lamination1_individual_film_name');
-if(null === $lamination1_individual_film_name) {
-    if(isset($row['lamination1_individual_film_name'])) $lamination1_individual_film_name = $row['lamination1_individual_film_name'];
-    else $lamination1_individual_film_name = null;
+if($lamination1_individual_film_name === null) {
+    $lamination1_individual_film_name = $row['lamination1_individual_film_name'];
 }
 
 $lamination1_individual_price = filter_input(INPUT_POST, 'lamination1_individual_price');
-if(null === $lamination1_individual_price) {
-    if(isset($row['lamination1_individual_price'])) $lamination1_individual_price = $row['lamination1_individual_price'];
-    else $lamination1_individual_price = null;
+if($lamination1_individual_price === null) {
+    $lamination1_individual_price = $row['lamination1_individual_price'];
 }
 
 $lamination1_individual_currency = filter_input(INPUT_POST, 'lamination1_individual_currency');
-if(null === $lamination1_individual_currency) {
-    if(isset($row['lamination1_individual_currency'])) $lamination1_individual_currency = $row['lamination1_individual_currency'];
-    else $lamination1_individual_currency = null;
+if($lamination1_individual_currency === null) {
+    $lamination1_individual_currency = $row['lamination1_individual_currency'];
 }
 
 $lamination1_individual_thickness = filter_input(INPUT_POST, 'lamination1_individual_thickness');
-if(null === $lamination1_individual_thickness) {
-    if(isset($row['lamination1_individual_thickness'])) $lamination1_individual_thickness = $row['lamination1_individual_thickness'];
-    else $lamination1_individual_thickness = null;
+if($lamination1_individual_thickness === null) {
+    $lamination1_individual_thickness = $row['lamination1_individual_thickness'];
 }
 
 $lamination1_individual_density = filter_input(INPUT_POST, 'lamination1_individual_density');
-if(null === $lamination1_individual_density) {
-    if(isset($row['lamination1_individual_density'])) $lamination1_individual_density = $row['lamination1_individual_density'];
-    else $lamination1_individual_density = null;
+if($lamination1_individual_density === null) {
+    $lamination1_individual_density = $row['lamination1_individual_density'];
 }
 
-if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
-    $lamination1_customers_material = filter_input(INPUT_POST, 'lamination1_customers_material') == 'on' ? 1 : 0;
-}
-else {
-    if(isset($row['lamination1_customers_material'])) $lamination1_customers_material = $row['lamination1_customers_material'];
-    else $lamination1_customers_material = null;
+$lamination1_customers_material = filter_input(INPUT_POST, 'lamination1_customers_material');
+if($lamination1_customers_material === null) {
+    $lamination1_customers_material = $row['lamination1_customers_material'];
 }
 
-$lamination2_film_id = filter_input(INPUT_POST, 'lamination2_film_id');
-if(null === $lamination2_film_id) {
-    if(isset($row['lamination2_film_id'])) $lamination2_film_id = $row['lamination2_film_id'];
-    else $lamination2_film_id = null;
+$lamination1_ski = filter_input(INPUT_POST, 'lamination1_ski');
+if($lamination1_ski === null) {
+    $lamination1_ski = $row['lamination1_ski'];
 }
 
 $lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id');
-if(null === $lamination2_film_variation_id) {
-    if(isset($row['lamination2_film_variation_id'])) $lamination2_film_variation_id = $row['lamination2_film_variation_id'];
-    else $lamination2_film_variation_id = null;
+if($lamination2_film_variation_id === null) {
+    $lamination2_film_variation_id = $row['lamination2_film_variation_id'];
 }
 
 $lamination2_price = filter_input(INPUT_POST, 'lamination2_price');
-if(null === $lamination2_price) {
-    if(isset($row['lamination2_price'])) $lamination2_price = $row['lamination2_price'];
-    else $lamination2_price = null;
+if($lamination2_price === null) {
+    $lamination2_price = $row['lamination2_price'];
 }
 
 $lamination2_currency = filter_input(INPUT_POST, 'lamination2_currency');
-if(null === $lamination2_currency) {
-    if(isset($row['lamination2_currency'])) $lamination2_currency = $row['lamination2_currency'];
-    else $lamination2_currency = null;
+if($lamination2_currency === null) {
+    $lamination2_currency = $row['lamination2_currency'];
 }
 
 $lamination2_individual_film_name = filter_input(INPUT_POST, 'lamination2_individual_film_name');
-if(null === $lamination2_individual_film_name) {
-    if(isset($row['lamination2_individual_film_name'])) $lamination2_individual_film_name = $row['lamination2_individual_film_name'];
-    else $lamination2_individual_film_name = null;
+if($lamination2_individual_film_name === null) {
+    $lamination2_individual_film_name = $row['lamination2_individual_film_name'];
 }
 
 $lamination2_individual_price = filter_input(INPUT_POST, 'lamination2_individual_price');
-if(null === $lamination2_individual_price) {
-    if(isset($row['lamination2_individual_price'])) $lamination2_individual_price = $row['lamination2_individual_price'];
-    else $lamination2_individual_price = null;
+if($lamination2_individual_price === null) {
+    $lamination2_individual_price = $row['lamination2_individual_price'];
 }
 
 $lamination2_individual_currency = filter_input(INPUT_POST, 'lamination2_individual_currency');
-if(null === $lamination2_individual_currency) {
-    if(isset($row['lamination2_individual_currency'])) $lamination2_individual_currency = $row['lamination2_individual_currency'];
-    else $lamination2_individual_currency = null;
+if($lamination2_individual_currency === null) {
+    $lamination2_individual_currency = $row['lamination2_individual_currency'];
 }
 
 $lamination2_individual_thickness = filter_input(INPUT_POST, 'lamination2_individual_thickness');
-if(null === $lamination2_individual_thickness) {
-    if(isset($row['lamination2_individual_thickness'])) $lamination2_individual_thickness = $row['lamination2_individual_thickness'];
-    else $lamination2_individual_thickness = null;
+if($lamination2_individual_thickness === null) {
+    $lamination2_individual_thickness = $row['lamination2_individual_thickness'];
 }
 
 $lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density');
-if(null === $lamination2_individual_density) {
-    if(isset($row['lamination2_individual_density'])) $lamination2_individual_density = $row['lamination2_individual_density'];
-    else $lamination2_individual_density = null;
+if($lamination2_individual_density === null) {
+    $lamination2_individual_density = $row['lamination2_individual_density'];
 }
 
-if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
-    $lamination2_customers_material = filter_input(INPUT_POST, 'lamination2_customers_material') == 'on' ? 1 : 0;
-}
-else {
-    if(isset($row['lamination2_customers_material'])) $lamination2_customers_material = $row['lamination2_customers_material'];
-    else $lamination2_customers_material = null;
+$lamination2_customers_material = filter_input(INPUT_POST, 'lamination2_customers_material');
+if($lamination2_customers_material === null) {
+    $lamination2_customers_material = $row['lamination2_customers_material'];
 }
 
-$quantity = filter_input(INPUT_POST, 'quantity');
-if(null === $quantity) {
-    if(isset($row['quantity'])) $quantity = $row['quantity'];
-    else $quantity = null;
-}
-else {
-    $quantity = preg_replace("/\D/", "", $quantity);
+$lamination2_ski = filter_input(INPUT_POST, 'lamination2_ski');
+if($lamination2_ski === null) {
+    $lamination2_ski = $row['lamination2_ski'];
 }
 
 $width = filter_input(INPUT_POST, 'width');
-if(null === $width) {
-    if(isset($row['width'])) $width = $row['width'];
-    else $width = null;
+if($width === null) {
+    $width = $row['width'];
 }
 
 $streams_number = filter_input(INPUT_POST, 'streams_number');
-if(null === $streams_number) {
-    if(isset($row['streams_number'])) $streams_number = $row['streams_number'];
-    else $streams_number = null;
+if($streams_number === null) {
+    $streams_number = $row['streams_number'];
+}
+
+$machine_id = filter_input(INPUT_POST, 'machine_id');
+if($machine_id === null) {
+    $machine_id = $row['machine_id'];
 }
 
 $length = filter_input(INPUT_POST, 'length');
-if(null === $length) {
-    if(isset($row['length'])) $length = $row['length'];
-    else $length = null;
+if($length === null) {
+    $length = $row['length'];
 }
 
 $stream_width = filter_input(INPUT_POST, 'stream_width');
-if(null === $stream_width) {
-    if(isset($row['stream_width'])) $stream_width = $row['stream_width'];
-    else $stream_width = null;
+if($stream_width === null) {
+    $stream_width = $row['stream_width'];
 }
 
 $raport = filter_input(INPUT_POST, 'raport');
-if(null === $raport) {
-    if(isset($row['raport'])) $raport = $row['raport'];
-    else $raport = null;
+if($raport === null) {
+    $raport = $row['raport'];
 }
 
 $lamination_roller_width = filter_input(INPUT_POST, 'lamination_roller_width');
-if(null === $lamination_roller_width) {
-    if(isset($row['lamination_roller_width'])) $lamination_roller_width = $row['lamination_roller_width'];
-    else $lamination_roller_width = null;
+if($lamination_roller_width === null) {
+    $lamination_roller_width = $row['lamination_roller_width'];
 }
 
 $ink_number = filter_input(INPUT_POST, 'ink_number');
-if(null === $ink_number) {
-    if(isset($row['ink_number'])) $ink_number = $row['ink_number'];
-    else $ink_number = null;
+if($ink_number === null) {
+    $ink_number = $row['ink_number'];
 }
 
-if(isset($row['techmap_id'])) $techmap_id = $row['techmap_id'];
-else $techmap_id = null;
+$manager_id = filter_input(INPUT_POST, 'manager_id');
+if($manager_id === null) {
+    $manager_id = $row['manager_id'];
+}
 
-if(isset($row['status_id'])) $status_id = $row['status_id'];
-else $status_id = null;
+$status_id = filter_input(INPUT_POST, 'status_id');
+if($status_id === null) {
+    $status_id = $row['status_id'];
+}
 
 // Данные о цветах
 for ($i=1; $i<=8; $i++) {
     $ink_var = "ink_$i";
     $$ink_var = filter_input(INPUT_POST, "ink_$i");
     if(null === $$ink_var) {
-        if(isset($row["ink_$i"])) $$ink_var = $row["ink_$i"];
-        else $$ink_var = null;
+        $$ink_var = $row["ink_$i"];
     }
     
     $color_var = "color_$i";
     $$color_var = filter_input(INPUT_POST, "color_$i");
     if(null === $$color_var) {
-        if(isset($row["color_$i"])) $$color_var = $row["color_$i"];
-        else $$color_var = null;
+        $$color_var = $row["color_$i"];
     }
     
     $cmyk_var = "cmyk_$i";
     $$cmyk_var = filter_input(INPUT_POST, "cmyk_$i");
     if(null === $$cmyk_var) {
-        if(isset($row["cmyk_$i"])) $$cmyk_var = $row["cmyk_$i"];
-        else $$cmyk_var = null;
+        $$cmyk_var = $row["cmyk_$i"];
     }
     
     $percent_var = "percent_$i";
     $$percent_var = filter_input(INPUT_POST, "percent_$i");
     if(null === $$percent_var) {
-        if(isset($row["percent_$i"])) $$percent_var = $row["percent_$i"];
-        else $$percent_var = null;
+        $$percent_var = $row["percent_$i"];
     }
     
     $cliche_var = "cliche_$i";
     $$cliche_var = filter_input(INPUT_POST, "cliche_$i");
     if(null === $$cliche_var) {
-        if(isset($row["cliche_$i"])) $$cliche_var = $row["cliche_$i"];
-        else $$cliche_var = null;
+        $$cliche_var = $row["cliche_$i"];
     }
 }
 
