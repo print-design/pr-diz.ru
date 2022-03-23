@@ -1686,7 +1686,11 @@ $colorfulnesses = array();
                                         <option value="" hidden="hidden" selected="selected">Рапорт...</option>
                                         <?php
                                         if(!empty($machine_id)) {
-                                            $sql = "select value from raport where machine_id = $machine_id order by value";
+                                            $sql = "select value from raport where active = 1 and machine_id = $machine_id ";
+                                            if(!empty($raport)) {
+                                                $sql .= "union select value from raport where active = 0 and machine_id = $machine_id and value = $raport ";
+                                            }
+                                            $sql .= "order by value";
                                             $fetcher = new Fetcher($sql);
                                             
                                             while($row = $fetcher->Fetch()) {
@@ -1707,7 +1711,11 @@ $colorfulnesses = array();
                                     <select id="lamination_roller_width" name="lamination_roller_width" class="form-control lam-only d-none">
                                         <option value="" hidden="hidden">Ширина ламинирующего вала...</option>
                                         <?php
-                                        $sql = "select value from norm_laminator_roller order by value";
+                                        $sql = "select value from norm_laminator_roller where active = 1 ";
+                                        if(!empty($lamination_roller_width)) {
+                                            $sql .= "union select value from norm_laminator_roller where active = 0 and value = $lamination_roller_width ";
+                                        }
+                                        $sql .= "order by value";
                                         $fetcher = new Fetcher($sql);
                                         
                                         while ($row = $fetcher->Fetch()):

@@ -69,10 +69,10 @@ if(null !== filter_input(INPUT_POST, 'roller_delete_submit')) {
                     <table class="table table-hover">
                         <tr>
                             <th style="border-top: 0;">Значение</th>
-                            <th style="border-top: 0;"></th>
+                            <th style="border-top: 0;" class="text-right">Активный</th>
                         </tr>
                         <?php
-                        $sql = "select id, value from norm_laminator_roller order by value";
+                        $sql = "select id, value, active from norm_laminator_roller order by value";
                         $grabber = new Grabber($sql);
                         $rollers = $grabber->result;
                         foreach ($rollers as $row):
@@ -80,11 +80,13 @@ if(null !== filter_input(INPUT_POST, 'roller_delete_submit')) {
                         <tr>
                             <td><?=$row['value'] ?></td>
                             <td class="text-right">
-                                <form method="post">
-                                    <input type="hidden" name="id" value="<?=$row['id'] ?>" />
-                                    <input type="hidden" name="scroll" />
-                                    <button type="submit" id="roller_delete_submit" name="roller_delete_submit" class="btn btn-link fas fa-trash-alt confirmable"></button>
-                                </form>
+                                <a class="activate" data-id='<?=$row['id'] ?>' href="javascript: void(0);">
+                                    <?php if($row['active']): ?>
+                                    <i class="fas fa-eye"></i>
+                                    <?php else: ?>
+                                    <i class="fas fa-eye-slash"></i>
+                                    <?php endif; ?>
+                                </a>
                             </td>
                         </tr>
                         <?php
@@ -103,5 +105,27 @@ if(null !== filter_input(INPUT_POST, 'roller_delete_submit')) {
         <?php
         include '../include/footer.php';
         ?>
+        <script>
+            $('a.activate').click(function() {
+                this_el = $(this);
+                $.ajax({ url: "../ajax/activate.php?type=laminator_roller&id=" + $(this).attr('data-id') })
+                        .done(function(data) {
+                            switch(data) {
+                                case "0":
+                                    this_el.html("<i class='fas fa-eye-slash'></i>");
+                                    break;
+                                case "1":
+                                    this_el.html("<i class='fas fa-eye'></i>");
+                                    break;
+                                default:
+                                    alert('Ошибка при активации / деактивации');
+                                    break;
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при активации / деактивации');
+                        });
+            });
+        </script>
     </body>
 </html>
