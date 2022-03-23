@@ -449,6 +449,9 @@ $ski = filter_input(INPUT_POST, 'ski');
 if($ski === null && isset($row['ski'])) {
     $ski = $row['ski'];
 }
+if($ski === null) {
+    $ski = STANDARD_SKI; // По умолчанию значение должно быть "Стандартные лыиж".
+}
 
 $width_ski = filter_input(INPUT_POST, 'width_ski');
 if($width_ski === null && isset($row['width_ski'])) {

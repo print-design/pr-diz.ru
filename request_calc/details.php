@@ -25,9 +25,9 @@ if(empty($id)) {
 }
 
 $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_type_id, wt.name work_type, "
-        . "f.name film_name, fv.thickness thickness, fv.weight weight, rc.price, rc.currency, rc.individual_film_name, rc.individual_price, rc.individual_currency, rc.individual_thickness, rc.individual_density, rc.customers_material, rc.ski, rc.width_ski, "
-        . "lam1f.name lamination1_film_name, lam1fv.thickness lamination1_thickness, lam1fv.weight lamination1_weight, rc.lamination1_price, rc.lamination1_currency, rc.lamination1_individual_film_name, rc.lamination1_individual_price, rc.lamination1_individual_currency, rc.lamination1_individual_thickness, rc.lamination1_individual_density, rc.lamination1_customers_material, rc.lamination1_ski, rc.lamination1_width_ski, "
-        . "lam2f.name lamination2_film_name, lam2fv.thickness lamination2_thickness, lam2fv.weight lamination2_weight, rc.lamination2_price, rc.lamination2_currency, rc.lamination2_individual_film_name, rc.lamination2_individual_price, rc.lamination2_individual_currency, rc.lamination2_individual_thickness, rc.lamination2_individual_density, rc.lamination2_customers_material, rc.lamination2_ski, rc.lamination2_width_ski, "
+        . "rc.film_variation_id, f.name film_name, fv.thickness thickness, fv.weight weight, rc.price, rc.currency, rc.individual_film_name, rc.individual_price, rc.individual_currency, rc.individual_thickness, rc.individual_density, rc.customers_material, rc.ski, rc.width_ski, "
+        . "rc.lamination1_film_variation_id, lam1f.name lamination1_film_name, lam1fv.thickness lamination1_thickness, lam1fv.weight lamination1_weight, rc.lamination1_price, rc.lamination1_currency, rc.lamination1_individual_film_name, rc.lamination1_individual_price, rc.lamination1_individual_currency, rc.lamination1_individual_thickness, rc.lamination1_individual_density, rc.lamination1_customers_material, rc.lamination1_ski, rc.lamination1_width_ski, "
+        . "rc.lamination2_film_variation_id, lam2f.name lamination2_film_name, lam2fv.thickness lamination2_thickness, lam2fv.weight lamination2_weight, rc.lamination2_price, rc.lamination2_currency, rc.lamination2_individual_film_name, rc.lamination2_individual_price, rc.lamination2_individual_currency, rc.lamination2_individual_thickness, rc.lamination2_individual_density, rc.lamination2_customers_material, rc.lamination2_ski, rc.lamination2_width_ski, "
         . "rc.width, rc.streams_number, m.name machine, m.colorfulness colorfulness, rc.length, rc.stream_width, rc.raport, rc.lamination_roller_width, rc.ink_number, u.first_name, u.last_name, rc.status_id, "
         . "rc.ink_1, rc.ink_2, rc.ink_3, rc.ink_4, rc.ink_5, rc.ink_6, rc.ink_7, rc.ink_8, "
         . "rc.color_1, rc.color_2, rc.color_3, rc.color_4, rc.color_5, rc.color_6, rc.color_7, rc.color_8, "
@@ -58,6 +58,7 @@ $quantity = $row['quantity'];
 $work_type_id = $row['work_type_id'];
 $work_type = $row['work_type'];
 
+$film_variation_id = $row['film_variation_id'];
 $film_name = $row['film_name'];
 $thickness = $row['thickness'];
 $weight = $row['weight'];
@@ -72,6 +73,7 @@ $customers_material = $row['customers_material'];
 $ski = $row['ski'];
 $width_ski = $row['width_ski'];
 
+$lamination1_film_variation_id = $row['lamination1_film_variation_id'];
 $lamination1_film_name = $row['lamination1_film_name'];
 $lamination1_thickness = $row['lamination1_thickness'];
 $lamination1_weight = $row['lamination1_weight'];
@@ -86,6 +88,7 @@ $lamination1_customers_material = $row['lamination1_customers_material'];
 $lamination1_ski = $row['lamination1_ski'];
 $lamination1_width_ski = $row['lamination1_width_ski'];
 
+$lamination2_film_variation_id = $row['lamination2_film_variation_id'];
 $lamination2_film_name = $row['lamination2_film_name'];
 $lamination2_thickness = $row['lamination2_thickness'];
 $lamination2_weight = $row['lamination2_weight'];

@@ -84,7 +84,7 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
             <div>Масса с приладкой</div>
             <div class="value mb-2">8 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">192 000 м</span></div>
         </div>
-        <?php if(!empty($lamination1_film_name) || !empty($lamination1_individual_film_name)): ?>
+        <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
         <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
             <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 кг</span></h3>
             <div>Закупочная стоимость</div>
@@ -99,7 +99,7 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
         <?php else: ?>
         <div class="col-4" style="width: 250px;"></div>
         <?php endif; ?>
-        <?php if(!empty($lamination2_film_name) || !empty($lamination2_individual_film_name)): ?>
+        <?php if(!empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name)): ?>
         <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
             <h3>Ламинация 2&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 кг</span></h3>
             <div>Закупочная стоимость</div>
@@ -116,14 +116,14 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
         <?php endif; ?>
     </div>
     <?php
-    if(!empty($lamination1_film_name) || !empty($lamination1_individual_film_name) || !empty($lamination2_film_name) || !empty($lamination2_individual_film_name) || $work_type_id == 2):
+    if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name) || !empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name) || $work_type_id == 2):
     ?>
     <div id="show_costs">
         <div class="row text-nowrap">
             <div class="col-4 pr-4">
                 <button type="button" class="btn btn-light" onclick="javascript: ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать расходы</button>
             </div>
-            <?php if(!empty($lamination1_film_name) || !empty($lamination1_individual_film_name)): ?>
+            <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
             <?php endif; ?>
             <?php if(!empty($lamination2_brand_name) || !empty($lamination2_individual_film_name)): ?>
@@ -137,10 +137,10 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
                 <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
                 <h2 class="mt-2">Расходы</h2>
             </div>
-            <?php if(!empty($lamination1_film_name) || !empty($lamination1_individual_film_name)): ?>
+            <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
             <?php endif; ?>
-            <?php if(!empty($lamination2_film_name) || !empty($lamination2_individual_film_name)): ?>
+            <?php if(!empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name)): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
             <?php endif; ?>
         </div>
@@ -161,7 +161,7 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
                 endif;
                 ?>
             </div>
-            <?php if(!empty($lamination1_film_name) || !empty($lamination1_individual_film_name)): ?>
+            <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
                 <div class="value mb-2">1 280 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">4,5 кг</span></div>
@@ -173,7 +173,7 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
             <?php else: ?>
             <div class="col-4" style="width: 250px;"></div>
             <?php endif; ?>
-            <?php if(!empty($lamination2_film_name) || !empty($lamination2_individual_film_name)): ?>
+            <?php if(!empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name)): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
                 <div class="value mb-2">1 280 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">4,5 кг</span></div>
