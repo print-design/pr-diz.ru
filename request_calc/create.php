@@ -2444,6 +2444,7 @@ $colorfulnesses = array();
                 
                 $('#no_ski_option').removeClass('d-none');
                 $('#lamination1_ski').val(<?=STANDARD_SKI ?>);
+                $('#lamination1_ski').change();
         
                 SetFieldsVisibility($('#work_type_id').val());
                 HideLamination2();
@@ -2482,6 +2483,7 @@ $colorfulnesses = array();
                 $('#form_lamination_2 select').removeAttr('disabled');
                 
                 $('#lamination2_ski').val(<?=STANDARD_SKI ?>);
+                $('#lamination2_ski').change();
             }
             
             // Заполняем список красочностей
