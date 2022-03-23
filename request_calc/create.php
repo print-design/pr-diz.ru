@@ -371,22 +371,25 @@ $customer_id = filter_input(INPUT_POST, 'customer_id');
 if($customer_id === null && isset($row['customer_id'])) {
     $customer_id = $row['customer_id'];
 }
-                 
+
 $name = filter_input(INPUT_POST, 'name');
 if($name === null && isset($row['name'])) {
     $name = $row['name'];
 }
-                
+
 $unit = filter_input(INPUT_POST, 'unit');
 if($unit === null && isset($row[''])) {
     $unit = $row['unit'];
 }
 
-$quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity'));
+$quantity = filter_input(INPUT_POST, 'quantity');
 if($quantity === null && isset($row['quantity'])) {
     $quantity = $row['quantity'];
 }
-            
+else {
+    $quantity = preg_replace("/\D/", "", $quantity);
+}
+
 $work_type_id = filter_input(INPUT_POST, 'work_type_id');
 if($work_type_id === null && isset($row['work_type_id'])) {
     $work_type_id = $row['work_type_id'];
