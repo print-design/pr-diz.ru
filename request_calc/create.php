@@ -341,20 +341,21 @@ if(empty($id)) {
 $row = array();
 
 if(!empty($id)) {
-    $sql = "select date, customer_id, name, unit, quantity, work_type_id, "
-            . "film_variation_id, price, currency, individual_film_name, individual_price, individual_currency, individual_thickness, individual_density, customers_material, ski, "
-            . "(select film_id from film_variation where id = request_calc.film_variation_id) film_id, "
-            . "lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_price, lamination1_individual_currency, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, lamination1_ski, "
-            . "(select film_id from film_variation where id = request_calc.lamination1_film_variation_id) lamination1_film_id, "
-            . "lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_price, lamination2_individual_currency, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, lamination2_ski, "
-            . "(select film_id from film_variation where id = request_calc.lamination2_film_variation_id) lamination2_film_id, "
-            . "width, streams_number, machine_id, length, stream_width, raport, lamination_roller_width, ink_number, manager_id, status_id, "
-            . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
-            . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
-            . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
-            . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, cliche_1, "
-            . "cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8 "
-            . "from request_calc where id=$id";
+    $sql = "select c.date, c.customer_id, c.name, c.unit, c.quantity, c.work_type_id, "
+            . "c.film_variation_id, c.price, c.currency, c.individual_film_name, c.individual_price, c.individual_currency, c.individual_thickness, c.individual_density, c.customers_material, c.ski, "
+            . "(select film_id from film_variation where id = c.film_variation_id) film_id, "
+            . "c.lamination1_film_variation_id, c.lamination1_price, c.lamination1_currency, c.lamination1_individual_film_name, c.lamination1_individual_price, c.lamination1_individual_currency, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, c.lamination1_ski, "
+            . "(select film_id from film_variation where id = c.lamination1_film_variation_id) lamination1_film_id, "
+            . "c.lamination2_film_variation_id, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_price, c.lamination2_individual_currency, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_ski, "
+            . "(select film_id from film_variation where id = c.lamination2_film_variation_id) lamination2_film_id, "
+            . "c.width, c.streams_number, c.machine_id, c.length, c.stream_width, c.raport, c.lamination_roller_width, c.ink_number, c.manager_id, c.status_id, "
+            . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
+            . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
+            . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
+            . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, c.cliche_1, "
+            . "c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
+            . "(select count(id) from request_calc where customer_id = c.customer_id and id <= c.id) num_for_customer "
+            . "from request_calc c where c.id = $id";
     $fetcher = new Fetcher($sql);
     $row = $fetcher->Fetch();
     $error_message = $fetcher->error;
@@ -643,6 +644,11 @@ for ($i=1; $i<=8; $i++) {
     }
 }
 
+$num_for_customer = null;
+if(isset($row['num_for_customer'])) {
+    $num_for_customer = $row['num_for_customer'];
+}
+
 // Расчёт скрываем:
 // 1. При создании нового заказчика
 // 2. При создании нового расчёта
@@ -799,7 +805,7 @@ $colorfulnesses = array();
                         <h1>Новый расчет</h1>
                         <?php else: ?>
                         <h1><?= htmlentities($name) ?></h1>
-                        <h2 style="font-size: 26px;">№<?=$id ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
+                        <h2 style="font-size: 26px;">№<?=$customer_id ?>-<?=$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
                         <?php endif; ?>
                         <!-- Заказчик -->
                         <div class="row">

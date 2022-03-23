@@ -7,14 +7,16 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Лыжи
+const NO_SKI = 0;
+const STANDARD_SKI = 1;
+const NONSTANDARD_SKI = 2;
+
 // Формы
 const OLD = "old";
 const FLINT = "flint";
 const KODAK = "kodak";
 const TVER = "tver";
-
-// Значение марки плёнки "другая"
-const INDIVIDUAL = "individual";
 
 // Получение объекта
 $id = filter_input(INPUT_POST, 'id');
@@ -22,16 +24,18 @@ if(empty($id)) {
     $id = filter_input(INPUT_GET, 'id');
 }
 
-$sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, wt.name work_type, "
-        . "f.name film_name, fv.thickness thickness, fv.weight weight, rc.price, rc.currency, rc.individual_film_name, rc.individual_price, rc.individual_currency, rc.individual_thickness, rc.individual_density, rc.customers_material, rc.ski, "
-        . "lam1f.name lamination1_film_name, lam1fv.thickness lamination1_thickness, lam1fv.weight lamination1_weight, rc.lamination1_price, rc.lamination1_currency, rc.lamination1_individual_film_name, rc.lamination1_individual_price, rc.lamination1_individual_currency, rc.lamination1_individual_thickness, rc.lamination1_individual_density, rc.lamination1_customers_material, rc.lamination1_ski, "
-        . "lam2f.name lamination2_film_name, lam2fv.thickness lamination2_thickness, lam2fv.weight lamination2_weight, rc.lamination2_price, rc.lamination2_currency, rc.lamination2_individual_film_name, rc.lamination2_individual_price, rc.lamination2_individual_currency, rc.lamination2_individual_thickness, rc.lamination2_individual_density, rc.lamination2_customers_material, rc.lamination2_ski, "
+$sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_type_id, wt.name work_type, "
+        . "f.name film_name, fv.thickness thickness, fv.weight weight, rc.price, rc.currency, rc.individual_film_name, rc.individual_price, rc.individual_currency, rc.individual_thickness, rc.individual_density, rc.customers_material, rc.ski, rc.width_ski, "
+        . "lam1f.name lamination1_film_name, lam1fv.thickness lamination1_thickness, lam1fv.weight lamination1_weight, rc.lamination1_price, rc.lamination1_currency, rc.lamination1_individual_film_name, rc.lamination1_individual_price, rc.lamination1_individual_currency, rc.lamination1_individual_thickness, rc.lamination1_individual_density, rc.lamination1_customers_material, rc.lamination1_ski, rc.lamination1_width_ski, "
+        . "lam2f.name lamination2_film_name, lam2fv.thickness lamination2_thickness, lam2fv.weight lamination2_weight, rc.lamination2_price, rc.lamination2_currency, rc.lamination2_individual_film_name, rc.lamination2_individual_price, rc.lamination2_individual_currency, rc.lamination2_individual_thickness, rc.lamination2_individual_density, rc.lamination2_customers_material, rc.lamination2_ski, rc.lamination2_width_ski, "
         . "rc.width, rc.streams_number, m.name machine, m.colorfulness colorfulness, rc.length, rc.stream_width, rc.raport, rc.lamination_roller_width, rc.ink_number, u.first_name, u.last_name, rc.status_id, "
         . "rc.ink_1, rc.ink_2, rc.ink_3, rc.ink_4, rc.ink_5, rc.ink_6, rc.ink_7, rc.ink_8, "
         . "rc.color_1, rc.color_2, rc.color_3, rc.color_4, rc.color_5, rc.color_6, rc.color_7, rc.color_8, "
         . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
         . "rc.percent_1, rc.percent_2, rc.percent_3, rc.percent_4, rc.percent_5, rc.percent_6, rc.percent_7, rc.percent_8, rc.cliche_1, "
-        . "rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8 "
+        . "rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8, "
+        . "cus.name customer, cus.phone customer_phone, cus.extension customer_extension, cus.email customer_email, cus.person customer_person, "
+        . "(select count(id) from request_calc where customer_id = rc.customer_id and id <= rc.id) num_for_customer "
         . "from request_calc rc "
         . "left join film_variation fv on rc.film_variation_id = fv.id "
         . "left join film f on fv.film_id = f.id "
@@ -42,6 +46,7 @@ $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, wt.name w
         . "left join machine m on rc.machine_id = m.id "
         . "left join user u on rc.manager_id = u.id "
         . "left join work_type wt on rc.work_type_id = wt.id "
+        . "left join customer cus on rc.customer_id = cus.id "
         . "where rc.id=$id";
 $row = (new Fetcher($sql))->Fetch();
 
@@ -50,6 +55,7 @@ $customer_id = $row['customer_id'];
 $name = $row['name'];
 $unit = $row['unit'];
 $quantity = $row['quantity'];
+$work_type_id = $row['work_type_id'];
 $work_type = $row['work_type'];
 
 $film_name = $row['film_name'];
@@ -64,6 +70,7 @@ $individual_thickness = $row['individual_thickness'];
 $individual_density = $row['individual_density'];
 $customers_material = $row['customers_material'];
 $ski = $row['ski'];
+$width_ski = $row['width_ski'];
 
 $lamination1_film_name = $row['lamination1_film_name'];
 $lamination1_thickness = $row['lamination1_thickness'];
@@ -77,6 +84,7 @@ $lamination1_individual_thickness = $row['lamination1_individual_thickness'];
 $lamination1_individual_density = $row['lamination1_individual_density'];
 $lamination1_customers_material = $row['lamination1_customers_material'];
 $lamination1_ski = $row['lamination1_ski'];
+$lamination1_width_ski = $row['lamination1_width_ski'];
 
 $lamination2_film_name = $row['lamination2_film_name'];
 $lamination2_thickness = $row['lamination2_thickness'];
@@ -90,6 +98,7 @@ $lamination2_individual_thickness = $row['lamination2_individual_thickness'];
 $lamination2_individual_density = $row['lamination2_individual_density'];
 $lamination2_customers_material = $row['lamination2_customers_material'];
 $lamination2_ski = $row['lamination2_ski'];
+$lamination2_width_ski = $row['lamination2_width_ski'];
 
 $width = $row['width'];
 $streams_number = $row['streams_number'];
@@ -127,12 +136,13 @@ for($i=1; $i<=$ink_number; $i++) {
     }
 }
 
-
 $customer = $row['customer'];
 $customer_phone = $row['customer_phone'];
 $customer_extension = $row['customer_extension'];
 $customer_email = $row['customer_email'];
 $customer_person = $row['customer_person'];
+
+$num_for_customer = $row['num_for_customer'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -236,16 +246,16 @@ $customer_person = $row['customer_person'];
                         <tr><th>Количество ручьев</th><td colspan="3"><?= $streams_number ?></td></tr>
                             <?php
                             endif;
-                            if(!empty($machine)):
+                            if(!empty($last_name) || !empty($first_name)):
                             ?>
-                        <tr><th>Печать без лыж</th><td colspan="3"><?=$no_ski == 1 ? "ДА" : "НЕТ" ?></td></tr>
+                        <tr><th>Менеджер</th><td colspan="3"><?=$last_name.(empty($last_name) ? "" : " ").$first_name ?></td></tr>
                             <?php
                             endif;
-                            if($brand_name == INDIVIDUAL):
+                            if(empty($film_name)):
                             ?>
                         <tr>
                             <th>Пленка</th>
-                            <td><?=$individual_brand_name ?></td>
+                            <td><?=$individual_film_name ?></td>
                             <td><?= number_format($individual_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($individual_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                             <td><?=$customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                         </tr>
@@ -254,49 +264,117 @@ $customer_person = $row['customer_person'];
                             ?>
                         <tr>
                             <th>Пленка</th>
-                            <td><?=$brand_name ?></td>
+                            <td><?=$film_name ?></td>
                             <td><?= number_format($thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                             <td><?=$customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                         </tr>
                             <?php
                             endif;
-                            $lamination = "нет";
-                            if(!empty($lamination1_brand_name)) $lamination = "1";
-                            if(!empty($lamination2_brand_name)) $lamination = "2";
-                            
-                            if(!empty($lamination1_brand_name) && $lamination1_brand_name == INDIVIDUAL):
                             ?>
                         <tr>
-                            <th<?=(empty($lamination2_brand_name) ? "" : " rowspan='2'") ?>>Ламинация: <?=$lamination ?></th>
-                            <td><?=$lamination1_individual_brand_name ?></td>
+                            <th></th>
+                            <td>
+                                <?php
+                                    switch ($ski) {
+                                    case STANDARD_SKI:
+                                        echo "Стандартные лыжи";
+                                        break;
+                                    case NONSTANDARD_SKI:
+                                        echo "Нестандартные лыжи";
+                                        break;
+                                    default :
+                                        echo 'Без лыж';
+                                        break;
+                                    }
+                                ?>
+                            </td>
+                            <td colspan="2"><?=($ski == NONSTANDARD_SKI ? $width_ski.' мм' : '') ?></td>
+                        </tr>
+                            <?php
+                            $lamination = "нет";
+                            if(!empty($lamination1_film_name) || !empty($lamination1_individual_film_name)) $lamination = "1";
+                            if(!empty($lamination2_film_name) || !empty($lamination2_individual_film_name)) $lamination = "2";
+                            
+                            if(!empty($lamination1_individual_film_name)):
+                            ?>
+                        <tr>
+                            <th>Ламинация: <?=$lamination ?></th>
+                            <td><?=$lamination1_individual_film_name ?></td>
                             <td><?= number_format($lamination1_individual_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_individual_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                             <td><?=$lamination1_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                         </tr>
                             <?php
-                            elseif(!empty($lamination1_brand_name)):
+                            elseif(!empty($lamination1_film_name)):
                             ?>
                         <tr>
-                            <th<?=(empty($lamination2_brand_name) ? "" : " rowspan='2'") ?>>Ламинация: <?=$lamination ?></th>
-                            <td><?=$lamination1_brand_name ?></td>
+                            <th>Ламинация: <?=$lamination ?></th>
+                            <td><?=$lamination1_film_name ?></td>
                             <td><?= number_format($lamination1_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                             <td><?=$lamination1_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                         </tr>
                             <?php
                             endif;
-                            if(!empty($lamination2_brand_name) && $lamination2_brand_name == INDIVIDUAL):
+                            if(!empty($lamination1_individual_film_name) || !empty($lamination1_film_name)):
                             ?>
                         <tr>
-                            <td><?=$lamination2_individual_brand_name ?></td>
+                            <th></th>
+                            <td>
+                                <?php
+                                    switch ($lamination1_ski) {
+                                    case STANDARD_SKI:
+                                        echo "Стандартные лыжи";
+                                        break;
+                                    case NONSTANDARD_SKI:
+                                        echo "Нестандартные лыжи";
+                                        break;
+                                    default :
+                                        echo 'Без лыж';
+                                        break;
+                                    }
+                                ?>
+                            </td>
+                            <td colspan="2"><?=($lamination1_ski == NONSTANDARD_SKI ? $lamination1_width_ski.' мм' : '') ?></td>
+                        </tr>
+                            <?php
+                            endif;
+                            if(!empty($lamination2_individual_film_name)):
+                            ?>
+                        <tr>
+                            <th></th>
+                            <td><?=$lamination2_individual_film_name ?></td>
                             <td><?= number_format($lamination2_individual_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_individual_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                             <td><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
                         </tr>
                             <?php
-                            elseif(!empty($lamination2_brand_name)):
+                            elseif(!empty($lamination2_film_name)):
                             ?>
                         <tr>
-                            <td><?=$lamination2_brand_name ?></td>
+                            <th></th>
+                            <td><?=$lamination2_film_name ?></td>
                             <td><?= number_format($lamination2_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                             <td><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
+                        </tr>
+                            <?php
+                            endif;
+                            if(!empty($lamination2_individual_film_name) || !empty($lamination2_film_name)):
+                            ?>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <?php
+                                    switch ($lamination2_ski) {
+                                        case STANDARD_SKI:
+                                            echo 'Стандартные лыжи';
+                                            break;
+                                        case NONSTANDARD_SKI:
+                                            echo 'Нестандартные лыжи';
+                                            break;
+                                        default :
+                                            echo 'Без лыж';
+                                            break;
+                                    }
+                                ?>
+                            </td>
                         </tr>
                             <?php
                             endif;
