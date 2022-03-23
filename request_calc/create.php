@@ -246,7 +246,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $individual_thickness = filter_input(INPUT_POST, 'individual_thickness'); if(empty($individual_thickness)) $individual_thickness = "NULL";
         $individual_density = filter_input(INPUT_POST, 'individual_density'); if(empty($individual_density)) $individual_density = "NULL";
         $customers_material = 0; if(filter_input(INPUT_POST, 'customers_material') == 'on') $customers_material = 1;
-        $ski = filter_input(INPUT_POST, 'ski');
+        $ski = filter_input(INPUT_POST, 'ski'); if(empty($ski)) $ski = "NULL";
+        $width_ski = filter_input(INPUT_POST, 'width_ski'); if(empty($width_ski)) $width_ski = "NULL";
         
         $lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id'); if(empty($lamination1_film_variation_id)) $lamination1_film_variation_id = "NULL";
         $lamination1_price = filter_input(INPUT_POST, 'lamination1_price'); if(empty($lamination1_price)) $lamination1_price = "NULL";
@@ -257,7 +258,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $lamination1_individual_thickness = filter_input(INPUT_POST, 'lamination1_individual_thickness'); if(empty($lamination1_individual_thickness)) $lamination1_individual_thickness = "NULL";
         $lamination1_individual_density = filter_input(INPUT_POST, 'lamination1_individual_density'); if(empty($lamination1_individual_density)) $lamination1_individual_density = "NULL";
         $lamination1_customers_material = 0; if(filter_input(INPUT_POST, 'lamination1_customers_material') == 'on') $lamination1_customers_material = 1;
-        $lamination1_ski = filter_input(INPUT_POST, 'lamination1_ski');
+        $lamination1_ski = filter_input(INPUT_POST, 'lamination1_ski'); if(empty($lamination1_ski)) $lamination1_ski = "NULL";
+        $lamination1_width_ski = filter_input(INPUT_POST, 'lamination1_width_ski'); if(empty($lamination1_width_ski)) $lamination1_width_ski = "NULL";
         
         $lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id'); if(empty($lamination2_film_variation_id)) $lamination2_film_variation_id = "NULL";
         $lamination2_price = filter_input(INPUT_POST, 'lamination2_price'); if(empty($lamination2_price)) $lamination2_price = "NULL";
@@ -268,7 +270,8 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $lamination2_individual_thickness = filter_input(INPUT_POST, 'lamination2_individual_thickness'); if(empty($lamination2_individual_thickness)) $lamination2_individual_thickness = "NULL";
         $lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density'); if(empty($lamination2_individual_density)) $lamination2_individual_density = "NULL";
         $lamination2_customers_material = 0; if(filter_input(INPUT_POST, 'lamination2_customers_material') == 'on') $lamination2_customers_material = 1;
-        $lamination2_ski = filter_input(INPUT_POST, 'lamination2_ski');
+        $lamination2_ski = filter_input(INPUT_POST, 'lamination2_ski'); if(empty($lamination2_ski)) $lamination2_ski = "NULL";
+        $lamination2_width_ski = filter_input(INPUT_POST, 'lamination2_width_ski'); if(empty($lamination2_width_ski)) $lamination2_width_ski = "NULL";
         
         $width = filter_input(INPUT_POST, 'width'); if(empty($width)) $width = "NULL";
         $length = filter_input(INPUT_POST, 'length'); if(empty($length)) $length = "NULL";
@@ -303,9 +306,9 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         }
         
         $sql = "insert into request_calc (customer_id, name, unit, quantity, work_type_id, "
-                . "film_variation_id, price, currency, individual_film_name, individual_price, individual_currency, individual_thickness, individual_density, customers_material, ski, "
-                . "lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_price, lamination1_individual_currency, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, lamination1_ski, "
-                . "lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_price, lamination2_individual_currency, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, lamination2_ski, "
+                . "film_variation_id, price, currency, individual_film_name, individual_price, individual_currency, individual_thickness, individual_density, customers_material, ski, width_ski, "
+                . "lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_price, lamination1_individual_currency, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, lamination1_ski, lamination1_width_ski, "
+                . "lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_price, lamination2_individual_currency, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, lamination2_ski, lamination2_width_ski, "
                 . "width, streams_number, machine_id, length, stream_width, raport, lamination_roller_width, ink_number, manager_id, status_id, "
                 . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
                 . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -313,9 +316,9 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                 . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, cliche_1, "
                 . "cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8) "
                 . "values($customer_id, '$name', '$unit', $quantity, $work_type_id, "
-                . "$film_variation_id, $price, '$currency', '$individual_film_name', $individual_price, '$individual_currency', $individual_thickness, $individual_density, $customers_material, $ski, "
-                . "$lamination1_film_variation_id, $lamination1_price, '$lamination1_currency', '$lamination1_individual_film_name', $lamination1_individual_price, '$lamination1_individual_currency', $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, $lamination1_ski, "
-                . "$lamination2_film_variation_id, $lamination2_price, '$lamination2_currency', '$lamination2_individual_film_name', $lamination2_individual_price, '$lamination2_individual_currency', $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, $lamination2_ski, "
+                . "$film_variation_id, $price, '$currency', '$individual_film_name', $individual_price, '$individual_currency', $individual_thickness, $individual_density, $customers_material, $ski, $width_ski, "
+                . "$lamination1_film_variation_id, $lamination1_price, '$lamination1_currency', '$lamination1_individual_film_name', $lamination1_individual_price, '$lamination1_individual_currency', $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, $lamination1_ski, $lamination1_width_ski, "
+                . "$lamination2_film_variation_id, $lamination2_price, '$lamination2_currency', '$lamination2_individual_film_name', $lamination2_individual_price, '$lamination2_individual_currency', $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, $lamination2_ski, $lamination2_width_ski, "
                 . "$width, $streams_number, $machine_id, $length, $stream_width, $raport, $lamination_roller_width, $ink_number, $manager_id, $status_id, "
                 . "'$ink_1', '$ink_2', '$ink_3', '$ink_4', '$ink_5', '$ink_6', '$ink_7', '$ink_8', "
                 . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
@@ -342,11 +345,11 @@ $row = array();
 
 if(!empty($id)) {
     $sql = "select c.date, c.customer_id, c.name, c.unit, c.quantity, c.work_type_id, "
-            . "c.film_variation_id, c.price, c.currency, c.individual_film_name, c.individual_price, c.individual_currency, c.individual_thickness, c.individual_density, c.customers_material, c.ski, "
+            . "c.film_variation_id, c.price, c.currency, c.individual_film_name, c.individual_price, c.individual_currency, c.individual_thickness, c.individual_density, c.customers_material, c.ski, c.width_ski, "
             . "(select film_id from film_variation where id = c.film_variation_id) film_id, "
-            . "c.lamination1_film_variation_id, c.lamination1_price, c.lamination1_currency, c.lamination1_individual_film_name, c.lamination1_individual_price, c.lamination1_individual_currency, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, c.lamination1_ski, "
+            . "c.lamination1_film_variation_id, c.lamination1_price, c.lamination1_currency, c.lamination1_individual_film_name, c.lamination1_individual_price, c.lamination1_individual_currency, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, c.lamination1_ski, c.lamination1_width_ski, "
             . "(select film_id from film_variation where id = c.lamination1_film_variation_id) lamination1_film_id, "
-            . "c.lamination2_film_variation_id, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_price, c.lamination2_individual_currency, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_ski, "
+            . "c.lamination2_film_variation_id, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_price, c.lamination2_individual_currency, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_ski, c.lamination2_width_ski, "
             . "(select film_id from film_variation where id = c.lamination2_film_variation_id) lamination2_film_id, "
             . "c.width, c.streams_number, c.machine_id, c.length, c.stream_width, c.raport, c.lamination_roller_width, c.ink_number, c.manager_id, c.status_id, "
             . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
@@ -444,6 +447,11 @@ if($ski === null && isset($row['ski'])) {
     $ski = $row['ski'];
 }
 
+$width_ski = filter_input(INPUT_POST, 'width_ski');
+if($width_ski === null && isset($row['width_ski'])) {
+    $width_ski = $row['width_ski'];
+}
+
 $lamination1_film_id = filter_input(INPUT_POST, 'lamination1_film_id');
 if($lamination1_film_id === null && isset($row['lamination1_film_id'])) {
     $lamination1_film_id = $row['lamination1_film_id'];
@@ -499,6 +507,11 @@ if($lamination1_ski === null && isset($row['lamination1_ski'])) {
     $lamination1_ski = $row['lamination1_ski'];
 }
 
+$lamination1_width_ski = filter_input(INPUT_POST, 'lamination1_width_ski');
+if($lamination1_width_ski === null && isset($row['lamination1_width_ski'])) {
+    $lamination1_width_ski = $row['lamination1_width_ski'];
+}
+
 $lamination2_film_id = filter_input(INPUT_POST, 'lamination2_film_id');
 if($lamination2_film_id === null && isset($row['lamination2_film_id'])) {
     $lamination2_film_id = $row['lamination2_film_id'];
@@ -552,6 +565,11 @@ if($lamination2_customers_material === null && isset($row['lamination2_customers
 $lamination2_ski = filter_input(INPUT_POST, 'lamination2_ski');
 if($lamination2_ski === null && isset($row['lamination2_ski'])) {
     $lamination2_ski = $row['lamination2_ski'];
+}
+
+$lamination2_width_ski = filter_input(INPUT_POST, 'lamination2_width_ski');
+if($lamination2_width_ski === null && isset($row['lamination2_width_ski'])) {
+    $lamination2_width_ski = $row['lamination2_width_ski'];
 }
 
 $width = filter_input(INPUT_POST, 'width');
@@ -952,20 +970,27 @@ $colorfulnesses = array();
                             </div>
                         </div>
                         <!-- Основная плёнка -->
-                        <div class="d-flex justify-content-start">
-                            <div class="mt-2">
+                        <div class="row">
+                            <div class="col-5 mt-2">
                                 <p id="film_title"><span class="font-weight-bold">Пленка</span></p>
                                 <p id="main_film_title" class="d-none"><span class="font-weight-bold">Основная пленка</span></p>
                             </div>
-                            <div class="mt-2 ml-2">
-                                <select name="ski" id="ski" class="form-control form-control-sm">
-                                    <?php
-                                    $no_ski_class = "";
-                                    ?>
-                                    <option id="no_ski_option" value="<?=NO_SKI ?>"<?=$no_ski_class ?>>Без лыж</option>
-                                    <option value="<?=STANDARD_SKI ?>">Стандартные лыжи</option>
-                                    <option value="<?=NONSTANDARD_SKI ?>">Нестандартные лыжи</option>
-                                </select>
+                            <div class="col-5 mt-2">
+                                <div class="row">
+                                    <div class="col-7">
+                                        <select name="ski" id="ski" class="form-control form-control-sm">
+                                            <?php
+                                            $no_ski_class = "";
+                                            ?>
+                                            <option id="no_ski_option" value="<?=NO_SKI ?>"<?=$no_ski_class ?><?=($ski == NO_SKI ? " selected='selected'" : "") ?>>Без лыж</option>
+                                            <option value="<?=STANDARD_SKI ?>"<?=($ski == STANDARD_SKI ? " selected='selected'" : "") ?>>Стандартные лыжи</option>
+                                            <option value="<?=NONSTANDARD_SKI ?>"<?=($ski == NONSTANDARD_SKI ? " selected='selected'" : "") ?>>Нестандартные лыжи</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-5">
+                                        <input name="width_ski" id="width_ski" type="text" class="form-control form-control-sm int-only" value="<?=$width_ski ?>" placeholder="Ширина пленки" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -1155,15 +1180,22 @@ $colorfulnesses = array();
                         </div>
                         <!-- Ламинация 1 -->
                         <div id="form_lamination_1" class="d-none">
-                            <div class="d-flex justify-content-start">
-                                <div class="mt-2">
+                            <div class="row">
+                                <div class="col-5 mt-2">
                                     <p class="font-weight-bold">Ламинация 1</p>
                                 </div>
-                                <div class="mt-2 ml-2">
-                                    <select name="lamination1_ski" id="lamination1_ski" class="form-control form-control-sm">
-                                        <option value="<?=STANDARD_SKI ?>">Стандартные лыжи</option>
-                                        <option value="<?=NONSTANDARD_SKI ?>">Нестандартные лыжи</option>
-                                    </select>
+                                <div class="col-5 mt-2">
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <select name="lamination1_ski" id="lamination1_ski" class="form-control form-control-sm">
+                                                <option value="<?=STANDARD_SKI ?>">Стандартные лыжи</option>
+                                                <option value="<?=NONSTANDARD_SKI ?>">Нестандартные лыжи</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-5">
+                                            <input name="lamination1_width_ski" id="lamination1_width_ski" type="text" class="form-control form-control-sm int-only" placeholder="Ширина пленки" />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -1363,15 +1395,22 @@ $colorfulnesses = array();
                             </div>
                             <!-- Ламинация 2 -->
                             <div id="form_lamination_2" class="d-none">
-                                <div class="d-flex justify-content-start">
-                                    <div class="mt-2">
+                                <div class="row">
+                                    <div class="col-5 mt-2">
                                         <p class="font-weight-bold">Ламинация 2</p>
                                     </div>
-                                    <div class="mt-2 ml-2">
-                                        <select name="lamination2_ski" id="lamination2_ski" class="form-control form-control-sm">
-                                            <option value="<?=STANDARD_SKI ?>">Стандартные лыжи</option>
-                                            <option value="<?=NONSTANDARD_SKI ?>">Нестандартные лыжи</option>
-                                        </select>
+                                    <div class="col-5 mt-2">
+                                        <div class="row">
+                                            <div class="col-7">
+                                                <select name="lamination2_ski" id="lamination2_ski" class="form-control form-control-sm">
+                                                    <option value="<?=STANDARD_SKI ?>">Стандартные лыжи</option>
+                                                    <option value="<?=NONSTANDARD_SKI ?>">Нестандартные лыжи</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-5">
+                                                <input name="lamination2_width_ski" id="lamination2_width_ski" type="text" class="form-control form-control-sm int-only" placeholder="Ширина пленки" />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
