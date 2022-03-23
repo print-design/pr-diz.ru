@@ -2217,6 +2217,36 @@ $colorfulnesses = array();
                 ChangeLimitIntValue($(this), 100);
             });
             
+            // Показываем или скрываем поле "Ширина пленки" в зависимости от значения поля "Лыжи"
+            $('#ski').change(SetWidthSkiVisibility);
+            $('#lamination1_ski').change(SetWidthSkiVisibility);
+            $('#lamination2_ski').change(SetWidthSkiVisibility);
+            
+            function SetWidthSkiVisibility() {
+                if($('#ski').val() == <?=NONSTANDARD_SKI ?>) {
+                    $('#width_ski').removeClass('d-none');
+                }
+                else {
+                    $('#width_ski').addClass('d-none');
+                }
+                
+                if($('#lamination1_ski').val() == <?=NONSTANDARD_SKI ?>) {
+                    $('#lamination1_width_ski').removeClass('d-none');
+                }
+                else {
+                    $('#lamination1_width_ski').addClass('d-none');
+                }
+                
+                if($('#lamination2_ski').val() == <?=NONSTANDARD_SKI ?>) {
+                    $('#lamination2_width_ski').removeClass('d-none');
+                }
+                else {
+                    $('#lamination2_width_ski').addClass('d-none');
+                }
+            }
+            
+            SetWidthSkiVisibility();
+            
             // Показываем или скрываем поля в зависимости от работы с печатью / без печати и наличия / отсутствия ламинации
             function SetFieldsVisibility(work_type_id) {
                 if(work_type_id == 2) {
