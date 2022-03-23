@@ -2383,6 +2383,7 @@ $colorfulnesses = array();
             $('#customers_material').change(function(e) {
                 isCustomers = $(e.target).is(':checked');
                 SetFilmFieldsVisibility($('#film_id').val(), isCustomers, '');
+                $('#price').removeClass('is-invalid');
                 
                 if(!isCustomers) {
                     $('#film_variation_id').change();
@@ -2392,6 +2393,7 @@ $colorfulnesses = array();
             $('#lamination1_customers_material').change(function(e) {
                 isCustomers = $(e.target).is(':checked');
                 SetFilmFieldsVisibility($('#lamination1_film_id').val(), isCustomers, 'lamination1_');
+                $('#lamination1_price').removeClass('is-invalid');
                 
                 if(!isCustomers) {
                     $('#lamination1_film_variation_id').change();
@@ -2401,6 +2403,7 @@ $colorfulnesses = array();
             $('#lamination2_customers_material').change(function(e) {
                 isCustomers = $(e.target).is(':checked');
                 SetFilmFieldsVisibility($('#lamination2_film_id').val(), isCustomers, 'lamination2_');
+                $('#lamination2_price').removeClass('is-invalid');
                 
                 if(!isCustomers) {
                     $('#lamination2_film_variation_id').change();
