@@ -1030,61 +1030,58 @@ $colorfulnesses = array();
                                 </div>
                             </div>
                             <div class="col-5">
-                                <div class="row">
-                                    <div class="col-7">
-                                        <div class="form-group">
-                                            <label for="film_variation_id">Толщина, мкм</label>
-                                            <select id="film_variation_id" name="film_variation_id" class="form-control" required="required">
-                                                <option value="" hidden="hidden" selected="selected">Толщина...</option>
-                                                <?php
-                                                if(!empty($film_id)) {
-                                                    $sql = "select id, thickness, weight from film_variation where film_id='$film_id' order by thickness";
-                                                    $thicknesses = (new Grabber($sql))->result;
+                                <div class="form-group">
+                                    <label for="film_variation_id">Толщина, мкм</label>
+                                    <select id="film_variation_id" name="film_variation_id" class="form-control" required="required">
+                                        <option value="" hidden="hidden" selected="selected">Толщина...</option>
+                                            <?php
+                                            if(!empty($film_id)) {
+                                                $sql = "select id, thickness, weight from film_variation where film_id='$film_id' order by thickness";
+                                                $thicknesses = (new Grabber($sql))->result;
                                             
-                                                    foreach ($thicknesses as $row):
-                                                    $selected = '';
-                                                    if($row['id'] == $film_variation_id) {
-                                                        $selected = " selected='selected'";
-                                                    }
-                                                ?>
-                                                <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['thickness'] ?> мкм <?=$row['weight'] ?> г/м<sup>2</sup></option>
-                                                <?php
-                                                endforeach;
+                                                foreach ($thicknesses as $row):
+                                                $selected = '';
+                                                if($row['id'] == $film_variation_id) {
+                                                    $selected = " selected='selected'";
                                                 }
-                                                ?>
+                                            ?>
+                                        <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['thickness'] ?> мкм <?=$row['weight'] ?> г/м<sup>2</sup></option>
+                                            <?php
+                                            endforeach;
+                                            }
+                                            ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-5"></div>
+                            <div class="col-5">
+                                <div class="form-group">
+                                    <label for="price" id="for_price">Цена</label>
+                                    <div class="input-group">
+                                        <input type="text" 
+                                               id="price" 
+                                               name="price" 
+                                               class="form-control float-only film-price<?=$price_valid ?>" 
+                                               placeholder="Цена" 
+                                               value="<?=$price ?>" 
+                                               onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onmouseup="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
+                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                               onkeyup="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
+                                               onfocusout="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" />
+                                        <div class="input-group-append">
+                                            <select id="currency" name="currency" class="film-currency">
+                                                <option value="" hidden="">...</option>
+                                                <option value="rub"<?=$currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
+                                                <option value="usd"<?=$currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
+                                                <option value="euro"<?=$currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
                                             </select>
+                                            <div class="input-group-text d-none" id="currency_text"></div>
                                         </div>
-                                    </div>
-                                    <div class="col-5">
-                                        <div class="form-group">
-                                            <label for="price" id="for_price">Цена</label>
-                                            <div class="input-group">
-                                                <input type="text" 
-                                                       id="price" 
-                                                       name="price" 
-                                                       class="form-control float-only film-price<?=$price_valid ?>" 
-                                                       placeholder="Цена" 
-                                                       value="<?=$price ?>" 
-                                                       onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                       onmouseup="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
-                                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                       onkeyup="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
-                                                       onfocusout="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" />
-                                                <div class="input-group-append">
-                                                    <select id="currency" name="currency" class="film-currency">
-                                                        <option value="" hidden="">...</option>
-                                                        <option value="rub"<?=$currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
-                                                        <option value="usd"<?=$currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                                        <option value="euro"<?=$currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
-                                                    </select>
-                                                    <div class="input-group-text d-none" id="currency_text"></div>
-                                                </div>
-                                                <div class="invalid-feedback">Цена ниже минимальной</div>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" id="price_min" name="price_min" />
+                                        <div class="invalid-feedback">Цена ниже минимальной</div>
                                     </div>
                                 </div>
+                                <input type="hidden" id="price_min" name="price_min" />
                             </div>
                         </div>
                         <div class="row individual_only">
@@ -1232,60 +1229,27 @@ $colorfulnesses = array();
                                     </div>
                                 </div>
                                 <div class="col-5">
-                                    <div class="row">
-                                        <div class="col-7">
-                                            <div class="form-group">
-                                                <label for="lamination1_film_variation_id">Толщина, мкм</label>
-                                                <select id="lamination1_film_variation_id" name="lamination1_film_variation_id" class="form-control">
-                                                    <option value="" hidden="hidden" selected="selected">Толщина...</option>
-                                                    <?php
-                                                    if(!empty($lamination1_film_id)) {
-                                                        $sql = "select id, thickness, weight from film_variation where film_id='$lamination1_film_id' order by thickness";
-                                                        $thicknesses = (new Grabber($sql))->result;
+                                    <div class="form-group">
+                                        <label for="lamination1_film_variation_id">Толщина, мкм</label>
+                                        <select id="lamination1_film_variation_id" name="lamination1_film_variation_id" class="form-control">
+                                            <option value="" hidden="hidden" selected="selected">Толщина...</option>
+                                                <?php
+                                                if(!empty($lamination1_film_id)) {
+                                                    $sql = "select id, thickness, weight from film_variation where film_id='$lamination1_film_id' order by thickness";
+                                                    $thicknesses = (new Grabber($sql))->result;
                                                 
-                                                        foreach ($thicknesses as $row):
-                                                        $selected = '';
-                                                        if($row['id'] == $lamination1_film_variation_id) {
-                                                            $selected = " selected='selected'";
-                                                        }
-                                                    ?>
-                                                    <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['thickness'] ?> мкм <?=$row['weight'] ?> г/м<sup>2</sup></option>
-                                                    <?php
-                                                    endforeach;
+                                                    foreach ($thicknesses as $row):
+                                                    $selected = '';
+                                                    if($row['id'] == $lamination1_film_variation_id) {
+                                                        $selected = " selected='selected'";
                                                     }
-                                                    ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-5">
-                                            <div class="form-group">
-                                                <label for="lamination1_price" id="for_lamination1_price">Цена</label>
-                                                <div class="input-group">
-                                                    <input type="text" 
-                                                        id="lamination1_price" 
-                                                        name="lamination1_price" 
-                                                        class="form-control float-only film-price<?=$lamination1_price_valid ?>" 
-                                                        placeholder="Цена" 
-                                                        value="<?=$lamination1_price ?>" 
-                                                        onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                        onmouseup="javascript: $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" 
-                                                        onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                        onkeyup="javascript: $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" 
-                                                        onfocusout="javascript: $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" />
-                                                    <div class="input-group-append">
-                                                        <select id="lamination1_currency" name="lamination1_currency" class="film-currency">
-                                                            <option value="" hidden="">...</option>
-                                                            <option value="rub"<?=$lamination1_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
-                                                            <option value="usd"<?=$lamination1_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                                            <option value="euro"<?=$lamination1_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
-                                                        </select>
-                                                        <div class="input-group-text d-none" id="lamination1_currency_text"></div>
-                                                    </div>
-                                                <div class="invalid-feedback">Цена ниже минимальной</div>
-                                            </div>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" id="lamination1_price_min" name="lamination1_price_min" />
+                                                ?>
+                                            <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['thickness'] ?> мкм <?=$row['weight'] ?> г/м<sup>2</sup></option>
+                                                <?php
+                                                endforeach;
+                                                }
+                                                ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-1 d-flex flex-column justify-content-end">
@@ -1298,6 +1262,36 @@ $colorfulnesses = array();
                                     <div class="<?=$hide_lamination1_class ?>" id="hide_lamination_1">
                                         <button type="button" class="btn btn-light" onclick="javascript: HideLamination1();"><i class="fas fa-trash-alt"></i></button>
                                     </div>
+                                </div>
+                                <div class="col-5"></div>
+                                <div class="col-5">
+                                    <div class="form-group">
+                                        <label for="lamination1_price" id="for_lamination1_price">Цена</label>
+                                        <div class="input-group">
+                                            <input type="text" 
+                                                   id="lamination1_price" 
+                                                   name="lamination1_price" 
+                                                   class="form-control float-only film-price<?=$lamination1_price_valid ?>" 
+                                                   placeholder="Цена" 
+                                                   value="<?=$lamination1_price ?>" 
+                                                   onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                   onmouseup="javascript: $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" 
+                                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                                   onkeyup="javascript: $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" 
+                                                   onfocusout="javascript: $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" />
+                                            <div class="input-group-append">
+                                                <select id="lamination1_currency" name="lamination1_currency" class="film-currency">
+                                                    <option value="" hidden="">...</option>
+                                                    <option value="rub"<?=$lamination1_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
+                                                    <option value="usd"<?=$lamination1_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
+                                                    <option value="euro"<?=$lamination1_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
+                                                </select>
+                                                <div class="input-group-text d-none" id="lamination1_currency_text"></div>
+                                            </div>
+                                            <div class="invalid-feedback">Цена ниже минимальной</div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="lamination1_price_min" name="lamination1_price_min" />
                                 </div>
                             </div>
                             <div class="row lamination1_individual_only">
@@ -1447,64 +1441,61 @@ $colorfulnesses = array();
                                         </div>
                                     </div>
                                     <div class="col-5">
-                                        <div class="row">
-                                            <div class="col-7">
-                                                <div class="form-group">
-                                                    <label for="lamination2_film_variation_id">Толщина, мкм</label>
-                                                    <select id="lamination2_film_variation_id" name="lamination2_film_variation_id" class="form-control">
-                                                        <option value="" hidden="hidden" selected="selected">Толщина...</option>
-                                                        <?php
-                                                        if(!empty($lamination2_film_id)):
-                                                        $sql = "select id, thickness, weight from film_variation where film_id='$lamination2_film_id' order by thickness";
-                                                        $variations = (new Grabber($sql))->result;
+                                        <div class="form-group">
+                                            <label for="lamination2_film_variation_id">Толщина, мкм</label>
+                                            <select id="lamination2_film_variation_id" name="lamination2_film_variation_id" class="form-control">
+                                                <option value="" hidden="hidden" selected="selected">Толщина...</option>
+                                                    <?php
+                                                    if(!empty($lamination2_film_id)):
+                                                    $sql = "select id, thickness, weight from film_variation where film_id='$lamination2_film_id' order by thickness";
+                                                    $variations = (new Grabber($sql))->result;
                                                     
-                                                        foreach ($variations as $row):
-                                                        $selected = "";
-                                                        if($row['id'] == $lamination2_film_variation_id) {
-                                                            $selected = " selected='selected'";
-                                                        }
-                                                        ?>
-                                                        <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['thickness'] ?> мкм <?=$row['weight'] ?> г/м<sup>2</sup></option>
-                                                        <?php
-                                                        endforeach;
-                                                        endif;
-                                                        ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-5">
-                                                <div class="form-group">
-                                                    <label for="lamination2_price" id="for_lamination2_price">Цена</label>
-                                                    <div class="input-group">
-                                                        <input type="text" 
-                                                            id="lamination2_price" 
-                                                            name="lamination2_price" 
-                                                            class="form-control float-only film-price<?=$lamination2_price_valid ?>" 
-                                                            placeholder="Цена" 
-                                                            value="<?=$lamination2_price ?>" 
-                                                            onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                            onmouseup="javascript: $(this).attr('name', 'lamination2_price'); $(this).attr('placeholder', 'Цена');" 
-                                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                            onkeyup="javascript: $(this).attr('name', 'lamination2_price'); $(this).attr('placeholder', 'Цена');" 
-                                                            onfocusout="javascript: $(this).attr('name', 'lamination2_price'); $(this).attr('placeholder', 'Цена');" />
-                                                        <div class="input-group-append">
-                                                            <select id="lamination2_currency" name="lamination2_currency" class="film-currency">
-                                                                <option value="" hidden="">...</option>
-                                                                <option value="rub"<?=$lamination2_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
-                                                                <option value="usd"<?=$lamination2_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                                                <option value="euro"<?=$lamination2_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
-                                                            </select>
-                                                            <div class="input-group-text d-none" id="lamination2_currency_text"></div>
-                                                        </div>
-                                                        <div class="invalid-feedback">Цена ниже минимальной</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <input type="hidden" id="lamination2_price_min" name="lamination2_price_min" />
+                                                    foreach ($variations as $row):
+                                                    $selected = "";
+                                                    if($row['id'] == $lamination2_film_variation_id) {
+                                                        $selected = " selected='selected'";
+                                                    }
+                                                    ?>
+                                                <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['thickness'] ?> мкм <?=$row['weight'] ?> г/м<sup>2</sup></option>
+                                                    <?php
+                                                    endforeach;
+                                                    endif;
+                                                    ?>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-1 d-flex flex-column justify-content-end">
                                         <button type="button" class="btn btn-light" onclick="javascript: HideLamination2();"><i class="fas fa-trash-alt"></i></button>
+                                    </div>
+                                    <div class="col-5"></div>
+                                    <div class="col-5">
+                                        <div class="form-group">
+                                            <label for="lamination2_price" id="for_lamination2_price">Цена</label>
+                                            <div class="input-group">
+                                                <input type="text" 
+                                                       id="lamination2_price" 
+                                                       name="lamination2_price" 
+                                                       class="form-control float-only film-price<?=$lamination2_price_valid ?>" 
+                                                       placeholder="Цена" 
+                                                       value="<?=$lamination2_price ?>" 
+                                                       onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                       onmouseup="javascript: $(this).attr('name', 'lamination2_price'); $(this).attr('placeholder', 'Цена');" 
+                                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                                       onkeyup="javascript: $(this).attr('name', 'lamination2_price'); $(this).attr('placeholder', 'Цена');" 
+                                                       onfocusout="javascript: $(this).attr('name', 'lamination2_price'); $(this).attr('placeholder', 'Цена');" />
+                                                <div class="input-group-append">
+                                                    <select id="lamination2_currency" name="lamination2_currency" class="film-currency">
+                                                        <option value="" hidden="">...</option>
+                                                        <option value="rub"<?=$lamination2_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
+                                                        <option value="usd"<?=$lamination2_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
+                                                        <option value="euro"<?=$lamination2_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
+                                                    </select>
+                                                    <div class="input-group-text d-none" id="lamination2_currency_text"></div>
+                                                </div>
+                                                <div class="invalid-feedback">Цена ниже минимальной</div>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="lamination2_price_min" name="lamination2_price_min" />
                                     </div>
                                 </div>
                                 <div class="row lamination2_individual_only">
