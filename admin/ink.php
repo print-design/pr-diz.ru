@@ -801,21 +801,18 @@ if($row = $fetcher->Fetch()) {
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
                                     <label for="min_price">Ограничение на минимальную стоимость, руб</label>
-                                    <div class="input-group">
-                                        <input type="text" 
-                                               class="form-control" 
-                                               id="min_price" 
-                                               name="min_price" 
-                                               value="<?= empty($min_price) || $min_price == 0.0 ? "" : floatval($min_price) ?>" 
-                                               placeholder="Мин. стоимость, руб" 
-                                               required="required" 
-                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'min_price'); $(this).attr('name', 'min_price'); $(this).attr('placeholder', 'Мин. стоимость, руб');" 
-                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'min_price'); $(this).attr('name', 'min_price'); $(this).attr('placeholder', 'Мин. стоимость, руб');" 
-                                               onfocusout="javascript: $(this).attr('id', 'min_price'); $(this).attr('name', 'min_price'); $(this).attr('placeholder', 'Мин. стоимость, руб');" />
-                                        <div class="input-group-append"><span class="input-group-text">%</span></div>
-                                    </div>
+                                    <input type="text" 
+                                           class="form-control" 
+                                           id="min_price" 
+                                           name="min_price" 
+                                           value="<?= empty($min_price) || $min_price == 0.0 ? "" : floatval($min_price) ?>" 
+                                           placeholder="Мин. стоимость, руб" 
+                                           required="required" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'min_price'); $(this).attr('name', 'min_price'); $(this).attr('placeholder', 'Мин. стоимость, руб');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'min_price'); $(this).attr('name', 'min_price'); $(this).attr('placeholder', 'Мин. стоимость, руб');" 
+                                           onfocusout="javascript: $(this).attr('id', 'min_price'); $(this).attr('name', 'min_price'); $(this).attr('placeholder', 'Мин. стоимость, руб');" />
                                     <div class="invalid-feedback">Ограничение на минимальную стоимость обязательно</div>
                                 </div>
                             </div>
