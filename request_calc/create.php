@@ -818,7 +818,7 @@ $colorfulnesses = array();
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/request_calc/<?= filter_input(INPUT_GET, "mode") == "recalc" ? "request_calc.php".BuildQueryRemove("mode") : "" ?>">Назад</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/request_calc/<?= filter_input(INPUT_GET, "mode") == "recalc" ? "details.php".BuildQueryRemove("mode") : "" ?>">Назад</a>
             <div class="row">
                 <!-- Левая половина -->
                 <div class="col-5" id="left_side">
