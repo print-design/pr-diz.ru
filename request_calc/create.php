@@ -1185,7 +1185,22 @@ $colorfulnesses = array();
                         <div id="form_lamination_1" class="d-none">
                             <div class="row">
                                 <div class="col-5 mt-2">
-                                    <p class="font-weight-bold">Ламинация 1</p>
+                                    <div class="d-flex justify-content-start">
+                                        <div class="p-1">
+                                            <p class="font-weight-bold">Ламинация 1</p>
+                                        </div>
+                                        <div class="p-0">
+                                            <?php
+                                            $hide_lamination1_class = "d-block";
+                                            if(!empty($lamination2_film_id)) {
+                                                $hide_lamination1_class = "d-none";
+                                            }
+                                            ?>
+                                            <div class="<?=$hide_lamination1_class ?>" id="hide_lamination_1">
+                                                <button type="button" class="btn btn-light" onclick="javascript: HideLamination1();"><i class="fas fa-trash-alt"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-5 mt-2">
                                     <div class="row">
@@ -1250,17 +1265,6 @@ $colorfulnesses = array();
                                                 }
                                                 ?>
                                         </select>
-                                    </div>
-                                </div>
-                                <div class="col-1 d-flex flex-column justify-content-end">
-                                    <?php
-                                    $hide_lamination1_class = "d-block";
-                                    if(!empty($lamination2_film_id)) {
-                                        $hide_lamination1_class = "d-none";
-                                    }
-                                    ?>
-                                    <div class="<?=$hide_lamination1_class ?>" id="hide_lamination_1">
-                                        <button type="button" class="btn btn-light" onclick="javascript: HideLamination1();"><i class="fas fa-trash-alt"></i></button>
                                     </div>
                                 </div>
                                 <div class="col-5"></div>
@@ -1397,7 +1401,14 @@ $colorfulnesses = array();
                             <div id="form_lamination_2" class="d-none">
                                 <div class="row">
                                     <div class="col-5 mt-2">
-                                        <p class="font-weight-bold">Ламинация 2</p>
+                                        <div class="d-flex justify-content-start">
+                                            <div class="p-1">
+                                                <p class="font-weight-bold">Ламинация 2</p>
+                                            </div>
+                                            <div class="p-0">
+                                                <button type="button" class="btn btn-light" onclick="javascript: HideLamination2();"><i class="fas fa-trash-alt"></i></button>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-5 mt-2">
                                         <div class="row">
@@ -1463,9 +1474,6 @@ $colorfulnesses = array();
                                                     ?>
                                             </select>
                                         </div>
-                                    </div>
-                                    <div class="col-1 d-flex flex-column justify-content-end">
-                                        <button type="button" class="btn btn-light" onclick="javascript: HideLamination2();"><i class="fas fa-trash-alt"></i></button>
                                     </div>
                                     <div class="col-5"></div>
                                     <div class="col-5">
