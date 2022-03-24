@@ -821,7 +821,7 @@ $colorfulnesses = array();
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/request_calc/<?= filter_input(INPUT_GET, "mode") == "recalc" ? "request_calc.php".BuildQueryRemove("mode") : "" ?>">Назад</a>
             <div class="row">
                 <!-- Левая половина -->
-                <div class="col-6" id="left_side">
+                <div class="col-5" id="left_side">
                     <form method="post">
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                         <input type="hidden" id="scroll" name="scroll" />
@@ -833,7 +833,7 @@ $colorfulnesses = array();
                         <?php endif; ?>
                         <!-- Заказчик -->
                         <div class="row">
-                            <div class="col-7">
+                            <div class="col-8">
                                 <div class="form-group">
                                     <label for="customer_id">Заказчик</label>
                                     <select id="customer_id" name="customer_id" class="form-control<?=$customer_id_valid ?>" multiple="multiple" required="required">
@@ -856,58 +856,50 @@ $colorfulnesses = array();
                                     <div class="invalid-feedback">Заказчик обязательно</div>
                                 </div>
                             </div>
-                            <div class="col-3 d-flex flex-column justify-content-end">
+                            <div class="col-4 d-flex flex-column justify-content-end">
                                 <div class="form-group">
                                     <button type="button" class="btn btn-outline-dark w-100" data-toggle="modal" data-target="#new_customer"><i class="fas fa-plus"></i>&nbsp;Создать нового</button>
                                 </div>
                             </div>
                         </div>
                         <!-- Название заказа -->
-                        <div class="row">
-                            <div class="col-10">
-                                <div class="form-group">
-                                    <label for="name">Название заказа</label>
-                                    <input type="text" 
-                                        id="name" 
-                                        name="name" 
-                                        class="form-control<?=$name_valid ?>" 
-                                        placeholder="Название заказа" 
-                                        value="<?= htmlentities($name) ?>" 
-                                        required="required" 
-                                        autocomplete="off" 
-                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                        onmouseup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название заказа');" 
-                                        onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                        onkeyup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название заказа');" 
-                                        onfocusout="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название заказа');" />
-                                    <div class="invalid-feedback">Название заказа обязательно</div>
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <label for="name">Название заказа</label>
+                            <input type="text" 
+                                id="name" 
+                                name="name" 
+                                class="form-control<?=$name_valid ?>" 
+                                placeholder="Название заказа" 
+                                value="<?= htmlentities($name) ?>" 
+                                required="required" 
+                                autocomplete="off" 
+                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                onmouseup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название заказа');" 
+                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                onkeyup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название заказа');" 
+                                onfocusout="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название заказа');" />
+                            <div class="invalid-feedback">Название заказа обязательно</div>
                         </div>
                         <!-- Тип работы -->
-                        <div class="row">
-                            <div class="col-10">
-                                <div class="form-group">
-                                    <label for="work_type_id">Тип работы</label>
-                                    <select id="work_type_id" name="work_type_id" class="form-control" required="required">
-                                        <option value="" hidden="hidden" selected="selected">Тип работы...</option>
-                                        <?php
-                                        $sql = "select id, name from work_type";
-                                        $fetcher = new Fetcher($sql);
+                        <div class="form-group">
+                            <label for="work_type_id">Тип работы</label>
+                            <select id="work_type_id" name="work_type_id" class="form-control" required="required">
+                                <option value="" hidden="hidden" selected="selected">Тип работы...</option>
+                                <?php
+                                $sql = "select id, name from work_type";
+                                $fetcher = new Fetcher($sql);
                                 
-                                        while ($row = $fetcher->Fetch()):
-                                        $selected = '';
-                                        if($row['id'] == $work_type_id) {
-                                            $selected = " selected='selected'";
-                                        }
-                                        ?>
-                                        <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
-                                        <?php
-                                        endwhile;
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
+                                while ($row = $fetcher->Fetch()):
+                                $selected = '';
+                                if($row['id'] == $work_type_id) {
+                                    $selected = " selected='selected'";
+                                }
+                                ?>
+                                <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
+                                <?php
+                                endwhile;
+                                ?>
+                            </select>
                         </div>
                         <!-- Единица заказа -->
                         <?php
@@ -927,36 +919,34 @@ $colorfulnesses = array();
                             </div>
                         </div>
                         <!-- Печатная машина -->
-                        <div class="print-only d-none row">
-                            <div class="col-10">
-                                <div class="form-group w-100">
-                                    <label for="machine_id">Печатная машина</label>
-                                    <select id="machine_id" name="machine_id" class="form-control print-only d-none">
-                                        <option value="" hidden="hidden" selected="selected">Печатная машина...</option>
-                                        <?php
-                                        $sql = "select id, name, colorfulness from machine where colorfulness > 0";
-                                        $fetcher = new Fetcher($sql);
+                        <div class="print-only d-none">
+                            <div class="form-group w-100">
+                                <label for="machine_id">Печатная машина</label>
+                                <select id="machine_id" name="machine_id" class="form-control print-only d-none">
+                                    <option value="" hidden="hidden" selected="selected">Печатная машина...</option>
+                                    <?php
+                                    $sql = "select id, name, colorfulness from machine where colorfulness > 0";
+                                    $fetcher = new Fetcher($sql);
                                 
-                                        while ($row = $fetcher->Fetch()):
-                                        $selected = '';
-                                        if($row['id'] == $machine_id) {
-                                            $selected = " selected='selected'";
-                                        }
-                                        ?>
-                                        <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'].' ('.$row['colorfulness'].' красок)' ?></option>
-                                        <?php
-                                        // Заполняем список красочностей, чтобы при выборе машины установить нужное количество элементов списка
-                                        $colorfulnesses[$row['id']] = $row['colorfulness'];
-                                        endwhile;
-                                        ?>
-                                    </select>
-                                </div>
+                                    while ($row = $fetcher->Fetch()):
+                                    $selected = '';
+                                    if($row['id'] == $machine_id) {
+                                        $selected = " selected='selected'";
+                                    }
+                                    ?>
+                                    <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'].' ('.$row['colorfulness'].' красок)' ?></option>
+                                    <?php
+                                    // Заполняем список красочностей, чтобы при выборе машины установить нужное количество элементов списка
+                                    $colorfulnesses[$row['id']] = $row['colorfulness'];
+                                    endwhile;
+                                    ?>
+                                </select>
                             </div>
                         </div>
                         <!-- Объем заказа -->
                         <div class="row">
                             <!-- Объем заказа -->
-                            <div class="col-5">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="quantity" id="label_quantity">Объем заказа, кг</label>
                                     <input type="text" 
@@ -977,11 +967,11 @@ $colorfulnesses = array();
                         </div>
                         <!-- Основная плёнка -->
                         <div class="row">
-                            <div class="col-5 mt-2">
+                            <div class="col-6 mt-2">
                                 <p id="film_title"><span class="font-weight-bold">Пленка</span></p>
                                 <p id="main_film_title" class="d-none"><span class="font-weight-bold">Основная пленка</span></p>
                             </div>
-                            <div class="col-5 mt-2">
+                            <div class="col-6 mt-2">
                                 <div class="row">
                                     <div class="col-7">
                                         <select name="ski" id="ski" class="form-control form-control-sm">
@@ -1000,7 +990,7 @@ $colorfulnesses = array();
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-5">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="film_id">Марка пленки</label>
                                     <select id="film_id" name="film_id" class="form-control" required="required">
@@ -1029,7 +1019,7 @@ $colorfulnesses = array();
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-5">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="film_variation_id">Толщина, мкм</label>
                                     <select id="film_variation_id" name="film_variation_id" class="form-control" required="required">
@@ -1053,8 +1043,8 @@ $colorfulnesses = array();
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-5"></div>
-                            <div class="col-5">
+                            <div class="col-6"></div>
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="price" id="for_price">Цена</label>
                                     <div class="input-group">
@@ -1085,7 +1075,7 @@ $colorfulnesses = array();
                             </div>
                         </div>
                         <div class="row individual_only">
-                            <div class="col-5">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="individual_film_name">Название пленки</label>
                                     <input type="text" 
@@ -1102,7 +1092,7 @@ $colorfulnesses = array();
                                     <div class="invalid-feedback">Название пленки обязательно</div>
                                 </div>
                             </div>
-                            <div class="col-5">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="individual_price">Цена</label>
                                     <div class="input-group">
@@ -1129,7 +1119,7 @@ $colorfulnesses = array();
                                     <div class="invalid-feedback">Цена обязательно</div>
                                 </div>
                             </div>
-                            <div class="col-5">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="individual_thickness">Толщина, мкм</label>
                                     <input type="text" 
@@ -1146,7 +1136,7 @@ $colorfulnesses = array();
                                     <div class="invalid-feedback">Толщина обязательно</div>
                                 </div>
                             </div>
-                            <div class="col-5">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="individual_density">Удельный вес</label>
                                     <input type="text" 
@@ -1165,12 +1155,12 @@ $colorfulnesses = array();
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-5">
+                            <div class="col-6">
                                 <div id="show_lamination_1">
                                     <button type="button" class="btn btn-light" onclick="javascript: ShowLamination1();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                                 </div>
                             </div>
-                            <div class="col-5">
+                            <div class="col-6">
                                 <div class="form-check">
                                     <label class="form-check-label text-nowrap" style="line-height: 25px;">
                                         <?php
@@ -1184,7 +1174,7 @@ $colorfulnesses = array();
                         <!-- Ламинация 1 -->
                         <div id="form_lamination_1" class="d-none">
                             <div class="row">
-                                <div class="col-5 mt-2">
+                                <div class="col-6 mt-2">
                                     <div class="d-flex justify-content-start">
                                         <div class="p-1">
                                             <p class="font-weight-bold">Ламинация 1</p>
@@ -1202,7 +1192,7 @@ $colorfulnesses = array();
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-5 mt-2">
+                                <div class="col-6 mt-2">
                                     <div class="row">
                                         <div class="col-7">
                                             <select name="lamination1_ski" id="lamination1_ski" class="form-control form-control-sm">
@@ -1217,7 +1207,7 @@ $colorfulnesses = array();
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-5">
+                                <div class="col-6">
                                     <div class="form-group">
                                         <label for="lamination1_film_id">Марка пленки</label>
                                         <select id="lamination1_film_id" name="lamination1_film_id" class="form-control">
@@ -1243,7 +1233,7 @@ $colorfulnesses = array();
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-5">
+                                <div class="col-6">
                                     <div class="form-group">
                                         <label for="lamination1_film_variation_id">Толщина, мкм</label>
                                         <select id="lamination1_film_variation_id" name="lamination1_film_variation_id" class="form-control">
@@ -1267,8 +1257,8 @@ $colorfulnesses = array();
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-5"></div>
-                                <div class="col-5">
+                                <div class="col-6"></div>
+                                <div class="col-6">
                                     <div class="form-group">
                                         <label for="lamination1_price" id="for_lamination1_price">Цена</label>
                                         <div class="input-group">
@@ -1299,7 +1289,7 @@ $colorfulnesses = array();
                                 </div>
                             </div>
                             <div class="row lamination1_individual_only">
-                                <div class="col-5">
+                                <div class="col-6">
                                     <div class="form-group">
                                         <label for="lamination1_individual_film_name">Название пленки</label>
                                         <input type="text" 
@@ -1316,7 +1306,7 @@ $colorfulnesses = array();
                                         <div class="invalid-feedback">Название пленки обязательно</div>
                                     </div>
                                 </div>
-                                <div class="col-5">
+                                <div class="col-6">
                                     <div class="form-group">
                                         <label for="lamination1_individual_price">Цена</label>
                                         <div class="input-group">
@@ -1343,8 +1333,7 @@ $colorfulnesses = array();
                                         <div class="invalid-feedback">Цена обязательно</div>
                                     </div>
                                 </div>
-                                <div class="col-1"></div>
-                                <div class="col-5">
+                                <div class="col-6">
                                     <div class="form-group">
                                         <label for="lamination1_individual_thickness">Толщина, мкм</label>
                                         <input type="text" 
@@ -1361,7 +1350,7 @@ $colorfulnesses = array();
                                         <div class="invalid-feedback">Толщина обязательно</div>
                                     </div>
                                 </div>
-                                <div class="col-5">
+                                <div class="col-6">
                                     <div class="form-group">
                                         <label for="lamination1_individual_density">Удельный вес</label>
                                         <input type="text" 
@@ -1378,15 +1367,14 @@ $colorfulnesses = array();
                                         <div class="invalid-feedback">Удельный вес обязательно</div>
                                     </div>
                                 </div>
-                                <div class="col-1"></div>
                             </div>
                             <div class="row">
-                                <div class="col-5">
+                                <div class="col-6">
                                     <div id="show_lamination_2">
                                         <button type="button" class="btn btn-light" onclick="javascript: ShowLamination2();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                                     </div> 
                                 </div>
-                                <div class="col-5">
+                                <div class="col-6">
                                     <div class="form-check">
                                         <label class="form-check-label text-nowrap" style="line-height: 25px;">
                                             <?php
@@ -1400,7 +1388,7 @@ $colorfulnesses = array();
                             <!-- Ламинация 2 -->
                             <div id="form_lamination_2" class="d-none">
                                 <div class="row">
-                                    <div class="col-5 mt-2">
+                                    <div class="col-6 mt-2">
                                         <div class="d-flex justify-content-start">
                                             <div class="p-1">
                                                 <p class="font-weight-bold">Ламинация 2</p>
@@ -1410,7 +1398,7 @@ $colorfulnesses = array();
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-5 mt-2">
+                                    <div class="col-6 mt-2">
                                         <div class="row">
                                             <div class="col-7">
                                                 <select name="lamination2_ski" id="lamination2_ski" class="form-control form-control-sm">
@@ -1425,7 +1413,7 @@ $colorfulnesses = array();
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-5">
+                                    <div class="col-6">
                                         <div class="form-group">
                                             <label for="lamination2_film_id">Марка пленки</label>
                                             <select id="lamination2_film_id" name="lamination2_film_id" class="form-control">
@@ -1451,7 +1439,7 @@ $colorfulnesses = array();
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-5">
+                                    <div class="col-6">
                                         <div class="form-group">
                                             <label for="lamination2_film_variation_id">Толщина, мкм</label>
                                             <select id="lamination2_film_variation_id" name="lamination2_film_variation_id" class="form-control">
@@ -1475,8 +1463,8 @@ $colorfulnesses = array();
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-5"></div>
-                                    <div class="col-5">
+                                    <div class="col-6"></div>
+                                    <div class="col-6">
                                         <div class="form-group">
                                             <label for="lamination2_price" id="for_lamination2_price">Цена</label>
                                             <div class="input-group">
@@ -1507,7 +1495,7 @@ $colorfulnesses = array();
                                     </div>
                                 </div>
                                 <div class="row lamination2_individual_only">
-                                    <div class="col-5">
+                                    <div class="col-6">
                                         <div class="form-group">
                                             <label for="lamination2_individual_film_name">Название пленки</label>
                                             <input type="text" 
@@ -1524,7 +1512,7 @@ $colorfulnesses = array();
                                             <div class="invalid-feedback">Название пленки обязательно</div>
                                         </div>
                                     </div>
-                                    <div class="col-5">
+                                    <div class="col-6">
                                         <div class="form-group">
                                             <label for="lamination2_individual_price">Цена</label>
                                             <div class="input-group">
@@ -1551,8 +1539,7 @@ $colorfulnesses = array();
                                             <div class="invalid-feedback">Цена обязательно</div>
                                         </div>
                                     </div>
-                                    <div class="col-1"></div>
-                                    <div class="col-5">
+                                    <div class="col-6">
                                         <div class="form-group">
                                             <label for="lamination2_individual_thickness">Толщина, мкм</label>
                                             <input type="text" 
@@ -1569,7 +1556,7 @@ $colorfulnesses = array();
                                             <div class="invalid-feedback">Толщина обязательно</div>
                                         </div>
                                     </div>
-                                    <div class="col-5">
+                                    <div class="col-6">
                                         <div class="form-group">
                                             <label for="lamination2_individual_density">Удельный вес</label>
                                             <input type="text" 
@@ -1586,11 +1573,10 @@ $colorfulnesses = array();
                                             <div class="invalid-feedback">Удельный вес обязательно</div>
                                         </div>
                                     </div>
-                                    <div class="col-1"></div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-5"></div>
-                                    <div class="col-5">
+                                    <div class="col-6"></div>
+                                    <div class="col-6">
                                         <div class="form-check">
                                             <label class="form-check-label text-nowrap" style="line-height: 25px;">
                                                 <?php
@@ -1605,7 +1591,7 @@ $colorfulnesses = array();
                         </div>
                         <div class="row mt-3">
                             <!-- Обрезная ширина -->
-                            <div class="col-5 no-print-only d-none">
+                            <div class="col-6 no-print-only d-none">
                                 <div class="form-group">
                                     <label for="width">Обрезная ширина</label>
                                     <input type="text" 
@@ -1623,7 +1609,7 @@ $colorfulnesses = array();
                                 </div>
                             </div>
                             <!-- Длина от метки до метки -->
-                            <div class="col-5 print-only d-none">
+                            <div class="col-6 print-only d-none">
                                 <div class="form-group">
                                     <label for="length">Длина от метки до метки, мм</label>
                                     <input type="text" 
@@ -1641,7 +1627,7 @@ $colorfulnesses = array();
                                 </div>
                             </div>
                             <!-- Ширина ручья -->
-                            <div class="col-5 print-only d-none">
+                            <div class="col-6 print-only d-none">
                                 <div class="form-group">
                                     <label for="stream_width">Ширина ручья, мм</label>
                                     <input type="text" 
@@ -1659,7 +1645,7 @@ $colorfulnesses = array();
                                 </div>
                             </div>
                             <!-- Количество ручьёв -->
-                            <div class="col-5">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="streams_number">Количество ручьев</label>
                                     <input type="text" 
@@ -1678,7 +1664,7 @@ $colorfulnesses = array();
                                 </div>
                             </div>
                             <!-- Рапорт -->
-                            <div class="col-5 print-only d-none">
+                            <div class="col-6 print-only d-none">
                                 <div class="form-group">
                                     <label for="raport">Рапорт</label>
                                     <select id="raport" name="raport" class="form-control print-only d-none">
@@ -1704,7 +1690,7 @@ $colorfulnesses = array();
                                 </div>
                             </div>
                             <!-- Ширина ламинирующего вала -->
-                            <div class="col-5 lam-only d-none">
+                            <div class="col-6 lam-only d-none">
                                 <div class="form-group">
                                     <label for="lamination_roller_width">Ширина ламинирующего вала</label>
                                     <select id="lamination_roller_width" name="lamination_roller_width" class="form-control lam-only d-none">
@@ -1730,181 +1716,179 @@ $colorfulnesses = array();
                             </div>
                         </div>
                         <!-- Количество красок -->
-                        <div class="print-only row d-none">
-                            <div class="col-10">
-                                <div class="form-group">
-                                    <label for="ink_number">Количество красок</label>
-                                    <select id="ink_number" name="ink_number" class="form-control print-only d-none">
-                                        <option value="" hidden="hidden">Количество красок...</option>
-                                            <?php
-                                            if(!empty($ink_number) || !empty($machine_id)):
-                                            for($i = 1; $i <= $colorfulnesses[$machine_id]; $i++):
-                                                $selected = "";
-                                            if($ink_number == $i) {
-                                                $selected = " selected='selected'";
-                                            }
-                                            ?>
-                                        <option<?=$selected ?>><?=$i ?></option>
-                                            <?php
-                                            endfor;
-                                            endif;
-                                            ?>
-                                    </select>
-                                </div>
-                                <!-- Каждая краска -->
-                                <?php
-                                for($i=1; $i<=8; $i++):
-                                $block_class = " d-none";
-                                $ink_required = "";
+                        <div class="print-only d-none">
+                            <div class="form-group">
+                                <label for="ink_number">Количество красок</label>
+                                <select id="ink_number" name="ink_number" class="form-control print-only d-none">
+                                    <option value="" hidden="hidden">Количество красок...</option>
+                                        <?php
+                                        if(!empty($ink_number) || !empty($machine_id)):
+                                        for($i = 1; $i <= $colorfulnesses[$machine_id]; $i++):
+                                        $selected = "";
+                                        if($ink_number == $i) {
+                                            $selected = " selected='selected'";
+                                        }
+                                        ?>
+                                    <option<?=$selected ?>><?=$i ?></option>
+                                        <?php
+                                        endfor;
+                                        endif;
+                                        ?>
+                                </select>
+                            </div>
+                            <!-- Каждая краска -->
+                            <?php
+                            for($i=1; $i<=8; $i++):
+                            $block_class = " d-none";
+                            $ink_required = "";
 
-                                if(!empty($ink_number) && is_numeric($ink_number) && $i <= $ink_number) {
-                                    $block_class = "";
-                                    $ink_required = " required='required'";
+                            if(!empty($ink_number) && is_numeric($ink_number) && $i <= $ink_number) {
+                                $block_class = "";
+                                $ink_required = " required='required'";
+                            }
+                            ?>
+                            <div class="row ink_block<?=$block_class ?>" id="ink_block_<?=$i ?>">
+                                <?php
+                                $ink_class = " col-12";
+                                $cmyk_class = " d-none";
+                                $color_class = " d-none";
+                                $percent_class = " d-none";
+                                $cliche_class = " d-none";
+                            
+                                $ink_var_name = "ink_$i";
+                        
+                                if($$ink_var_name == "white" || $$ink_var_name == "lacquer") {
+                                    $ink_class = " col-6";
+                                    $percent_class = " col-3";
+                                    $cliche_class = " col-3";
+                                }
+                                else if($$ink_var_name == "panton") {
+                                    $ink_class = " col-3";
+                                    $color_class = " col-3";
+                                    $percent_class = " col-3";
+                                    $cliche_class = " col-3";
+                                }
+                                else if($$ink_var_name == "cmyk") {
+                                    $ink_class = " col-3";
+                                    $cmyk_class = " col-3";
+                                    $percent_class = " col-3";
+                                    $cliche_class = " col-3";
                                 }
                                 ?>
-                                <div class="row ink_block<?=$block_class ?>" id="ink_block_<?=$i ?>">
+                                <div class="form-group<?=$ink_class ?>" id="ink_group_<?=$i ?>">
+                                    <label for="ink_<?=$i ?>"><?=$i ?> цвет</label>
+                                    <select id="ink_<?=$i ?>" name="ink_<?=$i ?>" class="form-control ink" data-id="<?=$i ?>"<?=$ink_required ?>>
+                                        <option value="" hidden="hidden" selected="selected">Цвет...</option>
+                                        <?php
+                                        $cmyk_selected = "";
+                                        $panton_selected = "";
+                                        $white_selected = "";
+                                        $lacquer_selected = "";
+                                    
+                                        $selected_var_name = $$ink_var_name."_selected";
+                                        $$selected_var_name = " selected='selected'";
+                                        ?>
+                                        <option value="cmyk"<?=$cmyk_selected ?>>CMYK</option>
+                                        <option value="panton"<?=$panton_selected ?>>Пантон</option>
+                                        <option value="white"<?=$white_selected ?>>Белый</option>
+                                        <option value="lacquer"<?=$lacquer_selected ?>>Лак</option>
+                                    </select>
+                                    <div class="invalid-feedback">Цвет обязательно</div>
+                                </div>
+                                <div class="form-group<?=$color_class ?>" id="color_group_<?=$i ?>">
                                     <?php
-                                    $ink_class = " col-12";
-                                    $cmyk_class = " d-none";
-                                    $color_class = " d-none";
-                                    $percent_class = " d-none";
-                                    $cliche_class = " d-none";
-                            
-                                    $ink_var_name = "ink_$i";
-                            
-                                    if($$ink_var_name == "white" || $$ink_var_name == "lacquer") {
-                                        $ink_class = " col-6";
-                                        $percent_class = " col-3";
-                                        $cliche_class = " col-3";
-                                    }
-                                    else if($$ink_var_name == "panton") {
-                                        $ink_class = " col-3";
-                                        $color_class = " col-3";
-                                        $percent_class = " col-3";
-                                        $cliche_class = " col-3";
-                                    }
-                                    else if($$ink_var_name == "cmyk") {
-                                        $ink_class = " col-3";
-                                        $cmyk_class = " col-3";
-                                        $percent_class = " col-3";
-                                        $cliche_class = " col-3";
-                                    }
+                                    $color_var = "color_$i"; 
+                                    $color_var_valid = 'color_'.$i.'_valid'; 
                                     ?>
-                                    <div class="form-group<?=$ink_class ?>" id="ink_group_<?=$i ?>">
-                                        <label for="ink_<?=$i ?>"><?=$i ?> цвет</label>
-                                        <select id="ink_<?=$i ?>" name="ink_<?=$i ?>" class="form-control ink" data-id="<?=$i ?>"<?=$ink_required ?>>
-                                            <option value="" hidden="hidden" selected="selected">Цвет...</option>
-                                            <?php
-                                            $cmyk_selected = "";
-                                            $panton_selected = "";
-                                            $white_selected = "";
-                                            $lacquer_selected = "";
-                                    
-                                            $selected_var_name = $$ink_var_name."_selected";
-                                            $$selected_var_name = " selected='selected'";
-                                            ?>
-                                            <option value="cmyk"<?=$cmyk_selected ?>>CMYK</option>
-                                            <option value="panton"<?=$panton_selected ?>>Пантон</option>
-                                            <option value="white"<?=$white_selected ?>>Белый</option>
-                                            <option value="lacquer"<?=$lacquer_selected ?>>Лак</option>
-                                        </select>
-                                        <div class="invalid-feedback">Цвет обязательно</div>
+                                    <label for="color_<?=$i ?>">Номер пантона</label>
+                                    <div class="input-group flex-nowrap">
+                                        <div class="input-group-prepend"><span class="input-group-text">P</span></div>
+                                        <input type="text" 
+                                            id="color_<?=$i ?>" 
+                                            name="color_<?=$i ?>" 
+                                            class="form-control panton color<?=$$color_var_valid ?>" 
+                                            placeholder="Номер пантона..." 
+                                            value="<?= empty($$color_var) ? "" : $$color_var?>" 
+                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                            onmouseup="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" 
+                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                            onkeyup="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" 
+                                            onfocusout="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" />
                                     </div>
-                                    <div class="form-group<?=$color_class ?>" id="color_group_<?=$i ?>">
+                                    <div class="invalid-feedback">Код цвета обязательно</div>
+                                </div>
+                                <div class="form-group<?=$cmyk_class ?>" id="cmyk_group_<?=$i ?>">
+                                    <?php
+                                    $cmyk_var = "cmyk_$i";
+                                    $cmyk_var_valid = 'cmyk_'.$i.'_valid';
+                                    ?>
+                                    <label for="cmyk_<?=$i ?>">CMYK</label>
+                                    <select id="cmyk_<?=$i ?>" name="cmyk_<?=$i ?>" class="form-control cmyk<?=$$cmyk_var_valid ?>" data-id="<?=$i ?>">
+                                        <option value="" hidden="hidden" selected="selected">CMYK...</option>
                                         <?php
-                                        $color_var = "color_$i"; 
-                                        $color_var_valid = 'color_'.$i.'_valid'; 
+                                        $cyan_selected = "";
+                                        $magenta_selected = "";
+                                        $yellow_selected = "";
+                                        $kontur_selected = "";
+                                    
+                                        $cmyk_var_selected = $$cmyk_var.'_selected';
+                                        $$cmyk_var_selected = " selected='selected'";
                                         ?>
-                                        <label for="color_<?=$i ?>">Номер пантона</label>
-                                        <div class="input-group flex-nowrap">
-                                            <div class="input-group-prepend"><span class="input-group-text">P</span></div>
-                                            <input type="text" 
-                                                id="color_<?=$i ?>" 
-                                                name="color_<?=$i ?>" 
-                                                class="form-control panton color<?=$$color_var_valid ?>" 
-                                                placeholder="Номер пантона..." 
-                                                value="<?= empty($$color_var) ? "" : $$color_var?>" 
-                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                onmouseup="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" 
-                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                onkeyup="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" 
-                                                onfocusout="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" />
+                                        <option value="cyan"<?=$cyan_selected ?>>Cyan</option>
+                                        <option value="magenta"<?=$magenta_selected ?>>Magenta</option>
+                                        <option value="yellow"<?=$yellow_selected ?>>Yellow</option>
+                                        <option value="kontur"<?=$kontur_selected ?>>Kontur</option>
+                                    </select>
+                                    <div class="invalid-feedback">Выберите компонент цвета</div>
+                                </div>
+                                <div class="form-group<?=$percent_class ?>" id="percent_group_<?=$i ?>">
+                                    <?php
+                                    $percent_var = "percent_$i";
+                                    $percent_var_valid = 'percent_'.$i.'_valid';
+                                    ?>
+                                    <label for="percent_<?=$i ?>">Процент<br /></label>
+                                    <div class="input-group flex-nowrap">
+                                        <input type="text" 
+                                            id="percent_<?=$i ?>" 
+                                            name="percent_<?=$i ?>" 
+                                            class="form-control int-only percent<?=$$percent_var_valid ?>" 
+                                            style="width: 80px;" 
+                                            value="<?= empty($$percent_var) ? "" : $$percent_var ?>" 
+                                            placeholder="Процент..." 
+                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                            onmouseup="javascript: $(this).attr('id', 'percent_<?=$i ?>'); $(this).attr('name', 'percent_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" 
+                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                            onkeyup="javascript: $(this).attr('id', 'percent_<?=$i ?>'); $(this).attr('name', 'percent_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" 
+                                            onfocusout="javascript: $(this).attr('id', 'percent_<?=$i ?>'); $(this).attr('name', 'percent_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
                                         </div>
-                                        <div class="invalid-feedback">Код цвета обязательно</div>
-                                    </div>
-                                    <div class="form-group<?=$cmyk_class ?>" id="cmyk_group_<?=$i ?>">
-                                        <?php
-                                        $cmyk_var = "cmyk_$i";
-                                        $cmyk_var_valid = 'cmyk_'.$i.'_valid';
-                                        ?>
-                                        <label for="cmyk_<?=$i ?>">CMYK</label>
-                                        <select id="cmyk_<?=$i ?>" name="cmyk_<?=$i ?>" class="form-control cmyk<?=$$cmyk_var_valid ?>" data-id="<?=$i ?>">
-                                            <option value="" hidden="hidden" selected="selected">CMYK...</option>
-                                            <?php
-                                            $cyan_selected = "";
-                                            $magenta_selected = "";
-                                            $yellow_selected = "";
-                                            $kontur_selected = "";
-                                    
-                                            $cmyk_var_selected = $$cmyk_var.'_selected';
-                                            $$cmyk_var_selected = " selected='selected'";
-                                            ?>
-                                            <option value="cyan"<?=$cyan_selected ?>>Cyan</option>
-                                            <option value="magenta"<?=$magenta_selected ?>>Magenta</option>
-                                            <option value="yellow"<?=$yellow_selected ?>>Yellow</option>
-                                            <option value="kontur"<?=$kontur_selected ?>>Kontur</option>
-                                        </select>
-                                        <div class="invalid-feedback">Выберите компонент цвета</div>
-                                    </div>
-                                    <div class="form-group<?=$percent_class ?>" id="percent_group_<?=$i ?>">
-                                        <?php
-                                        $percent_var = "percent_$i";
-                                        $percent_var_valid = 'percent_'.$i.'_valid';
-                                        ?>
-                                        <label for="percent_<?=$i ?>">Процент<br /></label>
-                                        <div class="input-group flex-nowrap">
-                                            <input type="text" 
-                                                id="percent_<?=$i ?>" 
-                                                name="percent_<?=$i ?>" 
-                                                class="form-control int-only percent<?=$$percent_var_valid ?>" 
-                                                style="width: 80px;" 
-                                                value="<?= empty($$percent_var) ? "" : $$percent_var ?>" 
-                                                placeholder="Процент..." 
-                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                onmouseup="javascript: $(this).attr('id', 'percent_<?=$i ?>'); $(this).attr('name', 'percent_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" 
-                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                onkeyup="javascript: $(this).attr('id', 'percent_<?=$i ?>'); $(this).attr('name', 'percent_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" 
-                                                onfocusout="javascript: $(this).attr('id', 'percent_<?=$i ?>'); $(this).attr('name', 'percent_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" />
-                                            <div class="input-group-append">
-                                                <span class="input-group-text">%</span>
-                                            </div>
-                                            <div class="invalid-feedback">Процент обязательно</div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group<?=$cliche_class ?>" id="cliche_group_<?=$i ?>">
-                                        <label for="cliche_<?=$i ?>">Форма</label>
-                                        <select id="cliche_<?=$i ?>" name="cliche_<?=$i ?>" class="form-control cliche">
-                                            <?php
-                                            $old_selected = "";
-                                            $flint_selected = "";
-                                            $kodak_selected = "";
-                                            $tver_selected = "";
-                                    
-                                            $cliche_var = "cliche_$i";
-                                            $cliche_selected_var = $$cliche_var."_selected";
-                                            $$cliche_selected_var = " selected='selected'";
-                                            ?>
-                                            <option value="<?=OLD ?>"<?=$old_selected ?>>Старая</option>
-                                            <option value="<?=FLINT ?>"<?=$flint_selected ?>>Новая Флинт</option>
-                                            <option value="<?=KODAK ?>"<?=$kodak_selected ?>>Новая Кодак</option>
-                                            <option value="<?=TVER ?>"<?=$tver_selected ?>>Новая Тверь</option>
-                                        </select>
+                                        <div class="invalid-feedback">Процент обязательно</div>
                                     </div>
                                 </div>
-                                <?php
-                                endfor;
-                                ?>
+                                <div class="form-group<?=$cliche_class ?>" id="cliche_group_<?=$i ?>">
+                                    <label for="cliche_<?=$i ?>">Форма</label>
+                                    <select id="cliche_<?=$i ?>" name="cliche_<?=$i ?>" class="form-control cliche">
+                                        <?php
+                                        $old_selected = "";
+                                        $flint_selected = "";
+                                        $kodak_selected = "";
+                                        $tver_selected = "";
+                                    
+                                        $cliche_var = "cliche_$i";
+                                        $cliche_selected_var = $$cliche_var."_selected";
+                                        $$cliche_selected_var = " selected='selected'";
+                                        ?>
+                                        <option value="<?=OLD ?>"<?=$old_selected ?>>Старая</option>
+                                        <option value="<?=FLINT ?>"<?=$flint_selected ?>>Новая Флинт</option>
+                                        <option value="<?=KODAK ?>"<?=$kodak_selected ?>>Новая Кодак</option>
+                                        <option value="<?=TVER ?>"<?=$tver_selected ?>>Новая Тверь</option>
+                                    </select>
+                                </div>
                             </div>
+                            <?php
+                            endfor;
+                            ?>
                         </div>
                         <button type="submit" id="create_request_calc_submit" name="create_request_calc_submit" class="btn btn-dark mt-3<?=$create_request_calc_submit_class ?>">Рассчитать</button>
                     </form>
