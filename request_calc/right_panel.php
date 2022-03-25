@@ -6,7 +6,7 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
 }
 ?>
 <div id="calculation"<?=$calculation_class ?> style="position: absolute; bottom: auto; right: 10px; margin-top: 60px;">
-    <div style="position: absolute; right: 30px; top: -80px;">
+    <div style="position: absolute; right: 30px; top: 0px;">
         <a class="btn btn-outline-dark" target="_blank" style="margin-top: 20px;" href="print.php?id=<?=$id ?>"><i class="fa fa-print"></i></a>
     </div>
     <h1>Расчет</h1>
@@ -126,7 +126,7 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
             <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
             <?php endif; ?>
-            <?php if(!empty($lamination2_brand_name) || !empty($lamination2_individual_film_name)): ?>
+            <?php if(!empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name)): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
             <?php endif; ?>
         </div>
