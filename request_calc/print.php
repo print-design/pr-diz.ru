@@ -589,7 +589,7 @@ $num_for_customer = $row['num_for_customer'];
             </div>
         </div>
         <script>
-            /*var css = '@page { size: landscape; margin: 8mm; }',
+            var css = '@page { size: landscape; margin: 8mm; }',
                     head = document.head || document.getElementsByTagName('head')[0],
                     style = document.createElement('style');
             
@@ -604,7 +604,7 @@ $num_for_customer = $row['num_for_customer'];
             
             head.appendChild(style);
             
-            window.print();*/
+            window.print();
         </script>
     </body>
 </html>
