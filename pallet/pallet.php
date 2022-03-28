@@ -107,7 +107,8 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
             . "(select sum(length) from pallet_roll where pallet_id = p.id) length, "
             . "(select sum(weight) from pallet_roll where pallet_id = p.id) net_weight "
             . "from pallet p where p.id=$id";
-    $fetcher = new Fetcher($sql);      if($row = $fetcher->Fetch()) {
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
         $old_film_variation_id = $row['film_variation_id'];
         $old_length = $row['length'];
         $old_width = $row['width'];
@@ -493,7 +494,7 @@ if(null === $comment) $comment = $row['comment'];
                         <?php if(!IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
                         <p><?= htmlentities($comment) ?></p>
                         <?php endif; ?>
-                        <textarea id="comment" name="comment" rows="4" class="form-control no-latin"<?=$comment_disabled ?>><?=$comment_value ?></textarea>
+                        <textarea id="comment" name="comment" rows="4" class="form-control"<?=$comment_disabled ?>><?=$comment_value ?></textarea>
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="d-flex justify-content-between mt-4">
