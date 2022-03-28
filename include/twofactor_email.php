@@ -24,14 +24,15 @@
             $code_mail->isSMTP();
             $code_mail->SMTPAuth = true;
             $code_mail->SMTPDebug = 0;
+            $code_mail->SMTPSecure = "tls";
         
-            $code_mail->Host = 'ssl://smtp.yandex.ru';
-            $code_mail->Port = 465;
-            $code_mail->Username = 's9108350097@yandex.ru';
-            $code_mail->Password = 'Av_errt345_TYU';
+            $code_mail->Host = 'smtp.beget.com';
+            $code_mail->Port = 2525;
+            $code_mail->Username = 'info@print-diz.ru';
+            $code_mail->Password = '1633999_dMqkdNOJmt';
         
             // От кого
-            $code_mail->setFrom('s9108350097@yandex.ru', 'ERP');
+            $code_mail->setFrom('info@print-diz.ru', 'Принт-Дизайн');
             
             // Кому
             $code_mail->addAddress(EMAIL_TO, EMAIL_TO_NAME);
