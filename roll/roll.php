@@ -652,7 +652,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         <?php if(!IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
                         <p><?= htmlentities($comment) ?></p>
                         <?php endif; ?>
-                        <textarea id="comment" name="comment" rows="4" class="form-control no-latin"<?=$comment_disabled ?>><?=$comment_value ?></textarea>
+                        <textarea id="comment" name="comment" rows="4" class="form-control"<?=$comment_disabled ?>><?=$comment_value ?></textarea>
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="d-flex justify-content-between mt-4">

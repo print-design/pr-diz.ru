@@ -356,7 +356,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                     </div>
                     <div class="form-group">
                         <label for="comment">Комментарий</label>
-                        <textarea id="comment" name="comment" rows="4" class="form-control no-latin"><?= htmlentities(filter_input(INPUT_POST, 'comment')) ?></textarea>
+                        <textarea id="comment" name="comment" rows="4" class="form-control"><?= htmlentities(filter_input(INPUT_POST, 'comment')) ?></textarea>
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="d-flex justify-content-start mt-4">
