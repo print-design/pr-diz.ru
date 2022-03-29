@@ -316,6 +316,40 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $error_message = $executer->error;
         $insert_id = $executer->insert_id;
         
+        // Математика
+        if(empty($error_message)) {
+            // ПОЛУЧЕНИЕ ИСХОДНЫХ ДАННЫХ
+            
+            // Масса тиража
+            $quantity = null;
+            
+            // Типы, толщины и удельные веса плёнок
+            $film_thickness = null;
+            $film_density = null;
+            
+            $lam1_film_thickness = null;
+            $lam1_film_density = null;
+            
+            $lam2_film_thickness = null;
+            $lam2_film_density = null;
+            
+            // Ширина ручья
+            $stream_width = null;
+            
+            // Количество ручьёв
+            $streams_count = null;
+            
+            // Рапорт
+            $raport = null;
+            
+            // Лыжи
+            $ski = null;
+            $lam1_ski = null;
+            $lam2_ski = null;
+            
+            // Ширина материала
+        }
+        
         if(empty($error_message)) {
             header('Location: create.php?id='.$insert_id);
         }
