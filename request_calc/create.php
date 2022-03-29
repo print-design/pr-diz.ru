@@ -71,8 +71,6 @@ $currency_valid = '';
 $quantity_valid = '';
 
 $individual_film_name_valid = '';
-$individual_price_valid = '';
-$individual_currency_valid = '';
 $individual_thickness_valid = '';
 $individual_density_valid = '';
 
@@ -136,11 +134,6 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         // Проверка валидности параметров, введённых вручную при выборе марки плёнки "Другая"
         if(empty(filter_input(INPUT_POST, 'individual_film_name'))) {
             $individual_film_name_valid = ISINVALID;
-            $form_valid = false;
-        }
-        
-        if(filter_input(INPUT_POST, 'customers_material') != 'on' && empty(filter_input(INPUT_POST, 'individual_price'))) {
-            $individual_price_valid = ISINVALID;
             $form_valid = false;
         }
         
@@ -241,8 +234,6 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $price = filter_input(INPUT_POST, 'price'); if(empty($price)) $price = "NULL";
         $currency = filter_input(INPUT_POST, 'currency');
         $individual_film_name = addslashes(filter_input(INPUT_POST, 'individual_film_name'));
-        $individual_price = filter_input(INPUT_POST, 'individual_price'); if(empty($individual_price)) $individual_price = "NULL";
-        $individual_currency = filter_input(INPUT_POST, 'individual_currency');
         $individual_thickness = filter_input(INPUT_POST, 'individual_thickness'); if(empty($individual_thickness)) $individual_thickness = "NULL";
         $individual_density = filter_input(INPUT_POST, 'individual_density'); if(empty($individual_density)) $individual_density = "NULL";
         $customers_material = 0; if(filter_input(INPUT_POST, 'customers_material') == 'on') $customers_material = 1;
@@ -253,8 +244,6 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $lamination1_price = filter_input(INPUT_POST, 'lamination1_price'); if(empty($lamination1_price)) $lamination1_price = "NULL";
         $lamination1_currency = filter_input(INPUT_POST, 'lamination1_currency');
         $lamination1_individual_film_name = addslashes(filter_input(INPUT_POST, 'lamination1_individual_film_name'));
-        $lamination1_individual_price = filter_input(INPUT_POST, 'lamination1_individual_price'); if(empty($lamination1_individual_price)) $lamination1_individual_price = "NULL";
-        $lamination1_individual_currency = filter_input(INPUT_POST, 'lamination1_individual_currency');
         $lamination1_individual_thickness = filter_input(INPUT_POST, 'lamination1_individual_thickness'); if(empty($lamination1_individual_thickness)) $lamination1_individual_thickness = "NULL";
         $lamination1_individual_density = filter_input(INPUT_POST, 'lamination1_individual_density'); if(empty($lamination1_individual_density)) $lamination1_individual_density = "NULL";
         $lamination1_customers_material = 0; if(filter_input(INPUT_POST, 'lamination1_customers_material') == 'on') $lamination1_customers_material = 1;
@@ -265,8 +254,6 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $lamination2_price = filter_input(INPUT_POST, 'lamination2_price'); if(empty($lamination2_price)) $lamination2_price = "NULL";
         $lamination2_currency = filter_input(INPUT_POST, 'lamination2_currency');
         $lamination2_individual_film_name = addslashes(filter_input(INPUT_POST, 'lamination2_individual_film_name'));
-        $lamination2_individual_price = filter_input(INPUT_POST, 'lamination2_individual_price'); if(empty($lamination2_individual_price)) $lamination2_individual_price = "NULL";
-        $lamination2_individual_currency = filter_input(INPUT_POST, 'lamination2_individual_currency');
         $lamination2_individual_thickness = filter_input(INPUT_POST, 'lamination2_individual_thickness'); if(empty($lamination2_individual_thickness)) $lamination2_individual_thickness = "NULL";
         $lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density'); if(empty($lamination2_individual_density)) $lamination2_individual_density = "NULL";
         $lamination2_customers_material = 0; if(filter_input(INPUT_POST, 'lamination2_customers_material') == 'on') $lamination2_customers_material = 1;
@@ -306,9 +293,9 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         }
         
         $sql = "insert into request_calc (customer_id, name, unit, quantity, work_type_id, "
-                . "film_variation_id, price, currency, individual_film_name, individual_price, individual_currency, individual_thickness, individual_density, customers_material, ski, width_ski, "
-                . "lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_price, lamination1_individual_currency, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, lamination1_ski, lamination1_width_ski, "
-                . "lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_price, lamination2_individual_currency, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, lamination2_ski, lamination2_width_ski, "
+                . "film_variation_id, price, currency, individual_film_name, individual_thickness, individual_density, customers_material, ski, width_ski, "
+                . "lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, lamination1_ski, lamination1_width_ski, "
+                . "lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, lamination2_ski, lamination2_width_ski, "
                 . "width, streams_number, machine_id, length, stream_width, raport, lamination_roller_width, ink_number, manager_id, status_id, "
                 . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
                 . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
@@ -316,9 +303,9 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                 . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, cliche_1, "
                 . "cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8) "
                 . "values($customer_id, '$name', '$unit', $quantity, $work_type_id, "
-                . "$film_variation_id, $price, '$currency', '$individual_film_name', $individual_price, '$individual_currency', $individual_thickness, $individual_density, $customers_material, $ski, $width_ski, "
-                . "$lamination1_film_variation_id, $lamination1_price, '$lamination1_currency', '$lamination1_individual_film_name', $lamination1_individual_price, '$lamination1_individual_currency', $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, $lamination1_ski, $lamination1_width_ski, "
-                . "$lamination2_film_variation_id, $lamination2_price, '$lamination2_currency', '$lamination2_individual_film_name', $lamination2_individual_price, '$lamination2_individual_currency', $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, $lamination2_ski, $lamination2_width_ski, "
+                . "$film_variation_id, $price, '$currency', '$individual_film_name', $individual_thickness, $individual_density, $customers_material, $ski, $width_ski, "
+                . "$lamination1_film_variation_id, $lamination1_price, '$lamination1_currency', '$lamination1_individual_film_name', $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, $lamination1_ski, $lamination1_width_ski, "
+                . "$lamination2_film_variation_id, $lamination2_price, '$lamination2_currency', '$lamination2_individual_film_name', $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, $lamination2_ski, $lamination2_width_ski, "
                 . "$width, $streams_number, $machine_id, $length, $stream_width, $raport, $lamination_roller_width, $ink_number, $manager_id, $status_id, "
                 . "'$ink_1', '$ink_2', '$ink_3', '$ink_4', '$ink_5', '$ink_6', '$ink_7', '$ink_8', "
                 . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
@@ -345,11 +332,11 @@ $row = array();
 
 if(!empty($id)) {
     $sql = "select c.date, c.customer_id, c.name, c.unit, c.quantity, c.work_type_id, "
-            . "c.film_variation_id, c.price, c.currency, c.individual_film_name, c.individual_price, c.individual_currency, c.individual_thickness, c.individual_density, c.customers_material, c.ski, c.width_ski, "
+            . "c.film_variation_id, c.price, c.currency, c.individual_film_name, c.individual_thickness, c.individual_density, c.customers_material, c.ski, c.width_ski, "
             . "(select film_id from film_variation where id = c.film_variation_id) film_id, "
-            . "c.lamination1_film_variation_id, c.lamination1_price, c.lamination1_currency, c.lamination1_individual_film_name, c.lamination1_individual_price, c.lamination1_individual_currency, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, c.lamination1_ski, c.lamination1_width_ski, "
+            . "c.lamination1_film_variation_id, c.lamination1_price, c.lamination1_currency, c.lamination1_individual_film_name, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, c.lamination1_ski, c.lamination1_width_ski, "
             . "(select film_id from film_variation where id = c.lamination1_film_variation_id) lamination1_film_id, "
-            . "c.lamination2_film_variation_id, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_price, c.lamination2_individual_currency, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_ski, c.lamination2_width_ski, "
+            . "c.lamination2_film_variation_id, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_ski, c.lamination2_width_ski, "
             . "(select film_id from film_variation where id = c.lamination2_film_variation_id) lamination2_film_id, "
             . "c.width, c.streams_number, c.machine_id, c.length, c.stream_width, c.raport, c.lamination_roller_width, c.ink_number, c.manager_id, c.status_id, "
             . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
@@ -420,16 +407,6 @@ if($individual_film_name === null && isset($row['individual_film_name'])) {
     $individual_film_name = $row['individual_film_name'];
 }
 
-$individual_price = filter_input(INPUT_POST, 'individual_price');
-if($individual_price === null && isset($row['individual_price'])) {
-    $individual_price = $row['individual_price'];
-}
-
-$individual_currency = filter_input(INPUT_POST, 'individual_currency');
-if($individual_currency === null && isset($row['individual_currency'])) {
-    $individual_currency = $row['individual_currency'];
-}
-
 $individual_thickness = filter_input(INPUT_POST, 'individual_thickness');
 if($individual_thickness === null && isset($row['individual_thickness'])) {
     $individual_thickness = $row['individual_thickness'];
@@ -483,16 +460,6 @@ if($lamination1_individual_film_name === null && isset($row['lamination1_individ
     $lamination1_individual_film_name = $row['lamination1_individual_film_name'];
 }
 
-$lamination1_individual_price = filter_input(INPUT_POST, 'lamination1_individual_price');
-if($lamination1_individual_price === null && isset($row['lamination1_individual_price'])) {
-    $lamination1_individual_price = $row['lamination1_individual_price'];
-}
-
-$lamination1_individual_currency = filter_input(INPUT_POST, 'lamination1_individual_currency');
-if($lamination1_individual_currency === null && isset($row['lamination1_individual_currency'])) {
-    $lamination1_individual_currency = $row['lamination1_individual_currency'];
-}
-
 $lamination1_individual_thickness = filter_input(INPUT_POST, 'lamination1_individual_thickness');
 if($lamination1_individual_thickness === null && isset($row['lamination1_individual_thickness'])) {
     $lamination1_individual_thickness = $row['lamination1_individual_thickness'];
@@ -541,16 +508,6 @@ if($lamination2_currency === null && isset($row['lamination2_currency'])) {
 $lamination2_individual_film_name = filter_input(INPUT_POST, 'lamination2_individual_film_name');
 if($lamination2_individual_film_name === null && isset($row['lamination2_individual_film_name'])) {
     $lamination2_individual_film_name = $row['lamination2_individual_film_name'];
-}
-
-$lamination2_individual_price = filter_input(INPUT_POST, 'lamination2_individual_price');
-if($lamination2_individual_price === null && isset($row['lamination2_individual_price'])) {
-    $lamination2_individual_price = $row['lamination2_individual_price'];
-}
-
-$lamination2_individual_currency = filter_input(INPUT_POST, 'lamination2_individual_currency');
-if($lamination2_individual_currency === null && isset($row['lamination2_individual_currency'])) {
-    $lamination2_individual_currency = $row['lamination2_individual_currency'];
 }
 
 $lamination2_individual_thickness = filter_input(INPUT_POST, 'lamination2_individual_thickness');
@@ -974,17 +931,10 @@ $colorfulnesses = array();
                             <div class="col-6 mt-2">
                                 <div class="row">
                                     <div class="col-7">
-                                        <select name="ski" id="ski" class="form-control form-control-sm">
-                                            <?php
-                                            $no_ski_class = "";
-                                            ?>
-                                            <option id="no_ski_option" value="<?=NO_SKI ?>"<?=$no_ski_class ?><?=($ski == NO_SKI ? " selected='selected'" : "") ?>>Без лыж</option>
-                                            <option value="<?=STANDARD_SKI ?>"<?=($ski == STANDARD_SKI ? " selected='selected'" : "") ?>>Стандартные лыжи</option>
-                                            <option value="<?=NONSTANDARD_SKI ?>"<?=($ski == NONSTANDARD_SKI ? " selected='selected'" : "") ?>>Нестандартные лыжи</option>
-                                        </select>
+                                        
                                     </div>
                                     <div class="col-5">
-                                        <input name="width_ski" id="width_ski" type="text" class="form-control form-control-sm int-only" value="<?=$width_ski ?>" placeholder="Ширина пленки" />
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -1042,8 +992,56 @@ $colorfulnesses = array();
                                             ?>
                                     </select>
                                 </div>
+                                <div class="form-group individual_only">
+                                    <label for="individual_thickness">Толщина, мкм</label>
+                                    <input type="text" 
+                                           id="individual_thickness" 
+                                           name="individual_thickness" 
+                                           class="form-control int-only" 
+                                           placeholder="Толщина" 
+                                           value="<?= $individual_thickness ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'individual_thickness'); $(this).attr('name', 'individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'individual_thickness'); $(this).attr('name', 'individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
+                                           onfocusout="javascript: $(this).attr('id', 'individual_thickness'); $(this).attr('name', 'individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" />
+                                    <div class="invalid-feedback">Толщина обязательно</div>
+                                </div>
                             </div>
-                            <div class="col-6"></div>
+                            <div class="col-6 individual_only">
+                                <div class="form-group">
+                                    <label for="individual_film_name">Название пленки</label>
+                                    <input type="text" 
+                                           id="individual_film_name" 
+                                           name="individual_film_name" 
+                                           class="form-control" 
+                                           placeholder="Название пленки" 
+                                           value="<?=$individual_film_name ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'individual_film_name'); $(this).attr('name', 'individual_film_name'); $(this).attr('placeholder', 'Название пленки')" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'individual_film_name'); $(this).attr('name', 'individual_film_name'); $(this).attr('placeholder', 'Название пленки')" 
+                                           onfocusout="javascript: $(this).attr('id', 'individual_film_name'); $(this).attr('name', 'individual_film_name'); $(this).attr('placeholder', 'Название пленки')" />
+                                    <div class="invalid-feedback">Название пленки обязательно</div>
+                                </div>
+                            </div>
+                            <div class="col-6 individual_only">
+                                <div class="form-group">
+                                    <label for="individual_density">Удельный вес</label>
+                                    <input type="text" 
+                                           id="individual_density" 
+                                           name="individual_density" 
+                                           class="form-control float-only" 
+                                           placeholder="Удельный вес" 
+                                           value="<?= empty($individual_density) ? '' : floatval($individual_density) ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'individual_density'); $(this).attr('name', 'individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'individual_density'); $(this).attr('name', 'individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
+                                           onfocusout="javascript: $(this).attr('id', 'individual_density'); $(this).attr('name', 'individual_density'); $(this).attr('placeholder', 'Удельный вес')" />
+                                    <div class="invalid-feedback">Удельный вес обязательно</div>
+                                </div>
+                            </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="price" id="for_price">Цена</label>
@@ -1053,7 +1051,8 @@ $colorfulnesses = array();
                                                name="price" 
                                                class="form-control float-only film-price<?=$price_valid ?>" 
                                                placeholder="Цена" 
-                                               value="<?=$price ?>" 
+                                               value="<?=$price ?>"
+                                               required="required" 
                                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                                onmouseup="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
@@ -1073,84 +1072,34 @@ $colorfulnesses = array();
                                 </div>
                                 <input type="hidden" id="price_min" name="price_min" />
                             </div>
-                        </div>
-                        <div class="row individual_only">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="individual_film_name">Название пленки</label>
-                                    <input type="text" 
-                                           id="individual_film_name" 
-                                           name="individual_film_name" 
-                                           class="form-control" 
-                                           placeholder="Название пленки" 
-                                           value="<?=$individual_film_name ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'individual_film_name'); $(this).attr('name', 'individual_film_name'); $(this).attr('placeholder', 'Название пленки')" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'individual_film_name'); $(this).attr('name', 'individual_film_name'); $(this).attr('placeholder', 'Название пленки')" 
-                                           onfocusout="javascript: $(this).attr('id', 'individual_film_name'); $(this).attr('name', 'individual_film_name'); $(this).attr('placeholder', 'Название пленки')" />
-                                    <div class="invalid-feedback">Название пленки обязательно</div>
+                                    <label for="ski" id="for_ski">Лыжи</label>
+                                    <select name="ski" id="ski" class="form-control">
+                                        <?php
+                                        $no_ski_class = "";
+                                        ?>
+                                        <option id="no_ski_option" value="<?=NO_SKI ?>"<?=$no_ski_class ?><?=($ski == NO_SKI ? " selected='selected'" : "") ?>>Без лыж</option>
+                                        <option value="<?=STANDARD_SKI ?>"<?=($ski == STANDARD_SKI ? " selected='selected'" : "") ?>>Стандартные лыжи</option>
+                                        <option value="<?=NONSTANDARD_SKI ?>"<?=($ski == NONSTANDARD_SKI ? " selected='selected'" : "") ?>>Нестандартные лыжи</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <label class="form-check-label text-nowrap mt-3" style="line-height: 25px;">
+                                        <?php
+                                        $checked = $customers_material == 1 ? " checked='checked'" : "";
+                                        ?>
+                                        <input type="checkbox" class="form-check-input" id="customers_material" name="customers_material" value="on"<?=$checked ?>>Сырьё заказчика
+                                    </label>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="individual_price">Цена</label>
-                                    <div class="input-group">
-                                        <input type="text" 
-                                               id="individual_price" 
-                                               name="individual_price" 
-                                               class="form-control float-only" 
-                                               placeholder="Цена" 
-                                               value="<?= empty($individual_price) ? '' : floatval($individual_price) ?>" 
-                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'individual_price'); $(this).attr('name', 'individual_price'); $(this).attr('placeholder', 'Цена')" 
-                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'individual_price'); $(this).attr('name', 'individual_price'); $(this).attr('placeholder', 'Цена')" 
-                                               onfocusout="javascript: $(this).attr('id', 'individual_price'); $(this).attr('name', 'individual_price'); $(this).attr('placeholder', 'Цена')" />
-                                        <div class="input-group-append">
-                                            <select id="individual_currency" name="individual_currency" class="film-currency">
-                                                <option value="" hidden="">...</option>
-                                                <option value="rub"<?=$individual_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
-                                                <option value="usd"<?=$individual_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                                <option value="euro"<?=$individual_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="invalid-feedback">Цена обязательно</div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="individual_thickness">Толщина, мкм</label>
-                                    <input type="text" 
-                                           id="individual_thickness" 
-                                           name="individual_thickness" 
-                                           class="form-control int-only" 
-                                           placeholder="Толщина" 
-                                           value="<?= $individual_thickness ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'individual_thickness'); $(this).attr('name', 'individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'individual_thickness'); $(this).attr('name', 'individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
-                                           onfocusout="javascript: $(this).attr('id', 'individual_thickness'); $(this).attr('name', 'individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" />
-                                    <div class="invalid-feedback">Толщина обязательно</div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="individual_density">Удельный вес</label>
-                                    <input type="text" 
-                                           id="individual_density" 
-                                           name="individual_density" 
-                                           class="form-control float-only" 
-                                           placeholder="Удельный вес" 
-                                           value="<?= empty($individual_density) ? '' : floatval($individual_density) ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'individual_density'); $(this).attr('name', 'individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'individual_density'); $(this).attr('name', 'individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
-                                           onfocusout="javascript: $(this).attr('id', 'individual_density'); $(this).attr('name', 'individual_density'); $(this).attr('placeholder', 'Удельный вес')" />
-                                    <div class="invalid-feedback">Удельный вес обязательно</div>
+                                    <label for="width_ski" id="for_width_ski">Ширина пленки</label>
+                                    <input name="width_ski" id="width_ski" type="text" class="form-control int-only" value="<?=$width_ski ?>" placeholder="Ширина пленки" />
+                                    <div class="invalid-feedback">Ширина пленки обязательно</div>
                                 </div>
                             </div>
                         </div>
@@ -1161,14 +1110,7 @@ $colorfulnesses = array();
                                 </div>
                             </div>
                             <div class="col-6">
-                                <div class="form-check">
-                                    <label class="form-check-label text-nowrap" style="line-height: 25px;">
-                                        <?php
-                                        $checked = $customers_material == 1 ? " checked='checked'" : "";
-                                        ?>
-                                        <input type="checkbox" class="form-check-input" id="customers_material" name="customers_material" value="on"<?=$checked ?>>Сырьё заказчика
-                                    </label>
-                                </div>
+                                
                             </div>
                         </div>
                         <!-- Ламинация 1 -->
@@ -1268,6 +1210,7 @@ $colorfulnesses = array();
                                                    class="form-control float-only film-price<?=$lamination1_price_valid ?>" 
                                                    placeholder="Цена" 
                                                    value="<?=$lamination1_price ?>" 
+                                                   required="required"
                                                    onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                                    onmouseup="javascript: $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" 
                                                    onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
@@ -1307,31 +1250,7 @@ $colorfulnesses = array();
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="form-group">
-                                        <label for="lamination1_individual_price">Цена</label>
-                                        <div class="input-group">
-                                            <input type="text" 
-                                                   id="lamination1_individual_price" 
-                                                   name="lamination1_individual_price" 
-                                                   class="form-control float-only" 
-                                                   placeholder="Цена" 
-                                                   value="<?= empty($lamination1_individual_price) ? '' : floatval($lamination1_individual_price) ?>" 
-                                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                   onmouseup="javascript: $(this).attr('id', 'lamination1_individual_price'); $(this).attr('name', 'lamination1_individual_price'); $(this).attr('placeholder', 'Цена')" 
-                                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                   onkeyup="javascript: $(this).attr('id', 'lamination1_individual_price'); $(this).attr('name', 'lamination1_individual_price'); $(this).attr('placeholder', 'Цена')" 
-                                                   onfocusout="javascript: $(this).attr('id', 'lamination1_individual_price'); $(this).attr('name', 'lamination1_individual_price'); $(this).attr('placeholder', 'Цена')" />
-                                            <div class="input-group-append">
-                                                <select id="lamination1_individual_currency" name="lamination1_individual_currency" class="film-currency">
-                                                    <option value="" hidden="">...</option>
-                                                    <option value="rub"<?=$lamination1_individual_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
-                                                    <option value="usd"<?=$lamination1_individual_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                                    <option value="euro"<?=$lamination1_individual_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="invalid-feedback">Цена обязательно</div>
-                                    </div>
+                                    
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group">
@@ -1474,6 +1393,7 @@ $colorfulnesses = array();
                                                        class="form-control float-only film-price<?=$lamination2_price_valid ?>" 
                                                        placeholder="Цена" 
                                                        value="<?=$lamination2_price ?>" 
+                                                       required="required"
                                                        onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                                        onmouseup="javascript: $(this).attr('name', 'lamination2_price'); $(this).attr('placeholder', 'Цена');" 
                                                        onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
@@ -1513,31 +1433,7 @@ $colorfulnesses = array();
                                         </div>
                                     </div>
                                     <div class="col-6">
-                                        <div class="form-group">
-                                            <label for="lamination2_individual_price">Цена</label>
-                                            <div class="input-group">
-                                                <input type="text" 
-                                                       id="lamination2_individual_price" 
-                                                       name="lamination2_individual_price" 
-                                                       class="form-control float-only" 
-                                                       placeholder="Цена" 
-                                                       value="<?= empty($lamination2_individual_price) ? '' : floatval($lamination2_individual_price) ?>" 
-                                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                       onmouseup="javascript: $(this).attr('id', 'lamination2_individual_price'); $(this).attr('name', 'lamination2_individual_price'); $(this).attr('placeholder', 'Цена')" 
-                                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                       onkeyup="javascript: $(this).attr('id', 'lamination2_individual_price'); $(this).attr('name', 'lamination2_individual_price'); $(this).attr('placeholder', 'Цена')" 
-                                                       onfocusout="javascript: $(this).attr('id', 'lamination2_individual_price'); $(this).attr('name', 'lamination2_individual_price'); $(this).attr('placeholder', 'Цена')" />
-                                                <div class="input-group-append">
-                                                    <select id="lamination2_individual_currency" name="lamination2_individual_currency" class="film-currency">
-                                                        <option value="" hidden="">...</option>
-                                                        <option value="rub"<?=$lamination2_individual_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
-                                                        <option value="usd"<?=$lamination2_individual_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                                        <option value="euro"<?=$lamination2_individual_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="invalid-feedback">Цена обязательно</div>
-                                        </div>
+                                        
                                     </div>
                                     <div class="col-6">
                                         <div class="form-group">
@@ -2037,14 +1933,16 @@ $colorfulnesses = array();
                             $('#price_min').val(data.price);
                             ValidatePrice($('#price'), $('#price_min'));
                             
-                            if(data.currency_local.length != '') {
+                            if(data.currency_local != '') {
                                 $('#currency').addClass('d-none');
+                                $('#currency').removeAttr('required');
                                 $('#currency_text').text(data.currency_local);
                                 $('#currency_text').removeClass('d-none');
                             }
                             else {
                                 $('#currency_text').addClass('d-none');
                                 $('#currency').removeClass('d-none');
+                                $('#currency').attr('required', 'required');
                             }
                         })
                         .fail(function() {
@@ -2102,12 +2000,14 @@ $colorfulnesses = array();
                             
                             if(data.currency_local != '') {
                                 $('#lamination1_currency').addClass('d-none');
+                                $('#lamination1_currency').removeAttr('required');
                                 $('#lamination1_currency_text').text(data.currency_local);
                                 $('#lamination1_currency_text').removeClass('d-none');
                             }
                             else {
                                 $('#lamination1_currency_text').addClass('d-none');
                                 $('#lamination1_currency').removeClass('d-none');
+                                $('#lamination1_currency').attr('required', 'required');
                             }
                         })
                         .fail(function() {
@@ -2165,12 +2065,14 @@ $colorfulnesses = array();
                             
                             if(data.currency_local.length != '') {
                                 $('#lamination2_currency').addClass('d-none');
+                                $('#lamination2_currency').removeAttr('required');
                                 $('#lamination2_currency_text').text(data.currency_local);
                                 $('#lamination2_currency_text').removeClass('d-none');
                             }
                             else {
                                 $('#lamination2_currency_text').addClass('d-none');
                                 $('#lamination2_currency').removeClass('d-none');
+                                $('#lamination2_currency').attr('required', 'required');
                             }
                         })
                         .fail(function() {
@@ -2222,23 +2124,29 @@ $colorfulnesses = array();
             function SetWidthSkiVisibility() {
                 if($('#ski').val() == <?=NONSTANDARD_SKI ?>) {
                     $('#width_ski').removeClass('d-none');
+                    $('#for_width_ski').removeClass('d-none');
                 }
                 else {
                     $('#width_ski').addClass('d-none');
+                    $('#for_width_ski').addClass('d-none');
                 }
                 
                 if($('#lamination1_ski').val() == <?=NONSTANDARD_SKI ?>) {
                     $('#lamination1_width_ski').removeClass('d-none');
+                    $('#for_lamination1_width_ski').removeClass('d-none');
                 }
                 else {
                     $('#lamination1_width_ski').addClass('d-none');
+                    $('#for_lamination1_width_ski').addClass('d-none');
                 }
                 
                 if($('#lamination2_ski').val() == <?=NONSTANDARD_SKI ?>) {
                     $('#lamination2_width_ski').removeClass('d-none');
+                    $('#for_lamination2_width_ski').removeClass('d-none');
                 }
                 else {
                     $('#lamination2_width_ski').addClass('d-none');
+                    $('#for_lamination2_width_ski').addClass('d-none');
                 }
             }
             
@@ -2322,16 +2230,10 @@ $colorfulnesses = array();
                     $('#' + prefix + 'price').attr('disabled', 'disabled');
                     $('#' + prefix + 'currency').val('');
                     $('#' + prefix + 'currency').attr('disabled', 'disabled');
-                    $('#' + prefix + 'individual_price').val('');
-                    $('#' + prefix + 'individual_price').attr('disabled', 'disabled');
-                    $('#' + prefix + 'individual_currency').val('');
-                    $('#' + prefix + 'individual_currency').attr('disabled', 'disabled');
                 }
                 else {
                     $('#' + prefix + 'price').removeAttr('disabled');
                     $('#' + prefix + 'currency').removeAttr('disabled');
-                    $('#' + prefix + 'individual_price').removeAttr('disabled');
-                    $('#' + prefix + 'individual_currency').removeAttr('disabled');
                     $('#' + prefix + 'thickness').change();
                 }
                 
@@ -2339,12 +2241,6 @@ $colorfulnesses = array();
                     $('#' + prefix + 'film_variation_id').removeAttr('required');
                     $('#' + prefix + 'film_variation_id').addClass('d-none');
                     $('#' + prefix + 'film_variation_id').prev('label').addClass('d-none');
-                    $('#' + prefix + 'price').removeAttr('required');
-                    $('#' + prefix + 'price').val('');
-                    $('#' + prefix + 'currency').removeAttr('required');
-                    $('#' + prefix + 'currency').val('');
-                    $('#' + prefix + 'price').parent('.input-group').addClass('d-none');
-                    $('#' + prefix + 'price').parent('.input-group').prev('label').addClass('d-none');
                     $('.' + prefix + 'individual_only').removeClass('d-none');
                     $('.' + prefix + 'individual_only input').attr('required', 'required');
                     $('.' + prefix + 'individual_only select').attr('required', 'required');
@@ -2353,21 +2249,9 @@ $colorfulnesses = array();
                     $('#' + prefix + 'film_variation_id').attr('required', 'required');
                     $('#' + prefix + 'film_variation_id').removeClass('d-none');
                     $('#' + prefix + 'film_variation_id').prev('label').removeClass('d-none');
-                    $('#' + prefix + 'price').attr('required', 'required');
-                    $('#' + prefix + 'price').parent('.input-group').removeClass('d-none');
-                    $('#' + prefix + 'price').parent('.input-group').prev('label').removeClass('d-none');
-                    $('#' + prefix + 'currency').attr('required', 'required');
                     $('.' + prefix + 'individual_only').addClass('d-none');
                     $('.' + prefix + 'individual_only input').removeAttr('required');
                     $('.' + prefix + 'individual_only select').removeAttr('required');
-                }
-                
-                if($('#' + prefix + 'individual_price').attr('disabled') == 'disabled') {
-                    $('#' + prefix + 'individual_price').removeAttr('required');
-                }
-                
-                if($('#' + prefix + 'individual_currency').attr('disabled') == 'disabled') {
-                    $('#' + prefix + 'individual_currency').removeAttr('required');
                 }
             }
             
