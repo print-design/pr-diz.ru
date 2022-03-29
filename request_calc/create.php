@@ -1286,29 +1286,12 @@ $colorfulnesses = array();
                             </div>
                             <!-- Ламинация 2 -->
                             <div id="form_lamination_2" class="d-none">
-                                <div class="row">
-                                    <div class="col-6 mt-2">
-                                        <div class="d-flex justify-content-start">
-                                            <div class="p-1">
-                                                <p class="font-weight-bold">Ламинация 2</p>
-                                            </div>
-                                            <div class="p-0">
-                                                <button type="button" class="btn btn-light" onclick="javascript: HideLamination2();"><i class="fas fa-trash-alt"></i></button>
-                                            </div>
-                                        </div>
+                                <div class="d-flex justify-content-between">
+                                    <div class="p-1">
+                                        <p class="font-weight-bold">Ламинация 2</p>
                                     </div>
-                                    <div class="col-6 mt-2">
-                                        <div class="row">
-                                            <div class="col-7">
-                                                <select name="lamination2_ski" id="lamination2_ski" class="form-control form-control-sm">
-                                                    <option value="<?=STANDARD_SKI ?>">Стандартные лыжи</option>
-                                                    <option value="<?=NONSTANDARD_SKI ?>">Нестандартные лыжи</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-5">
-                                                <input name="lamination2_width_ski" id="lamination2_width_ski" type="text" class="form-control form-control-sm int-only" placeholder="Ширина пленки" />
-                                            </div>
-                                        </div>
+                                    <div class="p-0">
+                                        <button type="button" class="btn btn-link font-weight-bold" onclick="javascript: HideLamination2();"><img src="../images/icons/trash2.svg" />&nbsp;&nbsp;&nbsp;Удалить</button>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -1361,8 +1344,56 @@ $colorfulnesses = array();
                                                     ?>
                                             </select>
                                         </div>
+                                        <div class="form-group lamination2_individual_only">
+                                            <label for="lamination2_individual_thickness">Толщина, мкм</label>
+                                            <input type="text" 
+                                                   id="lamination2_individual_thickness" 
+                                                   name="lamination2_individual_thickness" 
+                                                   class="form-control int-only" 
+                                                   placeholder="Толщина" 
+                                                   value="<?= $lamination2_individual_thickness ?>" 
+                                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_individual_thickness'); $(this).attr('name', 'lamination2_individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
+                                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_individual_thickness'); $(this).attr('name', 'lamination2_individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
+                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_individual_thickness'); $(this).attr('name', 'lamination2_individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" />
+                                            <div class="invalid-feedback">Толщина обязательно</div>
+                                        </div>
                                     </div>
-                                    <div class="col-6"></div>
+                                    <div class="col-6 lamination2_individual_only">
+                                        <div class="form-group">
+                                            <label for="lamination2_individual_film_name">Название пленки</label>
+                                            <input type="text" 
+                                                   id="lamination2_individual_film_name" 
+                                                   name="lamination2_individual_film_name" 
+                                                   class="form-control" 
+                                                   placeholder="Название пленки" 
+                                                   value="<?=$lamination2_individual_film_name ?>" 
+                                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_individual_film_name'); $(this).attr('name', 'lamination2_individual_film_name'); $(this).attr('placeholder', 'Название пленки')" 
+                                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_individual_film_name'); $(this).attr('name', 'lamination2_individual_film_name'); $(this).attr('placeholder', 'Название пленки')" 
+                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_individual_film_name'); $(this).attr('name', 'lamination2_individual_film_name'); $(this).attr('placeholder', 'Название пленки')" />
+                                            <div class="invalid-feedback">Название пленки обязательно</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 lamination2_individual_only">
+                                        <div class="form-group">
+                                            <label for="lamination2_individual_density">Удельный вес</label>
+                                            <input type="text" 
+                                                   id="lamination2_individual_density" 
+                                                   name="lamination2_individual_density" 
+                                                   class="form-control float-only" 
+                                                   placeholder="Удельный вес" 
+                                                   value="<?= empty($lamination2_individual_density) ? '' : floatval($lamination2_individual_density) ?>" 
+                                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_individual_density'); $(this).attr('name', 'lamination2_individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
+                                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_individual_density'); $(this).attr('name', 'lamination2_individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
+                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_individual_density'); $(this).attr('name', 'lamination2_individual_density'); $(this).attr('placeholder', 'Удельный вес')" />
+                                            <div class="invalid-feedback">Удельный вес обязательно</div>
+                                        </div>
+                                    </div>
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="lamination2_price" id="for_lamination2_price">Цена</label>
@@ -1393,73 +1424,30 @@ $colorfulnesses = array();
                                         </div>
                                         <input type="hidden" id="lamination2_price_min" name="lamination2_price_min" />
                                     </div>
-                                </div>
-                                <div class="row lamination2_individual_only">
                                     <div class="col-6">
                                         <div class="form-group">
-                                            <label for="lamination2_individual_film_name">Название пленки</label>
-                                            <input type="text" 
-                                                   id="lamination2_individual_film_name" 
-                                                   name="lamination2_individual_film_name" 
-                                                   class="form-control" 
-                                                   placeholder="Название пленки" 
-                                                   value="<?=$lamination2_individual_film_name ?>" 
-                                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_individual_film_name'); $(this).attr('name', 'lamination2_individual_film_name'); $(this).attr('placeholder', 'Название пленки')" 
-                                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_individual_film_name'); $(this).attr('name', 'lamination2_individual_film_name'); $(this).attr('placeholder', 'Название пленки')" 
-                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_individual_film_name'); $(this).attr('name', 'lamination2_individual_film_name'); $(this).attr('placeholder', 'Название пленки')" />
-                                            <div class="invalid-feedback">Название пленки обязательно</div>
+                                            <label for="lamination2_ski" id="for_lamination2_ski">Лыжи</label>
+                                            <select name="lamination2_ski" id="lamination2_ski" class="form-control form-control-sm">
+                                                <option value="<?=STANDARD_SKI ?>">Стандартные лыжи</option>
+                                                <option value="<?=NONSTANDARD_SKI ?>">Нестандартные лыжи</option>
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="col-6">
-                                        
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label for="lamination2_individual_thickness">Толщина, мкм</label>
-                                            <input type="text" 
-                                                   id="lamination2_individual_thickness" 
-                                                   name="lamination2_individual_thickness" 
-                                                   class="form-control int-only" 
-                                                   placeholder="Толщина" 
-                                                   value="<?= $lamination2_individual_thickness ?>" 
-                                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_individual_thickness'); $(this).attr('name', 'lamination2_individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
-                                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_individual_thickness'); $(this).attr('name', 'lamination2_individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
-                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_individual_thickness'); $(this).attr('name', 'lamination2_individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" />
-                                            <div class="invalid-feedback">Толщина обязательно</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label for="lamination2_individual_density">Удельный вес</label>
-                                            <input type="text" 
-                                                   id="lamination2_individual_density" 
-                                                   name="lamination2_individual_density" 
-                                                   class="form-control float-only" 
-                                                   placeholder="Удельный вес" 
-                                                   value="<?= empty($lamination2_individual_density) ? '' : floatval($lamination2_individual_density) ?>" 
-                                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_individual_density'); $(this).attr('name', 'lamination2_individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
-                                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_individual_density'); $(this).attr('name', 'lamination2_individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
-                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_individual_density'); $(this).attr('name', 'lamination2_individual_density'); $(this).attr('placeholder', 'Удельный вес')" />
-                                            <div class="invalid-feedback">Удельный вес обязательно</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6"></div>
                                     <div class="col-6">
                                         <div class="form-check">
-                                            <label class="form-check-label text-nowrap" style="line-height: 25px;">
+                                            <label class="form-check-label text-nowrap mt-3" style="line-height: 25px;">
                                                 <?php
                                                 $checked = $lamination2_customers_material == 1 ? " checked='checked'" : "";
                                                 ?>
                                                 <input type="checkbox" class="form-check-input" id="lamination2_customers_material" name="lamination2_customers_material" value="on"<?=$checked ?>>Сырьё заказчика
                                             </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="lamination2_width_ski" id="for_lamination2_width_ski">Ширина пленки</label>
+                                            <input name="lamination2_width_ski" id="lamination2_width_ski" type="text" class="form-control form-control-sm int-only" placeholder="Ширина пленки" />
+                                            <div class="invalid-feedback">Ширина пленки обязательно</div>
                                         </div>
                                     </div>
                                 </div>
