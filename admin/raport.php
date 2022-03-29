@@ -84,7 +84,7 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                         <tr>
                             <td><?= floatval($row['value']) ?></td>
                             <td class="text-right">
-                                <a class="activate" data-id='<?=$row['id'] ?>' href="javascript: void(0);">
+                                <a class="activate" data-id='<?=$row['id'] ?>' href="javascript: void(0);" title="<?=($row['active'] ? 'Активный' : 'Неактивный') ?>" data-toggle="tooltip" data-placement="right">
                                     <?php if($row['active']): ?>
                                     <i class="fas fa-eye"></i>
                                     <?php else: ?>
@@ -118,18 +118,33 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                             switch(data) {
                                 case "0":
                                     this_el.html("<i class='fas fa-eye-slash'></i>");
+                                    this_el.attr("title", "Неактивный");
+                                    this_el.tooltip();
                                     break;
                                 case "1":
                                     this_el.html("<i class='fas fa-eye'></i>");
+                                    this_el.attr("title", "Активный");
+                                    this_el.tooltip();
                                     break;
                                 default:
                                     alert('Ошибка при активации / деактивации');
+                                    this_el.removeAttr('title');
                                     break;
                             }
                         })
                         .fail(function() {
                             alert('Ошибка при активации / деактивации');
                         });
+            });
+            
+            // Всплывающая подсказка
+            $(function() {
+                $("a.activate").tooltip({
+                    position: {
+                        my: "left center",
+                        at: "right+10 center"
+                    }
+                });
             });
         </script>
     </body>
