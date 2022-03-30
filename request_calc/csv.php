@@ -45,10 +45,9 @@ function GetWidthData($ski, $streams_number, $stream_width, $width_ski) {
     return $result;
 }
 
-$export_submit = filter_input(INPUT_POST, 'export_submit');
-$id = filter_input(INPUT_POST, 'id');
+$id = filter_input(INPUT_GET, 'id');
 
-if($export_submit !== null && $id !== null) {
+if($id !== null) {
     // Заголовки CSV-файла
     $titles = array("Параметр", "Значение", "Расчёт", "Комментарий");
     
@@ -125,6 +124,19 @@ if($export_submit !== null && $id !== null) {
     $lam1_waste_length = null;
     $lam2_waste_length = null;
     
+    // Красочность
+    $ink_number = null;
+    
+    // М пог. грязные
+    $mpogdirty = null;
+    $lam1_mpogdirty = null;
+    $lam2_mpogdirty = null;
+    
+    // М2 грязные
+    $m2dirty = null;
+    $lam1_m2dirty = null;
+    $lam2_m2dirty = null;
+    
     $sql = "select rc.date, rc.name, rc.quantity, rc.unit, "
             . "f.name film, fv.thickness thickness, fv.weight density, rc.ski, rc.width_ski, "
             . "lam1_f.name lam1_film, lam1_fv.thickness lam1_thickness, lam1_fv.weight lam1_density, rc.lamination1_ski, rc.lamination1_width_ski, "
@@ -173,20 +185,29 @@ if($export_submit !== null && $id !== null) {
         $raport_format = number_format($raport, 3, ",", "");
         $ink_number = $row['ink_number']; // Красочность
         
+        $laminations_number = 0; // Количество ламинаций
+        
+        if(!empty($lam2_film) && !empty($lam2_thickness) && !empty($lam2_density)) {
+            $laminations_number = 2;
+        }
+        elseif(!empty ($lam1_film) && !empty ($lam1_thickness) && !empty ($lam1_density)) {
+            $laminations_number = 1;
+        }
+        
         array_push($data, array("Масса тиража, кг", $quantity, "", ""));
         array_push($data, array("Основная пленка, марка", $film, "", ""));
         array_push($data, array("Основная пленка, толщина, мкм", $thickness, "", ""));
         array_push($data, array("Основная пленка, плотность, г/м2", $density_format, "", ""));
         array_push($data, array("Основная пленка, лыжи", GetSkiName($ski), "", ""));
         
-        if(!empty($lam1_film) && !empty($lam1_thickness) && !empty($lam1_density)) {
+        if($laminations_number > 0) {
             array_push($data, array("Ламинация 1, марка", $lam1_film, "", ""));
             array_push($data, array("Ламинация 1, толщина, мкм", $lam1_thickness, "", ""));
             array_push($data, array("Ламинация 1, плотность, г/м2", $lam1_density_format, "", ""));
             array_push($data, array("Ламинация 1, лыжи", GetSkiName($lam1_ski), "", ""));
         }
         
-        if(!empty($lam2_film) && !empty($lam2_thickness) && !empty($lam2_density)) {
+        if($laminations_number > 1) {
             array_push($data, array("Ламинация 2, марка", $lam2_film, "", ""));
             array_push($data, array("Ламинация 2, толщина, мкм", $lam2_thickness, "", ""));
             array_push($data, array("Ламинация 2, плотность, г/м2", $lam2_density_format, "", ""));
@@ -227,19 +248,57 @@ if($export_submit !== null && $id !== null) {
             array_push($data, array("Основная пленка, метраж отходов, м", $waste_length_format, $tuning_data[$machine_id]['waste_percent']." * $mpogpure_format / 100", "процент отходов печати * м. пог. чистые / 100"));
         }
         
-        if(!empty($lam1_film) && !empty($lam1_thickness) && !empty($lam1_density)) {
+        if($laminations_number > 0) {
             $lam1_waste_length = $laminator_tuning_data['waste_percent'] * $mpogpure / 100;
             $lam1_waste_length_format = number_format($lam1_waste_length, 2, ",", " ");
             array_push($data, array("Ламинация 1, метраж отходов, м", $lam1_waste_length_format, $laminator_tuning_data['waste_percent']." * $mpogpure_format / 100", "процент отходов ламинации * м. пог. чистые / 100"));
         }
         
-        if(!empty($lam2_film) && !empty($lam2_thickness) && !empty($lam2_density)) {
+        if($laminations_number > 1) {
             $lam2_waste_length = $laminator_tuning_data['waste_percent'] * $mpogpure / 100;
             $lam2_waste_length_format = number_format($lam1_waste_length, 2, ",", " ");
             array_push($data, array("Ламинация 2, метраж отходов, м", $lam2_waste_length_format, $laminator_tuning_data['waste_percent']." * $mpogpure_format / 100", "процент отходов ламинации * м. пог. чистые / 100"));
         }
         
-        array_push($data, array("Красочность", $ink_number, "", ""));
+        if(!empty($ink_number)) {
+            array_push($data, array("Красочность", $ink_number, "", ""));
+        }
+        
+        if(!empty($machine_id)) {
+            $mpogdirty = $mpogpure * $tuning_data[$machine_id]['waste_percent'] + $ink_number * $tuning_data[$machine_id]['length'] + $laminations_number * $laminator_tuning_data['length'];
+            $mpogdirty_format = number_format($mpogdirty, 2, ",", " ");
+            array_push($data, array("Основная пленка, м. пог. грязные, м", $mpogdirty_format, "$mpogpure_format * ".$tuning_data[$machine_id]['waste_percent']." + $ink_number * ".$tuning_data[$machine_id]['length']." + $laminations_number * ".$laminator_tuning_data['length'], "м. пог. чистые * общий процент отходов на печати + красочность * метраж приладки 1 краски + кол-во ламинаций * метраж приладки ламинации"));
+        }
+        
+        if($laminations_number > 0) {
+            $lam1_mpogdirty = $mpogpure * $tuning_data[$machine_id]['waste_percent'] + $laminator_tuning_data['length'] * 2;
+            $lam1_mpogdirty_format = number_format($lam1_mpogdirty, 2, ",", " ");
+            array_push($data, array("Ламинация 1, м. пог. грязные, м", $lam1_mpogdirty_format, "$mpogpure_format * ".$tuning_data[$machine_id]['waste_percent']." + ".$laminator_tuning_data['length']." * 2", "м. пог. чистые * общий процент отходов на печати + метраж приладки ламинации * 2"));
+        }
+        
+        if($laminations_number > 1) {
+            $lam2_mpogdirty = $mpogpure * $tuning_data[$machine_id]['waste_percent'] + $laminator_tuning_data['length'];
+            $lam2_mpogdirty_format = number_format($lam2_mpogdirty, 2, ",", " ");
+            array_push($data, array("Ламинация 2, м. пог. грязные, м", $lam2_mpogdirty_format, "$mpogpure_format * ".$tuning_data[$machine_id]['waste_percent']." + ".$laminator_tuning_data['length'], "м. пог. чистые * общий процент отходов на печати + метраж приладки ламинации"));
+        }
+        
+        if(!empty($machine_id)) {
+            $m2dirty = $mpogdirty * $width / 1000;
+            $m2dirty_format = number_format($m2dirty, 2, ",", " ");
+            array_push($data, array("Основная пленка, м2 грязные, м2", $m2dirty_format, "$mpogdirty_format * $width / 1000", "м. пог. грязные * ширина материала основной пленки / 1000"));
+        }
+        
+        if($laminations_number > 0) {
+            $lam1_m2dirty = $lam1_mpogdirty * $lam1_width / 1000;
+            $lam1_m2dirty_format = number_format($lam1_m2dirty, 2, ",", " ");
+            array_push($data, array("Ламинация 1, м2 грязные, м2", $lam1_m2dirty_format, "$lam1_mpogdirty_format * $lam1_width / 1000", "м. пог. грязные * ширина материала пленки ламинации 1 / 1000"));
+        }
+        
+        if($laminations_number > 1) {
+            $lam2_m2dirty = $lam2_mpogdirty * $lam2_width / 1000;
+            $lam2_m2dirty_format = number_format($lam2_m2dirty, 2, ",", " ");
+            array_push($data, array("Ламинация 2, м2 грязные, м2", $lam2_m2dirty_format, "$lam2_mpogdirty_format * $lam2_width / 1000", "м. пог. грязные * ширина материала пленки ламинации 2 / 1000"));
+        }
     }
     
     
