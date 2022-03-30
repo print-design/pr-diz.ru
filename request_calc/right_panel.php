@@ -6,10 +6,21 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
 }
 ?>
 <div id="calculation"<?=$calculation_class ?> style="position: absolute; bottom: auto; right: 10px; margin-top: 60px;">
-    <div style="position: absolute; right: 30px; top: 0px;">
+    <div style="position: absolute; right: 30px; top: 0px;" class="d-none">
         <a class="btn btn-outline-dark" target="_blank" style="margin-top: 20px;" href="print.php?id=<?=$id ?>"><i class="fa fa-print"></i></a>
     </div>
-    <h1>Расчет</h1>
+    <div class="d-flex justify-content-between p-2">
+        <div>
+            <h1>Расчет</h1>
+        </div>
+        <div>
+            <form method="post" action="csv.php" style="display: inline;">
+                <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                <button type="submit" name="export_submit" class="toplink btn btn-outline-dark mr-3" style="width: 3rem;" title="Скачать"><i class="fas fa-file-csv"></i></button>
+            </form>
+            <a class="toplink btn btn-outline-dark" target="_blank" style="width: 3rem;" title="Печать" href="print.php?id=<?=$id ?>"><i class="fa fa-print"></i></a>
+        </div>
+    </div>
     <div class="row text-nowrap">
         <div class="col-3">
             <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
