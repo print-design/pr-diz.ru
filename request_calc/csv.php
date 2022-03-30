@@ -1,6 +1,24 @@
 <?php
 include '../include/topscripts.php';
 
+// Лыжи
+const NO_SKI = 0;
+const STANDARD_SKI = 1;
+const NONSTANDARD_SKI = 2;
+
+function GetSkiName($ski) {
+    switch ($ski) {
+        case NO_SKI:
+            return "Без лыж";
+        case STANDARD_SKI:
+            return "Стандартные лыжи";
+        case NONSTANDARD_SKI:
+            return "Нестандартные лыжи";
+        default :
+            return "Неизвестно";
+    }
+}
+
 $export_submit = filter_input(INPUT_POST, 'export_submit');
 $id = filter_input(INPUT_POST, 'id');
 
@@ -16,36 +34,44 @@ if($export_submit !== null && $id !== null) {
     // Масса тиража
     $quantity = null;
             
-    // Типы, толщины и удельные веса плёнок
+    // Типы, толщины и удельные веса плёнок, лыжи и ширина плёнки
     $film = null;
     $thickness = null;
     $density = null;
+    $ski = null;
+    $width_ski = null;
             
     $lam1_film = null;
     $lam1_thickness = null;
     $lam1_density = null;
+    $lam1_ski = null;
+    $lam1_width_ski = null;
             
     $lam2_film = null;
     $lam2_thickness = null;
     $lam2_density = null;
+    $lam2_ski = null;
+    $lam2_width_ski = null;
             
     // Ширина ручья
     $stream_width = null;
             
     // Количество ручьёв
-    $streams_count = null;
+    $streams_number = null;
             
     // Рапорт
     $raport = null;
-            
-    // Лыжи
-    $ski = null;
-    $lam1_ski = null;
-    $lam2_ski = null;
     
-    $sql = "select rc.date, rc.name, rc.quantity, rc.unit, f.name film, fv.thickness thickness, fv.weight density, "
-            . "lam1_f.name lam1_film, lam1_fv.thickness lam1_thickness, lam1_fv.weight lam1_density, "
-            . "lam2_f.name lam2_film, lam2_fv.thickness lam2_thickness, lam2_fv.weight lam2_density "
+    // Ширина материала
+    $width = null;
+    $lam1_width = null;
+    $lam2_width = null;
+    
+    $sql = "select rc.date, rc.name, rc.quantity, rc.unit, "
+            . "f.name film, fv.thickness thickness, fv.weight density, rc.ski, rc.width_ski, "
+            . "lam1_f.name lam1_film, lam1_fv.thickness lam1_thickness, lam1_fv.weight lam1_density, rc.lamination1_ski, rc.lamination1_width_ski, "
+            . "lam2_f.name lam2_film, lam2_fv.thickness lam2_thickness, lam2_fv.weight lam2_density, rc.lamination2_ski, rc.lamination2_width_ski, "
+            . "rc.stream_width, rc.streams_number, rc.raport "
             . "from request_calc rc "
             . "left join film_variation fv on rc.film_variation_id = fv.id "
             . "left join film f on fv.film_id = f.id "
@@ -64,34 +90,66 @@ if($export_submit !== null && $id !== null) {
         $film = $row['film']; // Основная пленка, марка
         $thickness = $row['thickness']; // Основная пленка, толщина, мкм
         $density = $row['density']; // Основная пленка, плотность, г/м2
+        $ski = $row['ski']; // Основная пленка, лыжи
+        $width_ski = $row['width_ski']; // Основная пленка, ширина пленки, мм
         
         $lam1_film = $row['lam1_film']; // Ламинация 1, марка
         $lam1_thickness = $row['lam1_thickness']; // Ламинация 1, толщина, мкм
         $lam1_density = $row['lam1_density']; // Ламинация 1, плотность, г/м2
+        $lam1_ski = $row['lamination1_ski']; // Ламинация 1, лыжи
+        $lam1_width_ski = $row['lamination1_width_ski']; // Ламинация 1, ширина пленки, мм
         
         $lam2_film = $row['lam2_film']; // Ламинация 2, марка
         $lam2_thickness = $row['lam2_thickness']; // Ламинация 2, толщина, мкм
         $lam2_density = $row['lam2_density']; // Ламинация 2, плотность, г/м2
+        $lam2_ski = $row['lamination2_ski']; // Ламинация 2, лыжи
+        $lam2_width_ski = $row['lamination2_width_ski'];  // Ламинация 2, ширина пленки, мм
+        
+        $stream_width = $row['stream_width']; // Ширина ручья, мм
+        $streams_number = $row['streams_number']; // Количество ручьёв
+        $raport = $row['raport']; // Рапорт
         
         array_push($data, array("Масса тиража, кг", $quantity, "", ""));
         array_push($data, array("Основная пленка, марка", $film, "", ""));
         array_push($data, array("Основная пленка, толщина, мкм", $thickness, "", ""));
         array_push($data, array("Основная пленка, плотность, г/м2", number_format($density, 2, ",", " "), "", ""));
+        array_push($data, array("Основная пленка, лыжи", GetSkiName($ski), "", ""));
         
         if(!empty($lam1_film) && !empty($lam1_thickness) && !empty($lam1_density)) {
             array_push($data, array("Ламинация 1, марка", $lam1_film, "", ""));
             array_push($data, array("Ламинация 1, толщина, мкм", $lam1_thickness, "", ""));
-            array_push($data, array("Ламинация 1, плотность, г/м2", $lam1_density, "", ""));
+            array_push($data, array("Ламинация 1, плотность, г/м2", number_format($lam1_density, 2, ",", " "), "", ""));
+            array_push($data, array("Ламинация 1, лыжи", GetSkiName($lam1_ski), "", ""));
         }
         
         if(!empty($lam2_film) && !empty($lam2_thickness) && !empty($lam2_density)) {
-            array_push($data, array("Ламинация 2, марка", $lam2_thickness, "", ""));
+            array_push($data, array("Ламинация 2, марка", $lam2_film, "", ""));
             array_push($data, array("Ламинация 2, толщина, мкм", $lam2_thickness, "", ""));
-            array_push($data, array("Ламинация 2, плотность, г/м2", $lam1_density, "", ""));
+            array_push($data, array("Ламинация 2, плотность, г/м2", number_format($lam2_density, 2, ",", " "), "", ""));
+            array_push($data, array("Ламинация 2, лыжи", GetSkiName($lam2_ski), "", ""));
+        }
+        
+        array_push($data, array("Ширина ручья, мм", $stream_width, "", ""));
+        array_push($data, array("Количество ручьёв", $streams_number, "", ""));
+        array_push($data, array("Рапорт", number_format($raport, 3, ",", ""), "", ""));
+        
+        switch ($ski) {
+            case NO_SKI:
+                $width = $streams_number * $stream_width;
+                array_push($data, array("Основная пленка, ширина материала, мм", $width, "$streams_number * $stream_width", "количество ручьёв * ширина ручья"));
+                break;
+            
+            case STANDARD_SKI:
+                $width = $streams_number * $stream_width + 20;
+                array_push($data, array("Основная пленка, ширина материала, мм", $width, "$streams_number * $stream_width + 20", "количество ручьёв * ширина ручья + 20 мм"));
+                break;
+            
+            case NONSTANDARD_SKI:
+                $width = $width_ski;
+                array_push($data, array("Основная пленка, ширина материала, мм", $width, "", "при нестандартных лыжах вводится вручную"));
+                break;
         }
     }
-            
-    // Ширина материала
     
     $file_name = DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y')." $name.csv";
     
