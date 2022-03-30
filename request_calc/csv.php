@@ -19,6 +19,32 @@ function GetSkiName($ski) {
     }
 }
 
+function GetWidthData($ski, $streams_number, $stream_width, $width_ski) {
+    $result = array();
+    
+    switch($ski) {
+        case NO_SKI:
+            $result['width'] = $streams_number * $stream_width;
+            $result['calculation'] = "$streams_number * $stream_width";
+            $result['comment'] = "количество ручьёв * ширина ручья";
+            break;
+        
+        case STANDARD_SKI:
+            $result['width'] = $streams_number * $stream_width + 20;
+            $result['calculation'] = "$streams_number * $stream_width + 20";
+            $result['comment'] = "количество ручьёв * ширина ручья + 20 мм";
+            break;
+        
+        case NONSTANDARD_SKI:
+            $result['width'] = $width_ski;
+            $result['calculation'] = "";
+            $result['comment'] = "вводится вручную";
+            break;
+    }
+    
+    return $result;
+}
+
 $export_submit = filter_input(INPUT_POST, 'export_submit');
 $id = filter_input(INPUT_POST, 'id');
 
@@ -66,6 +92,12 @@ if($export_submit !== null && $id !== null) {
     $width = null;
     $lam1_width = null;
     $lam2_width = null;
+    
+    // М2 чистые
+    $m2pure = null;
+    
+    // М пог. чистые
+    $mpogpure = null;
     
     $sql = "select rc.date, rc.name, rc.quantity, rc.unit, "
             . "f.name film, fv.thickness thickness, fv.weight density, rc.ski, rc.width_ski, "
@@ -133,22 +165,27 @@ if($export_submit !== null && $id !== null) {
         array_push($data, array("Количество ручьёв", $streams_number, "", ""));
         array_push($data, array("Рапорт", number_format($raport, 3, ",", ""), "", ""));
         
-        switch ($ski) {
-            case NO_SKI:
-                $width = $streams_number * $stream_width;
-                array_push($data, array("Основная пленка, ширина материала, мм", $width, "$streams_number * $stream_width", "количество ручьёв * ширина ручья"));
-                break;
-            
-            case STANDARD_SKI:
-                $width = $streams_number * $stream_width + 20;
-                array_push($data, array("Основная пленка, ширина материала, мм", $width, "$streams_number * $stream_width + 20", "количество ручьёв * ширина ручья + 20 мм"));
-                break;
-            
-            case NONSTANDARD_SKI:
-                $width = $width_ski;
-                array_push($data, array("Основная пленка, ширина материала, мм", $width, "", "при нестандартных лыжах вводится вручную"));
-                break;
+        $width_data = GetWidthData($ski, $streams_number, $stream_width, $width_ski);
+        $width = $width_data['width'];
+        array_push($data, array("Основная пленка, ширина материала, мм", $width, $width_data['calculation'], $width_data['comment']));
+        
+        if(!empty($lam1_film) && !empty($lam1_thickness) && !empty($lam1_density)) {
+            $lam1_width_data = GetWidthData($lam1_ski, $streams_number, $stream_width, $lam1_width_ski);
+            $lam1_width = $lam1_width_data['width'];
+            array_push($data, array("Ламинация 1, ширина материала, мм", $lam1_width, $lam1_width_data['calculation'], $lam1_width_data['comment']));
         }
+        
+        if(!empty($lam2_film) && !empty($lam2_thickness) && !empty($lam2_density)) {
+            $lam2_width_data = GetWidthData($lam2_ski, $streams_number, $stream_width, $lam2_width_ski);
+            $lam2_width = $lam2_width_data['width'];
+            array_push($data, array("Ламинация 2, ширина материала, мм", $lam2_width, $lam2_width_data['calculation'], $lam2_width_data['comment']));
+        }
+        
+        $m2pure = $quantity * 1000 / ($density + $lam1_density ?? 0 + $lam2_density ?? 0);
+        array_push($data, array("М2 чистые, м2", number_format($m2pure, 2, ",", " "), "$quantity * 1000 / ($density + ".($lam1_density ?? 0)." + ".($lam2_density ?? 0).")", "масса тиража * 1000 / (осн. пл. уд. вес + лам. 1 уд. вес + лам. 2 уд. вес)"));
+        
+        $mpogpure = $m2pure / ($streams_number * $stream_width);
+        array_push($data, array("М пог. чистые, м", number_format($mpogpure, 2, ",", " "), "$m2pure / ($streams_number * $stream_width)", "м2 чистые / (количество ручьёв * ширина ручья)"));
     }
     
     $file_name = DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y')." $name.csv";

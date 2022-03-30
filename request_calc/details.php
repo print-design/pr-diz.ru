@@ -238,7 +238,7 @@ $num_for_customer = $row['num_for_customer'];
                         <tr><th>Ширина ламинирующего вала</th><td colspan="3"><?= $lamination_roller_width ?> мм</td></tr>
                             <?php
                             endif;
-                            if(!empty($streams_count)):
+                            if(!empty($streams_number)):
                             ?>
                         <tr><th>Количество ручьев</th><td colspan="3"><?= $streams_number ?></td></tr>
                             <?php
