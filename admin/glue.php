@@ -176,6 +176,32 @@ if($row = $fetcher->Fetch()) {
                             <div class="invalid-feedback">Стоимость клея обязательно</div>
                         </div>
                         <div class="form-group">
+                            <label for="solvent">Стоимость растворителя для клея (за кг)</label>
+                            <div class="input-group">
+                                <input type="text" 
+                                       class="form-control float-only" 
+                                       id="solvent" 
+                                       name="solvent" 
+                                       value="<?= empty($solvent) ? "" : floatval($solvent) ?>" 
+                                       placeholder="Стоимость, за кг" 
+                                       required="required" 
+                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onmouseup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                       onkeyup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                       onfocusout="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" />
+                                <div class="input-group-append">
+                                    <select id="solvent_currency" name="solvent_currency" required="required">
+                                        <option value="" hidden="">...</option>
+                                        <option value="rub"<?=$solvent_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
+                                        <option value="usd"<?=$solvent_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
+                                        <option value="euro"<?=$solvent_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="invalid-feedback">Стоимость растворителя для клея обязательно</div>
+                        </div>
+                        <div class="form-group">
                             <label for="glue">Расход клея, г/м<sup>2</sup></label>
                             <input type="text" 
                                    class="form-control float-only" 
@@ -206,32 +232,6 @@ if($row = $fetcher->Fetch()) {
                                    onkeyup="javascript: $(this).attr('id', 'glue_expense_pet'); $(this).attr('name', 'glue_expense_pet'); $(this).attr('placeholder', 'Расход клея при ламинации ПЭТ, г/м2');" 
                                    onfocusout="javascript: $(this).attr('id', 'glue_expense_pet'); $(this).attr('name', 'glue_expense_pet'); $(this).attr('placeholder', 'Расход клея при ламинации ПЭТ, г/м2');" />
                             <div class="invalid-feedback">Расход клея при ламинации ПЭТ обязательно</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="solvent">Стоимость растворителя для клея (за кг)</label>
-                            <div class="input-group">
-                                <input type="text" 
-                                       class="form-control float-only" 
-                                       id="solvent" 
-                                       name="solvent" 
-                                       value="<?= empty($solvent) ? "" : floatval($solvent) ?>" 
-                                       placeholder="Стоимость, за кг" 
-                                       required="required" 
-                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" 
-                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" 
-                                       onfocusout="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" />
-                                <div class="input-group-append">
-                                    <select id="solvent_currency" name="solvent_currency" required="required">
-                                        <option value="" hidden="">...</option>
-                                        <option value="rub"<?=$solvent_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
-                                        <option value="usd"<?=$solvent_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                        <option value="euro"<?=$solvent_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="invalid-feedback">Стоимость растворителя для клея обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="solvent_part">Расход растворителя (кг) на 1 кг клея</label>
