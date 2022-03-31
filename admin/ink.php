@@ -350,7 +350,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell w-50 pr-3">
                                 <div class="form-group">
-                                    <label for="c">C (за кг)</label>
+                                    <label for="c">Чистый C (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
@@ -373,32 +373,32 @@ if($row = $fetcher->Fetch()) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback">C обязательно</div>
+                                    <div class="invalid-feedback">Чистый C обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell w-50 pl-3">
                                 <div class="form-group">
-                                    <label for="c_expense">Расход C (г/м<sup>2</sup>)</label>
+                                    <label for="c_expense">Расход смеси C (г/м<sup>2</sup>)</label>
                                     <input type="text" 
                                            class="form-control float-only" 
                                            id="c_expense" 
                                            name="c_expense" 
                                            value="<?= empty($c_expense) || $c_expense == 0.0 ? "" : floatval($c_expense) ?>" 
-                                           placeholder="Расход C (г/м2)" 
+                                           placeholder="Расход смеси C (г/м2)" 
                                            required="required" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'c_expense'); $(this).attr('name', 'c_expense'); $(this).attr('placeholder', 'Расход C (г/м2)');" 
+                                           onmouseup="javascript: $(this).attr('id', 'c_expense'); $(this).attr('name', 'c_expense'); $(this).attr('placeholder', 'Расход смеси C (г/м2)');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'c_expense'); $(this).attr('name', 'c_expense'); $(this).attr('placeholder', 'Расход C (г/м2)');" 
-                                           onfocusout="javascript: $(this).attr('id', 'c_expense'); $(this).attr('name', 'c_expense'); $(this).attr('placeholder', 'Расход C (г/м2)');" />
-                                    <div class="invalid-feedback">Расход C обязательно</div>
+                                           onkeyup="javascript: $(this).attr('id', 'c_expense'); $(this).attr('name', 'c_expense'); $(this).attr('placeholder', 'Расход смеси C (г/м2)');" 
+                                           onfocusout="javascript: $(this).attr('id', 'c_expense'); $(this).attr('name', 'c_expense'); $(this).attr('placeholder', 'Расход смеси C (г/м2)');" />
+                                    <div class="invalid-feedback">Расход смеси C обязательно</div>
                                 </div>
                             </div>
                         </div>
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="m">M (за кг)</label>
+                                    <label for="m">Чистый M (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
@@ -421,32 +421,32 @@ if($row = $fetcher->Fetch()) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback">M обязательно</div>
+                                    <div class="invalid-feedback">Чистый M обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
-                                    <label for="m_expense">Расход M (г/м<sup>2</sup>)</label>
+                                    <label for="m_expense">Расход смеси M (г/м<sup>2</sup>)</label>
                                     <input type="text" 
                                            class="form-control float-only" 
                                            id="m_expense" 
                                            name="m_expense" 
                                            value="<?= empty($m_expense) || $m_expense == 0.0 ? "" : floatval($m_expense) ?>" 
-                                           placeholder="Расход M (г/м2)" 
+                                           placeholder="Расход смеси M (г/м2)" 
                                            required="required" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'm_expense'); $(this).attr('name', 'm_expense'); $(this).attr('placeholder', 'Расход M (г/м2)');" 
+                                           onmouseup="javascript: $(this).attr('id', 'm_expense'); $(this).attr('name', 'm_expense'); $(this).attr('placeholder', 'Расход смеси M (г/м2)');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'm_expense'); $(this).attr('name', 'm_expense'); $(this).attr('placeholder', 'Расход M (г/м2)');" 
-                                           onfocusout="javascript: $(this).attr('id', 'm_expense'); $(this).attr('name', 'm_expense'); $(this).attr('placeholder', 'Расход M (г/м2)');" />
-                                    <div class="invalid-feedback">Расход M обязательно</div>
+                                           onkeyup="javascript: $(this).attr('id', 'm_expense'); $(this).attr('name', 'm_expense'); $(this).attr('placeholder', 'Расход смеси M (г/м2)');" 
+                                           onfocusout="javascript: $(this).attr('id', 'm_expense'); $(this).attr('name', 'm_expense'); $(this).attr('placeholder', 'Расход смеси M (г/м2)');" />
+                                    <div class="invalid-feedback">Расход смеси M обязательно</div>
                                 </div>
                             </div>
                         </div>
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="y">Y (за кг)</label>
+                                    <label for="y">Чистый Y (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
@@ -469,32 +469,32 @@ if($row = $fetcher->Fetch()) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback">Y обязательно</div>
+                                    <div class="invalid-feedback">Чистый Y обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
-                                    <label for="y_expense">Расход Y (г/м<sup>2</sup>)</label>
+                                    <label for="y_expense">Расход смеси Y (г/м<sup>2</sup>)</label>
                                     <input type="text" 
                                            class="form-control float-only" 
                                            id="y_expense" 
                                            name="y_expense" 
                                            value="<?= empty($y_expense) || $y_expense == 0.0 ? "" : floatval($y_expense) ?>" 
-                                           placeholder="Расход Y (г/м2)" 
+                                           placeholder="Расход смеси Y (г/м2)" 
                                            required="required" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'y_expense'); $(this).attr('name', 'y_expense'); $(this).attr('placeholder', 'Расход Y (г/м2)');" 
+                                           onmouseup="javascript: $(this).attr('id', 'y_expense'); $(this).attr('name', 'y_expense'); $(this).attr('placeholder', 'Расход смеси Y (г/м2)');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'y_expense'); $(this).attr('name', 'y_expense'); $(this).attr('placeholder', 'Расход Y (г/м2)');" 
-                                           onfocusout="javascript: $(this).attr('id', 'y_expense'); $(this).attr('name', 'y_expense'); $(this).attr('placeholder', 'Расход Y (г/м2)');" />
-                                    <div class="invalid-feedback">Расход Y обязательно</div>
+                                           onkeyup="javascript: $(this).attr('id', 'y_expense'); $(this).attr('name', 'y_expense'); $(this).attr('placeholder', 'Расход смеси Y (г/м2)');" 
+                                           onfocusout="javascript: $(this).attr('id', 'y_expense'); $(this).attr('name', 'y_expense'); $(this).attr('placeholder', 'Расход смеси Y (г/м2)');" />
+                                    <div class="invalid-feedback">Расход смеси Y обязательно</div>
                                 </div>
                             </div>
                         </div>
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="k">K (за кг)</label>
+                                    <label for="k">Чистый K (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
@@ -517,32 +517,32 @@ if($row = $fetcher->Fetch()) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback">K обязательно</div>
+                                    <div class="invalid-feedback">Чистый K обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
-                                    <label for="k_expense">Расход K (г/м<sup>2</sup>)</label>
+                                    <label for="k_expense">Расход смеси K (г/м<sup>2</sup>)</label>
                                     <input type="text" 
                                            class="form-control float-only" 
                                            id="k_expense" 
                                            name="k_expense" 
                                            value="<?= empty($k_expense) || $k_expense == 0.0 ? "" : floatval($k_expense) ?>" 
-                                           placeholder="Расход K (г/м2)" 
+                                           placeholder="Расход смеси K (г/м2)" 
                                            required="required" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'k_expense'); $(this).attr('name', 'k_expense'); $(this).attr('placeholder', 'Расход K (г/м2)');" 
+                                           onmouseup="javascript: $(this).attr('id', 'k_expense'); $(this).attr('name', 'k_expense'); $(this).attr('placeholder', 'Расход смеси K (г/м2)');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'k_expense'); $(this).attr('name', 'k_expense'); $(this).attr('placeholder', 'Расход K (г/м2)');" 
-                                           onfocusout="javascript: $(this).attr('id', 'k_expense'); $(this).attr('name', 'k_expense'); $(this).attr('placeholder', 'Расход K (г/м2)');" />
-                                    <div class="invalid-feedback">Расход K обязательно</div>
+                                           onkeyup="javascript: $(this).attr('id', 'k_expense'); $(this).attr('name', 'k_expense'); $(this).attr('placeholder', 'Расход смеси K (г/м2)');" 
+                                           onfocusout="javascript: $(this).attr('id', 'k_expense'); $(this).attr('name', 'k_expense'); $(this).attr('placeholder', 'Расход смеси K (г/м2)');" />
+                                    <div class="invalid-feedback">Расход  смеси K обязательно</div>
                                 </div>
                             </div>
                         </div>
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="panton">Пантоны (за кг)</label>
+                                    <label for="panton">Чистый Пантон (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
@@ -565,32 +565,32 @@ if($row = $fetcher->Fetch()) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback">Пантоны обязательно</div>
+                                    <div class="invalid-feedback">Чистый Пантон обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
-                                    <label for="panton_expense">Расход пантонов (г/м<sup>2</sup>)</label>
+                                    <label for="panton_expense">Расход смеси пантона (г/м<sup>2</sup>)</label>
                                     <input type="text" 
                                            class="form-control float-only" 
                                            id="panton_expense" 
                                            name="panton_expense" 
                                            value="<?= empty($panton_expense) || $panton_expense == 0.0 ? "" : floatval($panton_expense) ?>" 
-                                           placeholder="Расход пантонов (г/м2)" 
+                                           placeholder="Расход смеси пантона (г/м2)" 
                                            required="required" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'panton_expense'); $(this).attr('name', 'panton_expense'); $(this).attr('placeholder', 'Расход пантонов (г/м2)');" 
+                                           onmouseup="javascript: $(this).attr('id', 'panton_expense'); $(this).attr('name', 'panton_expense'); $(this).attr('placeholder', 'Расход смеси пантона (г/м2)');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'panton_expense'); $(this).attr('name', 'panton_expense'); $(this).attr('placeholder', 'Расход пантонов (г/м2)');" 
-                                           onfocusout="javascript: $(this).attr('id', 'panton_expense'); $(this).attr('name', 'panton_expense'); $(this).attr('placeholder', 'Расход пантонов (г/м2)');" />
-                                    <div class="invalid-feedback">Расход пантонов обязательно</div>
+                                           onkeyup="javascript: $(this).attr('id', 'panton_expense'); $(this).attr('name', 'panton_expense'); $(this).attr('placeholder', 'Расход смеси пантона (г/м2)');" 
+                                           onfocusout="javascript: $(this).attr('id', 'panton_expense'); $(this).attr('name', 'panton_expense'); $(this).attr('placeholder', 'Расход смеси пантона (г/м2)');" />
+                                    <div class="invalid-feedback">Расход смеси пантона обязательно</div>
                                 </div>
                             </div>
                         </div>
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="white">Белая (за кг)</label>
+                                    <label for="white">Чистая Белая (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
@@ -613,32 +613,32 @@ if($row = $fetcher->Fetch()) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback">Белая обязательно</div>
+                                    <div class="invalid-feedback">Чистая Белая обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
-                                    <label for="white_expense">Расход белой (г/м<sup>2</sup>)</label>
+                                    <label for="white_expense">Расход смеси белой (г/м<sup>2</sup>)</label>
                                     <input type="text" 
                                            class="form-control float-only" 
                                            id="white_expense" 
                                            name="white_expense" 
                                            value="<?= empty($white_expense) || $white_expense == 0.0 ? "" : floatval($white_expense) ?>" 
-                                           placeholder="Расход белой (г/м2)" 
+                                           placeholder="Расход смеси белой (г/м2)" 
                                            required="required" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'white_expense'); $(this).attr('name', 'white_expense'); $(this).attr('placeholder', 'Расход белой (г/м2)');" 
+                                           onmouseup="javascript: $(this).attr('id', 'white_expense'); $(this).attr('name', 'white_expense'); $(this).attr('placeholder', 'Расход смеси белой (г/м2)');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'white_expense'); $(this).attr('name', 'white_expense'); $(this).attr('placeholder', 'Расход белой (г/м2)');" 
-                                           onfocusout="javascript: $(this).attr('id', 'white_expense'); $(this).attr('name', 'white_expense'); $(this).attr('placeholder', 'Расход белой (г/м2)');" />
-                                    <div class="invalid-feedback">Расход белой обязательно</div>
+                                           onkeyup="javascript: $(this).attr('id', 'white_expense'); $(this).attr('name', 'white_expense'); $(this).attr('placeholder', 'Расход смеси белой (г/м2)');" 
+                                           onfocusout="javascript: $(this).attr('id', 'white_expense'); $(this).attr('name', 'white_expense'); $(this).attr('placeholder', 'Расход смеси белой (г/м2)');" />
+                                    <div class="invalid-feedback">Расход смеси белой обязательно</div>
                                 </div>
                             </div>
                         </div>
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="lacquer">Лак (за кг)</label>
+                                    <label for="lacquer">Чистый Лак (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
@@ -661,25 +661,25 @@ if($row = $fetcher->Fetch()) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback">Лак обязательно</div>
+                                    <div class="invalid-feedback">Чистый Лак обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
-                                    <label for="lacquer_expense">Расход лака (г/м<sup>2</sup>)</label>
+                                    <label for="lacquer_expense">Расход смеси лака (г/м<sup>2</sup>)</label>
                                     <input type="text" 
                                            class="form-control float-only" 
                                            id="lacquer_expense" 
                                            name="lacquer_expense" 
                                            value="<?= empty($lacquer_expense) || $lacquer_expense == 0.0 ? "" : floatval($lacquer_expense) ?>" 
-                                           placeholder="Расход лака (г/м2)" 
+                                           placeholder="Расход смеси лака (г/м2)" 
                                            required="required" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'lacquer_expense'); $(this).attr('name', 'lacquer_expense'); $(this).attr('placeholder', 'Расход лака (г/м2)');" 
+                                           onmouseup="javascript: $(this).attr('id', 'lacquer_expense'); $(this).attr('name', 'lacquer_expense'); $(this).attr('placeholder', 'Расход смеси лака (г/м2)');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'lacquer_expense'); $(this).attr('name', 'lacquer_expense'); $(this).attr('placeholder', 'Расход лака (г/м2)');" 
-                                           onfocusout="javascript: $(this).attr('id', 'lacquer_expense'); $(this).attr('name', 'lacquer_expense'); $(this).attr('placeholder', 'Расход лака (г/м2)');" />
-                                    <div class="invalid-feedback">Расход лака обязательно</div>
+                                           onkeyup="javascript: $(this).attr('id', 'lacquer_expense'); $(this).attr('name', 'lacquer_expense'); $(this).attr('placeholder', 'Расход смеси лака (г/м2)');" 
+                                           onfocusout="javascript: $(this).attr('id', 'lacquer_expense'); $(this).attr('name', 'lacquer_expense'); $(this).attr('placeholder', 'Расход смеси лака (г/м2)');" />
+                                    <div class="invalid-feedback">Расход смеси лака обязательно</div>
                                 </div>
                             </div>
                         </div>
