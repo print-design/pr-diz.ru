@@ -150,7 +150,7 @@ if($row = $fetcher->Fetch()) {
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
                         <div class="form-group">
-                            <label for="glue">Стоимость клея (за кг)</label>
+                            <label for="glue">Стоимость чистого клея (за кг)</label>
                             <div class="input-group">
                                 <input type="text" 
                                        class="form-control float-only" 
@@ -173,7 +173,7 @@ if($row = $fetcher->Fetch()) {
                                     </select>
                                 </div>
                             </div>
-                            <div class="invalid-feedback">Стоимость клея обязательно</div>
+                            <div class="invalid-feedback">Стоимость чистого клея обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="solvent">Стоимость растворителя для клея (за кг)</label>
@@ -202,20 +202,20 @@ if($row = $fetcher->Fetch()) {
                             <div class="invalid-feedback">Стоимость растворителя для клея обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="glue">Расход клея, г/м<sup>2</sup></label>
+                            <label for="glue">Расход смеси клея, г/м<sup>2</sup></label>
                             <input type="text" 
                                    class="form-control float-only" 
                                    id="glue_expense" 
                                    name="glue_expense" 
                                    value="<?= empty($glue_expense) ? "" : floatval($glue_expense) ?>" 
-                                   placeholder="Расход клея, г/м2" 
+                                   placeholder="Расход смеси клея, г/м2" 
                                    required="required" 
                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'glue_expense'); $(this).attr('name', 'glue_expense'); $(this).attr('placeholder', 'Расход клея, г/м2');" 
+                                   onmouseup="javascript: $(this).attr('id', 'glue_expense'); $(this).attr('name', 'glue_expense'); $(this).attr('placeholder', 'Расход смеси клея, г/м2');" 
                                    onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'glue_expense'); $(this).attr('name', 'glue_expense'); $(this).attr('placeholder', 'Расход клея, г/м2');" 
-                                   onfocusout="javascript: $(this).attr('id', 'glue_expense'); $(this).attr('name', 'glue_expense'); $(this).attr('placeholder', 'Расход клея, г/м2');" />
-                            <div class="invalid-feedback">Расход клея обязательно</div>
+                                   onkeyup="javascript: $(this).attr('id', 'glue_expense'); $(this).attr('name', 'glue_expense'); $(this).attr('placeholder', 'Расход смеси клея, г/м2');" 
+                                   onfocusout="javascript: $(this).attr('id', 'glue_expense'); $(this).attr('name', 'glue_expense'); $(this).attr('placeholder', 'Расход смеси клея, г/м2');" />
+                            <div class="invalid-feedback">Расход смеси клея обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="glue">Расход клея при ламинации ПЭТ, г/м<sup>2</sup></label>
