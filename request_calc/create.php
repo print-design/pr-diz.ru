@@ -8,7 +8,7 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
 }
 
 // ID заказчика
-$customer_id = null;
+$new_customer_id = null;
 
 // Создание заказчика
 if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
@@ -25,7 +25,7 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
         $sql = "select id from customer where name = '$customer_name' and manager_id = $customer_manager_id limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
-            $customer_id = $row[0];
+            $new_customer_id = $row[0];
         }
         
         // Если такого заказчика нет, создаём его
@@ -33,7 +33,7 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
             $sql = "insert into customer (name, person, phone, extension, email, manager_id) values ('$customer_name', '$customer_person', '$customer_phone', '$customer_extension', '$customer_email', $customer_manager_id)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
-            $customer_id = $executer->insert_id;
+            $new_customer_id = $executer->insert_id;
         }
     }
 }
@@ -391,6 +391,9 @@ if(isset($row['date'])) $date = $row['date'];
 $customer_id = filter_input(INPUT_POST, 'customer_id');
 if($customer_id === null && isset($row['customer_id'])) {
     $customer_id = $row['customer_id'];
+}
+else if(!empty($new_customer_id)) {
+    $customer_id = $new_customer_id;
 }
 
 $name = filter_input(INPUT_POST, 'name');
