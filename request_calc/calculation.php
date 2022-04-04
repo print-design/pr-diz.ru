@@ -5,39 +5,20 @@ const NO_SKI = 0;
 const STANDARD_SKI = 1;
 const NONSTANDARD_SKI = 2;
 
-function GetSkiName($ski) {
-    switch ($ski) {
-        case NO_SKI:
-            return "Без лыж";
-        case STANDARD_SKI:
-            return "Стандартные лыжи";
-        case NONSTANDARD_SKI:
-            return "Нестандартные лыжи";
-        default :
-            return "Неизвестно";
-    }
-}
-
-function GetWidthData($ski, $streams_number, $stream_width, $width_ski) {
-    $result = array();
+function GetWidth($ski, $streams_number, $stream_width, $width_ski) {
+    $result = 0;
     
     switch($ski) {
         case NO_SKI:
-            $result['width'] = $streams_number * $stream_width;
-            $result['calculation'] = "$streams_number * $stream_width";
-            $result['comment'] = "количество ручьёв * ширина ручья";
+            $result = $streams_number * $stream_width;
             break;
         
         case STANDARD_SKI:
-            $result['width'] = $streams_number * $stream_width + 20;
-            $result['calculation'] = "$streams_number * $stream_width + 20";
-            $result['comment'] = "количество ручьёв * ширина ручья + 20 мм";
+            $result = $streams_number * $stream_width + 20;
             break;
         
         case NONSTANDARD_SKI:
-            $result['width'] = $width_ski;
-            $result['calculation'] = "";
-            $result['comment'] = "вводится вручную";
+            $result = $width_ski;
             break;
     }
     
@@ -103,14 +84,6 @@ function Calculate($tuning_data,
     $lam1_m2dirty = null;
     $lam2_m2dirty = null;
     
-    // Лыжи (основная пленка, ламинация 1, ламинация 2)
-    $ski_name = GetSkiName($ski);
-    $lam1_ski_name = GetSkiName($lam1_ski);
-    $lam2_ski_name = GetSkiName($lam2_ski);
-    $result['ski_name'] = $ski_name;
-    $result['lam1_ski_name'] = $lam1_ski_name;
-    $result['lam2_ski_name'] = $lam2_ski_name;
-    
     $laminations_number = 0; // Количество ламинаций
     
     if(!empty($lam2_film) && !empty($lam2_thickness) && !empty($lam2_density)) {
@@ -122,23 +95,17 @@ function Calculate($tuning_data,
     
     $result['laminations_number'] = $laminations_number;
 
-    $width_data = GetWidthData($ski, $streams_number, $stream_width, $width_ski);
-    $result['width'] = $width_data['width'];
-    $result['width_calculation'] = $width_data['calculation'];
-    $result['width_comment'] = $width_data['comment'];
+    $width = GetWidth($ski, $streams_number, $stream_width, $width_ski);
+    $result['width'] = $width;
         
     if($laminations_number > 0) {
-        $lam1_width_data = GetWidthData($lam1_ski, $streams_number, $stream_width, $lam1_width_ski);
-        $result['lam1_width'] = $lam1_width_data['width'];
-        $result['lam1_width_calculation'] = $lam1_width_data['calculation'];
-        $result['lam1_width_comment'] = $lam1_width_data['comment'];
+        $lam1_width = GetWidth($lam1_ski, $streams_number, $stream_width, $lam1_width_ski);
+        $result['lam1_width'] = $lam1_width;
     }
         
     if($laminations_number > 1) {
-        $lam2_width_data = GetWidthData($lam2_ski, $streams_number, $stream_width, $lam2_width_ski);
-        $result['lam2_width'] = $lam2_width_data['width'];
-        $result['lam2_width_calculation'] = $lam2_width_data['calculation'];
-        $result['lam2_width_comment'] = $lam2_width_data['comment'];
+        $lam2_width = GetWidth($lam2_ski, $streams_number, $stream_width, $lam2_width_ski);
+        $result['lam2_width'] = $lam2_width;
     }
 
     // Площадь чистая
@@ -183,17 +150,17 @@ function Calculate($tuning_data,
         
     // Площадь грязная
     if(!empty($machine_id)) {
-        $m2dirty = $mpogdirty * $width_data['width'] / 1000;
+        $m2dirty = $mpogdirty * $width / 1000;
         $result['m2dirty'] = $m2dirty;
     }
         
     if($laminations_number > 0) {
-        $lam1_m2dirty = $lam1_mpogdirty * $lam1_width_data['width'] / 1000;
+        $lam1_m2dirty = $lam1_mpogdirty * $lam1_width / 1000;
         $result['lam1_m2dirty'] = $lam1_m2dirty;
     }
         
     if($laminations_number > 1) {
-        $lam2_m2dirty = $lam2_mpogdirty * $lam2_width_data['width'] / 1000;
+        $lam2_m2dirty = $lam2_mpogdirty * $lam2_width / 1000;
         $result['lam2_m2dirty'] = $lam2_m2dirty;
     }
     
@@ -202,17 +169,31 @@ function Calculate($tuning_data,
     //****************************************
     
     // Масса плёнки чистая (без приладки)
-    $mpure = $mpogpure * $width_data['width'] / 1000;
+    $mpure = $mpogpure * $width / 1000;
     $result['mpure'] = $mpure;
     
     if($laminations_number > 0) {
-        $lam1_mpure = $mpogpure * $lam1_width_data['width'] / 1000;
+        $lam1_mpure = $mpogpure * $lam1_width / 1000;
         $result['lam1_mpure'] = $lam1_mpure;
     }
     
     if($laminations_number > 1) {
-        $lam2_mpure = $mpogpure * $lam1_width_data['width'] / 1000;
+        $lam2_mpure = $mpogpure * $lam1_width / 1000;
         $result['lam2_mpure'] = $lam2_mpure;
+    }
+    
+    // Длина пленки чистая
+    $lengthpure = $mpogpure;
+    $result['lengthpure'] = $lengthpure;
+    
+    if($laminations_number > 0) {
+        $lam1_lengthpure = $mpogpure;
+        $result['lam1_lengthpure'] = $lam1_lengthpure;
+    }
+    
+    if($laminations_number > 1) {
+        $lam2_lengthpure = $mpogpure;
+        $result['lam2_lengthpure'] = $mpogpure;
     }
         
     return $result;
