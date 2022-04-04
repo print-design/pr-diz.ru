@@ -55,35 +55,6 @@ function Calculate($tuning_data,
         ) {
     $result = array();
     
-    // Ширина материала
-    $width = null;
-    $lam1_width = null;
-    $lam2_width = null;
-    
-    // М2 чистые
-    $m2pure = null;
-    
-    // М пог. чистые
-    $mpogpure = null;
-    
-    // Метраж отходов, м
-    $waste_length = null;
-    $lam1_waste_length = null;
-    $lam2_waste_length = null;
-    
-    // Красочность
-    $ink_number = null;
-    
-    // М пог. грязные
-    $mpogdirty = null;
-    $lam1_mpogdirty = null;
-    $lam2_mpogdirty = null;
-    
-    // М2 грязные
-    $m2dirty = null;
-    $lam1_m2dirty = null;
-    $lam2_m2dirty = null;
-    
     $laminations_number = 0; // Количество ламинаций
     
     if(!empty($lam2_film) && !empty($lam2_thickness) && !empty($lam2_density)) {
@@ -145,7 +116,7 @@ function Calculate($tuning_data,
         
     if($laminations_number > 1) {
         $lam2_mpogdirty = $mpogpure * $tuning_data[$machine_id]['waste_percent'] + $laminator_tuning_data['length'];
-        $result['lam2_mpogdirty'] = $lam1_mpogdirty;
+        $result['lam2_mpogdirty'] = $lam2_mpogdirty;
     }
         
     // Площадь грязная
@@ -168,21 +139,21 @@ function Calculate($tuning_data,
     // Массы и длины плёнок
     //****************************************
     
-    // Масса плёнки чистая (без приладки)
-    $mpure = $mpogpure * $width / 1000;
+    // Масса плёнки чистая (без приладки), кг
+    $mpure = $mpogpure * $width * $density / 1000;
     $result['mpure'] = $mpure;
     
     if($laminations_number > 0) {
-        $lam1_mpure = $mpogpure * $lam1_width / 1000;
+        $lam1_mpure = $mpogpure * $lam1_width * $lam1_density / 1000;
         $result['lam1_mpure'] = $lam1_mpure;
     }
     
     if($laminations_number > 1) {
-        $lam2_mpure = $mpogpure * $lam1_width / 1000;
+        $lam2_mpure = $mpogpure * $lam1_width * $lam2_density / 1000;
         $result['lam2_mpure'] = $lam2_mpure;
     }
     
-    // Длина пленки чистая
+    // Длина пленки чистая, м
     $lengthpure = $mpogpure;
     $result['lengthpure'] = $lengthpure;
     
@@ -195,7 +166,39 @@ function Calculate($tuning_data,
         $lam2_lengthpure = $mpogpure;
         $result['lam2_lengthpure'] = $mpogpure;
     }
-        
+    
+    // Масса плёнки грязная (с приладкой), кг
+    $mdirty = $m2dirty * $density / 1000;
+    $result['mdirty'] = $mdirty;
+    
+    if($laminations_number > 0) {
+        $lam1_mdirty  = $lam1_m2dirty * $lam1_density / 1000;
+        $result['lam1_mdirty'] = $lam1_mdirty;
+    }
+    
+    if($laminations_number > 1) {
+        $lam2_mdirty = $lam2_m2dirty * $lam2_m2dirty / 1000;
+        $result['lam2_mdirty'] = $lam2_m2dirty;
+    }
+    
+    // Длина плёнки грязная, м
+    $lengthdirty = $mpogdirty;
+    $result['lengthdirty'] = $lengthdirty;
+    
+    if($laminations_number > 0) {
+        $lam1_lengthdirty = $lam1_mpogdirty;
+        $result['lam1_lengthdirty'] = $lam1_lengthdirty;
+    }
+    
+    if($laminations_number > 1) {
+        $lam2_lengthdirty = $lam2_mpogdirty;
+        $result['lam2_lengthdirty'] = $lam2_lengthdirty;
+    }
+    
+    //****************************************
+    // Себестоимость плёнок
+    //****************************************
+            
     return $result;
 }
 ?>

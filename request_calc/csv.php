@@ -259,18 +259,22 @@ if($id !== null) {
             array_push($file_data, array("М2 грязные (лам 2), м2", $lam2_m2dirty_format, "$lam2_mpogdirty_format * $lam2_width / 1000", "м. пог. грязные * ширина материала ламинации 2 / 1000"));
         }
         
+        //****************************
         // Массы и длины пленок
+        // ***************************
+        
+        // Масса плёнки чистая
         $mpure_format = number_format($data['mpure'], 2, ",", " ");
-        array_push($file_data, array("Масса плёнки чистая (осн), кг", $mpure_format, $mpogpure_format." *  $width / 1000", "м. пог. чистые * ширина материала основной пленки / 1000"));
+        array_push($file_data, array("Масса плёнки чистая (осн), кг", $mpure_format, "$mpogpure_format * $width * $density_format / 1000", "м. пог. чистые * ширина материала основной пленки / 1000"));
         
         if($laminations_number > 0) {
             $lam1_mpure_format = number_format($data['lam1_mpure'], 2, ",", " ");
-            array_push($file_data, array("Масса плёнки чистая (лам 1), кг", $lam1_mpure_format, $mpogpure_format." * $lam1_width / 1000", "м. пог. чистые * ширина материала ламинации 1 / 1000"));
+            array_push($file_data, array("Масса плёнки чистая (лам 1), кг", $lam1_mpure_format, "$mpogpure_format * $lam1_width * $lam1_density_format / 1000", "м. пог. чистые * ширина материала ламинации 1 / 1000"));
         }
         
         if($laminations_number > 1) {
             $lam2_mpure_format = number_format($data['lam2_mpure'], 2, ",", " ");
-            array_push($file_data, array("Масса плёнки чистая (лам 2), кг", $lam1_mpure_format, $mpogpure_format." * $lam1_width / 1000", "м. пог. чистые * ширина материала ламинации 2 / 1000"));
+            array_push($file_data, array("Масса плёнки чистая (лам 2), кг", $lam1_mpure_format, "$mpogpure_format * $lam1_width * $lam2_density_format / 1000", "м. пог. чистые * ширина материала ламинации 2 / 1000"));
         }
         
         // Длина пленки чистая
@@ -287,6 +291,39 @@ if($id !== null) {
             array_push($file_data, array("Длина плёнки чистая (лам 2), м", $lam2_lengthpure_format, $mpogpure_format, "м. пог. чистые"));
         }
         
+        // Масса плёнки грязная (с приладкой), кг
+        $mdirty_format = number_format($data['mdirty'], 2, ",", " ");
+        array_push($file_data, array("Масса плёнки грязная (осн), м", $mdirty_format, "$m2dirty_format * $density_format / 1000", "м2 грязные * уд. вес / 1000"));
+        
+        if($laminations_number > 0) {
+            $lam1_mdirty_format = number_format($data['lam1_mdirty'], 2, ",", " ");
+            array_push($file_data, array("Масса плёнки грязная (лам 1), м", $lam1_mdirty_format, "$lam1_m2dirty_format * $lam1_density_format / 1000", "м2 грязные * уд. вес / 1000"));
+        }
+        
+        if($laminations_number > 1) {
+            $lam2_mdirty_format = number_format($data['lam2_mdirty'], 2, ",", " ");
+            array_push($file_data, array("Масса плёнки грязная (лам 2), м", $lam2_mdirty_format, "$lam2_m2dirty_format * $lam2_m2dirty_format / 1000", "м2 грязные * уд. вес / 1000"));
+        }
+        
+        // Длина плёнки грязная, м
+        $lengthdirty_format = number_format($data['lengthdirty'], 2, ",", " ");
+        array_push($file_data, array("Длина плёнки грязная (осн), м", $lengthdirty_format, $lam1_mpogdirty_format, "м пог. грязные осн. плёнки"));
+        
+        if($laminations_number > 0) {
+            $lam1_lengthdirty_format = number_format($data['lam1_lengthdirty'], 2, ",", " ");
+            array_push($file_data, array("Длина плёнки грязная (лам 1), м2", $lam1_lengthdirty_format, $lam1_mpogdirty_format, "м. пог. грязные ламинации 1"));
+        }
+        
+        if($laminations_number > 1) {
+            $lam2_lengthdirty_format = number_format($data['lam2_lengthdirty'], 2, ",", " ");
+            array_push($file_data, array("Длина плёнки грязная (лам 2), м2", $lam2_lengthdirty_format, $lam2_mpogdirty_format, "м. пог. грязные даминации 2"));
+        }
+        
+        //***************************************************
+        // Себестоимость плёнок
+        //***************************************************
+        
+        //***************************************************
         // Сохранение в файл
         $file_name = DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y')." $name.csv";
         
