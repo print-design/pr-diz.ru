@@ -158,7 +158,7 @@ function Calculate($tuning_data,
         
     if($laminations_number > 1) {
         $lam2_waste_length = $laminator_tuning_data['waste_percent'] * $mpogpure / 100;
-        $result['lam2_waste_length'];
+        $result['lam2_waste_length'] = $lam2_waste_length;
     }
         
     if(!empty($machine_id)) {
