@@ -197,13 +197,13 @@ if($id !== null) {
         $file_name = DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y')." $name.csv";
         
         DownloadSendHeaders($file_name);
-        echo Array2Csv($data, $titles);
+        echo Array2Csv($file_data, $titles);
         die();
     }
 }
 ?>
 <html>
     <body>
-        <h1>Чтобы экспортировать в CSV надо наэати на кнопку "Экспорт" в верхней правой части страницы.</h1>
+        <h1 style="text-decoration: underline;">Чтобы экспортировать в CSV надо наэати на кнопку "Экспорт" в верхней правой части страницы.</h1>
     </body>
 </html>

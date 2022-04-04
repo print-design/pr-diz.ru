@@ -177,17 +177,17 @@ function Calculate($tuning_data,
     }
         
     if(!empty($machine_id)) {
-        $m2dirty = $mpogdirty * $width / 1000;
+        $m2dirty = $mpogdirty * $width_data['width'] / 1000;
         $result['m2dirty'] = $m2dirty;
     }
         
     if($laminations_number > 0) {
-        $lam1_m2dirty = $lam1_mpogdirty * $lam1_width / 1000;
+        $lam1_m2dirty = $lam1_mpogdirty * $lam1_width_data['width'] / 1000;
         $result['lam1_m2dirty'] = $lam1_m2dirty;
     }
         
     if($laminations_number > 1) {
-        $lam2_m2dirty = $lam2_mpogdirty * $lam2_width / 1000;
+        $lam2_m2dirty = $lam2_mpogdirty * $lam2_width_data['width'] / 1000;
         $result['lam2_m2dirty'] = $lam2_m2dirty;
     }
         
