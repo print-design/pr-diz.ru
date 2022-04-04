@@ -68,73 +68,6 @@ if($id !== null) {
     }
     
     // ПОЛУЧЕНИЕ ИСХОДНЫХ ДАННЫХ
-    
-    // Масса тиража
-    $quantity = null;
-            
-    // Типы, толщины и удельные веса плёнок, лыжи и ширина плёнки
-    $film = null;
-    $thickness = null;
-    $density = null;
-    $ski = null;
-    $width_ski = null;
-            
-    $lam1_film = null;
-    $lam1_thickness = null;
-    $lam1_density = null;
-    $lam1_ski = null;
-    $lam1_width_ski = null;
-            
-    $lam2_film = null;
-    $lam2_thickness = null;
-    $lam2_density = null;
-    $lam2_ski = null;
-    $lam2_width_ski = null;
-    
-    // Машина
-    $machine_id = null;
-            
-    // Ширина ручья
-    $stream_width = null;
-            
-    // Количество ручьёв
-    $streams_number = null;
-            
-    // Рапорт
-    $raport = null;
-    
-    // Красочность
-    $ink_number = null;
-    
-    // Ширина материала
-    $width = null;
-    $lam1_width = null;
-    $lam2_width = null;
-    
-    // М2 чистые
-    $m2pure = null;
-    
-    // М пог. чистые
-    $mpogpure = null;
-    
-    // Метраж отходов, м
-    $waste_length = null;
-    $lam1_waste_length = null;
-    $lam2_waste_length = null;
-    
-    // Красочность
-    $ink_number = null;
-    
-    // М пог. грязные
-    $mpogdirty = null;
-    $lam1_mpogdirty = null;
-    $lam2_mpogdirty = null;
-    
-    // М2 грязные
-    $m2dirty = null;
-    $lam1_m2dirty = null;
-    $lam2_m2dirty = null;
-    
     $sql = "select rc.date, rc.name, rc.quantity, rc.unit, "
             . "f.name film, fv.thickness thickness, fv.weight density, rc.ski, rc.width_ski, "
             . "lam1_f.name lam1_film, lam1_fv.thickness lam1_thickness, lam1_fv.weight lam1_density, rc.lamination1_ski, rc.lamination1_width_ski, "
@@ -183,48 +116,47 @@ if($id !== null) {
         $raport_format = number_format($raport, 3, ",", "");
         $ink_number = $row['ink_number']; // Красочность
         
-        
-    // Данные CSV-файла
-    $data = Calculate($tuning_data, 
+        // Данные CSV-файла
+        $data = Calculate($tuning_data, 
             $laminator_tuning_data,
             
             $quantity, // Масса тиража
-        $film, // Основная пленка, марка
-        $thickness, // Основная пленка, толщина, мкм
-        $density, // Основная пленка, плотность, г/м2
-        $density_format,
-        $ski, // Основная пленка, лыжи
-        $width_ski, // Основная пленка, ширина пленки, мм
+            $film, // Основная пленка, марка
+            $thickness, // Основная пленка, толщина, мкм
+            $density, // Основная пленка, плотность, г/м2
+            $density_format,
+            $ski, // Основная пленка, лыжи
+            $width_ski, // Основная пленка, ширина пленки, мм
         
-        $lam1_film, // Ламинация 1, марка
-        $lam1_thickness, // Ламинация 1, толщина, мкм
-        $lam1_density, // Ламинация 1, плотность, г/м2
-        $lam1_density_format,
-        $lam1_ski, // Ламинация 1, лыжи
-        $lam1_width_ski, // Ламинация 1, ширина пленки, мм
+            $lam1_film, // Ламинация 1, марка
+            $lam1_thickness, // Ламинация 1, толщина, мкм
+            $lam1_density, // Ламинация 1, плотность, г/м2
+            $lam1_density_format,
+            $lam1_ski, // Ламинация 1, лыжи
+            $lam1_width_ski, // Ламинация 1, ширина пленки, мм
         
-        $lam2_film, // Ламинация 2, марка
-        $lam2_thickness, // Ламинация 2, толщина, мкм
-        $lam2_density, // Ламинация 2, плотность, г/м2
-        $lam2_density_format,
-        $lam2_ski, // Ламинация 2, лыжи
-        $lam2_width_ski,  // Ламинация 2, ширина пленки, мм
+            $lam2_film, // Ламинация 2, марка
+            $lam2_thickness, // Ламинация 2, толщина, мкм
+            $lam2_density, // Ламинация 2, плотность, г/м2
+            $lam2_density_format,
+            $lam2_ski, // Ламинация 2, лыжи
+            $lam2_width_ski,  // Ламинация 2, ширина пленки, мм
         
-        $machine_id,
-        $stream_width, // Ширина ручья, мм
-        $streams_number, // Количество ручьёв
-        $raport, // Рапорт
-        $raport_format,
-        $ink_number // Красочность
+            $machine_id, // Машина
+            $stream_width, // Ширина ручья, мм
+            $streams_number, // Количество ручьёв
+            $raport, // Рапорт
+            $raport_format,
+            $ink_number // Красочность
         );
-    
-    // Сохранение в файл
-    $file_name = DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y')." $name.csv";
-    
-    DownloadSendHeaders($file_name);
-    echo Array2Csv($data, $titles);
-    die();
-}
+        
+        // Сохранение в файл
+        $file_name = DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y')." $name.csv";
+        
+        DownloadSendHeaders($file_name);
+        echo Array2Csv($data, $titles);
+        die();
+    }
 }
 ?>
 <html>
