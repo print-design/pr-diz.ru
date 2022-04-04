@@ -61,26 +61,63 @@ if($id !== null) {
     // Заголовки CSV-файла
     $titles = array("Параметр", "Значение", "Расчёт", "Комментарий");
     
-    // ПОЛУЧЕНИЕ НОРМ
-    $tuning_data = array();
-    $sql = "select machine_id, time, length, waste_percent from norm_tuning where id in (select max(id) from norm_tuning group by machine_id)";
-    $fetcher = new Fetcher($sql);
-    while ($row = $fetcher->Fetch()) {
-        $tuning_data[$row['machine_id']] = array("time" => $row['time'], "length" => $row['length'], "waste_percent" => $row['waste_percent']);
-    }
-    
-    $laminator_tuning_data = null;
-    $sql = "select time, length, waste_percent from norm_laminator_tuning order by id desc limit 1";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        $laminator_tuning_data = array("time" => $row['time'], "length" => $row['length'], "waste_percent" => $row['waste_percent']);
-    }
-    
     // ПОЛУЧЕНИЕ ИСХОДНЫХ ДАННЫХ
+    $date = null;
+    $name = null;
+        
+    $quantity = null; // Масса тиража
+    $film = null; // Основная пленка, марка
+    $thickness = null; // Основная пленка, толщина, мкм
+    $density = null; // Основная пленка, плотность, г/м2
+    $price = null; // Основная пленка, цена
+    $currency = null; // Основная пленка, валюта
+    $individual_film_name = null; // Основная плёнка, другая, название
+    $individual_thickness = null; // Основная плёнка, другая, толщина
+    $individual_density = null; // Основная плёнка, другая, уд.вес
+    $customers_material = null; // Основная плёнка, другая, материал заказчика
+    $ski = null; // Основная пленка, лыжи
+    $width_ski = null; // Основная пленка, ширина пленки, мм
+        
+    $lam1_film = null; // Ламинация 1, марка
+    $lam1_thickness = null; // Ламинация 1, толщина, мкм
+    $lam1_density = null; // Ламинация 1, плотность, г/м2
+    $lamination1_price = null; // Ламинация 1, цена
+    $lamination1_currency = null; // Ламинация 1, валюта
+    $individual_film_name = null; // Ламинация 1, другая, название
+    $individual_thickness = null; // Ламинация 1, другая, толщина
+    $individual_density = null; // Ламинация 1, другая, уд. вес
+    $customers_material = null; // Ламинация 1, другая, маткриал заказчика
+    $lam1_ski = null; // Ламинация 1, лыжи
+    $lam1_width_ski = null; // Ламинация 1, ширина пленки, мм
+        
+    $lam2_film = null; // Ламинация 2, марка
+    $lam2_thickness = null; // Ламинация 2, толщина, мкм
+    $lam2_density = null; // Ламинация 2, плотность, г/м2
+    $lamination2_price = null; // Ламинация 2, цена
+    $lamination2_currency = null; // Ламинация 2, валюта
+    $lamination2_individual_film_name; // Ламинация 2, другая, название
+    $lamination2_individual_thickness; // Ламинация 2, другая, толщина
+    $lamination2_individual_density; // Ламинация 2, другая, уд.вес
+    $lamination2_customers_material; // Ламинация 2, другая, уд. вес
+    $lam2_ski = null; // Ламинация 2, лыжи
+    $lam2_width_ski = null;  // Ламинация 2, ширина пленки, мм
+        
+    $machine_id = null;
+    $stream_width = null; // Ширина ручья, мм
+    $streams_number = null; // Количество ручьёв
+    $raport = null; // Рапорт
+    $ink_number = null; // Красочность
+        
     $sql = "select rc.date, rc.name, rc.quantity, rc.unit, "
-            . "f.name film, fv.thickness thickness, fv.weight density, rc.ski, rc.width_ski, "
-            . "lam1_f.name lam1_film, lam1_fv.thickness lam1_thickness, lam1_fv.weight lam1_density, rc.lamination1_ski, rc.lamination1_width_ski, "
-            . "lam2_f.name lam2_film, lam2_fv.thickness lam2_thickness, lam2_fv.weight lam2_density, rc.lamination2_ski, rc.lamination2_width_ski, "
+            . "f.name film, fv.thickness thickness, fv.weight density, "
+            . "rc.price, rc.currency, rc.individual_film_name, rc.individual_thickness, rc.individual_density, "
+            . "rc.customers_material, rc.ski, rc.width_ski, "
+            . "lam1_f.name lam1_film, lam1_fv.thickness lam1_thickness, lam1_fv.weight lam1_density, "
+            . "rc.lamination1_price, rc.lamination1_currency, rc.lamination1_individual_film_name, rc.lamination1_individual_thickness, rc.lamination1_individual_density, "
+            . "rc.lamination1_customers_material, rc.lamination1_ski, rc.lamination1_width_ski, "
+            . "lam2_f.name lam2_film, lam2_fv.thickness lam2_thickness, lam2_fv.weight lam2_density, "
+            . "rc.lamination2_price, rc.lamination2_currency, rc.lamination2_individual_film_name, rc.lamination2_individual_thickness, rc.lamination2_individual_density, "
+            . "rc.lamination2_customers_material, rc.lamination2_ski, rc.lamination2_width_ski, "
             . "rc.machine_id, rc.stream_width, rc.streams_number, rc.raport, rc.ink_number "
             . "from request_calc rc "
             . "left join film_variation fv on rc.film_variation_id = fv.id "
@@ -120,7 +157,40 @@ if($id !== null) {
         $streams_number = $row['streams_number']; // Количество ручьёв
         $raport = $row['raport']; // Рапорт
         $ink_number = $row['ink_number']; // Красочность
+    }
+    
+    // Курсы валют
+    $usd = null;
+    $euro = null;
+    
+    if(!empty($date)) {
+        $sql = "select usd, euro from currency where date <= '$date' order by id desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $usd = $row['usd'];
+            $euro = $row['euro'];
+        }
+    }
+    
+    // ПОЛУЧЕНИЕ НОРМ
+    $tuning_data = null;
+    $laminator_tuning_data = null;
+    
+    if(!empty($date)) {
+        $sql = "select machine_id, time, length, waste_percent from norm_tuning where id in (select max(id) from norm_tuning where date <= '$date' group by machine_id)";
+        $fetcher = new Fetcher($sql);
+        while ($row = $fetcher->Fetch()) {
+            $tuning_data[$row['machine_id']] = array("time" => $row['time'], "length" => $row['length'], "waste_percent" => $row['waste_percent']);
+        }
         
+        $sql = "select time, length, waste_percent from norm_laminator_tuning where date <= '$date' order by id desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $laminator_tuning_data = array("time" => $row['time'], "length" => $row['length'], "waste_percent" => $row['waste_percent']);
+        }
+    }
+        
+    if(!empty($date)) {
         // Данные расчёта
         $data = Calculate($tuning_data, 
                 $laminator_tuning_data,
@@ -153,6 +223,9 @@ if($id !== null) {
         
         // Данные CSV-файла
         $file_data = array();
+        
+        array_push($file_data, array("Курс доллара, руб", $usd, "", ""));
+        array_push($file_data, array("Курс евро, руб", $euro, "", ""));
         
         array_push($file_data, array("Масса тиража, кг", $quantity, "", ""));
         array_push($file_data, array("Марка (осн)", $film, "", ""));
