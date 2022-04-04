@@ -46,8 +46,8 @@ function GetWidthData($ski, $streams_number, $stream_width, $width_ski) {
 
 function Calculate($tuning_data, 
         $laminator_tuning_data,
-        
         $quantity, // Масса тиража
+        
         $film, // Основная пленка, марка
         $thickness, // Основная пленка, толщина, мкм
         $density, // Основная пленка, плотность, г/м2
@@ -103,6 +103,7 @@ function Calculate($tuning_data,
     $lam1_m2dirty = null;
     $lam2_m2dirty = null;
     
+    // Лыжи (основная пленка, ламинация 1, ламинация 2)
     $ski_name = GetSkiName($ski);
     $lam1_ski_name = GetSkiName($lam1_ski);
     $lam2_ski_name = GetSkiName($lam2_ski);
@@ -120,7 +121,7 @@ function Calculate($tuning_data,
     }
     
     $result['laminations_number'] = $laminations_number;
-        
+
     $width_data = GetWidthData($ski, $streams_number, $stream_width, $width_ski);
     $result['width'] = $width_data['width'];
     $result['width_calculation'] = $width_data['calculation'];
@@ -139,13 +140,16 @@ function Calculate($tuning_data,
         $result['lam2_width_calculation'] = $lam2_width_data['calculation'];
         $result['lam2_width_comment'] = $lam2_width_data['comment'];
     }
-        
+
+    // Площадь чистая
     $m2pure = $quantity * 1000 / ($density + $lam1_density ?? 0 + $lam2_density ?? 0);
     $result['m2pure'] = $m2pure;
         
+    // Метры погонные чистые
     $mpogpure = $m2pure / ($streams_number * $stream_width);
     $result['mpogpure'] = $mpogpure;
         
+    // Метраж отходов, исходя из склее и инерции
     if(!empty($machine_id)) {
         $waste_length = $tuning_data[$machine_id]['waste_percent'] * $mpogpure / 100;
         $result['waste_length'] = $waste_length;
@@ -161,6 +165,7 @@ function Calculate($tuning_data,
         $result['lam2_waste_length'] = $lam2_waste_length;
     }
         
+    // Метры погонные грязные
     if(!empty($machine_id)) {
         $mpogdirty = $mpogpure * $tuning_data[$machine_id]['waste_percent'] + $ink_number * $tuning_data[$machine_id]['length'] + $laminations_number * $laminator_tuning_data['length'];
         $result['mpogdirty'] = $mpogdirty;
@@ -176,6 +181,7 @@ function Calculate($tuning_data,
         $result['lam2_mpogdirty'] = $lam1_mpogdirty;
     }
         
+    // Площадь грязная
     if(!empty($machine_id)) {
         $m2dirty = $mpogdirty * $width_data['width'] / 1000;
         $result['m2dirty'] = $m2dirty;
@@ -189,6 +195,24 @@ function Calculate($tuning_data,
     if($laminations_number > 1) {
         $lam2_m2dirty = $lam2_mpogdirty * $lam2_width_data['width'] / 1000;
         $result['lam2_m2dirty'] = $lam2_m2dirty;
+    }
+    
+    //****************************************
+    // Массы и длины плёнок
+    //****************************************
+    
+    // Масса плёнки чистая (без приладки)
+    $mpure = $mpogpure * $width_data['width'] / 1000;
+    $result['mpure'] = $mpure;
+    
+    if($laminations_number > 0) {
+        $lam1_mpure = $mpogpure * $lam1_width_data['width'] / 1000;
+        $result['lam1_mpure'] = $lam1_mpure;
+    }
+    
+    if($laminations_number > 1) {
+        $lam2_mpure = $mpogpure * $lam1_width_data['width'] / 1000;
+        $result['lam2_mpure'] = $lam2_mpure;
     }
         
     return $result;
