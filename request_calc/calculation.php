@@ -32,20 +32,38 @@ function Calculate($tuning_data,
         $film, // Основная пленка, марка
         $thickness, // Основная пленка, толщина, мкм
         $density, // Основная пленка, плотность, г/м2
+        $price, // Основная пленка, цена
+        $currency, // Основная пленка, валюта
+        $individual_film_name, // Основная плёнка, другая, название
+        $individual_thickness, // Основная плёнка, другая, толщина
+        $individual_density, // Основная плёнка, другая, уд.вес
+        $customers_material, // Основная плёнка, другая, материал заказчика
         $ski, // Основная пленка, лыжи
         $width_ski, // Основная пленка, ширина пленки, мм
         
-        $lam1_film, // Ламинация 1, марка
-        $lam1_thickness, // Ламинация 1, толщина, мкм
-        $lam1_density, // Ламинация 1, плотность, г/м2
-        $lam1_ski, // Ламинация 1, лыжи
-        $lam1_width_ski, // Ламинация 1, ширина пленки, мм
+        $lamination1_film, // Ламинация 1, марка
+        $lamination1_thickness, // Ламинация 1, толщина, мкм
+        $lamination1_density, // Ламинация 1, плотность, г/м2
+        $lamination1_price, // Ламинация 1, цена
+        $lamination1_lamination1_currency, // Ламинация 1, валюта
+        $lamination1_individual_film_name, // Ламинация 1, другая, название
+        $lamination1_individual_thickness, // Ламинация 1, другая, толщина
+        $lamination1_individual_density, // Ламинация 1, другая, уд. вес
+        $lamination1_customers_material, // Ламинация 1, другая, материал заказчика
+        $lamination1_ski, // Ламинация 1, лыжи
+        $lamination1_width_ski, // Ламинация 1, ширина пленки, мм
         
-        $lam2_film, // Ламинация 2, марка
-        $lam2_thickness, // Ламинация 2, толщина, мкм
-        $lam2_density, // Ламинация 2, плотность, г/м2
-        $lam2_ski, // Ламинация 2, лыжи
-        $lam2_width_ski,  // Ламинация 2, ширина пленки, мм
+        $lamination2_film, // Ламинация 2, марка
+        $lamination2_thickness, // Ламинация 2, толщина, мкм
+        $lamination2_density, // Ламинация 2, плотность, г/м2
+        $lamination2_price, // Ламинация 2, цена
+        $lamination2_currency, // Ламинация 2, валюта
+        $lamination2_individual_film_name, // Ламинация 2, другая, название
+        $lamination2_individual_thickness, // Ламинация 2, другая, толщина
+        $lamination2_individual_density, // Ламинация 2, другая, уд.вес
+        $lamination2_customers_material, // Ламинация 2, другая, уд. вес
+        $lamination2_ski, // Ламинация 2, лыжи
+        $lamination2_width_ski,  // Ламинация 2, ширина пленки, мм
         
         $machine_id, // Машина
         $stream_width, // Ширина ручья, мм
@@ -57,10 +75,10 @@ function Calculate($tuning_data,
     
     $laminations_number = 0; // Количество ламинаций
     
-    if(!empty($lam2_film) && !empty($lam2_thickness) && !empty($lam2_density)) {
+    if(!empty($lamination2_film) && !empty($lamination2_thickness) && !empty($lamination2_density)) {
         $laminations_number = 2;
     }
-    elseif(!empty ($lam1_film) && !empty ($lam1_thickness) && !empty ($lam1_density)) {
+    elseif(!empty ($lamination1_film) && !empty ($lamination1_thickness) && !empty ($lamination1_density)) {
         $laminations_number = 1;
     }
     
@@ -70,17 +88,17 @@ function Calculate($tuning_data,
     $result['width'] = $width;
         
     if($laminations_number > 0) {
-        $lam1_width = GetWidth($lam1_ski, $streams_number, $stream_width, $lam1_width_ski);
-        $result['lam1_width'] = $lam1_width;
+        $lamination1_width = GetWidth($lamination1_ski, $streams_number, $stream_width, $lamination1_width_ski);
+        $result['lamination1_width'] = $lamination1_width;
     }
         
     if($laminations_number > 1) {
-        $lam2_width = GetWidth($lam2_ski, $streams_number, $stream_width, $lam2_width_ski);
-        $result['lam2_width'] = $lam2_width;
+        $lamination2_width = GetWidth($lamination2_ski, $streams_number, $stream_width, $lamination2_width_ski);
+        $result['lamination2_width'] = $lamination2_width;
     }
 
     // Площадь чистая
-    $m2pure = $quantity * 1000 / ($density + $lam1_density ?? 0 + $lam2_density ?? 0);
+    $m2pure = $quantity * 1000 / ($density + $lamination1_density ?? 0 + $lamination2_density ?? 0);
     $result['m2pure'] = $m2pure;
         
     // Метры погонные чистые
@@ -94,13 +112,13 @@ function Calculate($tuning_data,
     }
         
     if($laminations_number > 0) {
-        $lam1_waste_length = $laminator_tuning_data['waste_percent'] * $mpogpure / 100;
-        $result['lam1_waste_length'] = $lam1_waste_length;
+        $lamination1_waste_length = $laminator_tuning_data['waste_percent'] * $mpogpure / 100;
+        $result['lamination1_waste_length'] = $lamination1_waste_length;
     }
         
     if($laminations_number > 1) {
-        $lam2_waste_length = $laminator_tuning_data['waste_percent'] * $mpogpure / 100;
-        $result['lam2_waste_length'] = $lam2_waste_length;
+        $lamination2_waste_length = $laminator_tuning_data['waste_percent'] * $mpogpure / 100;
+        $result['lamination2_waste_length'] = $lamination2_waste_length;
     }
         
     // Метры погонные грязные
@@ -110,13 +128,13 @@ function Calculate($tuning_data,
     }
         
     if($laminations_number > 0) {
-        $lam1_mpogdirty = $mpogpure * $tuning_data[$machine_id]['waste_percent'] + $laminator_tuning_data['length'] * 2;
-        $result['lam1_mpogdirty'] = $lam1_mpogdirty;
+        $lamination1_mpogdirty = $mpogpure * $tuning_data[$machine_id]['waste_percent'] + $laminator_tuning_data['length'] * 2;
+        $result['lamination1_mpogdirty'] = $lamination1_mpogdirty;
     }
         
     if($laminations_number > 1) {
-        $lam2_mpogdirty = $mpogpure * $tuning_data[$machine_id]['waste_percent'] + $laminator_tuning_data['length'];
-        $result['lam2_mpogdirty'] = $lam2_mpogdirty;
+        $lamination2_mpogdirty = $mpogpure * $tuning_data[$machine_id]['waste_percent'] + $laminator_tuning_data['length'];
+        $result['lamination2_mpogdirty'] = $lamination2_mpogdirty;
     }
         
     // Площадь грязная
@@ -126,13 +144,13 @@ function Calculate($tuning_data,
     }
         
     if($laminations_number > 0) {
-        $lam1_m2dirty = $lam1_mpogdirty * $lam1_width / 1000;
-        $result['lam1_m2dirty'] = $lam1_m2dirty;
+        $lamination1_m2dirty = $lamination1_mpogdirty * $lamination1_width / 1000;
+        $result['lamination1_m2dirty'] = $lamination1_m2dirty;
     }
         
     if($laminations_number > 1) {
-        $lam2_m2dirty = $lam2_mpogdirty * $lam2_width / 1000;
-        $result['lam2_m2dirty'] = $lam2_m2dirty;
+        $lamination2_m2dirty = $lamination2_mpogdirty * $lamination2_width / 1000;
+        $result['lamination2_m2dirty'] = $lamination2_m2dirty;
     }
     
     //****************************************
@@ -144,13 +162,13 @@ function Calculate($tuning_data,
     $result['mpure'] = $mpure;
     
     if($laminations_number > 0) {
-        $lam1_mpure = $mpogpure * $lam1_width * $lam1_density / 1000;
-        $result['lam1_mpure'] = $lam1_mpure;
+        $lamination1_mpure = $mpogpure * $lamination1_width * $lamination1_density / 1000;
+        $result['lamination1_mpure'] = $lamination1_mpure;
     }
     
     if($laminations_number > 1) {
-        $lam2_mpure = $mpogpure * $lam1_width * $lam2_density / 1000;
-        $result['lam2_mpure'] = $lam2_mpure;
+        $lamination2_mpure = $mpogpure * $lamination1_width * $lamination2_density / 1000;
+        $result['lamination2_mpure'] = $lamination2_mpure;
     }
     
     // Длина пленки чистая, м
@@ -158,13 +176,13 @@ function Calculate($tuning_data,
     $result['lengthpure'] = $lengthpure;
     
     if($laminations_number > 0) {
-        $lam1_lengthpure = $mpogpure;
-        $result['lam1_lengthpure'] = $lam1_lengthpure;
+        $lamination1_lengthpure = $mpogpure;
+        $result['lamination1_lengthpure'] = $lamination1_lengthpure;
     }
     
     if($laminations_number > 1) {
-        $lam2_lengthpure = $mpogpure;
-        $result['lam2_lengthpure'] = $mpogpure;
+        $lamination2_lengthpure = $mpogpure;
+        $result['lamination2_lengthpure'] = $mpogpure;
     }
     
     // Масса плёнки грязная (с приладкой), кг
@@ -172,13 +190,13 @@ function Calculate($tuning_data,
     $result['mdirty'] = $mdirty;
     
     if($laminations_number > 0) {
-        $lam1_mdirty  = $lam1_m2dirty * $lam1_density / 1000;
-        $result['lam1_mdirty'] = $lam1_mdirty;
+        $lamination1_mdirty  = $lamination1_m2dirty * $lamination1_density / 1000;
+        $result['lamination1_mdirty'] = $lamination1_mdirty;
     }
     
     if($laminations_number > 1) {
-        $lam2_mdirty = $lam2_m2dirty * $lam2_m2dirty / 1000;
-        $result['lam2_mdirty'] = $lam2_m2dirty;
+        $lamination2_mdirty = $lamination2_m2dirty * $lamination2_m2dirty / 1000;
+        $result['lamination2_mdirty'] = $lamination2_m2dirty;
     }
     
     // Длина плёнки грязная, м
@@ -186,13 +204,13 @@ function Calculate($tuning_data,
     $result['lengthdirty'] = $lengthdirty;
     
     if($laminations_number > 0) {
-        $lam1_lengthdirty = $lam1_mpogdirty;
-        $result['lam1_lengthdirty'] = $lam1_lengthdirty;
+        $lamination1_lengthdirty = $lamination1_mpogdirty;
+        $result['lamination1_lengthdirty'] = $lamination1_lengthdirty;
     }
     
     if($laminations_number > 1) {
-        $lam2_lengthdirty = $lam2_mpogdirty;
-        $result['lam2_lengthdirty'] = $lam2_lengthdirty;
+        $lamination2_lengthdirty = $lamination2_mpogdirty;
+        $result['lamination2_lengthdirty'] = $lamination2_lengthdirty;
     }
     
     //****************************************
