@@ -153,18 +153,36 @@ if($id !== null) {
     // ПОЛУЧЕНИЕ НОРМ
     $tuning_data = null;
     $laminator_tuning_data = null;
+    $machine_data = null;
+    $laminator_machine_data = null;
     
     if(!empty($date)) {
         $sql = "select machine_id, time, length, waste_percent from norm_tuning where id in (select max(id) from norm_tuning where date <= '$date' group by machine_id)";
         $fetcher = new Fetcher($sql);
         while ($row = $fetcher->Fetch()) {
-            $tuning_data[$row['machine_id']] = array("time" => $row['time'], "length" => $row['length'], "waste_percent" => $row['waste_percent']);
+            if($row['machine_id'] == $machine_id) {
+                $tuning_data = new TuningData($row['time'], $row['length'], $row['waste_percent']);
+            }
         }
         
         $sql = "select time, length, waste_percent from norm_laminator_tuning where date <= '$date' order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
-            $laminator_tuning_data = array("time" => $row['time'], "length" => $row['length'], "waste_percent" => $row['waste_percent']);
+            $laminator_tuning_data = new TuningData($row['time'], $row['length'], $row['waste_percent']);
+        }
+        
+        $sql = "select machine_id, price, speed, max_width from norm_machine where id in (select max(id) from norm_machine where date <= '$date' group by machine_id)";
+        $fetcher = new Fetcher($sql);
+        while ($row = $fetcher->Fetch()) {
+            if($row['machine_id'] == $machine_id) {
+                $machine_data = new MachineData($row['price'], $row['speed'], $row['max_width']);
+            }
+        }
+        
+        $sql = "select price, speed, max_width from norm_laminator where date <= '$date' order by id desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $laminator_machine_data = new MachineData($row['price'], $row['speed'], $row['max_width']);
         }
     }
         
@@ -172,6 +190,8 @@ if($id !== null) {
         // Расчёт
         $calculation = new Calculation($tuning_data, 
                 $laminator_tuning_data,
+                $machine_data,
+                $laminator_machine_data,
                 $usd, // Курс доллара
                 $euro, // Курс евро
                 $quantity, // Масса тиража
@@ -365,7 +385,60 @@ if($id !== null) {
         //***************************************************
         // Себестоимость плёнок
         //***************************************************
-        //array_push($file_data, array("Общая стоимость пленки (осн)"))
+        
+        // Себестоимость грязная (с приладки), руб
+        array_push($file_data, array($calculation->film_price->name, $calculation->film_price->display, $calculation->film_price->formula, $calculation->film_price->comment));
+        
+        if($calculation->laminations_number > 0) {
+            array_push($file_data, array($calculation->lamination1_film_price->name, $calculation->lamination1_film_price->display, $calculation->lamination1_film_price->formula, $calculation->lamination1_film_price->comment));
+        }
+        
+        if($calculation->laminations_number > 1) {
+            array_push($file_data, array($calculation->lamination2_film_price->name, $calculation->lamination2_film_price->display, $calculation->lamination2_film_price->formula, $calculation->lamination2_film_price->comment));
+        }
+        
+        //******************************************************
+        // Время - Деньги
+        //******************************************************
+        
+        // Время приладки, мин
+        if(!empty($machine_id)) {
+            array_push($file_data, array($calculation->tuning_time->name, $calculation->tuning_time->display, $calculation->tuning_time->formula, $calculation->tuning_time->comment));
+        }
+        
+        if($calculation->laminations_number > 0) {
+            array_push($file_data, array($calculation->lamination1_tuning_time->name, $calculation->lamination1_tuning_time->display, $calculation->lamination1_tuning_time->formula, $calculation->lamination1_tuning_time->comment));
+        }
+        
+        if($calculation->laminations_number > 1) {
+            array_push($file_data, array($calculation->lamination2_tuning_time->name, $calculation->lamination2_tuning_time->display, $calculation->lamination2_tuning_time->formula, $calculation->lamination2_tuning_time->comment));
+        }
+        
+        // Время печати и ламинации (без приладки), ч
+        if(!empty($machine_id)) {
+            array_push($file_data, array($calculation->print_time->name, $calculation->print_time->display, $calculation->print_time->formula, $calculation->print_time->comment));
+        }
+        
+        if($calculation->laminations_number > 0) {
+            array_push($file_data, array($calculation->lamination1_time->name, $calculation->lamination1_time->display, $calculation->print_time->formula, $calculation->print_time->comment));
+        }
+        
+        if($calculation->laminations_number > 1) {
+            array_push($file_data, array($calculation->lamination2_time->name, $calculation->lamination2_time->display, $calculation->print_time->formula, $calculation->print_time->comment));
+        }
+        
+        // Общее время выполнения тиража
+        if(!empty($machine_id)) {
+            array_push($file_data, array($calculation->work_time->name, $calculation->work_time->display, $calculation->work_time->formula, $calculation->work_time->comment));
+        }
+        
+        if($calculation->laminations_number > 0) {
+            array_push($file_data, array($calculation->lamination1_work_time->name, $calculation->lamination1_work_time->display, $calculation->lamination1_work_time->formula, $calculation->lamination1_work_time->comment));
+        }
+        
+        if($calculation->laminations_number > 1) {
+            array_push($file_data, array($calculation->lamination2_work_time->name, $calculation->lamination2_work_time->display, $calculation->lamination2_work_time->formula, $calculation->lamination2_work_time->comment));
+        }
         
         //***************************************************
         // Сохранение в файл

@@ -20,6 +20,31 @@ class CalculationItem {
         }
     }
 }
+
+class TuningData {
+    public $time;
+    public $length;
+    public $waste_percent;
+    
+    public function __construct($time, $length, $waste_percent) {
+        $this->time = $time;
+        $this->length = $length;
+        $this->waste_percent = $waste_percent;
+    }
+}
+
+class MachineData {
+    public $price;
+    public $speed;
+    public $max_width;
+    
+    public function __construct($price, $speed, $max_width) {
+        $this->price = $price;
+        $this->speed = $speed;
+        $this->max_width = $max_width;
+    }
+}
+
 class Calculation {
     // Лыжи
     const NO_SKI = 0;
@@ -132,10 +157,21 @@ class Calculation {
     public CalculationItem $lamination2_lengthdirty;
     public CalculationItem $film_price;
     public CalculationItem $lamination1_film_price;
-    public $lamination2_film_price;
+    public CalculationItem $lamination2_film_price;
+    public CalculationItem $tuning_time;
+    public CalculationItem $lamination1_tuning_time;
+    public CalculationItem $lamination2_tuning_time;
+    public CalculationItem $print_time;
+    public CalculationItem $lamination1_time;
+    public CalculationItem $lamination2_time;
+    public CalculationItem $work_time;
+    public CalculationItem $lamination1_work_time;
+    public CalculationItem $lamination2_work_time;
 
-    public function __construct($tuning_data, 
-            $laminator_tuning_data,
+    public function __construct(TuningData $tuning_data, 
+            TuningData $laminator_tuning_data,
+            MachineData $machine_data,
+            MachineData $laminator_machine_data,
             $usd, // Курс доллара
             $euro, // Курс евро
             $quantity, // Масса тиража
@@ -212,28 +248,28 @@ class Calculation {
         
         // Метраж отходов, исходя из склее и инерции
         if(!empty($machine_id)) {
-            $this->waste_length = new CalculationItem("Метраж отходов (осн), м", $tuning_data[$machine_id]['waste_percent'] * $this->mpogpure->value / 100, $tuning_data[$machine_id]['waste_percent']." * ".$this->mpogpure->display." / 100", "процент отходов печати * м. пог. чистые / 100");
+            $this->waste_length = new CalculationItem("Метраж отходов (осн), м", $tuning_data->waste_percent * $this->mpogpure->value / 100, $tuning_data->waste_percent." * ".$this->mpogpure->display." / 100", "процент отходов печати * м. пог. чистые / 100");
         }
         
         if($this->laminations_number > 0) {
-            $this->lamination1_waste_length = new CalculationItem("Метраж отходов (лам 1), м", $laminator_tuning_data['waste_percent'] * $this->mpogpure->value / 100, $laminator_tuning_data['waste_percent']." * ".$this->mpogpure->display." / 100", "процент отходов ламинации * м. пог. чистые / 100");
+            $this->lamination1_waste_length = new CalculationItem("Метраж отходов (лам 1), м", $laminator_tuning_data->waste_percent * $this->mpogpure->value / 100, $laminator_tuning_data->waste_percent." * ".$this->mpogpure->display." / 100", "процент отходов ламинации * м. пог. чистые / 100");
         }
         
         if($this->laminations_number > 1) {
-            $this->lamination2_waste_length = new CalculationItem("Метраж отходов (лам 2), м", $laminator_tuning_data['waste_percent'] * $this->mpogpure->value / 100, $laminator_tuning_data['waste_percent']." * ".$this->mpogpure->display." / 100", "процент отходов ламинации * м. пог. чистые / 100");
+            $this->lamination2_waste_length = new CalculationItem("Метраж отходов (лам 2), м", $laminator_tuning_data->waste_percent * $this->mpogpure->value / 100, $laminator_tuning_data->waste_percent." * ".$this->mpogpure->display." / 100", "процент отходов ламинации * м. пог. чистые / 100");
         }
         
         // Метры погонные грязные
         if(!empty($machine_id)) {
-            $this->mpogdirty = new CalculationItem("М. пог. грязные (осн), м", $this->mpogpure->value * $tuning_data[$machine_id]['waste_percent'] + $ink_number * $tuning_data[$machine_id]['length'] + $this->laminations_number * $laminator_tuning_data['length'], $this->mpogpure->display." * ".$tuning_data[$machine_id]['waste_percent']." + ".$ink_number." * ".$tuning_data[$machine_id]['length']." + ".$this->laminations_number." * ".$laminator_tuning_data['length'], "м. пог. чистые * общий процент отходов на печати + красочность * метраж приладки 1 краски + кол-во ламинаций * метраж приладки ламинации");
+            $this->mpogdirty = new CalculationItem("М. пог. грязные (осн), м", $this->mpogpure->value * $tuning_data->waste_percent + $ink_number * $tuning_data->waste_percent + $this->laminations_number * $laminator_tuning_data->length, $this->mpogpure->display." * ".$tuning_data->waste_percent." + ".$ink_number." * ".$tuning_data->length." + ".$this->laminations_number." * ".$laminator_tuning_data->length, "м. пог. чистые * общий процент отходов на печати + красочность * метраж приладки 1 краски + кол-во ламинаций * метраж приладки ламинации");
         }
         
         if($this->laminations_number > 0) {
-            $this->lamination1_mpogdirty = new CalculationItem("М. пог. грязные (лам 1), м", $this->mpogpure->value * $tuning_data[$machine_id]['waste_percent'] + $laminator_tuning_data['length'] * 2, $this->mpogpure->display." * ".$tuning_data[$machine_id]['waste_percent']." + ".$laminator_tuning_data['length']." * 2", "м. пог. чистые * общий процент отходов на печати + метраж приладки ламинации * 2");
+            $this->lamination1_mpogdirty = new CalculationItem("М. пог. грязные (лам 1), м", $this->mpogpure->value * $tuning_data->waste_percent + $laminator_tuning_data->length * 2, $this->mpogpure->display." * ".$tuning_data->waste_percent." + ".$laminator_tuning_data->length." * 2", "м. пог. чистые * общий процент отходов на печати + метраж приладки ламинации * 2");
         }
         
         if($this->laminations_number > 1) {
-            $this->lamination2_mpogdirty = new CalculationItem("М. пог. грязные (лам 2), м", $this->mpogpure->value * $tuning_data[$machine_id]['waste_percent'] + $laminator_tuning_data['length'], $this->mpogpure->display." * ".$tuning_data[$machine_id]['waste_percent']." + ".$laminator_tuning_data['length'], "м. пог. чистые * общий процент отходов на печати + метраж приладки ламинации");
+            $this->lamination2_mpogdirty = new CalculationItem("М. пог. грязные (лам 2), м", $this->mpogpure->value * $tuning_data->waste_percent + $laminator_tuning_data->length, $this->mpogpure->display." * ".$tuning_data->waste_percent." + ".$laminator_tuning_data->length, "м. пог. чистые * общий процент отходов на печати + метраж приладки ламинации");
         }
         
         // Площадь грязная
@@ -310,6 +346,49 @@ class Calculation {
     
         if($this->laminations_number > 1) {
             $this->lamination2_film_price = new CalculationItem("Общая стоимость плёнки (лам 2)", $this->lamination2_mdirty->value * $lamination2_price * $this->GetCurrencyRate($lamination2_currency, $usd, $euro), $this->lamination2_mdirty->display." * $lamination2_price * ".$this->GetCurrencyRate($lamination2_currency, $usd, $euro), "Масса плёнки (лам 2) / цена * курс валюты");
+        }
+        
+        //*****************************************
+        // Время - деньги
+        //*****************************************
+        
+        // Время приладки
+        if(!empty($machine_id)) {
+            $this->tuning_time = new CalculationItem("Время приладки (осн), мин", $ink_number * $tuning_data->time, "$ink_number * $tuning_data->time", "Красочность * время приладки");
+        }
+        
+        if($this->laminations_number > 0) {
+            $this->lamination1_tuning_time = new CalculationItem("Время приладки (лам 1), мин", $laminator_tuning_data->time, $laminator_tuning_data->time, "Время приладки ламинатора");
+        }
+        
+        if($this->laminations_number > 1) {
+            $this->lamination2_tuning_time = new CalculationItem("Время приладки (лам 2), мин", $laminator_tuning_data->time, $laminator_tuning_data->time, "Время приладки ламинатора");
+        }
+        
+        // Время печати и ламинации (без приладки)
+        if(!empty($machine_id)) {
+            $this->print_time = new CalculationItem("Время печати без приладки (осн), ч", ($this->mpogpure->value + $this->waste_length->value) / 1000 / $machine_data->speed, "(".$this->mpogpure->display." + ".$this->waste_length->display.") / 1000 / ".$machine_data->speed, "(м. пог. чистые + метраж отходов) / 1000 / скорость работы машины");
+        }
+        
+        if($this->laminations_number > 0) {
+            $this->lamination1_time = new CalculationItem("Время ламинации без приладки (лам 1), ч", ($this->mpogpure->value + $this->waste_length->value) / 1000 / $laminator_machine_data->speed, "(".$this->mpogpure->display." + ".$this->waste_length->display.") / 1000 / ".$laminator_machine_data->speed, "(м. пог. чистые + метраж отходов) / 1000 / скорость работы ламинатора");
+        }
+        
+        if($this->laminations_number > 1) {
+            $this->lamination2_time = new CalculationItem("Время ламинации без приладки (лам 2), ч", ($this->mpogpure->value + $this->waste_length->value) / 1000 / $laminator_machine_data->speed, "(".$this->mpogpure->display." + ".$this->waste_length->display.") / 1000 / ".$laminator_machine_data->speed, "(м. пог. чистые + метраж отходов) / 1000 / скорость работы ламинатора");
+        }
+        
+        // Общее время выполнения тиража
+        if(!empty($machine_id)) {
+            $this->work_time = new CalculationItem("Общее время выполнения (осн), ч", $this->tuning_time->value / 60 + $this->print_time->value, $this->tuning_time->display." / 60 + ".$this->print_time->display, "Время приладки / 60 + время печати");
+        }
+        
+        if($this->laminations_number > 0) {
+            $this->lamination1_work_time = new CalculationItem("Общее время выполнения (лам 1), ч", $this->lamination1_tuning_time->value / 60 + $this->lamination1_time->value, $this->lamination1_tuning_time->display." / 60 + ".$this->lamination1_time->display, "Время приладки / 60 + время ламинации");
+        }
+        
+        if($this->laminations_number > 1) {
+            $this->lamination2_work_time = new CalculationItem("Общее время выполнения (лам 2), ч", $this->lamination2_tuning_time->value / 60 + $this->lamination2_time->value, $this->lamination2_tuning_time->display." / 60 + ".$this->lamination2_time->display, "Время приладки / 60 + время ламинации");
         }
     }
 }
