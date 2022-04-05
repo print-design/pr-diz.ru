@@ -129,7 +129,7 @@ if($id !== null) {
             . "where rc.id = $id";
     $fetcher = new Fetcher($sql);
     
-    while ($row = $fetcher->Fetch()) {
+    if ($row = $fetcher->Fetch()) {
         $date = $row['date'];
         $name = $row['name'];
         
@@ -209,9 +209,11 @@ if($id !== null) {
     }
         
     if(!empty($date)) {
-        // Данные расчёта
-        $data = Calculate($tuning_data, 
+        // Расчёт
+        $calculation = new Calculation($tuning_data, 
                 $laminator_tuning_data,
+                $usd, // Курс доллара
+                $euro, // Курс евро
                 $quantity, // Масса тиража
                 
                 $film, // Основная пленка, марка
@@ -270,9 +272,7 @@ if($id !== null) {
         array_push($file_data, array("Плотность (осн), г/м2", $density_format, "", ""));
         array_push($file_data, array("Лыжи (осн)", GetSkiName($ski), "", ""));
         
-        $laminations_number = $data['laminations_number'];
-        
-        if($laminations_number > 0) {
+        if($calculation->laminations_number > 0) {
             array_push($file_data, array("Марка (лам 1)", $lamination1_film, "", ""));
             array_push($file_data, array("Толщина (лам 1), мкм", $lamination1_thickness, "", ""));
             $lamination1_density_format = empty($lamination1_density) ? "0" : number_format($lamination1_density, 2, ",", " ");
@@ -280,7 +280,7 @@ if($id !== null) {
             array_push($file_data, array("Лыжи (лам 1)", GetSkiName($lamination1_ski), "", ""));
         }
         
-        if($laminations_number > 1) {
+        if($calculation->laminations_number > 1) {
             array_push($file_data, array("Марка (лам 2)", $lamination2_film, "", ""));
             array_push($file_data, array("Толщина (лам 2), мкм", $lamination2_thickness, "", ""));
             $lamination2_density_format = empty($lamination2_density) ? "0" : number_format($lamination2_density, 2, ",", " ");
@@ -293,44 +293,47 @@ if($id !== null) {
         $raport_format = number_format($raport, 3, ",", "");
         array_push($file_data, array("Рапорт", $raport_format, "", ""));
         
-        // Результаты вычислений
-        $width = $data['width'];
-        $width_calculation = GetWidthCalculation($ski, $streams_number, $stream_width, $width_ski);
-        $width_comment = GetWidthComment($ski);
-        array_push($file_data, array("Ширина материала (осн), мм", $width, $width_calculation, $width_comment));
+        // Результаты расчёта
+        $width = $calculation->width;
+        array_push($file_data, array("Ширина материала (осн), мм", 
+                    $width, 
+                    GetWidthCalculation($ski, $streams_number, $stream_width, $width_ski), 
+                    GetWidthComment($ski)));
         
-        if($laminations_number > 0) {
-            $lamination1_width = $data['lamination1_width'];
-            $lamination1_width_calculation = GetWidthCalculation($lamination1_ski, $streams_number, $stream_width, $lamination1_width_ski);
-            $lamination1_width_comment = GetWidthComment($lamination1_ski);
-            array_push($file_data, array("Ширина материала (лам 1), мм", $lamination1_width, $lamination1_width_calculation, $lamination1_width_comment));
+        if($calculation->laminations_number > 0) {
+            $lamination1_width = $calculation->lamination1_width;
+            array_push($file_data, array("Ширина материала (лам 1), мм", 
+                $lamination1_width, 
+                GetWidthCalculation($lamination1_ski, $streams_number, $stream_width, $lamination1_width_ski), 
+                GetWidthComment($lamination1_ski)));
         }
         
-        if($laminations_number > 1) {
-            $lamination2_width = $data['lamination2_width'];
-            $lamination2_width_calculation = GetWidthCalculation($lamination2_ski, $streams_number, $stream_width, $lamination2_width_ski);
-            $lamination2_width_comment = GetWidthComment($lamination2_ski);
-            array_push($file_data, array("Ширина материала (лам 2), мм", $lamination2_width, $lamination2_width_calculation, $lamination2_width_comment));
+        if($calculation->laminations_number > 1) {
+            $lamination2_width = $calculation->lamination2_width;
+            array_push($file_data, array("Ширина материала (лам 2), мм", 
+                $lamination2_width, 
+                GetWidthCalculation($lamination2_ski, $streams_number, $stream_width, $lamination2_width_ski), 
+                GetWidthComment($lamination2_ski)));
         }
         
-        $m2pure_format = number_format($data['m2pure'], 2, ",", " ");
+        $m2pure_format = number_format($calculation->m2pure, 2, ",", " ");
         array_push($file_data, array("М2 чистые, м2", $m2pure_format, "$quantity * 1000 / ($density_format + $lamination1_density_format + $lamination2_density_format)", "масса тиража * 1000 / (осн. пл. уд. вес + лам. 1 уд. вес + лам. 2 уд. вес)"));
         
-        $mpogpure_format = number_format($data['mpogpure'], 2, ",", " ");
+        $mpogpure_format = number_format($calculation->mpogpure, 2, ",", " ");
         array_push($file_data, array("М пог. чистые, м", $mpogpure_format, "$m2pure_format / ($streams_number * $stream_width)", "м2 чистые / (количество ручьёв * ширина ручья)"));
         
         if(!empty($machine_id)) {
-            $waste_length_format = number_format($data['waste_length'], 2, ",", " ");
+            $waste_length_format = number_format($calculation->waste_length, 2, ",", " ");
             array_push($file_data, array("Метраж отходов (осн), м", $waste_length_format, $tuning_data[$machine_id]['waste_percent']." * $mpogpure_format / 100", "процент отходов печати * м. пог. чистые / 100"));
         }
         
-        if($laminations_number > 0) {
-            $lamination1_waste_length_format = number_format($data['lamination1_waste_length'], 2, ",", " ");
+        if($calculation->laminations_number > 0) {
+            $lamination1_waste_length_format = number_format($calculation->lamination1_waste_length, 2, ",", " ");
             array_push($file_data, array("Метраж отходов (осн), м", $lamination1_waste_length_format, $laminator_tuning_data['waste_percent']." * $mpogpure_format / 100", "процент отходов ламинации * м. пог. чистые / 100"));
         }
         
-        if($laminations_number > 1) {
-            $lamination2_waste_length_format = number_format($data['lamination1_waste_length'], 2, ",", " ");
+        if($calculation->laminations_number > 1) {
+            $lamination2_waste_length_format = number_format($calculation->lamination2_waste_length, 2, ",", " ");
             array_push($file_data, array("Метраж отходов (осн), м", $lamination2_waste_length_format, $laminator_tuning_data['waste_percent']." * $mpogpure_format / 100", "процент отходов ламинации * м. пог. чистые / 100"));
         }
         
@@ -339,32 +342,32 @@ if($id !== null) {
         }
         
         if(!empty($machine_id)) {
-            $mpogdirty_format = number_format($data['mpogdirty'], 2, ",", " ");
-            array_push($file_data, array("М. пог. грязные (осн), м", $mpogdirty_format, "$mpogpure_format * ".$tuning_data[$machine_id]['waste_percent']." + $ink_number * ".$tuning_data[$machine_id]['length']." + $laminations_number * ".$laminator_tuning_data['length'], "м. пог. чистые * общий процент отходов на печати + красочность * метраж приладки 1 краски + кол-во ламинаций * метраж приладки ламинации"));
+            $mpogdirty_format = number_format($calculation->mpogdirty, 2, ",", " ");
+            array_push($file_data, array("М. пог. грязные (осн), м", $mpogdirty_format, "$mpogpure_format * ".$tuning_data[$machine_id]['waste_percent']." + $ink_number * ".$tuning_data[$machine_id]['length']." + $calculation->laminations_number * ".$laminator_tuning_data['length'], "м. пог. чистые * общий процент отходов на печати + красочность * метраж приладки 1 краски + кол-во ламинаций * метраж приладки ламинации"));
         }
         
-        if($laminations_number > 0) {
-            $lamination1_mpogdirty_format = number_format($data['lamination1_mpogdirty'], 2, ",", " ");
+        if($calculation->laminations_number > 0) {
+            $lamination1_mpogdirty_format = number_format($calculation->lamination1_mpogdirty, 2, ",", " ");
             array_push($file_data, array("М. пог. грязные (лам 1), м", $lamination1_mpogdirty_format, "$mpogpure_format * ".$tuning_data[$machine_id]['waste_percent']." + ".$laminator_tuning_data['length']." * 2", "м. пог. чистые * общий процент отходов на печати + метраж приладки ламинации * 2"));
         }
         
-        if($laminations_number > 1) {
-            $lamination2_mpogdirty_format = number_format($data['lamination2_mpogdirty'], 2, ",", " ");
+        if($calculation->laminations_number > 1) {
+            $lamination2_mpogdirty_format = number_format($calculation->lamination2_mpogdirty, 2, ",", " ");
             array_push($file_data, array("М. пог. грязные (лам 2), м", $lamination2_mpogdirty_format, "$mpogpure_format * ".$tuning_data[$machine_id]['waste_percent']." + ".$laminator_tuning_data['length'], "м. пог. чистые * общий процент отходов на печати + метраж приладки ламинации"));
         }
         
         if(!empty($machine_id)) {
-            $m2dirty_format = number_format($data['m2dirty'], 2, ",", " ");
+            $m2dirty_format = number_format($calculation->m2dirty, 2, ",", " ");
             array_push($file_data, array("М2 грязные (осн), м2", $m2dirty_format, "$mpogdirty_format * $width / 1000", "м. пог. грязные * ширина материала основной пленки / 1000"));
         }
         
-        if($laminations_number > 0) {
-            $lamination1_m2dirty_format = number_format($data['lamination1_m2dirty'], 2, ",", " ");
+        if($calculation->laminations_number > 0) {
+            $lamination1_m2dirty_format = number_format($calculation->lamination1_m2dirty, 2, ",", " ");
             array_push($file_data, array("М2 грязные (лам 1), м2", $lamination1_m2dirty_format, "$lamination1_mpogdirty_format * $lamination1_width / 1000", "м. пог. грязные * ширина материала ламинации 1 / 1000"));
         }
         
-        if($laminations_number > 1) {
-            $lamination2_m2dirty_format = number_format($data['lamination2_m2dirty'], 2, ",", " ");
+        if($calculation->laminations_number > 1) {
+            $lamination2_m2dirty_format = number_format($calculation->lamination2_m2dirty, 2, ",", " ");
             array_push($file_data, array("М2 грязные (лам 2), м2", $lamination2_m2dirty_format, "$lamination2_mpogdirty_format * $lamination2_width / 1000", "м. пог. грязные * ширина материала ламинации 2 / 1000"));
         }
         
@@ -373,58 +376,58 @@ if($id !== null) {
         // ***************************
         
         // Масса плёнки чистая
-        $mpure_format = number_format($data['mpure'], 2, ",", " ");
+        $mpure_format = number_format($calculation->mpure, 2, ",", " ");
         array_push($file_data, array("Масса плёнки чистая (осн), кг", $mpure_format, "$mpogpure_format * $width * $density_format / 1000", "м. пог. чистые * ширина материала основной пленки / 1000"));
         
-        if($laminations_number > 0) {
-            $lamination1_mpure_format = number_format($data['lamination1_mpure'], 2, ",", " ");
+        if($calculation->laminations_number > 0) {
+            $lamination1_mpure_format = number_format($calculation->lamination1_mpure, 2, ",", " ");
             array_push($file_data, array("Масса плёнки чистая (лам 1), кг", $lamination1_mpure_format, "$mpogpure_format * $lamination1_width * $lamination1_density_format / 1000", "м. пог. чистые * ширина материала ламинации 1 / 1000"));
         }
         
-        if($laminations_number > 1) {
-            $lamination2_mpure_format = number_format($data['lamination2_mpure'], 2, ",", " ");
+        if($calculation->laminations_number > 1) {
+            $lamination2_mpure_format = number_format($calculation->lamination2_mpure, 2, ",", " ");
             array_push($file_data, array("Масса плёнки чистая (лам 2), кг", $lamination1_mpure_format, "$mpogpure_format * $lamination1_width * $lamination2_density_format / 1000", "м. пог. чистые * ширина материала ламинации 2 / 1000"));
         }
         
         // Длина пленки чистая
-        $lengthpure_format = number_format($data['lengthpure'], 2, ",", " ");
+        $lengthpure_format = number_format($calculation->lengthpure, 2, ",", " ");
         array_push($file_data, array("Длина плёнки чистая (осн), м", $lengthpure_format, $mpogpure_format, "м. пог. чистые"));
         
-        if($laminations_number > 0) {
-            $lamination1_lengthpure_format = number_format($data['lamination1_lengthpure'], 2, ",", " ");
+        if($calculation->laminations_number > 0) {
+            $lamination1_lengthpure_format = number_format($calculation->lamination1_lengthpure, 2, ",", " ");
             array_push($file_data, array("Длина плёнки чистая (лам 1), м", $lamination1_lengthpure_format, $mpogpure_format, "м. пог. чистые"));
         }
         
-        if($laminations_number > 1) {
-            $lamination2_lengthpure_format = number_format($data['lamination2_lengthpure'], 2, ",", " ");
+        if($calculation->laminations_number > 1) {
+            $lamination2_lengthpure_format = number_format($calculation->lamination2_lengthpure, 2, ",", " ");
             array_push($file_data, array("Длина плёнки чистая (лам 2), м", $lamination2_lengthpure_format, $mpogpure_format, "м. пог. чистые"));
         }
         
         // Масса плёнки грязная (с приладкой), кг
-        $mdirty_format = number_format($data['mdirty'], 2, ",", " ");
+        $mdirty_format = number_format($calculation->mdirty, 2, ",", " ");
         array_push($file_data, array("Масса плёнки грязная (осн), м", $mdirty_format, "$m2dirty_format * $density_format / 1000", "м2 грязные * уд. вес / 1000"));
         
-        if($laminations_number > 0) {
-            $lamination1_mdirty_format = number_format($data['lamination1_mdirty'], 2, ",", " ");
+        if($calculation->laminations_number > 0) {
+            $lamination1_mdirty_format = number_format($calculation->lamination1_mdirty, 2, ",", " ");
             array_push($file_data, array("Масса плёнки грязная (лам 1), м", $lamination1_mdirty_format, "$lamination1_m2dirty_format * $lamination1_density_format / 1000", "м2 грязные * уд. вес / 1000"));
         }
         
-        if($laminations_number > 1) {
-            $lamination2_mdirty_format = number_format($data['lamination2_mdirty'], 2, ",", " ");
-            array_push($file_data, array("Масса плёнки грязная (лам 2), м", $lamination2_mdirty_format, "$lamination2_m2dirty_format * $lamination2_m2dirty_format / 1000", "м2 грязные * уд. вес / 1000"));
+        if($calculation->laminations_number > 1) {
+            $lamination2_mdirty_format = number_format($calculation->lamination2_mdirty, 2, ",", " ");
+            array_push($file_data, array("Масса плёнки грязная (лам 2), м", $lamination2_mdirty_format, "$lamination2_m2dirty_format * $lamination2_density_format / 1000", "м2 грязные * уд. вес / 1000"));
         }
         
         // Длина плёнки грязная, м
-        $lengthdirty_format = number_format($data['lengthdirty'], 2, ",", " ");
+        $lengthdirty_format = number_format($calculation->lengthdirty, 2, ",", " ");
         array_push($file_data, array("Длина плёнки грязная (осн), м", $lengthdirty_format, $mpogdirty_format, "м пог. грязные осн. плёнки"));
         
-        if($laminations_number > 0) {
-            $lamination1_lengthdirty_format = number_format($data['lamination1_lengthdirty'], 2, ",", " ");
+        if($calculation->laminations_number > 0) {
+            $lamination1_lengthdirty_format = number_format($calculation->lamination1_lengthdirty, 2, ",", " ");
             array_push($file_data, array("Длина плёнки грязная (лам 1), м2", $lamination1_lengthdirty_format, $lamination1_mpogdirty_format, "м. пог. грязные ламинации 1"));
         }
         
-        if($laminations_number > 1) {
-            $lamination2_lengthdirty_format = number_format($data['lamination2_lengthdirty'], 2, ",", " ");
+        if($calculation->laminations_number > 1) {
+            $lamination2_lengthdirty_format = number_format($calculation->lamination2_lengthdirty, 2, ",", " ");
             array_push($file_data, array("Длина плёнки грязная (лам 2), м2", $lamination2_lengthdirty_format, $lamination2_mpogdirty_format, "м. пог. грязные даминации 2"));
         }
         
