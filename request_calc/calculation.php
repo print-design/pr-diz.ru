@@ -45,6 +45,86 @@ class MachineData {
     }
 }
 
+class InkData {
+    public $c;
+    public $c_currency;
+    public $c_expense;
+    public $m;
+    public $m_currency;
+    public $m_expense;
+    public $y;
+    public $y_currency;
+    public $y_expense;
+    public $k;
+    public $k_currency;
+    public $k_expense;
+    public $white;
+    public $white_currency;
+    public $white_expense;
+    public $panton;
+    public $panton_currency;
+    public $panton_expense;
+    public $lacquer;
+    public $lacquer_currency;
+    public $lacquer_expense;
+    public $solvent_etoxipropanol;
+    public $solvent_etoxipropanol_currency;
+    public $solvent_flexol82;
+    public $solvent_flexol82_currency;
+    public $solvent_part;
+    public $min_price;
+    
+    public function __construct($c, $c_currency, $c_expense, $m, $m_currency, $m_expense, $y, $y_currency, $y_expense, $k, $k_currency, $k_expense, $white, $white_currency, $white_expense, $panton, $panton_currency, $panton_expense, $lacquer, $lacquer_currency, $lacquer_expense, $solvent_etoxipropanol, $solvent_etoxipropanol_currency, $solvent_flexol82, $solvent_flexol82_currency, $solvent_part, $min_price) {
+        $this->c = $c;
+        $this->c_currency = $c_currency;
+        $this->c_expense = $c_expense;
+        $this->m = $m;
+        $this->m_currency = $m_currency;
+        $this->m_expense = $m_expense;
+        $this->y = $y;
+        $this->y_currency = $y_currency;
+        $this->y_expense = $y_expense;
+        $this->k = $k;
+        $this->k_currency = $k_currency;
+        $this->k_expense = $k_expense;
+        $this->white = $white;
+        $this->white_currency = $white_currency;
+        $this->white_expense = $white_expense;
+        $this->panton = $panton;
+        $this->panton_currency = $panton_currency;
+        $this->panton_expense = $panton_expense;
+        $this->lacquer = $lacquer;
+        $this->lacquer_currency = $lacquer_currency;
+        $this->lacquer_expense = $lacquer_expense;
+        $this->solvent_etoxipropanol = $solvent_etoxipropanol;
+        $this->solvent_etoxipropanol_currency = $solvent_etoxipropanol_currency;
+        $this->solvent_flexol82 = $solvent_flexol82;
+        $this->solvent_flexol82_currency = $solvent_flexol82_currency;
+        $this->solvent_part = $solvent_part;
+        $this->min_price = $min_price;
+    }
+}
+
+class GlueData {
+    public $glue;
+    public $glue_currency;
+    public $glue_expense;
+    public $glue_expense_pet;
+    public $solvent;
+    public $solvent_currency;
+    public $solvent_part;
+    
+    public function __construct($glue, $glue_currency, $glue_expense, $glue_expense_pet, $solvent, $solvent_currency, $solvent_part) {
+        $this->glue = $glue;
+        $this->glue_currency = $glue_currency;
+        $this->glue_expense = $glue_expense;
+        $this->glue_expense_pet = $glue_expense_pet;
+        $this->solvent = $solvent;
+        $this->solvent_currency = $solvent_currency;
+        $this->solvent_part = $solvent_part;
+    }
+}
+
 class Calculation {
     // Лыжи
     const NO_SKI = 0;
@@ -170,11 +250,14 @@ class Calculation {
     public CalculationItem $work_price;
     public CalculationItem $lamination1_work_price;
     public CalculationItem $lamination2_work_price;
+    public CalculationItem $print_area;
 
     public function __construct(TuningData $tuning_data, 
             TuningData $laminator_tuning_data,
             MachineData $machine_data,
             MachineData $laminator_machine_data,
+            InkData $ink_data,
+            GlueData $glue_data,
             $usd, // Курс доллара
             $euro, // Курс евро
             $quantity, // Масса тиража
@@ -405,6 +488,15 @@ class Calculation {
         
         if($this->laminations_number > 1) {
             $this->lamination2_work_price = new CalculationItem("Стоимость выполнения (лам 2), руб", $this->lamination2_work_time->value * $laminator_machine_data->price, $this->lamination2_work_time->display." * ".$laminator_machine_data->price, "Общее время выполнения лам 2 * стоимость работы оборудования лам 2");
+        }
+        
+        //****************************************
+        // Расход краски
+        //****************************************
+        
+        if(!empty($machine_id)) {
+            // Площадь запечатки
+            $this->print_area = new CalculationItem("Площадь запечатки, м2", $this->mpogdirty->value * ($stream_width * $streams_number + 10) / 1000, $this->mpogdirty->display." * ($stream_width * $streams_number + 10) / 1000", "м. пог. грязные * (ширина ручья * кол-во ручьёв + 10 мм) / 1000");
         }
     }
 }

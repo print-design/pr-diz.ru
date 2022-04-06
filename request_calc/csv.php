@@ -155,6 +155,8 @@ if($id !== null) {
     $laminator_tuning_data = null;
     $machine_data = null;
     $laminator_machine_data = null;
+    $ink_data = null;
+    $glue_data = null;
     
     if(!empty($date)) {
         $sql = "select machine_id, time, length, waste_percent from norm_tuning where id in (select max(id) from norm_tuning where date <= '$date' group by machine_id)";
@@ -184,6 +186,20 @@ if($id !== null) {
         if($row = $fetcher->Fetch()) {
             $laminator_machine_data = new MachineData($row['price'], $row['speed'], $row['max_width']);
         }
+        
+        $sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, solvent_etoxipropanol, solvent_etoxipropanol_currency, solvent_flexol82, solvent_flexol82_currency, solvent_part, min_price "
+                . "from norm_ink where date <= '$date' order by id desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $ink_data = new InkData($row['c'], $row['c_currency'], $row['c_expense'], $row['m'], $row['m_currency'], $row['m_expense'], $row['y'], $row['y_currency'], $row['y_expense'], $row['k'], $row['k_currency'], $row['k_expense'], $row['white'], $row['white_currency'], $row['white_expense'], $row['panton'], $row['panton_currency'], $row['panton_expense'], $row['lacquer'], $row['lacquer_currency'], $row['lacquer_expense'], $row['solvent_etoxipropanol'], $row['solvent_etoxipropanol_currency'], $row['solvent_flexol82'], $row['solvent_flexol82_currency'], $row['solvent_part'], $row['min_price']);
+        }
+        
+        $sql = "select glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, solvent_part "
+                . "from norm_glue where date <= '$date' order by id desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $glue_data = new GlueData($row['glue'], $row['glue_currency'], $row['glue_expense'], $row['glue_expense_pet'], $row['solvent'], $row['solvent_currency'], $row['solvent_part']);
+        }
     }
         
     if(!empty($date)) {
@@ -192,6 +208,8 @@ if($id !== null) {
                 $laminator_tuning_data,
                 $machine_data,
                 $laminator_machine_data,
+                $ink_data,
+                $glue_data,
                 $usd, // Курс доллара
                 $euro, // Курс евро
                 $quantity, // Масса тиража
@@ -451,6 +469,15 @@ if($id !== null) {
         
         if($calculation->laminations_number > 1) {
             array_push($file_data, array($calculation->lamination2_work_price->name, $calculation->lamination2_work_price->display, $calculation->lamination2_work_price->formula, $calculation->lamination2_work_price->comment));
+        }
+        
+        //****************************************
+        // Расход краски
+        //****************************************
+        
+        if(!empty($machine_id)) {
+            // Площадь запечатки
+            array_push($file_data, array($calculation->print_area->name, $calculation->print_area->display, $calculation->print_area->formula, $calculation->print_area->comment));
         }
         
         //***************************************************
