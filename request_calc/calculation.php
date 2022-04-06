@@ -167,6 +167,9 @@ class Calculation {
     public CalculationItem $work_time;
     public CalculationItem $lamination1_work_time;
     public CalculationItem $lamination2_work_time;
+    public CalculationItem $work_price;
+    public CalculationItem $lamination1_work_price;
+    public CalculationItem $lamination2_work_price;
 
     public function __construct(TuningData $tuning_data, 
             TuningData $laminator_tuning_data,
@@ -241,7 +244,7 @@ class Calculation {
         $density_display = empty($density) ? "0" : number_format($density, 2, ",", " ");
         $lamination1_density_display = empty($lamination1_density) ? "0" : number_format($lamination1_density, 2, ",", " ");
         $lamination2_density_display = empty($lamination2_density) ? "0" : number_format($lamination2_density, 2, ",", " ");
-        $this->m2pure = new CalculationItem("М2 чистые, м2", $quantity * 1000 / ($density + $lamination1_density ?? 0 + $lamination2_density ?? 0), "$quantity * 1000 / ($density_display + $lamination1_density_display + $lamination2_density_display)", "масса тиража * 1000 / (осн. пл. уд. вес + лам. 1 уд. вес + лам. 2 уд. вес)");
+        $this->m2pure = new CalculationItem("М2 чистые, м2", $quantity * 1000 / ($density + $lamination1_density ?? 0 + $lamination2_density ?? 0), "$quantity * 1000 / ($density_display + $lamination1_density_display + $lamination2_density_display)", "масса тиража * 1000 / (уд. вес осн + уд. вес лам 1 + уд. вес лам 2)");
         
         // Метры погонные чистые
         $this->mpogpure = new CalculationItem("М пог. чистые, м", $this->m2pure->value / ($streams_number * $stream_width), $this->m2pure->display." / ($streams_number * $stream_width)", "м2 чистые / (количество ручьёв * ширина ручья)");
@@ -274,15 +277,15 @@ class Calculation {
         
         // Площадь грязная
         if(!empty($machine_id)) {
-            $this->m2dirty = new CalculationItem("М2 грязные (осн), м2", $this->mpogdirty->value * $this->width->value / 1000, $this->mpogdirty->display." * ".$this->width->display." / 1000", "м. пог. грязные * ширина материала основной пленки / 1000");
+            $this->m2dirty = new CalculationItem("М2 грязные (осн), м2", $this->mpogdirty->value * $this->width->value / 1000, $this->mpogdirty->display." * ".$this->width->display." / 1000", "м. пог. грязные * ширина материала осн / 1000");
         }
         
         if($this->laminations_number > 0) {
-            $this->lamination1_m2dirty = new CalculationItem("М2 грязные (лам 1), м2", $this->lamination1_mpogdirty->value * $this->lamination1_width->value / 1000, $this->lamination1_mpogdirty->display." * ".$this->lamination1_width->display." / 1000", "м. пог. грязные * ширина материала ламинации 1 / 1000");
+            $this->lamination1_m2dirty = new CalculationItem("М2 грязные (лам 1), м2", $this->lamination1_mpogdirty->value * $this->lamination1_width->value / 1000, $this->lamination1_mpogdirty->display." * ".$this->lamination1_width->display." / 1000", "м. пог. грязные * ширина материала лам 1 / 1000");
         }
         
         if($this->laminations_number > 1) {
-            $this->lamination2_m2dirty = new CalculationItem("М2 грязные (лам 2), м2", $this->lamination2_mpogdirty->value * $this->lamination2_width->value / 1000, $this->lamination2_mpogdirty->display." * ".$this->lamination2_width->display." / 1000", "м. пог. грязные * ширина материала ламинации 2 / 1000");
+            $this->lamination2_m2dirty = new CalculationItem("М2 грязные (лам 2), м2", $this->lamination2_mpogdirty->value * $this->lamination2_width->value / 1000, $this->lamination2_mpogdirty->display." * ".$this->lamination2_width->display." / 1000", "м. пог. грязные * ширина материала лам 2 / 1000");
         }
     
         //****************************************
@@ -290,14 +293,14 @@ class Calculation {
         //****************************************
     
         // Масса плёнки чистая (без приладки), кг
-        $this->mpure = new CalculationItem("Масса плёнки чистая (осн), кг", $this->mpogpure->value * $this->width->value * $density / 1000, $this->mpogpure->display." * ".$this->width->display." * ".$density_display." / 1000", "м. пог. чистые * ширина материала плёнки (осн) / 1000");
+        $this->mpure = new CalculationItem("Масса плёнки чистая (осн), кг", $this->mpogpure->value * $this->width->value * $density / 1000, $this->mpogpure->display." * ".$this->width->display." * ".$density_display." / 1000", "м. пог. чистые * ширина материала плёнки осн / 1000");
     
         if($this->laminations_number > 0) {
-            $this->lamination1_mpure = new CalculationItem("Масса плёнки чистая (лам 1), кг", $this->mpogpure->value * $this->lamination1_width->value * $lamination1_density / 1000, $this->mpogpure->display." * ".$this->lamination1_width->display." * ".$lamination1_density_display." / 1000", "м. пог. чистые * ширина материала плёнки (лам 1) / 1000");
+            $this->lamination1_mpure = new CalculationItem("Масса плёнки чистая (лам 1), кг", $this->mpogpure->value * $this->lamination1_width->value * $lamination1_density / 1000, $this->mpogpure->display." * ".$this->lamination1_width->display." * ".$lamination1_density_display." / 1000", "м. пог. чистые * ширина материала плёнки лам 1 / 1000");
         }
     
         if($this->laminations_number > 1) {
-            $this->lamination2_mpure = new CalculationItem("Масса плёнки чистая (лам 2), кг", $this->mpogpure->value * $this->lamination2_width->value * $lamination2_density / 1000, $this->mpogpure->display." * ".$this->lamination2_width->display." * ".$lamination2_density_display." / 1000", "м. пог. чистые * ширина материала плёнки (лам 2) / 1000");
+            $this->lamination2_mpure = new CalculationItem("Масса плёнки чистая (лам 2), кг", $this->mpogpure->value * $this->lamination2_width->value * $lamination2_density / 1000, $this->mpogpure->display." * ".$this->lamination2_width->display." * ".$lamination2_density_display." / 1000", "м. пог. чистые * ширина материала плёнки лам 2 / 1000");
         }
     
         // Длина пленки чистая, м
@@ -312,25 +315,25 @@ class Calculation {
         }
     
         // Масса плёнки грязная (с приладкой), кг
-        $this->mdirty = new CalculationItem("Масса плёнки грязная (осн), м", $this->m2dirty->value * $density / 1000, $this->m2dirty->display." * ".$density_display." / 1000", "м2 грязные * уд. вес / 1000");
+        $this->mdirty = new CalculationItem("Масса плёнки грязная (осн), м", $this->m2dirty->value * $density / 1000, $this->m2dirty->display." * ".$density_display." / 1000", "м2 грязные * уд. вес осн / 1000");
     
         if($this->laminations_number > 0) {
-            $this->lamination1_mdirty = new CalculationItem("Масса плёнки грязная (лам 1), м", $this->lamination1_m2dirty->value * $lamination1_density / 1000, $this->lamination1_m2dirty->display." * ".$lamination1_density_display." / 1000", "м2 грязные * уд. вес / 1000");
+            $this->lamination1_mdirty = new CalculationItem("Масса плёнки грязная (лам 1), м", $this->lamination1_m2dirty->value * $lamination1_density / 1000, $this->lamination1_m2dirty->display." * ".$lamination1_density_display." / 1000", "м2 грязные * уд. вес лам 1 / 1000");
         }
     
         if($this->laminations_number > 1) {
-            $this->lamination2_mdirty = new CalculationItem("Масса плёнки грязная (лам 2), м", $this->lamination2_m2dirty->value * $lamination2_density / 1000, $this->lamination2_m2dirty->display." * ".$lamination2_density_display." / 1000", "м2 грязные * уд. вес / 1000");
+            $this->lamination2_mdirty = new CalculationItem("Масса плёнки грязная (лам 2), м", $this->lamination2_m2dirty->value * $lamination2_density / 1000, $this->lamination2_m2dirty->display." * ".$lamination2_density_display." / 1000", "м2 грязные * уд. вес лам 2 / 1000");
         }
     
         // Длина плёнки грязная, м
-        $this->lengthdirty =  new CalculationItem("Длина плёнки грязная (осн), м", $this->mpogdirty->value, $this->mpogdirty->display, "м пог. грязные осн. плёнки");
+        $this->lengthdirty =  new CalculationItem("Длина плёнки грязная (осн), м", $this->mpogdirty->value, $this->mpogdirty->display, "м пог. грязные осн");
     
         if($this->laminations_number > 0) {
-            $this->lamination1_lengthdirty = new CalculationItem("Длина плёнки грязная (лам 1), м2", $this->lamination1_mpogdirty->value, $this->lamination1_mpogdirty->display, "м. пог. грязные ламинации 1");
+            $this->lamination1_lengthdirty = new CalculationItem("Длина плёнки грязная (лам 1), м2", $this->lamination1_mpogdirty->value, $this->lamination1_mpogdirty->display, "м. пог. грязные лам 1");
         }
     
         if($this->laminations_number > 1) {
-            $this->lamination2_lengthdirty = new CalculationItem("Длина плёнки грязная (лам 2), м2", $this->lamination2_mpogdirty->value, $this->lamination2_mpogdirty->display, "м. пог. грязные даминации 2");
+            $this->lamination2_lengthdirty = new CalculationItem("Длина плёнки грязная (лам 2), м2", $this->lamination2_mpogdirty->value, $this->lamination2_mpogdirty->display, "м. пог. грязные лам 2");
         }
     
         //****************************************
@@ -338,14 +341,14 @@ class Calculation {
         //****************************************
     
         // Себестоимость грязная (с приладки), руб
-        $this->film_price = new CalculationItem("Общая стоимость плёнки (осн)", $this->mdirty->value * $price * $this->GetCurrencyRate($currency, $usd, $euro), $this->mdirty->display." / $price * ".$this->GetCurrencyRate($currency, $usd, $euro), "Масса пленки (осн) / цена * курс валюты");
+        $this->film_price = new CalculationItem("Общая стоимость плёнки (осн)", $this->mdirty->value * $price * $this->GetCurrencyRate($currency, $usd, $euro), $this->mdirty->display." / $price * ".$this->GetCurrencyRate($currency, $usd, $euro), "Масса пленки осн / цена * курс валюты");
     
         if($this->laminations_number > 0) {
-            $this->lamination1_film_price = new CalculationItem("Общая стоимость плёнки (лам 1)", $this->lamination1_mdirty->value * $lamination1_price * $this->GetCurrencyRate($lamination1_currency, $usd, $euro), $this->lamination1_mdirty->display." * $lamination1_price * ".$this->GetCurrencyRate($lamination1_currency, $usd, $euro), "Масса плёнки (лам 1) / цена * курс валюты");
+            $this->lamination1_film_price = new CalculationItem("Общая стоимость плёнки (лам 1)", $this->lamination1_mdirty->value * $lamination1_price * $this->GetCurrencyRate($lamination1_currency, $usd, $euro), $this->lamination1_mdirty->display." * $lamination1_price * ".$this->GetCurrencyRate($lamination1_currency, $usd, $euro), "Масса плёнки лам 1 / цена * курс валюты");
         }
     
         if($this->laminations_number > 1) {
-            $this->lamination2_film_price = new CalculationItem("Общая стоимость плёнки (лам 2)", $this->lamination2_mdirty->value * $lamination2_price * $this->GetCurrencyRate($lamination2_currency, $usd, $euro), $this->lamination2_mdirty->display." * $lamination2_price * ".$this->GetCurrencyRate($lamination2_currency, $usd, $euro), "Масса плёнки (лам 2) / цена * курс валюты");
+            $this->lamination2_film_price = new CalculationItem("Общая стоимость плёнки (лам 2)", $this->lamination2_mdirty->value * $lamination2_price * $this->GetCurrencyRate($lamination2_currency, $usd, $euro), $this->lamination2_mdirty->display." * $lamination2_price * ".$this->GetCurrencyRate($lamination2_currency, $usd, $euro), "Масса плёнки лам 2 / цена * курс валюты");
         }
         
         //*****************************************
@@ -389,6 +392,19 @@ class Calculation {
         
         if($this->laminations_number > 1) {
             $this->lamination2_work_time = new CalculationItem("Общее время выполнения (лам 2), ч", $this->lamination2_tuning_time->value / 60 + $this->lamination2_time->value, $this->lamination2_tuning_time->display." / 60 + ".$this->lamination2_time->display, "Время приладки / 60 + время ламинации");
+        }
+        
+        // Стоимость выполнения тиража
+        if(!empty($machine_id)) {
+            $this->work_price = new CalculationItem("Стоимость выполнения (осн), руб", $this->work_time->value * $machine_data->price, $this->work_time->display." * ".$machine_data->price, "Общее время выполнения осн * стоимость работы оборудования осн");
+        }
+        
+        if($this->laminations_number > 0) {
+            $this->lamination1_work_price = new CalculationItem("Стоимость выполнения (лам 1), руб", $this->lamination1_work_time->value * $laminator_machine_data->price, $this->lamination1_work_time->display." * ".$laminator_machine_data->price, "Общее время выполнения лам 1 * стоимость работы оборудования лам 1");
+        }
+        
+        if($this->laminations_number > 1) {
+            $this->lamination2_work_price = new CalculationItem("Стоимость выполнения (лам 2), руб", $this->lamination2_work_time->value * $laminator_machine_data->price, $this->lamination2_work_time->display." * ".$laminator_machine_data->price, "Общее время выполнения лам 2 * стоимость работы оборудования лам 2");
         }
     }
 }

@@ -440,6 +440,19 @@ if($id !== null) {
             array_push($file_data, array($calculation->lamination2_work_time->name, $calculation->lamination2_work_time->display, $calculation->lamination2_work_time->formula, $calculation->lamination2_work_time->comment));
         }
         
+        // Стоимость выполнения тиража
+        if(!empty($machine_id)) {
+            array_push($file_data, array($calculation->work_price->name, $calculation->work_price->display, $calculation->work_price->formula, $calculation->work_price->comment));
+        }
+        
+        if($calculation->laminations_number > 0) {
+            array_push($file_data, array($calculation->lamination1_work_price->name, $calculation->lamination1_work_price->display, $calculation->lamination1_work_price->formula, $calculation->lamination1_work_price->comment));
+        }
+        
+        if($calculation->laminations_number > 1) {
+            array_push($file_data, array($calculation->lamination2_work_price->name, $calculation->lamination2_work_price->display, $calculation->lamination2_work_price->formula, $calculation->lamination2_work_price->comment));
+        }
+        
         //***************************************************
         // Сохранение в файл
         $file_name = DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y')." $name.csv";
