@@ -317,6 +317,8 @@ class Calculation {
     public CalculationItem $ink_solvent_kg_price;
     public $ink_kg_prices;
     public $ink_expenses;
+    public $ink_prices;
+    public $ink_solvent_prices;
 
     public function __construct(TuningData $tuning_data, 
             TuningData $laminator_tuning_data,
@@ -577,7 +579,9 @@ class Calculation {
             }
             
             $this->ink_kg_prices = array();
-            $this->ink_solvent_kg_prices = array();
+            $this->ink_expenses = array();
+            $this->ink_prices = array();
+            $this->ink_solvent_prices = array();
             
             for($i=1; $i<=$ink_number; $i++) {
                 $ink = "ink_$i";
@@ -592,6 +596,14 @@ class Calculation {
                 // Расход смеси
                 $ink_expense = new CalculationItem("Расход смеси (краска $i), кг", $this->print_area->value * $this->GetInkExpense($$ink, $$cmyk, $ink_data->c_expense, $ink_data->m_expense, $ink_data->y_expense, $ink_data->k_expense, $ink_data->panton_expense, $ink_data->white_expense, $ink_data->lacquer_expense) / 1000  * $$percent / 100, $this->print_area->display." * ".$this->GetInkExpense($$ink, $$cmyk, $ink_data->c_expense, $ink_data->m_expense, $ink_data->y_expense, $ink_data->k_expense, $ink_data->panton_expense, $ink_data->white_expense, $ink_data->lacquer_expense)." / 1000  * ".$$percent." / 100", "Площадь запечатки * расход смеси за 1 м2 / 1000 * процент краски / 100");
                 $this->ink_expenses[$i] = $ink_expense;
+                
+                // Стоимость краски
+                $ink_price = new CalculationItem("Стоимость краски (краска $i), руб", $ink_expense->value * $ink_kg_price->value, $ink_expense->display." * ".$ink_kg_price->display, "Расход смеси * стоимость краски в смеси за 1 кг");
+                $this->ink_prices[$i] = $ink_price;
+                
+                // Стоимость растворителя
+                $ink_solvent_price = new CalculationItem("Стоимость растворителя (краска $i), руб", $ink_expense->value * $this->ink_solvent_kg_price->value, $ink_expense->display." * ".$this->ink_solvent_kg_price->display, "Расход смеси * стоимость растворителя в смеси за 1 кг");
+                $this->ink_solvent_prices[$i] = $ink_solvent_price;
             }
         }
     }

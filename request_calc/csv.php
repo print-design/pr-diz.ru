@@ -512,6 +512,12 @@ if($id !== null) {
                 
                 // Расход смеси, кг
                 array_push($file_data, array($calculation->ink_expenses[$i]->name, $calculation->ink_expenses[$i]->display, $calculation->ink_expenses[$i]->formula, $calculation->ink_expenses[$i]->comment));
+                
+                // Стоимость краски, руб
+                array_push($file_data, array($calculation->ink_prices[$i]->name, $calculation->ink_prices[$i]->display, $calculation->ink_prices[$i]->formula, $calculation->ink_prices[$i]->comment));
+                
+                // Стоимость растворителя, руб
+                array_push($file_data, array($calculation->ink_solvent_prices[$i]->name, $calculation->ink_solvent_prices[$i]->display, $calculation->ink_solvent_prices[$i]->formula, $calculation->ink_solvent_prices[$i]->comment));
             }
         }
         
