@@ -67,6 +67,7 @@ if($id !== null) {
     $stream_width = null; // Ширина ручья, мм
     $streams_number = null; // Количество ручьёв
     $raport = null; // Рапорт
+    $lamination_roller_width = null; // Ширина ламинирующего вала
     $ink_number = null; // Красочность
         
     $sql = "select rc.date, rc.name, rc.quantity, rc.unit, "
@@ -79,7 +80,7 @@ if($id !== null) {
             . "lamination2_f.name lamination2_film, lamination2_fv.thickness lamination2_thickness, lamination2_fv.weight lamination2_density, "
             . "rc.lamination2_price, rc.lamination2_currency, rc.lamination2_individual_film_name, rc.lamination2_individual_thickness, rc.lamination2_individual_density, "
             . "rc.lamination2_customers_material, rc.lamination2_ski, rc.lamination2_width_ski, "
-            . "m.name machine, rc.machine_id, rc.stream_width, rc.streams_number, rc.raport, rc.ink_number, "
+            . "m.name machine, rc.machine_id, rc.stream_width, rc.streams_number, rc.raport, rc.lamination_roller_width, rc.ink_number, "
             . "rc.ink_1, rc.ink_2, rc.ink_3, rc.ink_4, rc.ink_5, rc.ink_6, rc.ink_7, rc.ink_8, "
             . "rc.color_1, rc.color_2, rc.color_3, rc.color_4, rc.color_5, rc.color_6, rc.color_7, rc.color_8, "
             . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
@@ -142,6 +143,7 @@ if($id !== null) {
         $stream_width = $row['stream_width']; // Ширина ручья, мм
         $streams_number = $row['streams_number']; // Количество ручьёв
         $raport = $row['raport']; // Рапорт
+        $lamination_roller_width = $row['lamination_roller_width']; // Ширина ламинирующего вала
         $ink_number = $row['ink_number']; // Красочность
         
         $ink_1 = $row['ink_1']; $ink_2 = $row['ink_2']; $ink_3 = $row['ink_3']; $ink_4 = $row['ink_4']; $ink_5 = $row['ink_5']; $ink_6 = $row['ink_6']; $ink_7 = $row['ink_7']; $ink_8 = $row['ink_8'];
@@ -268,6 +270,7 @@ if($id !== null) {
                 $stream_width, // Ширина ручья, мм
                 $streams_number, // Количество ручьёв
                 $raport, // Рапорт
+                $lamination_roller_width, // Ширина ламинирующего вала
                 $ink_number, // Красочность
                 
                 $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
@@ -521,7 +524,24 @@ if($id !== null) {
             }
         }
         
+        //***********************************
+        // Расход клея
+        //***********************************
         
+        if($calculation->laminations_number > 0) {
+            // Стоимость клея в смеси за 1 кг
+            array_push($file_data, array($calculation->glue_kg_price->name, $calculation->glue_kg_price->display, $calculation->glue_kg_price->formula, $calculation->glue_kg_price->comment));
+            
+            // Стоимость растворителя в смеси за 1 кг
+            array_push($file_data, array($calculation->glue_solvent_kg_price->name, $calculation->glue_solvent_kg_price->display, $calculation->glue_solvent_kg_price->formula, $calculation->glue_solvent_kg_price->comment));
+            
+            // Площадь заклейки (лам 1), м2
+            array_push($file_data, array($calculation->glue_area1->name, $calculation->glue_area1->display, $calculation->glue_area1->formula, $calculation->glue_area1->comment));
+        }
+        
+        if($calculation->laminations_number > 1) {
+            array_push($file_data, array($calculation->glue_area2->name, $calculation->glue_area2->display, $calculation->glue_area2->formula, $calculation->glue_area2->comment));
+        }
         
         //***************************************************
         // Сохранение в файл
