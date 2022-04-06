@@ -134,6 +134,18 @@ class Calculation {
     // Валюты
     const USD = "usd";
     const EURO = "euro";
+    
+    // Краски
+    const CMYK = "cmyk";
+    const PANTON = "panton";
+    const WHITE = "white";
+    const LACQUER = "lacquer";
+    
+    // CMYK
+    const CYAN = "cyan";
+    const MAGENDA = "magenta";
+    const YELLOW = "yellow";
+    const KONTUR = "kontur";
 
     function GetWidth($ski, $streams_number, $stream_width, $width_ski) {
         $result = 0;
@@ -207,6 +219,40 @@ class Calculation {
                 return 1;
         }
     }
+    
+    function GetInkPrice($ink, $cmyk, $c_price, $m_price, $y_price, $k_price, $panton_price, $white_price, $lacquer_price) {
+        switch ($ink) {
+            case Calculation::CMYK:
+                switch ($cmyk) {
+                    case Calculation::CYAN:
+                        return $c_price;
+                        
+                    case Calculation::MAGENDA:
+                        return $m_price;
+                        
+                    case Calculation::YELLOW:
+                        return $y_price;
+                        
+                    case Calculation::KONTUR:
+                        return $k_price;
+                        
+                    default :
+                        return null;
+                }
+                
+            case Calculation::PANTON:
+                return $panton_price;
+                
+            case Calculation::WHITE:
+                return $white_price;
+                
+            case Calculation::LACQUER:
+                return $lacquer_price;
+                
+            default :
+                return null;
+        }
+    }
 
     public $laminations_number = 0;
     public CalculationItem $width;
@@ -251,6 +297,7 @@ class Calculation {
     public CalculationItem $lamination1_work_price;
     public CalculationItem $lamination2_work_price;
     public CalculationItem $print_area;
+    public CalculationItem $inks;
 
     public function __construct(TuningData $tuning_data, 
             TuningData $laminator_tuning_data,
@@ -302,7 +349,13 @@ class Calculation {
             $stream_width, // Ширина ручья, мм
             $streams_number, // Количество ручьёв
             $raport, // Рапорт
-            $ink_number // Красочность
+            $ink_number, // Красочность
+            
+            $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
+            $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
+            $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, 
+            $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, 
+            $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8
             ) {
         
     
@@ -497,6 +550,14 @@ class Calculation {
         if(!empty($machine_id)) {
             // Площадь запечатки
             $this->print_area = new CalculationItem("Площадь запечатки, м2", $this->mpogdirty->value * ($stream_width * $streams_number + 10) / 1000, $this->mpogdirty->display." * ($stream_width * $streams_number + 10) / 1000", "м. пог. грязные * (ширина ручья * кол-во ручьёв + 10 мм) / 1000");
+            
+            for($i=1; $i<=$ink_number; $i++) {
+                // Стоимость краски в смеси за 1 кг
+                $ink = "ink_$i";
+                $cmyk = "cmyk_$i";
+                $price = $this->GetInkPrice($$ink, $$cmyk, $c_price, $m_price, $y_price, $k_price, $panton_price, $white_price, $lacquer_price); exit($price);
+                //$ink = new CalculationItem("Стоимость краски в смеси за 1 кг (краска 1), руб")
+            }
         }
     }
 }
