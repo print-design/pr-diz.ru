@@ -62,6 +62,7 @@ if($id !== null) {
     $lamination2_ski = null; // Ламинация 2, лыжи
     $lamination2_width_ski = null;  // Ламинация 2, ширина пленки, мм
         
+    $machine = null;
     $machine_id = null;
     $stream_width = null; // Ширина ручья, мм
     $streams_number = null; // Количество ручьёв
@@ -78,13 +79,14 @@ if($id !== null) {
             . "lamination2_f.name lamination2_film, lamination2_fv.thickness lamination2_thickness, lamination2_fv.weight lamination2_density, "
             . "rc.lamination2_price, rc.lamination2_currency, rc.lamination2_individual_film_name, rc.lamination2_individual_thickness, rc.lamination2_individual_density, "
             . "rc.lamination2_customers_material, rc.lamination2_ski, rc.lamination2_width_ski, "
-            . "rc.machine_id, rc.stream_width, rc.streams_number, rc.raport, rc.ink_number, "
+            . "m.name machine, rc.machine_id, rc.stream_width, rc.streams_number, rc.raport, rc.ink_number, "
             . "rc.ink_1, rc.ink_2, rc.ink_3, rc.ink_4, rc.ink_5, rc.ink_6, rc.ink_7, rc.ink_8, "
             . "rc.color_1, rc.color_2, rc.color_3, rc.color_4, rc.color_5, rc.color_6, rc.color_7, rc.color_8, "
             . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
             . "rc.percent_1, rc.percent_2, rc.percent_3, rc.percent_4, rc.percent_5, rc.percent_6, rc.percent_7, rc.percent_8, "
             . "rc.cliche_1, rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8 "
             . "from request_calc rc "
+            . "left join machine m on rc.machine_id = m.id "
             . "left join film_variation fv on rc.film_variation_id = fv.id "
             . "left join film f on fv.film_id = f.id "
             . "left join film_variation lamination1_fv on rc.lamination1_film_variation_id = lamination1_fv.id "
@@ -135,6 +137,7 @@ if($id !== null) {
         $lamination2_ski = $row['lamination2_ski']; // Ламинация 2, лыжи
         $lamination2_width_ski = $row['lamination2_width_ski'];  // Ламинация 2, ширина пленки, мм
         
+        $machine = $row['machine'];
         $machine_id = $row['machine_id'];
         $stream_width = $row['stream_width']; // Ширина ручья, мм
         $streams_number = $row['streams_number']; // Количество ручьёв
@@ -265,7 +268,13 @@ if($id !== null) {
                 $stream_width, // Ширина ручья, мм
                 $streams_number, // Количество ручьёв
                 $raport, // Рапорт
-                $ink_number // Красочность
+                $ink_number, // Красочность
+                
+                $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
+                $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
+                $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, 
+                $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, 
+                $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8
                 );
         
         // Данные CSV-файла
@@ -273,6 +282,10 @@ if($id !== null) {
         
         array_push($file_data, array("Курс доллара, руб", $usd, "", ""));
         array_push($file_data, array("Курс евро, руб", $euro, "", ""));
+        
+        if(!empty($machine_id)) {
+            array_push($file_data, array("Машина", $machine, "", ""));
+        }
         
         array_push($file_data, array("Масса тиража, кг", $quantity, "", ""));
         array_push($file_data, array("Марка (осн)", $film, "", ""));
@@ -330,11 +343,6 @@ if($id !== null) {
         
         if($calculation->laminations_number > 1) {
             array_push($file_data, array($calculation->lamination2_waste_length->name, $calculation->lamination2_waste_length->display, $calculation->lamination2_waste_length->formula, $calculation->lamination2_waste_length->comment));
-        }
-        
-        // Красочность
-        if(!empty($ink_number)) {
-            array_push($file_data, array("Красочность", $ink_number, "", ""));
         }
         
         // М. пог. грязные, м
@@ -489,7 +497,25 @@ if($id !== null) {
         if(!empty($machine_id)) {
             // Площадь запечатки
             array_push($file_data, array($calculation->print_area->name, $calculation->print_area->display, $calculation->print_area->formula, $calculation->print_area->comment));
+            
+            // Красочность
+            if(!empty($ink_number)) {
+                array_push($file_data, array("Красочность", $ink_number, "", ""));
+            }
+            
+            // Стоимость растворителя в смеси за 1 кг
+            array_push($file_data, array($calculation->ink_solvent_kg_price->name, $calculation->ink_solvent_kg_price->display, $calculation->ink_solvent_kg_price->formula, $calculation->ink_solvent_kg_price->comment));
+            
+            for($i=1; $i<=$ink_number; $i++) {
+                // Стоимость краски в смеси за 1 кг
+                array_push($file_data, array($calculation->ink_kg_prices[$i]->name, $calculation->ink_kg_prices[$i]->display, $calculation->ink_kg_prices[$i]->formula, $calculation->ink_kg_prices[$i]->comment));
+                
+                // Расход смеси, кг
+                array_push($file_data, array($calculation->ink_expenses[$i]->name, $calculation->ink_expenses[$i]->display, $calculation->ink_expenses[$i]->formula, $calculation->ink_expenses[$i]->comment));
+            }
         }
+        
+        
         
         //***************************************************
         // Сохранение в файл

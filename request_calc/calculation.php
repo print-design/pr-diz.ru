@@ -125,6 +125,16 @@ class GlueData {
     }
 }
 
+class PriceData {
+    public $value;
+    public $currency;
+    
+    public function __construct($value, $currency) {
+        $this->value = $value;
+        $this->currency = $currency;
+    }
+}
+
 class Calculation {
     // Лыжи
     const NO_SKI = 0;
@@ -146,20 +156,23 @@ class Calculation {
     const MAGENDA = "magenta";
     const YELLOW = "yellow";
     const KONTUR = "kontur";
+    
+    // Машины
+    const COMIFLEX = 1;
 
     function GetWidth($ski, $streams_number, $stream_width, $width_ski) {
         $result = 0;
     
         switch($ski) {
-            case Calculation::NO_SKI:
+            case self::NO_SKI:
                 $result = $streams_number * $stream_width;
                 break;
         
-            case Calculation::STANDARD_SKI:
+            case self::STANDARD_SKI:
                 $result = $streams_number * $stream_width + 20;
                 break;
         
-            case Calculation::NONSTANDARD_SKI:
+            case self::NONSTANDARD_SKI:
                 $result = $width_ski;
                 break;
         }
@@ -171,15 +184,15 @@ class Calculation {
         $result = "";
     
         switch($ski) {
-            case Calculation::NO_SKI:
+            case self::NO_SKI:
                 $result = "$streams_number * $stream_width";
                 break;
         
-            case Calculation::STANDARD_SKI:
+            case self::STANDARD_SKI:
                 $result = "$streams_number * $stream_width + 20";
                 break;
         
-            case Calculation::NONSTANDARD_SKI:
+            case self::NONSTANDARD_SKI:
                 $result = "";
                 break;
         }
@@ -191,15 +204,15 @@ class Calculation {
         $result = "";
     
         switch($ski) {
-            case Calculation::NO_SKI:
+            case self::NO_SKI:
                 $result = "количество ручьёв * ширина ручья";
                 break;
         
-            case Calculation::STANDARD_SKI:
+            case self::STANDARD_SKI:
                 $result = "количество ручьёв * ширина ручья + 20 мм";
                 break;
         
-            case Calculation::NONSTANDARD_SKI:
+            case self::NONSTANDARD_SKI:
                 $result = "вводится вручную";
                 break;
         }
@@ -209,10 +222,10 @@ class Calculation {
 
     function GetCurrencyRate($currency, $usd, $euro) {
         switch($currency) {
-            case Calculation::USD:
+            case self::USD:
                 return $usd;
             
-            case Calculation::EURO:
+            case self::EURO:
                 return $euro;
             
             default :
@@ -220,34 +233,64 @@ class Calculation {
         }
     }
     
-    function GetInkPrice($ink, $cmyk, $c_price, $m_price, $y_price, $k_price, $panton_price, $white_price, $lacquer_price) {
+    function GetInkPrice($ink, $cmyk, $c, $c_currency, $m, $m_currency, $y, $y_currency, $k, $k_currency, $panton, $panton_currency, $white, $white_currency, $lacquer, $lacquer_currency) {
         switch ($ink) {
-            case Calculation::CMYK:
+            case self::CMYK:
                 switch ($cmyk) {
-                    case Calculation::CYAN:
-                        return $c_price;
+                    case self::CYAN:
+                        return new PriceData($c, $c_currency);
                         
-                    case Calculation::MAGENDA:
-                        return $m_price;
+                    case self::MAGENDA:
+                        return new PriceData($m, $m_currency);
                         
-                    case Calculation::YELLOW:
-                        return $y_price;
+                    case self::YELLOW:
+                        return new PriceData($y, $y_currency);
                         
-                    case Calculation::KONTUR:
-                        return $k_price;
+                    case self::KONTUR:
+                        return new PriceData($k, $k_currency);
                         
                     default :
                         return null;
                 }
                 
-            case Calculation::PANTON:
-                return $panton_price;
+            case self::PANTON:
+                return new PriceData($panton, $panton_currency);
                 
-            case Calculation::WHITE:
-                return $white_price;
+            case self::WHITE:
+                return new PriceData($white, $white_currency);
                 
-            case Calculation::LACQUER:
-                return $lacquer_price;
+            case self::LACQUER:
+                return new PriceData($lacquer, $lacquer_currency);
+                
+            default :
+                return null;
+        }
+    }
+    
+    function GetInkExpense($ink, $cmyk, $c_expense, $m_expense, $y_expense, $k_expense, $panton_expense, $white_expense, $lacquer_expense) {
+        switch ($ink) {
+            case self::CMYK:
+                switch ($cmyk) {
+                    case self::CYAN:
+                        return $c_expense;
+                        
+                    case self::MAGENDA:
+                        return $m_expense;
+                        
+                    case self::YELLOW:
+                        return $y_expense;
+                        
+                    case self::KONTUR:
+                        return $k_expense;
+                }
+            case self::PANTON:
+                return $panton_expense;
+                
+            case self::WHITE:
+                return $white_expense;
+                
+            case self::LACQUER:
+                return $lacquer_expense;
                 
             default :
                 return null;
@@ -255,49 +298,25 @@ class Calculation {
     }
 
     public $laminations_number = 0;
-    public CalculationItem $width;
-    public CalculationItem $lamination1_width;
-    public CalculationItem $lamination2_width;
+    public CalculationItem $width, $lamination1_width, $lamination2_width;
     public CalculationItem $m2pure;
     public CalculationItem $mpogpure;
-    public CalculationItem $waste_length;
-    public CalculationItem $lamination1_waste_length;
-    public CalculationItem $lamination2_waste_length;
-    public CalculationItem $mpogdirty;
-    public CalculationItem $lamination1_mpogdirty;
-    public CalculationItem $lamination2_mpogdirty;
-    public CalculationItem $m2dirty;
-    public CalculationItem $lamination1_m2dirty;
-    public CalculationItem $lamination2_m2dirty;
-    public CalculationItem $mpure;
-    public CalculationItem $lamination1_mpure;
-    public CalculationItem $lamination2_mpure;
-    public CalculationItem $lengthpure;
-    public CalculationItem $lamination1_lengthpure;
-    public CalculationItem $lamination2_lengthpure;
-    public CalculationItem $mdirty;
-    public CalculationItem $lamination1_mdirty;
-    public CalculationItem $lamination2_mdirty;
-    public CalculationItem $lengthdirty;
-    public CalculationItem $lamination1_lengthdirty;
-    public CalculationItem $lamination2_lengthdirty;
-    public CalculationItem $film_price;
-    public CalculationItem $lamination1_film_price;
-    public CalculationItem $lamination2_film_price;
-    public CalculationItem $tuning_time;
-    public CalculationItem $lamination1_tuning_time;
-    public CalculationItem $lamination2_tuning_time;
-    public CalculationItem $print_time;
-    public CalculationItem $lamination1_time;
-    public CalculationItem $lamination2_time;
-    public CalculationItem $work_time;
-    public CalculationItem $lamination1_work_time;
-    public CalculationItem $lamination2_work_time;
-    public CalculationItem $work_price;
-    public CalculationItem $lamination1_work_price;
-    public CalculationItem $lamination2_work_price;
+    public CalculationItem $waste_length, $lamination1_waste_length, $lamination2_waste_length;
+    public CalculationItem $mpogdirty, $lamination1_mpogdirty, $lamination2_mpogdirty;
+    public CalculationItem $m2dirty, $lamination1_m2dirty, $lamination2_m2dirty;
+    public CalculationItem $mpure, $lamination1_mpure, $lamination2_mpure;
+    public CalculationItem $lengthpure, $lamination1_lengthpure, $lamination2_lengthpure;
+    public CalculationItem $mdirty, $lamination1_mdirty, $lamination2_mdirty;
+    public CalculationItem $lengthdirty, $lamination1_lengthdirty, $lamination2_lengthdirty;
+    public CalculationItem $film_price, $lamination1_film_price, $lamination2_film_price;
+    public CalculationItem $tuning_time, $lamination1_tuning_time, $lamination2_tuning_time;
+    public CalculationItem $print_time, $lamination1_time, $lamination2_time;
+    public CalculationItem $work_time, $lamination1_work_time, $lamination2_work_time;
+    public CalculationItem $work_price, $lamination1_work_price, $lamination2_work_price;
     public CalculationItem $print_area;
-    public CalculationItem $inks;
+    public CalculationItem $ink_solvent_kg_price;
+    public $ink_kg_prices;
+    public $ink_expenses;
 
     public function __construct(TuningData $tuning_data, 
             TuningData $laminator_tuning_data,
@@ -357,8 +376,6 @@ class Calculation {
             $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, 
             $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8
             ) {
-        
-    
         if(!empty($lamination2_film) && !empty($lamination2_thickness) && !empty($lamination2_density)) {
             $this->laminations_number = 2;
         }
@@ -551,12 +568,30 @@ class Calculation {
             // Площадь запечатки
             $this->print_area = new CalculationItem("Площадь запечатки, м2", $this->mpogdirty->value * ($stream_width * $streams_number + 10) / 1000, $this->mpogdirty->display." * ($stream_width * $streams_number + 10) / 1000", "м. пог. грязные * (ширина ручья * кол-во ручьёв + 10 мм) / 1000");
             
+            // Стоимость растворителя в смеси за 1 кг
+            if($machine_id == self::COMIFLEX) {
+                $this->ink_solvent_kg_price = new CalculationItem("Стоимость этоксипропанола в смеси за 1 кг, руб", $ink_data->solvent_etoxipropanol * $this->GetCurrencyRate($ink_data->solvent_etoxipropanol_currency, $usd, $euro) * ($ink_data->solvent_part / (1 + $ink_data->solvent_part)), $ink_data->solvent_etoxipropanol." * ".$this->GetCurrencyRate($ink_data->solvent_etoxipropanol_currency, $usd, $euro)." * (".$ink_data->solvent_part." / (1 + ".$ink_data->solvent_part."))", "Стоимость 1 кг чистого этоксипропанола * курс валюты * (расход этоксипропанола на 1 кг краски / (1 + расход этоксипропанола на 1 кг краски))");
+            }
+            else {
+                $this->ink_solvent_kg_price = new CalculationItem("Стоимость флексоля 82 в смеси за 1 кг, руб", $ink_data->solvent_flexol82 * $this->GetCurrencyRate($ink_data->solvent_flexol82_currency, $usd, $euro) * ($ink_data->solvent_part / (1 + $ink_data->solvent_part)), $ink_data->solvent_flexol82." * ".$this->GetCurrencyRate($ink_data->solvent_flexol82_currency, $usd, $euro)." * (".$ink_data->solvent_part." / (1 + ".$ink_data->solvent_part."))", "Стоимость 1 кг чистого флексоля 82 * курс валюты * (расход флексоля 82 на 1 кг краски / (1 + расход флексоля 82 на 1 кг краски))");
+            }
+            
+            $this->ink_kg_prices = array();
+            $this->ink_solvent_kg_prices = array();
+            
             for($i=1; $i<=$ink_number; $i++) {
-                // Стоимость краски в смеси за 1 кг
                 $ink = "ink_$i";
                 $cmyk = "cmyk_$i";
-                $price = $this->GetInkPrice($$ink, $$cmyk, $c_price, $m_price, $y_price, $k_price, $panton_price, $white_price, $lacquer_price); exit($price);
-                //$ink = new CalculationItem("Стоимость краски в смеси за 1 кг (краска 1), руб")
+                $percent = "percent_$i";
+                
+                // Стоимость краски в смеси за 1 кг
+                $price = $this->GetInkPrice($$ink, $$cmyk, $ink_data->c, $ink_data->c_currency, $ink_data->m, $ink_data->m_currency, $ink_data->y, $ink_data->y_currency, $ink_data->k, $ink_data->k_currency, $ink_data->panton, $ink_data->panton_currency, $ink_data->white, $ink_data->white_currency, $ink_data->lacquer, $ink_data->lacquer_currency);
+                $ink_kg_price = new CalculationItem("Стоимость краски в смеси за 1 кг (краска $i), руб", $price->value * $this->GetCurrencyRate($price->currency, $usd, $euro) * (1 - ($ink_data->solvent_part / (1 + $ink_data->solvent_part))), $price->value." * ".$this->GetCurrencyRate($price->currency, $usd, $euro)." * (1 - (".$ink_data->solvent_part." / (1 + ".$ink_data->solvent_part.")))", "Стоимость 1 кг чистой краски * курс валюты * (1 - (расход растворителя на 1 кг краски / (1 + расход растворителя на 1 кг краски)))");
+                $this->ink_kg_prices[$i] = $ink_kg_price;
+                
+                // Расход смеси
+                $ink_expense = new CalculationItem("Расход смеси (краска $i), кг", $this->print_area->value * $this->GetInkExpense($$ink, $$cmyk, $ink_data->c_expense, $ink_data->m_expense, $ink_data->y_expense, $ink_data->k_expense, $ink_data->panton_expense, $ink_data->white_expense, $ink_data->lacquer_expense) / 1000  * $$percent / 100, $this->print_area->display." * ".$this->GetInkExpense($$ink, $$cmyk, $ink_data->c_expense, $ink_data->m_expense, $ink_data->y_expense, $ink_data->k_expense, $ink_data->panton_expense, $ink_data->white_expense, $ink_data->lacquer_expense)." / 1000  * ".$$percent." / 100", "Площадь запечатки * расход смеси за 1 м2 / 1000 * процент краски / 100");
+                $this->ink_expenses[$i] = $ink_expense;
             }
         }
     }
