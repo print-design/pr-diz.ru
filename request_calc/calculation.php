@@ -407,7 +407,7 @@ class Calculation {
         $density_display = empty($density) ? "0" : number_format($density, 2, ",", " ");
         $lamination1_density_display = empty($lamination1_density) ? "0" : number_format($lamination1_density, 2, ",", " ");
         $lamination2_density_display = empty($lamination2_density) ? "0" : number_format($lamination2_density, 2, ",", " ");
-        $this->m2pure = new CalculationItem("М2 чистые, м2", $quantity * 1000 / ($density + $lamination1_density ?? 0 + $lamination2_density ?? 0), "$quantity * 1000 / ($density_display + $lamination1_density_display + $lamination2_density_display)", "масса тиража * 1000 / (уд. вес осн + уд. вес лам 1 + уд. вес лам 2)");
+        $this->m2pure = new CalculationItem("М2 чистые, м2", $quantity * 1000 / ($density + (empty($lamination1_density) ? 0 : $lamination1_density) + (empty($lamination2_density) ? 0 : $lamination2_density)), $quantity." * 1000 / (".$density." + ".(empty($lamination1_density) ? 0 : $lamination1_density)." + ".(empty($lamination2_density) ? 0 : $lamination2_density).")", "масса тиража * 1000 / (уд. вес осн + уд. вес лам 1 + уд. вес лам 2)");
         
         // Метры погонные чистые
         $this->mpogpure = new CalculationItem("М пог. чистые, м", $this->m2pure->value / ($streams_number * $stream_width), $this->m2pure->display." / ($streams_number * $stream_width)", "м2 чистые / (количество ручьёв * ширина ручья)");
@@ -628,11 +628,23 @@ class Calculation {
             
             // Площадь заклейки (лам 1), м2
             $this->glue_area1 = new CalculationItem("Площадь заклейки (лам 1), м2", $this->lamination1_mpogdirty->value * $lamination_roller_width / 1000, $this->lamination1_mpogdirty->display." * ".$lamination_roller_width." / 1000", "М. пог. грязные лам 1 * ширина ламинирующего вала / 1000");
+            
+            // Расход клея (лам 1), кг
+            $this->glue_expense1 = new CalculationItem("Расход клея (лам 1), кг", $this->glue_area1->value * $glue_data->glue_expense / 1000, $this->glue_area1->display." * ".$glue_data->glue_expense." / 1000", "Площадь заклейки лам 1 * расход смеси клея в 1 м2 / 1000");
+            
+            // Стоимость клея (лам 1), руб
+            $this->glue_price1 = new CalculationItem("Стоимость клея (лам 1), руб", $this->glue_expense1->value * $this->glue_kg_price->value, $this->glue_expense1->display." * ".$this->glue_kg_price->display, "Расход клея лам 1 * стоимость клея в смеси за 1 кг");
         }
         
         if($this->laminations_number > 1) {
             // Площадь заклейки (лам 2), м2
             $this->glue_area2 = new CalculationItem("Площадь заклейки (лам 2), м2", $this->lamination2_mpogdirty->value * $lamination_roller_width / 1000, $this->lamination2_mpogdirty->display." * ".$lamination_roller_width." / 1000", "М. пог. грязные лам 2 * ширина ламинирующего вала / 1000");
+            
+            // Расход клея (лам 2), кг
+            $this->glue_expense2 = new CalculationItem("Расход клея (лам 2), кг", $this->glue_area2->value * $glue_data->glue_expense / 1000, $this->glue_area2->display." * ".$glue_data->glue_expense." / 1000", "Площадь заклейки лам 2 * расход смеси клея в 1 м2 / 1000");
+            
+            // Стоимость клея (лам 2)
+            $this->glue_price2 = new CalculationItem("Стоимость клея (лам 2), руб", $this->glue_expense2->value * $this->glue_kg_price->value, $this->glue_expense2->display." * ".$this->glue_kg_price->display, "Расход клея лам 2 * стоимость клея в смеси за 1 кг");
         }
     }
 }

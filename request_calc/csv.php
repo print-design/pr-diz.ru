@@ -358,7 +358,7 @@ if($id !== null) {
                 $cmyk = "cmyk_$i";
                 $percent = "percent_$i";
                 $cliche = "cliche_$i";
-                array_push($file_data, array("Краска $i: ".GetInkName($$ink).(empty($$color) ? "" : " ".$$color).(empty($$cmyk) ? "" : " ".$$cmyk)." ".$$percent."% ".GetClicheName($$cliche), "", "", ""));
+                array_push($file_data, array("Краска $i:", GetInkName($$ink).(empty($$color) ? "" : " ".$$color).(empty($$cmyk) ? "" : " ".$$cmyk)." ".$$percent."% ".GetClicheName($$cliche), "", ""));
             }
         }
         
@@ -583,10 +583,23 @@ if($id !== null) {
             
             // Площадь заклейки (лам 1), м2
             array_push($file_data, array($calculation->glue_area1->name, $calculation->glue_area1->display, $calculation->glue_area1->formula, $calculation->glue_area1->comment));
+            
+            // Расход клея (лам 1), кг
+            array_push($file_data, array($calculation->glue_expense1->name, $calculation->glue_expense1->display, $calculation->glue_expense1->formula, $calculation->glue_expense1->comment));
+            
+            // Стоимость клея (лам 1), руб
+            array_push($file_data, array($calculation->glue_price1->name, $calculation->glue_price1->display, $calculation->glue_price1->formula, $calculation->glue_price1->comment));
         }
         
         if($calculation->laminations_number > 1) {
+            // Площадь заклейки (лам 2), м2
             array_push($file_data, array($calculation->glue_area2->name, $calculation->glue_area2->display, $calculation->glue_area2->formula, $calculation->glue_area2->comment));
+            
+            // Расход клея (лам 2), кг
+            array_push($file_data, array($calculation->glue_expense2->name, $calculation->glue_expense2->display, $calculation->glue_expense2->formula, $calculation->glue_expense2->comment));
+            
+            // Стоимость клея (лам 2)
+            array_push($file_data, array($calculation->glue_price2->name, $calculation->glue_price2->display, $calculation->glue_price2->formula, $calculation->glue_price2->comment));
         }
         
         //***************************************************
