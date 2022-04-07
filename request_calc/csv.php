@@ -381,7 +381,7 @@ if($id !== null) {
         // М пог. чистые, м
         array_push($file_data, array($calculation->mpogpure->name, $calculation->mpogpure->display, $calculation->mpogpure->formula, $calculation->mpogpure->comment));
         
-        // Метраж отходов, м
+        // Метраж отходов СтартСтоп, м
         if(!empty($machine_id)) {
             array_push($file_data, array($calculation->waste_length->name, $calculation->waste_length->display, $calculation->waste_length->formula, $calculation->waste_length->comment));
         }
@@ -607,6 +607,12 @@ if($id !== null) {
             // Стоимость раствора (лам 2), руб
             array_push($file_data, array($calculation->glue_solvent_price2->name, $calculation->glue_solvent_price2->display, $calculation->glue_solvent_price2->formula, $calculation->glue_solvent_price2->comment));
         }
+        
+        //*********************************
+        // Материалы
+        //*********************************
+        array_push($file_data, array("", "", "", ""));
+        array_push($file_data, array("Материалы", "", "", ""));
         
         //***************************************************
         // Сохранение в файл

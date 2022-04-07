@@ -412,17 +412,17 @@ class Calculation {
         // Метры погонные чистые
         $this->mpogpure = new CalculationItem("М пог. чистые, м", $this->m2pure->value / ($streams_number * $stream_width / 1000), "|= ".$this->m2pure->display." / ($streams_number * $stream_width / 1000)", "м2 чистые / (количество ручьёв * ширина ручья / 1000)");
         
-        // Метраж отходов, исходя из склее и инерции
+        // Метраж отходов СтартСтоп
         if(!empty($machine_id)) {
-            $this->waste_length = new CalculationItem("Метраж отходов (осн), м", $tuning_data->waste_percent * $this->mpogpure->value / 100, "|= ".$tuning_data->waste_percent." * ".$this->mpogpure->display." / 100", "процент отходов печати * м. пог. чистые / 100");
+            $this->waste_length = new CalculationItem("Метраж отходов СтартСтоп (осн), м", $tuning_data->waste_percent * $this->mpogpure->value / 100, "|= ".$tuning_data->waste_percent." * ".$this->mpogpure->display." / 100", "процент отходов печати * м. пог. чистые / 100");
         }
         
         if($this->laminations_number > 0) {
-            $this->lamination1_waste_length = new CalculationItem("Метраж отходов (лам 1), м", $laminator_tuning_data->waste_percent * $this->mpogpure->value / 100, "|= ".$laminator_tuning_data->waste_percent." * ".$this->mpogpure->display." / 100", "процент отходов ламинации * м. пог. чистые / 100");
+            $this->lamination1_waste_length = new CalculationItem("Метраж отходов СтартСтоп (лам 1), м", $laminator_tuning_data->waste_percent * $this->mpogpure->value / 100, "|= ".$laminator_tuning_data->waste_percent." * ".$this->mpogpure->display." / 100", "процент отходов ламинации * м. пог. чистые / 100");
         }
         
         if($this->laminations_number > 1) {
-            $this->lamination2_waste_length = new CalculationItem("Метраж отходов (лам 2), м", $laminator_tuning_data->waste_percent * $this->mpogpure->value / 100, "|= ".$laminator_tuning_data->waste_percent." * ".$this->mpogpure->display." / 100", "процент отходов ламинации * м. пог. чистые / 100");
+            $this->lamination2_waste_length = new CalculationItem("Метраж отходов СтартСтоп (лам 2), м", $laminator_tuning_data->waste_percent * $this->mpogpure->value / 100, "|= ".$laminator_tuning_data->waste_percent." * ".$this->mpogpure->display." / 100", "процент отходов ламинации * м. пог. чистые / 100");
         }
         
         // Метры погонные грязные
