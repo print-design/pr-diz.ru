@@ -577,6 +577,10 @@ if($id !== null) {
                 array_push($file_data, array("Красочность", $ink_number, "", ""));
             }
             
+            // Масса краски в смеси, кг
+            array_push($file_data, array($calculation->ink_kg_weight->name, $calculation->ink_kg_weight->display, $calculation->ink_kg_weight->formula, $calculation->ink_kg_weight->comment));
+                
+            
             // Стоимость растворителя в смеси за 1 кг
             array_push($file_data, array($calculation->ink_solvent_kg_price->name, $calculation->ink_solvent_kg_price->display, $calculation->ink_solvent_kg_price->formula, $calculation->ink_solvent_kg_price->comment));
             

@@ -337,10 +337,12 @@ class Calculation {
     public CalculationItem $work_price, $lamination1_work_price, $lamination2_work_price;
     public CalculationItem $print_area;
     public CalculationItem $ink_solvent_kg_price;
+    public CalculationItem $ink_kg_weight;
     public $ink_kg_prices;
     public $ink_expenses;
     public $ink_prices;
     public $ink_solvent_prices;
+    public CalculationItem $glue_kg_weight;
     public CalculationItem $glue_kg_price;
     public CalculationItem $glue_solvent_kg_price;
     public CalculationItem $glue_area1;
@@ -601,6 +603,9 @@ class Calculation {
             // Площадь запечатки
             $this->print_area = new CalculationItem("Площадь запечатки, м2", $this->mpogdirty->value * ($stream_width * $streams_number + 10) / 1000, "|= ".$this->mpogdirty->display." * ($stream_width * $streams_number + 10) / 1000", "м. пог. грязные * (ширина ручья * кол-во ручьёв + 10 мм) / 1000");
             
+            // Масса краски в смеси, кг
+            $this->ink_kg_weight = new CalculationItem("Масса краски в смеси, кг", 1 + $ink_data->solvent_part, "|= 1 + ".$this->Display($ink_data->solvent_part), "1 + расход растворителя на 1 кг краски");
+            
             // Стоимость растворителя в смеси за 1 кг
             if($machine_id == self::COMIFLEX) {
                 $this->ink_solvent_kg_price = new CalculationItem("Стоимость этоксипропанола в смеси за 1 кг, руб", $ink_data->solvent_etoxipropanol * $this->GetCurrencyRate($ink_data->solvent_etoxipropanol_currency, $usd, $euro) * ($ink_data->solvent_part / (1 + $ink_data->solvent_part)), "|= ".$this->Display($ink_data->solvent_etoxipropanol)." * ".$this->Display($this->GetCurrencyRate($ink_data->solvent_etoxipropanol_currency, $usd, $euro))." * (".$this->Display($ink_data->solvent_part)." / (1 + ".$this->Display($ink_data->solvent_part)."))", "стоимость 1 кг чистого этоксипропанола * курс валюты * (расход этоксипропанола на 1 кг краски / (1 + расход этоксипропанола на 1 кг краски))");
@@ -609,6 +614,7 @@ class Calculation {
                 $this->ink_solvent_kg_price = new CalculationItem("Стоимость флексоля 82 в смеси за 1 кг, руб", $ink_data->solvent_flexol82 * $this->GetCurrencyRate($ink_data->solvent_flexol82_currency, $usd, $euro) * ($ink_data->solvent_part / (1 + $ink_data->solvent_part)), "|= ".$this->Display($ink_data->solvent_flexol82)." * ".$this->Display($this->GetCurrencyRate($ink_data->solvent_flexol82_currency, $usd, $euro))." * (".$this->Display($ink_data->solvent_part)." / (1 + ".$this->Display($ink_data->solvent_part)."))", "стоимость 1 кг чистого флексоля 82 * курс валюты * (расход флексоля 82 на 1 кг краски / (1 + расход флексоля 82 на 1 кг краски))");
             }
             
+            $this->ink_kg_weights = array();
             $this->ink_kg_prices = array();
             $this->ink_expenses = array();
             $this->ink_prices = array();
