@@ -53,6 +53,19 @@ function GetClicheName($cliche) {
     }
 }
 
+function GetUnitName($unit) {
+    switch ($unit) {
+        case Calculation::KG:
+            return "кг";
+            
+        case Calculation::PIECES:
+            return "шт";
+            
+        default :
+            return "";
+    }
+}
+
 $id = filter_input(INPUT_GET, 'id');
 
 if($id !== null) {
@@ -325,7 +338,7 @@ if($id !== null) {
             array_push($file_data, array("Машина", $machine, "", ""));
         }
         
-        array_push($file_data, array("Масса тиража, кг", $quantity, "", ""));
+        array_push($file_data, array("Размер тиража", $quantity.' '. GetUnitName($unit), "", ""));
         array_push($file_data, array("Марка (осн)", $film, "", ""));
         array_push($file_data, array("Толщина (осн), мкм", $thickness, "", ""));
         $density_format = empty($density) ? "0" : number_format($density, 2, ",", " ");
@@ -365,6 +378,9 @@ if($id !== null) {
         }
         
         array_push($file_data, array("", "", "", ""));
+        
+        // Масса тиража
+        array_push($file_data, array($calculation->weight->name, $calculation->weight->display, $calculation->weight->formula, $calculation->weight->comment));
         
         // Ширина материала, мм
         array_push($file_data, array($calculation->width->name, $calculation->width->display, $calculation->width->formula, $calculation->width->comment));
