@@ -97,7 +97,7 @@ if($id !== null) {
     $streams_number = null; // Количество ручьёв
     $raport = null; // Рапорт
     $lamination_roller_width = null; // Ширина ламинирующего вала
-    $ink_number = null; // Красочность
+    $ink_number = 0; // Красочность
         
     $sql = "select rc.date, rc.name, rc.quantity, rc.unit, "
             . "f.name film, fv.thickness thickness, fv.weight density, "
