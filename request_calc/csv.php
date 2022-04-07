@@ -610,12 +610,6 @@ if($id !== null) {
             array_push($file_data, array($calculation->glue_solvent_price2->name, $calculation->glue_solvent_price2->display, $calculation->glue_solvent_price2->formula, $calculation->glue_solvent_price2->comment));
         }
         
-        //*********************************
-        // Материалы
-        //*********************************
-        array_push($file_data, array("", "", "", ""));
-        array_push($file_data, array("Материалы", "", "", ""));
-        
         //***************************************************
         // Сохранение в файл
         $file_name = DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y')." $name.csv";
