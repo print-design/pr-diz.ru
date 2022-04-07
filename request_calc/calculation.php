@@ -12,7 +12,7 @@ class CalculationItem {
         $this->formula = $formula;
         $this->comment = $comment;
         
-        if(is_float($value)) {
+        if(is_float($value) || is_double($value)) {
             $this->display = number_format($value, 2, ",", " ");
         }
         else {
@@ -306,6 +306,15 @@ class Calculation {
                 return null;
         }
     }
+    
+    function Display($value) {
+        if(is_float($value) || is_double($value)) {
+            return number_format($value, 2, ",", " ");
+        }
+        else {
+            return $value;
+        }
+    }
 
     public $laminations_number = 0;
     public CalculationItem $weight;
@@ -419,10 +428,7 @@ class Calculation {
         }
 
         // Площадь чистая
-        $density_display = empty($density) ? "0" : number_format($density, 2, ",", " ");
-        $lamination1_density_display = empty($lamination1_density) ? "0" : number_format($lamination1_density, 2, ",", " ");
-        $lamination2_density_display = empty($lamination2_density) ? "0" : number_format($lamination2_density, 2, ",", " ");
-        $this->m2pure = new CalculationItem("М2 чистые, м2", $this->weight->value * 1000 / ($density + (empty($lamination1_density) ? 0 : $lamination1_density) + (empty($lamination2_density) ? 0 : $lamination2_density)), "|= ".$this->weight->display." * 1000 / (".$density_display." + ".(empty($lamination1_density) ? 0 : $lamination1_density_display)." + ".(empty($lamination2_density) ? 0 : $lamination2_density_display).")", "масса тиража * 1000 / (уд. вес осн + уд. вес лам 1 + уд. вес лам 2)");
+        $this->m2pure = new CalculationItem("М2 чистые, м2", $this->weight->value * 1000 / ($density + (empty($lamination1_density) ? 0 : $lamination1_density) + (empty($lamination2_density) ? 0 : $lamination2_density)), "|= ".$this->weight->display." * 1000 / (".$this->Display($density)." + ".(empty($lamination1_density) ? 0 : $this->Display($lamination1_density))." + ".(empty($lamination2_density) ? 0 : $this->Display($lamination2_density)).")", "масса тиража * 1000 / (уд. вес осн + уд. вес лам 1 + уд. вес лам 2)");
         
         // Метры погонные чистые
         $this->mpogpure = new CalculationItem("М пог. чистые, м", $this->m2pure->value / ($streams_number * $stream_width / 1000), "|= ".$this->m2pure->display." / ($streams_number * $stream_width / 1000)", "м2 чистые / (количество ручьёв * ширина ручья / 1000)");
@@ -471,14 +477,14 @@ class Calculation {
         //****************************************
     
         // Масса плёнки чистая (без приладки), кг
-        $this->mpure = new CalculationItem("Масса плёнки чистая (осн), кг", $this->mpogpure->value * $this->width->value / 1000 * $density / 1000, "|= ".$this->mpogpure->display." * ".$this->width->display." / 1000 * ".$density_display." / 1000", "м. пог. чистые * ширина материала осн / 1000 * уд. вес осн / 1000");
+        $this->mpure = new CalculationItem("Масса плёнки чистая (осн), кг", $this->mpogpure->value * $this->width->value / 1000 * $density / 1000, "|= ".$this->mpogpure->display." * ".$this->width->display." / 1000 * ".$this->Display($density)." / 1000", "м. пог. чистые * ширина материала осн / 1000 * уд. вес осн / 1000");
     
         if($this->laminations_number > 0) {
-            $this->lamination1_mpure = new CalculationItem("Масса плёнки чистая (лам 1), кг", $this->mpogpure->value * $this->lamination1_width->value / 1000 * $lamination1_density / 1000, "|= ".$this->mpogpure->display." * ".$this->lamination1_width->display." / 1000 * ".$lamination1_density_display." / 1000", "м. пог. чистые * ширина материала лам 1 / 1000 * уд. вес лам 1 / 1000");
+            $this->lamination1_mpure = new CalculationItem("Масса плёнки чистая (лам 1), кг", $this->mpogpure->value * $this->lamination1_width->value / 1000 * $lamination1_density / 1000, "|= ".$this->mpogpure->display." * ".$this->lamination1_width->display." / 1000 * ".$this->Display($lamination1_density)." / 1000", "м. пог. чистые * ширина материала лам 1 / 1000 * уд. вес лам 1 / 1000");
         }
     
         if($this->laminations_number > 1) {
-            $this->lamination2_mpure = new CalculationItem("Масса плёнки чистая (лам 2), кг", $this->mpogpure->value * $this->lamination2_width->value / 1000 * $lamination2_density / 1000, "|= ".$this->mpogpure->display." * ".$this->lamination2_width->display." / 1000 * ".$lamination2_density_display." / 1000", "м. пог. чистые * ширина материала лам 2 / 1000 * уд. вес лам 2 / 1000");
+            $this->lamination2_mpure = new CalculationItem("Масса плёнки чистая (лам 2), кг", $this->mpogpure->value * $this->lamination2_width->value / 1000 * $lamination2_density / 1000, "|= ".$this->mpogpure->display." * ".$this->lamination2_width->display." / 1000 * ".$this->Display($lamination2_density)." / 1000", "м. пог. чистые * ширина материала лам 2 / 1000 * уд. вес лам 2 / 1000");
         }
     
         // Длина пленки чистая, м
@@ -493,14 +499,14 @@ class Calculation {
         }
     
         // Масса плёнки грязная (с приладкой), кг
-        $this->mdirty = new CalculationItem("Масса плёнки грязная (осн), м", $this->m2dirty->value * $density / 1000, "|= ".$this->m2dirty->display." * ".$density_display." / 1000", "м2 грязные * уд. вес осн / 1000");
+        $this->mdirty = new CalculationItem("Масса плёнки грязная (осн), м", $this->m2dirty->value * $density / 1000, "|= ".$this->m2dirty->display." * ".$this->Display($density)." / 1000", "м2 грязные * уд. вес осн / 1000");
     
         if($this->laminations_number > 0) {
-            $this->lamination1_mdirty = new CalculationItem("Масса плёнки грязная (лам 1), м", $this->lamination1_m2dirty->value * $lamination1_density / 1000, "|= ".$this->lamination1_m2dirty->display." * ".$lamination1_density_display." / 1000", "м2 грязные * уд. вес лам 1 / 1000");
+            $this->lamination1_mdirty = new CalculationItem("Масса плёнки грязная (лам 1), м", $this->lamination1_m2dirty->value * $lamination1_density / 1000, "|= ".$this->lamination1_m2dirty->display." * ".$this->Display($lamination1_density)." / 1000", "м2 грязные * уд. вес лам 1 / 1000");
         }
     
         if($this->laminations_number > 1) {
-            $this->lamination2_mdirty = new CalculationItem("Масса плёнки грязная (лам 2), м", $this->lamination2_m2dirty->value * $lamination2_density / 1000, "|= ".$this->lamination2_m2dirty->display." * ".$lamination2_density_display." / 1000", "м2 грязные * уд. вес лам 2 / 1000");
+            $this->lamination2_mdirty = new CalculationItem("Масса плёнки грязная (лам 2), м", $this->lamination2_m2dirty->value * $lamination2_density / 1000, "|= ".$this->lamination2_m2dirty->display." * ".$this->Display($lamination2_density)." / 1000", "м2 грязные * уд. вес лам 2 / 1000");
         }
     
         // Длина плёнки грязная, м
@@ -519,14 +525,14 @@ class Calculation {
         //****************************************
     
         // Себестоимость грязная (с приладки), руб
-        $this->film_price = new CalculationItem("Общая стоимость плёнки (осн)", $this->mdirty->value * $price * $this->GetCurrencyRate($currency, $usd, $euro), "|= ".$this->mdirty->display." / $price * ".$this->GetCurrencyRate($currency, $usd, $euro), "масса пленки осн / цена * курс валюты");
+        $this->film_price = new CalculationItem("Общая стоимость плёнки (осн)", $this->mdirty->value * $price * $this->GetCurrencyRate($currency, $usd, $euro), "|= ".$this->mdirty->display." / ".$this->Display($price)." * ".$this->GetCurrencyRate($currency, $usd, $euro), "масса пленки осн / цена * курс валюты");
     
         if($this->laminations_number > 0) {
-            $this->lamination1_film_price = new CalculationItem("Общая стоимость плёнки (лам 1)", $this->lamination1_mdirty->value * $lamination1_price * $this->GetCurrencyRate($lamination1_currency, $usd, $euro), "|= ".$this->lamination1_mdirty->display." * $lamination1_price * ".$this->GetCurrencyRate($lamination1_currency, $usd, $euro), "масса плёнки лам 1 / цена * курс валюты");
+            $this->lamination1_film_price = new CalculationItem("Общая стоимость плёнки (лам 1)", $this->lamination1_mdirty->value * $lamination1_price * $this->GetCurrencyRate($lamination1_currency, $usd, $euro), "|= ".$this->lamination1_mdirty->display." * ".$this->Display($lamination1_price)." * ".$this->GetCurrencyRate($lamination1_currency, $usd, $euro), "масса плёнки лам 1 / цена * курс валюты");
         }
     
         if($this->laminations_number > 1) {
-            $this->lamination2_film_price = new CalculationItem("Общая стоимость плёнки (лам 2)", $this->lamination2_mdirty->value * $lamination2_price * $this->GetCurrencyRate($lamination2_currency, $usd, $euro), "|= ".$this->lamination2_mdirty->display." * $lamination2_price * ".$this->GetCurrencyRate($lamination2_currency, $usd, $euro), "масса плёнки лам 2 / цена * курс валюты");
+            $this->lamination2_film_price = new CalculationItem("Общая стоимость плёнки (лам 2)", $this->lamination2_mdirty->value * $lamination2_price * $this->GetCurrencyRate($lamination2_currency, $usd, $euro), "|= ".$this->lamination2_mdirty->display." * ".$this->Display($lamination2_price)." * ".$this->GetCurrencyRate($lamination2_currency, $usd, $euro), "масса плёнки лам 2 / цена * курс валюты");
         }
         
         //*****************************************
@@ -574,15 +580,15 @@ class Calculation {
         
         // Стоимость выполнения тиража
         if(!empty($machine_id)) {
-            $this->work_price = new CalculationItem("Стоимость выполнения (осн), руб", $this->work_time->value * $machine_data->price, "|= ".$this->work_time->display." * ".$machine_data->price, "общее время выполнения осн * стоимость работы оборудования осн");
+            $this->work_price = new CalculationItem("Стоимость выполнения (осн), руб", $this->work_time->value * $machine_data->price, "|= ".$this->work_time->display." * ".$this->Display($machine_data->price), "общее время выполнения осн * стоимость работы оборудования осн");
         }
         
         if($this->laminations_number > 0) {
-            $this->lamination1_work_price = new CalculationItem("Стоимость выполнения (лам 1), руб", $this->lamination1_work_time->value * $laminator_machine_data->price, "|= ".$this->lamination1_work_time->display." * ".$laminator_machine_data->price, "общее время выполнения лам 1 * стоимость работы оборудования лам 1");
+            $this->lamination1_work_price = new CalculationItem("Стоимость выполнения (лам 1), руб", $this->lamination1_work_time->value * $laminator_machine_data->price, "|= ".$this->lamination1_work_time->display." * ".$this->Display($laminator_machine_data->price), "общее время выполнения лам 1 * стоимость работы оборудования лам 1");
         }
         
         if($this->laminations_number > 1) {
-            $this->lamination2_work_price = new CalculationItem("Стоимость выполнения (лам 2), руб", $this->lamination2_work_time->value * $laminator_machine_data->price, "|= ".$this->lamination2_work_time->display." * ".$laminator_machine_data->price, "общее время выполнения лам 2 * стоимость работы оборудования лам 2");
+            $this->lamination2_work_price = new CalculationItem("Стоимость выполнения (лам 2), руб", $this->lamination2_work_time->value * $laminator_machine_data->price, "|= ".$this->lamination2_work_time->display." * ".$this->Display($laminator_machine_data->price), "общее время выполнения лам 2 * стоимость работы оборудования лам 2");
         }
         
         //****************************************
@@ -612,16 +618,16 @@ class Calculation {
                 $percent = "percent_$i";
                 
                 // Стоимость краски в смеси за 1 кг
-                $price = $this->GetInkPrice($$ink, $$cmyk, $ink_data->c, $ink_data->c_currency, $ink_data->m, $ink_data->m_currency, $ink_data->y, $ink_data->y_currency, $ink_data->k, $ink_data->k_currency, $ink_data->panton, $ink_data->panton_currency, $ink_data->white, $ink_data->white_currency, $ink_data->lacquer, $ink_data->lacquer_currency);
-                $ink_kg_price = new CalculationItem("Стоимость краски в смеси за 1 кг (краска $i), руб", $price->value * $this->GetCurrencyRate($price->currency, $usd, $euro) * (1 - ($ink_data->solvent_part / (1 + $ink_data->solvent_part))), "|= ".$price->value." * ".$this->GetCurrencyRate($price->currency, $usd, $euro)." * (1 - (".$ink_data->solvent_part." / (1 + ".$ink_data->solvent_part.")))", "стоимость 1 кг чистой краски * курс валюты * (1 - (расход растворителя на 1 кг краски / (1 + расход растворителя на 1 кг краски)))");
-                $this->ink_kg_prices[$i] = $ink_kg_price;
+                $pure_ink_kg_price = $this->GetInkPrice($$ink, $$cmyk, $ink_data->c, $ink_data->c_currency, $ink_data->m, $ink_data->m_currency, $ink_data->y, $ink_data->y_currency, $ink_data->k, $ink_data->k_currency, $ink_data->panton, $ink_data->panton_currency, $ink_data->white, $ink_data->white_currency, $ink_data->lacquer, $ink_data->lacquer_currency);
+                $mix_ink_kg_price = new CalculationItem("Стоимость краски в смеси за 1 кг (краска $i), руб", $pure_ink_kg_price->value * $this->GetCurrencyRate($pure_ink_kg_price->currency, $usd, $euro) * (1 - ($ink_data->solvent_part / (1 + $ink_data->solvent_part))), "|= ".$this->Display($pure_ink_kg_price->value)." * ".$this->GetCurrencyRate($pure_ink_kg_price->currency, $usd, $euro)." * (1 - (".$ink_data->solvent_part." / (1 + ".$ink_data->solvent_part.")))", "стоимость 1 кг чистой краски * курс валюты * (1 - (расход растворителя на 1 кг краски / (1 + расход растворителя на 1 кг краски)))");
+                $this->ink_kg_prices[$i] = $mix_ink_kg_price;
                 
                 // Расход смеси
                 $ink_expense = new CalculationItem("Расход смеси (краска $i), кг", $this->print_area->value * $this->GetInkExpense($$ink, $$cmyk, $ink_data->c_expense, $ink_data->m_expense, $ink_data->y_expense, $ink_data->k_expense, $ink_data->panton_expense, $ink_data->white_expense, $ink_data->lacquer_expense) / 1000  * $$percent / 100, "|= ".$this->print_area->display." * ".$this->GetInkExpense($$ink, $$cmyk, $ink_data->c_expense, $ink_data->m_expense, $ink_data->y_expense, $ink_data->k_expense, $ink_data->panton_expense, $ink_data->white_expense, $ink_data->lacquer_expense)." / 1000  * ".$$percent." / 100", "площадь запечатки * расход смеси за 1 м2 / 1000 * процент краски / 100");
                 $this->ink_expenses[$i] = $ink_expense;
                 
                 // Стоимость краски
-                $ink_price = new CalculationItem("Стоимость краски (краска $i), руб", $ink_expense->value * $ink_kg_price->value, "|= ".$ink_expense->display." * ".$ink_kg_price->display, "Расход смеси * стоимость краски в смеси за 1 кг");
+                $ink_price = new CalculationItem("Стоимость краски (краска $i), руб", $ink_expense->value * $ink_kg_price->value, "|= ".$ink_expense->display." * ".$this->$ink_kg_price->display, "Расход смеси * стоимость краски в смеси за 1 кг");
                 $this->ink_prices[$i] = $ink_price;
                 
                 // Стоимость растворителя
