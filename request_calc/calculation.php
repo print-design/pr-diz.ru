@@ -435,30 +435,30 @@ class Calculation {
         // Метры погонные чистые
         $this->mpogpure = new CalculationItem("М пог. чистые, м", $this->m2pure->value / ($streams_number * $stream_width / 1000), "|= ".$this->m2pure->display." / ($streams_number * $stream_width / 1000)", "м2 чистые / (количество ручьёв * ширина ручья / 1000)");
         
-        // Метраж отходов СтартСтоп
+        // СтартСтопОтход
         if(!empty($machine_id)) {
-            $this->waste_length = new CalculationItem("Метраж отходов СтартСтоп (осн), м", $tuning_data->waste_percent * $this->mpogpure->value / 100, "|= ".$this->Display($tuning_data->waste_percent)." * ".$this->mpogpure->display." / 100", "процент отходов печати * м. пог. чистые / 100");
+            $this->waste_length = new CalculationItem("СтартСтопОтход (осн), м", $tuning_data->waste_percent * $this->mpogpure->value / 100, "|= ".$this->Display($tuning_data->waste_percent)." * ".$this->mpogpure->display." / 100", "СтартСтопОтход печати * м. пог. чистые / 100");
         }
         
         if($this->laminations_number > 0) {
-            $this->lamination1_waste_length = new CalculationItem("Метраж отходов СтартСтоп (лам 1), м", $laminator_tuning_data->waste_percent * $this->mpogpure->value / 100, "|= ".$this->Display($laminator_tuning_data->waste_percent)." * ".$this->mpogpure->display." / 100", "процент отходов ламинации * м. пог. чистые / 100");
+            $this->lamination1_waste_length = new CalculationItem("СтартСтопОтход (лам 1), м", $laminator_tuning_data->waste_percent * $this->mpogpure->value / 100, "|= ".$this->Display($laminator_tuning_data->waste_percent)." * ".$this->mpogpure->display." / 100", "СтартСтопОтход ламинации * м. пог. чистые / 100");
         }
         
         if($this->laminations_number > 1) {
-            $this->lamination2_waste_length = new CalculationItem("Метраж отходов СтартСтоп (лам 2), м", $laminator_tuning_data->waste_percent * $this->mpogpure->value / 100, "|= ".$this->Display($laminator_tuning_data->waste_percent)." * ".$this->mpogpure->display." / 100", "процент отходов ламинации * м. пог. чистые / 100");
+            $this->lamination2_waste_length = new CalculationItem("СтартСтопОтход (лам 2), м", $laminator_tuning_data->waste_percent * $this->mpogpure->value / 100, "|= ".$this->Display($laminator_tuning_data->waste_percent)." * ".$this->mpogpure->display." / 100", "СтартСтопОтход ламинации * м. пог. чистые / 100");
         }
         
         // Метры погонные грязные
         if(!empty($machine_id)) {
-            $this->mpogdirty = new CalculationItem("М. пог. грязные (осн), м", $this->mpogpure->value + ($ink_number * $tuning_data->length) + ($this->laminations_number * $laminator_tuning_data->length) + $this->waste_length->value, "|= ".$this->mpogpure->display." + (".$ink_number." * ".$this->Display($tuning_data->length).") + (".$this->laminations_number." * ".$this->Display($laminator_tuning_data->length).") + ".$this->waste_length->display, "м. пог. чистые + (красочность * метраж приладки 1 краски) + (количество ламинаций * метраж приладки ламинации) + метраж отходов осн");
+            $this->mpogdirty = new CalculationItem("М. пог. грязные (осн), м", $this->mpogpure->value + ($ink_number * $tuning_data->length) + ($this->laminations_number * $laminator_tuning_data->length) + $this->waste_length->value, "|= ".$this->mpogpure->display." + (".$ink_number." * ".$this->Display($tuning_data->length).") + (".$this->laminations_number." * ".$this->Display($laminator_tuning_data->length).") + ".$this->waste_length->display, "м. пог. чистые + (красочность * метраж приладки 1 краски) + (количество ламинаций * метраж приладки ламинации) + СтартСтопОтход осн");
         }
         
         if($this->laminations_number > 0) {
-            $this->lamination1_mpogdirty = new CalculationItem("М. пог. грязные (лам 1), м", $this->mpogpure->value + ($this->laminations_number * $laminator_tuning_data->length) + $this->lamination1_waste_length->value, "|= ".$this->mpogpure->display." + (".$this->laminations_number." * ".$this->Display($laminator_tuning_data->length).") + ".$this->Display($this->lamination1_waste_length->display), "м. пог. чистые + (количество ламинаций * метраж приладки ламинации) + метраж отходов лам 1");
+            $this->lamination1_mpogdirty = new CalculationItem("М. пог. грязные (лам 1), м", $this->mpogpure->value + ($this->laminations_number * $laminator_tuning_data->length) + $this->lamination1_waste_length->value, "|= ".$this->mpogpure->display." + (".$this->laminations_number." * ".$this->Display($laminator_tuning_data->length).") + ".$this->Display($this->lamination1_waste_length->display), "м. пог. чистые + (количество ламинаций * метраж приладки ламинации) + СтартСтопОтход лам 1");
         }
         
         if($this->laminations_number > 1) {
-            $this->lamination2_mpogdirty = new CalculationItem("М. пог. грязные (лам 2), м", $this->mpogpure->value + ($this->laminations_number * $laminator_tuning_data->length) + $this->lamination2_waste_length->value, "|= ".$this->mpogpure->display." + (".$this->laminations_number." * ".$this->Display($laminator_tuning_data->length).") + ".$this->Display($this->lamination2_waste_length->display), "м. пог. чистые + (количество ламинаций * метраж приладки ламинации) + метраж отходов лам 2");
+            $this->lamination2_mpogdirty = new CalculationItem("М. пог. грязные (лам 2), м", $this->mpogpure->value + ($this->laminations_number * $laminator_tuning_data->length) + $this->lamination2_waste_length->value, "|= ".$this->mpogpure->display." + (".$this->laminations_number." * ".$this->Display($laminator_tuning_data->length).") + ".$this->Display($this->lamination2_waste_length->display), "м. пог. чистые + (количество ламинаций * метраж приладки ламинации) + СтартСтопОтход лам 2");
         }
         
         // Площадь грязная
@@ -556,15 +556,15 @@ class Calculation {
         
         // Время печати и ламинации (без приладки)
         if(!empty($machine_id)) {
-            $this->print_time = new CalculationItem("Время печати без приладки (осн), ч", ($this->mpogpure->value + $this->waste_length->value) / 1000 / $machine_data->speed, "|= (".$this->mpogpure->display." + ".$this->waste_length->display.") / 1000 / ".$this->Display($machine_data->speed), "(м. пог. чистые + метраж отходов) / 1000 / скорость работы машины");
+            $this->print_time = new CalculationItem("Время печати без приладки (осн), ч", ($this->mpogpure->value + $this->waste_length->value) / 1000 / $machine_data->speed, "|= (".$this->mpogpure->display." + ".$this->waste_length->display.") / 1000 / ".$this->Display($machine_data->speed), "(м. пог. чистые + СтартСтопОтход) / 1000 / скорость работы машины");
         }
         
         if($this->laminations_number > 0) {
-            $this->lamination1_time = new CalculationItem("Время ламинации без приладки (лам 1), ч", ($this->mpogpure->value + $this->waste_length->value) / 1000 / $laminator_machine_data->speed, "|= (".$this->mpogpure->display." + ".$this->waste_length->display.") / 1000 / ".$this->Display($laminator_machine_data->speed), "(м. пог. чистые + метраж отходов) / 1000 / скорость работы ламинатора");
+            $this->lamination1_time = new CalculationItem("Время ламинации без приладки (лам 1), ч", ($this->mpogpure->value + $this->waste_length->value) / 1000 / $laminator_machine_data->speed, "|= (".$this->mpogpure->display." + ".$this->waste_length->display.") / 1000 / ".$this->Display($laminator_machine_data->speed), "(м. пог. чистые + СтартСтопОтход) / 1000 / скорость работы ламинатора");
         }
         
         if($this->laminations_number > 1) {
-            $this->lamination2_time = new CalculationItem("Время ламинации без приладки (лам 2), ч", ($this->mpogpure->value + $this->waste_length->value) / 1000 / $laminator_machine_data->speed, "|= (".$this->mpogpure->display." + ".$this->waste_length->display.") / 1000 / ".$this->Display($laminator_machine_data->speed), "(м. пог. чистые + метраж отходов) / 1000 / скорость работы ламинатора");
+            $this->lamination2_time = new CalculationItem("Время ламинации без приладки (лам 2), ч", ($this->mpogpure->value + $this->waste_length->value) / 1000 / $laminator_machine_data->speed, "|= (".$this->mpogpure->display." + ".$this->waste_length->display.") / 1000 / ".$this->Display($laminator_machine_data->speed), "(м. пог. чистые + СтартСтопОтход) / 1000 / скорость работы ламинатора");
         }
         
         // Общее время выполнения тиража

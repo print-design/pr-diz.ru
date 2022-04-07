@@ -406,7 +406,7 @@ if($id !== null) {
         // М пог. чистые, м
         array_push($file_data, array($calculation->mpogpure->name, $calculation->mpogpure->display, $calculation->mpogpure->formula, $calculation->mpogpure->comment));
         
-        // Метраж отходов СтартСтоп, м
+        // СтартСтоп отход, м
         if(!empty($machine_id)) {
             array_push($file_data, array($calculation->waste_length->name, $calculation->waste_length->display, $calculation->waste_length->formula, $calculation->waste_length->comment));
         }
