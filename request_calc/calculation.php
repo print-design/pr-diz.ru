@@ -471,7 +471,7 @@ class Calculation {
         //****************************************
     
         // Масса плёнки чистая (без приладки), кг
-        $this->mpure = new CalculationItem("Масса плёнки чистая (осн), кг", $this->mpogpure->value * $this->width->value * $density / 1000, "|= ".$this->mpogpure->display." * ".$this->width->display." * ".$density_display." / 1000", "м. пог. чистые * ширина материала осн * уд. вес / 1000");
+        $this->mpure = new CalculationItem("Масса плёнки чистая (осн), кг", $this->mpogpure->value * $this->width->value / 1000 * $density / 1000, "|= ".$this->mpogpure->display." * ".$this->width->display." / 1000 * ".$density_display." / 1000", "м. пог. чистые * ширина материала осн / 1000 * уд. вес / 1000");
     
         if($this->laminations_number > 0) {
             $this->lamination1_mpure = new CalculationItem("Масса плёнки чистая (лам 1), кг", $this->mpogpure->value * $this->lamination1_width->value / 1000 * $lamination1_density / 1000, "|= ".$this->mpogpure->display." * ".$this->lamination1_width->display." / 1000 * ".$lamination1_density_display." / 1000", "м. пог. чистые * ширина материала лам 1 / 1000 * уд. вес / 1000");
