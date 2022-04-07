@@ -150,20 +150,20 @@ if($row = $fetcher->Fetch()) {
                             <div class="invalid-feedback">Метраж обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="length">Общий процент отходов</label>
+                            <label for="length">Процент отходов на СтартСтоп</label>
                             <div class="input-group">
                                 <input type="text" 
                                        class="form-control" 
                                        id="waste_percent" 
                                        name="waste_percent" 
                                        value="<?= empty($waste_percent) ? "" : intval($waste_percent) ?>" 
-                                       placeholder="Общий процент отходов" 
+                                       placeholder="Процент отходов на СтартСтоп" 
                                        required="required" 
                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'waste_percent'); $(this).attr('name', 'waste_percent'); $(this).attr('placeholder', 'Общий процент отходов');" 
+                                       onmouseup="javascript: $(this).attr('id', 'waste_percent'); $(this).attr('name', 'waste_percent'); $(this).attr('placeholder', 'Процент отходов на СтартСтоп');" 
                                        onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'waste_percent'); $(this).attr('name', 'waste_percent'); $(this).attr('placeholder', 'Общий процент отходов');" 
-                                       onfocusout="javascript: $(this).attr('id', 'waste_percent'); $(this).attr('name', 'waste_percent'); $(this).attr('placeholder', 'Метраж, метры');" />
+                                       onkeyup="javascript: $(this).attr('id', 'waste_percent'); $(this).attr('name', 'waste_percent'); $(this).attr('placeholder', 'Процент отходов на СтартСтоп');" 
+                                       onfocusout="javascript: $(this).attr('id', 'waste_percent'); $(this).attr('name', 'waste_percent'); $(this).attr('placeholder', 'Процент отходов на СтартСтоп');" />
                                 <div class="input-group-append"><span class="input-group-text">%</span></div>
                             </div>
                             <div class="invalid-feedback">Метраж обязательно</div>
