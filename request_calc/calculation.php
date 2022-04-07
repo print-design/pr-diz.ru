@@ -422,7 +422,7 @@ class Calculation {
         $density_display = empty($density) ? "0" : number_format($density, 2, ",", " ");
         $lamination1_density_display = empty($lamination1_density) ? "0" : number_format($lamination1_density, 2, ",", " ");
         $lamination2_density_display = empty($lamination2_density) ? "0" : number_format($lamination2_density, 2, ",", " ");
-        $this->m2pure = new CalculationItem("М2 чистые, м2", $this->weight->value * 1000 / ($density + (empty($lamination1_density) ? 0 : $lamination1_density) + (empty($lamination2_density) ? 0 : $lamination2_density)), "|= ".$this->weight->display." * 1000 / (".$density." + ".(empty($lamination1_density) ? 0 : $lamination1_density)." + ".(empty($lamination2_density) ? 0 : $lamination2_density).")", "масса тиража * 1000 / (уд. вес осн + уд. вес лам 1 + уд. вес лам 2)");
+        $this->m2pure = new CalculationItem("М2 чистые, м2", $this->weight->value * 1000 / ($density + (empty($lamination1_density) ? 0 : $lamination1_density) + (empty($lamination2_density) ? 0 : $lamination2_density)), "|= ".$this->weight->display." * 1000 / (".$density_display." + ".(empty($lamination1_density) ? 0 : $lamination1_density_display)." + ".(empty($lamination2_density) ? 0 : $lamination2_density_display).")", "масса тиража * 1000 / (уд. вес осн + уд. вес лам 1 + уд. вес лам 2)");
         
         // Метры погонные чистые
         $this->mpogpure = new CalculationItem("М пог. чистые, м", $this->m2pure->value / ($streams_number * $stream_width / 1000), "|= ".$this->m2pure->display." / ($streams_number * $stream_width / 1000)", "м2 чистые / (количество ручьёв * ширина ручья / 1000)");
