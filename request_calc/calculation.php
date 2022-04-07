@@ -634,6 +634,9 @@ class Calculation {
             
             // Стоимость клея (лам 1), руб
             $this->glue_price1 = new CalculationItem("Стоимость клея (лам 1), руб", $this->glue_expense1->value * $this->glue_kg_price->value, $this->glue_expense1->display." * ".$this->glue_kg_price->display, "Расход клея лам 1 * стоимость клея в смеси за 1 кг");
+            
+            // Стоимость раствора (лам 1), руб
+            $this->glue_solvent_price1 = new CalculationItem("Стоимость раствора (лам 1), руб", $this->glue_expense1->value * $this->glue_solvent_kg_price->value, $this->glue_expense1->display." * ".$this->glue_solvent_kg_price->display, "Расход клея лам 1 * стоимость растворителя в смеси за 1 кг");
         }
         
         if($this->laminations_number > 1) {
@@ -645,6 +648,9 @@ class Calculation {
             
             // Стоимость клея (лам 2)
             $this->glue_price2 = new CalculationItem("Стоимость клея (лам 2), руб", $this->glue_expense2->value * $this->glue_kg_price->value, $this->glue_expense2->display." * ".$this->glue_kg_price->display, "Расход клея лам 2 * стоимость клея в смеси за 1 кг");
+            
+            // Стоимость раствора (лам 2), руб
+            $this->glue_solvent_price2 = new CalculationItem("Стоимость раствора (лам 2), руб", $this->glue_expense2->value * $this->glue_solvent_kg_price->value, $this->glue_expense2->display." * ".$this->glue_solvent_kg_price->display, "Расход клея лам 1 * стоимость растворителя в смеси за 1 кг");
         }
     }
 }

@@ -589,6 +589,9 @@ if($id !== null) {
             
             // Стоимость клея (лам 1), руб
             array_push($file_data, array($calculation->glue_price1->name, $calculation->glue_price1->display, $calculation->glue_price1->formula, $calculation->glue_price1->comment));
+            
+            // Стоимость раствора (лам 1), руб
+            array_push($file_data, array($calculation->glue_solvent_price1->name, $calculation->glue_solvent_price1->display, $calculation->glue_solvent_price1->formula, $calculation->glue_solvent_price1->comment));
         }
         
         if($calculation->laminations_number > 1) {
@@ -600,6 +603,9 @@ if($id !== null) {
             
             // Стоимость клея (лам 2)
             array_push($file_data, array($calculation->glue_price2->name, $calculation->glue_price2->display, $calculation->glue_price2->formula, $calculation->glue_price2->comment));
+            
+            // Стоимость раствора (лам 2), руб
+            array_push($file_data, array($calculation->glue_solvent_price2->name, $calculation->glue_solvent_price2->display, $calculation->glue_solvent_price2->formula, $calculation->glue_solvent_price2->comment));
         }
         
         //***************************************************
