@@ -130,7 +130,8 @@ if($id !== null) {
         $date = $row['date'];
         $name = $row['name'];
         
-        $quantity = $row['quantity']; // Масса тиража
+        $quantity = $row['quantity']; // Размер тиража в кг или шт
+        $unit = $row['unit']; // Кг или шт
         
         if(!empty($row['film_variation_id'])) {
             $film = $row['film']; // Основная пленка, марка
@@ -270,7 +271,8 @@ if($id !== null) {
                 $glue_data,
                 $usd, // Курс доллара
                 $euro, // Курс евро
-                $quantity, // Масса тиража
+                $quantity, // Размер тиража в кг или шт
+                $unit, // Кг или шт
                 
                 $film, // Основная пленка, марка
                 $thickness, // Основная пленка, толщина, мкм
