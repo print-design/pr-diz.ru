@@ -2,6 +2,16 @@
 include '../include/topscripts.php';
 include './calculation.php';
 
+function Display($value) {
+    $fvalue = floatval($value);
+    if(!is_nan($fvalue)) {
+        return number_format($fvalue, 2, ",", " ");
+    }
+    else {
+        return $value;
+    }
+}
+
 function GetSkiName($ski) {
     switch ($ski) {
         case Calculation::NO_SKI:
@@ -331,8 +341,8 @@ if($id !== null) {
         // Данные CSV-файла
         $file_data = array();
         
-        array_push($file_data, array("Курс доллара, руб", $usd, "", ""));
-        array_push($file_data, array("Курс евро, руб", $euro, "", ""));
+        array_push($file_data, array("Курс доллара, руб", Display($usd), "", ""));
+        array_push($file_data, array("Курс евро, руб", Display($euro), "", ""));
         
         if(!empty($machine_id)) {
             array_push($file_data, array("Машина", $machine, "", ""));
@@ -341,23 +351,20 @@ if($id !== null) {
         array_push($file_data, array("Размер тиража", $quantity.' '. GetUnitName($unit), "", ""));
         array_push($file_data, array("Марка (осн)", $film, "", ""));
         array_push($file_data, array("Толщина (осн), мкм", $thickness, "", ""));
-        $density_format = empty($density) ? "0" : number_format($density, 2, ",", " ");
-        array_push($file_data, array("Плотность (осн), г/м2", $density_format, "", ""));
+        array_push($file_data, array("Плотность (осн), г/м2", Display($density), "", ""));
         array_push($file_data, array("Лыжи (осн)", GetSkiName($ski), "", ""));
         
         if($calculation->laminations_number > 0) {
             array_push($file_data, array("Марка (лам 1)", $lamination1_film, "", ""));
             array_push($file_data, array("Толщина (лам 1), мкм", $lamination1_thickness, "", ""));
-            $lamination1_density_format = empty($lamination1_density) ? "0" : number_format($lamination1_density, 2, ",", " ");
-            array_push($file_data, array("Плотность (лам 1), г/м2", $lamination1_density_format, "", ""));
+            array_push($file_data, array("Плотность (лам 1), г/м2", Display($lamination1_density), "", ""));
             array_push($file_data, array("Лыжи (лам 1)", GetSkiName($lamination1_ski), "", ""));
         }
         
         if($calculation->laminations_number > 1) {
             array_push($file_data, array("Марка (лам 2)", $lamination2_film, "", ""));
             array_push($file_data, array("Толщина (лам 2), мкм", $lamination2_thickness, "", ""));
-            $lamination2_density_format = empty($lamination2_density) ? "0" : number_format($lamination2_density, 2, ",", " ");
-            array_push($file_data, array("Плотность (лам 2), г/м2", $lamination2_density_format, "", ""));
+            array_push($file_data, array("Плотность (лам 2), г/м2", Display($lamination2_density), "", ""));
             array_push($file_data, array("Лыжи (лам 2)", GetSkiName($lamination2_ski), "", ""));
         }
         
