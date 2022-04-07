@@ -157,6 +157,12 @@ class Calculation {
     const YELLOW = "yellow";
     const KONTUR = "kontur";
     
+    // Формы
+    const OLD = "old";
+    const FLINT = "flint";
+    const KODAK = "kodak";
+    const TVER = "tver";
+    
     // Машины
     const COMIFLEX = 1;
 
@@ -345,9 +351,6 @@ class Calculation {
             $density, // Основная пленка, плотность, г/м2
             $price, // Основная пленка, цена
             $currency, // Основная пленка, валюта
-            $individual_film_name, // Основная плёнка, другая, название
-            $individual_thickness, // Основная плёнка, другая, толщина
-            $individual_density, // Основная плёнка, другая, уд.вес
             $customers_material, // Основная плёнка, другая, материал заказчика
             $ski, // Основная пленка, лыжи
             $width_ski, // Основная пленка, ширина пленки, мм
@@ -357,9 +360,6 @@ class Calculation {
             $lamination1_density, // Ламинация 1, плотность, г/м2
             $lamination1_price, // Ламинация 1, цена
             $lamination1_currency, // Ламинация 1, валюта
-            $lamination1_individual_film_name, // Ламинация 1, другая, название
-            $lamination1_individual_thickness, // Ламинация 1, другая, толщина
-            $lamination1_individual_density, // Ламинация 1, другая, уд. вес
             $lamination1_customers_material, // Ламинация 1, другая, материал заказчика
             $lamination1_ski, // Ламинация 1, лыжи
             $lamination1_width_ski, // Ламинация 1, ширина пленки, мм
@@ -369,9 +369,6 @@ class Calculation {
             $lamination2_density, // Ламинация 2, плотность, г/м2
             $lamination2_price, // Ламинация 2, цена
             $lamination2_currency, // Ламинация 2, валюта
-            $lamination2_individual_film_name, // Ламинация 2, другая, название
-            $lamination2_individual_thickness, // Ламинация 2, другая, толщина
-            $lamination2_individual_density, // Ламинация 2, другая, уд.вес
             $lamination2_customers_material, // Ламинация 2, другая, уд. вес
             $lamination2_ski, // Ламинация 2, лыжи
             $lamination2_width_ski,  // Ламинация 2, ширина пленки, мм
