@@ -529,18 +529,18 @@ class Calculation {
         }
     
         //****************************************
-        // Себестоимость плёнок
+        // Общая стоимость плёнок
         //****************************************
     
-        // Себестоимость грязная (с приладки), руб
-        $this->film_price = new CalculationItem("Общая стоимость плёнки (осн)", $this->mdirty->value * $price * $this->GetCurrencyRate($currency, $usd, $euro), "|= ".$this->mdirty->display." / ".$this->Display($price)." * ".$this->Display($this->GetCurrencyRate($currency, $usd, $euro)), "масса пленки осн / цена * курс валюты");
+        // Общая стоимость грязная (с приладки), руб
+        $this->film_price = new CalculationItem("Общая стоимость плёнки (осн)", $this->mdirty->value * $price * $this->GetCurrencyRate($currency, $usd, $euro), "|= ".$this->mdirty->display." * ".$this->Display($price)." * ".$this->Display($this->GetCurrencyRate($currency, $usd, $euro)), "масса пленки осн * цена * курс валюты");
     
         if($this->laminations_number > 0) {
-            $this->lamination1_film_price = new CalculationItem("Общая стоимость плёнки (лам 1)", $this->lamination1_mdirty->value * $lamination1_price * $this->GetCurrencyRate($lamination1_currency, $usd, $euro), "|= ".$this->lamination1_mdirty->display." * ".$this->Display($lamination1_price)." * ".$this->Display($this->GetCurrencyRate($lamination1_currency, $usd, $euro)), "масса плёнки лам 1 / цена * курс валюты");
+            $this->lamination1_film_price = new CalculationItem("Общая стоимость плёнки (лам 1)", $this->lamination1_mdirty->value * $lamination1_price * $this->GetCurrencyRate($lamination1_currency, $usd, $euro), "|= ".$this->lamination1_mdirty->display." * ".$this->Display($lamination1_price)." * ".$this->Display($this->GetCurrencyRate($lamination1_currency, $usd, $euro)), "масса плёнки лам 1 * цена * курс валюты");
         }
     
         if($this->laminations_number > 1) {
-            $this->lamination2_film_price = new CalculationItem("Общая стоимость плёнки (лам 2)", $this->lamination2_mdirty->value * $lamination2_price * $this->GetCurrencyRate($lamination2_currency, $usd, $euro), "|= ".$this->lamination2_mdirty->display." * ".$this->Display($lamination2_price)." * ".$this->Display($this->GetCurrencyRate($lamination2_currency, $usd, $euro)), "масса плёнки лам 2 / цена * курс валюты");
+            $this->lamination2_film_price = new CalculationItem("Общая стоимость плёнки (лам 2)", $this->lamination2_mdirty->value * $lamination2_price * $this->GetCurrencyRate($lamination2_currency, $usd, $euro), "|= ".$this->lamination2_mdirty->display." * ".$this->Display($lamination2_price)." * ".$this->Display($this->GetCurrencyRate($lamination2_currency, $usd, $euro)), "масса плёнки лам 2 * цена * курс валюты");
         }
         
         //*****************************************
