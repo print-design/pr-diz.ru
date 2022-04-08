@@ -536,11 +536,11 @@ if($id !== null) {
         }
         
         if($calculation->laminations_number > 0) {
-            array_push($file_data, array($calculation->lamination1_time->name, $calculation->lamination1_time->display, $calculation->print_time->formula, $calculation->print_time->comment));
+            array_push($file_data, array($calculation->lamination1_time->name, $calculation->lamination1_time->display, $calculation->lamination1_time->formula, $calculation->lamination1_time->comment));
         }
         
         if($calculation->laminations_number > 1) {
-            array_push($file_data, array($calculation->lamination2_time->name, $calculation->lamination2_time->display, $calculation->print_time->formula, $calculation->print_time->comment));
+            array_push($file_data, array($calculation->lamination2_time->name, $calculation->lamination2_time->display, $calculation->lamination2_time->formula, $calculation->lamination2_time->comment));
         }
         
         // Общее время выполнения тиража
@@ -580,7 +580,7 @@ if($id !== null) {
             // Расход КраскаСмеси на 1 кг краски
             array_push($file_data, array($calculation->ink_1kg_mix_weight->name, $calculation->ink_1kg_mix_weight->display, $calculation->ink_1kg_mix_weight->formula, $calculation->ink_1kg_mix_weight->comment));
             
-            // Стоимость 1 кг чистого растворителя
+            // Цена 1 кг чистого растворителя
             array_push($file_data, array($calculation->ink_solvent_kg_price->name, $calculation->ink_solvent_kg_price->display, $calculation->ink_solvent_kg_price->formula, $calculation->ink_solvent_kg_price->comment));
             
             // Красочность
@@ -589,10 +589,10 @@ if($id !== null) {
             }
             
             for($i=1; $i<=$ink_number; $i++) {
-                // Стоимость 1 кг чистой краски
+                // Цена 1 кг чистой краски
                 array_push($file_data, array($calculation->ink_kg_prices[$i]->name, $calculation->ink_kg_prices[$i]->display, $calculation->ink_kg_prices[$i]->formula, $calculation->ink_kg_prices[$i]->comment));
                 
-                // Стоимость 1 кг КраскаСмеси
+                // Цена 1 кг КраскаСмеси
                 array_push($file_data, array($calculation->mix_ink_kg_prices[$i]->name, $calculation->mix_ink_kg_prices[$i]->display, $calculation->mix_ink_kg_prices[$i]->formula, $calculation->mix_ink_kg_prices[$i]->comment));
                 
                 // Расход КраскаСмеси, кг
@@ -611,13 +611,13 @@ if($id !== null) {
             // Расход КлееСмеси на 1 кг клея
             array_push($file_data, array($calculation->glue_kg_weight->name, $calculation->glue_kg_weight->display, $calculation->glue_kg_weight->formula, $calculation->glue_kg_weight->comment));
             
-            // Стоимость 1 кг чистого клея
+            // Цена 1 кг чистого клея
             array_push($file_data, array($calculation->glue_kg_price->name, $calculation->glue_kg_price->display, $calculation->glue_kg_price->formula, $calculation->glue_kg_price->comment));
             
-            // Стоимость 1 кг чистого растворителя для клея
+            // Цена 1 кг чистого растворителя для клея
             array_push($file_data, array($calculation->glue_solvent_kg_price->name, $calculation->glue_solvent_kg_price->display, $calculation->glue_solvent_kg_price->formula, $calculation->glue_solvent_kg_price->comment));
             
-            // Стоимость 1 кг КлееСмеси
+            // Цена 1 кг КлееСмеси
             array_push($file_data, array($calculation->mix_glue_kg_price->name, $calculation->mix_glue_kg_price->display, $calculation->mix_glue_kg_price->formula, $calculation->mix_glue_kg_price->comment));
             
             // Площадь заклейки (лам 1), м2

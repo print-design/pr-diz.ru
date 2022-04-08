@@ -323,39 +323,39 @@ class Calculation {
     }
 
     public $laminations_number = 0;
-    public CalculationItem $weight;
-    public CalculationItem $width, $lamination1_width, $lamination2_width;
-    public CalculationItem $m2pure;
-    public CalculationItem $mpogpure;
-    public CalculationItem $waste_length, $lamination1_waste_length, $lamination2_waste_length;
-    public CalculationItem $mpogdirty, $lamination1_mpogdirty, $lamination2_mpogdirty;
-    public CalculationItem $m2dirty, $lamination1_m2dirty, $lamination2_m2dirty;
-    public CalculationItem $mpure, $lamination1_mpure, $lamination2_mpure;
-    public CalculationItem $lengthpure, $lamination1_lengthpure, $lamination2_lengthpure;
-    public CalculationItem $mdirty, $lamination1_mdirty, $lamination2_mdirty;
-    public CalculationItem $lengthdirty, $lamination1_lengthdirty, $lamination2_lengthdirty;
-    public CalculationItem $film_price, $lamination1_film_price, $lamination2_film_price;
-    public CalculationItem $tuning_time, $lamination1_tuning_time, $lamination2_tuning_time;
-    public CalculationItem $print_time, $lamination1_time, $lamination2_time;
-    public CalculationItem $work_time, $lamination1_work_time, $lamination2_work_time;
-    public CalculationItem $work_price, $lamination1_work_price, $lamination2_work_price;
-    public CalculationItem $print_area;
-    public CalculationItem $ink_1kg_mix_weight; // расход КраскаСмеси на 1 кг краски
-    public CalculationItem $ink_solvent_kg_price; // стоимость 1 кг чистого раствортеля для краски
-    public $ink_kg_prices; // стоимость 1 кг чистой краски
-    public $mix_ink_kg_prices; // стоимость 1 кг КраскаСмеси
+    public /*CalculationItem*/ $weight;
+    public /*CalculationItem*/ $width, $lamination1_width, $lamination2_width;
+    public /*CalculationItem*/ $m2pure;
+    public /*CalculationItem*/ $mpogpure;
+    public /*CalculationItem*/ $waste_length, $lamination1_waste_length, $lamination2_waste_length;
+    public /*CalculationItem*/ $mpogdirty, $lamination1_mpogdirty, $lamination2_mpogdirty;
+    public /*CalculationItem*/ $m2dirty, $lamination1_m2dirty, $lamination2_m2dirty;
+    public /*CalculationItem*/ $mpure, $lamination1_mpure, $lamination2_mpure;
+    public /*CalculationItem*/ $lengthpure, $lamination1_lengthpure, $lamination2_lengthpure;
+    public /*CalculationItem*/ $mdirty, $lamination1_mdirty, $lamination2_mdirty;
+    public /*CalculationItem*/ $lengthdirty, $lamination1_lengthdirty, $lamination2_lengthdirty;
+    public /*CalculationItem*/ $film_price, $lamination1_film_price, $lamination2_film_price;
+    public /*CalculationItem*/ $tuning_time, $lamination1_tuning_time, $lamination2_tuning_time;
+    public /*CalculationItem*/ $print_time, $lamination1_time, $lamination2_time;
+    public /*CalculationItem*/ $work_time, $lamination1_work_time, $lamination2_work_time;
+    public /*CalculationItem*/ $work_price, $lamination1_work_price, $lamination2_work_price;
+    public /*CalculationItem*/ $print_area;
+    public /*CalculationItem*/ $ink_1kg_mix_weight; // расход КраскаСмеси на 1 кг краски
+    public /*CalculationItem*/ $ink_solvent_kg_price; // цена 1 кг чистого раствортеля для краски
+    public $ink_kg_prices; // цена 1 кг чистой краски
+    public $mix_ink_kg_prices; // цена 1 кг КраскаСмеси
     public $ink_expenses; // расход КраскаСмеси
     public $ink_prices; // стоимость КраскаСмеси
-    public CalculationItem $glue_kg_weight; // расход КлееСмеси на 1 кг клея
-    public CalculationItem $glue_kg_price; // стоимость 1 кг чистого клея
-    public CalculationItem $glue_solvent_kg_price; // стоимость 1 кг чистого растворителя для клея
-    public CalculationItem $mix_glue_kg_price; // стоимость 1 кг КлееСмеси
-    public CalculationItem $glue_area1;
-    public CalculationItem $glue_area2;
-    public CalculationItem $glue_expense1;
-    public CalculationItem $glue_expense2;
-    public CalculationItem $glue_price1;
-    public CalculationItem $glue_price2;
+    public /*CalculationItem*/ $glue_kg_weight; // расход КлееСмеси на 1 кг клея
+    public /*CalculationItem*/ $glue_kg_price; // цена 1 кг чистого клея
+    public /*CalculationItem*/ $glue_solvent_kg_price; // цена 1 кг чистого растворителя для клея
+    public /*CalculationItem*/ $mix_glue_kg_price; // цена 1 кг КлееСмеси
+    public /*CalculationItem*/ $glue_area1;
+    public /*CalculationItem*/ $glue_area2;
+    public /*CalculationItem*/ $glue_expense1;
+    public /*CalculationItem*/ $glue_expense2;
+    public /*CalculationItem*/ $glue_price1;
+    public /*CalculationItem*/ $glue_price2;
 
     public function __construct(TuningData $tuning_data, 
             TuningData $laminator_tuning_data,
@@ -533,14 +533,14 @@ class Calculation {
         //****************************************
     
         // Общая стоимость грязная (с приладки), руб
-        $this->film_price = new CalculationItem("Общая стоимость плёнки (осн)", $this->mdirty->value * $price * $this->GetCurrencyRate($currency, $usd, $euro), "|= ".$this->mdirty->display." * ".$this->Display($price)." * ".$this->Display($this->GetCurrencyRate($currency, $usd, $euro)), "масса пленки осн * цена * курс валюты");
+        $this->film_price = new CalculationItem("Общая стоимость плёнки (осн)", $this->mdirty->value * $price * $this->GetCurrencyRate($currency, $usd, $euro), "|= ".$this->mdirty->display." * ".$this->Display($price)." * ".$this->Display($this->GetCurrencyRate($currency, $usd, $euro)), "масса пленки осн * цена плёнки * курс валюты");
     
         if($this->laminations_number > 0) {
-            $this->lamination1_film_price = new CalculationItem("Общая стоимость плёнки (лам 1)", $this->lamination1_mdirty->value * $lamination1_price * $this->GetCurrencyRate($lamination1_currency, $usd, $euro), "|= ".$this->lamination1_mdirty->display." * ".$this->Display($lamination1_price)." * ".$this->Display($this->GetCurrencyRate($lamination1_currency, $usd, $euro)), "масса плёнки лам 1 * цена * курс валюты");
+            $this->lamination1_film_price = new CalculationItem("Общая стоимость плёнки (лам 1)", $this->lamination1_mdirty->value * $lamination1_price * $this->GetCurrencyRate($lamination1_currency, $usd, $euro), "|= ".$this->lamination1_mdirty->display." * ".$this->Display($lamination1_price)." * ".$this->Display($this->GetCurrencyRate($lamination1_currency, $usd, $euro)), "масса плёнки лам 1 * цена плёнки * курс валюты");
         }
     
         if($this->laminations_number > 1) {
-            $this->lamination2_film_price = new CalculationItem("Общая стоимость плёнки (лам 2)", $this->lamination2_mdirty->value * $lamination2_price * $this->GetCurrencyRate($lamination2_currency, $usd, $euro), "|= ".$this->lamination2_mdirty->display." * ".$this->Display($lamination2_price)." * ".$this->Display($this->GetCurrencyRate($lamination2_currency, $usd, $euro)), "масса плёнки лам 2 * цена * курс валюты");
+            $this->lamination2_film_price = new CalculationItem("Общая стоимость плёнки (лам 2)", $this->lamination2_mdirty->value * $lamination2_price * $this->GetCurrencyRate($lamination2_currency, $usd, $euro), "|= ".$this->lamination2_mdirty->display." * ".$this->Display($lamination2_price)." * ".$this->Display($this->GetCurrencyRate($lamination2_currency, $usd, $euro)), "масса плёнки лам 2 * цена плёнки * курс валюты");
         }
         
         //*****************************************
@@ -566,11 +566,11 @@ class Calculation {
         }
         
         if($this->laminations_number > 0) {
-            $this->lamination1_time = new CalculationItem("Время ламинации без приладки (лам 1), ч", ($this->mpogpure->value + $this->waste_length->value) / 1000 / $laminator_machine_data->speed, "|= (".$this->mpogpure->display." + ".$this->waste_length->display.") / 1000 / ".$this->Display($laminator_machine_data->speed), "(м. пог. чистые + СтартСтопОтход) / 1000 / скорость работы ламинатора");
+            $this->lamination1_time = new CalculationItem("Время ламинации без приладки (лам 1), ч", ($this->mpogpure->value + $this->lamination1_waste_length->value) / 1000 / $laminator_machine_data->speed, "|= (".$this->mpogpure->display." + ".$this->lamination1_waste_length->display.") / 1000 / ".$this->Display($laminator_machine_data->speed), "(м. пог. чистые + СтартСтопОтход) / 1000 / скорость работы ламинатора");
         }
         
         if($this->laminations_number > 1) {
-            $this->lamination2_time = new CalculationItem("Время ламинации без приладки (лам 2), ч", ($this->mpogpure->value + $this->waste_length->value) / 1000 / $laminator_machine_data->speed, "|= (".$this->mpogpure->display." + ".$this->waste_length->display.") / 1000 / ".$this->Display($laminator_machine_data->speed), "(м. пог. чистые + СтартСтопОтход) / 1000 / скорость работы ламинатора");
+            $this->lamination2_time = new CalculationItem("Время ламинации без приладки (лам 2), ч", ($this->mpogpure->value + $this->lamination2_waste_length->value) / 1000 / $laminator_machine_data->speed, "|= (".$this->mpogpure->display." + ".$this->lamination2_waste_length->display.") / 1000 / ".$this->Display($laminator_machine_data->speed), "(м. пог. чистые + СтартСтопОтход) / 1000 / скорость работы ламинатора");
         }
         
         // Общее время выполнения тиража
@@ -588,15 +588,15 @@ class Calculation {
         
         // Стоимость выполнения тиража
         if(!empty($machine_id)) {
-            $this->work_price = new CalculationItem("Стоимость выполнения (осн), руб", $this->work_time->value * $machine_data->price, "|= ".$this->work_time->display." * ".$this->Display($machine_data->price), "общее время выполнения осн * стоимость работы оборудования осн");
+            $this->work_price = new CalculationItem("Стоимость выполнения (осн), руб", $this->work_time->value * $machine_data->price, "|= ".$this->work_time->display." * ".$this->Display($machine_data->price), "общее время выполнения осн * цена работы оборудования осн");
         }
         
         if($this->laminations_number > 0) {
-            $this->lamination1_work_price = new CalculationItem("Стоимость выполнения (лам 1), руб", $this->lamination1_work_time->value * $laminator_machine_data->price, "|= ".$this->lamination1_work_time->display." * ".$this->Display($laminator_machine_data->price), "общее время выполнения лам 1 * стоимость работы оборудования лам 1");
+            $this->lamination1_work_price = new CalculationItem("Стоимость выполнения (лам 1), руб", $this->lamination1_work_time->value * $laminator_machine_data->price, "|= ".$this->lamination1_work_time->display." * ".$this->Display($laminator_machine_data->price), "общее время выполнения лам 1 * цена работы оборудования лам 1");
         }
         
         if($this->laminations_number > 1) {
-            $this->lamination2_work_price = new CalculationItem("Стоимость выполнения (лам 2), руб", $this->lamination2_work_time->value * $laminator_machine_data->price, "|= ".$this->lamination2_work_time->display." * ".$this->Display($laminator_machine_data->price), "общее время выполнения лам 2 * стоимость работы оборудования лам 2");
+            $this->lamination2_work_price = new CalculationItem("Стоимость выполнения (лам 2), руб", $this->lamination2_work_time->value * $laminator_machine_data->price, "|= ".$this->lamination2_work_time->display." * ".$this->Display($laminator_machine_data->price), "общее время выполнения лам 2 * цена работы оборудования лам 2");
         }
         
         //****************************************
@@ -610,12 +610,12 @@ class Calculation {
             // Расход КраскаСмеси на 1 кг краски
             $this->ink_1kg_mix_weight = new CalculationItem("Расход КраскаСмеси на 1 кг краски, кг", 1 + $ink_data->solvent_part, "|= 1 + ".$this->Display($ink_data->solvent_part), "1 + расход растворителя на 1 кг краски");
             
-            // Стоимость 1 кг чистого растворителя для краски
+            // Цена 1 кг чистого растворителя для краски
             if($machine_shortname == self::COMIFLEX) {
-                $this->ink_solvent_kg_price = new CalculationItem("Стоимость 1 кг чистого флексоля 82, руб", $ink_data->solvent_flexol82 * $this->GetCurrencyRate($ink_data->solvent_flexol82_currency, $usd, $euro), "|= ".$this->Display($ink_data->solvent_flexol82)." * ".$this->Display($this->GetCurrencyRate($ink_data->solvent_flexol82_currency, $usd, $euro)), "стоимость 1 кг флексоля 82 * курс валюты");
+                $this->ink_solvent_kg_price = new CalculationItem("Цена 1 кг чистого флексоля 82, руб", $ink_data->solvent_flexol82 * $this->GetCurrencyRate($ink_data->solvent_flexol82_currency, $usd, $euro), "|= ".$this->Display($ink_data->solvent_flexol82)." * ".$this->Display($this->GetCurrencyRate($ink_data->solvent_flexol82_currency, $usd, $euro)), "цена 1 кг флексоля 82 * курс валюты");
             }
             else {
-                $this->ink_solvent_kg_price = new CalculationItem("Стоимость 1 кг чистого этоксипропанола, руб", $ink_data->solvent_etoxipropanol * $this->GetCurrencyRate($ink_data->solvent_etoxipropanol_currency, $usd, $euro), "|= ".$this->Display($ink_data->solvent_etoxipropanol)." * ".$this->Display($this->GetCurrencyRate($ink_data->solvent_etoxipropanol_currency, $usd, $euro)), "стоимость 1 кг этоксипропанола * курс валюты");
+                $this->ink_solvent_kg_price = new CalculationItem("Цена 1 кг чистого этоксипропанола, руб", $ink_data->solvent_etoxipropanol * $this->GetCurrencyRate($ink_data->solvent_etoxipropanol_currency, $usd, $euro), "|= ".$this->Display($ink_data->solvent_etoxipropanol)." * ".$this->Display($this->GetCurrencyRate($ink_data->solvent_etoxipropanol_currency, $usd, $euro)), "цена 1 кг этоксипропанола * курс валюты");
             }
             
             $this->ink_kg_prices = array();
@@ -629,13 +629,13 @@ class Calculation {
                 $cmyk = "cmyk_$i";
                 $percent = "percent_$i";
                 
-                // Стоимость 1 кг чистой краски, руб
+                // Цена 1 кг чистой краски, руб
                 $price = $this->GetInkPrice($$ink, $$cmyk, $ink_data->c, $ink_data->c_currency, $ink_data->m, $ink_data->m_currency, $ink_data->y, $ink_data->y_currency, $ink_data->k, $ink_data->k_currency, $ink_data->panton, $ink_data->panton_currency, $ink_data->white, $ink_data->white_currency, $ink_data->lacquer, $ink_data->lacquer_currency);
-                $ink_kg_price = new CalculationItem("Стоимость 1 кг чистой краски (краска $i), руб", $price->value * $this->GetCurrencyRate($price->currency, $usd, $euro), "|= ".$this->Display($price->value)." * ". $this->Display($this->GetCurrencyRate($price->currency, $usd, $euro)), "стоимость 1 кг краски * курс валюты");
+                $ink_kg_price = new CalculationItem("Цена 1 кг чистой краски (краска $i), руб", $price->value * $this->GetCurrencyRate($price->currency, $usd, $euro), "|= ".$this->Display($price->value)." * ". $this->Display($this->GetCurrencyRate($price->currency, $usd, $euro)), "цена 1 кг краски * курс валюты");
                 $this->ink_kg_prices[$i] = $ink_kg_price;
                 
-                // Стоимость 1 кг КраскаСмеси, руб
-                $mix_ink_kg_price = new CalculationItem("Стоимость 1 кг КраскаСмеси (краска $i), руб", (($ink_kg_price->value * 1) + ($this->ink_solvent_kg_price->value * $ink_data->solvent_part)) / $this->ink_1kg_mix_weight->value, "|= ((".$this->Display($ink_kg_price->display)." * 1) + (".$this->Display($this->ink_solvent_kg_price->display)." * ".$this->Display($ink_data->solvent_part).")) / ".$this->ink_1kg_mix_weight->display, "((стоимость 1 кг чистой краски * 1) + (стоимость 1 кг чистого растворителя * расход растворителя на 1 кг краски)) / расход КраскаСмеси на 1 кг краски");
+                // Цена 1 кг КраскаСмеси, руб
+                $mix_ink_kg_price = new CalculationItem("Цена 1 кг КраскаСмеси (краска $i), руб", (($ink_kg_price->value * 1) + ($this->ink_solvent_kg_price->value * $ink_data->solvent_part)) / $this->ink_1kg_mix_weight->value, "|= ((".$this->Display($ink_kg_price->display)." * 1) + (".$this->Display($this->ink_solvent_kg_price->display)." * ".$this->Display($ink_data->solvent_part).")) / ".$this->ink_1kg_mix_weight->display, "((цена 1 кг чистой краски * 1) + (цена 1 кг чистого растворителя * расход растворителя на 1 кг краски)) / расход КраскаСмеси на 1 кг краски");
                 $this->mix_ink_kg_prices[$i] = $mix_ink_kg_price;
                 
                 // Расход КраскаСмеси
@@ -643,7 +643,7 @@ class Calculation {
                 $this->ink_expenses[$i] = $ink_expense;
                 
                 // Стоимость КраскаСмеси
-                $ink_price = new CalculationItem("Стоимость КраскаСмеси (краска $i), руб", $ink_expense->value * $mix_ink_kg_price->value, "|= ".$ink_expense->display." * ".$mix_ink_kg_price->display, "Расход КраскаСмеси * стоимость 1 кг КраскаСмеси");
+                $ink_price = new CalculationItem("Стоимость КраскаСмеси (краска $i), руб", $ink_expense->value * $mix_ink_kg_price->value, "|= ".$ink_expense->display." * ".$mix_ink_kg_price->display, "Расход КраскаСмеси * цена 1 кг КраскаСмеси");
                 $this->ink_prices[$i] = $ink_price;
             }
         }
@@ -656,14 +656,14 @@ class Calculation {
             // Расход КлееСмеси на 1 кг клея
             $this->glue_kg_weight = new CalculationItem("Расход КлееСмеси на 1 кг клея, кг", 1 + $glue_data->solvent_part, "|= 1 + ".$this->Display($glue_data->solvent_part), "1 + расход растворителя на 1 кг клея");
             
-            // Стоимость 1 кг чистого клея
-            $this->glue_kg_price = new CalculationItem("Стоимость 1 кг чистого клея, руб", $glue_data->glue * $this->GetCurrencyRate($glue_data->glue_currency, $usd, $euro), "|= ".$this->Display($glue_data->glue)." * ".$this->Display($this->GetCurrencyRate($glue_data->glue_currency, $usd, $euro)), "стоимость 1 кг клея * курс валюты");
+            // Цена 1 кг чистого клея
+            $this->glue_kg_price = new CalculationItem("Цена 1 кг чистого клея, руб", $glue_data->glue * $this->GetCurrencyRate($glue_data->glue_currency, $usd, $euro), "|= ".$this->Display($glue_data->glue)." * ".$this->Display($this->GetCurrencyRate($glue_data->glue_currency, $usd, $euro)), "цена 1 кг клея * курс валюты");
             
-            // Стоимость 1 кг чистого растворителя для клея
-            $this->glue_solvent_kg_price = new CalculationItem("Стоимость 1 кг чистого растворителя для клея", $glue_data->solvent * $this->GetCurrencyRate($glue_data->solvent_currency, $usd, $euro), "|= ".$this->Display($glue_data->solvent)." * ".$this->Display($this->GetCurrencyRate($glue_data->solvent_currency, $usd, $euro)), "стоимость 1 кг растворителя для клея * курс валюты");
+            // Цена 1 кг чистого растворителя для клея
+            $this->glue_solvent_kg_price = new CalculationItem("Цена 1 кг чистого растворителя для клея", $glue_data->solvent * $this->GetCurrencyRate($glue_data->solvent_currency, $usd, $euro), "|= ".$this->Display($glue_data->solvent)." * ".$this->Display($this->GetCurrencyRate($glue_data->solvent_currency, $usd, $euro)), "цена 1 кг растворителя для клея * курс валюты");
             
-            // Стоимость 1 кг КлееСмеси
-            $this->mix_glue_kg_price = new CalculationItem("Стоимость 1 кг КлееСмеси, руб", (($this->glue_kg_price->value * 1) + ($this->glue_solvent_kg_price->value * $glue_data->solvent_part)) / $this->glue_kg_weight->value, "|= ((".$this->glue_kg_price->display." * 1) + (".$this->glue_solvent_kg_price->display." * ".$this->Display($glue_data->solvent_part).")) / ".$this->glue_kg_weight->display, "((стоимость 1 кг чистого клея * 1) + (стоимость 1 кг чистого растворителя * расход растворителя на 1 кг клея)) / расходл КлееСмеси на 1 кг клея");
+            // Цена 1 кг КлееСмеси
+            $this->mix_glue_kg_price = new CalculationItem("Цена 1 кг КлееСмеси, руб", (($this->glue_kg_price->value * 1) + ($this->glue_solvent_kg_price->value * $glue_data->solvent_part)) / $this->glue_kg_weight->value, "|= ((".$this->glue_kg_price->display." * 1) + (".$this->glue_solvent_kg_price->display." * ".$this->Display($glue_data->solvent_part).")) / ".$this->glue_kg_weight->display, "((цена 1 кг чистого клея * 1) + (цена 1 кг чистого растворителя * расход растворителя на 1 кг клея)) / расходл КлееСмеси на 1 кг клея");
             
             // Площадь заклейки (лам 1), м2
             $this->glue_area1 = new CalculationItem("Площадь заклейки (лам 1), м2", $this->lamination1_mpogdirty->value * $lamination_roller_width / 1000, "|= ".$this->lamination1_mpogdirty->display." * ".$this->Display($lamination_roller_width)." / 1000", "м. пог. грязные лам 1 * ширина ламинирующего вала / 1000");
@@ -672,7 +672,7 @@ class Calculation {
             $this->glue_expense1 = new CalculationItem("Расход КлееСмеси (лам 1), кг", $this->glue_area1->value * $glue_data->glue_expense / 1000, "|= ".$this->glue_area1->display." * ".$this->Display($glue_data->glue_expense)." / 1000", "площадь заклейки лам 1 * расход КлееСмеси в 1 м2 / 1000");
             
             // Стоимость КлееСмеси (лам 1), руб
-            $this->glue_price1 = new CalculationItem("Стоимость КлееСмеси (лам 1), руб", $this->glue_expense1->value * $this->mix_glue_kg_price->value, "|= ".$this->glue_expense1->display." * ".$this->mix_glue_kg_price->display, "расход КлееСмеси лам 1 * стоимость 1 кг КлееСмеси");
+            $this->glue_price1 = new CalculationItem("Стоимость КлееСмеси (лам 1), руб", $this->glue_expense1->value * $this->mix_glue_kg_price->value, "|= ".$this->glue_expense1->display." * ".$this->mix_glue_kg_price->display, "расход КлееСмеси лам 1 * цена 1 кг КлееСмеси");
         }
         
         if($this->laminations_number > 1) {
@@ -683,7 +683,7 @@ class Calculation {
             $this->glue_expense2 = new CalculationItem("Расход КлееСмеси (лам 2), кг", $this->glue_area2->value * $glue_data->glue_expense / 1000, "|= ".$this->glue_area2->display." * ".$this->Display($glue_data->glue_expense)." / 1000", "площадь заклейки лам 2 * расход КлееСмеси в 1 м2 / 1000");
             
             // Стоимость КлееСмеси (лам 2)
-            $this->glue_price2 = new CalculationItem("Стоимость КлееСмеси (лам 2), руб", $this->glue_expense2->value * $this->mix_glue_kg_price->value, "|= ".$this->glue_expense2->display." * ".$this->mix_glue_kg_price->display, "расход КлееСмеси лам 2 * стоимость 1 кг КлееСмеси");
+            $this->glue_price2 = new CalculationItem("Стоимость КлееСмеси (лам 2), руб", $this->glue_expense2->value * $this->mix_glue_kg_price->value, "|= ".$this->glue_expense2->display." * ".$this->mix_glue_kg_price->display, "расход КлееСмеси лам 2 * цена 1 кг КлееСмеси");
         }
     }
 }
