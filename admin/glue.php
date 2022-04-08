@@ -150,20 +150,20 @@ if($row = $fetcher->Fetch()) {
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
                         <div class="form-group">
-                            <label for="glue">Стоимость чистого клея (за кг)</label>
+                            <label for="glue">Цена чистого клея (за кг)</label>
                             <div class="input-group">
                                 <input type="text" 
                                        class="form-control float-only" 
                                        id="glue" 
                                        name="glue" 
                                        value="<?= empty($glue) ? "" : floatval($glue) ?>" 
-                                       placeholder="Стоимость, за кг" 
+                                       placeholder="Цена, за кг" 
                                        required="required" 
                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'glue'); $(this).attr('name', 'glue'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                       onmouseup="javascript: $(this).attr('id', 'glue'); $(this).attr('name', 'glue'); $(this).attr('placeholder', 'Цена, за кг');" 
                                        onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'glue'); $(this).attr('name', 'glue'); $(this).attr('placeholder', 'Стоимость, за кг');" 
-                                       onfocusout="javascript: $(this).attr('id', 'glue'); $(this).attr('name', 'glue'); $(this).attr('placeholder', 'Стоимость, за кг');" />
+                                       onkeyup="javascript: $(this).attr('id', 'glue'); $(this).attr('name', 'glue'); $(this).attr('placeholder', 'Цена, за кг');" 
+                                       onfocusout="javascript: $(this).attr('id', 'glue'); $(this).attr('name', 'glue'); $(this).attr('placeholder', 'Цена, за кг');" />
                                 <div class="input-group-append">
                                     <select id="glue_currency" name="glue_currency" required="required">
                                         <option value="" hidden="">...</option>
@@ -173,23 +173,23 @@ if($row = $fetcher->Fetch()) {
                                     </select>
                                 </div>
                             </div>
-                            <div class="invalid-feedback">Стоимость чистого клея обязательно</div>
+                            <div class="invalid-feedback">Цена чистого клея обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="solvent">Стоимость растворителя для клея (за кг)</label>
+                            <label for="solvent">Цена растворителя для клея (за кг)</label>
                             <div class="input-group">
                                 <input type="text" 
                                        class="form-control float-only" 
                                        id="solvent" 
                                        name="solvent" 
                                        value="<?= empty($solvent) ? "" : floatval($solvent) ?>" 
-                                       placeholder="Стоимость, за кг" 
+                                       placeholder="Цена, за кг" 
                                        required="required" 
                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                       onmouseup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Цена, за кг');" 
                                        onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" 
-                                       onfocusout="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Стоимость, за кг');" />
+                                       onkeyup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Цена, за кг');" 
+                                       onfocusout="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Цена, за кг');" />
                                 <div class="input-group-append">
                                     <select id="solvent_currency" name="solvent_currency" required="required">
                                         <option value="" hidden="">...</option>
@@ -199,7 +199,7 @@ if($row = $fetcher->Fetch()) {
                                     </select>
                                 </div>
                             </div>
-                            <div class="invalid-feedback">Стоимость растворителя для клея обязательно</div>
+                            <div class="invalid-feedback">Цена растворителя для клея обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="glue">Расход смеси клея, г/м<sup>2</sup></label>

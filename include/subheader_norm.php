@@ -29,9 +29,9 @@
     <a href="laminator.php" class="mr-4<?=$laminator_class ?>">Ламинатор</a>
     <a href="currency.php" class="mr-4<?=$currency_class ?>">Курсы валют</a>
     <a href="extracharge.php" class="mr-4<?=$extracharge_class ?>">Наценка</a>
-    <a href="ink.php" class="mr-4<?=$ink_class ?>">Стоимость краски</a>
-    <a href="glue.php" class="mr-4<?=$glue_class ?>">Стоимость клея</a>
-    <a href="cliche.php" class="mr-4<?=$cliche_class ?>">Стоимость форм</a>
+    <a href="ink.php" class="mr-4<?=$ink_class ?>">Цена краски</a>
+    <a href="glue.php" class="mr-4<?=$glue_class ?>">Цена клея</a>
+    <a href="cliche.php" class="mr-4<?=$cliche_class ?>">Цена форм</a>
 </div>
 <?php
 if(!empty($machine_id)):

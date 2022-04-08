@@ -357,13 +357,13 @@ if($row = $fetcher->Fetch()) {
                                                id="c" 
                                                name="c" 
                                                value="<?= empty($c) || $c == 0.0 ? "" : floatval($c) ?>" 
-                                               placeholder="Стоимость, за кг" 
+                                               placeholder="Цена, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'c'); $(this).attr('name', 'c'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onmouseup="javascript: $(this).attr('id', 'c'); $(this).attr('name', 'c'); $(this).attr('placeholder', 'Цена, за кг');" 
                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'c'); $(this).attr('name', 'c'); $(this).attr('placeholder', 'Стоимость, за кг');" 
-                                               onfocusout="javascript: $(this).attr('id', 'c'); $(this).attr('name', 'c'); $(this).attr('placeholder', 'Стоимость, за кг');" />
+                                               onkeyup="javascript: $(this).attr('id', 'c'); $(this).attr('name', 'c'); $(this).attr('placeholder', 'Цена, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'c'); $(this).attr('name', 'c'); $(this).attr('placeholder', 'Цена, за кг');" />
                                         <div class="input-group-append">
                                             <select id="c_currency" name="c_currency" required="required">
                                                 <option value="" hidden="">...</option>
@@ -405,13 +405,13 @@ if($row = $fetcher->Fetch()) {
                                                id="m" 
                                                name="m" 
                                                value="<?= empty($m) || $m == 0.0 ? "" : floatval($m) ?>" 
-                                               placeholder="Стоимость, за кг" 
+                                               placeholder="Цена, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'm'); $(this).attr('name', 'm'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onmouseup="javascript: $(this).attr('id', 'm'); $(this).attr('name', 'm'); $(this).attr('placeholder', 'Цена, за кг');" 
                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'm'); $(this).attr('name', 'm'); $(this).attr('placeholder', 'Стоимость, за кг');" 
-                                               onfocusout="javascript: $(this).attr('id', 'm'); $(this).attr('name', 'm'); $(this).attr('placeholder', 'Стоимость, за кг');" />
+                                               onkeyup="javascript: $(this).attr('id', 'm'); $(this).attr('name', 'm'); $(this).attr('placeholder', 'Цена, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'm'); $(this).attr('name', 'm'); $(this).attr('placeholder', 'Цена, за кг');" />
                                         <div class="input-group-append">
                                             <select id="m_currency" name="m_currency" required="required">
                                                 <option value="" hidden="">...</option>
@@ -453,13 +453,13 @@ if($row = $fetcher->Fetch()) {
                                                id="y" 
                                                name="y" 
                                                value="<?= empty($y) || $y == 0.0 ? "" : floatval($y) ?>" 
-                                               placeholder="Стоимость, за кг" 
+                                               placeholder="Цена, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'y'); $(this).attr('name', 'y'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onmouseup="javascript: $(this).attr('id', 'y'); $(this).attr('name', 'y'); $(this).attr('placeholder', 'Цена, за кг');" 
                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'y'); $(this).attr('name', 'y'); $(this).attr('placeholder', 'Стоимость, за кг');" 
-                                               onfocusout="javascript: $(this).attr('id', 'y'); $(this).attr('name', 'y'); $(this).attr('placeholder', 'Стоимость, за кг');" />
+                                               onkeyup="javascript: $(this).attr('id', 'y'); $(this).attr('name', 'y'); $(this).attr('placeholder', 'Цена, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'y'); $(this).attr('name', 'y'); $(this).attr('placeholder', 'Цена, за кг');" />
                                         <div class="input-group-append">
                                             <select id="y_currency" name="y_currency" required="required">
                                                 <option value="" hidden="">...</option>
@@ -501,13 +501,13 @@ if($row = $fetcher->Fetch()) {
                                                id="k" 
                                                name="k" 
                                                value="<?= empty($k) || $k == 0.0 ? "" : floatval($k) ?>" 
-                                               placeholder="Стоимость, за кг" 
+                                               placeholder="Цена, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'k'); $(this).attr('name', 'k'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onmouseup="javascript: $(this).attr('id', 'k'); $(this).attr('name', 'k'); $(this).attr('placeholder', 'Цена, за кг');" 
                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'k'); $(this).attr('name', 'k'); $(this).attr('placeholder', 'Стоимость, за кг');" 
-                                               onfocusout="javascript: $(this).attr('id', 'k'); $(this).attr('name', 'k'); $(this).attr('placeholder', 'Стоимость, за кг');" />
+                                               onkeyup="javascript: $(this).attr('id', 'k'); $(this).attr('name', 'k'); $(this).attr('placeholder', 'Цена, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'k'); $(this).attr('name', 'k'); $(this).attr('placeholder', 'Цена, за кг');" />
                                         <div class="input-group-append">
                                             <select id="k_currency" name="k_currency" required="required">
                                                 <option value="" hidden="">...</option>
@@ -549,13 +549,13 @@ if($row = $fetcher->Fetch()) {
                                                id="panton" 
                                                name="panton" 
                                                value="<?= empty($panton) || $panton == 0.0 ? "" : floatval($panton) ?>" 
-                                               placeholder="Стоимость, за кг" 
+                                               placeholder="Цена, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'panton'); $(this).attr('name', 'panton'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onmouseup="javascript: $(this).attr('id', 'panton'); $(this).attr('name', 'panton'); $(this).attr('placeholder', 'Цена, за кг');" 
                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'panton'); $(this).attr('name', 'panton'); $(this).attr('placeholder', 'Стоимость, за кг');" 
-                                               onfocusout="javascript: $(this).attr('id', 'panton'); $(this).attr('name', 'panton'); $(this).attr('placeholder', 'Стоимость, за кг');" />
+                                               onkeyup="javascript: $(this).attr('id', 'panton'); $(this).attr('name', 'panton'); $(this).attr('placeholder', 'Цена, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'panton'); $(this).attr('name', 'panton'); $(this).attr('placeholder', 'Цена, за кг');" />
                                         <div class="input-group-append">
                                             <select id="panton_currency" name="panton_currency" required="required">
                                                 <option value="" hidden="">...</option>
@@ -597,13 +597,13 @@ if($row = $fetcher->Fetch()) {
                                                id="white" 
                                                name="white" 
                                                value="<?= empty($white) || $white == 0.0 ? "" : floatval($white) ?>" 
-                                               placeholder="Стоимость, за кг" 
+                                               placeholder="Цена, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'white'); $(this).attr('name', 'white'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onmouseup="javascript: $(this).attr('id', 'white'); $(this).attr('name', 'white'); $(this).attr('placeholder', 'Цена, за кг');" 
                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'white'); $(this).attr('name', 'white'); $(this).attr('placeholder', 'Стоимость, за кг');" 
-                                               onfocusout="javascript: $(this).attr('id', 'white'); $(this).attr('name', 'white'); $(this).attr('placeholder', 'Стоимость, за кг');" />
+                                               onkeyup="javascript: $(this).attr('id', 'white'); $(this).attr('name', 'white'); $(this).attr('placeholder', 'Цена, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'white'); $(this).attr('name', 'white'); $(this).attr('placeholder', 'Цена, за кг');" />
                                         <div class="input-group-append">
                                             <select id="white_currency" name="white_currency" required="required">
                                                 <option value="" hidden="">...</option>
@@ -645,13 +645,13 @@ if($row = $fetcher->Fetch()) {
                                                id="lacquer" 
                                                name="lacquer" 
                                                value="<?= empty($lacquer) || $lacquer == 0.0 ? "" : floatval($lacquer) ?>" 
-                                               placeholder="Стоимость, за кг" 
+                                               placeholder="Цена, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'lacquer'); $(this).attr('name', 'lacquer'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onmouseup="javascript: $(this).attr('id', 'lacquer'); $(this).attr('name', 'lacquer'); $(this).attr('placeholder', 'Цена, за кг');" 
                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'lacquer'); $(this).attr('name', 'lacquer'); $(this).attr('placeholder', 'Стоимость, за кг');" 
-                                               onfocusout="javascript: $(this).attr('id', 'lacquer'); $(this).attr('name', 'lacquer'); $(this).attr('placeholder', 'Стоимость, за кг');" />
+                                               onkeyup="javascript: $(this).attr('id', 'lacquer'); $(this).attr('name', 'lacquer'); $(this).attr('placeholder', 'Цена, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'lacquer'); $(this).attr('name', 'lacquer'); $(this).attr('placeholder', 'Цена, за кг');" />
                                         <div class="input-group-append">
                                             <select id="lacquer_currency" name="lacquer_currency" required="required">
                                                 <option value="" hidden="">...</option>
@@ -686,20 +686,20 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="solvent_etoxipropanol">Стоимость этоксипропанола (за кг)</label>
+                                    <label for="solvent_etoxipropanol">Цена этоксипропанола (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
                                                id="solvent_etoxipropanol" 
                                                name="solvent_etoxipropanol" 
                                                value="<?= empty($solvent_etoxipropanol) || $solvent_etoxipropanol == 0.0 ? "" : floatval($solvent_etoxipropanol) ?>" 
-                                               placeholder="Стоимость, за кг" 
+                                               placeholder="Цена, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'solvent_etoxipropanol'); $(this).attr('name', 'solvent_etoxipropanol'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onmouseup="javascript: $(this).attr('id', 'solvent_etoxipropanol'); $(this).attr('name', 'solvent_etoxipropanol'); $(this).attr('placeholder', 'Цена, за кг');" 
                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'solvent_etoxipropanol'); $(this).attr('name', 'solvent_etoxipropanol'); $(this).attr('placeholder', 'Стоимость, за кг');" 
-                                               onfocusout="javascript: $(this).attr('id', 'solvent_etoxipropanol'); $(this).attr('name', 'solvent_etoxipropanol'); $(this).attr('placeholder', 'Стоимость, за кг');" />
+                                               onkeyup="javascript: $(this).attr('id', 'solvent_etoxipropanol'); $(this).attr('name', 'solvent_etoxipropanol'); $(this).attr('placeholder', 'Цена, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'solvent_etoxipropanol'); $(this).attr('name', 'solvent_etoxipropanol'); $(this).attr('placeholder', 'Цена, за кг');" />
                                         <div class="input-group-append">
                                             <select id="solvent_etoxipropanol_currency" name="solvent_etoxipropanol_currency" required="required">
                                                 <option value="" hidden="">...</option>
@@ -709,25 +709,25 @@ if($row = $fetcher->Fetch()) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback">Стоимость этоксипропанола обязательно</div>
+                                    <div class="invalid-feedback">Цена этоксипропанола обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
-                                    <label for="solvent_flexol82">Стоимость флексоля 82 (за кг)</label>
+                                    <label for="solvent_flexol82">Цена флексоля 82 (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
                                                id="solvent_flexol82" 
                                                name="solvent_flexol82" 
                                                value="<?= empty($solvent_flexol82) || $solvent_flexol82 == 0.0 ? "" : floatval($solvent_flexol82) ?>" 
-                                               placeholder="Стоимость, за кг" 
+                                               placeholder="Цена, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'solvent_flexol82'); $(this).attr('name', 'solvent_flexol82'); $(this).attr('placeholder', 'Стоимость, за кг');" 
+                                               onmouseup="javascript: $(this).attr('id', 'solvent_flexol82'); $(this).attr('name', 'solvent_flexol82'); $(this).attr('placeholder', 'Цена, за кг');" 
                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'solvent_flexol82'); $(this).attr('name', 'solvent_flexol82'); $(this).attr('placeholder', 'Стоимость, за кг');" 
-                                               onfocusout="javascript: $(this).attr('id', 'solvent_flexol82'); $(this).attr('name', 'solvent_flexol82'); $(this).attr('placeholder', 'Стоимость, за кг');" />
+                                               onkeyup="javascript: $(this).attr('id', 'solvent_flexol82'); $(this).attr('name', 'solvent_flexol82'); $(this).attr('placeholder', 'Цена, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'solvent_flexol82'); $(this).attr('name', 'solvent_flexol82'); $(this).attr('placeholder', 'Цена, за кг');" />
                                         <div class="input-group-append">
                                             <select id="solvent_flexol82_currency" name="solvent_flexol82_currency" required="required">
                                                 <option value="" hidden="">...</option>
@@ -737,7 +737,7 @@ if($row = $fetcher->Fetch()) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback">Стоимость флексоля 82 обязательно</div>
+                                    <div class="invalid-feedback">Цена флексоля 82 обязательно</div>
                                 </div>
                             </div>
                         </div>

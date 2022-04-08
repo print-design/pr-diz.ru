@@ -112,20 +112,20 @@ if($row = $fetcher->Fetch()) {
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
                         <div class="form-group">
-                            <label for="price">Стоимость работы оборудования, руб/час</label>
+                            <label for="price">Цена работы оборудования, руб/час</label>
                             <input type="text" 
                                    class="form-control float-only" 
                                    id="price" 
                                    name="price" 
                                    value="<?= empty($price) ? "" : floatval($price) ?>" 
-                                   placeholder="Стоимость, руб/час" 
+                                   placeholder="Цена, руб/час" 
                                    required="required" 
                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'price'); $(this).attr('name', 'price'); $(this).attr('placeholder', 'Стоимость, руб/час');" 
+                                   onmouseup="javascript: $(this).attr('id', 'price'); $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена, руб/час');" 
                                    onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'price'); $(this).attr('name', 'price'); $(this).attr('placeholder', 'Стоимость, руб/час');" 
-                                   onfocusout="javascript: $(this).attr('id', 'price'); $(this).attr('name', 'price'); $(this).attr('placeholder', 'Стоимость, руб/час');" />
-                            <div class="invalid-feedback">Стоимость обязательно</div>
+                                   onkeyup="javascript: $(this).attr('id', 'price'); $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена, руб/час');" 
+                                   onfocusout="javascript: $(this).attr('id', 'price'); $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена, руб/час');" />
+                            <div class="invalid-feedback">Цена обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="speed">Скорость работы оборудования, км/час</label>
