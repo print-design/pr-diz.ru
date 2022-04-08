@@ -3,9 +3,11 @@ include '../include/topscripts.php';
 include './calculation.php';
 
 function Display($value) {
-    $fvalue = floatval($value);
-    if(!is_nan($fvalue)) {
+    if(is_float($value) || is_double($value)) {
         return number_format($fvalue, 2, ",", " ");
+    }
+    elseif(is_string($value)) {
+        return str_replace(".", ",", $value);
     }
     else {
         return $value;
@@ -113,8 +115,9 @@ if($id !== null) {
     $lamination2_customers_material = null; // Ламинация 2, другая, уд. вес
     $lamination2_ski = null; // Ламинация 2, лыжи
     $lamination2_width_ski = null;  // Ламинация 2, ширина пленки, мм
-        
+    
     $machine = null;
+    $machine_shortname = null;
     $machine_id = null;
     $stream_width = null; // Ширина ручья, мм
     $streams_number = null; // Количество ручьёв
@@ -132,7 +135,7 @@ if($id !== null) {
             . "lamination2_f.name lamination2_film, lamination2_fv.thickness lamination2_thickness, lamination2_fv.weight lamination2_density, "
             . "rc.lamination2_film_variation_id, rc.lamination2_price, rc.lamination2_currency, rc.lamination2_individual_film_name, rc.lamination2_individual_thickness, rc.lamination2_individual_density, "
             . "rc.lamination2_customers_material, rc.lamination2_ski, rc.lamination2_width_ski, "
-            . "m.name machine, rc.machine_id, rc.stream_width, rc.streams_number, rc.raport, rc.lamination_roller_width, rc.ink_number, "
+            . "m.name machine, m.shortname machine_shortname, rc.machine_id, rc.stream_width, rc.streams_number, rc.raport, rc.lamination_roller_width, rc.ink_number, "
             . "rc.ink_1, rc.ink_2, rc.ink_3, rc.ink_4, rc.ink_5, rc.ink_6, rc.ink_7, rc.ink_8, "
             . "rc.color_1, rc.color_2, rc.color_3, rc.color_4, rc.color_5, rc.color_6, rc.color_7, rc.color_8, "
             . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
@@ -205,6 +208,7 @@ if($id !== null) {
         $lamination2_width_ski = $row['lamination2_width_ski'];  // Ламинация 2, ширина пленки, мм
         
         $machine = $row['machine'];
+        $machine_shortname = $row['machine_shortname'];
         $machine_id = $row['machine_id'];
         $stream_width = $row['stream_width']; // Ширина ручья, мм
         $streams_number = $row['streams_number']; // Количество ручьёв
@@ -325,6 +329,7 @@ if($id !== null) {
                 $lamination2_width_ski,  // Ламинация 2, ширина пленки, мм
                 
                 $machine_id, // Машина
+                $machine_shortname, // Короткое название машины
                 $stream_width, // Ширина ручья, мм
                 $streams_number, // Количество ручьёв
                 $raport, // Рапорт
@@ -577,22 +582,18 @@ if($id !== null) {
                 array_push($file_data, array("Красочность", $ink_number, "", ""));
             }
             
-            // Масса краски в смеси, кг
-            array_push($file_data, array($calculation->ink_kg_weight->name, $calculation->ink_kg_weight->display, $calculation->ink_kg_weight->formula, $calculation->ink_kg_weight->comment));
-                
-            
-            // Стоимость растворителя в смеси за 1 кг
+            // Стоимость 1 кг чистого растворителя
             array_push($file_data, array($calculation->ink_solvent_kg_price->name, $calculation->ink_solvent_kg_price->display, $calculation->ink_solvent_kg_price->formula, $calculation->ink_solvent_kg_price->comment));
             
             for($i=1; $i<=$ink_number; $i++) {
-                // Стоимость краски в смеси за 1 кг
+                // Стоимость 1 кг чистой краски
                 array_push($file_data, array($calculation->ink_kg_prices[$i]->name, $calculation->ink_kg_prices[$i]->display, $calculation->ink_kg_prices[$i]->formula, $calculation->ink_kg_prices[$i]->comment));
                 
                 // Расход смеси, кг
                 array_push($file_data, array($calculation->ink_expenses[$i]->name, $calculation->ink_expenses[$i]->display, $calculation->ink_expenses[$i]->formula, $calculation->ink_expenses[$i]->comment));
                 
                 // Стоимость краски, руб
-                array_push($file_data, array($calculation->ink_prices[$i]->name, $calculation->ink_prices[$i]->display, $calculation->ink_prices[$i]->formula, $calculation->ink_prices[$i]->comment));
+                //array_push($file_data, array($calculation->ink_prices[$i]->name, $calculation->ink_prices[$i]->display, $calculation->ink_prices[$i]->formula, $calculation->ink_prices[$i]->comment));
                 
                 // Стоимость растворителя, руб
                 array_push($file_data, array($calculation->ink_solvent_prices[$i]->name, $calculation->ink_solvent_prices[$i]->display, $calculation->ink_solvent_prices[$i]->formula, $calculation->ink_solvent_prices[$i]->comment));
