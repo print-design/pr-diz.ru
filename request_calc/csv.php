@@ -87,8 +87,10 @@ if($id !== null) {
     // ПОЛУЧЕНИЕ ИСХОДНЫХ ДАННЫХ
     $date = null;
     $name = null;
-        
-    $quantity = null; // Масса тиража
+    $unit = null; // Кг или шт
+    $quantity = null; // Размер тиража
+    $work_type_id = null; // Типа работы: с печатью или без печати
+    
     $film = null; // Основная пленка, марка
     $thickness = null; // Основная пленка, толщина, мкм
     $density = null; // Основная пленка, плотность, г/м2
@@ -119,13 +121,14 @@ if($id !== null) {
     $machine = null;
     $machine_shortname = null;
     $machine_id = null;
-    $stream_width = null; // Ширина ручья, мм
+    $width = null; // Обрезная ширина, мм (если плёнка без печати)
+    $stream_width = null; // Ширина ручья, мм (если плёнка с печатью)
     $streams_number = null; // Количество ручьёв
     $raport = null; // Рапорт
     $lamination_roller_width = null; // Ширина ламинирующего вала
     $ink_number = 0; // Красочность
-        
-    $sql = "select rc.date, rc.name, rc.quantity, rc.unit, "
+    
+    $sql = "select rc.date, rc.name, rc.unit, rc.quantity, rc.work_type_id, "
             . "f.name film, fv.thickness thickness, fv.weight density, "
             . "rc.film_variation_id, rc.price, rc.currency, rc.individual_film_name, rc.individual_thickness, rc.individual_density, "
             . "rc.customers_material, rc.ski, rc.width_ski, "
@@ -135,7 +138,7 @@ if($id !== null) {
             . "lamination2_f.name lamination2_film, lamination2_fv.thickness lamination2_thickness, lamination2_fv.weight lamination2_density, "
             . "rc.lamination2_film_variation_id, rc.lamination2_price, rc.lamination2_currency, rc.lamination2_individual_film_name, rc.lamination2_individual_thickness, rc.lamination2_individual_density, "
             . "rc.lamination2_customers_material, rc.lamination2_ski, rc.lamination2_width_ski, "
-            . "m.name machine, m.shortname machine_shortname, rc.machine_id, rc.stream_width, rc.streams_number, rc.raport, rc.lamination_roller_width, rc.ink_number, "
+            . "m.name machine, m.shortname machine_shortname, rc.machine_id, rc.width, rc.stream_width, rc.streams_number, rc.raport, rc.lamination_roller_width, rc.ink_number, "
             . "rc.ink_1, rc.ink_2, rc.ink_3, rc.ink_4, rc.ink_5, rc.ink_6, rc.ink_7, rc.ink_8, "
             . "rc.color_1, rc.color_2, rc.color_3, rc.color_4, rc.color_5, rc.color_6, rc.color_7, rc.color_8, "
             . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
@@ -156,8 +159,9 @@ if($id !== null) {
         $date = $row['date'];
         $name = $row['name'];
         
-        $quantity = $row['quantity']; // Размер тиража в кг или шт
         $unit = $row['unit']; // Кг или шт
+        $quantity = $row['quantity']; // Размер тиража в кг или шт
+        $work_type_id = $row['work_type_id']; // Тип работы: с печатью или без печати
         
         if(!empty($row['film_variation_id'])) {
             $film = $row['film']; // Основная пленка, марка
@@ -210,7 +214,8 @@ if($id !== null) {
         $machine = $row['machine'];
         $machine_shortname = $row['machine_shortname'];
         $machine_id = $row['machine_id'];
-        $stream_width = $row['stream_width']; // Ширина ручья, мм
+        $width = $row['width']; // Обрезная ширина, мм (если плёнка без печати)
+        $stream_width = $row['stream_width']; // Ширина ручья, мм (если плёнка с печатью)
         $streams_number = $row['streams_number']; // Количество ручьёв
         $raport = $row['raport']; // Рапорт
         $lamination_roller_width = $row['lamination_roller_width']; // Ширина ламинирующего вала
@@ -237,12 +242,12 @@ if($id !== null) {
     }
     
     // ПОЛУЧЕНИЕ НОРМ
-    $tuning_data = null;
-    $laminator_tuning_data = null;
-    $machine_data = null;
-    $laminator_machine_data = null;
-    $ink_data = null;
-    $glue_data = null;
+    $tuning_data = new TuningData(null, null, null);
+    $laminator_tuning_data = new TuningData(null, null, null);
+    $machine_data = new MachineData(null, null, null);
+    $laminator_machine_data = new MachineData(null, null, null);
+    $ink_data = new InkData(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+    $glue_data = new GlueData(null, null, null, null, null, null, null);
     
     if(!empty($date)) {
         $sql = "select machine_id, time, length, waste_percent from norm_tuning where id in (select max(id) from norm_tuning where date <= '$date' group by machine_id)";
@@ -298,8 +303,9 @@ if($id !== null) {
                 $glue_data,
                 $usd, // Курс доллара
                 $euro, // Курс евро
-                $quantity, // Размер тиража в кг или шт
                 $unit, // Кг или шт
+                $quantity, // Размер тиража в кг или шт
+                $work_type_id, // Тип работы: с печатью или без печати
                 
                 $film, // Основная пленка, марка
                 $thickness, // Основная пленка, толщина, мкм
@@ -330,7 +336,8 @@ if($id !== null) {
                 
                 $machine_id, // Машина
                 $machine_shortname, // Короткое название машины
-                $stream_width, // Ширина ручья, мм
+                $width, // Обрезная ширина, мм (если плёнка без печати)
+                $stream_width, // Ширина ручья, мм (если плёнка с печатью)
                 $streams_number, // Количество ручьёв
                 $raport, // Рапорт
                 $lamination_roller_width, // Ширина ламинирующего вала
