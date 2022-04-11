@@ -473,10 +473,10 @@ class Calculation {
             $this->mpogdirty = new CalculationItem("М. пог. грязные (осн), м", $this->mpogpure->value + ($ink_number * $tuning_data->length) + $this->waste_length->value, "|= ".$this->mpogpure->display." + (".$ink_number." * ".$this->Display($tuning_data->length).") + ".$this->waste_length->display, "м. пог. чистые + (красочность * метраж приладки 1 краски) + СтартСтопОтход осн");
         }
         elseif ($this->laminations_number > 0) {
-            $this->mpogdirty = new CalculationItem("М. пог. грязные (осн), м", $this->mpogpure->value + ($this->laminations_number * $laminator_tuning_data->length) + $this->waste_length->value, "|= ".$this->mpogpure->display." + (".$this->laminations_number." * ".$this->Display($laminator_tuning_data->length).") + ".$this->waste_length->display, "м. пог. чистые + (количество ламинаций * метраж приладки ламинации) + СтартСтопОтход осн");
+            $this->mpogdirty = new CalculationItem("М. пог. грязные (осн), м", $this->mpogpure->value + ($this->laminations_number * $laminator_tuning_data->length), "|= ".$this->mpogpure->display." + (".$this->laminations_number." * ".$this->Display($laminator_tuning_data->length).")", "м. пог. чистые + (количество ламинаций * метраж приладки ламинации)");
         }
         else {
-            $this->mpogdirty = new CalculationItem("М. пог. грязные (осн), м", $this->mpogpure->value + $this->waste_length->value, "|= ".$this->mpogpure->display." + ".$this->waste_length->display, "м. пог. чистые + СтартСтопОтход осн");
+            $this->mpogdirty = new CalculationItem("М. пог. грязные (осн), м", $this->mpogpure->value, "|= ".$this->mpogpure->display, "м. пог. чистые");
         }
         
         if($this->laminations_number > 0) {
