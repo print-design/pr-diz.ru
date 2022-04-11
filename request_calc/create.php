@@ -1264,7 +1264,6 @@ $colorfulnesses = array();
                                                    class="form-control float-only film-price<?=$lamination1_price_valid ?>" 
                                                    placeholder="Цена" 
                                                    value="<?=$lamination1_price ?>" 
-                                                   required="required"
                                                    onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                                    onmouseup="javascript: $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" 
                                                    onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
@@ -1441,7 +1440,6 @@ $colorfulnesses = array();
                                                        class="form-control float-only film-price<?=$lamination2_price_valid ?>" 
                                                        placeholder="Цена" 
                                                        value="<?=$lamination2_price ?>" 
-                                                       required="required"
                                                        onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                                        onmouseup="javascript: $(this).attr('name', 'lamination2_price'); $(this).attr('placeholder', 'Цена');" 
                                                        onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
@@ -2300,6 +2298,7 @@ $colorfulnesses = array();
                 $('#film_title').addClass('d-none');
                 $('#lamination1_film_id').attr('required', 'required');
                 $('#lamination1_film_variation_id').attr('required', 'required');
+                $('#lamination1_price').attr('required', 'required');
                 
                 $('#no_ski_option').addClass('d-none');
                 if($('#ski').val() == <?=NO_SKI ?>) {
@@ -2347,6 +2346,7 @@ $colorfulnesses = array();
                 $('#hide_lamination_1').removeClass('d-block');
                 $('#lamination2_film_id').attr('required', 'required');
                 $('#lamination2_film_variation_id').attr('required', 'required');
+                $('#lamination2_price').attr('required', 'required');
                 SetFilmFieldsVisibility($('#lamination2_film_id').val(), $('#lamination2_customers_material').is(':checked'), 'lamination2_');
             }
             
