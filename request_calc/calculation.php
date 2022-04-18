@@ -177,7 +177,7 @@ class Calculation {
     // Машины
     const COMIFLEX = 'comiflex';
 
-    function GetWidthPrint($ski, $streams_number, $stream_width, $width_ski) {
+    function GetWidth($ski, $streams_number, $stream_width, $width_ski) {
         $result = 0;
     
         switch($ski) {
@@ -197,27 +197,7 @@ class Calculation {
         return $result;
     }
     
-    function GetWidthNoPrint($ski, $width, $width_ski) {
-        $result = 0;
-        
-        switch ($ski) {
-            case self::NO_SKI:
-                $result = $width;
-                break;
-            
-            case self::STANDARD_SKI:
-                $result = $width + 20;
-                break;
-            
-            case self::NONSTANDARD_SKI:
-                $result = $width_ski;
-                break;
-        }
-        
-        return $result;
-    }
-    
-    function GetWidthFormulaPrint($ski, $streams_number, $stream_width, $width_ski) {
+    function GetWidthFormula($ski, $streams_number, $stream_width, $width_ski) {
         $result = "";
     
         switch($ski) {
@@ -237,27 +217,7 @@ class Calculation {
         return $result;
     }
     
-    function GetWidthFormulaNoPrint($ski, $width, $width_ski) {
-        $result = "";
-    
-        switch($ski) {
-            case self::NO_SKI:
-                $result = "$width";
-                break;
-        
-            case self::STANDARD_SKI:
-                $result = "$width + 20";
-                break;
-        
-            case self::NONSTANDARD_SKI:
-                $result = "$width_ski";
-                break;
-        }
-    
-        return $result;
-    }
-
-    function GetWidthCommentPrint($ski) {
+    function GetWidthComment($ski) {
         $result = "";
     
         switch($ski) {
@@ -277,26 +237,6 @@ class Calculation {
         return $result;
     }
     
-    function GetWidthCommentNoPrint($ski) {
-        $result = "";
-    
-        switch($ski) {
-            case self::NO_SKI:
-                $result = "обрезная ширина";
-                break;
-        
-            case self::STANDARD_SKI:
-                $result = "обрезная ширина + 20 мм";
-                break;
-        
-            case self::NONSTANDARD_SKI:
-                $result = "вводится вручную";
-                break;
-        }
-    
-        return $result;
-    }
-
     function GetCurrencyRate($currency, $usd, $euro) {
         switch($currency) {
             case self::USD:
@@ -462,8 +402,7 @@ class Calculation {
         
             $machine_id, // Машина
             $machine_shortname, // Короткое наименование машины
-            $width, // Обрезная ширина, мм (если плёнка без печати)
-            $stream_width, // Ширина ручья, мм (если плёнка с печатью)
+            $stream_width, // Ширина ручья, мм
             $streams_number, // Количество ручьёв
             $raport, // Рапорт
             $lamination_roller_width, // Ширина ламинирующего вала
@@ -491,41 +430,21 @@ class Calculation {
         }
 
         // Ширина материала, мм
-        if($work_type_id == self::WORK_TYPE_NOPRINT) {
-            $this->width = new CalculationItem("Ширина материала (осн), мм", $this->GetWidthNoPrint($ski, $width, $width_ski), "|= ".$this->GetWidthFormulaNoPrint($ski, $width, $width_ski), $this->GetWidthCommentNoPrint($ski));
-        }
-        elseif($work_type_id = self::WORK_TYPE_PRINT) {
-            $this->width = new CalculationItem("Ширина материала (осн), мм", $this->GetWidthPrint($ski, $streams_number, $stream_width, $width_ski), "|= ".$this->GetWidthFormulaPrint($ski, $streams_number, $stream_width, $width_ski), $this->GetWidthCommentPrint($ski));
-        }
+        $this->width = new CalculationItem("Ширина материала (осн), мм", $this->GetWidth($ski, $streams_number, $stream_width, $width_ski), "|= ".$this->GetWidthFormula($ski, $streams_number, $stream_width, $width_ski), $this->GetWidthComment($ski));
         
         if($this->laminations_number > 0) {
-            if($work_type_id == self::WORK_TYPE_NOPRINT) {
-                $this->lamination1_width = new CalculationItem("Ширина материала (лам 1), мм", $this->GetWidthNoPrint($lamination1_ski, $width, $lamination1_width_ski), "|= ".$this->GetWidthFormulaNoPrint($lamination1_ski, $width, $lamination1_width_ski), $this->GetWidthCommentNoPrint($lamination1_ski));
-            }
-            elseif($work_type_id == self::WORK_TYPE_PRINT) {
-                $this->lamination1_width = new CalculationItem("Ширина материала (лам 1), мм", $this->GetWidthPrint($lamination1_ski, $streams_number, $stream_width, $lamination1_width_ski), "|= ".$this->GetWidthFormulaPrint($lamination1_ski, $streams_number, $stream_width, $lamination1_width_ski), $this->GetWidthCommentPrint($lamination1_ski));
-            }
+            $this->lamination1_width = new CalculationItem("Ширина материала (лам 1), мм", $this->GetWidth($lamination1_ski, $streams_number, $stream_width, $lamination1_width_ski), "|= ".$this->GetWidthFormula($lamination1_ski, $streams_number, $stream_width, $lamination1_width_ski), $this->GetWidthComment($lamination1_ski));
         }
         
         if($this->laminations_number > 1) {
-            if($work_type_id == self::WORK_TYPE_NOPRINT) {
-                $this->lamination2_width = new CalculationItem("Ширина материала (лам 2), мм", $this->GetWidthNoPrint($lamination2_ski, $width, $lamination2_width_ski), "|= ".$this->GetWidthFormulaNoPrint($lamination2_ski, $width, $lamination2_width_ski), $this->GetWidthCommentNoPrint($lamination2_ski));
-            }
-            elseif($work_type_id == self::WORK_TYPE_PRINT) {
-                $this->lamination2_width = new CalculationItem("Ширина материала (лам 2), мм", $this->GetWidthPrint($lamination2_ski, $streams_number, $stream_width, $lamination2_width_ski), "|= ".$this->GetWidthFormulaPrint($lamination2_ski, $streams_number, $stream_width, $lamination2_width_ski), $this->GetWidthCommentPrint($lamination2_ski));
-            }
+            $this->lamination2_width = new CalculationItem("Ширина материала (лам 2), мм", $this->GetWidth($lamination2_ski, $streams_number, $stream_width, $lamination2_width_ski), "|= ".$this->GetWidthFormula($lamination2_ski, $streams_number, $stream_width, $lamination2_width_ski), $this->GetWidthComment($lamination2_ski));
         }
 
         // Площадь чистая
         $this->m2pure = new CalculationItem("М2 чистые, м2", $this->weight->value * 1000 / ($density + (empty($lamination1_density) ? 0 : $lamination1_density) + (empty($lamination2_density) ? 0 : $lamination2_density)), "|= ".$this->weight->display." * 1000 / (".$this->Display($density)." + ".(empty($lamination1_density) ? 0 : $this->Display($lamination1_density))." + ".(empty($lamination2_density) ? 0 : $this->Display($lamination2_density)).")", "масса тиража * 1000 / (уд. вес осн + уд. вес лам 1 + уд. вес лам 2)");
         
         // Метры погонные чистые
-        if($work_type_id == self::WORK_TYPE_NOPRINT) {
-            $this->mpogpure = new CalculationItem("М пог. чистые, м", $this->m2pure->value / ($width / 1000), "|= ".$this->m2pure->display." / ($width / 1000)", "м2 чистые / (ширина обрезная / 1000)");
-        }
-        elseif($work_type_id == self::WORK_TYPE_PRINT) {
-            $this->mpogpure = new CalculationItem("М пог. чистые, м", $this->m2pure->value / ($streams_number * $stream_width / 1000), "|= ".$this->m2pure->display." / ($streams_number * $stream_width / 1000)", "м2 чистые / (количество ручьёв * ширина ручья / 1000)");
-        }
+        $this->mpogpure = new CalculationItem("М пог. чистые, м", $this->m2pure->value / ($streams_number * $stream_width / 1000), "|= ".$this->m2pure->display." / ($streams_number * $stream_width / 1000)", "м2 чистые / (количество ручьёв * ширина ручья / 1000)");
         
         // СтартСтопОтход
         if(!empty($machine_id)) {

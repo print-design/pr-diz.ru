@@ -260,7 +260,6 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $lamination2_ski = filter_input(INPUT_POST, 'lamination2_ski'); if(empty($lamination2_ski)) $lamination2_ski = "NULL";
         $lamination2_width_ski = filter_input(INPUT_POST, 'lamination2_width_ski'); if(empty($lamination2_width_ski)) $lamination2_width_ski = "NULL";
         
-        $width = filter_input(INPUT_POST, 'width'); if(empty($width)) $width = "NULL";
         $length = filter_input(INPUT_POST, 'length'); if(empty($length)) $length = "NULL";
         $stream_width = filter_input(INPUT_POST, 'stream_width'); if(empty($stream_width)) $stream_width = "NULL";
         $streams_number = filter_input(INPUT_POST, 'streams_number'); if(empty($streams_number)) $streams_number = "NULL";
@@ -296,7 +295,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                 . "film_variation_id, price, currency, individual_film_name, individual_thickness, individual_density, customers_material, ski, width_ski, "
                 . "lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, lamination1_ski, lamination1_width_ski, "
                 . "lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, lamination2_ski, lamination2_width_ski, "
-                . "width, streams_number, machine_id, length, stream_width, raport, lamination_roller_width, ink_number, manager_id, status_id, "
+                . "streams_number, machine_id, length, stream_width, raport, lamination_roller_width, ink_number, manager_id, status_id, "
                 . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
                 . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                 . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -306,7 +305,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                 . "$film_variation_id, $price, '$currency', '$individual_film_name', $individual_thickness, $individual_density, $customers_material, $ski, $width_ski, "
                 . "$lamination1_film_variation_id, $lamination1_price, '$lamination1_currency', '$lamination1_individual_film_name', $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, $lamination1_ski, $lamination1_width_ski, "
                 . "$lamination2_film_variation_id, $lamination2_price, '$lamination2_currency', '$lamination2_individual_film_name', $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, $lamination2_ski, $lamination2_width_ski, "
-                . "$width, $streams_number, $machine_id, $length, $stream_width, $raport, $lamination_roller_width, $ink_number, $manager_id, $status_id, "
+                . "$streams_number, $machine_id, $length, $stream_width, $raport, $lamination_roller_width, $ink_number, $manager_id, $status_id, "
                 . "'$ink_1', '$ink_2', '$ink_3', '$ink_4', '$ink_5', '$ink_6', '$ink_7', '$ink_8', "
                 . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                 . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
@@ -372,7 +371,7 @@ if(!empty($id)) {
             . "(select film_id from film_variation where id = c.lamination1_film_variation_id) lamination1_film_id, "
             . "c.lamination2_film_variation_id, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_ski, c.lamination2_width_ski, "
             . "(select film_id from film_variation where id = c.lamination2_film_variation_id) lamination2_film_id, "
-            . "c.width, c.streams_number, c.machine_id, c.length, c.stream_width, c.raport, c.lamination_roller_width, c.ink_number, c.manager_id, c.status_id, "
+            . "c.streams_number, c.machine_id, c.length, c.stream_width, c.raport, c.lamination_roller_width, c.ink_number, c.manager_id, c.status_id, "
             . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
             . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
@@ -570,11 +569,6 @@ if($lamination2_ski === null && isset($row['lamination2_ski'])) {
 $lamination2_width_ski = filter_input(INPUT_POST, 'lamination2_width_ski');
 if($lamination2_width_ski === null && isset($row['lamination2_width_ski'])) {
     $lamination2_width_ski = $row['lamination2_width_ski'];
-}
-
-$width = filter_input(INPUT_POST, 'width');
-if($width === null && isset($row['width'])) {
-    $width = $row['width'];
 }
 
 $streams_number = filter_input(INPUT_POST, 'streams_number');
@@ -1489,24 +1483,6 @@ $colorfulnesses = array();
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <!-- Обрезная ширина -->
-                            <div class="col-6 no-print-only d-none">
-                                <div class="form-group">
-                                    <label for="width">Обрезная ширина</label>
-                                    <input type="text" 
-                                           id="width" 
-                                           name="width" 
-                                           class="form-control int-only no-print-only d-none" 
-                                           placeholder="Обрезная ширина, мм" 
-                                           value="<?=$width ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Обрезная ширина, мм')" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Обрезная ширина, мм')" 
-                                           onfocusout="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Обрезная ширина, мм')" />
-                                    <div class="invalid-feedback">Обрезная ширина обязательно</div>
-                                </div>
-                            </div>
                             <!-- Длина этикетки -->
                             <div class="col-6 print-only d-none">
                                 <div class="form-group">
@@ -1526,13 +1502,14 @@ $colorfulnesses = array();
                                 </div>
                             </div>
                             <!-- Ширина ручья -->
-                            <div class="col-6 print-only d-none">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="stream_width">Ширина ручья, мм</label>
                                     <input type="text" 
                                            id="stream_width" 
                                            name="stream_width" 
-                                           class="form-control print-only d-none" 
+                                           class="form-control" 
+                                           required="required" 
                                            placeholder="Ширина ручья, мм" 
                                            value="<?= empty($stream_width) ? "" : floatval($stream_width) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
