@@ -1456,7 +1456,7 @@ $colorfulnesses = array();
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="lamination2_ski" id="for_lamination2_ski">Лыжи</label>
-                                            <select name="lamination2_ski" id="lamination2_ski" class="form-control form-control-sm">
+                                            <select name="lamination2_ski" id="lamination2_ski" class="form-control">
                                                 <option value="<?=STANDARD_SKI ?>">Стандартные лыжи</option>
                                                 <option value="<?=NONSTANDARD_SKI ?>">Нестандартные лыжи</option>
                                             </select>
