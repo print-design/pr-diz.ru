@@ -1483,24 +1483,6 @@ $colorfulnesses = array();
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <!-- Длина этикетки -->
-                            <div class="col-6 print-only d-none">
-                                <div class="form-group">
-                                    <label for="length">Длина этикетки, мм</label>
-                                    <input type="text" 
-                                           id="length" 
-                                           name="length" 
-                                           class="form-control print-only d-none" 
-                                           placeholder="Длина этикетки, мм" 
-                                           value="<?= empty($length) ? "" : floatval($length) ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
-                                           onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки, мм');" />
-                                    <div class="invalid-feedback">Длина этикетки обязательно</div>
-                                </div>
-                            </div>
                             <!-- Ширина ручья -->
                             <div class="col-6">
                                 <div class="form-group">
@@ -1518,6 +1500,24 @@ $colorfulnesses = array();
                                            onkeyup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" 
                                            onfocusout="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" />
                                     <div class="invalid-feedback">Ширина ручья обязательно</div>
+                                </div>
+                            </div>
+                            <!-- Длина этикетки -->
+                            <div class="col-6 print-only d-none">
+                                <div class="form-group">
+                                    <label for="length">Длина этикетки, мм</label>
+                                    <input type="text" 
+                                           id="length" 
+                                           name="length" 
+                                           class="form-control print-only d-none" 
+                                           placeholder="Длина этикетки, мм" 
+                                           value="<?= empty($length) ? "" : floatval($length) ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
+                                           onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки, мм');" />
+                                    <div class="invalid-feedback">Длина этикетки обязательно</div>
                                 </div>
                             </div>
                             <!-- Количество ручьёв -->
