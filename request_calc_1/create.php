@@ -2657,22 +2657,22 @@ $colorfulnesses = array();
                                     <div class="invalid-feedback">Обрезная ширина обязательно</div>
                                 </div>
                             </div>
-                            <!-- Длина от метки до метки -->
+                            <!-- Длина этикетки -->
                             <div class="col-6 print-only d-none">
                                 <div class="form-group">
-                                    <label for="length">Длина от метки до метки, мм</label>
+                                    <label for="length">Длина этикетки, мм</label>
                                     <input type="text" 
                                            id="length" 
                                            name="length" 
                                            class="form-control print-only d-none" 
-                                           placeholder="Длина от метки до метки, мм" 
+                                           placeholder="Длина этикетки, мм" 
                                            value="<?= empty($length) ? "" : floatval($length) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки, мм');" 
+                                           onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки, мм');" 
-                                           onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина от метки до метки, мм');" />
-                                    <div class="invalid-feedback">Длина от метки до метки обязательно</div>
+                                           onkeyup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
+                                           onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки, мм');" />
+                                    <div class="invalid-feedback">Длина этикетки обязательно</div>
                                 </div>
                             </div>
                             <!-- Ширина ручья -->
@@ -3548,7 +3548,7 @@ $colorfulnesses = array();
                 ChangeLimitIntValue($(this), 1600);
             });
             
-            // Ограничение значения поля "Длина от метки до метки" до 3 цифр
+            // Ограничение значения поля "Длина этикетки" до 3 цифр
             $('input#length').keydown(function(e) {
                 if(!KeyDownLimitIntValue($(e.target), e, 999)) {
                     return false;

@@ -534,7 +534,7 @@ if(!empty($id)) {
                             <td></td>
                         </tr>
                         <tr>
-                            <th>Длина <span style="font-size: smaller;">(от метки до метки)</span></th>
+                            <th>Длина этикетки</span></th>
                             <td><?=$length ?> мм</td>
                         </tr>
                         <tr>
