@@ -264,12 +264,12 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
         $stream_width = filter_input(INPUT_POST, 'stream_width'); if(empty($stream_width)) $stream_width = "NULL";
         $streams_number = filter_input(INPUT_POST, 'streams_number'); if(empty($streams_number)) $streams_number = "NULL";
         $raport = filter_input(INPUT_POST, 'raport'); if(empty($raport)) $raport = "NULL";
+        $number_in_raport = filter_input(INPUT_POST, 'number_in_raport'); if(empty($number_in_raport)) $number_in_raport = "NULL";
         $lamination_roller_width = filter_input(INPUT_POST, 'lamination_roller_width'); if(empty($lamination_roller_width)) $lamination_roller_width = "NULL";
         $ink_number = filter_input(INPUT_POST, 'ink_number'); if(empty($ink_number)) $ink_number = "NULL";
         
         $manager_id = GetUserId();
         $status_id = CALCULATION; // Статус "Расчёт"
-        
         
         // Данные о цвете
         for($i=1; $i<=8; $i++) {
@@ -295,7 +295,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                 . "film_variation_id, price, currency, individual_film_name, individual_thickness, individual_density, customers_material, ski, width_ski, "
                 . "lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, lamination1_ski, lamination1_width_ski, "
                 . "lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, lamination2_ski, lamination2_width_ski, "
-                . "streams_number, machine_id, length, stream_width, raport, lamination_roller_width, ink_number, manager_id, status_id, "
+                . "streams_number, machine_id, length, stream_width, raport, number_in_raport, lamination_roller_width, ink_number, manager_id, status_id, "
                 . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
                 . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                 . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -305,7 +305,7 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
                 . "$film_variation_id, $price, '$currency', '$individual_film_name', $individual_thickness, $individual_density, $customers_material, $ski, $width_ski, "
                 . "$lamination1_film_variation_id, $lamination1_price, '$lamination1_currency', '$lamination1_individual_film_name', $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, $lamination1_ski, $lamination1_width_ski, "
                 . "$lamination2_film_variation_id, $lamination2_price, '$lamination2_currency', '$lamination2_individual_film_name', $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, $lamination2_ski, $lamination2_width_ski, "
-                . "$streams_number, $machine_id, $length, $stream_width, $raport, $lamination_roller_width, $ink_number, $manager_id, $status_id, "
+                . "$streams_number, $machine_id, $length, $stream_width, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $manager_id, $status_id, "
                 . "'$ink_1', '$ink_2', '$ink_3', '$ink_4', '$ink_5', '$ink_6', '$ink_7', '$ink_8', "
                 . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                 . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
@@ -341,6 +341,9 @@ if(null !== filter_input(INPUT_POST, 'create_request_calc_submit')) {
             // Рапорт
             $raport = null;
             
+            // Количество этикеток на рапорте
+            $number_in_raport = null;
+            
             // Лыжи
             $ski = null;
             $lam1_ski = null;
@@ -371,7 +374,7 @@ if(!empty($id)) {
             . "(select film_id from film_variation where id = c.lamination1_film_variation_id) lamination1_film_id, "
             . "c.lamination2_film_variation_id, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_ski, c.lamination2_width_ski, "
             . "(select film_id from film_variation where id = c.lamination2_film_variation_id) lamination2_film_id, "
-            . "c.streams_number, c.machine_id, c.length, c.stream_width, c.raport, c.lamination_roller_width, c.ink_number, c.manager_id, c.status_id, "
+            . "c.streams_number, c.machine_id, c.length, c.stream_width, c.raport, c.number_in_raport, c.lamination_roller_width, c.ink_number, c.manager_id, c.status_id, "
             . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
             . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
@@ -594,6 +597,11 @@ if($stream_width === null && isset($row['stream_width'])) {
 $raport = filter_input(INPUT_POST, 'raport');
 if($raport === null && isset($row['raport'])) {
     $raport = $row['raport'];
+}
+
+$number_in_raport = filter_input(INPUT_POST, 'number_in_raport');
+if($number_in_raport === null && isset($row['number_in_raport'])) {
+    $number_in_raport = $row['number_in_raport'];
 }
 
 $lamination_roller_width = filter_input(INPUT_POST, 'lamination_roller_width');
@@ -1507,16 +1515,12 @@ $colorfulnesses = array();
                                 <div class="form-group">
                                     <label for="length">Длина этикетки, мм</label>
                                     <input type="text" 
+                                           readonly="readonly" 
                                            id="length" 
                                            name="length" 
                                            class="form-control print-only d-none" 
                                            placeholder="Длина этикетки, мм" 
-                                           value="<?= empty($length) ? "" : floatval($length) ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
-                                           onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки, мм');" />
+                                           value="<?= empty($length) ? "" : floatval($length) ?>" />
                                     <div class="invalid-feedback">Длина этикетки обязательно</div>
                                 </div>
                             </div>
@@ -1562,6 +1566,22 @@ $colorfulnesses = array();
                                             }
                                         }
                                         ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Количество этикеток в рапорте -->
+                            <div class="col-6 print-only d-none">
+                                <div class="form-group">
+                                    <label for="number_in_raport">Количество этикеток в рапорте</label>
+                                    <select id="number_in_raport" name="number_in_raport" class="form-control print-only d-none">
+                                        <option value="" hidden="hidden" selected="selected">Кол-во эт. в рапорте...</option>
+                                        <?php
+                                        for($i=1; $i<=10; $i++):
+                                        $selected = "";
+                                        if($i == $number_in_raport) $selected = " selected='selected'";
+                                        ?>
+                                        <option<?=$selected ?>><?=$i ?></option>
+                                        <?php endfor; ?>
                                     </select>
                                 </div>
                             </div>
@@ -2351,6 +2371,26 @@ $colorfulnesses = array();
                 $('#lamination2_ski').val(<?=STANDARD_SKI ?>);
                 $('#lamination2_ski').change();
             }
+            
+            // Считаем длину этикетки (рапорт / количество этикеток в рапорте)
+            function CountLength() {
+                var raport = $('#raport').val();
+                var number_in_raport = $('#number_in_raport').val();
+                if(raport != '' && number_in_raport != '') {
+                    var f_raport = parseFloat(raport);
+                    var i_number_in_raport = parseInt(number_in_raport);
+                    var length = Math.floor(f_raport / i_number_in_raport * 10) / 10;
+                    $('#length').val(length);
+                }
+            }
+            
+            $('#raport').change(function() {
+                CountLength();
+            });
+            
+            $('#number_in_raport').change(function() {
+                CountLength();
+            });
             
             // Заполняем список красочностей
             var colorfulnesses = {};
