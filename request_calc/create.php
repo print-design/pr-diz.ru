@@ -404,7 +404,7 @@ if($name === null && isset($row['name'])) {
 }
 
 $unit = filter_input(INPUT_POST, 'unit');
-if($unit === null && isset($row[''])) {
+if($unit === null && isset($row['unit'])) {
     $unit = $row['unit'];
 }
 
