@@ -437,10 +437,10 @@ class Calculation {
             $this->weight = new CalculationItem("Масса тиража, кг", $quantity, "|= ".$this->Display($quantity), "размер тиража в кг");
         }
         else {
-            $this->areapure = new CalculationItem("М2 чистые, м2", $length * $stream_width * $quantity / 1000000, "|= $length * $stream_width * $quantity / 1000000", "длина этикетки * ширина ручья * количество штук / 1 000 000");
+            $this->areapure = new CalculationItem("М2 чистые, м2", $length * $stream_width * $quantity / 1000000, "|= ".$this->Display($length)." * ".$this->Display($stream_width)." * ".$this->Display($quantity)." / 1000000", "длина этикетки * ширина ручья * количество штук / 1 000 000");
             if($this->areapure !== null) array_push ($this->base_values, $this->areapure);
             
-            $this->weight = new CalculationItem("Масса тиража, кг", $this->areapure->value * ($density + (empty($lamination1_density) ? 0 : $lamination1_density) + (empty($lamination2_density) ? 0 : $lamination2_density)) / 1000, "|= ".$this->areapure->value." * ($density".(empty($lamination1_density) ? "" : " + $lamination1_density").(empty($lamination2_density) ? "" : " + $lamination2_density").") / 1000", "м2 чистые * (уд. вес (осн) + уд. вес (лам 1) + уд. вес (лам 2)) / 1000");
+            $this->weight = new CalculationItem("Масса тиража, кг", $this->areapure->value * ($density + (empty($lamination1_density) ? 0 : $lamination1_density) + (empty($lamination2_density) ? 0 : $lamination2_density)) / 1000, "|= ".$this->areapure->display." * (".$this->Display($density).(empty($lamination1_density) ? "" : " + ".$this->Display($lamination1_density)).(empty($lamination2_density) ? "" : " + ".$this->Display($lamination2_density)).") / 1000", "м2 чистые * (уд. вес (осн) + уд. вес (лам 1) + уд. вес (лам 2)) / 1000");
         }
         
         if($this->weight !== null) array_push ($this->base_values, $this->weight);
