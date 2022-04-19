@@ -60,12 +60,12 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
         <div class="col-4 pr-4">
             <h3>Себестоимость</h3>
             <div>Себестоимость</div>
-            <div class="value mb-2">860 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
+            <div class="value mb-2">860 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765,563 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
         </div>
         <div class="col-4 pr-4">
             <h3>Отгрузочная стоимость</h3>
             <div>Отгрузочная стоимость</div>
-            <div class="value">1 200 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
+            <div class="value">1 200 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236,216 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
         </div>
         <div class="col-4" style="width: 250px;"></div>
     </div>
