@@ -1929,7 +1929,6 @@ $colorfulnesses = array();
                     $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?film_variation_id=" + $(this).val() })
                         .done(function(data) {
                             $('label#for_price').text("Цена (" + data.text + ")");
-                            $('#currency').val(data.currency);
                             $('#price_min').val(data.price);
                             ValidatePrice($('#price'), $('#price_min'));
                             
@@ -1994,7 +1993,6 @@ $colorfulnesses = array();
                     $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?film_variation_id=" + $(this).val() })
                         .done(function(data) {
                             $('label#for_lamination1_price').text("Цена (" + data.text + ")");
-                            $('#lamination1_currency').val(data.currency);
                             $('#lamination1_price_min').val(data.price);
                             ValidatePrice($('#lamination1_price'), $('#lamination1_price_min'));
                             
@@ -2059,7 +2057,6 @@ $colorfulnesses = array();
                     $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?film_variation_id=" + $(this).val() })
                         .done(function(data) {
                             $('label#for_lamination2_price').text("Цена (" + data.text + ")");
-                            $('#lamination2_currency').val(data.currency);
                             $('#lamination2_price_min').val(data.price);
                             ValidatePrice($('#lamination2_price'), $('#lamination2_price_min'));
                             
