@@ -121,6 +121,7 @@ if($id !== null) {
     $machine = null;
     $machine_shortname = null;
     $machine_id = null;
+    $length = null; // Длина этикетки, мм
     $width = null; // Обрезная ширина, мм (если плёнка без печати)
     $stream_width = null; // Ширина ручья, мм (если плёнка с печатью)
     $streams_number = null; // Количество ручьёв
@@ -138,7 +139,7 @@ if($id !== null) {
             . "lamination2_f.name lamination2_film, lamination2_fv.thickness lamination2_thickness, lamination2_fv.weight lamination2_density, "
             . "rc.lamination2_film_variation_id, rc.lamination2_price, rc.lamination2_currency, rc.lamination2_individual_film_name, rc.lamination2_individual_thickness, rc.lamination2_individual_density, "
             . "rc.lamination2_customers_material, rc.lamination2_ski, rc.lamination2_width_ski, "
-            . "m.name machine, m.shortname machine_shortname, rc.machine_id, rc.stream_width, rc.streams_number, rc.raport, rc.lamination_roller_width, rc.ink_number, "
+            . "m.name machine, m.shortname machine_shortname, rc.machine_id, rc.length, rc.stream_width, rc.streams_number, rc.raport, rc.lamination_roller_width, rc.ink_number, "
             . "rc.ink_1, rc.ink_2, rc.ink_3, rc.ink_4, rc.ink_5, rc.ink_6, rc.ink_7, rc.ink_8, "
             . "rc.color_1, rc.color_2, rc.color_3, rc.color_4, rc.color_5, rc.color_6, rc.color_7, rc.color_8, "
             . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
@@ -214,6 +215,7 @@ if($id !== null) {
         $machine = $row['machine'];
         $machine_shortname = $row['machine_shortname'];
         $machine_id = $row['machine_id'];
+        $length = $row['length']; // Длина этикетки, мм
         $stream_width = $row['stream_width']; // Ширина ручья, мм
         $streams_number = $row['streams_number']; // Количество ручьёв
         $raport = $row['raport']; // Рапорт
@@ -335,6 +337,7 @@ if($id !== null) {
                 
                 $machine_id, // Машина
                 $machine_shortname, // Короткое название машины
+                $length, // Длина этикетки, мм
                 $stream_width, // Ширина ручья, мм
                 $streams_number, // Количество ручьёв
                 $raport, // Рапорт
@@ -394,6 +397,39 @@ if($id !== null) {
             }
         }
         
+        array_push($file_data, array("", "", "", ""));
+        
+        // Основные величины
+        foreach($calculation->base_values as $base_value) {
+            array_push($file_data, array($base_value->name, $base_value->display, $base_value->formula, $base_value->comment));
+        }
+        
+        // Расход краски
+        if(!empty($ink_number)) {
+            array_push($file_data, array("Красочность", $ink_number, "", ""));
+            
+            for($i=1; $i<=$ink_number; $i++) {
+                // Цена 1 кг чистой краски
+                array_push($file_data, array($calculation->ink_kg_prices[$i]->name, $calculation->ink_kg_prices[$i]->display, $calculation->ink_kg_prices[$i]->formula, $calculation->ink_kg_prices[$i]->comment));
+                
+                // Цена 1 кг КраскаСмеси
+                array_push($file_data, array($calculation->mix_ink_kg_prices[$i]->name, $calculation->mix_ink_kg_prices[$i]->display, $calculation->mix_ink_kg_prices[$i]->formula, $calculation->mix_ink_kg_prices[$i]->comment));
+                
+                // Расход КраскаСмеси, кг
+                array_push($file_data, array($calculation->ink_expenses[$i]->name, $calculation->ink_expenses[$i]->display, $calculation->ink_expenses[$i]->formula, $calculation->ink_expenses[$i]->comment));
+                
+                // Стоимость КраскаСмеси, руб
+                array_push($file_data, array($calculation->ink_prices[$i]->name, $calculation->ink_prices[$i]->display, $calculation->ink_prices[$i]->formula, $calculation->ink_prices[$i]->comment));
+            }
+        }
+        
+        // Расход клея
+        foreach($calculation->glue_values as $glue_value) {
+            array_push($file_data, array($glue_value->name, $glue_value->display, $glue_value->formula, $glue_value->comment));
+        }
+        
+        //***********************************************************
+        //*** DELETE
         array_push($file_data, array("", "", "", ""));
         
         // Масса тиража

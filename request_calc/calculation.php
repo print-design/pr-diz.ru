@@ -327,6 +327,9 @@ class Calculation {
     }
 
     public $laminations_number = 0;
+    public $base_values;
+    
+    public /*CalculationItem*/ $areapure;
     public /*CalculationItem*/ $weight;
     public /*CalculationItem*/ $width, $lamination1_width, $lamination2_width;
     public /*CalculationItem*/ $m2pure;
@@ -346,10 +349,13 @@ class Calculation {
     public /*CalculationItem*/ $print_area;
     public /*CalculationItem*/ $ink_1kg_mix_weight; // расход КраскаСмеси на 1 кг краски
     public /*CalculationItem*/ $ink_solvent_kg_price; // цена 1 кг чистого раствортеля для краски
+    
     public $ink_kg_prices; // цена 1 кг чистой краски
     public $mix_ink_kg_prices; // цена 1 кг КраскаСмеси
     public $ink_expenses; // расход КраскаСмеси
     public $ink_prices; // стоимость КраскаСмеси
+    
+    public $glue_values;
     public /*CalculationItem*/ $glue_kg_weight; // расход КлееСмеси на 1 кг клея
     public /*CalculationItem*/ $glue_kg_price; // цена 1 кг чистого клея
     public /*CalculationItem*/ $glue_solvent_kg_price; // цена 1 кг чистого растворителя для клея
@@ -360,6 +366,8 @@ class Calculation {
     public /*CalculationItem*/ $glue_expense2;
     public /*CalculationItem*/ $glue_price1;
     public /*CalculationItem*/ $glue_price2;
+    
+    
 
     public function __construct(TuningData $tuning_data, 
             TuningData $laminator_tuning_data,
@@ -402,6 +410,7 @@ class Calculation {
         
             $machine_id, // Машина
             $machine_shortname, // Короткое наименование машины
+            $length, // Длина этикетки, мм
             $stream_width, // Ширина ручья, мм
             $streams_number, // Количество ручьёв
             $raport, // Рапорт
@@ -426,6 +435,7 @@ class Calculation {
             $this->weight = new CalculationItem("Масса тиража, кг", $quantity, "|= $quantity", "размер тиража в кг");
         }
         else {
+            $this->areapure = $length * $stream_width * $quantity / 1000000;
             exit("Расчёт в штуках ещё не готов");
         }
 
@@ -707,6 +717,45 @@ class Calculation {
             // Стоимость КлееСмеси (лам 2)
             $this->glue_price2 = new CalculationItem("Стоимость КлееСмеси (лам 2), руб", $this->glue_expense2->value * $this->mix_glue_kg_price->value, "|= ".$this->glue_expense2->display." * ".$this->mix_glue_kg_price->display, "расход КлееСмеси лам 2 * цена 1 кг КлееСмеси");
         }
+        
+        //****************************************
+        // Помещаем все результаты в один массив
+        //****************************************
+        $this->base_values = array();
+        
+        if($this->areapure !== null) array_push ($this->base_values, $this->areapure);
+        if($this->weight !== null) array_push ($this->base_values, $this->weight);
+        if($this->width !== null) array_push ($this->base_values, $this->width); if($this->lamination1_width !== null) array_push ($this->all_data, $this->lamination1_width); if($this->lamination2_width !== null) array_push ($this->all_data, $this->lamination2_width);
+        if($this->m2pure !== null) array_push ($this->base_values, $this->m2pure);
+        if($this->mpogpure !== null) array_push ($this->base_values, $this->mpogpure);
+        if($this->waste_length !== null) array_push ($this->base_values, $this->waste_length); if($this->lamination1_waste_length !== null) array_push ($this->all_data, $this->lamination1_waste_length); if($this->lamination2_waste_length !== null) array_push ($this->all_data, $this->lamination2_waste_length);
+        if($this->mpogdirty !== null) array_push ($this->base_values, $this->mpogdirty); if($this->lamination1_mpogdirty !== null) array_push ($this->all_data, $this->lamination1_mpogdirty); if($this->lamination2_mpogdirty !== null) array_push ($this->all_data, $this->lamination2_mpogdirty);
+        if($this->m2dirty !== null) array_push ($this->base_values, $m2dirty); if($lamination1_m2dirty !== null) array_push ($all_data, $lamination1_m2dirty); if($lamination2_m2dirty !== null) array_push ($all_data, $lamination2_m2dirty);
+        if($mpure !== null) array_push ($this->base_values, $mpure); if($lamination1_mpure !== null) array_push ($all_data, $lamination1_mpure); if($lamination2_mpure !== null) array_push ($all_data, $lamination2_mpure);
+        if($lengthpure !== null) array_push ($this->base_values, $lengthpure); if($lamination1_lengthpure !== null) array_push ($all_data, $lamination1_lengthpure); if($lamination2_lengthpure !== null) array_push ($all_data, $lamination2_lengthpure);
+        if($mdirty !== null) array_push ($this->base_values, $mdirty); if($lamination1_mdirty !== null) array_push ($all_data, $lamination1_mdirty); if($lamination2_mdirty !== null) array_push ($all_data, $lamination2_mdirty);
+        if($lengthdirty !== null) array_push ($this->base_values, $lengthdirty); if($lamination1_lengthdirty !== null) array_push ($all_data, $lamination1_lengthdirty); if($lamination2_lengthdirty !== null) array_push ($all_data, $lamination2_lengthdirty);
+        if($film_price !== null) array_push ($this->base_values, $film_price); if($lamination1_film_price !== null) array_push ($all_data, $lamination1_film_price); if($lamination2_film_price !== null) array_push ($all_data, $lamination2_film_price);
+        if($tuning_time !== null) array_push ($this->base_values, $tuning_time); if($lamination1_tuning_time !== null) array_push ($all_data, $lamination1_tuning_time); if($lamination2_tuning_time !== null) array_push ($all_data, $lamination2_tuning_time);
+        if($print_time !== null) array_push ($this->base_values, $print_time); if($lamination1_time !== null) array_push ($all_data, $lamination1_time); if($lamination2_time !== null) array_push ($all_data, $lamination2_time);
+        if($work_time !== null) array_push ($this->base_values, $work_time); if($lamination1_work_time !== null) array_push ($all_data, $lamination1_work_time); if($lamination2_work_time !== null) array_push ($all_data, $lamination2_work_time);
+        if($work_price !== null) array_push ($this->base_values, $work_price); if($lamination1_work_price !== null) array_push ($all_data, $lamination1_work_price); if($lamination2_work_price !== null) array_push ($all_data, $lamination2_work_price);
+        if($print_area !== null) array_push ($this->base_values, $print_area);
+        if($ink_1kg_mix_weight !== null) array_push ($this->base_values, $ink_1kg_mix_weight);
+        if($ink_solvent_kg_price !== null) array_push ($this->base_values, $ink_solvent_kg_price);
+        
+        $this->glue_values = array();
+        
+        if($glue_kg_weight !== null) array_push ($this->glue_values, $glue_kg_weight);
+        if($glue_kg_price !== null) array_push ($this->glue_values, $glue_kg_price);
+        if($glue_solvent_kg_price !== null) array_push ($this->glue_values, $glue_solvent_kg_price);
+        if($mix_glue_kg_price !== null) array_push ($this->glue_values, $mix_glue_kg_price);
+        if($glue_area1 !== null) array_push ($this->glue_values, $glue_area1);
+        if($glue_area2 !== null) array_push ($this->glue_values, $glue_area2);
+        if($glue_expense1 !== null) array_push ($this->glue_values, $glue_expense1);
+        if($glue_expense2 !== null) array_push ($this->glue_values, $glue_expense2);
+        if($glue_price1 !== null) array_push ($this->glue_values, $glue_price1);
+        if($glue_price2 !== null) array_push ($this->glue_values, $glue_price2);
     }
 }
 ?>
