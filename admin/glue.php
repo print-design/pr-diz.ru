@@ -218,20 +218,20 @@ if($row = $fetcher->Fetch()) {
                             <div class="invalid-feedback">Расход смеси клея обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="glue">Расход клея при ламинации ПЭТ, г/м<sup>2</sup></label>
+                            <label for="glue">Расход смеси клея при ламинации ПЭТ, г/м<sup>2</sup></label>
                             <input type="text" 
                                    class="form-control float-only" 
                                    id="glue_expense_pet" 
                                    name="glue_expense_pet" 
                                    value="<?= empty($glue_expense_pet) ? "" : floatval($glue_expense_pet) ?>" 
-                                   placeholder="Расход клея при ламинации ПЭТ, г/м2" 
+                                   placeholder="Расход смеси клея при ламинации ПЭТ, г/м2" 
                                    required="required" 
                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'glue_expense_pet'); $(this).attr('name', 'glue_expense_pet'); $(this).attr('placeholder', 'Расход клея при ламинации ПЭТ, г/м2');" 
+                                   onmouseup="javascript: $(this).attr('id', 'glue_expense_pet'); $(this).attr('name', 'glue_expense_pet'); $(this).attr('placeholder', 'Расход смеси клея при ламинации ПЭТ, г/м2');" 
                                    onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'glue_expense_pet'); $(this).attr('name', 'glue_expense_pet'); $(this).attr('placeholder', 'Расход клея при ламинации ПЭТ, г/м2');" 
-                                   onfocusout="javascript: $(this).attr('id', 'glue_expense_pet'); $(this).attr('name', 'glue_expense_pet'); $(this).attr('placeholder', 'Расход клея при ламинации ПЭТ, г/м2');" />
-                            <div class="invalid-feedback">Расход клея при ламинации ПЭТ обязательно</div>
+                                   onkeyup="javascript: $(this).attr('id', 'glue_expense_pet'); $(this).attr('name', 'glue_expense_pet'); $(this).attr('placeholder', 'Расход смеси клея при ламинации ПЭТ, г/м2');" 
+                                   onfocusout="javascript: $(this).attr('id', 'glue_expense_pet'); $(this).attr('name', 'glue_expense_pet'); $(this).attr('placeholder', 'Расход смеси клея при ламинации ПЭТ, г/м2');" />
+                            <div class="invalid-feedback">Расход смеси клея при ламинации ПЭТ обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="solvent_part">Расход растворителя (кг) на 1 кг клея</label>
