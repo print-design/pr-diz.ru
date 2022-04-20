@@ -51,7 +51,7 @@ function GetRollImageFolderName($sign) {
 
 // Создание технологической карты
 if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
-    $request_calc_id = filter_input(INPUT_POST, 'request_calc_id');
+    $calculation_id = filter_input(INPUT_POST, 'calculation_id');
     $id = filter_input(INPUT_POST, 'id');
             
     $reverse_print = filter_input(INPUT_POST, 'reverse_print');
@@ -75,9 +75,9 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     
     $sql = "";
     
-    if(!empty($request_calc_id)) {
-        $sql = "insert into techmap (request_calc_id, reverse_print, spool, winding, winding_unit, sign, label, package, roll_type, comment) "
-                . "values ($request_calc_id, $reverse_print, $spool, $winding, '$winding_unit', '$sign', '$label', '$package', $roll_type, '$comment')";
+    if(!empty($calculation_id)) {
+        $sql = "insert into techmap (calculation_id, reverse_print, spool, winding, winding_unit, sign, label, package, roll_type, comment) "
+                . "values ($calculation_id, $reverse_print, $spool, $winding, '$winding_unit', '$sign', '$label', '$package', $roll_type, '$comment')";
     }
     elseif(!empty ($id)) {
         $sql = "update techmap set reverse_print=$reverse_print, spool=$spool, winding=$winding, winding_unit='$winding_unit', sign='$sign', label='$label', "
@@ -104,9 +104,9 @@ $current_date_time = date("dmYHis");
 // Получение объекта
 $sql = "";
 
-$request_calc_id = filter_input(INPUT_POST, 'request_calc_id');
-if(empty($request_calc_id)) {
-    $request_calc_id = filter_input(INPUT_GET, 'request_calc_id');
+$calculation_id = filter_input(INPUT_POST, 'calculation_id');
+if(empty($calculation_id)) {
+    $calculation_id = filter_input(INPUT_GET, 'calculation_id');
 }
 
 $id = filter_input(INPUT_POST, 'id');
@@ -114,8 +114,8 @@ if(empty($id)) {
     $id = filter_input(INPUT_GET, 'id');
 }
 
-if(!empty($request_calc_id)) {
-    $sql = "select c.id request_calc_id, c.date, c.name, c.unit, c.quantity, c.work_type_id, c.stream_width, c.streams_number, c.length, c.raport, "
+if(!empty($calculation_id)) {
+    $sql = "select c.id calculation_id, c.date, c.name, c.unit, c.quantity, c.work_type_id, c.stream_width, c.streams_number, c.length, c.raport, "
             . "c.brand_name, c.thickness, c.individual_brand_name, c.individual_thickness, "
             . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_individual_brand_name, c.lamination1_individual_thickness, "
             . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_individual_brand_name, c.lamination2_individual_thickness, "
@@ -124,14 +124,14 @@ if(!empty($request_calc_id)) {
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
             . "c.cliche_1, c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
             . "cus.name customer, wt.name work_type, u.first_name, u.last_name "
-            . "from request_calc c "
+            . "from calculation c "
             . "inner join customer cus on c.customer_id=cus.id "
             . "inner join work_type wt on c.work_type_id = wt.id "
             . "inner join user u on c.manager_id = u.id "
-            . "where c.id=$request_calc_id";
+            . "where c.id=$calculation_id";
 }
 elseif (!empty($id)) {
-    $sql = "select c.id request_calc_id, c.date, c.name, c.unit, c.quantity, c.work_type_id, c.stream_width, c.streams_number, c.length, c.raport, "
+    $sql = "select c.id calculation_id, c.date, c.name, c.unit, c.quantity, c.work_type_id, c.stream_width, c.streams_number, c.length, c.raport, "
             . "c.brand_name, c.thickness, c.individual_brand_name, c.individual_thickness, "
             . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_individual_brand_name, c.lamination1_individual_thickness, "
             . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_individual_brand_name, c.lamination2_individual_thickness, "
@@ -139,10 +139,10 @@ elseif (!empty($id)) {
             . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
             . "c.cliche_1, c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
-            . "t.request_calc_id, t.date techmap_date, t.reverse_print, t.spool, t.winding, t.winding_unit, t.sign, t.label, t.package, t.roll_type, t.comment, "
+            . "t.calculation_id, t.date techmap_date, t.reverse_print, t.spool, t.winding, t.winding_unit, t.sign, t.label, t.package, t.roll_type, t.comment, "
             . "cus.name customer, wt.name work_type, u.first_name, u.last_name "
-            . "from request_calc c "
-            . "inner join techmap t on t.request_calc_id = c.id "
+            . "from calculation c "
+            . "inner join techmap t on t.calculation_id = c.id "
             . "inner join customer cus on c.customer_id=cus.id "
             . "inner join work_type wt on c.work_type_id = wt.id "
             . "inner join user u on c.manager_id = u.id "
@@ -150,7 +150,7 @@ elseif (!empty($id)) {
 }
 $row = (new Fetcher($sql))->Fetch();
 
-$request_calc_id = $row['request_calc_id'];
+$calculation_id = $row['calculation_id'];
 $date = $row['date'];
 $name = $row['name'];
 $unit = $row['unit'];
@@ -195,7 +195,7 @@ $first_name = $row['first_name'];
 $last_name = $row['last_name'];
 
 if(!empty($id)) {
-    $request_calc_id = $row['request_calc_id'];
+    $calculation_id = $row['calculation_id'];
     $techmap_date = $row['techmap_date'];
     $reverse_print = $row['reverse_print'];
     $spool = $row['spool'];
@@ -330,12 +330,12 @@ if(!empty($id)) {
             <?php
             endif;
             ?>
-            <a class="btn btn-outline-dark backlink" href="request_calc.php?id=<?=$request_calc_id ?>">Назад</a>
+            <a class="btn btn-outline-dark backlink" href="calculation.php?id=<?=$calculation_id ?>">Назад</a>
             <div id="title_zone">
                 <div id="title_qr">
                     <?php
                     $errorCorrectionLevel = 'L'; // 'L','M','Q','H'
-                    $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/request_calc/request_calc.php?id='.$id;
+                    $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/calculation/calculation.php?id='.$id;
                     $filename = "../temp/techmap".$id."_".$current_date_time.".png";
                 
                     do {
@@ -534,7 +534,7 @@ if(!empty($id)) {
                             <td></td>
                         </tr>
                         <tr>
-                            <th>Длина этикетки</span></th>
+                            <th>Длина этикетки</th>
                             <td><?=$length ?> мм</td>
                         </tr>
                         <tr>
@@ -551,7 +551,7 @@ if(!empty($id)) {
             <br />
             <?php endif; ?>
             <form method="post">
-                <input type="hidden" name="request_calc_id" value="<?= empty(filter_input(INPUT_GET, 'request_calc_id')) ? '' : filter_input(INPUT_GET, 'request_calc_id') ?>" />
+                <input type="hidden" name="calculation_id" value="<?= empty(filter_input(INPUT_GET, 'calculation_id')) ? '' : filter_input(INPUT_GET, 'calculation_id') ?>" />
                 <input type="hidden" name="id" value="<?= empty(filter_input(INPUT_GET, 'id')) ? '' : filter_input(INPUT_GET, 'id') ?>" />
                 <?php if($work_type_id == 2): ?>
                 <div class="params_main">

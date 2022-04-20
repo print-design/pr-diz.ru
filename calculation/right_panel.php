@@ -1,28 +1,36 @@
 <?php
 $calculation_class = "";
                         
-if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit_class)) {
+if(isset($create_calculation_submit_class) && empty($create_calculation_submit_class)) {
     $calculation_class = " class='d-none'";    
 }
 ?>
-<div id="calculation"<?=$calculation_class ?> style="position: absolute; top: 0px; bottom: auto;">
-    <div style="position: absolute; right: 30px; top: -80px;">
+<div id="calculation"<?=$calculation_class ?> style="position: absolute; bottom: auto; right: 10px; margin-top: 60px;">
+    <div style="position: absolute; right: 30px; top: 0px;" class="d-none">
         <a class="btn btn-outline-dark" target="_blank" style="margin-top: 20px;" href="print.php?id=<?=$id ?>"><i class="fa fa-print"></i></a>
     </div>
-    <h1>Расчет</h1>
+    <div class="d-flex justify-content-between p-2">
+        <div>
+            <h1>Расчет</h1>
+        </div>
+        <div>
+            <a class="btn btn-outline-dark mr-3" style="width: 3rem;" title="Скачать" href="csv.php?id=<?=$id ?>"><i class="fas fa-file-csv"></i></a>
+            <a class="btn btn-outline-dark" target="_blank" style="width: 3rem;" title="Печать" href="print.php?id=<?=$id ?>"><i class="fa fa-print"></i></a>
+        </div>
+    </div>
     <div class="row text-nowrap">
         <div class="col-3">
             <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
                 <div class="text-nowrap" style="font-size: x-small;">Наценка</div>
                 <?php if($status_id == 1 || $status_id == 2): ?>
                 <div class="input-group">
-                    <input type="text" id="extracharge" name="extracharge" data-id="<?=$id ?>" style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" value="<?=$extracharge ?>" required="required" />
+                    <input type="text" id="extracharge" name="extracharge" data-id="<?=$id ?>" style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" value="30" required="required" />
                     <div class="input-group-append" style="height: 28px;">
                         <span class="input-group-text">%</span>
                     </div>
                 </div>
                 <?php else: ?>
-                <span class="text-nowrap"><?=$extracharge ?>%</span>
+                <span class="text-nowrap">30%</span>
                 <?php endif; ?>
             </div>
         </div>
@@ -52,12 +60,12 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
         <div class="col-4 pr-4">
             <h3>Себестоимость</h3>
             <div>Себестоимость</div>
-            <div class="value mb-2">860 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
+            <div class="value mb-2">860 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765,563 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
         </div>
         <div class="col-4 pr-4">
             <h3>Отгрузочная стоимость</h3>
             <div>Отгрузочная стоимость</div>
-            <div class="value">1 200 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
+            <div class="value">1 200 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236,216 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
         </div>
         <div class="col-4" style="width: 250px;"></div>
     </div>
@@ -77,19 +85,19 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
             <h3>Основная пленка&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 кг</span></h3>
             <div>Закупочная стоимость</div>
             <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за кг</span></div>
-            <div>Минимальная ширина</div>
+            <div>Ширина</div>
             <div class="value mb-2">800 мм</div>
             <div>Масса без приладки</div>
             <div class="value mb-2">7 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">172 000 м</span></div>
             <div>Масса с приладкой</div>
             <div class="value mb-2">8 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">192 000 м</span></div>
         </div>
-        <?php if(!empty($lamination1_brand_name)): ?>
+        <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
         <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
             <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 кг</span></h3>
             <div>Закупочная стоимость</div>
             <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за кг</span></div>
-            <div>Минимальная ширина</div>
+            <div>Ширина</div>
             <div class="value mb-2">800 мм</div>
             <div>Масса без приладки</div>
             <div class="value mb-2">7 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">172 000 м</span></div>
@@ -99,12 +107,12 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
         <?php else: ?>
         <div class="col-4" style="width: 250px;"></div>
         <?php endif; ?>
-        <?php if(!empty($lamination2_brand_name)): ?>
+        <?php if(!empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name)): ?>
         <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
             <h3>Ламинация 2&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 кг</span></h3>
             <div>Закупочная стоимость</div>
             <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за кг</span></div>
-            <div>Минимальная ширина</div>
+            <div>Ширина</div>
             <div class="value mb-2">800 мм</div>
             <div>Масса без приладки</div>
             <div class="value mb-2">7 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">172 000 м</span></div>
@@ -116,17 +124,17 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
         <?php endif; ?>
     </div>
     <?php
-    if(!empty($lamination1_brand_name) || !empty($lamination2_brand_name) || $work_type_id == 2):
+    if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name) || !empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name) || $work_type_id == 2):
     ?>
     <div id="show_costs">
         <div class="row text-nowrap">
             <div class="col-4 pr-4">
                 <button type="button" class="btn btn-light" onclick="javascript: ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать расходы</button>
             </div>
-            <?php if(!empty($lamination1_brand_name)): ?>
+            <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
             <?php endif; ?>
-            <?php if(!empty($lamination2_brand_name)): ?>
+            <?php if(!empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name)): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
             <?php endif; ?>
         </div>
@@ -137,10 +145,10 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
                 <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
                 <h2 class="mt-2">Расходы</h2>
             </div>
-            <?php if(!empty($lamination1_brand_name)): ?>
+            <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
             <?php endif; ?>
-            <?php if(!empty($lamination2_brand_name)): ?>
+            <?php if(!empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name)): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
             <?php endif; ?>
         </div>
@@ -161,7 +169,7 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
                 endif;
                 ?>
             </div>
-            <?php if(!empty($lamination1_brand_name)): ?>
+            <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
                 <div class="value mb-2">1 280 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">4,5 кг</span></div>
@@ -173,7 +181,7 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
             <?php else: ?>
             <div class="col-4" style="width: 250px;"></div>
             <?php endif; ?>
-            <?php if(!empty($lamination2_brand_name)): ?>
+            <?php if(!empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name)): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
                 <div class="value mb-2">1 280 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">4,5 кг</span></div>
@@ -194,7 +202,7 @@ if(isset($create_request_calc_submit_class) && empty($create_request_calc_submit
     <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
     <input type="hidden" id="change_status_submit" name="change_status_submit" />
         <?php if (empty($techmap_id)): ?>
-    <a href="techmap.php?request_calc_id=<?=$id ?>" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Составить тех. карту</a>
+    <a href="techmap.php?calculation_id=<?=$id ?>" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Составить тех. карту</a>
         <?php else: ?>
     <a href="techmap.php?id=<?=$techmap_id ?>" class="btn btn-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
         <?php endif; ?>

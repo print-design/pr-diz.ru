@@ -12,12 +12,12 @@ if($count > 1) {
     $file = $substrings[$count - 1];
 }
 
-$request_calc_status = '';
+$calculation_status = '';
 $techmap_status = '';
 $schedule_status = '';
 
-if($folder == 'request_calc') {
-    $request_calc_status = ' disabled';
+if($folder == 'calculation') {
+    $calculation_status = ' disabled';
 }
 elseif($folder == 'techmap') {
     $techmap_status = ' disabled';
@@ -34,7 +34,7 @@ elseif($folder == 'schedule') {
             if(IsInRole(array('technologist', 'dev', 'manager', 'administrator', 'designer'))):
             ?>
             <li class="nav-item">
-                <a class="nav-link<?=$request_calc_status ?>" href="<?=APPLICATION ?>/request_calc/<?= IsInRole('manager') ? BuildQuery("manager", GetUserId()) : "" ?>">Расчеты</a>
+                <a class="nav-link<?=$calculation_status ?>" href="<?=APPLICATION ?>/calculation/<?= IsInRole('manager') ? BuildQuery("manager", GetUserId()) : "" ?>">Расчеты</a>
             </li>
             <?php endif; ?>
         </ul>

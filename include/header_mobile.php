@@ -39,7 +39,7 @@
                 <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Меню</a>
                 <div class="dropdown-menu" style="position: absolute;">
                     <?php if(IsInRole(array('technologist', 'dev'))): ?>
-                    <a class="btn btn-link dropdown-item" href="<?=APPLICATION ?>/request_calc/">Заказы</a>
+                    <a class="btn btn-link dropdown-item" href="<?=APPLICATION ?>/calculation/">Заказы</a>
                     <?php
                     endif;
                     if(IsInRole(array('technologist', 'storekeeper', 'dev', 'manager'))):

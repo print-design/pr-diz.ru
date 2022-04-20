@@ -82,7 +82,7 @@ if(null !== filter_input(INPUT_POST, 'remove-date-submit')) {
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
 
-$sql = "select t.date, t.request_calc_id, t.work_date, t.work_shift, t.designer, t.printer, t.cutter, t.printings_number, t.rolls_number, t.information, "
+$sql = "select t.date, t.calculation_id, t.work_date, t.work_shift, t.designer, t.printer, t.cutter, t.printings_number, t.rolls_number, t.information, "
         . "t.reverse_print, t.self_adhesive, t.spool, t.number_per_spool, t.winding, t.roll_type, "
         . "c.name name, c.unit, c.quantity, c.work_type_id, "
         . "c.brand_name, c.individual_brand_name, c.lamination1_brand_name, c.lamination1_individual_brand_name, c.lamination2_brand_name, c.lamination2_individual_brand_name, "
@@ -91,15 +91,15 @@ $sql = "select t.date, t.request_calc_id, t.work_date, t.work_shift, t.designer,
         . "cus.name customer, u.last_name manager, "
         . "cr.dirty_width, cr.dirty_length "
         . "from techmap t "
-        . "inner join request_calc c on t.request_calc_id = c.id "
+        . "inner join calculation c on t.calculation_id = c.id "
         . "inner join customer cus on c.customer_id = cus.id "
         . "inner join user u on c.manager_id = u.id "
-        . "inner join request_calc_result cr on cr.request_calc_id = c.id "
+        . "inner join calculation_result cr on cr.calculation_id = c.id "
         . "where t.id = $id";
 $row = (new Fetcher($sql))->Fetch();
 
 $date = DateTime::createFromFormat("Y-m-d H:i:s", $row['date']);
-$request_calc_id = $row['request_calc_id'];
+$calculation_id = $row['calculation_id'];
 $work_date = $row['work_date'];
 $work_shift = $row['work_shift'];
 $designer = $row['designer'];
@@ -197,7 +197,7 @@ $roll_type = $row['roll_type'];
             <div class="d-flex justify-content-between mb-2">
                 <div class="p-1">
                     <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/techmap/<?= IsInRole('manager') ? BuildQueryAddRemove('manager', GetUserId(), 'id') : BuildQueryRemove('id') ?>">К списку</a>
-                    <a class="btn btn-outline-dark ml-3 topbutton" style="width: 200px;" href="<?=APPLICATION ?>/request_calc/request_calc.php?id=<?=$request_calc_id ?>">К расчету</a>
+                    <a class="btn btn-outline-dark ml-3 topbutton" style="width: 200px;" href="<?=APPLICATION ?>/calculation/calculation.php?id=<?=$calculation_id ?>">К расчету</a>
                 </div>
                 <div class="p-1">
                     <a class="btn btn-outline-dark topbutton" style="width: 200px;" href="print.php?id=<?=$id ?>" target="_blank"><i class="fas fa-print"></i>&nbsp;&nbsp;Печать</a>

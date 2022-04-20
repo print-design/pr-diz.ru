@@ -50,7 +50,7 @@ $current_date_time = date("dmYHis");
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
 
-$sql = "select c.id request_calc_id, c.date, c.name, c.unit, c.quantity, c.work_type_id, c.stream_width, c.streams_number, c.length, c.raport, "
+$sql = "select c.id calculation_id, c.date, c.name, c.unit, c.quantity, c.work_type_id, c.stream_width, c.streams_number, c.length, c.raport, "
         . "c.brand_name, c.thickness, c.individual_brand_name, c.individual_thickness, "
         . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_individual_brand_name, c.lamination1_individual_thickness, "
         . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_individual_brand_name, c.lamination2_individual_thickness, "
@@ -58,17 +58,17 @@ $sql = "select c.id request_calc_id, c.date, c.name, c.unit, c.quantity, c.work_
         . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
         . "c.cliche_1, c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
-        . "t.request_calc_id, t.date techmap_date, t.reverse_print, t.spool, t.winding, t.winding_unit, t.sign, t.label, t.package, t.roll_type, t.comment, "
+        . "t.calculation_id, t.date techmap_date, t.reverse_print, t.spool, t.winding, t.winding_unit, t.sign, t.label, t.package, t.roll_type, t.comment, "
         . "cus.name customer, wt.name work_type, u.first_name, u.last_name "
-        . "from request_calc c "
-        . "inner join techmap t on t.request_calc_id = c.id "
+        . "from calculation c "
+        . "inner join techmap t on t.calculation_id = c.id "
         . "inner join customer cus on c.customer_id=cus.id "
         . "inner join work_type wt on c.work_type_id = wt.id "
         . "inner join user u on c.manager_id = u.id "
         . "where t.id=$id";
 $row = (new Fetcher($sql))->Fetch();
 
-$request_calc_id = $row['request_calc_id'];
+$calculation_id = $row['calculation_id'];
 $date = $row['date'];
 $name = $row['name'];
 $unit = $row['unit'];
@@ -112,7 +112,7 @@ $work_type = $row['work_type'];
 $first_name = $row['first_name'];
 $last_name = $row['last_name'];
 
-$request_calc_id = $row['request_calc_id'];
+$calculation_id = $row['calculation_id'];
 $techmap_date = $row['techmap_date'];
 $reverse_print = $row['reverse_print'];
 $spool = $row['spool'];
@@ -210,7 +210,7 @@ $comment = $row['comment'];
             <div id="title_qr">
                 <?php
                 $errorCorrectionLevel = 'L'; // 'L','M','Q','H'
-                $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/request_calc/request_calc.php?id='.$id;
+                $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/calculation/calculation.php?id='.$id;
                 $filename = "../temp/techmap".$id."_".$current_date_time.".png";
                 
                 do {

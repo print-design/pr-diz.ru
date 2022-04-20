@@ -14,10 +14,10 @@ if($extracharge !== null) {
         $extracharge = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set extracharge=$extracharge where id=$id"))->error;
+    $error_message = (new Executer("update calculation set extracharge=$extracharge where id=$id"))->error;
     
     if(empty($error_message)) {
-        $fetcher = new Fetcher("select extracharge from request_calc where id=$id");
+        $fetcher = new Fetcher("select extracharge from calculation where id=$id");
         $row = $fetcher->Fetch();
         $error_message = $fetcher->error;
         
@@ -34,7 +34,7 @@ if($customer_id !== null) {
         $customer_id = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set customer_id=$customer_id where id=$id"))->error;
+    $error_message = (new Executer("update calculation set customer_id=$customer_id where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -44,7 +44,7 @@ if($customer_id !== null) {
 $name = filter_input(INPUT_GET, 'name');
 if($name !== null) {
     $name = addslashes($name);
-    $error_message = (new Executer("update request_calc set name='$name' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set name='$name' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -57,7 +57,7 @@ if($work_type_id !== null) {
         $work_type_id = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set work_type_id=$work_type_id where id=$id"))->error;
+    $error_message = (new Executer("update calculation set work_type_id=$work_type_id where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -71,13 +71,13 @@ if($quantity !== null) {
         $quantity = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set quantity=$quantity where id=$id"))->error;
+    $error_message = (new Executer("update calculation set quantity=$quantity where id=$id"))->error;
     
-    $sql = "select unit from request_calc where id=$id";
+    $sql = "select unit from calculation where id=$id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         if(empty($row[0])) {
-            $error_message = (new Executer("update request_calc set unit='kg' where id=$id"))->error;
+            $error_message = (new Executer("update calculation set unit='kg' where id=$id"))->error;
         }
     }
     
@@ -89,7 +89,7 @@ if($quantity !== null) {
 // Автосохранение единицы объёма
 $unit = filter_input(INPUT_GET, 'unit');
 if($unit !== null) {
-    $error_message = (new Executer("update request_calc set unit='$unit' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set unit='$unit' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -98,7 +98,7 @@ if($unit !== null) {
 // Автосохранение типа машины
 $machine_type = filter_input(INPUT_GET, 'machine_type');
 if($machine_type !== null) {
-    $error_message = (new Executer("update request_calc set machine_type='$machine_type' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set machine_type='$machine_type' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -107,7 +107,7 @@ if($machine_type !== null) {
 // Автосохранение расширения/сжатия
 $raport_resize = filter_input(INPUT_GET, 'raport_resize');
 if($raport_resize !== null) {
-    $error_message = (new Executer("update request_calc set raport_resize=$raport_resize where id=$id"))->error;
+    $error_message = (new Executer("update calculation set raport_resize=$raport_resize where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -117,15 +117,15 @@ if($raport_resize !== null) {
 $brand_name = filter_input(INPUT_GET, 'brand_name');
 if($brand_name !== null) {
     $brand_name = addslashes($brand_name);
-    $error_message = (new Executer("update request_calc set brand_name='$brand_name' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set brand_name='$brand_name' where id=$id"))->error;
     
     // Если плёнка пользовательская, то сохраняем пустую толщину
     // Иначе сохраняем пустые пользовательские значения
     if($brand_name == INDIVIDUAL) {
-        $error_message = (new Executer("update request_calc set thickness=NULL where id=$id"))->error;
+        $error_message = (new Executer("update calculation set thickness=NULL where id=$id"))->error;
     }
     else {
-        $error_message = (new Executer("update request_calc set individual_brand_name='', individual_price=NULL, individual_thickness=NULL, individual_density=NULL where id=$id"))->error;
+        $error_message = (new Executer("update calculation set individual_brand_name='', individual_price=NULL, individual_thickness=NULL, individual_density=NULL where id=$id"))->error;
     }
     
     if(empty($error_message)) {
@@ -140,7 +140,7 @@ if($thickness !== null) {
         $thickness = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set thickness='$thickness' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set thickness='$thickness' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -149,7 +149,7 @@ if($thickness !== null) {
 // Автосохранение флажка "Сырьё заказчика"
 $customers_material = filter_input(INPUT_GET, 'customers_material');
 if($customers_material !== null) {
-    $error_message = (new Executer("update request_calc set customers_material=$customers_material where id=$id"))->error;
+    $error_message = (new Executer("update calculation set customers_material=$customers_material where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -159,7 +159,7 @@ if($customers_material !== null) {
 $individual_brand_name = filter_input(INPUT_GET, 'individual_brand_name');
 if($individual_brand_name !== null) {
     $individual_brand_name = addslashes($individual_brand_name);
-    $error_message = (new Executer("update request_calc set individual_brand_name='$individual_brand_name' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set individual_brand_name='$individual_brand_name' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -172,7 +172,7 @@ if($individual_price !== null) {
         $individual_price = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set individual_price='$individual_price' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set individual_price='$individual_price' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -185,7 +185,7 @@ if($individual_thickness !== null) {
         $individual_thickness = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set individual_thickness='$individual_thickness' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set individual_thickness='$individual_thickness' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -198,7 +198,7 @@ if($individual_density !== null) {
         $individual_density = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set individual_density='$individual_density' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set individual_density='$individual_density' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -208,15 +208,15 @@ if($individual_density !== null) {
 $lamination1_brand_name = filter_input(INPUT_GET, 'lamination1_brand_name');
 if($lamination1_brand_name !== null) {
     $lamination1_brand_name = addslashes($lamination1_brand_name);
-    $error_message = (new Executer("update request_calc set lamination1_brand_name='$lamination1_brand_name' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set lamination1_brand_name='$lamination1_brand_name' where id=$id"))->error;
     
     // Если плёнка пользовательская, то сохраняем пустую толщину
     // Иначе сохраняем пустые пользовательские значения
     if($lamination1_brand_name == INDIVIDUAL) {
-        $error_message = (new Executer("update request_calc set lamination1_thickness=NULL where id=$id"))->error;
+        $error_message = (new Executer("update calculation set lamination1_thickness=NULL where id=$id"))->error;
     }
     else {
-        $error_message = (new Executer("update request_calc set lamination1_individual_brand_name='', lamination1_individual_price=NULL, lamination1_individual_thickness=NULL, lamination1_individual_density=NULL where id=$id"))->error;
+        $error_message = (new Executer("update calculation set lamination1_individual_brand_name='', lamination1_individual_price=NULL, lamination1_individual_thickness=NULL, lamination1_individual_density=NULL where id=$id"))->error;
     }
     
     if(empty($error_message)) {
@@ -231,7 +231,7 @@ if($lamination1_thickness !== null) {
         $lamination1_thickness = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set lamination1_thickness='$lamination1_thickness' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set lamination1_thickness='$lamination1_thickness' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -240,7 +240,7 @@ if($lamination1_thickness !== null) {
 // Автосохранение флажка "Сырьё заказчика" ЛАМИНАЦИЯ 1
 $lamination1_customers_material = filter_input(INPUT_GET, 'lamination1_customers_material');
 if($lamination1_customers_material !== null) {
-    $error_message = (new Executer("update request_calc set lamination1_customers_material=$lamination1_customers_material where id=$id"))->error;
+    $error_message = (new Executer("update calculation set lamination1_customers_material=$lamination1_customers_material where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -250,7 +250,7 @@ if($lamination1_customers_material !== null) {
 $lamination1_individual_brand_name = filter_input(INPUT_GET, 'lamination1_individual_brand_name');
 if($lamination1_individual_brand_name !== null) {
     $lamination1_individual_brand_name = addslashes($lamination1_individual_brand_name);
-    $error_message = (new Executer("update request_calc set lamination1_individual_brand_name='$lamination1_individual_brand_name' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set lamination1_individual_brand_name='$lamination1_individual_brand_name' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -263,7 +263,7 @@ if($lamination1_individual_price !== null) {
         $lamination1_individual_price = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set lamination1_individual_price='$lamination1_individual_price' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set lamination1_individual_price='$lamination1_individual_price' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -276,7 +276,7 @@ if($lamination1_individual_thickness !== null) {
         $lamination1_individual_thickness = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set lamination1_individual_thickness='$lamination1_individual_thickness' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set lamination1_individual_thickness='$lamination1_individual_thickness' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -289,7 +289,7 @@ if($lamination1_individual_density !== null) {
         $lamination1_individual_density = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set lamination1_individual_density='$lamination1_individual_density' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set lamination1_individual_density='$lamination1_individual_density' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -299,15 +299,15 @@ if($lamination1_individual_density !== null) {
 $lamination2_brand_name = filter_input(INPUT_GET, 'lamination2_brand_name');
 if($lamination2_brand_name !== null) {
     $lamination2_brand_name = addslashes($lamination2_brand_name);
-    $error_message = (new Executer("update request_calc set lamination2_brand_name='$lamination2_brand_name' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set lamination2_brand_name='$lamination2_brand_name' where id=$id"))->error;
     
     // Если плёнка пользовательская, то сохраняем пустую толщину
     // Иначе сохраняем пустые пользовательские значения
     if($lamination2_brand_name == INDIVIDUAL) {
-        $error_message = (new Executer("update request_calc set lamination2_thickness=NULL where id=$id"))->error;
+        $error_message = (new Executer("update calculation set lamination2_thickness=NULL where id=$id"))->error;
     }
     else {
-        $error_message = (new Executer("update request_calc set lamination2_individual_brand_name='', lamination2_individual_price=NULL, lamination2_individual_thickness=NULL, lamination2_individual_density=NULL where id=$id"))->error;
+        $error_message = (new Executer("update calculation set lamination2_individual_brand_name='', lamination2_individual_price=NULL, lamination2_individual_thickness=NULL, lamination2_individual_density=NULL where id=$id"))->error;
     }
     
     if(empty($error_message)) {
@@ -322,7 +322,7 @@ if($lamination2_thickness !== null) {
         $lamination2_thickness = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set lamination2_thickness='$lamination2_thickness' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set lamination2_thickness='$lamination2_thickness' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -331,7 +331,7 @@ if($lamination2_thickness !== null) {
 // Автосохранение флажка "Сырьё заказчика" ЛАМИНАЦИЯ 2
 $lamination2_customers_material = filter_input(INPUT_GET, 'lamination2_customers_material');
 if($lamination2_customers_material !== null) {
-    $error_message = (new Executer("update request_calc set lamination2_customers_material=$lamination2_customers_material where id=$id"))->error;
+    $error_message = (new Executer("update calculation set lamination2_customers_material=$lamination2_customers_material where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -341,7 +341,7 @@ if($lamination2_customers_material !== null) {
 $lamination2_individual_brand_name = filter_input(INPUT_GET, 'lamination2_individual_brand_name');
 if($lamination2_individual_brand_name !== null) {
     $lamination2_individual_brand_name = addslashes($lamination2_brand_name);
-    $error_message = (new Executer("update request_calc set lamination2_individual_brand_name='$lamination2_individual_brand_name' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set lamination2_individual_brand_name='$lamination2_individual_brand_name' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -354,7 +354,7 @@ if($lamination2_individual_price !== null) {
         $lamination2_individual_price = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set lamination2_individual_price='$lamination2_individual_price' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set lamination2_individual_price='$lamination2_individual_price' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -367,7 +367,7 @@ if($lamination2_individual_thickness !== null) {
         $lamination2_individual_thickness = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set lamination2_individual_thickness='$lamination2_individual_thickness' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set lamination2_individual_thickness='$lamination2_individual_thickness' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -380,7 +380,7 @@ if($lamination2_individual_density !== null) {
         $lamination2_individual_density = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set lamination2_individual_density='$lamination2_individual_density' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set lamination2_individual_density='$lamination2_individual_density' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -393,7 +393,7 @@ if($stream_width !== null) {
         $stream_width = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set stream_width=$stream_width where id=$id"))->error;
+    $error_message = (new Executer("update calculation set stream_width=$stream_width where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -406,7 +406,7 @@ if($streams_number !== null) {
         $streams_number = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set streams_number=$streams_number where id=$id"))->error;
+    $error_message = (new Executer("update calculation set streams_number=$streams_number where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -419,7 +419,7 @@ if($number_on_raport !== null) {
         $number_on_raport = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set number_on_raport=$number_on_raport where id=$id"))->error;
+    $error_message = (new Executer("update calculation set number_on_raport=$number_on_raport where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -432,7 +432,7 @@ if($raport !== null) {
         $raport = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set raport=$raport where id=$id"))->error;
+    $error_message = (new Executer("update calculation set raport=$raport where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -445,7 +445,7 @@ if($label_length !== null) {
         $label_length = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set label_length=$label_length where id=$id"))->error;
+    $error_message = (new Executer("update calculation set label_length=$label_length where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -458,7 +458,7 @@ if($lamination_roller_width !== null) {
         $lamination_roller_width = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set lamination_roller_width='$lamination_roller_width' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set lamination_roller_width='$lamination_roller_width' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -471,7 +471,7 @@ if($ski_width !== null) {
         $ski_width = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set ski_width='$ski_width' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set ski_width='$ski_width' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -480,7 +480,7 @@ if($ski_width !== null) {
 // Автосохранение флажка "Печать без лыж"
 $no_ski = filter_input(INPUT_GET, 'no_ski');
 if($no_ski !== null) {
-    $error_message = (new Executer("update request_calc set no_ski=$no_ski where id=$id"))->error;
+    $error_message = (new Executer("update calculation set no_ski=$no_ski where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -493,7 +493,7 @@ if($ink_number !== null) {
         $ink_number = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set ink_number=$ink_number where id=$id"))->error;
+    $error_message = (new Executer("update calculation set ink_number=$ink_number where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -503,7 +503,7 @@ if($ink_number !== null) {
 $ink = filter_input(INPUT_GET, 'ink');
 $data_id = filter_input(INPUT_GET, 'data_id');
 if($ink !== null && $data_id !== null) {
-    $error_message = (new Executer("update request_calc set ink_$data_id='$ink' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set ink_$data_id='$ink' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -517,7 +517,7 @@ if($color !== null && $data_id !== null) {
         $color = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set color_$data_id=$color where id=$id"))->error;
+    $error_message = (new Executer("update calculation set color_$data_id=$color where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -527,7 +527,7 @@ if($color !== null && $data_id !== null) {
 $cmyk = filter_input(INPUT_GET, 'cmyk');
 $data_id = filter_input(INPUT_GET, 'data_id');
 if($cmyk !== null && $data_id !== null) {
-    $error_message = (new Executer("update request_calc set cmyk_$data_id='$cmyk' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set cmyk_$data_id='$cmyk' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -541,7 +541,7 @@ if($percent !== null && $data_id !== null) {
         $percent = "NULL";
     }
     
-    $error_message = (new Executer("update request_calc set percent_$data_id=$percent where id=$id"))->error;
+    $error_message = (new Executer("update calculation set percent_$data_id=$percent where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
@@ -551,7 +551,7 @@ if($percent !== null && $data_id !== null) {
 $cliche = filter_input(INPUT_GET, 'cliche');
 $data_id = filter_input(INPUT_GET, 'data_id');
 if($cliche !== null && $data_id !== null) {
-    $error_message = (new Executer("update request_calc set cliche_$data_id='$cliche' where id=$id"))->error;
+    $error_message = (new Executer("update calculation set cliche_$data_id='$cliche' where id=$id"))->error;
     if(empty($error_message)) {
         echo 'OK';
     }
