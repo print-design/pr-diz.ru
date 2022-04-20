@@ -366,8 +366,6 @@ class Calculation {
     public /*CalculationItem*/ $glue_expense2;
     public /*CalculationItem*/ $glue_price1;
     public /*CalculationItem*/ $glue_price2;
-    
-    
 
     public function __construct(TuningData $tuning_data, 
             TuningData $laminator_tuning_data,
