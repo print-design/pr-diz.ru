@@ -39,49 +39,49 @@ else {
     include './calculation.php';
     
     // ПОЛУЧАЕМ ИСХОДНЫЕ ДАННЫЕ
-    $date = null;
-    $name = null;
-    $unit = null; // Кг или шт
-    $quantity = null; // Размер тиража
-    $work_type_id = null; // Типа работы: с печатью или без печати
+    $param_date = null;
+    $param_name = null;
+    $param_unit = null; // Кг или шт
+    $param_quantity = null; // Размер тиража
+    $param_work_type_id = null; // Типа работы: с печатью или без печати
     
-    $film = null; // Основная пленка, марка
-    $thickness = null; // Основная пленка, толщина, мкм
-    $density = null; // Основная пленка, плотность, г/м2
-    $price = null; // Основная пленка, цена
-    $currency = null; // Основная пленка, валюта
-    $customers_material = null; // Основная плёнка, другая, материал заказчика
-    $ski = null; // Основная пленка, лыжи
-    $width_ski = null; // Основная пленка, ширина пленки, мм
+    $param_film = null; // Основная пленка, марка
+    $param_thickness = null; // Основная пленка, толщина, мкм
+    $param_density = null; // Основная пленка, плотность, г/м2
+    $param_price = null; // Основная пленка, цена
+    $param_currency = null; // Основная пленка, валюта
+    $param_customers_material = null; // Основная плёнка, другая, материал заказчика
+    $param_ski = null; // Основная пленка, лыжи
+    $param_width_ski = null; // Основная пленка, ширина пленки, мм
         
-    $lamination1_film = null; // Ламинация 1, марка
-    $lamination1_thickness = null; // Ламинация 1, толщина, мкм
-    $lamination1_density = null; // Ламинация 1, плотность, г/м2
-    $lamination1_price = null; // Ламинация 1, цена
-    $lamination1_lamination1_currency = null; // Ламинация 1, валюта
-    $lamination1_customers_material = null; // Ламинация 1, другая, материал заказчика
-    $lamination1_ski = null; // Ламинация 1, лыжи
-    $lamination1_width_ski = null; // Ламинация 1, ширина пленки, мм
+    $param_lamination1_film = null; // Ламинация 1, марка
+    $param_lamination1_thickness = null; // Ламинация 1, толщина, мкм
+    $param_lamination1_density = null; // Ламинация 1, плотность, г/м2
+    $param_lamination1_price = null; // Ламинация 1, цена
+    $param_lamination1_lamination1_currency = null; // Ламинация 1, валюта
+    $param_lamination1_customers_material = null; // Ламинация 1, другая, материал заказчика
+    $param_lamination1_ski = null; // Ламинация 1, лыжи
+    $param_lamination1_width_ski = null; // Ламинация 1, ширина пленки, мм
 
-    $lamination2_film = null; // Ламинация 2, марка
-    $lamination2_thickness = null; // Ламинация 2, толщина, мкм
-    $lamination2_density = null; // Ламинация 2, плотность, г/м2
-    $lamination2_price = null; // Ламинация 2, цена
-    $lamination2_currency = null; // Ламинация 2, валюта
-    $lamination2_customers_material = null; // Ламинация 2, другая, уд. вес
-    $lamination2_ski = null; // Ламинация 2, лыжи
-    $lamination2_width_ski = null;  // Ламинация 2, ширина пленки, мм
+    $param_lamination2_film = null; // Ламинация 2, марка
+    $param_lamination2_thickness = null; // Ламинация 2, толщина, мкм
+    $param_lamination2_density = null; // Ламинация 2, плотность, г/м2
+    $param_lamination2_price = null; // Ламинация 2, цена
+    $param_lamination2_currency = null; // Ламинация 2, валюта
+    $param_lamination2_customers_material = null; // Ламинация 2, другая, уд. вес
+    $param_lamination2_ski = null; // Ламинация 2, лыжи
+    $param_lamination2_width_ski = null;  // Ламинация 2, ширина пленки, мм
     
-    $machine = null;
-    $machine_shortname = null;
-    $machine_id = null;
-    $length = null; // Длина этикетки, мм
-    $width = null; // Обрезная ширина, мм (если плёнка без печати)
-    $stream_width = null; // Ширина ручья, мм (если плёнка с печатью)
-    $streams_number = null; // Количество ручьёв
-    $raport = null; // Рапорт
-    $lamination_roller_width = null; // Ширина ламинирующего вала
-    $ink_number = 0; // Красочность
+    $param_machine = null;
+    $param_machine_shortname = null;
+    $param_machine_id = null;
+    $param_length = null; // Длина этикетки, мм
+    $param_width = null; // Обрезная ширина, мм (если плёнка без печати)
+    $param_stream_width = null; // Ширина ручья, мм (если плёнка с печатью)
+    $param_streams_number = null; // Количество ручьёв
+    $param_raport = null; // Рапорт
+    $param_lamination_roller_width = null; // Ширина ламинирующего вала
+    $param_ink_number = 0; // Красочность
     
     $sql = "select rc.date, rc.name, rc.unit, rc.quantity, rc.work_type_id, "
             . "f.name film, fv.thickness thickness, fv.weight density, "
@@ -111,76 +111,76 @@ else {
     $fetcher = new Fetcher($sql);
     
     if ($row = $fetcher->Fetch()) {
-        $date = $row['date'];
-        $name = $row['name'];
+        $param_date = $row['date'];
+        $param_name = $row['name'];
         
-        $unit = $row['unit']; // Кг или шт
-        $quantity = $row['quantity']; // Размер тиража в кг или шт
-        $work_type_id = $row['work_type_id']; // Тип работы: с печатью или без печати
+        $param_unit = $row['unit']; // Кг или шт
+        $param_quantity = $row['quantity']; // Размер тиража в кг или шт
+        $param_work_type_id = $row['work_type_id']; // Тип работы: с печатью или без печати
         
         if(!empty($row['film_variation_id'])) {
-            $film = $row['film']; // Основная пленка, марка
-            $thickness = $row['thickness']; // Основная пленка, толщина, мкм
-            $density = $row['density']; // Основная пленка, плотность, г/м2
+            $param_film = $row['film']; // Основная пленка, марка
+            $param_thickness = $row['thickness']; // Основная пленка, толщина, мкм
+            $param_density = $row['density']; // Основная пленка, плотность, г/м2
         }
         else {
-            $film = $row['individual_film_name']; // Основная пленка, марка
-            $thickness = $row['individual_thickness']; // Основная пленка, толщина, мкм
-            $density = $row['individual_density']; // Основная пленка, плотность, г/м2
+            $param_film = $row['individual_film_name']; // Основная пленка, марка
+            $param_thickness = $row['individual_thickness']; // Основная пленка, толщина, мкм
+            $param_density = $row['individual_density']; // Основная пленка, плотность, г/м2
         }
-        $price = $row['price']; // Основная пленка, цена
-        $currency = $row['currency']; // Основная пленка, валюта
-        $customers_material = $row['customers_material']; // Основная плёнка, другая, материал заказчика
-        $ski = $row['ski']; // Основная пленка, лыжи
-        $width_ski = $row['width_ski']; // Основная пленка, ширина пленки, мм
+        $param_price = $row['price']; // Основная пленка, цена
+        $param_currency = $row['currency']; // Основная пленка, валюта
+        $param_customers_material = $row['customers_material']; // Основная плёнка, другая, материал заказчика
+        $param_ski = $row['ski']; // Основная пленка, лыжи
+        $param_width_ski = $row['width_ski']; // Основная пленка, ширина пленки, мм
         
         if(!empty($row['lamination1_film_variation_id'])) {
-            $lamination1_film = $row['lamination1_film']; // Ламинация 1, марка
-            $lamination1_thickness = $row['lamination1_thickness']; // Ламинация 1, толщина, мкм
-            $lamination1_density = $row['lamination1_density']; // Ламинация 1, плотность, г/м2
+            $param_lamination1_film = $row['lamination1_film']; // Ламинация 1, марка
+            $param_lamination1_thickness = $row['lamination1_thickness']; // Ламинация 1, толщина, мкм
+            $param_lamination1_density = $row['lamination1_density']; // Ламинация 1, плотность, г/м2
         }
         else {
-            $lamination1_film = $row['lamination1_individual_film_name']; // Ламинация 1, марка
-            $lamination1_thickness = $row['lamination1_individual_thickness']; // Ламинация 1, толщина, мкм
-            $lamination1_density = $row['lamination1_individual_density']; // Ламинация 1, плотность, г/м2
+            $param_lamination1_film = $row['lamination1_individual_film_name']; // Ламинация 1, марка
+            $param_lamination1_thickness = $row['lamination1_individual_thickness']; // Ламинация 1, толщина, мкм
+            $param_lamination1_density = $row['lamination1_individual_density']; // Ламинация 1, плотность, г/м2
         }
-        $lamination1_price = $row['lamination1_price']; // Ламинация 1, цена
-        $lamination1_currency = $row['lamination1_currency']; // Ламинация 1, валюта
-        $lamination1_customers_material = $row['lamination1_customers_material']; // Ламинация 1, другая, материал заказчика
-        $lamination1_ski = $row['lamination1_ski']; // Ламинация 1, лыжи
-        $lamination1_width_ski = $row['lamination1_width_ski']; // Ламинация 1, ширина пленки, мм
+        $param_lamination1_price = $row['lamination1_price']; // Ламинация 1, цена
+        $param_lamination1_currency = $row['lamination1_currency']; // Ламинация 1, валюта
+        $param_lamination1_customers_material = $row['lamination1_customers_material']; // Ламинация 1, другая, материал заказчика
+        $param_lamination1_ski = $row['lamination1_ski']; // Ламинация 1, лыжи
+        $param_lamination1_width_ski = $row['lamination1_width_ski']; // Ламинация 1, ширина пленки, мм
         
         if(!empty($row['lamination2_film_variation_id'])) {
-            $lamination2_film = $row['lamination2_film']; // Ламинация 2, марка
-            $lamination2_thickness = $row['lamination2_thickness']; // Ламинация 2, толщина, мкм
-            $lamination2_density = $row['lamination2_density']; // Ламинация 2, плотность, г/м2
+            $param_lamination2_film = $row['lamination2_film']; // Ламинация 2, марка
+            $param_lamination2_thickness = $row['lamination2_thickness']; // Ламинация 2, толщина, мкм
+            $param_lamination2_density = $row['lamination2_density']; // Ламинация 2, плотность, г/м2
         }
         else {
-            $lamination2_film = $row['lamination2_individual_film_name']; // Ламинация 2, марка
-            $lamination2_thickness = $row['lamination2_individual_thickness']; // Ламинация 2, толщина, мкм
-            $lamination2_density = $row['lamination2_individual_density']; // Ламинация 2, плотность, г/м2
+            $param_lamination2_film = $row['lamination2_individual_film_name']; // Ламинация 2, марка
+            $param_lamination2_thickness = $row['lamination2_individual_thickness']; // Ламинация 2, толщина, мкм
+            $param_lamination2_density = $row['lamination2_individual_density']; // Ламинация 2, плотность, г/м2
         }
-        $lamination2_price = $row['lamination2_price']; // Ламинация 2, цена
-        $lamination2_currency = $row['lamination2_currency']; // Ламинация 2, валюта
-        $lamination2_customers_material = $row['lamination2_customers_material']; // Ламинация 2, другая, уд. вес
-        $lamination2_ski = $row['lamination2_ski']; // Ламинация 2, лыжи
-        $lamination2_width_ski = $row['lamination2_width_ski'];  // Ламинация 2, ширина пленки, мм
+        $param_lamination2_price = $row['lamination2_price']; // Ламинация 2, цена
+        $param_lamination2_currency = $row['lamination2_currency']; // Ламинация 2, валюта
+        $param_lamination2_customers_material = $row['lamination2_customers_material']; // Ламинация 2, другая, уд. вес
+        $param_lamination2_ski = $row['lamination2_ski']; // Ламинация 2, лыжи
+        $param_lamination2_width_ski = $row['lamination2_width_ski'];  // Ламинация 2, ширина пленки, мм
         
-        $machine = $row['machine'];
-        $machine_shortname = $row['machine_shortname'];
-        $machine_id = $row['machine_id'];
-        $length = $row['length']; // Длина этикетки, мм
-        $stream_width = $row['stream_width']; // Ширина ручья, мм
-        $streams_number = $row['streams_number']; // Количество ручьёв
-        $raport = $row['raport']; // Рапорт
-        $lamination_roller_width = $row['lamination_roller_width']; // Ширина ламинирующего вала
-        $ink_number = $row['ink_number']; // Красочность
+        $param_machine = $row['machine'];
+        $param_machine_shortname = $row['machine_shortname'];
+        $param_machine_id = $row['machine_id'];
+        $param_length = $row['length']; // Длина этикетки, мм
+        $param_stream_width = $row['stream_width']; // Ширина ручья, мм
+        $param_streams_number = $row['streams_number']; // Количество ручьёв
+        $param_raport = $row['raport']; // Рапорт
+        $param_lamination_roller_width = $row['lamination_roller_width']; // Ширина ламинирующего вала
+        $param_ink_number = $row['ink_number']; // Красочность
         
-        $ink_1 = $row['ink_1']; $ink_2 = $row['ink_2']; $ink_3 = $row['ink_3']; $ink_4 = $row['ink_4']; $ink_5 = $row['ink_5']; $ink_6 = $row['ink_6']; $ink_7 = $row['ink_7']; $ink_8 = $row['ink_8'];
-        $color_1 = $row['color_1']; $color_2 = $row['color_2']; $color_3 = $row['color_3']; $color_4 = $row['color_4']; $color_5 = $row['color_5']; $color_6 = $row['color_6']; $color_7 = $row['color_7']; $color_8 = $row['color_8'];
-        $cmyk_1 = $row['cmyk_1']; $cmyk_2 = $row['cmyk_2']; $cmyk_3 = $row['cmyk_3']; $cmyk_4 = $row['cmyk_4']; $cmyk_5 = $row['cmyk_5']; $cmyk_6 = $row['cmyk_6']; $cmyk_7 = $row['cmyk_7']; $cmyk_8 = $row['cmyk_8'];
-        $percent_1 = $row['percent_1']; $percent_2 = $row['percent_2']; $percent_3 = $row['percent_3']; $percent_4 = $row['percent_4']; $percent_5 = $row['percent_5']; $percent_6 = $row['percent_6']; $percent_7 = $row['percent_7']; $percent_8 = $row['percent_8'];
-        $cliche_1 = $row['cliche_1']; $cliche_2 = $row['cliche_2']; $cliche_3 = $row['cliche_3']; $cliche_4 = $row['cliche_4']; $cliche_5 = $row['cliche_5']; $cliche_6 = $row['cliche_6']; $cliche_7 = $row['cliche_7']; $cliche_8 = $row['cliche_8'];
+        $param_ink_1 = $row['ink_1']; $param_ink_2 = $row['ink_2']; $param_ink_3 = $row['ink_3']; $param_ink_4 = $row['ink_4']; $param_ink_5 = $row['ink_5']; $param_ink_6 = $row['ink_6']; $param_ink_7 = $row['ink_7']; $param_ink_8 = $row['ink_8'];
+        $param_color_1 = $row['color_1']; $param_color_2 = $row['color_2']; $param_color_3 = $row['color_3']; $param_color_4 = $row['color_4']; $param_color_5 = $row['color_5']; $param_color_6 = $row['color_6']; $param_color_7 = $row['color_7']; $param_color_8 = $row['color_8'];
+        $param_cmyk_1 = $row['cmyk_1']; $param_cmyk_2 = $row['cmyk_2']; $param_cmyk_3 = $row['cmyk_3']; $param_cmyk_4 = $row['cmyk_4']; $param_cmyk_5 = $row['cmyk_5']; $param_cmyk_6 = $row['cmyk_6']; $param_cmyk_7 = $row['cmyk_7']; $param_cmyk_8 = $row['cmyk_8'];
+        $param_percent_1 = $row['percent_1']; $param_percent_2 = $row['percent_2']; $param_percent_3 = $row['percent_3']; $param_percent_4 = $row['percent_4']; $param_percent_5 = $row['percent_5']; $param_percent_6 = $row['percent_6']; $param_percent_7 = $row['percent_7']; $param_percent_8 = $row['percent_8'];
+        $param_cliche_1 = $row['cliche_1']; $param_cliche_2 = $row['cliche_2']; $param_cliche_3 = $row['cliche_3']; $param_cliche_4 = $row['cliche_4']; $param_cliche_5 = $row['cliche_5']; $param_cliche_6 = $row['cliche_6']; $param_cliche_7 = $row['cliche_7']; $param_cliche_8 = $row['cliche_8'];
     }
     
     $error_message = $fetcher->error;
@@ -211,43 +211,43 @@ else {
     $glue_data = new GlueData(null, null, null, null, null, null, null);
     
     if(empty($error_message)) {
-        $sql = "select machine_id, time, length, waste_percent from norm_tuning where id in (select max(id) from norm_tuning where date <= '$date' group by machine_id)";
+        $sql = "select machine_id, time, length, waste_percent from norm_tuning where id in (select max(id) from norm_tuning where date <= '$param_date' group by machine_id)";
         $fetcher = new Fetcher($sql);
         while ($row = $fetcher->Fetch()) {
-            if($row['machine_id'] == $machine_id) {
+            if($row['machine_id'] == $param_machine_id) {
                 $tuning_data = new TuningData($row['time'], $row['length'], $row['waste_percent']);
             }
         }
         
-        $sql = "select time, length, waste_percent from norm_laminator_tuning where date <= '$date' order by id desc limit 1";
+        $sql = "select time, length, waste_percent from norm_laminator_tuning where date <= '$param_date' order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $laminator_tuning_data = new TuningData($row['time'], $row['length'], $row['waste_percent']);
         }
         
-        $sql = "select machine_id, price, speed, max_width from norm_machine where id in (select max(id) from norm_machine where date <= '$date' group by machine_id)";
+        $sql = "select machine_id, price, speed, max_width from norm_machine where id in (select max(id) from norm_machine where date <= '$param_date' group by machine_id)";
         $fetcher = new Fetcher($sql);
         while ($row = $fetcher->Fetch()) {
-            if($row['machine_id'] == $machine_id) {
+            if($row['machine_id'] == $param_machine_id) {
                 $machine_data = new MachineData($row['price'], $row['speed'], $row['max_width']);
             }
         }
         
-        $sql = "select price, speed, max_width from norm_laminator where date <= '$date' order by id desc limit 1";
+        $sql = "select price, speed, max_width from norm_laminator where date <= '$param_date' order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $laminator_machine_data = new MachineData($row['price'], $row['speed'], $row['max_width']);
         }
         
         $sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, solvent_etoxipropanol, solvent_etoxipropanol_currency, solvent_flexol82, solvent_flexol82_currency, solvent_part, min_price "
-                . "from norm_ink where date <= '$date' order by id desc limit 1";
+                . "from norm_ink where date <= '$param_date' order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $ink_data = new InkData($row['c'], $row['c_currency'], $row['c_expense'], $row['m'], $row['m_currency'], $row['m_expense'], $row['y'], $row['y_currency'], $row['y_expense'], $row['k'], $row['k_currency'], $row['k_expense'], $row['white'], $row['white_currency'], $row['white_expense'], $row['panton'], $row['panton_currency'], $row['panton_expense'], $row['lacquer'], $row['lacquer_currency'], $row['lacquer_expense'], $row['solvent_etoxipropanol'], $row['solvent_etoxipropanol_currency'], $row['solvent_flexol82'], $row['solvent_flexol82_currency'], $row['solvent_part'], $row['min_price']);
         }
         
         $sql = "select glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, solvent_part "
-                . "from norm_glue where date <= '$date' order by id desc limit 1";
+                . "from norm_glue where date <= '$param_date' order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $glue_data = new GlueData($row['glue'], $row['glue_currency'], $row['glue_expense'], $row['glue_expense_pet'], $row['solvent'], $row['solvent_currency'], $row['solvent_part']);
@@ -255,13 +255,22 @@ else {
     }
     
     // ДЕЛАЕМ РАСЧЁТ
-    $calculation = new Calculation($tuning_data, $laminator_tuning_data, $machine_data, $laminator_machine_data, $ink_data, $glue_data, $new_usd, $new_euro, $unit, $quantity, $work_type_id, $film, $thickness, $density, $price, $currency, $customers_material, $ski, $width_ski, $lamination1_film, $lamination1_thickness, $lamination1_density, $lamination1_price, $lamination1_currency, $lamination1_customers_material, $lamination1_ski, $lamination1_width_ski, $lamination2_film, $lamination2_thickness, $lamination2_density, $lamination2_price, $lamination2_currency, $lamination2_customers_material, $lamination2_ski, $lamination2_width_ski, $machine_id, $machine_shortname, $length, $stream_width, $streams_number, $raport, $lamination_roller_width, $ink_number, $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8);
+    $calculation = new Calculation($tuning_data, $laminator_tuning_data, $machine_data, $laminator_machine_data, $ink_data, $glue_data, $new_usd, $new_euro, 
+            $param_unit, $param_quantity, $param_work_type_id, $param_film, $param_thickness, $param_density, $param_price, $param_currency, $param_customers_material, $param_ski, $param_width_ski, 
+            $param_lamination1_film, $param_lamination1_thickness, $param_lamination1_density, $param_lamination1_price, $param_lamination1_currency, $param_lamination1_customers_material, $param_lamination1_ski, $param_lamination1_width_ski, 
+            $param_lamination2_film, $param_lamination2_thickness, $param_lamination2_density, $param_lamination2_price, $param_lamination2_currency, $param_lamination2_customers_material, $param_lamination2_ski, $param_lamination2_width_ski, 
+            $param_machine_id, $param_machine_shortname, $param_length, $param_stream_width, $param_streams_number, $param_raport, $param_lamination_roller_width, $param_ink_number, 
+            $param_ink_1, $param_ink_2, $param_ink_3, $param_ink_4, $param_ink_5, $param_ink_6, $param_ink_7, $param_ink_8, 
+            $param_color_1, $param_color_2, $param_color_3, $param_color_4, $param_color_5, $param_color_6, $param_color_7, $param_color_8, 
+            $param_cmyk_1, $param_cmyk_2, $param_cmyk_3, $param_cmyk_4, $param_cmyk_5, $param_cmyk_6, $param_cmyk_7, $param_cmyk_8, 
+            $param_percent_1, $param_percent_2, $param_percent_3, $param_percent_4, $param_percent_5, $param_percent_6, $param_percent_7, $param_percent_8, 
+            $param_cliche_1, $param_cliche_2, $param_cliche_3, $param_cliche_4, $param_cliche_5, $param_cliche_6, $param_cliche_7, $param_cliche_8);
     
     // Себестоимость = стоимость плёнки + работ + краски + клея
     $film_cost = $calculation->film_price->value + (empty($calculation->lamination1_film_price) ? 0 : $calculation->lamination1_film_price->value) + (empty($calculation->lamination2_film_price) ? 0 : $calculation->lamination2_film_price->value);
     $work_cost = (empty($calculation->work_price) ? 0 : $calculation->work_price->value) + (empty($calculation->lamination1_work_price) ? 0 : $calculation->lamination1_work_price->value) + (empty($calculation->lamination2_work_price) ? 0 : $calculation->lamination2_work_price->value);
     $ink_cost = 0;
-    for($i=1; $i<=$ink_number; $i++) {
+    for($i=1; $i<=$param_ink_number; $i++) {
         if(!empty($calculation->ink_prices[$i]->value)) {
             $ink_cost += $calculation->ink_prices[$i]->value;
         }
@@ -271,7 +280,7 @@ else {
     if($new_cost === null) $new_cost = "NULL";
     
     // Себестоимость на 1 шт/кг = Себестоимость / массу тиража или кол-во штук
-    $new_cost_per_unit = $new_cost / $quantity;
+    $new_cost_per_unit = $new_cost / $param_quantity;
     if($new_cost_per_unit === null) $new_cost_per_unit = "NULL";
     
     // Материалы = масса с приладкой осн. + масса с приладкой лам. 1 + масса с приладкой лам. 2
@@ -283,7 +292,7 @@ else {
     if($new_material_price === null) $new_material_price = "NULL";
     
     // Основная плёнка цена за шт/кг = стоимость основной плёнки / количество
-    $new_material_price_per_unit = $calculation->film_price->value / $quantity;
+    $new_material_price_per_unit = $calculation->film_price->value / $param_quantity;
     if($new_material_price_per_unit === null) $new_material_price_per_unit = "NULL";
     
     // Ширина основной плёнки = ширина осн. плёнки
@@ -311,7 +320,7 @@ else {
     if($new_material_lamination1_price === null) $new_material_lamination1_price = "NULL";
     
     // Лам 1 цена за шт/кг = лам 1 цена / кол-во
-    $new_material_lamination1_price_per_unit = (empty($calculation->lamination1_film_price) ? 0 : $calculation->lamination1_film_price->value) / $quantity;
+    $new_material_lamination1_price_per_unit = (empty($calculation->lamination1_film_price) ? 0 : $calculation->lamination1_film_price->value) / $param_quantity;
     if($new_material_lamination1_price_per_unit === null) $new_material_lamination1_price_per_unit = "NULL";
     
     // Лам 1 ширина = лам 1 ширина
@@ -339,7 +348,7 @@ else {
     if($new_material_lamination2_price === null) $new_material_lamination2_price = "NULL";
     
     // Лам 2 цена за шт/кг = лам 2 плёнка цена / кол-во
-    $new_material_lamination2_price_per_unit = (empty($calculation->lamination2_film_price) ? 0 : $calculation->lamination2_film_price->value) / $quantity;
+    $new_material_lamination2_price_per_unit = (empty($calculation->lamination2_film_price) ? 0 : $calculation->lamination2_film_price->value) / $param_quantity;
     if($new_material_lamination2_price_per_unit === null) $new_material_lamination2_price_per_unit = "NULL";
     
     // Лам 2 ширина = лам 2 ширина
@@ -363,7 +372,7 @@ else {
     if($new_material_lamination2_length_with_tuning === null) $new_material_lamination2_length_with_tuning = "NULL";
     
     // Отходы плёнка цена = (масса грязная - масса чистая) * стоимость за 1 кг * курс валюты
-    $new_expenses_waste = ($calculation->mdirty->value - $calculation->mpure->value) * $price * $calculation->GetCurrencyRate($currency, $new_usd, $new_euro);
+    $new_expenses_waste = ($calculation->mdirty->value - $calculation->mpure->value) * $param_price * $calculation->GetCurrencyRate($param_currency, $new_usd, $new_euro);
     if($new_expenses_waste === null) $new_expenses_waste = "NULL";
     
     // Отходы плёнка масса = масса грязная - масса чистая
@@ -372,7 +381,7 @@ else {
     
     // Стоимость всех красок
     $ink_price = 0;
-    for($i=1; $i<=$ink_number; $i++) {
+    for($i=1; $i<=$param_ink_number; $i++) {
         if(!empty($calculation->ink_prices[$i]->value)) {
             $ink_price += $calculation->ink_prices[$i]->value;
         }
@@ -383,7 +392,7 @@ else {
     
     // Расход всех красок
     $ink_expense = 0;
-    for($i=1; $i<=$ink_number; $i++) {
+    for($i=1; $i<=$param_ink_number; $i++) {
         if(!empty($calculation->ink_expenses[$i]->value)) {
             $ink_expense += $calculation->ink_expenses[$i]->value;
         }
@@ -401,7 +410,7 @@ else {
     if($new_expenses_work_time === null) $new_expenses_work_time = "NULL";
     
     // Отходы плёнки ламинации 1, руб
-    $new_expenses_lamination1_waste = (empty($calculation->lamination1_mdirty) || empty($calculation->lamination1_mpure)) ? null : ($calculation->lamination1_mdirty->value - $calculation->lamination1_mpure->value) * $lamination1_price * $calculation->GetCurrencyRate($lamination1_currency, $new_usd, $new_euro);
+    $new_expenses_lamination1_waste = (empty($calculation->lamination1_mdirty) || empty($calculation->lamination1_mpure)) ? null : ($calculation->lamination1_mdirty->value - $calculation->lamination1_mpure->value) * $param_lamination1_price * $calculation->GetCurrencyRate($param_lamination1_currency, $new_usd, $new_euro);
     if($new_expenses_lamination1_waste === null) $new_expenses_lamination1_waste = "NULL";
     
     // Отходы плёнки ламинации 1, кг
@@ -425,7 +434,7 @@ else {
     if($new_expenses_lamination1_work_time === null) $new_expenses_lamination1_work_time = "NULL";
     
     // Отходы плёнки лам 2, руб
-    $new_expenses_lamination2_waste = (empty($calculation->lamination2_mdirty) || empty($calculation->lamination2_mpure)) ? null : ($calculation->lamination2_mdirty->value - $calculation->lamination2_mpure->value) * $lamination2_price * $calculation->GetCurrencyRate($lamination2_currency, $new_usd, $new_euro);
+    $new_expenses_lamination2_waste = (empty($calculation->lamination2_mdirty) || empty($calculation->lamination2_mpure)) ? null : ($calculation->lamination2_mdirty->value - $calculation->lamination2_mpure->value) * $param_lamination2_price * $calculation->GetCurrencyRate($param_lamination2_currency, $new_usd, $new_euro);
     if($new_expenses_lamination2_waste === null) $new_expenses_lamination2_waste = "NULL";
     
     // Отходы плёнки лам 2, кг
@@ -486,21 +495,33 @@ else {
     //****************************************************
     // ПОМЕЩАЕМ РЕЗУЛЬТАТЫ ВЫЧИСЛЕНИЙ В БАЗУ
     if(empty($error_message)) {
-        $sql = "insert into calculation_result (extracharge, usd, euro, cost, cost_per_unit, material, "
+        $sql = "insert into calculation_result (calculation_id, extracharge, usd, euro, cost, cost_per_unit, material, "
                 . "material_price, material_price_per_unit, material_width, material_weight, material_length, material_weight_with_tuning, material_length_with_tuning, "
                 . "material_lamination1_price, material_lamination1_price_per_unit, material_lamination1_width, material_lamination1_weight, material_lamination1_length, material_lamination1_weight_with_tuning, material_lamination1_length_with_tuning, "
                 . "material_lamination2_price, material_lamination2_price_per_unit, material_lamination2_width, material_lamination2_weight, material_lamination2_length, material_lamination2_weight_with_tuning, material_lamination2_length_with_tuning, "
                 . "expenses_waste, expenses_waste_weight, expenses_ink, expenses_ink_weight, expenses_work, expenses_work_time, "
                 . "expenses_lamination1_waste, expenses_lamination1_waste_weight, expenses_lamination1_glue, expenses_lamination1_glue_weight, expenses_lamination1_work, expenses_lamination1_work_time, "
                 . "expenses_lamination2_waste, expenses_lamination2_waste_weight, expenses_lamination2_glue, expenses_lamination2_glue_weight, expenses_lamination2_work, expenses_lamination2_work_time) "
-                . "values ($new_extracharge, $new_usd, $new_euro, $new_cost, $new_cost_per_unit, $new_material, "
+                . "values ($id, $new_extracharge, $new_usd, $new_euro, $new_cost, $new_cost_per_unit, $new_material, "
                 . "$new_material_price, $new_material_price_per_unit, $new_material_width, $new_material_weight, $new_material_length, $new_material_weight_with_tuning, $new_material_length_with_tuning, "
                 . "$new_material_lamination1_price, $new_material_lamination1_price_per_unit, $new_material_lamination1_width, $new_material_lamination1_weight, $new_material_lamination1_length, $new_material_lamination1_weight_with_tuning, $new_material_lamination1_length_with_tuning, "
                 . "$new_material_lamination2_price, $new_material_lamination2_price_per_unit, $new_material_lamination2_width, $new_material_lamination2_weight, $new_material_lamination2_length, $new_material_lamination2_weight_with_tuning, $new_material_lamination2_length_with_tuning, "
                 . "$new_expenses_waste, $new_expenses_waste_weight, $new_expenses_ink, $new_expenses_ink_weight, $new_expenses_work, $new_expenses_work_time, "
                 . "$new_expenses_lamination1_waste, $new_expenses_lamination1_waste_weight, $new_expenses_lamination1_glue, $new_expenses_lamination1_glue_weight, $new_expenses_lamination1_work, $new_expenses_lamination1_work_time, "
                 . "$new_expenses_lamination2_waste, $new_expenses_lamination2_waste_weight, $new_expenses_lamination2_glue, $new_expenses_lamination2_glue_weight, $new_expenses_lamination2_work, $new_expenses_lamination2_work_time)";
-        echo $sql;
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
+    //***************************************************
+    // ЧИТАЕМ СОХРАНЁННЫЕ РЕЗУЛЬТАТЫ ИЗ БАЗЫ
+    $fetcher = new Fetcher($sql_calculation_result);
+    
+    if($row = $fetcher->Fetch()) {
+        //
+    }
+    else {
+        $error_message = "Ошибка при чтении из базы сохранённых данных";
     }
 }
 ?>
