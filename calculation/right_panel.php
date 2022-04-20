@@ -32,8 +32,14 @@ $sql_calculation_result = "select extracharge, usd, euro, cost, cost_per_unit, m
         . "from calculation_result where calculation_id = $id order by id desc limit 1";
 $fetcher = new Fetcher($sql_calculation_result);
 
-if($fetcher->Fetch()) {
-    echo "OK";
+if($row = $fetcher->Fetch()) {
+    $extracharge = $row['extracharge']; $usd = $row['usd']; $euro = $row['euro']; $cost = $row['cost']; $cost_per_unit = $row['cost_per_unit']; $material = $row['material'];
+    $material_price = $row['material_price']; $material_price_per_unit = $row['material_price_per_unit']; $material_width = $row['material_width']; $material_weight = $row['material_weight']; $material_length = $row['material_length']; $material_weight_with_tuning = $row['material_weight_with_tuning']; $material_length_with_tuning = $row['material_length_with_tuning'];
+    $material_lamination1_price = $row['material_lamination1_price']; $material_lamination1_price_per_unit = $row['material_lamination1_price_per_unit']; $material_lamination1_width = $row['material_lamination1_width']; $material_lamination1_weight = $row['material_lamination1_weight']; $material_lamination1_length = $row['material_lamination1_length']; $material_lamination1_weight_with_tuning = $row['material_lamination1_weight_with_tuning']; $material_lamination1_length_with_tuning = $row['material_lamination1_length_with_tuning'];
+    $material_lamination2_price = $row['material_lamination2_price']; $material_lamination2_price_per_unit = $row['material_lamination2_price_per_unit']; $material_lamination2_width = $row['material_lamination2_width']; $material_lamination2_weight = $row['material_lamination2_weight']; $material_lamination2_length = $row['material_lamination2_length']; $material_lamination2_weight_with_tuning = $row['material_lamination2_weight_with_tuning']; $material_lamination2_length_with_tuning = $row['material_lamination2_length_with_tuning'];
+    $expenses_waste = $row['expenses_waste']; $expenses_waste_weight = $row['expenses_waste_weight']; $expenses_ink = $row['expenses_ink']; $expenses_ink_weight = $row['expenses_ink_weight']; $expenses_work = $row['expenses_work']; $expenses_work_time = $row['expenses_work_time'];
+    $expenses_lamination1_waste = $row['expenses_lamination1_waste']; $expenses_lamination1_waste_weight = $row['expenses_lamination1_waste_weight']; $expenses_lamination1_glue = $row['expenses_lamination1_glue']; $expenses_lamination1_glue_weight = $row['expenses_lamination1_glue_weight']; $expenses_lamination1_work = $row['expenses_lamination1_work']; $expenses_lamination1_work_time = $row['expenses_lamination1_work_time'];
+    $expenses_lamination2_waste = $row['expenses_lamination2_waste']; $expenses_lamination2_waste_weight = $row['expenses_lamination2_waste_weight']; $expenses_lamination2_glue = $row['expenses_lamination2_glue']; $expenses_lamination2_glue_weight = $row['expenses_lamination2_glue_weight']; $expenses_lamination2_work = $row['expenses_lamination2_work']; $expenses_lamination2_work_time = $row['expenses_lamination2_work_time'];
 }
 else {
     include './calculation.php';
@@ -518,7 +524,13 @@ else {
     $fetcher = new Fetcher($sql_calculation_result);
     
     if($row = $fetcher->Fetch()) {
-        //
+        $extracharge = $row['extracharge']; $usd = $row['usd']; $euro = $row['euro']; $cost = $row['cost']; $cost_per_unit = $row['cost_per_unit']; $material = $row['material'];
+        $material_price = $row['material_price']; $material_price_per_unit = $row['material_price_per_unit']; $material_width = $row['material_width']; $material_weight = $row['material_weight']; $material_length = $row['material_length']; $material_weight_with_tuning = $row['material_weight_with_tuning']; $material_length_with_tuning = $row['material_length_with_tuning'];
+        $material_lamination1_price = $row['material_lamination1_price']; $material_lamination1_price_per_unit = $row['material_lamination1_price_per_unit']; $material_lamination1_width = $row['material_lamination1_width']; $material_lamination1_weight = $row['material_lamination1_weight']; $material_lamination1_length = $row['material_lamination1_length']; $material_lamination1_weight_with_tuning = $row['material_lamination1_weight_with_tuning']; $material_lamination1_length_with_tuning = $row['material_lamination1_length_with_tuning'];
+        $material_lamination2_price = $row['material_lamination2_price']; $material_lamination2_price_per_unit = $row['material_lamination2_price_per_unit']; $material_lamination2_width = $row['material_lamination2_width']; $material_lamination2_weight = $row['material_lamination2_weight']; $material_lamination2_length = $row['material_lamination2_length']; $material_lamination2_weight_with_tuning = $row['material_lamination2_weight_with_tuning']; $material_lamination2_length_with_tuning = $row['material_lamination2_length_with_tuning'];
+        $expenses_waste = $row['expenses_waste']; $expenses_waste_weight = $row['expenses_waste_weight']; $expenses_ink = $row['expenses_ink']; $expenses_ink_weight = $row['expenses_ink_weight']; $expenses_work = $row['expenses_work']; $expenses_work_time = $row['expenses_work_time'];
+        $expenses_lamination1_waste = $row['expenses_lamination1_waste']; $expenses_lamination1_waste_weight = $row['expenses_lamination1_waste_weight']; $expenses_lamination1_glue = $row['expenses_lamination1_glue']; $expenses_lamination1_glue_weight = $row['expenses_lamination1_glue_weight']; $expenses_lamination1_work = $row['expenses_lamination1_work']; $expenses_lamination1_work_time = $row['expenses_lamination1_work_time'];
+        $expenses_lamination2_waste = $row['expenses_lamination2_waste']; $expenses_lamination2_waste_weight = $row['expenses_lamination2_waste_weight']; $expenses_lamination2_glue = $row['expenses_lamination2_glue']; $expenses_lamination2_glue_weight = $row['expenses_lamination2_glue_weight']; $expenses_lamination2_work = $row['expenses_lamination2_work']; $expenses_lamination2_work_time = $row['expenses_lamination2_work_time'];
     }
     else {
         $error_message = "Ошибка при чтении из базы сохранённых данных";
