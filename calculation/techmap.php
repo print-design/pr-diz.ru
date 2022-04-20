@@ -116,15 +116,21 @@ if(empty($id)) {
 
 if(!empty($calculation_id)) {
     $sql = "select c.id calculation_id, c.date, c.name, c.unit, c.quantity, c.work_type_id, c.stream_width, c.streams_number, c.length, c.raport, "
-            . "c.brand_name, c.thickness, c.individual_brand_name, c.individual_thickness, "
-            . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_individual_brand_name, c.lamination1_individual_thickness, "
-            . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_individual_brand_name, c.lamination2_individual_thickness, "
+            . "f.name film_name, fv.thickness thickness, c.individual_film_name, c.individual_thickness, "
+            . "f1.name lamination1_film_name, fv1.thickness lamination1_thickness, c.lamination1_individual_film_name, c.lamination1_individual_thickness, "
+            . "f2.name lamination2_film_name, fv2.thickness lamination2_thickness, c.lamination2_individual_film_name, c.lamination2_individual_thickness, "
             . "c.ink_number, c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
             . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
             . "c.cliche_1, c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
             . "cus.name customer, wt.name work_type, u.first_name, u.last_name "
             . "from calculation c "
+            . "inner join film_variation fv on c.film_variation_id = fv.id "
+            . "inner join film f on fv.film_id = f.id "
+            . "inner join film_variation fv1 on c.lamination1_film_variation_id = fv1.id "
+            . "inner join film f1 on fv1.film_id = f1.id "
+            . "inner join film_variation fv2 on c.lamination2_film_variation_id = fv2.id "
+            . "inner join film f2 on fv2.film_id = f2.id "
             . "inner join customer cus on c.customer_id=cus.id "
             . "inner join work_type wt on c.work_type_id = wt.id "
             . "inner join user u on c.manager_id = u.id "
@@ -132,9 +138,9 @@ if(!empty($calculation_id)) {
 }
 elseif (!empty($id)) {
     $sql = "select c.id calculation_id, c.date, c.name, c.unit, c.quantity, c.work_type_id, c.stream_width, c.streams_number, c.length, c.raport, "
-            . "c.brand_name, c.thickness, c.individual_brand_name, c.individual_thickness, "
-            . "c.lamination1_brand_name, c.lamination1_thickness, c.lamination1_individual_brand_name, c.lamination1_individual_thickness, "
-            . "c.lamination2_brand_name, c.lamination2_thickness, c.lamination2_individual_brand_name, c.lamination2_individual_thickness, "
+            . "f.name film_name, fv.thickness thickness, c.individual_film_name, c.individual_thickness, "
+            . "f1.name lamination1_film_name, fv1.thickness lamination1_thickness, c.lamination1_individual_film_name, c.lamination1_individual_thickness, "
+            . "f2.name lamination2_film_name, fv2.thickness lamination2_thickness, c.lamination2_individual_film_name, c.lamination2_individual_thickness, "
             . "c.ink_number, c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
             . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
@@ -142,6 +148,12 @@ elseif (!empty($id)) {
             . "t.calculation_id, t.date techmap_date, t.reverse_print, t.spool, t.winding, t.winding_unit, t.sign, t.label, t.package, t.roll_type, t.comment, "
             . "cus.name customer, wt.name work_type, u.first_name, u.last_name "
             . "from calculation c "
+            . "inner join film_variation fv on c.film_variation_id = fv.id "
+            . "inner join film f on fv.film_id = f.id "
+            . "inner join film_variation fv1 on c.lamination1_film_variation_id = fv1.id "
+            . "inner join film f1 on fv1.film_id = f1.id "
+            . "inner join film_variation fv2 on c.lamination2_film_variation_id = fv2.id "
+            . "inner join film f2 on fv2.film_id = f2.id "
             . "inner join techmap t on t.calculation_id = c.id "
             . "inner join customer cus on c.customer_id=cus.id "
             . "inner join work_type wt on c.work_type_id = wt.id "
@@ -161,17 +173,17 @@ $streams_number = $row['streams_number'];
 $length = $row['length'];
 $raport = $row['raport'];
 
-$brand_name = $row['brand_name'];
+$film_name = $row['film_name'];
 $thickness = $row['thickness'];
-$individual_brand_name = $row['individual_brand_name'];
+$individual_film_name = $row['individual_film_name'];
 $individual_thickness = $row['individual_thickness'];
-$lamination1_brand_name = $row['lamination1_brand_name'];
+$lamination1_film_name = $row['lamination1_film_name'];
 $lamination1_thickness = $row['lamination1_thickness'];
-$lamination1_individual_brand_name = $row['lamination1_individual_brand_name'];
+$lamination1_individual_film_name = $row['lamination1_individual_film_name'];
 $lamination1_individual_thickness = $row['lamination1_individual_thickness'];
-$lamination2_brand_name = $row['lamination2_brand_name'];
+$lamination2_film_name = $row['lamination2_film_name'];
 $lamination2_thickness = $row['lamination2_thickness'];
-$lamination2_individual_brand_name = $row['lamination2_individual_brand_name'];
+$lamination2_individual_film_name = $row['lamination2_individual_film_name'];
 $lamination2_individual_thickness = $row['lamination2_individual_thickness'];
 $ink_number = $row['ink_number'];
 
@@ -330,7 +342,7 @@ if(!empty($id)) {
             <?php
             endif;
             ?>
-            <a class="btn btn-outline-dark backlink" href="calculation.php?id=<?=$calculation_id ?>">Назад</a>
+            <a class="btn btn-outline-dark backlink" href="details.php?id=<?= filter_input(INPUT_GET, 'calculation_id') ?>">Назад</a>
             <div id="title_zone">
                 <div id="title_qr">
                     <?php
@@ -382,11 +394,11 @@ if(!empty($id)) {
                     <table class="w-75">
                         <tr>
                             <th>Марка пленки</th>
-                            <td><?=($brand_name == INDIVIDUAL ? $individual_brand_name : $brand_name) ?></td>
+                            <td><?=($film_name == INDIVIDUAL ? $individual_film_name : $film_name) ?></td>
                         </tr>
                         <tr>
                             <th>Толщина</th>
-                            <td><?=($brand_name == INDIVIDUAL ? $individual_thickness : $thickness) ?> мкм</td>
+                            <td><?=($film_name == INDIVIDUAL ? $individual_thickness : $thickness) ?> мкм</td>
                         </tr>
                         <tr>
                             <th>Ширина</th>
@@ -402,17 +414,17 @@ if(!empty($id)) {
                         </tr>
                     </table>
                 </div>
-                <?php if(!empty($lamination1_brand_name)): ?>
+                <?php if(!empty($lamination1_film_name)): ?>
                 <div class="col-3">
                     <div class="table_title">Ламинация 1</div>
                     <table class="w-75">
                         <tr>
                             <th>Марка пленки</th>
-                            <td><?=($lamination1_brand_name == INDIVIDUAL ? $lamination1_individual_brand_name : $lamination1_brand_name) ?></td>
+                            <td><?=($lamination1_film_name == INDIVIDUAL ? $lamination1_individual_film_name : $lamination1_film_name) ?></td>
                         </tr>
                         <tr>
                             <th>Толщина</th>
-                            <td><?=($lamination1_brand_name == INDIVIDUAL ? $lamination1_individual_thickness : $lamination1_thickness) ?> мкм</td>
+                            <td><?=($lamination1_film_name == INDIVIDUAL ? $lamination1_individual_thickness : $lamination1_thickness) ?> мкм</td>
                         </tr>
                         <tr>
                             <th>Ширина</th>
@@ -430,18 +442,18 @@ if(!empty($id)) {
                 </div>
                 <?php
                 endif;
-                if(!empty($lamination2_brand_name)):
+                if(!empty($lamination2_film_name)):
                 ?>
                 <div class="col-3">
                     <div class="table_title">Ламинация 2</div>
                     <table class="w-75">
                         <tr>
                             <th>Марка пленки</th>
-                            <td><?=($lamination2_brand_name == INDIVIDUAL ? $lamination2_individual_brand_name : $lamination2_brand_name) ?></td>
+                            <td><?=($lamination2_film_name == INDIVIDUAL ? $lamination2_individual_film_name : $lamination2_film_name) ?></td>
                         </tr>
                         <tr>
                             <th>Толщина</th>
-                            <td><?=($lamination2_brand_name == INDIVIDUAL ? $lamination2_individual_thickness : $lamination2_thickness) ?> мкм</td>
+                            <td><?=($lamination2_film_name == INDIVIDUAL ? $lamination2_individual_thickness : $lamination2_thickness) ?> мкм</td>
                         </tr>
                         <tr>
                             <th>Ширина</th>
@@ -560,7 +572,7 @@ if(!empty($id)) {
                         <input type="radio" class="form-check-inline" id="reverse_print_0" name="reverse_print" value="0"<?= isset($reverse_print) && $reverse_print == 0 ? " checked='checked'" : "" ?> />
                         <label for="reverse_print_0" class="form-check-label">Лицевая</label>
                         <?php
-                        if(!empty($lamination1_brand_name) && !isset($reverse_print)) {
+                        if(!empty($lamination1_film_name) && !isset($reverse_print)) {
                             $reverse_print = 1;
                         }
                         ?>
@@ -819,7 +831,7 @@ if(!empty($id)) {
             SetRollTypeCheckboxEnabled($('select#sign').val());
             
             // При наличии ламинации запрещается выбор прямой печати
-            <?php if(!empty($lamination1_brand_name)): ?>
+            <?php if(!empty($lamination1_film_name)): ?>
                 $('#reverse_print_0').click(function() {
                     $('#reverse_print_message').modal('show');
                     $('#reverse_print_1').click();
