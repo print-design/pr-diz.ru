@@ -570,14 +570,18 @@ if(!empty($id)) {
             <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
                 <div class="text-nowrap" style="font-size: x-small;">Наценка</div>
                 <?php if($status_id == 1 || $status_id == 2): ?>
-                <div class="input-group">
-                    <input type="text" id="extracharge" name="extracharge" data-id="<?=$id ?>" style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" value="<?=$extracharge ?>" required="required" />
-                    <div class="input-group-append" style="height: 28px;">
-                        <span class="input-group-text">%</span>
+                <form method="post" class="form-inline">
+                    <input type="hidden" name="id" value="<?=$id ?>" />
+                    <div class="input-group">
+                        <input type="text" id="extracharge" name="extracharge" data-id="<?=$id ?>" style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" value="<?=$extracharge ?>" required="required" />
+                        <div class="input-group-append" style="height: 28px;">
+                            <span class="input-group-text">%</span>
+                        </div>
                     </div>
-                </div>
+                    <button class="btn btn-sm btn-dark d-none" id="extracharge-submit" name="extracharge-submit">Сохранить</button>
+                </form>
                 <?php else: ?>
-                <span class="text-nowrap">30%</span>
+                <span class="text-nowrap"><?=$extracharge ?>%</span>
                 <?php endif; ?>
             </div>
         </div>
