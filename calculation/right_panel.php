@@ -7,7 +7,7 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
 
 // Отображение чисел в удобном формате
 function Display($value, $decimals) {
-    if(is_float($value) || is_double($value)) {
+    if(is_float($value) || is_double($value) || is_int($value)) {
         return number_format($value, $decimals, ",", " ");
     }
     elseif(is_string($value)) {
@@ -339,7 +339,7 @@ else {
     if($new_lamination1_film_price === null) $new_lamination1_film_price = "NULL";
     
     // Лам 1 цена за кг = лам 1 цена / вес
-    $new_lamination1_film_price_per_unit = (empty($calculation->lamination1_film_price) ? 0 : $calculation->lamination1_film_price->value) / $calculation->lamination1_weight_dirty->value;
+    $new_lamination1_film_price_per_unit = empty($calculation->lamination1_film_price) || empty($calculation->lamination1_weight_dirty) ? null : $calculation->lamination1_film_price->value / $calculation->lamination1_weight_dirty->value;
     if($new_lamination1_film_price_per_unit === null) $new_lamination1_film_price_per_unit = "NULL";
     
     // Лам 1 ширина = лам 1 ширина
@@ -360,14 +360,14 @@ else {
     
     // Лам 1 длина с приладкой = лам 1 длина грязная
     $new_lamination1_length_dirty = empty($calculation->lamination1_length_dirty) ? null : $calculation->lamination1_length_dirty->value;
-    if($new_lamination1_weight_dirty === null) $new_lamination1_weight_dirty = "NULL";
+    if($new_lamination1_length_dirty === null) $new_lamination1_length_dirty = "NULL";
     
     // Лам 2 плёнка цена
     $new_lamination2_film_price = empty($calculation->lamination2_film_price) ? null : $calculation->lamination2_film_price->value;
     if($new_lamination2_film_price === null) $new_lamination2_film_price = "NULL";
     
     // Лам 2 цена за кг = лам 2 плёнка цена / вес
-    $new_lamination2_film_price_per_unit = (empty($calculation->lamination2_film_price) ? 0 : $calculation->lamination2_film_price->value) / $calculation->lamination2_weight_dirty->value;
+    $new_lamination2_film_price_per_unit = empty($calculation->lamination2_film_price) || empty($calculation->lamination2_weight_dirty) ? null : $calculation->lamination2_film_price->value / $calculation->lamination2_weight_dirty->value;
     if($new_lamination2_film_price_per_unit === null) $new_lamination2_film_price_per_unit = "NULL";
     
     // Лам 2 ширина = лам 2 ширина
@@ -625,38 +625,38 @@ else {
             <div>Закупочная стоимость</div>
             <div class="value mb-2"><?= Display(floatval($film_price), 2) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_price_per_unit), 3) ?> &#8381; за кг</span></div>
             <div>Ширина</div>
-            <div class="value mb-2">800 мм</div>
+            <div class="value mb-2"><?= Display(intval($width), 0) ?> мм</div>
             <div>Масса без приладки</div>
-            <div class="value mb-2">7 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">172 000 м</span></div>
+            <div class="value mb-2"><?= Display(floatval($weight_pure), 2) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($length_pure), 2) ?> м</span></div>
             <div>Масса с приладкой</div>
-            <div class="value mb-2"><?= Display(floatval($weight_dirty), 2) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">192 000 м</span></div>
+            <div class="value mb-2"><?= Display(floatval($weight_dirty), 2) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($length_dirty), 2) ?> м</span></div>
         </div>
         <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
         <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
             <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination1_weight_dirty), 2) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
-            <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за кг</span></div>
+            <div class="value mb-2"><?= Display(floatval($lamination1_film_price), 2) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display($lamination1_film_price_per_unit, 3) ?> &#8381; за кг</span></div>
             <div>Ширина</div>
-            <div class="value mb-2">800 мм</div>
+            <div class="value mb-2"><?= Display(intval($lamination1_width), 0) ?> мм</div>
             <div>Масса без приладки</div>
-            <div class="value mb-2">7 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">172 000 м</span></div>
+            <div class="value mb-2"><?= Display(floatval($lamination1_weight_pure), 2) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination1_length_pure), 2) ?> м</span></div>
             <div>Масса с приладкой</div>
-            <div class="value mb-2"><?= Display(floatval($lamination1_weight_dirty), 2) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">192 000 м</span></div>
+            <div class="value mb-2"><?= Display(floatval($lamination1_weight_dirty), 2) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination1_length_dirty), 2) ?> м</span></div>
         </div>
         <?php else: ?>
         <div class="col-4" style="width: 250px;"></div>
         <?php endif; ?>
         <?php if(!empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name)): ?>
         <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
-            <h3>Ламинация 2&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 кг</span></h3>
+            <h3>Ламинация 2&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination2_weight_dirty), 2) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
-            <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за кг</span></div>
+            <div class="value mb-2"><?= Display(floatval($lamination2_film_price), 2) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display($lamination2_film_price_per_unit, 3) ?> &#8381; за кг</span></div>
             <div>Ширина</div>
-            <div class="value mb-2">800 мм</div>
+            <div class="value mb-2"><?= Display(intval($lamination2_width), 0) ?> мм</div>
             <div>Масса без приладки</div>
-            <div class="value mb-2">7 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">172 000 м</span></div>
+            <div class="value mb-2"><?= Display(floatval($lamination2_weight_pure), 2) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination2_length_pure), 2) ?> м</span></div>
             <div>Масса с приладкой</div>
-            <div class="value mb-2">8 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">192 000 м</span></div>
+            <div class="value mb-2"><?= Display(floatval($lamination2_weight_dirty), 2) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination2_length_dirty), 2) ?> м</span></div>
         </div>
         <?php else: ?>
         <div class="col-4" style="width: 250px;"></div>
@@ -694,16 +694,16 @@ else {
         <div class="row text-nowrap">
             <div class="col-4 pr-4">
                 <div>Отходы</div>
-                <div class="value mb-2">1 280 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">4,5 кг</span></div>
+                <div class="value mb-2"><?= Display(floatval($film_waste_price), 2) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_waste), 2) ?> кг</span></div>
                 <?php if($work_type_id == 2): ?>
                 <div>Краска</div>
-                <div class="value mb-2">17 500 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">17,5 кг</span></div>
+                <div class="value mb-2"><?= Display(floatval($ink_price), 2) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($ink_weight), 2) ?> кг</span></div>
                 <?php
                 endif;
                 if($work_type_id == 2):
                 ?>
                 <div>Печать тиража</div>
-                <div class="value mb-2">470 500 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">6 ч. 30 мин.</span></div>
+                <div class="value mb-2"><?= Display(floatval($work_price), 2) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($work_time), 2) ?> ч</span></div>
                 <?php
                 endif;
                 ?>
@@ -711,11 +711,11 @@ else {
             <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
-                <div class="value mb-2">1 280 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">4,5 кг</span></div>
+                <div class="value mb-2"><?= Display(floatval($lamination1_film_waste_price), 2) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination1_film_waste), 2) ?> кг</span></div>
                 <div>Клей</div>
-                <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">1,0 кг</span></div>
+                <div class="value mb-2"><?= Display(floatval($glue_price1), 2) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($glue_expense1), 2) ?> кг</span></div>
                 <div>Работа ламинатора</div>
-                <div class="value mb-2">1 500 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">3 часа</span></div>
+                <div class="value mb-2"><?= Display(floatval($lamination1_work_price), 2) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination1_work_time), 2) ?> ч</span></div>
             </div>
             <?php else: ?>
             <div class="col-4" style="width: 250px;"></div>
@@ -723,11 +723,11 @@ else {
             <?php if(!empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name)): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
-                <div class="value mb-2">1 280 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">4,5 кг</span></div>
+                <div class="value mb-2"><?= Display(floatval($lamination2_film_waste_price), 2) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination2_film_waste), 2) ?> кг</span></div>
                 <div>Клей</div>
-                <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">1,0 кг</span></div>
+                <div class="value mb-2"><?= Display(floatval($glue_price2), 2) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($glue_expense2), 2) ?> кг</span></div>
                 <div>Работа ламинатора</div>
-                <div class="value mb-2">1 500 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">3 часа</span></div>
+                <div class="value mb-2"><?= Display(floatval($lamination2_work_price), 2) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination2_work_time), 2) ?> ч</span></div>
             </div>
             <?php else: ?>
             <div class="col-4" style="width: 250px;"></div>
