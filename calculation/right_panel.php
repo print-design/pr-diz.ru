@@ -18,6 +18,16 @@ function Display($value, $decimals) {
     }
 }
 
+// Редактирование наценки
+if(null !== filter_input(INPUT_POST, 'extracharge-submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $extracharge = filter_input(INPUT_POST, 'extracharge');
+    
+    $sql = "update calculation_result set extracharge=$extracharge where calculation_id=$id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+}
+
 // Типы наценки
 const ET_NOPRINT = 1; // Пленка без печати
 const ET_PRINT = 2; // Пленка с печатью без ламинации
@@ -573,7 +583,17 @@ if(!empty($id)) {
                 <form method="post" class="form-inline">
                     <input type="hidden" name="id" value="<?=$id ?>" />
                     <div class="input-group">
-                        <input type="text" id="extracharge" name="extracharge" data-id="<?=$id ?>" style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" value="<?=$extracharge ?>" required="required" />
+                        <input type="text" 
+                               id="extracharge" 
+                               name="extracharge" 
+                               style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
+                               value="<?=$extracharge ?>" 
+                               required="required"
+                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                               onmouseup="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');" 
+                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
+                               onkeyup="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');" 
+                               onfocusout="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');" />
                         <div class="input-group-append" style="height: 28px;">
                             <span class="input-group-text">%</span>
                         </div>
