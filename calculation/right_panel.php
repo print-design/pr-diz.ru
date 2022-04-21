@@ -309,8 +309,8 @@ else {
     $new_material_weight = $calculation->weight_pure->value;
     if($new_material_weight === null) $new_material_weight = "NULL";
     
-    // Длина без приладки = метры погонные чистые
-    $new_material_length = $calculation->mpogpure->value;
+    // Длина без приладки = длина плёнки чистая
+    $new_material_length = $calculation->length_pure->value;
     if($new_material_length === null) $new_material_length = "NULL";
     
     // Масса с приладкой = масса плёнки грязная
@@ -318,7 +318,7 @@ else {
     if($new_material_weight_with_tuning === null) $new_material_weight_with_tuning = "NULL";
     
     // Длина с приладкой = метры погонные грязные
-    $new_material_length_with_tuning = $calculation->mpogdirty->value;
+    $new_material_length_with_tuning = $calculation->length_dirty->value;
     if($new_material_length_with_tuning === null) $new_material_length_with_tuning = "NULL";
     
     // Лам 1 цена = лам 1 цена
@@ -338,7 +338,7 @@ else {
     if($new_material_lamination1_weight === null) $new_material_lamination1_weight = "NULL";
     
     // Лам 1 длина без приладки = лам 1 длина чистая
-    $new_material_lamination1_length = empty($calculation->lamination1_lengthpure) ? null : $calculation->lamination1_lengthpure->value;
+    $new_material_lamination1_length = empty($calculation->lamination1_length_pure) ? null : $calculation->lamination1_length_pure->value;
     if($new_material_lamination1_length === null) $new_material_lamination1_length = "NULL";
     
     // Лам 1 масса с приладкой = лам 1 масса грязная
@@ -346,7 +346,7 @@ else {
     if($new_material_lamination1_weight_with_tuning === null) $new_material_lamination1_weight_with_tuning = "NULL";
     
     // Лам 1 длина с приладкой = лам 1 длина грязная
-    $new_material_lamination1_length_with_tuning = empty($calculation->lamination1_lengthdirty) ? null : $calculation->lamination1_lengthdirty->value;
+    $new_material_lamination1_length_with_tuning = empty($calculation->lamination1_length_dirty) ? null : $calculation->lamination1_length_dirty->value;
     if($new_material_lamination1_weight_with_tuning === null) $new_material_lamination1_weight_with_tuning = "NULL";
     
     // Лам 2 плёнка цена
@@ -366,7 +366,7 @@ else {
     if($new_material_lamination2_weight === null) $new_material_lamination2_weight = "NULL";
     
     // Лам 2 длина без приладки
-    $new_material_lamination2_length = empty($calculation->lamination2_lengthpure) ? null : $calculation->lamination2_lengthpure->value;
+    $new_material_lamination2_length = empty($calculation->lamination2_length_pure) ? null : $calculation->lamination2_length_pure->value;
     if($new_material_lamination2_length === null) $new_material_lamination2_length = "NULL";
     
     // Лам 2 масса с приладкой = лам 2 масса грязная
@@ -374,7 +374,7 @@ else {
     if($new_material_lamination2_weight_with_tuning === null) $new_material_lamination2_weight_with_tuning = "NULL";
     
     // Лам 2 длина с приладкой = лам 2 длина грязная
-    $new_material_lamination2_length_with_tuning = empty($calculation->lamination2_lengthdirty) ? null : $calculation->lamination2_lengthdirty->value;
+    $new_material_lamination2_length_with_tuning = empty($calculation->lamination2_length_dirty) ? null : $calculation->lamination2_length_dirty->value;
     if($new_material_lamination2_length_with_tuning === null) $new_material_lamination2_length_with_tuning = "NULL";
     
     // Отходы плёнка цена = (масса грязная - масса чистая) * стоимость за 1 кг * курс валюты
