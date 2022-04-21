@@ -5,6 +5,19 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
     $calculation_class = " class='d-none'";    
 }
 
+// Отображение чисел в удобном формате
+function Display($value, $decimals) {
+    if(is_float($value) || is_double($value)) {
+        return number_format($value, $decimals, ",", " ");
+    }
+    elseif(is_string($value)) {
+        return str_replace(".", ",", $value);
+    }
+    else {
+        return $value;
+    }
+}
+
 // Типы наценки
 const ET_NOPRINT = 1; // Пленка без печати
 const ET_PRINT = 2; // Пленка с печатью без ламинации
@@ -297,8 +310,8 @@ else {
     $new_film_price = $calculation->film_price->value;
     if($new_film_price === null) $new_film_price = "NULL";
     
-    // Основная плёнка цена за шт/кг = стоимость основной плёнки / количество
-    $new_film_price_per_unit = $calculation->film_price->value / $param_quantity;
+    // Основная плёнка цена за кг = стоимость основной плёнки / вес
+    $new_film_price_per_unit = $calculation->film_price->value / $calculation->weight_dirty->value;
     if($new_film_price_per_unit === null) $new_film_price_per_unit = "NULL";
     
     // Ширина основной плёнки = ширина осн. плёнки
@@ -325,8 +338,8 @@ else {
     $new_lamination1_film_price = empty($calculation->lamination1_film_price) ? null : $calculation->lamination1_film_price->value;
     if($new_lamination1_film_price === null) $new_lamination1_film_price = "NULL";
     
-    // Лам 1 цена за шт/кг = лам 1 цена / кол-во
-    $new_lamination1_film_price_per_unit = (empty($calculation->lamination1_film_price) ? 0 : $calculation->lamination1_film_price->value) / $param_quantity;
+    // Лам 1 цена за кг = лам 1 цена / вес
+    $new_lamination1_film_price_per_unit = (empty($calculation->lamination1_film_price) ? 0 : $calculation->lamination1_film_price->value) / $calculation->lamination1_weight_dirty->value;
     if($new_lamination1_film_price_per_unit === null) $new_lamination1_film_price_per_unit = "NULL";
     
     // Лам 1 ширина = лам 1 ширина
@@ -353,8 +366,8 @@ else {
     $new_lamination2_film_price = empty($calculation->lamination2_film_price) ? null : $calculation->lamination2_film_price->value;
     if($new_lamination2_film_price === null) $new_lamination2_film_price = "NULL";
     
-    // Лам 2 цена за шт/кг = лам 2 плёнка цена / кол-во
-    $new_lamination2_film_price_per_unit = (empty($calculation->lamination2_film_price) ? 0 : $calculation->lamination2_film_price->value) / $param_quantity;
+    // Лам 2 цена за кг = лам 2 плёнка цена / вес
+    $new_lamination2_film_price_per_unit = (empty($calculation->lamination2_film_price) ? 0 : $calculation->lamination2_film_price->value) / $calculation->lamination2_weight_dirty->value;
     if($new_lamination2_film_price_per_unit === null) $new_lamination2_film_price_per_unit = "NULL";
     
     // Лам 2 ширина = лам 2 ширина
@@ -556,7 +569,7 @@ else {
                 <div class="text-nowrap" style="font-size: x-small;">Наценка</div>
                 <?php if($status_id == 1 || $status_id == 2): ?>
                 <div class="input-group">
-                    <input type="text" id="extracharge" name="extracharge" data-id="<?=$id ?>" style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" value="30" required="required" />
+                    <input type="text" id="extracharge" name="extracharge" data-id="<?=$id ?>" style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" value="<?=$extracharge ?>" required="required" />
                     <div class="input-group-append" style="height: 28px;">
                         <span class="input-group-text">%</span>
                     </div>
@@ -586,12 +599,12 @@ else {
         <div class="col-4 pr-4">
             <h3>Себестоимость</h3>
             <div>Себестоимость</div>
-            <div class="value mb-2">860 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765,563 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
+            <div class="value mb-2"><?= Display(floatval($cost), 2) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
         </div>
         <div class="col-4 pr-4">
             <h3>Отгрузочная стоимость</h3>
             <div>Отгрузочная стоимость</div>
-            <div class="value">1 200 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236,216 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
+            <div class="value" style="text-decoration: line-through;">1 200 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236,216 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
         </div>
         <div class="col-4" style="width: 250px;"></div>
     </div>
@@ -599,28 +612,28 @@ else {
     <div class="row text-nowrap">
         <div class="col-12">
             <div>Себестоимость форм</div>
-            <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;420&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;329,5&nbsp;мм</span></div>    
+            <div class="value mb-2" style="text-decoration: line-through;">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;420&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;329,5&nbsp;мм</span></div>    
         </div>
     </div>
     <?php endif; ?>
     <div class="mt-3">
-        <h2>Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 кг</span></h2>
+        <h2>Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($total_weight_dirty), 2) ?> кг</span></h2>
     </div>
     <div class="row text-nowrap">
         <div class="col-4 pr-4">
-            <h3>Основная пленка&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 кг</span></h3>
+            <h3>Основная пленка&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($weight_dirty), 2) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
-            <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за кг</span></div>
+            <div class="value mb-2"><?= Display(floatval($film_price), 2) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_price_per_unit), 3) ?> &#8381; за кг</span></div>
             <div>Ширина</div>
             <div class="value mb-2">800 мм</div>
             <div>Масса без приладки</div>
             <div class="value mb-2">7 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">172 000 м</span></div>
             <div>Масса с приладкой</div>
-            <div class="value mb-2">8 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">192 000 м</span></div>
+            <div class="value mb-2"><?= Display(floatval($weight_dirty), 2) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">192 000 м</span></div>
         </div>
         <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
         <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
-            <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 кг</span></h3>
+            <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination1_weight_dirty), 2) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
             <div class="value mb-2">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">236 &#8381; за кг</span></div>
             <div>Ширина</div>
@@ -628,7 +641,7 @@ else {
             <div>Масса без приладки</div>
             <div class="value mb-2">7 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">172 000 м</span></div>
             <div>Масса с приладкой</div>
-            <div class="value mb-2">8 000 кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">192 000 м</span></div>
+            <div class="value mb-2"><?= Display(floatval($lamination1_weight_dirty), 2) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">192 000 м</span></div>
         </div>
         <?php else: ?>
         <div class="col-4" style="width: 250px;"></div>
