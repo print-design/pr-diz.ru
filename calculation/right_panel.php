@@ -19,16 +19,16 @@ $material_price = null; $material_price_per_unit = null; $material_width = null;
 $material_lamination1_price = null; $material_lamination1_price_per_unit = null; $material_lamination1_width = null; $material_lamination1_weight = null; $material_lamination1_length = null; $material_lamination1_weight_with_tuning = null; $material_lamination1_length_with_tuning = null;
 $material_lamination2_price = null; $material_lamination2_price_per_unit = null; $material_lamination2_width = null; $material_lamination2_weight = null; $material_lamination2_length = null; $material_lamination2_weight_with_tuning = null; $material_lamination2_length_with_tuning = null;
 $expenses_waste = null; $expenses_waste_weight = null; $expenses_ink = null; $expenses_ink_weight = null; $expenses_work = null; $expenses_work_time = null;
-$expenses_lamination1_waste = null; $expenses_lamination1_waste_weight = null; $expenses_lamination1_glue = null; $expenses_lamination1_glue_weight = null; $expenses_lamination1_work = null; $expenses_lamination1_work_time = null;
-$expenses_lamination2_waste = null; $expenses_lamination2_waste_weight = null; $expenses_lamination2_glue = null; $expenses_lamination2_glue_weight = null; $expenses_lamination2_work = null; $expenses_lamination2_work_time = null;
+$expenses_lamination1_waste = null; $expenses_lamination1_waste_weight = null; $glue_price1 = null; $glue_expense1 = null; $lamination1_work_price = null; $lamination1_work_time = null;
+$expenses_lamination2_waste = null; $expenses_lamination2_waste_weight = null; $glue_price2 = null; $glue_expense2 = null; $lamination2_work_price = null; $lamination2_work_time = null;
         
 $sql_calculation_result = "select extracharge, usd, euro, cost, cost_per_unit, material, "
         . "material_price, material_price_per_unit, material_width, material_weight, material_length, material_weight_with_tuning, material_length_with_tuning, "
         . "material_lamination1_price, material_lamination1_price_per_unit, material_lamination1_width, material_lamination1_weight, material_lamination1_length, material_lamination1_weight_with_tuning, material_lamination1_length_with_tuning, "
         . "material_lamination2_price, material_lamination2_price_per_unit, material_lamination2_width, material_lamination2_weight, material_lamination2_length, material_lamination2_weight_with_tuning, material_lamination2_length_with_tuning, "
         . "expenses_waste, expenses_waste_weight, expenses_ink, expenses_ink_weight, expenses_work, expenses_work_time, "
-        . "expenses_lamination1_waste, expenses_lamination1_waste_weight, expenses_lamination1_glue, expenses_lamination1_glue_weight, expenses_lamination1_work, expenses_lamination1_work_time, "
-        . "expenses_lamination2_waste, expenses_lamination2_waste_weight, expenses_lamination2_glue, expenses_lamination2_glue_weight, expenses_lamination2_work, expenses_lamination2_work_time "
+        . "expenses_lamination1_waste, expenses_lamination1_waste_weight, glue_price1, glue_expense1, lamination1_work_price, lamination1_work_time, "
+        . "expenses_lamination2_waste, expenses_lamination2_waste_weight, glue_price2, glue_expense2, lamination2_work_price, lamination2_work_time "
         . "from calculation_result where calculation_id = $id order by id desc limit 1";
 $fetcher = new Fetcher($sql_calculation_result);
 
@@ -38,8 +38,8 @@ if($row = $fetcher->Fetch()) {
     $material_lamination1_price = $row['material_lamination1_price']; $material_lamination1_price_per_unit = $row['material_lamination1_price_per_unit']; $material_lamination1_width = $row['material_lamination1_width']; $material_lamination1_weight = $row['material_lamination1_weight']; $material_lamination1_length = $row['material_lamination1_length']; $material_lamination1_weight_with_tuning = $row['material_lamination1_weight_with_tuning']; $material_lamination1_length_with_tuning = $row['material_lamination1_length_with_tuning'];
     $material_lamination2_price = $row['material_lamination2_price']; $material_lamination2_price_per_unit = $row['material_lamination2_price_per_unit']; $material_lamination2_width = $row['material_lamination2_width']; $material_lamination2_weight = $row['material_lamination2_weight']; $material_lamination2_length = $row['material_lamination2_length']; $material_lamination2_weight_with_tuning = $row['material_lamination2_weight_with_tuning']; $material_lamination2_length_with_tuning = $row['material_lamination2_length_with_tuning'];
     $expenses_waste = $row['expenses_waste']; $expenses_waste_weight = $row['expenses_waste_weight']; $expenses_ink = $row['expenses_ink']; $expenses_ink_weight = $row['expenses_ink_weight']; $expenses_work = $row['expenses_work']; $expenses_work_time = $row['expenses_work_time'];
-    $expenses_lamination1_waste = $row['expenses_lamination1_waste']; $expenses_lamination1_waste_weight = $row['expenses_lamination1_waste_weight']; $expenses_lamination1_glue = $row['expenses_lamination1_glue']; $expenses_lamination1_glue_weight = $row['expenses_lamination1_glue_weight']; $expenses_lamination1_work = $row['expenses_lamination1_work']; $expenses_lamination1_work_time = $row['expenses_lamination1_work_time'];
-    $expenses_lamination2_waste = $row['expenses_lamination2_waste']; $expenses_lamination2_waste_weight = $row['expenses_lamination2_waste_weight']; $expenses_lamination2_glue = $row['expenses_lamination2_glue']; $expenses_lamination2_glue_weight = $row['expenses_lamination2_glue_weight']; $expenses_lamination2_work = $row['expenses_lamination2_work']; $expenses_lamination2_work_time = $row['expenses_lamination2_work_time'];
+    $expenses_lamination1_waste = $row['expenses_lamination1_waste']; $expenses_lamination1_waste_weight = $row['expenses_lamination1_waste_weight']; $glue_price1 = $row['glue_price1']; $glue_expense1 = $row['glue_expense1']; $lamination1_work_price = $row['lamination1_work_price']; $lamination1_work_time = $row['lamination1_work_time'];
+    $expenses_lamination2_waste = $row['expenses_lamination2_waste']; $expenses_lamination2_waste_weight = $row['expenses_lamination2_waste_weight']; $glue_price2 = $row['glue_price2']; $glue_expense2 = $row['glue_expense2']; $lamination2_work_price = $row['lamination2_work_price']; $lamination2_work_time = $row['lamination2_work_time'];
 }
 else {
     include './calculation.php';
@@ -424,20 +424,20 @@ else {
     if($new_expenses_lamination1_waste_weight === null) $new_expenses_lamination1_waste_weight = "NULL";
     
     // Стоимость клея лам 1
-    $new_expenses_lamination1_glue = empty($calculation->glue_price1) ? null : $calculation->glue_price1->value;
-    if($new_expenses_lamination1_glue === null) $new_expenses_lamination1_glue = "NULL";
+    $new_glue_price1 = empty($calculation->glue_price1) ? null : $calculation->glue_price1->value;
+    if($new_glue_price1 === null) $new_glue_price1 = "NULL";
     
     // Расход клея лам 1
-    $new_expenses_lamination1_glue_weight = empty($calculation->glue_expense1) ? null : $calculation->glue_expense1->value;
-    if($new_expenses_lamination1_glue_weight === null) $new_expenses_lamination1_glue_weight = "NULL";
+    $new_glue_expense1 = empty($calculation->glue_expense1) ? null : $calculation->glue_expense1->value;
+    if($new_glue_expense1 === null) $new_glue_expense1 = "NULL";
     
     // Работа лам 1, руб
-    $new_expenses_lamination1_work = empty($calculation->lamination1_work_price) ? null : $calculation->lamination1_work_price->value;
-    if($new_expenses_lamination1_work === null) $new_expenses_lamination1_work = "NULL";
+    $new_lamination1_work_price = empty($calculation->lamination1_work_price) ? null : $calculation->lamination1_work_price->value;
+    if($new_lamination1_work_price === null) $new_lamination1_work_price = "NULL";
     
     // Работа лам 1, ч
-    $new_expenses_lamination1_work_time = empty($calculation->lamination1_work_time) ? null : $calculation->lamination1_work_time->value;
-    if($new_expenses_lamination1_work_time === null) $new_expenses_lamination1_work_time = "NULL";
+    $new_lamination1_work_time = empty($calculation->lamination1_work_time) ? null : $calculation->lamination1_work_time->value;
+    if($new_lamination1_work_time === null) $new_lamination1_work_time = "NULL";
     
     // Отходы плёнки лам 2, руб
     $new_expenses_lamination2_waste = (empty($calculation->lamination2_mdirty) || empty($calculation->lamination2_mpure)) ? null : ($calculation->lamination2_mdirty->value - $calculation->lamination2_mpure->value) * $param_lamination2_price * $calculation->GetCurrencyRate($param_lamination2_currency, $new_usd, $new_euro);
@@ -448,20 +448,20 @@ else {
     if($new_expenses_lamination2_waste_weight === null) $new_expenses_lamination2_waste_weight = "NULL";
     
     // Стоимость клея лам 2
-    $new_expenses_lamination2_glue = empty($calculation->glue_price2) ? null : $calculation->glue_price2->value;
-    if($new_expenses_lamination2_glue === null) $new_expenses_lamination2_glue = "NULL";
+    $new_glue_price2 = empty($calculation->glue_price2) ? null : $calculation->glue_price2->value;
+    if($new_glue_price2 === null) $new_glue_price2 = "NULL";
     
     // Расход клея лам 2
-    $new_expenses_lamination2_glue_weight = empty($calculation->glue_expense2) ? null : $calculation->glue_expense2->value;
-    if($new_expenses_lamination2_glue_weight === null) $new_expenses_lamination2_glue_weight = "NULL";
+    $new_glue_expense2 = empty($calculation->glue_expense2) ? null : $calculation->glue_expense2->value;
+    if($new_glue_expense2 === null) $new_glue_expense2 = "NULL";
     
     // Работа лам 2, руб
-    $new_expenses_lamination2_work = empty($calculation->lamination2_work_price) ? null : $calculation->lamination2_work_price->value;
-    if($new_expenses_lamination2_work === null) $new_expenses_lamination2_work = "NULL";
+    $new_lamination2_work_price = empty($calculation->lamination2_work_price) ? null : $calculation->lamination2_work_price->value;
+    if($new_lamination2_work_price === null) $new_lamination2_work_price = "NULL";
     
     // Работа лам 2, ч
-    $new_expenses_lamination2_work_time = empty($calculation->lamination2_work_time) ? null : $calculation->lamination2_work_time->value;
-    if($new_expenses_lamination2_work_time === null) $new_expenses_lamination2_work_time = "NULL";
+    $new_lamination2_work_time = empty($calculation->lamination2_work_time) ? null : $calculation->lamination2_work_time->value;
+    if($new_lamination2_work_time === null) $new_lamination2_work_time = "NULL";
     
     //**************************************
     // Наценка
@@ -506,15 +506,15 @@ else {
                 . "material_lamination1_price, material_lamination1_price_per_unit, material_lamination1_width, material_lamination1_weight, material_lamination1_length, material_lamination1_weight_with_tuning, material_lamination1_length_with_tuning, "
                 . "material_lamination2_price, material_lamination2_price_per_unit, material_lamination2_width, material_lamination2_weight, material_lamination2_length, material_lamination2_weight_with_tuning, material_lamination2_length_with_tuning, "
                 . "expenses_waste, expenses_waste_weight, expenses_ink, expenses_ink_weight, expenses_work, expenses_work_time, "
-                . "expenses_lamination1_waste, expenses_lamination1_waste_weight, expenses_lamination1_glue, expenses_lamination1_glue_weight, expenses_lamination1_work, expenses_lamination1_work_time, "
-                . "expenses_lamination2_waste, expenses_lamination2_waste_weight, expenses_lamination2_glue, expenses_lamination2_glue_weight, expenses_lamination2_work, expenses_lamination2_work_time) "
+                . "expenses_lamination1_waste, expenses_lamination1_waste_weight, glue_price1, glue_expense1, lamination1_work_price, lamination1_work_time, "
+                . "expenses_lamination2_waste, expenses_lamination2_waste_weight, glue_price2, glue_expense2, lamination2_work_price, lamination2_work_time) "
                 . "values ($id, $new_extracharge, $new_usd, $new_euro, $new_cost, $new_cost_per_unit, $new_material, "
                 . "$new_material_price, $new_material_price_per_unit, $new_material_width, $new_material_weight, $new_material_length, $new_material_weight_with_tuning, $new_material_length_with_tuning, "
                 . "$new_material_lamination1_price, $new_material_lamination1_price_per_unit, $new_material_lamination1_width, $new_material_lamination1_weight, $new_material_lamination1_length, $new_material_lamination1_weight_with_tuning, $new_material_lamination1_length_with_tuning, "
                 . "$new_material_lamination2_price, $new_material_lamination2_price_per_unit, $new_material_lamination2_width, $new_material_lamination2_weight, $new_material_lamination2_length, $new_material_lamination2_weight_with_tuning, $new_material_lamination2_length_with_tuning, "
                 . "$new_expenses_waste, $new_expenses_waste_weight, $new_expenses_ink, $new_expenses_ink_weight, $new_expenses_work, $new_expenses_work_time, "
-                . "$new_expenses_lamination1_waste, $new_expenses_lamination1_waste_weight, $new_expenses_lamination1_glue, $new_expenses_lamination1_glue_weight, $new_expenses_lamination1_work, $new_expenses_lamination1_work_time, "
-                . "$new_expenses_lamination2_waste, $new_expenses_lamination2_waste_weight, $new_expenses_lamination2_glue, $new_expenses_lamination2_glue_weight, $new_expenses_lamination2_work, $new_expenses_lamination2_work_time)";
+                . "$new_expenses_lamination1_waste, $new_expenses_lamination1_waste_weight, $new_glue_price1, $new_glue_expense1, $new_lamination1_work_price, $new_lamination1_work_time, "
+                . "$new_expenses_lamination2_waste, $new_expenses_lamination2_waste_weight, $new_glue_price2, $new_glue_expense2, $new_lamination2_work_price, $new_lamination2_work_time)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
@@ -529,8 +529,8 @@ else {
         $material_lamination1_price = $row['material_lamination1_price']; $material_lamination1_price_per_unit = $row['material_lamination1_price_per_unit']; $material_lamination1_width = $row['material_lamination1_width']; $material_lamination1_weight = $row['material_lamination1_weight']; $material_lamination1_length = $row['material_lamination1_length']; $material_lamination1_weight_with_tuning = $row['material_lamination1_weight_with_tuning']; $material_lamination1_length_with_tuning = $row['material_lamination1_length_with_tuning'];
         $material_lamination2_price = $row['material_lamination2_price']; $material_lamination2_price_per_unit = $row['material_lamination2_price_per_unit']; $material_lamination2_width = $row['material_lamination2_width']; $material_lamination2_weight = $row['material_lamination2_weight']; $material_lamination2_length = $row['material_lamination2_length']; $material_lamination2_weight_with_tuning = $row['material_lamination2_weight_with_tuning']; $material_lamination2_length_with_tuning = $row['material_lamination2_length_with_tuning'];
         $expenses_waste = $row['expenses_waste']; $expenses_waste_weight = $row['expenses_waste_weight']; $expenses_ink = $row['expenses_ink']; $expenses_ink_weight = $row['expenses_ink_weight']; $expenses_work = $row['expenses_work']; $expenses_work_time = $row['expenses_work_time'];
-        $expenses_lamination1_waste = $row['expenses_lamination1_waste']; $expenses_lamination1_waste_weight = $row['expenses_lamination1_waste_weight']; $expenses_lamination1_glue = $row['expenses_lamination1_glue']; $expenses_lamination1_glue_weight = $row['expenses_lamination1_glue_weight']; $expenses_lamination1_work = $row['expenses_lamination1_work']; $expenses_lamination1_work_time = $row['expenses_lamination1_work_time'];
-        $expenses_lamination2_waste = $row['expenses_lamination2_waste']; $expenses_lamination2_waste_weight = $row['expenses_lamination2_waste_weight']; $expenses_lamination2_glue = $row['expenses_lamination2_glue']; $expenses_lamination2_glue_weight = $row['expenses_lamination2_glue_weight']; $expenses_lamination2_work = $row['expenses_lamination2_work']; $expenses_lamination2_work_time = $row['expenses_lamination2_work_time'];
+        $expenses_lamination1_waste = $row['expenses_lamination1_waste']; $expenses_lamination1_waste_weight = $row['expenses_lamination1_waste_weight']; $glue_price1 = $row['glue_price1']; $glue_expense1 = $row['glue_expense1']; $lamination1_work_price = $row['lamination1_work_price']; $lamination1_work_time = $row['lamination1_work_time'];
+        $expenses_lamination2_waste = $row['expenses_lamination2_waste']; $expenses_lamination2_waste_weight = $row['expenses_lamination2_waste_weight']; $glue_price2 = $row['glue_price2']; $glue_expense2 = $row['glue_expense2']; $lamination2_work_price = $row['lamination2_work_price']; $lamination2_work_time = $row['lamination2_work_time'];
     }
     else {
         $error_message = "Ошибка при чтении из базы сохранённых данных";
