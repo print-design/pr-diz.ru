@@ -339,7 +339,7 @@ class Calculation {
     public /*CalculationItem*/ $m2dirty, $lamination1_m2dirty, $lamination2_m2dirty;
     public /*CalculationItem*/ $mpure, $lamination1_mpure, $lamination2_mpure;
     public /*CalculationItem*/ $lengthpure, $lamination1_lengthpure, $lamination2_lengthpure;
-    public /*CalculationItem*/ $mdirty, $lamination1_mdirty, $lamination2_mdirty;
+    public /*CalculationItem*/ $weight_dirty, $lamination1_weight_dirty, $lamination2_weight_dirty;
     public /*CalculationItem*/ $lengthdirty, $lamination1_lengthdirty, $lamination2_lengthdirty;
     public /*CalculationItem*/ $film_price, $lamination1_film_price, $lamination2_film_price;
     public /*CalculationItem*/ $tuning_time, $lamination1_tuning_time, $lamination2_tuning_time;
@@ -555,18 +555,18 @@ class Calculation {
         }
         
         // Масса плёнки грязная (с приладкой), кг
-        $this->mdirty = new CalculationItem("Масса плёнки грязная (осн), м", $this->m2dirty->value * $density / 1000, "|= ".$this->m2dirty->display." * ".$this->Display($density)." / 1000", "м2 грязные * уд. вес осн / 1000");
-        if($this->mdirty !== null) array_push ($this->base_values, $this->mdirty);
+        $this->weight_dirty = new CalculationItem("Масса плёнки грязная (осн), м", $this->m2dirty->value * $density / 1000, "|= ".$this->m2dirty->display." * ".$this->Display($density)." / 1000", "м2 грязные * уд. вес осн / 1000");
+        if($this->weight_dirty !== null) array_push ($this->base_values, $this->weight_dirty);
         
     
         if($this->laminations_number > 0) {
-            $this->lamination1_mdirty = new CalculationItem("Масса плёнки грязная (лам 1), м", $this->lamination1_m2dirty->value * $lamination1_density / 1000, "|= ".$this->lamination1_m2dirty->display." * ".$this->Display($lamination1_density)." / 1000", "м2 грязные * уд. вес лам 1 / 1000");
-            if($this->lamination1_mdirty !== null) array_push ($this->base_values, $this->lamination1_mdirty);
+            $this->lamination1_weight_dirty = new CalculationItem("Масса плёнки грязная (лам 1), м", $this->lamination1_m2dirty->value * $lamination1_density / 1000, "|= ".$this->lamination1_m2dirty->display." * ".$this->Display($lamination1_density)." / 1000", "м2 грязные * уд. вес лам 1 / 1000");
+            if($this->lamination1_weight_dirty !== null) array_push ($this->base_values, $this->lamination1_weight_dirty);
         }
     
         if($this->laminations_number > 1) {
-            $this->lamination2_mdirty = new CalculationItem("Масса плёнки грязная (лам 2), м", $this->lamination2_m2dirty->value * $lamination2_density / 1000, "|= ".$this->lamination2_m2dirty->display." * ".$this->Display($lamination2_density)." / 1000", "м2 грязные * уд. вес лам 2 / 1000");
-            if($this->lamination2_mdirty !== null) array_push ($this->base_values, $this->lamination2_mdirty);
+            $this->lamination2_weight_dirty = new CalculationItem("Масса плёнки грязная (лам 2), м", $this->lamination2_m2dirty->value * $lamination2_density / 1000, "|= ".$this->lamination2_m2dirty->display." * ".$this->Display($lamination2_density)." / 1000", "м2 грязные * уд. вес лам 2 / 1000");
+            if($this->lamination2_weight_dirty !== null) array_push ($this->base_values, $this->lamination2_weight_dirty);
         }
     
         // Длина плёнки грязная, м
@@ -589,16 +589,16 @@ class Calculation {
         //****************************************
     
         // Общая стоимость грязная (с приладки), руб
-        $this->film_price = new CalculationItem("Общая стоимость плёнки (осн)", $this->mdirty->value * $price * $this->GetCurrencyRate($currency, $usd, $euro), "|= ".$this->mdirty->display." * ".$this->Display($price)." * ".$this->Display($this->GetCurrencyRate($currency, $usd, $euro)), "масса пленки осн * цена плёнки * курс валюты");
+        $this->film_price = new CalculationItem("Общая стоимость плёнки (осн)", $this->weight_dirty->value * $price * $this->GetCurrencyRate($currency, $usd, $euro), "|= ".$this->weight_dirty->display." * ".$this->Display($price)." * ".$this->Display($this->GetCurrencyRate($currency, $usd, $euro)), "масса пленки осн * цена плёнки * курс валюты");
         if($this->film_price !== null) array_push ($this->base_values, $this->film_price);
     
         if($this->laminations_number > 0) {
-            $this->lamination1_film_price = new CalculationItem("Общая стоимость плёнки (лам 1)", $this->lamination1_mdirty->value * $lamination1_price * $this->GetCurrencyRate($lamination1_currency, $usd, $euro), "|= ".$this->lamination1_mdirty->display." * ".$this->Display($lamination1_price)." * ".$this->Display($this->GetCurrencyRate($lamination1_currency, $usd, $euro)), "масса плёнки лам 1 * цена плёнки * курс валюты");
+            $this->lamination1_film_price = new CalculationItem("Общая стоимость плёнки (лам 1)", $this->lamination1_weight_dirty->value * $lamination1_price * $this->GetCurrencyRate($lamination1_currency, $usd, $euro), "|= ".$this->lamination1_weight_dirty->display." * ".$this->Display($lamination1_price)." * ".$this->Display($this->GetCurrencyRate($lamination1_currency, $usd, $euro)), "масса плёнки лам 1 * цена плёнки * курс валюты");
             if($this->lamination1_film_price !== null) array_push ($this->base_values, $this->lamination1_film_price);
         }
     
         if($this->laminations_number > 1) {
-            $this->lamination2_film_price = new CalculationItem("Общая стоимость плёнки (лам 2)", $this->lamination2_mdirty->value * $lamination2_price * $this->GetCurrencyRate($lamination2_currency, $usd, $euro), "|= ".$this->lamination2_mdirty->display." * ".$this->Display($lamination2_price)." * ".$this->Display($this->GetCurrencyRate($lamination2_currency, $usd, $euro)), "масса плёнки лам 2 * цена плёнки * курс валюты");
+            $this->lamination2_film_price = new CalculationItem("Общая стоимость плёнки (лам 2)", $this->lamination2_weight_dirty->value * $lamination2_price * $this->GetCurrencyRate($lamination2_currency, $usd, $euro), "|= ".$this->lamination2_weight_dirty->display." * ".$this->Display($lamination2_price)." * ".$this->Display($this->GetCurrencyRate($lamination2_currency, $usd, $euro)), "масса плёнки лам 2 * цена плёнки * курс валюты");
             if($this->lamination2_film_price !== null) array_push ($this->base_values, $this->lamination2_film_price);
         }
         
