@@ -240,6 +240,15 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $ski = filter_input(INPUT_POST, 'ski'); if(empty($ski)) $ski = "NULL";
         $width_ski = filter_input(INPUT_POST, 'width_ski'); if(empty($width_ski)) $width_ski = "NULL";
         
+        // Если currency пустой, то получаем значение валюты из справочника цен на плёнку
+        if(empty($currency)) {
+            $sql = "select currency from film_price where film_variation_id = $film_variation_id order by id desc limit 1";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $currency = $row['currency'];
+            }
+        }
+        
         $lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id'); if(empty($lamination1_film_variation_id)) $lamination1_film_variation_id = "NULL";
         $lamination1_price = filter_input(INPUT_POST, 'lamination1_price'); if(empty($lamination1_price)) $lamination1_price = "NULL";
         $lamination1_currency = filter_input(INPUT_POST, 'lamination1_currency');
@@ -250,6 +259,15 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $lamination1_ski = filter_input(INPUT_POST, 'lamination1_ski'); if(empty($lamination1_ski)) $lamination1_ski = "NULL";
         $lamination1_width_ski = filter_input(INPUT_POST, 'lamination1_width_ski'); if(empty($lamination1_width_ski)) $lamination1_width_ski = "NULL";
         
+        // Если lamination1_currency пустой, то получаем значение валюты из справочника цен на плёнку
+        if(empty($lamination1_currency)) {
+            $sql = "select currency from film_price where film_variation_id = $lamination1_film_variation_id order by id desc limit 1";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $lamination1_currency = $row['currency'];
+            }
+        }
+        
         $lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id'); if(empty($lamination2_film_variation_id)) $lamination2_film_variation_id = "NULL";
         $lamination2_price = filter_input(INPUT_POST, 'lamination2_price'); if(empty($lamination2_price)) $lamination2_price = "NULL";
         $lamination2_currency = filter_input(INPUT_POST, 'lamination2_currency');
@@ -259,6 +277,15 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $lamination2_customers_material = 0; if(filter_input(INPUT_POST, 'lamination2_customers_material') == 'on') $lamination2_customers_material = 1;
         $lamination2_ski = filter_input(INPUT_POST, 'lamination2_ski'); if(empty($lamination2_ski)) $lamination2_ski = "NULL";
         $lamination2_width_ski = filter_input(INPUT_POST, 'lamination2_width_ski'); if(empty($lamination2_width_ski)) $lamination2_width_ski = "NULL";
+        
+        // Если lamination2_currency пустой, то получаем значение валюты из справочника цен на плёнку
+        if(empty($lamination2_currency)) {
+            $sql = "select currency from film_price where film_variation_id = $lamination2_film_variation_id order by id desc limit 1";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $lamination2_currency = $row['currency'];
+            }
+        }
         
         $length = filter_input(INPUT_POST, 'length'); if(empty($length)) $length = "NULL";
         $stream_width = filter_input(INPUT_POST, 'stream_width'); if(empty($stream_width)) $stream_width = "NULL";
@@ -314,43 +341,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $insert_id = $executer->insert_id;
-        
-        // Математика
-        if(empty($error_message)) {
-            // ПОЛУЧЕНИЕ ИСХОДНЫХ ДАННЫХ
-            
-            // Масса тиража
-            $quantity = null;
-            
-            // Типы, толщины и удельные веса плёнок
-            $film_thickness = null;
-            $film_density = null;
-            
-            $lam1_film_thickness = null;
-            $lam1_film_density = null;
-            
-            $lam2_film_thickness = null;
-            $lam2_film_density = null;
-            
-            // Ширина ручья
-            $stream_width = null;
-            
-            // Количество ручьёв
-            $streams_count = null;
-            
-            // Рапорт
-            $raport = null;
-            
-            // Количество этикеток на рапорте
-            $number_in_raport = null;
-            
-            // Лыжи
-            $ski = null;
-            $lam1_ski = null;
-            $lam2_ski = null;
-            
-            // Ширина материала
-        }
         
         if(empty($error_message)) {
             header('Location: create.php?id='.$insert_id);
