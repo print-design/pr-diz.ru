@@ -292,6 +292,13 @@ if($id !== null) {
         if($row = $fetcher->Fetch()) {
             $glue_data = new GlueData($row['glue'], $row['glue_currency'], $row['glue_expense'], $row['glue_expense_pet'], $row['solvent'], $row['solvent_currency'], $row['solvent_part']);
         }
+        
+        $sql = "select flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, scotch, scotch_currency "
+                . "from norm_cliche where date <= '$date' order by id desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $cliche_data = new ClicheData($row['flint'], $row['flint_currency'], $row['kodak'], $row['kodak_currency'], $row['tver'], $row['tver_currency'], $row['film'], $row['film_currency'], $row['scotch'], $row['scotch_currency']);
+        }
     }
         
     if(!empty($date)) {
@@ -302,6 +309,7 @@ if($id !== null) {
                 $laminator_machine_data,
                 $ink_data,
                 $glue_data,
+                $cliche_data,
                 $usd, // Курс доллара
                 $euro, // Курс евро
                 $unit, // Кг или шт
@@ -404,6 +412,8 @@ if($id !== null) {
             array_push($file_data, array($base_value->name, $base_value->display, $base_value->formula, $base_value->comment));
         }
         
+        array_push($file_data, array("", "", "", ""));
+        
         // Расход краски
         if(!empty($ink_number)) {
             array_push($file_data, array("Красочность", $ink_number, "", ""));
@@ -423,9 +433,18 @@ if($id !== null) {
             }
         }
         
+        array_push($file_data, array("", "", "", ""));
+        
         // Расход клея
         foreach($calculation->glue_values as $glue_value) {
             array_push($file_data, array($glue_value->name, $glue_value->display, $glue_value->formula, $glue_value->comment));
+        }
+        
+        array_push($file_data, array("", "", "", ""));
+        
+        // Стоимость форм
+        foreach($calculation->cliche_values as $cliche_value) {
+            array_push($file_data, array($cliche_value->name, $cliche_value->display, $cliche_value->formula, $cliche_value->comment));
         }
         
         //***************************************************

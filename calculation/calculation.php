@@ -128,6 +128,32 @@ class GlueData {
     }
 }
 
+class ClicheData {
+    public $flint;
+    public $flint_currency;
+    public $kodak;
+    public $kodak_currency;
+    public $tver;
+    public $tver_currency;
+    public $film;
+    public $film_currency;
+    public $scotch;
+    public $scotch_currency;
+    
+    public function __construct($flint, $flint_currency, $kodak, $kodak_currency, $tver, $tver_currency, $film, $film_currency, $scotch, $scotch_currency) {
+        $this->flint = $flint;
+        $this->flint_currency = $flint_currency;
+        $this->kodak = $kodak;
+        $this->kodak_currency = $kodak_currency;
+        $this->tver = $tver;
+        $this->tver_currency = $tver_currency;
+        $this->film = $film;
+        $this->film_currency = $film_currency;
+        $this->scotch = $scotch;
+        $this->scotch_currency = $scotch_currency;
+    }
+}
+
 class PriceData {
     public $value;
     public $currency;
@@ -366,6 +392,9 @@ class Calculation {
     public /*CalculationItem*/ $glue_expense2;
     public /*CalculationItem*/ $glue_price1;
     public /*CalculationItem*/ $glue_price2;
+    
+    public $cliche_values; // стоимость форм
+    public CalculationItem $cliche_area; // Площадь формы
 
     public function __construct(TuningData $tuning_data, 
             TuningData $laminator_tuning_data,
@@ -373,6 +402,7 @@ class Calculation {
             MachineData $laminator_machine_data,
             InkData $ink_data,
             GlueData $glue_data,
+            ClicheData $cliche_data,
             $usd, // Курс доллара
             $euro, // Курс евро
             $unit, // Кг или шт
@@ -781,6 +811,33 @@ class Calculation {
             // Стоимость КлееСмеси (лам 2)
             $this->glue_price2 = new CalculationItem("Стоимость КлееСмеси (лам 2), руб", $this->glue_expense2->value * $this->mix_glue_kg_price->value, "|= ".$this->glue_expense2->display." * ".$this->mix_glue_kg_price->display, "расход КлееСмеси лам 2 * цена 1 кг КлееСмеси");
             if($this->glue_price2 !== null) array_push ($this->glue_values, $this->glue_price2);
+        }
+        
+        //***********************************
+        // Стоимость форм
+        //***********************************
+        if(!empty($raport)) {
+            $this->cliche_values = array();
+            $ski_width = 0;
+            
+            if($ski == self::STANDARD_SKI || $ski == self::NONSTANDARD_SKI) {
+                $ski_width = 20;
+            }
+            
+            $this->cliche_area = new CalculationItem("Площадь формы, см2", ($raport + 20) * ($stream_width * $streams_number + $ski_width) / 10, "|= (". $this->Display($raport)." + 20) * (". $this->Display($stream_width)." * ". $this->Display($streams_number)." + $ski_width) / 10", "(рапорт + 20) * (ширина ручья * кол-во ручьёв + ширина лыж) / 10");
+            if($this->cliche_area !== null) array_push ($this->cliche_values, $this->cliche_area);
+            
+            for($i=1; $i<=$ink_number; $i++) {
+                $cliche = "cliche_$i";
+                $cliche_value = null;
+                
+                if($$cliche == self::OLD) {
+                    $cliche_value = new CalculationItem("Цена формы $i, руб", 0, "0", "Цена старой формы 0 руб.");
+                }
+                /*elseif($$cliche == self::FLINT) {
+                    $cliche_value = new CalculationItem("Цена формы $i, руб", $this->cliche_area * $cli, $formula, $comment);
+                }*/
+            }
         }
     }
 }

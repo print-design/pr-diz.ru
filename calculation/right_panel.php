@@ -282,10 +282,17 @@ if(!empty($id)) {
             if($row = $fetcher->Fetch()) {
                 $glue_data = new GlueData($row['glue'], $row['glue_currency'], $row['glue_expense'], $row['glue_expense_pet'], $row['solvent'], $row['solvent_currency'], $row['solvent_part']);
             }
+            
+            $sql = "select flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, scotch, scotch_currency "
+                    . "from norm_cliche where date <= '$date' order by id desc limit 1";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $cliche_data = new ClicheData($row['flint'], $row['flint_currency'], $row['kodak'], $row['kodak_currency'], $row['tver'], $row['tver_currency'], $row['film'], $row['film_currency'], $row['scotch'], $row['scotch_currency']);
+            }
         }
     
         // ДЕЛАЕМ РАСЧЁТ
-        $calculation = new Calculation($tuning_data, $laminator_tuning_data, $machine_data, $laminator_machine_data, $ink_data, $glue_data, $new_usd, $new_euro, 
+        $calculation = new Calculation($tuning_data, $laminator_tuning_data, $machine_data, $laminator_machine_data, $ink_data, $glue_data, $cliche_data, $new_usd, $new_euro, 
                 $param_unit, $param_quantity, $param_work_type_id, $param_film, $param_thickness, $param_density, $param_price, $param_currency, $param_customers_material, $param_ski, $param_width_ski, 
                 $param_lamination1_film, $param_lamination1_thickness, $param_lamination1_density, $param_lamination1_price, $param_lamination1_currency, $param_lamination1_customers_material, $param_lamination1_ski, $param_lamination1_width_ski, 
                 $param_lamination2_film, $param_lamination2_thickness, $param_lamination2_density, $param_lamination2_price, $param_lamination2_currency, $param_lamination2_customers_material, $param_lamination2_ski, $param_lamination2_width_ski, 
