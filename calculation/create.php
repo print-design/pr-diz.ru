@@ -1767,11 +1767,11 @@ $colorfulnesses = array();
                                         ?>
                                         <option value="<?=OLD ?>"<?=$old_selected ?>>Старая</option>
                                         <option value="<?=FLINT ?>"<?=$flint_selected ?>>Новая Флинт</option>
+                                        <option value="<?=KODAK ?>"<?=$kodak_selected ?>>Новая Кодак</option>
                                         <?php if(false): ?>
                                         <!-- Тверские формы решили убрать -->
-                                        <option value="<?=KODAK ?>"<?=$kodak_selected ?>>Новая Кодак</option>
-                                        <?php endif; ?>
                                         <option value="<?=TVER ?>"<?=$tver_selected ?>>Новая Тверь</option>
+                                        <?php endif; ?>
                                     </select>
                                 </div>
                             </div>
