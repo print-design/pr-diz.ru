@@ -35,7 +35,7 @@ const ET_PRINT_1 = 3; // Пленка с печатью и ламинацией
 const ET_PRINT_2 = 4; // Пленка с печатью и двумя ламинациями
 
 // Берём расчёт из таблицы базы
-$extracharge = null; $usd = null; $euro = null; $cost = null; $cost_per_unit = null; $total_weight_dirty = null;
+$extracharge = null; $usd = null; $euro = null; $cost = null; $cost_per_unit = null; $cliche_price = null; $total_weight_dirty = null;
 $film_price = null; $film_price_per_unit = null; $width = null; $weight_pure = null; $length_pure = null; $weight_dirty = null; $length_dirty = null;
 $lamination1_film_price = null; $lamination1_film_price_per_unit = null; $lamination1_width = null; $lamination1_weight_pure = null; $lamination1_length_pure = null; $lamination1_weight_dirty = null; $lamination1_length_dirty = null;
 $lamination2_film_price = null; $lamination2_film_price_per_unit = null; $lamination2_width = null; $lamination2_weight_pure = null; $lamination2_length_pure = null; $lamination2_weight_dirty = null; $lamination2_length_dirty = null;
@@ -46,7 +46,7 @@ $lamination2_film_waste_price = null; $lamination2_film_waste = null; $glue_pric
 $id = filter_input(INPUT_GET, 'id');
 
 if(!empty($id)) {
-    $sql_calculation_result = "select extracharge, usd, euro, cost, cost_per_unit, total_weight_dirty, "
+    $sql_calculation_result = "select extracharge, usd, euro, cost, cost_per_unit, cliche_price, total_weight_dirty, "
             . "film_price, film_price_per_unit, width, weight_pure, length_pure, weight_dirty, length_dirty, "
             . "lamination1_film_price, lamination1_film_price_per_unit, lamination1_width, lamination1_weight_pure, lamination1_length_pure, lamination1_weight_dirty, lamination1_length_dirty, "
             . "lamination2_film_price, lamination2_film_price_per_unit, lamination2_width, lamination2_weight_pure, lamination2_length_pure, lamination2_weight_dirty, lamination2_length_dirty, "
@@ -57,7 +57,7 @@ if(!empty($id)) {
     $fetcher = new Fetcher($sql_calculation_result);
 
     if($row = $fetcher->Fetch()) {
-        $extracharge = $row['extracharge']; $usd = $row['usd']; $euro = $row['euro']; $cost = $row['cost']; $cost_per_unit = $row['cost_per_unit']; $total_weight_dirty = $row['total_weight_dirty'];
+        $extracharge = $row['extracharge']; $usd = $row['usd']; $euro = $row['euro']; $cost = $row['cost']; $cost_per_unit = $row['cost_per_unit']; $cliche_price = $row['cliche_price']; $total_weight_dirty = $row['total_weight_dirty'];
         $film_price = $row['film_price']; $film_price_per_unit = $row['film_price_per_unit']; $width = $row['width']; $weight_pure = $row['weight_pure']; $length_pure = $row['length_pure']; $weight_dirty = $row['weight_dirty']; $length_dirty = $row['length_dirty'];
         $lamination1_film_price = $row['lamination1_film_price']; $lamination1_film_price_per_unit = $row['lamination1_film_price_per_unit']; $lamination1_width = $row['lamination1_width']; $lamination1_weight_pure = $row['lamination1_weight_pure']; $lamination1_length_pure = $row['lamination1_length_pure']; $lamination1_weight_dirty = $row['lamination1_weight_dirty']; $lamination1_length_dirty = $row['lamination1_length_dirty'];
         $lamination2_film_price = $row['lamination2_film_price']; $lamination2_film_price_per_unit = $row['lamination2_film_price_per_unit']; $lamination2_width = $row['lamination2_width']; $lamination2_weight_pure = $row['lamination2_weight_pure']; $lamination2_length_pure = $row['lamination2_length_pure']; $lamination2_weight_dirty = $row['lamination2_weight_dirty']; $lamination2_length_dirty = $row['lamination2_length_dirty'];
@@ -319,6 +319,10 @@ if(!empty($id)) {
         // Себестоимость на 1 шт/кг = Себестоимость / массу тиража или кол-во штук
         $new_cost_per_unit = $new_cost / $param_quantity;
         if($new_cost_per_unit === null) $new_cost_per_unit = "NULL";
+        
+        // Себестоимость форм
+        $new_cliche_price = empty($calculation->cliche_price) ? null : $calculation->cliche_price->value;
+        if($new_cliche_price == null) $new_cliche_price = "NULL";
     
         // Материалы = масса с приладкой осн. + масса с приладкой лам. 1 + масса с приладкой лам. 2
         $new_total_weight_dirty = $calculation->weight_dirty->value + (empty($calculation->lamination1_weight_dirty) ? 0 : $calculation->lamination1_weight_dirty->value) + (empty($calculation->lamination2_weight_dirty) ? 0 : $calculation->lamination2_weight_dirty->value);
@@ -532,14 +536,14 @@ if(!empty($id)) {
         //****************************************************
         // ПОМЕЩАЕМ РЕЗУЛЬТАТЫ ВЫЧИСЛЕНИЙ В БАЗУ
         if(empty($error_message)) {
-            $sql = "insert into calculation_result (calculation_id, extracharge, usd, euro, cost, cost_per_unit, total_weight_dirty, "
+            $sql = "insert into calculation_result (calculation_id, extracharge, usd, euro, cost, cost_per_unit, cliche_price, total_weight_dirty, "
                     . "film_price, film_price_per_unit, width, weight_pure, length_pure, weight_dirty, length_dirty, "
                     . "lamination1_film_price, lamination1_film_price_per_unit, lamination1_width, lamination1_weight_pure, lamination1_length_pure, lamination1_weight_dirty, lamination1_length_dirty, "
                     . "lamination2_film_price, lamination2_film_price_per_unit, lamination2_width, lamination2_weight_pure, lamination2_length_pure, lamination2_weight_dirty, lamination2_length_dirty, "
                     . "film_waste_price, film_waste, ink_price, ink_weight, work_price, work_time, "
                     . "lamination1_film_waste_price, lamination1_film_waste, glue_price1, glue_expense1, lamination1_work_price, lamination1_work_time, "
                     . "lamination2_film_waste_price, lamination2_film_waste, glue_price2, glue_expense2, lamination2_work_price, lamination2_work_time) "
-                    . "values ($id, $new_extracharge, $new_usd, $new_euro, $new_cost, $new_cost_per_unit, $new_total_weight_dirty, "
+                    . "values ($id, $new_extracharge, $new_usd, $new_euro, $new_cost, $new_cost_per_unit, $new_cliche_price, $new_total_weight_dirty, "
                     . "$new_film_price, $new_film_price_per_unit, $new_width, $new_weight_pure, $new_length_pure, $new_weight_dirty, $new_length_dirty, "
                     . "$new_lamination1_film_price, $new_lamination1_film_price_per_unit, $new_lamination1_width, $new_lamination1_weight_pure, $new_lamination1_length_pure, $new_lamination1_weight_dirty, $new_lamination1_length_dirty, "
                     . "$new_lamination2_film_price, $new_lamination2_film_price_per_unit, $new_lamination2_width, $new_lamination2_weight_pure, $new_lamination2_length_pure, $new_lamination2_weight_dirty, $new_lamination2_length_dirty, "
@@ -555,7 +559,7 @@ if(!empty($id)) {
         $fetcher = new Fetcher($sql_calculation_result);
     
         if($row = $fetcher->Fetch()) {
-            $extracharge = $row['extracharge']; $usd = $row['usd']; $euro = $row['euro']; $cost = $row['cost']; $cost_per_unit = $row['cost_per_unit']; $total_weight_dirty = $row['total_weight_dirty'];
+            $extracharge = $row['extracharge']; $usd = $row['usd']; $euro = $row['euro']; $cost = $row['cost']; $cost_per_unit = $row['cost_per_unit']; $cliche_price = $row['cliche_price']; $total_weight_dirty = $row['total_weight_dirty'];
             $film_price = $row['film_price']; $film_price_per_unit = $row['film_price_per_unit']; $width = $row['width']; $weight_pure = $row['weight_pure']; $length_pure = $row['length_pure']; $weight_dirty = $row['weight_dirty']; $length_dirty = $row['length_dirty'];
             $lamination1_film_price = $row['lamination1_film_price']; $lamination1_film_price_per_unit = $row['lamination1_film_price_per_unit']; $lamination1_width = $row['lamination1_width']; $lamination1_weight_pure = $row['lamination1_weight_pure']; $lamination1_length_pure = $row['lamination1_length_pure']; $lamination1_weight_dirty = $row['lamination1_weight_dirty']; $lamination1_length_dirty = $row['lamination1_length_dirty'];
             $lamination2_film_price = $row['lamination2_film_price']; $lamination2_film_price_per_unit = $row['lamination2_film_price_per_unit']; $lamination2_width = $row['lamination2_width']; $lamination2_weight_pure = $row['lamination2_weight_pure']; $lamination2_length_pure = $row['lamination2_length_pure']; $lamination2_weight_dirty = $row['lamination2_weight_dirty']; $lamination2_length_dirty = $row['lamination2_length_dirty'];
@@ -645,7 +649,7 @@ if(!empty($id)) {
     <div class="row text-nowrap">
         <div class="col-12">
             <div>Себестоимость форм</div>
-            <div class="value mb-2" style="text-decoration: line-through;">800 000 &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;420&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;329,5&nbsp;мм</span></div>    
+            <div class="value mb-2"><?= Display(floatval($cliche_price), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= Display($stream_width * $streams_number + ($ski == NO_SKI ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($raport) + 20) ?>&nbsp;мм</span></div>    
         </div>
     </div>
     <?php endif; ?>
