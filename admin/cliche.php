@@ -13,7 +13,7 @@ $error_message = '';
 
 $flint_valid = '';
 $kodak_valid = '';
-$tver_valid = '';
+//$tver_valid = '';
 $film_valid = '';
 $scotch_valid = '';
 
@@ -29,10 +29,10 @@ if(null !== filter_input(INPUT_POST, 'norm_cliche_submit')) {
         $form_valid = false;
     }
     
-    if(is_nan(filter_input(INPUT_POST, 'tver')) || empty(filter_input(INPUT_POST, 'tver_currency'))) {
+    /*if(is_nan(filter_input(INPUT_POST, 'tver')) || empty(filter_input(INPUT_POST, 'tver_currency'))) {
         $tver_valid = ISINVALID;
         $form_valid = false;
-    }
+    }*/
     
     if(is_nan(filter_input(INPUT_POST, 'film')) || empty(filter_input(INPUT_POST, 'film_currency'))) {
         $film_valid = ISINVALID;
@@ -48,7 +48,7 @@ if(null !== filter_input(INPUT_POST, 'norm_cliche_submit')) {
         // Старый объект
         $old_flint = "";
         $old_kodak = "";
-        $old_tver = "";
+        //$old_tver = "";
         $old_film = "";
         $old_flint_currency = "";
         $old_kodak_currency = "";
@@ -64,7 +64,7 @@ if(null !== filter_input(INPUT_POST, 'norm_cliche_submit')) {
         if($row = $fetcher->Fetch()) {
             $old_flint = $row['flint'];
             $old_kodak = $row['kodak'];
-            $old_tver = $row['tver'];
+            //$old_tver = $row['tver'];
             $old_film = $row['film'];
             $old_flint_currency = $row['flint_currency'];
             $old_kodak_currency = $row['kodak_currency'];
@@ -77,7 +77,7 @@ if(null !== filter_input(INPUT_POST, 'norm_cliche_submit')) {
         // Новый объект
         $new_flint = filter_input(INPUT_POST, 'flint');
         $new_kodak = filter_input(INPUT_POST, 'kodak');
-        $new_tver = filter_input(INPUT_POST, 'tver');
+        $new_tver = 0.025; // filter_input(INPUT_POST, 'tver');
         $new_film = filter_input(INPUT_POST, 'film');
         $new_flint_currency = filter_input(INPUT_POST, 'flint_currency');
         $new_kodak_currency = filter_input(INPUT_POST, 'kodak_currency');
@@ -90,7 +90,7 @@ if(null !== filter_input(INPUT_POST, 'norm_cliche_submit')) {
                 $old_flint_currency != $new_flint_currency || 
                 $old_kodak != $new_kodak || 
                 $old_kodak_currency != $new_kodak_currency || 
-                $old_tver != $new_tver || 
+                //$old_tver != $new_tver || 
                 $old_tver_currency != $new_tver_currency || 
                 $old_film != $new_film || 
                 $old_film_currency != $new_film_currency || 
@@ -219,6 +219,8 @@ if($row = $fetcher->Fetch()) {
                             </div>
                             <div class="invalid-feedback">Kodak обязательно</div>
                         </div>
+                        <?php if(false): ?>
+                        <!-- Тверскими формами решили не пользоваться -->
                         <div class="form-group">
                             <label for="tver">Тверь (за см<sup>2</sup>)</label>
                             <div class="input-group">
@@ -245,6 +247,8 @@ if($row = $fetcher->Fetch()) {
                             </div>
                             <div class="invalid-feedback">Тверь обязательно</div>
                         </div>
+                        <!-- Тверскими формами решили не пользоваться -->
+                        <?php endif; ?>
                         <div class="form-group">
                             <label for="tver">Плёнка (за см<sup>2</sup>)</label>
                             <div class="input-group">
