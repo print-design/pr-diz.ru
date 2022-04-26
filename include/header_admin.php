@@ -33,6 +33,7 @@ elseif($folder == 'admin') {
 <div class="container-fluid header">
     <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
+            <?php if(IsInRole(array('technologist', 'dev', 'administrator'))): ?>
             <li class="nav-item">
                 <a class="nav-link<?=$user_class ?>" href="<?=APPLICATION ?>/user/">Сотрудники</a>
             </li>
@@ -42,9 +43,12 @@ elseif($folder == 'admin') {
             <li class="nav-item">
                 <a class="nav-link<?=$film_class ?>" href="<?=APPLICATION ?>/supplier/film.php">Пленка</a>
             </li>
+            <?php endif; ?>
+            <?php if(IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))): ?>
             <li class="nav-item">
                 <a class="nav-link<?=$norm_class ?>" href="<?=APPLICATION ?>/admin/machine.php<?= BuildQuery('machine_id', 1) ?>">Нормы</a>
             </li>
+            <?php endif; ?>
         </ul>
         <div class="ml-auto"></div>
         <?php

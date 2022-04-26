@@ -48,4 +48,9 @@ elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     <?php
     endif;
     ?>
+    
+    <!-- Старший менеджер может редактировать константы -->
+    <?php if(IsInRole('manager-senior')): ?>
+    <a href="<?=APPLICATION ?>/admin/machine.php<?= BuildQuery('machine_id', 1) ?>" class="left_bar_item<?=$admin_class ?>" title="Админка" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_admin.svg" /></a>
+    <?php endif; ?>
 </div>
