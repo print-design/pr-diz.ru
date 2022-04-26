@@ -26,6 +26,18 @@ if(null !== filter_input(INPUT_POST, 'extracharge-submit')) {
     $sql = "update calculation_result set extracharge=$extracharge where calculation_id=$id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
+    
+    if(empty($error_message)) {
+        $sql = "update calculation_result set shipping_cost = cost + (cost * extracharge / 100)";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
+    if(empty($error_message)) {
+        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.shipping_cost_per_unit = cr.shipping_cost / c.quantity";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
 }
 
 // Типы наценки
