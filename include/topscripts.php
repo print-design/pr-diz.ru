@@ -42,12 +42,13 @@ function IsInRole($role) {
     $cookie = filter_input(INPUT_COOKIE, ROLE);
     
     // Роль 'manager-senior' имеет все права роли 'manager'
-    if($role == 'manager') {
-        $role = array('manager', 'manager-senior');
-    }
+    
     
     if(is_array($role) && in_array('manager', $role)) {
         array_push($role, 'manager-senior');
+    }
+    elseif($role == 'manager') {
+        $role = array('manager', 'manager-senior');
     }
     
     if(is_array($role)) {
