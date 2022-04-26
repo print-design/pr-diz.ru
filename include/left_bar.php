@@ -33,7 +33,7 @@ elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     <?php
     if(IsInRole(array('technologist', 'dev', 'manager', 'administrator', 'designer'))):
     ?>
-    <a href="<?=APPLICATION ?>/calculation/<?= IsInRole('manager') ? BuildQuery("manager", GetUserId()) : "" ?>" class="left_bar_item<?=$zakaz_class ?>" title="Заказы"><img src="<?=APPLICATION ?>/images/nav_clock.svg" /></a>
+    <a href="<?=APPLICATION ?>/calculation/" class="left_bar_item<?=$zakaz_class ?>" title="Заказы"><img src="<?=APPLICATION ?>/images/nav_clock.svg" /></a>
     <?php
     endif;
     if(IsInRole(array('technologist', 'storekeeper', 'dev', 'manager', 'administrator'))):

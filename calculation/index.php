@@ -63,9 +63,12 @@ function OrderLink($param) {
                     }
                     
                     $manager = filter_input(INPUT_GET, 'manager');
+                    if(empty($manager) && !IsInRole(array('technologist', 'dev', 'manager-senior'))) {
+                        $manager = GetUserId();
+                    }
                     if(!empty($manager)) {
-                        if(empty($where)) $where = " where cus.manager_id=$manager";
-                        else $where .= " and cus.manager_id=$manager";
+                        if(empty($where)) $where = " where c.manager_id=$manager";
+                        else $where .= " and c.manager_id=$manager";
                     }
                     
                     $customer = filter_input(INPUT_GET, 'customer');
@@ -113,10 +116,11 @@ function OrderLink($param) {
                             endwhile;
                             ?>
                         </select>
+                        <?php if(IsInRole(array('technologist', 'dev', 'manager-senior'))): ?>
                         <select id="manager" name="manager" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Менеджер...</option>
                             <?php
-                            $sql = "select distinct u.id, u.last_name, u.first_name from calculation c inner join customer cus on c.customer_id = cus.id inner join user u on cus.manager_id = u.id order by u.last_name";
+                            $sql = "select distinct u.id, u.last_name, u.first_name from calculation c inner join user u on c.manager_id = u.id order by u.last_name";
                             $fetcher = new Fetcher($sql);
                             
                             while ($row = $fetcher->Fetch()):
@@ -126,10 +130,16 @@ function OrderLink($param) {
                             endwhile;
                             ?>
                         </select>
+                        <?php endif; ?>
                         <select id="customer" name="customer" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Заказчик...</option>
                             <?php
-                            $sql = "select distinct cus.id, cus.name from calculation c inner join customer cus on c.customer_id = cus.id order by cus.name";
+                            $customer_where = "";
+                            $customer_manager = GetUserId();
+                            if(!IsInRole(array('technologist', 'dev', 'manager-senior'))) {
+                                $customer_where = " where c.manager_id = $customer_manager";
+                            }
+                            $sql = "select distinct cus.id, cus.name from calculation c inner join customer cus on c.customer_id = cus.id$customer_where order by cus.name";
                             $fetcher = new Fetcher($sql);
                             
                             while ($row = $fetcher->Fetch()):
