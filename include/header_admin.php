@@ -40,11 +40,11 @@ elseif($folder == 'admin') {
             <li class="nav-item">
                 <a class="nav-link<?=$supplier_class ?>" href="<?=APPLICATION ?>/supplier/">Поставщики</a>
             </li>
+            <?php endif; ?>
+            <?php if(IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))): ?>
             <li class="nav-item">
                 <a class="nav-link<?=$film_class ?>" href="<?=APPLICATION ?>/supplier/film.php">Пленка</a>
             </li>
-            <?php endif; ?>
-            <?php if(IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))): ?>
             <li class="nav-item">
                 <a class="nav-link<?=$norm_class ?>" href="<?=APPLICATION ?>/admin/machine.php<?= BuildQuery('machine_id', 1) ?>">Нормы</a>
             </li>
