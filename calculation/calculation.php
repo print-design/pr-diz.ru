@@ -866,7 +866,7 @@ class Calculation {
             }
             
             // Стоимость всех форм
-            $this->cliche_price = new CalculationItem("Стоимость форм", $cliche_price_value, $cliche_price_formula, $cliche_price_comment);
+            $this->cliche_price = new CalculationItem("Стоимость форм", $cliche_price_value, "|= ".$cliche_price_formula, $cliche_price_comment);
             if($this->cliche_price !== null) array_push ($this->cliche_values, $this->cliche_price);
             
             // Стоимость скотча
