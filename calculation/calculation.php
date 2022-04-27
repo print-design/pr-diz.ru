@@ -453,6 +453,7 @@ class Calculation {
             $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, 
             $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8
             ) {
+        // Количество ламинаций
         if(!empty($lamination2_film) && !empty($lamination2_thickness) && !empty($lamination2_density)) {
             $this->laminations_number = 2;
         }
@@ -460,6 +461,12 @@ class Calculation {
             $this->laminations_number = 1;
         }
         
+        // Если материал заказчика, то его цена = 0
+        if($customers_material) $price = 0;
+        if($lamination1_customers_material) $lamination1_price = 0;
+        if($lamination2_customers_material) $lamination2_price = 0;
+        
+        // Данные по плёнке и работе
         $this->base_values = array();
         
         // Масса тиража, кг
