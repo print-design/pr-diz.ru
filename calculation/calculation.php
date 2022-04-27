@@ -870,7 +870,7 @@ class Calculation {
             if($this->cliche_price !== null) array_push ($this->cliche_values, $this->cliche_price);
             
             // Стоимость скотча
-            $this->scotch_price = new CalculationItem("Стоимость скотча", $cliche_data->scotch * ($this->cliche_area->value / 10000) * $ink_number * $this->GetCurrencyRate($cliche_data->scotch_currency, $usd, $euro), "|= ".$cliche_data->scotch." * (".$this->cliche_area->display." / 10000) * $ink_number * ". $this->Display($this->GetCurrencyRate($cliche_data->scotch_currency, $usd, $euro)), "цена скотча за м2 * (площадь формы в см2 / 10000) * красочность * курс валюты");
+            $this->scotch_price = new CalculationItem("Стоимость скотча", $cliche_data->scotch * ($this->cliche_area->value / 10000) * $ink_number * $this->GetCurrencyRate($cliche_data->scotch_currency, $usd, $euro), "|= ".$this->Display($cliche_data->scotch)." * (".$this->cliche_area->display." / 10000) * $ink_number * ". $this->Display($this->GetCurrencyRate($cliche_data->scotch_currency, $usd, $euro)), "цена скотча за м2 * (площадь формы в см2 / 10000) * красочность * курс валюты");
             if($this->scotch_price !== null) array_push ($this->cliche_values, $this->scotch_price);
         }
     }
