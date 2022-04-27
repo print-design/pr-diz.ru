@@ -840,7 +840,7 @@ class Calculation {
                 $cliche_item = null;
                 
                 if($$cliche_type == self::OLD) {
-                    $cliche_item = new CalculationItem("Цена формы $i, руб", 0, "0", "Цена старой формы 0 руб.");
+                    $cliche_item = new CalculationItem("Цена формы $i, руб", 0, "|= 0", "Цена старой формы 0 руб.");
                 }
                 elseif($$cliche_type == self::FLINT) {
                     $cliche_item = new CalculationItem("Цена формы $i, руб", $this->cliche_area->value * $cliche_data->flint * $this->GetCurrencyRate($cliche_data->flint_currency, $usd, $euro), "|= ". $this->cliche_area->display." * ". $this->Display($cliche_data->flint)." * ". $this->Display($this->GetCurrencyRate($cliche_data->flint_currency, $usd, $euro)), "площадь формы  * цена формы Флинт за 1 см2 * курс валюты");
