@@ -825,8 +825,9 @@ class Calculation {
         //***********************************
         // Стоимость форм
         //***********************************
-        if(!empty($machine_id)) {
-            $this->cliche_values = array();
+        $this->cliche_values = array();
+        
+        if(!empty($machine_id)) {    
             $ski_width = 0;
             
             if($ski == self::STANDARD_SKI || $ski == self::NONSTANDARD_SKI) {

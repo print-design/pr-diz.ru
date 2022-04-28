@@ -4,7 +4,7 @@ include './calculation.php';
 
 function Display($value) {
     if(is_float($value) || is_double($value)) {
-        return number_format($fvalue, 2, ",", " ");
+        return number_format($value, 2, ",", " ");
     }
     elseif(is_string($value)) {
         return str_replace(".", ",", $value);
@@ -75,6 +75,19 @@ function GetUnitName($unit) {
             
         default :
             return "";
+    }
+}
+
+function GetCurrencyName($currency) {
+    switch ($currency) {
+        case Calculation::USD:
+            return "USD";
+            
+        case Calculation::EURO:
+            return "евро";
+            
+        default :
+            return "руб";
     }
 }
 
@@ -374,12 +387,16 @@ if($id !== null) {
         array_push($file_data, array("Толщина (осн), мкм", $thickness, "", ""));
         array_push($file_data, array("Плотность (осн), г/м2", Display($density), "", ""));
         array_push($file_data, array("Лыжи (осн)", GetSkiName($ski), "", ""));
+        if($customers_material) array_push ($file_data, array("Материал заказчика (осн)", "", "", ""));
+        else array_push ($file_data, array("Цена (осн)", Display ($price)." ". GetCurrencyName($currency).($currency == Calculation::USD ? " (". Display($price * $usd)." руб)" : "").($currency == Calculation::EURO ? " (". Display($price * $euro)." руб)" : ""), "", ""));
         
         if($calculation->laminations_number > 0) {
             array_push($file_data, array("Марка (лам 1)", $lamination1_film, "", ""));
             array_push($file_data, array("Толщина (лам 1), мкм", $lamination1_thickness, "", ""));
             array_push($file_data, array("Плотность (лам 1), г/м2", Display($lamination1_density), "", ""));
             array_push($file_data, array("Лыжи (лам 1)", GetSkiName($lamination1_ski), "", ""));
+            if($lamination1_customers_material) array_push ($file_data, array("Материал заказчика (лам 1)", "", "", ""));
+            else array_push ($file_data, array("Цена (лам 1)", Display($lamination1_price)." ". GetCurrencyName($lamination1_currency).($lamination1_currency == Calculation::USD ? " (".Display ($lamination1_price * $usd)." руб)" : "").($lamination1_currency == Calculation::EURO ? " (".Display ($lamination1_price * $euro)." руб)" : ""), "", ""));
         }
         
         if($calculation->laminations_number > 1) {
@@ -387,6 +404,8 @@ if($id !== null) {
             array_push($file_data, array("Толщина (лам 2), мкм", $lamination2_thickness, "", ""));
             array_push($file_data, array("Плотность (лам 2), г/м2", Display($lamination2_density), "", ""));
             array_push($file_data, array("Лыжи (лам 2)", GetSkiName($lamination2_ski), "", ""));
+            if($lamination2_customers_material) array_push ($file_data, array("Материал заказчика (лам 2)", "", "", ""));
+            else array_push ($file_data, array("Цена (лам 2)", Display($lamination2_price)." ". GetCurrencyName($lamination2_currency).($lamination2_currency == Calculation::USD ? " (".Display ($lamination2_price * $usd)." руб)" : "").($lamination2_currency == Calculation::EURO ? " (".Display ($lamination2_price * $euro)." руб)" : ""), "", ""));
         }
         
         array_push($file_data, array("Ширина ручья, мм", $stream_width, "", ""));
@@ -431,9 +450,9 @@ if($id !== null) {
                 // Стоимость КраскаСмеси, руб
                 array_push($file_data, array($calculation->ink_prices[$i]->name, $calculation->ink_prices[$i]->display, $calculation->ink_prices[$i]->formula, $calculation->ink_prices[$i]->comment));
             }
+            
+            array_push($file_data, array("", "", "", ""));
         }
-        
-        array_push($file_data, array("", "", "", ""));
         
         // Расход клея
         foreach($calculation->glue_values as $glue_value) {
