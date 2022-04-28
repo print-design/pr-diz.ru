@@ -377,6 +377,8 @@ if($id !== null) {
         
         array_push($file_data, array("Курс доллара, руб", Display($usd), "", ""));
         array_push($file_data, array("Курс евро, руб", Display($euro), "", ""));
+        if($work_type_id == Calculation::WORK_TYPE_PRINT) array_push ($file_data, array("Тип работы", "Плёнка с печатью", "", ""));
+        elseif($work_type_id == Calculation::WORK_TYPE_NOPRINT) array_push ($file_data, array("Тип работы", "Плёнка без печати", "", ""));
         
         if(!empty($machine_id)) {
             array_push($file_data, array("Машина", $machine, "", ""));
@@ -410,8 +412,14 @@ if($id !== null) {
         
         array_push($file_data, array("Ширина ручья, мм", $stream_width, "", ""));
         array_push($file_data, array("Количество ручьёв", $streams_number, "", ""));
-        $raport_format = number_format($raport, 3, ",", "");
-        array_push($file_data, array("Рапорт", $raport_format, "", ""));
+        
+        if(!empty($machine_id)) {
+            array_push($file_data, array("Рапорт", Display($raport), "", ""));
+        }
+        
+        if($calculation->laminations_number > 0) {
+            array_push($file_data, array("Ширина ламинирующего вала, мм", Display($lamination_roller_width), "", ""));
+        }
         
         if(!empty($machine_id)) {
             for($i=1; $i<=$ink_number; $i++) {
