@@ -152,7 +152,7 @@ $num_for_customer = $row['num_for_customer'];
                 padding-top: 5px;
                 padding-right: 5px;
                 padding-bottom: 5px;
-                vertical-align: top; border: solid 2px red;
+                vertical-align: top;
             }
         </style>
     </head>
