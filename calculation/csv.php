@@ -389,6 +389,7 @@ if($id !== null) {
         array_push($file_data, array("Толщина (осн), мкм", $thickness, "", ""));
         array_push($file_data, array("Плотность (осн), г/м2", Display($density), "", ""));
         array_push($file_data, array("Лыжи (осн)", GetSkiName($ski), "", ""));
+        if($ski == Calculation::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки (осн), мм", Display($width_ski), "", ""));
         if($customers_material) array_push ($file_data, array("Материал заказчика (осн)", "", "", ""));
         else array_push ($file_data, array("Цена (осн)", Display ($price)." ". GetCurrencyName($currency).($currency == Calculation::USD ? " (". Display($price * $usd)." руб)" : "").($currency == Calculation::EURO ? " (". Display($price * $euro)." руб)" : ""), "", ""));
         
@@ -397,6 +398,7 @@ if($id !== null) {
             array_push($file_data, array("Толщина (лам 1), мкм", $lamination1_thickness, "", ""));
             array_push($file_data, array("Плотность (лам 1), г/м2", Display($lamination1_density), "", ""));
             array_push($file_data, array("Лыжи (лам 1)", GetSkiName($lamination1_ski), "", ""));
+            if($lamination1_ski == Calculation::NONSTANDARD_SKI) array_push($file_data, array("Ширина пленки (лам 1), мм", Display($lamination1_width_ski), "", ""));
             if($lamination1_customers_material) array_push ($file_data, array("Материал заказчика (лам 1)", "", "", ""));
             else array_push ($file_data, array("Цена (лам 1)", Display($lamination1_price)." ". GetCurrencyName($lamination1_currency).($lamination1_currency == Calculation::USD ? " (".Display ($lamination1_price * $usd)." руб)" : "").($lamination1_currency == Calculation::EURO ? " (".Display ($lamination1_price * $euro)." руб)" : ""), "", ""));
         }
@@ -406,6 +408,7 @@ if($id !== null) {
             array_push($file_data, array("Толщина (лам 2), мкм", $lamination2_thickness, "", ""));
             array_push($file_data, array("Плотность (лам 2), г/м2", Display($lamination2_density), "", ""));
             array_push($file_data, array("Лыжи (лам 2)", GetSkiName($lamination2_ski), "", ""));
+            if($lamination2_ski == Calculation::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки (лам 2), мм", Display($lamination2_width_ski), "", ""));
             if($lamination2_customers_material) array_push ($file_data, array("Материал заказчика (лам 2)", "", "", ""));
             else array_push ($file_data, array("Цена (лам 2)", Display($lamination2_price)." ". GetCurrencyName($lamination2_currency).($lamination2_currency == Calculation::USD ? " (".Display ($lamination2_price * $usd)." руб)" : "").($lamination2_currency == Calculation::EURO ? " (".Display ($lamination2_price * $euro)." руб)" : ""), "", ""));
         }

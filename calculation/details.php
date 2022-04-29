@@ -152,7 +152,7 @@ $num_for_customer = $row['num_for_customer'];
                 padding-top: 5px;
                 padding-right: 5px;
                 padding-bottom: 5px;
-                vertical-align: top;
+                vertical-align: top; border: solid 2px red;
             }
         </style>
     </head>
@@ -372,6 +372,7 @@ $num_for_customer = $row['num_for_customer'];
                                     }
                                 ?>
                             </td>
+                            <td colspan="2"><?=($lamination2_ski == NONSTANDARD_SKI ? $lamination2_width_ski.' мм' : '') ?></td>
                         </tr>
                             <?php
                             endif;

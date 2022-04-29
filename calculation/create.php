@@ -1112,7 +1112,7 @@ $colorfulnesses = array();
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="width_ski" id="for_width_ski">Ширина пленки</label>
+                                    <label for="width_ski" id="for_width_ski">Ширина пленки, мм</label>
                                     <input name="width_ski" id="width_ski" type="text" class="form-control int-only" value="<?=$width_ski ?>" placeholder="Ширина пленки" />
                                     <div class="invalid-feedback">Ширина пленки обязательно</div>
                                 </div>
@@ -1279,8 +1279,8 @@ $colorfulnesses = array();
                                     <div class="form-group">
                                         <label for="lamination1_ski" id="for_lamination1_ski">Лыжи</label>
                                         <select name="lamination1_ski" id="lamination1_ski" class="form-control">
-                                            <option value="<?=STANDARD_SKI ?>">Стандартные лыжи</option>
-                                            <option value="<?=NONSTANDARD_SKI ?>">Нестандартные лыжи</option>
+                                            <option value="<?=STANDARD_SKI ?>"<?=($lamination1_ski == STANDARD_SKI ? " selected='selected'" : "") ?>>Стандартные лыжи</option>
+                                            <option value="<?=NONSTANDARD_SKI ?>"<?=($lamination2_ski == NONSTANDARD_SKI ? " selected='selected'" : "") ?>>Нестандартные лыжи</option>
                                         </select>
                                     </div>
                                 </div>
@@ -1296,8 +1296,8 @@ $colorfulnesses = array();
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label for="lamination1_width_ski" id="for_lamination1_width_ski">Ширина пленки</label>
-                                        <input name="lamination1_width_ski" id="lamination1_width_ski" type="text" class="form-control int-only" placeholder="Ширина пленки" />
+                                        <label for="lamination1_width_ski" id="for_lamination1_width_ski">Ширина пленки, мм</label>
+                                        <input name="lamination1_width_ski" id="lamination1_width_ski" type="text" class="form-control int-only" value="<?=$lamination1_width_ski ?>" placeholder="Ширина пленки" />
                                         <div class="invalid-feedback">Ширина пленки обязательно</div>
                                     </div>
                                 </div>
@@ -1455,8 +1455,8 @@ $colorfulnesses = array();
                                         <div class="form-group">
                                             <label for="lamination2_ski" id="for_lamination2_ski">Лыжи</label>
                                             <select name="lamination2_ski" id="lamination2_ski" class="form-control">
-                                                <option value="<?=STANDARD_SKI ?>">Стандартные лыжи</option>
-                                                <option value="<?=NONSTANDARD_SKI ?>">Нестандартные лыжи</option>
+                                                <option value="<?=STANDARD_SKI ?>"<?=($lamination2_ski == STANDARD_SKI ? " selected='selected'" : "") ?>>Стандартные лыжи</option>
+                                                <option value="<?=NONSTANDARD_SKI ?>"<?=($lamination2_ski == NONSTANDARD_SKI ? " selected='selected'" : "") ?>>Нестандартные лыжи</option>
                                             </select>
                                         </div>
                                     </div>
@@ -1472,8 +1472,8 @@ $colorfulnesses = array();
                                     </div>
                                     <div class="col-6">
                                         <div class="form-group">
-                                            <label for="lamination2_width_ski" id="for_lamination2_width_ski">Ширина пленки</label>
-                                            <input name="lamination2_width_ski" id="lamination2_width_ski" type="text" class="form-control form-control-sm int-only" placeholder="Ширина пленки" />
+                                            <label for="lamination2_width_ski" id="for_lamination2_width_ski">Ширина пленки, мм</label>
+                                            <input name="lamination2_width_ski" id="lamination2_width_ski" type="text" class="form-control int-only" value="<?=$lamination2_width_ski ?>" placeholder="Ширина пленки" />
                                             <div class="invalid-feedback">Ширина пленки обязательно</div>
                                         </div>
                                     </div>
