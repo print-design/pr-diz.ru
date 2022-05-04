@@ -727,7 +727,7 @@ if(!empty($id)) {
         <?php endif;*/ ?>
     </div>
     <?php
-    if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name) || !empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name) || $work_type_id == 2):
+    /*if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name) || !empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name) || $work_type_id == 2):*/
     ?>
     <div id="show_costs">
         <div class="row text-nowrap">
@@ -759,20 +759,20 @@ if(!empty($id)) {
             <div class="col-4 pr-4">
                 <div>Отходы</div>
                 <div class="value mb-2"><?= Display(floatval($film_waste_price), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_waste), 2) ?> кг</span></div>
-                <?php if($work_type_id == 2): ?>
+                <?php /*if($work_type_id == 2):*/ ?>
                 <div>Краска</div>
                 <div class="value mb-2"><?= Display(floatval($ink_price), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($ink_weight), 2) ?> кг</span></div>
                 <?php
-                endif;
-                if($work_type_id == 2):
+                /*endif;
+                if($work_type_id == 2):*/
                 ?>
                 <div>Печать тиража</div>
                 <div class="value mb-2"><?= Display(floatval($work_price), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($work_time), 2) ?> ч</span></div>
                 <?php
-                endif;
+                /*endif;*/
                 ?>
             </div>
-            <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
+            <?php /*if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)):*/ ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
                 <div class="value mb-2"><?= Display(floatval($lamination1_film_waste_price), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination1_film_waste), 2) ?> кг</span></div>
@@ -781,10 +781,10 @@ if(!empty($id)) {
                 <div>Работа ламинатора</div>
                 <div class="value mb-2"><?= Display(floatval($lamination1_work_price), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination1_work_time), 2) ?> ч</span></div>
             </div>
-            <?php else: ?>
+            <?php /*else: ?>
             <div class="col-4" style="width: 250px;"></div>
-            <?php endif; ?>
-            <?php if(!empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name)): ?>
+            <?php endif;*/ ?>
+            <?php /*if(!empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name)):*/ ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
                 <div class="value mb-2"><?= Display(floatval($lamination2_film_waste_price), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination2_film_waste), 2) ?> кг</span></div>
@@ -793,13 +793,13 @@ if(!empty($id)) {
                 <div>Работа ламинатора</div>
                 <div class="value mb-2"><?= Display(floatval($lamination2_work_price), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination2_work_time), 2) ?> ч</span></div>
             </div>
-            <?php else: ?>
+            <?php /*else: ?>
             <div class="col-4" style="width: 250px;"></div>
-            <?php endif; ?>
+            <?php endif;*/ ?>
         </div>
     </div>
     <?php
-    endif;
+    /*endif;*/
     ?>
     <div style="clear:both"></div>
     <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
