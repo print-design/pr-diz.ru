@@ -25,9 +25,9 @@ class CalculationItem {
 }
 
 class TuningData {
-    public $time;
-    public $length;
-    public $waste_percent;
+    public $time = 0;
+    public $length = 0;
+    public $waste_percent = 0;
     
     public function __construct($time, $length, $waste_percent) {
         $this->time = $time;
@@ -37,9 +37,9 @@ class TuningData {
 }
 
 class MachineData {
-    public $price;
-    public $speed;
-    public $max_width;
+    public $price = 0;
+    public $speed = 0;
+    public $max_width = 0;
     
     public function __construct($price, $speed, $max_width) {
         $this->price = $price;
@@ -49,33 +49,33 @@ class MachineData {
 }
 
 class InkData {
-    public $c;
-    public $c_currency;
-    public $c_expense;
-    public $m;
-    public $m_currency;
-    public $m_expense;
-    public $y;
-    public $y_currency;
-    public $y_expense;
-    public $k;
-    public $k_currency;
-    public $k_expense;
-    public $white;
-    public $white_currency;
-    public $white_expense;
-    public $panton;
-    public $panton_currency;
-    public $panton_expense;
-    public $lacquer;
-    public $lacquer_currency;
-    public $lacquer_expense;
-    public $solvent_etoxipropanol;
-    public $solvent_etoxipropanol_currency;
-    public $solvent_flexol82;
-    public $solvent_flexol82_currency;
-    public $solvent_part;
-    public $min_price;
+    public $c = 0;
+    public $c_currency = 0;
+    public $c_expense = 0;
+    public $m = 0;
+    public $m_currency = 0;
+    public $m_expense = 0;
+    public $y = 0;
+    public $y_currency = 0;
+    public $y_expense = 0;
+    public $k = 0;
+    public $k_currency = 0;
+    public $k_expense = 0;
+    public $white = 0;
+    public $white_currency = 0;
+    public $white_expense = 0;
+    public $panton = 0;
+    public $panton_currency = 0;
+    public $panton_expense = 0;
+    public $lacquer = 0;
+    public $lacquer_currency = 0;
+    public $lacquer_expense = 0;
+    public $solvent_etoxipropanol = 0;
+    public $solvent_etoxipropanol_currency = 0;
+    public $solvent_flexol82 = 0;
+    public $solvent_flexol82_currency = 0;
+    public $solvent_part = 0;
+    public $min_price = 0;
     
     public function __construct($c, $c_currency, $c_expense, $m, $m_currency, $m_expense, $y, $y_currency, $y_expense, $k, $k_currency, $k_expense, $white, $white_currency, $white_expense, $panton, $panton_currency, $panton_expense, $lacquer, $lacquer_currency, $lacquer_expense, $solvent_etoxipropanol, $solvent_etoxipropanol_currency, $solvent_flexol82, $solvent_flexol82_currency, $solvent_part, $min_price) {
         $this->c = $c;
@@ -454,6 +454,8 @@ class Calculation {
             $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, 
             $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8
             ) {
+        // Значения по умолчанию
+        
         // Количество ламинаций
         if(!empty($lamination2_film) && !empty($lamination2_thickness) && !empty($lamination2_density)) {
             $this->laminations_number = 2;
@@ -564,8 +566,8 @@ class Calculation {
         
         // СтартСтопОтход
         $this->waste_length = new CalculationItem("СтартСтопОтход (осн), м", 
-                (empty($tuning_data->waste_percent) ? 0 : $tuning_data->waste_percent) * $this->length_pure_1->value / 100, 
-                "|= ".$this->Display(empty($tuning_data->waste_percent) ? 0 : $tuning_data->waste_percent)." * ".$this->length_pure_1->display." / 100", 
+                $tuning_data->waste_percent * $this->length_pure_1->value / 100, 
+                "|= ".$this->Display($tuning_data->waste_percent)." * ".$this->length_pure_1->display." / 100", 
                 "СтартСтопОтход печати * м. пог. чистые осн / 100");
         if($this->waste_length !== null) array_push ($this->base_values, $this->waste_length);
         
@@ -587,8 +589,8 @@ class Calculation {
         
         // Метры погонные грязные
         $this->length_dirty_1 = new CalculationItem("М. пог. грязные (осн), м", 
-                $this->length_pure_1->value + ((empty($ink_number) ? 0 : $ink_number) * $tuning_data->length) + ($this->laminations_number * $laminator_tuning_data->length) + $this->waste_length->value, 
-                "|= ".$this->length_pure_1->display." + (".(empty($ink_number) ? 0 : $ink_number)." * ".$this->Display($tuning_data->length).") + (".$this->laminations_number." * ".$this->Display($laminator_tuning_data->length).") + ".$this->waste_length->display, 
+                $this->length_pure_1->value + ($ink_number * $tuning_data->length) + ($this->laminations_number * $laminator_tuning_data->length) + $this->waste_length->value, 
+                "|= ".$this->length_pure_1->display." + (".$ink_number." * ".$this->Display($tuning_data->length).") + (".$this->laminations_number." * ".$this->Display($laminator_tuning_data->length).") + ".$this->waste_length->display, 
                 "м. пог. чистые осн + (красочность * метраж приладки 1 краски) + (количество ламинаций * метраж приладки ламинации) + СтартСтопОтход осн");
             if($this->length_dirty_1 !== null) array_push ($this->base_values, $this->length_dirty_1);
         
@@ -734,16 +736,25 @@ class Calculation {
         //****************************************
     
         // Общая стоимость грязная (с приладки), руб
-        $this->film_price = new CalculationItem("Общая стоимость плёнки (осн)", $this->weight_dirty->value * $price * $this->GetCurrencyRate($currency, $usd, $euro), "|= ".$this->weight_dirty->display." * ".$this->Display($price)." * ".$this->Display($this->GetCurrencyRate($currency, $usd, $euro)), "масса пленки осн * цена плёнки * курс валюты");
+        $this->film_price = new CalculationItem("Общая стоимость плёнки (осн)", 
+                $this->weight_dirty->value * $price * $this->GetCurrencyRate($currency, $usd, $euro), 
+                "|= ".$this->weight_dirty->display." * ".$this->Display($price)." * ".$this->Display($this->GetCurrencyRate($currency, $usd, $euro)), 
+                "масса пленки осн * цена плёнки осн * курс валюты");
         if($this->film_price !== null) array_push ($this->base_values, $this->film_price);
     
         if($this->laminations_number > 0) {
-            $this->lamination1_film_price = new CalculationItem("Общая стоимость плёнки (лам 1)", $this->lamination1_weight_dirty->value * $lamination1_price * $this->GetCurrencyRate($lamination1_currency, $usd, $euro), "|= ".$this->lamination1_weight_dirty->display." * ".$this->Display($lamination1_price)." * ".$this->Display($this->GetCurrencyRate($lamination1_currency, $usd, $euro)), "масса плёнки лам 1 * цена плёнки * курс валюты");
+            $this->lamination1_film_price = new CalculationItem("Общая стоимость плёнки (лам 1)", 
+                    $this->lamination1_weight_dirty->value * $lamination1_price * $this->GetCurrencyRate($lamination1_currency, $usd, $euro), 
+                    "|= ".$this->lamination1_weight_dirty->display." * ".$this->Display($lamination1_price)." * ".$this->Display($this->GetCurrencyRate($lamination1_currency, $usd, $euro)), 
+                    "масса плёнки лам 1 * цена плёнки лам 1 * курс валюты");
             if($this->lamination1_film_price !== null) array_push ($this->base_values, $this->lamination1_film_price);
         }
     
         if($this->laminations_number > 1) {
-            $this->lamination2_film_price = new CalculationItem("Общая стоимость плёнки (лам 2)", $this->lamination2_weight_dirty->value * $lamination2_price * $this->GetCurrencyRate($lamination2_currency, $usd, $euro), "|= ".$this->lamination2_weight_dirty->display." * ".$this->Display($lamination2_price)." * ".$this->Display($this->GetCurrencyRate($lamination2_currency, $usd, $euro)), "масса плёнки лам 2 * цена плёнки * курс валюты");
+            $this->lamination2_film_price = new CalculationItem("Общая стоимость плёнки (лам 2)", 
+                    $this->lamination2_weight_dirty->value * $lamination2_price * $this->GetCurrencyRate($lamination2_currency, $usd, $euro), 
+                    "|= ".$this->lamination2_weight_dirty->display." * ".$this->Display($lamination2_price)." * ".$this->Display($this->GetCurrencyRate($lamination2_currency, $usd, $euro)), 
+                    "масса плёнки лам 2 * цена плёнки лам 2 * курс валюты");
             if($this->lamination2_film_price !== null) array_push ($this->base_values, $this->lamination2_film_price);
         }
         
@@ -753,18 +764,28 @@ class Calculation {
         
         // Время приладки
         if($work_type_id == self::WORK_TYPE_PRINT) {
-            $this->tuning_time = new CalculationItem("Время приладки (осн), мин", $ink_number * $tuning_data->time, "|= $ink_number * ".$this->Display($tuning_data->time), "Красочность * время приладки");
+            $this->tuning_time = new CalculationItem("Время приладки (осн), мин", 
+                    $ink_number * $tuning_data->time, 
+                    "|= $ink_number * ".$this->Display($tuning_data->time), 
+                    "Красочность * время приладки");
             if($this->tuning_time !== null) array_push ($this->base_values, $this->tuning_time);
         }
         
         if($this->laminations_number > 0) {
-            $this->lamination1_tuning_time = new CalculationItem("Время приладки (лам 1), мин", $laminator_tuning_data->time, "|= ".$this->Display($laminator_tuning_data->time), "Время приладки ламинатора");
+            $this->lamination1_tuning_time = new CalculationItem("Время приладки (лам 1), мин", 
+                    $laminator_tuning_data->time, 
+                    "|= ".$this->Display($laminator_tuning_data->time), 
+                    "Время приладки ламинатора");
             if($this->lamination1_tuning_time !== null) array_push ($this->base_values, $this->lamination1_tuning_time);
         }
         
         if($this->laminations_number > 1) {
-            $this->lamination2_tuning_time = new CalculationItem("Время приладки (лам 2), мин", $laminator_tuning_data->time, "|= ".$this->Display($laminator_tuning_data->time), "Время приладки ламинатора");
-            if($this->lamination2_tuning_time !== null) array_push ($this->base_values, $this->lamination2_tuning_time);}
+            $this->lamination2_tuning_time = new CalculationItem("Время приладки (лам 2), мин", 
+                    $laminator_tuning_data->time, 
+                    "|= ".$this->Display($laminator_tuning_data->time), 
+                    "Время приладки ламинатора");
+            if($this->lamination2_tuning_time !== null) array_push ($this->base_values, $this->lamination2_tuning_time);
+        }
         
         // Время печати и ламинации (без приладки)
         if($work_type_id == self::WORK_TYPE_PRINT) {
