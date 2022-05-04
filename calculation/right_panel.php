@@ -695,7 +695,7 @@ if(!empty($id)) {
             <div>Масса с приладкой</div>
             <div class="value mb-2"><?= Display(floatval($weight_dirty), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($length_dirty), 0) ?> м</span></div>
         </div>
-        <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
+        <?php /*if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)):*/ ?>
         <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
             <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination1_weight_dirty), 0) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
@@ -707,10 +707,10 @@ if(!empty($id)) {
             <div>Масса с приладкой</div>
             <div class="value mb-2"><?= Display(floatval($lamination1_weight_dirty), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination1_length_dirty), 0) ?> м</span></div>
         </div>
-        <?php else: ?>
+        <?php /*else: ?>
         <div class="col-4" style="width: 250px;"></div>
-        <?php endif; ?>
-        <?php if(!empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name)): ?>
+        <?php endif;*/ ?>
+        <?php /*if(!empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name)):*/ ?>
         <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
             <h3>Ламинация 2&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination2_weight_dirty), 0) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
@@ -722,9 +722,9 @@ if(!empty($id)) {
             <div>Масса с приладкой</div>
             <div class="value mb-2"><?= Display(floatval($lamination2_weight_dirty), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination2_length_dirty), 0) ?> м</span></div>
         </div>
-        <?php else: ?>
+        <?php /*else: ?>
         <div class="col-4" style="width: 250px;"></div>
-        <?php endif; ?>
+        <?php endif;*/ ?>
     </div>
     <?php
     if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name) || !empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name) || $work_type_id == 2):
