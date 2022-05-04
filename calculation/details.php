@@ -7,6 +7,10 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Типы работы
+const WORK_TYPE_NOPRINT = 1;
+const WORK_TYPE_PRINT = 2;
+
 // Лыжи
 const NO_SKI = 0;
 const STANDARD_SKI = 1;
@@ -208,7 +212,7 @@ $num_for_customer = $row['num_for_customer'];
                         <tr><th>Объем заказа</th><td colspan="3"><?= rtrim(rtrim(number_format($quantity, 2, ",", " "), "0"), ",") ?> <?=$unit == 'kg' ? "кг" : "шт" ?></td></tr>
                             <?php
                             endif;
-                            if(!empty($machine)):
+                            if($work_type_id == WORK_TYPE_PRINT):
                             ?>
                         <tr><th>Печатная машина</th><td colspan="3"><?=$machine.' ('.$colorfulness.' красок)' ?></td></tr>
                             <?php
@@ -376,7 +380,7 @@ $num_for_customer = $row['num_for_customer'];
                         </tr>
                             <?php
                             endif;
-                            if(!empty($ink_number)):
+                            if($work_type_id == WORK_TYPE_PRINT):
                             ?>
                         <tr>
                             <th>Красочность: <?=$ink_number ?></th>
