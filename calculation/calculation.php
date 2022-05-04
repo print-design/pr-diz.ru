@@ -505,7 +505,7 @@ class Calculation {
         if($this->length_pure_1 !== null) array_push ($this->base_values, $this->length_pure_1);
         
         // СтартСтопОтход
-        if(!empty($machine_id)) {
+        if($work_type_id == self::WORK_TYPE_PRINT) {
             $this->waste_length = new CalculationItem("СтартСтопОтход (осн), м", $tuning_data->waste_percent * $this->length_pure_1->value / 100, "|= ".$this->Display($tuning_data->waste_percent)." * ".$this->length_pure_1->display." / 100", "СтартСтопОтход печати * м. пог. чистые / 100");
             if($this->waste_length !== null) array_push ($this->base_values, $this->waste_length);
         }
@@ -521,10 +521,10 @@ class Calculation {
         }
         
         // Метры погонные грязные
-        if(!empty($machine_id) && $this->laminations_number > 0) {
+        if($work_type_id == self::WORK_TYPE_PRINT && $this->laminations_number > 0) {
             $this->length_dirty_1 = new CalculationItem("М. пог. грязные (осн), м", $this->length_pure_1->value + ($ink_number * $tuning_data->length) + ($this->laminations_number * $laminator_tuning_data->length) + $this->waste_length->value, "|= ".$this->length_pure_1->display." + (".$ink_number." * ".$this->Display($tuning_data->length).") + (".$this->laminations_number." * ".$this->Display($laminator_tuning_data->length).") + ".$this->waste_length->display, "м. пог. чистые + (красочность * метраж приладки 1 краски) + (количество ламинаций * метраж приладки ламинации) + СтартСтопОтход осн");
         }
-        elseif (!empty ($machine_id)) {
+        elseif ($work_type_id == self::WORK_TYPE_PRINT) {
             $this->length_dirty_1 = new CalculationItem("М. пог. грязные (осн), м", $this->length_pure_1->value + ($ink_number * $tuning_data->length) + $this->waste_length->value, "|= ".$this->length_pure_1->display." + (".$ink_number." * ".$this->Display($tuning_data->length).") + ".$this->waste_length->display, "м. пог. чистые + (красочность * метраж приладки 1 краски) + СтартСтопОтход осн");
         }
         elseif ($this->laminations_number > 0) {
@@ -646,7 +646,7 @@ class Calculation {
         //*****************************************
         
         // Время приладки
-        if(!empty($machine_id)) {
+        if($work_type_id == self::WORK_TYPE_PRINT) {
             $this->tuning_time = new CalculationItem("Время приладки (осн), мин", $ink_number * $tuning_data->time, "|= $ink_number * ".$this->Display($tuning_data->time), "Красочность * время приладки");
             if($this->tuning_time !== null) array_push ($this->base_values, $this->tuning_time);
         }
@@ -661,7 +661,7 @@ class Calculation {
             if($this->lamination2_tuning_time !== null) array_push ($this->base_values, $this->lamination2_tuning_time);}
         
         // Время печати и ламинации (без приладки)
-        if(!empty($machine_id)) {
+        if($work_type_id == self::WORK_TYPE_PRINT) {
             $this->print_time = new CalculationItem("Время печати без приладки (осн), ч", ($this->length_pure_1->value + $this->waste_length->value) / 1000 / $machine_data->speed, "|= (".$this->length_pure_1->display." + ".$this->waste_length->display.") / 1000 / ".$this->Display($machine_data->speed), "(м. пог. чистые + СтартСтопОтход) / 1000 / скорость работы машины");
             if($this->print_time !== null) array_push ($this->base_values, $this->print_time);
         }
@@ -677,7 +677,7 @@ class Calculation {
         }
         
         // Общее время выполнения тиража
-        if(!empty($machine_id)) {
+        if($work_type_id == self::WORK_TYPE_PRINT) {
             $this->work_time = new CalculationItem("Общее время выполнения (осн), ч", $this->tuning_time->value / 60 + $this->print_time->value, "|= ".$this->tuning_time->display." / 60 + ".$this->print_time->display, "время приладки / 60 + время печати");
             if($this->work_time !== null) array_push ($this->base_values, $this->work_time);
         }
@@ -693,7 +693,7 @@ class Calculation {
         }
         
         // Стоимость выполнения тиража
-        if(!empty($machine_id)) {
+        if($work_type_id == self::WORK_TYPE_PRINT) {
             $this->work_price = new CalculationItem("Стоимость выполнения (осн), руб", $this->work_time->value * $machine_data->price, "|= ".$this->work_time->display." * ".$this->Display($machine_data->price), "общее время выполнения осн * цена работы оборудования осн");
             if($this->work_price !== null) array_push ($this->base_values, $this->work_price);
         }
@@ -711,7 +711,7 @@ class Calculation {
         // Расход краски
         //****************************************
         
-        if(!empty($machine_id)) {
+        if($work_type_id == self::WORK_TYPE_PRINT) {
             // Площадь запечатки
             $this->print_area = new CalculationItem("Площадь запечатки, м2", $this->length_dirty_1->value * ($stream_width * $streams_number + 10) / 1000, "|= ".$this->length_dirty_1->display." * ($stream_width * $streams_number + 10) / 1000", "м. пог. грязные * (ширина ручья * кол-во ручьёв + 10 мм) / 1000");
             if($this->print_area !== null) array_push ($this->base_values, $this->print_area);
@@ -827,7 +827,7 @@ class Calculation {
         //***********************************
         $this->cliche_values = array();
         
-        if(!empty($machine_id)) {    
+        if($work_type_id == self::WORK_TYPE_PRINT) {    
             $ski_width = 0;
             
             if($ski == self::STANDARD_SKI || $ski == self::NONSTANDARD_SKI) {
