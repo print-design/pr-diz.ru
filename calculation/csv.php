@@ -240,6 +240,11 @@ if($id !== null) {
         $cmyk_1 = $row['cmyk_1']; $cmyk_2 = $row['cmyk_2']; $cmyk_3 = $row['cmyk_3']; $cmyk_4 = $row['cmyk_4']; $cmyk_5 = $row['cmyk_5']; $cmyk_6 = $row['cmyk_6']; $cmyk_7 = $row['cmyk_7']; $cmyk_8 = $row['cmyk_8'];
         $percent_1 = $row['percent_1']; $percent_2 = $row['percent_2']; $percent_3 = $row['percent_3']; $percent_4 = $row['percent_4']; $percent_5 = $row['percent_5']; $percent_6 = $row['percent_6']; $percent_7 = $row['percent_7']; $percent_8 = $row['percent_8'];
         $cliche_1 = $row['cliche_1']; $cliche_2 = $row['cliche_2']; $cliche_3 = $row['cliche_3']; $cliche_4 = $row['cliche_4']; $cliche_5 = $row['cliche_5']; $cliche_6 = $row['cliche_6']; $cliche_7 = $row['cliche_7']; $cliche_8 = $row['cliche_8'];
+        
+        if($work_type_id == Calculation::WORK_TYPE_NOPRINT) {
+            $machine_id = null;
+            $ink_number = 0;
+        }
     }
     
     // Курсы валют
@@ -369,8 +374,7 @@ if($id !== null) {
                 $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
                 $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, 
                 $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, 
-                $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8
-                );
+                $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8);
         
         // Данные CSV-файла
         $file_data = array();
@@ -390,7 +394,7 @@ if($id !== null) {
         array_push($file_data, array("Плотность 1, г/м2", Display($density_1), "", ""));
         array_push($file_data, array("Лыжи 1", GetSkiName($ski_1), "", ""));
         if($ski_1 == Calculation::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки 1, мм", Display($width_ski_1), "", ""));
-        if($customers_material_1) array_push ($file_data, array("Материал заказчика 1", "", "", ""));
+        if($customers_material_1 == true) array_push ($file_data, array("Материал заказчика 1", "", "", ""));
         else array_push ($file_data, array("Цена 1", Display ($price_1)." ". GetCurrencyName($currency_1).($currency_1 == Calculation::USD ? " (". Display($price_1 * $usd)." руб)" : "").($currency_1 == Calculation::EURO ? " (". Display($price_1 * $euro)." руб)" : ""), "", ""));
         
         if($calculation->laminations_number > 0) {
@@ -399,7 +403,7 @@ if($id !== null) {
             array_push($file_data, array("Плотность 2, г/м2", Display($density_2), "", ""));
             array_push($file_data, array("Лыжи 2", GetSkiName($ski_2), "", ""));
             if($ski_2 == Calculation::NONSTANDARD_SKI) array_push($file_data, array("Ширина пленки 2, мм", Display($width_ski_2), "", ""));
-            if($customers_material_2) array_push ($file_data, array("Материал заказчика 2", "", "", ""));
+            if($customers_material_2 == true) array_push ($file_data, array("Материал заказчика 2", "", "", ""));
             else array_push ($file_data, array("Цена 2", Display($price_2)." ". GetCurrencyName($currency_2).($currency_2 == Calculation::USD ? " (".Display ($price_2 * $usd)." руб)" : "").($currency_2 == Calculation::EURO ? " (".Display ($price_2 * $euro)." руб)" : ""), "", ""));
         }
         
@@ -409,7 +413,7 @@ if($id !== null) {
             array_push($file_data, array("Плотность 3, г/м2", Display($density_3), "", ""));
             array_push($file_data, array("Лыжи 3", GetSkiName($ski_3), "", ""));
             if($ski_3 == Calculation::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки 3, мм", Display($width_ski_3), "", ""));
-            if($customers_material_3) array_push ($file_data, array("Материал заказчика (лам 2)", "", "", ""));
+            if($customers_material_3 == true) array_push ($file_data, array("Материал заказчика (лам 2)", "", "", ""));
             else array_push ($file_data, array("Цена 3", Display($price_3)." ". GetCurrencyName($currency_3).($currency_3 == Calculation::USD ? " (".Display ($price_3 * $usd)." руб)" : "").($currency_3 == Calculation::EURO ? " (".Display ($price_3 * $euro)." руб)" : ""), "", ""));
         }
         
@@ -448,6 +452,11 @@ if($id !== null) {
         if(empty($raport)) $raport = 0;
         if(empty($lamination_roller_width)) $lamination_roller_width = 0;
         if(empty($ink_number)) $ink_number = 0;
+        
+        // Если материал заказчика, то его цена = 0
+        if($customers_material_1 == true) $price_1 = 0;
+        if($customers_material_2 == true) $price_2 = 0;
+        if($customers_material_3 == true) $price_3 = 0;
         
         // Уравнивающий коэффициент
         array_push($file_data, array("УК1", $calculation->uk1, "", "нет печати - 0, есть печать - 1"));
@@ -598,7 +607,7 @@ if($id !== null) {
         array_push($file_data, array("М2 грязные 3",
             Display($calculation->area_dirty_3),
             "|= ".Display($calculation->length_dirty_start_3)." * ".Display($calculation->width_3)." / 1000",
-            "м пог грязные * ширина материала 3 / 1000"));
+            "м пог грязные 3 * ширина материала 3 / 1000"));
         
         //****************************************
         // Массы и длины плёнок
@@ -619,7 +628,139 @@ if($id !== null) {
             "|= ".Display($calculation->length_pure_start_3)." * ".Display($calculation->width_3)." * ".Display($density_3)." / 1000000",
             "м пог чистые 3 * ширина материала 3 * уд вес 3 / 1000000"));
         
+        array_push($file_data, array("Длина пленки чистая 1, м",
+            Display($calculation->length_pure_1),
+            "|= ". Display($calculation->length_pure_start_1),
+            "м пог чистые 1"));
+        
+        array_push($file_data, array("Длина пленки чистая 2, м",
+            Display($calculation->length_pure_2),
+            "|= ". Display($calculation->length_pure_start_2),
+            "м пог чистые 2"));
+        
+        array_push($file_data, array("Длина пленки чистая 3, м",
+            Display($calculation->length_pure_3),
+            "|= ". Display($calculation->length_pure_start_3),
+            "м пог чистые 3"));
+        
+        array_push($file_data, array("Масса плёнки грязная 1, кг",
+            Display($calculation->weight_dirty_1),
+            "|= ".Display($calculation->area_dirty_1)." * ".Display($density_1)." / 1000",
+            "м2 грязные 1 * уд вес 1 / 1000"));
+        
+        array_push($file_data, array("Масса плёнки грязная 2, кг",
+            Display($calculation->weight_dirty_2),
+            "|= ".Display($calculation->area_dirty_2)." * ".Display($density_2)." / 1000",
+            "м2 грязные 2 * уд вес 2 / 1000"));
+        
+        array_push($file_data, array("Масса плёнки грязная 3, кг",
+            Display($calculation->weight_dirty_3),
+            "|= ".Display($calculation->area_dirty_3)." * ".Display($density_3)." / 1000",
+            "м2 грязные 3 * уд вес 3 / 1000"));
+        
+        array_push($file_data, array("Длина плёнки грязная 1, м",
+            Display($calculation->length_dirty_1),
+            "|= ". Display($calculation->length_dirty_start_1),
+            "м пог грязные 1"));
+        
+        array_push($file_data, array("Длина плёнки грязная 2, м",
+            Display($calculation->length_dirty_2),
+            "|= ". Display($calculation->length_dirty_start_2),
+            "м пог грязные 2"));
+        
+        array_push($file_data, array("Длина плёнки грязная 3, м",
+            Display($calculation->length_dirty_3),
+            "|= ". Display($calculation->length_dirty_start_3),
+            "м пог грязные 3"));
+        
+        //****************************************
+        // Общая стоимость плёнок
+        //****************************************
+        
+        array_push($file_data, array("Общая стоимость грязная 1, руб",
+            Display($calculation->film_price_1),
+            "|= ".Display($calculation->weight_dirty_1)." * ".Display($price_1)." * ".Display($calculation->GetCurrencyRate($currency_1, $usd, $euro)),
+            "масса пленки 1 * цена плёнки 1 * курс валюты"));
+        
+        array_push($file_data, array("Общая стоимость грязная 2, руб",
+            Display($calculation->film_price_2),
+            "|= ".Display($calculation->weight_dirty_2)." * ".Display($price_2)." * ".Display($calculation->GetCurrencyRate($currency_2, $usd, $euro)),
+            "масса пленки 2 * цена плёнки 2 * курс валюты"));
+        
+        array_push($file_data, array("Общая стоимость грязная 3, руб",
+            Display($calculation->film_price_3),
+            "|= ".Display($calculation->weight_dirty_3)." * ".Display($price_3)." * ".Display($calculation->GetCurrencyRate($currency_3, $usd, $euro)),
+            "масса пленки 3 * цена плёнки 3 * курс валюты"));
+        
+        //*****************************************
+        // Время - деньги
+        //*****************************************
+        
+        array_push($file_data, array("Время приладки 1, мин",
+            Display($calculation->tuning_time_1),
+            "|= ".Display($ink_number)." * ".Display($tuning_data->time),
+            "красочность * время приладки 1 краски"));
+        
+        array_push($file_data, array("Время приладки 2, мин",
+            Display($calculation->tuning_time_2),
+            "|= ".Display($laminator_tuning_data->time)." * ".Display($calculation->uk2),
+            "время приладки ламинатора * УК2"));
+        
+        array_push($file_data, array("Время приладки 3, мин",
+            Display($calculation->tuning_time_3),
+            "|= ".Display($laminator_tuning_data->time)." * ".Display($calculation->uk3),
+            "время приладки ламинатора * УК3"));
+        
+        array_push($file_data, array("Время печати (без приладки) 1, ч",
+            Display($calculation->print_time_1),
+            "|= (".Display($calculation->length_pure_start_1)." + ".Display($calculation->waste_length_1).") / ".Display($machine_data->speed)." / 1000 * ".Display($calculation->uk1),
+            "(м пог чистые 1 + СтартСтопОтход 1) / скорость работы машины / 1000 * УК1"));
+        
+        array_push($file_data, array("Время ламинации (без приладки) 2, ч",
+            Display($calculation->lamination_time_2),
+            "|= (".Display($calculation->length_pure_start_2)." + ".Display($calculation->waste_length_2).") / ".Display($laminator_machine_data->speed)." / 1000 * ".Display($calculation->uk2),
+            "(м пог чистые 1 + СтартСтопОтход 1) / скорость работы ламинатора /1000 * УК2"));
+        
+        array_push($file_data, array("Время ламинации (без приладки) 3, ч",
+            Display($calculation->lamination_time_3),
+            "|= (".Display($calculation->length_pure_start_3)." + ".Display($calculation->waste_length_3).") / ".Display($laminator_machine_data->speed)." / 1000 * ".Display($calculation->uk3),
+            "(м пог чистые 1 + СтартСтопОтход 1) / скорость работы ламинатора / 1000 * УК3"));
+        
+        array_push($file_data, array("Общее время выполнения тиража 1, ч",
+            Display($calculation->work_time_1),
+            "|= ".Display($calculation->tuning_time_1)." / 60 + ".Display($calculation->print_time_1),
+            "время приладки 1 / 60 + время печати"));
+        
+        array_push($file_data, array("Общее время выполнения тиража 2, ч",
+            Display($calculation->work_time_2),
+            "|= ".Display($calculation->tuning_time_2)." / 60 + ".Display($calculation->lamination_time_2),
+            "время приладки 2 / 60 + время ламинации 1"));
+        
+        array_push($file_data, array("Общее время выполнения тиража 3, ч",
+            Display($calculation->work_time_3),
+            "|= ".Display($calculation->tuning_time_3)." / 60 + ".Display($calculation->lamination_time_3),
+            "время приладки 3 / 60 + время ламинации 2"));
+        
+        array_push($file_data, array("Стоимость выполнения тиража 1, руб",
+            Display($calculation->work_price_1),
+            "|= ".Display($calculation->work_time_1)." * ".Display($machine_data->price),
+            "общее время выполнения 1 * цена работы оборудования 1"));
+        
+        array_push($file_data, array("Стоимость выполнения тиража 2, руб",
+            Display($calculation->work_price_2),
+            "|= ".Display($calculation->work_time_2)." * ".Display($laminator_machine_data->price),
+            "общее время выполнения 2 * цена работы оборудования 2"));
+        
+        array_push($file_data, array("Стоимость выполнения тиража 3, руб",
+            Display($calculation->work_price_3),
+            "|= ".Display($calculation->work_time_3)." * ".Display($laminator_machine_data->price),
+            "общее время выполнения 3 * цена работы оборудования 3"));
+        
         array_push($file_data, array("", "", "", ""));
+        
+        //****************************************
+        // Расход краски
+        //****************************************
         
         // Расход краски
         /*if(!empty($ink_number)) {

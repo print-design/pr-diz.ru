@@ -387,9 +387,9 @@ class Calculation {
         }
         
         // Если материал заказчика, то его цена = 0
-        if($customers_material_1) $price_1 = 0;
-        if($customers_material_2) $price_2 = 0;
-        if($customers_material_3) $price_3 = 0;
+        if($customers_material_1 == true) $price_1 = 0;
+        if($customers_material_2 == true) $price_2 = 0;
+        if($customers_material_3 == true) $price_3 = 0;
         
         // Уравнивующий коэф 1(УК1)=0 когда нет печати,=1 когда есть печать
         $this->uk1 = $work_type_id == self::WORK_TYPE_PRINT ? 1 : 0;
@@ -536,208 +536,96 @@ class Calculation {
         $this->weight_pure_3 = $this->length_pure_start_3 * $this->width_3 * $density_3 / 1000000;
                 
     
-        // Масса плёнки чистая (без приладки), кг
-        /*$this->weight_pure = new CalculationItem("Масса плёнки чистая (осн), кг", 
-                $this->length_pure_1->value * $this->width * $density / 1000000, 
-                "|= ".$this->length_pure_1->display." * ".$this->width." * ".$this->Display($density)." / 1000000", 
-                "м. пог. чистые осн * ширина материала осн * уд. вес осн / 1000000");
-        if($this->weight_pure !== null) array_push ($this->base_values, $this->weight_pure);
+        // Длина пленки чистая 1, м
+        $this->length_pure_1 = $this->length_pure_start_1;
         
-    
-        if($this->laminations_number > 0) {
-            $this->lamination1_weight_pure = new CalculationItem("Масса плёнки чистая (лам 1), кг", 
-                    $this->lamination1_length_pure_1->value * $this->lamination1_width * $lamination1_density / 1000000, 
-                    "|= ".$this->lamination1_length_pure_1->display." * ".$this->lamination1_width->display." * ".$this->Display($lamination1_density)." / 1000000", 
-                    "м. пог. чистые * ширина материала лам 1 * уд. вес лам 1 / 1000000");
-            if($this->lamination1_weight_pure !== null) array_push ($this->base_values, $this->lamination1_weight_pure);
-        }
-    
-        if($this->laminations_number > 1) {
-            $this->lamination2_weight_pure = new CalculationItem("Масса плёнки чистая (лам 2), кг", 
-                    $this->lamination2_length_pure_1->value * $this->lamination2_width * $lamination2_density / 1000000, 
-                    "|= ".$this->lamination2_length_pure_1->display." * ".$this->lamination2_width->display." * ".$this->Display($lamination2_density)." / 1000000", 
-                    "м. пог. чистые * ширина материала лам 2 * уд. вес лам 2 / 1000000");
-            if($this->lamination2_weight_pure !== null) array_push ($this->base_values, $this->lamination2_weight_pure);
-        }*/
+        // Длина пленки чистая 2, м
+        $this->length_pure_2 = $this->length_pure_start_2;
         
-        /*
-    
-        // Длина пленки чистая, м
-        $this->length_pure = new CalculationItem("Длина плёнки чистая (осн), м", 
-                $this->length_pure_1->value, 
-                "|= ".$this->length_pure_1->display, 
-                "м. пог. чистые осн");
-        if($this->length_pure !== null) array_push ($this->base_values, $this->length_pure);
-    
-        if($this->laminations_number > 0) {
-            $this->lamination1_length_pure = new CalculationItem("Длина плёнки чистая (лам 1), м", 
-                    $this->lamination1_length_pure_1->value, 
-                    "|= ".$this->lamination1_length_pure_1->display, 
-                    "м. пог. чистые лам 1");
-            if($this->lamination1_length_pure !== null) array_push ($this->base_values, $this->lamination1_length_pure);
-        }
-    
-        if($this->laminations_number > 1) {
-            $this->lamination2_length_pure = new CalculationItem("Длина плёнки чистая (лам 2), м", 
-                    $this->lamination2_length_pure_1->value, 
-                    "|= ".$this->lamination2_length_pure_1->display, 
-                    "м. пог. чистые лам 2");
-            if($this->lamination2_length_pure !== null) array_push ($this->base_values, $this->lamination2_length_pure);
-        }
+        // Длина пленки чистая 3, м
+        $this->length_pure_3 = $this->length_pure_start_3;
         
-        // Масса плёнки грязная (с приладкой), кг
-        $this->weight_dirty = new CalculationItem("Масса плёнки грязная (осн), м", 
-                $this->area_dirty->value * $density / 1000, 
-                "|= ".$this->area_dirty->display." * ".$this->Display($density)." / 1000", 
-                "м2 грязные осн * уд. вес осн / 1000");
-        if($this->weight_dirty !== null) array_push ($this->base_values, $this->weight_dirty);
         
-    
-        if($this->laminations_number > 0) {
-            $this->lamination1_weight_dirty = new CalculationItem("Масса плёнки грязная (лам 1), м", 
-                    $this->lamination1_area_dirty->value * $lamination1_density / 1000, 
-                    "|= ".$this->lamination1_area_dirty->display." * ".$this->Display($lamination1_density)." / 1000", 
-                    "м2 грязные лам 1 * уд. вес лам 1 / 1000");
-            if($this->lamination1_weight_dirty !== null) array_push ($this->base_values, $this->lamination1_weight_dirty);
-        }
-    
-        if($this->laminations_number > 1) {
-            $this->lamination2_weight_dirty = new CalculationItem("Масса плёнки грязная (лам 2), м", 
-                    $this->lamination2_area_dirty->value * $lamination2_density / 1000, 
-                    "|= ".$this->lamination2_area_dirty->display." * ".$this->Display($lamination2_density)." / 1000", 
-                    "м2 грязные лам 2 * уд. вес лам 2 / 1000");
-            if($this->lamination2_weight_dirty !== null) array_push ($this->base_values, $this->lamination2_weight_dirty);
-        }
-    
-        // Длина плёнки грязная, м
-        $this->length_dirty =  new CalculationItem("Длина плёнки грязная (осн), м", 
-                $this->length_dirty_1->value, 
-                "|= ".$this->length_dirty_1->display, 
-                "м пог. грязные осн");
-        if($this->length_dirty !== null) array_push ($this->base_values, $this->length_dirty);
-    
-        if($this->laminations_number > 0) {
-            $this->lamination1_length_dirty = new CalculationItem("Длина плёнки грязная (лам 1), м", 
-                    $this->lamination1_length_dirty_1->value, 
-                    "|= ".$this->lamination1_length_dirty_1->display, 
-                    "м. пог. грязные лам 1");
-            if($this->lamination1_length_dirty !== null) array_push ($this->base_values, $this->lamination1_length_dirty);
-        }
-    
-        if($this->laminations_number > 1) {
-            $this->lamination2_length_dirty = new CalculationItem("Длина плёнки грязная (лам 2), м", 
-                    $this->lamination2_length_dirty_1->value, 
-                    "|= ".$this->lamination2_length_dirty_1->display, 
-                    "м. пог. грязные лам 2");
-            if($this->lamination2_length_dirty !== null) array_push ($this->base_values, $this->lamination2_length_dirty);
-        }
+        // Масса плёнки грязная 1, кг
+        $this->weight_dirty_1 = $this->area_dirty_1 * $density_1 / 1000;
+        
+        // Масса плёнки грязная 2, кг
+        $this->weight_dirty_2 = $this->area_dirty_2 * $density_2 / 1000;
+        
+        // Масса плёнки грязная 3, кг
+        $this->weight_dirty_3 = $this->area_dirty_3 * $density_3 / 1000;
+        
+        
+        // Длина плёнки грязная 1, м
+        $this->length_dirty_1 = $this->length_dirty_start_1;
+         
+        // Длина плёнки грязная 2, м
+        $this->length_dirty_2 = $this->length_dirty_start_2;
+        
+        // Длина плёнки грязная 3, м
+        $this->length_dirty_3 = $this->length_dirty_start_3;
     
         //****************************************
         // Общая стоимость плёнок
         //****************************************
-    
-        // Общая стоимость грязная (с приладки), руб
-        $this->film_price = new CalculationItem("Общая стоимость плёнки (осн)", 
-                $this->weight_dirty->value * $price * $this->GetCurrencyRate($currency, $usd, $euro), 
-                "|= ".$this->weight_dirty->display." * ".$this->Display($price)." * ".$this->Display($this->GetCurrencyRate($currency, $usd, $euro)), 
-                "масса пленки осн * цена плёнки осн * курс валюты");
-        if($this->film_price !== null) array_push ($this->base_values, $this->film_price);
-    
-        if($this->laminations_number > 0) {
-            $this->lamination1_film_price = new CalculationItem("Общая стоимость плёнки (лам 1)", 
-                    $this->lamination1_weight_dirty->value * $lamination1_price * $this->GetCurrencyRate($lamination1_currency, $usd, $euro), 
-                    "|= ".$this->lamination1_weight_dirty->display." * ".$this->Display($lamination1_price)." * ".$this->Display($this->GetCurrencyRate($lamination1_currency, $usd, $euro)), 
-                    "масса плёнки лам 1 * цена плёнки лам 1 * курс валюты");
-            if($this->lamination1_film_price !== null) array_push ($this->base_values, $this->lamination1_film_price);
-        }
-    
-        if($this->laminations_number > 1) {
-            $this->lamination2_film_price = new CalculationItem("Общая стоимость плёнки (лам 2)", 
-                    $this->lamination2_weight_dirty->value * $lamination2_price * $this->GetCurrencyRate($lamination2_currency, $usd, $euro), 
-                    "|= ".$this->lamination2_weight_dirty->display." * ".$this->Display($lamination2_price)." * ".$this->Display($this->GetCurrencyRate($lamination2_currency, $usd, $euro)), 
-                    "масса плёнки лам 2 * цена плёнки лам 2 * курс валюты");
-            if($this->lamination2_film_price !== null) array_push ($this->base_values, $this->lamination2_film_price);
-        }
         
+        // Общая стоимость грязная 1, руб
+        $this->film_price_1 = $this->weight_dirty_1 * $price_1 * $this->GetCurrencyRate($currency_1, $usd, $euro);
+                
+        // Общая стоимость грязная 2, руб
+        $this->film_price_2 = $this->weight_dirty_2 * $price_2 * $this->GetCurrencyRate($currency_2, $usd, $euro);
+        
+        // Общая стоимость грязная 3, руб
+        $this->film_price_3 = $this->weight_dirty_3 * $price_3 * $this->GetCurrencyRate($currency_3, $usd, $euro);
+    
         //*****************************************
         // Время - деньги
         //*****************************************
         
-        // Время приладки
-        if($work_type_id == self::WORK_TYPE_PRINT) {
-            $this->tuning_time = new CalculationItem("Время приладки (осн), мин", 
-                    $ink_number * $tuning_data->time, 
-                    "|= $ink_number * ".$this->Display($tuning_data->time), 
-                    "Красочность * время приладки");
-            if($this->tuning_time !== null) array_push ($this->base_values, $this->tuning_time);
-        }
+        // Время приладки 1, мин
+        $this->tuning_time_1 = $ink_number * $tuning_data->time;
         
-        if($this->laminations_number > 0) {
-            $this->lamination1_tuning_time = new CalculationItem("Время приладки (лам 1), мин", 
-                    $laminator_tuning_data->time, 
-                    "|= ".$this->Display($laminator_tuning_data->time), 
-                    "Время приладки ламинатора");
-            if($this->lamination1_tuning_time !== null) array_push ($this->base_values, $this->lamination1_tuning_time);
-        }
+        // Время приладки 2, мин
+        $this->tuning_time_2 = $laminator_tuning_data->time * $this->uk2;
         
-        if($this->laminations_number > 1) {
-            $this->lamination2_tuning_time = new CalculationItem("Время приладки (лам 2), мин", 
-                    $laminator_tuning_data->time, 
-                    "|= ".$this->Display($laminator_tuning_data->time), 
-                    "Время приладки ламинатора");
-            if($this->lamination2_tuning_time !== null) array_push ($this->base_values, $this->lamination2_tuning_time);
-        }
+        // Время приладки 3, мин
+        $this->tuning_time_3 = $laminator_tuning_data->time * $this->uk3;
         
-        // Время печати и ламинации (без приладки)
-        if($work_type_id == self::WORK_TYPE_PRINT) {
-            $this->print_time = new CalculationItem("Время печати без приладки (осн), ч", ($this->length_pure_1->value + $this->waste_length->value) / 1000 / $machine_data->speed, "|= (".$this->length_pure_1->display." + ".$this->waste_length->display.") / 1000 / ".$this->Display($machine_data->speed), "(м. пог. чистые + СтартСтопОтход) / 1000 / скорость работы машины");
-            if($this->print_time !== null) array_push ($this->base_values, $this->print_time);
-        }
         
-        if($this->laminations_number > 0) {
-            $this->lamination1_time = new CalculationItem("Время ламинации без приладки (лам 1), ч", ($this->length_pure_1->value + $this->lamination1_waste_length->value) / 1000 / $laminator_machine_data->speed, "|= (".$this->length_pure_1->display." + ".$this->lamination1_waste_length->display.") / 1000 / ".$this->Display($laminator_machine_data->speed), "(м. пог. чистые + СтартСтопОтход) / 1000 / скорость работы ламинатора");
-            if($this->lamination1_time !== null) array_push ($this->base_values, $this->lamination1_time);
-        }
+        // Время печати (без приладки) 1, ч
+        $this->print_time_1 = ($this->length_pure_start_1 + $this->waste_length_1) / $machine_data->speed / 1000 * $this->uk1;
         
-        if($this->laminations_number > 1) {
-            $this->lamination2_time = new CalculationItem("Время ламинации без приладки (лам 2), ч", ($this->length_pure_1->value + $this->lamination2_waste_length->value) / 1000 / $laminator_machine_data->speed, "|= (".$this->length_pure_1->display." + ".$this->lamination2_waste_length->display.") / 1000 / ".$this->Display($laminator_machine_data->speed), "(м. пог. чистые + СтартСтопОтход) / 1000 / скорость работы ламинатора");
-            if($this->lamination2_time !== null) array_push ($this->base_values, $this->lamination2_time);
-        }
+        // Время ламинации (без приладки) 2, ч
+        $this->lamination_time_2 = ($this->length_pure_start_2 + $this->waste_length_2) / $laminator_machine_data->speed / 1000 * $this->uk2;
         
-        // Общее время выполнения тиража
-        if($work_type_id == self::WORK_TYPE_PRINT) {
-            $this->work_time = new CalculationItem("Общее время выполнения (осн), ч", $this->tuning_time->value / 60 + $this->print_time->value, "|= ".$this->tuning_time->display." / 60 + ".$this->print_time->display, "время приладки / 60 + время печати");
-            if($this->work_time !== null) array_push ($this->base_values, $this->work_time);
-        }
+        // Время ламинации (без приладки) 3, ч
+        $this->lamination_time_3 = ($this->length_pure_start_3 + $this->waste_length_3) / $laminator_machine_data->speed / 1000 * $this->uk3;
         
-        if($this->laminations_number > 0) {
-            $this->lamination1_work_time = new CalculationItem("Общее время выполнения (лам 1), ч", $this->lamination1_tuning_time->value / 60 + $this->lamination1_time->value, "|= ".$this->lamination1_tuning_time->display." / 60 + ".$this->lamination1_time->display, "время приладки / 60 + время ламинации");
-            if($this->lamination1_work_time !== null) array_push ($this->base_values, $this->lamination1_work_time);
-        }
         
-        if($this->laminations_number > 1) {
-            $this->lamination2_work_time = new CalculationItem("Общее время выполнения (лам 2), ч", $this->lamination2_tuning_time->value / 60 + $this->lamination2_time->value, "|= ".$this->lamination2_tuning_time->display." / 60 + ".$this->lamination2_time->display, "время приладки / 60 + время ламинации");
-            if($this->lamination2_work_time !== null) array_push ($this->base_values, $this->lamination2_work_time);
-        }
+        // Общее время выполнения тиража 1, ч
+        $this->work_time_1 = $this->tuning_time_1 / 60 + $this->print_time_1;
+         
+        // Общее время выполнения тиража 2, ч
+        $this->work_time_2 = $this->tuning_time_2 / 60 + $this->lamination_time_2;
         
-        // Стоимость выполнения тиража
-        if($work_type_id == self::WORK_TYPE_PRINT) {
-            $this->work_price = new CalculationItem("Стоимость выполнения (осн), руб", $this->work_time->value * $machine_data->price, "|= ".$this->work_time->display." * ".$this->Display($machine_data->price), "общее время выполнения осн * цена работы оборудования осн");
-            if($this->work_price !== null) array_push ($this->base_values, $this->work_price);
-        }
+        // Общее время выполнения тиража 3, ч
+        $this->work_time_3 = $this->tuning_time_3 / 60 + $this->lamination_time_3;
         
-        if($this->laminations_number > 0) {
-            $this->lamination1_work_price = new CalculationItem("Стоимость выполнения (лам 1), руб", $this->lamination1_work_time->value * $laminator_machine_data->price, "|= ".$this->lamination1_work_time->display." * ".$this->Display($laminator_machine_data->price), "общее время выполнения лам 1 * цена работы оборудования лам 1");
-            if($this->lamination1_work_price !== null) array_push ($this->base_values, $this->lamination1_work_price);
-        }
         
-        if($this->laminations_number > 1) {
-            $this->lamination2_work_price = new CalculationItem("Стоимость выполнения (лам 2), руб", $this->lamination2_work_time->value * $laminator_machine_data->price, "|= ".$this->lamination2_work_time->display." * ".$this->Display($laminator_machine_data->price), "общее время выполнения лам 2 * цена работы оборудования лам 2");
-            if($this->lamination2_work_price !== null) array_push ($this->base_values, $this->lamination2_work_price);}
+        // Стоимость выполнения тиража 1, руб
+        $this->work_price_1 = $this->work_time_1 * $machine_data->price;
+        
+        // Стоимость выполнения тиража 2, руб
+        $this->work_price_2 = $this->work_time_2 * $laminator_machine_data->price;
+        
+        // Стоимость выполнения тиража 3, руб
+        $this->work_price_3 = $this->work_time_3 * $laminator_machine_data->price;
         
         //****************************************
         // Расход краски
         //****************************************
+            
+        /*
         
         if($work_type_id == self::WORK_TYPE_PRINT) {
             // Площадь запечатки
