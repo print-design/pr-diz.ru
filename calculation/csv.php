@@ -437,15 +437,58 @@ if($id !== null) {
         
         array_push($file_data, array("", "", "", ""));
         
-        // Основные величины
-        foreach($calculation->base_values as $base_value) {
-            array_push($file_data, array($base_value->name, $base_value->display, $base_value->formula, $base_value->comment));
+        // Значения по умолчанию
+        if(empty($lamination1_thickness)) $lamination1_thickness = 0;
+        if(empty($lamination1_density)) $lamination1_density = 0;
+        if(empty($lamination1_price)) $lamination1_price = 0;
+        if(empty($lamination2_thickness)) $lamination2_thickness = 0;
+        if(empty($lamination2_density)) $lamination2_density = 0;
+        if(empty($lamination2_price)) $lamination2_price = 0;
+        if($work_type_id = Calculation::WORK_TYPE_NOPRINT) $machine_id= null;
+        if(empty($raport)) $raport = 0;
+        if(empty($lamination_roller_width)) $lamination_roller_width = 0;
+        if(empty($ink_number)) $ink_number = 0;
+        
+        // Результаты вычислений
+        array_push($file_data, array("М2 чистые, м2",
+            Display($calculation->area_pure_1),
+            $unit == Calculation::KG ? "" : "|= ".Display($length)." * ".Display($stream_width)." * ".Display($quantity)." / 1000000",
+            $unit == Calculation::KG ? "Считается только при размере тиража в штуках" : "длина этикетки * ширина ручья * количество штук / 1 000 000"));
+        
+        array_push($file_data, array("Масса тиража, кг", 
+            Display($calculation->weight),
+            $unit == Calculation::KG ? "|= ".$quantity : "|= ".Display($calculation->area_pure_1)." * (".Display($density)." + ".Display($lamination1_density)." + ".Display($lamination2_density).") / 1000",
+            $unit == Calculation::KG ? "размер тиража в кг" : "м2 чистые * (уд. вес (осн) + уд. вес (лам 1) + уд. вес (лам 2)) / 1000"));
+        
+        $width_formula = "";
+        switch ($ski) {
+            case Calculation::NO_SKI:
+                $width_formula = "|= ".Display($streams_number)." * ".Display($stream_width);
+                break;
+            
+            case Calculation::STANDARD_SKI:
+                $width_formula = "|= ".Display($streams_number)." * ".Display($stream_width)." + 20";
+                break;
+            
+            case Calculation::NONSTANDARD_SKI:
+                $width_formula = "|= ".Display($width_ski);
+                break;
         }
+        
+        array_push($file_data, array("Ширина материала 1, мм",
+            Display($calculation->width),
+            $width_formula,
+            "без лыж: количество ручьёв * ширина ручья, стандартные лыжи: количество ручьёв * ширина ручья + 20 мм, нестандартные лыжи: вводится вручную"));
+        
+        // Основные величины
+        /*foreach($calculation->base_values as $base_value) {
+            array_push($file_data, array($base_value->name, $base_value->display, $base_value->formula, $base_value->comment));
+        }*/
         
         array_push($file_data, array("", "", "", ""));
         
         // Расход краски
-        if(!empty($ink_number)) {
+        /*if(!empty($ink_number)) {
             array_push($file_data, array("Красочность", $ink_number, "", ""));
             
             for($i=1; $i<=$ink_number; $i++) {
@@ -463,19 +506,19 @@ if($id !== null) {
             }
             
             array_push($file_data, array("", "", "", ""));
-        }
+        }*/
         
         // Расход клея
-        foreach($calculation->glue_values as $glue_value) {
+        /*foreach($calculation->glue_values as $glue_value) {
             array_push($file_data, array($glue_value->name, $glue_value->display, $glue_value->formula, $glue_value->comment));
-        }
+        }*/
         
         array_push($file_data, array("", "", "", ""));
         
         // Стоимость форм
-        foreach($calculation->cliche_values as $cliche_value) {
+        /*foreach($calculation->cliche_values as $cliche_value) {
             array_push($file_data, array($cliche_value->name, $cliche_value->display, $cliche_value->formula, $cliche_value->comment));
-        }
+        }*/
         
         //***************************************************
         // Сохранение в файл

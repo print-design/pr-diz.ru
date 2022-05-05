@@ -353,11 +353,11 @@ class Calculation {
     }
 
     public $laminations_number = 0;
-    public $base_values;
+    public $base_results;
     
     public /*CalculationItem*/ $uk1, $uk2, $uk3;
-    public /*CalculationItem*/ $area_pure_1;
-    public /*CalculationItem*/ $weight;
+    public /*CalculationItem*/ $area_pure_1 = 0;
+    public /*CalculationItem*/ $weight = 0;
     public /*CalculationItem*/ $width, $lamination1_width, $lamination2_width;
     public /*CalculationItem*/ $area_pure, $lamination1_area_pure, $lamination2_area_pure;
     public /*CalculationItem*/ $length_pure_1, $lamination1_length_pure_1, $lamination2_length_pure_1;
@@ -455,6 +455,16 @@ class Calculation {
             $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8
             ) {
         // Значения по умолчанию
+        if(empty($lamination1_thickness)) $lamination1_thickness = 0;
+        if(empty($lamination1_density)) $lamination1_density = 0;
+        if(empty($lamination1_price)) $lamination1_price = 0;
+        if(empty($lamination2_thickness)) $lamination2_thickness = 0;
+        if(empty($lamination2_density)) $lamination2_density = 0;
+        if(empty($lamination2_price)) $lamination2_price = 0;
+        if($work_type_id = self::WORK_TYPE_NOPRINT) $machine_id= null;
+        if(empty($raport)) $raport = 0;
+        if(empty($lamination_roller_width)) $lamination_roller_width = 0;
+        if(empty($ink_number)) $ink_number = 0;
         
         // Количество ламинаций
         if(!empty($lamination2_film) && !empty($lamination2_thickness) && !empty($lamination2_density)) {
@@ -482,61 +492,84 @@ class Calculation {
         $this->uk3 = new CalculationItem("УК3", $this->laminations_number > 1 ? 1 : 0, "", "нет второй ламинации - 0, есть вторая ламинация - 1") ;
         if($this->uk3 !== null) array_push ($this->base_values, $this->uk3);
         
-        // Масса тиража, кг
+        // М2 чистые, м2
         if($unit == self::KG) {
-            $this->weight = new CalculationItem("Масса тиража, кг", $quantity, "|= ".$this->Display($quantity), "размер тиража в кг");
+            $this->area_pure_1 = 0;
         }
         else {
-            $this->area_pure_1 = new CalculationItem("М2 чистые, м2", $length * $stream_width * $quantity / 1000000, "|= ".$this->Display($length)." * ".$this->Display($stream_width)." * ".$this->Display($quantity)." / 1000000", "длина этикетки * ширина ручья * количество штук / 1 000 000");
-            if($this->area_pure_1 !== null) array_push ($this->base_values, $this->area_pure_1);
-            
-            $this->weight = new CalculationItem("Масса тиража, кг", $this->area_pure_1->value * ($density + (empty($lamination1_density) ? 0 : $lamination1_density) + (empty($lamination2_density) ? 0 : $lamination2_density)) / 1000, "|= ".$this->area_pure_1->display." * (".$this->Display($density).(empty($lamination1_density) ? "" : " + ".$this->Display($lamination1_density)).(empty($lamination2_density) ? "" : " + ".$this->Display($lamination2_density)).") / 1000", "м2 чистые * (уд. вес (осн) + уд. вес (лам 1) + уд. вес (лам 2)) / 1000");
+            $this->area_pure_1 = $length * $stream_width * $quantity / 1000000;
         }
         
-        if($this->weight !== null) array_push ($this->base_values, $this->weight);
+        // Масса тиража, кг
+        if($unit == self::KG) {
+            $this->weight = $quantity;
+        }
+        else {
+            $this->weight = $this->area_pure_1 * ($density + (empty($lamination1_density) ? 0 : $lamination1_density) + (empty($lamination2_density) ? 0 : $lamination2_density)) / 1000;
+        }
 
-        // Ширина материала, мм
-        $this->width = new CalculationItem("Ширина материала (осн), мм", 
+        // Ширина материала 1, мм
+        switch($ski) {
+            case self::NO_SKI:
+                $this->width = $streams_number * $stream_width;
+                break;
+        
+            case self::STANDARD_SKI:
+                $this->width = $streams_number * $stream_width + 20;
+                break;
+        
+            case self::NONSTANDARD_SKI:
+                $this->width = $width_ski;
+                break;
+            
+            default :
+                $this->width = 0;
+                break;
+        }
+        
+        /*$this->width = new CalculationItem("Ширина материала (осн), мм", 
                 $this->GetWidth($ski, $streams_number, $stream_width, $width_ski), 
                 "|= ".$this->GetWidthFormula($ski, $streams_number, $stream_width, $width_ski), 
                 $this->GetWidthComment($ski));
         if($this->width !== null) array_push ($this->base_values, $this->width);
         
-        if($this->laminations_number > 0) {
-            $this->lamination1_width = new CalculationItem("Ширина материала (лам 1), мм", 
+        $this->lamination1_width = $this->laminations_number == 0 ? 
+            new CalculationItem("Ширина материала (лам 1), мм", 0, "", "Ламинации нет") :
+            new CalculationItem("Ширина материала (лам 1), мм", 
                     $this->GetWidth($lamination1_ski, $streams_number, $stream_width, $lamination1_width_ski), 
                     "|= ".$this->GetWidthFormula($lamination1_ski, $streams_number, $stream_width, $lamination1_width_ski), 
                     $this->GetWidthComment($lamination1_ski));
             if($this->lamination1_width !== null) array_push ($this->base_values, $this->lamination1_width);
-        }
         
-        if($this->laminations_number > 1) {
-            $this->lamination2_width = new CalculationItem("Ширина материала (лам 2), мм", 
-                    $this->GetWidth($lamination2_ski, $streams_number, $stream_width, $lamination2_width_ski), 
-                    "|= ".$this->GetWidthFormula($lamination2_ski, $streams_number, $stream_width, $lamination2_width_ski), 
-                    $this->GetWidthComment($lamination2_ski));
-            if($this->lamination2_width !== null) array_push ($this->base_values, $this->lamination2_width);
-        }
+        $this->lamination2_width = $this->laminations_number < 1 ?
+            new CalculationItem("Ширина материала (лам 2), мм", 0, "", "Второй ламинации нет") :
+            new CalculationItem("Ширина материала (лам 2), мм", 
+                $this->GetWidth($lamination2_ski, $streams_number, $stream_width, $lamination2_width_ski), 
+                "|= ".$this->GetWidthFormula($lamination2_ski, $streams_number, $stream_width, $lamination2_width_ski), 
+                $this->GetWidthComment($lamination2_ski));
+        if($this->lamination2_width !== null) array_push ($this->base_values, $this->lamination2_width);*/
+        
+        /*
 
         // Площадь чистая
         $this->area_pure = new CalculationItem("М2 чистые (осн), м2", 
-                $this->weight->value * 1000 / ($density + (empty($lamination1_density) ? 0 : $lamination1_density) + (empty($lamination2_density) ? 0 : $lamination2_density)), 
-                "|= ".$this->weight->display." * 1000 / (".$this->Display($density)." + ".(empty($lamination1_density) ? 0 : $this->Display($lamination1_density))." + ".(empty($lamination2_density) ? 0 : $this->Display($lamination2_density)).")", 
+                $this->weight * 1000 / ($density + (empty($lamination1_density) ? 0 : $lamination1_density) + (empty($lamination2_density) ? 0 : $lamination2_density)), 
+                "|= ".$this->weight." * 1000 / (".$this->Display($density)." + ".(empty($lamination1_density) ? 0 : $this->Display($lamination1_density))." + ".(empty($lamination2_density) ? 0 : $this->Display($lamination2_density)).")", 
                 "масса тиража * 1000 / (уд. вес осн + уд. вес лам 1 + уд. вес лам 2)");
         if($this->area_pure !== null) array_push ($this->base_values, $this->area_pure);
         
         if($this->laminations_number > 0) {
             $this->lamination1_area_pure = new CalculationItem("М2 чистые (лам 1), м2", 
-                    $this->weight->value * 1000 / ($density + (empty($lamination1_density) ? 0 : $lamination1_density) + (empty($lamination2_density) ? 0 : $lamination2_density)) * $this->uk2->value, 
-                    "|= ".$this->weight->display." * 1000 / (".$this->Display($density)." + ".(empty($lamination1_density) ? 0 : $this->Display($lamination1_density))." + ".(empty($lamination2_density) ? 0 : $this->Display($lamination2_density)).") * ".$this->uk2->display, 
+                    $this->weight * 1000 / ($density + (empty($lamination1_density) ? 0 : $lamination1_density) + (empty($lamination2_density) ? 0 : $lamination2_density)) * $this->uk2->value, 
+                    "|= ".$this->weight." * 1000 / (".$this->Display($density)." + ".(empty($lamination1_density) ? 0 : $this->Display($lamination1_density))." + ".(empty($lamination2_density) ? 0 : $this->Display($lamination2_density)).") * ".$this->uk2->display, 
                     "масса тиража * 1000 / (уд. вес осн + уд. вес лам 1 + уд. вес лам 2) * УК2");
             if($this->lamination1_area_pure !== null) array_push ($this->base_values, $this->lamination1_area_pure);
         }
         
         if($this->laminations_number > 1) {
             $this->lamination2_area_pure = new CalculationItem("М2 чистые (лам 2), м2", 
-                    $this->weight->value * 1000 / ($density + (empty($lamination1_density) ? 0 : $lamination1_density) + (empty($lamination2_density) ? 0 : $lamination2_density)) * $this->uk3->value, 
-                    "|= ".$this->weight->display." * 1000 / (".$this->Display($density)." + ".(empty($lamination1_density) ? 0 : $this->Display($lamination1_density))." + ".(empty($lamination2_density) ? 0 : $this->Display($lamination2_density)).") * ".$this->uk3->display, 
+                    $this->weight * 1000 / ($density + (empty($lamination1_density) ? 0 : $lamination1_density) + (empty($lamination2_density) ? 0 : $lamination2_density)) * $this->uk3->value, 
+                    "|= ".$this->weight." * 1000 / (".$this->Display($density)." + ".(empty($lamination1_density) ? 0 : $this->Display($lamination1_density))." + ".(empty($lamination2_density) ? 0 : $this->Display($lamination2_density)).") * ".$this->uk3->display, 
                     "масса тиража * 1000 / (уд. вес осн + уд. вес лам 1 + уд. вес лам 2) * УК3");
             if($this->lamination2_area_pure !== null) array_push ($this->base_values, $this->lamination2_area_pure);
         }
@@ -612,14 +645,14 @@ class Calculation {
         
         // Площадь грязная
         $this->area_dirty = new CalculationItem("М2 грязные (осн), м2", 
-                $this->length_dirty_1->value * $this->width->value / 1000, 
-                "|= ".$this->length_dirty_1->display." * ".$this->width->display." / 1000", 
+                $this->length_dirty_1->value * $this->width / 1000, 
+                "|= ".$this->length_dirty_1->display." * ".$this->width." / 1000", 
                 "м. пог. грязные осн * ширина материала осн / 1000");
         if($this->area_dirty !== null) array_push ($this->base_values, $this->area_dirty);
         
         if($this->laminations_number > 0) {
             $this->lamination1_area_dirty = new CalculationItem("М2 грязные (лам 1), м2", 
-                    $this->lamination1_length_dirty_1->value * $this->lamination1_width->value / 1000, 
+                    $this->lamination1_length_dirty_1->value * $this->lamination1_width / 1000, 
                     "|= ".$this->lamination1_length_dirty_1->display." * ".$this->lamination1_width->display." / 1000", 
                     "м. пог. грязные * ширина материала лам 1 / 1000");
             if($this->lamination1_area_dirty !== null) array_push ($this->base_values, $this->lamination1_area_dirty);
@@ -627,7 +660,7 @@ class Calculation {
         
         if($this->laminations_number > 1) {
             $this->lamination2_area_dirty = new CalculationItem("М2 грязные (лам 2), м2", 
-                    $this->lamination2_length_dirty_1->value * $this->lamination2_width->value / 1000, 
+                    $this->lamination2_length_dirty_1->value * $this->lamination2_width / 1000, 
                     "|= ".$this->lamination2_length_dirty_1->display." * ".$this->lamination2_width->display." / 1000", 
                     "м. пог. грязные * ширина материала лам 2 / 1000");
             if($this->lamination2_area_dirty !== null) array_push ($this->base_values, $this->lamination2_area_dirty);
@@ -639,15 +672,15 @@ class Calculation {
     
         // Масса плёнки чистая (без приладки), кг
         $this->weight_pure = new CalculationItem("Масса плёнки чистая (осн), кг", 
-                $this->length_pure_1->value * $this->width->value * $density / 1000000, 
-                "|= ".$this->length_pure_1->display." * ".$this->width->display." * ".$this->Display($density)." / 1000000", 
+                $this->length_pure_1->value * $this->width * $density / 1000000, 
+                "|= ".$this->length_pure_1->display." * ".$this->width." * ".$this->Display($density)." / 1000000", 
                 "м. пог. чистые осн * ширина материала осн * уд. вес осн / 1000000");
         if($this->weight_pure !== null) array_push ($this->base_values, $this->weight_pure);
         
     
         if($this->laminations_number > 0) {
             $this->lamination1_weight_pure = new CalculationItem("Масса плёнки чистая (лам 1), кг", 
-                    $this->lamination1_length_pure_1->value * $this->lamination1_width->value * $lamination1_density / 1000000, 
+                    $this->lamination1_length_pure_1->value * $this->lamination1_width * $lamination1_density / 1000000, 
                     "|= ".$this->lamination1_length_pure_1->display." * ".$this->lamination1_width->display." * ".$this->Display($lamination1_density)." / 1000000", 
                     "м. пог. чистые * ширина материала лам 1 * уд. вес лам 1 / 1000000");
             if($this->lamination1_weight_pure !== null) array_push ($this->base_values, $this->lamination1_weight_pure);
@@ -655,7 +688,7 @@ class Calculation {
     
         if($this->laminations_number > 1) {
             $this->lamination2_weight_pure = new CalculationItem("Масса плёнки чистая (лам 2), кг", 
-                    $this->lamination2_length_pure_1->value * $this->lamination2_width->value * $lamination2_density / 1000000, 
+                    $this->lamination2_length_pure_1->value * $this->lamination2_width * $lamination2_density / 1000000, 
                     "|= ".$this->lamination2_length_pure_1->display." * ".$this->lamination2_width->display." * ".$this->Display($lamination2_density)." / 1000000", 
                     "м. пог. чистые * ширина материала лам 2 * уд. вес лам 2 / 1000000");
             if($this->lamination2_weight_pure !== null) array_push ($this->base_values, $this->lamination2_weight_pure);
@@ -1008,6 +1041,8 @@ class Calculation {
             $this->scotch_price = new CalculationItem("Стоимость скотча", $cliche_data->scotch * ($this->cliche_area->value / 10000) * $ink_number * $this->GetCurrencyRate($cliche_data->scotch_currency, $usd, $euro), "|= ".$this->Display($cliche_data->scotch)." * (".$this->cliche_area->display." / 10000) * $ink_number * ". $this->Display($this->GetCurrencyRate($cliche_data->scotch_currency, $usd, $euro)), "цена скотча за м2 * (площадь формы в см2 / 10000) * красочность * курс валюты");
             if($this->scotch_price !== null) array_push ($this->cliche_values, $this->scotch_price);
         }
+         * 
+         */
     }
 }
 ?>
