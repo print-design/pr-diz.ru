@@ -1,29 +1,4 @@
 <?php
-class CalculationItem {
-    public $name;
-    public $value;
-    public $display;
-    public $formula;
-    public $comment;
-    
-    public function __construct($name, $value, $formula, $comment) {
-        $this->name = $name;
-        $this->value = $value;
-        $this->formula = $formula;
-        $this->comment = $comment;
-        
-        if(is_float($value) || is_double($value)) {
-            $this->display = number_format($value, 2, ",", " ");
-        }
-        elseif(is_string($value)) {
-            $this->display = str_replace(".", ",", $value);
-        }
-        else {
-            $this->display = $value;
-        }
-    }
-}
-
 class TuningData {
     public $time = 0;
     public $length = 0;
@@ -202,66 +177,6 @@ class Calculation {
     
     // Машины
     const COMIFLEX = 'comiflex';
-
-    function GetWidth($ski, $streams_number, $stream_width, $width_ski) {
-        $result = 0;
-    
-        switch($ski) {
-            case self::NO_SKI:
-                $result = $streams_number * $stream_width;
-                break;
-        
-            case self::STANDARD_SKI:
-                $result = $streams_number * $stream_width + 20;
-                break;
-        
-            case self::NONSTANDARD_SKI:
-                $result = $width_ski;
-                break;
-        }
-    
-        return $result;
-    }
-    
-    function GetWidthFormula($ski, $streams_number, $stream_width, $width_ski) {
-        $result = "";
-    
-        switch($ski) {
-            case self::NO_SKI:
-                $result = "$streams_number * $stream_width";
-                break;
-        
-            case self::STANDARD_SKI:
-                $result = "$streams_number * $stream_width + 20";
-                break;
-        
-            case self::NONSTANDARD_SKI:
-                $result = "$width_ski";
-                break;
-        }
-    
-        return $result;
-    }
-    
-    function GetWidthComment($ski) {
-        $result = "";
-    
-        switch($ski) {
-            case self::NO_SKI:
-                $result = "количество ручьёв * ширина ручья";
-                break;
-        
-            case self::STANDARD_SKI:
-                $result = "количество ручьёв * ширина ручья + 20 мм";
-                break;
-        
-            case self::NONSTANDARD_SKI:
-                $result = "вводится вручную";
-                break;
-        }
-    
-        return $result;
-    }
     
     function GetCurrencyRate($currency, $usd, $euro) {
         switch($currency) {
@@ -353,51 +268,48 @@ class Calculation {
     }
 
     public $laminations_number = 0;
-    public $base_results;
     
-    public /*CalculationItem*/ $uk1, $uk2, $uk3;
-    public /*CalculationItem*/ $area_pure_1 = 0;
-    public /*CalculationItem*/ $weight = 0;
-    public /*CalculationItem*/ $width, $lamination1_width, $lamination2_width;
-    public /*CalculationItem*/ $area_pure, $lamination1_area_pure, $lamination2_area_pure;
-    public /*CalculationItem*/ $length_pure_1, $lamination1_length_pure_1, $lamination2_length_pure_1;
-    public /*CalculationItem*/ $waste_length, $lamination1_waste_length, $lamination2_waste_length;
-    public /*CalculationItem*/ $length_dirty_1, $lamination1_length_dirty_1, $lamination2_length_dirty_1;
-    public /*CalculationItem*/ $area_dirty, $lamination1_area_dirty, $lamination2_area_dirty;
-    public /*CalculationItem*/ $weight_pure, $lamination1_weight_pure, $lamination2_weight_pure;
-    public /*CalculationItem*/ $length_pure, $lamination1_length_pure, $lamination2_length_pure;
-    public /*CalculationItem*/ $weight_dirty, $lamination1_weight_dirty, $lamination2_weight_dirty;
-    public /*CalculationItem*/ $length_dirty, $lamination1_length_dirty, $lamination2_length_dirty;
-    public /*CalculationItem*/ $film_price, $lamination1_film_price, $lamination2_film_price;
-    public /*CalculationItem*/ $tuning_time, $lamination1_tuning_time, $lamination2_tuning_time;
-    public /*CalculationItem*/ $print_time, $lamination1_time, $lamination2_time;
-    public /*CalculationItem*/ $work_time, $lamination1_work_time, $lamination2_work_time;
-    public /*CalculationItem*/ $work_price, $lamination1_work_price, $lamination2_work_price;
-    public /*CalculationItem*/ $print_area;
-    public /*CalculationItem*/ $ink_1kg_mix_weight; // расход КраскаСмеси на 1 кг краски
-    public /*CalculationItem*/ $ink_solvent_kg_price; // цена 1 кг чистого раствортеля для краски
+    public $uk1, $uk2, $uk3;
+    public $area_pure_start = 0;
+    public $weight = 0;
+    public $width_1, $width_2, $width_3;
+    public $area_pure_1, $area_pure_2, $area_pure_3;
+    public $length_pure_start_1, $length_pure_start_2, $length_pure_start_3;
+    public $waste_length_1, $waste_length_2, $waste_length_3;
+    public $length_dirty_start_1, $length_dirty_start_2, $length_dirty_start_3;
+    public $area_dirty_1, $area_dirty_2, $area_dirty_3;
+    public $weight_pure_1, $weight_pure_2, $weight_pure_3;
+    public $length_pure_1, $length_pure_2, $length_pure_3;
+    public $weight_dirty_1, $weight_dirty_2, $weight_dirty_3;
+    public $length_dirty_1, $length_dirty_2, $length_dirty_3;
+    public $film_price_1, $film_price_2, $film_price_3;
+    public $tuning_time_1, $tuning_time_2, $tuning_time_3;
+    public $print_time_1, $lamination_time_2, $lamination_time_3;
+    public $work_time_1, $work_time_2, $work_time_3;
+    public $work_price_1, $work_price_2, $work_price_3;
+    public $print_area;
+    public $ink_1kg_mix_weight; // расход КраскаСмеси на 1 кг краски
+    public $ink_solvent_kg_price; // цена 1 кг чистого раствортеля для краски
     
     public $ink_kg_prices; // цена 1 кг чистой краски
     public $mix_ink_kg_prices; // цена 1 кг КраскаСмеси
     public $ink_expenses; // расход КраскаСмеси
     public $ink_prices; // стоимость КраскаСмеси
     
-    public $glue_values;
-    public /*CalculationItem*/ $glue_kg_weight; // расход КлееСмеси на 1 кг клея
-    public /*CalculationItem*/ $glue_kg_price; // цена 1 кг чистого клея
-    public /*CalculationItem*/ $glue_solvent_kg_price; // цена 1 кг чистого растворителя для клея
-    public /*CalculationItem*/ $mix_glue_kg_price; // цена 1 кг КлееСмеси
-    public /*CalculationItem*/ $glue_area1;
-    public /*CalculationItem*/ $glue_area2;
-    public /*CalculationItem*/ $glue_expense1;
-    public /*CalculationItem*/ $glue_expense2;
-    public /*CalculationItem*/ $glue_price1;
-    public /*CalculationItem*/ $glue_price2;
+    public $glue_kg_weight; // расход КлееСмеси на 1 кг клея
+    public $glue_kg_price; // цена 1 кг чистого клея
+    public $glue_solvent_kg_price; // цена 1 кг чистого растворителя для клея
+    public $mix_glue_kg_price; // цена 1 кг КлееСмеси
+    public $glue_area1;
+    public $glue_area2;
+    public $glue_expense1;
+    public $glue_expense2;
+    public $glue_price1;
+    public $glue_price2;
     
-    public $cliche_values;
-    public /*CalculationItem*/ $cliche_area; // Площадь формы
-    public /*CalculationItem*/ $cliche_price; // Стоимость форм
-    public /*CalculationItem*/ $scotch_price; // Стоимость скотча для наклейки формы
+    public $cliche_area; // Площадь формы
+    public $cliche_price; // Стоимость форм
+    public $scotch_price; // Стоимость скотча для наклейки формы
 
     public function __construct(TuningData $tuning_data, 
             TuningData $laminator_tuning_data,
@@ -412,32 +324,32 @@ class Calculation {
             $quantity, // Размер тиража в кг или шт
             $work_type_id, // Тип работы: с печатью или без печати
         
-            $film, // Основная пленка, марка
-            $thickness, // Основная пленка, толщина, мкм
-            $density, // Основная пленка, плотность, г/м2
-            $price, // Основная пленка, цена
-            $currency, // Основная пленка, валюта
-            $customers_material, // Основная плёнка, другая, материал заказчика
-            $ski, // Основная пленка, лыжи
-            $width_ski, // Основная пленка, ширина пленки, мм
+            $film_1, // Основная пленка, марка
+            $thickness_1, // Основная пленка, толщина, мкм
+            $density_1, // Основная пленка, плотность, г/м2
+            $price_1, // Основная пленка, цена
+            $currency_1, // Основная пленка, валюта
+            $customers_material_1, // Основная плёнка, другая, материал заказчика
+            $ski_1, // Основная пленка, лыжи
+            $width_ski_1, // Основная пленка, ширина пленки, мм
         
-            $lamination1_film, // Ламинация 1, марка
-            $lamination1_thickness, // Ламинация 1, толщина, мкм
-            $lamination1_density, // Ламинация 1, плотность, г/м2
-            $lamination1_price, // Ламинация 1, цена
-            $lamination1_currency, // Ламинация 1, валюта
-            $lamination1_customers_material, // Ламинация 1, другая, материал заказчика
-            $lamination1_ski, // Ламинация 1, лыжи
-            $lamination1_width_ski, // Ламинация 1, ширина пленки, мм
+            $film_2, // Ламинация 1, марка
+            $thickness_2, // Ламинация 1, толщина, мкм
+            $density_2, // Ламинация 1, плотность, г/м2
+            $price_2, // Ламинация 1, цена
+            $currency_2, // Ламинация 1, валюта
+            $customers_material_2, // Ламинация 1, другая, материал заказчика
+            $ski_2, // Ламинация 1, лыжи
+            $width_ski_2, // Ламинация 1, ширина пленки, мм
         
-            $lamination2_film, // Ламинация 2, марка
-            $lamination2_thickness, // Ламинация 2, толщина, мкм
-            $lamination2_density, // Ламинация 2, плотность, г/м2
-            $lamination2_price, // Ламинация 2, цена
-            $lamination2_currency, // Ламинация 2, валюта
-            $lamination2_customers_material, // Ламинация 2, другая, уд. вес
-            $lamination2_ski, // Ламинация 2, лыжи
-            $lamination2_width_ski,  // Ламинация 2, ширина пленки, мм
+            $film_3, // Ламинация 2, марка
+            $thickness_3, // Ламинация 2, толщина, мкм
+            $density_3, // Ламинация 2, плотность, г/м2
+            $price_3, // Ламинация 2, цена
+            $currency_3, // Ламинация 2, валюта
+            $customers_material_3, // Ламинация 2, другая, уд. вес
+            $ski_3, // Ламинация 2, лыжи
+            $width_ski_3,  // Ламинация 2, ширина пленки, мм
         
             $machine_id, // Машина
             $machine_shortname, // Короткое наименование машины
@@ -455,49 +367,45 @@ class Calculation {
             $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8
             ) {
         // Значения по умолчанию
-        if(empty($lamination1_thickness)) $lamination1_thickness = 0;
-        if(empty($lamination1_density)) $lamination1_density = 0;
-        if(empty($lamination1_price)) $lamination1_price = 0;
-        if(empty($lamination2_thickness)) $lamination2_thickness = 0;
-        if(empty($lamination2_density)) $lamination2_density = 0;
-        if(empty($lamination2_price)) $lamination2_price = 0;
-        if($work_type_id = self::WORK_TYPE_NOPRINT) $machine_id= null;
+        if(empty($thickness_2)) $thickness_2 = 0;
+        if(empty($density_2)) $density_2 = 0;
+        if(empty($price_2)) $price_2 = 0;
+        if(empty($thickness_2)) $thickness_2 = 0;
+        if(empty($density_2)) $density_2 = 0;
+        if(empty($price_2)) $price_2 = 0;
+        if($work_type_id == self::WORK_TYPE_NOPRINT) $machine_id = null;
         if(empty($raport)) $raport = 0;
         if(empty($lamination_roller_width)) $lamination_roller_width = 0;
         if(empty($ink_number)) $ink_number = 0;
         
         // Количество ламинаций
-        if(!empty($lamination2_film) && !empty($lamination2_thickness) && !empty($lamination2_density)) {
+        if(!empty($film_3) && !empty($thickness_3) && !empty($density_3)) {
             $this->laminations_number = 2;
         }
-        elseif(!empty ($lamination1_film) && !empty ($lamination1_thickness) && !empty ($lamination1_density)) {
+        elseif(!empty ($film_2) && !empty ($thickness_2) && !empty ($density_2)) {
             $this->laminations_number = 1;
         }
         
         // Если материал заказчика, то его цена = 0
-        if($customers_material) $price = 0;
-        if($lamination1_customers_material) $lamination1_price = 0;
-        if($lamination2_customers_material) $lamination2_price = 0;
+        if($customers_material_1) $price_1 = 0;
+        if($customers_material_2) $price_2 = 0;
+        if($customers_material_3) $price_3 = 0;
         
-        // Данные по плёнке и работе
-        $this->base_values = array();
+        // Уравнивующий коэф 1(УК1)=0 когда нет печати,=1 когда есть печать
+        $this->uk1 = $work_type_id == self::WORK_TYPE_PRINT ? 1 : 0;
         
-        // Уравнивующий коэф пленка 1(УК1)=0 когда нет печати,=1 когда есть печать
-        // Уравнивующий коэф пленка2 (УК2)=0 когда нет ламинации 1 , = 1 когда есть ламинация 1
-        // Уравнивующий коэф пленка 3 (УК3)=0 когда нет ламинации 2, = 1 когда есть ламинация 2
-        $this->uk1 = new CalculationItem("УК1", $work_type_id == self::WORK_TYPE_PRINT ? 1 : 0, "", "нет печати - 0, есть печать - 1");
-        if($this->uk1 !== null) array_push ($this->base_values, $this->uk1);
-        $this->uk2 = new CalculationItem("УК2", $this->laminations_number > 0 ? 1 : 0, "", "нет ламинации - 0, есть ламинация - 1");
-        if($this->uk2 !== null) array_push ($this->base_values, $this->uk2);
-        $this->uk3 = new CalculationItem("УК3", $this->laminations_number > 1 ? 1 : 0, "", "нет второй ламинации - 0, есть вторая ламинация - 1") ;
-        if($this->uk3 !== null) array_push ($this->base_values, $this->uk3);
+        // Уравнивующий коэф 2 (УК2)=0 когда нет ламинации 1 , = 1 когда есть ламинация 1
+        $this->uk2 = $this->laminations_number > 0 ? 1 : 0;
+        
+        // Уравнивующий коэф 3 (УК3)=0 когда нет ламинации 2, = 1 когда есть ламинация 2
+        $this->uk3 = $this->laminations_number > 1 ? 1 : 0;
         
         // М2 чистые, м2
         if($unit == self::KG) {
-            $this->area_pure_1 = 0;
+            $this->area_pure_start = 0;
         }
         else {
-            $this->area_pure_1 = $length * $stream_width * $quantity / 1000000;
+            $this->area_pure_start = $length * $stream_width * $quantity / 1000000;
         }
         
         // Масса тиража, кг
@@ -505,51 +413,68 @@ class Calculation {
             $this->weight = $quantity;
         }
         else {
-            $this->weight = $this->area_pure_1 * ($density + (empty($lamination1_density) ? 0 : $lamination1_density) + (empty($lamination2_density) ? 0 : $lamination2_density)) / 1000;
+            $this->weight = $this->area_pure_start * ($density_1 + $density_2 + $density_3) / 1000;
         }
 
         // Ширина материала 1, мм
-        switch($ski) {
+        switch($ski_1) {
             case self::NO_SKI:
-                $this->width = $streams_number * $stream_width;
+                $this->width_1 = $streams_number * $stream_width;
                 break;
         
             case self::STANDARD_SKI:
-                $this->width = $streams_number * $stream_width + 20;
+                $this->width_1 = $streams_number * $stream_width + 20;
                 break;
         
             case self::NONSTANDARD_SKI:
-                $this->width = $width_ski;
+                $this->width_1 = $width_ski_1;
                 break;
             
             default :
-                $this->width = 0;
+                $this->width_1 = 0;
                 break;
         }
         
-        /*$this->width = new CalculationItem("Ширина материала (осн), мм", 
-                $this->GetWidth($ski, $streams_number, $stream_width, $width_ski), 
-                "|= ".$this->GetWidthFormula($ski, $streams_number, $stream_width, $width_ski), 
-                $this->GetWidthComment($ski));
-        if($this->width !== null) array_push ($this->base_values, $this->width);
+        // Ширина материала 2, мм
+        switch($ski_2) {
+            case self::NO_SKI:
+                $this->width_2 = $streams_number * $stream_width;
+                break;
         
-        $this->lamination1_width = $this->laminations_number == 0 ? 
-            new CalculationItem("Ширина материала (лам 1), мм", 0, "", "Ламинации нет") :
-            new CalculationItem("Ширина материала (лам 1), мм", 
-                    $this->GetWidth($lamination1_ski, $streams_number, $stream_width, $lamination1_width_ski), 
-                    "|= ".$this->GetWidthFormula($lamination1_ski, $streams_number, $stream_width, $lamination1_width_ski), 
-                    $this->GetWidthComment($lamination1_ski));
-            if($this->lamination1_width !== null) array_push ($this->base_values, $this->lamination1_width);
+            case self::STANDARD_SKI:
+                $this->width_2 = $streams_number * $stream_width + 20;
+                break;
         
-        $this->lamination2_width = $this->laminations_number < 1 ?
-            new CalculationItem("Ширина материала (лам 2), мм", 0, "", "Второй ламинации нет") :
-            new CalculationItem("Ширина материала (лам 2), мм", 
-                $this->GetWidth($lamination2_ski, $streams_number, $stream_width, $lamination2_width_ski), 
-                "|= ".$this->GetWidthFormula($lamination2_ski, $streams_number, $stream_width, $lamination2_width_ski), 
-                $this->GetWidthComment($lamination2_ski));
-        if($this->lamination2_width !== null) array_push ($this->base_values, $this->lamination2_width);*/
+            case self::NONSTANDARD_SKI:
+                $this->width_2 = $width_ski_2;
+                break;
+            
+            default :
+                $this->width_2 = 0;
+                break;
+        }
+        
+        // Ширина материала 1, мм
+        switch($ski_3) {
+            case self::NO_SKI:
+                $this->width_3 = $streams_number * $stream_width;
+                break;
+        
+            case self::STANDARD_SKI:
+                $this->width_3 = $streams_number * $stream_width + 20;
+                break;
+        
+            case self::NONSTANDARD_SKI:
+                $this->width_3 = $width_ski_3;
+                break;
+            
+            default :
+                $this->width_3 = 0;
+                break;
+        }
         
         /*
+        
 
         // Площадь чистая
         $this->area_pure = new CalculationItem("М2 чистые (осн), м2", 

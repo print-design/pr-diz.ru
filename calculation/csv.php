@@ -104,32 +104,32 @@ if($id !== null) {
     $quantity = null; // Размер тиража
     $work_type_id = null; // Типа работы: с печатью или без печати
     
-    $film = null; // Основная пленка, марка
-    $thickness = null; // Основная пленка, толщина, мкм
-    $density = null; // Основная пленка, плотность, г/м2
-    $price = null; // Основная пленка, цена
-    $currency = null; // Основная пленка, валюта
-    $customers_material = null; // Основная плёнка, другая, материал заказчика
-    $ski = null; // Основная пленка, лыжи
-    $width_ski = null; // Основная пленка, ширина пленки, мм
+    $film_1 = null; // Основная пленка, марка
+    $thickness_1 = null; // Основная пленка, толщина, мкм
+    $density_1 = null; // Основная пленка, плотность, г/м2
+    $price_1 = null; // Основная пленка, цена
+    $currency_1 = null; // Основная пленка, валюта
+    $customers_material_1 = null; // Основная плёнка, другая, материал заказчика
+    $ski_1 = null; // Основная пленка, лыжи
+    $width_ski_1 = null; // Основная пленка, ширина пленки, мм
         
-    $lamination1_film = null; // Ламинация 1, марка
-    $lamination1_thickness = null; // Ламинация 1, толщина, мкм
-    $lamination1_density = null; // Ламинация 1, плотность, г/м2
-    $lamination1_price = null; // Ламинация 1, цена
-    $lamination1_lamination1_currency = null; // Ламинация 1, валюта
-    $lamination1_customers_material = null; // Ламинация 1, другая, материал заказчика
-    $lamination1_ski = null; // Ламинация 1, лыжи
-    $lamination1_width_ski = null; // Ламинация 1, ширина пленки, мм
+    $film_2 = null; // Ламинация 1, марка
+    $thickness_2 = null; // Ламинация 1, толщина, мкм
+    $density_2 = null; // Ламинация 1, плотность, г/м2
+    $price_2 = null; // Ламинация 1, цена
+    $currency_2 = null; // Ламинация 1, валюта
+    $customers_material_2 = null; // Ламинация 1, другая, материал заказчика
+    $ski_2 = null; // Ламинация 1, лыжи
+    $width_ski_2 = null; // Ламинация 1, ширина пленки, мм
 
-    $lamination2_film = null; // Ламинация 2, марка
-    $lamination2_thickness = null; // Ламинация 2, толщина, мкм
-    $lamination2_density = null; // Ламинация 2, плотность, г/м2
-    $lamination2_price = null; // Ламинация 2, цена
-    $lamination2_currency = null; // Ламинация 2, валюта
-    $lamination2_customers_material = null; // Ламинация 2, другая, уд. вес
-    $lamination2_ski = null; // Ламинация 2, лыжи
-    $lamination2_width_ski = null;  // Ламинация 2, ширина пленки, мм
+    $film_3 = null; // Ламинация 2, марка
+    $thickness_3 = null; // Ламинация 2, толщина, мкм
+    $density_3 = null; // Ламинация 2, плотность, г/м2
+    $price_3 = null; // Ламинация 2, цена
+    $currency_3 = null; // Ламинация 2, валюта
+    $customers_material_3 = null; // Ламинация 2, другая, уд. вес
+    $ski_3 = null; // Ламинация 2, лыжи
+    $width_ski_3 = null;  // Ламинация 2, ширина пленки, мм
     
     $machine = null;
     $machine_shortname = null;
@@ -178,52 +178,52 @@ if($id !== null) {
         $work_type_id = $row['work_type_id']; // Тип работы: с печатью или без печати
         
         if(!empty($row['film_variation_id'])) {
-            $film = $row['film']; // Основная пленка, марка
-            $thickness = $row['thickness']; // Основная пленка, толщина, мкм
-            $density = $row['density']; // Основная пленка, плотность, г/м2
+            $film_1 = $row['film']; // Основная пленка, марка
+            $thickness_1 = $row['thickness']; // Основная пленка, толщина, мкм
+            $density_1 = $row['density']; // Основная пленка, плотность, г/м2
         }
         else {
-            $film = $row['individual_film_name']; // Основная пленка, марка
-            $thickness = $row['individual_thickness']; // Основная пленка, толщина, мкм
-            $density = $row['individual_density']; // Основная пленка, плотность, г/м2
+            $film_1 = $row['individual_film_name']; // Основная пленка, марка
+            $thickness_1 = $row['individual_thickness']; // Основная пленка, толщина, мкм
+            $density_1 = $row['individual_density']; // Основная пленка, плотность, г/м2
         }
-        $price = $row['price']; // Основная пленка, цена
-        $currency = $row['currency']; // Основная пленка, валюта
-        $customers_material = $row['customers_material']; // Основная плёнка, другая, материал заказчика
-        $ski = $row['ski']; // Основная пленка, лыжи
-        $width_ski = $row['width_ski']; // Основная пленка, ширина пленки, мм
+        $price_1 = $row['price']; // Основная пленка, цена
+        $currency_1 = $row['currency']; // Основная пленка, валюта
+        $customers_material_1 = $row['customers_material']; // Основная плёнка, другая, материал заказчика
+        $ski_1 = $row['ski']; // Основная пленка, лыжи
+        $width_ski_1 = $row['width_ski']; // Основная пленка, ширина пленки, мм
         
         if(!empty($row['lamination1_film_variation_id'])) {
-            $lamination1_film = $row['lamination1_film']; // Ламинация 1, марка
-            $lamination1_thickness = $row['lamination1_thickness']; // Ламинация 1, толщина, мкм
-            $lamination1_density = $row['lamination1_density']; // Ламинация 1, плотность, г/м2
+            $film_2 = $row['lamination1_film']; // Ламинация 1, марка
+            $thickness_2 = $row['lamination1_thickness']; // Ламинация 1, толщина, мкм
+            $density_2 = $row['lamination1_density']; // Ламинация 1, плотность, г/м2
         }
         else {
-            $lamination1_film = $row['lamination1_individual_film_name']; // Ламинация 1, марка
-            $lamination1_thickness = $row['lamination1_individual_thickness']; // Ламинация 1, толщина, мкм
-            $lamination1_density = $row['lamination1_individual_density']; // Ламинация 1, плотность, г/м2
+            $film_2 = $row['lamination1_individual_film_name']; // Ламинация 1, марка
+            $thickness_2 = $row['lamination1_individual_thickness']; // Ламинация 1, толщина, мкм
+            $density_2 = $row['lamination1_individual_density']; // Ламинация 1, плотность, г/м2
         }
-        $lamination1_price = $row['lamination1_price']; // Ламинация 1, цена
-        $lamination1_currency = $row['lamination1_currency']; // Ламинация 1, валюта
-        $lamination1_customers_material = $row['lamination1_customers_material']; // Ламинация 1, другая, материал заказчика
-        $lamination1_ski = $row['lamination1_ski']; // Ламинация 1, лыжи
-        $lamination1_width_ski = $row['lamination1_width_ski']; // Ламинация 1, ширина пленки, мм
+        $price_2 = $row['lamination1_price']; // Ламинация 1, цена
+        $currency_2 = $row['lamination1_currency']; // Ламинация 1, валюта
+        $customers_material_2 = $row['lamination1_customers_material']; // Ламинация 1, другая, материал заказчика
+        $ski_2 = $row['lamination1_ski']; // Ламинация 1, лыжи
+        $width_ski_2 = $row['lamination1_width_ski']; // Ламинация 1, ширина пленки, мм
         
         if(!empty($row['lamination2_film_variation_id'])) {
-            $lamination2_film = $row['lamination2_film']; // Ламинация 2, марка
-            $lamination2_thickness = $row['lamination2_thickness']; // Ламинация 2, толщина, мкм
-            $lamination2_density = $row['lamination2_density']; // Ламинация 2, плотность, г/м2
+            $film_3 = $row['lamination2_film']; // Ламинация 2, марка
+            $thickness_3 = $row['lamination2_thickness']; // Ламинация 2, толщина, мкм
+            $density_3 = $row['lamination2_density']; // Ламинация 2, плотность, г/м2
         }
         else {
-            $lamination2_film = $row['lamination2_individual_film_name']; // Ламинация 2, марка
-            $lamination2_thickness = $row['lamination2_individual_thickness']; // Ламинация 2, толщина, мкм
-            $lamination2_density = $row['lamination2_individual_density']; // Ламинация 2, плотность, г/м2
+            $film_3 = $row['lamination2_individual_film_name']; // Ламинация 2, марка
+            $thickness_3 = $row['lamination2_individual_thickness']; // Ламинация 2, толщина, мкм
+            $density_3 = $row['lamination2_individual_density']; // Ламинация 2, плотность, г/м2
         }
-        $lamination2_price = $row['lamination2_price']; // Ламинация 2, цена
-        $lamination2_currency = $row['lamination2_currency']; // Ламинация 2, валюта
-        $lamination2_customers_material = $row['lamination2_customers_material']; // Ламинация 2, другая, уд. вес
-        $lamination2_ski = $row['lamination2_ski']; // Ламинация 2, лыжи
-        $lamination2_width_ski = $row['lamination2_width_ski'];  // Ламинация 2, ширина пленки, мм
+        $price_3 = $row['lamination2_price']; // Ламинация 2, цена
+        $currency_3 = $row['lamination2_currency']; // Ламинация 2, валюта
+        $customers_material_3 = $row['lamination2_customers_material']; // Ламинация 2, другая, уд. вес
+        $ski_3 = $row['lamination2_ski']; // Ламинация 2, лыжи
+        $width_ski_3 = $row['lamination2_width_ski'];  // Ламинация 2, ширина пленки, мм
         
         $machine = $row['machine'];
         $machine_shortname = $row['machine_shortname'];
@@ -329,32 +329,32 @@ if($id !== null) {
                 $quantity, // Размер тиража в кг или шт
                 $work_type_id, // Тип работы: с печатью или без печати
                 
-                $film, // Основная пленка, марка
-                $thickness, // Основная пленка, толщина, мкм
-                $density, // Основная пленка, плотность, г/м2
-                $price, // Основная пленка, цена
-                $currency, // Основная пленка, валюта
-                $customers_material, // Основная плёнка, другая, материал заказчика
-                $ski, // Основная пленка, лыжи
-                $width_ski, // Основная пленка, ширина пленки, мм
+                $film_1, // Основная пленка, марка
+                $thickness_1, // Основная пленка, толщина, мкм
+                $density_1, // Основная пленка, плотность, г/м2
+                $price_1, // Основная пленка, цена
+                $currency_1, // Основная пленка, валюта
+                $customers_material_1, // Основная плёнка, другая, материал заказчика
+                $ski_1, // Основная пленка, лыжи
+                $width_ski_1, // Основная пленка, ширина пленки, мм
                 
-                $lamination1_film, // Ламинация 1, марка
-                $lamination1_thickness, // Ламинация 1, толщина, мкм
-                $lamination1_density, // Ламинация 1, плотность, г/м2
-                $lamination1_price, // Ламинация 1, цена
-                $lamination1_currency, // Ламинация 1, валюта
-                $lamination1_customers_material, // Ламинация 1, другая, материал заказчика
-                $lamination1_ski, // Ламинация 1, лыжи
-                $lamination1_width_ski, // Ламинация 1, ширина пленки, мм
+                $film_2, // Ламинация 1, марка
+                $thickness_2, // Ламинация 1, толщина, мкм
+                $density_2, // Ламинация 1, плотность, г/м2
+                $price_2, // Ламинация 1, цена
+                $currency_2, // Ламинация 1, валюта
+                $customers_material_2, // Ламинация 1, другая, материал заказчика
+                $ski_2, // Ламинация 1, лыжи
+                $width_ski_2, // Ламинация 1, ширина пленки, мм
                 
-                $lamination2_film, // Ламинация 2, марка
-                $lamination2_thickness, // Ламинация 2, толщина, мкм
-                $lamination2_density, // Ламинация 2, плотность, г/м2
-                $lamination2_price, // Ламинация 2, цена
-                $lamination2_currency, // Ламинация 2, валюта
-                $lamination2_customers_material, // Ламинация 2, другая, уд. вес
-                $lamination2_ski, // Ламинация 2, лыжи
-                $lamination2_width_ski,  // Ламинация 2, ширина пленки, мм
+                $film_3, // Ламинация 2, марка
+                $thickness_3, // Ламинация 2, толщина, мкм
+                $density_3, // Ламинация 2, плотность, г/м2
+                $price_3, // Ламинация 2, цена
+                $currency_3, // Ламинация 2, валюта
+                $customers_material_3, // Ламинация 2, другая, уд. вес
+                $ski_3, // Ламинация 2, лыжи
+                $width_ski_3,  // Ламинация 2, ширина пленки, мм
                 
                 $machine_id, // Машина
                 $machine_shortname, // Короткое название машины
@@ -385,32 +385,32 @@ if($id !== null) {
         }
         
         array_push($file_data, array("Размер тиража", $quantity.' '. GetUnitName($unit), "", ""));
-        array_push($file_data, array("Марка (осн)", $film, "", ""));
-        array_push($file_data, array("Толщина (осн), мкм", $thickness, "", ""));
-        array_push($file_data, array("Плотность (осн), г/м2", Display($density), "", ""));
-        array_push($file_data, array("Лыжи (осн)", GetSkiName($ski), "", ""));
-        if($ski == Calculation::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки (осн), мм", Display($width_ski), "", ""));
-        if($customers_material) array_push ($file_data, array("Материал заказчика (осн)", "", "", ""));
-        else array_push ($file_data, array("Цена (осн)", Display ($price)." ". GetCurrencyName($currency).($currency == Calculation::USD ? " (". Display($price * $usd)." руб)" : "").($currency == Calculation::EURO ? " (". Display($price * $euro)." руб)" : ""), "", ""));
+        array_push($file_data, array("Марка 1", $film_1, "", ""));
+        array_push($file_data, array("Толщина 1, мкм", $thickness_1, "", ""));
+        array_push($file_data, array("Плотность 1, г/м2", Display($density_1), "", ""));
+        array_push($file_data, array("Лыжи 1", GetSkiName($ski_1), "", ""));
+        if($ski_1 == Calculation::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки 1, мм", Display($width_ski_1), "", ""));
+        if($customers_material_1) array_push ($file_data, array("Материал заказчика 1", "", "", ""));
+        else array_push ($file_data, array("Цена 1", Display ($price_1)." ". GetCurrencyName($currency_1).($currency_1 == Calculation::USD ? " (". Display($price_1 * $usd)." руб)" : "").($currency_1 == Calculation::EURO ? " (". Display($price_1 * $euro)." руб)" : ""), "", ""));
         
         if($calculation->laminations_number > 0) {
-            array_push($file_data, array("Марка (лам 1)", $lamination1_film, "", ""));
-            array_push($file_data, array("Толщина (лам 1), мкм", $lamination1_thickness, "", ""));
-            array_push($file_data, array("Плотность (лам 1), г/м2", Display($lamination1_density), "", ""));
-            array_push($file_data, array("Лыжи (лам 1)", GetSkiName($lamination1_ski), "", ""));
-            if($lamination1_ski == Calculation::NONSTANDARD_SKI) array_push($file_data, array("Ширина пленки (лам 1), мм", Display($lamination1_width_ski), "", ""));
-            if($lamination1_customers_material) array_push ($file_data, array("Материал заказчика (лам 1)", "", "", ""));
-            else array_push ($file_data, array("Цена (лам 1)", Display($lamination1_price)." ". GetCurrencyName($lamination1_currency).($lamination1_currency == Calculation::USD ? " (".Display ($lamination1_price * $usd)." руб)" : "").($lamination1_currency == Calculation::EURO ? " (".Display ($lamination1_price * $euro)." руб)" : ""), "", ""));
+            array_push($file_data, array("Марка 2", $film_2, "", ""));
+            array_push($file_data, array("Толщина 2, мкм", $thickness_2, "", ""));
+            array_push($file_data, array("Плотность 2, г/м2", Display($density_2), "", ""));
+            array_push($file_data, array("Лыжи 2", GetSkiName($ski_2), "", ""));
+            if($ski_2 == Calculation::NONSTANDARD_SKI) array_push($file_data, array("Ширина пленки 2, мм", Display($width_ski_2), "", ""));
+            if($customers_material_2) array_push ($file_data, array("Материал заказчика 2", "", "", ""));
+            else array_push ($file_data, array("Цена 2", Display($price_2)." ". GetCurrencyName($currency_2).($currency_2 == Calculation::USD ? " (".Display ($price_2 * $usd)." руб)" : "").($currency_2 == Calculation::EURO ? " (".Display ($price_2 * $euro)." руб)" : ""), "", ""));
         }
         
         if($calculation->laminations_number > 1) {
-            array_push($file_data, array("Марка (лам 2)", $lamination2_film, "", ""));
-            array_push($file_data, array("Толщина (лам 2), мкм", $lamination2_thickness, "", ""));
-            array_push($file_data, array("Плотность (лам 2), г/м2", Display($lamination2_density), "", ""));
-            array_push($file_data, array("Лыжи (лам 2)", GetSkiName($lamination2_ski), "", ""));
-            if($lamination2_ski == Calculation::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки (лам 2), мм", Display($lamination2_width_ski), "", ""));
-            if($lamination2_customers_material) array_push ($file_data, array("Материал заказчика (лам 2)", "", "", ""));
-            else array_push ($file_data, array("Цена (лам 2)", Display($lamination2_price)." ". GetCurrencyName($lamination2_currency).($lamination2_currency == Calculation::USD ? " (".Display ($lamination2_price * $usd)." руб)" : "").($lamination2_currency == Calculation::EURO ? " (".Display ($lamination2_price * $euro)." руб)" : ""), "", ""));
+            array_push($file_data, array("Марка 3", $film_3, "", ""));
+            array_push($file_data, array("Толщина 3, мкм", $thickness_3, "", ""));
+            array_push($file_data, array("Плотность 3, г/м2", Display($density_3), "", ""));
+            array_push($file_data, array("Лыжи 3", GetSkiName($ski_3), "", ""));
+            if($ski_3 == Calculation::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки 3, мм", Display($width_ski_3), "", ""));
+            if($customers_material_3) array_push ($file_data, array("Материал заказчика (лам 2)", "", "", ""));
+            else array_push ($file_data, array("Цена 3", Display($price_3)." ". GetCurrencyName($currency_3).($currency_3 == Calculation::USD ? " (".Display ($price_3 * $usd)." руб)" : "").($currency_3 == Calculation::EURO ? " (".Display ($price_3 * $euro)." руб)" : ""), "", ""));
         }
         
         array_push($file_data, array("Ширина ручья, мм", $stream_width, "", ""));
@@ -438,52 +438,92 @@ if($id !== null) {
         array_push($file_data, array("", "", "", ""));
         
         // Значения по умолчанию
-        if(empty($lamination1_thickness)) $lamination1_thickness = 0;
-        if(empty($lamination1_density)) $lamination1_density = 0;
-        if(empty($lamination1_price)) $lamination1_price = 0;
-        if(empty($lamination2_thickness)) $lamination2_thickness = 0;
-        if(empty($lamination2_density)) $lamination2_density = 0;
-        if(empty($lamination2_price)) $lamination2_price = 0;
-        if($work_type_id = Calculation::WORK_TYPE_NOPRINT) $machine_id= null;
+        if(empty($thickness_2)) $thickness_2 = 0;
+        if(empty($density_2)) $density_2 = 0;
+        if(empty($price_2)) $price_2 = 0;
+        if(empty($thickness_3)) $thickness_3 = 0;
+        if(empty($density_3)) $density_3 = 0;
+        if(empty($price_3)) $price_3 = 0;
+        if($work_type_id == Calculation::WORK_TYPE_NOPRINT) $machine_id = null;
         if(empty($raport)) $raport = 0;
         if(empty($lamination_roller_width)) $lamination_roller_width = 0;
         if(empty($ink_number)) $ink_number = 0;
         
+        // Уравнивающий коэффициент
+        array_push($file_data, array("УК1", $calculation->uk1, "", "нет печати - 0, есть печать - 1"));
+        array_push($file_data, array("УК2", $calculation->uk2, "", "нет ламинации - 0, есть ламинация - 1"));
+        array_push($file_data, array("УК3", $calculation->uk3, "", "нет второй ламинации - 0, есть вторая ламинация - 1"));
+        
         // Результаты вычислений
         array_push($file_data, array("М2 чистые, м2",
-            Display($calculation->area_pure_1),
+            Display($calculation->area_pure_start),
             $unit == Calculation::KG ? "" : "|= ".Display($length)." * ".Display($stream_width)." * ".Display($quantity)." / 1000000",
             $unit == Calculation::KG ? "Считается только при размере тиража в штуках" : "длина этикетки * ширина ручья * количество штук / 1 000 000"));
         
         array_push($file_data, array("Масса тиража, кг", 
             Display($calculation->weight),
-            $unit == Calculation::KG ? "|= ".$quantity : "|= ".Display($calculation->area_pure_1)." * (".Display($density)." + ".Display($lamination1_density)." + ".Display($lamination2_density).") / 1000",
-            $unit == Calculation::KG ? "размер тиража в кг" : "м2 чистые * (уд. вес (осн) + уд. вес (лам 1) + уд. вес (лам 2)) / 1000"));
+            $unit == Calculation::KG ? "|= ".$quantity : "|= ".Display($calculation->area_pure_start)." * (".Display($density_1)." + ".Display($density_2)." + ".Display($density_3).") / 1000",
+            $unit == Calculation::KG ? "размер тиража в кг" : "м2 чистые * (уд. вес 1 + уд. вес 2 + уд. вес 3) / 1000"));
         
-        $width_formula = "";
-        switch ($ski) {
+        $width_1_formula = "";
+        switch ($ski_1) {
             case Calculation::NO_SKI:
-                $width_formula = "|= ".Display($streams_number)." * ".Display($stream_width);
+                $width_1_formula = "|= ".Display($streams_number)." * ".Display($stream_width);
                 break;
             
             case Calculation::STANDARD_SKI:
-                $width_formula = "|= ".Display($streams_number)." * ".Display($stream_width)." + 20";
+                $width_1_formula = "|= ".Display($streams_number)." * ".Display($stream_width)." + 20";
                 break;
             
             case Calculation::NONSTANDARD_SKI:
-                $width_formula = "|= ".Display($width_ski);
+                $width_1_formula = "|= ".Display($width_ski_1);
                 break;
         }
         
         array_push($file_data, array("Ширина материала 1, мм",
-            Display($calculation->width),
-            $width_formula,
-            "без лыж: количество ручьёв * ширина ручья, стандартные лыжи: количество ручьёв * ширина ручья + 20 мм, нестандартные лыжи: вводится вручную"));
+            Display($calculation->width_1),
+            $width_1_formula,
+            "без лыж 1: количество ручьёв * ширина ручья, стандартные лыжи 1: количество ручьёв * ширина ручья + 20 мм, нестандартные лыжи 1: вводится вручную"));
         
-        // Основные величины
-        /*foreach($calculation->base_values as $base_value) {
-            array_push($file_data, array($base_value->name, $base_value->display, $base_value->formula, $base_value->comment));
-        }*/
+        $width_2_formula = "";
+        switch ($ski_2) {
+            case Calculation::NO_SKI:
+                $width_2_formula = "|= ".Display($streams_number)." * ".Display($stream_width);
+                break;
+            
+            case Calculation::STANDARD_SKI:
+                $width_2_formula = "|= ".Display($streams_number)." * ".Display($stream_width)." + 20";
+                break;
+            
+            case Calculation::NONSTANDARD_SKI:
+                $width_2_formula = "|= ".Display($width_ski_2);
+                break;
+        }
+        
+        array_push($file_data, array("Ширина материала 2, мм",
+            Display($calculation->width_2),
+            $width_2_formula,
+            "без лыж 2: количество ручьёв * ширина ручья, стандартные лыжи 2: количество ручьёв * ширина ручья + 20 мм, нестандартные лыжи 2: вводится вручную"));
+        
+        $width_3_formula = "";
+        switch ($ski_3) {
+            case Calculation::NO_SKI:
+                $width_3_formula = "|= ".Display($streams_number)." * ".Display($stream_width);
+                break;
+            
+            case Calculation::STANDARD_SKI:
+                $width_3_formula = "|= ".Display($streams_number)." * ".Display($stream_width)." + 20";
+                break;
+            
+            case Calculation::NONSTANDARD_SKI:
+                $width_3_formula = "|= ".Display($width_ski_3);
+                break;
+        }
+        
+        array_push($file_data, array("Ширина материала 3, мм",
+            Display($calculation->width_3),
+            $width_3_formula,
+            "без лыж 3: количество ручьёв * ширина ручья, стандартные лыжи 3: количество ручьёв * ширина ручья + 20 мм, нестандартные лыжи 3: вводится вручную"));
         
         array_push($file_data, array("", "", "", ""));
         
