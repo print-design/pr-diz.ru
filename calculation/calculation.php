@@ -493,54 +493,18 @@ class Calculation {
         // М пог чистые 3, м
         $this->length_pure_start_3 = $this->area_pure_3 / ($streams_number * $stream_width / 1000);
         
-        /*$this->length_pure_1 = new CalculationItem("М пог. чистые (осн), м", 
-                $this->area_pure->value / ($streams_number * $stream_width / 1000), 
-                "|= ".$this->area_pure->display." / ($streams_number * $stream_width / 1000)", 
-                "м2 чистые осн / (количество ручьёв * ширина ручья / 1000)");
-        if($this->length_pure_1 !== null) array_push ($this->base_values, $this->length_pure_1);
-        
-        if($this->laminations_number > 0) {
-            $this->lamination1_length_pure_1 = new CalculationItem("М пог. чистые (лам 1), м", 
-                    $this->lamination1_area_pure->value / ($streams_number * $stream_width / 1000), 
-                    "|= ".$this->lamination1_area_pure->display." / ($streams_number * $stream_width / 1000)", 
-                    "м2 чистые лам 1 / (количество ручьёв * ширина ручья / 1000)");
-            if($this->lamination1_length_pure_1 !== null) array_push ($this->base_values, $this->lamination1_length_pure_1);
-        }
         
         
+        // СтартСтопОтход 1
+        $this->waste_length_1 = $tuning_data->waste_percent * $this->length_pure_start_1 / 100;
         
-        if($this->laminations_number > 1) {
-            $this->lamination2_length_pure_1 = new CalculationItem("М пог. чистые (лам 2), м", 
-                    $this->lamination2_area_pure->value / ($streams_number * $stream_width / 1000), 
-                    "|= ".$this->lamination2_area_pure->display." / ($streams_number * $stream_width / 1000)", 
-                    "м2 чистые лам 2 / (количество ручьёв * ширина ручья / 1000)");
-            if($this->lamination2_length_pure_1 !== null) array_push ($this->base_values, $this->lamination2_length_pure_1);
-        }*/
-        
+        // СтартСтопОтход 2
+        $this->waste_length_2 = $laminator_tuning_data->waste_percent * $this->length_pure_start_2 / 100;
+                
+        // СтартСтопОтход 3
+        $this->waste_length_3 = $laminator_tuning_data->waste_percent * $this->length_pure_start_3 / 100;
+                
         /*
-        
-        // СтартСтопОтход
-        $this->waste_length = new CalculationItem("СтартСтопОтход (осн), м", 
-                $tuning_data->waste_percent * $this->length_pure_1->value / 100, 
-                "|= ".$this->Display($tuning_data->waste_percent)." * ".$this->length_pure_1->display." / 100", 
-                "СтартСтопОтход печати * м. пог. чистые осн / 100");
-        if($this->waste_length !== null) array_push ($this->base_values, $this->waste_length);
-        
-        if($this->laminations_number > 0) {
-            $this->lamination1_waste_length = new CalculationItem("СтартСтопОтход (лам 1), м", 
-                    $laminator_tuning_data->waste_percent * $this->lamination1_length_pure_1->value / 100, 
-                    "|= ".$this->Display($laminator_tuning_data->waste_percent)." * ".$this->lamination1_length_pure_1->display." / 100", 
-                    "СтартСтопОтход ламинации * м. пог. чистые лам 1 / 100");
-            if($this->lamination1_waste_length !== null) array_push ($this->base_values, $this->lamination1_waste_length);
-        }
-        
-        if($this->laminations_number > 1) {
-            $this->lamination2_waste_length = new CalculationItem("СтартСтопОтход (лам 2), м", 
-                    $laminator_tuning_data->waste_percent * $this->lamination2_length_pure_1->value / 100, 
-                    "|= ".$this->Display($laminator_tuning_data->waste_percent)." * ".$this->lamination2_length_pure_1->display." / 100", 
-                    "СтартСтопОтход ламинации * м. пог. чистые (лам 2) / 100");
-            if($this->lamination2_waste_length !== null) array_push ($this->base_values, $this->lamination2_waste_length);
-        }
         
         // Метры погонные грязные
         $this->length_dirty_1 = new CalculationItem("М. пог. грязные (осн), м", 

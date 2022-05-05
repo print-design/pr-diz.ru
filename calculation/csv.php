@@ -555,6 +555,21 @@ if($id !== null) {
             "|= ".Display($calculation->area_pure_3)." / (".Display($streams_number)." * ".Display($stream_width)." / 1000)",
             "м2 чистые 3 / (количество ручьёв * ширина ручья / 1000)"));
         
+        array_push($file_data, array("СтартСтопОтход 1",
+            Display($calculation->waste_length_1),
+            "|= ".Display($tuning_data->waste_percent)." * ".Display($calculation->length_pure_start_1)." / 100",
+            "СтартСтопОтход печати * м пог чистые 1 / 100"));
+        
+        array_push($file_data, array("СтартСтопОтход 2",
+            Display($calculation->waste_length_2),
+            "|= ".Display($laminator_tuning_data->waste_percent)." * ".Display($calculation->length_pure_start_2)." / 100",
+            "СтартСтопОтход ламинации * м. пог. чистые 2 / 100"));
+        
+        array_push($file_data, array("СтартСтопОтход 3",
+            Display($calculation->waste_length_3),
+            "|= ".Display($laminator_tuning_data->waste_percent)." * ".Display($calculation->length_pure_start_3)." / 100",
+            "СтартСтопОтход ламинации * м. пог. чистые 3 / 100"));
+        
         array_push($file_data, array("", "", "", ""));
         
         // Расход краски
