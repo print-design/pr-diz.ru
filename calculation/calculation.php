@@ -473,31 +473,16 @@ class Calculation {
                 break;
         }
         
+        // М2 чистые 1, м2
+        $this->area_pure_1 = $this->weight * 1000 / ($density_1 + $density_2 + $density_3);
+        
+        // М2 чистые 2, м2
+        $this->area_pure_2 = $this->weight * 1000 / ($density_1 + $density_2 + $density_3) * $this->uk2;
+        
+        // М2 чистые 3, м2
+        $this->area_pure_3 = $this->weight * 1000 / ($density_1 + $density_2 + $density_3) * $this->uk3;
+        
         /*
-        
-
-        // Площадь чистая
-        $this->area_pure = new CalculationItem("М2 чистые (осн), м2", 
-                $this->weight * 1000 / ($density + (empty($lamination1_density) ? 0 : $lamination1_density) + (empty($lamination2_density) ? 0 : $lamination2_density)), 
-                "|= ".$this->weight." * 1000 / (".$this->Display($density)." + ".(empty($lamination1_density) ? 0 : $this->Display($lamination1_density))." + ".(empty($lamination2_density) ? 0 : $this->Display($lamination2_density)).")", 
-                "масса тиража * 1000 / (уд. вес осн + уд. вес лам 1 + уд. вес лам 2)");
-        if($this->area_pure !== null) array_push ($this->base_values, $this->area_pure);
-        
-        if($this->laminations_number > 0) {
-            $this->lamination1_area_pure = new CalculationItem("М2 чистые (лам 1), м2", 
-                    $this->weight * 1000 / ($density + (empty($lamination1_density) ? 0 : $lamination1_density) + (empty($lamination2_density) ? 0 : $lamination2_density)) * $this->uk2->value, 
-                    "|= ".$this->weight." * 1000 / (".$this->Display($density)." + ".(empty($lamination1_density) ? 0 : $this->Display($lamination1_density))." + ".(empty($lamination2_density) ? 0 : $this->Display($lamination2_density)).") * ".$this->uk2->display, 
-                    "масса тиража * 1000 / (уд. вес осн + уд. вес лам 1 + уд. вес лам 2) * УК2");
-            if($this->lamination1_area_pure !== null) array_push ($this->base_values, $this->lamination1_area_pure);
-        }
-        
-        if($this->laminations_number > 1) {
-            $this->lamination2_area_pure = new CalculationItem("М2 чистые (лам 2), м2", 
-                    $this->weight * 1000 / ($density + (empty($lamination1_density) ? 0 : $lamination1_density) + (empty($lamination2_density) ? 0 : $lamination2_density)) * $this->uk3->value, 
-                    "|= ".$this->weight." * 1000 / (".$this->Display($density)." + ".(empty($lamination1_density) ? 0 : $this->Display($lamination1_density))." + ".(empty($lamination2_density) ? 0 : $this->Display($lamination2_density)).") * ".$this->uk3->display, 
-                    "масса тиража * 1000 / (уд. вес осн + уд. вес лам 1 + уд. вес лам 2) * УК3");
-            if($this->lamination2_area_pure !== null) array_push ($this->base_values, $this->lamination2_area_pure);
-        }
         
         // Метры погонные чистые
         $this->length_pure_1 = new CalculationItem("М пог. чистые (осн), м", 

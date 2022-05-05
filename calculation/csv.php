@@ -525,6 +525,21 @@ if($id !== null) {
             $width_3_formula,
             "без лыж 3: количество ручьёв * ширина ручья, стандартные лыжи 3: количество ручьёв * ширина ручья + 20 мм, нестандартные лыжи 3: вводится вручную"));
         
+        array_push($file_data, array("М2 чистые 1, м2",
+            Display($calculation->area_pure_1),
+            "|= ".Display($calculation->weight)." * 1000 / (".Display($density_1)." + ".Display($density_2)." + ".Display($density_3),
+            "масса тиража * 1000 / (уд. вес 1 + уд. вес 2 + уд. вес 3)"));
+        
+        array_push($file_data, array("М2 чистые 2, м2",
+            Display($calculation->area_pure_2),
+            "|= ".Display($calculation->weight)." * 1000 / (".Display($density_1)." + ".Display($density_2)." + ".Display($density_3).") * ".$calculation->uk2,
+            "масса тиража * 1000 / (уд. вес 1 + уд. вес 2 + уд. вес 3) * УК2"));
+        
+        array_push($file_data, array("М2 чистые 3, м2",
+            Display($calculation->area_pure_3),
+            "|= ".Display($calculation->weight)." * 1000 / (".Display($density_1)." + ".Display($density_2)." + ".Display($density_3).") * ".$calculation->uk3,
+            "масса тиража * 1000 / (уд. вес 1 + уд. вес 2 + уд. вес 3) * УК3"));
+        
         array_push($file_data, array("", "", "", ""));
         
         // Расход краски
