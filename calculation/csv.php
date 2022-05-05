@@ -540,6 +540,21 @@ if($id !== null) {
             "|= ".Display($calculation->weight)." * 1000 / (".Display($density_1)." + ".Display($density_2)." + ".Display($density_3).") * ".$calculation->uk3,
             "масса тиража * 1000 / (уд. вес 1 + уд. вес 2 + уд. вес 3) * УК3"));
         
+        array_push($file_data, array("М пог чистые 1, м",
+            Display($calculation->length_pure_start_1),
+            "|= ".Display($calculation->area_pure_1)." / (".Display($streams_number)." * ".Display($stream_width)." / 1000)",
+            "м2 чистые 1 / (количество ручьёв * ширина ручья / 1000)"));
+        
+        array_push($file_data, array("М пог чистые 2, м",
+            Display($calculation->length_pure_start_2),
+            "|= ".Display($calculation->area_pure_2)." / (".Display($streams_number)." * ".Display($stream_width)." / 1000)",
+            "м2 чистые 2 / (количество ручьёв * ширина ручья / 1000)"));
+        
+        array_push($file_data, array("М пог чистые 2, м",
+            Display($calculation->length_pure_start_3),
+            "|= ".Display($calculation->area_pure_3)." / (".Display($streams_number)." * ".Display($stream_width)." / 1000)",
+            "м2 чистые 3 / (количество ручьёв * ширина ручья / 1000)"));
+        
         array_push($file_data, array("", "", "", ""));
         
         // Расход краски

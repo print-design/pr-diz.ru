@@ -482,10 +482,18 @@ class Calculation {
         // М2 чистые 3, м2
         $this->area_pure_3 = $this->weight * 1000 / ($density_1 + $density_2 + $density_3) * $this->uk3;
         
-        /*
         
-        // Метры погонные чистые
-        $this->length_pure_1 = new CalculationItem("М пог. чистые (осн), м", 
+        
+        // М пог чистые 1, м
+        $this->length_pure_start_1 = $this->area_pure_1 / ($streams_number * $stream_width / 1000);
+        
+        // М пог чистые 2, м
+        $this->length_pure_start_2 = $this->area_pure_2 / ($streams_number * $stream_width / 1000);
+        
+        // М пог чистые 3, м
+        $this->length_pure_start_3 = $this->area_pure_3 / ($streams_number * $stream_width / 1000);
+        
+        /*$this->length_pure_1 = new CalculationItem("М пог. чистые (осн), м", 
                 $this->area_pure->value / ($streams_number * $stream_width / 1000), 
                 "|= ".$this->area_pure->display." / ($streams_number * $stream_width / 1000)", 
                 "м2 чистые осн / (количество ручьёв * ширина ручья / 1000)");
@@ -499,13 +507,17 @@ class Calculation {
             if($this->lamination1_length_pure_1 !== null) array_push ($this->base_values, $this->lamination1_length_pure_1);
         }
         
+        
+        
         if($this->laminations_number > 1) {
             $this->lamination2_length_pure_1 = new CalculationItem("М пог. чистые (лам 2), м", 
                     $this->lamination2_area_pure->value / ($streams_number * $stream_width / 1000), 
                     "|= ".$this->lamination2_area_pure->display." / ($streams_number * $stream_width / 1000)", 
                     "м2 чистые лам 2 / (количество ручьёв * ширина ручья / 1000)");
             if($this->lamination2_length_pure_1 !== null) array_push ($this->base_values, $this->lamination2_length_pure_1);
-        }
+        }*/
+        
+        /*
         
         // СтартСтопОтход
         $this->waste_length = new CalculationItem("СтартСтопОтход (осн), м", 
