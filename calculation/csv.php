@@ -570,6 +570,55 @@ if($id !== null) {
             "|= ".Display($laminator_tuning_data->waste_percent)." * ".Display($calculation->length_pure_start_3)." / 100",
             "СтартСтопОтход ламинации * м. пог. чистые 3 / 100"));
         
+        array_push($file_data, array("М пог грязные 1",
+            Display($calculation->length_dirty_start_1),
+            "|= ".Display($calculation->length_pure_start_1)." + (".Display($ink_number)." * ".Display($tuning_data->length).") + (".Display($calculation->laminations_number)." * ".Display($laminator_tuning_data->length).") + ".Display($calculation->waste_length_1),
+            "м пог чистые 1 + (красочность * метраж приладки 1 краски) + (количество ламинаций * метраж приладки ламинации) + СтартСтопОтход 1"));
+        
+        array_push($file_data, array("М пог грязные 2",
+            Display($calculation->length_dirty_start_2),
+            "|= ".Display($calculation->length_pure_start_2)." + (".Display($calculation->laminations_number)." * ".Display($laminator_tuning_data->length).") + ".Display($calculation->waste_length_2),
+            "м пог чистые 2 + (количество ламинаций * метраж приладки ламинации) + СтартСтопОтход 2"));
+        
+        array_push($file_data, array("М пог грязные 3",
+            Display($calculation->length_dirty_start_3),
+            "|= ".Display($calculation->length_pure_start_3)." + (".Display($laminator_tuning_data->length)." * ".Display($calculation->uk3).") + ".Display($calculation->waste_length_3),
+            "м пог чистые 3 + (метраж приладки ламинации * УК3) + СтартСтопОтход 3"));
+        
+        array_push($file_data, array("М2 грязные 1",
+            Display($calculation->area_dirty_1),
+            "|= ".Display($calculation->length_dirty_start_1)." * ".Display($calculation->width_1)." / 1000",
+            "м пог грязные 1 * ширина материала 1 / 1000"));
+        
+        array_push($file_data, array("М2 грязные 2",
+            Display($calculation->area_dirty_2),
+            "|= ".Display($calculation->length_dirty_start_2)." * ".Display($calculation->width_2)." / 1000",
+            "м пог грязные 2 * ширина материала 2 / 1000"));
+        
+        array_push($file_data, array("М2 грязные 3",
+            Display($calculation->area_dirty_3),
+            "|= ".Display($calculation->length_dirty_start_3)." * ".Display($calculation->width_3)." / 1000",
+            "м пог грязные * ширина материала 3 / 1000"));
+        
+        //****************************************
+        // Массы и длины плёнок
+        //****************************************
+        
+        array_push($file_data, array("Масса плёнки чистая 1",
+            Display($calculation->weight_pure_1),
+            "|= ".Display($calculation->length_pure_start_1)." * ".Display($calculation->width_1)." * ".Display($density_1)." / 1000000",
+            "м пог чистые 1 * ширина материала 1 * уд вес 1 / 1000000"));
+        
+        array_push($file_data, array("Масса плёнки чистая 2",
+            Display($calculation->weight_pure_2),
+            "|= ".Display($calculation->length_pure_start_2)." * ".Display($calculation->width_2)." * ".Display($density_2)." / 1000000",
+            "м пог чистые 2 * ширина материала 2 * уд вес 2 / 1000000"));
+        
+        array_push($file_data, array("Масса плёнки чистая 3",
+            Display($calculation->weight_pure_3),
+            "|= ".Display($calculation->length_pure_start_3)." * ".Display($calculation->width_3)." * ".Display($density_3)." / 1000000",
+            "м пог чистые 3 * ширина материала 3 * уд вес 3 / 1000000"));
+        
         array_push($file_data, array("", "", "", ""));
         
         // Расход краски
