@@ -289,7 +289,8 @@ class Calculation {
     public $work_price_1, $work_price_2, $work_price_3;
     public $print_area;
     public $ink_1kg_mix_weight; // расход КраскаСмеси на 1 кг краски
-    public $ink_solvent_kg_price; // цена 1 кг чистого раствортеля для краски
+    public $ink_flexol82_kg_price; // цена 1 кг чистого флексоля 82 для краски
+    public $ink_etoxypropanol_kg_price; // цена 1 кг чистого этоксипропанола для краски
     
     public $ink_kg_prices; // цена 1 кг чистой краски
     public $mix_ink_kg_prices; // цена 1 кг КраскаСмеси
@@ -373,7 +374,10 @@ class Calculation {
         if(empty($thickness_2)) $thickness_2 = 0;
         if(empty($density_2)) $density_2 = 0;
         if(empty($price_2)) $price_2 = 0;
-        if($work_type_id == self::WORK_TYPE_NOPRINT) $machine_id = null;
+        if($work_type_id == self::WORK_TYPE_NOPRINT) {
+            $machine_id = null;
+            $ink_number = 0;
+        }
         if(empty($raport)) $raport = 0;
         if(empty($lamination_roller_width)) $lamination_roller_width = 0;
         if(empty($ink_number)) $ink_number = 0;
@@ -624,10 +628,59 @@ class Calculation {
         //****************************************
         // Расход краски
         //****************************************
-            
-        /*
         
-        if($work_type_id == self::WORK_TYPE_PRINT) {
+        // Площадь запечатки, м2
+        $this->print_area = $this->length_dirty_1 * ($stream_width * $streams_number + 10) / 1000;
+        
+        // Расход КраскаСмеси на 1 кг краски, кг
+        $this->ink_1kg_mix_weight = 1 + $ink_data->solvent_part;
+        
+        // Цена 1 кг чистого флексоля 82, руб
+        $this->ink_flexol82_kg_price = $ink_data->solvent_flexol82 * $this->GetCurrencyRate($ink_data->solvent_flexol82_currency, $usd, $euro);
+        
+        // Цена 1 кг чистого этоксипропанола, руб
+        $this->ink_etoxypropanol_kg_price = $ink_data->solvent_etoxipropanol * $this->GetCurrencyRate($ink_data->solvent_etoxipropanol_currency, $usd, $euro);
+        
+        // Если печатаем на Комифлекс, то пользуемся флексолем82, иначе - этоксипропанолом
+        $ink_solvent_kg_price = 0;
+        
+        if($machine_shortname == self::COMIFLEX) {
+            $ink_solvent_kg_price = $this->ink_flexol82_kg_price;
+        }
+        else {
+            $ink_solvent_kg_price = $this->ink_etoxypropanol_kg_price;
+        }
+        
+        $this->ink_kg_prices = array();
+        $this->mix_ink_kg_prices = array();
+        $this->ink_expenses = array();
+        $this->ink_prices = array();
+        
+        for($i=1; $i<=$ink_number; $i++) {
+            $ink = "ink_$i";
+            $cmyk = "cmyk_$i";
+            $percent = "percent_$i";
+            
+            // Цена 1 кг чистой краски, руб
+            $price = $this->GetInkPrice($$ink, $$cmyk, $ink_data->c, $ink_data->c_currency, $ink_data->m, $ink_data->m_currency, $ink_data->y, $ink_data->y_currency, $ink_data->k, $ink_data->k_currency, $ink_data->panton, $ink_data->panton_currency, $ink_data->white, $ink_data->white_currency, $ink_data->lacquer, $ink_data->lacquer_currency);
+            $ink_kg_price = $price->value * $this->GetCurrencyRate($price->currency, $usd, $euro);
+            $this->ink_kg_prices[$i] = $ink_kg_price;
+            
+            // Цена 1 кг КраскаСмеси, руб
+            $mix_ink_kg_price = (($ink_kg_price * 1) + ($ink_solvent_kg_price * $ink_data->solvent_part)) / $this->ink_1kg_mix_weight;
+            $this->mix_ink_kg_prices[$i] = $mix_ink_kg_price;
+            
+            // Расход КраскаСмеси, кг
+            $ink_expense = $this->print_area * $this->GetInkExpense($$ink, $$cmyk, $ink_data->c_expense, $ink_data->m_expense, $ink_data->y_expense, $ink_data->k_expense, $ink_data->panton_expense, $ink_data->white_expense, $ink_data->lacquer_expense) * $$percent / 1000 / 100;
+            $this->ink_expenses[$i] = $ink_expense;
+            
+            // Стоимость КраскаСмеси, руб
+            $ink_price = $ink_expense * $mix_ink_kg_price;
+            $this->ink_prices[$i] = $ink_price;
+        }
+        
+        
+        /*if($work_type_id == self::WORK_TYPE_PRINT) {
             // Площадь запечатки
             $this->print_area = new CalculationItem("Площадь запечатки, м2", $this->length_dirty_1->value * ($stream_width * $streams_number + 10) / 1000, "|= ".$this->length_dirty_1->display." * ($stream_width * $streams_number + 10) / 1000", "м. пог. грязные * (ширина ручья * кол-во ручьёв + 10 мм) / 1000");
             if($this->print_area !== null) array_push ($this->base_values, $this->print_area);
@@ -674,12 +727,13 @@ class Calculation {
                 $ink_price = new CalculationItem("Стоимость КраскаСмеси (краска $i), руб", $ink_expense->value * $mix_ink_kg_price->value, "|= ".$ink_expense->display." * ".$mix_ink_kg_price->display, "Расход КраскаСмеси * цена 1 кг КраскаСмеси");
                 $this->ink_prices[$i] = $ink_price;
             }
-        }
+        }*/
         
         //********************************************
         // Расход клея
         //********************************************
         
+        /*
         $this->glue_values = array();
         
         if($this->laminations_number > 0) {

@@ -762,6 +762,62 @@ if($id !== null) {
         // Расход краски
         //****************************************
         
+        array_push($file_data, array("Площадь запечатки, м2",
+            Display($calculation->print_area),
+            "|= ".Display($calculation->length_dirty_1)." * (".Display($stream_width)." * ".Display($streams_number)." + 10) / 1000",
+            "м пог грязные 1 * (ширина ручья * кол-во ручьёв + 10 мм) / 1000"));
+        
+        array_push($file_data, array("Расход КраскаСмеси на 1 кг краски, кг",
+            Display($calculation->ink_1kg_mix_weight),
+            "|= 1 + ".Display($ink_data->solvent_part),
+            "1 + расход растворителя на 1 кг краски"));
+        
+        array_push($file_data, array("Цена 1 кг чистого флексоля 82, руб",
+            Display($calculation->ink_flexol82_kg_price),
+            "|= ".Display($ink_data->solvent_flexol82)." * ".Display($calculation->GetCurrencyRate($ink_data->solvent_flexol82_currency, $usd, $euro)),
+            "цена 1 кг флексоля 82 * курс валюты"));
+        
+        array_push($file_data, array("Цена 1 кг чистого этоксипропанола, руб",
+            Display($calculation->ink_etoxypropanol_kg_price),
+            "|= ". Display($ink_data->solvent_etoxipropanol)." * ". Display($calculation->GetCurrencyRate($ink_data->solvent_etoxipropanol_currency, $usd, $euro)),
+            "цена 1 кг этоксипропанола * курс валюты"));
+        
+        $ink_solvent_kg_price = 0;
+            
+        if($machine_shortname == Calculation::COMIFLEX) {
+            $ink_solvent_kg_price = $calculation->ink_flexol82_kg_price;
+        }
+        else {
+            $ink_solvent_kg_price = $calculation->ink_etoxypropanol_kg_price;
+        }
+        
+        for($i=1; $i<=$ink_number; $i++) {
+            $ink = "ink_$i";
+            $cmyk = "cmyk_$i";
+            $percent = "percent_$i";
+            $price = $calculation->GetInkPrice($$ink, $$cmyk, $ink_data->c, $ink_data->c_currency, $ink_data->m, $ink_data->m_currency, $ink_data->y, $ink_data->y_currency, $ink_data->k, $ink_data->k_currency, $ink_data->panton, $ink_data->panton_currency, $ink_data->white, $ink_data->white_currency, $ink_data->lacquer, $ink_data->lacquer_currency);
+            
+            array_push($file_data, array("Цена 1 кг чистой краски $i, руб",
+                Display($calculation->ink_kg_prices[$i]),
+                "|= ". Display($price->value)." * ". Display($calculation->GetCurrencyRate($price->currency, $usd, $euro)),
+                "цена 1 кг чистой краски $i * курс валюты"));
+            
+            array_push($file_data, array("Цена 1 кг КраскаСмеси $i, руб",
+                Display($calculation->mix_ink_kg_prices[$i]),
+                "|= ((".Display($calculation->ink_kg_prices[$i])." * 1) + (".Display($ink_solvent_kg_price)." * ".Display($ink_data->solvent_part).")) / ".Display($calculation->ink_1kg_mix_weight),
+                "((цена 1 кг чистой краски $i * 1) + (цена 1 кг чистого растворителя * расход растворителя на 1 кг краски)) / расход КраскаСмеси на 1 кг краски"));
+            
+            array_push($file_data, array("Расход КраскаСмеси $i, кг",
+                Display($calculation->ink_expenses[$i]),
+                "|= ".Display($calculation->print_area)." * ".Display($calculation->GetInkExpense($$ink, $$cmyk, $ink_data->c_expense, $ink_data->m_expense, $ink_data->y_expense, $ink_data->k_expense, $ink_data->panton_expense, $ink_data->white_expense, $ink_data->lacquer_expense))." * ".Display($$percent)." / 1000 / 100",
+                "площадь запечатки * расход КраскаСмеси за 1 м2 * процент краски $i / 1000 / 100"));
+            
+            array_push($file_data, array("Стоимость КраскаСмеси $i, руб",
+                Display($calculation->ink_prices[$i]),
+                "|= ". Display($calculation->mix_ink_kg_prices[$i])." * ". Display($calculation->ink_expenses[$i]),
+                "Расход КраскаСмеси $i * цена 1 кг КраскаСмеси $i"));
+        }
+        
         // Расход краски
         /*if(!empty($ink_number)) {
             array_push($file_data, array("Красочность", $ink_number, "", ""));
