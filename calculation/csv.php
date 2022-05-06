@@ -902,8 +902,42 @@ if($id !== null) {
             "|= ".Display($raport)." + 20",
             "рапорт + 20мм"));
         
+        array_push($file_data, array("Ширина форм, мм",
+            Display($calculation->cliche_width),
+            "|= (".Display($streams_number)." * ".Display($stream_width)." + 20) + ".((!empty($ski_1) && $ski_1 == Calculation::NO_SKI) ? 0 : 20),
+            "(кол-во ручьёв * ширина ручьёв + 20 мм), если есть лыжи (стандартные или нестандартные), то ещё + 20 мм"));
+        
+        array_push($file_data, array("Площадь форм, см",
+            Display($calculation->cliche_area),
+            "|= ".Display($calculation->cliche_height)." * ".Display($calculation->cliche_width)." / 100",
+            "высота форм * ширина форм / 100"));
+        
         array_push($file_data, array("Количество новых форм",
             Display($calculation->cliche_new_number),"", ""));
+        
+        for($i=1; $i<=$ink_number; $i++) {
+            $cliche = "cliche_$i";
+            
+            $cliche_sm_price = 0;
+            $cliche_currency = "";
+            
+            switch ($$cliche) {
+                case Calculation::FLINT:
+                    $cliche_sm_price = $cliche_data->flint;
+                    $cliche_currency = $cliche_data->flint_currency;
+                    break;
+                
+                case Calculation::KODAK:
+                    $cliche_sm_price = $cliche_data->kodak;
+                    $cliche_currency = $cliche_data->kodak_currency;
+                    break;
+            }
+            
+            array_push($file_data, array("Цена формы $i, руб",
+                Display($calculation->cliche_prices[$i]),
+                "|= ".Display($calculation->cliche_area)." * ".Display($cliche_sm_price)." * ".Display($calculation->GetCurrencyRate($cliche_currency, $usd, $euro)),
+                "площадь формы * цена формы за 1 см * курс валюты"));
+        }
         
         //***************************************************
         // Сохранение в файл

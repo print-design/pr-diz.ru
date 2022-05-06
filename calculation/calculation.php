@@ -310,8 +310,9 @@ class Calculation {
     
     public $cliche_height; // высота формы
     public $cliche_width; // ширина формы
-    public $cliche_prices; // цена форм
+    public $cliche_area; // площадь формы
     public $cliche_new_number; // количество новых форм
+    public $cliche_prices; // цена форм
 
     public function __construct(TuningData $tuning_data, 
             TuningData $laminator_tuning_data,
@@ -599,13 +600,13 @@ class Calculation {
         
         
         // Время печати (без приладки) 1, ч
-        $this->print_time_1 = ($this->length_pure_start_1 + $this->waste_length_1) / $machine_data->speed / 1000 * $this->uk1;
+        $this->print_time_1 = $machine_data->speed == 0 ? 0 : ($this->length_pure_start_1 + $this->waste_length_1) / $machine_data->speed / 1000 * $this->uk1;
         
         // Время ламинации (без приладки) 2, ч
-        $this->lamination_time_2 = ($this->length_pure_start_2 + $this->waste_length_2) / $laminator_machine_data->speed / 1000 * $this->uk2;
+        $this->lamination_time_2 = $laminator_machine_data->speed == 0 ? 0 : ($this->length_pure_start_2 + $this->waste_length_2) / $laminator_machine_data->speed / 1000 * $this->uk2;
         
         // Время ламинации (без приладки) 3, ч
-        $this->lamination_time_3 = ($this->length_pure_start_3 + $this->waste_length_3) / $laminator_machine_data->speed / 1000 * $this->uk3;
+        $this->lamination_time_3 = $laminator_machine_data->speed == 0 ? 0 : ($this->length_pure_start_3 + $this->waste_length_3) / $laminator_machine_data->speed / 1000 * $this->uk3;
         
         
         // Общее время выполнения тиража 1, ч
@@ -729,10 +730,16 @@ class Calculation {
         // Стоимость форм
         //***********************************
         
+        $this->cliche_prices = array();
+        
         // Высота форм, мм
         $this->cliche_height = $raport + 20;
         
-        //public $cliche_width; // Ширина форм
+        // Ширина форм, мм
+        $this->cliche_width = ($streams_number * $stream_width + 20) + ((!empty($ski_1) && $ski_1 == self::NO_SKI) ? 0 : 20);
+        
+        // Площадь форм, см
+        $this->cliche_area = $this->cliche_height * $this->cliche_width / 100;
         
         $this->cliche_prices = array();
         
@@ -746,7 +753,24 @@ class Calculation {
                 $this->cliche_new_number += 1;
             }
             
-            // Цена формы
+            $cliche_sm_price = 0;
+            $cliche_currency = "";
+            
+            switch ($$cliche) {
+                case self::FLINT:
+                    $cliche_sm_price = $cliche_data->flint;
+                    $cliche_currency = $cliche_data->flint_currency;
+                    break;
+                
+                case self::KODAK:
+                    $cliche_sm_price = $cliche_data->kodak;
+                    $cliche_currency = $cliche_data->kodak_currency;
+                    break;
+            }
+            
+            // Цена формы, руб
+            $cliche_price = $this->cliche_area * $cliche_sm_price * $this->GetCurrencyRate($cliche_currency, $usd, $euro);
+            $this->cliche_prices[$i] = $cliche_price;
         }
         
         
