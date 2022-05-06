@@ -693,6 +693,13 @@ if($id !== null) {
             "|= ".Display($calculation->weight_dirty_3)." * ".Display($price_3)." * ".Display($calculation->GetCurrencyRate($currency_3, $usd, $euro)),
             "масса пленки 3 * цена плёнки 3 * курс валюты"));
         
+        array_push($file_data, array("ОБЩАЯ СТОИМОСТЬ ВСЕХ ПЛЁНОК, руб",
+            Display($calculation->film_price_1 + $calculation->film_price_2 + $calculation->film_price_3),
+            "|= ".Display($calculation->film_price_1)." + ".Display($calculation->film_price_2)." + ".Display($calculation->film_price_3),
+            "стоимость грязная 1 + стоимость грязная 2 + стоимость грязная 3"));
+        
+        array_push($file_data, array("", "", "", ""));
+        
         //*****************************************
         // Время - деньги
         //*****************************************
@@ -757,6 +764,11 @@ if($id !== null) {
             "|= ".Display($calculation->work_time_3)." * ".Display($laminator_machine_data->price),
             "общее время выполнения 3 * цена работы оборудования 3"));
         
+        array_push($file_data, array("ОБЩАЯ СТОИМОСТЬ РАБОТ, руб",
+            Display($calculation->work_price_1 + $calculation->work_price_2 + $calculation->work_price_3),
+            "|= ".Display($calculation->work_price_1)." + ".Display($calculation->work_price_2)." + ".Display($calculation->work_price_3),
+            "стоимость выполнения тиража 1 + стоимость выполнения тиража 2 + стоимость выполнения тиража 3"));
+        
         array_push($file_data, array("", "", "", ""));
         
         //****************************************
@@ -792,6 +804,9 @@ if($id !== null) {
             $ink_solvent_kg_price = $calculation->ink_etoxypropanol_kg_price;
         }
         
+        $total_ink_cost = 0;
+        $total_ink_cost_formula = "";
+        
         for($i=1; $i<=$ink_number; $i++) {
             $ink = "ink_$i";
             $cmyk = "cmyk_$i";
@@ -817,7 +832,18 @@ if($id !== null) {
                 Display($calculation->ink_prices[$i]),
                 "|= ". Display($calculation->mix_ink_kg_prices[$i])." * ". Display($calculation->ink_expenses[$i]),
                 "Расход КраскаСмеси $i * цена 1 кг КраскаСмеси $i"));
+            
+            $total_ink_cost += $calculation->ink_prices[$i];
+            if(!empty($total_ink_cost_formula)) {
+                $total_ink_cost_formula .= " + ";
+            }
+            $total_ink_cost_formula .= Display($calculation->ink_prices[$i]);
         }
+        
+        array_push($file_data, array("СТОИМОСТЬ КРАСКИ, руб",
+            Display($total_ink_cost),
+            "|= ".$total_ink_cost_formula,
+            "Сумма стоимость всех красок"));
         
         array_push($file_data, array("", "", "", ""));
         
@@ -891,6 +917,11 @@ if($id !== null) {
             "|= ".Display($calculation->glue_expense3)." * ".Display($calculation->mix_glue_kg_price),
             "расход КлеяСмеси 3 * цена 1 кг КлеяСмеси"));
         
+        array_push($file_data, array("СТОИМОСТЬ КЛЕЯ, руб",
+            Display($calculation->glue_price2 + $calculation->glue_price3),
+            "|= ".Display($calculation->glue_price2)." + ".Display($calculation->glue_price3),
+            "стоимость клея 2 + стоимость клея 3"));
+        
         array_push($file_data, array("", "", "", ""));
         
         //***********************************
@@ -915,6 +946,9 @@ if($id !== null) {
         array_push($file_data, array("Количество новых форм",
             Display($calculation->cliche_new_number),"", ""));
         
+        $total_cliche_price = 0;
+        $total_cliche_price_formula = "";
+        
         for($i=1; $i<=$ink_number; $i++) {
             $cliche = "cliche_$i";
             
@@ -937,7 +971,18 @@ if($id !== null) {
                 Display($calculation->cliche_prices[$i]),
                 "|= ".Display($calculation->cliche_area)." * ".Display($cliche_sm_price)." * ".Display($calculation->GetCurrencyRate($cliche_currency, $usd, $euro)),
                 "площадь формы * цена формы за 1 см * курс валюты"));
+            
+            $total_cliche_price += $calculation->cliche_prices[$i];
+            if(!empty($total_cliche_price_formula)) {
+                $total_cliche_price_formula .= " + ";
+            }
+            $total_cliche_price_formula .= Display($calculation->cliche_prices[$i]);
         }
+        
+        array_push($file_data, array("СТОИМОСТЬ ФОРМ",
+            Display($total_cliche_price),
+            "|= ".$total_cliche_price_formula,
+            "сумма стоимости всех форм"));
         
         //***************************************************
         // Сохранение в файл
