@@ -772,68 +772,6 @@ class Calculation {
             $cliche_price = $this->cliche_area * $cliche_sm_price * $this->GetCurrencyRate($cliche_currency, $usd, $euro);
             $this->cliche_prices[$i] = $cliche_price;
         }
-        
-        
-        
-        /*
-        $this->cliche_values = array();
-        
-        if($work_type_id == self::WORK_TYPE_PRINT) {    
-            $ski_width = 0;
-            
-            if($ski == self::STANDARD_SKI || $ski == self::NONSTANDARD_SKI) {
-                $ski_width = 20;
-            }
-            
-            // Площадь формы
-            $this->cliche_area = new CalculationItem("Площадь формы, см2", ($raport + 20) * ($stream_width * $streams_number + $ski_width) / 100, "|= (". $this->Display($raport)." + 20) * (". $this->Display($stream_width)." * ". $this->Display($streams_number)." + $ski_width) / 100", "(рапорт + 20) * (ширина ручья * кол-во ручьёв + ширина лыж) / 100");
-            if($this->cliche_area !== null) array_push ($this->cliche_values, $this->cliche_area);
-            
-            // Стоимость каждой формы
-            $cliche_price_value = 0;
-            $cliche_price_formula = "";
-            $cliche_price_comment = "";
-            
-            for($i=1; $i<=$ink_number; $i++) {
-                $cliche_type = "cliche_$i";
-                $cliche_item = null;
-                
-                if($$cliche_type == self::OLD) {
-                    $cliche_item = new CalculationItem("Цена формы $i, руб", 0, "|= 0", "Цена старой формы 0 руб.");
-                }
-                elseif($$cliche_type == self::FLINT) {
-                    $cliche_item = new CalculationItem("Цена формы $i, руб", $this->cliche_area->value * $cliche_data->flint * $this->GetCurrencyRate($cliche_data->flint_currency, $usd, $euro), "|= ". $this->cliche_area->display." * ". $this->Display($cliche_data->flint)." * ". $this->Display($this->GetCurrencyRate($cliche_data->flint_currency, $usd, $euro)), "площадь формы  * цена формы Флинт за 1 см2 * курс валюты");
-                }
-                elseif($$cliche_type == self::KODAK) {
-                    $cliche_item = new CalculationItem("Цена формы $i, руб", $this->cliche_area->value * $cliche_data->kodak * $this->GetCurrencyRate($cliche_data->kodak_currency, $usd, $euro), "|= ".$this->cliche_area->display." * ". $this->Display($cliche_data->kodak)." * ". $this->Display($this->GetCurrencyRate($cliche_data->kodak_currency, $usd, $euro)), "площадь формы * цена формы Кодак за 1 см2 * курс валюты");
-                }
-                elseif($$cliche_type == self::TVER) {
-                    $cliche_item = new CalculationItem("Цена формы $i, руб", $this->cliche_area->value * $cliche_data->tver * $this->GetCurrencyRate($cliche_data->tver_currency, $usd, $euro), "|= ". $this->cliche_area->display." * ". $this->Display($cliche_data->tver)." * ". $this->Display($this->GetCurrencyRate($cliche_data->tver_currency, $usd, $euro)), "площадь формы * цена формы Тверь за 1 см2 * курс валюты");
-                }
-                
-                if($cliche_item !== null) {
-                    array_push ($this->cliche_values, $cliche_item);
-                    
-                    $cliche_price_value += $cliche_item->value;
-                    if(mb_strlen($cliche_price_formula) > 0) {
-                        $cliche_price_formula .= " + ";
-                        $cliche_price_comment .= " + ";
-                    }
-                    $cliche_price_formula .= $cliche_item->display;
-                    $cliche_price_comment .= "цена формы $i";
-                }
-            }
-            
-            // Стоимость всех форм
-            $this->cliche_price = new CalculationItem("Стоимость форм", $cliche_price_value, "|= ".$cliche_price_formula, $cliche_price_comment);
-            if($this->cliche_price !== null) array_push ($this->cliche_values, $this->cliche_price);
-            
-            // Стоимость скотча
-            $this->scotch_price = new CalculationItem("Стоимость скотча", $cliche_data->scotch * ($this->cliche_area->value / 10000) * $ink_number * $this->GetCurrencyRate($cliche_data->scotch_currency, $usd, $euro), "|= ".$this->Display($cliche_data->scotch)." * (".$this->cliche_area->display." / 10000) * $ink_number * ". $this->Display($this->GetCurrencyRate($cliche_data->scotch_currency, $usd, $euro)), "цена скотча за м2 * (площадь формы в см2 / 10000) * красочность * курс валюты");
-            if($this->scotch_price !== null) array_push ($this->cliche_values, $this->scotch_price);
-        }
-         * 
-         */
     }
 }
 ?>
