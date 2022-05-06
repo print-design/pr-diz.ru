@@ -693,8 +693,9 @@ if($id !== null) {
             "|= ".Display($calculation->weight_dirty_3)." * ".Display($price_3)." * ".Display($calculation->GetCurrencyRate($currency_3, $usd, $euro)),
             "масса пленки 3 * цена плёнки 3 * курс валюты"));
         
+        $total_film_cost = $calculation->film_price_1 + $calculation->film_price_2 + $calculation->film_price_3;
         array_push($file_data, array("ОБЩАЯ СТОИМОСТЬ ВСЕХ ПЛЁНОК, руб",
-            Display($calculation->film_price_1 + $calculation->film_price_2 + $calculation->film_price_3),
+            Display($total_film_cost),
             "|= ".Display($calculation->film_price_1)." + ".Display($calculation->film_price_2)." + ".Display($calculation->film_price_3),
             "стоимость грязная 1 + стоимость грязная 2 + стоимость грязная 3"));
         
@@ -764,8 +765,9 @@ if($id !== null) {
             "|= ".Display($calculation->work_time_3)." * ".Display($laminator_machine_data->price),
             "общее время выполнения 3 * цена работы оборудования 3"));
         
+        $total_work_cost = $calculation->work_price_1 + $calculation->work_price_2 + $calculation->work_price_3;
         array_push($file_data, array("ОБЩАЯ СТОИМОСТЬ РАБОТ, руб",
-            Display($calculation->work_price_1 + $calculation->work_price_2 + $calculation->work_price_3),
+            Display($total_work_cost),
             "|= ".Display($calculation->work_price_1)." + ".Display($calculation->work_price_2)." + ".Display($calculation->work_price_3),
             "стоимость выполнения тиража 1 + стоимость выполнения тиража 2 + стоимость выполнения тиража 3"));
         
@@ -917,10 +919,19 @@ if($id !== null) {
             "|= ".Display($calculation->glue_expense3)." * ".Display($calculation->mix_glue_kg_price),
             "расход КлеяСмеси 3 * цена 1 кг КлеяСмеси"));
         
+        $total_glue_cost = $calculation->glue_price2 + $calculation->glue_price3;
         array_push($file_data, array("СТОИМОСТЬ КЛЕЯ, руб",
-            Display($calculation->glue_price2 + $calculation->glue_price3),
+            Display($total_glue_cost),
             "|= ".Display($calculation->glue_price2)." + ".Display($calculation->glue_price3),
             "стоимость клея 2 + стоимость клея 3"));
+        
+        array_push($file_data, array("", "", "", ""));
+        
+        $total_cost = $total_film_cost + $total_work_cost + $total_ink_cost + $total_glue_cost;
+        array_push($file_data, array("СЕБЕСТОИМОСТЬ",
+        Display($total_cost),
+            "|= ".Display($total_film_cost)." + ".Display($total_work_cost)." + ".Display($total_ink_cost)." + ".Display($total_glue_cost),
+            "стоимость плёнки + стоимость работы + стоимость краски + стоимость клея"));
         
         array_push($file_data, array("", "", "", ""));
         
