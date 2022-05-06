@@ -316,15 +316,13 @@ if(!empty($id)) {
                 $param_cliche_1, $param_cliche_2, $param_cliche_3, $param_cliche_4, $param_cliche_5, $param_cliche_6, $param_cliche_7, $param_cliche_8);
     
         // Себестоимость = стоимость плёнки + работ + краски + клея
-        $film_cost = $calculation->film_price->value + (empty($calculation->lamination1_film_price) ? 0 : $calculation->lamination1_film_price->value) + (empty($calculation->lamination2_film_price) ? 0 : $calculation->lamination2_film_price->value);
-        $work_cost = (empty($calculation->work_price) ? 0 : $calculation->work_price->value) + (empty($calculation->lamination1_work_price) ? 0 : $calculation->lamination1_work_price->value) + (empty($calculation->lamination2_work_price) ? 0 : $calculation->lamination2_work_price->value);
+        $film_cost = $calculation->film_price_1 + $calculation->film_price_2 + $calculation->film_price_3;
+        $work_cost = $calculation->work_price_1 + $calculation->work_price_2 + $calculation->work_price_3;
         $ink_cost = 0;
         for($i=1; $i<=$param_ink_number; $i++) {
-            if(!empty($calculation->ink_prices[$i]->value)) {
-                $ink_cost += $calculation->ink_prices[$i]->value;
-            }
+            $ink_cost += $calculation->ink_prices[$i];
         }
-        $glue_cost = (empty($calculation->glue_price1) ? 0 : $calculation->glue_price1->value) + (empty($calculation->glue_price2) ? 0 : $calculation->glue_price2->value);
+        $glue_cost = $calculation->glue_price2 + $calculation->glue_price3;
         $new_cost = $film_cost + $work_cost + $ink_cost + $glue_cost;
         if($new_cost === null) $new_cost = "NULL";
     
@@ -333,111 +331,112 @@ if(!empty($id)) {
         if($new_cost_per_unit === null) $new_cost_per_unit = "NULL";
         
         // Себестоимость форм
-        $new_cliche_price = empty($calculation->cliche_price) ? null : $calculation->cliche_price->value;
+        $new_cliche_price = 0;
+        for($i=1; $i<=$param_ink_number; $i++) {
+            $new_cliche_price += $calculation->cliche_prices[$i];
+        }
         if($new_cliche_price == null) $new_cliche_price = "NULL";
     
         // Материалы = масса с приладкой осн. + масса с приладкой лам. 1 + масса с приладкой лам. 2
-        $new_total_weight_dirty = $calculation->weight_dirty->value + (empty($calculation->lamination1_weight_dirty) ? 0 : $calculation->lamination1_weight_dirty->value) + (empty($calculation->lamination2_weight_dirty) ? 0 : $calculation->lamination2_weight_dirty->value);
+        $new_total_weight_dirty = $calculation->weight_dirty_1 + $calculation->weight_dirty_2 + $calculation->weight_dirty_3;
         if($new_total_weight_dirty === null) $new_total_weight_dirty = "NULL";
     
         // Основная пленка цена = стоимость основной плёнки
-        $new_film_price = $calculation->film_price->value;
+        $new_film_price = $calculation->film_price_1;
         if($new_film_price === null) $new_film_price = "NULL";
     
         // Основная плёнка цена за кг = стоимость основной плёнки / вес
-        $new_film_price_per_unit = $calculation->film_price->value / $calculation->weight_dirty->value;
+        $new_film_price_per_unit = $calculation->film_price_1 / $calculation->weight_dirty_1;
         if($new_film_price_per_unit === null) $new_film_price_per_unit = "NULL";
     
         // Ширина основной плёнки = ширина осн. плёнки
-        $new_width = $calculation->width->value;
+        $new_width = $calculation->width_1;
         if($new_width === null) $new_width = "NULL";
     
         // Масса без приладки = масса плёнки чистая
-        $new_weight_pure = $calculation->weight_pure->value;
+        $new_weight_pure = $calculation->weight_pure_1;
         if($new_weight_pure === null) $new_weight_pure = "NULL";
     
         // Длина без приладки = длина плёнки чистая
-        $new_length_pure = $calculation->length_pure->value;
+        $new_length_pure = $calculation->length_pure_1;
         if($new_length_pure === null) $new_length_pure = "NULL";
     
         // Масса с приладкой = масса плёнки грязная
-        $new_weight_dirty = $calculation->weight_dirty->value;
+        $new_weight_dirty = $calculation->weight_dirty_1;
         if($new_weight_dirty === null) $new_weight_dirty = "NULL";
     
         // Длина с приладкой = метры погонные грязные
-        $new_length_dirty = $calculation->length_dirty->value;
+        $new_length_dirty = $calculation->length_dirty_1;
         if($new_length_dirty === null) $new_length_dirty = "NULL";
     
         // Лам 1 цена = лам 1 цена
-        $new_lamination1_film_price = empty($calculation->lamination1_film_price) ? null : $calculation->lamination1_film_price->value;
+        $new_lamination1_film_price = $calculation->film_price_2;
         if($new_lamination1_film_price === null) $new_lamination1_film_price = "NULL";
     
         // Лам 1 цена за кг = лам 1 цена / вес
-        $new_lamination1_film_price_per_unit = empty($calculation->lamination1_film_price) || empty($calculation->lamination1_weight_dirty) ? null : $calculation->lamination1_film_price->value / $calculation->lamination1_weight_dirty->value;
+        $new_lamination1_film_price_per_unit = empty($calculation->weight_dirty_2) ? 0 : $calculation->film_price_2 / $calculation->weight_dirty_2;
         if($new_lamination1_film_price_per_unit === null) $new_lamination1_film_price_per_unit = "NULL";
     
         // Лам 1 ширина = лам 1 ширина
-        $new_lamination1_width = empty($calculation->lamination1_width) ? null : $calculation->lamination1_width->value;
+        $new_lamination1_width = $calculation->width_2;
         if($new_lamination1_width === null) $new_lamination1_width = "NULL";
         
         // Лам 1 масса без приладки = лам 1 масса чистая
-        $new_lamination1_weight_pure = empty($calculation->lamination1_weight_pure) ? null : $calculation->lamination1_weight_pure->value;
+        $new_lamination1_weight_pure = $calculation->weight_pure_2;
         if($new_lamination1_weight_pure === null) $new_lamination1_weight_pure = "NULL";
     
         // Лам 1 длина без приладки = лам 1 длина чистая
-        $new_lamination1_length_pure = empty($calculation->lamination1_length_pure) ? null : $calculation->lamination1_length_pure->value;
+        $new_lamination1_length_pure = $calculation->length_pure_2;
         if($new_lamination1_length_pure === null) $new_lamination1_length_pure = "NULL";
     
         // Лам 1 масса с приладкой = лам 1 масса грязная
-        $new_lamination1_weight_dirty = empty($calculation->lamination1_weight_dirty) ? null : $calculation->lamination1_weight_dirty->value;
+        $new_lamination1_weight_dirty = $calculation->weight_dirty_2;
         if($new_lamination1_weight_dirty === null) $new_lamination1_weight_dirty = "NULL";
     
         // Лам 1 длина с приладкой = лам 1 длина грязная
-        $new_lamination1_length_dirty = empty($calculation->lamination1_length_dirty) ? null : $calculation->lamination1_length_dirty->value;
+        $new_lamination1_length_dirty = $calculation->length_dirty_2;
         if($new_lamination1_length_dirty === null) $new_lamination1_length_dirty = "NULL";
     
         // Лам 2 плёнка цена
-        $new_lamination2_film_price = empty($calculation->lamination2_film_price) ? null : $calculation->lamination2_film_price->value;
+        $new_lamination2_film_price = $calculation->film_price_3;
         if($new_lamination2_film_price === null) $new_lamination2_film_price = "NULL";
     
         // Лам 2 цена за кг = лам 2 плёнка цена / вес
-        $new_lamination2_film_price_per_unit = empty($calculation->lamination2_film_price) || empty($calculation->lamination2_weight_dirty) ? null : $calculation->lamination2_film_price->value / $calculation->lamination2_weight_dirty->value;
+        $new_lamination2_film_price_per_unit = empty($calculation->weight_dirty_3) ? 0 : $calculation->film_price_3 / $calculation->weight_dirty_3;
         if($new_lamination2_film_price_per_unit === null) $new_lamination2_film_price_per_unit = "NULL";
     
         // Лам 2 ширина = лам 2 ширина
-        $new_lamination2_width = empty($calculation->lamination2_width) ? null : $calculation->lamination2_width->value;
+        $new_lamination2_width = $calculation->width_3;
         if($new_lamination2_width === null) $new_lamination2_width = "NULL";
     
         // Лам 2 масса без приладки
-        $new_lamination2_weight_pure = empty($calculation->lamination2_weight_pure) ? null : $calculation->lamination2_weight_pure->value;
+        $new_lamination2_weight_pure = $calculation->weight_pure_3;
         if($new_lamination2_weight_pure === null) $new_lamination2_weight_pure = "NULL";
     
         // Лам 2 длина без приладки
-        $new_lamination2_length_pure = empty($calculation->lamination2_length_pure) ? null : $calculation->lamination2_length_pure->value;
+        $new_lamination2_length_pure = $calculation->length_pure_3;
         if($new_lamination2_length_pure === null) $new_lamination2_length_pure = "NULL";
     
         // Лам 2 масса с приладкой = лам 2 масса грязная
-        $new_lamination2_weight_dirty = empty($calculation->lamination2_weight_dirty) ? null : $calculation->lamination2_weight_dirty->value;
+        $new_lamination2_weight_dirty = $calculation->weight_dirty_3;
         if($new_lamination2_weight_dirty === null) $new_lamination2_weight_dirty = "NULL";
     
         // Лам 2 длина с приладкой = лам 2 длина грязная
-        $new_lamination2_length_dirty = empty($calculation->lamination2_length_dirty) ? null : $calculation->lamination2_length_dirty->value;
+        $new_lamination2_length_dirty = $calculation->length_dirty_3;
         if($new_lamination2_length_dirty === null) $new_lamination2_length_dirty = "NULL";
     
         // Отходы плёнка цена = (масса грязная - масса чистая) * стоимость за 1 кг * курс валюты
-        $new_film_waste_price = ($calculation->weight_dirty->value - $calculation->weight_pure->value) * $param_price * $calculation->GetCurrencyRate($param_currency, $new_usd, $new_euro);
+        $new_film_waste_price = ($calculation->weight_dirty_1 - $calculation->weight_pure_1) * $param_price * $calculation->GetCurrencyRate($param_currency, $new_usd, $new_euro);
         if($new_film_waste_price === null) $new_film_waste_price = "NULL";
     
         // Отходы плёнка масса = масса грязная - масса чистая
-        $new_film_waste = $calculation->weight_dirty->value - $calculation->weight_pure->value;
+        $new_film_waste = $calculation->weight_dirty_1 - $calculation->weight_pure_1;
         if($new_film_waste === null) $new_film_waste = "NULL";
     
         // Стоимость всех красок
         $ink_price = 0;
         for($i=1; $i<=$param_ink_number; $i++) {
-            if(!empty($calculation->ink_prices[$i]->value)) {
-                $ink_price += $calculation->ink_prices[$i]->value;
-            }
+            $ink_price += $calculation->ink_prices[$i];
         }
         $new_ink_price = null;
         if(!empty($ink_price)) $new_ink_price = $ink_price;
@@ -446,74 +445,72 @@ if(!empty($id)) {
         // Расход всех красок
         $ink_expense = 0;
         for($i=1; $i<=$param_ink_number; $i++) {
-            if(!empty($calculation->ink_expenses[$i]->value)) {
-                $ink_expense += $calculation->ink_expenses[$i]->value;
-            }
+            $ink_expense += $calculation->ink_expenses[$i];
         }
         $new_ink_weight = null;
         if(!empty($ink_expense)) $new_ink_weight = $ink_expense;
         if($new_ink_weight === null) $new_ink_weight = "NULL";
     
         // Работа по печати тиража, руб
-        $new_work_price = empty($calculation->work_price) ? null : $calculation->work_price->value;
+        $new_work_price = $calculation->work_price_1;
         if($new_work_price === null) $new_work_price = "NULL";
     
         // Работа по печати тиража, ч
-        $new_work_time = empty($calculation->work_time->value) ? null : $calculation->work_time->value;
+        $new_work_time = $calculation->work_time_1;
         if($new_work_time === null) $new_work_time = "NULL";
     
         // Отходы плёнки ламинации 1, руб
-        $new_lamination1_film_waste_price = (empty($calculation->lamination1_weight_dirty) || empty($calculation->lamination1_weight_pure)) ? null : ($calculation->lamination1_weight_dirty->value - $calculation->lamination1_weight_pure->value) * $param_lamination1_price * $calculation->GetCurrencyRate($param_lamination1_currency, $new_usd, $new_euro);
+        $new_lamination1_film_waste_price = ($calculation->weight_dirty_2 - $calculation->weight_pure_2) * $param_lamination1_price * $calculation->GetCurrencyRate($param_lamination1_currency, $new_usd, $new_euro);
         if($new_lamination1_film_waste_price === null) $new_lamination1_film_waste_price = "NULL";
     
         // Отходы плёнки ламинации 1, кг
-        $new_lamination1_film_waste = (empty($calculation->lamination1_weight_dirty) || empty($calculation->lamination1_weight_pure)) ? null : $calculation->lamination1_weight_dirty->value - $calculation->lamination1_weight_pure->value;
+        $new_lamination1_film_waste = $calculation->weight_dirty_2 - $calculation->weight_pure_2;
         if($new_lamination1_film_waste === null) $new_lamination1_film_waste = "NULL";
     
         // Стоимость клея лам 1
-        $new_glue_price1 = empty($calculation->glue_price1) ? null : $calculation->glue_price1->value;
+        $new_glue_price1 = $calculation->glue_price2;
         if($new_glue_price1 === null) $new_glue_price1 = "NULL";
     
         // Расход клея лам 1
-        $new_glue_expense1 = empty($calculation->glue_expense1) ? null : $calculation->glue_expense1->value;
+        $new_glue_expense1 = $calculation->glue_expense2;
         if($new_glue_expense1 === null) $new_glue_expense1 = "NULL";
     
         // Работа лам 1, руб
-        $new_lamination1_work_price = empty($calculation->lamination1_work_price) ? null : $calculation->lamination1_work_price->value;
+        $new_lamination1_work_price = $calculation->work_price_2;
         if($new_lamination1_work_price === null) $new_lamination1_work_price = "NULL";
     
         // Работа лам 1, ч
-        $new_lamination1_work_time = empty($calculation->lamination1_work_time) ? null : $calculation->lamination1_work_time->value;
+        $new_lamination1_work_time = $calculation->work_time_2;
         if($new_lamination1_work_time === null) $new_lamination1_work_time = "NULL";
     
         // Отходы плёнки лам 2, руб
-        $new_lamination2_film_waste_price = (empty($calculation->lamination2_weight_dirty) || empty($calculation->lamination2_weight_pure)) ? null : ($calculation->lamination2_weight_dirty->value - $calculation->lamination2_weight_pure->value) * $param_lamination2_price * $calculation->GetCurrencyRate($param_lamination2_currency, $new_usd, $new_euro);
+        $new_lamination2_film_waste_price = ($calculation->weight_dirty_3 - $calculation->weight_pure_3) * $param_lamination2_price * $calculation->GetCurrencyRate($param_lamination2_currency, $new_usd, $new_euro);
         if($new_lamination2_film_waste_price === null) $new_lamination2_film_waste_price = "NULL";
     
         // Отходы плёнки лам 2, кг
-        $new_lamination2_film_waste = (empty($calculation->lamination2_weight_dirty) || empty($calculation->lamination2_weight_pure)) ? null : $calculation->lamination2_weight_dirty->value - $calculation->lamination2_weight_pure->value;
+        $new_lamination2_film_waste = $calculation->weight_dirty_3 - $calculation->weight_pure_3;
         if($new_lamination2_film_waste === null) $new_lamination2_film_waste = "NULL";
     
         // Стоимость клея лам 2
-        $new_glue_price2 = empty($calculation->glue_price2) ? null : $calculation->glue_price2->value;
+        $new_glue_price2 = $calculation->glue_price3;
         if($new_glue_price2 === null) $new_glue_price2 = "NULL";
     
         // Расход клея лам 2
-        $new_glue_expense2 = empty($calculation->glue_expense2) ? null : $calculation->glue_expense2->value;
+        $new_glue_expense2 = $calculation->glue_expense3;
         if($new_glue_expense2 === null) $new_glue_expense2 = "NULL";
     
         // Работа лам 2, руб
-        $new_lamination2_work_price = empty($calculation->lamination2_work_price) ? null : $calculation->lamination2_work_price->value;
+        $new_lamination2_work_price = $calculation->work_price_3;
         if($new_lamination2_work_price === null) $new_lamination2_work_price = "NULL";
     
         // Работа лам 2, ч
-        $new_lamination2_work_time = empty($calculation->lamination2_work_time) ? null : $calculation->lamination2_work_time->value;
+        $new_lamination2_work_time = $calculation->work_time_3;
         if($new_lamination2_work_time === null) $new_lamination2_work_time = "NULL";
     
         //**************************************
         // Наценка
         $new_extracharge = null;
-        $ech_weight = $calculation->weight->value;
+        $ech_weight = $calculation->weight;
         $ech_type = 0;
     
         if($work_type_id == Calculation::WORK_TYPE_NOPRINT) {
