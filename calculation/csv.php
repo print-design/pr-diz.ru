@@ -244,6 +244,7 @@ if($id !== null) {
         if($work_type_id == Calculation::WORK_TYPE_NOPRINT) {
             $machine_id = null;
             $ink_number = 0;
+            $raport = 0;
         }
     }
     
@@ -818,38 +819,91 @@ if($id !== null) {
                 "Расход КраскаСмеси $i * цена 1 кг КраскаСмеси $i"));
         }
         
-        // Расход краски
-        /*if(!empty($ink_number)) {
-            array_push($file_data, array("Красочность", $ink_number, "", ""));
-            
-            for($i=1; $i<=$ink_number; $i++) {
-                // Цена 1 кг чистой краски
-                array_push($file_data, array($calculation->ink_kg_prices[$i]->name, $calculation->ink_kg_prices[$i]->display, $calculation->ink_kg_prices[$i]->formula, $calculation->ink_kg_prices[$i]->comment));
-                
-                // Цена 1 кг КраскаСмеси
-                array_push($file_data, array($calculation->mix_ink_kg_prices[$i]->name, $calculation->mix_ink_kg_prices[$i]->display, $calculation->mix_ink_kg_prices[$i]->formula, $calculation->mix_ink_kg_prices[$i]->comment));
-                
-                // Расход КраскаСмеси, кг
-                array_push($file_data, array($calculation->ink_expenses[$i]->name, $calculation->ink_expenses[$i]->display, $calculation->ink_expenses[$i]->formula, $calculation->ink_expenses[$i]->comment));
-                
-                // Стоимость КраскаСмеси, руб
-                array_push($file_data, array($calculation->ink_prices[$i]->name, $calculation->ink_prices[$i]->display, $calculation->ink_prices[$i]->formula, $calculation->ink_prices[$i]->comment));
-            }
-            
-            array_push($file_data, array("", "", "", ""));
-        }*/
+        array_push($file_data, array("", "", "", ""));
         
+        //********************************************
         // Расход клея
-        /*foreach($calculation->glue_values as $glue_value) {
-            array_push($file_data, array($glue_value->name, $glue_value->display, $glue_value->formula, $glue_value->comment));
-        }*/
+        //********************************************
+        
+        array_push($file_data, array("Расход КлеяСмеси на 1 кг клея, кг",
+            Display($calculation->glue_kg_weight),
+            "|= 1 + ".Display($glue_data->solvent_part),
+            "1 + расход растворителя на 1 кг клея"));
+        
+        array_push($file_data, array("Цена 1 кг чистого клея, руб",
+            Display($calculation->glue_kg_price),
+            "|= ".Display($glue_data->glue)." * ".Display($calculation->GetCurrencyRate($glue_data->glue_currency, $usd, $euro)),
+            "цена 1 кг клея * курс валюты"));
+        
+        array_push($file_data, array("Цена 1 кг чистого растворителя для клея, руб",
+            Display($calculation->glue_solvent_kg_price),
+            "|= ".Display($glue_data->solvent)." * ".Display($calculation->GetCurrencyRate($glue_data->solvent_currency, $usd, $euro)),
+            "цена 1 кг растворителя для клея * курс валюты"));
+        
+        array_push($file_data, array("Цена 1 кг КлеяСмеси, руб",
+            Display($calculation->mix_glue_kg_price),
+            "|= ((1 * ".Display($calculation->glue_kg_price).") + (".Display($glue_data->solvent_part)." * ".Display($calculation->glue_solvent_kg_price).")) / ".Display($calculation->glue_kg_weight),
+            "((1 * цена 1 кг чистого клея) + (расход растворителя на 1 кг клея * цена 1 кг чистого растворителя)) / расход КлеяСмеси на 1 кг клея"));
+        
+        array_push($file_data, array("Площадь заклейки 2, м2",
+            Display($calculation->glue_area2),
+            "|= ".Display($calculation->length_dirty_2)." * ".Display($lamination_roller_width)." / 1000",
+            "м пог грязные 2 * ширина ламинирующего вала / 1000"));
+        
+        array_push($file_data, array("Площадь заклейки 3, м2",
+            Display($calculation->glue_area3),
+            "|= ".Display($calculation->length_dirty_3)." * ".Display($lamination_roller_width)." / 1000",
+            "м пог грязные 2 * ширина ламинирующего вала / 1000"));
+        
+        $glue_expense2_formula = Display($calculation->glue_area2)." * ".Display($glue_data->glue_expense)." / 1000";
+        $glue_expense2_comment = "площадь заклейки 2 * расход КлеяСмеси в 1 м2 / 1000";
+        
+        if((strlen($film_1) > 3 && substr($film_1, 0, 3) == "Pet") || (strlen($film_2) > 3 && substr($film_2, 0, 3) == "Pet")) {
+            $glue_expense2_formula = Display($calculation->glue_area2)." * ".Display($glue_data->glue_expense_pet)." / 1000";
+            $glue_expense2_comment = "площадь заклейки 2 * расход КлеяСмеси для ПЭТ в 1 м2 / 1000";
+        }
+        
+        array_push($file_data, array("Расход КлеяСмеси 2, кг",
+            Display($calculation->glue_expense2),
+            "|= ".$glue_expense2_formula,
+            $glue_expense2_comment));
+        
+        $glue_expense3_formula = Display($calculation->glue_area3)." * ".Display($glue_data->glue_expense)." / 1000";
+        $glue_expense3_comment = "площадь заклейки 3 * расход КлеяСмеси в 1 м2 / 1000";
+        
+        if((strlen($film_2) > 3 && substr($film_2, 0, 3) == "Pet") || (strlen($film_3) > 3 && substr($film_3, 0, 3) == "Pet")) {
+            $glue_expense2_formula = Display($calculation->glue_area3)." * ".Display($glue_data->glue_expense_pet)." / 1000";
+            $glue_expense3_comment = "площадь заклейки 3 * расход КлеяСмеси для ПЭТ в 1 м2 / 1000";
+        }
+        
+        array_push($file_data, array("Расход КлеяСмеси 3, кг",
+            Display($calculation->glue_expense3),
+            "|= ".$glue_expense3_formula,
+            $glue_expense3_comment));
+        
+        array_push($file_data, array("Стоимость КлеяСмеси 2, руб",
+            Display($calculation->glue_price2),
+            "|= ".Display($calculation->glue_expense2)." * ".Display($calculation->mix_glue_kg_price),
+            "расход КлеяСмеси 2 * цена 1 кг КлеяСмеси"));
+        
+        array_push($file_data, array("Стоимость КлеяСмеси 3, руб",
+            Display($calculation->glue_price3),
+            "|= ".Display($calculation->glue_expense3)." * ".Display($calculation->mix_glue_kg_price),
+            "расход КлеяСмеси 3 * цена 1 кг КлеяСмеси"));
         
         array_push($file_data, array("", "", "", ""));
         
+        //***********************************
         // Стоимость форм
-        /*foreach($calculation->cliche_values as $cliche_value) {
-            array_push($file_data, array($cliche_value->name, $cliche_value->display, $cliche_value->formula, $cliche_value->comment));
-        }*/
+        //***********************************
+        
+        array_push($file_data, array("Высота форм, мм",
+            Display($calculation->cliche_height),
+            "|= ".Display($raport)." + 20",
+            "рапорт + 20мм"));
+        
+        array_push($file_data, array("Количество новых форм",
+            Display($calculation->cliche_new_number),"", ""));
         
         //***************************************************
         // Сохранение в файл
