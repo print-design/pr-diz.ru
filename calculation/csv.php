@@ -696,19 +696,19 @@ if($id !== null) {
             "|= ".Display($calculation->weight_dirty_3)." * ".Display($price_3)." * ".Display($calculation->GetCurrencyRate($currency_3, $usd, $euro)),
             "масса пленки 3 * цена плёнки 3 * курс валюты"));
         
-        $film_price_unit_1 = $calculation->film_price_1 / $calculation->weight_dirty_1;
+        $film_price_unit_1 = empty($calculation->weight_dirty_1) ? 0 : $calculation->film_price_1 / $calculation->weight_dirty_1;
         array_push($file_data, array("Стоимость за кг 1, руб",
             Display($film_price_unit_1),
             "|= ".Display($calculation->film_price_1)." / ".Display($calculation->weight_dirty_1),
             "общая стоимость грязная 1 / масса плёнки грязная 1"));
         
-        $film_price_unit_2 = $calculation->film_price_2 / $calculation->weight_dirty_2;
+        $film_price_unit_2 = empty($calculation->weight_dirty_2) ? 0 : $calculation->film_price_2 / $calculation->weight_dirty_2;
         array_push($file_data, array("Стоимость за кг 2, руб",
             Display($film_price_unit_2),
             "|= ".Display($calculation->film_price_2)." / ".Display($calculation->weight_dirty_2),
             "общая стоимость грязная 2 / масса плёнки грязная 2"));
         
-        $film_price_unit_3 = $calculation->film_price_3 / $calculation->weight_dirty_3;
+        $film_price_unit_3 = empty($calculation->weight_dirty_3) ? 0 : $calculation->film_price_3 / $calculation->weight_dirty_3;
         array_push($file_data, array("Стоимость за кг 3, руб",
             Display($film_price_unit_3),
             "|= ".Display($calculation->film_price_3)." / ".Display($calculation->weight_dirty_3),
@@ -758,7 +758,13 @@ if($id !== null) {
         array_push($file_data, array("ОБЩАЯ СТОИМОСТЬ ВСЕХ ПЛЁНОК, руб",
             Display($total_film_cost),
             "|= ".Display($calculation->film_price_1)." + ".Display($calculation->film_price_2)." + ".Display($calculation->film_price_3),
-            "стоимость грязная 1 + стоимость грязная 2 + стоимость грязная 3"));
+            "стоимость плёнки грязная 1 + стоимость плёнки грязная 2 + стоимость плёнки грязная 3"));
+        
+        $total_film_weight = $calculation->weight_dirty_1 + $calculation->weight_dirty_2 + $calculation->weight_dirty_3;
+        array_push($file_data, array("ОБЩИЙ ВЕС ВСЕХ ПЛЁНОК, кг",
+            Display($total_film_weight),
+            "|= ".Display($calculation->weight_dirty_1)." + ".Display($calculation->weight_dirty_2)." + ".Display($calculation->weight_dirty_3),
+            "масса плёнки грязная 1 + масса плёнки грязная 2 + масса плёнки грязная 3"));
         
         array_push($file_data, array("", "", "", ""));
         
