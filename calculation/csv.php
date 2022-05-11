@@ -866,12 +866,12 @@ if($id !== null) {
         
         array_push($file_data, array("Цена 1 кг чистого флексоля 82, руб",
             Display($calculation->ink_flexol82_kg_price),
-            "|= ".Display($ink_data->solvent_flexol82)." * ".Display($calculation->GetCurrencyRate($ink_data->solvent_flexol82_currency, $usd, $euro)),
+            "|= ".Display($ink_data->solvent_flexol82_price)." * ".Display($calculation->GetCurrencyRate($ink_data->solvent_flexol82_currency, $usd, $euro)),
             "цена 1 кг флексоля 82 * курс валюты"));
         
         array_push($file_data, array("Цена 1 кг чистого этоксипропанола, руб",
             Display($calculation->ink_etoxypropanol_kg_price),
-            "|= ". Display($ink_data->solvent_etoxipropanol)." * ". Display($calculation->GetCurrencyRate($ink_data->solvent_etoxipropanol_currency, $usd, $euro)),
+            "|= ". Display($ink_data->solvent_etoxipropanol_price)." * ". Display($calculation->GetCurrencyRate($ink_data->solvent_etoxipropanol_currency, $usd, $euro)),
             "цена 1 кг этоксипропанола * курс валюты"));
         
         $ink_solvent_kg_price = 0;
@@ -892,7 +892,7 @@ if($id !== null) {
             $ink = "ink_$i";
             $cmyk = "cmyk_$i";
             $percent = "percent_$i";
-            $price = $calculation->GetInkPrice($$ink, $$cmyk, $ink_data->c, $ink_data->c_currency, $ink_data->m, $ink_data->m_currency, $ink_data->y, $ink_data->y_currency, $ink_data->k, $ink_data->k_currency, $ink_data->panton, $ink_data->panton_currency, $ink_data->white, $ink_data->white_currency, $ink_data->lacquer, $ink_data->lacquer_currency);
+            $price = $calculation->GetInkPrice($$ink, $$cmyk, $ink_data->c_price, $ink_data->c_currency, $ink_data->m_price, $ink_data->m_currency, $ink_data->y_price, $ink_data->y_currency, $ink_data->k_price, $ink_data->k_currency, $ink_data->panton_price, $ink_data->panton_currency, $ink_data->white_price, $ink_data->white_currency, $ink_data->lacquer_price, $ink_data->lacquer_currency);
             
             array_push($file_data, array("Цена 1 кг чистой краски $i, руб",
                 Display($calculation->ink_kg_prices[$i]),
@@ -950,12 +950,12 @@ if($id !== null) {
         
         array_push($file_data, array("Цена 1 кг чистого клея, руб",
             Display($calculation->glue_kg_price),
-            "|= ".Display($glue_data->glue)." * ".Display($calculation->GetCurrencyRate($glue_data->glue_currency, $usd, $euro)),
+            "|= ".Display($glue_data->glue_price)." * ".Display($calculation->GetCurrencyRate($glue_data->glue_currency, $usd, $euro)),
             "цена 1 кг клея * курс валюты"));
         
         array_push($file_data, array("Цена 1 кг чистого растворителя для клея, руб",
             Display($calculation->glue_solvent_kg_price),
-            "|= ".Display($glue_data->solvent)." * ".Display($calculation->GetCurrencyRate($glue_data->solvent_currency, $usd, $euro)),
+            "|= ".Display($glue_data->solvent_price)." * ".Display($calculation->GetCurrencyRate($glue_data->solvent_currency, $usd, $euro)),
             "цена 1 кг растворителя для клея * курс валюты"));
         
         array_push($file_data, array("Цена 1 кг КлеяСмеси, руб",
@@ -1105,12 +1105,12 @@ if($id !== null) {
             
             switch ($$cliche) {
                 case Calculation::FLINT:
-                    $cliche_sm_price = $cliche_data->flint;
+                    $cliche_sm_price = $cliche_data->flint_price;
                     $cliche_currency = $cliche_data->flint_currency;
                     break;
                 
                 case Calculation::KODAK:
-                    $cliche_sm_price = $cliche_data->kodak;
+                    $cliche_sm_price = $cliche_data->kodak_price;
                     $cliche_currency = $cliche_data->kodak_currency;
                     break;
             }

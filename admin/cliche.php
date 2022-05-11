@@ -66,7 +66,7 @@ if(null !== filter_input(INPUT_POST, 'norm_cliche_submit')) {
                 $old_flint_currency != $new_flint_currency || 
                 $old_kodak_price != $new_kodak_price || 
                 $old_kodak_currency != $new_kodak_currency || 
-                $old_scotch != $new_scotch || 
+                $old_scotch_price != $new_scotch_price || 
                 $old_scotch_currency != $new_scotch_currency) {
             $sql = "insert into norm_cliche (flint_price, flint_currency, kodak_price, kodak_currency, scotch_price, scotch_currency) values ($new_flint_price, '$new_flint_currency', $new_kodak_price, '$new_kodak_currency', $new_scotch_price, '$new_scotch_currency')";
             $executer = new Executer($sql);
@@ -93,11 +93,11 @@ if(empty($error_message)) {
 }
 
 if($row = $fetcher->Fetch()) {
-    $flint_price = $row['flint'];
+    $flint_price = $row['flint_price'];
     $flint_currency = $row['flint_currency'];
-    $kodak_price = $row['kodak'];
+    $kodak_price = $row['kodak_price'];
     $kodak_currency = $row['kodak_currency'];
-    $scotch_price = $row['scotch'];
+    $scotch_price = $row['scotch_price'];
     $scotch_currency = $row['scotch_currency'];
 }
 ?>

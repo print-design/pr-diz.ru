@@ -253,7 +253,7 @@ if(!empty($id)) {
         $glue_data = new DataGlue(null, null, null, null, null, null, null);
     
         if(empty($error_message)) {
-            if(empty($machine_id)) {
+            if(empty($param_machine_id)) {
                 $data_priladka = new DataPriladka(0, 0, 0);
             }
             else {
@@ -272,7 +272,7 @@ if(!empty($id)) {
                 $data_priladka_laminator = new DataPriladka($row['time'], $row['length'], $row['waste_percent']);
             }
         
-            if(empty($machine_id)) {
+            if(empty($param_machine_id)) {
                 $data_machine = new DataMachine(0, 0, 0);
             }
             else {
@@ -302,7 +302,7 @@ if(!empty($id)) {
                     . "from norm_glue where date <= '$param_date' order by id desc limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
-                $glue_data = new DataGlue($row['glue'], $row['glue_currency'], $row['glue_expense'], $row['glue_expense_pet'], $row['solvent'], $row['solvent_currency'], $row['solvent_part']);
+                $glue_data = new DataGlue($row['glue_price'], $row['glue_currency'], $row['glue_expense'], $row['glue_expense_pet'], $row['solvent_price'], $row['solvent_currency'], $row['solvent_part']);
             }
             
             $sql = "select flint_price, flint_currency, kodak_price, kodak_currency, scotch_price, scotch_currency "

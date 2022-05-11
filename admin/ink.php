@@ -692,7 +692,7 @@ if($row = $fetcher->Fetch()) {
                                                class="form-control float-only" 
                                                id="solvent_etoxipropanol_price" 
                                                name="solvent_etoxipropanol_price" 
-                                               value="<?= empty($solvent_etoxipropanol_price_price) || $solvent_etoxipropanol_price == 0.0 ? "" : floatval($solvent_etoxipropanol_price) ?>" 
+                                               value="<?= empty($solvent_etoxipropanol_price) || $solvent_etoxipropanol_price == 0.0 ? "" : floatval($solvent_etoxipropanol_price) ?>" 
                                                placeholder="Цена, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
