@@ -693,6 +693,45 @@ if($id !== null) {
             "|= ".Display($calculation->weight_dirty_3)." * ".Display($price_3)." * ".Display($calculation->GetCurrencyRate($currency_3, $usd, $euro)),
             "масса пленки 3 * цена плёнки 3 * курс валюты"));
         
+        //*******************************************
+        // Данные для правой панели - плёнка
+        //*******************************************
+        $film_waste_weight_1 = $calculation->weight_dirty_1 - $calculation->weight_pure_1;
+        array_push($file_data, array("Отходы 1, кг",
+            Display($film_waste_weight_1),
+            "|= ".Display($calculation->weight_dirty_1)." - ".Display($calculation->weight_pure_1),
+            "масса плёнки грязная 1 - масса плёнки чистая 1"));
+        
+        $film_waste_weight_2 = $calculation->weight_dirty_2 - $calculation->weight_pure_2;
+        array_push($file_data, array("Отходы 2, кг",
+            Display($film_waste_weight_2),
+            "|= ".Display($calculation->weight_dirty_2)." - ".Display($calculation->weight_pure_2),
+            "масса плёнки грязная 2 - масса плёнки чистая 2"));
+        
+        $film_waste_weight_3 = $calculation->weight_dirty_3 - $calculation->weight_pure_3;
+        array_push($file_data, array("Отходы 3, кг",
+            Display($film_waste_weight_3),
+            "|= ".Display($calculation->weight_dirty_3)." - ".Display($calculation->weight_pure_3),
+            "масса плёнки грязная 3 - масса плёнки чистая 3"));
+        
+        $film_waste_price_1 = $film_waste_weight_1 * $price_1 * $calculation->GetCurrencyRate($currency_1, $usd, $euro);
+        array_push($file_data, array("Отходы 1, руб",
+            Display($film_waste_price_1),
+            "|= ".Display($film_waste_weight_1)." * ".Display($price_1)." * ".Display($calculation->GetCurrencyRate($currency_1, $usd, $euro)),
+            "отходы 1, кг * цена плёнки 1 * курс валюты"));
+        
+        $film_waste_price_2 = $film_waste_weight_2 * $price_2 * $calculation->GetCurrencyRate($currency_2, $usd, $euro);
+        array_push($file_data, array("Отходы 2, руб",
+            Display($film_waste_price_2),
+            "|= ".Display($film_waste_weight_2)." * ".Display($price_2)." * ".Display($calculation->GetCurrencyRate($currency_2, $usd, $euro)),
+            "отходы 2, кг * цена плёнки 2 * курс валюты"));
+        
+        $film_waste_price_3 = $film_waste_weight_3 * $price_3 * $calculation->GetCurrencyRate($currency_3, $usd, $euro);
+        array_push($file_data, array("Отходы 3, руб",
+            Display($film_waste_price_3),
+            "|= ".Display($film_waste_weight_3)." * ".Display($price_3)." * ".Display($calculation->GetCurrencyRate($currency_3, $usd, $euro)),
+            "отходы 3, кг * цена плёнки 3 * курс валюты"));
+        
         $total_film_cost = $calculation->film_price_1 + $calculation->film_price_2 + $calculation->film_price_3;
         array_push($file_data, array("ОБЩАЯ СТОИМОСТЬ ВСЕХ ПЛЁНОК, руб",
             Display($total_film_cost),
