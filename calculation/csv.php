@@ -103,6 +103,7 @@ if($id !== null) {
     $unit = null; // Кг или шт
     $quantity = null; // Размер тиража
     $work_type_id = null; // Типа работы: с печатью или без печати
+    $extracharge = null; // Наценка
     
     $film_1 = null; // Основная пленка, марка
     $thickness_1 = null; // Основная пленка, толщина, мкм
@@ -142,7 +143,7 @@ if($id !== null) {
     $lamination_roller_width = null; // Ширина ламинирующего вала
     $ink_number = 0; // Красочность
     
-    $sql = "select rc.date, rc.name, rc.unit, rc.quantity, rc.work_type_id, "
+    $sql = "select rc.date, rc.name, rc.unit, rc.quantity, rc.work_type_id, cr.extracharge, "
             . "f.name film, fv.thickness thickness, fv.weight density, "
             . "rc.film_variation_id, rc.price, rc.currency, rc.individual_film_name, rc.individual_thickness, rc.individual_density, "
             . "rc.customers_material, rc.ski, rc.width_ski, "
@@ -160,6 +161,7 @@ if($id !== null) {
             . "rc.cliche_1, rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8 "
             . "from calculation rc "
             . "left join machine m on rc.machine_id = m.id "
+            . "left join calculation_result cr on cr.calculation_id = rc.id "
             . "left join film_variation fv on rc.film_variation_id = fv.id "
             . "left join film f on fv.film_id = f.id "
             . "left join film_variation lamination1_fv on rc.lamination1_film_variation_id = lamination1_fv.id "
@@ -176,6 +178,7 @@ if($id !== null) {
         $unit = $row['unit']; // Кг или шт
         $quantity = $row['quantity']; // Размер тиража в кг или шт
         $work_type_id = $row['work_type_id']; // Тип работы: с печатью или без печати
+        $extracharge = $row['extracharge'];
         
         if(!empty($row['film_variation_id'])) {
             $film_1 = $row['film']; // Основная пленка, марка
@@ -693,9 +696,28 @@ if($id !== null) {
             "|= ".Display($calculation->weight_dirty_3)." * ".Display($price_3)." * ".Display($calculation->GetCurrencyRate($currency_3, $usd, $euro)),
             "масса пленки 3 * цена плёнки 3 * курс валюты"));
         
+        $film_price_unit_1 = $calculation->film_price_1 / $calculation->weight_dirty_1;
+        array_push($file_data, array("Стоимость за кг 1, руб",
+            Display($film_price_unit_1),
+            "|= ".Display($calculation->film_price_1)." / ".Display($calculation->weight_dirty_1),
+            "общая стоимость грязная 1 / масса плёнки грязная 1"));
+        
+        $film_price_unit_2 = $calculation->film_price_2 / $calculation->weight_dirty_2;
+        array_push($file_data, array("Стоимость за кг 2, руб",
+            Display($film_price_unit_2),
+            "|= ".Display($calculation->film_price_2)." / ".Display($calculation->weight_dirty_2),
+            "общая стоимость грязная 2 / масса плёнки грязная 2"));
+        
+        $film_price_unit_3 = $calculation->film_price_3 / $calculation->weight_dirty_3;
+        array_push($file_data, array("Стоимость за кг 3, руб",
+            Display($film_price_unit_3),
+            "|= ".Display($calculation->film_price_3)." / ".Display($calculation->weight_dirty_3),
+            "общая стоимость грязная 3 / масса плёнки грязная 3"));
+        
         //*******************************************
         // Данные для правой панели - плёнка
         //*******************************************
+        
         $film_waste_weight_1 = $calculation->weight_dirty_1 - $calculation->weight_pure_1;
         array_push($file_data, array("Отходы 1, кг",
             Display($film_waste_weight_1),
@@ -845,6 +867,8 @@ if($id !== null) {
             $ink_solvent_kg_price = $calculation->ink_etoxypropanol_kg_price;
         }
         
+        $total_ink_expense = 0;
+        $total_ink_expense_formula = "";
         $total_ink_cost = 0;
         $total_ink_cost_formula = "";
         
@@ -874,12 +898,23 @@ if($id !== null) {
                 "|= ". Display($calculation->mix_ink_kg_prices[$i])." * ". Display($calculation->ink_expenses[$i]),
                 "Расход КраскаСмеси $i * цена 1 кг КраскаСмеси $i"));
             
+            $total_ink_expense += $calculation->ink_expenses[$i];
+            if(!empty($total_ink_expense_formula)) {
+                $total_ink_expense_formula .= " + ";
+            }
+            $total_ink_expense_formula .= Display($calculation->ink_expenses[$i]);
+            
             $total_ink_cost += $calculation->ink_prices[$i];
             if(!empty($total_ink_cost_formula)) {
                 $total_ink_cost_formula .= " + ";
             }
             $total_ink_cost_formula .= Display($calculation->ink_prices[$i]);
         }
+        
+        array_push($file_data, array("РАСХОД КРАСКИ, руб",
+            Display($total_ink_expense),
+            "|= ".$total_ink_expense_formula,
+            "Сумма расход всех красок"));
         
         array_push($file_data, array("СТОИМОСТЬ КРАСКИ, руб",
             Display($total_ink_cost),
@@ -967,10 +1002,57 @@ if($id !== null) {
         array_push($file_data, array("", "", "", ""));
         
         $total_cost = $total_film_cost + $total_work_cost + $total_ink_cost + $total_glue_cost;
-        array_push($file_data, array("СЕБЕСТОИМОСТЬ",
-        Display($total_cost),
+        array_push($file_data, array("СЕБЕСТОИМОСТЬ, руб",
+            Display($total_cost),
             "|= ".Display($total_film_cost)." + ".Display($total_work_cost)." + ".Display($total_ink_cost)." + ".Display($total_glue_cost),
             "стоимость плёнки + стоимость работы + стоимость краски + стоимость клея"));
+        
+        $total_cost_per_unit = $total_cost / $quantity;
+        array_push($file_data, array("Себестоимость за ".GetUnitName($unit).", руб",
+            Display($total_cost_per_unit),
+            "|= ".Display($total_cost)." / ".Display($quantity),
+            "себестоимость / размер тиража"));
+        
+        // Наценка
+        if(empty($extracharge)) {
+            $ech_weight = $calculation->weight;
+            $ech_type = 0;
+            
+            if($work_type_id == Calculation::WORK_TYPE_NOPRINT) {
+                $ech_type = ET_NOPRINT;
+            }
+            elseif($calculation->laminations_number == 0) {
+                $ech_type = ET_PRINT;
+            }
+            elseif($calculation->laminations_number == 1) {
+                $ech_type = ET_PRINT_1;
+            }
+            elseif($calculation->laminations_number == 2) {
+                $ech_type = ET_PRINT_2;
+            }
+            
+            if($ech_type != 0) {
+                $sql = "select value from extracharge where extracharge_type_id = $ech_type and $ech_weight >= from_weight and ($ech_weight <= to_weight or to_weight is null)";
+                $fetcher = new Fetcher($sql);
+                if($row = $fetcher->Fetch()) {
+                    $extracharge = $row['value'];
+                }
+            }
+        }
+        
+        if(!empty($extracharge)) {
+            $shipping_cost = $total_cost + ($total_cost * $extracharge / 100);
+            array_push($file_data, array("Отгрузочная стоимость, руб",
+                Display($shipping_cost),
+                "|= ".Display($total_cost)." + (".Display($total_cost)." * ".Display($extracharge)." / 100)",
+                "себестоимость + (себестоимость * наценка / 100)"));
+            
+            $shipping_cost_per_unit = $shipping_cost / $quantity;
+            array_push($file_data, array("Отгрузочная стоимость за ".GetUnitName($unit).", руб",
+            Display($shipping_cost_per_unit),
+                "|= ".Display($shipping_cost)." / ".Display($quantity),
+                "отгрузочная стоимость / размер тиража"));
+        }
         
         array_push($file_data, array("", "", "", ""));
         
