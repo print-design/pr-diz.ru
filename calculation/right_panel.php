@@ -253,11 +253,16 @@ if(!empty($id)) {
         $glue_data = new GlueData(null, null, null, null, null, null, null);
     
         if(empty($error_message)) {
-            $sql = "select machine_id, time, length, waste_percent from norm_tuning where id in (select max(id) from norm_tuning where date <= '$param_date' group by machine_id)";
-            $fetcher = new Fetcher($sql);
-            while ($row = $fetcher->Fetch()) {
-                if($row['machine_id'] == $param_machine_id) {
-                    $tuning_data = new TuningData($row['time'], $row['length'], $row['waste_percent']);
+            if(empty($machine_id)) {
+                $tuning_data = new TuningData(0, 0, 0);
+            }
+            else {
+                $sql = "select machine_id, time, length, waste_percent from norm_tuning where id in (select max(id) from norm_tuning where date <= '$param_date' group by machine_id)";
+                $fetcher = new Fetcher($sql);
+                while ($row = $fetcher->Fetch()) {
+                    if($row['machine_id'] == $param_machine_id) {
+                        $tuning_data = new TuningData($row['time'], $row['length'], $row['waste_percent']);
+                    }
                 }
             }
         
@@ -267,11 +272,16 @@ if(!empty($id)) {
                 $laminator_tuning_data = new TuningData($row['time'], $row['length'], $row['waste_percent']);
             }
         
-            $sql = "select machine_id, price, speed, max_width from norm_machine where id in (select max(id) from norm_machine where date <= '$param_date' group by machine_id)";
-            $fetcher = new Fetcher($sql);
-            while ($row = $fetcher->Fetch()) {
-                if($row['machine_id'] == $param_machine_id) {
-                    $machine_data = new MachineData($row['price'], $row['speed'], $row['max_width']);
+            if(empty($machine_id)) {
+                $machine_data = new MachineData(0, 0, 0);
+            }
+            else {
+                $sql = "select machine_id, price, speed, max_width from norm_machine where id in (select max(id) from norm_machine where date <= '$param_date' group by machine_id)";
+                $fetcher = new Fetcher($sql);
+                while ($row = $fetcher->Fetch()) {
+                    if($row['machine_id'] == $param_machine_id) {
+                        $machine_data = new MachineData($row['price'], $row['speed'], $row['max_width']);
+                    }
                 }
             }
         
