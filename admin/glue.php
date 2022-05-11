@@ -11,16 +11,16 @@ define('ISINVALID', ' is-invalid');
 $form_valid = true;
 $error_message = '';
 
-$glue_valid = '';
+$glue_price_valid = '';
 $glue_expense_valid = '';
 $glue_expense_pet_valid = '';
-$solvent_valid = '';
+$solvent_price_valid = '';
 $solvent_part_valid = '';
 
 // Сохранение введённых значений
 if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
-    if(empty(filter_input(INPUT_POST, 'glue')) || empty(filter_input(INPUT_POST, 'glue_currency'))) {
-        $glue_valid = ISINVALID;
+    if(empty(filter_input(INPUT_POST, 'glue_price')) || empty(filter_input(INPUT_POST, 'glue_currency'))) {
+        $glue_price_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -34,8 +34,8 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'solvent')) || empty(filter_input(INPUT_POST, 'solvent_currency'))) {
-        $solvent_valid = ISINVALID;
+    if(empty(filter_input(INPUT_POST, 'solvent_price')) || empty(filter_input(INPUT_POST, 'solvent_currency'))) {
+        $solvent_price_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -46,45 +46,45 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
     
     if($form_valid) {
         // Старый объект
-        $old_glue = '';
+        $old_glue_price = '';
         $old_glue_currency = '';
         $old_glue_expense = '';
         $old_glue_expense_pet = '';
-        $old_solvent = '';
+        $old_solvent_price = '';
         $old_solvent_currency = '';
         $old_solvent_part = '';
         
-        $sql = "select glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, solvent_part from norm_glue order by date desc limit 1";
+        $sql = "select glue_price, glue_currency, glue_expense, glue_expense_pet, solvent_price, solvent_currency, solvent_part from norm_glue order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
-            $old_glue = $row['glue'];
+            $old_glue_price = $row['glue_price'];
             $old_glue_currency = $row['glue_currency'];
             $old_glue_expense = $row['glue_expense'];
             $old_glue_expense_pet = $row['glue_expense_pet'];
-            $old_solvent = $row['solvent'];
+            $old_solvent_price = $row['solvent_price'];
             $old_solvent_currency = $row['solvent_currency'];
             $old_solvent_part = $row['solvent_part'];
         }
         
         // Новый объект
-        $new_glue = filter_input(INPUT_POST, 'glue');
+        $new_glue_price = filter_input(INPUT_POST, 'glue_price');
         $new_glue_currency = filter_input(INPUT_POST, 'glue_currency');
         $new_glue_expense = filter_input(INPUT_POST, 'glue_expense');
         $new_glue_expense_pet = filter_input(INPUT_POST, 'glue_expense_pet');
-        $new_solvent = filter_input(INPUT_POST, 'solvent');
+        $new_solvent_price = filter_input(INPUT_POST, 'solvent_price');
         $new_solvent_currency = filter_input(INPUT_POST, 'solvent_currency');
         $new_solvent_part = filter_input(INPUT_POST, 'solvent_part');
         
-        if($old_glue != $new_glue || 
+        if($old_glue_price != $new_glue_price || 
                 $old_glue_currency != $new_glue_currency || 
                 $old_glue_expense != $new_glue_expense || 
                 $old_glue_expense_pet != $new_glue_expense_pet || 
-                $old_solvent != $new_solvent || 
+                $old_solvent_price != $new_solvent_price || 
                 $old_solvent_currency != $new_solvent_currency || 
                 $old_solvent_part != $new_solvent_part) {
-            $sql = "insert into norm_glue (glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, solvent_part) values ($new_glue, '$new_glue_currency', $new_glue_expense, $new_glue_expense_pet, $new_solvent, '$new_solvent_currency', $new_solvent_part)";
+            $sql = "insert into norm_glue (glue_price, glue_currency, glue_expense, glue_expense_pet, solvent_price, solvent_currency, solvent_part) values ($new_glue_price, '$new_glue_currency', $new_glue_expense, $new_glue_expense_pet, $new_solvent_price, '$new_solvent_currency', $new_solvent_part)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -95,24 +95,24 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
 }
 
 // Получение объекта
-$glue = '';
+$glue_price = '';
 $glue_currency = '';
 $glue_expense = '';
 $glue_expense_pet = '';
-$solvent = '';
+$solvent_price = '';
 $solvent_currency = '';
 $solvent_part = '';
 
-$sql = "select glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, solvent_part from norm_glue order by date desc limit 1";
+$sql = "select glue_price, glue_currency, glue_expense, glue_expense_pet, solvent_price, solvent_currency, solvent_part from norm_glue order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
 }
 
 if($row = $fetcher->Fetch()) {
-    $glue = $row['glue'];
-    $solvent = $row['solvent'];
+    $glue_price = $row['glue_price'];
     $glue_currency = $row['glue_currency'];
+    $solvent_price = $row['solvent_price'];
     $glue_expense = $row['glue_expense'];
     $glue_expense_pet = $row['glue_expense_pet'];
     $solvent_currency = $row['solvent_currency'];
@@ -150,20 +150,20 @@ if($row = $fetcher->Fetch()) {
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
                         <div class="form-group">
-                            <label for="glue">Цена чистого клея (за кг)</label>
+                            <label for="glue_price">Цена чистого клея (за кг)</label>
                             <div class="input-group">
                                 <input type="text" 
                                        class="form-control float-only" 
-                                       id="glue" 
-                                       name="glue" 
-                                       value="<?= empty($glue) ? "" : floatval($glue) ?>" 
+                                       id="glue_price" 
+                                       name="glue_price" 
+                                       value="<?= empty($glue_price) ? "" : floatval($glue_price) ?>" 
                                        placeholder="Цена, за кг" 
                                        required="required" 
                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'glue'); $(this).attr('name', 'glue'); $(this).attr('placeholder', 'Цена, за кг');" 
+                                       onmouseup="javascript: $(this).attr('id', 'glue_price'); $(this).attr('name', 'glue_price'); $(this).attr('placeholder', 'Цена, за кг');" 
                                        onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'glue'); $(this).attr('name', 'glue'); $(this).attr('placeholder', 'Цена, за кг');" 
-                                       onfocusout="javascript: $(this).attr('id', 'glue'); $(this).attr('name', 'glue'); $(this).attr('placeholder', 'Цена, за кг');" />
+                                       onkeyup="javascript: $(this).attr('id', 'glue_price'); $(this).attr('name', 'glue_price'); $(this).attr('placeholder', 'Цена, за кг');" 
+                                       onfocusout="javascript: $(this).attr('id', 'glue_price'); $(this).attr('name', 'glue_price'); $(this).attr('placeholder', 'Цена, за кг');" />
                                 <div class="input-group-append">
                                     <select id="glue_currency" name="glue_currency" required="required">
                                         <option value="" hidden="">...</option>
@@ -176,20 +176,20 @@ if($row = $fetcher->Fetch()) {
                             <div class="invalid-feedback">Цена чистого клея обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="solvent">Цена растворителя для клея (за кг)</label>
+                            <label for="solvent_price">Цена растворителя для клея (за кг)</label>
                             <div class="input-group">
                                 <input type="text" 
                                        class="form-control float-only" 
-                                       id="solvent" 
-                                       name="solvent" 
-                                       value="<?= empty($solvent) ? "" : floatval($solvent) ?>" 
+                                       id="solvent_price" 
+                                       name="solvent_price" 
+                                       value="<?= empty($solvent_price) ? "" : floatval($solvent_price) ?>" 
                                        placeholder="Цена, за кг" 
                                        required="required" 
                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Цена, за кг');" 
+                                       onmouseup="javascript: $(this).attr('id', 'solvent_price'); $(this).attr('name', 'solvent_price'); $(this).attr('placeholder', 'Цена, за кг');" 
                                        onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Цена, за кг');" 
-                                       onfocusout="javascript: $(this).attr('id', 'solvent'); $(this).attr('name', 'solvent'); $(this).attr('placeholder', 'Цена, за кг');" />
+                                       onkeyup="javascript: $(this).attr('id', 'solvent_price'); $(this).attr('name', 'solvent_price'); $(this).attr('placeholder', 'Цена, за кг');" 
+                                       onfocusout="javascript: $(this).attr('id', 'solvent_price'); $(this).attr('name', 'solvent_price'); $(this).attr('placeholder', 'Цена, за кг');" />
                                 <div class="input-group-append">
                                     <select id="solvent_currency" name="solvent_currency" required="required">
                                         <option value="" hidden="">...</option>
@@ -202,7 +202,7 @@ if($row = $fetcher->Fetch()) {
                             <div class="invalid-feedback">Цена растворителя для клея обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="glue">Расход смеси клея, г/м<sup>2</sup></label>
+                            <label for="glue_expense">Расход смеси клея, г/м<sup>2</sup></label>
                             <input type="text" 
                                    class="form-control float-only" 
                                    id="glue_expense" 
@@ -218,7 +218,7 @@ if($row = $fetcher->Fetch()) {
                             <div class="invalid-feedback">Расход смеси клея обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="glue">Расход смеси клея при ламинации ПЭТ, г/м<sup>2</sup></label>
+                            <label for="glue_expense_pet">Расход смеси клея при ламинации ПЭТ, г/м<sup>2</sup></label>
                             <input type="text" 
                                    class="form-control float-only" 
                                    id="glue_expense_pet" 

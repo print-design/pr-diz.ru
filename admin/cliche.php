@@ -11,92 +11,64 @@ define('ISINVALID', ' is-invalid');
 $form_valid = true;
 $error_message = '';
 
-$flint_valid = '';
-$kodak_valid = '';
-//$tver_valid = '';
-$film_valid = '';
-$scotch_valid = '';
+$flint_price_valid = '';
+$kodak_price_valid = '';
+$scotch_price_valid = '';
 
 // Сохранение введённых значений
 if(null !== filter_input(INPUT_POST, 'norm_cliche_submit')) {
-    if(is_nan(filter_input(INPUT_POST, 'flint')) || empty(filter_input(INPUT_POST, 'flint_currency'))) {
-        $flint_valid = ISINVALID;
+    if(is_nan(filter_input(INPUT_POST, 'flint_price')) || empty(filter_input(INPUT_POST, 'flint_currency'))) {
+        $flint_price_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(is_nan(filter_input(INPUT_POST, 'kodak')) || empty(filter_input(INPUT_POST, 'kodak_currency'))) {
-        $kodak_valid = ISINVALID;
+    if(is_nan(filter_input(INPUT_POST, 'kodak_price')) || empty(filter_input(INPUT_POST, 'kodak_currency'))) {
+        $kodak_price_valid = ISINVALID;
         $form_valid = false;
     }
     
-    /*if(is_nan(filter_input(INPUT_POST, 'tver')) || empty(filter_input(INPUT_POST, 'tver_currency'))) {
-        $tver_valid = ISINVALID;
-        $form_valid = false;
-    }*/
-    
-    if(is_nan(filter_input(INPUT_POST, 'film')) || empty(filter_input(INPUT_POST, 'film_currency'))) {
-        $film_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
-    if(is_nan(filter_input(INPUT_POST, 'scotch'))) {
-        $scotch_valid = ISINVALID;
+    if(is_nan(filter_input(INPUT_POST, 'scotch_price')) || empty(filter_input(INPUT_POST, 'scotch_currency'))) {
+        $scotch_price_valid = ISINVALID;
         $form_valid = false;
     }
     
     if($form_valid) {
         // Старый объект
-        $old_flint = "";
-        $old_kodak = "";
-        //$old_tver = "";
-        $old_film = "";
+        $old_flint_price = "";
         $old_flint_currency = "";
+        $old_kodak_price = "";
         $old_kodak_currency = "";
-        $old_tver_currency = "";
-        $old_film_currency = "";
-        $old_scotch = "";
+        $old_scotch_price = "";
         $old_scotch_currency = "";
         
-        $sql = "select flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, scotch, scotch_currency from norm_cliche order by date desc limit 1";
+        $sql = "select flint_price, flint_currency, kodak_price, kodak_currency, scotch_price, scotch_currency from norm_cliche order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
-            $old_flint = $row['flint'];
-            $old_kodak = $row['kodak'];
-            //$old_tver = $row['tver'];
-            $old_film = $row['film'];
+            $old_flint_price = $row['flint_price'];
             $old_flint_currency = $row['flint_currency'];
+            $old_kodak_price = $row['kodak_price'];
             $old_kodak_currency = $row['kodak_currency'];
-            $old_tver_currency = $row['tver_currency'];
-            $old_film_currency = $row['film_currency'];
-            $old_scotch = $row['scotch'];
+            $old_scotch_price = $row['scotch_price'];
             $old_scotch_currency = $row['scotch_currency'];
         }
 
         // Новый объект
-        $new_flint = filter_input(INPUT_POST, 'flint');
-        $new_kodak = filter_input(INPUT_POST, 'kodak');
-        $new_tver = 0.025; // filter_input(INPUT_POST, 'tver');
-        $new_film = filter_input(INPUT_POST, 'film');
+        $new_flint_price = filter_input(INPUT_POST, 'flint_price');
         $new_flint_currency = filter_input(INPUT_POST, 'flint_currency');
+        $new_kodak_price = filter_input(INPUT_POST, 'kodak_price');
         $new_kodak_currency = filter_input(INPUT_POST, 'kodak_currency');
-        $new_tver_currency = filter_input(INPUT_POST, 'tver_currency');
-        $new_film_currency = filter_input(INPUT_POST, 'film_currency');
-        $new_scotch = filter_input(INPUT_POST, 'scotch');
+        $new_scotch_price = filter_input(INPUT_POST, 'scotch_price');
         $new_scotch_currency = filter_input(INPUT_POST, 'scotch_currency');
         
-        if($old_flint != $new_flint || 
+        if($old_flint_price != $new_flint_price || 
                 $old_flint_currency != $new_flint_currency || 
-                $old_kodak != $new_kodak || 
+                $old_kodak_price != $new_kodak_price || 
                 $old_kodak_currency != $new_kodak_currency || 
-                //$old_tver != $new_tver || 
-                $old_tver_currency != $new_tver_currency || 
-                $old_film != $new_film || 
-                $old_film_currency != $new_film_currency || 
                 $old_scotch != $new_scotch || 
                 $old_scotch_currency != $new_scotch_currency) {
-            $sql = "insert into norm_cliche (flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, scotch, scotch_currency) values ($new_flint, '$new_flint_currency', $new_kodak, '$new_kodak_currency', $new_tver, '$new_tver_currency', $new_film, '$new_film_currency', $new_scotch, '$new_scotch_currency')";
+            $sql = "insert into norm_cliche (flint_price, flint_currency, kodak_price, kodak_currency, scotch_price, scotch_currency) values ($new_flint_price, '$new_flint_currency', $new_kodak_price, '$new_kodak_currency', $new_scotch_price, '$new_scotch_currency')";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -107,33 +79,25 @@ if(null !== filter_input(INPUT_POST, 'norm_cliche_submit')) {
 }
 
 // Получение объекта
-$flint = "";
-$kodak = "";
-$tver = "";
-$film = "";
+$flint_price = "";
 $flint_currency = "";
+$kodak_price = "";
 $kodak_currency = "";
-$tver_currency = "";
-$film_currency = "";
-$scotch = "";
+$scotch_price = "";
 $scotch_currency = "";
 
-$sql = "select flint, kodak, flint_currency, kodak_currency, tver, tver_currency, film, film_currency, scotch, scotch_currency from norm_cliche order by date desc limit 1";
+$sql = "select flint_price, flint_currency, kodak_price, kodak_currency, scotch_price, scotch_currency from norm_cliche order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
 }
 
 if($row = $fetcher->Fetch()) {
-    $flint = $row['flint'];
-    $kodak = $row['kodak'];
-    $tver = $row['tver'];
-    $film = $row['film'];
+    $flint_price = $row['flint'];
     $flint_currency = $row['flint_currency'];
+    $kodak_price = $row['kodak'];
     $kodak_currency = $row['kodak_currency'];
-    $tver_currency = $row['tver_currency'];
-    $film_currency = $row['film_currency'];
-    $scotch = $row['scotch'];
+    $scotch_price = $row['scotch'];
     $scotch_currency = $row['scotch_currency'];
 }
 ?>
@@ -168,20 +132,20 @@ if($row = $fetcher->Fetch()) {
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
                         <div class="form-group">
-                            <label for="flint">Flint (за см<sup>2</sup>)</label>
+                            <label for="flint_price">Flint (за см<sup>2</sup>)</label>
                             <div class="input-group">
                                 <input type="text" 
                                        class="form-control float-only" 
-                                       id="flint" 
-                                       name="flint" 
-                                       value="<?= empty($flint) ? "" : floatval($flint) ?>" 
+                                       id="flint_price" 
+                                       name="flint_price" 
+                                       value="<?= empty($flint_price) ? "" : floatval($flint_price) ?>" 
                                        placeholder="Стоимость, за см2" 
                                        required="required" 
                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'flint'); $(this).attr('name', 'flint'); $(this).attr('placeholder', 'Стоимость, за см2');" 
+                                       onmouseup="javascript: $(this).attr('id', 'flint_price'); $(this).attr('name', 'flint_price'); $(this).attr('placeholder', 'Стоимость, за см2');" 
                                        onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'flint'); $(this).attr('name', 'flint'); $(this).attr('placeholder', 'Стоимость, за см2');" 
-                                       onfocusout="javascript: $(this).attr('id', 'flint'); $(this).attr('name', 'flint'); $(this).attr('placeholder', 'Стоимость, за см2');" />
+                                       onkeyup="javascript: $(this).attr('id', 'flint_price'); $(this).attr('name', 'flint_price'); $(this).attr('placeholder', 'Стоимость, за см2');" 
+                                       onfocusout="javascript: $(this).attr('id', 'flint_price'); $(this).attr('name', 'flint_price'); $(this).attr('placeholder', 'Стоимость, за см2');" />
                                 <div class="input-group-append">
                                     <select id="flint_currency" name="flint_currency" required="required">
                                         <option value="" hidden="">...</option>
@@ -194,20 +158,20 @@ if($row = $fetcher->Fetch()) {
                             <div class="invalid-feedback">Flint обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="kodak">Kodak (за см<sup>2</sup>)</label>
+                            <label for="kodak_price">Kodak (за см<sup>2</sup>)</label>
                             <div class="input-group">
                                 <input type="text" 
                                        class="form-control float-only" 
-                                       id="kodak" 
-                                       name="kodak" 
-                                       value="<?= empty($kodak) ? "" : floatval($kodak) ?>" 
+                                       id="kodak_price" 
+                                       name="kodak_price" 
+                                       value="<?= empty($kodak_price) ? "" : floatval($kodak_price) ?>" 
                                        placeholder="Стоимость, за см2" 
                                        required="required" 
                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'kodak'); $(this).attr('name', 'kodak'); $(this).attr('placeholder', 'Стоимость, за см2');" 
+                                       onmouseup="javascript: $(this).attr('id', 'kodak_price'); $(this).attr('name', 'kodak_price'); $(this).attr('placeholder', 'Стоимость, за см2');" 
                                        onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'kodak'); $(this).attr('name', 'kodak'); $(this).attr('placeholder', 'Стоимость, за см2');" 
-                                       onfocusout="javascript: $(this).attr('id', 'kodak'); $(this).attr('name', 'kodak'); $(this).attr('placeholder', 'Стоимость, за см2');" />
+                                       onkeyup="javascript: $(this).attr('id', 'kodak_price'); $(this).attr('name', 'kodak_price'); $(this).attr('placeholder', 'Стоимость, за см2');" 
+                                       onfocusout="javascript: $(this).attr('id', 'kodak_price'); $(this).attr('name', 'kodak_price'); $(this).attr('placeholder', 'Стоимость, за см2');" />
                                 <div class="input-group-append">
                                     <select id="kodak_currency" name="kodak_currency" required="required">
                                         <option value="" hidden="">...</option>
@@ -218,78 +182,22 @@ if($row = $fetcher->Fetch()) {
                                 </div>
                             </div>
                             <div class="invalid-feedback">Kodak обязательно</div>
-                        </div>
-                        <?php if(false): ?>
-                        <!-- Тверскими формами решили не пользоваться -->
+                        </div>                        
                         <div class="form-group">
-                            <label for="tver">Тверь (за см<sup>2</sup>)</label>
+                            <label for="scotch_price">Скотч (за м<sup>2</sup>)</label>
                             <div class="input-group">
                                 <input type="text" 
                                        class="form-control float-only" 
-                                       id="tver" 
-                                       name="tver" 
-                                       value="<?= empty($tver) ? "" : floatval($tver) ?>" 
-                                       placeholder="Стоимость, за см2" 
-                                       required="required" 
-                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'tver'); $(this).attr('name', 'tver'); $(this).attr('placeholder', 'Стоимость, за см2');" 
-                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'tver'); $(this).attr('name', 'tver'); $(this).attr('placeholder', 'Стоимость, за см2');" 
-                                       onfocusout="javascript: $(this).attr('id', 'tver'); $(this).attr('name', 'tver'); $(this).attr('placeholder', 'Стоимость, за см2');" />
-                                <div class="input-group-append">
-                                    <select id="tver_currency" name="tver_currency" required="required">
-                                        <option value="" hidden="">...</option>
-                                        <option value="rub"<?=$tver_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
-                                        <option value="usd"<?=$tver_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                        <option value="euro"<?=$tver_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="invalid-feedback">Тверь обязательно</div>
-                        </div>
-                        <!-- Тверскими формами решили не пользоваться -->
-                        <?php endif; ?>
-                        <div class="form-group">
-                            <label for="tver">Плёнка (за см<sup>2</sup>)</label>
-                            <div class="input-group">
-                                <input type="text" 
-                                       class="form-control float-only" 
-                                       id="film" 
-                                       name="film" 
-                                       value="<?= empty($film) ? "" : floatval($film) ?>" 
-                                       placeholder="Стоимость, за см2" 
-                                       required="required" 
-                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'film'); $(this).attr('name', 'film'); $(this).attr('placeholder', 'Стоимость, за см2');" 
-                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'film'); $(this).attr('name', 'film'); $(this).attr('placeholder', 'Стоимость, за см2');" 
-                                       onfocusout="javascript: $(this).attr('id', 'film'); $(this).attr('name', 'film'); $(this).attr('placeholder', 'Стоимость, за см2');" />
-                                <div class="input-group-append">
-                                    <select id="film_currency" name="film_currency" required="required">
-                                        <option value="" hidden="">...</option>
-                                        <option value="rub"<?=$film_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
-                                        <option value="usd"<?=$film_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                        <option value="euro"<?=$film_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="invalid-feedback">Плёнка обязательно</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="scotch">Скотч (за м<sup>2</sup>)</label>
-                            <div class="input-group">
-                                <input type="text" 
-                                       class="form-control float-only" 
-                                       id="scotch" 
-                                       name="scotch" 
-                                       value="<?= empty($scotch) ? "" : floatval($scotch) ?>" 
+                                       id="scotch_price" 
+                                       name="scotch_price" 
+                                       value="<?= empty($scotch_price) ? "" : floatval($scotch_price) ?>" 
                                        placeholder="Скотч, м2" 
                                        required="required" 
                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'scotch'); $(this).attr('name', 'scotch'); $(this).attr('placeholder', 'Скотч, м2');" 
+                                       onmouseup="javascript: $(this).attr('id', 'scotch_price'); $(this).attr('name', 'scotch_price'); $(this).attr('placeholder', 'Скотч, м2');" 
                                        onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'scotch'); $(this).attr('name', 'scotch'); $(this).attr('placeholder', 'Скотч, м2');" 
-                                       onfocusout="javascript: $(this).attr('id', 'scotch'); $(this).attr('name', 'scotch'); $(this).attr('placeholder', 'Скотч, м2');" />
+                                       onkeyup="javascript: $(this).attr('id', 'scotch_price'); $(this).attr('name', 'scotch_price'); $(this).attr('placeholder', 'Скотч, м2');" 
+                                       onfocusout="javascript: $(this).attr('id', 'scotch_price'); $(this).attr('name', 'scotch_price'); $(this).attr('placeholder', 'Скотч, м2');" />
                                 <div class="input-group-append">
                                     <select id="scotch_currency" name="scotch_currency" required="required">
                                         <option value="" hidden="">...</option>

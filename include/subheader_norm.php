@@ -17,7 +17,7 @@
             
     $laminator_class = 
             (substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/laminator.php')) == APPLICATION.'/admin/laminator.php' || 
-            substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/laminator_tuning.php')) == APPLICATION.'/admin/laminator_tuning.php' || 
+            substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/laminator_priladka.php')) == APPLICATION.'/admin/laminator_priladka.php' || 
             substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/laminator_roller.php')) == APPLICATION.'/admin/laminator_roller.php') ? 
             " active" : "";
     $currency_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/currency.php')) == APPLICATION.'/admin/currency.php' ? " active" : "";
@@ -36,28 +36,28 @@
 <?php
 if(!empty($machine_id)):
 $machine_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/machine.php')) == APPLICATION.'/admin/machine.php' ? " active" : "";
-$tuning_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/tuning.php')) == APPLICATION.'/admin/tuning.php' ? " active" : "";
+$priladka_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/priladka.php')) == APPLICATION.'/admin/priladka.php' ? " active" : "";
 $raport_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/raport.php')) == APPLICATION.'/admin/raport.php' ? " active" : "";
 ?>
 <hr class="pb-0 mb-0" />
 <div class="text-nowrap nav2">
     <a href="<?=APPLICATION ?>/admin/machine.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$machine_class ?>">Нормы работы оборудования</a>
-    <a href="<?=APPLICATION ?>/admin/tuning.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$tuning_class ?>">Приладка</a>
+    <a href="<?=APPLICATION ?>/admin/priladka.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$priladka_class ?>">Приладка</a>
     <a href="<?=APPLICATION ?>/admin/raport.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$raport_class ?>">Рапорт</a>
 </div>
 <?php endif; ?>
 <?php
 if(substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/laminator.php')) == APPLICATION.'/admin/laminator.php' ||
-        substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/laminator_tuning.php')) == APPLICATION.'/admin/laminator_tuning.php' ||
+        substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/laminator_priladka.php')) == APPLICATION.'/admin/laminator_priladka.php' ||
         substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/laminator_roller.php')) == APPLICATION.'/admin/laminator_roller.php'):
 $laminator_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/laminator.php')) == APPLICATION.'/admin/laminator.php' ? " active" : "";
-$laminator_tuning_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/laminator_tuning.php')) == APPLICATION.'/admin/laminator_tuning.php' ? " active" : "";
+$laminator_priladka_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/laminator_priladka.php')) == APPLICATION.'/admin/laminator_priladka.php' ? " active" : "";
 $laminator_roller_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/laminator_roller.php')) == APPLICATION.'/admin/laminator_roller.php' ? " active" : "";
 ?>
 <hr class="pb-0 mb-0" />
 <div class="text-nowrap nav2">
     <a href="<?=APPLICATION ?>/admin/laminator.php" class="mr-4<?=$laminator_class ?>">Нормы работы оборудования</a>
-    <a href="<?=APPLICATION ?>/admin/laminator_tuning.php" class="mr-4<?=$laminator_tuning_class ?>">Приладка</a>
+    <a href="<?=APPLICATION ?>/admin/laminator_priladka.php" class="mr-4<?=$laminator_priladka_class ?>">Приладка</a>
     <a href="<?=APPLICATION ?>/admin/laminator_roller.php" class="mr-4<?=$laminator_roller_class ?>">Ширина вала</a>
 </div>
 <?php endif; ?>

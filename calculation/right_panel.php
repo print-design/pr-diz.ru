@@ -1,6 +1,6 @@
 <?php
 $calculation_class = "";
-                        
+                    
 if(isset($create_calculation_submit_class) && empty($create_calculation_submit_class)) {
     $calculation_class = " class='d-none'";    
 }
@@ -245,42 +245,42 @@ if(!empty($id)) {
         }
     
         // ПОЛУЧЕНИЕ НОРМ
-        $tuning_data = new TuningData(null, null, null);
-        $laminator_tuning_data = new TuningData(null, null, null);
-        $machine_data = new MachineData(null, null, null);
-        $laminator_machine_data = new MachineData(null, null, null);
-        $ink_data = new InkData(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-        $glue_data = new GlueData(null, null, null, null, null, null, null);
+        $data_priladka = new DataPriladka(null, null, null);
+        $data_priladka_laminator = new DataPriladka(null, null, null);
+        $data_machine = new DataMachine(null, null, null);
+        $data_machine_laminator = new DataMachine(null, null, null);
+        $ink_data = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        $glue_data = new DataGlue(null, null, null, null, null, null, null);
     
         if(empty($error_message)) {
             if(empty($machine_id)) {
-                $tuning_data = new TuningData(0, 0, 0);
+                $data_priladka = new DataPriladka(0, 0, 0);
             }
             else {
-                $sql = "select machine_id, time, length, waste_percent from norm_tuning where id in (select max(id) from norm_tuning where date <= '$param_date' group by machine_id)";
+                $sql = "select machine_id, time, length, waste_percent from norm_priladka where id in (select max(id) from norm_priladka where date <= '$param_date' group by machine_id)";
                 $fetcher = new Fetcher($sql);
                 while ($row = $fetcher->Fetch()) {
                     if($row['machine_id'] == $param_machine_id) {
-                        $tuning_data = new TuningData($row['time'], $row['length'], $row['waste_percent']);
+                        $data_priladka = new DataPriladka($row['time'], $row['length'], $row['waste_percent']);
                     }
                 }
             }
         
-            $sql = "select time, length, waste_percent from norm_laminator_tuning where date <= '$param_date' order by id desc limit 1";
+            $sql = "select time, length, waste_percent from norm_laminator_priladka where date <= '$param_date' order by id desc limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
-                $laminator_tuning_data = new TuningData($row['time'], $row['length'], $row['waste_percent']);
+                $data_priladka_laminator = new DataPriladka($row['time'], $row['length'], $row['waste_percent']);
             }
         
             if(empty($machine_id)) {
-                $machine_data = new MachineData(0, 0, 0);
+                $data_machine = new DataMachine(0, 0, 0);
             }
             else {
                 $sql = "select machine_id, price, speed, max_width from norm_machine where id in (select max(id) from norm_machine where date <= '$param_date' group by machine_id)";
                 $fetcher = new Fetcher($sql);
                 while ($row = $fetcher->Fetch()) {
                     if($row['machine_id'] == $param_machine_id) {
-                        $machine_data = new MachineData($row['price'], $row['speed'], $row['max_width']);
+                        $data_machine = new DataMachine($row['price'], $row['speed'], $row['max_width']);
                     }
                 }
             }
@@ -288,33 +288,33 @@ if(!empty($id)) {
             $sql = "select price, speed, max_width from norm_laminator where date <= '$param_date' order by id desc limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
-                $laminator_machine_data = new MachineData($row['price'], $row['speed'], $row['max_width']);
+                $data_machine_laminator = new DataMachine($row['price'], $row['speed'], $row['max_width']);
             }
         
-            $sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, solvent_etoxipropanol, solvent_etoxipropanol_currency, solvent_flexol82, solvent_flexol82_currency, solvent_part, min_price "
+            $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_price, lacquer_currency, lacquer_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price "
                     . "from norm_ink where date <= '$param_date' order by id desc limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
-                $ink_data = new InkData($row['c'], $row['c_currency'], $row['c_expense'], $row['m'], $row['m_currency'], $row['m_expense'], $row['y'], $row['y_currency'], $row['y_expense'], $row['k'], $row['k_currency'], $row['k_expense'], $row['white'], $row['white_currency'], $row['white_expense'], $row['panton'], $row['panton_currency'], $row['panton_expense'], $row['lacquer'], $row['lacquer_currency'], $row['lacquer_expense'], $row['solvent_etoxipropanol'], $row['solvent_etoxipropanol_currency'], $row['solvent_flexol82'], $row['solvent_flexol82_currency'], $row['solvent_part'], $row['min_price']);
+                $ink_data = new DataInk($row['c_price'], $row['c_currency'], $row['c_expense'], $row['m_price'], $row['m_currency'], $row['m_expense'], $row['y_price'], $row['y_currency'], $row['y_expense'], $row['k_price'], $row['k_currency'], $row['k_expense'], $row['white_price'], $row['white_currency'], $row['white_expense'], $row['panton_price'], $row['panton_currency'], $row['panton_expense'], $row['lacquer_price'], $row['lacquer_currency'], $row['lacquer_expense'], $row['solvent_etoxipropanol_price'], $row['solvent_etoxipropanol_currency'], $row['solvent_flexol82_price'], $row['solvent_flexol82_currency'], $row['solvent_part'], $row['min_price']);
             }
         
-            $sql = "select glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, solvent_part "
+            $sql = "select glue_price, glue_currency, glue_expense, glue_expense_pet, solvent_price, solvent_currency, solvent_part "
                     . "from norm_glue where date <= '$param_date' order by id desc limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
-                $glue_data = new GlueData($row['glue'], $row['glue_currency'], $row['glue_expense'], $row['glue_expense_pet'], $row['solvent'], $row['solvent_currency'], $row['solvent_part']);
+                $glue_data = new DataGlue($row['glue'], $row['glue_currency'], $row['glue_expense'], $row['glue_expense_pet'], $row['solvent'], $row['solvent_currency'], $row['solvent_part']);
             }
             
-            $sql = "select flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, scotch, scotch_currency "
+            $sql = "select flint_price, flint_currency, kodak_price, kodak_currency, scotch_price, scotch_currency "
                     . "from norm_cliche where date <= '$date' order by id desc limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
-                $cliche_data = new ClicheData($row['flint'], $row['flint_currency'], $row['kodak'], $row['kodak_currency'], $row['tver'], $row['tver_currency'], $row['film'], $row['film_currency'], $row['scotch'], $row['scotch_currency']);
+                $cliche_data = new DataCliche($row['flint_price'], $row['flint_currency'], $row['kodak_price'], $row['kodak_currency'], $row['scotch_price'], $row['scotch_currency']);
             }
         }
     
         // ДЕЛАЕМ РАСЧЁТ
-        $calculation = new Calculation($tuning_data, $laminator_tuning_data, $machine_data, $laminator_machine_data, $ink_data, $glue_data, $cliche_data, $new_usd, $new_euro, 
+        $calculation = new Calculation($data_priladka, $data_priladka_laminator, $data_machine, $data_machine_laminator, $ink_data, $glue_data, $cliche_data, $new_usd, $new_euro, 
                 $param_unit, $param_quantity, $param_work_type_id, $param_film, $param_thickness, $param_density, $param_price, $param_currency, $param_customers_material, $param_ski, $param_width_ski, 
                 $param_lamination1_film, $param_lamination1_thickness, $param_lamination1_density, $param_lamination1_price, $param_lamination1_currency, $param_lamination1_customers_material, $param_lamination1_ski, $param_lamination1_width_ski, 
                 $param_lamination2_film, $param_lamination2_thickness, $param_lamination2_density, $param_lamination2_price, $param_lamination2_currency, $param_lamination2_customers_material, $param_lamination2_ski, $param_lamination2_width_ski, 

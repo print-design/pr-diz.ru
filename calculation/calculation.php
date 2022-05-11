@@ -1,9 +1,11 @@
 <?php
-class TuningData {
-    public $time = 0;
-    public $length = 0;
-    public $waste_percent = 0;
+// Данные приладки
+class DataPriladka {
+    public $time; // Время приладки
+    public $length; // Длина приладки
+    public $waste_percent; // Процент отходов от приладки
     
+    // Конструктор
     public function __construct($time, $length, $waste_percent) {
         $this->time = $time;
         $this->length = $length;
@@ -11,11 +13,13 @@ class TuningData {
     }
 }
 
-class MachineData {
-    public $price = 0;
-    public $speed = 0;
-    public $max_width = 0;
+// Характеристика оборудования
+class DataMachine {
+    public $price; // Цена
+    public $speed; // Скорость
+    public $max_width; // Максимальная ширина
     
+    // Контруктор
     public function __construct($price, $speed, $max_width) {
         $this->price = $price;
         $this->speed = $speed;
@@ -23,122 +27,123 @@ class MachineData {
     }
 }
 
-class InkData {
-    public $c = 0;
-    public $c_currency = 0;
-    public $c_expense = 0;
-    public $m = 0;
-    public $m_currency = 0;
-    public $m_expense = 0;
-    public $y = 0;
-    public $y_currency = 0;
-    public $y_expense = 0;
-    public $k = 0;
-    public $k_currency = 0;
-    public $k_expense = 0;
-    public $white = 0;
-    public $white_currency = 0;
-    public $white_expense = 0;
-    public $panton = 0;
-    public $panton_currency = 0;
-    public $panton_expense = 0;
-    public $lacquer = 0;
-    public $lacquer_currency = 0;
-    public $lacquer_expense = 0;
-    public $solvent_etoxipropanol = 0;
-    public $solvent_etoxipropanol_currency = 0;
-    public $solvent_flexol82 = 0;
-    public $solvent_flexol82_currency = 0;
-    public $solvent_part = 0;
-    public $min_price = 0;
+// Данные по краскам
+class DataInk {
+    public $c_price; // Cyan, цена
+    public $c_currency; // Cyan, валюта
+    public $c_expense; // Cyan, расход
+    public $m_price;
+    public $m_currency;
+    public $m_expense;
+    public $y_price;
+    public $y_currency;
+    public $y_expense;
+    public $k_price;
+    public $k_currency;
+    public $k_expense;
+    public $white_price;
+    public $white_currency;
+    public $white_expense;
+    public $panton_price;
+    public $panton_currency;
+    public $panton_expense;
+    public $lacquer_price;
+    public $lacquer_currency;
+    public $lacquer_expense;
+    public $solvent_etoxipropanol_price;
+    public $solvent_etoxipropanol_currency;
+    public $solvent_flexol82_price;
+    public $solvent_flexol82_currency;
+    public $solvent_part; // Расход растворителя на 1 кг краски
+    public $min_price; // Ограничение на минимальную стоимость
     
-    public function __construct($c, $c_currency, $c_expense, $m, $m_currency, $m_expense, $y, $y_currency, $y_expense, $k, $k_currency, $k_expense, $white, $white_currency, $white_expense, $panton, $panton_currency, $panton_expense, $lacquer, $lacquer_currency, $lacquer_expense, $solvent_etoxipropanol, $solvent_etoxipropanol_currency, $solvent_flexol82, $solvent_flexol82_currency, $solvent_part, $min_price) {
-        $this->c = $c;
+    // Конструктор
+    public function __construct($c_price, $c_currency, $c_expense, $m_price, $m_currency, $m_expense, $y_price, $y_currency, $y_expense, $k_price, $k_currency, $k_expense, $white_price, $white_currency, $white_expense, $panton_price, $panton_currency, $panton_expense, $lacquer_price, $lacquer_currency, $lacquer_expense, $solvent_etoxipropanol_price, $solvent_etoxipropanol_currency, $solvent_flexol82_price, $solvent_flexol82_currency, $solvent_part, $min_price) {
+        $this->c_price = $c_price;
         $this->c_currency = $c_currency;
         $this->c_expense = $c_expense;
-        $this->m = $m;
+        $this->m_price = $m_price;
         $this->m_currency = $m_currency;
         $this->m_expense = $m_expense;
-        $this->y = $y;
+        $this->y_price = $y_price;
         $this->y_currency = $y_currency;
         $this->y_expense = $y_expense;
-        $this->k = $k;
+        $this->k_price = $k_price;
         $this->k_currency = $k_currency;
         $this->k_expense = $k_expense;
-        $this->white = $white;
+        $this->white_price = $white_price;
         $this->white_currency = $white_currency;
         $this->white_expense = $white_expense;
-        $this->panton = $panton;
+        $this->panton_price = $panton_price;
         $this->panton_currency = $panton_currency;
         $this->panton_expense = $panton_expense;
-        $this->lacquer = $lacquer;
+        $this->lacquer_price = $lacquer_price;
         $this->lacquer_currency = $lacquer_currency;
         $this->lacquer_expense = $lacquer_expense;
-        $this->solvent_etoxipropanol = $solvent_etoxipropanol;
+        $this->solvent_etoxipropanol_price = $solvent_etoxipropanol_price;
         $this->solvent_etoxipropanol_currency = $solvent_etoxipropanol_currency;
-        $this->solvent_flexol82 = $solvent_flexol82;
+        $this->solvent_flexol82_price = $solvent_flexol82_price;
         $this->solvent_flexol82_currency = $solvent_flexol82_currency;
         $this->solvent_part = $solvent_part;
         $this->min_price = $min_price;
     }
 }
 
-class GlueData {
-    public $glue;
-    public $glue_currency;
-    public $glue_expense;
-    public $glue_expense_pet;
-    public $solvent;
-    public $solvent_currency;
-    public $solvent_part;
+// Данные по клею
+class DataGlue {
+    public $glue_price; // Клей, цена
+    public $glue_currency; // Клей, валюта
+    public $glue_expense; // Клей, расход
+    public $glue_expense_pet; // Клей, расход (ламинация ПЭТ)
+    public $solvent_price; // Растворитель, цена
+    public $solvent_currency; // Растворитель, валюта
+    public $solvent_part; // Расход растворителя на 1 кг клея
     
-    public function __construct($glue, $glue_currency, $glue_expense, $glue_expense_pet, $solvent, $solvent_currency, $solvent_part) {
-        $this->glue = $glue;
+    // Конструктор
+    public function __construct($glue_price, $glue_currency, $glue_expense, $glue_expense_pet, $solvent_price, $solvent_currency, $solvent_part) {
+        $this->glue_price = $glue_price;
         $this->glue_currency = $glue_currency;
         $this->glue_expense = $glue_expense;
         $this->glue_expense_pet = $glue_expense_pet;
-        $this->solvent = $solvent;
+        $this->solvent_price = $solvent_price;
         $this->solvent_currency = $solvent_currency;
         $this->solvent_part = $solvent_part;
     }
 }
 
-class ClicheData {
-    public $flint;
-    public $flint_currency;
-    public $kodak;
-    public $kodak_currency;
-    public $tver;
-    public $tver_currency;
-    public $film;
-    public $film_currency;
-    public $scotch;
-    public $scotch_currency;
+// Данные по формам
+class DataCliche {
+    public $flint_price; // Флинт, цена
+    public $flint_currency; // Флинт, валюта
+    public $kodak_price; // Кодак, цена
+    public $kodak_currency; // Кодак, валюта
+    public $scotch_price; // Скотч, цена
+    public $scotch_currency; // Скотч, валюта
     
-    public function __construct($flint, $flint_currency, $kodak, $kodak_currency, $tver, $tver_currency, $film, $film_currency, $scotch, $scotch_currency) {
-        $this->flint = $flint;
+    // Конструктор
+    public function __construct($flint_price, $flint_currency, $kodak_price, $kodak_currency, $scotch_price, $scotch_currency) {
+        $this->flint_price = $flint_price;
         $this->flint_currency = $flint_currency;
-        $this->kodak = $kodak;
+        $this->kodak_price = $kodak_price;
         $this->kodak_currency = $kodak_currency;
-        $this->tver = $tver;
-        $this->tver_currency = $tver_currency;
-        $this->film = $film;
-        $this->film_currency = $film_currency;
-        $this->scotch = $scotch;
+        $this->scotch_price = $scotch_price;
         $this->scotch_currency = $scotch_currency;
     }
 }
 
-class PriceData {
-    public $value;
-    public $currency;
+// Цена вместе с валютой
+class DataPrice {
+    public $value; // цена
+    public $currency; // валюта
     
+    // Конструктор
     public function __construct($value, $currency) {
         $this->value = $value;
         $this->currency = $currency;
     }
 }
 
+// Расчёт
 class Calculation {
     // Типы работы
     const WORK_TYPE_NOPRINT = 1;
@@ -191,34 +196,34 @@ class Calculation {
         }
     }
     
-    function GetInkPrice($ink, $cmyk, $c, $c_currency, $m, $m_currency, $y, $y_currency, $k, $k_currency, $panton, $panton_currency, $white, $white_currency, $lacquer, $lacquer_currency) {
+    function GetInkPrice($ink, $cmyk, $c_price, $c_currency, $m_price, $m_currency, $y_price, $y_currency, $k_price, $k_currency, $panton_price, $panton_currency, $white_price, $white_currency, $lacquer_price, $lacquer_currency) {
         switch ($ink) {
             case self::CMYK:
                 switch ($cmyk) {
                     case self::CYAN:
-                        return new PriceData($c, $c_currency);
+                        return new DataPrice($c_price, $c_currency);
                         
                     case self::MAGENDA:
-                        return new PriceData($m, $m_currency);
+                        return new DataPrice($m_price, $m_currency);
                         
                     case self::YELLOW:
-                        return new PriceData($y, $y_currency);
+                        return new DataPrice($y_price, $y_currency);
                         
                     case self::KONTUR:
-                        return new PriceData($k, $k_currency);
+                        return new DataPrice($k_price, $k_currency);
                         
                     default :
                         return null;
                 }
                 
             case self::PANTON:
-                return new PriceData($panton, $panton_currency);
+                return new DataPrice($panton_price, $panton_currency);
                 
             case self::WHITE:
-                return new PriceData($white, $white_currency);
+                return new DataPrice($white_price, $white_currency);
                 
             case self::LACQUER:
-                return new PriceData($lacquer, $lacquer_currency);
+                return new DataPrice($lacquer_price, $lacquer_currency);
                 
             default :
                 return null;
@@ -283,7 +288,7 @@ class Calculation {
     public $weight_dirty_1, $weight_dirty_2, $weight_dirty_3;
     public $length_dirty_1, $length_dirty_2, $length_dirty_3;
     public $film_price_1, $film_price_2, $film_price_3;
-    public $tuning_time_1, $tuning_time_2, $tuning_time_3;
+    public $priladka_time_1, $priladka_time_2, $priladka_time_3;
     public $print_time_1, $lamination_time_2, $lamination_time_3;
     public $work_time_1, $work_time_2, $work_time_3;
     public $work_price_1, $work_price_2, $work_price_3;
@@ -314,13 +319,13 @@ class Calculation {
     public $cliche_new_number; // количество новых форм
     public $cliche_prices; // цена форм
 
-    public function __construct(TuningData $tuning_data, 
-            TuningData $laminator_tuning_data,
-            MachineData $machine_data,
-            MachineData $laminator_machine_data,
-            InkData $ink_data,
-            GlueData $glue_data,
-            ClicheData $cliche_data,
+    public function __construct(DataPriladka $data_priladka, 
+            DataPriladka $data_priladka_laminator,
+            DataMachine $data_machine,
+            DataMachine $data_machine_laminator,
+            DataInk $ink_data,
+            DataGlue $glue_data,
+            DataCliche $cliche_data,
             $usd, // Курс доллара
             $euro, // Курс евро
             $unit, // Кг или шт
@@ -501,23 +506,23 @@ class Calculation {
         
         
         // СтартСтопОтход 1
-        $this->waste_length_1 = $tuning_data->waste_percent * $this->length_pure_start_1 / 100;
+        $this->waste_length_1 = $data_priladka->waste_percent * $this->length_pure_start_1 / 100;
         
         // СтартСтопОтход 2
-        $this->waste_length_2 = $laminator_tuning_data->waste_percent * $this->length_pure_start_2 / 100;
+        $this->waste_length_2 = $data_priladka_laminator->waste_percent * $this->length_pure_start_2 / 100;
                 
         // СтартСтопОтход 3
-        $this->waste_length_3 = $laminator_tuning_data->waste_percent * $this->length_pure_start_3 / 100;
+        $this->waste_length_3 = $data_priladka_laminator->waste_percent * $this->length_pure_start_3 / 100;
         
         
         // М пог грязные 1
-        $this->length_dirty_start_1 = $this->length_pure_start_1 + ($ink_number * $tuning_data->length) + ($this->laminations_number * $laminator_tuning_data->length) + $this->waste_length_1;
+        $this->length_dirty_start_1 = $this->length_pure_start_1 + ($ink_number * $data_priladka->length) + ($this->laminations_number * $data_priladka_laminator->length) + $this->waste_length_1;
         
         // М пог грязные 2
-        $this->length_dirty_start_2 = $this->length_pure_start_2 + ($this->laminations_number * $laminator_tuning_data->length) + $this->waste_length_2; 
+        $this->length_dirty_start_2 = $this->length_pure_start_2 + ($this->laminations_number * $data_priladka_laminator->length) + $this->waste_length_2; 
         
         // М пог грязные 3
-        $this->length_dirty_start_3 = $this->length_pure_start_3 + ($laminator_tuning_data->length * $this->uk3) + $this->waste_length_3;
+        $this->length_dirty_start_3 = $this->length_pure_start_3 + ($data_priladka_laminator->length * $this->uk3) + $this->waste_length_3;
         
         
         // М2 грязные 1
@@ -590,43 +595,43 @@ class Calculation {
         //*****************************************
         
         // Время приладки 1, мин
-        $this->tuning_time_1 = $ink_number * $tuning_data->time;
+        $this->priladka_time_1 = $ink_number * $data_priladka->time;
         
         // Время приладки 2, мин
-        $this->tuning_time_2 = $laminator_tuning_data->time * $this->uk2;
+        $this->priladka_time_2 = $data_priladka_laminator->time * $this->uk2;
         
         // Время приладки 3, мин
-        $this->tuning_time_3 = $laminator_tuning_data->time * $this->uk3;
+        $this->priladka_time_3 = $data_priladka_laminator->time * $this->uk3;
         
         
         // Время печати (без приладки) 1, ч
-        $this->print_time_1 = $machine_data->speed == 0 ? 0 : ($this->length_pure_start_1 + $this->waste_length_1) / $machine_data->speed / 1000 * $this->uk1;
+        $this->print_time_1 = $data_machine->speed == 0 ? 0 : ($this->length_pure_start_1 + $this->waste_length_1) / $data_machine->speed / 1000 * $this->uk1;
         
         // Время ламинации (без приладки) 2, ч
-        $this->lamination_time_2 = $laminator_machine_data->speed == 0 ? 0 : ($this->length_pure_start_2 + $this->waste_length_2) / $laminator_machine_data->speed / 1000 * $this->uk2;
+        $this->lamination_time_2 = $data_machine_laminator->speed == 0 ? 0 : ($this->length_pure_start_2 + $this->waste_length_2) / $data_machine_laminator->speed / 1000 * $this->uk2;
         
         // Время ламинации (без приладки) 3, ч
-        $this->lamination_time_3 = $laminator_machine_data->speed == 0 ? 0 : ($this->length_pure_start_3 + $this->waste_length_3) / $laminator_machine_data->speed / 1000 * $this->uk3;
+        $this->lamination_time_3 = $data_machine_laminator->speed == 0 ? 0 : ($this->length_pure_start_3 + $this->waste_length_3) / $data_machine_laminator->speed / 1000 * $this->uk3;
         
         
         // Общее время выполнения тиража 1, ч
-        $this->work_time_1 = $this->tuning_time_1 / 60 + $this->print_time_1;
+        $this->work_time_1 = $this->priladka_time_1 / 60 + $this->print_time_1;
          
         // Общее время выполнения тиража 2, ч
-        $this->work_time_2 = $this->tuning_time_2 / 60 + $this->lamination_time_2;
+        $this->work_time_2 = $this->priladka_time_2 / 60 + $this->lamination_time_2;
         
         // Общее время выполнения тиража 3, ч
-        $this->work_time_3 = $this->tuning_time_3 / 60 + $this->lamination_time_3;
+        $this->work_time_3 = $this->priladka_time_3 / 60 + $this->lamination_time_3;
         
         
         // Стоимость выполнения тиража 1, руб
-        $this->work_price_1 = $this->work_time_1 * $machine_data->price;
+        $this->work_price_1 = $this->work_time_1 * $data_machine->price;
         
         // Стоимость выполнения тиража 2, руб
-        $this->work_price_2 = $this->work_time_2 * $laminator_machine_data->price;
+        $this->work_price_2 = $this->work_time_2 * $data_machine_laminator->price;
         
         // Стоимость выполнения тиража 3, руб
-        $this->work_price_3 = $this->work_time_3 * $laminator_machine_data->price;
+        $this->work_price_3 = $this->work_time_3 * $data_machine_laminator->price;
         
         //****************************************
         // Расход краски
@@ -639,10 +644,10 @@ class Calculation {
         $this->ink_1kg_mix_weight = 1 + $ink_data->solvent_part;
         
         // Цена 1 кг чистого флексоля 82, руб
-        $this->ink_flexol82_kg_price = $ink_data->solvent_flexol82 * $this->GetCurrencyRate($ink_data->solvent_flexol82_currency, $usd, $euro);
+        $this->ink_flexol82_kg_price = $ink_data->solvent_flexol82_price * $this->GetCurrencyRate($ink_data->solvent_flexol82_currency, $usd, $euro);
         
         // Цена 1 кг чистого этоксипропанола, руб
-        $this->ink_etoxypropanol_kg_price = $ink_data->solvent_etoxipropanol * $this->GetCurrencyRate($ink_data->solvent_etoxipropanol_currency, $usd, $euro);
+        $this->ink_etoxypropanol_kg_price = $ink_data->solvent_etoxipropanol_price * $this->GetCurrencyRate($ink_data->solvent_etoxipropanol_currency, $usd, $euro);
         
         // Если печатаем на Комифлекс, то пользуемся флексолем82, иначе - этоксипропанолом
         $ink_solvent_kg_price = 0;
@@ -665,7 +670,7 @@ class Calculation {
             $percent = "percent_$i";
             
             // Цена 1 кг чистой краски, руб
-            $price = $this->GetInkPrice($$ink, $$cmyk, $ink_data->c, $ink_data->c_currency, $ink_data->m, $ink_data->m_currency, $ink_data->y, $ink_data->y_currency, $ink_data->k, $ink_data->k_currency, $ink_data->panton, $ink_data->panton_currency, $ink_data->white, $ink_data->white_currency, $ink_data->lacquer, $ink_data->lacquer_currency);
+            $price = $this->GetInkPrice($$ink, $$cmyk, $ink_data->c_price, $ink_data->c_currency, $ink_data->m_price, $ink_data->m_currency, $ink_data->y_price, $ink_data->y_currency, $ink_data->k_price, $ink_data->k_currency, $ink_data->panton_price, $ink_data->panton_currency, $ink_data->white_price, $ink_data->white_currency, $ink_data->lacquer_price, $ink_data->lacquer_currency);
             $ink_kg_price = $price->value * $this->GetCurrencyRate($price->currency, $usd, $euro);
             $this->ink_kg_prices[$i] = $ink_kg_price;
             
@@ -690,10 +695,10 @@ class Calculation {
         $this->glue_kg_weight = 1 + $glue_data->solvent_part;
         
         // Цена 1 кг чистого клея, руб
-        $this->glue_kg_price = $glue_data->glue * $this->GetCurrencyRate($glue_data->glue_currency, $usd, $euro);
+        $this->glue_kg_price = $glue_data->glue_price * $this->GetCurrencyRate($glue_data->glue_currency, $usd, $euro);
         
         // Цена 1 кг чистого растворителя для клея, руб
-        $this->glue_solvent_kg_price = $glue_data->solvent * $this->GetCurrencyRate($glue_data->solvent_currency, $usd, $euro);
+        $this->glue_solvent_kg_price = $glue_data->solvent_price * $this->GetCurrencyRate($glue_data->solvent_currency, $usd, $euro);
         
         // Цена 1 кг КлеяСмеси, руб
         $this->mix_glue_kg_price = ((1 * $this->glue_kg_price) + ($glue_data->solvent_part * $this->glue_solvent_kg_price)) / $this->glue_kg_weight;
@@ -758,12 +763,12 @@ class Calculation {
             
             switch ($$cliche) {
                 case self::FLINT:
-                    $cliche_sm_price = $cliche_data->flint;
+                    $cliche_sm_price = $cliche_data->flint_price;
                     $cliche_currency = $cliche_data->flint_currency;
                     break;
                 
                 case self::KODAK:
-                    $cliche_sm_price = $cliche_data->kodak;
+                    $cliche_sm_price = $cliche_data->kodak_price;
                     $cliche_currency = $cliche_data->kodak_currency;
                     break;
             }

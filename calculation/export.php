@@ -487,8 +487,8 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     $pure_area = null;    $pure_width = null;    $pure_length = null;
     $pure_length_lam = null;    $dirty_length = null;    $dirty_width = null;
     $dirty_area = null;    $pure_weight = null;    $dirty_weight = null;
-    $material_price = null;    $print_time = null;    $tuning_time = null;
-    $print_tuning_time = null;    $print_price = null;    $cliche_area = null;
+    $material_price = null;    $print_time = null;    $priladka_time = null;
+    $print_priladka_time = null;    $print_price = null;    $cliche_area = null;
     $cliche_flint_price = null;    $cliche_kodak_price = null;    $cliche_tver_price = null;
     $cliche_price = null;    $paint_price = null;    $pure_weight_lam1 = null;
     $dirty_weight_lam1 = null;    $price_lam1_material = null;    $price_lam1_glue = null;
@@ -499,8 +499,8 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     $cost_with_cliche_kg = null;    $cost_no_cliche_thing = null;    $cost_with_cliche_thing = null;
 
     $sql = "select pure_area, pure_width, pure_length, pure_length_lam, "
-            . "dirty_length, dirty_width, dirty_area, pure_weight, dirty_weight, material_price, print_time, tuning_time, "
-            . "print_tuning_time, print_price, cliche_area, cliche_flint_price, cliche_kodak_price, cliche_tver_price, "
+            . "dirty_length, dirty_width, dirty_area, pure_weight, dirty_weight, material_price, print_time, priladka_time, "
+            . "print_priladka_time, print_price, cliche_area, cliche_flint_price, cliche_kodak_price, cliche_tver_price, "
             . "cliche_price, paint_price, pure_weight_lam1, dirty_weight_lam1, "
             . "price_lam1_material, price_lam1_glue, price_lam1_work, pure_weight_lam2, dirty_weight_lam2, price_lam2_material, "
             . "price_lam2_glue, price_lam2_work, price_lam_total, pure_weight_total, dirty_weight_total, cost_no_cliche, "
@@ -520,8 +520,8 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
         $dirty_weight = $row['dirty_weight'];
         $material_price = $row['material_price'];
         $print_time = $row['print_time'];
-        $tuning_time = $row['tuning_time'];
-        $print_tuning_time = $row['print_tuning_time'];
+        $priladka_time = $row['priladka_time'];
+        $print_priladka_time = $row['print_priladka_time'];
         $print_price = $row['print_price'];
         $cliche_area = $row['cliche_area'];
         $cliche_flint_price = $row['cliche_flint_price'];
@@ -632,8 +632,8 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     echo mb_convert_encoding("Вес материала готовой продукции с отходами,кг :   $dirty_weight_total;\n", "cp1251");
     echo mb_convert_encoding("Стоимость материала печати,руб:$material_price;\n", "cp1251");
     echo mb_convert_encoding("Время печати тиража без приладки,ч:       $print_time;\n", "cp1251");
-    echo mb_convert_encoding("Время приладки,ч :       $tuning_time;\n", "cp1251");
-    echo mb_convert_encoding("Время печати с приладкой,ч :       $print_tuning_time;\n", "cp1251");
+    echo mb_convert_encoding("Время приладки,ч :       $priladka_time;\n", "cp1251");
+    echo mb_convert_encoding("Время печати с приладкой,ч :       $print_priladka_time;\n", "cp1251");
     echo mb_convert_encoding("Стоимость печати,руб :   $print_price;\n", "cp1251");
     echo mb_convert_encoding("Площадь печатной формы,см2 :   $cliche_area;\n", "cp1251");
     echo mb_convert_encoding("Стоимость 1 печатной формы,руб :   $new_cliche_price;\n", "cp1251");

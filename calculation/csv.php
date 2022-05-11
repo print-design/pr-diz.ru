@@ -265,42 +265,42 @@ if($id !== null) {
     }
     
     // ПОЛУЧЕНИЕ НОРМ
-    $tuning_data = new TuningData(null, null, null);
-    $laminator_tuning_data = new TuningData(null, null, null);
-    $machine_data = new MachineData(null, null, null);
-    $laminator_machine_data = new MachineData(null, null, null);
-    $ink_data = new InkData(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-    $glue_data = new GlueData(null, null, null, null, null, null, null);
+    $data_priladka = new DataPriladka(null, null, null);
+    $data_priladka_laminator = new DataPriladka(null, null, null);
+    $data_machine = new DataMachine(null, null, null);
+    $data_machine_laminator = new DataMachine(null, null, null);
+    $ink_data = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+    $glue_data = new DataGlue(null, null, null, null, null, null, null);
     
     if(!empty($date)) {
         if(empty($machine_id)) {
-            $tuning_data = new TuningData(0, 0, 0);
+            $data_priladka = new DataPriladka(0, 0, 0);
         }
         else {
-            $sql = "select machine_id, time, length, waste_percent from norm_tuning where id in (select max(id) from norm_tuning where date <= '$date' group by machine_id)";
+            $sql = "select machine_id, time, length, waste_percent from norm_priladka where id in (select max(id) from norm_priladka where date <= '$date' group by machine_id)";
             $fetcher = new Fetcher($sql);
             while ($row = $fetcher->Fetch()) {
                 if($row['machine_id'] == $machine_id) {
-                    $tuning_data = new TuningData($row['time'], $row['length'], $row['waste_percent']);
+                    $data_priladka = new DataPriladka($row['time'], $row['length'], $row['waste_percent']);
                 }
             }
         }
         
-        $sql = "select time, length, waste_percent from norm_laminator_tuning where date <= '$date' order by id desc limit 1";
+        $sql = "select time, length, waste_percent from norm_laminator_priladka where date <= '$date' order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
-            $laminator_tuning_data = new TuningData($row['time'], $row['length'], $row['waste_percent']);
+            $data_priladka_laminator = new DataPriladka($row['time'], $row['length'], $row['waste_percent']);
         }
         
         if(empty($machine_id)) {
-            $machine_data = new MachineData(0, 0, 0);
+            $data_machine = new DataMachine(0, 0, 0);
         }
         else {
             $sql = "select machine_id, price, speed, max_width from norm_machine where id in (select max(id) from norm_machine where date <= '$date' group by machine_id)";
             $fetcher = new Fetcher($sql);
             while ($row = $fetcher->Fetch()) {
                 if($row['machine_id'] == $machine_id) {
-                    $machine_data = new MachineData($row['price'], $row['speed'], $row['max_width']);
+                    $data_machine = new DataMachine($row['price'], $row['speed'], $row['max_width']);
                 }
             }
         }
@@ -308,37 +308,37 @@ if($id !== null) {
         $sql = "select price, speed, max_width from norm_laminator where date <= '$date' order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
-            $laminator_machine_data = new MachineData($row['price'], $row['speed'], $row['max_width']);
+            $data_machine_laminator = new DataMachine($row['price'], $row['speed'], $row['max_width']);
         }
         
-        $sql = "select c, c_currency, c_expense, m, m_currency, m_expense, y, y_currency, y_expense, k, k_currency, k_expense, white, white_currency, white_expense, panton, panton_currency, panton_expense, lacquer, lacquer_currency, lacquer_expense, solvent_etoxipropanol, solvent_etoxipropanol_currency, solvent_flexol82, solvent_flexol82_currency, solvent_part, min_price "
+        $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_price, lacquer_currency, lacquer_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price "
                 . "from norm_ink where date <= '$date' order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
-            $ink_data = new InkData($row['c'], $row['c_currency'], $row['c_expense'], $row['m'], $row['m_currency'], $row['m_expense'], $row['y'], $row['y_currency'], $row['y_expense'], $row['k'], $row['k_currency'], $row['k_expense'], $row['white'], $row['white_currency'], $row['white_expense'], $row['panton'], $row['panton_currency'], $row['panton_expense'], $row['lacquer'], $row['lacquer_currency'], $row['lacquer_expense'], $row['solvent_etoxipropanol'], $row['solvent_etoxipropanol_currency'], $row['solvent_flexol82'], $row['solvent_flexol82_currency'], $row['solvent_part'], $row['min_price']);
+            $ink_data = new DataInk($row['c_price'], $row['c_currency'], $row['c_expense'], $row['m_price'], $row['m_currency'], $row['m_expense'], $row['y_price'], $row['y_currency'], $row['y_expense'], $row['k_price'], $row['k_currency'], $row['k_expense'], $row['white_price'], $row['white_currency'], $row['white_expense'], $row['panton_price'], $row['panton_currency'], $row['panton_expense'], $row['lacquer_price'], $row['lacquer_currency'], $row['lacquer_expense'], $row['solvent_etoxipropanol_price'], $row['solvent_etoxipropanol_currency'], $row['solvent_flexol82_price'], $row['solvent_flexol82_currency'], $row['solvent_part'], $row['min_price']);
         }
         
-        $sql = "select glue, glue_currency, glue_expense, glue_expense_pet, solvent, solvent_currency, solvent_part "
+        $sql = "select glue_price, glue_currency, glue_expense, glue_expense_pet, solvent_price, solvent_currency, solvent_part "
                 . "from norm_glue where date <= '$date' order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
-            $glue_data = new GlueData($row['glue'], $row['glue_currency'], $row['glue_expense'], $row['glue_expense_pet'], $row['solvent'], $row['solvent_currency'], $row['solvent_part']);
+            $glue_data = new DataGlue($row['glue_price'], $row['glue_currency'], $row['glue_expense'], $row['glue_expense_pet'], $row['solvent_price'], $row['solvent_currency'], $row['solvent_part']);
         }
         
-        $sql = "select flint, flint_currency, kodak, kodak_currency, tver, tver_currency, film, film_currency, scotch, scotch_currency "
+        $sql = "select flint_price, flint_currency, kodak_price, kodak_currency, scotch_price, scotch_currency "
                 . "from norm_cliche where date <= '$date' order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
-            $cliche_data = new ClicheData($row['flint'], $row['flint_currency'], $row['kodak'], $row['kodak_currency'], $row['tver'], $row['tver_currency'], $row['film'], $row['film_currency'], $row['scotch'], $row['scotch_currency']);
+            $cliche_data = new DataCliche($row['flint_price'], $row['flint_currency'], $row['kodak_price'], $row['kodak_currency'], $row['scotch_price'], $row['scotch_currency']);
         }
     }
         
     if(!empty($date)) {
         // Расчёт
-        $calculation = new Calculation($tuning_data, 
-                $laminator_tuning_data,
-                $machine_data,
-                $laminator_machine_data,
+        $calculation = new Calculation($data_priladka, 
+                $data_priladka_laminator,
+                $data_machine,
+                $data_machine_laminator,
                 $ink_data,
                 $glue_data,
                 $cliche_data,
@@ -580,32 +580,32 @@ if($id !== null) {
         
         array_push($file_data, array("СтартСтопОтход 1",
             Display($calculation->waste_length_1),
-            "|= ".Display($tuning_data->waste_percent)." * ".Display($calculation->length_pure_start_1)." / 100",
+            "|= ".Display($data_priladka->waste_percent)." * ".Display($calculation->length_pure_start_1)." / 100",
             "СтартСтопОтход печати * м пог чистые 1 / 100"));
         
         array_push($file_data, array("СтартСтопОтход 2",
             Display($calculation->waste_length_2),
-            "|= ".Display($laminator_tuning_data->waste_percent)." * ".Display($calculation->length_pure_start_2)." / 100",
+            "|= ".Display($data_priladka_laminator->waste_percent)." * ".Display($calculation->length_pure_start_2)." / 100",
             "СтартСтопОтход ламинации * м. пог. чистые 2 / 100"));
         
         array_push($file_data, array("СтартСтопОтход 3",
             Display($calculation->waste_length_3),
-            "|= ".Display($laminator_tuning_data->waste_percent)." * ".Display($calculation->length_pure_start_3)." / 100",
+            "|= ".Display($data_priladka_laminator->waste_percent)." * ".Display($calculation->length_pure_start_3)." / 100",
             "СтартСтопОтход ламинации * м. пог. чистые 3 / 100"));
         
         array_push($file_data, array("М пог грязные 1",
             Display($calculation->length_dirty_start_1),
-            "|= ".Display($calculation->length_pure_start_1)." + (".Display($ink_number)." * ".Display($tuning_data->length).") + (".Display($calculation->laminations_number)." * ".Display($laminator_tuning_data->length).") + ".Display($calculation->waste_length_1),
+            "|= ".Display($calculation->length_pure_start_1)." + (".Display($ink_number)." * ".Display($data_priladka->length).") + (".Display($calculation->laminations_number)." * ".Display($data_priladka_laminator->length).") + ".Display($calculation->waste_length_1),
             "м пог чистые 1 + (красочность * метраж приладки 1 краски) + (количество ламинаций * метраж приладки ламинации) + СтартСтопОтход 1"));
         
         array_push($file_data, array("М пог грязные 2",
             Display($calculation->length_dirty_start_2),
-            "|= ".Display($calculation->length_pure_start_2)." + (".Display($calculation->laminations_number)." * ".Display($laminator_tuning_data->length).") + ".Display($calculation->waste_length_2),
+            "|= ".Display($calculation->length_pure_start_2)." + (".Display($calculation->laminations_number)." * ".Display($data_priladka_laminator->length).") + ".Display($calculation->waste_length_2),
             "м пог чистые 2 + (количество ламинаций * метраж приладки ламинации) + СтартСтопОтход 2"));
         
         array_push($file_data, array("М пог грязные 3",
             Display($calculation->length_dirty_start_3),
-            "|= ".Display($calculation->length_pure_start_3)." + (".Display($laminator_tuning_data->length)." * ".Display($calculation->uk3).") + ".Display($calculation->waste_length_3),
+            "|= ".Display($calculation->length_pure_start_3)." + (".Display($data_priladka_laminator->length)." * ".Display($calculation->uk3).") + ".Display($calculation->waste_length_3),
             "м пог чистые 3 + (метраж приладки ламинации * УК3) + СтартСтопОтход 3"));
         
         array_push($file_data, array("М2 грязные 1",
@@ -783,63 +783,63 @@ if($id !== null) {
         //*****************************************
         
         array_push($file_data, array("Время приладки 1, мин",
-            Display($calculation->tuning_time_1),
-            "|= ".Display($ink_number)." * ".Display($tuning_data->time),
+            Display($calculation->priladka_time_1),
+            "|= ".Display($ink_number)." * ".Display($data_priladka->time),
             "красочность * время приладки 1 краски"));
         
         array_push($file_data, array("Время приладки 2, мин",
-            Display($calculation->tuning_time_2),
-            "|= ".Display($laminator_tuning_data->time)." * ".Display($calculation->uk2),
+            Display($calculation->priladka_time_2),
+            "|= ".Display($data_priladka_laminator->time)." * ".Display($calculation->uk2),
             "время приладки ламинатора * УК2"));
         
         array_push($file_data, array("Время приладки 3, мин",
-            Display($calculation->tuning_time_3),
-            "|= ".Display($laminator_tuning_data->time)." * ".Display($calculation->uk3),
+            Display($calculation->priladka_time_3),
+            "|= ".Display($data_priladka_laminator->time)." * ".Display($calculation->uk3),
             "время приладки ламинатора * УК3"));
         
         array_push($file_data, array("Время печати (без приладки) 1, ч",
             Display($calculation->print_time_1),
-            "|= (".Display($calculation->length_pure_start_1)." + ".Display($calculation->waste_length_1).") / ".Display($machine_data->speed)." / 1000 * ".Display($calculation->uk1),
+            "|= (".Display($calculation->length_pure_start_1)." + ".Display($calculation->waste_length_1).") / ".Display($data_machine->speed)." / 1000 * ".Display($calculation->uk1),
             "(м пог чистые 1 + СтартСтопОтход 1) / скорость работы машины / 1000 * УК1"));
         
         array_push($file_data, array("Время ламинации (без приладки) 2, ч",
             Display($calculation->lamination_time_2),
-            "|= (".Display($calculation->length_pure_start_2)." + ".Display($calculation->waste_length_2).") / ".Display($laminator_machine_data->speed)." / 1000 * ".Display($calculation->uk2),
+            "|= (".Display($calculation->length_pure_start_2)." + ".Display($calculation->waste_length_2).") / ".Display($data_machine_laminator->speed)." / 1000 * ".Display($calculation->uk2),
             "(м пог чистые 1 + СтартСтопОтход 1) / скорость работы ламинатора /1000 * УК2"));
         
         array_push($file_data, array("Время ламинации (без приладки) 3, ч",
             Display($calculation->lamination_time_3),
-            "|= (".Display($calculation->length_pure_start_3)." + ".Display($calculation->waste_length_3).") / ".Display($laminator_machine_data->speed)." / 1000 * ".Display($calculation->uk3),
+            "|= (".Display($calculation->length_pure_start_3)." + ".Display($calculation->waste_length_3).") / ".Display($data_machine_laminator->speed)." / 1000 * ".Display($calculation->uk3),
             "(м пог чистые 1 + СтартСтопОтход 1) / скорость работы ламинатора / 1000 * УК3"));
         
         array_push($file_data, array("Общее время выполнения тиража 1, ч",
             Display($calculation->work_time_1),
-            "|= ".Display($calculation->tuning_time_1)." / 60 + ".Display($calculation->print_time_1),
+            "|= ".Display($calculation->priladka_time_1)." / 60 + ".Display($calculation->print_time_1),
             "время приладки 1 / 60 + время печати"));
         
         array_push($file_data, array("Общее время выполнения тиража 2, ч",
             Display($calculation->work_time_2),
-            "|= ".Display($calculation->tuning_time_2)." / 60 + ".Display($calculation->lamination_time_2),
+            "|= ".Display($calculation->priladka_time_2)." / 60 + ".Display($calculation->lamination_time_2),
             "время приладки 2 / 60 + время ламинации 1"));
         
         array_push($file_data, array("Общее время выполнения тиража 3, ч",
             Display($calculation->work_time_3),
-            "|= ".Display($calculation->tuning_time_3)." / 60 + ".Display($calculation->lamination_time_3),
+            "|= ".Display($calculation->priladka_time_3)." / 60 + ".Display($calculation->lamination_time_3),
             "время приладки 3 / 60 + время ламинации 2"));
         
         array_push($file_data, array("Стоимость выполнения тиража 1, руб",
             Display($calculation->work_price_1),
-            "|= ".Display($calculation->work_time_1)." * ".Display($machine_data->price),
+            "|= ".Display($calculation->work_time_1)." * ".Display($data_machine->price),
             "общее время выполнения 1 * цена работы оборудования 1"));
         
         array_push($file_data, array("Стоимость выполнения тиража 2, руб",
             Display($calculation->work_price_2),
-            "|= ".Display($calculation->work_time_2)." * ".Display($laminator_machine_data->price),
+            "|= ".Display($calculation->work_time_2)." * ".Display($data_machine_laminator->price),
             "общее время выполнения 2 * цена работы оборудования 2"));
         
         array_push($file_data, array("Стоимость выполнения тиража 3, руб",
             Display($calculation->work_price_3),
-            "|= ".Display($calculation->work_time_3)." * ".Display($laminator_machine_data->price),
+            "|= ".Display($calculation->work_time_3)." * ".Display($data_machine_laminator->price),
             "общее время выполнения 3 * цена работы оборудования 3"));
         
         $total_work_cost = $calculation->work_price_1 + $calculation->work_price_2 + $calculation->work_price_3;
