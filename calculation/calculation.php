@@ -313,8 +313,8 @@ class Calculation {
     public $glue_area3; // площадь заклейки, плёнка 3, м2
     public $glue_expense2; // расход клея, плёнка 2, кг
     public $glue_expense3; // расход клея, плёнка 3, кг
-    public $glue_price2; // стоимость клея, плёнка 2, руб
-    public $glue_price3; // стоимость клея, плёнка 3, руб
+    public $glue_cost2; // стоимость клея, плёнка 2, руб
+    public $glue_cost3; // стоимость клея, плёнка 3, руб
     
     public $cliche_height; // высота формы, мм
     public $cliche_width; // ширина формы, мм
@@ -372,19 +372,22 @@ class Calculation {
             $lamination_roller_width, // Ширина ламинирующего вала
             $ink_number, // Красочность
             
-            $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
-            $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
-            $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, 
-            $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, 
-            $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8
+            $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, // Тип краски (CMYK, пантон, белая, лак)
+            $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, // Номер пантона
+            $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, // Тип CMYK (cyan, magenda, yellow, kontur)
+            $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, // Процент данной краски
+            $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8 // Форма (старая, Флинт, Кодак)
             ) {
-        // Значения по умолчанию
+        // Если нет одной ламинации или обеих, то толщина, плотность и цена плёнок для ламинации имеют пустые значения.
+        // Присваиваем им значение 0, чтобы программа не сломалась при попытке вычилений с пустым значением.
         if(empty($thickness_2)) $thickness_2 = 0;
         if(empty($density_2)) $density_2 = 0;
         if(empty($price_2)) $price_2 = 0;
         if(empty($thickness_3)) $thickness_3 = 0;
         if(empty($density_3)) $density_3 = 0;
         if(empty($price_3)) $price_3 = 0;
+        
+        // Если тип работы - плёнка без печати, то 
         if($work_type_id == self::WORK_TYPE_NOPRINT) {
             $machine_id = null;
             $ink_number = 0;
@@ -394,12 +397,18 @@ class Calculation {
         if(empty($lamination_roller_width)) $lamination_roller_width = 0;
         if(empty($ink_number)) $ink_number = 0;
         
-        // Количество ламинаций
+        // Определение количества ламинаций
+        // Если плёнка 3, толщина 3 и плотность 3 - не пустые, то количество ламинаций - 2
+        // Иначе, если плёнка 2, толщина 2 и плотность 2 - не пустые, то количество ламинаций - 1
+        // Иначе количество ламинаций - 0
         if(!empty($film_3) && !empty($thickness_3) && !empty($density_3)) {
             $this->laminations_number = 2;
         }
         elseif(!empty ($film_2) && !empty ($thickness_2) && !empty ($density_2)) {
             $this->laminations_number = 1;
+        }
+        else {
+            $this->laminations_number = 0;
         }
         
         // Если материал заказчика, то его цена = 0
@@ -415,6 +424,8 @@ class Calculation {
         
         // Уравнивующий коэф 3 (УК3)=0 когда нет ламинации 2, = 1 когда есть ламинация 2
         $this->uk3 = $this->laminations_number > 1 ? 1 : 0;
+        
+        // НИЖЕ НАЧИНАЕТСЯ ВЫЧИСЛЕНИЕ
         
         // М2 чистые, м2
         if($unit == self::KG) {
@@ -687,8 +698,8 @@ class Calculation {
             $this->ink_expenses[$i] = $ink_expense;
             
             // Стоимость КраскаСмеси, руб
-            $ink_price = $ink_expense * $mix_ink_kg_price;
-            $this->ink_costs[$i] = $ink_price;
+            $ink_cost = $ink_expense * $mix_ink_kg_price;
+            $this->ink_costs[$i] = $ink_cost;
         }
         
         //********************************************
@@ -730,10 +741,10 @@ class Calculation {
         }
         
         // Стоимость КлеяСмеси 2, руб
-        $this->glue_price2 = $this->glue_expense2 * $this->mix_glue_kg_price;
+        $this->glue_cost2 = $this->glue_expense2 * $this->mix_glue_kg_price;
         
         // Стоимость КлеяСмеси 3, руб
-        $this->glue_price3 = $this->glue_expense3 * $this->mix_glue_kg_price;
+        $this->glue_cost3 = $this->glue_expense3 * $this->mix_glue_kg_price;
         
         //***********************************
         // Стоимость форм

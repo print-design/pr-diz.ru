@@ -51,9 +51,9 @@ $extracharge = null; $usd = null; $euro = null; $cost = null; $cost_per_unit = n
 $film_cost = null; $film_cost_per_unit = null; $width = null; $weight_pure = null; $length_pure = null; $weight_dirty = null; $length_dirty = null;
 $lamination1_film_cost = null; $lamination1_film_cost_per_unit = null; $lamination1_width = null; $lamination1_weight_pure = null; $lamination1_length_pure = null; $lamination1_weight_dirty = null; $lamination1_length_dirty = null;
 $lamination2_film_cost = null; $lamination2_film_cost_per_unit = null; $lamination2_width = null; $lamination2_weight_pure = null; $lamination2_length_pure = null; $lamination2_weight_dirty = null; $lamination2_length_dirty = null;
-$film_waste_price = null; $film_waste = null; $ink_price = null; $ink_weight = null; $work_price = null; $work_time = null;
-$lamination1_film_waste_price = null; $lamination1_film_waste = null; $glue_price1 = null; $glue_expense1 = null; $lamination1_work_price = null; $lamination1_work_time = null;
-$lamination2_film_waste_price = null; $lamination2_film_waste = null; $glue_price2 = null; $glue_expense2 = null; $lamination2_work_price = null; $lamination2_work_time = null;
+$film_waste_cost = null; $film_waste = null; $ink_cost = null; $ink_weight = null; $work_cost = null; $work_time = null;
+$lamination1_film_waste_cost = null; $lamination1_film_waste = null; $glue_cost1 = null; $glue_expense1 = null; $lamination1_work_cost = null; $lamination1_work_time = null;
+$lamination2_film_waste_cost = null; $lamination2_film_waste = null; $glue_cost2 = null; $glue_expense2 = null; $lamination2_work_cost = null; $lamination2_work_time = null;
 
 $id = filter_input(INPUT_GET, 'id');
 
@@ -62,9 +62,9 @@ if(!empty($id)) {
             . "film_cost, film_cost_per_unit, width, weight_pure, length_pure, weight_dirty, length_dirty, "
             . "lamination1_film_cost, lamination1_film_cost_per_unit, lamination1_width, lamination1_weight_pure, lamination1_length_pure, lamination1_weight_dirty, lamination1_length_dirty, "
             . "lamination2_film_cost, lamination2_film_cost_per_unit, lamination2_width, lamination2_weight_pure, lamination2_length_pure, lamination2_weight_dirty, lamination2_length_dirty, "
-            . "film_waste_price, film_waste, ink_price, ink_weight, work_price, work_time, "
-            . "lamination1_film_waste_price, lamination1_film_waste, glue_price1, glue_expense1, lamination1_work_price, lamination1_work_time, "
-            . "lamination2_film_waste_price, lamination2_film_waste, glue_price2, glue_expense2, lamination2_work_price, lamination2_work_time "
+            . "film_waste_cost, film_waste, ink_cost, ink_weight, work_cost, work_time, "
+            . "lamination1_film_waste_cost, lamination1_film_waste, glue_cost1, glue_expense1, lamination1_work_cost, lamination1_work_time, "
+            . "lamination2_film_waste_cost, lamination2_film_waste, glue_cost2, glue_expense2, lamination2_work_cost, lamination2_work_time "
             . "from calculation_result where calculation_id = $id order by id desc limit 1";
     $fetcher = new Fetcher($sql_calculation_result);
 
@@ -73,9 +73,9 @@ if(!empty($id)) {
         $film_cost = $row['film_cost']; $film_cost_per_unit = $row['film_cost_per_unit']; $width = $row['width']; $weight_pure = $row['weight_pure']; $length_pure = $row['length_pure']; $weight_dirty = $row['weight_dirty']; $length_dirty = $row['length_dirty'];
         $lamination1_film_cost = $row['lamination1_film_cost']; $lamination1_film_cost_per_unit = $row['lamination1_film_cost_per_unit']; $lamination1_width = $row['lamination1_width']; $lamination1_weight_pure = $row['lamination1_weight_pure']; $lamination1_length_pure = $row['lamination1_length_pure']; $lamination1_weight_dirty = $row['lamination1_weight_dirty']; $lamination1_length_dirty = $row['lamination1_length_dirty'];
         $lamination2_film_cost = $row['lamination2_film_cost']; $lamination2_film_cost_per_unit = $row['lamination2_film_cost_per_unit']; $lamination2_width = $row['lamination2_width']; $lamination2_weight_pure = $row['lamination2_weight_pure']; $lamination2_length_pure = $row['lamination2_length_pure']; $lamination2_weight_dirty = $row['lamination2_weight_dirty']; $lamination2_length_dirty = $row['lamination2_length_dirty'];
-        $film_waste_price = $row['film_waste_price']; $film_waste = $row['film_waste']; $ink_price = $row['ink_price']; $ink_weight = $row['ink_weight']; $work_price = $row['work_price']; $work_time = $row['work_time'];
-        $lamination1_film_waste_price = $row['lamination1_film_waste_price']; $lamination1_film_waste = $row['lamination1_film_waste']; $glue_price1 = $row['glue_price1']; $glue_expense1 = $row['glue_expense1']; $lamination1_work_price = $row['lamination1_work_price']; $lamination1_work_time = $row['lamination1_work_time'];
-        $lamination2_film_waste_price = $row['lamination2_film_waste_price']; $lamination2_film_waste = $row['lamination2_film_waste']; $glue_price2 = $row['glue_price2']; $glue_expense2 = $row['glue_expense2']; $lamination2_work_price = $row['lamination2_work_price']; $lamination2_work_time = $row['lamination2_work_time'];        
+        $film_waste_cost = $row['film_waste_cost']; $film_waste = $row['film_waste']; $ink_cost = $row['ink_cost']; $ink_weight = $row['ink_weight']; $work_cost = $row['work_cost']; $work_time = $row['work_time'];
+        $lamination1_film_waste_cost = $row['lamination1_film_waste_cost']; $lamination1_film_waste = $row['lamination1_film_waste']; $glue_cost1 = $row['glue_cost1']; $glue_expense1 = $row['glue_expense1']; $lamination1_work_cost = $row['lamination1_work_cost']; $lamination1_work_time = $row['lamination1_work_time'];
+        $lamination2_film_waste_cost = $row['lamination2_film_waste_cost']; $lamination2_film_waste = $row['lamination2_film_waste']; $glue_cost2 = $row['glue_cost2']; $glue_expense2 = $row['glue_expense2']; $lamination2_work_cost = $row['lamination2_work_cost']; $lamination2_work_time = $row['lamination2_work_time'];        
     }
     else {
         include './calculation.php';
@@ -332,7 +332,7 @@ if(!empty($id)) {
         for($i=1; $i<=$param_ink_number; $i++) {
             $ink_cost += $calculation->ink_costs[$i];
         }
-        $glue_cost = $calculation->glue_price2 + $calculation->glue_price3;
+        $glue_cost = $calculation->glue_cost2 + $calculation->glue_cost3;
         $new_cost = $film_cost + $work_cost + $ink_cost + $glue_cost;
         if($new_cost === null) $new_cost = "NULL";
     
@@ -436,21 +436,21 @@ if(!empty($id)) {
         if($new_lamination2_length_dirty === null) $new_lamination2_length_dirty = "NULL";
     
         // Отходы плёнка цена = (масса грязная - масса чистая) * стоимость за 1 кг * курс валюты
-        $new_film_waste_price = ($calculation->weight_dirty_1 - $calculation->weight_pure_1) * $param_price * $calculation->GetCurrencyRate($param_currency, $new_usd, $new_euro);
-        if($new_film_waste_price === null) $new_film_waste_price = "NULL";
+        $new_film_waste_cost = ($calculation->weight_dirty_1 - $calculation->weight_pure_1) * $param_price * $calculation->GetCurrencyRate($param_currency, $new_usd, $new_euro);
+        if($new_film_waste_cost === null) $new_film_waste_cost = "NULL";
     
         // Отходы плёнка масса = масса грязная - масса чистая
         $new_film_waste = $calculation->weight_dirty_1 - $calculation->weight_pure_1;
         if($new_film_waste === null) $new_film_waste = "NULL";
     
         // Стоимость всех красок
-        $ink_price = 0;
+        $ink_cost = 0;
         for($i=1; $i<=$param_ink_number; $i++) {
-            $ink_price += $calculation->ink_costs[$i];
+            $ink_cost += $calculation->ink_costs[$i];
         }
-        $new_ink_price = null;
-        if(!empty($ink_price)) $new_ink_price = $ink_price;
-        if($new_ink_price === null) $new_ink_price = "NULL";
+        $new_ink_cost = null;
+        if(!empty($ink_cost)) $new_ink_cost = $ink_cost;
+        if($new_ink_cost === null) $new_ink_cost = "NULL";
     
         // Расход всех красок
         $ink_expense = 0;
@@ -462,56 +462,56 @@ if(!empty($id)) {
         if($new_ink_weight === null) $new_ink_weight = "NULL";
     
         // Работа по печати тиража, руб
-        $new_work_price = $calculation->work_cost_1;
-        if($new_work_price === null) $new_work_price = "NULL";
+        $new_work_cost = $calculation->work_cost_1;
+        if($new_work_cost === null) $new_work_cost = "NULL";
     
         // Работа по печати тиража, ч
         $new_work_time = $calculation->work_time_1;
         if($new_work_time === null) $new_work_time = "NULL";
     
         // Отходы плёнки ламинации 1, руб
-        $new_lamination1_film_waste_price = ($calculation->weight_dirty_2 - $calculation->weight_pure_2) * $param_lamination1_price * $calculation->GetCurrencyRate($param_lamination1_currency, $new_usd, $new_euro);
-        if($new_lamination1_film_waste_price === null) $new_lamination1_film_waste_price = "NULL";
+        $new_lamination1_film_waste_cost = ($calculation->weight_dirty_2 - $calculation->weight_pure_2) * $param_lamination1_price * $calculation->GetCurrencyRate($param_lamination1_currency, $new_usd, $new_euro);
+        if($new_lamination1_film_waste_cost === null) $new_lamination1_film_waste_cost = "NULL";
     
         // Отходы плёнки ламинации 1, кг
         $new_lamination1_film_waste = $calculation->weight_dirty_2 - $calculation->weight_pure_2;
         if($new_lamination1_film_waste === null) $new_lamination1_film_waste = "NULL";
     
         // Стоимость клея лам 1
-        $new_glue_price1 = $calculation->glue_price2;
-        if($new_glue_price1 === null) $new_glue_price1 = "NULL";
+        $new_glue_cost1 = $calculation->glue_cost2;
+        if($new_glue_cost1 === null) $new_glue_cost1 = "NULL";
     
         // Расход клея лам 1
         $new_glue_expense1 = $calculation->glue_expense2;
         if($new_glue_expense1 === null) $new_glue_expense1 = "NULL";
     
         // Работа лам 1, руб
-        $new_lamination1_work_price = $calculation->work_cost_2;
-        if($new_lamination1_work_price === null) $new_lamination1_work_price = "NULL";
+        $new_lamination1_work_cost = $calculation->work_cost_2;
+        if($new_lamination1_work_cost === null) $new_lamination1_work_cost = "NULL";
     
         // Работа лам 1, ч
         $new_lamination1_work_time = $calculation->work_time_2;
         if($new_lamination1_work_time === null) $new_lamination1_work_time = "NULL";
     
         // Отходы плёнки лам 2, руб
-        $new_lamination2_film_waste_price = ($calculation->weight_dirty_3 - $calculation->weight_pure_3) * $param_lamination2_price * $calculation->GetCurrencyRate($param_lamination2_currency, $new_usd, $new_euro);
-        if($new_lamination2_film_waste_price === null) $new_lamination2_film_waste_price = "NULL";
+        $new_lamination2_film_waste_cost = ($calculation->weight_dirty_3 - $calculation->weight_pure_3) * $param_lamination2_price * $calculation->GetCurrencyRate($param_lamination2_currency, $new_usd, $new_euro);
+        if($new_lamination2_film_waste_cost === null) $new_lamination2_film_waste_cost = "NULL";
     
         // Отходы плёнки лам 2, кг
         $new_lamination2_film_waste = $calculation->weight_dirty_3 - $calculation->weight_pure_3;
         if($new_lamination2_film_waste === null) $new_lamination2_film_waste = "NULL";
     
         // Стоимость клея лам 2
-        $new_glue_price2 = $calculation->glue_price3;
-        if($new_glue_price2 === null) $new_glue_price2 = "NULL";
+        $new_glue_cost2 = $calculation->glue_cost3;
+        if($new_glue_cost2 === null) $new_glue_cost2 = "NULL";
     
         // Расход клея лам 2
         $new_glue_expense2 = $calculation->glue_expense3;
         if($new_glue_expense2 === null) $new_glue_expense2 = "NULL";
     
         // Работа лам 2, руб
-        $new_lamination2_work_price = $calculation->work_cost_3;
-        if($new_lamination2_work_price === null) $new_lamination2_work_price = "NULL";
+        $new_lamination2_work_cost = $calculation->work_cost_3;
+        if($new_lamination2_work_cost === null) $new_lamination2_work_cost = "NULL";
     
         // Работа лам 2, ч
         $new_lamination2_work_time = $calculation->work_time_3;
@@ -574,16 +574,16 @@ if(!empty($id)) {
                     . "film_cost, film_cost_per_unit, width, weight_pure, length_pure, weight_dirty, length_dirty, "
                     . "lamination1_film_cost, lamination1_film_cost_per_unit, lamination1_width, lamination1_weight_pure, lamination1_length_pure, lamination1_weight_dirty, lamination1_length_dirty, "
                     . "lamination2_film_cost, lamination2_film_cost_per_unit, lamination2_width, lamination2_weight_pure, lamination2_length_pure, lamination2_weight_dirty, lamination2_length_dirty, "
-                    . "film_waste_price, film_waste, ink_price, ink_weight, work_price, work_time, "
-                    . "lamination1_film_waste_price, lamination1_film_waste, glue_price1, glue_expense1, lamination1_work_price, lamination1_work_time, "
-                    . "lamination2_film_waste_price, lamination2_film_waste, glue_price2, glue_expense2, lamination2_work_price, lamination2_work_time) "
+                    . "film_waste_cost, film_waste, ink_cost, ink_weight, work_cost, work_time, "
+                    . "lamination1_film_waste_cost, lamination1_film_waste, glue_cost1, glue_expense1, lamination1_work_cost, lamination1_work_time, "
+                    . "lamination2_film_waste_cost, lamination2_film_waste, glue_cost2, glue_expense2, lamination2_work_cost, lamination2_work_time) "
                     . "values ($id, $new_extracharge, $new_usd, $new_euro, $new_cost, $new_cost_per_unit, $new_shipping_cost, $new_shipping_cost_per_unit, $new_cliche_cost, $new_total_weight_dirty, "
                     . "$new_film_cost, $new_film_cost_per_unit, $new_width, $new_weight_pure, $new_length_pure, $new_weight_dirty, $new_length_dirty, "
                     . "$new_lamination1_film_cost, $new_lamination1_film_cost_per_unit, $new_lamination1_width, $new_lamination1_weight_pure, $new_lamination1_length_pure, $new_lamination1_weight_dirty, $new_lamination1_length_dirty, "
                     . "$new_lamination2_film_cost, $new_lamination2_film_cost_per_unit, $new_lamination2_width, $new_lamination2_weight_pure, $new_lamination2_length_pure, $new_lamination2_weight_dirty, $new_lamination2_length_dirty, "
-                    . "$new_film_waste_price, $new_film_waste, $new_ink_price, $new_ink_weight, $new_work_price, $new_work_time, "
-                    . "$new_lamination1_film_waste_price, $new_lamination1_film_waste, $new_glue_price1, $new_glue_expense1, $new_lamination1_work_price, $new_lamination1_work_time, "
-                    . "$new_lamination2_film_waste_price, $new_lamination2_film_waste, $new_glue_price2, $new_glue_expense2, $new_lamination2_work_price, $new_lamination2_work_time)";
+                    . "$new_film_waste_cost, $new_film_waste, $new_ink_cost, $new_ink_weight, $new_work_cost, $new_work_time, "
+                    . "$new_lamination1_film_waste_cost, $new_lamination1_film_waste, $new_glue_cost1, $new_glue_expense1, $new_lamination1_work_cost, $new_lamination1_work_time, "
+                    . "$new_lamination2_film_waste_cost, $new_lamination2_film_waste, $new_glue_cost2, $new_glue_expense2, $new_lamination2_work_cost, $new_lamination2_work_time)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -597,9 +597,9 @@ if(!empty($id)) {
             $film_cost = $row['film_cost']; $film_cost_per_unit = $row['film_cost_per_unit']; $width = $row['width']; $weight_pure = $row['weight_pure']; $length_pure = $row['length_pure']; $weight_dirty = $row['weight_dirty']; $length_dirty = $row['length_dirty'];
             $lamination1_film_cost = $row['lamination1_film_cost']; $lamination1_film_cost_per_unit = $row['lamination1_film_cost_per_unit']; $lamination1_width = $row['lamination1_width']; $lamination1_weight_pure = $row['lamination1_weight_pure']; $lamination1_length_pure = $row['lamination1_length_pure']; $lamination1_weight_dirty = $row['lamination1_weight_dirty']; $lamination1_length_dirty = $row['lamination1_length_dirty'];
             $lamination2_film_cost = $row['lamination2_film_cost']; $lamination2_film_cost_per_unit = $row['lamination2_film_cost_per_unit']; $lamination2_width = $row['lamination2_width']; $lamination2_weight_pure = $row['lamination2_weight_pure']; $lamination2_length_pure = $row['lamination2_length_pure']; $lamination2_weight_dirty = $row['lamination2_weight_dirty']; $lamination2_length_dirty = $row['lamination2_length_dirty'];
-            $film_waste_price = $row['film_waste_price']; $film_waste = $row['film_waste']; $ink_price = $row['ink_price']; $ink_weight = $row['ink_weight']; $work_price = $row['work_price']; $work_time = $row['work_time'];
-            $lamination1_film_waste_price = $row['lamination1_film_waste_price']; $lamination1_film_waste = $row['lamination1_film_waste']; $glue_price1 = $row['glue_price1']; $glue_expense1 = $row['glue_expense1']; $lamination1_work_price = $row['lamination1_work_price']; $lamination1_work_time = $row['lamination1_work_time'];
-            $lamination2_film_waste_price = $row['lamination2_film_waste_price']; $lamination2_film_waste = $row['lamination2_film_waste']; $glue_price2 = $row['glue_price2']; $glue_expense2 = $row['glue_expense2']; $lamination2_work_price = $row['lamination2_work_price']; $lamination2_work_time = $row['lamination2_work_time'];
+            $film_waste_cost = $row['film_waste_cost']; $film_waste = $row['film_waste']; $ink_cost = $row['ink_cost']; $ink_weight = $row['ink_weight']; $work_cost = $row['work_cost']; $work_time = $row['work_time'];
+            $lamination1_film_waste_cost = $row['lamination1_film_waste_cost']; $lamination1_film_waste = $row['lamination1_film_waste']; $glue_cost1 = $row['glue_cost1']; $glue_expense1 = $row['glue_expense1']; $lamination1_work_cost = $row['lamination1_work_cost']; $lamination1_work_time = $row['lamination1_work_time'];
+            $lamination2_film_waste_cost = $row['lamination2_film_waste_cost']; $lamination2_film_waste = $row['lamination2_film_waste']; $glue_cost2 = $row['glue_cost2']; $glue_expense2 = $row['glue_expense2']; $lamination2_work_cost = $row['lamination2_work_cost']; $lamination2_work_time = $row['lamination2_work_time'];
         }
         else {
             $error_message = "Ошибка при чтении из базы сохранённых данных";
@@ -755,16 +755,16 @@ if(!empty($id)) {
         <div class="row text-nowrap">
             <div class="col-4 pr-4">
                 <div>Отходы</div>
-                <div class="value mb-2"><?= Display(floatval($film_waste_price), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_waste), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= Display(floatval($film_waste_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_waste), 2) ?> кг</span></div>
                 <?php /*if($work_type_id == 2):*/ ?>
                 <div>Краска</div>
-                <div class="value mb-2"><?= Display(floatval($ink_price), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($ink_weight), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= Display(floatval($ink_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($ink_weight), 2) ?> кг</span></div>
                 <?php
                 /*endif;
                 if($work_type_id == 2):*/
                 ?>
                 <div>Печать тиража</div>
-                <div class="value mb-2"><?= Display(floatval($work_price), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($work_time), 2) ?> ч</span></div>
+                <div class="value mb-2"><?= Display(floatval($work_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($work_time), 2) ?> ч</span></div>
                 <?php
                 /*endif;*/
                 ?>
@@ -772,19 +772,19 @@ if(!empty($id)) {
             <?php /*if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)):*/ ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
-                <div class="value mb-2"><?= Display(floatval($lamination1_film_waste_price), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination1_film_waste), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= Display(floatval($lamination1_film_waste_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination1_film_waste), 2) ?> кг</span></div>
                 <div>Клей</div>
-                <div class="value mb-2"><?= Display(floatval($glue_price1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($glue_expense1), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= Display(floatval($glue_cost1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($glue_expense1), 2) ?> кг</span></div>
                 <div>Работа ламинатора</div>
-                <div class="value mb-2"><?= Display(floatval($lamination1_work_price), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination1_work_time), 2) ?> ч</span></div>
+                <div class="value mb-2"><?= Display(floatval($lamination1_work_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination1_work_time), 2) ?> ч</span></div>
             </div>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
-                <div class="value mb-2"><?= Display(floatval($lamination2_film_waste_price), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination2_film_waste), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= Display(floatval($lamination2_film_waste_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination2_film_waste), 2) ?> кг</span></div>
                 <div>Клей</div>
-                <div class="value mb-2"><?= Display(floatval($glue_price2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($glue_expense2), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= Display(floatval($glue_cost2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($glue_expense2), 2) ?> кг</span></div>
                 <div>Работа ламинатора</div>
-                <div class="value mb-2"><?= Display(floatval($lamination2_work_price), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination2_work_time), 2) ?> ч</span></div>
+                <div class="value mb-2"><?= Display(floatval($lamination2_work_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination2_work_time), 2) ?> ч</span></div>
             </div>
         </div>
     </div>

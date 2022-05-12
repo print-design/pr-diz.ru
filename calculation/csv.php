@@ -746,21 +746,21 @@ if($id !== null) {
             "|= ".Display($calculation->weight_dirty_3)." - ".Display($calculation->weight_pure_3),
             "масса плёнки грязная 3 - масса плёнки чистая 3"));
         
-        $film_waste_price_1 = $film_waste_weight_1 * $price_1 * $calculation->GetCurrencyRate($currency_1, $usd, $euro);
+        $film_waste_cost_1 = $film_waste_weight_1 * $price_1 * $calculation->GetCurrencyRate($currency_1, $usd, $euro);
         array_push($file_data, array("Отходы 1, руб",
-            Display($film_waste_price_1),
+            Display($film_waste_cost_1),
             "|= ".Display($film_waste_weight_1)." * ".Display($price_1)." * ".Display($calculation->GetCurrencyRate($currency_1, $usd, $euro)),
             "отходы 1, кг * цена плёнки 1 * курс валюты"));
         
-        $film_waste_price_2 = $film_waste_weight_2 * $price_2 * $calculation->GetCurrencyRate($currency_2, $usd, $euro);
+        $film_waste_cost_2 = $film_waste_weight_2 * $price_2 * $calculation->GetCurrencyRate($currency_2, $usd, $euro);
         array_push($file_data, array("Отходы 2, руб",
-            Display($film_waste_price_2),
+            Display($film_waste_cost_2),
             "|= ".Display($film_waste_weight_2)." * ".Display($price_2)." * ".Display($calculation->GetCurrencyRate($currency_2, $usd, $euro)),
             "отходы 2, кг * цена плёнки 2 * курс валюты"));
         
-        $film_waste_price_3 = $film_waste_weight_3 * $price_3 * $calculation->GetCurrencyRate($currency_3, $usd, $euro);
+        $film_waste_cost_3 = $film_waste_weight_3 * $price_3 * $calculation->GetCurrencyRate($currency_3, $usd, $euro);
         array_push($file_data, array("Отходы 3, руб",
-            Display($film_waste_price_3),
+            Display($film_waste_cost_3),
             "|= ".Display($film_waste_weight_3)." * ".Display($price_3)." * ".Display($calculation->GetCurrencyRate($currency_3, $usd, $euro)),
             "отходы 3, кг * цена плёнки 3 * курс валюты"));
         
@@ -1000,19 +1000,19 @@ if($id !== null) {
             $glue_expense3_comment));
         
         array_push($file_data, array("Стоимость КлеяСмеси 2, руб",
-            Display($calculation->glue_price2),
+            Display($calculation->glue_cost2),
             "|= ".Display($calculation->glue_expense2)." * ".Display($calculation->mix_glue_kg_price),
             "расход КлеяСмеси 2 * цена 1 кг КлеяСмеси"));
         
         array_push($file_data, array("Стоимость КлеяСмеси 3, руб",
-            Display($calculation->glue_price3),
+            Display($calculation->glue_cost3),
             "|= ".Display($calculation->glue_expense3)." * ".Display($calculation->mix_glue_kg_price),
             "расход КлеяСмеси 3 * цена 1 кг КлеяСмеси"));
         
-        $total_glue_cost = $calculation->glue_price2 + $calculation->glue_price3;
+        $total_glue_cost = $calculation->glue_cost2 + $calculation->glue_cost3;
         array_push($file_data, array("СТОИМОСТЬ КЛЕЯ, руб",
             Display($total_glue_cost),
-            "|= ".Display($calculation->glue_price2)." + ".Display($calculation->glue_price3),
+            "|= ".Display($calculation->glue_cost2)." + ".Display($calculation->glue_cost3),
             "стоимость клея 2 + стоимость клея 3"));
         
         array_push($file_data, array("", "", "", ""));
