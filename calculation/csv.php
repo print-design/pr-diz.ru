@@ -927,7 +927,7 @@ if($id !== null) {
             $total_ink_cost_formula .= Display($calculation->ink_prices[$i]);
         }
         
-        array_push($file_data, array("РАСХОД КРАСКИ, руб",
+        array_push($file_data, array("РАСХОД КРАСКИ, кг",
             Display($total_ink_expense),
             "|= ".$total_ink_expense_formula,
             "Сумма расход всех красок"));
