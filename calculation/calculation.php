@@ -183,6 +183,7 @@ class Calculation {
     // Машины
     const COMIFLEX = 'comiflex';
     
+    // Получения курса валюты (get - функция получения)
     function GetCurrencyRate($currency, $usd, $euro) {
         switch($currency) {
             case self::USD:
@@ -196,6 +197,7 @@ class Calculation {
         }
     }
     
+    // Получение цены на краску
     function GetInkPrice($ink, $cmyk, $c_price, $c_currency, $m_price, $m_currency, $y_price, $y_currency, $k_price, $k_currency, $panton_price, $panton_currency, $white_price, $white_currency, $lacquer_price, $lacquer_currency) {
         switch ($ink) {
             case self::CMYK:
@@ -230,6 +232,7 @@ class Calculation {
         }
     }
     
+    // Получение расхода краски
     function GetInkExpense($ink, $cmyk, $c_expense, $m_expense, $y_expense, $k_expense, $panton_expense, $white_expense, $lacquer_expense) {
         switch ($ink) {
             case self::CMYK:
@@ -260,6 +263,7 @@ class Calculation {
         }
     }
     
+    // Отображение чисел в удобном виде (напр: 1 234 567,89 вместо 1234567.8877998909)
     function Display($value) {
         if(is_float($value) || is_double($value)) {
             return number_format($value, 2, ",", " ");
@@ -272,53 +276,54 @@ class Calculation {
         }
     }
 
-    public $laminations_number = 0;
+    public $laminations_number = 0; // количество ламинаций
     
-    public $uk1, $uk2, $uk3;
-    public $area_pure_start = 0;
-    public $weight = 0;
-    public $width_1, $width_2, $width_3;
-    public $area_pure_1, $area_pure_2, $area_pure_3;
-    public $length_pure_start_1, $length_pure_start_2, $length_pure_start_3;
-    public $waste_length_1, $waste_length_2, $waste_length_3;
-    public $length_dirty_start_1, $length_dirty_start_2, $length_dirty_start_3;
-    public $area_dirty_1, $area_dirty_2, $area_dirty_3;
-    public $weight_pure_1, $weight_pure_2, $weight_pure_3;
-    public $length_pure_1, $length_pure_2, $length_pure_3;
-    public $weight_dirty_1, $weight_dirty_2, $weight_dirty_3;
-    public $length_dirty_1, $length_dirty_2, $length_dirty_3;
-    public $film_price_1, $film_price_2, $film_price_3;
-    public $priladka_time_1, $priladka_time_2, $priladka_time_3;
-    public $print_time_1, $lamination_time_2, $lamination_time_3;
-    public $work_time_1, $work_time_2, $work_time_3;
-    public $work_price_1, $work_price_2, $work_price_3;
-    public $print_area;
-    public $ink_1kg_mix_weight; // расход КраскаСмеси на 1 кг краски
-    public $ink_flexol82_kg_price; // цена 1 кг чистого флексоля 82 для краски
-    public $ink_etoxypropanol_kg_price; // цена 1 кг чистого этоксипропанола для краски
+    public $uk1, $uk2, $uk3; // уравнивающий коэффициент 1, 2, 3
+    public $area_pure_start = 0; // м2 чистые, м2 (рассчитывается: длина * ширина * кол-во в шт.; используется для вычисления массы тиража, если он в шт.)
+    public $weight = 0; // масса тиража, кг
+    public $width_1, $width_2, $width_3; // ширина материала, мм 
+    public $area_pure_1, $area_pure_2, $area_pure_3; // м2 чистые, м2 (рассчитывается: вес / плотность)
+    public $length_pure_start_1, $length_pure_start_2, $length_pure_start_3; // м пог чистые, м
+    public $waste_length_1, $waste_length_2, $waste_length_3; // СтартСтопОтход, м
+    public $length_dirty_start_1, $length_dirty_start_2, $length_dirty_start_3; // м пог грязные, м
+    public $area_dirty_1, $area_dirty_2, $area_dirty_3; // м2 грязные, м2
+    public $weight_pure_1, $weight_pure_2, $weight_pure_3; // масса плёнки чистая, кг
+    public $length_pure_1, $length_pure_2, $length_pure_3; // длина плёнки чистая, м
+    public $weight_dirty_1, $weight_dirty_2, $weight_dirty_3; // масса плёнки грязная, кг
+    public $length_dirty_1, $length_dirty_2, $length_dirty_3; // длина плёнки грязная, кг
+    public $film_price_1, $film_price_2, $film_price_3; // цена плёнки за кг, руб
+    public $priladka_time_1, $priladka_time_2, $priladka_time_3; // время приладки, мин
+    public $print_time_1, $lamination_time_2, $lamination_time_3; // время печати или ламинации без приладки, ч
+    public $work_time_1, $work_time_2, $work_time_3; // время печати или ламинации с приладкой, ч
+    public $work_price_1, $work_price_2, $work_price_3; // стоимость печати или ламирации с приладкой, руб
+    public $print_area; // площадь запечатки
+    public $ink_1kg_mix_weight; // расход КраскаСмеси на 1 кг краски, кг
+    public $ink_flexol82_kg_price; // цена 1 кг чистого флексоля 82 для краски, руб
+    public $ink_etoxypropanol_kg_price; // цена 1 кг чистого этоксипропанола для краски, руб
     
-    public $ink_kg_prices; // цена 1 кг чистой краски
-    public $mix_ink_kg_prices; // цена 1 кг КраскаСмеси
-    public $ink_expenses; // расход КраскаСмеси
-    public $ink_prices; // стоимость КраскаСмеси
+    public $ink_kg_prices; // массив: цена 1 кг каждой чистой краски
+    public $mix_ink_kg_prices; // массив: цена 1 кг каждой КраскаСмеси
+    public $ink_expenses; // массив: расход каждой КраскаСмеси
+    public $ink_prices; // массив: стоимость каждой КраскаСмеси
     
-    public $glue_kg_weight; // расход КлеяСмеси на 1 кг клея
-    public $glue_kg_price; // цена 1 кг чистого клея
-    public $glue_solvent_kg_price; // цена 1 кг чистого растворителя для клея
-    public $mix_glue_kg_price; // цена 1 кг КлеяСмеси
-    public $glue_area2;
-    public $glue_area3;
-    public $glue_expense2;
-    public $glue_expense3;
-    public $glue_price2;
-    public $glue_price3;
+    public $glue_kg_weight; // расход КлеяСмеси на 1 кг клея, кг
+    public $glue_kg_price; // цена 1 кг чистого клея, руб
+    public $glue_solvent_kg_price; // цена 1 кг чистого растворителя для клея, руб
+    public $mix_glue_kg_price; // цена 1 кг КлеяСмеси, руб
+    public $glue_area2; // площадь заклейки, плёнка 2, м2
+    public $glue_area3; // площадь заклейки, плёнка 3, м2
+    public $glue_expense2; // расход клея, плёнка 2, кг
+    public $glue_expense3; // расход клея, плёнка 3, кг
+    public $glue_price2; // стоимость клея, плёнка 2, руб
+    public $glue_price3; // стоимость клея, плёнка 3, кг
     
-    public $cliche_height; // высота формы
-    public $cliche_width; // ширина формы
-    public $cliche_area; // площадь формы
+    public $cliche_height; // высота формы, мм
+    public $cliche_width; // ширина формы, мм
+    public $cliche_area; // площадь формы, см2
     public $cliche_new_number; // количество новых форм
-    public $cliche_prices; // цена форм
+    public $cliche_prices; // массив: стоимость каждой формы, руб
 
+    // Конструктор
     public function __construct(DataPriladka $data_priladka, 
             DataPriladka $data_priladka_laminator,
             DataMachine $data_machine,
@@ -378,9 +383,9 @@ class Calculation {
         if(empty($thickness_2)) $thickness_2 = 0;
         if(empty($density_2)) $density_2 = 0;
         if(empty($price_2)) $price_2 = 0;
-        if(empty($thickness_2)) $thickness_2 = 0;
-        if(empty($density_2)) $density_2 = 0;
-        if(empty($price_2)) $price_2 = 0;
+        if(empty($thickness_3)) $thickness_3 = 0;
+        if(empty($density_3)) $density_3 = 0;
+        if(empty($price_3)) $price_3 = 0;
         if($work_type_id == self::WORK_TYPE_NOPRINT) {
             $machine_id = null;
             $ink_number = 0;
@@ -505,33 +510,33 @@ class Calculation {
         $this->length_pure_start_3 = $this->area_pure_3 / ($streams_number * $stream_width / 1000);
         
         
-        // СтартСтопОтход 1
+        // СтартСтопОтход 1, м
         $this->waste_length_1 = $data_priladka->waste_percent * $this->length_pure_start_1 / 100;
         
-        // СтартСтопОтход 2
+        // СтартСтопОтход 2, м
         $this->waste_length_2 = $data_priladka_laminator->waste_percent * $this->length_pure_start_2 / 100;
                 
-        // СтартСтопОтход 3
+        // СтартСтопОтход 3, м
         $this->waste_length_3 = $data_priladka_laminator->waste_percent * $this->length_pure_start_3 / 100;
         
         
-        // М пог грязные 1
+        // М пог грязные 1, м
         $this->length_dirty_start_1 = $this->length_pure_start_1 + ($ink_number * $data_priladka->length) + ($this->laminations_number * $data_priladka_laminator->length) + $this->waste_length_1;
         
-        // М пог грязные 2
+        // М пог грязные 2, м
         $this->length_dirty_start_2 = $this->length_pure_start_2 + ($this->laminations_number * $data_priladka_laminator->length) + $this->waste_length_2; 
         
-        // М пог грязные 3
+        // М пог грязные 3, м
         $this->length_dirty_start_3 = $this->length_pure_start_3 + ($data_priladka_laminator->length * $this->uk3) + $this->waste_length_3;
         
         
-        // М2 грязные 1
+        // М2 грязные 1, м2
         $this->area_dirty_1 = $this->length_dirty_start_1 * $this->width_1 / 1000;
         
-        // М2 грязные 2
+        // М2 грязные 2, м2
         $this->area_dirty_2 = $this->length_dirty_start_2 * $this->width_2 / 1000;
         
-        // М2 грязные 3
+        // М2 грязные 3, м2
         $this->area_dirty_3 = $this->length_dirty_start_3 * $this->width_3 / 1000;
         
         //****************************************
