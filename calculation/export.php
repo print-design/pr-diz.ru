@@ -490,7 +490,7 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     $material_price = null;    $print_time = null;    $priladka_time = null;
     $print_priladka_time = null;    $print_price = null;    $cliche_area = null;
     $cliche_flint_price = null;    $cliche_kodak_price = null;    $cliche_tver_price = null;
-    $cliche_price = null;    $paint_price = null;    $pure_weight_lam1 = null;
+    $cliche_cost = null;    $paint_price = null;    $pure_weight_lam1 = null;
     $dirty_weight_lam1 = null;    $price_lam1_material = null;    $price_lam1_glue = null;
     $price_lam1_work = null;    $pure_weight_lam2 = null;    $dirty_weight_lam2 = null;
     $price_lam2_material = null;    $price_lam2_glue = null;    $price_lam2_work = null;
@@ -501,7 +501,7 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     $sql = "select pure_area, pure_width, pure_length, pure_length_lam, "
             . "dirty_length, dirty_width, dirty_area, pure_weight, dirty_weight, material_price, print_time, priladka_time, "
             . "print_priladka_time, print_price, cliche_area, cliche_flint_price, cliche_kodak_price, cliche_tver_price, "
-            . "cliche_price, paint_price, pure_weight_lam1, dirty_weight_lam1, "
+            . "cliche_cost, paint_price, pure_weight_lam1, dirty_weight_lam1, "
             . "price_lam1_material, price_lam1_glue, price_lam1_work, pure_weight_lam2, dirty_weight_lam2, price_lam2_material, "
             . "price_lam2_glue, price_lam2_work, price_lam_total, pure_weight_total, dirty_weight_total, cost_no_cliche, "
             . "cost_with_cliche, cost_no_cliche_kg, cost_with_cliche_kg, cost_no_cliche_thing, cost_with_cliche_thing"
@@ -527,7 +527,7 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
         $cliche_flint_price = $row['cliche_flint_price'];
         $cliche_kodak_price = $row['cliche_kodak_price'];
         $cliche_tver_price = $row['cliche_tver_price'];
-        $cliche_price = $row['cliche_price'];
+        $cliche_cost = $row['cliche_cost'];
         $paint_price = $row['paint_price'];
         $pure_weight_lam1 = $row['pure_weight_lam1'];
         $dirty_weight_lam1 = $row['dirty_weight_lam1'];
@@ -551,19 +551,19 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     }
     
     // Стоимость новой формы
-    $new_cliche_price = 0;
+    $new_cliche_cost = 0;
     
     switch($new_forms_vendor_id) {
         case 1:
-            $new_cliche_price = $cliche_tver_price;
+            $new_cliche_cost = $cliche_tver_price;
             break;
         
         case 2:
-            $new_cliche_price = $cliche_flint_price;
+            $new_cliche_cost = $cliche_flint_price;
             break;
         
         case 3:
-            $new_cliche_price = $cliche_kodak_price;
+            $new_cliche_cost = $cliche_kodak_price;
             break;
     }
     
@@ -636,8 +636,8 @@ if(null !== filter_input(INPUT_POST, 'export_calculation_submit')) {
     echo mb_convert_encoding("Время печати с приладкой,ч :       $print_priladka_time;\n", "cp1251");
     echo mb_convert_encoding("Стоимость печати,руб :   $print_price;\n", "cp1251");
     echo mb_convert_encoding("Площадь печатной формы,см2 :   $cliche_area;\n", "cp1251");
-    echo mb_convert_encoding("Стоимость 1 печатной формы,руб :   $new_cliche_price;\n", "cp1251");
-    echo mb_convert_encoding("Стоимость комплекта печатной формы,руб :      $cliche_price;\n", "cp1251");
+    echo mb_convert_encoding("Стоимость 1 печатной формы,руб :   $new_cliche_cost;\n", "cp1251");
+    echo mb_convert_encoding("Стоимость комплекта печатной формы,руб :      $cliche_cost;\n", "cp1251");
     echo mb_convert_encoding("Стоимость всех красок + лак + растворитель,руб:   $paint_price;\n", "cp1251");
     echo mb_convert_encoding("Количество ламинаций:$laminations_count;\n", "cp1251");
     echo mb_convert_encoding("ИТОГО, себестоимость без печатных форм,руб : $cost_no_cliche;\n", "cp1251");

@@ -178,7 +178,6 @@ class Calculation {
     const OLD = "old";
     const FLINT = "flint";
     const KODAK = "kodak";
-    const TVER = "tver";
     
     // Машины
     const COMIFLEX = 'comiflex';
@@ -321,7 +320,7 @@ class Calculation {
     public $cliche_width; // ширина формы, мм
     public $cliche_area; // площадь формы, см2
     public $cliche_new_number; // количество новых форм
-    public $cliche_prices; // массив: стоимость каждой формы, руб
+    public $cliche_costs; // массив: стоимость каждой формы, руб
 
     // Конструктор
     public function __construct(DataPriladka $data_priladka, 
@@ -740,7 +739,7 @@ class Calculation {
         // Стоимость форм
         //***********************************
         
-        $this->cliche_prices = array();
+        $this->cliche_costs = array();
         
         // Высота форм, мм
         $this->cliche_height = $raport + 20;
@@ -751,7 +750,7 @@ class Calculation {
         // Площадь форм, см
         $this->cliche_area = $this->cliche_height * $this->cliche_width / 100;
         
-        $this->cliche_prices = array();
+        $this->cliche_costs = array();
         
         // Количество новых форм
         $this->cliche_new_number = 0;
@@ -779,8 +778,8 @@ class Calculation {
             }
             
             // Цена формы, руб
-            $cliche_price = $this->cliche_area * $cliche_sm_price * $this->GetCurrencyRate($cliche_currency, $usd, $euro);
-            $this->cliche_prices[$i] = $cliche_price;
+            $cliche_cost = $this->cliche_area * $cliche_sm_price * $this->GetCurrencyRate($cliche_currency, $usd, $euro);
+            $this->cliche_costs[$i] = $cliche_cost;
         }
     }
 }
