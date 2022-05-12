@@ -291,11 +291,11 @@ class Calculation {
     public $length_pure_1, $length_pure_2, $length_pure_3; // длина плёнки чистая, м
     public $weight_dirty_1, $weight_dirty_2, $weight_dirty_3; // масса плёнки грязная, кг
     public $length_dirty_1, $length_dirty_2, $length_dirty_3; // длина плёнки грязная, кг
-    public $film_price_1, $film_price_2, $film_price_3; // цена плёнки за кг, руб
+    public $film_cost_1, $film_cost_2, $film_cost_3; // стоимость плёнки грязная, руб
     public $priladka_time_1, $priladka_time_2, $priladka_time_3; // время приладки, мин
     public $print_time_1, $lamination_time_2, $lamination_time_3; // время печати или ламинации без приладки, ч
     public $work_time_1, $work_time_2, $work_time_3; // время печати или ламинации с приладкой, ч
-    public $work_price_1, $work_price_2, $work_price_3; // стоимость печати или ламирации с приладкой, руб
+    public $work_cost_1, $work_cost_2, $work_cost_3; // стоимость печати или ламирации с приладкой, руб
     public $print_area; // площадь запечатки
     public $ink_1kg_mix_weight; // расход КраскаСмеси на 1 кг краски, кг
     public $ink_flexol82_kg_price; // цена 1 кг чистого флексоля 82 для краски, руб
@@ -304,7 +304,7 @@ class Calculation {
     public $ink_kg_prices; // массив: цена 1 кг каждой чистой краски
     public $mix_ink_kg_prices; // массив: цена 1 кг каждой КраскаСмеси
     public $ink_expenses; // массив: расход каждой КраскаСмеси
-    public $ink_prices; // массив: стоимость каждой КраскаСмеси
+    public $ink_costs; // массив: стоимость каждой КраскаСмеси
     
     public $glue_kg_weight; // расход КлеяСмеси на 1 кг клея, кг
     public $glue_kg_price; // цена 1 кг чистого клея, руб
@@ -315,7 +315,7 @@ class Calculation {
     public $glue_expense2; // расход клея, плёнка 2, кг
     public $glue_expense3; // расход клея, плёнка 3, кг
     public $glue_price2; // стоимость клея, плёнка 2, руб
-    public $glue_price3; // стоимость клея, плёнка 3, кг
+    public $glue_price3; // стоимость клея, плёнка 3, руб
     
     public $cliche_height; // высота формы, мм
     public $cliche_width; // ширина формы, мм
@@ -587,13 +587,13 @@ class Calculation {
         //****************************************
         
         // Общая стоимость грязная 1, руб
-        $this->film_price_1 = $this->weight_dirty_1 * $price_1 * $this->GetCurrencyRate($currency_1, $usd, $euro);
-                
+        $this->film_cost_1 = $this->weight_dirty_1 * $price_1 * $this->GetCurrencyRate($currency_1, $usd, $euro);
+        
         // Общая стоимость грязная 2, руб
-        $this->film_price_2 = $this->weight_dirty_2 * $price_2 * $this->GetCurrencyRate($currency_2, $usd, $euro);
+        $this->film_cost_2 = $this->weight_dirty_2 * $price_2 * $this->GetCurrencyRate($currency_2, $usd, $euro);
         
         // Общая стоимость грязная 3, руб
-        $this->film_price_3 = $this->weight_dirty_3 * $price_3 * $this->GetCurrencyRate($currency_3, $usd, $euro);
+        $this->film_cost_3 = $this->weight_dirty_3 * $price_3 * $this->GetCurrencyRate($currency_3, $usd, $euro);
     
         //*****************************************
         // Время - деньги
@@ -630,13 +630,13 @@ class Calculation {
         
         
         // Стоимость выполнения тиража 1, руб
-        $this->work_price_1 = $this->work_time_1 * $data_machine->price;
+        $this->work_cost_1 = $this->work_time_1 * $data_machine->price;
         
         // Стоимость выполнения тиража 2, руб
-        $this->work_price_2 = $this->work_time_2 * $data_machine_laminator->price;
+        $this->work_cost_2 = $this->work_time_2 * $data_machine_laminator->price;
         
         // Стоимость выполнения тиража 3, руб
-        $this->work_price_3 = $this->work_time_3 * $data_machine_laminator->price;
+        $this->work_cost_3 = $this->work_time_3 * $data_machine_laminator->price;
         
         //****************************************
         // Расход краски
@@ -667,7 +667,7 @@ class Calculation {
         $this->ink_kg_prices = array();
         $this->mix_ink_kg_prices = array();
         $this->ink_expenses = array();
-        $this->ink_prices = array();
+        $this->ink_costs = array();
         
         for($i=1; $i<=$ink_number; $i++) {
             $ink = "ink_$i";
@@ -689,7 +689,7 @@ class Calculation {
             
             // Стоимость КраскаСмеси, руб
             $ink_price = $ink_expense * $mix_ink_kg_price;
-            $this->ink_prices[$i] = $ink_price;
+            $this->ink_costs[$i] = $ink_price;
         }
         
         //********************************************
