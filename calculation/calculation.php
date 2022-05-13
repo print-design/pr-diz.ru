@@ -773,8 +773,6 @@ class Calculation {
         // Стоимость форм
         //***********************************
         
-        $this->cliche_costs = array();
-        
         // Высота форм, мм
         $this->cliche_height = $raport + 20;
         
@@ -784,14 +782,17 @@ class Calculation {
         // Площадь форм, см
         $this->cliche_area = $this->cliche_height * $this->cliche_width / 100;
         
+        // Создаём массив стоимостей каждой формы
         $this->cliche_costs = array();
         
         // Количество новых форм
         $this->cliche_new_number = 0;
         
+        // Перебираем все формы, определяем стоимость каждой, помещаем эту величину в массив
         for($i=1; $i<=$ink_number; $i++) {
             $cliche = "cliche_$i";
             
+            // Если форма новая, то количество новых форм увеличиваем на 1
             if(!empty($$cliche) && $$cliche != self::OLD) {
                 $this->cliche_new_number += 1;
             }
@@ -811,7 +812,7 @@ class Calculation {
                     break;
             }
             
-            // Цена формы, руб
+            // Стоимость формы, руб
             $cliche_cost = $this->cliche_area * $cliche_sm_price * $this->GetCurrencyRate($cliche_currency, $usd, $euro);
             $this->cliche_costs[$i] = $cliche_cost;
         }
