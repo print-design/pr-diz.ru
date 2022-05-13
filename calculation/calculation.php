@@ -630,12 +630,15 @@ class Calculation {
         
         
         // Время печати (без приладки) 1, ч
+        // Если печати нет, то сразу возвращаем 0, иначе получится деление на 0
         $this->print_time_1 = $data_machine->speed == 0 ? 0 : ($this->length_pure_start_1 + $this->waste_length_1) / $data_machine->speed / 1000 * $this->uk1;
         
         // Время ламинации (без приладки) 2, ч
+        // Если печати нет, то сразу возвращаем 0, иначе получится деление на 0
         $this->lamination_time_2 = $data_machine_laminator->speed == 0 ? 0 : ($this->length_pure_start_2 + $this->waste_length_2) / $data_machine_laminator->speed / 1000 * $this->uk2;
         
         // Время ламинации (без приладки) 3, ч
+        // Если печати нет, то сразу возвращаем 0, иначе получится деление на 0
         $this->lamination_time_3 = $data_machine_laminator->speed == 0 ? 0 : ($this->length_pure_start_3 + $this->waste_length_3) / $data_machine_laminator->speed / 1000 * $this->uk3;
         
         
@@ -684,11 +687,19 @@ class Calculation {
             $ink_solvent_kg_price = $this->ink_etoxypropanol_kg_price;
         }
         
+        // Создаём массивв цен за 1 кг каждой чистой краски
         $this->ink_kg_prices = array();
+        
+        // Создаём массив цен за 1 кг каждой КраскаСмеси
         $this->mix_ink_kg_prices = array();
+        
+        // Создаём массив расходов каждой КраскаСмеси
         $this->ink_expenses = array();
+        
+        // Создаём массив стоимостей каждой КраскаСмеси
         $this->ink_costs = array();
         
+        // Перебираем все краски и помещаем в каждый из четырёх массивов данные по каждой краске
         for($i=1; $i<=$ink_number; $i++) {
             $ink = "ink_$i";
             $cmyk = "cmyk_$i";
@@ -735,6 +746,7 @@ class Calculation {
         $this->glue_area3 = $this->length_dirty_3 * $lamination_roller_width / 1000;
         
         // Расход КлеяСмеси 2, кг
+        // Если название плёнки начинается на "Pet", то используем расход краски для ламинации ПЭТ
         if((strlen($film_1) > 3 && substr($film_1, 0, 3) == "Pet") || (strlen($film_2) > 3 && substr($film_2, 0, 3) == "Pet")) {
             $this->glue_expense2 = $this->glue_area2 * $glue_data->glue_expense_pet / 1000;
         }
@@ -743,6 +755,7 @@ class Calculation {
         }
         
         // Расход КлеяСмеси 3, кг
+        // Если название плёнки начинается на "Pet", то используем расход краски для ламинации ПЭТ
         if((strlen($film_2) > 3 && substr($film_2, 0, 3) == "Pet") || (strlen($film_3) > 3 && substr($film_3, 0, 3) == "Pet")) {
             $this->glue_expense3 = $this->glue_area3 * $glue_data->glue_expense_pet / 1000;
         }
