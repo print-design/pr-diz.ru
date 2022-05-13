@@ -62,9 +62,9 @@ if(!empty($id)) {
             . "film_cost_1, film_cost_per_unit_1, width_1, weight_pure_1, length_pure_1, weight_dirty_1, length_dirty_1, "
             . "film_cost_2, film_cost_per_unit_2, width_2, weight_pure_2, length_pure_2, weight_dirty_2, length_dirty_2, "
             . "film_cost_3, film_cost_per_unit_3, width_3, weight_pure_3, length_pure_3, weight_dirty_3, length_dirty_3, "
-            . "film_waste_cost_1, film_waste_1, ink_cost, ink_weight, work_cost_1, work_time_1, "
-            . "film_waste_cost_2, film_waste_2, glue_cost_2, glue_expense_2, work_cost_2, work_time_2, "
-            . "film_waste_cost_3, film_waste_3, glue_cost_3, glue_expense_3, work_cost_3, work_time_3 "
+            . "film_waste_cost_1, film_waste_weight_1, ink_cost, ink_weight, work_cost_1, work_time_1, "
+            . "film_waste_cost_2, film_waste_weight_2, glue_cost_2, glue_expense_2, work_cost_2, work_time_2, "
+            . "film_waste_cost_3, film_waste_weight_3, glue_cost_3, glue_expense_3, work_cost_3, work_time_3 "
             . "from calculation_result where calculation_id = $id order by id desc limit 1";
     $fetcher = new Fetcher($sql_calculation_result);
 
@@ -437,7 +437,7 @@ if(!empty($id)) {
         if($new_length_dirty_3 === null) $new_length_dirty_3 = "NULL";
     
         // Отходы плёнка цена = (масса грязная - масса чистая) * стоимость за 1 кг * курс валюты
-        $new_film_waste_cost_1 = ($calculation->weight_dirty_1 - $calculation->weight_pure_1) * $param_price * $calculation->GetCurrencyRate($param_currency, $new_usd, $new_euro);
+        $new_film_waste_cost_1 = ($calculation->weight_dirty_1 - $calculation->weight_pure_1) * $param_price_1 * $calculation->GetCurrencyRate($param_currency_1, $new_usd, $new_euro);
         if($new_film_waste_cost_1 === null) $new_film_waste_cost_1 = "NULL";
     
         // Отходы плёнка масса = масса грязная - масса чистая
@@ -471,7 +471,7 @@ if(!empty($id)) {
         if($new_work_time_1 === null) $new_work_time_1 = "NULL";
     
         // Отходы плёнки ламинации 1, руб
-        $new_film_waste_cost_2 = ($calculation->weight_dirty_2 - $calculation->weight_pure_2) * $param_lamination1_price * $calculation->GetCurrencyRate($param_lamination1_currency, $new_usd, $new_euro);
+        $new_film_waste_cost_2 = ($calculation->weight_dirty_2 - $calculation->weight_pure_2) * $param_price_2 * $calculation->GetCurrencyRate($param_currency_2, $new_usd, $new_euro);
         if($new_film_waste_cost_2 === null) $new_film_waste_cost_2 = "NULL";
     
         // Отходы плёнки ламинации 1, кг
@@ -495,7 +495,7 @@ if(!empty($id)) {
         if($new_work_time_2 === null) $new_work_time_2 = "NULL";
     
         // Отходы плёнки лам 2, руб
-        $new_film_waste_cost_3 = ($calculation->weight_dirty_3 - $calculation->weight_pure_3) * $param_lamination2_price * $calculation->GetCurrencyRate($param_lamination2_currency, $new_usd, $new_euro);
+        $new_film_waste_cost_3 = ($calculation->weight_dirty_3 - $calculation->weight_pure_3) * $param_price_3 * $calculation->GetCurrencyRate($param_currency_3, $new_usd, $new_euro);
         if($new_film_waste_cost_3 === null) $new_film_waste_cost_3 = "NULL";
     
         // Отходы плёнки лам 2, кг
@@ -693,38 +693,37 @@ if(!empty($id)) {
     </div>
     <div class="row text-nowrap">
         <div class="col-4 pr-4">
-            <h3>Основная пленка&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($weight_dirty), 0) ?> кг</span></h3>
+            <h3>Основная пленка&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($weight_dirty_1), 0) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
-            <div class="value mb-2"><?= Display(floatval($film_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_cost_per_unit), 3) ?> &#8381; за кг</span></div>
+            <div class="value mb-2"><?= Display(floatval($film_cost_1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_cost_per_unit_1), 3) ?> &#8381; за кг</span></div>
             <div>Ширина</div>
-            <div class="value mb-2"><?= Display(intval($width), 0) ?> мм</div>
+            <div class="value mb-2"><?= Display(intval($width_1), 0) ?> мм</div>
             <div>Масса без приладки</div>
-            <div class="value mb-2"><?= Display(floatval($weight_pure), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($length_pure), 0) ?> м</span></div>
+            <div class="value mb-2"><?= Display(floatval($weight_pure_1), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($length_pure_1), 0) ?> м</span></div>
             <div>Масса с приладкой</div>
-            <div class="value mb-2"><?= Display(floatval($weight_dirty), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($length_dirty), 0) ?> м</span></div>
-        </div>
-        <?php /*if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)):*/ ?>
-        <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
-            <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination1_weight_dirty), 0) ?> кг</span></h3>
-            <div>Закупочная стоимость</div>
-            <div class="value mb-2"><?= Display(floatval($lamination1_film_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination1_film_cost_per_unit), 3) ?> &#8381; за кг</span></div>
-            <div>Ширина</div>
-            <div class="value mb-2"><?= Display(intval($lamination1_width), 0) ?> мм</div>
-            <div>Масса без приладки</div>
-            <div class="value mb-2"><?= Display(floatval($lamination1_weight_pure), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination1_length_pure), 0) ?> м</span></div>
-            <div>Масса с приладкой</div>
-            <div class="value mb-2"><?= Display(floatval($lamination1_weight_dirty), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination1_length_dirty), 0) ?> м</span></div>
+            <div class="value mb-2"><?= Display(floatval($weight_dirty_1), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($length_dirty_1), 0) ?> м</span></div>
         </div>
         <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
-            <h3>Ламинация 2&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination2_weight_dirty), 0) ?> кг</span></h3>
+            <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($weight_dirty_2), 0) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
-            <div class="value mb-2"><?= Display(floatval($lamination2_film_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination2_film_cost_per_unit), 3) ?> &#8381; за кг</span></div>
+            <div class="value mb-2"><?= Display(floatval($film_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_cost_per_unit_2), 3) ?> &#8381; за кг</span></div>
             <div>Ширина</div>
-            <div class="value mb-2"><?= Display(intval($lamination2_width), 0) ?> мм</div>
+            <div class="value mb-2"><?= Display(intval($width_2), 0) ?> мм</div>
             <div>Масса без приладки</div>
-            <div class="value mb-2"><?= Display(floatval($lamination2_weight_pure), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination2_length_pure), 0) ?> м</span></div>
+            <div class="value mb-2"><?= Display(floatval($weight_pure_2), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($length_pure_2), 0) ?> м</span></div>
             <div>Масса с приладкой</div>
-            <div class="value mb-2"><?= Display(floatval($lamination2_weight_dirty), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination2_length_dirty), 0) ?> м</span></div>
+            <div class="value mb-2"><?= Display(floatval($weight_dirty_2), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($length_dirty_2), 0) ?> м</span></div>
+        </div>
+        <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
+            <h3>Ламинация 2&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($weight_dirty_3), 0) ?> кг</span></h3>
+            <div>Закупочная стоимость</div>
+            <div class="value mb-2"><?= Display(floatval($film_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_cost_per_unit_3), 3) ?> &#8381; за кг</span></div>
+            <div>Ширина</div>
+            <div class="value mb-2"><?= Display(intval($width_3), 0) ?> мм</div>
+            <div>Масса без приладки</div>
+            <div class="value mb-2"><?= Display(floatval($weight_pure_3), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($length_pure_3), 0) ?> м</span></div>
+            <div>Масса с приладкой</div>
+            <div class="value mb-2"><?= Display(floatval($weight_dirty_3), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($length_dirty_3), 0) ?> м</span></div>
         </div>
     </div>
     <div id="show_costs">
@@ -756,36 +755,27 @@ if(!empty($id)) {
         <div class="row text-nowrap">
             <div class="col-4 pr-4">
                 <div>Отходы</div>
-                <div class="value mb-2"><?= Display(floatval($film_waste_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_waste), 2) ?> кг</span></div>
-                <?php /*if($work_type_id == 2):*/ ?>
+                <div class="value mb-2"><?= Display(floatval($film_waste_cost_1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_waste_weight_1), 2) ?> кг</span></div>
                 <div>Краска</div>
                 <div class="value mb-2"><?= Display(floatval($ink_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($ink_weight), 2) ?> кг</span></div>
-                <?php
-                /*endif;
-                if($work_type_id == 2):*/
-                ?>
                 <div>Печать тиража</div>
-                <div class="value mb-2"><?= Display(floatval($work_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($work_time), 2) ?> ч</span></div>
-                <?php
-                /*endif;*/
-                ?>
-            </div>
-            <?php /*if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)):*/ ?>
-            <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
-                <div>Отходы</div>
-                <div class="value mb-2"><?= Display(floatval($lamination1_film_waste_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination1_film_waste), 2) ?> кг</span></div>
-                <div>Клей</div>
-                <div class="value mb-2"><?= Display(floatval($glue_cost1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($glue_expense1), 2) ?> кг</span></div>
-                <div>Работа ламинатора</div>
-                <div class="value mb-2"><?= Display(floatval($lamination1_work_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination1_work_time), 2) ?> ч</span></div>
+                <div class="value mb-2"><?= Display(floatval($work_cost_1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($work_time_1), 2) ?> ч</span></div>
             </div>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
-                <div class="value mb-2"><?= Display(floatval($lamination2_film_waste_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination2_film_waste), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= Display(floatval($film_waste_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_waste_weight_2), 2) ?> кг</span></div>
                 <div>Клей</div>
-                <div class="value mb-2"><?= Display(floatval($glue_cost2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($glue_expense2), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= Display(floatval($glue_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($glue_expense_2), 2) ?> кг</span></div>
                 <div>Работа ламинатора</div>
-                <div class="value mb-2"><?= Display(floatval($lamination2_work_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($lamination2_work_time), 2) ?> ч</span></div>
+                <div class="value mb-2"><?= Display(floatval($work_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($work_time_2), 2) ?> ч</span></div>
+            </div>
+            <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
+                <div>Отходы</div>
+                <div class="value mb-2"><?= Display(floatval($film_waste_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_waste_weight_3), 2) ?> кг</span></div>
+                <div>Клей</div>
+                <div class="value mb-2"><?= Display(floatval($glue_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($glue_expense_3), 2) ?> кг</span></div>
+                <div>Работа ламинатора</div>
+                <div class="value mb-2"><?= Display(floatval($work_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($work_time_3), 2) ?> ч</span></div>
             </div>
         </div>
     </div>
