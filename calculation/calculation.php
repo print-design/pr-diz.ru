@@ -792,7 +792,7 @@ class Calculation {
         for($i=1; $i<=$ink_number; $i++) {
             $cliche = "cliche_$i";
             
-            // Если форма новая, то количество новых форм увеличиваем на 1
+            // Если форма не старая, то количество новых форм увеличиваем на 1
             if(!empty($$cliche) && $$cliche != self::OLD) {
                 $this->cliche_new_number += 1;
             }
