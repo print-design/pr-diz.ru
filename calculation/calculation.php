@@ -388,11 +388,14 @@ class Calculation {
         if(empty($price_3)) $price_3 = 0;
         
         // Если тип работы - плёнка без печати, то 
+        // машина = пустая, красочность = 0, рапорт = 0
         if($work_type_id == self::WORK_TYPE_NOPRINT) {
             $machine_id = null;
             $ink_number = 0;
             $raport = 0;
         }
+        
+        // Если нет рапорта, ширины вала ламинатора или красочности, присваиваем им 0
         if(empty($raport)) $raport = 0;
         if(empty($lamination_roller_width)) $lamination_roller_width = 0;
         if(empty($ink_number)) $ink_number = 0;
