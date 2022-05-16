@@ -227,7 +227,7 @@ $num_for_customer = $row['num_for_customer'];
                         <tr><th>Ширина ручья</th><td colspan="3"><?= rtrim(rtrim(number_format($stream_width, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                             <?php
                             endif;
-                            if(!empty($raport)):
+                            if($work_type_id == WORK_TYPE_PRINT):
                             ?>
                         <tr><th>Рапорт</th><td colspan="3"><?= $raport ?> мм</td></tr>
                             <?php
@@ -237,7 +237,7 @@ $num_for_customer = $row['num_for_customer'];
                         <tr><th>Количество этикеток в рапорте</th><td colspan="3"><?=$number_in_raport ?></td></tr>
                             <?php
                             endif;
-                            if(!empty($lamination_roller_width)):
+                            if(!empty($lamination1_individual_film_name) || !empty($lamination1_film_name)):
                             ?>
                         <tr><th>Ширина ламинирующего вала</th><td colspan="3"><?= $lamination_roller_width ?> мм</td></tr>
                             <?php

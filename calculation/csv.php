@@ -244,10 +244,17 @@ if($id !== null) {
         $percent_1 = $row['percent_1']; $percent_2 = $row['percent_2']; $percent_3 = $row['percent_3']; $percent_4 = $row['percent_4']; $percent_5 = $row['percent_5']; $percent_6 = $row['percent_6']; $percent_7 = $row['percent_7']; $percent_8 = $row['percent_8'];
         $cliche_1 = $row['cliche_1']; $cliche_2 = $row['cliche_2']; $cliche_3 = $row['cliche_3']; $cliche_4 = $row['cliche_4']; $cliche_5 = $row['cliche_5']; $cliche_6 = $row['cliche_6']; $cliche_7 = $row['cliche_7']; $cliche_8 = $row['cliche_8'];
         
+        // Если тип работы - плёнка без печати, то 
+        // машина = пустая, красочность = 0, рапорт = 0
         if($work_type_id == Calculation::WORK_TYPE_NOPRINT) {
             $machine_id = null;
             $ink_number = 0;
             $raport = 0;
+        }
+        
+        // Если нет ламинации, то ширина ламинирующего вала = 0
+        if(empty($film_2) && empty($film_3)) {
+            $lamination_roller_width = 0;
         }
     }
     
