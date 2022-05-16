@@ -327,9 +327,9 @@ class Calculation {
             DataPriladka $data_priladka_laminator,
             DataMachine $data_machine,
             DataMachine $data_machine_laminator,
-            DataInk $ink_data,
-            DataGlue $glue_data,
-            DataCliche $cliche_data,
+            DataInk $data_ink,
+            DataGlue $data_glue,
+            DataCliche $data_cliche,
             $usd, // Курс доллара
             $euro, // Курс евро
             $unit, // Кг или шт
@@ -669,13 +669,13 @@ class Calculation {
         $this->print_area = $this->length_dirty_1 * ($stream_width * $streams_number + 10) / 1000;
         
         // Расход КраскаСмеси на 1 кг краски, кг
-        $this->ink_1kg_mix_weight = 1 + $ink_data->solvent_part;
+        $this->ink_1kg_mix_weight = 1 + $data_ink->solvent_part;
         
         // Цена 1 кг чистого флексоля 82, руб
-        $this->ink_flexol82_kg_price = $ink_data->solvent_flexol82_price * $this->GetCurrencyRate($ink_data->solvent_flexol82_currency, $usd, $euro);
+        $this->ink_flexol82_kg_price = $data_ink->solvent_flexol82_price * $this->GetCurrencyRate($data_ink->solvent_flexol82_currency, $usd, $euro);
         
         // Цена 1 кг чистого этоксипропанола, руб
-        $this->ink_etoxypropanol_kg_price = $ink_data->solvent_etoxipropanol_price * $this->GetCurrencyRate($ink_data->solvent_etoxipropanol_currency, $usd, $euro);
+        $this->ink_etoxypropanol_kg_price = $data_ink->solvent_etoxipropanol_price * $this->GetCurrencyRate($data_ink->solvent_etoxipropanol_currency, $usd, $euro);
         
         // Если печатаем на Комифлекс, то пользуемся флексолем82, иначе - этоксипропанолом
         $ink_solvent_kg_price = 0;
@@ -706,16 +706,16 @@ class Calculation {
             $percent = "percent_$i";
             
             // Цена 1 кг чистой краски, руб
-            $price = $this->GetInkPrice($$ink, $$cmyk, $ink_data->c_price, $ink_data->c_currency, $ink_data->m_price, $ink_data->m_currency, $ink_data->y_price, $ink_data->y_currency, $ink_data->k_price, $ink_data->k_currency, $ink_data->panton_price, $ink_data->panton_currency, $ink_data->white_price, $ink_data->white_currency, $ink_data->lacquer_price, $ink_data->lacquer_currency);
+            $price = $this->GetInkPrice($$ink, $$cmyk, $data_ink->c_price, $data_ink->c_currency, $data_ink->m_price, $data_ink->m_currency, $data_ink->y_price, $data_ink->y_currency, $data_ink->k_price, $data_ink->k_currency, $data_ink->panton_price, $data_ink->panton_currency, $data_ink->white_price, $data_ink->white_currency, $data_ink->lacquer_price, $data_ink->lacquer_currency);
             $ink_kg_price = $price->value * $this->GetCurrencyRate($price->currency, $usd, $euro);
             $this->ink_kg_prices[$i] = $ink_kg_price;
             
             // Цена 1 кг КраскаСмеси, руб
-            $mix_ink_kg_price = (($ink_kg_price * 1) + ($ink_solvent_kg_price * $ink_data->solvent_part)) / $this->ink_1kg_mix_weight;
+            $mix_ink_kg_price = (($ink_kg_price * 1) + ($ink_solvent_kg_price * $data_ink->solvent_part)) / $this->ink_1kg_mix_weight;
             $this->mix_ink_kg_prices[$i] = $mix_ink_kg_price;
             
             // Расход КраскаСмеси, кг
-            $ink_expense = $this->print_area * $this->GetInkExpense($$ink, $$cmyk, $ink_data->c_expense, $ink_data->m_expense, $ink_data->y_expense, $ink_data->k_expense, $ink_data->panton_expense, $ink_data->white_expense, $ink_data->lacquer_expense) * $$percent / 1000 / 100;
+            $ink_expense = $this->print_area * $this->GetInkExpense($$ink, $$cmyk, $data_ink->c_expense, $data_ink->m_expense, $data_ink->y_expense, $data_ink->k_expense, $data_ink->panton_expense, $data_ink->white_expense, $data_ink->lacquer_expense) * $$percent / 1000 / 100;
             $this->ink_expenses[$i] = $ink_expense;
             
             // Стоимость КраскаСмеси, руб
@@ -728,16 +728,16 @@ class Calculation {
         //********************************************
         
         // Расход КлеяСмеси на 1 кг клея, кг
-        $this->glue_kg_weight = 1 + $glue_data->solvent_part;
+        $this->glue_kg_weight = 1 + $data_glue->solvent_part;
         
         // Цена 1 кг чистого клея, руб
-        $this->glue_kg_price = $glue_data->glue_price * $this->GetCurrencyRate($glue_data->glue_currency, $usd, $euro);
+        $this->glue_kg_price = $data_glue->glue_price * $this->GetCurrencyRate($data_glue->glue_currency, $usd, $euro);
         
         // Цена 1 кг чистого растворителя для клея, руб
-        $this->glue_solvent_kg_price = $glue_data->solvent_price * $this->GetCurrencyRate($glue_data->solvent_currency, $usd, $euro);
+        $this->glue_solvent_kg_price = $data_glue->solvent_price * $this->GetCurrencyRate($data_glue->solvent_currency, $usd, $euro);
         
         // Цена 1 кг КлеяСмеси, руб
-        $this->mix_glue_kg_price = ((1 * $this->glue_kg_price) + ($glue_data->solvent_part * $this->glue_solvent_kg_price)) / $this->glue_kg_weight;
+        $this->mix_glue_kg_price = ((1 * $this->glue_kg_price) + ($data_glue->solvent_part * $this->glue_solvent_kg_price)) / $this->glue_kg_weight;
         
         // Площадь заклейки 2, м2
         $this->glue_area2 = $this->length_dirty_2 * $lamination_roller_width / 1000;
@@ -748,19 +748,19 @@ class Calculation {
         // Расход КлеяСмеси 2, кг
         // Если название плёнки начинается на "Pet", то используем расход краски для ламинации ПЭТ
         if((strlen($film_1) > 3 && substr($film_1, 0, 3) == "Pet") || (strlen($film_2) > 3 && substr($film_2, 0, 3) == "Pet")) {
-            $this->glue_expense2 = $this->glue_area2 * $glue_data->glue_expense_pet / 1000;
+            $this->glue_expense2 = $this->glue_area2 * $data_glue->glue_expense_pet / 1000;
         }
         else {
-            $this->glue_expense2 = $this->glue_area2 * $glue_data->glue_expense / 1000;
+            $this->glue_expense2 = $this->glue_area2 * $data_glue->glue_expense / 1000;
         }
         
         // Расход КлеяСмеси 3, кг
         // Если название плёнки начинается на "Pet", то используем расход краски для ламинации ПЭТ
         if((strlen($film_2) > 3 && substr($film_2, 0, 3) == "Pet") || (strlen($film_3) > 3 && substr($film_3, 0, 3) == "Pet")) {
-            $this->glue_expense3 = $this->glue_area3 * $glue_data->glue_expense_pet / 1000;
+            $this->glue_expense3 = $this->glue_area3 * $data_glue->glue_expense_pet / 1000;
         }
         else {
-            $this->glue_expense3 = $this->glue_area3 * $glue_data->glue_expense / 1000;
+            $this->glue_expense3 = $this->glue_area3 * $data_glue->glue_expense / 1000;
         }
         
         // Стоимость КлеяСмеси 2, руб
@@ -802,13 +802,13 @@ class Calculation {
             
             switch ($$cliche) {
                 case self::FLINT:
-                    $cliche_sm_price = $cliche_data->flint_price;
-                    $cliche_currency = $cliche_data->flint_currency;
+                    $cliche_sm_price = $data_cliche->flint_price;
+                    $cliche_currency = $data_cliche->flint_currency;
                     break;
                 
                 case self::KODAK:
-                    $cliche_sm_price = $cliche_data->kodak_price;
-                    $cliche_currency = $cliche_data->kodak_currency;
+                    $cliche_sm_price = $data_cliche->kodak_price;
+                    $cliche_currency = $data_cliche->kodak_currency;
                     break;
             }
             
