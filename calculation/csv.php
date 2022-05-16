@@ -550,7 +550,7 @@ if($id !== null) {
         
         array_push($file_data, array("М2 чистые 1, м2",
             Display($calculation->area_pure_1),
-            "|= ".Display($calculation->weight)." * 1000 / (".Display($density_1)." + ".Display($density_2)." + ".Display($density_3),
+            "|= ".Display($calculation->weight)." * 1000 / (".Display($density_1)." + ".Display($density_2)." + ".Display($density_3).")",
             "масса тиража * 1000 / (уд. вес 1 + уд. вес 2 + уд. вес 3)"));
         
         array_push($file_data, array("М2 чистые 2, м2",
