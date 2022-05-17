@@ -242,7 +242,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $individual_thickness = filter_input(INPUT_POST, 'individual_thickness'); if(empty($individual_thickness)) $individual_thickness = "NULL"; if($film_id != INDIVIDUAL) $individual_thickness = "NULL";
         $individual_density = filter_input(INPUT_POST, 'individual_density'); if(empty($individual_density)) $individual_density = "NULL"; if($film_id != INDIVIDUAL) $individual_density = "NULL";
         $customers_material = 0; if(filter_input(INPUT_POST, 'customers_material') == 'on') $customers_material = 1;
-        $ski = filter_input(INPUT_POST, 'ski'); if(empty($ski)) $ski = "NULL";
+        $ski = filter_input(INPUT_POST, 'ski'); if(empty($ski)) $ski = "NULL"; if(empty($film_id)) $ski = "NULL";
         $width_ski = filter_input(INPUT_POST, 'width_ski'); if(empty($width_ski)) $width_ski = "NULL"; if($ski != NONSTANDARD_SKI) $width_ski = "NULL";
         
         // Если currency пустой, то получаем значение валюты из справочника цен на плёнку
@@ -262,8 +262,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $lamination1_individual_thickness = filter_input(INPUT_POST, 'lamination1_individual_thickness'); if(empty($lamination1_individual_thickness)) $lamination1_individual_thickness = "NULL"; if($lamination1_film_id != INDIVIDUAL) $lamination1_individual_thickness = "NULL";
         $lamination1_individual_density = filter_input(INPUT_POST, 'lamination1_individual_density'); if(empty($lamination1_individual_density)) $lamination1_individual_density = "NULL"; if($lamination1_film_id != INDIVIDUAL) $lamination1_individual_density = "NULL";
         $lamination1_customers_material = 0; if(filter_input(INPUT_POST, 'lamination1_customers_material') == 'on') $lamination1_customers_material = 1;
-        $lamination1_ski = filter_input(INPUT_POST, 'lamination1_ski'); if(empty($lamination1_ski)) $lamination1_ski = "NULL";
-        $lamination1_width_ski = filter_input(INPUT_POST, 'lamination1_width_ski'); if(empty($lamination1_width_ski)) $lamination1_width_ski = "NULL"; if($lamination1_width_ski != NONSTANDARD_SKI) $lamination1_width_ski = "NULL";
+        $lamination1_ski = filter_input(INPUT_POST, 'lamination1_ski'); if(empty($lamination1_ski)) $lamination1_ski = "NULL"; if(empty($lamination1_film_id)) $lamination1_ski = "NULL";
+        $lamination1_width_ski = filter_input(INPUT_POST, 'lamination1_width_ski'); if(empty($lamination1_width_ski)) $lamination1_width_ski = "NULL"; if($lamination1_ski != NONSTANDARD_SKI) $lamination1_width_ski = "NULL";
         
         // Если lamination1_currency пустой, то получаем значение валюты из справочника цен на плёнку
         if(empty($lamination1_currency)) {
@@ -282,8 +282,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $lamination2_individual_thickness = filter_input(INPUT_POST, 'lamination2_individual_thickness'); if(empty($lamination2_individual_thickness)) $lamination2_individual_thickness = "NULL"; if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_thickness = "NULL";
         $lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density'); if(empty($lamination2_individual_density)) $lamination2_individual_density = "NULL"; if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_density = "NULL";
         $lamination2_customers_material = 0; if(filter_input(INPUT_POST, 'lamination2_customers_material') == 'on') $lamination2_customers_material = 1;
-        $lamination2_ski = filter_input(INPUT_POST, 'lamination2_ski'); if(empty($lamination2_ski)) $lamination2_ski = "NULL";
-        $lamination2_width_ski = filter_input(INPUT_POST, 'lamination2_width_ski'); if(empty($lamination2_width_ski)) $lamination2_width_ski = "NULL"; if($lamination2_width_ski != NONSTANDARD_SKI) $lamination2_width_ski = "NULL";
+        $lamination2_ski = filter_input(INPUT_POST, 'lamination2_ski'); if(empty($lamination2_ski)) $lamination2_ski = "NULL"; if(empty($lamination2_film_id)) $lamination2_ski = "NULL";
+        $lamination2_width_ski = filter_input(INPUT_POST, 'lamination2_width_ski'); if(empty($lamination2_width_ski)) $lamination2_width_ski = "NULL"; if($lamination2_ski != NONSTANDARD_SKI) $lamination2_width_ski = "NULL";
         
         // Если lamination2_currency пустой, то получаем значение валюты из справочника цен на плёнку
         if(empty($lamination2_currency)) {
