@@ -2114,28 +2114,34 @@ $colorfulnesses = array();
             function SetWidthSkiVisibility() {
                 if($('#ski').val() == <?=NONSTANDARD_SKI ?>) {
                     $('#width_ski').removeClass('d-none');
+                    $('#width_ski').attr('required', 'required');
                     $('#for_width_ski').removeClass('d-none');
                 }
                 else {
                     $('#width_ski').addClass('d-none');
+                    $('#width_ski').removeAttr('required');
                     $('#for_width_ski').addClass('d-none');
                 }
                 
                 if($('#lamination1_ski').val() == <?=NONSTANDARD_SKI ?>) {
                     $('#lamination1_width_ski').removeClass('d-none');
+                    $('#lamination1_width_ski').attr('required', 'required');
                     $('#for_lamination1_width_ski').removeClass('d-none');
                 }
                 else {
                     $('#lamination1_width_ski').addClass('d-none');
+                    $('#lamination1_width_ski').removeAttr('required');
                     $('#for_lamination1_width_ski').addClass('d-none');
                 }
                 
                 if($('#lamination2_ski').val() == <?=NONSTANDARD_SKI ?>) {
                     $('#lamination2_width_ski').removeClass('d-none');
+                    $('#lamination2_width_ski').attr('required', 'required');
                     $('#for_lamination2_width_ski').removeClass('d-none');
                 }
                 else {
                     $('#lamination2_width_ski').addClass('d-none');
+                    $('#lamination2_width_ski').removeAttr('required');
                     $('#for_lamination2_width_ski').addClass('d-none');
                 }
             }
