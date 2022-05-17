@@ -278,7 +278,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id'); if(empty($lamination2_film_variation_id)) $lamination2_film_variation_id = "NULL"; if($lamination2_film_id == INDIVIDUAL) $lamination2_film_variation_id = "NULL";
         $lamination2_price = filter_input(INPUT_POST, 'lamination2_price'); if(empty($lamination2_price)) $lamination2_price = "NULL";
         $lamination2_currency = filter_input(INPUT_POST, 'lamination2_currency');
-        $lamination2_individual_film_name = addslashes(filter_input(INPUT_POST, 'lamination2_individual_film_name')); if($lamination2_film_id != INDIVIDUAL); $lamination2_individual_film_name = "";
+        $lamination2_individual_film_name = addslashes(filter_input(INPUT_POST, 'lamination2_individual_film_name')); if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_film_name = "";
         $lamination2_individual_thickness = filter_input(INPUT_POST, 'lamination2_individual_thickness'); if(empty($lamination2_individual_thickness)) $lamination2_individual_thickness = "NULL"; if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_thickness = "NULL";
         $lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density'); if(empty($lamination2_individual_density)) $lamination2_individual_density = "NULL"; if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_density = "NULL";
         $lamination2_customers_material = 0; if(filter_input(INPUT_POST, 'lamination2_customers_material') == 'on') $lamination2_customers_material = 1;
@@ -2309,7 +2309,7 @@ $colorfulnesses = array();
                 SetFilmFieldsVisibility($('#lamination1_film_id').val(), $('#lamination1_customers_material').is(':checked'), 'lamination1_');
             }
             
-            <?php if(!empty($lamination1_film_id)): ?>
+            <?php if(!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)): ?>
                 ShowLamination1();
             <?php endif; ?>
             
@@ -2350,7 +2350,7 @@ $colorfulnesses = array();
                 SetFilmFieldsVisibility($('#lamination2_film_id').val(), $('#lamination2_customers_material').is(':checked'), 'lamination2_');
             }
             
-            <?php if(!empty($lamination2_film_id)): ?>
+            <?php if(!empty($lamination2_film_id) || !empty($lamination2_individual_film_name)): ?>
                 ShowLamination2();
             <?php endif; ?>
             
