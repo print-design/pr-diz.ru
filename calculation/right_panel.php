@@ -346,7 +346,7 @@ if(!empty($id)) {
         for($i=1; $i<=$param_ink_number; $i++) {
             $new_cliche_cost += $calculation->cliche_costs[$i];
         }
-        if($new_cliche_cost == null) $new_cliche_cost = "NULL";
+        if($new_cliche_cost === null) $new_cliche_cost = "NULL";
     
         // Материалы = масса с приладкой осн. + масса с приладкой лам. 1 + масса с приладкой лам. 2
         $new_total_weight_dirty = $calculation->weight_dirty_1 + $calculation->weight_dirty_2 + $calculation->weight_dirty_3;
@@ -357,7 +357,7 @@ if(!empty($id)) {
         if($new_film_cost_1 === null) $new_film_cost_1 = "NULL";
     
         // Основная плёнка цена за кг = стоимость основной плёнки / вес
-        $new_film_cost_per_unit_1 = $calculation->film_cost_1 / $calculation->weight_dirty_1;
+        $new_film_cost_per_unit_1 = empty($calculation->weight_dirty_1) ? 0 : $calculation->film_cost_1 / $calculation->weight_dirty_1;
         if($new_film_cost_per_unit_1 === null) $new_film_cost_per_unit_1 = "NULL";
     
         // Ширина основной плёнки = ширина осн. плёнки
@@ -561,11 +561,11 @@ if(!empty($id)) {
         if(empty($error_message)) {
             // Отгрузочная стоимость = Себестоимость за тираж + (Сбестоимость за тираж*процент наценки / 100)
             $new_shipping_cost = $new_cost + ($new_cost * $new_extracharge / 100);
-            if($new_shipping_cost == null) $new_shipping_cost = "NULL";
+            if($new_shipping_cost === null) $new_shipping_cost = "NULL";
             
             // Отгрузочная стоимость за единицу (возможно как в кг, так и в шт)
             $new_shipping_cost_per_unit = $new_shipping_cost / $param_quantity;
-            if($new_shipping_cost_per_unit == null) $new_shipping_cost_per_unit = "NULL";
+            if($new_shipping_cost_per_unit === null) $new_shipping_cost_per_unit = "NULL";
         }
         
         //****************************************************

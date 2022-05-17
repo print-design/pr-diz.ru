@@ -12,9 +12,9 @@ const WORK_TYPE_NOPRINT = 1;
 const WORK_TYPE_PRINT = 2;
 
 // Лыжи
-const NO_SKI = 0;
-const STANDARD_SKI = 1;
-const NONSTANDARD_SKI = 2;
+const NO_SKI = 1;
+const STANDARD_SKI = 2;
+const NONSTANDARD_SKI = 3;
 
 // Формы
 const OLD = "old";

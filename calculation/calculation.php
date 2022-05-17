@@ -154,9 +154,9 @@ class Calculation {
     const PIECES = 'pieces';
     
     // Лыжи
-    const NO_SKI = 0;
-    const STANDARD_SKI = 1;
-    const NONSTANDARD_SKI = 2;
+    const NO_SKI = 1;
+    const STANDARD_SKI = 2;
+    const NONSTANDARD_SKI = 3;
 
     // Валюты
     const USD = "usd";
