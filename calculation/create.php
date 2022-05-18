@@ -832,7 +832,7 @@ $colorfulnesses = array();
                         <div class="form-group">
                             <label for="customer_id" class="d-block">Заказчик</label>
                             <div class="d-flex justify-content-between">
-                                <div>
+                                <div class="w-75">
                                     <select id="customer_id" name="customer_id" class="form-control<?=$customer_id_valid ?>" multiple="multiple" required="required">
                                         <option value="">Заказчик...</option>
                                         <?php
