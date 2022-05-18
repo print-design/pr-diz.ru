@@ -703,6 +703,10 @@ $colorfulnesses = array();
             label {
                 margin-bottom: .2rem;
             }
+            
+            .select2 {
+                width:100%!important;
+            }
         </style>
     </head>
     <body>
@@ -812,9 +816,9 @@ $colorfulnesses = array();
             }
             ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= filter_input(INPUT_GET, "mode") == "recalc" ? "details.php".BuildQueryRemove("mode") : "" ?>">Назад</a>
-            <div class="row">
+            <div>
                 <!-- Левая половина -->
-                <div class="col-5" id="left_side">
+                <div id="left_side">
                     <form method="post">
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                         <input type="hidden" id="scroll" name="scroll" />
@@ -825,10 +829,10 @@ $colorfulnesses = array();
                         <h2 style="font-size: 26px;">№<?=$customer_id ?>-<?=$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
                         <?php endif; ?>
                         <!-- Заказчик -->
-                        <div class="row">
-                            <div class="col-8">
-                                <div class="form-group">
-                                    <label for="customer_id">Заказчик</label>
+                        <div class="form-group">
+                            <label for="customer_id" class="d-block">Заказчик</label>
+                            <div class="d-flex justify-content-between">
+                                <div>
                                     <select id="customer_id" name="customer_id" class="form-control<?=$customer_id_valid ?>" multiple="multiple" required="required">
                                         <option value="">Заказчик...</option>
                                         <?php
@@ -846,14 +850,12 @@ $colorfulnesses = array();
                                         endwhile;
                                         ?>
                                     </select>
-                                    <div class="invalid-feedback">Заказчик обязательно</div>
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-outline-dark d-inline" data-toggle="modal" data-target="#new_customer"><i class="fas fa-plus"></i>&nbsp;Создать нового</button>
                                 </div>
                             </div>
-                            <div class="col-4 d-flex flex-column justify-content-end">
-                                <div class="form-group">
-                                    <button type="button" class="btn btn-outline-dark w-100" data-toggle="modal" data-target="#new_customer"><i class="fas fa-plus"></i>&nbsp;Создать нового</button>
-                                </div>
-                            </div>
+                            <div class="invalid-feedback">Заказчик обязательно</div>
                         </div>
                         <!-- Название заказа -->
                         <div class="form-group">
@@ -2497,6 +2499,7 @@ $colorfulnesses = array();
                 $("#costs").removeClass("d-none");
                 $("#show_costs").addClass("d-none");
                 AdjustFixedBlock($('#calculation'));
+                AdjustLeftBlock($('#left_side'), $('#calculation'));
             }
             
             // Скрытие расходов
@@ -2504,6 +2507,7 @@ $colorfulnesses = array();
                 $("#costs").addClass("d-none");
                 $("#show_costs").removeClass("d-none");
                 AdjustFixedBlock($('#calculation'));
+                AdjustLeftBlock($('#left_side'), $('#calculation'));
             }
             
             // Скрытие расчёта
@@ -2591,9 +2595,14 @@ $colorfulnesses = array();
             
             // Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне
             AdjustFixedBlock($('#calculation'));
+            AdjustLeftBlock($('#left_side'), $('#calculation'));
             
             $(window).on("scroll", function(){
                 AdjustFixedBlock($('#calculation'));
+            });
+            
+            $(window).on("resize", function(){
+                AdjustLeftBlock($('#left_side'), $('#calculation'));
             });
         </script>
     </body>

@@ -172,9 +172,9 @@ $num_for_customer = $row['num_for_customer'];
             }
             ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemove("id") ?>">Назад</a>
-            <div class="row">
+            <div>
                 <!-- Левая половина -->
-                <div class="col-5" id="left_side">
+                <div id="left_side">
                     <h1 style="font-size: 32px; font-weight: 600;"><?= htmlentities($name) ?></h1>
                     <h2 style="font-size: 26px;">№<?=$customer_id."-".$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
                     <?php
@@ -467,6 +467,7 @@ $num_for_customer = $row['num_for_customer'];
                 $("#costs").removeClass("d-none");
                 $("#show_costs").addClass("d-none");
                 AdjustFixedBlock($('#calculation'));
+                AdjustLeftBlock($('#left_side'), $('#calculation'));
             }
             
             // Скрытие расходов
@@ -474,6 +475,7 @@ $num_for_customer = $row['num_for_customer'];
                 $("#costs").addClass("d-none");
                 $("#show_costs").removeClass("d-none");
                 AdjustFixedBlock($('#calculation'));
+                AdjustLeftBlock($('#left_side'), $('#calculation'));
             }
             
             // Ограницение значений наценки
@@ -493,9 +495,14 @@ $num_for_customer = $row['num_for_customer'];
             
             // Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне
             AdjustFixedBlock($('#calculation'));
+            AdjustLeftBlock($('#left_side'), $('#calculation'));
             
             $(window).on("scroll", function(){
                 AdjustFixedBlock($('#calculation'));
+            });
+            
+            $(window).on("resize", function(){
+                AdjustLeftBlock($('#left_side'), $('#calculation'));
             });
         </script>
     </body>

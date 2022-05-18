@@ -374,6 +374,31 @@
             }
         }
     };
+    
+    // Регулирование ширины левой части (чтобы не заплывало на правый блок)
+    function AdjustLeftBlock(left_block, fixed_block) {
+        windowWidth = $(window).width();
+        fixedBlockWidth = fixed_block.width();
+        
+        if(fixed_block.hasClass('d-none')) {
+            if(windowWidth > 860) {
+                left_block.width(700);
+            }
+            else {
+                left_block.width(windowWidth - 160);
+            }
+        }
+        else {
+            leftWidth = windowWidth - fixedBlockWidth;
+            
+            if(leftWidth > 860) {
+                left_block.width(700);
+            }
+            else {
+                left_block.width(leftWidth - 160);
+            }
+        }
+    }
         
     // Прокрутка на прежнее место после отправки формы
     $(window).on("scroll", function(){
