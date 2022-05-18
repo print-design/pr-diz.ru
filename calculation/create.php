@@ -1289,7 +1289,7 @@ $colorfulnesses = array();
                                         <label for="lamination1_ski" id="for_lamination1_ski">Лыжи</label>
                                         <select name="lamination1_ski" id="lamination1_ski" class="form-control">
                                             <option value="<?=STANDARD_SKI ?>"<?=($lamination1_ski == STANDARD_SKI ? " selected='selected'" : "") ?>>Стандартные лыжи</option>
-                                            <option value="<?=NONSTANDARD_SKI ?>"<?=($lamination2_ski == NONSTANDARD_SKI ? " selected='selected'" : "") ?>>Нестандартные лыжи</option>
+                                            <option value="<?=NONSTANDARD_SKI ?>"<?=($lamination1_ski == NONSTANDARD_SKI ? " selected='selected'" : "") ?>>Нестандартные лыжи</option>
                                         </select>
                                     </div>
                                 </div>
