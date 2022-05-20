@@ -707,6 +707,14 @@ $colorfulnesses = array();
             .select2 {
                 width:100%!important;
             }
+            
+            #left_side {
+                width: 45%;
+            }
+            
+            #calculation {
+                width: 50%;
+            }
         </style>
     </head>
     <body>
@@ -2499,7 +2507,6 @@ $colorfulnesses = array();
                 $("#costs").removeClass("d-none");
                 $("#show_costs").addClass("d-none");
                 AdjustFixedBlock($('#calculation'));
-                AdjustLeftBlock($('#left_side'), $('#calculation'));
             }
             
             // Скрытие расходов
@@ -2507,7 +2514,6 @@ $colorfulnesses = array();
                 $("#costs").addClass("d-none");
                 $("#show_costs").removeClass("d-none");
                 AdjustFixedBlock($('#calculation'));
-                AdjustLeftBlock($('#left_side'), $('#calculation'));
             }
             
             // Скрытие расчёта
@@ -2595,14 +2601,9 @@ $colorfulnesses = array();
             
             // Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне
             AdjustFixedBlock($('#calculation'));
-            AdjustLeftBlock($('#left_side'), $('#calculation'));
             
             $(window).on("scroll", function(){
                 AdjustFixedBlock($('#calculation'));
-            });
-            
-            $(window).on("resize", function(){
-                AdjustLeftBlock($('#left_side'), $('#calculation'));
             });
         </script>
     </body>

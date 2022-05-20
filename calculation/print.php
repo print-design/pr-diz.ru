@@ -180,6 +180,13 @@ $num_for_customer = $row['num_for_customer'];
                 </div>
                     <?php endif; ?>
                 <table class="w-100 calculation-table">
+                        <?php
+                        if(!empty($last_name) || !empty($first_name)):
+                        ?>
+                    <tr><th>Менеджер</th><td colspan="3"><?=$last_name.(empty($last_name) ? "" : " ").$first_name ?></td></tr>
+                        <?php
+                        endif;
+                        ?>
                     <tr><th>Заказчик</th><td colspan="3"><?=$customer ?></td></tr>
                     <tr><th>Название заказа</th><td colspan="3"><?=$name ?></td></tr>
                     <tr><th>Тип работы</th><td colspan="3"><?=$work_type ?></td></tr>
@@ -189,14 +196,9 @@ $num_for_customer = $row['num_for_customer'];
                     <tr><th>Объем заказа</th><td colspan="3"><?= rtrim(rtrim(number_format($quantity, 2, ",", " "), "0"), ",") ?> <?=$unit == 'kg' ? "кг" : "шт" ?></td></tr>
                         <?php
                         endif;
-                        if(!empty($machine)):
+                        if($work_type_id == WORK_TYPE_PRINT):
                         ?>
                     <tr><th>Печатная машина</th><td colspan="3"><?=$machine.' ('.$colorfulness.' красок)' ?></td></tr>
-                        <?php
-                        endif;
-                        if(!empty($width)):
-                        ?>
-                    <tr><th>Обрезная ширина</th><td colspan="3"><?= rtrim(rtrim(number_format($width, 2, ",", " "), "0"), ",") ?> мм</td></tr>
                         <?php
                         endif;
                         if(!empty($length)):
@@ -209,24 +211,24 @@ $num_for_customer = $row['num_for_customer'];
                     <tr><th>Ширина ручья</th><td colspan="3"><?= rtrim(rtrim(number_format($stream_width, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                         <?php
                         endif;
-                        if(!empty($raport)):
+                        if($work_type_id == WORK_TYPE_PRINT):
                         ?>
                     <tr><th>Рапорт</th><td colspan="3"><?= $raport ?> мм</td></tr>
                         <?php
                         endif;
-                        if(!empty($lamination_roller_width)):
+                        if(!empty($number_in_raport)):
+                        ?>
+                    <tr><th>Количество этикеток в рапорте</th><td colspan="3"><?=$number_in_raport ?></td></tr>
+                        <?php
+                        endif;
+                        if(!empty($lamination1_individual_film_name) || !empty($lamination1_film_name)):
                         ?>
                     <tr><th>Ширина ламинирующего вала</th><td colspan="3"><?= $lamination_roller_width ?> мм</td></tr>
                         <?php
                         endif;
-                        if(!empty($streams_count)):
+                        if(!empty($streams_number)):
                         ?>
                     <tr><th>Количество ручьев</th><td colspan="3"><?= $streams_number ?></td></tr>
-                        <?php
-                        endif;
-                        if(!empty($last_name) || !empty($first_name)):
-                        ?>
-                    <tr><th>Менеджер</th><td colspan="3"><?=$last_name.(empty($last_name) ? "" : " ").$first_name ?></td></tr>
                         <?php
                         endif;
                         if(empty($film_name)):
@@ -253,7 +255,7 @@ $num_for_customer = $row['num_for_customer'];
                         <th></th>
                         <td>
                             <?php
-                            switch ($ski) {
+                                switch ($ski) {
                                 case STANDARD_SKI:
                                     echo "Стандартные лыжи";
                                     break;
@@ -263,7 +265,7 @@ $num_for_customer = $row['num_for_customer'];
                                 default :
                                     echo 'Без лыж';
                                     break;
-                            }
+                                }
                             ?>
                         </td>
                         <td colspan="2"><?=($ski == NONSTANDARD_SKI ? $width_ski.' мм' : '') ?></td>
@@ -272,7 +274,7 @@ $num_for_customer = $row['num_for_customer'];
                         $lamination = "нет";
                         if(!empty($lamination1_film_name) || !empty($lamination1_individual_film_name)) $lamination = "1";
                         if(!empty($lamination2_film_name) || !empty($lamination2_individual_film_name)) $lamination = "2";
-                            
+                        
                         if(!empty($lamination1_individual_film_name)):
                         ?>
                     <tr>
@@ -298,7 +300,7 @@ $num_for_customer = $row['num_for_customer'];
                         <th></th>
                         <td>
                             <?php
-                            switch ($lamination1_ski) {
+                                switch ($lamination1_ski) {
                                 case STANDARD_SKI:
                                     echo "Стандартные лыжи";
                                     break;
@@ -308,7 +310,7 @@ $num_for_customer = $row['num_for_customer'];
                                 default :
                                     echo 'Без лыж';
                                     break;
-                            }
+                                }
                             ?>
                         </td>
                         <td colspan="2"><?=($lamination1_ski == NONSTANDARD_SKI ? $lamination1_width_ski.' мм' : '') ?></td>
@@ -383,7 +385,7 @@ $num_for_customer = $row['num_for_customer'];
                                                 echo 'Пантон';
                                                 break;
                                             case 'lacquer':
-                                                echo 'Лак';    
+                                                echo 'Лак';
                                                 break;
                                             case  'white':
                                                 echo 'Белый';

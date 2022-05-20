@@ -158,6 +158,14 @@ $num_for_customer = $row['num_for_customer'];
                 padding-bottom: 5px;
                 vertical-align: top;
             }
+            
+            #left_side {
+                width: 45%;
+            }
+            
+            #calculation {
+                width: 50%;
+            }
         </style>
     </head>
     <body>
@@ -203,6 +211,13 @@ $num_for_customer = $row['num_for_customer'];
                     }
                     ?>
                     <table class="w-100 calculation-table">
+                            <?php
+                            if(!empty($last_name) || !empty($first_name)):
+                            ?>
+                        <tr><th>Менеджер</th><td colspan="3"><?=$last_name.(empty($last_name) ? "" : " ").$first_name ?></td></tr>
+                            <?php
+                            endif;
+                            ?>
                         <tr><th>Заказчик</th><td colspan="3"><?=$customer ?></td></tr>
                         <tr><th>Название заказа</th><td colspan="3"><?=$name ?></td></tr>
                         <tr><th>Тип работы</th><td colspan="3"><?=$work_type ?></td></tr>
@@ -245,11 +260,6 @@ $num_for_customer = $row['num_for_customer'];
                             if(!empty($streams_number)):
                             ?>
                         <tr><th>Количество ручьев</th><td colspan="3"><?= $streams_number ?></td></tr>
-                            <?php
-                            endif;
-                            if(!empty($last_name) || !empty($first_name)):
-                            ?>
-                        <tr><th>Менеджер</th><td colspan="3"><?=$last_name.(empty($last_name) ? "" : " ").$first_name ?></td></tr>
                             <?php
                             endif;
                             if(empty($film_name)):
@@ -467,7 +477,6 @@ $num_for_customer = $row['num_for_customer'];
                 $("#costs").removeClass("d-none");
                 $("#show_costs").addClass("d-none");
                 AdjustFixedBlock($('#calculation'));
-                AdjustLeftBlock($('#left_side'), $('#calculation'));
             }
             
             // Скрытие расходов
@@ -475,7 +484,6 @@ $num_for_customer = $row['num_for_customer'];
                 $("#costs").addClass("d-none");
                 $("#show_costs").removeClass("d-none");
                 AdjustFixedBlock($('#calculation'));
-                AdjustLeftBlock($('#left_side'), $('#calculation'));
             }
             
             // Ограницение значений наценки
@@ -495,14 +503,9 @@ $num_for_customer = $row['num_for_customer'];
             
             // Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне
             AdjustFixedBlock($('#calculation'));
-            AdjustLeftBlock($('#left_side'), $('#calculation'));
             
             $(window).on("scroll", function(){
                 AdjustFixedBlock($('#calculation'));
-            });
-            
-            $(window).on("resize", function(){
-                AdjustLeftBlock($('#left_side'), $('#calculation'));
             });
         </script>
     </body>
