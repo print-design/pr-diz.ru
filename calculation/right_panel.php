@@ -608,7 +608,7 @@ if(!empty($id)) {
     }
 }
 ?>
-<div id="calculation"<?=$calculation_class ?> style="position: absolute; bottom: auto; right: 10px; margin-top: 60px;">
+<div id="calculation"<?=$calculation_class ?>>
     <div style="position: absolute; right: 30px; top: 0px;" class="d-none">
         <a class="btn btn-outline-dark" target="_blank" style="margin-top: 20px;" href="print.php?id=<?=$id ?>"><i class="fa fa-print"></i></a>
     </div>

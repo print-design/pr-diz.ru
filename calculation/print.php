@@ -154,440 +154,296 @@ $num_for_customer = $row['num_for_customer'];
                 vertical-align: top;
             }
             
-            #right-panel .value {
-                font-size: 18px;
-                font-weight: 700;
+            #calculation {
+                position: absolute;
+                bottom: auto;
+                right: 10px;
+                margin-top: 0;
             }
             
-            #right-panel {
-                line-height: 1.3rem;
-            }
+            h1 { font-size: 26px; }
+            h2 { font-size: 20px; }
+            h3 { font-size: 16px; }
+            #right-panel { line-height: 1.3rem; }
+            #right-panel .value { font-size: 18px; }
+            #left_side { width: 45%; }
+            #calculation { width: 50%; }
+            #calculation .value { font-size: 16px; }
+            .btn { display: none; }
+            #costs { display: block!important; }
         </style>
     </head>
     <body>
-        <div class="row">
-            <!-- Левая половина -->
-            <div class="col-5" id="left_side">
-                <h1 style="font-size: 26px; font-weight: 600; margin: 0; padding: 0;"><?= htmlentities($name) ?></h1>
-                <h2 style="font-size: 20px; margin: 0; padding: 0;">№<?=$customer_id."-".$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
-                    <?php if(!empty($techmap_id)): ?>
-                <div style="width: 100%; padding: 6px; margin-top: 10p; margin-bottom: 10px; border-radius: 8px; font-weight: bold; text-align: center; border: solid 2px gray; color: gray;">
-                    <i class="fas fa-file"></i>&nbsp;&nbsp;&nbsp;Составлена технологическая карта
-                </div>
-                    <?php else: ?>
-                <div style="width: 100%; padding: 6px; margin-top: 10p; margin-bottom: 10px; border-radius: 8px; font-weight: bold; text-align: center; border: solid 2px gray; color: gray;">
-                    <i class="fas fa-calculator"></i>&nbsp;&nbsp;&nbsp;Сделан расчёт
-                </div>
-                    <?php endif; ?>
-                <table class="w-100 calculation-table">
-                        <?php
-                        if(!empty($last_name) || !empty($first_name)):
-                        ?>
-                    <tr><th>Менеджер</th><td colspan="3"><?=$last_name.(empty($last_name) ? "" : " ").$first_name ?></td></tr>
-                        <?php
-                        endif;
-                        ?>
-                    <tr><th>Заказчик</th><td colspan="3"><?=$customer ?></td></tr>
-                    <tr><th>Название заказа</th><td colspan="3"><?=$name ?></td></tr>
-                    <tr><th>Тип работы</th><td colspan="3"><?=$work_type ?></td></tr>
-                        <?php
-                        if(!empty($quantity) && !empty($unit)):
-                        ?>
-                    <tr><th>Объем заказа</th><td colspan="3"><?= rtrim(rtrim(number_format($quantity, 2, ",", " "), "0"), ",") ?> <?=$unit == 'kg' ? "кг" : "шт" ?></td></tr>
-                        <?php
-                        endif;
-                        if($work_type_id == WORK_TYPE_PRINT):
-                        ?>
-                    <tr><th>Печатная машина</th><td colspan="3"><?=$machine.' ('.$colorfulness.' красок)' ?></td></tr>
-                        <?php
-                        endif;
-                        if(!empty($length)):
-                        ?>
-                    <tr><th>Длина этикетки</th><td colspan="3"><?= rtrim(rtrim(number_format($length, 2, ",", ""), "0"), ",") ?> мм</td></tr>
-                        <?php
-                        endif;
-                        if(!empty($stream_width)):
-                        ?>
-                    <tr><th>Ширина ручья</th><td colspan="3"><?= rtrim(rtrim(number_format($stream_width, 2, ",", ""), "0"), ",") ?> мм</td></tr>
-                        <?php
-                        endif;
-                        if($work_type_id == WORK_TYPE_PRINT):
-                        ?>
-                    <tr><th>Рапорт</th><td colspan="3"><?= $raport ?> мм</td></tr>
-                        <?php
-                        endif;
-                        if(!empty($number_in_raport)):
-                        ?>
-                    <tr><th>Количество этикеток в рапорте</th><td colspan="3"><?=$number_in_raport ?></td></tr>
-                        <?php
-                        endif;
-                        if(!empty($lamination1_individual_film_name) || !empty($lamination1_film_name)):
-                        ?>
-                    <tr><th>Ширина ламинирующего вала</th><td colspan="3"><?= $lamination_roller_width ?> мм</td></tr>
-                        <?php
-                        endif;
-                        if(!empty($streams_number)):
-                        ?>
-                    <tr><th>Количество ручьев</th><td colspan="3"><?= $streams_number ?></td></tr>
-                        <?php
-                        endif;
-                        if(empty($film_name)):
-                        ?>
-                    <tr>
-                        <th>Пленка</th>
-                        <td><?=$individual_film_name ?></td>
-                        <td><?= number_format($individual_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($individual_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                        <td><?=$customers_material == 1 ? "Сырье заказчика" : "" ?></td>
-                    </tr>
-                        <?php
-                        else:
-                        ?>
-                    <tr>
-                        <th>Пленка</th>
-                        <td><?=$film_name ?></td>
-                        <td><?= number_format($thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                        <td><?=$customers_material == 1 ? "Сырье заказчика" : "" ?></td>
-                    </tr>
-                        <?php
-                        endif;
-                        ?>
-                    <tr>
-                        <th></th>
-                        <td>
-                            <?php
-                                switch ($ski) {
-                                case STANDARD_SKI:
-                                    echo "Стандартные лыжи";
-                                    break;
-                                case NONSTANDARD_SKI:
-                                    echo "Нестандартные лыжи";
-                                    break;
-                                default :
-                                    echo 'Без лыж';
-                                    break;
-                                }
-                            ?>
-                        </td>
-                        <td colspan="2"><?=($ski == NONSTANDARD_SKI ? $width_ski.' мм' : '') ?></td>
-                    </tr>
-                        <?php
-                        $lamination = "нет";
-                        if(!empty($lamination1_film_name) || !empty($lamination1_individual_film_name)) $lamination = "1";
-                        if(!empty($lamination2_film_name) || !empty($lamination2_individual_film_name)) $lamination = "2";
-                        
-                        if(!empty($lamination1_individual_film_name)):
-                        ?>
-                    <tr>
-                        <th>Ламинация: <?=$lamination ?></th>
-                        <td><?=$lamination1_individual_film_name ?></td>
-                        <td><?= number_format($lamination1_individual_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_individual_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                        <td><?=$lamination1_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
-                    </tr>
-                        <?php
-                        elseif(!empty($lamination1_film_name)):
-                        ?>
-                    <tr>
-                        <th>Ламинация: <?=$lamination ?></th>
-                        <td><?=$lamination1_film_name ?></td>
-                        <td><?= number_format($lamination1_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                        <td><?=$lamination1_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
-                    </tr>
-                        <?php
-                        endif;
-                        if(!empty($lamination1_individual_film_name) || !empty($lamination1_film_name)):
-                        ?>
-                    <tr>
-                        <th></th>
-                        <td>
-                            <?php
-                                switch ($lamination1_ski) {
-                                case STANDARD_SKI:
-                                    echo "Стандартные лыжи";
-                                    break;
-                                case NONSTANDARD_SKI:
-                                    echo "Нестандартные лыжи";
-                                    break;
-                                default :
-                                    echo 'Без лыж';
-                                    break;
-                                }
-                            ?>
-                        </td>
-                        <td colspan="2"><?=($lamination1_ski == NONSTANDARD_SKI ? $lamination1_width_ski.' мм' : '') ?></td>
-                    </tr>
-                        <?php
-                        endif;
-                        if(!empty($lamination2_individual_film_name)):
-                        ?>
-                    <tr>
-                        <th></th>
-                        <td><?=$lamination2_individual_film_name ?></td>
-                        <td><?= number_format($lamination2_individual_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_individual_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                        <td><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
-                    </tr>
-                        <?php
-                        elseif(!empty($lamination2_film_name)):
-                        ?>
-                    <tr>
-                        <th></th>
-                        <td><?=$lamination2_film_name ?></td>
-                        <td><?= number_format($lamination2_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                        <td><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
-                    </tr>
-                        <?php
-                        endif;
-                        if(!empty($lamination2_individual_film_name) || !empty($lamination2_film_name)):
-                        ?>
-                    <tr>
-                        <th></th>
-                        <td>
-                            <?php
-                                switch ($lamination2_ski) {
-                                    case STANDARD_SKI:
-                                        echo 'Стандартные лыжи';
-                                        break;
-                                    case NONSTANDARD_SKI:
-                                        echo 'Нестандартные лыжи';
-                                        break;
-                                    default :
-                                        echo 'Без лыж';
-                                        break;
-                                }
-                            ?>
-                        </td>
-                        <td colspan="2"><?=($lamination2_ski == NONSTANDARD_SKI ? $lamination2_width_ski.' мм' : '') ?></td>
-                    </tr>
-                        <?php
-                        endif;
-                        if($work_type_id == WORK_TYPE_PRINT):
-                        ?>
-                    <tr>
-                        <th>Красочность: <?=$ink_number ?></th>
-                        <td colspan="3">
-                            <table class="w-100">
-                                <?php
-                                for($i=1; $i<=$ink_number; $i++):
-                                $ink_var = "ink_$i";
-                                $color_var = "color_$i";
-                                $cmyk_var = "cmyk_$i";
-                                $percent_var = "percent_$i";
-                                $cliche_var = "cliche_$i";
-                                ?>
-                                <tr>
-                                    <td><?=$i ?></td>
-                                    <td>
-                                        <?php
-                                        switch ($$ink_var) {
-                                            case 'cmyk':
-                                                echo "CMYK";
-                                                break;
-                                            case 'panton':
-                                                echo 'Пантон';
-                                                break;
-                                            case 'lacquer':
-                                                echo 'Лак';
-                                                break;
-                                            case  'white':
-                                                echo 'Белый';
-                                                break;
-                                        }
-                                        ?>
-                                    </td>
-                                    <td>
-                                        <?php
-                                        if($$ink_var == "cmyk") {
-                                            echo $$cmyk_var;
-                                        }
-                                        elseif($$ink_var == "panton") {
-                                            echo 'P '.$$color_var;
-                                        }
-                                        ?>
-                                    </td>
-                                    <td><?=$$percent_var ?>%</td>
-                                    <td>
-                                        <?php
-                                        switch ($$cliche_var) {
-                                            case OLD:
-                                                echo 'Старая';
-                                                break;
-                                            case FLINT:
-                                                echo 'Флинт';
-                                                break;
-                                            case KODAK;
-                                                echo 'Кодак';
-                                                break;
-                                            case TVER;
-                                                echo 'Тверь';
-                                                break;
-                                        }
-                                        ?>
-                                    </td>
-                                </tr>
-                                    <?php
-                                    endfor;
-                                    ?>
-                            </table>
-                        </td>
-                    </tr>
-                        <?php
-                        endif;
-                        ?>
-                </table>
+        <?php
+        include './right_panel.php';
+        ?>
+        <!-- Левая половина -->
+        <div class="co_l-_5" id="left_side">
+            <h1 style="font-size: 26px; font-weight: 600; margin: 0; padding: 0;"><?= htmlentities($name) ?></h1>
+            <h2 style="font-size: 20px; margin: 0; padding: 0;">№<?=$customer_id."-".$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
+                <?php if(!empty($techmap_id)): ?>
+            <div style="width: 100%; padding: 6px; margin-top: 10p; margin-bottom: 10px; border-radius: 8px; font-weight: bold; text-align: center; border: solid 2px gray; color: gray;">
+                <i class="fas fa-file"></i>&nbsp;&nbsp;&nbsp;Составлена технологическая карта
             </div>
-            <!-- Перегородка -->
-            <div class="col-1" style="border-right: solid 1px lightgray;"></div>
-            <!-- Правая половина -->
-            <div class="col-6" id="right-panel">
-                <h1 style="font-size: 26px; font-weight: 600; margin: 0; padding: 0;">Расчет</h1>
-                <div class="row text-nowrap">
-                    <div class="col-3">
-                        <div class="p-1 pl-3" style="color: gray; border: solid 1px gray; border-radius: 8px; height: 40px; width: 100px; line-height: 0.8rem;">
-                            <div class="text-nowrap" style="font-size: x-small;">Наценка</div>
-                            <span class="text-nowrap">30 %</span>
-                        </div>
-                    </div>
-                        <?php
-                        $sql = "select euro, usd from currency where date < '$date' order by id desc limit 1";
-                        $fetcher = new Fetcher($sql);
-                        if($row = $fetcher->Fetch()):
-                        ?>
-                    <div class="col-3">
-                        <div class="p-1 pl-3" style="color: gray; border: solid 1px gray; border-radius: 8px; height: 40px; width: 100px; line-height: 0.8rem;">
-                            <div class="text-nowrap" style="font-size: x-small;">Курс евро</div>
-                            <?=number_format($row['euro'], 2, ',', ' ') ?>
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="p-1 pl-3" style="color: gray; border: solid 1px gray; border-radius: 8px; height: 40px; width: 100px; line-height: 0.8rem;">
-                            <div class="text-nowrap" style="font-size: x-small;">Курс доллара</div>
-                            <?=number_format($row['usd'], 2, ',', ' ') ?>
-                        </div>
-                    </div>
-                        <?php endif; ?>
-                </div>
-                <h2 style="font-size: 20px; margin: 0; padding: 0;">Стоимость</h2>
-                <div class="row text-nowrap">
-                    <div class="col-4 pr-4">
-                        <h3>Себестоимость</h3>
-                        <div>Себестоимость</div>
-                        <div class="value mb-2">860 000 &#8381;&nbsp;<span style="font-weight: normal; font-size: small;">765 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
-                    </div>
-                    <div class="col-4 pr-4">
-                        <h3>Отгрузочная стоимость</h3>
-                        <div>Отгрузочная стоимость</div>
-                        <div class="value">1 200 000 &#8381;&nbsp;<span style="font-weight: normal; font-size: small;">236 &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
-                    </div>
-                    <div class="col-4" style="width: 250px;"></div>
-                </div>
-                <?php if($work_type_id == 2): ?>
-                <div class="row text-nowrap">
-                    <div class="col-12">
-                        <div>Себестоимость форм</div>
-                        <div class="value mb-2">800 000 &#8381;&nbsp;<span style="font-weight: normal; font-size: small;"><?=$new_forms_number ?>&nbsp;шт&nbsp;420&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;329,5&nbsp;мм</span></div>
-                    </div>
-                </div>
+                <?php else: ?>
+            <div style="width: 100%; padding: 6px; margin-top: 10p; margin-bottom: 10px; border-radius: 8px; font-weight: bold; text-align: center; border: solid 2px gray; color: gray;">
+                <i class="fas fa-calculator"></i>&nbsp;&nbsp;&nbsp;Сделан расчёт
+            </div>
                 <?php endif; ?>
-                <h2 style="font-size: 20px; margin: 0; padding: 0;">Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;">765 кг</span></h2>
-                <div class="row text-nowrap">
-                    <div class="col-4 pr-4">
-                        <h3>Основная&nbsp;<span style="font-weight: normal; font-size: small;">765 кг</span></h3>
-                        <div>Закупочная стоимость</div>
-                        <div class="value mb-2">800 000 &#8381;&nbsp;<span style="font-weight: normal; font-size: small;">236 &#8381; за кг</span></div>
-                        <div>Минимальная ширина</div>
-                        <div class="value mb-2">800 000 мм</div>
-                        <div>Масса без приладки</div>
-                        <div class="value mb-2">7 000 кг&nbsp;<span style="font-weight: normal; font-size: small;">172 000 м</span></div>
-                        <div>Масса с приладкой</div>
-                        <div class="value mb-2">8 000 кг&nbsp;<span style="font-weight: normal; font-size: small;">192 000 м</span></div>
-                    </div>
-                        <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
-                    <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
-                        <h3>Ламинация 1&nbsp;<span style="font-weight: normal; font-size: small;">765 кг</span></h3>
-                        <div>Закупочная стоимость</div>
-                        <div class="value mb-2">800 000 &#8381;&nbsp;<span style="font-weight: normal; font-size: small;">236 &#8381; за кг</span></div>
-                        <div>Минимальная ширина</div>
-                        <div class="value mb-2">800 000 мм</div>
-                        <div>Масса без приладки</div>
-                        <div class="value mb-2">7 000 кг&nbsp;<span style="font-weight: normal; font-size: small;">172 000 м</span></div>
-                        <div>Масса с приладкой</div>
-                        <div class="value mb-2">8 000 кг&nbsp;<span style="font-weight: normal; font-size: small;">192 000 м</span></div>
-                    </div>
-                        <?php else: ?>
-                    <div class="col-4" style="width: 250px;"></div>
-                        <?php endif; ?>
-                        <?php if(!empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name)): ?>
-                    <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
-                        <h3>Ламинация 2&nbsp;<span style="font-weight: normal; font-size: small;">765 кг</span></h3>
-                        <div>Закупочная стоимость</div>
-                        <div class="value mb-2">800 000 &#8381;&nbsp;<span style="font-weight: normal; font-size: small;">236 &#8381; за кг</span></div>
-                        <div>Минимальная ширина</div>
-                        <div class="value mb-2">800 000 мм</div>
-                        <div>Масса без приладки</div>
-                        <div class="value mb-2">7 000 кг&nbsp;<span style="font-weight: normal; font-size: small;">172 000 м</span></div>
-                        <div>Масса с приладкой</div>
-                        <div class="value mb-2">8 000 кг&nbsp;<span style="font-weight: normal; font-size: small;">192 000 м</span></div>
-                    </div>
-                        <?php else: ?>
-                    <div class="col-4" style="width: 250px;"></div>
-                        <?php endif; ?>
-                </div>
+            <table class="w-100 calculation-table">
                     <?php
-                    if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name) || !empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name) || $work_type_id == 2):
+                    if(!empty($last_name) || !empty($first_name)):
                     ?>
-                <div class="row text-nowrap">
-                    <div class="col-4 pr-4">
-                        <h2 style="font-size: 20px; margin: 0; padding: 0;">Расходы</h2>
-                    </div>
-                        <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
-                    <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
-                        <?php endif; ?>
-                </div>
-                <div class="row text-nowrap">
-                    <div class="col-4 pr-4">
-                        <div>Отходы</div>
-                        <div class="value mb-2">1 280 &#8381;&nbsp;<span style="font-weight: normal; font-size: small;">4,5 кг</span></div>
-                            <?php if($work_type_id == 2): ?>
-                        <div>Краска</div>
-                        <div class="value mb-2">17 500 &#8381;&nbsp;<span style="font-weight: normal; font-size: small;">17,5 кг</span></div>
-                            <?php
-                            endif;
-                            if($work_type_id == 2):
-                            ?>
-                        <div>Печать тиража</div>
-                        <div class="value mb-2">470 500 &#8381;&nbsp;<span style="font-weight: normal; font-size: small;">6 ч. 30 мин.</span></div>
-                            <?php
-                            endif;
-                            ?>
-                    </div>
-                        <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
-                    <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
-                        <div>Отходы</div>
-                        <div class="value mb-2">1 280 &#8381;&nbsp;<span style="font-weight: normal; font-size: small;">4,5 кг</span></div>
-                        <div>Клей</div>
-                        <div class="value mb-2">800 000 &#8381;&nbsp;<span style="font-weight: normal; font-size: small;">1,0 кг</span></div>
-                        <div>Работа ламинатора</div>
-                        <div class="value mb-2">1 500 &#8381;&nbsp;<span style="font-weight: normal; font-size: small;">3 часа</span></div>
-                    </div>
-                        <?php else: ?>
-                    <div class="col-4" style="width: 250px;"></div>
-                        <?php endif; ?>
-                        <?php if(!empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name)): ?>
-                    <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
-                        <div>Отходы</div>
-                        <div class="value mb-2">1 280 &#8381;&nbsp;<span style="font-weight: normal; font-size: small;">4,5 кг</span></div>
-                        <div>Клей</div>
-                        <div class="value mb-2">800 000 &#8381;&nbsp;<span style="font-weight: normal; font-size: small;">1,0 кг</span></div>
-                        <div>Работа ламинатора</div>
-                        <div class="value mb-2">1 500 &#8381;&nbsp;<span style="font-weight: normal; font-size: small;">3 часа</span></div>
-                    </div>
-                        <?php else: ?>
-                    <div class="col-4" style="width: 250px;"></div>
-                        <?php endif; ?>
-                </div>
+                <tr><th>Менеджер</th><td colspan="3"><?=$last_name.(empty($last_name) ? "" : " ").$first_name ?></td></tr>
                     <?php
                     endif;
                     ?>
-            </div>
+                <tr><th>Заказчик</th><td colspan="3"><?=$customer ?></td></tr>
+                <tr><th>Название заказа</th><td colspan="3"><?=$name ?></td></tr>
+                <tr><th>Тип работы</th><td colspan="3"><?=$work_type ?></td></tr>
+                    <?php
+                    if(!empty($quantity) && !empty($unit)):
+                    ?>
+                <tr><th>Объем заказа</th><td colspan="3"><?= rtrim(rtrim(number_format($quantity, 2, ",", " "), "0"), ",") ?> <?=$unit == 'kg' ? "кг" : "шт" ?></td></tr>
+                    <?php
+                    endif;
+                    if($work_type_id == WORK_TYPE_PRINT):
+                    ?>
+                <tr><th>Печатная машина</th><td colspan="3"><?=$machine.' ('.$colorfulness.' красок)' ?></td></tr>
+                    <?php
+                    endif;
+                    if(!empty($length)):
+                    ?>
+                <tr><th>Длина этикетки</th><td colspan="3"><?= rtrim(rtrim(number_format($length, 2, ",", ""), "0"), ",") ?> мм</td></tr>
+                    <?php
+                    endif;
+                    if(!empty($stream_width)):
+                    ?>
+                <tr><th>Ширина ручья</th><td colspan="3"><?= rtrim(rtrim(number_format($stream_width, 2, ",", ""), "0"), ",") ?> мм</td></tr>
+                    <?php
+                    endif;
+                    if($work_type_id == WORK_TYPE_PRINT):
+                    ?>
+                <tr><th>Рапорт</th><td colspan="3"><?= $raport ?> мм</td></tr>
+                    <?php
+                    endif;
+                    if(!empty($number_in_raport)):
+                    ?>
+                <tr><th>Количество этикеток в рапорте</th><td colspan="3"><?=$number_in_raport ?></td></tr>
+                    <?php
+                    endif;
+                    if(!empty($lamination1_individual_film_name) || !empty($lamination1_film_name)):
+                    ?>
+                <tr><th>Ширина ламинирующего вала</th><td colspan="3"><?= $lamination_roller_width ?> мм</td></tr>
+                    <?php
+                    endif;
+                    if(!empty($streams_number)):
+                    ?>
+                <tr><th>Количество ручьев</th><td colspan="3"><?= $streams_number ?></td></tr>
+                    <?php
+                    endif;
+                    if(empty($film_name)):
+                    ?>
+                <tr>
+                    <th>Пленка</th>
+                    <td><?=$individual_film_name ?></td>
+                    <td><?= number_format($individual_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($individual_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                    <td><?=$customers_material == 1 ? "Сырье заказчика" : "" ?></td>
+                </tr>
+                    <?php
+                    else:
+                    ?>
+                <tr>
+                    <th>Пленка</th>
+                    <td><?=$film_name ?></td>
+                    <td><?= number_format($thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                    <td><?=$customers_material == 1 ? "Сырье заказчика" : "" ?></td>
+                </tr>
+                    <?php
+                    endif;
+                    ?>
+                <tr>
+                    <th></th>
+                    <td>
+                        <?php
+                            switch ($ski) {
+                            case STANDARD_SKI:
+                                echo "Стандартные лыжи";
+                                break;
+                            case NONSTANDARD_SKI:
+                                echo "Нестандартные лыжи";
+                                break;
+                            default :
+                                echo 'Без лыж';
+                                break;
+                            }
+                        ?>
+                    </td>
+                    <td colspan="2"><?=($ski == NONSTANDARD_SKI ? $width_ski.' мм' : '') ?></td>
+                </tr>
+                    <?php
+                    $lamination = "нет";
+                    if(!empty($lamination1_film_name) || !empty($lamination1_individual_film_name)) $lamination = "1";
+                    if(!empty($lamination2_film_name) || !empty($lamination2_individual_film_name)) $lamination = "2";
+                        
+                    if(!empty($lamination1_individual_film_name)):
+                    ?>
+                <tr>
+                    <th>Ламинация: <?=$lamination ?></th>
+                    <td><?=$lamination1_individual_film_name ?></td>
+                    <td><?= number_format($lamination1_individual_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_individual_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                    <td><?=$lamination1_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
+                </tr>
+                    <?php
+                    elseif(!empty($lamination1_film_name)):
+                    ?>
+                <tr>
+                    <th>Ламинация: <?=$lamination ?></th>
+                    <td><?=$lamination1_film_name ?></td>
+                    <td><?= number_format($lamination1_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                    <td><?=$lamination1_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
+                </tr>
+                    <?php
+                    endif;
+                    if(!empty($lamination1_individual_film_name) || !empty($lamination1_film_name)):
+                    ?>
+                <tr>
+                    <th></th>
+                    <td>
+                        <?php
+                            switch ($lamination1_ski) {
+                            case STANDARD_SKI:
+                                echo "Стандартные лыжи";
+                                break;
+                            case NONSTANDARD_SKI:
+                                echo "Нестандартные лыжи";
+                                break;
+                            default :
+                                echo 'Без лыж';
+                                break;
+                            }
+                        ?>
+                    </td>
+                    <td colspan="2"><?=($lamination1_ski == NONSTANDARD_SKI ? $lamination1_width_ski.' мм' : '') ?></td>
+                </tr>
+                    <?php
+                    endif;
+                    if(!empty($lamination2_individual_film_name)):
+                    ?>
+                <tr>
+                    <th></th>
+                    <td><?=$lamination2_individual_film_name ?></td>
+                    <td><?= number_format($lamination2_individual_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_individual_density, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                    <td><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
+                </tr>
+                    <?php
+                    elseif(!empty($lamination2_film_name)):
+                    ?>
+                <tr>
+                    <th></th>
+                    <td><?=$lamination2_film_name ?></td>
+                    <td><?= number_format($lamination2_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination2_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                    <td><?=$lamination2_customers_material == 1 ? "Сырье заказчика" : "" ?></td>
+                </tr>
+                    <?php
+                    endif;
+                    if(!empty($lamination2_individual_film_name) || !empty($lamination2_film_name)):
+                    ?>
+                <tr>
+                    <th></th>
+                    <td>
+                        <?php
+                            switch ($lamination2_ski) {
+                                case STANDARD_SKI:
+                                    echo 'Стандартные лыжи';
+                                    break;
+                                case NONSTANDARD_SKI:
+                                    echo 'Нестандартные лыжи';
+                                    break;
+                                default :
+                                    echo 'Без лыж';
+                                    break;
+                            }
+                        ?>
+                    </td>
+                    <td colspan="2"><?=($lamination2_ski == NONSTANDARD_SKI ? $lamination2_width_ski.' мм' : '') ?></td>
+                </tr>
+                    <?php
+                    endif;
+                    if($work_type_id == WORK_TYPE_PRINT):
+                    ?>
+                <tr>
+                    <th>Красочность: <?=$ink_number ?></th>
+                    <td colspan="3">
+                        <table class="w-100">
+                            <?php
+                            for($i=1; $i<=$ink_number; $i++):
+                            $ink_var = "ink_$i";
+                            $color_var = "color_$i";
+                            $cmyk_var = "cmyk_$i";
+                            $percent_var = "percent_$i";
+                            $cliche_var = "cliche_$i";
+                            ?>
+                            <tr>
+                                <td><?=$i ?></td>
+                                <td>
+                                    <?php
+                                    switch ($$ink_var) {
+                                        case 'cmyk':
+                                            echo "CMYK";
+                                            break;
+                                        case 'panton':
+                                            echo 'Пантон';
+                                            break;
+                                        case 'lacquer':
+                                            echo 'Лак';
+                                            break;
+                                        case  'white':
+                                            echo 'Белый';
+                                            break;
+                                    }
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    if($$ink_var == "cmyk") {
+                                        echo $$cmyk_var;
+                                    }
+                                    elseif($$ink_var == "panton") {
+                                        echo 'P '.$$color_var;
+                                    }
+                                    ?>
+                                </td>
+                                <td><?=$$percent_var ?>%</td>
+                                <td>
+                                    <?php
+                                    switch ($$cliche_var) {
+                                        case OLD:
+                                            echo 'Старая';
+                                            break;
+                                        case FLINT:
+                                            echo 'Флинт';
+                                            break;
+                                        case KODAK;
+                                            echo 'Кодак';
+                                            break;
+                                        case TVER;
+                                            echo 'Тверь';
+                                            break;
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                                <?php
+                                endfor;
+                                ?>
+                        </table>
+                    </td>
+                </tr>
+                    <?php
+                    endif;
+                    ?>
+            </table>
         </div>
         <script>
             var css = '@page { size: landscape; margin: 8mm; }',
