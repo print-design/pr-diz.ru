@@ -156,7 +156,14 @@ $num_for_customer = $row['num_for_customer'];
                 padding-top: 5px;
                 padding-right: 5px;
                 padding-bottom: 5px;
+                padding-left: 5px;
                 vertical-align: top;
+            }
+            
+            table.table tr th {
+                color: #909090;
+                height: 40px;
+                border-top: 0;
             }
             
             #left_side {
@@ -220,7 +227,7 @@ $num_for_customer = $row['num_for_customer'];
                     <tr><th>Объем заказа</th><td><?= rtrim(rtrim(number_format($quantity, 2, ",", " "), "0"), ",") ?> <?=$unit == 'kg' ? "кг" : "шт" ?></td></tr>
                         <?php endif; ?>
                     
-                    <tr><td colspan="2"><h2>Характеристики</h2></td></tr>
+                    <tr><td colspan="2" class="pt-4"><h2>Характеристики</h2></td></tr>
                         <?php if($work_type_id == WORK_TYPE_PRINT): ?>
                     <tr><th>Печатная машина</th><td><?=$machine ?></td></tr>
                         <?php
@@ -279,7 +286,7 @@ $num_for_customer = $row['num_for_customer'];
                             }
                         }
                         ?>  
-                    <tr><td colspan="2"><h2>Пленка</h2></td></tr>
+                    <tr><td colspan="2" class="pt-4"><h2>Пленка</h2></td></tr>
                         
                     <tr><th colspan="2">Основная пленка</th></tr>
                         <?php if(empty($film_name)): ?>
