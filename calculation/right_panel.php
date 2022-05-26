@@ -542,7 +542,7 @@ if(!empty($id)) {
         }
     
         if(empty($error_message)) {
-            $sql = "select value from extracharge where extracharge_type_id = $ech_type and $ech_weight >= from_weight and ($ech_weight <= to_weight or to_weight is null)";
+            $sql = "select value from extracharge where extracharge_type_id = $ech_type and round($ech_weight) >= from_weight and (round($ech_weight) <= to_weight or to_weight is null)";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 $new_extracharge = $row['value'];
