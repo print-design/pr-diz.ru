@@ -312,7 +312,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             
             $color_var = "color_$i";
             $$color_var = filter_input(INPUT_POST, "color_$i");
-            if(empty($$color_var)) $$color_var = "NULL";
             
             $cmyk_var = "cmyk_$i";
             $$cmyk_var = filter_input(INPUT_POST, "cmyk_$i");
@@ -2538,14 +2537,20 @@ $colorfulnesses = array();
             });
             
             // Ограничение значения поля "пантон"
-            $('input.panton').keydown(function(e) {
-                if(!KeyDownLimitIntValue($(e.target), e, 99999)) {
+            $('input.panton').keypress(function(e) {
+                if(/[^0-9a-zA-Zа-яА-Я]/.test(e.key)) {
                     return false;
                 }
             });
             
-            $('input.panton').change(function(){
-                ChangeLimitIntValue($(this), 99999);
+            $('input.panton').keyup(function() {
+                var val = $(this).val();
+                val = val.replaceAll(/[^0-9a-zA-Zа-яА-Я]/g, '');
+            });
+    
+            $('input.panton').change(function(e) {
+                var val = $(this).val();
+                val = val.replace(/[^0-9a-zA-Zа-яА-Я]/g, '');
             });
             
             // Ограничение значения поля "Обрезная ширина" до 1600
