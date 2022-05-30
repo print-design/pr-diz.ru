@@ -680,15 +680,19 @@ if(!empty($id)) {
         </div>
         <div class="col-4" style="width: 250px;"></div>
     </div>
-    <?php if($work_type_id == 2): ?>
     <div class="row text-nowrap">
-        <div class="col-12">
+        <div class="col-4 pr-4">
+            <?php if($work_type_id == 2): ?>
             <div>Себестоимость форм</div>
             <div class="value"><?= Display(floatval($cliche_cost), 0) ?> &#8381;</div>
             <div style="font-weight: normal;" class="value mb-2" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= Display($stream_width * $streams_number + ($ski == NO_SKI ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($raport) + 20) ?>&nbsp;мм</div>
+            <?php endif; ?>
+        </div>
+        <div class="col-4">
+            <div>Прибыль</div>
+            <div class="value mb-2"><?= empty($shipping_cost) || empty($cost) ? "0" : Display(floatval($shipping_cost - $cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= empty($cost_per_unit) || empty($cost) ? "0" : Display(floatval($shipping_cost_per_unit - $cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? 'кг' : 'шт') ?></span></div>
         </div>
     </div>
-    <?php endif; ?>
     <div class="mt-3">
         <h2>Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($total_weight_dirty), 0) ?> кг</span></h2>
     </div>
