@@ -612,17 +612,17 @@ if(!empty($id)) {
     <div style="position: absolute; right: 30px; top: 0px;" class="d-none">
         <a class="btn btn-outline-dark" target="_blank" style="margin-top: 20px;" href="print.php?id=<?=$id ?>"><i class="fa fa-print"></i></a>
     </div>
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between p-2">
         <div>
-            <h2>Стоимость</h2>
+            <h1>Расчет</h1>
         </div>
         <div>
             <a class="btn btn-outline-dark mr-3" style="width: 3rem;" title="Скачать" href="csv.php?id=<?=$id ?>"><i class="fas fa-file-csv"></i></a>
             <a class="btn btn-outline-dark" target="_blank" style="width: 3rem;" title="Печать" href="print.php?id=<?=$id ?>"><i class="fa fa-print"></i></a>
         </div>
     </div>
-    <div class="d-flex justify-content-start text-nowrap">
-        <div class="mr-4">
+    <div class="row text-nowrap">
+        <div class="col-3">
             <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
                 <div class="text-nowrap" style="font-size: x-small;">Наценка</div>
                 <?php if($status_id == 1 || $status_id == 2): ?>
@@ -651,92 +651,76 @@ if(!empty($id)) {
                 <?php endif; ?>
             </div>
         </div>
-        <div class="mr-4">
+        <div class="col-3">
             <div class="p-2" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 60px; width: 100px;">
                 <div class="text-nowrap" style="font-size: x-small;">Курс евро</div>
                 <?=number_format($euro, 2, ',', ' ') ?>
             </div>
         </div>
-        <div>
+        <div class="col-3">
             <div class="p-2" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 60px; width: 100px;">
                 <div class="text-nowrap" style="font-size: x-small;">Курс доллара</div>
                 <?=number_format($usd, 2, ',', ' ') ?>
             </div>
         </div>
     </div>
-    <div class="row text-nowrap mt-4">
-        <div class="col-6 pr-4">
+    <div class="mt-3">
+        <h2>Стоимость</h2>
+    </div>
+    <div class="row text-nowrap">
+        <div class="col-4 pr-4">
             <h3>Себестоимость</h3>
             <div>Себестоимость</div>
             <div class="value mb-2"><?= Display(floatval($cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
         </div>
-        <div class="col-6 pr-4">
+        <div class="col-4 pr-4">
             <h3>Отгрузочная стоимость</h3>
             <div>Отгрузочная стоимость</div>
             <div class="value"><?= Display(floatval($shipping_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($shipping_cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
         </div>
+        <div class="col-4" style="width: 250px;"></div>
     </div>
+    <?php if($work_type_id == 2): ?>
     <div class="row text-nowrap">
-        <div class="col-6 pr-4">
-            <?php if($work_type_id == 2): ?>
+        <div class="col-12">
             <div>Себестоимость форм</div>
-            <div class="value mb-2"><?= Display(floatval($cliche_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= Display($stream_width * $streams_number + ($ski == NO_SKI ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($raport) + 20) ?>&nbsp;мм</span></div>    
-            <?php endif; ?>
-        </div>
-        <div class="col-6 pr-4">
-            <div>Прибыль</div>
-            <div class="value mb-2"><?= empty($shipping_cost) || empty($cost) ? "0" : Display(floatval($shipping_cost - $cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= empty($cost_per_unit) || empty($cost) ? "0" : Display(floatval($shipping_cost_per_unit - $cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? 'кг' : 'шт') ?></span></div>
+            <div class="value"><?= Display(floatval($cliche_cost), 0) ?> &#8381;</div>
+            <div style="font-weight: normal;" class="value mb-2" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= Display($stream_width * $streams_number + ($ski == NO_SKI ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($raport) + 20) ?>&nbsp;мм</div>
         </div>
     </div>
-    <hr />
+    <?php endif; ?>
     <div class="mt-3">
         <h2>Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($total_weight_dirty), 0) ?> кг</span></h2>
     </div>
-    <div class="mt-3">
-        <h3>Основная пленка&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($weight_dirty_1), 0) ?> кг</span></h3>
-    </div>
     <div class="row text-nowrap">
-        <div class="col-6">
+        <div class="col-4 pr-4">
+            <h3>Основная пленка&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($weight_dirty_1), 0) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
             <div class="value mb-2"><?= Display(floatval($film_cost_1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_cost_per_unit_1), 3) ?> &#8381; за кг</span></div>
-            <div>Минимальная ширина</div>
+            <div>Ширина</div>
             <div class="value mb-2"><?= Display(intval($width_1), 0) ?> мм</div>
-        </div>
-        <div class="col-6">
             <div>Масса без приладки</div>
             <div class="value mb-2"><?= Display(floatval($weight_pure_1), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($length_pure_1), 0) ?> м</span></div>
             <div>Масса с приладкой</div>
             <div class="value mb-2"><?= Display(floatval($weight_dirty_1), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($length_dirty_1), 0) ?> м</span></div>
         </div>
-    </div>
-    <div class="mt-3">
-        <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($weight_dirty_2), 0) ?> кг</span></h3>
-    </div>
-    <div class="row text-nowrap">
-        <div class="col-6">
+        <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
+            <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($weight_dirty_2), 0) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
             <div class="value mb-2"><?= Display(floatval($film_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_cost_per_unit_2), 3) ?> &#8381; за кг</span></div>
-            <div>Минимальная ширина</div>
+            <div>Ширина</div>
             <div class="value mb-2"><?= Display(intval($width_2), 0) ?> мм</div>
-        </div>
-        <div class="col-6">
             <div>Масса без приладки</div>
             <div class="value mb-2"><?= Display(floatval($weight_pure_2), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($length_pure_2), 0) ?> м</span></div>
             <div>Масса с приладкой</div>
             <div class="value mb-2"><?= Display(floatval($weight_dirty_2), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($length_dirty_2), 0) ?> м</span></div>
         </div>
-    </div>
-    <div class="mt-3">
-        <h3>Ламинация 2&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($weight_dirty_3), 0) ?> кг</span></h3>
-    </div>
-    <div class="row text-nowrap">
-        <div class="col-6">
+        <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
+            <h3>Ламинация 2&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($weight_dirty_3), 0) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
             <div class="value mb-2"><?= Display(floatval($film_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_cost_per_unit_3), 3) ?> &#8381; за кг</span></div>
-            <div>Минимальная ширина</div>
+            <div>Ширина</div>
             <div class="value mb-2"><?= Display(intval($width_3), 0) ?> мм</div>
-        </div>
-        <div class="col-6">
             <div>Масса без приладки</div>
             <div class="value mb-2"><?= Display(floatval($weight_pure_3), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($length_pure_3), 0) ?> м</span></div>
             <div>Масса с приладкой</div>
@@ -744,52 +728,53 @@ if(!empty($id)) {
         </div>
     </div>
     <div id="show_costs">
-        <button type="button" class="btn btn-light" onclick="javascript: ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать расходы</button>
+        <div class="row text-nowrap">
+            <div class="col-4 pr-4">
+                <button type="button" class="btn btn-light" onclick="javascript: ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать расходы</button>
+            </div>
+            <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
+            <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
+            <?php endif; ?>
+            <?php if(!empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name)): ?>
+            <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
+            <?php endif; ?>
+        </div>
     </div>
     <div id="costs" class="d-none">
-        <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
-        <h2 class="mt-2">Расходы</h2>
-        <div class="mt-3">
-            <h3>Основная пленка&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($weight_dirty_1), 0) ?> кг</span></h3>
+        <div class="row text-nowrap">
+            <div class="col-4 pr-4">
+                <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
+                <h2 class="mt-2">Расходы</h2>
+            </div>
+            <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
+            <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
+            <?php endif; ?>
+            <?php if(!empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name)): ?>
+            <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
+            <?php endif; ?>
         </div>
         <div class="row text-nowrap">
-            <div class="col-6">
+            <div class="col-4 pr-4">
                 <div>Отходы</div>
                 <div class="value mb-2"><?= Display(floatval($film_waste_cost_1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_waste_weight_1), 2) ?> кг</span></div>
                 <div>Краска</div>
                 <div class="value mb-2"><?= Display(floatval($ink_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($ink_weight), 2) ?> кг</span></div>
-            </div>
-            <div class="col-6">
                 <div>Печать тиража</div>
                 <div class="value mb-2"><?= Display(floatval($work_cost_1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($work_time_1), 2) ?> ч</span></div>
             </div>
-        </div>
-        <div class="mt-3">
-            <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($weight_dirty_2), 0) ?> кг</span></h3>
-        </div>
-        <div class="row text-nowrap">
-            <div class="col-6">
+            <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
                 <div class="value mb-2"><?= Display(floatval($film_waste_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_waste_weight_2), 2) ?> кг</span></div>
                 <div>Клей</div>
                 <div class="value mb-2"><?= Display(floatval($glue_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($glue_expense_2), 2) ?> кг</span></div>
-            </div>
-            <div class="col-6">
                 <div>Работа ламинатора</div>
                 <div class="value mb-2"><?= Display(floatval($work_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($work_time_2), 2) ?> ч</span></div>
             </div>
-        </div>
-        <div class="mt-3">
-            <h3>Ламинация 2&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($weight_dirty_3), 0) ?> кг</span></h3>
-        </div>
-        <div class="row text-nowrap">
-            <div class="col-6">
+            <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
                 <div class="value mb-2"><?= Display(floatval($film_waste_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_waste_weight_3), 2) ?> кг</span></div>
                 <div>Клей</div>
                 <div class="value mb-2"><?= Display(floatval($glue_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($glue_expense_3), 2) ?> кг</span></div>
-            </div>
-            <div class="col-6">
                 <div>Работа ламинатора</div>
                 <div class="value mb-2"><?= Display(floatval($work_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($work_time_3), 2) ?> ч</span></div>
             </div>
