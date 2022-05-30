@@ -68,7 +68,7 @@
     </div>
     <div class="col-6">
         <table class="calculation-table">
-            <tr><td colspan="2" class="pt-4"><h2>Характеристики</h2></td></tr>
+            <tr><td colspan="2"><h2>Характеристики</h2></td></tr>
                 <?php if($work_type_id == WORK_TYPE_PRINT): ?>
             <tr><th>Печатная машина</th><td><?=$machine ?></td></tr>
                 <?php
