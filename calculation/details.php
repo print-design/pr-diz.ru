@@ -160,10 +160,10 @@ $num_for_customer = $row['num_for_customer'];
                 vertical-align: top;
             }
             
-            table.table tr th {
-                color: #909090;
-                height: 40px;
-                border-top: 0;
+            table.calculation-table tr th {
+                white-space: nowrap;
+                width: 1%;
+                padding-right: 20px;
             }
             
             #left_side {
