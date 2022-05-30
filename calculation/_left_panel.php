@@ -134,7 +134,7 @@
 <table class="table w-100">
     <tr>
         <th class="ink">Цветовая схема</th>
-        <th class="ink">Ячейка</th>
+        <th class="ink">Цвет</th>
         <th class="ink">Запечатка</th>
         <th class="ink">Тип полимера</th>
         <th class="ink">Форма</th>
