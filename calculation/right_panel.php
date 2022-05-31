@@ -624,7 +624,7 @@ if(!empty($id)) {
     <div class="row text-nowrap">
         <div class="col-3">
             <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
-                <div class="text-nowrap" style="font-size: x-small;">Наценка</div>
+                <div class="text-nowrap" style="font-size: x-small;">Наценка на тираж</div>
                 <?php if($status_id == 1 || $status_id == 2): ?>
                 <form method="post" class="form-inline">
                     <input type="hidden" name="id" value="<?=$id ?>" />
@@ -670,12 +670,12 @@ if(!empty($id)) {
     <div class="row text-nowrap">
         <div class="col-4 pr-4">
             <h3>Себестоимость</h3>
-            <div>Себестоимость</div>
+            <div>Себестоимость без ПФ</div>
             <div class="value mb-2"><?= Display(floatval($cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
         </div>
         <div class="col-4 pr-4">
-            <h3>Отгрузочная стоимость</h3>
-            <div>Отгрузочная стоимость</div>
+            <h3>Отгрузочная стоимость без ПФ</h3>
+            <div>Отгрузочная стоимость без ПФ</div>
             <div class="value"><?= Display(floatval($shipping_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($shipping_cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
         </div>
         <div class="col-4" style="width: 250px;"></div>
@@ -683,7 +683,7 @@ if(!empty($id)) {
     <div class="row text-nowrap">
         <div class="col-4 pr-4">
             <?php if($work_type_id == 2): ?>
-            <div>Себестоимость форм</div>
+            <div>Себестоимость ПФ</div>
             <div class="value"><?= Display(floatval($cliche_cost), 0) ?> &#8381;</div>
             <div style="font-weight: normal;" class="value mb-2" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= Display($stream_width * $streams_number + ($ski == NO_SKI ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($raport) + 20) ?>&nbsp;мм</div>
             <?php endif; ?>
