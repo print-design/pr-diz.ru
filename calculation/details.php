@@ -244,12 +244,26 @@ $num_for_customer = $row['num_for_customer'];
                 }
             });
             
+            $('#extracharge_cliche').keydown(function(e) {
+                if(!KeyDownLimitIntValue($(e.target), e, 999)) {
+                    return false;
+                }
+            });
+            
             $('#extracharge').change(function(){
+                ChangeLimitIntValue($(this), 999);
+            });
+            
+            $('#extracharge_cliche').change(function(){
                 ChangeLimitIntValue($(this), 999);
             });
             
             $('#extracharge').keyup(function(){
                 $('#extracharge-submit').removeClass('d-none');
+            });
+            
+            $('#extracharge_cliche').keyup(function(){
+                $('#extracharge-cliche-submit').removeClass('d-none');
             });
             
             // Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне

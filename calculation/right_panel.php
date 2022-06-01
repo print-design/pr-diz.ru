@@ -18,7 +18,7 @@ function Display($value, $decimals) {
     }
 }
 
-// Редактирование наценки
+// Редактирование наценки на тираж
 if(null !== filter_input(INPUT_POST, 'extracharge-submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $extracharge = filter_input(INPUT_POST, 'extracharge');
@@ -40,6 +40,22 @@ if(null !== filter_input(INPUT_POST, 'extracharge-submit')) {
     }
 }
 
+// Редактирование наценки на ПФ
+if(null !== filter_input(INPUT_POST, 'extracharge-cliche-submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $extracharge_cliche = filter_input(INPUT_POST, 'extracharge_cliche');
+    
+    $sql = "update calculation_result set extracharge_cliche=$extracharge_cliche where calculation_id=$id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    if(empty($error_message)) {
+        $sql = "update calculation_result set shipping_cliche_cost = cliche_cost + (cliche_cost * extracharge_cliche / 100)";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+}
+
 // Типы наценки
 const ET_NOPRINT = 1; // Пленка без печати
 const ET_PRINT = 2; // Пленка с печатью без ламинации
@@ -47,7 +63,7 @@ const ET_PRINT_1 = 3; // Пленка с печатью и ламинацией
 const ET_PRINT_2 = 4; // Пленка с печатью и двумя ламинациями
 
 // Берём расчёт из таблицы базы
-$extracharge = null; $usd = null; $euro = null; $cost = null; $cost_per_unit = null; $shipping_cost = null; $shipping_cost_per_unit = null; $cliche_cost = null; $total_weight_dirty = null;
+$extracharge = null; $extracharge_cliche = null; $usd = null; $euro = null; $cost = null; $cost_per_unit = null; $shipping_cost = null; $shipping_cost_per_unit = null; $cliche_cost = null; $shipping_cliche_cost = null; $total_weight_dirty = null;
 $film_cost_1 = null; $film_cost_per_unit_1 = null; $width_1 = null; $weight_pure_1 = null; $length_pure_1 = null; $weight_dirty_1 = null; $length_dirty_1 = null;
 $film_cost_2 = null; $film_cost_per_unit_2 = null; $width_2 = null; $weight_pure_2 = null; $length_pure_2 = null; $weight_dirty_2 = null; $length_dirty_2 = null;
 $film_cost_3 = null; $film_cost_per_unit_3 = null; $width_3 = null; $weight_pure_3 = null; $length_pure_3 = null; $weight_dirty_3 = null; $length_dirty_3 = null;
@@ -58,7 +74,7 @@ $film_waste_cost_3 = null; $film_waste_weight_3 = null; $glue_cost_3 = null; $gl
 $id = filter_input(INPUT_GET, 'id');
 
 if(!empty($id)) {
-    $sql_calculation_result = "select extracharge, usd, euro, cost, cost_per_unit, shipping_cost, shipping_cost_per_unit, cliche_cost, total_weight_dirty, "
+    $sql_calculation_result = "select extracharge, extracharge_cliche, usd, euro, cost, cost_per_unit, shipping_cost, shipping_cost_per_unit, cliche_cost, shipping_cliche_cost, total_weight_dirty, "
             . "film_cost_1, film_cost_per_unit_1, width_1, weight_pure_1, length_pure_1, weight_dirty_1, length_dirty_1, "
             . "film_cost_2, film_cost_per_unit_2, width_2, weight_pure_2, length_pure_2, weight_dirty_2, length_dirty_2, "
             . "film_cost_3, film_cost_per_unit_3, width_3, weight_pure_3, length_pure_3, weight_dirty_3, length_dirty_3, "
@@ -69,7 +85,7 @@ if(!empty($id)) {
     $fetcher = new Fetcher($sql_calculation_result);
 
     if($row = $fetcher->Fetch()) {
-        $extracharge = $row['extracharge']; $usd = $row['usd']; $euro = $row['euro']; $cost = $row['cost']; $cost_per_unit = $row['cost_per_unit']; $shipping_cost = $row['shipping_cost']; $shipping_cost_per_unit = $row['shipping_cost_per_unit']; $cliche_cost = $row['cliche_cost']; $total_weight_dirty = $row['total_weight_dirty'];
+        $extracharge = $row['extracharge']; $extracharge_cliche = $row['extracharge_cliche']; $usd = $row['usd']; $euro = $row['euro']; $cost = $row['cost']; $cost_per_unit = $row['cost_per_unit']; $shipping_cost = $row['shipping_cost']; $shipping_cost_per_unit = $row['shipping_cost_per_unit']; $cliche_cost = $row['cliche_cost']; $shipping_cliche_cost = $row['shipping_cliche_cost']; $total_weight_dirty = $row['total_weight_dirty'];
         $film_cost_1 = $row['film_cost_1']; $film_cost_per_unit_1 = $row['film_cost_per_unit_1']; $width_1 = $row['width_1']; $weight_pure_1 = $row['weight_pure_1']; $length_pure_1 = $row['length_pure_1']; $weight_dirty_1 = $row['weight_dirty_1']; $length_dirty_1 = $row['length_dirty_1'];
         $film_cost_2 = $row['film_cost_2']; $film_cost_per_unit_2 = $row['film_cost_per_unit_2']; $width_2 = $row['width_2']; $weight_pure_2 = $row['weight_pure_2']; $length_pure_2 = $row['length_pure_2']; $weight_dirty_2 = $row['weight_dirty_2']; $length_dirty_2 = $row['length_dirty_2'];
         $film_cost_3 = $row['film_cost_3']; $film_cost_per_unit_3 = $row['film_cost_per_unit_3']; $width_3 = $row['width_3']; $weight_pure_3 = $row['weight_pure_3']; $length_pure_3 = $row['length_pure_3']; $weight_dirty_3 = $row['weight_dirty_3']; $length_dirty_3 = $row['length_dirty_3'];
@@ -519,7 +535,7 @@ if(!empty($id)) {
         if($new_work_time_3 === null) $new_work_time_3 = "NULL";
     
         //**************************************
-        // Наценка
+        // Наценка на тираж
         $new_extracharge = null;
         $ech_weight = $calculation->weight;
         $ech_type = 0;
@@ -568,17 +584,25 @@ if(!empty($id)) {
             if($new_shipping_cost_per_unit === null) $new_shipping_cost_per_unit = "NULL";
         }
         
+        //*************************************************
+        // Наценка на ПФ
+        $new_extracharge_cliche = 0;
+        
+        //****************************************************
+        // Отгрузочная стоимость ПФ
+        $new_shipping_cliche_cost = $new_cliche_cost;
+        
         //****************************************************
         // ПОМЕЩАЕМ РЕЗУЛЬТАТЫ ВЫЧИСЛЕНИЙ В БАЗУ
         if(empty($error_message)) {
-            $sql = "insert into calculation_result (calculation_id, extracharge, usd, euro, cost, cost_per_unit, shipping_cost, shipping_cost_per_unit, cliche_cost, total_weight_dirty, "
+            $sql = "insert into calculation_result (calculation_id, extracharge, extracharge_cliche, usd, euro, cost, cost_per_unit, shipping_cost, shipping_cost_per_unit, cliche_cost, shipping_cliche_cost, total_weight_dirty, "
                     . "film_cost_1, film_cost_per_unit_1, width_1, weight_pure_1, length_pure_1, weight_dirty_1, length_dirty_1, "
                     . "film_cost_2, film_cost_per_unit_2, width_2, weight_pure_2, length_pure_2, weight_dirty_2, length_dirty_2, "
                     . "film_cost_3, film_cost_per_unit_3, width_3, weight_pure_3, length_pure_3, weight_dirty_3, length_dirty_3, "
                     . "film_waste_cost_1, film_waste_weight_1, ink_cost, ink_weight, work_cost_1, work_time_1, "
                     . "film_waste_cost_2, film_waste_weight_2, glue_cost_2, glue_expense_2, work_cost_2, work_time_2, "
                     . "film_waste_cost_3, film_waste_weight_3, glue_cost_3, glue_expense_3, work_cost_3, work_time_3) "
-                    . "values ($id, $new_extracharge, $new_usd, $new_euro, $new_cost, $new_cost_per_unit, $new_shipping_cost, $new_shipping_cost_per_unit, $new_cliche_cost, $new_total_weight_dirty, "
+                    . "values ($id, $new_extracharge, $new_extracharge_cliche, $new_usd, $new_euro, $new_cost, $new_cost_per_unit, $new_shipping_cost, $new_shipping_cost_per_unit, $new_cliche_cost, $new_shipping_cliche_cost, $new_total_weight_dirty, "
                     . "$new_film_cost_1, $new_film_cost_per_unit_1, $new_width_1, $new_weight_pure_1, $new_length_pure_1, $new_weight_dirty_1, $new_length_dirty_1, "
                     . "$new_film_cost_2, $new_film_cost_per_unit_2, $new_width_2, $new_weight_pure_2, $new_length_pure_2, $new_weight_dirty_2, $new_length_dirty_2, "
                     . "$new_film_cost_3, $new_film_cost_per_unit_3, $new_width_3, $new_weight_pure_3, $new_length_pure_3, $new_weight_dirty_3, $new_length_dirty_3, "
@@ -594,7 +618,7 @@ if(!empty($id)) {
         $fetcher = new Fetcher($sql_calculation_result);
     
         if($row = $fetcher->Fetch()) {
-            $extracharge = $row['extracharge']; $usd = $row['usd']; $euro = $row['euro']; $cost = $row['cost']; $cost_per_unit = $row['cost_per_unit']; $shipping_cost = $row['shipping_cost']; $shipping_cost_per_unit = $row['shipping_cost_per_unit']; $cliche_cost = $row['cliche_cost']; $total_weight_dirty = $row['total_weight_dirty'];
+            $extracharge = $row['extracharge']; $extracharge_cliche = $row['extracharge_cliche']; $usd = $row['usd']; $euro = $row['euro']; $cost = $row['cost']; $cost_per_unit = $row['cost_per_unit']; $shipping_cost = $row['shipping_cost']; $shipping_cost_per_unit = $row['shipping_cost_per_unit']; $cliche_cost = $row['cliche_cost']; $shipping_cliche_cost = $row['shipping_cliche_cost']; $total_weight_dirty = $row['total_weight_dirty'];
             $film_cost_1 = $row['film_cost_1']; $film_cost_per_unit_1 = $row['film_cost_per_unit_1']; $width_1 = $row['width_1']; $weight_pure_1 = $row['weight_pure_1']; $length_pure_1 = $row['length_pure_1']; $weight_dirty_1 = $row['weight_dirty_1']; $length_dirty_1 = $row['length_dirty_1'];
             $film_cost_2 = $row['film_cost_2']; $film_cost_per_unit_2 = $row['film_cost_per_unit_2']; $width_2 = $row['width_2']; $weight_pure_2 = $row['weight_pure_2']; $length_pure_2 = $row['length_pure_2']; $weight_dirty_2 = $row['weight_dirty_2']; $length_dirty_2 = $row['length_dirty_2'];
             $film_cost_3 = $row['film_cost_3']; $film_cost_per_unit_3 = $row['film_cost_per_unit_3']; $width_3 = $row['width_3']; $weight_pure_3 = $row['weight_pure_3']; $length_pure_3 = $row['length_pure_3']; $weight_dirty_3 = $row['weight_dirty_3']; $length_dirty_3 = $row['length_dirty_3'];
@@ -621,8 +645,8 @@ if(!empty($id)) {
             <a class="btn btn-outline-dark" target="_blank" style="width: 3rem;" title="Печать" href="print.php?id=<?=$id ?>"><i class="fa fa-print"></i></a>
         </div>
     </div>
-    <div class="row text-nowrap">
-        <div class="col-3">
+    <div class="d-flex justify-content-start">
+        <div class="mr-4">
             <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
                 <div class="text-nowrap" style="font-size: x-small;">Наценка на тираж</div>
                 <?php if($status_id == 1 || $status_id == 2): ?>
@@ -651,13 +675,42 @@ if(!empty($id)) {
                 <?php endif; ?>
             </div>
         </div>
-        <div class="col-3">
+        <div class="mr-4">
+            <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
+                <div class="text-nowrap" style="font-size: x-small;">Наценка на ПФ</div>
+                <?php if($status_id == 1 || $status_id == 2): ?>
+                <form method="post" class="form-inline">
+                    <input type="hidden" name="id" value="<?=$id ?>" />
+                    <div class="input-group">
+                        <input type="text" 
+                               id="extracharge_cliche" 
+                               name="extracharge_cliche" 
+                               style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
+                               value="<?=$extracharge_cliche ?>" 
+                               required="required" 
+                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                               onmouseup="javascript: $(this).attr('id', 'extracharge_cliche'); $(this).attr('name', 'extracharge_cliche');" 
+                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
+                               onkeyup="javascript: $(this).attr('id', 'extracharge_cliche'); $(this).attr('name', 'extracharge_cliche');" 
+                               onfocusout="javascript: $(this).attr('id', 'extracharge_cliche'); $(this).attr('name', 'extracharge_cliche');" />
+                        <div class="input-group-append" style="height: 28px;">
+                            <span class="input-group-text">%</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-dark d-none" id="extracharge-cliche-submit" name="extracharge-cliche-submit">Сохранить</button>
+                </form>
+                <?php else: ?>
+                <span class="text-nowrap"><?=$extracharge_cliche ?></span>
+                <?php endif; ?>
+            </div>
+        </div>
+        <div class="mr-4">
             <div class="p-2" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 60px; width: 100px;">
                 <div class="text-nowrap" style="font-size: x-small;">Курс евро</div>
                 <?=number_format($euro, 2, ',', ' ') ?>
             </div>
         </div>
-        <div class="col-3">
+        <div>
             <div class="p-2" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 60px; width: 100px;">
                 <div class="text-nowrap" style="font-size: x-small;">Курс доллара</div>
                 <?=number_format($usd, 2, ',', ' ') ?>
@@ -685,6 +738,8 @@ if(!empty($id)) {
             <div>Себестоимость ПФ</div>
             <div class="value"><?= Display(floatval($cliche_cost), 0) ?> &#8381;</div>
             <div style="font-weight: normal;" class="value mb-2" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= Display($stream_width * $streams_number + ($ski == NO_SKI ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($raport) + 20) ?>&nbsp;мм</div>
+            <div class="mt-2">Отгрузочная стоимость ПФ</div>
+            <div class="value"><?= Display(floatval($shipping_cliche_cost), 0) ?> &#8381;</div>
             <?php endif; ?>
         </div>
     </div>
