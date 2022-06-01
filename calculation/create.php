@@ -2528,12 +2528,26 @@ $colorfulnesses = array();
                 }
             });
             
+            $('#extracharge_cliche').keydown(function(e) {
+                if(!KeyDownLimitIntValue($(e.target), e, 999)) {
+                    return false;
+                }
+            });
+            
             $('#extracharge').change(function(){
+                ChangeLimitIntValue($(this), 999);
+            });
+            
+            $('#extracharge_cliche').change(function(){
                 ChangeLimitIntValue($(this), 999);
             });
             
             $('#extracharge').keyup(function(){
                 $('#extracharge-submit').removeClass('d-none');
+            });
+            
+            $('#extracharge_cliche').keyup(function(){
+                $('#extracharge-cliche-submit').removeClass('d-none');
             });
             
             // Ограничение значения поля "пантон"
@@ -2587,7 +2601,7 @@ $colorfulnesses = array();
             });
             
             // Скрытие расчёта при изменении значения полей
-            $("input[id!=extracharge]").change(function () {
+            $("input[id!=extracharge][id!=extracharge_cliche]").change(function () {
                 HideCalculation();
             });
             
@@ -2595,7 +2609,7 @@ $colorfulnesses = array();
                 HideCalculation();
             });
             
-            $("input[id!=extracharge]").keydown(function () {
+            $("input[id!=extracharge][id!=extracharge_cliche]").keydown(function () {
                 HideCalculation();
             });
             
