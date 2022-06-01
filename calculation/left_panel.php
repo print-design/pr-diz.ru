@@ -1,3 +1,17 @@
+<?php
+function GetCurrencyRate($currency, $usd, $euro) {
+    switch($currency) {
+        case Calculation::USD:
+            return $usd;
+            
+        case Calculation::EURO:
+            return $euro;
+            
+        default :
+            return 1;
+    }
+}
+?>
 <div class="row">
     <div class="col-6">
         <table class="calculation-table">
@@ -100,7 +114,7 @@
             <tr><th>Количество ручьев</th><td><?= $streams_number ?></td></tr>
                 <?php endif; ?>
                 <?php if($work_type_id == WORK_TYPE_PRINT): ?>
-            <tr><th>Рапорт</th><td><?= $raport ?> мм</td></tr>
+            <tr><th>Рапорт</th><td><?= rtrim(rtrim(number_format($raport, 3, ",", ""), "0"), ",") ?> мм</td></tr>
                 <?php endif; ?>
                 <?php if(!empty($number_in_raport)): ?>
             <tr><th>Количество этикеток в рапорте</th><td><?=$number_in_raport ?></td></tr>
@@ -130,6 +144,29 @@
     </div>
 </div>
 <?php if($work_type_id == WORK_TYPE_PRINT): ?>
+<?php
+require_once './calculation.php';
+
+// Стоимость форм
+$cliche_data = null;
+
+$sql = "select flint_price, flint_currency, kodak_price, kodak_currency, scotch_price, scotch_currency "
+        . "from norm_cliche where date <= '$date' order by id desc limit 1";
+$fetcher = new Fetcher($sql);
+
+if($row = $fetcher->Fetch()) {
+    $cliche_data = new DataCliche($row['flint_price'], $row['flint_currency'], $row['kodak_price'], $row['kodak_currency'], $row['scotch_price'], $row['scotch_currency']);
+}
+
+// Высота форм
+$cliche_height = $raport + 20;
+
+// Ширина форм
+$cliche_width = ($streams_number * $stream_width + 20) + ((!empty($ski) && $ski == NO_SKI) ? 0 : 20);
+
+// Площадь форм
+$cliche_area = $cliche_height * $cliche_width / 100;
+?>
 <p class="font-weight-bold mt-3">Красочность: <?=$ink_number." ".GetInkWithCases($ink_number) ?></p>
 <table class="table w-100">
     <tr>
@@ -138,6 +175,7 @@
         <th class="ink">Запечатка</th>
         <th class="ink">Тип полимера</th>
         <th class="ink">Форма</th>
+        <th class="ink">Стоимость</th>
     </tr>
     <?php
     for($i=1; $i<=$ink_number; $i++):
@@ -172,7 +210,7 @@
                 echo $$cmyk_var;
             }
             elseif($$ink_var == "panton") {
-                echo 'P '.$$color_var;
+                echo 'P'.$$color_var;
             }
             ?>
         </td>
@@ -200,6 +238,21 @@
                     break;
                 default :
                     echo 'Новая';
+                    break;
+            }
+            ?>
+        </td>
+        <td class="text-nowrap">
+            <?php
+            switch ($$cliche_var) {
+                case OLD:
+                    echo '0 ₽';
+                    break;
+                case FLINT:
+                    echo Display($cliche_area * $cliche_data->flint_price * GetCurrencyRate($cliche_data->flint_currency, $usd, $euro), 2)." ₽";
+                    break;
+                case KODAK:
+                    echo Display($cliche_area * $cliche_data->kodak_price * GetCurrencyRate($cliche_data->kodak_currency, $usd, $euro), 2)." ₽";
                     break;
             }
             ?>

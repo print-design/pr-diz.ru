@@ -101,7 +101,7 @@ $machine = $row['machine'];
 $colorfulness = $row['colorfulness'];
 $length = $row['length'];
 $stream_width = $row['stream_width'];
-$raport = rtrim(rtrim(number_format($row['raport'], 3, ",", " "), "0"), ",");
+$raport = $row['raport'];
 $number_in_raport = $row['number_in_raport'];
 $lamination_roller_width = $row['lamination_roller_width'];
 $ink_number = $row['ink_number'];
@@ -196,7 +196,7 @@ $num_for_customer = $row['num_for_customer'];
             </div>
                 <?php endif; ?>
             <?php
-            include './_left_panel.php';
+            include './left_panel.php';
             ?>
         </div>
         <script>

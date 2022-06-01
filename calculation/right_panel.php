@@ -78,7 +78,7 @@ if(!empty($id)) {
         $film_waste_cost_3 = $row['film_waste_cost_3']; $film_waste_weight_3 = $row['film_waste_weight_3']; $glue_cost_3 = $row['glue_cost_3']; $glue_expense_3 = $row['glue_expense_3']; $work_cost_3 = $row['work_cost_3']; $work_time_3 = $row['work_time_3'];
     }
     else {
-        include './calculation.php';
+        require_once './calculation.php';
     
         // ПОЛУЧАЕМ ИСХОДНЫЕ ДАННЫЕ
         $param_date = null;
@@ -674,23 +674,18 @@ if(!empty($id)) {
             <div class="value mb-2"><?= Display(floatval($cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
         </div>
         <div class="col-4 pr-4">
-            <h3>Отгрузочная стоимость без ПФ</h3>
+            <h3>Отгрузочная стоимость</h3>
             <div>Отгрузочная стоимость без ПФ</div>
             <div class="value"><?= Display(floatval($shipping_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($shipping_cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
+            <div class="mt-2">Прибыль без ПФ</div>
+            <div class="value mb-2"><?= empty($shipping_cost) || empty($cost) ? "0" : Display(floatval($shipping_cost - $cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= empty($cost_per_unit) || empty($cost) ? "0" : Display(floatval($shipping_cost_per_unit - $cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? 'кг' : 'шт') ?></span></div>
         </div>
-        <div class="col-4" style="width: 250px;"></div>
-    </div>
-    <div class="row text-nowrap">
-        <div class="col-4 pr-4">
+        <div class="col-4">
             <?php if($work_type_id == 2): ?>
             <div>Себестоимость ПФ</div>
             <div class="value"><?= Display(floatval($cliche_cost), 0) ?> &#8381;</div>
             <div style="font-weight: normal;" class="value mb-2" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= Display($stream_width * $streams_number + ($ski == NO_SKI ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($raport) + 20) ?>&nbsp;мм</div>
             <?php endif; ?>
-        </div>
-        <div class="col-4">
-            <div>Прибыль</div>
-            <div class="value mb-2"><?= empty($shipping_cost) || empty($cost) ? "0" : Display(floatval($shipping_cost - $cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= empty($cost_per_unit) || empty($cost) ? "0" : Display(floatval($shipping_cost_per_unit - $cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? 'кг' : 'шт') ?></span></div>
         </div>
     </div>
     <div class="mt-3">

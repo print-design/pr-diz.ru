@@ -106,7 +106,7 @@ $machine = $row['machine'];
 $colorfulness = $row['colorfulness'];
 $length = $row['length'];
 $stream_width = $row['stream_width'];
-$raport = rtrim(rtrim(number_format($row['raport'], 3, ",", " "), "0"), ",");
+$raport = $row['raport']; //rtrim(rtrim(number_format($row['raport'], 3, ",", " "), "0"), ",");
 $number_in_raport = $row['number_in_raport'];
 $lamination_roller_width = $row['lamination_roller_width'];
 $ink_number = $row['ink_number'];
@@ -214,7 +214,7 @@ $num_for_customer = $row['num_for_customer'];
                     $executer = new Executer($sql);
                 }
                 
-                include './_left_panel.php';
+                include './left_panel.php';
                 ?>
                 <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Пересчитать</a>
             </div>
