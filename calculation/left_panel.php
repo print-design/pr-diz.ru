@@ -269,7 +269,8 @@ $cliche_area = $cliche_height * $cliche_width / 100;
                     <?php
                     $checked = $cliche_in_price == 1 ? " checked='checked'" : "";
                     ?>
-                    <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?>>Включать ПФ в себестоимость
+                    <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?><?=DISABLED_ATTR ?>>Включать ПФ в себестоимость
+                    <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                 </label>
             </div>
             <div class="form-group">

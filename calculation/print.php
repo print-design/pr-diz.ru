@@ -20,6 +20,9 @@ const TVER = "tver";
 // Значение марки плёнки "другая"
 const INDIVIDUAL = "individual";
 
+// Атрибут "поле неактивно"
+const DISABLED_ATTR = " disabled='disabled'";
+
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
 
@@ -33,6 +36,7 @@ $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_t
         . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
         . "rc.percent_1, rc.percent_2, rc.percent_3, rc.percent_4, rc.percent_5, rc.percent_6, rc.percent_7, rc.percent_8, rc.cliche_1, "
         . "rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8, "
+        . "rc.cliche_in_price, "
         . "cus.name customer, cus.phone customer_phone, cus.extension customer_extension, cus.email customer_email, cus.person customer_person, "
         . "(select count(id) from calculation where customer_id = rc.customer_id and id <= rc.id) num_for_customer "
         . "from calculation rc "
@@ -132,7 +136,7 @@ for($i=1; $i<=$ink_number; $i++) {
     }
 }
 
-$cliche_in_price = 0;
+$cliche_in_price = $row['cliche_in_price'];
 
 $customer = $row['customer'];
 $customer_phone = $row['customer_phone'];

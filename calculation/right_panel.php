@@ -663,7 +663,7 @@ if(!empty($id)) {
                                onmouseup="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');" 
                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
                                onkeyup="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');" 
-                               onfocusout="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');" />
+                               onfocusout="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');"<?=DISABLED_ATTR ?> />
                         <div class="input-group-append" style="height: 28px;">
                             <span class="input-group-text">%</span>
                         </div>
@@ -692,7 +692,7 @@ if(!empty($id)) {
                                onmouseup="javascript: $(this).attr('id', 'extracharge_cliche'); $(this).attr('name', 'extracharge_cliche');" 
                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
                                onkeyup="javascript: $(this).attr('id', 'extracharge_cliche'); $(this).attr('name', 'extracharge_cliche');" 
-                               onfocusout="javascript: $(this).attr('id', 'extracharge_cliche'); $(this).attr('name', 'extracharge_cliche');" />
+                               onfocusout="javascript: $(this).attr('id', 'extracharge_cliche'); $(this).attr('name', 'extracharge_cliche');"<?=DISABLED_ATTR ?> />
                         <div class="input-group-append" style="height: 28px;">
                             <span class="input-group-text">%</span>
                         </div>
@@ -723,7 +723,7 @@ if(!empty($id)) {
     <div class="row text-nowrap">
         <div class="col-4 pr-4">
             <h3>Себестоимость</h3>
-            <div>Себестоимость без ПФ</div>
+            <div>Себестоимость <?=$cliche_in_price == 1 ? 'с' : 'без' ?> ПФ</div>
             <div class="value mb-2"><?= Display(floatval($cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
             <div class="mt-2">Себестоимость ПФ</div>
             <div class="value"><?= Display(floatval($cliche_cost), 0) ?> &#8381;</div>
@@ -731,14 +731,14 @@ if(!empty($id)) {
         </div>
         <div class="col-4 pr-4">
             <h3>Отгрузочная стоимость</h3>
-            <div>Отгрузочная стоимость без ПФ</div>
+            <div>Отгрузочная стоимость <?=$cliche_in_price == 1 ? 'с' : 'без' ?> ПФ</div>
             <div class="value"><?= Display(floatval($shipping_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($shipping_cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
             <div class="mt-2">Отгрузочная стоимость ПФ</div>
             <div class="value"><?= Display(floatval($shipping_cliche_cost), 0) ?> &#8381;</div>
         </div>
         <div class="col-4">
             <h3>Прибыль</h3>
-            <div>Прибыль без ПФ</div>
+            <div>Прибыль <?=$cliche_in_price == 1 ? 'с' : 'без' ?> ПФ</div>
             <div class="value mb-2"><?= empty($shipping_cost) || empty($cost) ? "0" : Display(floatval($shipping_cost - $cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= empty($cost_per_unit) || empty($cost) ? "0" : Display(floatval($shipping_cost_per_unit - $cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? 'кг' : 'шт') ?></span></div>            
         </div>
     </div>
