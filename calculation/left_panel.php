@@ -175,7 +175,7 @@ $cliche_area = $cliche_height * $cliche_width / 100;
         <th class="ink">Запечатка</th>
         <th class="ink">Тип полимера</th>
         <th class="ink">Форма</th>
-        <th class="ink">Стоимость</th>
+        <th class="ink">Себестоимость</th>
     </tr>
     <?php
     for($i=1; $i<=$ink_number; $i++):
