@@ -60,6 +60,9 @@ const FLINT = "flint";
 const KODAK = "kodak";
 const TVER = "tver";
 
+// Атрибут "поле неактивно"
+const DISABLED_ATTR = "";
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
