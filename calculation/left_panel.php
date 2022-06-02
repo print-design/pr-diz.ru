@@ -269,12 +269,11 @@ $cliche_area = $cliche_height * $cliche_width / 100;
                     <?php
                     $checked = $cliche_in_price == 1 ? " checked='checked'" : "";
                     ?>
-                    <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?><?=DISABLED_ATTR ?>>Включать ПФ в себестоимость
+                    <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?><?=DISABLED_ATTR ?> onchange="javascript: this.form.submit();">Включить ПФ в себестоимость
                     <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                    <input type="hidden" id="cliche_in_price_submit" name="cliche_in_price_submit" value="1" />
+                    <input type="hidden" name="scroll" />
                 </label>
-            </div>
-            <div class="form-group">
-                <button class="btn btn-sm btn-dark ml-3 d-none" type="submit" id="cliche_in_price_submit" name="cliche_in_price_submit">Сохранить</button>
             </div>
         </form>
     </div>

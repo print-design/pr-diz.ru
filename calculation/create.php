@@ -1813,7 +1813,7 @@ $colorfulnesses = array();
                                             <?php
                                             $checked = $cliche_in_price == 1 ? " checked='checked'" : "";
                                             ?>
-                                            <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?>>Включать ПФ в себестоимость
+                                            <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?>>Включить ПФ в себестоимость
                                         </label>
                                     </div>
                                 </div>

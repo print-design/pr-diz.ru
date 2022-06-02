@@ -239,11 +239,6 @@ $num_for_customer = $row['num_for_customer'];
         include '../include/footer.php';
         ?>
         <script>
-            // Отображение
-            $('#cliche_in_price').change(function() {
-                $('#cliche_in_price_submit').removeClass('d-none');
-            });
-            
             // Показ расходов
             function ShowCosts() {
                 $("#costs").removeClass("d-none");
