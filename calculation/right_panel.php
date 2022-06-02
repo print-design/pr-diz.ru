@@ -785,12 +785,6 @@ if(!empty($id)) {
             <div class="col-4 pr-4">
                 <button type="button" class="btn btn-light" onclick="javascript: ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать расходы</button>
             </div>
-            <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
-            <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
-            <?php endif; ?>
-            <?php if(!empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name)): ?>
-            <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
-            <?php endif; ?>
         </div>
     </div>
     <div id="costs" class="d-none">
@@ -799,12 +793,8 @@ if(!empty($id)) {
                 <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
                 <h2 class="mt-2">Расходы</h2>
             </div>
-            <?php if(!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
-            <?php endif; ?>
-            <?php if(!empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name)): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
-            <?php endif; ?>
         </div>
         <div class="row text-nowrap">
             <div class="col-4 pr-4">
