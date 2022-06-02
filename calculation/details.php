@@ -33,6 +33,12 @@ if(null !== filter_input(INPUT_POST, 'cliche_in_price_submit')) {
     $sql = "update calculation set cliche_in_price = $cliche_in_price where id = $id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
+    
+    if(empty($error_message)) {
+        $sql = "delete from calculation_result where calculation_id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
 }
 
 // Получение объекта

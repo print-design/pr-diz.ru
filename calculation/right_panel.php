@@ -140,6 +140,8 @@ if(!empty($id)) {
         $param_raport = null; // Рапорт
         $param_lamination_roller_width = null; // Ширина ламинирующего вала
         $param_ink_number = 0; // Красочность
+        
+        $param_cliche_in_price = null; // Включить ПФ в стоимость
     
         $sql = "select rc.date, rc.name, rc.unit, rc.quantity, rc.work_type_id, "
                 . "f.name film, fv.thickness thickness, fv.weight density, "
@@ -156,7 +158,8 @@ if(!empty($id)) {
                 . "rc.color_1, rc.color_2, rc.color_3, rc.color_4, rc.color_5, rc.color_6, rc.color_7, rc.color_8, "
                 . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
                 . "rc.percent_1, rc.percent_2, rc.percent_3, rc.percent_4, rc.percent_5, rc.percent_6, rc.percent_7, rc.percent_8, "
-                . "rc.cliche_1, rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8 "
+                . "rc.cliche_1, rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8, "
+                . "rc.cliche_in_price "
                 . "from calculation rc "
                 . "left join machine m on rc.machine_id = m.id "
                 . "left join film_variation fv on rc.film_variation_id = fv.id "
@@ -239,6 +242,8 @@ if(!empty($id)) {
             $param_cmyk_1 = $row['cmyk_1']; $param_cmyk_2 = $row['cmyk_2']; $param_cmyk_3 = $row['cmyk_3']; $param_cmyk_4 = $row['cmyk_4']; $param_cmyk_5 = $row['cmyk_5']; $param_cmyk_6 = $row['cmyk_6']; $param_cmyk_7 = $row['cmyk_7']; $param_cmyk_8 = $row['cmyk_8'];
             $param_percent_1 = $row['percent_1']; $param_percent_2 = $row['percent_2']; $param_percent_3 = $row['percent_3']; $param_percent_4 = $row['percent_4']; $param_percent_5 = $row['percent_5']; $param_percent_6 = $row['percent_6']; $param_percent_7 = $row['percent_7']; $param_percent_8 = $row['percent_8'];
             $param_cliche_1 = $row['cliche_1']; $param_cliche_2 = $row['cliche_2']; $param_cliche_3 = $row['cliche_3']; $param_cliche_4 = $row['cliche_4']; $param_cliche_5 = $row['cliche_5']; $param_cliche_6 = $row['cliche_6']; $param_cliche_7 = $row['cliche_7']; $param_cliche_8 = $row['cliche_8'];
+            
+            $param_cliche_in_price = $row['cliche_in_price'];
         }
     
         $error_message = $fetcher->error;
@@ -340,9 +345,9 @@ if(!empty($id)) {
                 $param_color_1, $param_color_2, $param_color_3, $param_color_4, $param_color_5, $param_color_6, $param_color_7, $param_color_8, 
                 $param_cmyk_1, $param_cmyk_2, $param_cmyk_3, $param_cmyk_4, $param_cmyk_5, $param_cmyk_6, $param_cmyk_7, $param_cmyk_8, 
                 $param_percent_1, $param_percent_2, $param_percent_3, $param_percent_4, $param_percent_5, $param_percent_6, $param_percent_7, $param_percent_8, 
-                $param_cliche_1, $param_cliche_2, $param_cliche_3, $param_cliche_4, $param_cliche_5, $param_cliche_6, $param_cliche_7, $param_cliche_8);
+                $param_cliche_1, $param_cliche_2, $param_cliche_3, $param_cliche_4, $param_cliche_5, $param_cliche_6, $param_cliche_7, $param_cliche_8, 
+                $param_cliche_in_price);
     
-        // Себестоимость = стоимость плёнки + работ + краски + клея
         $film_cost = $calculation->film_cost_1 + $calculation->film_cost_2 + $calculation->film_cost_3;
         $work_cost = $calculation->work_cost_1 + $calculation->work_cost_2 + $calculation->work_cost_3;
         $ink_cost = 0;
@@ -350,19 +355,32 @@ if(!empty($id)) {
             $ink_cost += $calculation->ink_costs[$i];
         }
         $glue_cost = $calculation->glue_cost2 + $calculation->glue_cost3;
-        $new_cost = $film_cost + $work_cost + $ink_cost + $glue_cost;
+        
+        // Себестоимость форм
+        $cliche_cost = 0;
+        for($i=1; $i<=$param_ink_number; $i++) {
+            $cliche_cost += $calculation->cliche_costs[$i];
+        }
+        
+        $new_cliche_cost = $cliche_cost;
+        if($new_cliche_cost === null) $new_cliche_cost = "NULL";
+        
+        // Если включаем ПФ в себестоимость
+        // Себестоимость = стоимость плёнки + работ + краски + клея + форм
+        // Иначе
+        // Себестоимость = стоимость плёнки + работ + краски + клея
+        $new_cost = 0;
+        if($cliche_in_price == 1) {
+            $new_cost = $film_cost + $work_cost + $ink_cost + $glue_cost + $cliche_cost;
+        }
+        else {
+            $new_cost = $film_cost + $work_cost + $ink_cost + $glue_cost;
+        }
         if($new_cost === null) $new_cost = "NULL";
     
         // Себестоимость на 1 шт/кг = Себестоимость / массу тиража или кол-во штук
         $new_cost_per_unit = $new_cost / $param_quantity;
         if($new_cost_per_unit === null) $new_cost_per_unit = "NULL";
-        
-        // Себестоимость форм
-        $new_cliche_cost = 0;
-        for($i=1; $i<=$param_ink_number; $i++) {
-            $new_cliche_cost += $calculation->cliche_costs[$i];
-        }
-        if($new_cliche_cost === null) $new_cliche_cost = "NULL";
     
         // Материалы = масса с приладкой осн. + масса с приладкой лам. 1 + масса с приладкой лам. 2
         $new_total_weight_dirty = $calculation->weight_dirty_1 + $calculation->weight_dirty_2 + $calculation->weight_dirty_3;
@@ -675,6 +693,7 @@ if(!empty($id)) {
                 <?php endif; ?>
             </div>
         </div>
+        <?php if($cliche_in_price != 1): ?>
         <div class="mr-4">
             <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
                 <div class="text-nowrap" style="font-size: x-small;">Наценка на ПФ</div>
@@ -704,6 +723,7 @@ if(!empty($id)) {
                 <?php endif; ?>
             </div>
         </div>
+        <?php endif; ?>
         <div class="mr-4">
             <div class="p-2" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 60px; width: 100px;">
                 <div class="text-nowrap" style="font-size: x-small;">Курс евро</div>
@@ -733,8 +753,10 @@ if(!empty($id)) {
             <h3>Отгрузочная стоимость</h3>
             <div>Отгрузочная стоимость <?=$cliche_in_price == 1 ? 'с' : 'без' ?> ПФ</div>
             <div class="value"><?= Display(floatval($shipping_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($shipping_cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
+            <?php if($cliche_in_price != 1): ?>
             <div class="mt-2">Отгрузочная стоимость ПФ</div>
             <div class="value"><?= Display(floatval($shipping_cliche_cost), 0) ?> &#8381;</div>
+            <?php endif; ?>
         </div>
         <div class="col-4">
             <h3>Прибыль</h3>
