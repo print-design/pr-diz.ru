@@ -137,6 +137,8 @@ for($i=1; $i<=$ink_number; $i++) {
     }
 }
 
+$cliche_in_price = 0;
+
 $customer = $row['customer'];
 $customer_phone = $row['customer_phone'];
 $customer_extension = $row['customer_extension'];
@@ -223,6 +225,11 @@ $num_for_customer = $row['num_for_customer'];
         include '../include/footer.php';
         ?>
         <script>
+            // Отображение
+            $('#cliche_in_price').change(function() {
+                $('#cliche_in_price_submit').removeClass('d-none');
+            });
+            
             // Показ расходов
             function ShowCosts() {
                 $("#costs").removeClass("d-none");
@@ -237,7 +244,7 @@ $num_for_customer = $row['num_for_customer'];
                 AdjustFixedBlock($('#calculation'));
             }
             
-            // Ограницение значений наценки
+            // Ограничение значений наценки
             $('#extracharge').keydown(function(e) {
                 if(!KeyDownLimitIntValue($(e.target), e, 999)) {
                     return false;

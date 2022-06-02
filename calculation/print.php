@@ -132,6 +132,8 @@ for($i=1; $i<=$ink_number; $i++) {
     }
 }
 
+$cliche_in_price = 0;
+
 $customer = $row['customer'];
 $customer_phone = $row['customer_phone'];
 $customer_extension = $row['customer_extension'];

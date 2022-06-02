@@ -260,4 +260,22 @@ $cliche_area = $cliche_height * $cliche_width / 100;
     </tr>
     <?php endfor; ?>
 </table>
+<div class="row">
+    <div class="col-6"></div>
+    <div class="col-6">
+        <form method="post" class="form-inline">
+            <div class="form-check">
+                <label class="form-check-label text-nowrap" style="line-height: 25px;">
+                    <?php
+                    $checked = $cliche_in_price == 1 ? " checked='checked'" : "";
+                    ?>
+                    <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?>>Включать ПФ в себестоимость
+                </label>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-sm btn-dark ml-3 d-none" type="submit" id="cliche_in_price_submit" name="cliche_in_price_submit">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</div>
 <?php endif; ?>

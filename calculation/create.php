@@ -660,6 +660,8 @@ for ($i=1; $i<=8; $i++) {
     }
 }
 
+$cliche_in_price = filter_input(INPUT_POST, 'cliche_in_price');
+
 $num_for_customer = null;
 if(isset($row['num_for_customer'])) {
     $num_for_customer = $row['num_for_customer'];
@@ -1324,9 +1326,7 @@ $colorfulnesses = array();
                                         <button type="button" class="btn btn-light" onclick="javascript: ShowLamination2();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                                     </div> 
                                 </div>
-                                <div class="col-6">
-                                    
-                                </div>
+                                <div class="col-6"></div>
                             </div>
                             <!-- Ламинация 2 -->
                             <div id="form_lamination_2" class="d-none">
@@ -1794,6 +1794,19 @@ $colorfulnesses = array();
                             <?php
                             endfor;
                             ?>
+                            <div class="row">
+                                <div class="col-6"></div>
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <label class="form-check-label text-nowrap mt-3" style="line-height: 25px;">
+                                            <?php
+                                            $checked = $cliche_in_price == 1 ? " checked='checked'" : "";
+                                            ?>
+                                            <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?>>Включать ПФ в себестоимость
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark mt-3<?=$create_calculation_submit_class ?>">Рассчитать</button>
                     </form>
