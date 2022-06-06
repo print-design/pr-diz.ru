@@ -143,6 +143,22 @@ class DataPrice {
     }
 }
 
+// Наценка вместе с типом наценки, минимальным и максимальным весом
+class DataExtracharge {
+    public $value; // наценка
+    public $ech_type; // тип наценкт
+    public $min_weight; // минимальный вес
+    public $max_weight; // максимальный вес
+    
+    // Конструктор
+    public function __construct($value, $ech_type, $min_weight, $max_weight) {
+        $this->value = $value;
+        $this->ech_type = $ech_type;
+        $this->min_weight = $min_weight;
+        $this->max_weight = $max_weight;
+    }
+}
+
 // Расчёт
 class Calculation {
     // Типы работы
@@ -152,6 +168,12 @@ class Calculation {
     // Единицы размера тиража
     const KG = 'kg';
     const PIECES = 'pieces';
+    
+    // Типы наценки
+    const ET_NOPRINT = 1; // Пленка без печати
+    const ET_PRINT = 2; // Пленка с печатью без ламинации
+    const ET_PRINT_1 = 3; // Пленка с печатью и ламинацией
+    const ET_PRINT_2 = 4; // Пленка с печатью и двумя ламинациями
     
     // Лыжи
     const NO_SKI = 1;
@@ -278,7 +300,7 @@ class Calculation {
 
     public $laminations_number = 0; // количество ламинаций
     
-    public $uk1, $uk2, $uk3; // уравнивающий коэффициент 1, 2, 3
+    public $uk1, $uk2, $uk3, $ukpf; // уравнивающий коэффициент 1, 2, 3, ПФ
     public $area_pure_start = 0; // м2 чистые, м2 (рассчитывается: длина * ширина * кол-во в шт.; используется для вычисления массы тиража, если он в шт.)
     public $weight = 0; // масса тиража, кг
     public $width_1, $width_2, $width_3; // ширина материала, мм 
@@ -322,6 +344,26 @@ class Calculation {
     public $cliche_area; // площадь формы, см2
     public $cliche_new_number; // количество новых форм
     public $cliche_costs; // массив: стоимость каждой формы, руб
+    
+    public $extracharge = 0; // Наценка на тираж
+    public $extracharge_cliche = 0; // Наценка на ПФ
+    public $film_cost; // Общая стоимость вссех материалов
+    public $work_cost; // Общая стоимость трудозатрат
+    public $ink_cost; // Стоимость красок
+    public $ink_expense; // Расход красок
+    public $glue_cost; // Стоимость клея
+    public $cliche_cost; // Себестоимость форм
+    public $cost; // Себестоимость
+    public $cost_per_unit; // Себестоимость за единицу 
+    public $shipping_cost; // Отгрузочная стоимость 
+    public $shipping_cost_per_unit; // Отгрузочная стоимость за единицу 
+    public $shipping_cliche_cost; // Отгрузочная стоимость форм 
+    public $income; // Прибыль
+    public $income_per_unit; // Прибыль за единицу
+    public $total_weight_dirty; // Общая масса с приладкой 
+    public $film_cost_per_unit_1, $film_cost_per_unit_2, $film_cost_per_unit_3; // Масса с приладкой на 1 кг
+    public $film_waste_cost_1, $film_waste_cost_2, $film_waste_cost_3; // Отходы, стоимость
+    public $film_waste_weight_1, $film_waste_weight_2, $film_waste_weight_3; // Отходы, масса
 
     // Конструктор
     public function __construct(DataPriladka $data_priladka, 
@@ -331,6 +373,7 @@ class Calculation {
             DataInk $data_ink,
             DataGlue $data_glue,
             DataCliche $data_cliche,
+            array $data_extracharge,
             $usd, // Курс доллара
             $euro, // Курс евро
             $unit, // Кг или шт
@@ -378,7 +421,10 @@ class Calculation {
             $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, // Тип CMYK (cyan, magenda, yellow, kontur)
             $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, // Процент данной краски
             $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8, // Форма (старая, Флинт, Кодак)
-            $cliche_in_price // Включить ПФ в себестоимость
+            
+            $cliche_in_price, // Включить ПФ в себестоимость
+            $extracharge, // Наценка на тираж
+            $extracharge_cliche // Наценка на ПФ
             ) {
         // Если нет одной ламинации или обеих, то толщина, плотность и цена плёнок для ламинации имеют пустые значения.
         // Присваиваем им значение 0, чтобы программа не сломалась при попытке вычилений с пустым значением.
@@ -440,6 +486,9 @@ class Calculation {
         
         // Уравнивующий коэф 3 (УК3)=0 когда нет ламинации 2, = 1 когда есть ламинация 2
         $this->uk3 = $this->laminations_number > 1 ? 1 : 0;
+        
+        // Уравнивающий коэфф. ПФ (УКПФ)=0, когда ПФ не велючен в себестоимость, =1 когда ПФ включен в себестоимость
+        $this->ukpf = $cliche_in_price == 1 ? 1 : 0;
         
         // НИЖЕ НАЧИНАЕТСЯ ВЫЧИСЛЕНИЕ
         
@@ -641,7 +690,7 @@ class Calculation {
         // Время приладки 3, мин
         $this->priladka_time_3 = $data_priladka_laminator->time * $this->uk3;
         
-        
+
         // Время печати (без приладки) 1, ч
         // Если печати нет, то сразу возвращаем 0, иначе получится деление на 0
         $this->print_time_1 = $data_machine->speed == 0 ? 0 : ($this->length_pure_start_1 + $this->waste_length_1) / $data_machine->speed / 1000 * $this->uk1;
@@ -829,6 +878,119 @@ class Calculation {
             $cliche_cost = $this->cliche_area * $cliche_sm_price * $this->GetCurrencyRate($cliche_currency, $usd, $euro);
             $this->cliche_costs[$i] = $cliche_cost;
         }
+        
+        //********************************************
+        // НАЦЕНКА
+        //********************************************
+        
+        // Если имеющаяся наценка не пустая, оставляем её
+        // Если пустая, вычисляем
+        if(!empty($extracharge)) {
+            $this->extracharge = $extracharge;
+        }
+        else {
+            $ech_type = 0;
+            
+            if($work_type_id == self::WORK_TYPE_NOPRINT) {
+                $ech_type = self::ET_NOPRINT;
+            }
+            elseif($this->laminations_number == 0) {
+                $ech_type = self::ET_PRINT;
+            }
+            elseif($this->laminations_number == 1) {
+                $ech_type = self::ET_PRINT_1;
+            }
+            elseif($this->laminations_number == 2) {
+                $ech_type = self::ET_PRINT_2;
+            }
+            
+            foreach($data_extracharge as $item) {
+                if($item->ech_type == $ech_type && round($this->weight) >= $item->min_weight && (round($this->weight) <= $item->max_weight || empty($item->msx_weight))) {
+                    $this->extracharge = $item->value;
+                }
+            }    
+        }
+        
+        // Если УКПФ = 1, то наценка на ПФ всегда 0
+        if($this->ukpf == 1) {
+            $this->extracharge_cliche = 0;
+        }
+        else {
+            $this->extracharge_cliche = $extracharge_cliche;
+        }
+        
+        //***********************************************
+        //ПРАВАЯ ПАНЕЛЬ
+        //***********************************************
+        
+        // Общая стоимость всех материалов
+        $this->film_cost = $this->film_cost_1 + $this->film_cost_2 + $this->film_cost_3;
+        
+        // Общая стоимость трудозатрат
+        $this->work_cost = $this->work_cost_1 + $this->work_cost_2 + $this->work_cost_3;
+        
+        // Общая стоимость всех КраскаСмеси
+        $this->ink_cost = 0;
+        
+        for($i=1; $i<$ink_number; $i++) {
+            $this->ink_cost += $this->ink_costs[$i];
+        }
+        
+        // Общий расход всех КраскаСмеси
+        $this->ink_expense = 0;
+        
+        for($i=1; $i<$ink_number; $i++) {
+            $ink_expense += $this->ink_expenses[$i];
+        }
+        
+        // Общая стоимость всех КлеяСмеси
+        $this->glue_cost = $this->glue_cost2 + $this->glue_cost3;
+        
+        // Себестоимость ПФ
+        $this->cliche_cost = 0;
+        
+        for($i=1; $i<=$ink_number; $i++) {
+            $this->cliche_cost += $this->cliche_costs[$i];
+        }
+        
+        // Себестоимость
+        $this->cost = $this->film_cost + $this->work_cost + $this->ink_cost + $this->glue_cost + ($this->cliche_cost * $this->ukpf);
+        
+        // Себестоимость за единицу
+        $this->cost_per_unit = $this->cost / $quantity;
+        
+        // Отгрузочная стоимость
+        $this->shipping_cost = $this->cost + ($this->cost * $this->extracharge / 100);
+        
+        // Отгрузочная стоимость за единицу
+        $this->shipping_cost_per_unit = $this->shipping_cost / $quantity;
+        
+        // Прибыль
+        $this->income = $this->shipping_cost - $this->cost;
+        
+        // Прибыль за единицу
+        $this->income_per_unit = $this->shipping_cost_per_unit - $this->cost_per_unit;
+        
+        // Отгрузочная стоимость ПФ
+        $this->shipping_cliche_cost = $this->cliche_cost + ($this->cliche_cost * $this->extracharge_cliche / 100);
+        
+        // Масса плёнки с приладкой
+        $this->total_weight_dirty = $this->weight_dirty_1 + $this->weight_dirty_2 + $this->weight_dirty_3;
+        
+        // Стоимость плёнки на единицу
+        $this->film_cost_per_unit_1 = empty($this->weight_dirty_1) ? 0 : $this->film_cost_1 / $this->weight_dirty_1;
+        $this->film_cost_per_unit_2 = empty($this->weight_dirty_2) ? 0 : $this->film_cost_2 / $this->weight_dirty_2;
+        $this->film_cost_per_unit_3 = empty($this->weight_dirty_3) ? 0 : $this->film_cost_3 / $this->weight_dirty_3;
+        
+        // Отходы плёнки, стоимость
+        $this->film_waste_cost_1 = ($this->weight_dirty_1 - $this->weight_pure_1) * $price_1 * $this->GetCurrencyRate($currency_1, $usd, $euro);
+        $this->film_waste_cost_2 = ($this->weight_dirty_2 - $this->weight_pure_2) * $price_2 * $this->GetCurrencyRate($currency_2, $usd, $euro);
+        $this->film_waste_cost_3 = ($this->weight_dirty_3 - $this->weight_pure_3) * $price_3 * $this->GetCurrencyRate($currency_3, $usd, $euro);
+        
+        // Отходы плёнки, масса
+        $this->film_waste_weight_1 = $this->weight_dirty_1 - $this->weight_pure_1;
+        $this->film_waste_weight_2 = $this->weight_dirty_2 - $this->weight_pure_2;
+        $this->film_waste_weight_3 = $this->weight_dirty_3 - $this->weight_pure_3; 
     }
 }
 ?>
