@@ -214,29 +214,25 @@ $num_for_customer = $row['num_for_customer'];
                 <h1 style="font-size: 32px; font-weight: 600;"><?= htmlentities($name) ?></h1>
                 <h2 style="font-size: 26px;">№<?=$customer_id."-".$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
                 <?php
-                $real_status_id = null;
-                    
-                if(!empty($techmap_id)):
-                    $real_status_id = TECHMAP;
+                if($status_id == DRAFT):
                 ?>
-                <div style="width: 100%; padding: 12px; margin-top: 40p; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px green; color: green;">
-                    <i class="fas fa-file"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Составлена технологическая карта
+                <div style="width: 100%; padding: 12px; margin-top: 40p; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px gray; color: gray;">
+                    <i class="fas fa-scroll"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Черновик
                 </div>
                 <?php
-                else:
-                    $real_status_id = CALCULATION;
+                elseif($status_id == CALCULATION):
                 ?>
                 <div style="width: 100%; padding: 12px; margin-top: 40p; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px blue; color: blue;">
                     <i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Сделан расчёт
                 </div>
                 <?php
+                elseif($status_id == TECHMAP):
+                ?>
+                <div style="width: 100%; padding: 12px; margin-top: 40p; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px green; color: green;">
+                    <i class="fas fa-file"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Составлена технологическая карта
+                </div>
+                <?php
                 endif;
-                    
-                // Обновляем поле status_id (оно нужно для сортировки по статусу на странице списка)
-                if(!empty($real_status_id) && $status_id != $real_status_id) {
-                    $sql = "update calculation set status_id = $real_status_id where id = $id";
-                    $executer = new Executer($sql);
-                }
                 
                 include './left_panel.php';
                 ?>

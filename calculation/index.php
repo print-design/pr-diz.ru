@@ -221,17 +221,6 @@ function OrderLink($param) {
                     while ($row = $fetcher->Fetch()):
                         
                     $rowcounter++;
-                    $status = '';
-                    $colour_style = '';
-                    
-                    if(!empty($row['techmap_id'])) {
-                        $status = "Составлена тех. карта";
-                        $colour_style = " color: green";
-                    }
-                    else {
-                        $status = "Сделан расчёт";
-                        $colour_style = " color: blue";
-                    }
                     ?>
                     <tr>
                         <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['num_for_customer'] ?></td>
@@ -241,7 +230,7 @@ function OrderLink($param) {
                         <td class="text-right text-nowrap"><?=number_format($row['quantity'], 0, ",", " ") ?>&nbsp;<?=$row['unit'] == 'kg' ? 'кг' : 'шт' ?></td>
                         <td><?=$row['work_type'] ?></td>
                         <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
-                        <td class="text-nowrap"><i class="fas fa-circle" style="<?=$colour_style ?>;"></i>&nbsp;&nbsp;<?=$status ?></td>
+                        <td class="text-nowrap"><i class="fas fa-circle" style="color: <?=$status_colors[$row['status_id']] ?>;"></i>&nbsp;&nbsp;<?=$status_names[$row['status_id']] ?></td>
                         <td><a href="details.php<?= BuildQuery("id", $row['id']) ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a></td>
                     </tr>
                     <?php
