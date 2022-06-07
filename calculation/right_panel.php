@@ -56,8 +56,6 @@ if(null !== filter_input(INPUT_POST, 'extracharge-cliche-submit')) {
     }
 }
 
-
-
 // Берём расчёт из таблицы базы
 $usd = null; $euro = null; $cost = null; $cost_per_unit = null; $shipping_cost = null; $shipping_cost_per_unit = null; $income = null; $income_per_unit = null; $cliche_cost = null; $shipping_cliche_cost = null; $total_weight_dirty = null;
 $film_cost_1 = null; $film_cost_per_unit_1 = null; $width_1 = null; $weight_pure_1 = null; $length_pure_1 = null; $weight_dirty_1 = null; $length_dirty_1 = null;

@@ -932,14 +932,14 @@ class Calculation {
         // Общая стоимость всех КраскаСмеси
         $this->ink_cost = 0;
         
-        for($i=1; $i<$ink_number; $i++) {
+        for($i=1; $i<=$ink_number; $i++) {
             $this->ink_cost += $this->ink_costs[$i];
         }
         
         // Общий расход всех КраскаСмеси
         $this->ink_expense = 0;
         
-        for($i=1; $i<$ink_number; $i++) {
+        for($i=1; $i<=$ink_number; $i++) {
             $ink_expense += $this->ink_expenses[$i];
         }
         
