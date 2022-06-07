@@ -16,6 +16,11 @@ function OrderLink($param) {
         echo "<a class='gray' href='".BuildQueryAddRemove("order", $param, "page")."' style='font-size: x-small;'><i class='fas fa-arrow-down'></i></a>";
     }
 }
+
+$status_titles = array(DRAFT => "Черновики", CALCULATION => "Расчеты");
+$status_id = filter_input(INPUT_GET, 'status');
+if(empty($status_id)) $status_id = DRAFT;
+$title = $status_titles[$status_id];
 ?>
 <!DOCTYPE html>
 <html>
@@ -39,7 +44,7 @@ function OrderLink($param) {
             ?>
             <div class="d-flex justify-content-between mb-auto">
                 <div class="p-1 text-nowrap">
-                    <h1 style="font-size: 32px; font-weight: 600;" class="d-inline">Расчеты</h1>
+                    <h1 style="font-size: 32px; font-weight: 600;" class="d-inline"><?=$title ?></h1>
                     <?php
                     // Фильтр
                     $where = '';
