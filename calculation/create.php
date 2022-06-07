@@ -306,7 +306,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $ink_number = filter_input(INPUT_POST, 'ink_number'); if(empty($ink_number)) $ink_number = "NULL";
         
         $manager_id = GetUserId();
-        $status_id = CALCULATION; // Статус "Расчёт"
+        $status_id = DRAFT; // Статус "Черновик"
         
         // Данные о цвете
         for($i=1; $i<=8; $i++) {
