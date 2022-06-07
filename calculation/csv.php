@@ -1119,17 +1119,17 @@ if($id !== null) {
         
         array_push($file_data, array("Отходы 1, руб",
             Display($calculation->film_waste_cost_1),
-            "|= ".Display($film_waste_weight_1)." * ".Display($price_1)." * ".Display($calculation->GetCurrencyRate($currency_1, $usd, $euro)),
+            "|= ".Display($calculation->film_waste_weight_1)." * ".Display($price_1)." * ".Display($calculation->GetCurrencyRate($currency_1, $usd, $euro)),
             "отходы 1, кг * цена плёнки 1 * курс валюты"));
         
         array_push($file_data, array("Отходы 2, руб",
             Display($calculation->film_waste_cost_2),
-            "|= ".Display($film_waste_weight_2)." * ".Display($price_2)." * ".Display($calculation->GetCurrencyRate($currency_2, $usd, $euro)),
+            "|= ".Display($calculation->film_waste_weight_2)." * ".Display($price_2)." * ".Display($calculation->GetCurrencyRate($currency_2, $usd, $euro)),
             "отходы 2, кг * цена плёнки 2 * курс валюты"));
         
         array_push($file_data, array("Отходы 3, руб",
             Display($calculation->film_waste_cost_3),
-            "|= ".Display($film_waste_weight_3)." * ".Display($price_3)." * ".Display($calculation->GetCurrencyRate($currency_3, $usd, $euro)),
+            "|= ".Display($calculation->film_waste_weight_3)." * ".Display($price_3)." * ".Display($calculation->GetCurrencyRate($currency_3, $usd, $euro)),
             "отходы 3, кг * цена плёнки 3 * курс валюты"));
         
         array_push($file_data, array("Отходы 1, кг",
