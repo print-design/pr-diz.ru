@@ -18,7 +18,11 @@ $techmap_status = '';
 $schedule_status = '';
 
 if($folder == 'calculation') {
-    if(filter_input(INPUT_GET, 'status') == CALCULATION) {
+    if(!isset($status_id)) {
+        $status_id = filter_input(INPUT_GET, 'status');
+    }
+    
+    if($status_id == CALCULATION) {
         $calculation_status = ' disabled';
     }
     else {

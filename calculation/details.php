@@ -208,7 +208,7 @@ $num_for_customer = $row['num_for_customer'];
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemove("id") ?>">Назад</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= $status_id == DRAFT ? BuildQueryRemove("id") : BuildQueryAddRemove('status', $status_id, 'id') ?>">Назад</a>
             <!-- Левая половина -->
             <div id="left_side">
                 <h1 style="font-size: 32px; font-weight: 600;"><?= htmlentities($name) ?></h1>
