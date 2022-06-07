@@ -40,6 +40,18 @@ if(null !== filter_input(INPUT_POST, 'extracharge-submit')) {
     }
 }
 
+// Смена статуса
+if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $status_id = filter_input(INPUT_POST, 'status_id');
+    
+    $sql = "update calculation set status_id = $status_id where id = $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    header("Location: ".BuildQueryRemove("status"));
+}
+
 // Редактирование наценки на ПФ
 if(null !== filter_input(INPUT_POST, 'extracharge-cliche-submit')) {
     $id = filter_input(INPUT_POST, 'id');
@@ -801,9 +813,15 @@ if(!empty($id)) {
     <div style="clear:both"></div>
     <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
     <input type="hidden" id="change_status_submit" name="change_status_submit" />
-        <?php if (empty($techmap_id)): ?>
+        <?php if ($status_id == DRAFT): ?>
+    <form method="post">
+        <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+        <input type="hidden" name="status_id" value="<?=CALCULATION ?>" />
+        <button type="submit" name="change-status-submit" class="btn btn-dark mt-3 mt-2" style="width: 200px;">Сохранить</button>
+    </form>
+        <?php elseif($status_id == CALCULATION): ?>
     <a href="techmap.php?calculation_id=<?=$id ?>" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Составить тех. карту</a>
-        <?php else: ?>
+        <?php elseif($status_id == TECHMAP): ?>
     <a href="techmap.php?id=<?=$techmap_id ?>" class="btn btn-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
         <?php endif; ?>
 </div>
