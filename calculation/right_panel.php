@@ -239,7 +239,7 @@ if(!empty($id)) {
             
             $param_cliche_in_price = $row['cliche_in_price'];
             $param_extracharge = $row['extracharge'];
-            $param_extraxharge_cliche = $row['extracharge_cliche'];
+            $param_extracharge_cliche = $row['extracharge_cliche'];
         }
     
         $error_message = $fetcher->error;
@@ -349,7 +349,7 @@ if(!empty($id)) {
                 $param_cmyk_1, $param_cmyk_2, $param_cmyk_3, $param_cmyk_4, $param_cmyk_5, $param_cmyk_6, $param_cmyk_7, $param_cmyk_8, 
                 $param_percent_1, $param_percent_2, $param_percent_3, $param_percent_4, $param_percent_5, $param_percent_6, $param_percent_7, $param_percent_8, 
                 $param_cliche_1, $param_cliche_2, $param_cliche_3, $param_cliche_4, $param_cliche_5, $param_cliche_6, $param_cliche_7, $param_cliche_8, 
-                $param_cliche_in_price, $param_extracharge, $param_extraxharge_cliche);
+                $param_cliche_in_price, $param_extracharge, $param_extracharge_cliche);
     
         // Себестоимость форм
         $new_cliche_cost = $calculation->cliche_cost;
@@ -557,6 +557,11 @@ if(!empty($id)) {
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
+        
+        //****************************************************
+        // Присваиваем новые значения наценки для отображения в правой панели
+        $extracharge = intval($new_extracharge);
+        $extracharge_cliche = intval($new_extracharge_cliche);
         
         //****************************************************
         // ПОМЕЩАЕМ РЕЗУЛЬТАТЫ ВЫЧИСЛЕНИЙ В БАЗУ
