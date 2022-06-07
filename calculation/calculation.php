@@ -940,7 +940,7 @@ class Calculation {
         $this->ink_expense = 0;
         
         for($i=1; $i<=$ink_number; $i++) {
-            $ink_expense += $this->ink_expenses[$i];
+            $this->ink_expense += $this->ink_expenses[$i];
         }
         
         // Общая стоимость всех КлеяСмеси
