@@ -40,18 +40,6 @@ if(null !== filter_input(INPUT_POST, 'extracharge-submit')) {
     }
 }
 
-// Смена статуса
-if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $status_id = filter_input(INPUT_POST, 'status_id');
-    
-    $sql = "update calculation set status_id = $status_id where id = $id";
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
-    
-    header("Location: ".BuildQueryRemove("status"));
-}
-
 // Редактирование наценки на ПФ
 if(null !== filter_input(INPUT_POST, 'extracharge-cliche-submit')) {
     $id = filter_input(INPUT_POST, 'id');
