@@ -19,7 +19,7 @@ function OrderLink($param) {
 
 $status_titles = array(DRAFT => "Черновики", CALCULATION => "Расчеты");
 $status_id = filter_input(INPUT_GET, 'status');
-if(empty($status_id)) $status_id = DRAFT;
+if(empty($status_id)) $status_id = CALCULATION;
 $title = $status_titles[$status_id];
 ?>
 <!DOCTYPE html>
@@ -49,16 +49,15 @@ $title = $status_titles[$status_id];
                     // Фильтр
                     $where = '';
                     
+                    if(!empty($status_id)) {
+                        if(empty($where)) $where = " where c.status_id=$status_id";
+                        else $where .= " and c.status_id=$status_id";
+                    }
+                    
                     $unit = filter_input(INPUT_GET, 'unit');
                     if(!empty($unit)) {
                         if(empty($where)) $where = " where c.unit='$unit'";
                         else $where .= " and c.unit='$unit'";
-                    }
-                    
-                    $status = filter_input(INPUT_GET, 'status');
-                    if(!empty($status)) {
-                        if(empty($where)) $where = " where c.status_id=$status";
-                        else $where .= " and c.status_id=$status";
                     }
                     
                     $work_type = filter_input(INPUT_GET, 'work_type');

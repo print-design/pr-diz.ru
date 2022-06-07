@@ -22,11 +22,11 @@ if($folder == 'calculation') {
         $status_id = filter_input(INPUT_GET, 'status');
     }
     
-    if($status_id == CALCULATION) {
-        $calculation_status = ' disabled';
+    if($status_id == DRAFT) {
+        $draft_status = ' disabled';
     }
     else {
-        $draft_status = ' disabled';
+        $calculation_status = ' disabled';
     }
 }
 elseif($folder == 'techmap') {
@@ -44,10 +44,10 @@ elseif($folder == 'schedule') {
             if(IsInRole(array('technologist', 'dev', 'manager', 'administrator', 'designer'))):
             ?>
             <li class="nav-item">
-                <a class="nav-link<?=$draft_status ?>" href="<?=APPLICATION ?>/calculation/">Черновики</a>
+                <a class="nav-link<?=$calculation_status ?>" href="<?=APPLICATION ?>/calculation/">Расчеты</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$calculation_status ?>" href="<?=APPLICATION ?>/calculation/?status=<?=CALCULATION ?>">Расчеты</a>
+                <a class="nav-link<?=$draft_status ?>" href="<?=APPLICATION ?>/calculation/?status=<?=DRAFT ?>">Черновики</a>
             </li>
             <?php endif; ?>
         </ul>
