@@ -383,7 +383,7 @@ if(!empty($id)) {
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
             . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, c.cliche_1, "
             . "c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
-            . "cliche_in_price, rc.rxtracharge, rc.extracharge_cliche, "
+            . "cliche_in_price, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
             . "from calculation c where c.id = $id";
     $fetcher = new Fetcher($sql);
@@ -673,16 +673,6 @@ if($cliche_in_price === null && isset($row['cliche_in_price'])) {
     $cliche_in_price = $row['cliche_in_price'];
 }
 
-$extracharge = $row['extracharge'];
-if($extracharge === null && isset($row['extracharge'])) {
-    $extracharge = $row['extracharge'];
-}
-
-$extracharge_cliche = $row['extracharge_cliche'];
-if($extracharge_cliche === null && isset($row['extracharge_cliche'])) {
-    $extracharge_cliche = $row['extracharge_cliche'];
-}
-
 $num_for_customer = null;
 if(isset($row['num_for_customer'])) {
     $num_for_customer = $row['num_for_customer'];
@@ -845,7 +835,7 @@ $colorfulnesses = array();
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= filter_input(INPUT_GET, "mode") == "recalc" ? "details.php".BuildQueryRemove("mode") : "" ?>">Назад</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= filter_input(INPUT_GET, "mode") == "recalc" ? "details.php".BuildQueryRemove("mode") : ($status_id == CALCULATION ? "" : BuildQuery("status", $status_id)) ?>">Назад</a>
             <div>
                 <!-- Левая половина -->
                 <div id="left_side">
