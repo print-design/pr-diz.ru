@@ -927,7 +927,7 @@ if($id !== null) {
         $glue_expense3_comment = "площадь заклейки 3 * расход КлеяСмеси в 1 м2 / 1000";
         
         if((strlen($film_2) > 3 && substr($film_2, 0, 3) == "Pet") || (strlen($film_3) > 3 && substr($film_3, 0, 3) == "Pet")) {
-            $glue_expense2_formula = Display($calculation->glue_area3)." * ".Display($glue_data->glue_expense_pet)." / 1000";
+            $glue_expense3_formula = Display($calculation->glue_area3)." * ".Display($glue_data->glue_expense_pet)." / 1000";
             $glue_expense3_comment = "площадь заклейки 3 * расход КлеяСмеси для ПЭТ в 1 м2 / 1000";
         }
         
