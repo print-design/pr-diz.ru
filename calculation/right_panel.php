@@ -28,13 +28,25 @@ if(null !== filter_input(INPUT_POST, 'extracharge-submit')) {
     $error_message = $executer->error;
     
     if(empty($error_message)) {
-        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id set cr.shipping_cost = cr.cost + (cr.cost * c.extracharge / 100) where c.id = $id";
+        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.shipping_cost = cr.cost + (cr.cost * c.extracharge / 100) where c.id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
     
     if(empty($error_message)) {
         $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.shipping_cost_per_unit = cr.shipping_cost / c.quantity where c.id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
+    if(empty($error_message)) {
+        $sql = "update calculation_result set income = shipping_cost - cost";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
+    if(empty($error_message)) {
+        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.income_per_unit = cr.income / c.quantity where c.id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
