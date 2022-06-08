@@ -817,11 +817,11 @@ if(!empty($id)) {
     <form method="post">
         <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
         <input type="hidden" name="status_id" value="<?=CALCULATION ?>" />
-        <button type="submit" name="change-status-submit" class="btn btn-dark mt-3 mt-2" style="width: 200px;">Сохранить</button>
+        <button type="submit" name="change-status-submit" class="btn btn-outline-dark mt-3 mt-2" style="width: 200px;">Сохранить</button>
     </form>
         <?php elseif($status_id == CALCULATION): ?>
     <a href="techmap.php?calculation_id=<?=$id ?>" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Составить тех. карту</a>
         <?php elseif($status_id == TECHMAP): ?>
-    <a href="techmap.php?id=<?=$techmap_id ?>" class="btn btn-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
+    <a href="techmap.php?id=<?=$techmap_id ?>" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
         <?php endif; ?>
 </div>
