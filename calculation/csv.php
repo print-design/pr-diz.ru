@@ -1051,7 +1051,7 @@ if($id !== null) {
         $total_cliche_cost_formula = "";
         
         for($i=1; $i<=$ink_number; $i++) {
-            if(empty($total_cliche_cost_formula)) {
+            if(!empty($total_cliche_cost_formula)) {
                 $total_cliche_cost_formula .= " + ";
             }
             $total_cliche_cost_formula .= Display($calculation->cliche_costs[$i]);
