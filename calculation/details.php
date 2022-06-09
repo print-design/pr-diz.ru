@@ -207,6 +207,19 @@ $num_for_customer = $row['num_for_customer'];
             #calculation {
                 width: 50%;
             }
+            
+            .btn-outline-dark.draft {
+                color: gray;
+                background-color: white;
+                border-color: gray;
+                border-radius: 8px;
+            }
+            
+            .btn-outline-dark.draft:hover, .btn-outline-dark.draft:active {
+                color: white;
+                background-color: gray;
+                border-color: gray;
+            }
         </style>
     </head>
     <body>
