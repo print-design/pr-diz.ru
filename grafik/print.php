@@ -10,6 +10,7 @@ if(null !== filter_input(INPUT_POST, 'print_submit')) {
     $diff3Days = new DateInterval('P3D');
     $machine_id = filter_input(INPUT_POST, 'machine');
     $from = filter_input(INPUT_POST, 'from');
+    $to = filter_input(INPUT_POST, 'to');
     
     if($from != null) {
         $date_from = DateTime::createFromFormat("Y-m-d", $from);
@@ -18,8 +19,13 @@ if(null !== filter_input(INPUT_POST, 'print_submit')) {
         $date_from = new DateTime();
     }
     
-    $date_to = clone $date_from;
-    $date_to->add($diff3Days);
+    if(empty($to)) {
+        $date_to = clone $date_from;
+        $date_to->add($diff3Days);
+    }
+    else {
+        $date_to = DateTime::createFromFormat("Y-m-d", $to);
+    }
     
     $timetable = new GrafikTimetable($date_from, $date_to, $machine_id);
 }

@@ -24,6 +24,7 @@
             <div class="p-1 ml-1">
                 <form class="form-inline" action="<?=APPLICATION ?>/print.php" target="_blank" method="post">
                     <input type="hidden" id="from" name="from" value="<?= $this->dateFrom->format('Y-m-d') ?>" class="print_from" />
+                    <input type="hidden" id="to" name="to" value="<?= filter_input(INPUT_GET, 'to') ?>" class="print_to" />
                     <input type="hidden" id="machine" name="machine" value="<?= $this->machineId ?>"/>
                     <input type="hidden" id="name" name="name" value="<?= $this->name ?>"/>
                     <input type="hidden" id="user1Name" name="user1Name" value="<?= $this->user1Name ?>"/>
