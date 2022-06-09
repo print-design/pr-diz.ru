@@ -44,10 +44,10 @@ elseif($folder == 'schedule') {
             if(IsInRole(array('technologist', 'dev', 'manager', 'administrator', 'designer'))):
             ?>
             <li class="nav-item">
-                <a class="nav-link<?=$calculation_status ?>" href="<?=APPLICATION ?>/calculation/">Расчеты</a>
+                <a class="nav-link<?=$calculation_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemove("status") ?>">Расчеты</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$draft_status ?>" href="<?=APPLICATION ?>/calculation/?status=<?=DRAFT ?>">Черновики</a>
+                <a class="nav-link<?=$draft_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQuery("status", DRAFT) ?>">Черновики</a>
             </li>
             <?php endif; ?>
         </ul>

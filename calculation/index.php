@@ -94,6 +94,7 @@ $title = $status_titles[$status_id];
                 <div class="p-1 text-nowrap">
                     <?php $order = filter_input(INPUT_GET, 'order'); ?>
                     <form class="form-inline d-inline" method="get">
+                        <input type="hidden" name="status" value="<?= filter_input(INPUT_GET, 'status') ?>" />
                         <?php if(null !== $order): ?>
                         <input type="hidden" name="order" value="<?= $order ?>" />
                         <?php endif; ?>
@@ -101,11 +102,6 @@ $title = $status_titles[$status_id];
                             <option value="">Шт/кг...</option>
                             <option value="pieces"<?= filter_input(INPUT_GET, 'unit') == 'pieces' ? " selected='selected'" : "" ?>>Шт</option>
                             <option value="kg"<?= filter_input(INPUT_GET, 'unit') == 'kg' ? " selected='selected'" : "" ?>>Кг</option>
-                        </select>
-                        <select id="status" name="status" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
-                            <option value="">Статус...</option>
-                            <option value="<?=CALCULATION ?>"<?=(filter_input(INPUT_GET, 'status') == CALCULATION) ? " selected='selected'" : "" ?>>Сделан расчёт</option>
-                            <option value="<?=TECHMAP ?>"<?=(filter_input(INPUT_GET, 'status') == TECHMAP) ? " selected='selected'" : "" ?>>Составлена тех.карта</option>
                         </select>
                         <select id="work_type" name="work_type" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Тип работы...</option>
