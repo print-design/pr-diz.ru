@@ -1,3 +1,6 @@
+<?php
+const ATLAS = 5;
+?>
 <div class="text-nowrap nav2">
     <?php
     $sql = "select id, name from machine order by position";
@@ -37,12 +40,16 @@ if(!empty($machine_id)):
 $machine_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/machine.php')) == APPLICATION.'/admin/machine.php' ? " active" : "";
 $priladka_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/priladka.php')) == APPLICATION.'/admin/priladka.php' ? " active" : "";
 $raport_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/raport.php')) == APPLICATION.'/admin/raport.php' ? " active" : "";
+$gap_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/gap.php')) == APPLICATION.'/admin/gap.php' ? " active" : "";
 ?>
 <hr class="pb-0 mb-0" />
 <div class="text-nowrap nav2">
     <a href="<?=APPLICATION ?>/admin/machine.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$machine_class ?>">Нормы работы оборудования</a>
     <a href="<?=APPLICATION ?>/admin/priladka.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$priladka_class ?>">Приладка</a>
     <a href="<?=APPLICATION ?>/admin/raport.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$raport_class ?>">Рапорт</a>
+    <?php if($machine_id == ATLAS): ?>
+    <a href="<?=APPLICATION ?>/admin/gap.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$gap_class ?>">Зазор</a>
+    <?php endif; ?>
 </div>
 <?php endif; ?>
 <?php
