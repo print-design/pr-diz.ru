@@ -695,6 +695,12 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit') ||
 
 // Список красочностей каждой машины
 $colorfulnesses = array();
+// Заполняем список красочностей, чтобы при выборе машины установить нужное количество элементов списка
+$sql = "select id, colorfulness from machine";
+$fetcher = new Fetcher($sql);
+while ($row = $fetcher->Fetch()) {
+    $colorfulnesses[$row['id']] = $row['colorfulness'];
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -966,8 +972,6 @@ $colorfulnesses = array();
                                     ?>
                                     <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'].' ('.$row['colorfulness'].' красок)' ?></option>
                                     <?php
-                                    // Заполняем список красочностей, чтобы при выборе машины установить нужное количество элементов списка
-                                    $colorfulnesses[$row['id']] = $row['colorfulness'];
                                     endwhile;
                                     endif;
                                     ?>
@@ -1551,7 +1555,8 @@ $colorfulnesses = array();
                                            id="stream_width_2" 
                                            name="stream_width" 
                                            class="form-control self-adhesive-only d-none" 
-                                           required="required" placeholder="Ширина этикетки, мм" 
+                                           required="required" 
+                                           placeholder="Ширина этикетки, мм" 
                                            value="<?= empty($stream_width) ? "" : floatval($stream_width) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'stream_width_2'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина этикетки, мм');" 
@@ -1571,6 +1576,25 @@ $colorfulnesses = array();
                                            class="form-control print-only d-none" 
                                            placeholder="Длина этикетки, мм" 
                                            value="<?= empty($length) ? "" : floatval($length) ?>" />
+                                    <div class="invalid-feedback">Длина этикетки обязательно</div>
+                                </div>
+                            </div>
+                            <!-- Длина этикетки (для самоклеящейся бумаги) -->
+                            <div class="col-6 self-adhesive-only d-none">
+                                <div class="form-group">
+                                    <label for="length_1">Длина этикетки, мм</label>
+                                    <input type="text" 
+                                           id="length_1" 
+                                           name="length" 
+                                           class="form-control self-adhesive-only d-none" 
+                                           required="required" 
+                                           placeholder="Длина этикетки, мм" 
+                                           value="<?= empty($length) ? "" : floatval($length) ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'length_1'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'length_1'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
+                                           onfocusout="javascript: $(this).attr('id', 'length_1'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки, мм');" />
                                     <div class="invalid-feedback">Длина этикетки обязательно</div>
                                 </div>
                             </div>
@@ -1594,10 +1618,10 @@ $colorfulnesses = array();
                                 </div>
                             </div>
                             <!-- Рапорт -->
-                            <div class="col-6 print-only d-none">
+                            <div class="col-6 print-only self-adhesive-only d-none">
                                 <div class="form-group">
                                     <label for="raport">Рапорт</label>
-                                    <select id="raport" name="raport" class="form-control print-only d-none">
+                                    <select id="raport" name="raport" class="form-control print-only self-adhesive-only d-none">
                                         <option value="" hidden="hidden" selected="selected">Рапорт...</option>
                                         <?php
                                         if(!empty($machine_id)) {
@@ -1662,10 +1686,10 @@ $colorfulnesses = array();
                             </div>
                         </div>
                         <!-- Количество красок -->
-                        <div class="print-only d-none">
+                        <div class="print-only self-adhesive-only d-none">
                             <div class="form-group">
                                 <label for="ink_number">Количество красок</label>
-                                <select id="ink_number" name="ink_number" class="form-control print-only d-none">
+                                <select id="ink_number" name="ink_number" class="form-control print-only self-adhesive-only d-none">
                                     <option value="" hidden="hidden">Количество красок...</option>
                                         <?php
                                         if(!empty($ink_number) || !empty($machine_id)):
@@ -1925,6 +1949,7 @@ $colorfulnesses = array();
                 $.ajax({ url: "../ajax/machine.php?work_type_id=" + work_type_id })
                         .done(function(data) {
                             $('#machine_id').html(data);
+                            $('#machine_id').change();
                         })
                         .fail(function() {
                             alert('Ошибка при заполнении списка машин');
@@ -1950,15 +1975,17 @@ $colorfulnesses = array();
             });
             
             // Обработка выбора машины, заполнение списка рапортов
-            $('#machine_id').change(function(){
+            $('#machine_id').change(function() {
                 if($(this).val() == "") {
                     $('#raport').html("<option value=''>Рапорт...</option>")
+                    $('#ink_number').html("<option value='' hidden='hidden'>Количество красок...</option>");
+                    $('#ink_number').change();
                 }
                 else {
                     // Заполняем список количеств цветов
                     $('.ink_block').addClass('d-none');
                     $('.ink').removeAttr('required');
-                                
+                    
                     colorfulness = parseInt(colorfulnesses[$(this).val()]);
                     var colorfulness_list = "<option value='' hidden='hidden'>Количество красок...</option>";
                     for(var i=1; i<=colorfulness; i++) {

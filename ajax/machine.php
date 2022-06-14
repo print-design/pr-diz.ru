@@ -19,6 +19,5 @@ foreach($machines as $machine):
 <option value="<?=$machine['id'] ?>"><?=$machine['name'] ?> (<?=$machine['colorfulness'] ?> красок)</option>
 <?php
 endforeach;
-
 endif;
 ?>
