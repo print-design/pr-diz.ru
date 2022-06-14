@@ -1553,16 +1553,16 @@ while ($row = $fetcher->Fetch()) {
                                     <label for="stream_width_2">Ширина этикетки, мм</label>
                                     <input type="text" 
                                            id="stream_width_2" 
-                                           name="stream_width" 
+                                           name="stream_width_2" 
                                            class="form-control self-adhesive-only d-none" 
                                            required="required" 
                                            placeholder="Ширина этикетки, мм" 
                                            value="<?= empty($stream_width) ? "" : floatval($stream_width) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'stream_width_2'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина этикетки, мм');" 
+                                           onmouseup="javascript: $(this).attr('id', 'stream_width_2'); $(this).attr('name', 'stream_width_2'); $(this).attr('placeholder', 'Ширина этикетки, мм');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'stream_width_2'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина этикетки, мм');" 
-                                           onfocusout="javascript: $(this).attr('id', 'stream_width_2'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина этикетки, мм');" />
+                                           onkeyup="javascript: $(this).attr('id', 'stream_width_2'); $(this).attr('name', 'stream_width_2'); $(this).attr('placeholder', 'Ширина этикетки, мм');" 
+                                           onfocusout="javascript: $(this).attr('id', 'stream_width_2'); $(this).attr('name', 'stream_width_2'); $(this).attr('placeholder', 'Ширина этикетки, мм');" />
                                 </div>
                             </div>
                             <!-- Длина этикетки -->
@@ -1582,19 +1582,19 @@ while ($row = $fetcher->Fetch()) {
                             <!-- Длина этикетки (для самоклеящейся бумаги) -->
                             <div class="col-6 self-adhesive-only d-none">
                                 <div class="form-group">
-                                    <label for="length_1">Длина этикетки, мм</label>
+                                    <label for="length_2">Длина этикетки, мм</label>
                                     <input type="text" 
-                                           id="length_1" 
-                                           name="length" 
+                                           id="length_2" 
+                                           name="length_2" 
                                            class="form-control self-adhesive-only d-none" 
                                            required="required" 
                                            placeholder="Длина этикетки, мм" 
                                            value="<?= empty($length) ? "" : floatval($length) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'length_1'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
+                                           onmouseup="javascript: $(this).attr('id', 'length_2'); $(this).attr('name', 'length_2'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'length_1'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
-                                           onfocusout="javascript: $(this).attr('id', 'length_1'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Длина этикетки, мм');" />
+                                           onkeyup="javascript: $(this).attr('id', 'length_2'); $(this).attr('name', 'length_2'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
+                                           onfocusout="javascript: $(this).attr('id', 'length_2'); $(this).attr('name', 'length_2'); $(this).attr('placeholder', 'Длина этикетки, мм');" />
                                     <div class="invalid-feedback">Длина этикетки обязательно</div>
                                 </div>
                             </div>
@@ -1663,11 +1663,11 @@ while ($row = $fetcher->Fetch()) {
                             <!-- Количество этикеток в рапорте (для самоклейки) -->
                             <div class="col-6 self-adhesive-only d-none">
                                 <div class="form-group">
-                                    <label for="number_in_raport_1">Количество этикеток в рапорте</label>
+                                    <label for="number_in_raport_2">Количество этикеток в рапорте</label>
                                     <input type="text" 
                                            readonly="readonly" 
-                                           id="number_in_raport_1" 
-                                           name="number_in_raport" 
+                                           id="number_in_raport_2" 
+                                           name="number_in_raport_2" 
                                            class="form-control self-adhesive-only d-none" 
                                            placeholder="Количество этикеток в рапорте" 
                                            value="<?= empty($number_in_raport) ? "" : intval($number_in_raport) ?>" />
