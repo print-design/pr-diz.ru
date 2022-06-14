@@ -20,17 +20,17 @@
             substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/laminator_priladka.php')) == APPLICATION.'/admin/laminator_priladka.php' || 
             substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/laminator_roller.php')) == APPLICATION.'/admin/laminator_roller.php' ||
             substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/glue.php')) == APPLICATION.'/admin/glue.php') ? 
-            " active" : "";
-    $currency_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/currency.php')) == APPLICATION.'/admin/currency.php' ? " active" : "";
+            " active" : "";    
     $extracharge_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/extracharge.php')) == APPLICATION.'/admin/extracharge.php' ? " active" : "";
     $ink_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/ink.php')) == APPLICATION.'/admin/ink.php' ? " active" : "";
     $cliche_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/cliche.php')) == APPLICATION.'/admin/cliche.php' ? " active" : "";
+    $currency_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/currency.php')) == APPLICATION.'/admin/currency.php' ? " active" : "";
     ?>
     <a href="laminator.php" class="mr-4<?=$laminator_class ?>">Ламинатор сольвент</a>
-    <a href="currency.php" class="mr-4<?=$currency_class ?>">Курсы валют</a>
     <a href="extracharge.php" class="mr-4<?=$extracharge_class ?>">Наценка</a>
     <a href="ink.php" class="mr-4<?=$ink_class ?>">Цена краски</a>
     <a href="cliche.php" class="mr-4<?=$cliche_class ?>">Цена форм</a>
+    <a href="currency.php" class="mr-4<?=$currency_class ?>">Курсы валют</a>
 </div>
 <?php
 if(!empty($machine_id)):
