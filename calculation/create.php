@@ -1641,6 +1641,7 @@ while ($row = $fetcher->Fetch()) {
                                         }
                                         ?>
                                     </select>
+                                    <label id="gap_raport" class="d-none"></label>
                                 </div>
                             </div>
                             <!-- Количество этикеток в рапорте -->
@@ -1659,6 +1660,20 @@ while ($row = $fetcher->Fetch()) {
                                     </select>
                                 </div>
                             </div>
+                            <!-- Количество этикеток в рапорте (для самоклейки) -->
+                            <div class="col-6 self-adhesive-only d-none">
+                                <div class="form-group">
+                                    <label for="number_in_raport_1">Количество этикеток в рапорте</label>
+                                    <input type="text" 
+                                           readonly="readonly" 
+                                           id="number_in_raport_1" 
+                                           name="number_in_raport" 
+                                           class="form-control self-adhesive-only d-none" 
+                                           placeholder="Количество этикеток в рапорте" 
+                                           value="<?= empty($number_in_raport) ? "" : intval($number_in_raport) ?>" />
+                                    <div class="invalid-feedback">Количество этикеток в рапорте обязательно</div>
+                                </div>
+                            </div> 
                             <!-- Ширина ламинирующего вала -->
                             <div class="col-6 lam-only d-none">
                                 <div class="form-group">
@@ -1980,6 +1995,8 @@ while ($row = $fetcher->Fetch()) {
                     $('#raport').html("<option value=''>Рапорт...</option>")
                     $('#ink_number').html("<option value='' hidden='hidden'>Количество красок...</option>");
                     $('#ink_number').change();
+                    $('#gap_raport').text('');
+                    $('#gap_raport').addClass('d-none');
                 }
                 else {
                     // Заполняем список количеств цветов
@@ -1999,7 +2016,23 @@ while ($row = $fetcher->Fetch()) {
                                 $('#raport').html(data);
                             })
                             .fail(function() {
-                                alert('Ошиибка при выборе машины');
+                                alert('Ошибка при заполнении списка рапортов');
+                            });
+                            
+                    // Указываем зазор по рапорту
+                    $.ajax({ url: "../ajax/gap.php?machine_id=" + $(this).val() })
+                            .done(function(data) {
+                                if(data.length == 0) {
+                                    $('$gap_raport').text('');
+                                    $('#gap_raport').addClass('d-none');
+                                }
+                                else {
+                                    $('#gap_raport').text(data);
+                                    $('#gap_raport').removeClass('d-none');
+                                }
+                            })
+                            .fail(function() {
+                                alert('Ошибка при определении зазора');
                             });
                 }
             });
