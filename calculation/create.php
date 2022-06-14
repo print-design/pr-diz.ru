@@ -954,7 +954,8 @@ $colorfulnesses = array();
                                 <select id="machine_id" name="machine_id" class="form-control print-only d-none">
                                     <option value="" hidden="hidden" selected="selected">Печатная машина...</option>
                                     <?php
-                                    $sql = "select id, name, colorfulness from machine where colorfulness > 0";
+                                    if(!empty($work_type_id)):
+                                    $sql = "select m.id, m.name, m.colorfulness from machine m inner join machine_work_type mwt on mwt.machine_id = m.id where mwt.work_type_id = $work_type_id order by m.position";
                                     $fetcher = new Fetcher($sql);
                                 
                                     while ($row = $fetcher->Fetch()):
@@ -968,6 +969,7 @@ $colorfulnesses = array();
                                     // Заполняем список красочностей, чтобы при выборе машины установить нужное количество элементов списка
                                     $colorfulnesses[$row['id']] = $row['colorfulness'];
                                     endwhile;
+                                    endif;
                                     ?>
                                 </select>
                             </div>
@@ -2214,8 +2216,6 @@ $colorfulnesses = array();
                     $('.no-print-only').addClass('d-none');
                     $('.no-print-only').removeAttr('required');
                     
-                    
-                    
                     if($('#form_lamination_1').is(':visible')) {
                         // Если есть ламинация, показываем поля "только с ламинацией"
                         $('.lam-only').not('.no-print-only').removeClass('d-none');
@@ -2281,14 +2281,14 @@ $colorfulnesses = array();
                     // Если тип работы "Самоклеящиеся материалы", то объём заказа всегда в штуках
                     $('#unit_pieces').click();
                     
-                    // Показываем поля "Только без печати"
-                    $('.no-print-only').not('.lam-only').removeClass('d-none');
-                    $('input.no-print-only').not('.lam-only').attr('required', 'required');
-                    $('select.no-print-only').not('.lam-only').attr('required', 'required');
+                    // Показываем поля "только с печатью"
+                    $('.print-only').not('.lam-only').removeClass('d-none');
+                    $('input.print-only').not('.lam-only').attr('required', 'required');
+                    $('select.print-only').not('.lam-only').attr('required', 'required');
                     
-                    // Скрываем поля "Только с печатью"
-                    $('.print-only').addClass('d-none');
-                    $('.print-only').removeAttr('required');
+                    // Скрываем поля "только без печати"
+                    $('.no-print-only').addClass('d-none');
+                    $('.no-print-only').removeAttr('required');
                     
                     // Скрываем кнопку "добавить ламинацию"
                     $('#show_lamination_1').addClass('d-none');
@@ -2299,6 +2299,15 @@ $colorfulnesses = array();
                     $('#form_lamination_1').addClass('d-none');
                     $('#form_lamination_2').addClass('d-none');
                 }
+                
+                // Заполняем список машин
+                $.ajax({ url: "../ajax/machine.php?work_type_id=" + work_type_id })
+                        .done(function(data) {
+                            $('#machine_id').html(data);
+                        })
+                        .fail(function() {
+                            alert('Ошибка при заполнении списка машин');
+                        });
             }
             
             SetFieldsVisibility($('#work_type_id').val());
