@@ -1897,10 +1897,22 @@ $colorfulnesses = array();
                 language: "ru"
             });
             
-            // При смене типа работы: если тип работы "плёнка с печатью", показываем поля, предназначенные только для плёнки с печатью
+            // Смена типа работы
             $('#work_type_id').change(function() {
                 SetFieldsVisibility($(this).val());
+                FillMachines($(this).val());
             });
+            
+            // Заполняем список машин
+            function FillMachines(work_type_id) {
+                $.ajax({ url: "../ajax/machine.php?work_type_id=" + work_type_id })
+                        .done(function(data) {
+                            $('#machine_id').html(data);
+                        })
+                        .fail(function() {
+                            alert('Ошибка при заполнении списка машин');
+                        });
+            }
             
             // Если единица объёма - кг, то в поле "Объём" пишем "Объём, кг", иначе "Объем, шт"
             if($('input[value=kg]').is(':checked')) {
@@ -2310,15 +2322,6 @@ $colorfulnesses = array();
                     $('#form_lamination_1').addClass('d-none');
                     $('#form_lamination_2').addClass('d-none');
                 }
-                
-                // Заполняем список машин
-                $.ajax({ url: "../ajax/machine.php?work_type_id=" + work_type_id })
-                        .done(function(data) {
-                            $('#machine_id').html(data);
-                        })
-                        .fail(function() {
-                            alert('Ошибка при заполнении списка машин');
-                        });
             }
             
             SetFieldsVisibility($('#work_type_id').val());
