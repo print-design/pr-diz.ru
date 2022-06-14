@@ -1,6 +1,6 @@
 <div class="text-nowrap nav2">
     <?php
-    $sql = "select id, name from machine";
+    $sql = "select id, name from machine order by position";
     $fetcher = new Fetcher($sql);
             
     while ($row = $fetcher->Fetch()):

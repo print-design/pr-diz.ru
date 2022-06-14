@@ -41,6 +41,7 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
 // Типы работы
 const WORK_TYPE_NOPRINT = 1;
 const WORK_TYPE_PRINT = 2;
+const WORK_TYPE_SELF_ADHESIVE = 3;
 
 // Значение марки плёнки "другая"
 const INDIVIDUAL = -1;
@@ -2213,6 +2214,8 @@ $colorfulnesses = array();
                     $('.no-print-only').addClass('d-none');
                     $('.no-print-only').removeAttr('required');
                     
+                    
+                    
                     if($('#form_lamination_1').is(':visible')) {
                         // Если есть ламинация, показываем поля "только с ламинацией"
                         $('.lam-only').not('.no-print-only').removeClass('d-none');
@@ -2224,6 +2227,9 @@ $colorfulnesses = array();
                         $('.no-lam-only').removeAttr('required');
                     }
                     else {
+                        // Показываем кнопку "добавить ламинацию"
+                        $('#show_lamination_1').removeClass('d-none');
+                    
                         // Показываем поля "только без ламинации"
                         $('.no-lam-only').not('.no-print-only').removeClass('d-none');
                         $('input.no-lam-only').not('.no-print-only').attr('required', 'required');
@@ -2234,7 +2240,7 @@ $colorfulnesses = array();
                         $('.lam-only').removeAttr('required');
                     }
                 }
-                else {
+                else if(work_type_id == 1) {
                     // Если тип работы "Плёнка без печати", то объём заказа всегда в килограммах
                     $('#unit_kg').click();
                     
@@ -2258,6 +2264,9 @@ $colorfulnesses = array();
                         $('.no-lam-only').removeAttr('required');
                     }
                     else {
+                        // Показываем кнопку "добавить ламинацию"
+                        $('#show_lamination_1').removeClass('d-none');
+                    
                         // Показываем поля "только без ламинации"
                         $('.no-lam-only').not('.print-only').removeClass('d-none');
                         $('input.no-lam-only').not('.print-only').attr('required', 'required');
@@ -2267,6 +2276,28 @@ $colorfulnesses = array();
                         $('.lam-only').addClass('d-none');
                         $('.lam-only').removeAttr('required');
                     }
+                }
+                else if(work_type_id == 3) {
+                    // Если тип работы "Самоклеящиеся материалы", то объём заказа всегда в штуках
+                    $('#unit_pieces').click();
+                    
+                    // Показываем поля "Только без печати"
+                    $('.no-print-only').not('.lam-only').removeClass('d-none');
+                    $('input.no-print-only').not('.lam-only').attr('required', 'required');
+                    $('select.no-print-only').not('.lam-only').attr('required', 'required');
+                    
+                    // Скрываем поля "Только с печатью"
+                    $('.print-only').addClass('d-none');
+                    $('.print-only').removeAttr('required');
+                    
+                    // Скрываем кнопку "добавить ламинацию"
+                    $('#show_lamination_1').addClass('d-none');
+                    
+                    // Скрываем все поля, касающиеся ламинации
+                    $('.lam-only').addClass('d-none');
+                    $('.lam-only').removeAttr('required');
+                    $('#form_lamination_1').addClass('d-none');
+                    $('#form_lamination_2').addClass('d-none');
                 }
             }
             
