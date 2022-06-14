@@ -1641,7 +1641,6 @@ while ($row = $fetcher->Fetch()) {
                                         }
                                         ?>
                                     </select>
-                                    <label id="gap_raport" class="d-none"></label>
                                 </div>
                             </div>
                             <!-- Количество этикеток в рапорте -->
@@ -1673,7 +1672,12 @@ while ($row = $fetcher->Fetch()) {
                                            value="<?= empty($number_in_raport) ? "" : intval($number_in_raport) ?>" />
                                     <div class="invalid-feedback">Количество этикеток в рапорте обязательно</div>
                                 </div>
-                            </div> 
+                            </div>
+                            <div class="col-6 self-adhesive-only">
+                                <div class="form-group">
+                                    <label id="gap_raport" class="d-none"></label>
+                                </div>
+                            </div>
                             <!-- Ширина ламинирующего вала -->
                             <div class="col-6 lam-only d-none">
                                 <div class="form-group">
