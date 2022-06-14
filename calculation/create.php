@@ -948,10 +948,10 @@ $colorfulnesses = array();
                             </div>
                         </div>
                         <!-- Печатная машина -->
-                        <div class="print-only d-none">
+                        <div class="print-only self-adhesive-only d-none">
                             <div class="form-group w-100">
                                 <label for="machine_id">Печатная машина</label>
-                                <select id="machine_id" name="machine_id" class="form-control print-only d-none">
+                                <select id="machine_id" name="machine_id" class="form-control print-only self-adhesive-only d-none">
                                     <option value="" hidden="hidden" selected="selected">Печатная машина...</option>
                                     <?php
                                     if(!empty($work_type_id)):
@@ -1163,7 +1163,7 @@ $colorfulnesses = array();
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row no-print-only print-only d-none">
                             <div class="col-6">
                                 <div id="show_lamination_1">
                                     <button type="button" class="btn btn-light" onclick="javascript: ShowLamination1();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
@@ -1525,13 +1525,13 @@ $colorfulnesses = array();
                         </div>
                         <div class="row mt-3">
                             <!-- Ширина ручья -->
-                            <div class="col-6">
+                            <div class="col-6 no-print-only print-only d-none">
                                 <div class="form-group">
                                     <label for="stream_width">Ширина ручья, мм</label>
                                     <input type="text" 
                                            id="stream_width" 
                                            name="stream_width" 
-                                           class="form-control" 
+                                           class="form-control no-print-only print-only d-none" 
                                            required="required" 
                                            placeholder="Ширина ручья, мм" 
                                            value="<?= empty($stream_width) ? "" : floatval($stream_width) ?>" 
@@ -1541,6 +1541,23 @@ $colorfulnesses = array();
                                            onkeyup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" 
                                            onfocusout="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" />
                                     <div class="invalid-feedback">Ширина ручья обязательно</div>
+                                </div>
+                            </div>
+                            <!-- Ширина этикетки -->
+                            <div class="col-6 self-adhesive-only d-none">
+                                <div class="form-group">
+                                    <label for="stream_width_2">Ширина этикетки, мм</label>
+                                    <input type="text" 
+                                           id="stream_width_2" 
+                                           name="stream_width" 
+                                           class="form-control self-adhesive-only d-none" 
+                                           required="required" placeholder="Ширина этикетки, мм" 
+                                           value="<?= empty($stream_width) ? "" : floatval($stream_width) ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'stream_width_2'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина этикетки, мм');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'stream_width_2'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина этикетки, мм');" 
+                                           onfocusout="javascript: $(this).attr('id', 'stream_width_2'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина этикетки, мм');" />
                                 </div>
                             </div>
                             <!-- Длина этикетки -->
@@ -1558,13 +1575,13 @@ $colorfulnesses = array();
                                 </div>
                             </div>
                             <!-- Количество ручьёв -->
-                            <div class="col-6">
+                            <div class="col-6 no-print-only print-only self-adhesive-only d-none">
                                 <div class="form-group">
                                     <label for="streams_number">Количество ручьев</label>
                                     <input type="text" 
                                            id="streams_number" 
                                            name="streams_number" 
-                                           class="form-control int-only" 
+                                           class="form-control int-only no-print-only print-only self-adhesive-only d-none" 
                                            required="required"
                                            placeholder="Количество ручьев" 
                                            value="<?=$streams_number ?>" 
@@ -2218,20 +2235,24 @@ $colorfulnesses = array();
             
             // Показываем или скрываем поля в зависимости от работы с печатью / без печати и наличия / отсутствия ламинации
             function SetFieldsVisibility(work_type_id) {
-                if(work_type_id == 2) {
+                if(work_type_id == <?=WORK_TYPE_PRINT ?>) {
                     // Если тип работы "Плёнка с печатью", то объём заказа и в килограммах и в штуках
                     $('#units').removeClass('d-none');
                     $('#unit_kg').parent().parent().removeClass('d-none');
                     $('#unit_pieces').parent().parent().removeClass('d-none');
                     
+                    // Скрываем поля "только без печати"
+                    $('.no-print-only').addClass('d-none');
+                    $('.no-print-only').removeAttr('required');
+                    
+                    // Скрываем поля "только самоклеящиеся материалы"
+                    $('.self-adhesive-only').addClass('d-none');
+                    $('.self-adhesive-only').removeAttr('required');
+                    
                     // Показываем поля "только с печатью"
                     $('.print-only').not('.lam-only').removeClass('d-none');
                     $('input.print-only').not('.lam-only').attr('required', 'required');
                     $('select.print-only').not('.lam-only').attr('required', 'required');
-                    
-                    // Скрываем поля "только без печати"
-                    $('.no-print-only').addClass('d-none');
-                    $('.no-print-only').removeAttr('required');
                     
                     if($('#form_lamination_1').is(':visible')) {
                         // Если есть ламинация, показываем поля "только с ламинацией"
@@ -2244,9 +2265,6 @@ $colorfulnesses = array();
                         $('.no-lam-only').removeAttr('required');
                     }
                     else {
-                        // Показываем кнопку "добавить ламинацию"
-                        $('#show_lamination_1').removeClass('d-none');
-                    
                         // Показываем поля "только без ламинации"
                         $('.no-lam-only').not('.no-print-only').removeClass('d-none');
                         $('input.no-lam-only').not('.no-print-only').attr('required', 'required');
@@ -2257,21 +2275,25 @@ $colorfulnesses = array();
                         $('.lam-only').removeAttr('required');
                     }
                 }
-                else if(work_type_id == 1) {
+                else if(work_type_id == <?=WORK_TYPE_NOPRINT ?>) {
                     // Если тип работы "Плёнка без печати", то объём заказа всегда в килограммах
                     $('#units').removeClass('d-none');
                     $('#unit_kg').parent().parent().removeClass('d-none');
                     $('#unit_pieces').parent().parent().addClass('d-none');
                     $('#unit_kg').click();
                     
+                    // Скрываем поля "только с печатью"
+                    $('.print-only').addClass('d-none');
+                    $('.print-only').removeAttr('required');
+                    
+                    // Скрываем поля "только самоклеящиеся материалы"
+                    $('.self-adhesive-only').addClass('d-none');
+                    $('.self-adhesive-only').removeAttr('required');
+                    
                     // Показываем поля "только без печати"
                     $('.no-print-only').not('.lam-only').removeClass('d-none');
                     $('input.no-print-only').not('.lam-only').attr('required', 'required');
                     $('select.no-print-only').not('.lam-only').attr('required', 'required');
-                    
-                    // Скрываем поля "только с печатью"
-                    $('.print-only').addClass('d-none');
-                    $('.print-only').removeAttr('required');
                     
                     if($('#form_lamination_1').is(':visible')) {
                         // Если есть ламинация, показываем поля "только с ламинацией"
@@ -2284,9 +2306,6 @@ $colorfulnesses = array();
                         $('.no-lam-only').removeAttr('required');
                     }
                     else {
-                        // Показываем кнопку "добавить ламинацию"
-                        $('#show_lamination_1').removeClass('d-none');
-                    
                         // Показываем поля "только без ламинации"
                         $('.no-lam-only').not('.print-only').removeClass('d-none');
                         $('input.no-lam-only').not('.print-only').attr('required', 'required');
@@ -2297,30 +2316,30 @@ $colorfulnesses = array();
                         $('.lam-only').removeAttr('required');
                     }
                 }
-                else if(work_type_id == 3) {
+                else if(work_type_id == <?=WORK_TYPE_SELF_ADHESIVE ?>) {
                     // Если тип работы "Самоклеящиеся материалы", то объём заказа всегда в штуках
                     $('#units').removeClass('d-none');
                     $('#unit_kg').parent().parent().addClass('d-none');
                     $('#unit_pieces').parent().parent().removeClass('d-none');
                     $('#unit_pieces').click();
                     
-                    // Показываем поля "только с печатью"
-                    $('.print-only').not('.lam-only').removeClass('d-none');
-                    $('input.print-only').not('.lam-only').attr('required', 'required');
-                    $('select.print-only').not('.lam-only').attr('required', 'required');
+                    // Скрываем поля "только с печатью"
+                    $('.print-only').addClass('d-none');
+                    $('.print-only').removeAttr('required');
                     
                     // Скрываем поля "только без печати"
                     $('.no-print-only').addClass('d-none');
                     $('.no-print-only').removeAttr('required');
-                    
-                    // Скрываем кнопку "добавить ламинацию"
-                    $('#show_lamination_1').addClass('d-none');
                     
                     // Скрываем все поля, касающиеся ламинации
                     $('.lam-only').addClass('d-none');
                     $('.lam-only').removeAttr('required');
                     $('#form_lamination_1').addClass('d-none');
                     $('#form_lamination_2').addClass('d-none');
+                    
+                    // Показываем поля "только самоклеящиеся материалы"
+                    $('.self-adhesive-only').removeClass('d-none');
+                    $('.self-adhesive-only').attr('required', 'required');
                 }
             }
             
