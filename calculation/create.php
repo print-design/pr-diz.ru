@@ -935,7 +935,7 @@ $colorfulnesses = array();
                         $kg_checked = ($unit == "kg" || empty($unit)) ? " checked='checked'" : "";
                         $pieces_checked = $unit == "pieces" ? " checked='checked'" : "";
                         ?>
-                        <div class="print-only justify-content-start mt-2 mb-1 d-none">
+                        <div id="units" class="justify-content-start mt-2 mb-1 d-none">
                             <div class="form-check-inline">
                                 <label class="form-check-label">
                                     <input type="radio" class="form-check-input" id="unit_kg" name="unit" value="kg"<?=$kg_checked ?> />Килограммы
@@ -2207,6 +2207,11 @@ $colorfulnesses = array();
             // Показываем или скрываем поля в зависимости от работы с печатью / без печати и наличия / отсутствия ламинации
             function SetFieldsVisibility(work_type_id) {
                 if(work_type_id == 2) {
+                    // Если тип работы "Плёнка с печатью", то объём заказа и в килограммах и в штуках
+                    $('#units').removeClass('d-none');
+                    $('#unit_kg').parent().parent().removeClass('d-none');
+                    $('#unit_pieces').parent().parent().removeClass('d-none');
+                    
                     // Показываем поля "только с печатью"
                     $('.print-only').not('.lam-only').removeClass('d-none');
                     $('input.print-only').not('.lam-only').attr('required', 'required');
@@ -2242,6 +2247,9 @@ $colorfulnesses = array();
                 }
                 else if(work_type_id == 1) {
                     // Если тип работы "Плёнка без печати", то объём заказа всегда в килограммах
+                    $('#units').removeClass('d-none');
+                    $('#unit_kg').parent().parent().removeClass('d-none');
+                    $('#unit_pieces').parent().parent().addClass('d-none');
                     $('#unit_kg').click();
                     
                     // Показываем поля "только без печати"
@@ -2279,6 +2287,9 @@ $colorfulnesses = array();
                 }
                 else if(work_type_id == 3) {
                     // Если тип работы "Самоклеящиеся материалы", то объём заказа всегда в штуках
+                    $('#units').removeClass('d-none');
+                    $('#unit_kg').parent().parent().addClass('d-none');
+                    $('#unit_pieces').parent().parent().removeClass('d-none');
                     $('#unit_pieces').click();
                     
                     // Показываем поля "только с печатью"
