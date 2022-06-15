@@ -383,7 +383,6 @@ class Calculation {
             DataPriladka $data_priladka_laminator,
             DataMachine $data_machine,
             DataMachine $data_machine_laminator,
-            DataGap $data_gap,
             DataInk $data_ink,
             DataGlue $data_glue,
             DataCliche $data_cliche,
@@ -534,7 +533,7 @@ class Calculation {
             case self::NO_SKI:
                 $this->width_1 = $streams_number * $stream_width;
                 break;
-        
+                
             case self::STANDARD_SKI:
                 $this->width_1 = $streams_number * $stream_width + 20;
                 break;
@@ -1005,6 +1004,302 @@ class Calculation {
         $this->film_waste_weight_1 = $this->weight_dirty_1 - $this->weight_pure_1;
         $this->film_waste_weight_2 = $this->weight_dirty_2 - $this->weight_pure_2;
         $this->film_waste_weight_3 = $this->weight_dirty_3 - $this->weight_pure_3; 
+    }
+}
+
+// Расчёт для самоклеящейся бумаги
+class CalculationSelfAdhesive {
+    // Получения курса валюты (get - функция получения)
+    function GetCurrencyRate($currency, $usd, $euro) {
+        switch($currency) {
+            case self::USD:
+                return $usd;
+            
+            case self::EURO:
+                return $euro;
+            
+            default :
+                return 1;
+        }
+    }
+    
+    // Получение цены на краску
+    function GetInkPrice($ink, $cmyk, $c_price, $c_currency, $m_price, $m_currency, $y_price, $y_currency, $k_price, $k_currency, $panton_price, $panton_currency, $white_price, $white_currency, $lacquer_price, $lacquer_currency) {
+        switch ($ink) {
+            case self::CMYK:
+                switch ($cmyk) {
+                    case self::CYAN:
+                        return new DataPrice($c_price, $c_currency);
+                        
+                    case self::MAGENDA:
+                        return new DataPrice($m_price, $m_currency);
+                        
+                    case self::YELLOW:
+                        return new DataPrice($y_price, $y_currency);
+                        
+                    case self::KONTUR:
+                        return new DataPrice($k_price, $k_currency);
+                        
+                    default :
+                        return null;
+                }
+                
+            case self::PANTON:
+                return new DataPrice($panton_price, $panton_currency);
+                
+            case self::WHITE:
+                return new DataPrice($white_price, $white_currency);
+                
+            case self::LACQUER:
+                return new DataPrice($lacquer_price, $lacquer_currency);
+                
+            default :
+                return null;
+        }
+    }
+    
+    // Получение расхода краски
+    function GetInkExpense($ink, $cmyk, $c_expense, $m_expense, $y_expense, $k_expense, $panton_expense, $white_expense, $lacquer_expense) {
+        switch ($ink) {
+            case self::CMYK:
+                switch ($cmyk) {
+                    case self::CYAN:
+                        return $c_expense;
+                        
+                    case self::MAGENDA:
+                        return $m_expense;
+                        
+                    case self::YELLOW:
+                        return $y_expense;
+                        
+                    case self::KONTUR:
+                        return $k_expense;
+                }
+            case self::PANTON:
+                return $panton_expense;
+                
+            case self::WHITE:
+                return $white_expense;
+                
+            case self::LACQUER:
+                return $lacquer_expense;
+                
+            default :
+                return null;
+        }
+    }
+    
+    public $width_mat = 0; // Ширина материала
+    public $length_label_dirty = 0; // Высота этикетки грязная
+    public $width_dirty = 0; // Ширина этикетки грязная
+    public $number_in_raport_dirty = 0; // Количество этикеток в рапорте грязный
+    public $number_in_raport_pure = 0; // Количество этикеток в рапорте чистый
+    public $gap = 0; // Фактический зазор между этикетками
+    
+    public $area_pure = 0; // М2 чистые, м2
+    public $length_pog_pure = 0; // М пог. чистые, м
+    public $waste_length = 0; // СтартСтопОтход, м
+    public $length_pog_dirty = 0; // М пог. грязные, м
+    public $area_dirty = 0; // М2 грязные, м2
+    
+    public $weight_pure = 0; // Масса плёнки чистая (без приладки), кг
+    public $length_pure = 0; // Длина плёнки чистая, м
+    public $weight_dirty = 0; // Масса плёнки грязная (с приладкой), кг
+    public $length_dirty = 0; // Длина плёнки гразная, м
+    
+    public $film_cost_dirty = 0; // Себестоимость грязная
+    public $priladka_time = 0; // Приладка Время, ч
+    public $print_time = 0; // Время печати тиража, без приладки, ч
+    public $work_time = 0; // Общее время выполнения тиража, ч
+    public $work_cost = 0; // Стоимость выполнения, руб
+    
+    public $print_area = 0; // М2 запечатки, м2
+    public $ink_1kg_mix_weight = 0; // Масса краски в смеси, кг
+    public $ink_etoxypropanol_kg_price = 0; // Цена 1 кг чистого этоксипропанола
+    
+    public $ink_kg_prices; // массив: цена 1 кг каждой чистой краски
+    public $mix_ink_kg_prices; // массив: цена 1 кг каждой краскаСмеси
+    public $ink_expenses; // массив: расход каждой КраскаСмеси
+    public $ink_costs; // массив: стоимость каждой КраскаСмеси
+
+    public function __construct(DataPriladka $data_priladka, 
+            DataMachine $data_machine, 
+            DataGap $data_gap, 
+            DataInk $data_ink, 
+            DataCliche $data_cliche, 
+            array $data_extracharge, 
+            $usd, // Курс доллара
+            $euro, // Курс евро
+            $quantity, // Размер тиража в шт
+            
+            $film, // Марка бумаги
+            $thickness, // Толщина, мкм
+            $density, // Плотность, г/м2
+            $price, // Цена
+            $currency, // Валюта
+            $customers_material, // Материал заказчика
+            $ski, // Лыжи
+            $width_ski, // Ширина материала
+            
+            $length, // Длина этикетки
+            $stream_width, // Ширина ручья, мм
+            $streams_number, // Количество ручьёв
+            $raport, // Рапорт
+            $ink_number, // Красочность
+            
+            $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, // Тип краски (CMYK, пантон, белая, лак)
+            $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, // Номер пантона
+            $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, // Тип CMYK (cyan, magenda, yellow, kontur)
+            $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, // Процент данной краски
+            $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8, // Форма (старая, Флинт, Кодак)
+            
+            $cliche_in_price, // Включить ПФ в себестоимость
+            $extracharge, // Наценка на тираж
+            $extracharge_cliche // Наценка на ПФ
+            ) {
+        // Если материал заказчика, то цена его = 0
+        if($customers_material == true) $price = 0;
+        
+        // НИЖЕ НАЧИНАЕТСЯ ВЫЧИСЛЕНИЕ
+        
+        // Ширина материала, мм
+        // Если стадартные лыжи: количество ручьёв * (ширина ручья + расстояние между ручьями) + 20
+        // Если нестандартные лыжи: ширина материала вводится вручную
+        switch ($ski) {
+            case Calculation::STANDARD_SKI:
+                $this->width_mat = $streams_number * ($stream_width + $data_gap->gap_stream) + 20;
+                break;
+            
+            case Calculation::NONSTANDARD_SKI:
+                $this->width_mat = $width_ski;
+                break;
+            
+            default :
+                $this->width_mat = 0;
+                break;
+        }
+        
+        // Высота этикетки грязная
+        $this->length_label_dirty = $length + $data_gap->gap_raport;
+        
+        // Ширина этикетки грязная
+        $this->width_dirty = $width_ski + $data_gap->gap_stream;
+        
+        // Количество этикеток в рапорте грязный
+        $this->number_in_raport_dirty = $raport / $this->length_label_dirty;
+        
+        // Количество этикеток в рапорте чистое
+        $this->number_in_raport_pure = floor($this->number_in_raport_dirty);
+        
+        // Фактический зазор
+        $this->gap = ($raport - ($length * $this->number_in_raport_pure)) / $this->number_in_raport_pure;
+        
+        //***************************
+        // Рассчёт по КГ
+        //***************************
+        
+        // М2 чистые, м2
+        $this->area_pure = ($length + $this->gap) * (($stream_width + $data_gap->gap_stream) + $data_gap->gap_stream) * $quantity / 1000000;
+        
+        // М. пог. чистые, м
+        $this->length_pog_pure = $this->area_pure / (($stream_width + $data_gap->gap_stream) + $data_gap->gap_stream) * $streams_number * 1000;
+        
+        // СтартСтопОтход, м
+        $this->waste_length = $data_priladka->waste_percent * $this->length_pog_pure / 100;
+        
+        // М пог. грязные, м
+        $this->length_pog_dirty = $this->length_pog_pure + ($ink_number * $data_priladka->length) + $this->waste_length;
+        
+        // М2 грязные
+        $this->area_dirty = $this->length_pog_dirty * $this->width_mat / 1000;
+        
+        //***************************
+        // Массы и длины плёнок
+        //***************************
+        
+        // Масса плёнки чистая (без приладки), кг
+        $this->weight_pure = $this->length_pog_pure * $this->width_mat * $density / 1000000;
+        
+        // Длина плёнки чистая, м
+        $this->length_pure = $this->length_pog_pure;
+        
+        // Масса плёнки грязная (с приладкой), кг
+        $this->weight_dirty = $this->area_dirty * $density / 1000;
+        
+        // Длина плёнки грязная, м
+        $this->length_dirty = $this->length_pog_dirty;
+        
+        //*****************************
+        // Себестоимость плёнок
+        //*****************************
+        
+        // Себестоимость плёнки грязная (с приладкой), руб
+        $this->film_cost_dirty = $this->area_dirty * $price * $this->GetCurrencyRate($currency, $usd, $euro);
+        
+        //*****************************
+        // Время - деньги
+        //*****************************
+        
+        // Приладка Время, ч
+        $this->priladka_time = $ink_number * $data_priladka->time;
+        
+        // Время печати тиража, без приладки, ч
+        $this->print_time = ($this->length_pog_pure + $this->waste_length) / $data_machine->speed / 1000;
+        
+        // Общее время выполнения тиража
+        $this->work_time = $this->priladka_time + $this->print_time;
+        
+        // Стоимость выполнения
+        $this->work_cost = $this->work_time * $data_machine->price;
+        
+        //************************
+        // Расход краски
+        //************************
+        
+        // М2 запечатки, м2
+        $this->print_area = (($stream_width + $data_gap->gap_stream) * ($length * $data_gap->gap_raport) * $quantity / 1000000) + ($this->length_pog_dirty * 0.01);
+        
+        // Масса краски в смеси, кг
+        $this->ink_1kg_mix_weight = 1 + $data_ink->solvent_part;
+        
+        // Цена 1 кг чистого этоксипропанола, руб
+        $this->ink_etoxypropanol_kg_price = $data_ink->solvent_etoxipropanol_price * $this->GetCurrencyRate($data_ink->solvent_etoxipropanol_currency, $usd, $euro);
+        
+        // Создаём массив цен за 1 кг каждой краски
+        $this->ink_kg_prices = array();
+        
+        // Создаём массив цен за 1 кг каждой КраскаСмеси
+        $this->mix_ink_kg_prices = array();
+        
+        // Создаём массив расходов каждой КраскаСмеси
+        $this->ink_expenses = array();
+        
+        // Создаём массив стоимостей каждой КраскаСмеси
+        $this->ink_costs = array();
+        
+        // Перебираем все краски и помещаем в каждый из четырёх массивов данные по каждой краске
+        for($i=1; $i<=$ink_number; $i++) {
+            $ink = "ink_$i";
+            $cmyk = "cmyk_$i";
+            $percent = "percent_$i";
+            
+            // Цена 1 кг чистой краски, руб
+            $ink_price = $this->GetInkPrice($$ink, $$cmyk, $data_ink->c_price, $data_ink->c_currency, $data_ink->m_price, $data_ink->m_currency, $data_ink->y_price, $data_ink->y_currency, $data_ink->k_price, $data_ink->k_currency, $data_ink->panton_price, $data_ink->panton_currency, $data_ink->white_price, $data_ink->white_currency, $data_ink->lacquer_price, $data_ink->lacquer_currency);
+            $ink_kg_price = $ink_price->value * $this->GetCurrencyRate($ink_price->currency, $usd, $euro);
+            $this->ink_kg_prices[$i] = $ink_kg_price;
+            
+            // Цена 1 КраскаСмеси, руб
+            $mix_ink_kg_price = (($ink_kg_price * 1) + ($this->ink_etoxypropanol_kg_price * $data_ink->solvent_part)) / $this->ink_1kg_mix_weight;
+            $this->mix_ink_kg_prices[$i] = $mix_ink_kg_price;
+            
+            // Расход КраскаСмеси, кг
+            $ink_expense = $this->print_area * $this->GetInkExpense($$ink, $$cmyk, $data_ink->c_expense, $data_ink->m_expense, $data_ink->y_expense, $data_ink->k_expense, $data_ink->panton_expense, $data_ink->white_expense, $data_ink->lacquer_expense);
+            $this->ink_expenses[$i] = $ink_expense;
+            
+            // Стоимость КраскаСмеси, руб
+            $ink_cost = $ink_expense * $mix_ink_kg_price;
+            $this->ink_costs[$i] = $ink_cost;
+        }
     }
 }
 ?>

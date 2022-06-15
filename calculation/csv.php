@@ -259,18 +259,6 @@ if($id !== null) {
             $raport = 0;
         }
         
-        // Если тип работы - самоклеящаяся бумага, то
-        // единицы = штуки, ламинации нет, и нет печати без лыж
-        if($work_type_id == Calculation::WORK_TYPE_SELF_ADHESIVE) {
-            $unit = Calculation::PIECES;
-            $film_2 = null;
-            $film_3 = null;
-            
-            if($ski_1 == Calculation::NO_SKI) {
-                $ski_1 = Calculation::STANDARD_SKI;
-            }
-        }
-        
         // Если нет ламинации, то ширина ламинирующего вала = 0, лыжи для плёнки 2 = 0
         if(empty($film_2) && empty($film_3)) {
             $lamination_roller_width = 0;
@@ -301,7 +289,6 @@ if($id !== null) {
     $data_priladka_laminator = new DataPriladka(null, null, null);
     $data_machine = new DataMachine(null, null, null);
     $data_machine_laminator = new DataMachine(null, null, null);
-    $data_gap = new DataGap(null, null);
     $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
     $data_glue = new DataGlue(null, null, null, null, null, null, null);
     $data_extracharge = array();
@@ -345,15 +332,6 @@ if($id !== null) {
             $data_machine_laminator = new DataMachine($row['price'], $row['speed'], $row['max_width']);
         }
         
-        if($work_type_id == Calculation::WORK_TYPE_SELF_ADHESIVE) {
-            // Зазоры определяем только для самоклеящейся бумаги
-            $sql = "select gap_raport, gap_stream from norm_gap where date <= '$date' order by id desc limit 1";
-            $fetcher = new Fetcher($sql);
-            if($row = $fetcher->Fetch()) {
-                $data_gap = new DataGap($row['gap_raport'], $row['gap_stream']);
-            }
-        }
-        
         $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_price, lacquer_currency, lacquer_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price "
                 . "from norm_ink where date <= '$date' order by id desc limit 1";
         $fetcher = new Fetcher($sql);
@@ -388,7 +366,6 @@ if($id !== null) {
                 $data_priladka_laminator,
                 $data_machine,
                 $data_machine_laminator,
-                $data_gap,
                 $data_ink,
                 $data_glue,
                 $cliche_data,
@@ -452,15 +429,9 @@ if($id !== null) {
         array_push($file_data, array("Курс евро, руб", Display($euro), "", ""));
         if($work_type_id == Calculation::WORK_TYPE_PRINT) array_push ($file_data, array("Тип работы", "Плёнка с печатью", "", ""));
         elseif($work_type_id == Calculation::WORK_TYPE_NOPRINT) array_push ($file_data, array("Тип работы", "Плёнка без печати", "", ""));
-        elseif ($work_type_id == Calculation::WORK_TYPE_SELF_ADHESIVE) array_push ($file_data, array("Тип работы", "Самоклеящиеся материалы", "", ""));
         
         if(!empty($machine_id)) {
             array_push($file_data, array("Машина", $machine, "", ""));
-        }
-        
-        if($work_type_id == Calculation::WORK_TYPE_SELF_ADHESIVE) {
-            array_push($file_data, array("ЗазорРапорт", Display($data_gap->gap_raport), "", ""));
-            array_push($file_data, array("ЗазорРучей", Display($data_gap->gap_stream), "", ""));
         }
         
         array_push($file_data, array("Размер тиража", $quantity.' '. GetUnitName($unit), "", ""));
@@ -558,6 +529,7 @@ if($id !== null) {
             $unit == Calculation::KG ? "размер тиража в кг" : "м2 чистые * (уд. вес 1 + уд. вес 2 + уд. вес 3) / 1000"));
         
         $width_1_formula = "";
+        
         switch ($ski_1) {
             case Calculation::NO_SKI:
                 $width_1_formula = "|= ".Display($streams_number)." * ".Display($stream_width);

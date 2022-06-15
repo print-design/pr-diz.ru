@@ -278,7 +278,6 @@ if(!empty($id)) {
         $data_priladka_laminator = new DataPriladka(null, null, null);
         $data_machine = new DataMachine(null, null, null);
         $data_machine_laminator = new DataMachine(null, null, null);
-        $data_gap = new DataGap(null, null);
         $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
         $data_glue = new DataGlue(null, null, null, null, null, null, null);
         $data_extracharge = array();
@@ -321,15 +320,6 @@ if(!empty($id)) {
             if($row = $fetcher->Fetch()) {
                 $data_machine_laminator = new DataMachine($row['price'], $row['speed'], $row['max_width']);
             }
-            
-            if($work_type_id == Calculation::WORK_TYPE_SELF_ADHESIVE) {
-                // Зазоры определяем только для самоклеящейся бумаги
-                $sql = "select gap_raport, gap_stream from norm_gap where date <= '$date' order by id desc limit 1";
-                $fetcher = new Fetcher($sql);
-                if($row = $fetcher->Fetch()) {
-                    $data_gap = new DataGap($row['gap_raport'], $row['gap_stream']);
-                }
-            }
         
             $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_price, lacquer_currency, lacquer_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price "
                     . "from norm_ink where date <= '$param_date' order by id desc limit 1";
@@ -360,7 +350,7 @@ if(!empty($id)) {
         }
     
         // ДЕЛАЕМ РАСЧЁТ
-        $calculation = new Calculation($data_priladka, $data_priladka_laminator, $data_machine, $data_machine_laminator, $data_gap, $data_ink, $data_glue, $cliche_data, $data_extracharge, $new_usd, $new_euro, 
+        $calculation = new Calculation($data_priladka, $data_priladka_laminator, $data_machine, $data_machine_laminator, $data_ink, $data_glue, $cliche_data, $data_extracharge, $new_usd, $new_euro, 
                 $param_unit, $param_quantity, $param_work_type_id, 
                 $param_film_1, $param_thickness_1, $param_density_1, $param_price_1, $param_currency_1, $param_customers_material_1, $param_ski_1, $param_width_ski_1, 
                 $param_film_2, $param_thickness_2, $param_density_2, $param_price_2, $param_currency_2, $param_customers_material_2, $param_ski_2, $param_width_ski_2, 
@@ -754,7 +744,6 @@ if(!empty($id)) {
             <div>Масса с приладкой</div>
             <div class="value mb-2"><?= Display(floatval($weight_dirty_1), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($length_dirty_1), 0) ?> м</span></div>
         </div>
-        <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
         <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
             <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($weight_dirty_2), 0) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
@@ -777,7 +766,6 @@ if(!empty($id)) {
             <div>Масса с приладкой</div>
             <div class="value mb-2"><?= Display(floatval($weight_dirty_3), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($length_dirty_3), 0) ?> м</span></div>
         </div>
-        <?php endif; ?>
     </div>
     <div id="show_costs">
         <div class="row text-nowrap">
@@ -792,10 +780,8 @@ if(!empty($id)) {
                 <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
                 <h2 class="mt-2">Расходы</h2>
             </div>
-            <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
-            <?php endif; ?>
         </div>
         <div class="row text-nowrap">
             <div class="col-4 pr-4">
@@ -806,7 +792,6 @@ if(!empty($id)) {
                 <div>Печать тиража</div>
                 <div class="value mb-2"><?= Display(floatval($work_cost_1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($work_time_1), 2) ?> ч</span></div>
             </div>
-            <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
                 <div class="value mb-2"><?= Display(floatval($film_waste_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_waste_weight_2), 2) ?> кг</span></div>
@@ -823,7 +808,6 @@ if(!empty($id)) {
                 <div>Работа ламинатора</div>
                 <div class="value mb-2"><?= Display(floatval($work_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($work_time_3), 2) ?> ч</span></div>
             </div>
-            <?php endif; ?>
         </div>
     </div>
     <div style="clear:both"></div>
