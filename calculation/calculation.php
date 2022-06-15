@@ -27,6 +27,18 @@ class DataMachine {
     }
 }
 
+// Зарактеристика зазоров
+class DataGap {
+    public $gap_raport; // ЗазорРапорт
+    public $gap_stream; // ЗазорРучей
+    
+    // Конструктор
+    public function __construct($gap_raport, $gap_stream) {
+        $this->gap_raport = $gap_raport;
+        $this->gap_stream = $gap_stream;
+    }
+}
+
 // Данные по краскам
 class DataInk {
     public $c_price; // Cyan, цена
@@ -164,6 +176,7 @@ class Calculation {
     // Типы работы
     const WORK_TYPE_NOPRINT = 1;
     const WORK_TYPE_PRINT = 2;
+    const WORK_TYPE_SELF_ADHESIVE = 3;
     
     // Единицы размера тиража
     const KG = 'kg';
@@ -370,6 +383,7 @@ class Calculation {
             DataPriladka $data_priladka_laminator,
             DataMachine $data_machine,
             DataMachine $data_machine_laminator,
+            DataGap $data_gap,
             DataInk $data_ink,
             DataGlue $data_glue,
             DataCliche $data_cliche,

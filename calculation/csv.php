@@ -259,6 +259,18 @@ if($id !== null) {
             $raport = 0;
         }
         
+        // Если тип работы - самоклеящаяся бумага, то
+        // единицы = штуки, ламинации нет, и нет печати без лыж
+        if($work_type_id == Calculation::WORK_TYPE_SELF_ADHESIVE) {
+            $unit = Calculation::PIECES;
+            $film_2 = null;
+            $film_3 = null;
+            
+            if($ski_1 == Calculation::NO_SKI) {
+                $ski_1 = Calculation::STANDARD_SKI;
+            }
+        }
+        
         // Если нет ламинации, то ширина ламинирующего вала = 0, лыжи для плёнки 2 = 0
         if(empty($film_2) && empty($film_3)) {
             $lamination_roller_width = 0;
@@ -289,8 +301,9 @@ if($id !== null) {
     $data_priladka_laminator = new DataPriladka(null, null, null);
     $data_machine = new DataMachine(null, null, null);
     $data_machine_laminator = new DataMachine(null, null, null);
-    $ink_data = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-    $glue_data = new DataGlue(null, null, null, null, null, null, null);
+    $data_gap = new DataGap(null, null);
+    $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+    $data_glue = new DataGlue(null, null, null, null, null, null, null);
     $data_extracharge = array();
     
     if(!empty($date)) {
@@ -332,18 +345,27 @@ if($id !== null) {
             $data_machine_laminator = new DataMachine($row['price'], $row['speed'], $row['max_width']);
         }
         
+        if($work_type_id == Calculation::WORK_TYPE_SELF_ADHESIVE) {
+            // Зазоры определяем только для самоклеящейся бумаги
+            $sql = "select gap_raport, gap_stream from norm_gap where date <= '$date' order by id desc limit 1";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $data_gap = new DataGap($row['gap_raport'], $row['gap_stream']);
+            }
+        }
+        
         $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_price, lacquer_currency, lacquer_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price "
                 . "from norm_ink where date <= '$date' order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
-            $ink_data = new DataInk($row['c_price'], $row['c_currency'], $row['c_expense'], $row['m_price'], $row['m_currency'], $row['m_expense'], $row['y_price'], $row['y_currency'], $row['y_expense'], $row['k_price'], $row['k_currency'], $row['k_expense'], $row['white_price'], $row['white_currency'], $row['white_expense'], $row['panton_price'], $row['panton_currency'], $row['panton_expense'], $row['lacquer_price'], $row['lacquer_currency'], $row['lacquer_expense'], $row['solvent_etoxipropanol_price'], $row['solvent_etoxipropanol_currency'], $row['solvent_flexol82_price'], $row['solvent_flexol82_currency'], $row['solvent_part'], $row['min_price']);
+            $data_ink = new DataInk($row['c_price'], $row['c_currency'], $row['c_expense'], $row['m_price'], $row['m_currency'], $row['m_expense'], $row['y_price'], $row['y_currency'], $row['y_expense'], $row['k_price'], $row['k_currency'], $row['k_expense'], $row['white_price'], $row['white_currency'], $row['white_expense'], $row['panton_price'], $row['panton_currency'], $row['panton_expense'], $row['lacquer_price'], $row['lacquer_currency'], $row['lacquer_expense'], $row['solvent_etoxipropanol_price'], $row['solvent_etoxipropanol_currency'], $row['solvent_flexol82_price'], $row['solvent_flexol82_currency'], $row['solvent_part'], $row['min_price']);
         }
         
         $sql = "select glue_price, glue_currency, glue_expense, glue_expense_pet, solvent_price, solvent_currency, solvent_part "
                 . "from norm_glue where date <= '$date' order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
-            $glue_data = new DataGlue($row['glue_price'], $row['glue_currency'], $row['glue_expense'], $row['glue_expense_pet'], $row['solvent_price'], $row['solvent_currency'], $row['solvent_part']);
+            $data_glue = new DataGlue($row['glue_price'], $row['glue_currency'], $row['glue_expense'], $row['glue_expense_pet'], $row['solvent_price'], $row['solvent_currency'], $row['solvent_part']);
         }
         
         $sql = "select flint_price, flint_currency, kodak_price, kodak_currency, scotch_price, scotch_currency "
@@ -366,8 +388,9 @@ if($id !== null) {
                 $data_priladka_laminator,
                 $data_machine,
                 $data_machine_laminator,
-                $ink_data,
-                $glue_data,
+                $data_gap,
+                $data_ink,
+                $data_glue,
                 $cliche_data,
                 $data_extracharge,
                 $usd, // Курс доллара
@@ -429,9 +452,15 @@ if($id !== null) {
         array_push($file_data, array("Курс евро, руб", Display($euro), "", ""));
         if($work_type_id == Calculation::WORK_TYPE_PRINT) array_push ($file_data, array("Тип работы", "Плёнка с печатью", "", ""));
         elseif($work_type_id == Calculation::WORK_TYPE_NOPRINT) array_push ($file_data, array("Тип работы", "Плёнка без печати", "", ""));
+        elseif ($work_type_id == Calculation::WORK_TYPE_SELF_ADHESIVE) array_push ($file_data, array("Тип работы", "Самоклеящиеся материалы", "", ""));
         
         if(!empty($machine_id)) {
             array_push($file_data, array("Машина", $machine, "", ""));
+        }
+        
+        if($work_type_id == Calculation::WORK_TYPE_SELF_ADHESIVE) {
+            array_push($file_data, array("ЗазорРапорт", Display($data_gap->gap_raport), "", ""));
+            array_push($file_data, array("ЗазорРучей", Display($data_gap->gap_stream), "", ""));
         }
         
         array_push($file_data, array("Размер тиража", $quantity.' '. GetUnitName($unit), "", ""));
@@ -825,17 +854,17 @@ if($id !== null) {
         
         array_push($file_data, array("Расход КраскаСмеси на 1 кг краски, кг",
             Display($calculation->ink_1kg_mix_weight),
-            "|= 1 + ".Display($ink_data->solvent_part),
+            "|= 1 + ".Display($data_ink->solvent_part),
             "1 + расход растворителя на 1 кг краски"));
         
         array_push($file_data, array("Цена 1 кг чистого флексоля 82, руб",
             Display($calculation->ink_flexol82_kg_price),
-            "|= ".Display($ink_data->solvent_flexol82_price)." * ".Display($calculation->GetCurrencyRate($ink_data->solvent_flexol82_currency, $usd, $euro)),
+            "|= ".Display($data_ink->solvent_flexol82_price)." * ".Display($calculation->GetCurrencyRate($data_ink->solvent_flexol82_currency, $usd, $euro)),
             "цена 1 кг флексоля 82 * курс валюты"));
         
         array_push($file_data, array("Цена 1 кг чистого этоксипропанола, руб",
             Display($calculation->ink_etoxypropanol_kg_price),
-            "|= ". Display($ink_data->solvent_etoxipropanol_price)." * ". Display($calculation->GetCurrencyRate($ink_data->solvent_etoxipropanol_currency, $usd, $euro)),
+            "|= ". Display($data_ink->solvent_etoxipropanol_price)." * ". Display($calculation->GetCurrencyRate($data_ink->solvent_etoxipropanol_currency, $usd, $euro)),
             "цена 1 кг этоксипропанола * курс валюты"));
         
         $ink_solvent_kg_price = 0;
@@ -851,7 +880,7 @@ if($id !== null) {
             $ink = "ink_$i";
             $cmyk = "cmyk_$i";
             $percent = "percent_$i";
-            $price = $calculation->GetInkPrice($$ink, $$cmyk, $ink_data->c_price, $ink_data->c_currency, $ink_data->m_price, $ink_data->m_currency, $ink_data->y_price, $ink_data->y_currency, $ink_data->k_price, $ink_data->k_currency, $ink_data->panton_price, $ink_data->panton_currency, $ink_data->white_price, $ink_data->white_currency, $ink_data->lacquer_price, $ink_data->lacquer_currency);
+            $price = $calculation->GetInkPrice($$ink, $$cmyk, $data_ink->c_price, $data_ink->c_currency, $data_ink->m_price, $data_ink->m_currency, $data_ink->y_price, $data_ink->y_currency, $data_ink->k_price, $data_ink->k_currency, $data_ink->panton_price, $data_ink->panton_currency, $data_ink->white_price, $data_ink->white_currency, $data_ink->lacquer_price, $data_ink->lacquer_currency);
             
             array_push($file_data, array("Цена 1 кг чистой краски $i, руб",
                 Display($calculation->ink_kg_prices[$i]),
@@ -860,12 +889,12 @@ if($id !== null) {
             
             array_push($file_data, array("Цена 1 кг КраскаСмеси $i, руб",
                 Display($calculation->mix_ink_kg_prices[$i]),
-                "|= ((".Display($calculation->ink_kg_prices[$i])." * 1) + (".Display($ink_solvent_kg_price)." * ".Display($ink_data->solvent_part).")) / ".Display($calculation->ink_1kg_mix_weight),
+                "|= ((".Display($calculation->ink_kg_prices[$i])." * 1) + (".Display($ink_solvent_kg_price)." * ".Display($data_ink->solvent_part).")) / ".Display($calculation->ink_1kg_mix_weight),
                 "((цена 1 кг чистой краски $i * 1) + (цена 1 кг чистого растворителя * расход растворителя на 1 кг краски)) / расход КраскаСмеси на 1 кг краски"));
             
             array_push($file_data, array("Расход КраскаСмеси $i, кг",
                 Display($calculation->ink_expenses[$i]),
-                "|= ".Display($calculation->print_area)." * ".Display($calculation->GetInkExpense($$ink, $$cmyk, $ink_data->c_expense, $ink_data->m_expense, $ink_data->y_expense, $ink_data->k_expense, $ink_data->panton_expense, $ink_data->white_expense, $ink_data->lacquer_expense))." * ".Display($$percent)." / 1000 / 100",
+                "|= ".Display($calculation->print_area)." * ".Display($calculation->GetInkExpense($$ink, $$cmyk, $data_ink->c_expense, $data_ink->m_expense, $data_ink->y_expense, $data_ink->k_expense, $data_ink->panton_expense, $data_ink->white_expense, $data_ink->lacquer_expense))." * ".Display($$percent)." / 1000 / 100",
                 "площадь запечатки * расход КраскаСмеси за 1 м2 * процент краски $i / 1000 / 100"));
             
             array_push($file_data, array("Стоимость КраскаСмеси $i, руб",
@@ -882,22 +911,22 @@ if($id !== null) {
         
         array_push($file_data, array("Расход КлеяСмеси на 1 кг клея, кг",
             Display($calculation->glue_kg_weight),
-            "|= 1 + ".Display($glue_data->solvent_part),
+            "|= 1 + ".Display($data_glue->solvent_part),
             "1 + расход растворителя на 1 кг клея"));
         
         array_push($file_data, array("Цена 1 кг чистого клея, руб",
             Display($calculation->glue_kg_price),
-            "|= ".Display($glue_data->glue_price)." * ".Display($calculation->GetCurrencyRate($glue_data->glue_currency, $usd, $euro)),
+            "|= ".Display($data_glue->glue_price)." * ".Display($calculation->GetCurrencyRate($data_glue->glue_currency, $usd, $euro)),
             "цена 1 кг клея * курс валюты"));
         
         array_push($file_data, array("Цена 1 кг чистого растворителя для клея, руб",
             Display($calculation->glue_solvent_kg_price),
-            "|= ".Display($glue_data->solvent_price)." * ".Display($calculation->GetCurrencyRate($glue_data->solvent_currency, $usd, $euro)),
+            "|= ".Display($data_glue->solvent_price)." * ".Display($calculation->GetCurrencyRate($data_glue->solvent_currency, $usd, $euro)),
             "цена 1 кг растворителя для клея * курс валюты"));
         
         array_push($file_data, array("Цена 1 кг КлеяСмеси, руб",
             Display($calculation->mix_glue_kg_price),
-            "|= ((1 * ".Display($calculation->glue_kg_price).") + (".Display($glue_data->solvent_part)." * ".Display($calculation->glue_solvent_kg_price).")) / ".Display($calculation->glue_kg_weight),
+            "|= ((1 * ".Display($calculation->glue_kg_price).") + (".Display($data_glue->solvent_part)." * ".Display($calculation->glue_solvent_kg_price).")) / ".Display($calculation->glue_kg_weight),
             "((1 * цена 1 кг чистого клея) + (расход растворителя на 1 кг клея * цена 1 кг чистого растворителя)) / расход КлеяСмеси на 1 кг клея"));
         
         array_push($file_data, array("Площадь заклейки 2, м2",
@@ -910,11 +939,11 @@ if($id !== null) {
             "|= ".Display($calculation->length_dirty_3)." * ".Display($lamination_roller_width)." / 1000",
             "м пог грязные 2 * ширина ламинирующего вала / 1000"));
         
-        $glue_expense2_formula = Display($calculation->glue_area2)." * ".Display($glue_data->glue_expense)." / 1000";
+        $glue_expense2_formula = Display($calculation->glue_area2)." * ".Display($data_glue->glue_expense)." / 1000";
         $glue_expense2_comment = "площадь заклейки 2 * расход КлеяСмеси в 1 м2 / 1000";
         
         if((strlen($film_1) > 3 && substr($film_1, 0, 3) == "Pet") || (strlen($film_2) > 3 && substr($film_2, 0, 3) == "Pet")) {
-            $glue_expense2_formula = Display($calculation->glue_area2)." * ".Display($glue_data->glue_expense_pet)." / 1000";
+            $glue_expense2_formula = Display($calculation->glue_area2)." * ".Display($data_glue->glue_expense_pet)." / 1000";
             $glue_expense2_comment = "площадь заклейки 2 * расход КлеяСмеси для ПЭТ в 1 м2 / 1000";
         }
         
@@ -923,11 +952,11 @@ if($id !== null) {
             "|= ".$glue_expense2_formula,
             $glue_expense2_comment));
         
-        $glue_expense3_formula = Display($calculation->glue_area3)." * ".Display($glue_data->glue_expense)." / 1000";
+        $glue_expense3_formula = Display($calculation->glue_area3)." * ".Display($data_glue->glue_expense)." / 1000";
         $glue_expense3_comment = "площадь заклейки 3 * расход КлеяСмеси в 1 м2 / 1000";
         
         if((strlen($film_2) > 3 && substr($film_2, 0, 3) == "Pet") || (strlen($film_3) > 3 && substr($film_3, 0, 3) == "Pet")) {
-            $glue_expense3_formula = Display($calculation->glue_area3)." * ".Display($glue_data->glue_expense_pet)." / 1000";
+            $glue_expense3_formula = Display($calculation->glue_area3)." * ".Display($data_glue->glue_expense_pet)." / 1000";
             $glue_expense3_comment = "площадь заклейки 3 * расход КлеяСмеси для ПЭТ в 1 м2 / 1000";
         }
         

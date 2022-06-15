@@ -278,8 +278,9 @@ if(!empty($id)) {
         $data_priladka_laminator = new DataPriladka(null, null, null);
         $data_machine = new DataMachine(null, null, null);
         $data_machine_laminator = new DataMachine(null, null, null);
-        $ink_data = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-        $glue_data = new DataGlue(null, null, null, null, null, null, null);
+        $data_gap = new DataGap(null, null);
+        $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        $data_glue = new DataGlue(null, null, null, null, null, null, null);
         $data_extracharge = array();
     
         if(empty($error_message)) {
@@ -320,19 +321,28 @@ if(!empty($id)) {
             if($row = $fetcher->Fetch()) {
                 $data_machine_laminator = new DataMachine($row['price'], $row['speed'], $row['max_width']);
             }
+            
+            if($work_type_id == Calculation::WORK_TYPE_SELF_ADHESIVE) {
+                // Зазоры определяем только для самоклеящейся бумаги
+                $sql = "select gap_raport, gap_stream from norm_gap where date <= '$date' order by id desc limit 1";
+                $fetcher = new Fetcher($sql);
+                if($row = $fetcher->Fetch()) {
+                    $data_gap = new DataGap($row['gap_raport'], $row['gap_stream']);
+                }
+            }
         
             $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_price, lacquer_currency, lacquer_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price "
                     . "from norm_ink where date <= '$param_date' order by id desc limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
-                $ink_data = new DataInk($row['c_price'], $row['c_currency'], $row['c_expense'], $row['m_price'], $row['m_currency'], $row['m_expense'], $row['y_price'], $row['y_currency'], $row['y_expense'], $row['k_price'], $row['k_currency'], $row['k_expense'], $row['white_price'], $row['white_currency'], $row['white_expense'], $row['panton_price'], $row['panton_currency'], $row['panton_expense'], $row['lacquer_price'], $row['lacquer_currency'], $row['lacquer_expense'], $row['solvent_etoxipropanol_price'], $row['solvent_etoxipropanol_currency'], $row['solvent_flexol82_price'], $row['solvent_flexol82_currency'], $row['solvent_part'], $row['min_price']);
+                $data_ink = new DataInk($row['c_price'], $row['c_currency'], $row['c_expense'], $row['m_price'], $row['m_currency'], $row['m_expense'], $row['y_price'], $row['y_currency'], $row['y_expense'], $row['k_price'], $row['k_currency'], $row['k_expense'], $row['white_price'], $row['white_currency'], $row['white_expense'], $row['panton_price'], $row['panton_currency'], $row['panton_expense'], $row['lacquer_price'], $row['lacquer_currency'], $row['lacquer_expense'], $row['solvent_etoxipropanol_price'], $row['solvent_etoxipropanol_currency'], $row['solvent_flexol82_price'], $row['solvent_flexol82_currency'], $row['solvent_part'], $row['min_price']);
             }
         
             $sql = "select glue_price, glue_currency, glue_expense, glue_expense_pet, solvent_price, solvent_currency, solvent_part "
                     . "from norm_glue where date <= '$param_date' order by id desc limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
-                $glue_data = new DataGlue($row['glue_price'], $row['glue_currency'], $row['glue_expense'], $row['glue_expense_pet'], $row['solvent_price'], $row['solvent_currency'], $row['solvent_part']);
+                $data_glue = new DataGlue($row['glue_price'], $row['glue_currency'], $row['glue_expense'], $row['glue_expense_pet'], $row['solvent_price'], $row['solvent_currency'], $row['solvent_part']);
             }
             
             $sql = "select flint_price, flint_currency, kodak_price, kodak_currency, scotch_price, scotch_currency "
@@ -350,7 +360,7 @@ if(!empty($id)) {
         }
     
         // ДЕЛАЕМ РАСЧЁТ
-        $calculation = new Calculation($data_priladka, $data_priladka_laminator, $data_machine, $data_machine_laminator, $ink_data, $glue_data, $cliche_data, $data_extracharge, $new_usd, $new_euro, 
+        $calculation = new Calculation($data_priladka, $data_priladka_laminator, $data_machine, $data_machine_laminator, $data_gap, $data_ink, $data_glue, $cliche_data, $data_extracharge, $new_usd, $new_euro, 
                 $param_unit, $param_quantity, $param_work_type_id, 
                 $param_film_1, $param_thickness_1, $param_density_1, $param_price_1, $param_currency_1, $param_customers_material_1, $param_ski_1, $param_width_ski_1, 
                 $param_film_2, $param_thickness_2, $param_density_2, $param_price_2, $param_currency_2, $param_customers_material_2, $param_ski_2, $param_width_ski_2, 
