@@ -38,6 +38,18 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
     }
 }
 
+// Смена статуса
+if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $status_id = filter_input(INPUT_POST, 'status_id');
+    
+    $sql = "update calculation set status_id = $status_id where id = $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    header("Location: ".BuildQueryRemove("status"));
+}
+
 // Типы работы
 const WORK_TYPE_NOPRINT = 1;
 const WORK_TYPE_PRINT = 2;
