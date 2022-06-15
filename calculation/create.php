@@ -2337,6 +2337,9 @@ while ($row = $fetcher->Fetch()) {
                         // Скрываем поля "только с ламинацией"
                         $('.lam-only').addClass('d-none');
                         $('.lam-only').removeAttr('required');
+                        
+                        // Показываем пункт "без лыж"
+                        $('#no_ski_option').removeClass('d-none');
                     }
                 }
                 else if(work_type_id == <?=WORK_TYPE_NOPRINT ?>) {
@@ -2378,6 +2381,9 @@ while ($row = $fetcher->Fetch()) {
                         // Скрываем поля "только с ламинацией"
                         $('.lam-only').addClass('d-none');
                         $('.lam-only').removeAttr('required');
+                        
+                        // Показываем пункт "без лыж"
+                        $('#no_ski_option').removeClass('d-none');
                     }
                 }
                 else if(work_type_id == <?=WORK_TYPE_SELF_ADHESIVE ?>) {
@@ -2396,10 +2402,28 @@ while ($row = $fetcher->Fetch()) {
                     $('.no-print-only').removeAttr('required');
                     
                     // Скрываем все поля, касающиеся ламинации
-                    $('.lam-only').addClass('d-none');
-                    $('.lam-only').removeAttr('required');
+                    $('#form_lamination_1 select').val('');
+                    $('#form_lamination_1 input').val('');
+                    $('#lamination1_film_id').change();
+                    $('#lamination1_customers_material').prop("checked", false);
+                
                     $('#form_lamination_1').addClass('d-none');
-                    $('#form_lamination_2').addClass('d-none');
+                    $('#show_lamination_1').removeClass('d-none');
+                    $('#main_film_title').addClass('d-none');
+                    $('#film_title').removeClass('d-none');
+                
+                    $('#form_lamination_1 input').removeAttr('required');
+                    $('#form_lamination_1 select').removeAttr('required');
+                    $('#form_lamination_1 input').removeAttr('disabled');
+                    $('#form_lamination_1 select').removeAttr('disabled');
+                
+                    $('#lamination1_ski').val(<?=STANDARD_SKI ?>);
+                    $('#lamination1_ski').change();
+        
+                    HideLamination2();
+                    
+                    // Скрываем пункт "без лыж"
+                    $('#no_ski_option').addClass('d-none');
                     
                     // Показываем поля "только самоклеящиеся материалы"
                     $('.self-adhesive-only').removeClass('d-none');
