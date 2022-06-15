@@ -10,6 +10,7 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
 // Типы работы
 const WORK_TYPE_NOPRINT = 1;
 const WORK_TYPE_PRINT = 2;
+const WORK_TYPE_SELF_ADHESIVE = 3;
 
 // Лыжи
 const NO_SKI = 1;

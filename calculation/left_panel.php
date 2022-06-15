@@ -83,7 +83,7 @@ function GetCurrencyRate($currency, $usd, $euro) {
     <div class="col-6">
         <table class="calculation-table">
             <tr><td colspan="2"><h2>Характеристики</h2></td></tr>
-                <?php if($work_type_id == WORK_TYPE_PRINT): ?>
+                <?php if($work_type_id != WORK_TYPE_NOPRINT): ?>
             <tr><th>Печатная машина</th><td><?=$machine ?></td></tr>
                 <?php
                 function GetInkWithCases($param) {
@@ -113,7 +113,7 @@ function GetCurrencyRate($currency, $usd, $euro) {
                 <?php if(!empty($streams_number)): ?>
             <tr><th>Количество ручьев</th><td><?= $streams_number ?></td></tr>
                 <?php endif; ?>
-                <?php if($work_type_id == WORK_TYPE_PRINT): ?>
+                <?php if($work_type_id != WORK_TYPE_NOPRINT): ?>
             <tr><th>Рапорт</th><td><?= rtrim(rtrim(number_format($raport, 3, ",", ""), "0"), ",") ?> мм</td></tr>
                 <?php endif; ?>
                 <?php if(!empty($number_in_raport)): ?>
@@ -124,7 +124,9 @@ function GetCurrencyRate($currency, $usd, $euro) {
                 if(!empty($lamination1_film_name) || !empty($lamination1_individual_film_name)) $lamination = "1";
                 if(!empty($lamination2_film_name) || !empty($lamination2_individual_film_name)) $lamination = "2";
                 ?>
+                <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
             <tr><th>Количество ламинаций</th><td><?=$lamination ?></td></tr>
+                <?php endif; ?>
                 <?php if(!empty($lamination1_individual_film_name) || !empty($lamination1_film_name)): ?>
             <tr><th>Ширина ламинирующего вала</th><td><?= $lamination_roller_width ?> мм</td></tr>
                 <?php endif; ?>
@@ -143,7 +145,7 @@ function GetCurrencyRate($currency, $usd, $euro) {
         </table>
     </div>
 </div>
-<?php if($work_type_id == WORK_TYPE_PRINT): ?>
+<?php if($work_type_id != WORK_TYPE_NOPRINT): ?>
 <?php
 require_once './calculation.php';
 

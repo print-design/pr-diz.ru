@@ -744,6 +744,7 @@ if(!empty($id)) {
             <div>Масса с приладкой</div>
             <div class="value mb-2"><?= Display(floatval($weight_dirty_1), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($length_dirty_1), 0) ?> м</span></div>
         </div>
+        <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
         <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
             <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($weight_dirty_2), 0) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
@@ -766,6 +767,7 @@ if(!empty($id)) {
             <div>Масса с приладкой</div>
             <div class="value mb-2"><?= Display(floatval($weight_dirty_3), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($length_dirty_3), 0) ?> м</span></div>
         </div>
+        <?php endif; ?>
     </div>
     <div id="show_costs">
         <div class="row text-nowrap">
@@ -780,8 +782,10 @@ if(!empty($id)) {
                 <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
                 <h2 class="mt-2">Расходы</h2>
             </div>
+            <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>
+            <?php endif; ?>
         </div>
         <div class="row text-nowrap">
             <div class="col-4 pr-4">
@@ -792,6 +796,7 @@ if(!empty($id)) {
                 <div>Печать тиража</div>
                 <div class="value mb-2"><?= Display(floatval($work_cost_1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($work_time_1), 2) ?> ч</span></div>
             </div>
+            <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
                 <div class="value mb-2"><?= Display(floatval($film_waste_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($film_waste_weight_2), 2) ?> кг</span></div>
@@ -808,6 +813,7 @@ if(!empty($id)) {
                 <div>Работа ламинатора</div>
                 <div class="value mb-2"><?= Display(floatval($work_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Display(floatval($work_time_3), 2) ?> ч</span></div>
             </div>
+            <?php endif; ?>
         </div>
     </div>
     <div style="clear:both"></div>

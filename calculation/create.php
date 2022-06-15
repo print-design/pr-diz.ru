@@ -310,11 +310,11 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             }
         }
         
-        $length = filter_input(INPUT_POST, 'length'); if(empty($length)) $length = "NULL";
-        $stream_width = filter_input(INPUT_POST, 'stream_width'); if(empty($stream_width)) $stream_width = "NULL";
+        $length = filter_input(INPUT_POST, 'length'); if(empty($length)) $length = filter_input (INPUT_POST, 'length_2'); if(empty($length)) $length = "NULL";
+        $stream_width = filter_input(INPUT_POST, 'stream_width'); if(empty($stream_width)) $stream_width = filter_input (INPUT_POST, 'stream_width_2'); if(empty($stream_width)) $stream_width = "NULL";
         $streams_number = filter_input(INPUT_POST, 'streams_number'); if(empty($streams_number)) $streams_number = "NULL";
         $raport = filter_input(INPUT_POST, 'raport'); if(empty($raport)) $raport = "NULL";
-        $number_in_raport = filter_input(INPUT_POST, 'number_in_raport'); if(empty($number_in_raport)) $number_in_raport = "NULL";
+        $number_in_raport = filter_input(INPUT_POST, 'number_in_raport'); if(empty($number_in_raport)) $number_in_raport = filter_input (INPUT_POST, 'number_in_raport_2'); if(empty($number_in_raport)) $number_in_raport = "NULL";
         $lamination_roller_width = filter_input(INPUT_POST, 'lamination_roller_width'); if(empty($lamination_roller_width)) $lamination_roller_width = "NULL";
         $ink_number = filter_input(INPUT_POST, 'ink_number'); if(empty($ink_number)) $ink_number = "NULL";
         
