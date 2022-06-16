@@ -601,9 +601,6 @@ if(!empty($id)) {
 }
 ?>
 <div id="calculation"<?=$calculation_class ?>>
-    <div style="position: absolute; right: 30px; top: 0px;" class="d-none">
-        <a class="btn btn-outline-dark" target="_blank" style="margin-top: 20px;" href="print.php?id=<?=$id ?>"><i class="fa fa-print"></i></a>
-    </div>
     <div class="d-flex justify-content-between p-2">
         <div>
             <h1>Расчет</h1>
@@ -697,7 +694,7 @@ if(!empty($id)) {
             <div class="value mb-2"><?= Calculation::Display(floatval($cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
             <div class="mt-2">Себестоимость ПФ</div>
             <div class="value"><?= Calculation::Display(floatval($cliche_cost), 0) ?> &#8381;</div>
-            <div style="font-weight: normal;" class="value mb-2" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= Calculation::Display($stream_width * $streams_number + ($ski == NO_SKI ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($raport) + 20) ?>&nbsp;мм</div>            
+            <div style="font-weight: normal;" class="value mb-2" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= Calculation::Display($stream_width * $streams_number + ($ski == CalculationBase::NO_SKI ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($raport) + 20) ?>&nbsp;мм</div>            
         </div>
         <div class="col-4 pr-4">
             <h3>Отгрузочная стоимость</h3>

@@ -219,7 +219,7 @@ class CalculationBase {
     const COMIFLEX = 'comiflex';
     
     // Получения курса валюты (get - функция получения)
-    function GetCurrencyRate($currency, $usd, $euro) {
+    public static function GetCurrencyRate($currency, $usd, $euro) {
         switch($currency) {
             case self::USD:
                 return $usd;
@@ -685,13 +685,13 @@ class Calculation extends CalculationBase {
         //****************************************
         
         // Общая стоимость грязная 1, руб
-        $this->film_cost_1 = $this->weight_dirty_1 * $price_1 * $this->GetCurrencyRate($currency_1, $usd, $euro);
+        $this->film_cost_1 = $this->weight_dirty_1 * $price_1 * self::GetCurrencyRate($currency_1, $usd, $euro);
         
         // Общая стоимость грязная 2, руб
-        $this->film_cost_2 = $this->weight_dirty_2 * $price_2 * $this->GetCurrencyRate($currency_2, $usd, $euro);
+        $this->film_cost_2 = $this->weight_dirty_2 * $price_2 * self::GetCurrencyRate($currency_2, $usd, $euro);
         
         // Общая стоимость грязная 3, руб
-        $this->film_cost_3 = $this->weight_dirty_3 * $price_3 * $this->GetCurrencyRate($currency_3, $usd, $euro);
+        $this->film_cost_3 = $this->weight_dirty_3 * $price_3 * self::GetCurrencyRate($currency_3, $usd, $euro);
     
         //*****************************************
         // Время - деньги
@@ -750,10 +750,10 @@ class Calculation extends CalculationBase {
         $this->ink_1kg_mix_weight = 1 + $data_ink->solvent_part;
         
         // Цена 1 кг чистого флексоля 82, руб
-        $this->ink_flexol82_kg_price = $data_ink->solvent_flexol82_price * $this->GetCurrencyRate($data_ink->solvent_flexol82_currency, $usd, $euro);
+        $this->ink_flexol82_kg_price = $data_ink->solvent_flexol82_price * self::GetCurrencyRate($data_ink->solvent_flexol82_currency, $usd, $euro);
         
         // Цена 1 кг чистого этоксипропанола, руб
-        $this->ink_etoxypropanol_kg_price = $data_ink->solvent_etoxipropanol_price * $this->GetCurrencyRate($data_ink->solvent_etoxipropanol_currency, $usd, $euro);
+        $this->ink_etoxypropanol_kg_price = $data_ink->solvent_etoxipropanol_price * self::GetCurrencyRate($data_ink->solvent_etoxipropanol_currency, $usd, $euro);
         
         // Если печатаем на Комифлекс, то пользуемся флексолем82, иначе - этоксипропанолом
         $ink_solvent_kg_price = 0;
@@ -785,7 +785,7 @@ class Calculation extends CalculationBase {
             
             // Цена 1 кг чистой краски, руб
             $price = $this->GetInkPrice($$ink, $$cmyk, $data_ink->c_price, $data_ink->c_currency, $data_ink->m_price, $data_ink->m_currency, $data_ink->y_price, $data_ink->y_currency, $data_ink->k_price, $data_ink->k_currency, $data_ink->panton_price, $data_ink->panton_currency, $data_ink->white_price, $data_ink->white_currency, $data_ink->lacquer_price, $data_ink->lacquer_currency);
-            $ink_kg_price = $price->value * $this->GetCurrencyRate($price->currency, $usd, $euro);
+            $ink_kg_price = $price->value * self::GetCurrencyRate($price->currency, $usd, $euro);
             $this->ink_kg_prices[$i] = $ink_kg_price;
             
             // Цена 1 кг КраскаСмеси, руб
@@ -809,10 +809,10 @@ class Calculation extends CalculationBase {
         $this->glue_kg_weight = 1 + $data_glue->solvent_part;
         
         // Цена 1 кг чистого клея, руб
-        $this->glue_kg_price = $data_glue->glue_price * $this->GetCurrencyRate($data_glue->glue_currency, $usd, $euro);
+        $this->glue_kg_price = $data_glue->glue_price * self::GetCurrencyRate($data_glue->glue_currency, $usd, $euro);
         
         // Цена 1 кг чистого растворителя для клея, руб
-        $this->glue_solvent_kg_price = $data_glue->solvent_price * $this->GetCurrencyRate($data_glue->solvent_currency, $usd, $euro);
+        $this->glue_solvent_kg_price = $data_glue->solvent_price * self::GetCurrencyRate($data_glue->solvent_currency, $usd, $euro);
         
         // Цена 1 кг КлеяСмеси, руб
         $this->mix_glue_kg_price = ((1 * $this->glue_kg_price) + ($data_glue->solvent_part * $this->glue_solvent_kg_price)) / $this->glue_kg_weight;
@@ -891,7 +891,7 @@ class Calculation extends CalculationBase {
             }
             
             // Стоимость формы, руб
-            $cliche_cost = $this->cliche_area * $cliche_sm_price * $this->GetCurrencyRate($cliche_currency, $usd, $euro);
+            $cliche_cost = $this->cliche_area * $cliche_sm_price * self::GetCurrencyRate($cliche_currency, $usd, $euro);
             $this->cliche_costs[$i] = $cliche_cost;
         }
         
@@ -999,9 +999,9 @@ class Calculation extends CalculationBase {
         $this->film_cost_per_unit_3 = empty($this->weight_dirty_3) ? 0 : $this->film_cost_3 / $this->weight_dirty_3;
         
         // Отходы плёнки, стоимость
-        $this->film_waste_cost_1 = ($this->weight_dirty_1 - $this->weight_pure_1) * $price_1 * $this->GetCurrencyRate($currency_1, $usd, $euro);
-        $this->film_waste_cost_2 = ($this->weight_dirty_2 - $this->weight_pure_2) * $price_2 * $this->GetCurrencyRate($currency_2, $usd, $euro);
-        $this->film_waste_cost_3 = ($this->weight_dirty_3 - $this->weight_pure_3) * $price_3 * $this->GetCurrencyRate($currency_3, $usd, $euro);
+        $this->film_waste_cost_1 = ($this->weight_dirty_1 - $this->weight_pure_1) * $price_1 * self::GetCurrencyRate($currency_1, $usd, $euro);
+        $this->film_waste_cost_2 = ($this->weight_dirty_2 - $this->weight_pure_2) * $price_2 * self::GetCurrencyRate($currency_2, $usd, $euro);
+        $this->film_waste_cost_3 = ($this->weight_dirty_3 - $this->weight_pure_3) * $price_3 * self::GetCurrencyRate($currency_3, $usd, $euro);
         
         // Отходы плёнки, масса
         $this->film_waste_weight_1 = $this->weight_dirty_1 - $this->weight_pure_1;
@@ -1157,7 +1157,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         //*****************************
         
         // Себестоимость плёнки грязная (с приладкой), руб
-        $this->film_cost_dirty = $this->area_dirty * $price * $this->GetCurrencyRate($currency, $usd, $euro);
+        $this->film_cost_dirty = $this->area_dirty * $price * self::GetCurrencyRate($currency, $usd, $euro);
         
         //*****************************
         // Время - деньги
@@ -1186,7 +1186,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->ink_1kg_mix_weight = 1 + $data_ink->solvent_part;
         
         // Цена 1 кг чистого этоксипропанола, руб
-        $this->ink_etoxypropanol_kg_price = $data_ink->solvent_etoxipropanol_price * $this->GetCurrencyRate($data_ink->solvent_etoxipropanol_currency, $usd, $euro);
+        $this->ink_etoxypropanol_kg_price = $data_ink->solvent_etoxipropanol_price * self::GetCurrencyRate($data_ink->solvent_etoxipropanol_currency, $usd, $euro);
         
         // Создаём массив цен за 1 кг каждой краски
         $this->ink_kg_prices = array();
@@ -1208,7 +1208,7 @@ class CalculationSelfAdhesive extends CalculationBase {
             
             // Цена 1 кг чистой краски, руб
             $ink_price = $this->GetInkPrice($$ink, $$cmyk, $data_ink->c_price, $data_ink->c_currency, $data_ink->m_price, $data_ink->m_currency, $data_ink->y_price, $data_ink->y_currency, $data_ink->k_price, $data_ink->k_currency, $data_ink->panton_price, $data_ink->panton_currency, $data_ink->white_price, $data_ink->white_currency, $data_ink->lacquer_price, $data_ink->lacquer_currency);
-            $ink_kg_price = $ink_price->value * $this->GetCurrencyRate($ink_price->currency, $usd, $euro);
+            $ink_kg_price = $ink_price->value * self::GetCurrencyRate($ink_price->currency, $usd, $euro);
             $this->ink_kg_prices[$i] = $ink_kg_price;
             
             // Цена 1 КраскаСмеси, руб

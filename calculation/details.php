@@ -8,22 +8,6 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Типы работы
-const WORK_TYPE_NOPRINT = 1;
-const WORK_TYPE_PRINT = 2;
-const WORK_TYPE_SELF_ADHESIVE = 3;
-
-// Лыжи
-const NO_SKI = 1;
-const STANDARD_SKI = 2;
-const NONSTANDARD_SKI = 3;
-
-// Формы
-const OLD = "old";
-const FLINT = "flint";
-const KODAK = "kodak";
-const TVER = "tver";
-
 // Атрибут "поле неактивно"
 const DISABLED_ATTR = "";
 
@@ -166,7 +150,7 @@ for($i=1; $i<=$ink_number; $i++) {
     $cliche_var = "cliche_$i";
     $$cliche_var = $row[$cliche_var];
     
-    if(!empty($$cliche_var) && $$cliche_var != OLD) {
+    if(!empty($$cliche_var) && $$cliche_var != CalculationBase::OLD) {
         $new_forms_number++;
     }
 }

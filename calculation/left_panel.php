@@ -1,17 +1,3 @@
-<?php
-function GetCurrencyRate($currency, $usd, $euro) {
-    switch($currency) {
-        case Calculation::USD:
-            return $usd;
-            
-        case Calculation::EURO:
-            return $euro;
-            
-        default :
-            return 1;
-    }
-}
-?>
 <div class="row">
     <div class="col-6">
         <table class="calculation-table">
@@ -83,7 +69,7 @@ function GetCurrencyRate($currency, $usd, $euro) {
     <div class="col-6">
         <table class="calculation-table">
             <tr><td colspan="2"><h2>Характеристики</h2></td></tr>
-                <?php if($work_type_id != WORK_TYPE_NOPRINT): ?>
+                <?php if($work_type_id != CalculationBase::WORK_TYPE_NOPRINT): ?>
             <tr><th>Печатная машина</th><td><?=$machine ?></td></tr>
                 <?php
                 function GetInkWithCases($param) {
@@ -113,7 +99,7 @@ function GetCurrencyRate($currency, $usd, $euro) {
                 <?php if(!empty($streams_number)): ?>
             <tr><th>Количество ручьев</th><td><?= $streams_number ?></td></tr>
                 <?php endif; ?>
-                <?php if($work_type_id != WORK_TYPE_NOPRINT): ?>
+                <?php if($work_type_id != CalculationBase::WORK_TYPE_NOPRINT): ?>
             <tr><th>Рапорт</th><td><?= rtrim(rtrim(number_format($raport, 3, ",", ""), "0"), ",") ?> мм</td></tr>
                 <?php endif; ?>
                 <?php if(!empty($number_in_raport)): ?>
@@ -124,7 +110,7 @@ function GetCurrencyRate($currency, $usd, $euro) {
                 if(!empty($lamination1_film_name) || !empty($lamination1_individual_film_name)) $lamination = "1";
                 if(!empty($lamination2_film_name) || !empty($lamination2_individual_film_name)) $lamination = "2";
                 ?>
-                <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
+                <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
             <tr><th>Количество ламинаций</th><td><?=$lamination ?></td></tr>
                 <?php endif; ?>
                 <?php if(!empty($lamination1_individual_film_name) || !empty($lamination1_film_name)): ?>
@@ -133,9 +119,9 @@ function GetCurrencyRate($currency, $usd, $euro) {
                 <?php
                 function GetSkiNameExt($param, $param_width) {
                     switch ($param) {
-                        case STANDARD_SKI:
+                        case CalculationBase::STANDARD_SKI:
                             return "Стандартные лыжи";
-                        case NONSTANDARD_SKI:
+                        case CalculationBase::NONSTANDARD_SKI:
                             return "Ширина $param_width мм";
                         default :
                             return 'Без лыж';
@@ -145,9 +131,8 @@ function GetCurrencyRate($currency, $usd, $euro) {
         </table>
     </div>
 </div>
-<?php if($work_type_id != WORK_TYPE_NOPRINT): ?>
 <?php
-require_once './calculation.php';
+if($work_type_id != CalculationBase::WORK_TYPE_NOPRINT):
 
 // Стоимость форм
 $cliche_data = null;
@@ -164,7 +149,7 @@ if($row = $fetcher->Fetch()) {
 $cliche_height = $raport + 20;
 
 // Ширина форм
-$cliche_width = ($streams_number * $stream_width + 20) + ((!empty($ski) && $ski == NO_SKI) ? 0 : 20);
+$cliche_width = ($streams_number * $stream_width + 20) + ((!empty($ski) && $ski == CalculationBase::NO_SKI) ? 0 : 20);
 
 // Площадь форм
 $cliche_area = $cliche_height * $cliche_width / 100;
@@ -220,14 +205,11 @@ $cliche_area = $cliche_height * $cliche_width / 100;
         <td>
             <?php
             switch ($$cliche_var) {
-                case FLINT:
+                case CalculationBase::FLINT:
                     echo 'Флинт';
                     break;
-                case KODAK;
+                case CalculationBase::KODAK;
                     echo 'Кодак';
-                    break;
-                case TVER;
-                    echo 'Тверь';
                     break;
             }
             ?>
@@ -235,7 +217,7 @@ $cliche_area = $cliche_height * $cliche_width / 100;
         <td>
             <?php
             switch ($$cliche_var) {
-                case  OLD:
+                case CalculationBase::OLD:
                     echo 'Старая';
                     break;
                 default :
@@ -247,14 +229,14 @@ $cliche_area = $cliche_height * $cliche_width / 100;
         <td class="text-nowrap">
             <?php
             switch ($$cliche_var) {
-                case OLD:
+                case CalculationBase::OLD:
                     echo '0 ₽';
                     break;
-                case FLINT:
-                    echo Calculation::Display($cliche_area * $cliche_data->flint_price * GetCurrencyRate($cliche_data->flint_currency, $usd, $euro), 2)." ₽";
+                case CalculationBase::FLINT:
+                    echo CalculationBase::Display($cliche_area * $cliche_data->flint_price * CalculationBase::GetCurrencyRate($cliche_data->flint_currency, $usd, $euro), 2)." ₽";
                     break;
-                case KODAK:
-                    echo Calculation::Display($cliche_area * $cliche_data->kodak_price * GetCurrencyRate($cliche_data->kodak_currency, $usd, $euro), 2)." ₽";
+                case CalculationBase::KODAK:
+                    echo CalculationBase::Display($cliche_area * $cliche_data->kodak_price * CalculationBase::GetCurrencyRate($cliche_data->kodak_currency, $usd, $euro), 2)." ₽";
                     break;
             }
             ?>

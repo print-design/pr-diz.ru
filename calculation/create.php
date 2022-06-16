@@ -51,28 +51,8 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     header("Location: ".BuildQueryRemove("status"));
 }
 
-// Типы работы
-const WORK_TYPE_NOPRINT = 1;
-const WORK_TYPE_PRINT = 2;
-const WORK_TYPE_SELF_ADHESIVE = 3;
-
 // Значение марки плёнки "другая"
 const INDIVIDUAL = -1;
-
-// Лыжи
-const NO_SKI = 1;
-const STANDARD_SKI = 2;
-const NONSTANDARD_SKI = 3;
-
-// Валюты
-const USD = "usd";
-const EURO = "euro";
-
-// Формы
-const OLD = "old";
-const FLINT = "flint";
-const KODAK = "kodak";
-const TVER = "tver";
 
 // Атрибут "поле неактивно"
 const DISABLED_ATTR = "";
@@ -248,7 +228,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $name = addslashes(filter_input(INPUT_POST, 'name'));
         $work_type_id = filter_input(INPUT_POST, 'work_type_id');
         $unit = filter_input(INPUT_POST, 'unit');
-        $machine_id = filter_input(INPUT_POST, 'machine_id'); if(empty($machine_id)) $machine_id = "NULL"; if($work_type_id == WORK_TYPE_NOPRINT) $machine_id = "NULL";
+        $machine_id = filter_input(INPUT_POST, 'machine_id'); if(empty($machine_id)) $machine_id = "NULL"; if($work_type_id == CalculationBase::WORK_TYPE_NOPRINT) $machine_id = "NULL";
         $quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity'));
         
         $film_id = filter_input(INPUT_POST, 'film_id');
@@ -260,7 +240,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $individual_density = filter_input(INPUT_POST, 'individual_density'); if(empty($individual_density)) $individual_density = "NULL"; if($film_id != INDIVIDUAL) $individual_density = "NULL";
         $customers_material = 0; if(filter_input(INPUT_POST, 'customers_material') == 'on') $customers_material = 1;
         $ski = filter_input(INPUT_POST, 'ski'); if(empty($ski)) $ski = "NULL"; if(empty($film_id)) $ski = "NULL";
-        $width_ski = filter_input(INPUT_POST, 'width_ski'); if(empty($width_ski)) $width_ski = "NULL"; if($ski != NONSTANDARD_SKI) $width_ski = "NULL";
+        $width_ski = filter_input(INPUT_POST, 'width_ski'); if(empty($width_ski)) $width_ski = "NULL"; if($ski != CalculationBase::NONSTANDARD_SKI) $width_ski = "NULL";
         
         // Если currency пустой, то получаем значение валюты из справочника цен на плёнку
         if(empty($currency)) {
@@ -280,7 +260,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $lamination1_individual_density = filter_input(INPUT_POST, 'lamination1_individual_density'); if(empty($lamination1_individual_density)) $lamination1_individual_density = "NULL"; if($lamination1_film_id != INDIVIDUAL) $lamination1_individual_density = "NULL";
         $lamination1_customers_material = 0; if(filter_input(INPUT_POST, 'lamination1_customers_material') == 'on') $lamination1_customers_material = 1;
         $lamination1_ski = filter_input(INPUT_POST, 'lamination1_ski'); if(empty($lamination1_ski)) $lamination1_ski = "NULL"; if(empty($lamination1_film_id)) $lamination1_ski = "NULL";
-        $lamination1_width_ski = filter_input(INPUT_POST, 'lamination1_width_ski'); if(empty($lamination1_width_ski)) $lamination1_width_ski = "NULL"; if($lamination1_ski != NONSTANDARD_SKI) $lamination1_width_ski = "NULL";
+        $lamination1_width_ski = filter_input(INPUT_POST, 'lamination1_width_ski'); if(empty($lamination1_width_ski)) $lamination1_width_ski = "NULL"; if($lamination1_ski != CalculationBase::NONSTANDARD_SKI) $lamination1_width_ski = "NULL";
         
         // Если lamination1_currency пустой, то получаем значение валюты из справочника цен на плёнку
         if(empty($lamination1_currency)) {
@@ -300,7 +280,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density'); if(empty($lamination2_individual_density)) $lamination2_individual_density = "NULL"; if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_density = "NULL";
         $lamination2_customers_material = 0; if(filter_input(INPUT_POST, 'lamination2_customers_material') == 'on') $lamination2_customers_material = 1;
         $lamination2_ski = filter_input(INPUT_POST, 'lamination2_ski'); if(empty($lamination2_ski)) $lamination2_ski = "NULL"; if(empty($lamination2_film_id)) $lamination2_ski = "NULL";
-        $lamination2_width_ski = filter_input(INPUT_POST, 'lamination2_width_ski'); if(empty($lamination2_width_ski)) $lamination2_width_ski = "NULL"; if($lamination2_ski != NONSTANDARD_SKI) $lamination2_width_ski = "NULL";
+        $lamination2_width_ski = filter_input(INPUT_POST, 'lamination2_width_ski'); if(empty($lamination2_width_ski)) $lamination2_width_ski = "NULL"; if($lamination2_ski != CalculationBase::NONSTANDARD_SKI) $lamination2_width_ski = "NULL";
         
         // Если lamination2_currency пустой, то получаем значение валюты из справочника цен на плёнку
         if(empty($lamination2_currency)) {
@@ -484,7 +464,7 @@ if($ski === null && isset($row['ski'])) {
     $ski = $row['ski'];
 }
 if($ski === null) {
-    $ski = STANDARD_SKI; // По умолчанию значение должно быть "Стандартные лыиж".
+    $ski = CalculationBase::STANDARD_SKI; // По умолчанию значение должно быть "Стандартные лыиж".
 }
 
 $width_ski = filter_input(INPUT_POST, 'width_ski');
@@ -677,7 +657,7 @@ for ($i=1; $i<=8; $i++) {
         $$cliche_var = $row["cliche_$i"];
     }
     
-    if($$cliche_var != OLD) {
+    if($$cliche_var != CalculationBase::OLD) {
         $new_forms_number++;
     }
 }
@@ -1166,9 +1146,9 @@ while ($row = $fetcher->Fetch()) {
                                         <?php
                                         $no_ski_class = "";
                                         ?>
-                                        <option id="no_ski_option" value="<?=NO_SKI ?>"<?=$no_ski_class ?><?=($ski == NO_SKI ? " selected='selected'" : "") ?>>Без лыж</option>
-                                        <option value="<?=STANDARD_SKI ?>"<?=($ski == STANDARD_SKI ? " selected='selected'" : "") ?>>Стандартные лыжи</option>
-                                        <option value="<?=NONSTANDARD_SKI ?>"<?=($ski == NONSTANDARD_SKI ? " selected='selected'" : "") ?>>Нестандартные лыжи</option>
+                                        <option id="no_ski_option" value="<?= CalculationBase::NO_SKI ?>"<?=$no_ski_class ?><?=($ski == CalculationBase::NO_SKI ? " selected='selected'" : "") ?>>Без лыж</option>
+                                        <option value="<?= CalculationBase::STANDARD_SKI ?>"<?=($ski == CalculationBase::STANDARD_SKI ? " selected='selected'" : "") ?>>Стандартные лыжи</option>
+                                        <option value="<?= CalculationBase::NONSTANDARD_SKI ?>"<?=($ski == CalculationBase::NONSTANDARD_SKI ? " selected='selected'" : "") ?>>Нестандартные лыжи</option>
                                     </select>
                                 </div>
                             </div>
@@ -1351,8 +1331,8 @@ while ($row = $fetcher->Fetch()) {
                                     <div class="form-group">
                                         <label for="lamination1_ski" id="for_lamination1_ski">Лыжи</label>
                                         <select name="lamination1_ski" id="lamination1_ski" class="form-control">
-                                            <option value="<?=STANDARD_SKI ?>"<?=($lamination1_ski == STANDARD_SKI ? " selected='selected'" : "") ?>>Стандартные лыжи</option>
-                                            <option value="<?=NONSTANDARD_SKI ?>"<?=($lamination1_ski == NONSTANDARD_SKI ? " selected='selected'" : "") ?>>Нестандартные лыжи</option>
+                                            <option value="<?= CalculationBase::STANDARD_SKI ?>"<?=($lamination1_ski == CalculationBase::STANDARD_SKI ? " selected='selected'" : "") ?>>Стандартные лыжи</option>
+                                            <option value="<?= CalculationBase::NONSTANDARD_SKI ?>"<?=($lamination1_ski == CalculationBase::NONSTANDARD_SKI ? " selected='selected'" : "") ?>>Нестандартные лыжи</option>
                                         </select>
                                     </div>
                                 </div>
@@ -1525,8 +1505,8 @@ while ($row = $fetcher->Fetch()) {
                                         <div class="form-group">
                                             <label for="lamination2_ski" id="for_lamination2_ski">Лыжи</label>
                                             <select name="lamination2_ski" id="lamination2_ski" class="form-control">
-                                                <option value="<?=STANDARD_SKI ?>"<?=($lamination2_ski == STANDARD_SKI ? " selected='selected'" : "") ?>>Стандартные лыжи</option>
-                                                <option value="<?=NONSTANDARD_SKI ?>"<?=($lamination2_ski == NONSTANDARD_SKI ? " selected='selected'" : "") ?>>Нестандартные лыжи</option>
+                                                <option value="<?= CalculationBase::STANDARD_SKI ?>"<?=($lamination2_ski == CalculationBase::STANDARD_SKI ? " selected='selected'" : "") ?>>Стандартные лыжи</option>
+                                                <option value="<?= CalculationBase::NONSTANDARD_SKI ?>"<?=($lamination2_ski == CalculationBase::NONSTANDARD_SKI ? " selected='selected'" : "") ?>>Нестандартные лыжи</option>
                                             </select>
                                         </div>
                                     </div>
@@ -1891,9 +1871,9 @@ while ($row = $fetcher->Fetch()) {
                                         $cliche_selected_var = $$cliche_var."_selected";
                                         $$cliche_selected_var = " selected='selected'";
                                         ?>
-                                        <option value="<?=OLD ?>"<?=$old_selected ?>>Старая</option>
-                                        <option value="<?=FLINT ?>"<?=$flint_selected ?>>Новая Флинт</option>
-                                        <option value="<?=KODAK ?>"<?=$kodak_selected ?>>Новая Кодак</option>
+                                        <option value="<?= CalculationBase::OLD ?>"<?=$old_selected ?>>Старая</option>
+                                        <option value="<?= CalculationBase::FLINT ?>"<?=$flint_selected ?>>Новая Флинт</option>
+                                        <option value="<?= CalculationBase::KODAK ?>"<?=$kodak_selected ?>>Новая Кодак</option>
                                         <?php if(false): ?>
                                         <!-- Тверские формы решили убрать -->
                                         <option value="<?=TVER ?>"<?=$tver_selected ?>>Новая Тверь</option>
@@ -2284,7 +2264,7 @@ while ($row = $fetcher->Fetch()) {
             $('#lamination2_ski').change(SetWidthSkiVisibility);
             
             function SetWidthSkiVisibility() {
-                if($('#ski').val() == <?=NONSTANDARD_SKI ?>) {
+                if($('#ski').val() == <?= CalculationBase::NONSTANDARD_SKI ?>) {
                     $('#width_ski').removeClass('d-none');
                     $('#width_ski').attr('required', 'required');
                     $('#for_width_ski').removeClass('d-none');
@@ -2295,7 +2275,7 @@ while ($row = $fetcher->Fetch()) {
                     $('#for_width_ski').addClass('d-none');
                 }
                 
-                if($('#lamination1_ski').val() == <?=NONSTANDARD_SKI ?>) {
+                if($('#lamination1_ski').val() == <?= CalculationBase::NONSTANDARD_SKI ?>) {
                     $('#lamination1_width_ski').removeClass('d-none');
                     $('#lamination1_width_ski').attr('required', 'required');
                     $('#for_lamination1_width_ski').removeClass('d-none');
@@ -2306,7 +2286,7 @@ while ($row = $fetcher->Fetch()) {
                     $('#for_lamination1_width_ski').addClass('d-none');
                 }
                 
-                if($('#lamination2_ski').val() == <?=NONSTANDARD_SKI ?>) {
+                if($('#lamination2_ski').val() == <?= CalculationBase::NONSTANDARD_SKI ?>) {
                     $('#lamination2_width_ski').removeClass('d-none');
                     $('#lamination2_width_ski').attr('required', 'required');
                     $('#for_lamination2_width_ski').removeClass('d-none');
@@ -2322,7 +2302,7 @@ while ($row = $fetcher->Fetch()) {
             
             // Показываем или скрываем поля в зависимости от работы с печатью / без печати и наличия / отсутствия ламинации
             function SetFieldsVisibility(work_type_id) {
-                if(work_type_id == <?=WORK_TYPE_PRINT ?>) {
+                if(work_type_id == <?= CalculationBase::WORK_TYPE_PRINT ?>) {
                     // Если тип работы "Плёнка с печатью", то объём заказа и в килограммах и в штуках
                     $('#units').removeClass('d-none');
                     $('#unit_kg').parent().parent().removeClass('d-none');
@@ -2365,7 +2345,7 @@ while ($row = $fetcher->Fetch()) {
                         $('#no_ski_option').removeClass('d-none');
                     }
                 }
-                else if(work_type_id == <?=WORK_TYPE_NOPRINT ?>) {
+                else if(work_type_id == <?= CalculationBase::WORK_TYPE_NOPRINT ?>) {
                     // Если тип работы "Плёнка без печати", то объём заказа всегда в килограммах
                     $('#units').removeClass('d-none');
                     $('#unit_kg').parent().parent().removeClass('d-none');
@@ -2409,7 +2389,7 @@ while ($row = $fetcher->Fetch()) {
                         $('#no_ski_option').removeClass('d-none');
                     }
                 }
-                else if(work_type_id == <?=WORK_TYPE_SELF_ADHESIVE ?>) {
+                else if(work_type_id == <?= CalculationBase::WORK_TYPE_SELF_ADHESIVE ?>) {
                     // Если тип работы "Самоклеящиеся материалы", то объём заказа всегда в штуках
                     $('#units').removeClass('d-none');
                     $('#unit_kg').parent().parent().addClass('d-none');
@@ -2440,7 +2420,7 @@ while ($row = $fetcher->Fetch()) {
                     $('#form_lamination_1 input').removeAttr('disabled');
                     $('#form_lamination_1 select').removeAttr('disabled');
                 
-                    $('#lamination1_ski').val(<?=STANDARD_SKI ?>);
+                    $('#lamination1_ski').val(<?= CalculationBase::STANDARD_SKI ?>);
                     $('#lamination1_ski').change();
         
                     HideLamination2();
@@ -2531,8 +2511,8 @@ while ($row = $fetcher->Fetch()) {
                 $('#lamination1_price').attr('required', 'required');
                 
                 $('#no_ski_option').addClass('d-none');
-                if($('#ski').val() == <?=NO_SKI ?>) {
-                    $('#ski').val(<?=STANDARD_SKI ?>);
+                if($('#ski').val() == <?= CalculationBase::NO_SKI ?>) {
+                    $('#ski').val(<?= CalculationBase::STANDARD_SKI ?>);
                 }
                 
                 SetFieldsVisibility($('#work_type_id').val());
@@ -2561,7 +2541,7 @@ while ($row = $fetcher->Fetch()) {
                 $('#form_lamination_1 select').removeAttr('disabled');
                 
                 $('#no_ski_option').removeClass('d-none');
-                $('#lamination1_ski').val(<?=STANDARD_SKI ?>);
+                $('#lamination1_ski').val(<?= CalculationBase::STANDARD_SKI ?>);
                 $('#lamination1_ski').change();
         
                 SetFieldsVisibility($('#work_type_id').val());
@@ -2601,7 +2581,7 @@ while ($row = $fetcher->Fetch()) {
                 $('#form_lamination_2 input').removeAttr('disabled');
                 $('#form_lamination_2 select').removeAttr('disabled');
                 
-                $('#lamination2_ski').val(<?=STANDARD_SKI ?>);
+                $('#lamination2_ski').val(<?= CalculationBase::STANDARD_SKI ?>);
                 $('#lamination2_ski').change();
             }
             
