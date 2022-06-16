@@ -76,7 +76,6 @@ if($id !== null) {
             . "rc.cliche_in_price, rc.extracharge, rc.extracharge_cliche "
             . "from calculation rc "
             . "left join machine m on rc.machine_id = m.id "
-            . "left join calculation_result cr on cr.calculation_id = rc.id "
             . "left join film_variation fv on rc.film_variation_id = fv.id "
             . "left join film f on fv.film_id = f.id "
             . "left join film_variation lamination1_fv on rc.lamination1_film_variation_id = lamination1_fv.id "
@@ -202,6 +201,7 @@ if($id !== null) {
     $data_machine_laminator = new DataMachine(null, null, null);
     $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
     $data_glue = new DataGlue(null, null, null, null, null, null, null);
+    $data_cliche = new DataCliche(null, null, null, null, null, null);
     $data_extracharge = array();
     
     if(!empty($date)) {
@@ -261,7 +261,7 @@ if($id !== null) {
                 . "from norm_cliche where date <= '$date' order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
-            $cliche_data = new DataCliche($row['flint_price'], $row['flint_currency'], $row['kodak_price'], $row['kodak_currency'], $row['scotch_price'], $row['scotch_currency']);
+            $data_cliche = new DataCliche($row['flint_price'], $row['flint_currency'], $row['kodak_price'], $row['kodak_currency'], $row['scotch_price'], $row['scotch_currency']);
         }
         
         $sql = "select extracharge_type_id, from_weight, to_weight, value from extracharge";
@@ -279,7 +279,7 @@ if($id !== null) {
                 $data_machine_laminator,
                 $data_ink,
                 $data_glue,
-                $cliche_data,
+                $data_cliche,
                 $data_extracharge,
                 $usd, // Курс доллара
                 $euro, // Курс евро
@@ -890,13 +890,13 @@ if($id !== null) {
             
             switch ($$cliche) {
                 case Calculation::FLINT:
-                    $cliche_sm_price = $cliche_data->flint_price;
-                    $cliche_currency = $cliche_data->flint_currency;
+                    $cliche_sm_price = $data_cliche->flint_price;
+                    $cliche_currency = $data_cliche->flint_currency;
                     break;
                 
                 case Calculation::KODAK:
-                    $cliche_sm_price = $cliche_data->kodak_price;
-                    $cliche_currency = $cliche_data->kodak_currency;
+                    $cliche_sm_price = $data_cliche->kodak_price;
+                    $cliche_currency = $data_cliche->kodak_currency;
                     break;
             }
             
