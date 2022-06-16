@@ -171,8 +171,8 @@ class DataExtracharge {
     }
 }
 
-// Расчёт
-class Calculation {
+// Базовый класс для классов расчёта
+class CalculationBase {
     // Типы работы
     const WORK_TYPE_NOPRINT = 1;
     const WORK_TYPE_PRINT = 2;
@@ -298,10 +298,10 @@ class Calculation {
         }
     }
     
-    // Отображение чисел в удобном виде (напр: 1 234 567,89 вместо 1234567.8877998909)
-    function Display($value) {
-        if(is_float($value) || is_double($value)) {
-            return number_format($value, 2, ",", " ");
+    // Отображение чисел в удобном формате
+    public static function Display($value, $decimals) {
+        if(is_float($value) || is_double($value) || is_int($value)) {
+            return number_format($value, $decimals, ",", " ");
         }
         elseif(is_string($value)) {
             return str_replace(".", ",", $value);
@@ -310,7 +310,10 @@ class Calculation {
             return $value;
         }
     }
+}
 
+// Расчёт
+class Calculation extends CalculationBase {
     public $laminations_number = 0; // количество ламинаций
     
     public $uk1, $uk2, $uk3, $ukpf; // уравнивающий коэффициент 1, 2, 3, ПФ
@@ -1008,87 +1011,7 @@ class Calculation {
 }
 
 // Расчёт для самоклеящейся бумаги
-class CalculationSelfAdhesive {
-    // Получения курса валюты (get - функция получения)
-    function GetCurrencyRate($currency, $usd, $euro) {
-        switch($currency) {
-            case self::USD:
-                return $usd;
-            
-            case self::EURO:
-                return $euro;
-            
-            default :
-                return 1;
-        }
-    }
-    
-    // Получение цены на краску
-    function GetInkPrice($ink, $cmyk, $c_price, $c_currency, $m_price, $m_currency, $y_price, $y_currency, $k_price, $k_currency, $panton_price, $panton_currency, $white_price, $white_currency, $lacquer_price, $lacquer_currency) {
-        switch ($ink) {
-            case self::CMYK:
-                switch ($cmyk) {
-                    case self::CYAN:
-                        return new DataPrice($c_price, $c_currency);
-                        
-                    case self::MAGENDA:
-                        return new DataPrice($m_price, $m_currency);
-                        
-                    case self::YELLOW:
-                        return new DataPrice($y_price, $y_currency);
-                        
-                    case self::KONTUR:
-                        return new DataPrice($k_price, $k_currency);
-                        
-                    default :
-                        return null;
-                }
-                
-            case self::PANTON:
-                return new DataPrice($panton_price, $panton_currency);
-                
-            case self::WHITE:
-                return new DataPrice($white_price, $white_currency);
-                
-            case self::LACQUER:
-                return new DataPrice($lacquer_price, $lacquer_currency);
-                
-            default :
-                return null;
-        }
-    }
-    
-    // Получение расхода краски
-    function GetInkExpense($ink, $cmyk, $c_expense, $m_expense, $y_expense, $k_expense, $panton_expense, $white_expense, $lacquer_expense) {
-        switch ($ink) {
-            case self::CMYK:
-                switch ($cmyk) {
-                    case self::CYAN:
-                        return $c_expense;
-                        
-                    case self::MAGENDA:
-                        return $m_expense;
-                        
-                    case self::YELLOW:
-                        return $y_expense;
-                        
-                    case self::KONTUR:
-                        return $k_expense;
-                }
-            case self::PANTON:
-                return $panton_expense;
-                
-            case self::WHITE:
-                return $white_expense;
-                
-            case self::LACQUER:
-                return $lacquer_expense;
-                
-            default :
-                return null;
-        }
-    }
-    
+class CalculationSelfAdhesive extends CalculationBase {
     public $width_mat = 0; // Ширина материала
     public $length_label_dirty = 0; // Высота этикетки грязная
     public $width_dirty = 0; // Ширина этикетки грязная
@@ -1166,11 +1089,11 @@ class CalculationSelfAdhesive {
         // Если стадартные лыжи: количество ручьёв * (ширина ручья + расстояние между ручьями) + 20
         // Если нестандартные лыжи: ширина материала вводится вручную
         switch ($ski) {
-            case Calculation::STANDARD_SKI:
+            case self::STANDARD_SKI:
                 $this->width_mat = $streams_number * ($stream_width + $data_gap->gap_stream) + 20;
                 break;
             
-            case Calculation::NONSTANDARD_SKI:
+            case self::NONSTANDARD_SKI:
                 $this->width_mat = $width_ski;
                 break;
             

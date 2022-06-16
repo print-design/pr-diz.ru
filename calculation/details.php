@@ -1,6 +1,7 @@
 <?php
 include '../include/topscripts.php';
 include './status_ids.php';
+include './calculation.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'manager'))) {

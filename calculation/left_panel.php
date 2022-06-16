@@ -251,10 +251,10 @@ $cliche_area = $cliche_height * $cliche_width / 100;
                     echo '0 ₽';
                     break;
                 case FLINT:
-                    echo Display($cliche_area * $cliche_data->flint_price * GetCurrencyRate($cliche_data->flint_currency, $usd, $euro), 2)." ₽";
+                    echo Calculation::Display($cliche_area * $cliche_data->flint_price * GetCurrencyRate($cliche_data->flint_currency, $usd, $euro), 2)." ₽";
                     break;
                 case KODAK:
-                    echo Display($cliche_area * $cliche_data->kodak_price * GetCurrencyRate($cliche_data->kodak_currency, $usd, $euro), 2)." ₽";
+                    echo Calculation::Display($cliche_area * $cliche_data->kodak_price * GetCurrencyRate($cliche_data->kodak_currency, $usd, $euro), 2)." ₽";
                     break;
             }
             ?>
