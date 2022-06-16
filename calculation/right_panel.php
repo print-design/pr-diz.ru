@@ -683,62 +683,62 @@ if(!empty($id)) {
         <div class="col-4 pr-4">
             <h3>Себестоимость</h3>
             <div>Себестоимость <?=$cliche_in_price == 1 ? 'с' : 'без' ?> ПФ</div>
-            <div class="value mb-2"><?= Calculation::Display(floatval($cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
+            <div class="value mb-2"><?= CalculationBase::Display(floatval($cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
             <div class="mt-2">Себестоимость ПФ</div>
-            <div class="value"><?= Calculation::Display(floatval($cliche_cost), 0) ?> &#8381;</div>
-            <div style="font-weight: normal;" class="value mb-2" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= Calculation::Display($stream_width * $streams_number + ($ski == CalculationBase::NO_SKI ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($raport) + 20) ?>&nbsp;мм</div>            
+            <div class="value"><?= CalculationBase::Display(floatval($cliche_cost), 0) ?> &#8381;</div>
+            <div class="value mb-2 font-weight-normal" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= CalculationBase::Display($stream_width * $streams_number + ($ski == CalculationBase::NO_SKI ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($raport) + 20) ?>&nbsp;мм</div>            
         </div>
         <div class="col-4 pr-4">
             <h3>Отгрузочная стоимость</h3>
             <div>Отгрузочная стоимость <?=$cliche_in_price == 1 ? 'с' : 'без' ?> ПФ</div>
-            <div class="value"><?= Calculation::Display(floatval($shipping_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($shipping_cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
+            <div class="value"><?= CalculationBase::Display(floatval($shipping_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($shipping_cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
             <?php if($cliche_in_price != 1): ?>
             <div class="mt-2">Отгрузочная стоимость ПФ</div>
-            <div class="value"><?= Calculation::Display(floatval($shipping_cliche_cost), 0) ?> &#8381;</div>
+            <div class="value"><?= CalculationBase::Display(floatval($shipping_cliche_cost), 0) ?> &#8381;</div>
             <?php endif; ?>
         </div>
         <div class="col-4">
             <h3>Прибыль</h3>
             <div>Прибыль <?=$cliche_in_price == 1 ? 'с' : 'без' ?> ПФ</div>
-            <div class="value mb-2"><?= Calculation::Display(floatval($income), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display($income_per_unit, 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? 'кг' : 'шт') ?></span></div>            
+            <div class="value mb-2"><?= CalculationBase::Display(floatval($income), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display($income_per_unit, 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? 'кг' : 'шт') ?></span></div>            
         </div>
     </div>
     <div class="mt-3">
-        <h2>Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($total_weight_dirty), 0) ?> кг</span></h2>
+        <h2>Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= CalculationBase::Display(floatval($total_weight_dirty), 0) ?> кг</span></h2>
     </div>
     <div class="row text-nowrap">
         <div class="col-4 pr-4">
-            <h3>Основная пленка&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($weight_dirty_1), 0) ?> кг</span></h3>
+            <h3>Основная пленка&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($weight_dirty_1), 0) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
-            <div class="value mb-2"><?= Calculation::Display(floatval($film_cost_1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($film_cost_per_unit_1), 3) ?> &#8381; за кг</span></div>
+            <div class="value mb-2"><?= CalculationBase::Display(floatval($film_cost_1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($film_cost_per_unit_1), 3) ?> &#8381; за кг</span></div>
             <div>Ширина</div>
-            <div class="value mb-2"><?= Calculation::Display(intval($width_1), 0) ?> мм</div>
+            <div class="value mb-2"><?= CalculationBase::Display(intval($width_1), 0) ?> мм</div>
             <div>Масса без приладки</div>
-            <div class="value mb-2"><?= Calculation::Display(floatval($weight_pure_1), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($length_pure_1), 0) ?> м</span></div>
+            <div class="value mb-2"><?= CalculationBase::Display(floatval($weight_pure_1), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($length_pure_1), 0) ?> м</span></div>
             <div>Масса с приладкой</div>
-            <div class="value mb-2"><?= Calculation::Display(floatval($weight_dirty_1), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($length_dirty_1), 0) ?> м</span></div>
+            <div class="value mb-2"><?= CalculationBase::Display(floatval($weight_dirty_1), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($length_dirty_1), 0) ?> м</span></div>
         </div>
         <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
-            <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($weight_dirty_2), 0) ?> кг</span></h3>
+            <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($weight_dirty_2), 0) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
-            <div class="value mb-2"><?= Calculation::Display(floatval($film_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($film_cost_per_unit_2), 3) ?> &#8381; за кг</span></div>
+            <div class="value mb-2"><?= CalculationBase::Display(floatval($film_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($film_cost_per_unit_2), 3) ?> &#8381; за кг</span></div>
             <div>Ширина</div>
-            <div class="value mb-2"><?= Calculation::Display(intval($width_2), 0) ?> мм</div>
+            <div class="value mb-2"><?= CalculationBase::Display(intval($width_2), 0) ?> мм</div>
             <div>Масса без приладки</div>
-            <div class="value mb-2"><?= Calculation::Display(floatval($weight_pure_2), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($length_pure_2), 0) ?> м</span></div>
+            <div class="value mb-2"><?= CalculationBase::Display(floatval($weight_pure_2), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($length_pure_2), 0) ?> м</span></div>
             <div>Масса с приладкой</div>
-            <div class="value mb-2"><?= Calculation::Display(floatval($weight_dirty_2), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($length_dirty_2), 0) ?> м</span></div>
+            <div class="value mb-2"><?= CalculationBase::Display(floatval($weight_dirty_2), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($length_dirty_2), 0) ?> м</span></div>
         </div>
         <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
-            <h3>Ламинация 2&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($weight_dirty_3), 0) ?> кг</span></h3>
+            <h3>Ламинация 2&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($weight_dirty_3), 0) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
-            <div class="value mb-2"><?= Calculation::Display(floatval($film_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($film_cost_per_unit_3), 3) ?> &#8381; за кг</span></div>
+            <div class="value mb-2"><?= CalculationBase::Display(floatval($film_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($film_cost_per_unit_3), 3) ?> &#8381; за кг</span></div>
             <div>Ширина</div>
-            <div class="value mb-2"><?= Calculation::Display(intval($width_3), 0) ?> мм</div>
+            <div class="value mb-2"><?= CalculationBase::Display(intval($width_3), 0) ?> мм</div>
             <div>Масса без приладки</div>
-            <div class="value mb-2"><?= Calculation::Display(floatval($weight_pure_3), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($length_pure_3), 0) ?> м</span></div>
+            <div class="value mb-2"><?= CalculationBase::Display(floatval($weight_pure_3), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($length_pure_3), 0) ?> м</span></div>
             <div>Масса с приладкой</div>
-            <div class="value mb-2"><?= Calculation::Display(floatval($weight_dirty_3), 0) ?> кг&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($length_dirty_3), 0) ?> м</span></div>
+            <div class="value mb-2"><?= CalculationBase::Display(floatval($weight_dirty_3), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($length_dirty_3), 0) ?> м</span></div>
         </div>
     </div>
     <div id="show_costs">
@@ -760,27 +760,27 @@ if(!empty($id)) {
         <div class="row text-nowrap">
             <div class="col-4 pr-4">
                 <div>Отходы</div>
-                <div class="value mb-2"><?= Calculation::Display(floatval($film_waste_cost_1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($film_waste_weight_1), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= CalculationBase::Display(floatval($film_waste_cost_1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($film_waste_weight_1), 2) ?> кг</span></div>
                 <div>Краска</div>
-                <div class="value mb-2"><?= Calculation::Display(floatval($ink_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($ink_weight), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= CalculationBase::Display(floatval($ink_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($ink_weight), 2) ?> кг</span></div>
                 <div>Печать тиража</div>
-                <div class="value mb-2"><?= Calculation::Display(floatval($work_cost_1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($work_time_1), 2) ?> ч</span></div>
+                <div class="value mb-2"><?= CalculationBase::Display(floatval($work_cost_1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($work_time_1), 2) ?> ч</span></div>
             </div>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
-                <div class="value mb-2"><?= Calculation::Display(floatval($film_waste_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($film_waste_weight_2), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= CalculationBase::Display(floatval($film_waste_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($film_waste_weight_2), 2) ?> кг</span></div>
                 <div>Клей</div>
-                <div class="value mb-2"><?= Calculation::Display(floatval($glue_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($glue_expense_2), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= CalculationBase::Display(floatval($glue_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($glue_expense_2), 2) ?> кг</span></div>
                 <div>Работа ламинатора</div>
-                <div class="value mb-2"><?= Calculation::Display(floatval($work_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($work_time_2), 2) ?> ч</span></div>
+                <div class="value mb-2"><?= CalculationBase::Display(floatval($work_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($work_time_2), 2) ?> ч</span></div>
             </div>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
-                <div class="value mb-2"><?= Calculation::Display(floatval($film_waste_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($film_waste_weight_3), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= CalculationBase::Display(floatval($film_waste_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($film_waste_weight_3), 2) ?> кг</span></div>
                 <div>Клей</div>
-                <div class="value mb-2"><?= Calculation::Display(floatval($glue_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($glue_expense_3), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= CalculationBase::Display(floatval($glue_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($glue_expense_3), 2) ?> кг</span></div>
                 <div>Работа ламинатора</div>
-                <div class="value mb-2"><?= Calculation::Display(floatval($work_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= Calculation::Display(floatval($work_time_3), 2) ?> ч</span></div>
+                <div class="value mb-2"><?= CalculationBase::Display(floatval($work_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($work_time_3), 2) ?> ч</span></div>
             </div>
         </div>
     </div>

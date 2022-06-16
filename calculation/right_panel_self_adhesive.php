@@ -56,7 +56,17 @@ if(null !== filter_input(INPUT_POST, 'extracharge-cliche-submit')) {
 }
 
 // Берём расчёт из таблицы базы
-$usd = null; $euro = null;
+$usd = null; $euro = null; $cost = null; $cost_per_unit = null; $shipping_cost = null; $shipping_cost_per_unit = null; $income = null; $income_per_unit = null; $cliche_cost = null; $shipping_cliche_cost = null; $total_weight_dirty = null;
+$film_cost = null; $film_cost_per_unit = null; $width = null; $weight_pure = null; $length_pure = null; $weight_dirty = null; $length_dirty = null;
+$film_waste_cost = null; $film_waste_weight = null; $ink_cost = null; $ink_weight = null; $work_cost = null; $work_time = null;
+
+$id = filter_input(INPUT_GET, 'id');
+
+if(!empty($id)) {
+    $usd = 0; $euro = 0; $cost = 0; $cost_per_unit = 0; $shipping_cost = 0; $shipping_cost_per_unit = 0; $income = 0; $income_per_unit = 0; $cliche_cost = 0; $shipping_cliche_cost = 0; $total_weight_dirty = 0;
+    $film_cost = 0; $film_cost_per_unit = 0; $width = 0; $weight_pure = 0; $length_pure = 0; $weight_dirty = 0; $length_dirty = 0;
+    $film_waste_cost = 0; $film_waste_weight = 0; $ink_cost = 0; $ink_weight = 0; $work_cost = 0; $work_time = 0;
+}
 ?>
 <div id="calculation"<?=$calculation_class ?>>
     <div class="d-flex justify-content-between p-2">
@@ -136,5 +146,15 @@ $usd = null; $euro = null;
     </div>
     <div class="mt-3">
         <h2>Стоимость</h2>
+    </div>
+    <div class="row text-nowrap">
+        <div class="col-4 pr-4">
+            <h3>Себестоимость</h3>
+            <div>Себестоимость <?=$cliche_in_price == 1 ? 'с' : 'без' ?> ПФ</div>
+            <div class="value mb-2"><?= CalculationBase::Display(floatval($cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= CalculationBase::Display(floatval($cost_per_unit), 3) ?> &#8381; за шт</span></div>
+            <div class="mt-2">Себестоимость ПФ</div>
+            <div class="value"><?= CalculationBase::Display(floatval($cliche_cost), 0) ?> &#8381;</div>
+            <div class="value mb-2 font-weight-normal" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;0&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;0&nbsp;мм</div>
+        </div>
     </div>
 </div>
