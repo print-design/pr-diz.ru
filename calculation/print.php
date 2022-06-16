@@ -171,7 +171,12 @@ $num_for_customer = $row['num_for_customer'];
     </head>
     <body>
         <?php
-        include './right_panel.php';
+        if(!empty($work_type_id) && $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+            include './right_panel_self_adhesive.php';
+        }
+        else {
+            include './right_panel.php';
+        }
         ?>
         <!-- Левая половина -->
         <div class="co_l-_5" id="left_side">

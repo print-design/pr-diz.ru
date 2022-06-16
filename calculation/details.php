@@ -210,7 +210,13 @@ $num_for_customer = $row['num_for_customer'];
     </head>
     <body>
         <?php
-        include './right_panel.php';
+        if(!empty($work_type_id) && $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+            include './right_panel_self_adhesive.php';
+        }
+        else {
+            include './right_panel.php';
+        }
+        
         include '../include/header_zakaz.php';
         ?>
         <div class="container-fluid">

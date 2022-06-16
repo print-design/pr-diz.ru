@@ -614,7 +614,6 @@ if(!empty($id)) {
         <div class="mr-4">
             <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
                 <div class="text-nowrap" style="font-size: x-small;">Наценка на тираж</div>
-                <?php if($status_id == 1 || $status_id == 2): ?>
                 <form method="post" class="form-inline">
                     <input type="hidden" name="id" value="<?=$id ?>" />
                     <div class="input-group">
@@ -635,16 +634,12 @@ if(!empty($id)) {
                     </div>
                     <button class="btn btn-sm btn-dark d-none" id="extracharge-submit" name="extracharge-submit">Сохранить</button>
                 </form>
-                <?php else: ?>
-                <span class="text-nowrap"><?=$extracharge ?>%</span>
-                <?php endif; ?>
             </div>
         </div>
         <?php if($cliche_in_price != 1): ?>
         <div class="mr-4">
             <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
                 <div class="text-nowrap" style="font-size: x-small;">Наценка на ПФ</div>
-                <?php if($status_id == 1 || $status_id == 2): ?>
                 <form method="post" class="form-inline">
                     <input type="hidden" name="id" value="<?=$id ?>" />
                     <div class="input-group">
@@ -665,9 +660,6 @@ if(!empty($id)) {
                     </div>
                     <button class="btn btn-sm btn-dark d-none" id="extracharge-cliche-submit" name="extracharge-cliche-submit">Сохранить</button>
                 </form>
-                <?php else: ?>
-                <span class="text-nowrap"><?=$extracharge_cliche ?></span>
-                <?php endif; ?>
             </div>
         </div>
         <?php endif; ?>
