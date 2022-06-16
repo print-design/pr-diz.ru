@@ -156,5 +156,83 @@ if(!empty($id)) {
             <div class="value"><?= CalculationBase::Display(floatval($cliche_cost), 0) ?> &#8381;</div>
             <div class="value mb-2 font-weight-normal" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;0&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;0&nbsp;мм</div>
         </div>
+        <div class="col-4 pr-4">
+            <h3>Отгрузочная стоимость</h3>
+            <div>Отгрузочная стоимость <?=$cliche_in_price == 1 ? 'с' : 'без' ?> ПФ</div>
+            <div class="value"><?= CalculationBase::Display(floatval($shipping_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($shipping_cost_per_unit), 3) ?> &#8381; за шт</span></div>
+            <?php if($cliche_in_price != 1): ?>
+            <div class="mt-2">Отгрузочная стоимость ПФ</div>
+            <div class="value"><?= CalculationBase::Display(floatval($shipping_cliche_cost), 0) ?> &#8381;</div>
+            <?php endif; ?>
+        </div>
+        <div class="col-4">
+            <h3>Прибыль</h3>
+            <div>Прибыль <?=$cliche_in_price == 1 ? 'с' : 'без' ?> ПФ</div>
+            <div class="value mb-2"><?= CalculationBase::Display(floatval($income), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display($income_per_unit, 3) ?> &#8381; за шт</span></div>
+        </div>
     </div>
+    <div class="mt-3">
+        <h2>Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= CalculationBase::Display(floatval($total_weight_dirty), 0) ?> кг</span></h2>
+    </div>
+    <div class="row text-nowrap">
+        <div class="col-4 pr-4">
+            <h3>Самоклеящийся материал&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($weight_dirty), 0) ?> кг</span></h3>
+            <div>Закупочная стоимость</div>
+            <div class="value mb-2"><?= CalculationBase::Display(floatval($film_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($film_cost_per_unit), 3) ?> &#8381; за кг</span></div>
+            <div>Ширина</div>
+            <div class="value mb-2"><?= CalculationBase::Display(intval($width), 0) ?> мм</div>
+            <div>Масса без приладки</div>
+            <div class="value mb-2"><?= CalculationBase::Display(floatval($weight_pure), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($length_pure), 0) ?> м</span></div>
+            <div>Масса с приладкой</div>
+            <div class="value mb-2"><?= CalculationBase::Display(floatval($weight_dirty), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($length_dirty), 0) ?> м</span></div>
+        </div>
+    </div>
+    <div id="show_costs">
+        <div class="row text-nowrap">
+            <div class="col-4 pr-4">
+                <button type="button" class="btn btn-light" onclick="javascript: ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать расходы</button>
+            </div>
+        </div>
+    </div>
+    <div id="costs" class="d-none">
+        <div class="row text-nowrap">
+            <div class="col-4 pr-4">
+                <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
+                <h2 class="mt-2">Расходы</h2>
+            </div>
+        </div>
+        <div class="row text-nowrap">
+            <div class="col-4 pr-4">
+                <div>Отходы</div>
+                <div class="value mb-2"><?= CalculationBase::Display(floatval($film_waste_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($film_waste_weight), 2) ?> кг</span></div>
+                <div>Краска</div>
+                <div class="value mb-2"><?= CalculationBase::Display(floatval($ink_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($ink_weight), 2) ?> кг</span></div>
+                <div>Печать тиража</div>
+                <div class="value mb-2"><?= CalculationBase::Display(floatval($work_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($work_time), 2) ?> ч</span></div>
+            </div>
+        </div>
+    </div>
+    <div style="clear: both"></div>
+    <?php if($status_id == DRAFT): ?>
+    <form method="post">
+        <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+        <input type="hidden" name="status_id" value="<?=CALCULATION ?>" />
+        <button type="submit" name="change-status-submit" class="btn btn-outline-dark mt-3" style="width: 200px;">Сохранить</button>
+    </form>
+    <?php elseif ($status_id == CALCULATION): ?>
+    <div class="d-flex justify-content-between">
+        <div>
+            <a href="techmap.php?calculation_id=<?=$id ?>" class="btn btn-outline-dark mt-3" style="width: 200px;">Составить тех. карту</a>
+        </div>
+        <div>
+            <form method="post">
+                <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                <input type="hidden" name="status_id" value="<?=DRAFT ?>" />
+                <button type="submit" name="change-status-submit" class="btn btn-outline-dark mt-3">Отправить в черновики</button>
+            </form>
+        </div>
+    </div>
+    <?php elseif ($status_id == TECHMAP): ?>
+    <a href="techmap.php?id=<?=$techmap_id ?>" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
+    <?php endif; ?>
 </div>

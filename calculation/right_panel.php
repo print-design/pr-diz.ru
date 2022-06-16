@@ -785,8 +785,6 @@ if(!empty($id)) {
         </div>
     </div>
     <div style="clear:both"></div>
-    <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-    <input type="hidden" id="change_status_submit" name="change_status_submit" />
         <?php if ($status_id == DRAFT): ?>
     <form method="post">
         <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
