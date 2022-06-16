@@ -298,6 +298,76 @@ class CalculationBase {
         }
     }
     
+    // Получение типа лыж
+    function GetSkiName($ski) {
+        switch ($ski) {
+            case Calculation::NO_SKI:
+                return "Без лыж";
+            case Calculation::STANDARD_SKI:
+                return "Стандартные лыжи";
+            case Calculation::NONSTANDARD_SKI:
+                return "Нестандартные лыжи";
+            default :
+                return "Неизвестно";
+        }
+    }
+    
+    // Получение имени краски
+    function GetInkName($ink) {
+        switch ($ink) {
+            case Calculation::CMYK:
+                return "CMYK";
+            case Calculation::PANTON:
+                return "Пантон";
+            case Calculation::WHITE:
+                return "Белая";
+            case Calculation::LACQUER:
+                return "Лак";
+            default :
+                return "Неизвестная";
+        }
+    }
+    
+    // Получения типа формы
+    function GetClicheName($cliche) {
+        switch ($cliche) {
+            case Calculation::OLD:
+                return "старая";
+            case Calculation::FLINT:
+                return "новая Флинт";
+            case Calculation::KODAK:
+                return "новая Кодак";
+            case Calculation::TVER:
+                return "новая Тверь";
+            default :
+                return "Неизвестная";
+        }
+    }
+    
+    // Получение называния единицы размера тиража
+    function GetUnitName($unit) {
+        switch ($unit) {
+            case Calculation::KG:
+                return "кг";
+            case Calculation::PIECES:
+                return "шт";
+            default :
+                return "";
+        }
+    }
+    
+    // Получение названия валюты
+    function GetCurrencyName($currency) {
+        switch ($currency) {
+            case Calculation::USD:
+                return "USD";
+            case Calculation::EURO:
+                return "евро";
+            default :
+                return "руб";
+        }
+    }
+    
     // Отображение чисел в удобном формате
     public static function Display($value, $decimals) {
         if(is_float($value) || is_double($value) || is_int($value)) {

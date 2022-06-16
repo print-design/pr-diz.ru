@@ -2,83 +2,6 @@
 include '../include/topscripts.php';
 include './calculation.php';
 
-function GetSkiName($ski) {
-    switch ($ski) {
-        case Calculation::NO_SKI:
-            return "Без лыж";
-        case Calculation::STANDARD_SKI:
-            return "Стандартные лыжи";
-        case Calculation::NONSTANDARD_SKI:
-            return "Нестандартные лыжи";
-        default :
-            return "Неизвестно";
-    }
-}
-
-function GetInkName($ink) {
-    switch ($ink) {
-        case Calculation::CMYK:
-            return "CMYK";
-            
-        case Calculation::PANTON:
-            return "Пантон";
-            
-        case Calculation::WHITE:
-            return "Белая";
-            
-        case Calculation::LACQUER:
-            return "Лак";
-            
-        default :
-            return "Неизвестная";
-    }
-}
-
-function GetClicheName($cliche) {
-    switch ($cliche) {
-        case Calculation::OLD:
-            return "старая";
-            
-        case Calculation::FLINT:
-            return "новая Флинт";
-            
-        case Calculation::KODAK:
-            return "новая Кодак";
-            
-        case Calculation::TVER:
-            return "новая Тверь";
-            
-        default :
-            return "Неизвестная";
-    }
-}
-
-function GetUnitName($unit) {
-    switch ($unit) {
-        case Calculation::KG:
-            return "кг";
-            
-        case Calculation::PIECES:
-            return "шт";
-            
-        default :
-            return "";
-    }
-}
-
-function GetCurrencyName($currency) {
-    switch ($currency) {
-        case Calculation::USD:
-            return "USD";
-            
-        case Calculation::EURO:
-            return "евро";
-            
-        default :
-            return "руб";
-    }
-}
-
 $id = filter_input(INPUT_GET, 'id');
 
 if($id !== null) {
@@ -422,33 +345,33 @@ if($id !== null) {
             array_push($file_data, array("Машина", $machine, "", ""));
         }
         
-        array_push($file_data, array("Размер тиража", $quantity.' '. GetUnitName($unit), "", ""));
+        array_push($file_data, array("Размер тиража", $quantity.' '. $calculation->GetUnitName($unit), "", ""));
         array_push($file_data, array("Марка 1", $film_1, "", ""));
         array_push($file_data, array("Толщина 1, мкм", $thickness_1, "", ""));
         array_push($file_data, array("Плотность 1, г/м2", CalculationBase::Display($density_1, 2), "", ""));
-        array_push($file_data, array("Лыжи 1", GetSkiName($ski_1), "", ""));
+        array_push($file_data, array("Лыжи 1", $calculation->GetSkiName($ski_1), "", ""));
         if($ski_1 == Calculation::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки 1, мм", CalculationBase::Display($width_ski_1, 2), "", ""));
         if($customers_material_1 == true) array_push ($file_data, array("Материал заказчика 1", "", "", ""));
-        else array_push ($file_data, array("Цена 1", CalculationBase::Display($price_1, 2)." ". GetCurrencyName($currency_1).($currency_1 == Calculation::USD ? " (". CalculationBase::Display($price_1 * $usd, 2)." руб)" : "").($currency_1 == Calculation::EURO ? " (". CalculationBase::Display($price_1 * $euro, 2)." руб)" : ""), "", ""));
+        else array_push ($file_data, array("Цена 1", CalculationBase::Display($price_1, 2)." ". $calculation->GetCurrencyName($currency_1).($currency_1 == Calculation::USD ? " (". CalculationBase::Display($price_1 * $usd, 2)." руб)" : "").($currency_1 == Calculation::EURO ? " (". CalculationBase::Display($price_1 * $euro, 2)." руб)" : ""), "", ""));
         
         if($calculation->laminations_number > 0) {
             array_push($file_data, array("Марка 2", $film_2, "", ""));
             array_push($file_data, array("Толщина 2, мкм", $thickness_2, "", ""));
             array_push($file_data, array("Плотность 2, г/м2", CalculationBase::Display($density_2, 2), "", ""));
-            array_push($file_data, array("Лыжи 2", GetSkiName($ski_2), "", ""));
+            array_push($file_data, array("Лыжи 2", $calculation->GetSkiName($ski_2), "", ""));
             if($ski_2 == Calculation::NONSTANDARD_SKI) array_push($file_data, array("Ширина пленки 2, мм", CalculationBase::Display($width_ski_2, 2), "", ""));
             if($customers_material_2 == true) array_push ($file_data, array("Материал заказчика 2", "", "", ""));
-            else array_push ($file_data, array("Цена 2", CalculationBase::Display($price_2, 2)." ". GetCurrencyName($currency_2).($currency_2 == Calculation::USD ? " (".CalculationBase::Display($price_2 * $usd, 2)." руб)" : "").($currency_2 == Calculation::EURO ? " (".CalculationBase::Display($price_2 * $euro, 2)." руб)" : ""), "", ""));
+            else array_push ($file_data, array("Цена 2", CalculationBase::Display($price_2, 2)." ". $calculation->GetCurrencyName($currency_2).($currency_2 == Calculation::USD ? " (".CalculationBase::Display($price_2 * $usd, 2)." руб)" : "").($currency_2 == Calculation::EURO ? " (".CalculationBase::Display($price_2 * $euro, 2)." руб)" : ""), "", ""));
         }
         
         if($calculation->laminations_number > 1) {
             array_push($file_data, array("Марка 3", $film_3, "", ""));
             array_push($file_data, array("Толщина 3, мкм", $thickness_3, "", ""));
             array_push($file_data, array("Плотность 3, г/м2", CalculationBase::Display($density_3, 2), "", ""));
-            array_push($file_data, array("Лыжи 3", GetSkiName($ski_3), "", ""));
+            array_push($file_data, array("Лыжи 3", $calculation->GetSkiName($ski_3), "", ""));
             if($ski_3 == Calculation::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки 3, мм", CalculationBase::Display($width_ski_3, 2), "", ""));
             if($customers_material_3 == true) array_push ($file_data, array("Материал заказчика (лам 2)", "", "", ""));
-            else array_push ($file_data, array("Цена 3", CalculationBase::Display($price_3, 2)." ". GetCurrencyName($currency_3).($currency_3 == Calculation::USD ? " (".CalculationBase::Display($price_3 * $usd, 2)." руб)" : "").($currency_3 == Calculation::EURO ? " (".CalculationBase::Display($price_3 * $euro, 2)." руб)" : ""), "", ""));
+            else array_push ($file_data, array("Цена 3", CalculationBase::Display($price_3, 2)." ". $calculation->GetCurrencyName($currency_3).($currency_3 == Calculation::USD ? " (".CalculationBase::Display($price_3 * $usd, 2)." руб)" : "").($currency_3 == Calculation::EURO ? " (".CalculationBase::Display($price_3 * $euro, 2)." руб)" : ""), "", ""));
         }
         
         array_push($file_data, array("Ширина ручья, мм", $stream_width, "", ""));
@@ -469,7 +392,7 @@ if($id !== null) {
                 $cmyk = "cmyk_$i";
                 $percent = "percent_$i";
                 $cliche = "cliche_$i";
-                array_push($file_data, array("Краска $i:", GetInkName($$ink).(empty($$color) ? "" : " ".$$color).(empty($$cmyk) ? "" : " ".$$cmyk)." ".$$percent."% ".GetClicheName($$cliche), "", ""));
+                array_push($file_data, array("Краска $i:", $calculation->GetInkName($$ink).(empty($$color) ? "" : " ".$$color).(empty($$cmyk) ? "" : " ".$$cmyk)." ".$$percent."% ".$calculation->GetClicheName($$cliche), "", ""));
             }
         }
         
@@ -634,7 +557,7 @@ if($id !== null) {
         
         array_push($file_data, array("М пог грязные 3",
             CalculationBase::Display($calculation->length_dirty_start_3, 2),
-            "|= ".CalculationBase::Display($calculation->length_pure_start_3, 2)." + (".CalculationBase::Display($data_priladka_laminator->length, 2)." * ".CalculationBase::Display($calculation->uk3, 2).") + ".CalculationBase::Display($calculation->waste_length_3, 2),
+            "|= ".CalculationBase::Display($calculation->length_pure_start_3, 2)." + (".CalculationBase::Display($data_priladka_laminator->length, 2)." * ".CalculationBase::Display($calculation->uk3, 0).") + ".CalculationBase::Display($calculation->waste_length_3, 2),
             "м пог чистые 3 + (метраж приладки ламинации * УК3) + СтартСтопОтход 3"));
         
         array_push($file_data, array("М2 грязные 1",
@@ -748,27 +671,27 @@ if($id !== null) {
         
         array_push($file_data, array("Время приладки 2, мин",
             CalculationBase::Display($calculation->priladka_time_2, 2),
-            "|= ".CalculationBase::Display($data_priladka_laminator->time, 2)." * ".CalculationBase::Display($calculation->uk2, 2),
+            "|= ".CalculationBase::Display($data_priladka_laminator->time, 2)." * ".CalculationBase::Display($calculation->uk2, 0),
             "время приладки ламинатора * УК2"));
         
         array_push($file_data, array("Время приладки 3, мин",
             CalculationBase::Display($calculation->priladka_time_3, 2),
-            "|= ".CalculationBase::Display($data_priladka_laminator->time, 2)." * ".CalculationBase::Display($calculation->uk3, 2),
+            "|= ".CalculationBase::Display($data_priladka_laminator->time, 2)." * ".CalculationBase::Display($calculation->uk3, 0),
             "время приладки ламинатора * УК3"));
         
         array_push($file_data, array("Время печати (без приладки) 1, ч",
             CalculationBase::Display($calculation->print_time_1, 2),
-            "|= (".CalculationBase::Display($calculation->length_pure_start_1, 2)." + ".CalculationBase::Display($calculation->waste_length_1, 2).") / ".CalculationBase::Display($data_machine->speed, 2)." / 1000 * ".CalculationBase::Display($calculation->uk1, 2),
+            "|= (".CalculationBase::Display($calculation->length_pure_start_1, 2)." + ".CalculationBase::Display($calculation->waste_length_1, 2).") / ".CalculationBase::Display($data_machine->speed, 2)." / 1000 * ".CalculationBase::Display($calculation->uk1, 0),
             "(м пог чистые 1 + СтартСтопОтход 1) / скорость работы машины / 1000 * УК1"));
         
         array_push($file_data, array("Время ламинации (без приладки) 2, ч",
             CalculationBase::Display($calculation->lamination_time_2, 2),
-            "|= (".CalculationBase::Display($calculation->length_pure_start_2, 2)." + ".CalculationBase::Display($calculation->waste_length_2, 2).") / ".CalculationBase::Display($data_machine_laminator->speed, 2)." / 1000 * ".CalculationBase::Display($calculation->uk2, 2),
+            "|= (".CalculationBase::Display($calculation->length_pure_start_2, 2)." + ".CalculationBase::Display($calculation->waste_length_2, 2).") / ".CalculationBase::Display($data_machine_laminator->speed, 2)." / 1000 * ".CalculationBase::Display($calculation->uk2, 0),
             "(м пог чистые 1 + СтартСтопОтход 1) / скорость работы ламинатора /1000 * УК2"));
         
         array_push($file_data, array("Время ламинации (без приладки) 3, ч",
             CalculationBase::Display($calculation->lamination_time_3, 2),
-            "|= (".CalculationBase::Display($calculation->length_pure_start_3, 2)." + ".CalculationBase::Display($calculation->waste_length_3, 2).") / ".CalculationBase::Display($data_machine_laminator->speed, 2)." / 1000 * ".CalculationBase::Display($calculation->uk3, 2),
+            "|= (".CalculationBase::Display($calculation->length_pure_start_3, 2)." + ".CalculationBase::Display($calculation->waste_length_3, 2).") / ".CalculationBase::Display($data_machine_laminator->speed, 2)." / 1000 * ".CalculationBase::Display($calculation->uk3, 0),
             "(м пог чистые 1 + СтартСтопОтход 1) / скорость работы ламинатора / 1000 * УК3"));
         
         array_push($file_data, array("Общее время выполнения тиража 1, ч",
@@ -1053,10 +976,10 @@ if($id !== null) {
         
         array_push($file_data, array("Себестоимость, руб",
             CalculationBase::Display($calculation->cost, 2),
-            "|= ". CalculationBase::Display($calculation->film_cost, 2)." + ". CalculationBase::Display($calculation->work_cost, 2)." + ". CalculationBase::Display($calculation->ink_cost, 2)." + ". CalculationBase::Display($calculation->glue_cost, 2)." + (". CalculationBase::Display($calculation->cliche_cost, 2)." * ". CalculationBase::Display($calculation->ukpf, 2).")",
+            "|= ". CalculationBase::Display($calculation->film_cost, 2)." + ". CalculationBase::Display($calculation->work_cost, 2)." + ". CalculationBase::Display($calculation->ink_cost, 2)." + ". CalculationBase::Display($calculation->glue_cost, 2)." + (". CalculationBase::Display($calculation->cliche_cost, 2)." * ". CalculationBase::Display($calculation->ukpf, 0).")",
             "стоимость плёнки + стоимость работы + стоимость краски + стоимость клея + (стоимость форм * УКПФ)"));
         
-        array_push($file_data, array("Себестоимость за ". GetUnitName($unit).", руб",
+        array_push($file_data, array("Себестоимость за ". $calculation->GetUnitName($unit).", руб",
             CalculationBase::Display($calculation->cost_per_unit, 2),
             "|= ". CalculationBase::Display($calculation->cost, 2)." / ". CalculationBase::Display($quantity, 2),
             "себестоимость / размер тиража"));
@@ -1066,7 +989,7 @@ if($id !== null) {
             "|= ".CalculationBase::Display($calculation->cost, 1)." + (".CalculationBase::Display($calculation->cost, 2)." * ".CalculationBase::Display($calculation->extracharge, 2)." / 100)",
             "себестоимость + (себестоимость * наценка на тираж / 100)"));
             
-        array_push($file_data, array("Отгрузочная стоимость за ".GetUnitName($unit).", руб",
+        array_push($file_data, array("Отгрузочная стоимость за ".$calculation->GetUnitName($unit).", руб",
             CalculationBase::Display($calculation->shipping_cost_per_unit, 2),
             "|= ".CalculationBase::Display($calculation->shipping_cost, 2)." / ".CalculationBase::Display($quantity, 2),
             "отгрузочная стоимость / размер тиража"));
@@ -1076,10 +999,10 @@ if($id !== null) {
             "|= ".CalculationBase::Display($calculation->shipping_cost, 2)." - ".CalculationBase::Display($calculation->cost, 2),
             "отгрузочная стоимость - себестоимость"));
             
-        array_push($file_data, array("Прибыль за ".GetUnitName($unit).", руб",
+        array_push($file_data, array("Прибыль за ".$calculation->GetUnitName($unit).", руб",
             CalculationBase::Display($calculation->income_per_unit, 2),
             "|= ".CalculationBase::Display($calculation->shipping_cost_per_unit, 2)." - ".CalculationBase::Display($calculation->cost_per_unit, 2),
-            "отгрузочная стоимость за ". GetUnitName($unit)." - себестоимость за ". GetUnitName($unit)));
+            "отгрузочная стоимость за ". $calculation->GetUnitName($unit)." - себестоимость за ". $calculation->GetUnitName($unit)));
             
         array_push($file_data, array("Отгрузочная стоимость ПФ, руб",
             CalculationBase::Display($calculation->shipping_cliche_cost, 2),
