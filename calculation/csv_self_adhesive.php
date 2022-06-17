@@ -313,6 +313,111 @@ if($id !== null) {
         // Массы и длины плёнок
         //***************************
         
+        array_push($file_data, array("Масса плёнки чистая (без приладки), кг",
+            CalculationBase::Display($calculation->weight_pure, 2),
+            "|= ". CalculationBase::Display($calculation->length_pog_pure, 2)." * ". CalculationBase::Display($calculation->width_mat, 2)." * ". CalculationBase::Display($density, 2)." / 1000000",
+            "м. пог чистые * ширина материала * уд. вес / 1000000"));
+        
+        array_push($file_data, array("Длина плёнки чистая, м",
+            CalculationBase::Display($calculation->length_pure, 2),
+            "|= ". CalculationBase::Display($calculation->length_pog_pure, 2),
+            "м. пог. чистые"));
+        
+        array_push($file_data, array("Масса плёнки грязная (с приладкой), кг",
+            CalculationBase::Display($calculation->weight_dirty, 2),
+            "|= ". CalculationBase::Display($calculation->area_dirty, 2)." * ". CalculationBase::Display($density, 2)." / 1000",
+            "м2 грязные * удельный вес / 1000"));
+        
+        array_push($file_data, array("Длина плёнки грязная, м",
+            CalculationBase::Display($calculation->length_dirty, 2),
+            "|= ".CalculationBase::Display($calculation->length_pog_dirty, 2),
+            "м. пог. чистые"));
+        
+        //*****************************
+        // Себестоимость плёнок
+        //*****************************
+        
+        array_push($file_data, array("Себестоимость плёнки грязная (с приладкой), руб",
+            CalculationBase::Display($calculation->film_cost_dirty, 2),
+            "|= ". CalculationBase::Display($calculation->area_dirty, 2)." * ". CalculationBase::Display($price, 2)." * ".CalculationBase::Display(CalculationBase::GetCurrencyRate($currency, $usd, $euro), 2),
+            "м2 грязные * цена * курс валюты"));
+        
+        array_push($file_data, array("", "", "", ""));
+        
+        //*****************************
+        // Время - деньги
+        //*****************************
+        
+        array_push($file_data, array("Время приладки, ч",
+            CalculationBase::Display($calculation->priladka_time, 2),
+            "|= $ink_number"." * ".CalculationBase::Display($data_priladka->time, 2),
+            "красочность * время приладки 1 краски"));
+        
+        array_push($file_data, array("Время печати тиража, без приладки, ч",
+            CalculationBase::Display($calculation->print_time, 2),
+            "|= (". CalculationBase::Display($calculation->length_pog_pure, 2)." + ". CalculationBase::Display($calculation->waste_length, 2).") / ". CalculationBase::Display($data_machine->speed, 2)." / 1000",
+            "м. пог. чистые + СтартСтопОтход) / скорость работы машины / 1000"));
+        
+        array_push($file_data, array("Общее время выполнения тиража, ч",
+            CalculationBase::Display($calculation->work_time, 2),
+            "|= ". CalculationBase::Display($calculation->priladka_time, 2)." + ". CalculationBase::Display($calculation->print_time, 2),
+            "время приладки + время печати тиража"));
+        
+        array_push($file_data, array("Стоимость выполнения, руб",
+            CalculationBase::Display($calculation->work_cost, 2),
+            "|= ". CalculationBase::Display($calculation->work_time, 2)." * ". CalculationBase::Display($data_machine->price, 2),
+            "общее время выполнения тиража * стоимость работы машины"));
+        
+        array_push($file_data, array("", "", "", ""));
+        
+        //************************
+        // Расход краски
+        //************************
+        
+        array_push($file_data, array("М2 запечатки, м2",
+            CalculationBase::Display($calculation->print_area, 2),
+            "|= ((". CalculationBase::Display($stream_width, 2)." + ". CalculationBase::Display($data_gap->gap_stream, 2).") * (". CalculationBase::Display($length, 2)." * ". CalculationBase::Display($data_gap->gap_raport, 2).") * $quantity / 1000000".") + (". CalculationBase::Display($calculation->length_pog_dirty, 2)." * 0,01)",
+            "((ширина этикетки + ЗазорРучей) * (длина этикетки + ЗазорРапорт) * кол-во этикеток / 1000000) + (м. пог. грязные * 0,01)"));
+        
+        array_push($file_data, array("Масса краски в смеси, кг",
+            CalculationBase::Display($calculation->ink_1kg_mix_weight, 2),
+            "|= 1 + ". CalculationBase::Display($data_ink->solvent_part, 2),
+            "1 + доля растворителя в смеси"));
+        
+        array_push($file_data, array("Цена 1 кг чистого этоксипропанола, руб",
+            CalculationBase::Display($calculation->ink_etoxypropanol_kg_price, 2),
+            "|= ". CalculationBase::Display($data_ink->solvent_etoxipropanol_price, 2)." * ".CalculationBase::Display(CalculationBase::GetCurrencyRate($data_ink->solvent_etoxipropanol_currency, $usd, $euro), 2),
+            "цена этоксипропанола * курс валюты"));
+        
+        for($i=1; $i<=$ink_number; $i++) {
+            $ink = "ink_$i";
+            $cmyk = "cmyk_$i";
+            $percent = "percent_$i";
+            $price = $calculation->GetInkPrice($$ink, $$cmyk, $data_ink->c_price, $data_ink->c_currency, $data_ink->m_price, $data_ink->m_currency, $data_ink->y_price, $data_ink->y_currency, $data_ink->k_price, $data_ink->k_currency, $data_ink->panton_price, $data_ink->panton_currency, $data_ink->white_price, $data_ink->white_currency, $data_ink->lacquer_price, $data_ink->lacquer_currency);
+            
+            array_push($file_data, array("Цена 1 кг чистой краски $i, руб",
+                CalculationBase::Display($calculation->ink_kg_prices[$i], 2),
+                "|= ". CalculationBase::Display($price->value, 2)." * ". CalculationBase::Display($calculation->GetCurrencyRate($price->currency, $usd, $euro), 2),
+                "цена 1 кг чистой краски $i * курс валюты"));
+            
+            array_push($file_data, array("Цена 1 кг КраскаСмеси $i, руб",
+                CalculationBase::Display($calculation->mix_ink_kg_prices[$i], 2),
+                "|= ((".CalculationBase::Display($calculation->ink_kg_prices[$i], 2)." * 1) + (".CalculationBase::Display($calculation->ink_etoxypropanol_kg_price, 2)." * ".CalculationBase::Display($data_ink->solvent_part, 2).")) / ".CalculationBase::Display($calculation->ink_1kg_mix_weight, 2),
+                "((цена 1 кг чистой краски $i * 1) + (цена 1 кг чистого растворителя * расход растворителя на 1 кг краски)) / расход КраскаСмеси на 1 кг краски"));
+            
+            array_push($file_data, array("Расход КраскаСмеси $i, кг",
+                CalculationBase::Display($calculation->ink_expenses[$i], 2),
+                "|= ".CalculationBase::Display($calculation->print_area, 2)." * ".CalculationBase::Display($calculation->GetInkExpense($$ink, $$cmyk, $data_ink->c_expense, $data_ink->m_expense, $data_ink->y_expense, $data_ink->k_expense, $data_ink->panton_expense, $data_ink->white_expense, $data_ink->lacquer_expense), 2)." * ".CalculationBase::Display($$percent, 2)." / 1000 / 100",
+                "площадь запечатки * расход КраскаСмеси за 1 м2 * процент краски $i / 1000 / 100"));
+            
+            array_push($file_data, array("Стоимость КраскаСмеси $i, руб",
+                CalculationBase::Display($calculation->ink_costs[$i], 2),
+                "|= ". CalculationBase::Display($calculation->mix_ink_kg_prices[$i], 2)." * ". CalculationBase::Display($calculation->ink_expenses[$i], 2),
+                "Расход КраскаСмеси $i * цена 1 кг КраскаСмеси $i"));
+        }
+        
+        array_push($file_data, array("", "", "", ""));
+        
         //****************************************
         // Сохранение в файл
         $file_name = DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y')." $name.csv";

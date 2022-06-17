@@ -1233,16 +1233,16 @@ class CalculationSelfAdhesive extends CalculationBase {
         // Время - деньги
         //*****************************
         
-        // Приладка Время, ч
+        // Время приладки, ч
         $this->priladka_time = $ink_number * $data_priladka->time;
         
         // Время печати тиража, без приладки, ч
         $this->print_time = ($this->length_pog_pure + $this->waste_length) / $data_machine->speed / 1000;
         
-        // Общее время выполнения тиража
+        // Общее время выполнения тиража, ч
         $this->work_time = $this->priladka_time + $this->print_time;
         
-        // Стоимость выполнения
+        // Стоимость выполнения, руб
         $this->work_cost = $this->work_time * $data_machine->price;
         
         //************************
@@ -1286,7 +1286,7 @@ class CalculationSelfAdhesive extends CalculationBase {
             $this->mix_ink_kg_prices[$i] = $mix_ink_kg_price;
             
             // Расход КраскаСмеси, кг
-            $ink_expense = $this->print_area * $this->GetInkExpense($$ink, $$cmyk, $data_ink->c_expense, $data_ink->m_expense, $data_ink->y_expense, $data_ink->k_expense, $data_ink->panton_expense, $data_ink->white_expense, $data_ink->lacquer_expense);
+            $ink_expense = $this->print_area * $this->GetInkExpense($$ink, $$cmyk, $data_ink->c_expense, $data_ink->m_expense, $data_ink->y_expense, $data_ink->k_expense, $data_ink->panton_expense, $data_ink->white_expense, $data_ink->lacquer_expense) * $$percent / 1000 / 100;
             $this->ink_expenses[$i] = $ink_expense;
             
             // Стоимость КраскаСмеси, руб
