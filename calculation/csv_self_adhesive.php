@@ -140,7 +140,7 @@ if($id !== null) {
             }
         }
         
-        $sql = "select gap_raport, gap_stream from norm_raport where date <= '$date' order by id desc limit 1";
+        $sql = "select gap_raport, gap_stream from norm_gap where date <= '$date' order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $data_gap = new DataGap($row['gap_raport'], $row['gap_stream']);
@@ -212,8 +212,8 @@ if($id !== null) {
         array_push($file_data, array("Машина", $machine, "", ""));
         array_push($file_data, array("Размер тиража", $quantity." шт", "", ""));
         array_push($file_data, array("Марка", $film, "", ""));
-        array_push($file_data, array("Толщина", $thickness, "", ""));
-        array_push($file_data, array("Плотность", $density, "", ""));
+        array_push($file_data, array("Толщина", CalculationBase::Display($thickness, 2), "", ""));
+        array_push($file_data, array("Плотность", CalculationBase::Display($density, 2), "", ""));
         array_push($file_data, array("Лыжи", $calculation->GetSkiName($ski), "", ""));
         if($ski == CalculationBase::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки, мм", CalculationBase::Display ($width_ski, 2), "", ""));
         if($customers_material == true) array_push ($file_data, array("Материал заказчика", "", "", ""));
@@ -241,8 +241,8 @@ if($id !== null) {
             array_push($file_data, array("Не включать ПФ в себестоимость", "", "", ""));
         }
         
-        array_push($file_data, array("ЗазорРапорт", CalculationBase::Display($gap_raport, 2), "", ""));
-        array_push($file_data, array("ЗазорРучей", CalculationBase::Display($gap_stream, 2), "", ""));
+        array_push($file_data, array("ЗазорРапорт", CalculationBase::Display($data_gap->gap_raport, 2), "", ""));
+        array_push($file_data, array("ЗазорРучей", CalculationBase::Display($data_gap->gap_stream, 2), "", ""));
         
         array_push($file_data, array("", "", "", ""));
         
@@ -250,6 +250,81 @@ if($id !== null) {
         if($customers_material == true) $price = 0;
         
         // Результаты вычислений
+        array_push($file_data, array("Ширина материала, мм",
+            CalculationBase::Display($calculation->width_mat, 2),
+            $ski == CalculationBase::NONSTANDARD_SKI ? "|= ".CalculationBase::Display($width_ski, 2) : "|= $streams_number * (".CalculationBase::Display($stream_width, 2)." + ".CalculationBase::Display($data_gap->gap_stream, 2).") + 20",
+            $ski == CalculationBase::NONSTANDARD_SKI ? "вводится вручную" : "количество ручьёв * (ширина этикетки + ЗазорРучей) + 20"));
+        
+        array_push($file_data, array("Высота этикетки грязная, мм",
+            CalculationBase::Display($calculation->length_label_dirty, 2),
+            "|= ". CalculationBase::Display($length, 2)." + ". CalculationBase::Display($data_gap->gap_raport, 2),
+            "высота этикетки + ЗазорРапорт"));
+        
+        array_push($file_data, array("Ширина этикетки грязная, мм",
+            CalculationBase::Display($calculation->width_dirty, 2),
+            "|= ". CalculationBase::Display($stream_width, 2)." + ". CalculationBase::Display($data_gap->gap_stream, 2),
+            "ширина этикетки + ЗазорРучей"));
+        
+        array_push($file_data, array("Количество этикеток в рапорте грязное",
+            CalculationBase::Display($calculation->number_in_raport_dirty, 2),
+            "|= ". CalculationBase::Display($raport, 2)." / ". CalculationBase::Display($calculation->length_label_dirty, 2),
+            "рапорт / высота этикетки грязная"));
+        
+        array_push($file_data, array("Количество этикеток в рапорте чистое",
+            CalculationBase::Display($calculation->number_in_raport_pure, 2),
+            "|= ОКРВНИЗ(".CalculationBase::Display($calculation->number_in_raport_dirty, 2).";1)",
+            "количество этикеток в рапорте грязное - округление в меньшую сторону"));
+        
+        array_push($file_data, array("Фактический зазор, мм",
+            CalculationBase::Display($calculation->gap, 2),
+            "|= (".CalculationBase::Display($raport, 2)." - (".CalculationBase::Display($length, 2)." * ".CalculationBase::Display($calculation->number_in_raport_pure, 2).")) / ".$calculation->number_in_raport_pure,
+            "(рапорт - (высота этикетки чистая * количество этикеток в рапорте чистое)) / количество этикеток в рапорте чистое"));
+        
+        //***************************
+        // Рассчёт по КГ
+        //***************************
+        
+        array_push($file_data, array("М2 чистые, м2", 
+            CalculationBase::Display($calculation->area_pure, 2),
+            "|= (".CalculationBase::Display($length, 2)." + ".CalculationBase::Display($calculation->gap, 2).") * ((".CalculationBase::Display($stream_width, 2)." + ".CalculationBase::Display($data_gap->gap_stream, 2).") + ".CalculationBase::Display($data_gap->gap_stream, 2).") * $quantity / 1000000",
+            "(длина этикетки чистая + фактический зазор) * ((ширина этикетки + ЗазорРучей) + ЗазорРучей) * количество этикеток / 1000000"));
+        
+        array_push($file_data, array("М. пог. чистые, м",
+            CalculationBase::Display($calculation->length_pog_pure, 2),
+            "|= ".CalculationBase::Display($calculation->area_pure, 2)." / ((".CalculationBase::Display($stream_width, 2)." + ".CalculationBase::Display($data_gap->gap_stream, 2).") + ". CalculationBase::Display($data_gap->gap_stream, 2).") * $streams_number * 1000",
+            "м2 чистые / ((ширина этикетки + ЗазорРучей) + ЗазорРучей) * кол-во ручьев) * 1000"));
+        
+        array_push($file_data, array("СтартСтопОтход, м",
+            CalculationBase::Display($calculation->waste_length, 2),
+            "|= ". CalculationBase::Display($data_priladka->waste_percent, 2)." * ". CalculationBase::Display($calculation->length_pog_pure, 2)." / 100",
+            "процент отходов на СтартСтоп * м.пог чистые / 100"));
+        
+        array_push($file_data, array(" М пог. грязные, м",
+            CalculationBase::Display($calculation->length_pog_dirty, 2),
+            "|= ". CalculationBase::Display($calculation->length_pog_pure, 2)." + ($ink_number * ". CalculationBase::Display($data_priladka->length, 2).") + ". CalculationBase::Display($calculation->waste_length, 2),
+            "м. пог чистые + (красчность * метраж приладки 1 краски) + СтартСтопОтход"));
+        
+        array_push($file_data, array("М2 грязные, m2",
+            CalculationBase::Display($calculation->area_dirty, 2),
+            "|= ". CalculationBase::Display($calculation->length_pog_dirty, 2)." * ". CalculationBase::Display($calculation->width_mat, 2)." / 1000",
+            "м. пог грязные * ширина материала / 1000"));
+        
+        //***************************
+        // Массы и длины плёнок
+        //***************************
+        
+        //****************************************
+        // Сохранение в файл
+        $file_name = DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y')." $name.csv";
+        
+        DownloadSendHeaders($file_name);
+        echo Array2Csv($file_data, $titles);
+        die();
     }
 }
 ?>
+<html>
+    <body>
+        <h1 style="text-decoration: underline;">Чтобы экспортировать в CSV надо нажать на кнопку "Экспорт" в верхней правой части страницы.</h1>
+    </body>
+</html>

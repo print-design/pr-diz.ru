@@ -1172,19 +1172,19 @@ class CalculationSelfAdhesive extends CalculationBase {
                 break;
         }
         
-        // Высота этикетки грязная
+        // Высота этикетки грязная, мм
         $this->length_label_dirty = $length + $data_gap->gap_raport;
         
-        // Ширина этикетки грязная
-        $this->width_dirty = $width_ski + $data_gap->gap_stream;
+        // Ширина этикетки грязная, мм
+        $this->width_dirty = $stream_width + $data_gap->gap_stream;
         
-        // Количество этикеток в рапорте грязный
+        // Количество этикеток в рапорте грязное
         $this->number_in_raport_dirty = $raport / $this->length_label_dirty;
         
         // Количество этикеток в рапорте чистое
         $this->number_in_raport_pure = floor($this->number_in_raport_dirty);
         
-        // Фактический зазор
+        // Фактический зазор, мм
         $this->gap = ($raport - ($length * $this->number_in_raport_pure)) / $this->number_in_raport_pure;
         
         //***************************
@@ -1203,7 +1203,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         // М пог. грязные, м
         $this->length_pog_dirty = $this->length_pog_pure + ($ink_number * $data_priladka->length) + $this->waste_length;
         
-        // М2 грязные
+        // М2 грязные, м2
         $this->area_dirty = $this->length_pog_dirty * $this->width_mat / 1000;
         
         //***************************
