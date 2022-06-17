@@ -1184,6 +1184,9 @@ class CalculationSelfAdhesive extends CalculationBase {
         // Количество этикеток в рапорте чистое
         $this->number_in_raport_pure = floor($this->number_in_raport_dirty);
         
+        // Защита от деления на ноль
+        if($this->number_in_raport_pure == 0) $this->number_in_raport_pure = 1;
+        
         // Фактический зазор, мм
         $this->gap = ($raport - ($length * $this->number_in_raport_pure)) / $this->number_in_raport_pure;
         
