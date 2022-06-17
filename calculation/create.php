@@ -1877,9 +1877,9 @@ while ($row = $fetcher->Fetch()) {
                                         $cliche_selected_var = $$cliche_var."_selected";
                                         $$cliche_selected_var = " selected='selected'";
                                         ?>
-                                        <option value="<?= CalculationBase::OLD ?>"<?=$old_selected ?>>Старая</option>
                                         <option value="<?= CalculationBase::FLINT ?>"<?=$flint_selected ?>>Новая Флинт</option>
                                         <option value="<?= CalculationBase::KODAK ?>"<?=$kodak_selected ?>>Новая Кодак</option>
+                                        <option value="<?= CalculationBase::OLD ?>"<?=$old_selected ?>>Старая</option>
                                         <?php if(false): ?>
                                         <!-- Тверские формы решили убрать -->
                                         <option value="<?=TVER ?>"<?=$tver_selected ?>>Новая Тверь</option>
