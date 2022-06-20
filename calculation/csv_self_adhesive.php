@@ -299,7 +299,7 @@ if($id !== null) {
             "|= ". CalculationBase::Display($data_priladka->waste_percent, 2)." * ". CalculationBase::Display($calculation->length_pog_pure, 2)." / 100",
             "процент отходов на СтартСтоп * м.пог чистые / 100"));
         
-        array_push($file_data, array(" М пог. грязные, м",
+        array_push($file_data, array("М пог. грязные, м",
             CalculationBase::Display($calculation->length_pog_dirty, 2),
             "|= ". CalculationBase::Display($calculation->length_pog_pure, 2)." + ($ink_number * ". CalculationBase::Display($data_priladka->length, 2).") + ". CalculationBase::Display($calculation->waste_length, 2),
             "м. пог чистые + (красчность * метраж приладки 1 краски) + СтартСтопОтход"));
