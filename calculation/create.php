@@ -1684,15 +1684,15 @@ while ($row = $fetcher->Fetch()) {
                             </div>
                             <div class="col-6 self-adhesive-only">
                                 <div class="form-group">
-                                    <label id="gap_raport">
+                                    <label id="gap_fact">
                                         <?php
-                                        if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
-                                            $sql = "select gap_raport from norm_gap where machine_id = $machine_id order by date desc limit 1";
-                                            $fetcher = new Fetcher($sql);
-                                            if($row = $fetcher->Fetch()) {
-                                                $gap_raport = $row['gap_raport'];
-                                                echo "Зазор между этикетками $gap_raport мм";
-                                            }
+                                        if(!empty($raport) && !empty($length) && !empty($number_in_raport)) {
+                                            $f_raport = floatval($raport);
+                                            $f_length = floatval($length);
+                                            $f_number_in_raport = floatval($number_in_raport);
+                                            $gap_fact = ($f_raport - ($f_length * $f_number_in_raport)) / $f_number_in_raport;
+                                            $s_gap_fact = CalculationBase::Display($gap_fact, 2);
+                                            echo "Зазор между этикетками $s_gap_fact мм";
                                         }
                                         ?>
                                     </label>
@@ -2019,7 +2019,6 @@ while ($row = $fetcher->Fetch()) {
                     $('#raport').html("<option value=''>Рапорт...</option>")
                     $('#ink_number').html("<option value='' hidden='hidden'>Количество красок...</option>");
                     $('#ink_number').change();
-                    $('#gap_raport').text('');
                 }
                 else {
                     // Заполняем список количеств цветов
@@ -2040,20 +2039,6 @@ while ($row = $fetcher->Fetch()) {
                             })
                             .fail(function() {
                                 alert('Ошибка при заполнении списка рапортов');
-                            });
-                            
-                    // Указываем зазор по рапорту
-                    $.ajax({ url: "../ajax/gap.php?machine_id=" + $(this).val() })
-                            .done(function(data) {
-                                if(data.length == 0) {
-                                    $('$gap_raport').text('');
-                                }
-                                else {
-                                    $('#gap_raport').text(data);
-                                }
-                            })
-                            .fail(function() {
-                                alert('Ошибка при определении зазора');
                             });
                 }
             });
@@ -2612,6 +2597,7 @@ while ($row = $fetcher->Fetch()) {
             }
             
             // Считаем количество этикеток в рапорте (рапорт / длина этикетки, округляем в меньшую сторону)
+            // Считаем фактический зазор: (рапорт - (длина этикетки чистая * кол-во этикеток в рапорте чистое)) / кол-во этикеток в рапорте чистое
             function CountNumberInRaport() {
                 var raport = $('#raport').val();
                 var length = $('#length_2').val();
@@ -2620,6 +2606,10 @@ while ($row = $fetcher->Fetch()) {
                     var f_length = parseFloat(length);
                     var number_in_raport = Math.floor(f_raport / f_length);
                     $('#number_in_raport_2').val(number_in_raport);
+                    
+                    var gap_fact = (f_raport - (f_length * number_in_raport)) / number_in_raport;
+                    var s_gap_fact = Intl.NumberFormat('ru', { minimumFractionDigits: 2}).format(gap_fact);
+                    $('#gap_fact').text('Зазор между этикетками ' + s_gap_fact + ' мм');
                 }
             }
             
