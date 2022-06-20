@@ -2608,7 +2608,7 @@ while ($row = $fetcher->Fetch()) {
                     $('#number_in_raport_2').val(number_in_raport);
                     
                     var gap_fact = (f_raport - (f_length * number_in_raport)) / number_in_raport;
-                    var s_gap_fact = Intl.NumberFormat('ru', { minimumFractionDigits: 2}).format(gap_fact);
+                    var s_gap_fact = Intl.NumberFormat('ru', { maximumFractionDigits: 2 }).format(gap_fact);
                     $('#gap_fact').text('Зазор между этикетками ' + s_gap_fact + ' мм');
                 }
             }
