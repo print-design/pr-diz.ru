@@ -291,11 +291,11 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             }
         }
         
-        $length = filter_input(INPUT_POST, 'length'); if(empty($length)) $length = filter_input (INPUT_POST, 'length_2'); if(empty($length)) $length = "NULL";
-        $stream_width = filter_input(INPUT_POST, 'stream_width'); if(empty($stream_width)) $stream_width = filter_input (INPUT_POST, 'stream_width_2'); if(empty($stream_width)) $stream_width = "NULL";
+        $length = $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'length_2') : filter_input(INPUT_POST, 'length'); if(empty($length)) $length = "NULL";
+        $stream_width = $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'stream_width_2') : filter_input(INPUT_POST, 'stream_width'); if(empty($stream_width)) $stream_width = "NULL";
         $streams_number = filter_input(INPUT_POST, 'streams_number'); if(empty($streams_number)) $streams_number = "NULL";
         $raport = filter_input(INPUT_POST, 'raport'); if(empty($raport)) $raport = "NULL";
-        $number_in_raport = filter_input(INPUT_POST, 'number_in_raport'); if(empty($number_in_raport)) $number_in_raport = filter_input (INPUT_POST, 'number_in_raport_2'); if(empty($number_in_raport)) $number_in_raport = "NULL";
+        $number_in_raport = $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'number_in_raport_2') : filter_input(INPUT_POST, 'number_in_raport'); if(empty($number_in_raport)) $number_in_raport = "NULL";
         $lamination_roller_width = filter_input(INPUT_POST, 'lamination_roller_width'); if(empty($lamination_roller_width)) $lamination_roller_width = "NULL";
         $ink_number = filter_input(INPUT_POST, 'ink_number'); if(empty($ink_number)) $ink_number = "NULL";
         
@@ -1544,7 +1544,7 @@ while ($row = $fetcher->Fetch()) {
                                     <input type="text" 
                                            id="stream_width" 
                                            name="stream_width" 
-                                           class="form-control no-print-only print-only d-none" 
+                                           class="form-control float-only no-print-only print-only d-none" 
                                            required="required" 
                                            placeholder="Ширина ручья, мм" 
                                            value="<?= empty($stream_width) ? "" : floatval($stream_width) ?>" 
@@ -1563,7 +1563,7 @@ while ($row = $fetcher->Fetch()) {
                                     <input type="text" 
                                            id="stream_width_2" 
                                            name="stream_width_2" 
-                                           class="form-control self-adhesive-only d-none" 
+                                           class="form-control float-only self-adhesive-only d-none" 
                                            required="required" 
                                            placeholder="Ширина этикетки, мм" 
                                            value="<?= empty($stream_width) ? "" : floatval($stream_width) ?>" 
@@ -1595,7 +1595,7 @@ while ($row = $fetcher->Fetch()) {
                                     <input type="text" 
                                            id="length_2" 
                                            name="length_2" 
-                                           class="form-control self-adhesive-only d-none" 
+                                           class="form-control float-only self-adhesive-only d-none" 
                                            required="required" 
                                            placeholder="Длина этикетки, мм" 
                                            value="<?= empty($length) ? "" : floatval($length) ?>" 
@@ -2611,12 +2611,33 @@ while ($row = $fetcher->Fetch()) {
                 }
             }
             
+            // Считаем количество этикеток в рапорте (рапорт / длина этикетки, округляем в меньшую сторону)
+            function CountNumberInRaport() {
+                var raport = $('#raport').val();
+                var length = $('#length_2').val();
+                if(raport != '' && length != '') {
+                    var f_raport = parseFloat(raport);
+                    var f_length = parseFloat(length);
+                    var number_in_raport = Math.floor(f_raport / f_length);
+                    $('#number_in_raport_2').val(number_in_raport);
+                }
+            }
+            
             $('#raport').change(function() {
                 CountLength();
+                CountNumberInRaport();
             });
             
             $('#number_in_raport').change(function() {
                 CountLength();
+            });
+            
+            $('#length_2').change(function() {
+                CountNumberInRaport();
+            });
+            
+            $('#length_2').keyup(function() {
+                CountNumberInRaport();
             });
             
             // Заполняем список красочностей
