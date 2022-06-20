@@ -1684,7 +1684,18 @@ while ($row = $fetcher->Fetch()) {
                             </div>
                             <div class="col-6 self-adhesive-only">
                                 <div class="form-group">
-                                    <label id="gap_raport" class="d-none"></label>
+                                    <label id="gap_raport">
+                                        <?php
+                                        if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                            $sql = "select gap_raport from norm_gap where machine_id = $machine_id order by date desc limit 1";
+                                            $fetcher = new Fetcher($sql);
+                                            if($row = $fetcher->Fetch()) {
+                                                $gap_raport = $row['gap_raport'];
+                                                echo "Зазор между этикетками $gap_raport мм";
+                                            }
+                                        }
+                                        ?>
+                                    </label>
                                 </div>
                             </div>
                             <!-- Ширина ламинирующего вала -->
@@ -2009,7 +2020,6 @@ while ($row = $fetcher->Fetch()) {
                     $('#ink_number').html("<option value='' hidden='hidden'>Количество красок...</option>");
                     $('#ink_number').change();
                     $('#gap_raport').text('');
-                    $('#gap_raport').addClass('d-none');
                 }
                 else {
                     // Заполняем список количеств цветов
@@ -2037,11 +2047,9 @@ while ($row = $fetcher->Fetch()) {
                             .done(function(data) {
                                 if(data.length == 0) {
                                     $('$gap_raport').text('');
-                                    $('#gap_raport').addClass('d-none');
                                 }
                                 else {
                                     $('#gap_raport').text(data);
-                                    $('#gap_raport').removeClass('d-none');
                                 }
                             })
                             .fail(function() {
