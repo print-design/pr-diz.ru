@@ -133,6 +133,8 @@ if(!empty($id)) {
         $param_ink_number = 0; // Красочность
         
         $param_cliche_in_price = null; // Включить ПФ в стоимость
+        $param_extracharge = null; // Наценка на тираж
+        $param_extracharge_cliche = null; // Наценка на ПФ
     
         $sql = "select rc.date, rc.name, rc.unit, rc.quantity, rc.work_type_id, "
                 . "f.name film, fv.thickness thickness, fv.weight density, "
@@ -265,6 +267,7 @@ if(!empty($id)) {
         $data_machine_laminator = new DataMachine(null, null, null);
         $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
         $data_glue = new DataGlue(null, null, null, null, null, null, null);
+        $data_cliche = new DataCliche(null, null, null, null, null, null);
         $data_extracharge = array();
     
         if(empty($error_message)) {
@@ -686,7 +689,7 @@ if(!empty($id)) {
             <div class="value mb-2"><?= CalculationBase::Display(floatval($cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
             <div class="mt-2">Себестоимость ПФ</div>
             <div class="value"><?= CalculationBase::Display(floatval($cliche_cost), 0) ?> &#8381;</div>
-            <div class="value mb-2 font-weight-normal" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= CalculationBase::Display($stream_width * $streams_number + ($ski == CalculationBase::NO_SKI ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($raport) + 20) ?>&nbsp;мм</div>            
+            <div class="value mb-2 font-weight-normal" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= CalculationBase::Display(($stream_width * $streams_number + 20) + ($ski == CalculationBase::NO_SKI ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($raport) + 20) ?>&nbsp;мм</div>            
         </div>
         <div class="col-4 pr-4">
             <h3>Отгрузочная стоимость</h3>

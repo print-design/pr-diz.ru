@@ -63,9 +63,320 @@ $film_waste_cost = null; $film_waste_weight = null; $ink_cost = null; $ink_weigh
 $id = filter_input(INPUT_GET, 'id');
 
 if(!empty($id)) {
-    $usd = 0; $euro = 0; $cost = 0; $cost_per_unit = 0; $shipping_cost = 0; $shipping_cost_per_unit = 0; $income = 0; $income_per_unit = 0; $cliche_cost = 0; $shipping_cliche_cost = 0; $total_weight_dirty = 0;
-    $film_cost = 0; $film_cost_per_unit = 0; $width = 0; $weight_pure = 0; $length_pure = 0; $weight_dirty = 0; $length_dirty = 0;
-    $film_waste_cost = 0; $film_waste_weight = 0; $ink_cost = 0; $ink_weight = 0; $work_cost = 0; $work_time = 0;
+    $sql_calculation_result = "select usd, euro, cost, cost_per_unit, shipping_cost, shipping_cost_per_unit, income, income_per_unit, cliche_cost, shipping_cliche_cost, total_weight_dirty, "
+            . "film_cost_1, film_cost_per_unit_1, width_1, weight_pure_1, length_pure_1, weight_dirty_1, length_dirty_1, "
+            . "film_waste_cost_1, film_waste_weight_1, ink_cost, ink_weight, work_cost_1, work_time_1 "
+            . "from calculation_result where calculation_id = $id order by id desc limit 1";
+    $fetcher = new Fetcher($sql_calculation_result);
+    
+    if($row = $fetcher->Fetch()) {
+        $usd = $row['usd']; $euro = $row['euro']; $cost = $row['cost']; $cost_per_unit = $row['cost_per_unit']; $shipping_cost = $row['shipping_cost']; $shipping_cost_per_unit = $row['shipping_cost_per_unit']; $income = $row['income']; $income_per_unit = $row['income_per_unit']; $cliche_cost = $row['cliche_cost']; $shipping_cliche_cost = $row['shipping_cliche_cost']; $total_weight_dirty = $row['total_weight_dirty'];
+        $film_cost = $row['film_cost_1']; $film_cost_per_unit = $row['film_cost_per_unit_1']; $width = $row['width_1']; $weight_pure = $row['weight_pure_1']; $length_pure = $row['length_pure_1']; $weight_dirty = $row['weight_dirty_1']; $length_dirty = $row['length_dirty_1'];
+        $film_waste_cost = $row['film_waste_cost_1']; $film_waste_weight = $row['film_waste_weight_1']; $ink_cost = $row['ink_cost']; $ink_weight = $row['ink_weight']; $work_cost = $row['work_cost_1']; $work_time = $row['work_time_1'];
+    }
+    else {
+        // ПОЛУЧАЕМ ИСХОДНЫЕ ДАННЫЕ
+        $param_date = null;
+        $param_name = null;
+        $param_quantity = null; // Количество этикеток
+        
+        $param_film = null; // Марка материала
+        $param_thickness = null; // Толщина, мкм
+        $param_density = null; // Плотность, г/см2
+        $param_price = null; // Цена, руб
+        $param_currency = null; // Валюта
+        $param_customers_material = null; // Материал заказчика
+        $param_ski = null; // Лыжи
+        $param_width_ski = null; // Ширина материала
+        
+        $param_machine = null;
+        $param_machine_id = null;
+        $param_length = null; // Длина этикетки, мм
+        $param_stream_width = null; // Ширина этикетки
+        $param_streams_number = null; // Количество ручьёв
+        $param_raport = null; // Рапорт
+        $param_ink_number = 0; // Красочность
+        
+        $param_cliche_in_price = null; // Включить ПФ в стоимость
+        $param_extracharge = null; // Наценка на тираж
+        $param_extracharge_cliche = null; // Наценка на ПФ
+        
+        $sql = "select rc.date, rc.name, rc.unit, rc.quantity, "
+                . "f.name film, fv.thickness thickness, fv.weight density, "
+                . "rc.film_variation_id, rc.price, rc.currency, rc.individual_film_name, rc.individual_thickness, rc.individual_density, "
+                . "rc.customers_material, rc.ski, rc.width_ski, "
+                . "m.name machine, rc.machine_id, rc.length, rc.stream_width, rc.streams_number, rc.raport, rc.ink_number, "
+                . "rc.ink_1, rc.ink_2, rc.ink_3, rc.ink_4, rc.ink_5, rc.ink_6, rc.ink_7, rc.ink_8, "
+                . "rc.color_1, rc.color_2, rc.color_3, rc.color_4, rc.color_5, rc.color_6, rc.color_7, rc.color_8, "
+                . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
+                . "rc.percent_1, rc.percent_2, rc.percent_3, rc.percent_4, rc.percent_5, rc.percent_6, rc.percent_7, rc.percent_8, "
+                . "rc.cliche_1, rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8, "
+                . "rc.cliche_in_price, rc.extracharge, rc.extracharge_cliche "
+                . "from calculation rc "
+                . "left join machine m on rc.machine_id = m.id "
+                . "left join film_variation fv on rc.film_variation_id = fv.id "
+                . "left join film f on fv.film_id = f.id "
+                . "where rc.id = $id";
+        $fetcher = new Fetcher($sql);
+        
+        if($row = $fetcher->Fetch()) {
+            $param_date = $row['date'];
+            $param_name = $row['name'];
+            $param_quantity = $row['quantity'];
+            
+            if(!empty($row['film_variation_id'])) {
+                $param_film = $row['film']; // Марка материала
+                $param_thickness = $row['thickness']; // Толщина, мкм
+                $param_density = $row['density']; // Плотность, г/м2
+            }
+            else {
+                $param_film = $row['individual_film_name']; // Марка материала
+                $param_thickness = $row['individual_thickness']; // Толщина, мкм
+                $param_density = $row['individual_density']; // Плотность, г/м2
+            }
+            $param_price = $row['price']; // Цена
+            $param_currency = $row['currency']; // Валюта
+            $param_customers_material = $row['customers_material']; // Материал заказчика
+            $param_ski = $row['ski']; // Лыжи
+            $param_width_ski = $row['width_ski']; // Ширина материала, мм
+            
+            $param_machine = $row['machine'];
+            $param_machine_id = $row['machine_id'];
+            $param_length = $row['length']; // Длина этикетки, мм
+            $param_stream_width = $row['stream_width']; // Ширина ручья, мм
+            $param_streams_number = $row['streams_number']; // Количество ручьёв
+            $param_raport = $row['raport']; // Рапорт
+            $param_ink_number = $row['ink_number']; // Красочность
+            
+            $param_ink_1 = $row['ink_1']; $param_ink_2 = $row['ink_2']; $param_ink_3 = $row['ink_3']; $param_ink_4 = $row['ink_4']; $param_ink_5 = $row['ink_5']; $param_ink_6 = $row['ink_6']; $param_ink_7 = $row['ink_7']; $param_ink_8 = $row['ink_8'];
+            $param_color_1 = $row['color_1']; $param_color_2 = $row['color_2']; $param_color_3 = $row['color_3']; $param_color_4 = $row['color_4']; $param_color_5 = $row['color_5']; $param_color_6 = $row['color_6']; $param_color_7 = $row['color_7']; $param_color_8 = $row['color_8'];
+            $param_cmyk_1 = $row['cmyk_1']; $param_cmyk_2 = $row['cmyk_2']; $param_cmyk_3 = $row['cmyk_3']; $param_cmyk_4 = $row['cmyk_4']; $param_cmyk_5 = $row['cmyk_5']; $param_cmyk_6 = $row['cmyk_6']; $param_cmyk_7 = $row['cmyk_7']; $param_cmyk_8 = $row['cmyk_8'];
+            $param_percent_1 = $row['percent_1']; $param_percent_2 = $row['percent_2']; $param_percent_3 = $row['percent_3']; $param_percent_4 = $row['percent_4']; $param_percent_5 = $row['percent_5']; $param_percent_6 = $row['percent_6']; $param_percent_7 = $row['percent_7']; $param_percent_8 = $row['percent_8'];
+            $param_cliche_1 = $row['cliche_1']; $param_cliche_2 = $row['cliche_2']; $param_cliche_3 = $row['cliche_3']; $param_cliche_4 = $row['cliche_4']; $param_cliche_5 = $row['cliche_5']; $param_cliche_6 = $row['cliche_6']; $param_cliche_7 = $row['cliche_7']; $param_cliche_8 = $row['cliche_8'];
+            
+            $param_cliche_in_price = $row['cliche_in_price'];
+            $param_extracharge = $row['extracharge'];
+            $param_extracharge_cliche = $row['extracharge_cliche'];
+        }
+        
+        $error_message = $fetcher->error;
+        
+        // Курсы валют
+        $new_usd = null;
+        $new_euro = null;
+        
+        if(empty($date)) {
+            $error_message = "Ошибка при получении даты расчёта";
+        }
+    
+        if(empty($error_message)) {
+            $sql = "select usd, euro from currency where date <= '$date' order by id desc limit 1";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $new_usd = $row['usd'];
+                $new_euro = $row['euro'];
+            }
+        }
+        
+        // ПОЛУЧЕНИЕ НОРМ
+        $data_priladka = new DataPriladka(null, null, null);
+        $data_machine = new DataMachine(null, null, null);
+        $data_gap = new DataGap(null, null);
+        $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        $data_cliche = new DataCliche(null, null, null, null, null, null);
+        $data_extracharge = array();
+    
+        if(empty($error_message)) {
+            if(empty($param_machine_id)) {
+                $data_priladka = new DataPriladka(0, 0, 0);
+            }
+            else {
+                $sql = "select machine_id, time, length, waste_percent from norm_priladka where id in (select max(id) from norm_priladka where date <= '$param_date' group by machine_id)";
+                $fetcher = new Fetcher($sql);
+                while ($row = $fetcher->Fetch()) {
+                    if($row['machine_id'] == $param_machine_id) {
+                        $data_priladka = new DataPriladka($row['time'], $row['length'], $row['waste_percent']);
+                    }
+                }
+            }
+        
+            if(empty($param_machine_id)) {
+                $data_machine = new DataMachine(0, 0, 0);
+            }
+            else {
+                $sql = "select machine_id, price, speed, max_width from norm_machine where id in (select max(id) from norm_machine where date <= '$param_date' group by machine_id)";
+                $fetcher = new Fetcher($sql);
+                while ($row = $fetcher->Fetch()) {
+                    if($row['machine_id'] == $param_machine_id) {
+                        $data_machine = new DataMachine($row['price'], $row['speed'], $row['max_width']);
+                    }
+                }
+            }
+            
+            $sql = "select gap_raport, gap_stream from norm_gap where date <= '$date' order by id desc limit 1";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $data_gap = new DataGap($row['gap_raport'], $row['gap_stream']);
+            }
+        
+            $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_price, lacquer_currency, lacquer_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price "
+                    . "from norm_ink where date <= '$param_date' order by id desc limit 1";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $data_ink = new DataInk($row['c_price'], $row['c_currency'], $row['c_expense'], $row['m_price'], $row['m_currency'], $row['m_expense'], $row['y_price'], $row['y_currency'], $row['y_expense'], $row['k_price'], $row['k_currency'], $row['k_expense'], $row['white_price'], $row['white_currency'], $row['white_expense'], $row['panton_price'], $row['panton_currency'], $row['panton_expense'], $row['lacquer_price'], $row['lacquer_currency'], $row['lacquer_expense'], $row['solvent_etoxipropanol_price'], $row['solvent_etoxipropanol_currency'], $row['solvent_flexol82_price'], $row['solvent_flexol82_currency'], $row['solvent_part'], $row['min_price']);
+            }
+        
+            $sql = "select flint_price, flint_currency, kodak_price, kodak_currency, scotch_price, scotch_currency "
+                    . "from norm_cliche where date <= '$date' order by id desc limit 1";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $data_cliche = new DataCliche($row['flint_price'], $row['flint_currency'], $row['kodak_price'], $row['kodak_currency'], $row['scotch_price'], $row['scotch_currency']);
+            }
+            
+            $sql = "select extracharge_type_id, from_weight, to_weight, value from extracharge";
+            $fetcher = new Fetcher($sql);
+            while($row = $fetcher->Fetch()) {
+                array_push($data_extracharge, new DataExtracharge($row['value'], $row['extracharge_type_id'], $row['from_weight'], $row['to_weight']));
+            }
+        }
+        
+        // ДЕЛАЕМ РАСЧЁТ
+        $calculation = new CalculationSelfAdhesive($data_priladka, $data_machine, $data_gap, $data_ink, $data_cliche, $data_extracharge, $new_usd, $new_euro, $param_quantity, $param_film, $param_thickness, $param_density, $param_price, $param_currency, $param_customers_material, $param_ski, $param_width_ski, $param_length, $param_stream_width, $param_streams_number, $param_raport, $param_ink_number, $param_ink_1, $param_ink_2, $param_ink_3, $param_ink_4, $param_ink_5, $param_ink_6, $param_ink_7, $param_ink_8, $param_color_1, $param_color_2, $param_color_3, $param_color_4, $param_color_5, $param_color_6, $param_color_7, $param_color_8, $param_cmyk_1, $param_cmyk_2, $param_cmyk_3, $param_cmyk_4, $param_cmyk_5, $param_cmyk_6, $param_cmyk_7, $param_cmyk_8, $param_percent_1, $param_percent_2, $param_percent_3, $param_percent_4, $param_percent_5, $param_percent_6, $param_percent_7, $param_percent_8, $param_cliche_1, $param_cliche_2, $param_cliche_3, $param_cliche_4, $param_cliche_5, $param_cliche_6, $param_cliche_7, $param_cliche_8, $cliche_in_price, $param_extracharge, $param_extracharge_cliche);
+        
+        // Себестоимость форм
+        $new_cliche_cost = $calculation->cliche_cost;
+        if($new_cliche_cost === null) $new_cliche_cost = "NULL";
+        
+        // Себестоимость
+        $new_cost = $calculation->cost;
+        if($new_cost === null) $new_cost = "NULL";
+    
+        // Себестоимость на 1 шт/кг = Себестоимость / массу тиража или кол-во штук
+        $new_cost_per_unit = $calculation->cost_per_unit;
+        if($new_cost_per_unit === null) $new_cost_per_unit = "NULL";
+        
+        // Наценка на тираж
+        $new_extracharge = $calculation->extracharge;
+        
+        // Наценка на ПФ
+        $new_extracharge_cliche = $calculation->extracharge_cliche;
+        
+        // Отгрузочная стоимость
+        $new_shipping_cost = $calculation->shipping_cost;
+        if($new_shipping_cost === null) $new_shipping_cost = "NULL";
+        
+        // Отгрузочная стоимость за единицу
+        $new_shipping_cost_per_unit = $calculation->shipping_cost_per_unit;
+        if($new_shipping_cost_per_unit === null) $new_shipping_cost_per_unit = "NULL";
+        
+        // Прибыль
+        $new_income = $calculation->income;
+        if($new_income === null) $new_income = "NULL";
+        
+        // Прибыль за единицу
+        $new_income_per_unit = $calculation->income_per_unit;
+        if($new_income_per_unit === null) $new_income_per_unit = "NULL";
+        
+        // Отгрузочная стоимость ПФ
+        $new_shipping_cliche_cost = $calculation->shipping_cliche_cost;
+        if($new_shipping_cliche_cost === null) $new_shipping_cliche_cost = "NULL";
+    
+        // Материалы = масса с приладкой осн. + масса с приладкой лам. 1 + масса с приладкой лам. 2
+        $new_total_weight_dirty = $calculation->total_weight_dirty;
+        if($new_total_weight_dirty === null) $new_total_weight_dirty = "NULL";
+    
+        // Цена материала
+        $new_film_cost = $calculation->film_cost;
+        if($new_film_cost === null) $new_film_cost = "NULL";
+    
+        // Цена материала за 1 шт
+        $new_film_cost_per_unit = $calculation->film_cost_per_unit;
+        if($new_film_cost_per_unit === null) $new_film_cost_per_unit = "NULL";
+    
+        // Ширина материала
+        $new_width = $calculation->width_mat;
+        if($new_width === null) $new_width = "NULL";
+    
+        // Масса без приладки = масса плёнки чистая
+        $new_weight_pure = $calculation->weight_pure;
+        if($new_weight_pure === null) $new_weight_pure = "NULL";
+    
+        // Длина без приладки = длина плёнки чистая
+        $new_length_pure = $calculation->length_pure;
+        if($new_length_pure === null) $new_length_pure = "NULL";
+    
+        // Масса с приладкой = масса плёнки грязная
+        $new_weight_dirty = $calculation->weight_dirty;
+        if($new_weight_dirty === null) $new_weight_dirty = "NULL";
+    
+        // Длина с приладкой = метры погонные грязные
+        $new_length_dirty = $calculation->length_dirty;
+        if($new_length_dirty === null) $new_length_dirty = "NULL";
+    
+        // Отходы плёнка цена = (масса грязная - масса чистая) * стоимость за 1 кг * курс валюты
+        $new_film_waste_cost = $calculation->film_waste_cost;
+        if($new_film_waste_cost === null) $new_film_waste_cost = "NULL";
+    
+        // Отходы плёнка масса = масса грязная - масса чистая
+        $new_film_waste_weight = $calculation->film_waste_weight;
+        if($new_film_waste_weight === null) $new_film_waste_weight = "NULL";
+    
+        // Стоимость всех красок
+        $new_ink_cost = null;
+        if(!empty($calculation->ink_cost)) $new_ink_cost = $calculation->ink_cost;
+        if($new_ink_cost === null) $new_ink_cost = "NULL";
+    
+        // Расход всех красок
+        $new_ink_weight = $calculation->ink_expense;
+        if($new_ink_weight === null) $new_ink_weight = "NULL";
+    
+        // Работа по печати тиража, руб
+        $new_work_cost = $calculation->work_cost;
+        if($new_work_cost === null) $new_work_cost = "NULL";
+    
+        // Работа по печати тиража, ч
+        $new_work_time = $calculation->work_time;
+        if($new_work_time === null) $new_work_time = "NULL";
+        
+        //****************************************************
+        // ПОМЕЩАЕМ НАЦЕНКУ В БАЗУ
+        if(empty($error_message)) {
+            $sql = "update calculation set extracharge = $new_extracharge, extracharge_cliche = $new_extracharge_cliche where id = $id";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
+        
+        //****************************************************
+        // Присваиваем новые значения наценки для отображения в правой панели
+        $extracharge = intval($new_extracharge);
+        $extracharge_cliche = intval($new_extracharge_cliche);
+        
+        //****************************************************
+        // ПОМЕЩАЕМ РЕЗУЛЬТАТЫ ВЫЧИСЛЕНИЙ В БАЗУ
+        if(empty($error_message)) {
+            $sql = "insert into calculation_result (calculation_id, usd, euro, cost, cost_per_unit, shipping_cost, shipping_cost_per_unit, income, income_per_unit, cliche_cost, shipping_cliche_cost, total_weight_dirty, "
+                    . "film_cost_1, film_cost_per_unit_1, width_1, weight_pure_1, length_pure_1, weight_dirty_1, length_dirty_1, "
+                    . "film_waste_cost_1, film_waste_weight_1, ink_cost, ink_weight, work_cost_1, work_time_1) "
+                    . "values ($id, $new_usd, $new_euro, $new_cost, $new_cost_per_unit, $new_shipping_cost, $new_shipping_cost_per_unit, $new_income, $new_income_per_unit, $new_cliche_cost, $new_shipping_cliche_cost, $new_total_weight_dirty, "
+                    . "$new_film_cost, $new_film_cost_per_unit, $new_width, $new_weight_pure, $new_length_pure, $new_weight_dirty, $new_length_dirty, "
+                    . "$new_film_waste_cost, $new_film_waste_weight, $new_ink_cost, $new_ink_weight, $new_work_cost, $new_work_time)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
+        
+        //***************************************************
+        // ЧИТАЕМ СОХРАНЁННЫЕ РЕЗУЛЬТАТЫ ИЗ БАЗЫ
+        $fetcher = new Fetcher($sql_calculation_result);
+    
+        if($row = $fetcher->Fetch()) {
+            $usd = $row['usd']; $euro = $row['euro']; $cost = $row['cost']; $cost_per_unit = $row['cost_per_unit']; $shipping_cost = $row['shipping_cost']; $shipping_cost_per_unit = $row['shipping_cost_per_unit']; $income = $row['income']; $income_per_unit = $row['income_per_unit']; $cliche_cost = $row['cliche_cost']; $shipping_cliche_cost = $row['shipping_cliche_cost']; $total_weight_dirty = $row['total_weight_dirty'];
+            $film_cost = $row['film_cost_1']; $film_cost_per_unit = $row['film_cost_per_unit_1']; $width = $row['width_1']; $weight_pure = $row['weight_pure_1']; $length_pure = $row['length_pure_1']; $weight_dirty = $row['weight_dirty_1']; $length_dirty = $row['length_dirty_1'];
+            $film_waste_cost = $row['film_waste_cost_1']; $film_waste_weight = $row['film_waste_weight_1']; $ink_cost = $row['ink_cost']; $ink_weight = $row['ink_weight']; $work_cost = $row['work_cost_1']; $work_time = $row['work_time_1'];
+        }
+        else {
+            $error_message = "Ошибка при чтении из базы сохранённых данных";
+        }
+    }
 }
 ?>
 <div id="calculation"<?=$calculation_class ?>>
@@ -154,7 +465,7 @@ if(!empty($id)) {
             <div class="value mb-2"><?= CalculationBase::Display(floatval($cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= CalculationBase::Display(floatval($cost_per_unit), 3) ?> &#8381; за шт</span></div>
             <div class="mt-2">Себестоимость ПФ</div>
             <div class="value"><?= CalculationBase::Display(floatval($cliche_cost), 0) ?> &#8381;</div>
-            <div class="value mb-2 font-weight-normal" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;0&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;0&nbsp;мм</div>
+            <div class="value mb-2 font-weight-normal" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= CalculationBase::Display($stream_width * $streams_number + 20, 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= CalculationBase::Display((intval($raport) + 20) + 20, 0) ?>&nbsp;мм</div>
         </div>
         <div class="col-4 pr-4">
             <h3>Отгрузочная стоимость</h3>
