@@ -418,6 +418,170 @@ if($id !== null) {
         
         array_push($file_data, array("", "", "", ""));
         
+        //***********************************
+        // Стоимость форм
+        //***********************************
+        
+        array_push($file_data, array("Высота форм, мм",
+            CalculationBase::Display($calculation->cliche_height, 2),
+            "|= ".CalculationBase::Display($raport, 2)." + 20",
+            "рапорт + 20мм"));
+        
+        array_push($file_data, array("Ширина форм, мм",
+            CalculationBase::Display($calculation->cliche_width, 2),
+            "|= (".CalculationBase::Display($streams_number, 2)." * ".CalculationBase::Display($stream_width, 2)." + 20) + ".((!empty($ski_1) && $ski_1 == Calculation::NO_SKI) ? 0 : 20),
+            "(кол-во ручьёв * ширина ручьёв + 20 мм), если есть лыжи (стандартные или нестандартные), то ещё + 20 мм"));
+        
+        array_push($file_data, array("Площадь форм, см",
+            CalculationBase::Display($calculation->cliche_area, 2),
+            "|= ".CalculationBase::Display($calculation->cliche_height, 2)." * ".CalculationBase::Display($calculation->cliche_width, 2)." / 100",
+            "высота форм * ширина форм / 100"));
+        
+        array_push($file_data, array("Количество новых форм",
+            CalculationBase::Display($calculation->cliche_new_number, 2),"", ""));
+        
+        for($i=1; $i<=$ink_number; $i++) {
+            $cliche = "cliche_$i";
+            
+            $cliche_sm_price = 0;
+            $cliche_currency = "";
+            
+            switch ($$cliche) {
+                case Calculation::FLINT:
+                    $cliche_sm_price = $data_cliche->flint_price;
+                    $cliche_currency = $data_cliche->flint_currency;
+                    break;
+                
+                case Calculation::KODAK:
+                    $cliche_sm_price = $data_cliche->kodak_price;
+                    $cliche_currency = $data_cliche->kodak_currency;
+                    break;
+            }
+            
+            array_push($file_data, array("Цена формы $i, руб",
+                CalculationBase::Display($calculation->cliche_costs[$i], 2),
+                "|= ".CalculationBase::Display($calculation->cliche_area, 2)." * ".CalculationBase::Display($cliche_sm_price, 2)." * ".CalculationBase::Display($calculation->GetCurrencyRate($cliche_currency, $usd, $euro), 2),
+                "площадь формы * цена формы за 1 см * курс валюты"));
+        }
+        
+        array_push($file_data, array("", "", "", ""));
+        
+        //*******************************************
+        // Наценка
+        //*******************************************
+        
+        array_push($file_data, array("Наценка на тираж, %", CalculationBase::Display($calculation->extracharge, 2), "", ""));
+        array_push($file_data, array("Наценка на ПФ, %", CalculationBase::Display($calculation->extracharge_cliche, 2), "", "Если УКПФ = 1, то наценка на ПФ всегда 0"));
+        array_push($file_data, array("", "", "", ""));
+        
+        //*******************************************
+        // Данные для правой панели
+        //*******************************************
+        
+        array_push($file_data, array("Общая стоимость материала, руб",
+            CalculationBase::Display($calculation->film_cost, 2),
+            "|= ".CalculationBase::Display($calculation->film_cost_1, 2)." + ".CalculationBase::Display($calculation->film_cost_2, 2)." + ".CalculationBase::Display($calculation->film_cost_3, 2),
+            "стоимость плёнки грязная 1 + стоимость плёнки грязная 2 + стоимость плёнки грязная 3"));
+        
+        array_push($file_data, array("Общая стоимость работ, руб",
+            CalculationBase::Display($calculation->work_cost, 2),
+            "|= ".CalculationBase::Display($calculation->work_cost_1, 2)." + ".CalculationBase::Display($calculation->work_cost_2, 2)." + ".CalculationBase::Display($calculation->work_cost_3, 2),
+            "стоимость выполнения тиража 1 + стоимость выполнения тиража 2 + стоимость выполнения тиража 3"));
+        
+        $total_ink_cost_formula = "";
+        $total_ink_expense_formula = "";
+        
+        for($i=1; $i<=$ink_number; $i++) {
+            if(!empty($total_ink_cost_formula)) {
+                $total_ink_cost_formula .= " + ";
+            }
+            $total_ink_cost_formula .= CalculationBase::Display($calculation->ink_costs[$i], 2);
+            
+            if(!empty($total_ink_expense_formula)) {
+                $total_ink_expense_formula .= " + ";
+            }
+            $total_ink_expense_formula .= CalculationBase::Display($calculation->ink_expenses[$i], 2);
+        }
+        
+        array_push($file_data, array("Стоимость краски, руб",
+            CalculationBase::Display($calculation->ink_cost, 2),
+            "|= ".$total_ink_cost_formula,
+            "Сумма стоимость всех красок"));
+        
+        array_push($file_data, array("Расход краски, кг",
+            CalculationBase::Display($calculation->ink_expense, 2),
+            "|= ".$total_ink_expense_formula,
+            "Сумма расход всех красок"));
+        
+        $total_cliche_cost_formula = "";
+        
+        for($i=1; $i<=$ink_number; $i++) {
+            if(!empty($total_cliche_cost_formula)) {
+                $total_cliche_cost_formula .= " + ";
+            }
+            $total_cliche_cost_formula .= CalculationBase::Display($calculation->cliche_costs[$i], 2);
+        }
+        
+        array_push($file_data, array("Стоимость форм, руб",
+            CalculationBase::Display($calculation->cliche_cost, 2),
+            "|= ".$total_cliche_cost_formula,
+            "сумма стоимости всех форм"));
+        
+        array_push($file_data, array("Себестоимость, руб",
+            CalculationBase::Display($calculation->cost, 2),
+            "|= ". CalculationBase::Display($calculation->film_cost, 2)." + ". CalculationBase::Display($calculation->work_cost, 2)." + ". CalculationBase::Display($calculation->ink_cost, 2)." + (". CalculationBase::Display($calculation->cliche_cost, 2)." * ". CalculationBase::Display($calculation->ukpf, 0).")",
+            "стоимость плёнки + стоимость работы + стоимость краски + (стоимость форм * УКПФ)"));
+        
+        array_push($file_data, array("Себестоимость за ". $calculation->GetUnitName($unit).", руб",
+            CalculationBase::Display($calculation->cost_per_unit, 2),
+            "|= ". CalculationBase::Display($calculation->cost, 2)." / ". CalculationBase::Display($quantity, 2),
+            "себестоимость / размер тиража"));
+        
+        array_push($file_data, array("Отгрузочная стоимость, руб",
+            CalculationBase::Display($calculation->shipping_cost, 2),
+            "|= ".CalculationBase::Display($calculation->cost, 1)." + (".CalculationBase::Display($calculation->cost, 2)." * ".CalculationBase::Display($calculation->extracharge, 2)." / 100)",
+            "себестоимость + (себестоимость * наценка на тираж / 100)"));
+            
+        array_push($file_data, array("Отгрузочная стоимость за ".$calculation->GetUnitName($unit).", руб",
+            CalculationBase::Display($calculation->shipping_cost_per_unit, 2),
+            "|= ".CalculationBase::Display($calculation->shipping_cost, 2)." / ".CalculationBase::Display($quantity, 2),
+            "отгрузочная стоимость / размер тиража"));
+            
+        array_push($file_data, array("Прибыль, руб",
+            CalculationBase::Display($calculation->income, 2),
+            "|= ".CalculationBase::Display($calculation->shipping_cost, 2)." - ".CalculationBase::Display($calculation->cost, 2),
+            "отгрузочная стоимость - себестоимость"));
+            
+        array_push($file_data, array("Прибыль за ".$calculation->GetUnitName($unit).", руб",
+            CalculationBase::Display($calculation->income_per_unit, 2),
+            "|= ".CalculationBase::Display($calculation->shipping_cost_per_unit, 2)." - ".CalculationBase::Display($calculation->cost_per_unit, 2),
+            "отгрузочная стоимость за ". $calculation->GetUnitName($unit)." - себестоимость за ". $calculation->GetUnitName($unit)));
+            
+        array_push($file_data, array("Отгрузочная стоимость ПФ, руб",
+            CalculationBase::Display($calculation->shipping_cliche_cost, 2),
+            "|= ".CalculationBase::Display($calculation->cliche_cost, 2)." + (".CalculationBase::Display($calculation->cliche_cost, 2)." * ".CalculationBase::Display($calculation->extracharge_cliche, 2)." / 100)",
+            "сумма стоимости всех форм + (сумма стоимости всех форм * наценка на ПФ / 100)"));
+        
+        array_push($file_data, array("Общий вес всех материала с приладкой, кг",
+            CalculationBase::Display($calculation->total_weight_dirty, 2),
+            "|= ".CalculationBase::Display($calculation->weight_dirty, 2),
+            "масса плёнки грязная"));
+        
+        array_push($file_data, array("Стоимость за кг 1, руб",
+            CalculationBase::Display($calculation->film_cost_per_unit, 2),
+            "|= ".CalculationBase::Display($calculation->film_cost, 2)." / ".CalculationBase::Display($calculation->weight_dirty, 2),
+            "общая стоимость грязная / масса материала грязная"));
+        
+        array_push($file_data, array("Отходы, руб",
+            CalculationBase::Display($calculation->film_waste_cost, 2),
+            "|= ".CalculationBase::Display($calculation->film_waste_weight, 2)." * ".CalculationBase::Display($price, 2)." * ".CalculationBase::Display($calculation->GetCurrencyRate($currency, $usd, $euro), 2),
+            "отходы, кг * цена материала * курс валюты"));
+        
+        array_push($file_data, array("Отходы, кг",
+            CalculationBase::Display($calculation->film_waste_weight, 2),
+            "|= ".CalculationBase::Display($calculation->weight_dirty, 2)." - ".CalculationBase::Display($calculation->weight_pure, 2),
+            "масса плёнки грязная - масса плёнки чистая"));
+        
         //****************************************
         // Сохранение в файл
         $file_name = DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y')." $name.csv";

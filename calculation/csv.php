@@ -920,7 +920,7 @@ if($id !== null) {
         // Данные для правой панели
         //*******************************************
         
-        array_push($file_data, array("Общая стоимость всез плёнок, руб",
+        array_push($file_data, array("Общая стоимость всех плёнок, руб",
             CalculationBase::Display($calculation->film_cost, 2),
             "|= ".CalculationBase::Display($calculation->film_cost_1, 2)." + ".CalculationBase::Display($calculation->film_cost_2, 2)." + ".CalculationBase::Display($calculation->film_cost_3, 2),
             "стоимость плёнки грязная 1 + стоимость плёнки грязная 2 + стоимость плёнки грязная 3"));
