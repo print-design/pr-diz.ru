@@ -187,6 +187,7 @@ class CalculationBase {
     const ET_PRINT = 2; // Пленка с печатью без ламинации
     const ET_PRINT_1 = 3; // Пленка с печатью и ламинацией
     const ET_PRINT_2 = 4; // Пленка с печатью и двумя ламинациями
+    const ET_SELF_ADHESIVE = 5; // Самоклеящиеся материалы
     
     // Лыжи
     const NO_SKI = 1;
@@ -991,7 +992,7 @@ class Calculation extends CalculationBase {
             }
             
             foreach($data_extracharge as $item) {
-                if($item->ech_type == $ech_type && round($this->weight) >= $item->min_weight && (round($this->weight) <= $item->max_weight || empty($item->msx_weight))) {
+                if($item->ech_type == $ech_type && round($this->weight) >= $item->min_weight && (round($this->weight) <= $item->max_weight || empty($item->max_weight))) {
                     $this->extracharge = $item->value;
                 }
             }    
@@ -1082,6 +1083,8 @@ class Calculation extends CalculationBase {
 
 // Расчёт для самоклеящейся бумаги
 class CalculationSelfAdhesive extends CalculationBase {
+    public $ukpf; // Уравнивающий коэффициент ПФ
+    
     public $width_mat = 0; // Ширина материала
     public $length_label_dirty = 0; // Высота этикетки грязная
     public $width_dirty = 0; // Ширина этикетки грязная
@@ -1100,7 +1103,7 @@ class CalculationSelfAdhesive extends CalculationBase {
     public $weight_dirty = 0; // Масса плёнки грязная (с приладкой), кг
     public $length_dirty = 0; // Длина плёнки гразная, м
     
-    public $film_cost_dirty = 0; // Себестоимость грязная
+    public $film_cost = 0; // Себестоимость грязная
     public $priladka_time = 0; // Приладка Время, ч
     public $print_time = 0; // Время печати тиража, без приладки, ч
     public $work_time = 0; // Общее время выполнения тиража, ч
@@ -1114,6 +1117,29 @@ class CalculationSelfAdhesive extends CalculationBase {
     public $mix_ink_kg_prices; // массив: цена 1 кг каждой краскаСмеси
     public $ink_expenses; // массив: расход каждой КраскаСмеси
     public $ink_costs; // массив: стоимость каждой КраскаСмеси
+    
+    public $cliche_height; // Высота формы, мм
+    public $cliche_width; // ширина формы, мм
+    public $cliche_area; // площадь формы, мм
+    public $cliche_new_number; // количество новых форм
+    public $cliche_costs; // массив: стоимость каждой формы, руб
+    
+    public $extracharge = 0; // Наценка на тираж
+    public $extracharge_cliche = 0; // Наценка на ПФ
+    public $ink_cost; // стоимость красок
+    public $ink_expense; // расход красок
+    public $cliche_cost; // себестоимость форм
+    public $cost; // себестоимость
+    public $cost_per_unit; // себестоимость за единицу
+    public $shipping_cost; // отгрузочная стоимость
+    public $shipping_cost_per_unit; // отгрузочная стоимость за диницу
+    public $shipping_cliche_cost; // отгрузочная стоимость форм
+    public $income; // прибыль
+    public $income_per_unit; // прибыль за единицу
+    public $total_weight_dirty; // общая масса с приладкой
+    public $film_cost_per_unit; // Масса с приладкой на 1 кг
+    public $film_waste_cost; // отходы, стоимость
+    public $film_waste_weight; // отходы, масса
 
     public function __construct(DataPriladka $data_priladka, 
             DataMachine $data_machine, 
@@ -1152,6 +1178,9 @@ class CalculationSelfAdhesive extends CalculationBase {
             ) {
         // Если материал заказчика, то цена его = 0
         if($customers_material == true) $price = 0;
+        
+        // Уравнивающий коэфф. ПФ (УКПФ)=0, когда ПФ не включен в стоимость, =1, когда ПФ включен в стоимость
+        $this->ukpf = $cliche_in_price == 1 ? 1 : 0;
         
         // НИЖЕ НАЧИНАЕТСЯ ВЫЧИСЛЕНИЕ
         
@@ -1230,7 +1259,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         //*****************************
         
         // Себестоимость плёнки грязная (с приладкой), руб
-        $this->film_cost_dirty = $this->area_dirty * $price * self::GetCurrencyRate($currency, $usd, $euro);
+        $this->film_cost = $this->area_dirty * $price * self::GetCurrencyRate($currency, $usd, $euro);
         
         //*****************************
         // Время - деньги
@@ -1296,6 +1325,139 @@ class CalculationSelfAdhesive extends CalculationBase {
             $ink_cost = $ink_expense * $mix_ink_kg_price;
             $this->ink_costs[$i] = $ink_cost;
         }
+        
+        //********************************
+        // Стоимость форм
+        //********************************
+        
+        // Высота форм, мм
+        $this->cliche_height = $raport + 20;
+        
+        // Ширина форм, мм (для самоклейки без лыж не бывает)
+        $this->cliche_width = ($streams_number * $stream_width + 20) + 20;
+        
+        // Площадь форм, см
+        $this->cliche_area = $this->cliche_height * $this->cliche_width / 100;
+        
+        // Создаём массив стоимостей каждой формы
+        $this->cliche_costs = array();
+        
+        // Количество новых форм
+        $this->cliche_new_number = 0;
+        
+        // Перебираем все формы, определяем стоимость каждой, помещаем эту величину в массив
+        for($i=1; $i<=$ink_number; $i++) {
+            $cliche = "cliche_$i";
+            
+            // Если форма не старая, то количество новых форм увеличинаем на 1
+            if(!empty($$cliche) && $$cliche != self::OLD) {
+                $this->cliche_new_number += 1;
+            }
+            
+            $cliche_sm_price = 0;
+            $cliche_currency = "";
+            
+            switch ($$cliche) {
+                case self::FLINT:
+                    $cliche_sm_price = $data_cliche->flint_price;
+                    $cliche_currency = $data_cliche->flint_currency;
+                    break;
+                
+                case self::KODAK:
+                    $cliche_sm_price = $data_cliche->kodak_price;
+                    $cliche_currency = $data_cliche->kodak_currency;
+                    break;
+            }
+            
+            // Стоимость формы, руб
+            $cliche_cost = $this->cliche_area * $cliche_sm_price * self::GetCurrencyRate($cliche_currency, $usd, $euro);
+            $this->cliche_costs[$i] = $cliche_cost;
+        }
+        
+        //********************************
+        // НАЦЕНКА
+        //********************************
+        
+        // Если имеющаяся наценка не пустая, оставляем её
+        // Если пустая, высисляем
+        if(!empty($extracharge)) {
+            $this->extracharge = $extracharge;
+        }
+        else {
+            $ech_type = self::ET_SELF_ADHESIVE;
+            
+            foreach($data_extracharge as $item) {
+                if($item->ech_type == $ech_type && round($this->weight_dirty) >= $item->min_weight && (round($this->weight_dirty) <= $item->max_weight || empty($item->max_weight))) {
+                    $this->extracharge = $item->value;
+                }
+            }
+        }
+        
+        // Если УКПФ = 1, то наценка на ПФ всегда 0
+        if($this->ukpf == 1) {
+            $this->extracharge_cliche = 0;
+        }
+        else {
+            $this->extracharge_cliche = $extracharge_cliche;
+        }
+        
+        //*********************************
+        // ПРАВАЯ ПАНЕЛЬ
+        //*********************************
+        
+        // Общая стоимость всех КраскаСмеси
+        $this->ink_cost = 0;
+        
+        for($i=1; $i<=$ink_number; $i++) {
+            $this->ink_cost += $this->ink_costs[$i];
+        }
+        
+        // Общий расход всех КраскаСмеси
+        $this->ink_expense = 0;
+        
+        for($i=1; $i<=$ink_number; $i++) {
+            $this->ink_expense += $this->ink_expenses[$i];
+        }
+        
+        // Себестоимость ПФ
+        $this->cliche_cost = 0;
+        
+        for($i=1; $i<$ink_number; $i++) {
+            $this->cliche_cost += $this->cliche_costs[$i];
+        }
+        
+        // Себестоимость
+        $this->cost = $this->film_cost + $this->work_cost + $this->ink_cost + ($this->cliche_cost * $this->ukpf);
+        
+        // Себестоимость за единицу
+        $this->cost_per_unit = $this->cost / $quantity;
+        
+        // Отгрузочная стоимость
+        $this->shipping_cost = $this->cost + ($this->cost * $this->extracharge / 100);
+        
+        // Отгрузочная стоимость за единицу
+        $this->shipping_cost_per_unit = $this->shipping_cost / $quantity;
+        
+        // Прибыль
+        $this->income = $this->shipping_cost - $this->cost;
+        
+        // Прибыль за единицу
+        $this->income_per_unit = $this->shipping_cost_per_unit - $this->cost_per_unit;
+        
+        // Отгрузочная стоимость ПФ
+        $this->shipping_cliche_cost = $this->cliche_cost + ($this->cliche_cost * $this->extracharge_cliche / 100);
+        
+        // Масса плёнки с приладкой
+        $this->total_weight_dirty = $this->weight_dirty;
+        
+        // Стоимость плёнки за единицу
+        $this->film_cost_per_unit = empty($this->weight_dirty) ? 0 : $this->film_cost / $this->weight_dirty;
+        
+        // Отходы плёнки, стоимость
+        $this->film_waste_cost = ($this->weight_dirty - $this->weight_pure) * $price * self::GetCurrencyRate($currency, $usd, $euro);
+        
+        // Отходы плёнки, масса
+        $this->film_waste_weight = $this->weight_dirty - $this->weight_pure;
     }
 }
 ?>
