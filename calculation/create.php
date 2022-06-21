@@ -682,6 +682,15 @@ if(isset($row['num_for_customer'])) {
     $num_for_customer = $row['num_for_customer'];
 }
 
+// Получение норм
+$gap_raport = null;
+
+$sql = "select gap_raport from norm_gap order by id desc limit 1";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $gap_raport = $row['gap_raport'];
+}
+
 // Расчёт скрываем:
 // 1. При создании нового заказчика
 // 2. При создании нового расчёта
@@ -2596,15 +2605,18 @@ while ($row = $fetcher->Fetch()) {
                 }
             }
             
-            // Считаем количество этикеток в рапорте (рапорт / длина этикетки, округляем в меньшую сторону)
+            // Считаем количество этикеток в рапорте (рапорт / длина этикетки грязная, округляем в меньшую сторону)
             // Считаем фактический зазор: (рапорт - (длина этикетки чистая * кол-во этикеток в рапорте чистое)) / кол-во этикеток в рапорте чистое
             function CountNumberInRaport() {
                 var raport = $('#raport').val();
                 var length = $('#length_2').val();
+                var gap_raport = <?=$gap_raport ?>;
                 if(raport != '' && length != '') {
                     var f_raport = parseFloat(raport);
                     var f_length = parseFloat(length);
-                    var number_in_raport = Math.floor(f_raport / f_length);
+                    var f_gap_raport = parseFloat(gap_raport);
+                    var f_length_dirty = f_length + f_gap_raport;
+                    var number_in_raport = Math.floor(f_raport / f_length_dirty);
                     $('#number_in_raport_2').val(number_in_raport);
                     
                     var gap_fact = (f_raport - (f_length * number_in_raport)) / number_in_raport;
