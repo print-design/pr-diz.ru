@@ -338,7 +338,7 @@ if($id !== null) {
         //*****************************
         
         array_push($file_data, array("Себестоимость плёнки грязная (с приладкой), руб",
-            CalculationBase::Display($calculation->film_cost_dirty, 2),
+            CalculationBase::Display($calculation->film_cost, 2),
             "|= ". CalculationBase::Display($calculation->area_dirty, 2)." * ". CalculationBase::Display($price, 2)." * ".CalculationBase::Display(CalculationBase::GetCurrencyRate($currency, $usd, $euro), 2),
             "м2 грязные * цена * курс валюты"));
         
@@ -393,11 +393,11 @@ if($id !== null) {
             $ink = "ink_$i";
             $cmyk = "cmyk_$i";
             $percent = "percent_$i";
-            $price = $calculation->GetInkPrice($$ink, $$cmyk, $data_ink->c_price, $data_ink->c_currency, $data_ink->m_price, $data_ink->m_currency, $data_ink->y_price, $data_ink->y_currency, $data_ink->k_price, $data_ink->k_currency, $data_ink->panton_price, $data_ink->panton_currency, $data_ink->white_price, $data_ink->white_currency, $data_ink->lacquer_price, $data_ink->lacquer_currency);
+            $price1 = $calculation->GetInkPrice($$ink, $$cmyk, $data_ink->c_price, $data_ink->c_currency, $data_ink->m_price, $data_ink->m_currency, $data_ink->y_price, $data_ink->y_currency, $data_ink->k_price, $data_ink->k_currency, $data_ink->panton_price, $data_ink->panton_currency, $data_ink->white_price, $data_ink->white_currency, $data_ink->lacquer_price, $data_ink->lacquer_currency);
             
             array_push($file_data, array("Цена 1 кг чистой краски $i, руб",
                 CalculationBase::Display($calculation->ink_kg_prices[$i], 2),
-                "|= ". CalculationBase::Display($price->value, 2)." * ". CalculationBase::Display($calculation->GetCurrencyRate($price->currency, $usd, $euro), 2),
+                "|= ". CalculationBase::Display($price1->value, 2)." * ". CalculationBase::Display($calculation->GetCurrencyRate($price1->currency, $usd, $euro), 2),
                 "цена 1 кг чистой краски $i * курс валюты"));
             
             array_push($file_data, array("Цена 1 кг КраскаСмеси $i, руб",
@@ -478,16 +478,6 @@ if($id !== null) {
         // Данные для правой панели
         //*******************************************
         
-        array_push($file_data, array("Общая стоимость материала, руб",
-            CalculationBase::Display($calculation->film_cost, 2),
-            "|= ".CalculationBase::Display($calculation->film_cost_1, 2)." + ".CalculationBase::Display($calculation->film_cost_2, 2)." + ".CalculationBase::Display($calculation->film_cost_3, 2),
-            "стоимость плёнки грязная 1 + стоимость плёнки грязная 2 + стоимость плёнки грязная 3"));
-        
-        array_push($file_data, array("Общая стоимость работ, руб",
-            CalculationBase::Display($calculation->work_cost, 2),
-            "|= ".CalculationBase::Display($calculation->work_cost_1, 2)." + ".CalculationBase::Display($calculation->work_cost_2, 2)." + ".CalculationBase::Display($calculation->work_cost_3, 2),
-            "стоимость выполнения тиража 1 + стоимость выполнения тиража 2 + стоимость выполнения тиража 3"));
-        
         $total_ink_cost_formula = "";
         $total_ink_expense_formula = "";
         
@@ -532,17 +522,17 @@ if($id !== null) {
             "|= ". CalculationBase::Display($calculation->film_cost, 2)." + ". CalculationBase::Display($calculation->work_cost, 2)." + ". CalculationBase::Display($calculation->ink_cost, 2)." + (". CalculationBase::Display($calculation->cliche_cost, 2)." * ". CalculationBase::Display($calculation->ukpf, 0).")",
             "стоимость плёнки + стоимость работы + стоимость краски + (стоимость форм * УКПФ)"));
         
-        array_push($file_data, array("Себестоимость за ". $calculation->GetUnitName($unit).", руб",
+        array_push($file_data, array("Себестоимость за шт, руб",
             CalculationBase::Display($calculation->cost_per_unit, 2),
             "|= ". CalculationBase::Display($calculation->cost, 2)." / ". CalculationBase::Display($quantity, 2),
-            "себестоимость / размер тиража"));
+            "себестоимость / количество этикеток"));
         
         array_push($file_data, array("Отгрузочная стоимость, руб",
             CalculationBase::Display($calculation->shipping_cost, 2),
             "|= ".CalculationBase::Display($calculation->cost, 1)." + (".CalculationBase::Display($calculation->cost, 2)." * ".CalculationBase::Display($calculation->extracharge, 2)." / 100)",
             "себестоимость + (себестоимость * наценка на тираж / 100)"));
             
-        array_push($file_data, array("Отгрузочная стоимость за ".$calculation->GetUnitName($unit).", руб",
+        array_push($file_data, array("Отгрузочная стоимость за шт, руб",
             CalculationBase::Display($calculation->shipping_cost_per_unit, 2),
             "|= ".CalculationBase::Display($calculation->shipping_cost, 2)." / ".CalculationBase::Display($quantity, 2),
             "отгрузочная стоимость / размер тиража"));
@@ -552,10 +542,10 @@ if($id !== null) {
             "|= ".CalculationBase::Display($calculation->shipping_cost, 2)." - ".CalculationBase::Display($calculation->cost, 2),
             "отгрузочная стоимость - себестоимость"));
             
-        array_push($file_data, array("Прибыль за ".$calculation->GetUnitName($unit).", руб",
+        array_push($file_data, array("Прибыль за шт, руб",
             CalculationBase::Display($calculation->income_per_unit, 2),
             "|= ".CalculationBase::Display($calculation->shipping_cost_per_unit, 2)." - ".CalculationBase::Display($calculation->cost_per_unit, 2),
-            "отгрузочная стоимость за ". $calculation->GetUnitName($unit)." - себестоимость за ". $calculation->GetUnitName($unit)));
+            "отгрузочная стоимость за шт - себестоимость за шт"));
             
         array_push($file_data, array("Отгрузочная стоимость ПФ, руб",
             CalculationBase::Display($calculation->shipping_cliche_cost, 2),

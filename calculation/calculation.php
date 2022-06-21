@@ -1422,7 +1422,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         // Себестоимость ПФ
         $this->cliche_cost = 0;
         
-        for($i=1; $i<$ink_number; $i++) {
+        for($i=1; $i<=$ink_number; $i++) {
             $this->cliche_cost += $this->cliche_costs[$i];
         }
         
