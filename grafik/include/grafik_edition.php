@@ -238,5 +238,5 @@
     <?php endif; ?>
     
     <!-- Дата продолжения работы над этим тиражом -->
-    <td class="<?=$top.' '.$this->shift ?>"><?= empty($this->edition['continuation_date']) ? '' : DateTime::createFromFormat('Y-m-d', $this->edition['continuation_date'])->format('d.m.Y') ?></td>
+    <td class="<?=$top.' '.$this->shift ?>"><?= $this->edition['continuation'] ?></td>
 </tr>

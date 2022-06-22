@@ -55,16 +55,16 @@ if($row = $fetcher->Fetch()) {
     $error_message = $executer->error;
     $insert_id = $executer->insert_id;
     
-    // Вставляем двту продолжения работы над тиражом в исходный тираж
-    $continuation_date = null;
-    $sql = "select ws.date from edition e inner join workshift ws on e.workshift_id = ws.id where e.id = $insert_id";
+    // Вставляем продолжения работы над тиражом в исходный тираж
+    $continuation = null;
+    $sql = "select m.name from edition e inner join workshift ws on e.workshift_id = ws.id inner join machine m on ws.machine_id = m.id where e.id = $insert_id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
-        $continuation_date = $row['date'];
+        $continuation = $row['name'];
     }
     
-    if(!empty($continuation_date)) {
-        $sql = "update edition set continuation_date = '$continuation_date' where id = $origin_id";
+    if(!empty($continuation)) {
+        $sql = "update edition set continuation = '$continuation' where id = $origin_id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
