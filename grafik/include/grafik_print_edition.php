@@ -78,4 +78,7 @@
         <?=$this->edition['comment'] ?>
     </td>
     <?php endif; ?>
+    
+    <!-- Дата продолжения работы над этим тиражом -->
+    <td class="<?=$top.' '.$this->shift ?>"></td>
 </tr>

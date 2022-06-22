@@ -16,7 +16,7 @@ include 'grafik_top.php';
             <?php if($this->hasLength): ?><th>Метраж</th><?php endif; ?>
             <?php if(IsInRole('admin')): if($this->hasStatus): ?><th>Статус</th><?php endif; endif; ?>
             <?php if($this->hasRoller): ?><th>Вал</th><?php endif; ?>
-            <?php if($this->hasLamination): ?><th>Ламинация</th><?php endif; ?>
+            <?php if($this->hasLamination): ?><th>Лам-ция</th><?php endif; ?>
             <?php if($this->hasColoring): ?><th>Кр-ть</th><?php endif; ?>
             <?php if($this->hasManager): ?><th>Менеджер</th><?php endif; ?>
             <?php if($this->hasComment): ?><th>Комментарий</th><?php endif; ?>
@@ -25,6 +25,7 @@ include 'grafik_top.php';
             <th></th>
             <th></th>
             <?php endif; ?>
+            <th>Продолж.</th>
         </tr>
     </thead>
     <tbody id="grafik-tbody">

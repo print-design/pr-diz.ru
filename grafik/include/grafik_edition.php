@@ -93,7 +93,7 @@
     <?php if($this->timetable->hasLength): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
-        <input type="number" min="0" pattern="\d*" value="<?=$this->edition['length'] ?>" onfocusout="javascript: EditLength($(this))" data-id='<?=$this->edition['id'] ?>' class="editable" style="width:65px;" />
+        <input type="text" min="0" pattern="\d*" value="<?=$this->edition['length'] ?>" onfocusout="javascript: EditLength($(this))" data-id='<?=$this->edition['id'] ?>' class="editable int-only" style="width:65px;" />
         <?php
         elseif(!empty($this->edition['status'])):
             echo $this->edition['status'];
@@ -236,4 +236,7 @@
         <button type='button'<?=$this->allow_edit_disabled ?> class='btn btn-outline-dark btn-sm' data-id="<?=$this->edition['id'] ?>" data-machine="<?=$this->edition['machine_id'] ?>" data-from="<?=$from ?>" data-to="<?=$to ?>" onclick="javascript: if(confirm('Действительно удалить?')) { DeleteEdition($(this)); }" title='Удалить тираж' data-toggle="tooltip"><i class='fas fa-trash-alt'></i></button>
     </td>
     <?php endif; ?>
+    
+    <!-- Дата продолжения работы над этим тиражом -->
+    <td class="<?=$top.' '.$this->shift ?>"><?= empty($this->edition['continuation_date']) ? '' : DateTime::createFromFormat('Y-m-d', $this->edition['continuation_date'])->format('d.m.Y') ?></td>
 </tr>

@@ -55,6 +55,12 @@ if($row = $fetcher->Fetch()) {
     $error_message = $executer->error;
     $insert_id = $executer->insert_id;
     
+    // Вставляем двту продолжения работы над тиражом в исходный тираж
+    $sql = "update edition set continuation_date = (select ws.date from edition e inner join workshift ws on e.workshift_id = ws.id where e.id = $insert_id) where id = $origin_id";
+    //$sql = "update edition set continuation_date = '2000-01-01' where id = $origin_id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
     // Очищаем буфер обмена
     $sql = "delete from clipboard";
     $executer = new Executer($sql);

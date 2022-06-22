@@ -42,4 +42,7 @@
     
     <!-- Комментарий -->
     <?php if($this->timetable->hasComment): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    
+    <!-- Дата продолжения работы над этим тиражом -->
+    <td class="<?=$top.' '.$this->shift ?>"
 </tr>

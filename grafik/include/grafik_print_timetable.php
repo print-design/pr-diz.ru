@@ -14,6 +14,7 @@
         <?php if($this->hasColoring): ?> <th>Кр-ть</th> <?php endif; ?>
         <?php if($this->hasManager): ?> <th>Менеджер</th> <?php endif; ?>
         <?php if($this->hasComment): ?> <th>Комментарий</th> <?php endif; ?>
+        <th>Продолж.</th>
     </tr>
     <?php
     foreach($this->grafik_dates as $grafik_date) {
