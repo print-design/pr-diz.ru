@@ -56,9 +56,18 @@ if($row = $fetcher->Fetch()) {
     $insert_id = $executer->insert_id;
     
     // Вставляем двту продолжения работы над тиражом в исходный тираж
-    $sql = "update edition set continuation_date = (select ws.date from edition e inner join workshift ws on e.workshift_id = ws.id where e.id = $insert_id) where id = $origin_id";
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
+    $continuation_date = null;
+    $sql = "select ws.date from edition e inner join workshift ws on e.workshift_id = ws.id where e.id = $insert_id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $continuation_date = $row['date'];
+    }
+    
+    if(!empty($continuation_date)) {
+        $sql = "update edition set continuation_date = '$continuation_date' where id = $origin_id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
     
     // Очищаем буфер обмена
     $sql = "delete from clipboard";
