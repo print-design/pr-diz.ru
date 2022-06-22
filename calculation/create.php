@@ -626,7 +626,7 @@ if($status_id === null && isset($row['status_id'])) {
 $new_forms_number = 0;
 
 // Данные о цветах
-for ($i=1; $i<=8; $i++) {
+for ($i=1; $i<=$ink_number; $i++) {
     $ink_var = "ink_$i";
     $$ink_var = filter_input(INPUT_POST, "ink_$i");
     if(null === $$ink_var && isset($row["ink_$i"])) {
