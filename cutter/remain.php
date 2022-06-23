@@ -150,7 +150,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
     $spool = filter_input(INPUT_POST, 'spool');
     $id_from_supplier = "Из раскроя";
     $cell = "Цех";
-    $comment = "";
+    $comment = addslashes(filter_input(INPUT_POST, 'comment'));
             
     $sql = "insert into roll (supplier_id, id_from_supplier, film_variation_id, width, length, net_weight, cell, comment, storekeeper_id) "
             . "values ($supplier_id, '$id_from_supplier', $film_variation_id, $width, $length, $net_weight, '$cell', '$comment', '$user_id')";
@@ -301,6 +301,10 @@ if($row = $fetcher->Fetch()) {
                             </label>
                         </div>
                     </div>
+                </div>
+                <div class="form-group remainder-group<?=$remainder_group_none ?>">
+                    <label for="comment">Комментарий</label>
+                    <input type="text" class="form-control" name="comment" id="comment" value="<?= filter_input(INPUT_POST, 'comment') ?>" autocomplete="off" />
                 </div>
                 <div class="form-group remainder-group">
                     <button type="submit" class="btn btn-dark form-control" style="height: 5rem;" id="close-submit" name="close-submit">Распечатать исходный роль<br /> и закрыть заявку</button>
