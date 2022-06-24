@@ -559,12 +559,12 @@ if($id !== null) {
         
         array_push($file_data, array("Стоимость за кг 1, руб",
             CalculationBase::Display($calculation->film_cost_per_unit, 2),
-            "|= ".CalculationBase::Display($calculation->film_cost, 2)." / ".CalculationBase::Display($calculation->weight_dirty, 2),
-            "общая стоимость грязная / масса материала грязная"));
+            "|= ".CalculationBase::Display($price, 2)." * ".CalculationBase::Display(CalculationBase::GetCurrencyRate($currency, $usd, $euro), 2),
+            "цена материала * курс валюты"));
         
         array_push($file_data, array("Отходы, руб",
             CalculationBase::Display($calculation->film_waste_cost, 2),
-            "|= ".CalculationBase::Display($calculation->film_waste_weight, 2)." * ".CalculationBase::Display($price, 2)." * ".CalculationBase::Display($calculation->GetCurrencyRate($currency, $usd, $euro), 2),
+            "|= ".CalculationBase::Display($calculation->film_waste_weight, 2)." * ".CalculationBase::Display($price, 2)." * ".CalculationBase::Display(CalculationBase::GetCurrencyRate($currency, $usd, $euro), 2),
             "отходы, кг * цена материала * курс валюты"));
         
         array_push($file_data, array("Отходы, кг",

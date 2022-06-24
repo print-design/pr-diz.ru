@@ -1016,32 +1016,32 @@ if($id !== null) {
         
         array_push($file_data, array("Стоимость за кг 1, руб",
             CalculationBase::Display($calculation->film_cost_per_unit_1, 2),
-            "|= ".CalculationBase::Display($calculation->film_cost_1, 2)." / ".CalculationBase::Display($calculation->weight_dirty_1, 2),
-            "общая стоимость грязная 1 / масса плёнки грязная 1"));
+            "|= ".CalculationBase::Display($price_1, 2)." * ".CalculationBase::Display(CalculationBase::GetCurrencyRate($currency_1, $usd, $euro), 2),
+            "цена плёнки 1 * курс валюты"));
         
         array_push($file_data, array("Стоимость за кг 2, руб",
             CalculationBase::Display($calculation->film_cost_per_unit_2, 2),
-            "|= ".CalculationBase::Display($calculation->film_cost_2, 2)." / ".CalculationBase::Display($calculation->weight_dirty_2, 2),
-            "общая стоимость грязная 2 / масса плёнки грязная 2"));
+            "|= ".CalculationBase::Display($price_2, 2)." * ".CalculationBase::Display(CalculationBase::GetCurrencyRate($currency_2, $usd, $euro), 2),
+            "цена плёнки 2 * курс валюты"));
         
         array_push($file_data, array("Стоимость за кг 3, руб",
             CalculationBase::Display($calculation->film_cost_per_unit_3, 2),
-            "|= ".CalculationBase::Display($calculation->film_cost_3, 2)." / ".CalculationBase::Display($calculation->weight_dirty_3, 2),
-            "общая стоимость грязная 3 / масса плёнки грязная 3"));
+            "|= ".CalculationBase::Display($price_3, 2)." * ".CalculationBase::Display(CalculationBase::GetCurrencyRate($currency_3, $usd, $euro), 2),
+            "цена плёнки 3 * курс валюты"));
         
         array_push($file_data, array("Отходы 1, руб",
             CalculationBase::Display($calculation->film_waste_cost_1, 2),
-            "|= ".CalculationBase::Display($calculation->film_waste_weight_1, 2)." * ".CalculationBase::Display($price_1, 2)." * ".CalculationBase::Display($calculation->GetCurrencyRate($currency_1, $usd, $euro), 2),
+            "|= ".CalculationBase::Display($calculation->film_waste_weight_1, 2)." * ".CalculationBase::Display($price_1, 2)." * ".CalculationBase::Display(CalculationBase::GetCurrencyRate($currency_1, $usd, $euro), 2),
             "отходы 1, кг * цена плёнки 1 * курс валюты"));
         
         array_push($file_data, array("Отходы 2, руб",
             CalculationBase::Display($calculation->film_waste_cost_2, 2),
-            "|= ".CalculationBase::Display($calculation->film_waste_weight_2, 2)." * ".CalculationBase::Display($price_2, 2)." * ".CalculationBase::Display($calculation->GetCurrencyRate($currency_2, $usd, $euro), 2),
+            "|= ".CalculationBase::Display($calculation->film_waste_weight_2, 2)." * ".CalculationBase::Display($price_2, 2)." * ".CalculationBase::Display(CalculationBase::GetCurrencyRate($currency_2, $usd, $euro), 2),
             "отходы 2, кг * цена плёнки 2 * курс валюты"));
         
         array_push($file_data, array("Отходы 3, руб",
             CalculationBase::Display($calculation->film_waste_cost_3, 2),
-            "|= ".CalculationBase::Display($calculation->film_waste_weight_3, 2)." * ".CalculationBase::Display($price_3, 2)." * ".CalculationBase::Display($calculation->GetCurrencyRate($currency_3, $usd, $euro), 2),
+            "|= ".CalculationBase::Display($calculation->film_waste_weight_3, 2)." * ".CalculationBase::Display($price_3, 2)." * ".CalculationBase::Display(CalculationBase::GetCurrencyRate($currency_3, $usd, $euro), 2),
             "отходы 3, кг * цена плёнки 3 * курс валюты"));
         
         array_push($file_data, array("Отходы 1, кг",

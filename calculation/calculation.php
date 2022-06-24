@@ -1065,9 +1065,9 @@ class Calculation extends CalculationBase {
         $this->total_weight_dirty = $this->weight_dirty_1 + $this->weight_dirty_2 + $this->weight_dirty_3;
         
         // Стоимость плёнки на единицу
-        $this->film_cost_per_unit_1 = empty($this->weight_dirty_1) ? 0 : $this->film_cost_1 / $this->weight_dirty_1;
-        $this->film_cost_per_unit_2 = empty($this->weight_dirty_2) ? 0 : $this->film_cost_2 / $this->weight_dirty_2;
-        $this->film_cost_per_unit_3 = empty($this->weight_dirty_3) ? 0 : $this->film_cost_3 / $this->weight_dirty_3;
+        $this->film_cost_per_unit_1 = $price_1 * self::GetCurrencyRate($currency_1, $usd, $euro);
+        $this->film_cost_per_unit_2 = $price_2 * self::GetCurrencyRate($currency_2, $usd, $euro);
+        $this->film_cost_per_unit_3 = $price_3 * self::GetCurrencyRate($currency_3, $usd, $euro);
         
         // Отходы плёнки, стоимость
         $this->film_waste_cost_1 = ($this->weight_dirty_1 - $this->weight_pure_1) * $price_1 * self::GetCurrencyRate($currency_1, $usd, $euro);
@@ -1451,7 +1451,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->total_weight_dirty = $this->weight_dirty;
         
         // Стоимость плёнки за единицу
-        $this->film_cost_per_unit = empty($this->weight_dirty) ? 0 : $this->film_cost / $this->weight_dirty;
+        $this->film_cost_per_unit = $price * self::GetCurrencyRate($currency, $usd, $euro);
         
         // Отходы плёнки, стоимость
         $this->film_waste_cost = ($this->weight_dirty - $this->weight_pure) * $price * self::GetCurrencyRate($currency, $usd, $euro);
