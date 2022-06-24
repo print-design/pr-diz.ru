@@ -557,7 +557,7 @@ if($id !== null) {
             "|= ".CalculationBase::Display($calculation->weight_dirty, 2),
             "масса плёнки грязная"));
         
-        array_push($file_data, array("Стоимость за кг 1, руб",
+        array_push($file_data, array("Стоимость за м2 1, руб",
             CalculationBase::Display($calculation->film_cost_per_unit, 2),
             "|= ".CalculationBase::Display($price, 2)." * ".CalculationBase::Display(CalculationBase::GetCurrencyRate($currency, $usd, $euro), 2),
             "цена материала * курс валюты"));

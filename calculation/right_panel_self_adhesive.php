@@ -489,7 +489,7 @@ if(!empty($id)) {
         <div class="col-4 pr-4">
             <h3>Самоклеящийся материал&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($weight_dirty), 0) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
-            <div class="value mb-2"><?= CalculationBase::Display(floatval($film_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($film_cost_per_unit), 3) ?> &#8381; за кг</span></div>
+            <div class="value mb-2"><?= CalculationBase::Display(floatval($film_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($film_cost_per_unit), 3) ?> &#8381; за м<sup>2</sup></div>
             <div>Ширина</div>
             <div class="value mb-2"><?= CalculationBase::Display(intval($width), 0) ?> мм</div>
             <div>Масса без приладки</div>
