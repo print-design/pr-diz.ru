@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-between mb-2">
     <div><h1><?= $this->name ?></h1></div>
     <div class="pt-1">
-        <?php if(IsInRole(array('technologist', 'dev'))): ?>
+        <?php if(IsInRole(array('technologist', 'dev', 'manager'))): ?>
         <form class="form-inline" method="get">
             <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
             <div class="form-group">
