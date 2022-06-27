@@ -360,8 +360,8 @@ if($id !== null) {
         
         array_push($file_data, array("Общее время выполнения тиража, ч",
             CalculationBase::Display($calculation->work_time, 2),
-            "|= ". CalculationBase::Display($calculation->priladka_time, 2)." + ". CalculationBase::Display($calculation->print_time, 2),
-            "время приладки + время печати тиража"));
+            "|= ". CalculationBase::Display($calculation->priladka_time, 2)." / 60 + ". CalculationBase::Display($calculation->print_time, 2),
+            "время приладки / 60 + время печати тиража"));
         
         array_push($file_data, array("Стоимость выполнения, руб",
             CalculationBase::Display($calculation->work_cost, 2),

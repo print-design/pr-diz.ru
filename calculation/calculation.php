@@ -1265,14 +1265,14 @@ class CalculationSelfAdhesive extends CalculationBase {
         // Время - деньги
         //*****************************
         
-        // Время приладки, ч
+        // Время приладки, мин
         $this->priladka_time = $ink_number * $data_priladka->time;
         
         // Время печати тиража, без приладки, ч
         $this->print_time = ($this->length_pog_pure + $this->waste_length) / $data_machine->speed / 1000;
         
         // Общее время выполнения тиража, ч
-        $this->work_time = $this->priladka_time + $this->print_time;
+        $this->work_time = $this->priladka_time / 60 + $this->print_time;
         
         // Стоимость выполнения, руб
         $this->work_cost = $this->work_time * $data_machine->price;
