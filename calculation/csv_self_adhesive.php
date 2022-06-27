@@ -286,13 +286,13 @@ if($id !== null) {
         
         array_push($file_data, array("М2 чистые, м2", 
             CalculationBase::Display($calculation->area_pure, 2),
-            "|= (".CalculationBase::Display($length, 2)." + ".CalculationBase::Display($calculation->gap, 2).") * ((".CalculationBase::Display($stream_width, 2)." + ".CalculationBase::Display($data_gap->gap_stream, 2).") + ".CalculationBase::Display($data_gap->gap_stream, 2).") * $quantity / 1000000",
-            "(длина этикетки чистая + фактический зазор) * ((ширина этикетки + ЗазорРучей) + ЗазорРучей) * количество этикеток / 1000000"));
+            "|= (".CalculationBase::Display($length, 2)." + ".CalculationBase::Display($calculation->gap, 2).") * (".CalculationBase::Display($stream_width, 2)." + ".CalculationBase::Display($data_gap->gap_stream, 2).") * $quantity / 1000000",
+            "(длина этикетки чистая + фактический зазор) * (ширина этикетки + ЗазорРучей) * количество этикеток / 1000000"));
         
         array_push($file_data, array("М. пог. чистые, м",
             CalculationBase::Display($calculation->length_pog_pure, 2),
-            "|= ".CalculationBase::Display($calculation->area_pure, 2)." / ((".CalculationBase::Display($stream_width, 2)." + ".CalculationBase::Display($data_gap->gap_stream, 2).") + ". CalculationBase::Display($data_gap->gap_stream, 2).") * $streams_number * 1000",
-            "м2 чистые / ((ширина этикетки + ЗазорРучей) + ЗазорРучей) * кол-во ручьев) * 1000"));
+            "|= (".CalculationBase::Display($calculation->area_pure, 2)." / (".CalculationBase::Display($stream_width, 2)." + ".CalculationBase::Display($data_gap->gap_stream, 2).")) * $streams_number * 1000",
+            "(м2 чистые / (ширина этикетки + ЗазорРучей) * кол-во ручьев) * 1000"));
         
         array_push($file_data, array("СтартСтопОтход, м",
             CalculationBase::Display($calculation->waste_length, 2),

@@ -1224,10 +1224,10 @@ class CalculationSelfAdhesive extends CalculationBase {
         //***************************
         
         // М2 чистые, м2
-        $this->area_pure = ($length + $this->gap) * (($stream_width + $data_gap->gap_stream) + $data_gap->gap_stream) * $quantity / 1000000;
+        $this->area_pure = ($length + $this->gap) * ($stream_width + $data_gap->gap_stream) * $quantity / 1000000;
         
         // М. пог. чистые, м
-        $this->length_pog_pure = $this->area_pure / (($stream_width + $data_gap->gap_stream) + $data_gap->gap_stream) * $streams_number * 1000;
+        $this->length_pog_pure = ($this->area_pure / ($stream_width + $data_gap->gap_stream)) * $streams_number * 1000;
         
         // СтартСтопОтход, м
         $this->waste_length = $data_priladka->waste_percent * $this->length_pog_pure / 100;
