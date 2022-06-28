@@ -13,15 +13,15 @@
         if(e.which == 10 || e.which == 13) {
             $(e.target).focusout();
          
-               submit_btn = $(e.target.form).find("button[type='submit']");
+            submit_btn = $(e.target.form).find("button[type='submit']");
                 
-                if(submit_btn == null) {
-                    this.form.submit();
-                }
-                else {
-                    submit_btn.click();
-                }
+            if(submit_btn == null) {
+                this.form.submit();
             }
+            else {
+                submit_btn.click();
+            }
+        }
     });
     
     // Фильтрация ввода
