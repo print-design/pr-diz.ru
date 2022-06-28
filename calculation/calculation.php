@@ -1282,7 +1282,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         //************************
         
         // М2 запечатки, м2
-        $this->print_area = (($stream_width + $data_gap->gap_stream) * ($length * $data_gap->gap_raport) * $quantity / 1000000) + ($this->length_pog_dirty * 0.01);
+        $this->print_area = (($stream_width + $data_gap->gap_stream) * ($length + $data_gap->gap_raport) * $quantity / 1000000) + ($this->length_pog_dirty * 0.01);
         
         // Масса краски в смеси, кг
         $this->ink_1kg_mix_weight = 1 + $data_ink->solvent_part;

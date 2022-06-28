@@ -376,7 +376,7 @@ if($id !== null) {
         
         array_push($file_data, array("М2 запечатки, м2",
             CalculationBase::Display($calculation->print_area, 2),
-            "|= ((". CalculationBase::Display($stream_width, 2)." + ". CalculationBase::Display($data_gap->gap_stream, 2).") * (". CalculationBase::Display($length, 2)." * ". CalculationBase::Display($data_gap->gap_raport, 2).") * $quantity / 1000000".") + (". CalculationBase::Display($calculation->length_pog_dirty, 2)." * 0,01)",
+            "|= ((". CalculationBase::Display($stream_width, 2)." + ". CalculationBase::Display($data_gap->gap_stream, 2).") * (". CalculationBase::Display($length, 2)." + ". CalculationBase::Display($data_gap->gap_raport, 2).") * $quantity / 1000000".") + (". CalculationBase::Display($calculation->length_pog_dirty, 2)." * 0,01)",
             "((ширина этикетки + ЗазорРучей) * (длина этикетки + ЗазорРапорт) * кол-во этикеток / 1000000) + (м. пог. грязные * 0,01)"));
         
         array_push($file_data, array("Масса краски в смеси, кг",
