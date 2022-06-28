@@ -15,7 +15,7 @@ if($row = $fetcher->Fetch()):
 <table class="w-100 mt-3">
     <tr>
         <td class="pr-3 pb-3">Имя представителя:</td>
-        <td class="pb-3">
+        <td class="pb-3" id="customer_card_person_td">
             <div id="customer_card_person" class="d-flex justify-content-between">
                 <div id="customer_card_person_value"><?=$row['person'] ?></div>
                 <div><a href="javascript: void(0);" onclick="EditCustomerPerson();"><img src="../images/icons/edit1.svg" title="Редактировать" /></a></div>
@@ -31,13 +31,13 @@ if($row = $fetcher->Fetch()):
     </tr>
     <tr>
         <td class="pr-3 pb-3">Номер телефона:</td>
-        <td class="pb-3">
+        <td class="pb-3" id="customer_card_phone_td">
             <div id="customer_card_phone" class="d-flex justify-content-between">
                 <div id="customer_card_phone_value"><?=$row['phone'].(empty($row['extension']) ? "" : " (доп. ".$row['extension'].")") ?></div>
                 <div><a href="javascript: void(0);" onclick="EditCustomerPhone();"><img src="../images/icons/edit1.svg" title="Редактировать" /></a></div>
             </div>
             <div id="customer_card_phone_edit" class="d-none justify-content-between">
-                <div><input type="tel" class="form-control" id="customer_card_phone_input" value="<?=$row['phone'].(empty($row['extension']) ? "" : " (доп. ".$row['extension'].")") ?>" /></div>
+                <div><input type="tel" class="form-control" id="customer_card_phone_number_input" value="<?=$row['phone'] ?>" /></div>
                 <div>
                     <a class="btn btn-outline-dark" onclick="CancelCustomerPhone()();" href="javascript: void(0);"><i class="fas fa-undo"></i></a>
                     <a class="btn btn-dark" href="javascript: void(0);">OK</a>
@@ -47,7 +47,7 @@ if($row = $fetcher->Fetch()):
     </tr>
     <tr>
         <td class="pr-3 pb-3">E-mail:</td>
-        <td class="pb-3">
+        <td class="pb-3" id="customer_card_email_td">
             <div id="customer_card_email" class="d-flex justify-content-between">
                 <div id="customer_card_email_value"><?=$row['email'] ?></div>
                 <div><a href="javascript: void(0);" onclick="EditCustomerEmail();"><img src="../images/icons/edit1.svg" title="Редактировать" /></a></div>
@@ -63,7 +63,7 @@ if($row = $fetcher->Fetch()):
     </tr>
     <tr>
         <td class="pr-3 pb-3">Менеджер:</td>
-        <td class="pb-3">
+        <td class="pb-3" id="customer_card_manager_td">
             <div id="customer_card_manager" class="d-flex justify-content-between">
                 <div id="customer_card_manager_value" data-id='<?=$row['user_id'] ?>'><?=$row['last_name'].' '.$row['first_name'] ?></div>
                 <div><a href="javascript: void(0);" onclick="EditCustomerManager();"><img src="../images/icons/edit1.svg" title="Редактировать" /></a></div>
@@ -95,6 +95,17 @@ endif;
 ?>
 <button type="button" class="close" data-dismiss='modal' style="position: absolute; right: 34px; top: 34px; z-index: 2000;"><img src="../images/icons/close_modal_red.svg" /></button>
 <script>
+    $.mask.definitions['~'] = "[+-]";
+    $("#customer_card_phone_number_input").mask("+7 (999) 999-99-99");
+    
+    $("#customer_card_phone_number_input").click(function(){
+        var maskposition = $(this).val().indexOf("_");
+        if(Number.isInteger(maskposition)) {
+            $(this).prop("selectionStart", maskposition);
+            $(this).prop("selectionEnd", maskposition);
+        }
+    });
+        
     function EditCustomerPerson() {
         $('#customer_card_person').removeClass('d-flex');
         $('#customer_card_person').addClass('d-none');
@@ -118,7 +129,8 @@ endif;
     }
     
     function CancelCustomerPhone() {
-        $('#customer_card_phone_input').val($('#customer_card_phone_value').text());
+        //$('#customer_card_phone_input').val($('#customer_card_phone_value').text());
+        $('#customer_card_phone_input').val('');
         $('#customer_card_phone_edit').removeClass('d-flex');
         $('#customer_card_phone_edit').addClass('d-none');
         $('#customer_card_phone').removeClass('d-none');
