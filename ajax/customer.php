@@ -21,7 +21,7 @@ if($row = $fetcher->Fetch()):
                 <div><a href="javascript: void(0);" onclick="EditCustomerPerson();"><img src="../images/icons/edit1.svg" title="Редактировать" /></a></div>
             </div>
             <div id="customer_card_person_edit" class="d-none justify-content-between">
-                <div><input type="text" class="form-control" id="customer_card_person_input" value="<?=$row['person'] ?>" /></div>
+                <div><input type="text" class="form-control" id="customer_card_person_input" value="<?= htmlentities($row['person']) ?>" /></div>
                 <div>
                     <a class="btn btn-outline-dark" onclick="CancelCustomerPerson();" href="javascript: void(0);"><i class="fas fa-undo"></i></a>
                     <a class="btn btn-dark" onclick="OKCustomerPerson(<?=$id ?>);" href="javascript: void(0);">OK</a>
@@ -38,12 +38,12 @@ if($row = $fetcher->Fetch()):
             </div>
             <div id="customer_card_phone_edit" class="d-none justify-content-between">
                 <div>
-                    <input type="tel" class="form-control" id="customer_card_phone_number_input" value="<?=$row['phone'] ?>" />
-                    <input type="text" class="form-control int-only" id="customer_card_phone_extension_input" value="<?=$row['extension'] ?>" placeholder="Добавочный" />
+                    <input type="tel" class="form-control" id="customer_card_phone_input" value="<?=$row['phone'] ?>" />
+                    <input type="text" class="form-control int-only" id="customer_card_extension_input" value="<?=$row['extension'] ?>" placeholder="Добавочный" />
                 </div>
                 <div>
-                    <a class="btn btn-outline-dark" onclick="CancelCustomerPhone()();" href="javascript: void(0);"><i class="fas fa-undo"></i></a>
-                    <a class="btn btn-dark" href="javascript: void(0);">OK</a>
+                    <a class="btn btn-outline-dark" onclick="CancelCustomerPhone();" href="javascript: void(0);"><i class="fas fa-undo"></i></a>
+                    <a class="btn btn-dark" onclick="OKCustomerPhone(<?=$id ?>);" href="javascript: void(0);">OK</a>
                 </div>
             </div>
         </td>
@@ -56,7 +56,7 @@ if($row = $fetcher->Fetch()):
                 <div><a href="javascript: void(0);" onclick="EditCustomerEmail();"><img src="../images/icons/edit1.svg" title="Редактировать" /></a></div>
             </div>
             <div id="customer_card_email_edit" class="d-none justify-content-between">
-                <div><input type="text" class="form-control" id="customer_card_email_input" value="<?=$row['email'] ?>" /></div>
+                <div><input type="email" class="form-control" id="customer_card_email_input" value="<?=$row['email'] ?>" /></div>
                 <div>
                     <a class="btn btn-outline-dark" onclick="CancelCustomerEmail();" href="javascript: void(0);"><i class="fas fa-undo"></i></a>
                     <a class="btn btn-dark" href="javascript: void(0);">OK</a>
@@ -104,6 +104,49 @@ endif;
     $.mask.definitions['~'] = "[+-]";
     $("#customer_card_phone_number_input").mask("+7 (999) 999-99-99");
     
+    // Фильтрация ввода
+    $('#customer_card_phone_extension_input').keypress(function(e) {
+        if(/\D/.test(e.key)) {
+            return false;
+        }
+    });
+    
+    $('#customer_card_phone_extension_input').keyup(function() {
+        var val = $(this).val();
+        val = val.replaceAll(/\D/g, '');
+        
+        if(val === '') {
+            $(this).val('');
+        }
+        else {
+            val = parseInt(val);
+            
+            if($(this).hasClass('int-format')) {
+                val = Intl.NumberFormat('ru-RU').format(val);
+            }
+            
+            $(this).val(val);
+        }
+    });
+    
+    $('#customer_card_phone_extension_input').change(function(e) {
+        var val = $(this).val();
+        val = val.replace(/[^\d]/g, '');
+        
+        if(val === '') {
+            $(this).val('');
+        }
+        else {
+            val = parseInt(val);
+            
+            if($(this).hasClass('int-format')) {
+                val = Intl.NumberFormat('ru-RU').format(val);
+            }
+            
+            $(this).val(val);
+        }
+    });
+    
     $("#customer_card_phone_number_input").click(function(){
         var maskposition = $(this).val().indexOf("_");
         if(Number.isInteger(maskposition)) {
@@ -111,7 +154,7 @@ endif;
             $(this).prop("selectionEnd", maskposition);
         }
     });
-        
+    
     function EditCustomerPerson() {
         $('#customer_card_person').removeClass('d-flex');
         $('#customer_card_person').addClass('d-none');
@@ -128,7 +171,7 @@ endif;
     }
     
     function OKCustomerPerson(id) {
-        $.ajax({ url:"../ajax/customer_edit.php?id=" + id + "&person=" + $('#customer_card_person_input').val() })
+        $.ajax({ url: "../ajax/customer_edit.php?id=" + id + "&person=" + encodeURIComponent($('#customer_card_person_input').val()) })
                 .done(function(data) {
                     $('#customer_card_person_value').text(data);
                     CancelCustomerPerson();
@@ -146,12 +189,25 @@ endif;
     }
     
     function CancelCustomerPhone() {
-        $('#customer_card_phone_number_input').val($('#customer_card_phone_value').attr('data-phone'));
-        $('#customer_card_phone_extension_input').val($('#customer_card_phone_value').attr('data-extension'));
+        $('#customer_card_phone_input').val($('#customer_card_phone_value').attr('data-phone'));
+        $('#customer_card_extension_input').val($('#customer_card_phone_value').attr('data-extension'));
         $('#customer_card_phone_edit').removeClass('d-flex');
         $('#customer_card_phone_edit').addClass('d-none');
         $('#customer_card_phone').removeClass('d-none');
         $('#customer_card_phone').addClass('d-flex');
+    }
+    
+    function OKCustomerPhone(id) {
+        $.ajax({ dataType: 'JSON', url: "../ajax/customer_edit.php?id=" + id + "&phone=" + encodeURIComponent($('#customer_card_phone_input').val()) + "&extension=" + $('#customer_card_extension_input').val() })
+                .done(function(data) {
+                    $('#customer_card_phone_value').text(data.phone + (data.extension.length == 0 ? "" : " (доп. " + data.extension + ")"));
+                    $('#customer_card_phone_value').attr('data-phone', data.phone);
+                    $('#customer_card_phone_value').attr('data-extension', data.extension);
+                    CancelCustomerPhone();
+        })
+                .fail(function() {
+                    alert('Ошибка при редактировании телефона');
+        });
     }
     
     function EditCustomerEmail() {
