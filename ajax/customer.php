@@ -33,11 +33,14 @@ if($row = $fetcher->Fetch()):
         <td class="pr-3 pb-3">Номер телефона:</td>
         <td class="pb-3" id="customer_card_phone_td">
             <div id="customer_card_phone" class="d-flex justify-content-between">
-                <div id="customer_card_phone_value"><?=$row['phone'].(empty($row['extension']) ? "" : " (доп. ".$row['extension'].")") ?></div>
+                <div id="customer_card_phone_value" data-phone="<?=$row['phone'] ?>" data-extension="<?=$row['extension'] ?>"><?=$row['phone'].(empty($row['extension']) ? "" : " (доп. ".$row['extension'].")") ?></div>
                 <div><a href="javascript: void(0);" onclick="EditCustomerPhone();"><img src="../images/icons/edit1.svg" title="Редактировать" /></a></div>
             </div>
             <div id="customer_card_phone_edit" class="d-none justify-content-between">
-                <div><input type="tel" class="form-control" id="customer_card_phone_number_input" value="<?=$row['phone'] ?>" /></div>
+                <div>
+                    <input type="tel" class="form-control" id="customer_card_phone_number_input" value="<?=$row['phone'] ?>" />
+                    <input type="text" class="form-control int-only" id="customer_card_phone_extension_input" value="<?=$row['extension'] ?>" placeholder="Добавочный" />
+                </div>
                 <div>
                     <a class="btn btn-outline-dark" onclick="CancelCustomerPhone()();" href="javascript: void(0);"><i class="fas fa-undo"></i></a>
                     <a class="btn btn-dark" href="javascript: void(0);">OK</a>
@@ -72,7 +75,10 @@ if($row = $fetcher->Fetch()):
                 <div>
                     <select class="form-control" id="customer_card_manager_select">
                         <?php
-                        $u_sql = "select u.id, u.last_name, u.first_name from user u inner join role r on u.role_id = r.id where r.name = 'manager' order by u.last_name, u.first_name";
+                        $u_sql = "select u.id, u.last_name, u.first_name from user u inner join role r on u.role_id = r.id where r.name = 'manager' "
+                                . "union "
+                                . "select u.id, u.last_name, u.first_name from user u where u.id = ".$row['user_id']." "
+                                . "order by last_name, first_name";
                         $u_fetcher = new Fetcher($u_sql);
                         while ($u_row = $u_fetcher->Fetch()):
                             $manager_selected = $row['user_id'] == $u_row['id'] ? " selected='selected'" : "";
@@ -129,8 +135,8 @@ endif;
     }
     
     function CancelCustomerPhone() {
-        //$('#customer_card_phone_input').val($('#customer_card_phone_value').text());
-        $('#customer_card_phone_input').val('');
+        $('#customer_card_phone_number_input').val($('#customer_card_phone_value').attr('data-phone'));
+        $('#customer_card_phone_extension_input').val($('#customer_card_phone_value').attr('data-extension'));
         $('#customer_card_phone_edit').removeClass('d-flex');
         $('#customer_card_phone_edit').addClass('d-none');
         $('#customer_card_phone').removeClass('d-none');
