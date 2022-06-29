@@ -89,7 +89,7 @@ if($row = $fetcher->Fetch()):
                 </div>
                 <div>
                     <a class="btn btn-outline-dark" onclick="CancelCustomerManager();" href="javascript: void(0);"><i class="fas fa-undo"></i></a>
-                    <a class="btn btn-dark" href="javascript: void(0);">OK</a>
+                    <a class="btn btn-dark" onclick="OKCustomerManager(<?=$id ?>);" href="javascript: void(0);">OK</a>
                 </div>
             </div>
         </td>
@@ -147,7 +147,7 @@ endif;
         }
     });
     
-    $("#customer_card_phone_number_input").click(function(){
+    $("#customer_card_phone_number_input").click(function() {
         var maskposition = $(this).val().indexOf("_");
         if(Number.isInteger(maskposition)) {
             $(this).prop("selectionStart", maskposition);
@@ -249,5 +249,17 @@ endif;
         $('#customer_card_manager_edit').addClass('d-none');
         $('#customer_card_manager').removeClass('d-none');
         $('#customer_card_manager').addClass('d-flex');
+    }
+    
+    function OKCustomerManager(id) {
+        $.ajax({ dataType: 'JSON', url: "../ajax/customer_edit.php?id=" + id + "&manager_id=" + $('#customer_card_manager_select').val() })
+                .done(function(data) {
+                    $('#customer_card_manager_value').text(data.last_name + ' ' + data.first_name);
+                    $('#customer_card_manager_value').attr('data-id', data.id);
+                    CancelCustomerManager();
+        })
+                .fail(function() {
+                    alert('Ошибка при редактировании менеджера');
+        });
     }
 </script>

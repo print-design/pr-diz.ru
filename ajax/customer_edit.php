@@ -59,10 +59,17 @@ if(null !== $id && null !== $manager_id) {
     $error_message = $executer->error;
     
     if(empty($error_message)) {
-        echo $manager_id;
+        $sql = "select last_name, first_name from user where id = $manager_id";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            echo json_encode(array("id" => $manager_id, "last_name" => $row['last_name'], "first_name" => $row['first_name']));
+        }
+        else {
+            echo json_encode(array("id" => 0, "last_name" => "ERROR", "first_name" => ""));
+        }
     }
     else {
-        echo "ERROR";
+        echo json_encode(array("id" => 0, "last_name" => "ERROR", "first_name" => ""));
     }
 }
 ?>
