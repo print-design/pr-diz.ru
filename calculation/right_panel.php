@@ -265,7 +265,7 @@ if(!empty($id)) {
         $data_priladka_laminator = new DataPriladka(null, null, null);
         $data_machine = new DataMachine(null, null, null);
         $data_machine_laminator = new DataMachine(null, null, null);
-        $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
         $data_glue = new DataGlue(null, null, null, null, null, null, null);
         $data_cliche = new DataCliche(null, null, null, null, null, null);
         $data_extracharge = array();
