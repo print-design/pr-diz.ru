@@ -59,7 +59,7 @@ if($row = $fetcher->Fetch()):
                 <div><input type="email" class="form-control" id="customer_card_email_input" value="<?=$row['email'] ?>" /></div>
                 <div>
                     <a class="btn btn-outline-dark" onclick="CancelCustomerEmail();" href="javascript: void(0);"><i class="fas fa-undo"></i></a>
-                    <a class="btn btn-dark" href="javascript: void(0);">OK</a>
+                    <a class="btn btn-dark" onclick="OKCustomerEmail(<?=$id ?>);" href="javascript: void(0);">OK</a>
                 </div>
             </div>
         </td>
@@ -223,6 +223,17 @@ endif;
         $('#customer_card_email_edit').addClass('d-none');
         $('#customer_card_email').removeClass('d-none');
         $('#customer_card_email').addClass('d-flex');
+    }
+    
+    function OKCustomerEmail(id) {
+        $.ajax({ url: "../ajax/customer_edit.php?id=" + id + "&person=" + encodeURIComponent($('#customer_card_email_input').val()) })
+                .done(function(data) {
+                    $('#customer_card_email_value').text(data);
+                    CancelCustomerEmail();
+        })
+                .fail(function() {
+                    alert('Ошибка при редактировании email');
+        });
     }
     
     function EditCustomerManager() {
