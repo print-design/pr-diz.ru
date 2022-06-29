@@ -109,7 +109,7 @@ if($id !== null) {
     $data_priladka = new DataPriladka(null, null, null);
     $data_machine = new DataMachine(null, null, null);
     $data_gap = new DataGap(null, null);
-    $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+    $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
     $data_cliche = new DataCliche(null, null, null, null, null, null);
     $data_extracharge = array();
     
@@ -408,7 +408,7 @@ if($id !== null) {
                 
                 array_push($file_data, array("Стоимость чистой краски $i, руб",
                     CalculationBase::Display($calculation->ink_costs[$i], 2),
-                    "|= ". CalculationBase::Display($data_ink->self_adhesive_laquer_expense, 2)." * ".CalculationBase::Display($calculation->ink_kg_prices[$i], 2),
+                    "|= ". CalculationBase::Display($calculation->ink_expenses[$i], 2)." * ".CalculationBase::Display($calculation->ink_kg_prices[$i], 2),
                     "Расход чистой краски $i * цена 1 кг чистой краски $i"));
             }
             else {
@@ -431,7 +431,7 @@ if($id !== null) {
             
                 array_push($file_data, array("Стоимость КраскаСмеси $i, руб",
                     CalculationBase::Display($calculation->ink_costs[$i], 2),
-                    "|= ". CalculationBase::Display($calculation->mix_ink_kg_prices[$i], 2)." * ". CalculationBase::Display($calculation->ink_expenses[$i], 2),
+                    "|= ". CalculationBase::Display($calculation->ink_expenses[$i], 2)." * ".CalculationBase::Display($calculation->mix_ink_kg_prices[$i], 2),
                     "Расход КраскаСмеси $i * цена 1 кг КраскаСмеси $i"));
             }
         }
