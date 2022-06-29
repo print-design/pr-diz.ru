@@ -146,11 +146,11 @@ if($id !== null) {
             $data_gap = new DataGap($row['gap_raport'], $row['gap_stream']);
         }
         
-        $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_price, lacquer_currency, lacquer_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price "
+        $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_price, lacquer_currency, lacquer_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense "
                 . "from norm_ink where date <= '$date' order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
-            $data_ink = new DataInk($row['c_price'], $row['c_currency'], $row['c_expense'], $row['m_price'], $row['m_currency'], $row['m_expense'], $row['y_price'], $row['y_currency'], $row['y_expense'], $row['k_price'], $row['k_currency'], $row['k_expense'], $row['white_price'], $row['white_currency'], $row['white_expense'], $row['panton_price'], $row['panton_currency'], $row['panton_expense'], $row['lacquer_price'], $row['lacquer_currency'], $row['lacquer_expense'], $row['solvent_etoxipropanol_price'], $row['solvent_etoxipropanol_currency'], $row['solvent_flexol82_price'], $row['solvent_flexol82_currency'], $row['solvent_part'], $row['min_price']);
+            $data_ink = new DataInk($row['c_price'], $row['c_currency'], $row['c_expense'], $row['m_price'], $row['m_currency'], $row['m_expense'], $row['y_price'], $row['y_currency'], $row['y_expense'], $row['k_price'], $row['k_currency'], $row['k_expense'], $row['white_price'], $row['white_currency'], $row['white_expense'], $row['panton_price'], $row['panton_currency'], $row['panton_expense'], $row['lacquer_price'], $row['lacquer_currency'], $row['lacquer_expense'], $row['solvent_etoxipropanol_price'], $row['solvent_etoxipropanol_currency'], $row['solvent_flexol82_price'], $row['solvent_flexol82_currency'], $row['solvent_part'], $row['min_price'], $row['self_adhesive_laquer_price'], $row['self_adhesive_laquer_currency'], $row['self_adhesive_laquer_expense']);
         }
         
         $sql = "select flint_price, flint_currency, kodak_price, kodak_currency, scotch_price, scotch_currency "
@@ -393,27 +393,47 @@ if($id !== null) {
             $ink = "ink_$i";
             $cmyk = "cmyk_$i";
             $percent = "percent_$i";
-            $price1 = $calculation->GetInkPrice($$ink, $$cmyk, $data_ink->c_price, $data_ink->c_currency, $data_ink->m_price, $data_ink->m_currency, $data_ink->y_price, $data_ink->y_currency, $data_ink->k_price, $data_ink->k_currency, $data_ink->panton_price, $data_ink->panton_currency, $data_ink->white_price, $data_ink->white_currency, $data_ink->lacquer_price, $data_ink->lacquer_currency);
             
-            array_push($file_data, array("Цена 1 кг чистой краски $i, руб",
-                CalculationBase::Display($calculation->ink_kg_prices[$i], 2),
-                "|= ". CalculationBase::Display($price1->value, 2)." * ". CalculationBase::Display($calculation->GetCurrencyRate($price1->currency, $usd, $euro), 2),
-                "цена 1 кг чистой краски $i * курс валюты"));
+            // Поскольку в самоклейке лак используется без растворителя, для лака используем другой расчёт
+            if($$ink == CalculationBase::LACQUER) {
+                array_push($file_data, array("Цена 1 кг чистой краски $i, руб",
+                    CalculationBase::Display($calculation->ink_kg_prices[$i], 2),
+                    "|= ". CalculationBase::Display($data_ink->self_adhesive_laquer_price, 2)." * ". CalculationBase::Display($calculation->GetCurrencyRate($data_ink->self_adhesive_laquer_currency, $usd, $euro), 2),
+                    "цена 1 кг чистой краски $i * курс валюты"));
+                
+                array_push($file_data, array("Расход чистой краски $i, кг",
+                    CalculationBase::Display($calculation->ink_expenses[$i], 2),
+                    "|= ".CalculationBase::Display($calculation->print_area, 2)." * ".CalculationBase::Display($data_ink->self_adhesive_laquer_expense, 2)." * ".CalculationBase::Display($$percent, 2)." / 1000 / 100",
+                    "площадь запечатки * расход чистой краски за 1 м2 * процент краски $i / 1000 / 100"));
+                
+                array_push($file_data, array("Стоимость чистой краски $i, руб",
+                    CalculationBase::Display($calculation->ink_costs[$i], 2),
+                    "|= ". CalculationBase::Display($data_ink->self_adhesive_laquer_expense, 2)." * ".CalculationBase::Display($calculation->ink_kg_prices[$i], 2),
+                    "Расход чистой краски $i * цена 1 кг чистой краски $i"));
+            }
+            else {
+                $price1 = $calculation->GetInkPrice($$ink, $$cmyk, $data_ink->c_price, $data_ink->c_currency, $data_ink->m_price, $data_ink->m_currency, $data_ink->y_price, $data_ink->y_currency, $data_ink->k_price, $data_ink->k_currency, $data_ink->panton_price, $data_ink->panton_currency, $data_ink->white_price, $data_ink->white_currency, $data_ink->lacquer_price, $data_ink->lacquer_currency);
             
-            array_push($file_data, array("Цена 1 кг КраскаСмеси $i, руб",
-                CalculationBase::Display($calculation->mix_ink_kg_prices[$i], 2),
-                "|= ((".CalculationBase::Display($calculation->ink_kg_prices[$i], 2)." * 1) + (".CalculationBase::Display($calculation->ink_etoxypropanol_kg_price, 2)." * ".CalculationBase::Display($data_ink->solvent_part, 2).")) / ".CalculationBase::Display($calculation->ink_1kg_mix_weight, 2),
-                "((цена 1 кг чистой краски $i * 1) + (цена 1 кг чистого растворителя * расход растворителя на 1 кг краски)) / расход КраскаСмеси на 1 кг краски"));
+                array_push($file_data, array("Цена 1 кг чистой краски $i, руб",
+                    CalculationBase::Display($calculation->ink_kg_prices[$i], 2),
+                    "|= ". CalculationBase::Display($price1->value, 2)." * ". CalculationBase::Display($calculation->GetCurrencyRate($price1->currency, $usd, $euro), 2),
+                    "цена 1 кг чистой краски $i * курс валюты"));
             
-            array_push($file_data, array("Расход КраскаСмеси $i, кг",
-                CalculationBase::Display($calculation->ink_expenses[$i], 2),
-                "|= ".CalculationBase::Display($calculation->print_area, 2)." * ".CalculationBase::Display($calculation->GetInkExpense($$ink, $$cmyk, $data_ink->c_expense, $data_ink->m_expense, $data_ink->y_expense, $data_ink->k_expense, $data_ink->panton_expense, $data_ink->white_expense, $data_ink->lacquer_expense), 2)." * ".CalculationBase::Display($$percent, 2)." / 1000 / 100",
-                "площадь запечатки * расход КраскаСмеси за 1 м2 * процент краски $i / 1000 / 100"));
+                array_push($file_data, array("Цена 1 кг КраскаСмеси $i, руб",
+                    CalculationBase::Display($calculation->mix_ink_kg_prices[$i], 2),
+                    "|= ((".CalculationBase::Display($calculation->ink_kg_prices[$i], 2)." * 1) + (".CalculationBase::Display($calculation->ink_etoxypropanol_kg_price, 2)." * ".CalculationBase::Display($data_ink->solvent_part, 2).")) / ".CalculationBase::Display($calculation->ink_1kg_mix_weight, 2),
+                    "((цена 1 кг чистой краски $i * 1) + (цена 1 кг чистого растворителя * расход растворителя на 1 кг краски)) / расход КраскаСмеси на 1 кг краски"));
             
-            array_push($file_data, array("Стоимость КраскаСмеси $i, руб",
-                CalculationBase::Display($calculation->ink_costs[$i], 2),
-                "|= ". CalculationBase::Display($calculation->mix_ink_kg_prices[$i], 2)." * ". CalculationBase::Display($calculation->ink_expenses[$i], 2),
-                "Расход КраскаСмеси $i * цена 1 кг КраскаСмеси $i"));
+                array_push($file_data, array("Расход КраскаСмеси $i, кг",
+                    CalculationBase::Display($calculation->ink_expenses[$i], 2),
+                    "|= ".CalculationBase::Display($calculation->print_area, 2)." * ".CalculationBase::Display($calculation->GetInkExpense($$ink, $$cmyk, $data_ink->c_expense, $data_ink->m_expense, $data_ink->y_expense, $data_ink->k_expense, $data_ink->panton_expense, $data_ink->white_expense, $data_ink->lacquer_expense), 2)." * ".CalculationBase::Display($$percent, 2)." / 1000 / 100",
+                    "площадь запечатки * расход КраскаСмеси за 1 м2 * процент краски $i / 1000 / 100"));
+            
+                array_push($file_data, array("Стоимость КраскаСмеси $i, руб",
+                    CalculationBase::Display($calculation->ink_costs[$i], 2),
+                    "|= ". CalculationBase::Display($calculation->mix_ink_kg_prices[$i], 2)." * ". CalculationBase::Display($calculation->ink_expenses[$i], 2),
+                    "Расход КраскаСмеси $i * цена 1 кг КраскаСмеси $i"));
+            }
         }
         
         array_push($file_data, array("", "", "", ""));

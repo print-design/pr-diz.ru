@@ -626,6 +626,12 @@ if($status_id === null && isset($row['status_id'])) {
 $new_forms_number = 0;
 
 // Данные о цветах
+$ink_1 = null; $ink_2 = null; $ink_3 = null; $ink_4 = null; $ink_5 = null; $ink_6 = null; $ink_7 = null; $ink_8 = null;
+$color_1 = null; $color_2 = null; $color_3 = null; $color_4 = null; $color_5 = null; $color_6 = null; $color_7 = null; $color_8 = null;
+$cmyk_1 = null; $cmyk_2 = null; $cmyk_3 = null; $cmyk_4 = null; $cmyk_5 = null; $cmyk_6 = null; $cmyk_7 = null; $cmyk_8 = null;
+$percent_1 = null; $percent_2 = null; $percent_3 = null; $percent_4 = null; $percent_5 = null; $percent_6 = null; $percent_7 = null; $percent_8 = null;
+$cliche_1 = null; $cliche_2 = null; $cliche_3 = null; $cliche_4 = null; $cliche_5 = null; $cliche_6 = null; $cliche_7 = null; $cliche_8 = null;
+
 for ($i=1; $i<=$ink_number; $i++) {
     $ink_var = "ink_$i";
     $$ink_var = filter_input(INPUT_POST, "ink_$i");

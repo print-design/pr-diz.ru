@@ -69,8 +69,12 @@ class DataInk {
     public $solvent_part; // Расход растворителя на 1 кг краски
     public $min_price; // Ограничение на минимальную стоимость
     
+    public $self_adhesive_laquer_price; // Самоклейка, цена лака за кг
+    public $self_adhesive_laquer_currency; // Самоклейка, валюьа лака
+    public $self_adhesive_laquer_expense; // Самоклейка, расход чистого лака
+    
     // Конструктор
-    public function __construct($c_price, $c_currency, $c_expense, $m_price, $m_currency, $m_expense, $y_price, $y_currency, $y_expense, $k_price, $k_currency, $k_expense, $white_price, $white_currency, $white_expense, $panton_price, $panton_currency, $panton_expense, $lacquer_price, $lacquer_currency, $lacquer_expense, $solvent_etoxipropanol_price, $solvent_etoxipropanol_currency, $solvent_flexol82_price, $solvent_flexol82_currency, $solvent_part, $min_price) {
+    public function __construct($c_price, $c_currency, $c_expense, $m_price, $m_currency, $m_expense, $y_price, $y_currency, $y_expense, $k_price, $k_currency, $k_expense, $white_price, $white_currency, $white_expense, $panton_price, $panton_currency, $panton_expense, $lacquer_price, $lacquer_currency, $lacquer_expense, $solvent_etoxipropanol_price, $solvent_etoxipropanol_currency, $solvent_flexol82_price, $solvent_flexol82_currency, $solvent_part, $min_price, $self_adhesive_laquer_price, $self_adhesive_laquer_currency, $self_adhesive_laquer_expense) {
         $this->c_price = $c_price;
         $this->c_currency = $c_currency;
         $this->c_expense = $c_expense;
@@ -98,6 +102,10 @@ class DataInk {
         $this->solvent_flexol82_currency = $solvent_flexol82_currency;
         $this->solvent_part = $solvent_part;
         $this->min_price = $min_price;
+        
+        $this->self_adhesive_laquer_price = $self_adhesive_laquer_price;
+        $this->self_adhesive_laquer_currency = $self_adhesive_laquer_currency;
+        $this->self_adhesive_laquer_expense = $self_adhesive_laquer_expense;
     }
 }
 
@@ -1308,22 +1316,38 @@ class CalculationSelfAdhesive extends CalculationBase {
             $cmyk = "cmyk_$i";
             $percent = "percent_$i";
             
-            // Цена 1 кг чистой краски, руб
-            $ink_price = $this->GetInkPrice($$ink, $$cmyk, $data_ink->c_price, $data_ink->c_currency, $data_ink->m_price, $data_ink->m_currency, $data_ink->y_price, $data_ink->y_currency, $data_ink->k_price, $data_ink->k_currency, $data_ink->panton_price, $data_ink->panton_currency, $data_ink->white_price, $data_ink->white_currency, $data_ink->lacquer_price, $data_ink->lacquer_currency);
-            $ink_kg_price = $ink_price->value * self::GetCurrencyRate($ink_price->currency, $usd, $euro);
-            $this->ink_kg_prices[$i] = $ink_kg_price;
+            // Поскольку в самоклейке лак используется без растворителя, для лака используем другой расчёт
+            if($$ink == CalculationBase::LACQUER) {
+                // Цена 1 кг чистой краски, руб
+                $ink_kg_price = $data_ink->self_adhesive_laquer_price * self::GetCurrencyRate($data_ink->self_adhesive_laquer_currency, $usd, $euro);
+                $this->ink_kg_prices[$i] = $ink_kg_price;
+                
+                // Расход чистой краски, кг
+                $ink_expense = $this->print_area * $data_ink->self_adhesive_laquer_expense * $$percent / 1000 / 100;
+                $this->ink_expenses[$i] = $ink_expense;
+                
+                // Стоимость чистой краски, руб
+                $ink_cost = $ink_expense * $ink_kg_price;
+                $this->ink_costs[$i] = $ink_cost;
+            }
+            else {
+                // Цена 1 кг чистой краски, руб
+                $ink_price = $this->GetInkPrice($$ink, $$cmyk, $data_ink->c_price, $data_ink->c_currency, $data_ink->m_price, $data_ink->m_currency, $data_ink->y_price, $data_ink->y_currency, $data_ink->k_price, $data_ink->k_currency, $data_ink->panton_price, $data_ink->panton_currency, $data_ink->white_price, $data_ink->white_currency, $data_ink->lacquer_price, $data_ink->lacquer_currency);
+                $ink_kg_price = $ink_price->value * self::GetCurrencyRate($ink_price->currency, $usd, $euro);
+                $this->ink_kg_prices[$i] = $ink_kg_price;
             
-            // Цена 1 КраскаСмеси, руб
-            $mix_ink_kg_price = (($ink_kg_price * 1) + ($this->ink_etoxypropanol_kg_price * $data_ink->solvent_part)) / $this->ink_1kg_mix_weight;
-            $this->mix_ink_kg_prices[$i] = $mix_ink_kg_price;
+                // Цена 1 кг КраскаСмеси, руб
+                $mix_ink_kg_price = (($ink_kg_price * 1) + ($this->ink_etoxypropanol_kg_price * $data_ink->solvent_part)) / $this->ink_1kg_mix_weight;
+                $this->mix_ink_kg_prices[$i] = $mix_ink_kg_price;
             
-            // Расход КраскаСмеси, кг
-            $ink_expense = $this->print_area * $this->GetInkExpense($$ink, $$cmyk, $data_ink->c_expense, $data_ink->m_expense, $data_ink->y_expense, $data_ink->k_expense, $data_ink->panton_expense, $data_ink->white_expense, $data_ink->lacquer_expense) * $$percent / 1000 / 100;
-            $this->ink_expenses[$i] = $ink_expense;
+                // Расход КраскаСмеси, кг
+                $ink_expense = $this->print_area * $this->GetInkExpense($$ink, $$cmyk, $data_ink->c_expense, $data_ink->m_expense, $data_ink->y_expense, $data_ink->k_expense, $data_ink->panton_expense, $data_ink->white_expense, $data_ink->lacquer_expense) * $$percent / 1000 / 100;
+                $this->ink_expenses[$i] = $ink_expense;
             
-            // Стоимость КраскаСмеси, руб
-            $ink_cost = $ink_expense * $mix_ink_kg_price;
-            $this->ink_costs[$i] = $ink_cost;
+                // Стоимость КраскаСмеси, руб
+                $ink_cost = $ink_expense * $mix_ink_kg_price;
+                $this->ink_costs[$i] = $ink_cost;
+            }
         }
         
         //********************************
