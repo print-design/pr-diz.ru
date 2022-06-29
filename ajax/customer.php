@@ -24,7 +24,7 @@ if($row = $fetcher->Fetch()):
                 <div><input type="text" class="form-control" id="customer_card_person_input" value="<?=$row['person'] ?>" /></div>
                 <div>
                     <a class="btn btn-outline-dark" onclick="CancelCustomerPerson();" href="javascript: void(0);"><i class="fas fa-undo"></i></a>
-                    <a class="btn btn-dark" href="javascript: void(0);">OK</a>
+                    <a class="btn btn-dark" onclick="OKCustomerPerson(<?=$id ?>);" href="javascript: void(0);">OK</a>
                 </div>
             </div>
         </td>
@@ -125,6 +125,17 @@ endif;
         $('#customer_card_person_edit').addClass('d-none');
         $('#customer_card_person').removeClass('d-none');
         $('#customer_card_person').addClass('d-flex');
+    }
+    
+    function OKCustomerPerson(id) {
+        $.ajax({ url:"../ajax/customer_edit.php?id=" + id + "&person=" + $('#customer_card_person_input').val() })
+                .done(function(data) {
+                    $('#customer_card_person_value').text(data);
+                    CancelCustomerPerson();
+        })
+                .fail(function() {
+                    alert('Ошибка при редактировании имени предствителя');
+        });
     }
     
     function EditCustomerPhone() {
