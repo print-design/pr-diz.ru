@@ -226,7 +226,7 @@ endif;
     }
     
     function OKCustomerEmail(id) {
-        $.ajax({ url: "../ajax/customer_edit.php?id=" + id + "&person=" + encodeURIComponent($('#customer_card_email_input').val()) })
+        $.ajax({ url: "../ajax/customer_edit.php?id=" + id + "&email=" + encodeURIComponent($('#customer_card_email_input').val()) })
                 .done(function(data) {
                     $('#customer_card_email_value').text(data);
                     CancelCustomerEmail();
