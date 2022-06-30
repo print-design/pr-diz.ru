@@ -69,7 +69,7 @@ if($row = $fetcher->Fetch()):
         <td class="pb-3" id="customer_card_manager_td">
             <div id="customer_card_manager" class="d-flex justify-content-between">
                 <div id="customer_card_manager_value" data-id='<?=$row['user_id'] ?>'><?=$row['last_name'].' '.$row['first_name'] ?></div>
-                <div><a href="javascript: void(0);" onclick="EditCustomerManager();"><img src="../images/icons/edit1.svg" title="Редактировать" /></a></div>
+                <div><a href="javascript: void(0);" class="d-none" onclick="EditCustomerManager();"><img src="../images/icons/edit1.svg" title="Редактировать" /></a></div>
             </div>
             <div id="customer_card_manager_edit" class="d-none justify-content-between">
                 <div>
