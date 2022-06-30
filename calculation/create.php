@@ -297,7 +297,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $raport = filter_input(INPUT_POST, 'raport'); if(empty($raport)) $raport = "NULL";
         $number_in_raport = $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'number_in_raport_2') : filter_input(INPUT_POST, 'number_in_raport'); if(empty($number_in_raport)) $number_in_raport = "NULL";
         $lamination_roller_width = filter_input(INPUT_POST, 'lamination_roller_width'); if(empty($lamination_roller_width)) $lamination_roller_width = "NULL";
-        $ink_number = filter_input(INPUT_POST, 'ink_number'); if(empty($ink_number)) $ink_number = "NULL";
+        $ink_number = filter_input(INPUT_POST, 'ink_number'); if(null == $ink_number) $ink_number = "NULL";
         
         $manager_id = GetUserId();
         $status_id = DRAFT; // Статус "Черновик"
@@ -1739,13 +1739,22 @@ while ($row = $fetcher->Fetch()) {
                                 </div>
                             </div>
                         </div>
-                        <!-- Количество красок -->
+                        <!-- Количество красок (для самоклейки возможно 0) -->
                         <div class="print-only self-adhesive-only d-none">
                             <div class="form-group">
                                 <label for="ink_number">Количество красок</label>
                                 <select id="ink_number" name="ink_number" class="form-control print-only self-adhesive-only d-none">
                                     <option value="" hidden="hidden">Количество красок...</option>
                                         <?php
+                                        if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): 
+                                        $selected = "";
+                                        if($ink_number == 0) {
+                                            $selected = " selected='selected'";
+                                        }
+                                        ?>
+                                    <option<?=$selected ?>>0</option>
+                                        <?php
+                                        endif;
                                         if(!empty($ink_number) || !empty($machine_id)):
                                         for($i = 1; $i <= $colorfulnesses[$machine_id]; $i++):
                                         $selected = "";
@@ -2036,12 +2045,15 @@ while ($row = $fetcher->Fetch()) {
                     $('#ink_number').change();
                 }
                 else {
-                    // Заполняем список количеств цветов
+                    // Заполняем список количеств цветов (Если тип "Самоклеящаяся бумага", то возможна красочность 0)
                     $('.ink_block').addClass('d-none');
                     $('.ink').removeAttr('required');
                     
                     colorfulness = parseInt(colorfulnesses[$(this).val()]);
                     var colorfulness_list = "<option value='' hidden='hidden'>Количество красок...</option>";
+                    if($('#work_type_id').val() == <?= CalculationBase::WORK_TYPE_SELF_ADHESIVE ?>) {
+                        colorfulness_list = colorfulness_list + "<option>0</option>";
+                    }
                     for(var i=1; i<=colorfulness; i++) {
                         colorfulness_list = colorfulness_list + "<option>" + i + "</option>";
                     }
