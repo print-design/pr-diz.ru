@@ -23,7 +23,7 @@ if($row = $fetcher->Fetch()):
             <div id="customer_card_person_edit" class="d-none justify-content-between">
                 <div><input type="text" class="form-control" id="customer_card_person_input" value="<?= htmlentities($row['person']) ?>" /></div>
                 <div>
-                    <a class="btn btn-outline-dark" onclick="CancelCustomerPerson();" href="javascript: void(0);"><i class="fas fa-undo"></i></a>
+                    <a class="btn btn-outline-dark d-none" onclick="CancelCustomerPerson();" href="javascript: void(0);"><i class="fas fa-undo"></i></a>
                     <a class="btn btn-dark" onclick="OKCustomerPerson(<?=$id ?>);" href="javascript: void(0);">OK</a>
                 </div>
             </div>
@@ -42,7 +42,7 @@ if($row = $fetcher->Fetch()):
                     <input type="text" class="form-control int-only" id="customer_card_extension_input" value="<?=$row['extension'] ?>" placeholder="Добавочный" />
                 </div>
                 <div>
-                    <a class="btn btn-outline-dark" onclick="CancelCustomerPhone();" href="javascript: void(0);"><i class="fas fa-undo"></i></a>
+                    <a class="btn btn-outline-dark d-none" onclick="CancelCustomerPhone();" href="javascript: void(0);"><i class="fas fa-undo"></i></a>
                     <a class="btn btn-dark" onclick="OKCustomerPhone(<?=$id ?>);" href="javascript: void(0);">OK</a>
                 </div>
             </div>
@@ -58,7 +58,7 @@ if($row = $fetcher->Fetch()):
             <div id="customer_card_email_edit" class="d-none justify-content-between">
                 <div><input type="email" class="form-control" id="customer_card_email_input" value="<?=$row['email'] ?>" /></div>
                 <div>
-                    <a class="btn btn-outline-dark" onclick="CancelCustomerEmail();" href="javascript: void(0);"><i class="fas fa-undo"></i></a>
+                    <a class="btn btn-outline-dark d-none" onclick="CancelCustomerEmail();" href="javascript: void(0);"><i class="fas fa-undo"></i></a>
                     <a class="btn btn-dark" onclick="OKCustomerEmail(<?=$id ?>);" href="javascript: void(0);">OK</a>
                 </div>
             </div>
@@ -88,7 +88,7 @@ if($row = $fetcher->Fetch()):
                     </select>
                 </div>
                 <div>
-                    <a class="btn btn-outline-dark" onclick="CancelCustomerManager();" href="javascript: void(0);"><i class="fas fa-undo"></i></a>
+                    <a class="btn btn-outline-dark d-none" onclick="CancelCustomerManager();" href="javascript: void(0);"><i class="fas fa-undo"></i></a>
                     <a class="btn btn-dark" onclick="OKCustomerManager(<?=$id ?>);" href="javascript: void(0);">OK</a>
                 </div>
             </div>
