@@ -54,7 +54,7 @@ if(null !== $id && null !== $email) {
 $manager_id = filter_input(INPUT_GET, 'manager_id');
 
 if(null !== $id && null !== $manager_id) {
-    $sql = "update customer set manager_id = $manager_id";
+    $sql = "update customer set manager_id = $manager_id where id = $id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     
