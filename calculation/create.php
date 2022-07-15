@@ -873,6 +873,36 @@ while ($row = $fetcher->Fetch()) {
                 </div>
             </div>
         </div>
+        <!-- Форма ввода нескольких объёмов заказа -->
+        <div id="quantities" class="modal fade show">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post">
+                        <div class="modal-header">
+                            <img title="Объем заказа" src="../images/icons/quantities.svg" />&nbsp;&nbsp;Объем заказа
+                            <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="text" 
+                                   id="quantity_1" 
+                                   name="quantity_1" 
+                                   class="form-control int-only int-format" 
+                                   placeholder="Тираж 1 (кол-во этикеток)" 
+                                   required="required" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onmouseup="javascript: $(this).attr('id', 'quantity_1'); $(this).attr('name', 'quantity_1'); $(this).attr('placeholder', 'Тираж 1 (кол-во этикеток)');" 
+                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                   onkeyup="javascript: $(this).attr('id', 'quantity_1'); $(this).attr('name', 'quantity_1'); $(this).attr('placeholder', 'Тираж 1 (кол-во этикеток)');" 
+                                   onfocusout="javascript: $(this).attr('id', 'quantity_1'); $(this).attr('name', 'quantity_1'); $(this).attr('placeholder', 'Тираж 1 (кол-во этикеток)');" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-dark mt-3" data-dismiss="modal" style="width: 150px;">Отмена</button>
+                            <button type="submit" id="quantities_submit" name="quantities_submit" class="btn btn-dark mt-3" style="width: 150px;">OK</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
@@ -1003,7 +1033,7 @@ while ($row = $fetcher->Fetch()) {
                             </div>
                         </div>
                         <!-- Объем заказа -->
-                        <div class="row">
+                        <div class="row no-print-only print-only d-none">
                             <!-- Объем заказа -->
                             <div class="col-6">
                                 <div class="form-group">
@@ -1011,16 +1041,37 @@ while ($row = $fetcher->Fetch()) {
                                     <input type="text" 
                                            id="quantity" 
                                            name="quantity" 
-                                           class="form-control int-only int-format" 
+                                           class="form-control int-only int-format no-print-only print-only" 
                                            placeholder="Объем заказа" 
                                            value="<?= empty($quantity) ? "" : number_format($quantity, 0, ",", " ") ?>" 
                                            required="required" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="avascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" 
-                                           onfocusout="avascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" />
+                                           onkeyup="javascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" 
+                                           onfocusout="javascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" />
                                     <div class="invalid-feedback">Объем заказа обязательно</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Количество тиражей -->
+                        <div class="form-group self-adhesive-only d-none">
+                            <label for="printings_number" class="d-block">Количество тиражей</label>
+                            <div class="d-flex justify-content-between">
+                                <div class="w-75">
+                                    <input type="text" 
+                                           id="printings_number" 
+                                           name="printings_number" 
+                                           class="form-control int-only self-adhesive-only" 
+                                           placeholder="Количество тиражей" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'printings_number'); $(this).attr('name', 'printings_number'); $(this).attr('placeholder', 'Количество тиражей');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'printings_number'); $(this).attr('name', 'printings_number'); $(this).attr('placeholder', 'Количество тиражей');" 
+                                           onfocusout="javascript: $(this).attr('id', 'printings_number'); $(this).attr('name', 'printings_number'); $(this).attr('placeholder', 'Количество тиражей');" />
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-outline-dark d-inline" data-toggle="modal" data-target="#quantities">Объем заказов</button>
                                 </div>
                             </div>
                         </div>
