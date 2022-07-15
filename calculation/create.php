@@ -2045,6 +2045,17 @@ while ($row = $fetcher->Fetch()) {
                 }
             });
             
+            // При изменении количества тиражей, добавляем соответствующее количество полей "Объём заказа"
+            $('#printings_number').change(function(){
+                AddQuantityFields($(this).val());
+            });
+            
+            function AddQuantityFields(num) {
+                for(i=1; i<=num; i++) {
+                    alert(i);
+                }
+            }
+            
             // Список заказчиков с поиском
             $('#customer_id').select2({
                 placeholder: "Заказчик...",
