@@ -20,12 +20,13 @@ if($id === null) {
 }
         
 // Получение объекта
-$sql = "select m.name, m.user1_name, m.user2_name, m.role_id, m.has_organization, m.has_edition, m.has_length, m.has_status, m.has_roller, m.has_lamination, m.has_coloring, m.coloring, m.has_manager, m.has_comment, m.is_cutter, r.local_name role "
+$sql = "select m.name, m.position, m.user1_name, m.user2_name, m.role_id, m.has_organization, m.has_edition, m.has_length, m.has_status, m.has_roller, m.has_lamination, m.has_coloring, m.coloring, m.has_manager, m.has_comment, m.is_cutter, r.local_name role "
         . "from machine m "
         . "left join role r on m.role_id = r.id "
         . "where m.id=$id";
 $row = (new Fetcher($sql))->Fetch();
 $name = $row['name'];
+$position = $row['position'];
 $user1_name = $row['user1_name'];
 $user2_name = $row['user2_name'];
 $role_id = $row['role_id'];
@@ -71,6 +72,7 @@ $role = $row['role'];
                     </div>
                     <table class="table table-bordered">
                         <tr><th>Наименование</th><td><?=$name ?></td></tr>
+                        <tr><th>Позиция</th><td><?=$position ?></td></tr>
                         <tr><th>Пользователь 1</th><td><?=$user1_name ?></td></tr>
                         <tr><th>Пользователь 2</th><td><?=$user2_name ?></td></tr>
                         <tr><th>Роль</th><td><?=$role ?></td></tr>

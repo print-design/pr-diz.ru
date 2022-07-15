@@ -20,6 +20,11 @@ if(null !== filter_input(INPUT_POST, 'machine_edit_submit')) {
         $form_valid = false;
     }
     
+    $position = filter_input(INPUT_POST, 'position');
+    if(empty($position)) {
+        $position = 0;
+    }
+    
     $user1_name = filter_input(INPUT_POST, 'user1_name');
     $user2_name = filter_input(INPUT_POST, 'user2_name');
     $role_id = filter_input(INPUT_POST, 'role_id');
@@ -41,7 +46,7 @@ if(null !== filter_input(INPUT_POST, 'machine_edit_submit')) {
         $name = addslashes($name);
         $user1_name = addslashes($user1_name);
         $user2_name = addslashes($user2_name);
-        $error_message = (new Executer("update machine set name='$name', user1_name='$user1_name', user2_name='$user2_name', "
+        $error_message = (new Executer("update machine set name='$name', position=$position, user1_name='$user1_name', user2_name='$user2_name', "
                 . "role_id=$role_id, has_edition=$has_edition, has_organization=$has_organization, has_length=$has_length, "
                 . "has_status=$has_status, has_roller=$has_roller, has_lamination=$has_lamination, has_coloring=$has_coloring, "
                 . "coloring=$coloring, has_manager=$has_manager, has_comment=$has_comment, is_cutter=$is_cutter "
@@ -60,10 +65,11 @@ if($id == null) {
 }
         
 // Получение объекта
-$row = (new Fetcher("select name, user1_name, user2_name, role_id, "
+$row = (new Fetcher("select name, position, user1_name, user2_name, role_id, "
         . "has_edition, has_organization, has_length, has_status, has_roller, has_lamination, has_coloring, coloring, has_manager, has_comment, is_cutter "
         . "from machine where id=$id"))->Fetch();
 $name = htmlentities($row['name']);
+$position = $row['position'];
 $user1_name = htmlentities($row['user1_name']);
 $user2_name = htmlentities($row['user2_name']);
 $role_id = $row['role_id'];
@@ -113,6 +119,10 @@ $is_cutter = $row['is_cutter'];
                             <label for="name">Наименование</label>
                             <input type="text" id="name" name="name" class="form-control<?=$name_valid ?>" value="<?=$name ?>" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Наименование обязательно</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="position">Позиция</label>
+                            <input type="number" min="0" id="position" name="position" class="form-control" value="<?=$position ?>" />
                         </div>
                         <div class="form-group">
                             <label for="user1_name">Пользователь 1</label>

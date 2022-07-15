@@ -33,6 +33,7 @@ include '../include/restrict_admin.php';
                 <thead>
                     <tr>
                         <th>Наименование</th>
+                        <th>Позиция</th>
                         <th>Пользователь 1</th>
                         <th>Пользователь 2</th>
                         <th>Роль</th>
@@ -50,15 +51,16 @@ include '../include/restrict_admin.php';
                 </thead>
                 <tbody>
                     <?php
-                    $sql = "select m.id, m.name, m.user1_name, m.user2_name, m.role_id, m.has_organization, m.has_edition, m.has_length, m.has_status, m.has_roller, m.has_lamination, m.has_coloring, m.coloring, m.has_manager, m.has_comment, m.is_cutter, r.local_name role "
+                    $sql = "select m.id, m.name, m.position, m.user1_name, m.user2_name, m.role_id, m.has_organization, m.has_edition, m.has_length, m.has_status, m.has_roller, m.has_lamination, m.has_coloring, m.coloring, m.has_manager, m.has_comment, m.is_cutter, r.local_name role "
                             . "from machine m "
                             . "left join role r on m.role_id = r.id "
-                            . "order by m.name asc";
+                            . "order by m.position asc";
                     $machines = (new Grabber($sql))->result;
                     foreach ($machines as $row):
                     ?>
                     <tr>
                         <td><a href='<?= APPLICATION."/machine/details.php?id=".$row['id'] ?>'><?=$row['name'] ?></a></td>
+                        <td><?=$row['position'] ?></td>
                         <td><?=$row['user1_name'] ?></td>
                         <td><?=$row['user2_name'] ?></td>
                         <td><?=$row['role'] ?></td>

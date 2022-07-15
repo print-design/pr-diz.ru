@@ -20,6 +20,11 @@ if(null !== filter_input(INPUT_POST, 'machine_create_submit')) {
         $form_valid = false;
     }
     
+    $position = filter_input(INPUT_POST, 'position');
+    if(empty($position)) {
+        $position = 0;
+    }
+    
     $user1_name = filter_input(INPUT_POST, 'user1_name');
     $user2_name = filter_input(INPUT_POST, 'user2_name');
     $role_id = filter_input(INPUT_POST, 'role_id');
@@ -40,8 +45,8 @@ if(null !== filter_input(INPUT_POST, 'machine_create_submit')) {
         $name = addslashes($name);
         $user1_name = addslashes($user1_name);
         $user2_name = addslashes($user2_name);
-        $executer = new Executer("insert into machine (name, user1_name, user2_name, role_id, has_edition, has_organization, has_length, has_status, has_roller, has_lamination, has_coloring, coloring, has_manager, has_comment, is_cutter) "
-                . "values ('$name', '$user1_name', '$user2_name', $role_id, $has_edition, $has_organization, $has_length, $has_status, $has_roller, $has_lamination, $has_coloring, $coloring, $has_manager, $has_comment, $is_cutter)");
+        $executer = new Executer("insert into machine (name, position, user1_name, user2_name, role_id, has_edition, has_organization, has_length, has_status, has_roller, has_lamination, has_coloring, coloring, has_manager, has_comment, is_cutter) "
+                . "values ('$name', $position, '$user1_name', '$user2_name', $role_id, $has_edition, $has_organization, $has_length, $has_status, $has_roller, $has_lamination, $has_coloring, $coloring, $has_manager, $has_comment, $is_cutter)");
         $error_message = $executer->error;
         $id = $executer->insert_id;
         
@@ -84,6 +89,10 @@ if(null !== filter_input(INPUT_POST, 'machine_create_submit')) {
                             <label for="name">Наименование</label>
                             <input type="text" id="name" name="name" class="form-control<?=$name_valid ?>" value="<?=htmlentities(filter_input(INPUT_POST, 'name')) ?>" required="required" autocomplete="off"/>
                             <div class="invalid-feedback">Наименование обязательно</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="position">Позиция</label>
+                            <input type="number" min="0" id="position" name="position" class="form-control" value="<?= htmlentities(filter_input(INPUT_POST, 'position')) ?>" />
                         </div>
                         <div class="form-group">
                             <label for="user1_name">Пользователь 1</label>

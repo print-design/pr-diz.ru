@@ -6,7 +6,7 @@
         <ul class="navbar-nav mr-auto">
             <?php
             if(LoggedIn()):
-            $sql = "select id, name from machine order by name";
+            $sql = "select id, name from machine order by position";
             $fetcher = new Fetcher($sql);
             while ($row = $fetcher->Fetch()):
                 $status = filter_input(INPUT_GET, 'id') == $row['id'] ? ' disabled' : '';
