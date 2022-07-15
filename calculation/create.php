@@ -2124,14 +2124,14 @@ while ($row = $fetcher->Fetch()) {
                     quantities_list += "<div class='col-4'>";
                     
                     for(i=1; i<=num; i++) {
-                        if(i == 16) {
+                        if((i - 1) % 15 == 0) {
                             quantities_list += "</div>";
                             quantities_list += "</div>";
                             quantities_list += "<div class='row mb-3'>";
                             quantities_list += "<div class='col-4'>";
                         }
                         
-                        if(i == 6 || i == 11) {
+                        if((i - 1) % 5 == 0 || (i - 1) % 10 == 0) {
                             quantities_list += "</div>";
                             quantities_list += "<div class='col-4'>";
                         }
