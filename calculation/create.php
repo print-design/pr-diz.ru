@@ -1063,7 +1063,7 @@ while ($row = $fetcher->Fetch()) {
                         </div>
                         <div class="self-adhesive-only">
                             <label>Тиражи</label>
-                            <div id="quantities_list" class="mb-3"></div>
+                            <div id="quantities_list"></div>
                         </div>
                         <!-- Основная плёнка -->
                         <p id="film_title"><span class="font-weight-bold">Пленка</span></p>
@@ -2120,12 +2120,26 @@ while ($row = $fetcher->Fetch()) {
                 
                 if(is_valid) {
                     $('#quantities_list').html('');
-                    quantities_list = '';
+                    quantities_list = "<div class='row mb-3'>";
+                    quantities_list += "<div class='col-4'>";
                     
                     for(i=1; i<=num; i++) {
+                        if(i == 16) {
+                            quantities_list += "</div>";
+                            quantities_list += "</div>";
+                            quantities_list += "<div class='row mb-3'>";
+                            quantities_list += "<div class='col-4'>";
+                        }
+                        
+                        if(i == 6 || i == 11) {
+                            quantities_list += "</div>";
+                            quantities_list += "<div class='col-4'>";
+                        }
                         quantities_list += "<p style='font-size: larger;'>" + i + ". " + $('#quantity_' + i).val() + " шт</p>"
                     }
             
+                    quantities_list += "</div>";
+                    quantities_list += "</div>";
                     $('#quantities_list').html(quantities_list);
                     $('#quantities').modal('hide');
                 }
