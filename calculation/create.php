@@ -882,19 +882,7 @@ while ($row = $fetcher->Fetch()) {
                             <img title="Объем заказа" src="../images/icons/quantities.svg" />&nbsp;&nbsp;Объем заказа
                             <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
                         </div>
-                        <div class="modal-body">
-                            <input type="text" 
-                                   id="quantity_1" 
-                                   name="quantity_1" 
-                                   class="form-control int-only int-format" 
-                                   placeholder="Тираж 1 (кол-во этикеток)" 
-                                   required="required" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'quantity_1'); $(this).attr('name', 'quantity_1'); $(this).attr('placeholder', 'Тираж 1 (кол-во этикеток)');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'quantity_1'); $(this).attr('name', 'quantity_1'); $(this).attr('placeholder', 'Тираж 1 (кол-во этикеток)');" 
-                                   onfocusout="javascript: $(this).attr('id', 'quantity_1'); $(this).attr('name', 'quantity_1'); $(this).attr('placeholder', 'Тираж 1 (кол-во этикеток)');" />
-                        </div>
+                        <div class="modal-body" id="quantities_form_body" style="max-height: 80vh; overflow-y: scroll;"></div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-dark mt-3" data-dismiss="modal" style="width: 150px;">Отмена</button>
                             <button type="submit" id="quantities_submit" name="quantities_submit" class="btn btn-dark mt-3" style="width: 150px;">OK</button>
@@ -1071,7 +1059,7 @@ while ($row = $fetcher->Fetch()) {
                                            onfocusout="javascript: $(this).attr('id', 'printings_number'); $(this).attr('name', 'printings_number'); $(this).attr('placeholder', 'Количество тиражей');" />
                                 </div>
                                 <div>
-                                    <button type="button" class="btn btn-outline-dark d-inline" data-toggle="modal" data-target="#quantities">Объем заказов</button>
+                                    <button type="button" id="btn_quantities" class="btn btn-outline-dark d-inline" data-toggle="modal" data-target="#quantities" disabled="disabled">Объем заказов</button>
                                 </div>
                             </div>
                         </div>
@@ -2046,15 +2034,66 @@ while ($row = $fetcher->Fetch()) {
             });
             
             // При изменении количества тиражей, добавляем соответствующее количество полей "Объём заказа"
-            $('#printings_number').change(function(){
-                AddQuantityFields($(this).val());
+            $('#printings_number').keyup(function() {
+                if($(this).val() == '') {
+                    $('#btn_quantities').attr('disabled', 'disabled');
+                }
+                else {
+                    $('#btn_quantities').removeAttr('disabled');
+                }
             });
             
-            function AddQuantityFields(num) {
-                for(i=1; i<=num; i++) {
-                    alert(i);
+            $('#printings_number').change(function(){
+                if($(this).val() == '') {
+                    $('#btn_quantities').attr('disabled', 'disabled');
                 }
-            }
+                else {
+                    $('#btn_quantities').removeAttr('disabled');
+                }
+            });
+            
+            $('#btn_quantities').click(function(){
+                num = $('#printings_number').val();
+                $('#quantities_form_body').html('');
+                
+                quantities_html = '';
+                
+                for(i=1; i<=num; i++) {
+                    quantities_html += "<input type='text' id='quantity_" + i + "' name='quantity_" + i + "' class='form-control mb-3 int-format' placeholder='Тираж " + i + " (кол-во этикеток)' required='required' />";
+                }
+                
+                $('#quantities_form_body').html(quantities_html);
+                
+                for(i=1; i<=num; i++) {
+                    $('#quantity_' + i).keypress(function(e) {
+                        if(/\D/.test(e.key)) {
+                            return false;
+                        }
+                    });
+                    
+                    $('#quantity_' + i).keyup(function() {
+                        var val = $(this).val();
+                        val = val.replaceAll(/\D/g, '');
+                        
+                        if(val === '') {
+                            $(this).val('');
+                        }
+                        else {
+                            val = parseInt(val);
+                            
+                            if($(this).hasClass('int-format')) {
+                                val = Intl.NumberFormat('ru-RU').format(val);
+                            }
+                            
+                            $(this).val(val);
+                        }
+                    });
+                    
+                    $('#quantity_' + i).change(function() {
+                        $('#quantity_' + i).keyup();
+                    });
+                }
+            });
             
             // Список заказчиков с поиском
             $('#customer_id').select2({
