@@ -2130,10 +2130,10 @@ while ($row = $fetcher->Fetch()) {
                 if(is_valid) {
                     $('#quantities_list').html('');
                     quantities_list = "<div class='row mb-3'>";
-                    quantities_list += "<div class='col-4'>";
+                    quantities_list += "<div class='col-3'>";
                     
                     for(i=1; i<=num; i++) {
-                        if(i > 1 && (i - 1) % 15 == 0) {
+                        if(i > 1 && (i - 1) % 20 == 0) {
                             quantities_list += "</div>";
                             quantities_list += "</div>";
                             quantities_list += "<div class='row mb-3'>";
@@ -2141,9 +2141,10 @@ while ($row = $fetcher->Fetch()) {
                         }
                         else if(i > 1 && ((i - 1) % 5 == 0 || (i - 1) % 10 == 0)) {
                             quantities_list += "</div>";
-                            quantities_list += "<div class='col-4'>";
+                            quantities_list += "<div class='col-3'>";
                         }
                         quantities_list += "<p style='font-size: larger;'>" + i + ". " + $('#quantity_' + i).val() + " шт</p>"
+                        quantities_list += "<input type='hidden' id='quantity_" + i + "' name=quantity_" + i + "' value='" + $('#quantity_' + i).val().replace(/\D/g, "") + "' />";
                     }
             
                     quantities_list += "</div>";
