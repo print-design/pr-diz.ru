@@ -2045,12 +2045,21 @@ while ($row = $fetcher->Fetch()) {
                 }
             });
             
+            // Ограничение количества тиражей до 20 и активация/деактивация кнопки вызова модального окна списка тиражей
             $('#printings_number').change(function(){
                 if($(this).val() == '') {
                     $('#btn_quantities').attr('disabled', 'disabled');
                 }
                 else {
                     $('#btn_quantities').removeAttr('disabled');
+                }
+                
+                ChangeLimitIntValue($(this), 20);
+            });
+            
+            $('#printings_number').keydown(function(e) {
+                if(!KeyDownLimitIntValue($(e.target), e, 20)) {
+                    return false;
                 }
             });
             
