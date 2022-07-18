@@ -583,12 +583,18 @@ if($machine_id === null && isset($row['machine_id'])) {
 }
 
 $length = filter_input(INPUT_POST, 'length');
-if($length === null && isset($row['length'])) {
+if(empty($length)) {
+    $length = filter_input(INPUT_POST, 'length_2');
+}
+if(empty($length) && isset($row['length'])) {
     $length = $row['length'];
 }
 
 $stream_width = filter_input(INPUT_POST, 'stream_width');
-if($stream_width === null && isset($row['stream_width'])) {
+if(empty($stream_width)) {
+    $stream_width = filter_input(INPUT_POST, 'stream_width_2');
+}
+if(empty($stream_width) && isset($row['stream_width'])) {
     $stream_width = $row['stream_width'];
 }
 
@@ -686,6 +692,16 @@ if(isset($row['extracharge_cliche'])) {
 $num_for_customer = null;
 if(isset($row['num_for_customer'])) {
     $num_for_customer = $row['num_for_customer'];
+}
+
+// Данные об объёмах заказов
+$qi = 1;
+$quantity_var = "quantity_$qi";
+
+while(filter_input(INPUT_POST, $quantity_var) !== null) {
+    $$quantity_var = filter_input(INPUT_POST, $quantity_var);
+    $qi++;
+    $quantity_var = "quantity_$qi";
 }
 
 // Получение норм
@@ -1045,11 +1061,22 @@ while ($row = $fetcher->Fetch()) {
                             <label for="printings_number" class="d-block">Количество тиражей</label>
                             <div class="d-flex justify-content-between">
                                 <div class="w-75">
+                                    <?php
+                                    $printings_number = 0;
+                                    $qi = 1;
+                                    $quantity_var = "quantity_$qi";
+                                    while(!empty($$quantity_var)) {
+                                        $printings_number++;
+                                        $qi++;
+                                        $quantity_var = "quantity_$qi";
+                                    }
+                                    ?>
                                     <input type="text" 
                                            id="printings_number" 
                                            name="printings_number" 
                                            class="form-control int-only self-adhesive-only" 
                                            placeholder="Количество тиражей" 
+                                           value="<?=$printings_number ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'printings_number'); $(this).attr('name', 'printings_number'); $(this).attr('placeholder', 'Количество тиражей');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
@@ -1063,7 +1090,32 @@ while ($row = $fetcher->Fetch()) {
                         </div>
                         <div class="self-adhesive-only">
                             <label>Тиражи</label>
-                            <div id="quantities_list"></div>
+                            <div id="quantities_list">
+                                <div class="row mb-3">
+                                    <div class="col-3">
+                                    <?php
+                                    $qi = 1;
+                                    $quantity_var = "quantity_$qi";
+                                    while (!empty($$quantity_var)) {
+                                        if($qi > 1 && ($qi - 1) % 20 == 0) {
+                                            echo "</div>";
+                                            echo "</div>";
+                                            echo "<div class='row mb_3'>";
+                                            echo "<div class='col-3'>";
+                                        }
+                                        elseif($qi > 1 && ($qi - 1) % 5 == 0) {
+                                            echo "</div>";
+                                            echo "<div class='col-3'>";
+                                        }
+                                        echo "<p style='font-size: larger;'>".CalculationBase::Display($$quantity_var, 0)." шт</p>";
+                                        echo "<input type='hidden' id='quantity_$qi' name='quantity_$qi' value='".$$quantity_var."' />";
+                                        $qi++;
+                                        $quantity_var = "quantity_$qi";
+                                    }
+                                    ?>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <!-- Основная плёнка -->
                         <p id="film_title"><span class="font-weight-bold">Пленка</span></p>
@@ -2063,6 +2115,13 @@ while ($row = $fetcher->Fetch()) {
                 }
             });
             
+            if($('#printings_number').val() == '') {
+                $('#btn_quantities').attr('disabled', 'disabled');
+            }
+            else {
+                $('#btn_quantities').removeAttr('disabled');
+            }
+            
             $('#btn_quantities').click(function(){
                 num = $('#printings_number').val();
                 $('#quantities_form_body').html('');
@@ -2070,7 +2129,7 @@ while ($row = $fetcher->Fetch()) {
                 quantities_html = '';
                 
                 for(i=1; i<=num; i++) {
-                    quantities_html += "<div class='form-group mb-3'><input type='text' id='quantity_" + i + "' name='quantity_" + i + "' class='form-control int-format' placeholder='Тираж " + i + " (кол-во этикеток)' required='required' /><div class='invalid-feedback'>Указать значение</div></div>";
+                    quantities_html += "<div class='form-group mb-3'><input type='text' id='quantity_" + i + "' name='quantity_" + i + "' class='form-control int-format' placeholder='Тираж " + i + " (кол-во этикеток)' value='" + (!$('#quantity_' + i).val() ? '' : $('#quantity_' + i).val()) + "' required='required' /><div class='invalid-feedback'>Указать значение</div></div>";
                 }
                 
                 $('#quantities_form_body').html(quantities_html);
@@ -2137,14 +2196,14 @@ while ($row = $fetcher->Fetch()) {
                             quantities_list += "</div>";
                             quantities_list += "</div>";
                             quantities_list += "<div class='row mb-3'>";
-                            quantities_list += "<div class='col-4'>";
+                            quantities_list += "<div class='col-3'>";
                         }
-                        else if(i > 1 && ((i - 1) % 5 == 0 || (i - 1) % 10 == 0)) {
+                        else if(i > 1 && (i - 1) % 5 == 0) {
                             quantities_list += "</div>";
                             quantities_list += "<div class='col-3'>";
                         }
                         quantities_list += "<p style='font-size: larger;'>" + i + ". " + $('#quantity_' + i).val() + " шт</p>"
-                        quantities_list += "<input type='hidden' id='quantity_" + i + "' name=quantity_" + i + "' value='" + $('#quantity_' + i).val().replace(/\D/g, "") + "' />";
+                        quantities_list += "<input type='hidden' id='quantity_" + i + "' name='quantity_" + i + "' value='" + $('#quantity_' + i).val().replace(/\D/g, "") + "' />";
                     }
             
                     quantities_list += "</div>";
