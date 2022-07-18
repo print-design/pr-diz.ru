@@ -106,6 +106,11 @@
             <tr><th>Количество этикеток в рапорте</th><td><?=$number_in_raport ?></td></tr>
                 <?php endif; ?>
                 <?php
+                if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE):
+                ?>
+            <tr><th>Фактический зазор</th><td><?= rtrim(rtrim(number_format($gap, 2, ",", ""), "0"), ",") ?> мм</td></tr>
+                <?php endif; ?>
+                <?php
                 $lamination = "нет";
                 if(!empty($lamination1_film_name) || !empty($lamination1_individual_film_name)) $lamination = "1";
                 if(!empty($lamination2_film_name) || !empty($lamination2_individual_film_name)) $lamination = "2";

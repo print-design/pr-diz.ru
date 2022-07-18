@@ -57,7 +57,8 @@ $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_t
         . "rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8, "
         . "rc.cliche_in_price, rc.extracharge, rc.extracharge_cliche, "
         . "cus.name customer, cus.phone customer_phone, cus.extension customer_extension, cus.email customer_email, cus.person customer_person, "
-        . "(select count(id) from calculation where customer_id = rc.customer_id and id <= rc.id) num_for_customer "
+        . "(select count(id) from calculation where customer_id = rc.customer_id and id <= rc.id) num_for_customer,"
+        . "(select gap from calculation_result where calculation_id = rc.id) gap "
         . "from calculation rc "
         . "left join film_variation fv on rc.film_variation_id = fv.id "
         . "left join film f on fv.film_id = f.id "
@@ -133,6 +134,8 @@ $last_name = $row['last_name'];
 $status_id = $row['status_id'];
 
 $new_forms_number = 0;
+
+$gap = $row['gap'];
 
 for($i=1; $i<=$ink_number; $i++) {
     $ink_var = "ink_$i";

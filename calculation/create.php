@@ -878,7 +878,7 @@ while ($row = $fetcher->Fetch()) {
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <img title="Объем заказа" src="../images/icons/quantities.svg" />&nbsp;&nbsp;Объем заказа
+                        Объем заказа
                         <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
                     </div>
                     <div class="modal-body" id="quantities_form_body" style="max-height: 80vh; overflow-y: scroll;"></div>

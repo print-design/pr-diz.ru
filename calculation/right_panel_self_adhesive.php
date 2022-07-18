@@ -338,6 +338,10 @@ if(!empty($id)) {
         $new_work_time = $calculation->work_time;
         if($new_work_time === null) $new_work_time = "NULL";
         
+        // Фактический зазор, мм
+        $new_gap = $calculation->gap;
+        if($new_gap === null) $new_gap = "NULL";
+        
         //****************************************************
         // ПОМЕЩАЕМ НАЦЕНКУ В БАЗУ
         if(empty($error_message)) {
@@ -356,10 +360,10 @@ if(!empty($id)) {
         if(empty($error_message)) {
             $sql = "insert into calculation_result (calculation_id, usd, euro, cost, cost_per_unit, shipping_cost, shipping_cost_per_unit, income, income_per_unit, cliche_cost, shipping_cliche_cost, total_weight_dirty, "
                     . "film_cost_1, film_cost_per_unit_1, width_1, weight_pure_1, length_pure_1, weight_dirty_1, length_dirty_1, "
-                    . "film_waste_cost_1, film_waste_weight_1, ink_cost, ink_weight, work_cost_1, work_time_1) "
+                    . "film_waste_cost_1, film_waste_weight_1, ink_cost, ink_weight, work_cost_1, work_time_1, gap) "
                     . "values ($id, $new_usd, $new_euro, $new_cost, $new_cost_per_unit, $new_shipping_cost, $new_shipping_cost_per_unit, $new_income, $new_income_per_unit, $new_cliche_cost, $new_shipping_cliche_cost, $new_total_weight_dirty, "
                     . "$new_film_cost, $new_film_cost_per_unit, $new_width, $new_weight_pure, $new_length_pure, $new_weight_dirty, $new_length_dirty, "
-                    . "$new_film_waste_cost, $new_film_waste_weight, $new_ink_cost, $new_ink_weight, $new_work_cost, $new_work_time)";
+                    . "$new_film_waste_cost, $new_film_waste_weight, $new_ink_cost, $new_ink_weight, $new_work_cost, $new_work_time, $new_gap)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -492,10 +496,12 @@ if(!empty($id)) {
             <div class="value mb-2"><?= CalculationBase::Display(floatval($film_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($film_cost_per_unit), 3) ?> &#8381; за м<sup>2</sup></div>
             <div>Ширина</div>
             <div class="value mb-2"><?= CalculationBase::Display(intval($width), 0) ?> мм</div>
+            <div>На приладку тиража</div>
+            <div class="value mb-2"><?= CalculationBase::Display(intval($length_dirty) - intval($length_pure), 0) ?> м</div>
             <div>Масса без приладки</div>
-            <div class="value mb-2"><?= CalculationBase::Display(floatval($weight_pure), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($length_pure), 0) ?> м</span></div>
+            <div class="value mb-2"><?= CalculationBase::Display(floatval($weight_pure), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(intval($length_pure), 0) ?> м</span></div>
             <div>Масса с приладкой</div>
-            <div class="value mb-2"><?= CalculationBase::Display(floatval($weight_dirty), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($length_dirty), 0) ?> м</span></div>
+            <div class="value mb-2"><?= CalculationBase::Display(floatval($weight_dirty), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(intval($length_dirty), 0) ?> м</span></div>
         </div>
     </div>
     <div id="show_costs">
