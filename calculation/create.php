@@ -733,7 +733,7 @@ if(!empty(filter_input(INPUT_POST, 'quantity_1'))) {
         $quantity_var = "quantity_$qi";
     }
 }
-else {
+elseif(filter_input(INPUT_GET, 'id') !== null) {
     $sql_quantity = "select quantity from calculation_quantity where calculation_id = $id";
     $fetcher_quantity = new Fetcher($sql_quantity);
     $error_message = $fetcher_quantity->error;
