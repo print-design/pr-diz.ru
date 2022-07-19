@@ -9,6 +9,13 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
 if(null !== filter_input(INPUT_POST, 'extracharge-submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $extracharge = filter_input(INPUT_POST, 'extracharge');
+    $quantity = 0;
+    
+    $sql = "select quantity from calculation_quantity where id = $id order by id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $quantity = $row['quantity'];
+    }
     
     $sql = "update calculation set extracharge=$extracharge where id=$id";
     $executer = new Executer($sql);
@@ -21,7 +28,7 @@ if(null !== filter_input(INPUT_POST, 'extracharge-submit')) {
     }
     
     if(empty($error_message)) {
-        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.shipping_cost_per_unit = cr.shipping_cost / c.quantity where c.id = $id";
+        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.shipping_cost_per_unit = cr.shipping_cost / $quantity where c.id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
@@ -33,7 +40,7 @@ if(null !== filter_input(INPUT_POST, 'extracharge-submit')) {
     }
     
     if(empty($error_message)) {
-        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.income_per_unit = cr.income / c.quantity where c.id = $id";
+        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.income_per_unit = cr.income / $quantity where c.id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
@@ -78,7 +85,6 @@ if(!empty($id)) {
         // ПОЛУЧАЕМ ИСХОДНЫЕ ДАННЫЕ
         $param_date = null;
         $param_name = null;
-        $param_quantity = null; // Количество этикеток
         
         $param_film = null; // Марка материала
         $param_thickness = null; // Толщина, мкм
@@ -101,7 +107,7 @@ if(!empty($id)) {
         $param_extracharge = null; // Наценка на тираж
         $param_extracharge_cliche = null; // Наценка на ПФ
         
-        $sql = "select rc.date, rc.name, rc.unit, rc.quantity, "
+        $sql = "select rc.date, rc.name, rc.unit, "
                 . "f.name film, fv.thickness thickness, fv.weight density, "
                 . "rc.film_variation_id, rc.price, rc.currency, rc.individual_film_name, rc.individual_thickness, rc.individual_density, "
                 . "rc.customers_material, rc.ski, rc.width_ski, "
@@ -122,7 +128,6 @@ if(!empty($id)) {
         if($row = $fetcher->Fetch()) {
             $param_date = $row['date'];
             $param_name = $row['name'];
-            $param_quantity = $row['quantity'];
             
             if(!empty($row['film_variation_id'])) {
                 $param_film = $row['film']; // Марка материала
@@ -176,6 +181,15 @@ if(!empty($id)) {
                 $new_usd = $row['usd'];
                 $new_euro = $row['euro'];
             }
+        }
+        
+        // Размеры тиражей
+        $param_quantities = array();
+        $sql = "select quantity from calculation_quantity where calculation_id = $id";
+        $fetcher = new Fetcher($sql);
+    
+        while($row = $fetcher->Fetch()) {
+            array_push($param_quantities, $row['quantity']);
         }
         
         // ПОЛУЧЕНИЕ НОРМ
@@ -241,7 +255,7 @@ if(!empty($id)) {
         }
         
         // ДЕЛАЕМ РАСЧЁТ
-        $calculation = new CalculationSelfAdhesive($data_priladka, $data_machine, $data_gap, $data_ink, $data_cliche, $data_extracharge, $new_usd, $new_euro, $param_quantity, $param_film, $param_thickness, $param_density, $param_price, $param_currency, $param_customers_material, $param_ski, $param_width_ski, $param_length, $param_stream_width, $param_streams_number, $param_raport, $param_ink_number, $param_ink_1, $param_ink_2, $param_ink_3, $param_ink_4, $param_ink_5, $param_ink_6, $param_ink_7, $param_ink_8, $param_color_1, $param_color_2, $param_color_3, $param_color_4, $param_color_5, $param_color_6, $param_color_7, $param_color_8, $param_cmyk_1, $param_cmyk_2, $param_cmyk_3, $param_cmyk_4, $param_cmyk_5, $param_cmyk_6, $param_cmyk_7, $param_cmyk_8, $param_percent_1, $param_percent_2, $param_percent_3, $param_percent_4, $param_percent_5, $param_percent_6, $param_percent_7, $param_percent_8, $param_cliche_1, $param_cliche_2, $param_cliche_3, $param_cliche_4, $param_cliche_5, $param_cliche_6, $param_cliche_7, $param_cliche_8, $cliche_in_price, $param_extracharge, $param_extracharge_cliche);
+        $calculation = new CalculationSelfAdhesive($data_priladka, $data_machine, $data_gap, $data_ink, $data_cliche, $data_extracharge, $new_usd, $new_euro, $param_quantities, $param_film, $param_thickness, $param_density, $param_price, $param_currency, $param_customers_material, $param_ski, $param_width_ski, $param_length, $param_stream_width, $param_streams_number, $param_raport, $param_ink_number, $param_ink_1, $param_ink_2, $param_ink_3, $param_ink_4, $param_ink_5, $param_ink_6, $param_ink_7, $param_ink_8, $param_color_1, $param_color_2, $param_color_3, $param_color_4, $param_color_5, $param_color_6, $param_color_7, $param_color_8, $param_cmyk_1, $param_cmyk_2, $param_cmyk_3, $param_cmyk_4, $param_cmyk_5, $param_cmyk_6, $param_cmyk_7, $param_cmyk_8, $param_percent_1, $param_percent_2, $param_percent_3, $param_percent_4, $param_percent_5, $param_percent_6, $param_percent_7, $param_percent_8, $param_cliche_1, $param_cliche_2, $param_cliche_3, $param_cliche_4, $param_cliche_5, $param_cliche_6, $param_cliche_7, $param_cliche_8, $cliche_in_price, $param_extracharge, $param_extracharge_cliche);
         
         // Себестоимость форм
         $new_cliche_cost = $calculation->cliche_cost;

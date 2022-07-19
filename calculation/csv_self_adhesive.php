@@ -11,7 +11,6 @@ if($id !== null) {
     // ПОЛУЧЕНИЕ ИСХОДНЫХ ДАННЫХ
     $date = null;
     $name = null;
-    $quantity = null;
     
     $film = null; // Самоклеящийся материал, марка
     $thickness = null; // Толщина, мкм
@@ -34,7 +33,7 @@ if($id !== null) {
     $extracharge = null; // Наценка на тираж
     $extracharge_cliche = null; // Наценка на ПФ
     
-    $sql = "select rc.date, rc.name, rc.quantity, "
+    $sql = "select rc.date, rc.name, "
             . "f.name film, fv.thickness thickness, fv.weight density, "
             . "rc.film_variation_id, rc.price, rc.currency, rc.individual_film_name, rc.individual_thickness, rc.individual_density, "
             . "rc.customers_material, rc.ski, rc.width_ski, "
@@ -55,7 +54,6 @@ if($id !== null) {
     if ($row = $fetcher->Fetch()) {
         $date = $row['date'];
         $name = $row['name'];
-        $quantity = $row['quantity']; // Размер тиража в кг или шт
         
         if(!empty($row['film_variation_id'])) {
             $film = $row['film']; // Основная пленка, марка
@@ -103,6 +101,15 @@ if($id !== null) {
             $usd = $row['usd'];
             $euro = $row['euro'];
         }
+    }
+    
+    // Размеры тиражей
+    $quantities = array();
+    $sql = "select quantity from calculation_quantity where calculation_id = $id";
+    $fetcher = new Fetcher($sql);
+    
+    while($row = $fetcher->Fetch()) {
+        array_push($quantities, $row['quantity']);
     }
     
     // ПОЛУЧЕНИЕ НОРМ
@@ -177,7 +184,7 @@ if($id !== null) {
                 $data_extracharge, 
                 $usd, // Курс доллара
                 $euro, // Курс евро
-                $quantity, // Размер тиража в шт
+                $quantities, // Размер тиража в шт
                 
                 $film, // Марка материла
                 $thickness, // Толщина материала, мкм
@@ -210,7 +217,7 @@ if($id !== null) {
         array_push($file_data, array("Курс доллара, руб", CalculationBase::Display($usd, 2), "", ""));
         array_push($file_data, array("Курс евро, руб", CalculationBase::Display($euro, 2), "", ""));
         array_push($file_data, array("Машина", $machine, "", ""));
-        array_push($file_data, array("Размер тиража", $quantity." шт", "", ""));
+        array_push($file_data, array("Размеры тиража", implode(', ', $quantities)." шт", "", ""));
         array_push($file_data, array("Марка", $film, "", ""));
         array_push($file_data, array("Толщина", CalculationBase::Display($thickness, 2), "", ""));
         array_push($file_data, array("Плотность", CalculationBase::Display($density, 2), "", ""));
@@ -286,7 +293,7 @@ if($id !== null) {
         
         array_push($file_data, array("М2 чистые, м2", 
             CalculationBase::Display($calculation->area_pure, 2),
-            "|= (".CalculationBase::Display($length, 2)." + ".CalculationBase::Display($calculation->gap, 2).") * (".CalculationBase::Display($stream_width, 2)." + ".CalculationBase::Display($data_gap->gap_stream, 2).") * $quantity / 1000000",
+            "|= (".CalculationBase::Display($length, 2)." + ".CalculationBase::Display($calculation->gap, 2).") * (".CalculationBase::Display($stream_width, 2)." + ".CalculationBase::Display($data_gap->gap_stream, 2).") * $quantities[0] / 1000000",
             "(длина этикетки чистая + фактический зазор) * (ширина этикетки + ЗазорРучей) * количество этикеток / 1000000"));
         
         array_push($file_data, array("М. пог. чистые, м",
@@ -376,7 +383,7 @@ if($id !== null) {
         
         array_push($file_data, array("М2 запечатки, м2",
             CalculationBase::Display($calculation->print_area, 2),
-            "|= ((". CalculationBase::Display($stream_width, 2)." + ". CalculationBase::Display($data_gap->gap_stream, 2).") * (". CalculationBase::Display($length, 2)." + ". CalculationBase::Display($data_gap->gap_raport, 2).") * $quantity / 1000000".") + (". CalculationBase::Display($calculation->length_pog_dirty, 2)." * 0,01)",
+            "|= ((". CalculationBase::Display($stream_width, 2)." + ". CalculationBase::Display($data_gap->gap_stream, 2).") * (". CalculationBase::Display($length, 2)." + ". CalculationBase::Display($data_gap->gap_raport, 2).") * $quantities[0] / 1000000".") + (". CalculationBase::Display($calculation->length_pog_dirty, 2)." * 0,01)",
             "((ширина этикетки + ЗазорРучей) * (длина этикетки + ЗазорРапорт) * кол-во этикеток / 1000000) + (м. пог. грязные * 0,01)"));
         
         array_push($file_data, array("Масса краски в смеси, кг",
@@ -544,7 +551,7 @@ if($id !== null) {
         
         array_push($file_data, array("Себестоимость за шт, руб",
             CalculationBase::Display($calculation->cost_per_unit, 2),
-            "|= ". CalculationBase::Display($calculation->cost, 2)." / ". CalculationBase::Display($quantity, 2),
+            "|= ". CalculationBase::Display($calculation->cost, 2)." / ". CalculationBase::Display($quantities[0], 2),
             "себестоимость / количество этикеток"));
         
         array_push($file_data, array("Отгрузочная стоимость, руб",
@@ -554,7 +561,7 @@ if($id !== null) {
             
         array_push($file_data, array("Отгрузочная стоимость за шт, руб",
             CalculationBase::Display($calculation->shipping_cost_per_unit, 2),
-            "|= ".CalculationBase::Display($calculation->shipping_cost, 2)." / ".CalculationBase::Display($quantity, 2),
+            "|= ".CalculationBase::Display($calculation->shipping_cost, 2)." / ".CalculationBase::Display($quantities[0], 2),
             "отгрузочная стоимость / размер тиража"));
             
         array_push($file_data, array("Прибыль, руб",

@@ -1157,7 +1157,7 @@ class CalculationSelfAdhesive extends CalculationBase {
             array $data_extracharge, 
             $usd, // Курс доллара
             $euro, // Курс евро
-            $quantity, // Размер тиража в шт
+            array $quantities, // Размер тиража в шт
             
             $film, // Марка бумаги
             $thickness, // Толщина, мкм
@@ -1232,7 +1232,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         //***************************
         
         // М2 чистые, м2
-        $this->area_pure = ($length + $this->gap) * ($stream_width + $data_gap->gap_stream) * $quantity / 1000000;
+        $this->area_pure = ($length + $this->gap) * ($stream_width + $data_gap->gap_stream) * $quantities[0] / 1000000;
         
         // М. пог. чистые, м
         $this->length_pog_pure = $this->area_pure / ($this->width_dirty * $streams_number / 1000);
@@ -1290,7 +1290,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         //************************
         
         // М2 запечатки, м2
-        $this->print_area = (($stream_width + $data_gap->gap_stream) * ($length + $data_gap->gap_raport) * $quantity / 1000000) + ($this->length_pog_dirty * 0.01);
+        $this->print_area = (($stream_width + $data_gap->gap_stream) * ($length + $data_gap->gap_raport) * $quantities[0] / 1000000) + ($this->length_pog_dirty * 0.01);
         
         // Масса краски в смеси, кг
         $this->ink_1kg_mix_weight = 1 + $data_ink->solvent_part;
@@ -1454,13 +1454,13 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->cost = $this->film_cost + $this->work_cost + $this->ink_cost + ($this->cliche_cost * $this->ukpf);
         
         // Себестоимость за единицу
-        $this->cost_per_unit = $this->cost / $quantity;
+        $this->cost_per_unit = $this->cost / $quantities[0];
         
         // Отгрузочная стоимость
         $this->shipping_cost = $this->cost + ($this->cost * $this->extracharge / 100);
         
         // Отгрузочная стоимость за единицу
-        $this->shipping_cost_per_unit = $this->shipping_cost / $quantity;
+        $this->shipping_cost_per_unit = $this->shipping_cost / $quantities[0];
         
         // Прибыль
         $this->income = $this->shipping_cost - $this->cost;

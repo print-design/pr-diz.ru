@@ -235,13 +235,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $work_type_id = filter_input(INPUT_POST, 'work_type_id');
         $unit = filter_input(INPUT_POST, 'unit');
         $machine_id = filter_input(INPUT_POST, 'machine_id'); if(empty($machine_id)) $machine_id = "NULL"; if($work_type_id == CalculationBase::WORK_TYPE_NOPRINT) $machine_id = "NULL";
-        $quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity'));
-        
-        //**************************************************
-        // ВРЕМЕННО !!!!!!!!!!!!!!!!!!!!!!!!
-        if(empty($quantity)) $quantity = filter_input (INPUT_POST, 'quantity_1');
-        //**************************************************
-        
+        $quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity')); if(empty($quantity)) $quantity = "NULL";
         $film_id = filter_input(INPUT_POST, 'film_id');
         $film_variation_id = filter_input(INPUT_POST, 'film_variation_id'); if($film_id == INDIVIDUAL) $film_variation_id = "NULL";
         $price = filter_input(INPUT_POST, 'price'); if(empty($price)) $price = "NULL";
