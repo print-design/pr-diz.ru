@@ -208,7 +208,9 @@ $title = $status_titles[$status_id];
                         }
                     }
                     
-                    $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.quantity, c.unit, wt.name work_type, u.last_name, u.first_name, c.status_id, "
+                    $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, format(c.quantity, 0, 'ru_RU') quantity, "
+                            . "(select group_concat(format(quantity, 0, 'ru_RU') separator ', ') from calculation_quantity where calculation_id = c.id) quantities, "
+                            . "c.unit, wt.name work_type, u.last_name, u.first_name, c.status_id, "
                             . "(select id from techmap where calculation_id = c.id order by id desc limit 1) techmap_id, "
                             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                             . "from calculation c "
@@ -221,13 +223,14 @@ $title = $status_titles[$status_id];
                     while ($row = $fetcher->Fetch()):
                         
                     $rowcounter++;
+                    $quantity = empty($row['quantities']) ? $row['quantity'] : $row['quantities'];
                     ?>
                     <tr>
                         <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['num_for_customer'] ?></td>
                         <td class="text-nowrap"><?= DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y') ?></td>
                         <td><a href="javascript: void(0);" class="customer" data-toggle="modal" data-target="#customerModal" data-customer-id="<?=$row['customer_id'] ?>"><?=$row['customer'] ?></a></td>
                         <td><?= htmlentities($row['name']) ?></td>
-                        <td class="text-right text-nowrap"><?=number_format($row['quantity'], 0, ",", " ") ?>&nbsp;<?=$row['unit'] == 'kg' ? 'кг' : 'шт' ?></td>
+                        <td class="text-right"><?=$quantity ?>&nbsp;<?=$row['unit'] == 'kg' ? 'кг' : 'шт' ?></td>
                         <td><?=$row['work_type'] ?></td>
                         <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
                         <td class="text-nowrap"><i class="fas fa-circle" style="color: <?=$status_colors[$row['status_id']] ?>;"></i>&nbsp;&nbsp;<?=$status_names[$row['status_id']] ?></td>
