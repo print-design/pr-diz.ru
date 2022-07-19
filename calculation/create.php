@@ -360,6 +360,23 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $error_message = $executer->error;
         $insert_id = $executer->insert_id;
         
+        // Для самоклеящейся бумаги заполняем список тиражей
+        if(empty($error_message) && $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+            $qi = 1;
+            $quantity_var = "quantity_$qi";
+            
+            while(filter_input(INPUT_POST, $quantity_var) !== null) {
+                $$quantity_var = filter_input(INPUT_POST, $quantity_var);
+                
+                $sql = "insert into calculation_quantity (calculation_id, quantity) values($insert_id, ".$$quantity_var.")";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+                
+                $qi++;
+                $quantity_var = "quantity_$qi";
+            }
+        }
+        
         if(empty($error_message)) {
             header('Location: create.php?id='.$insert_id);
         }
@@ -706,13 +723,29 @@ if(isset($row['num_for_customer'])) {
 }
 
 // Данные об объёмах заказов
-$qi = 1;
-$quantity_var = "quantity_$qi";
-
-while(filter_input(INPUT_POST, $quantity_var) !== null) {
-    $$quantity_var = filter_input(INPUT_POST, $quantity_var);
-    $qi++;
+if(!empty(filter_input(INPUT_POST, 'quantity_1'))) {
+    $qi = 1;
     $quantity_var = "quantity_$qi";
+
+    while(filter_input(INPUT_POST, $quantity_var) !== null) {
+        $$quantity_var = filter_input(INPUT_POST, $quantity_var);
+        $qi++;
+        $quantity_var = "quantity_$qi";
+    }
+}
+else {
+    $sql_quantity = "select quantity from calculation_quantity where calculation_id = $id";
+    $fetcher_quantity = new Fetcher($sql_quantity);
+    $error_message = $fetcher_quantity->error;
+
+    $qi = 1;
+    $quantity_var = "quantity_$qi";
+
+    while($row_quantity = $fetcher_quantity->Fetch()) {
+        $$quantity_var = $row_quantity['quantity'];
+        $qi++;
+        $quantity_var = "quantity_$qi";
+    }
 }
 
 // Получение норм

@@ -7,7 +7,7 @@
             <tr><th>Менеджер</th><td><?=$last_name.(empty($last_name) ? "" : " ").$first_name ?></td></tr>
                 <?php endif; ?>
             <tr><th>Тип работы</th><td><?=$work_type ?></td></tr>
-                <?php if(!empty($quantity) && !empty($unit)): ?>
+                <?php if(!empty($quantity) && !empty($unit) && $work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
             <tr><th>Объем заказа</th><td><?= rtrim(rtrim(number_format($quantity, 2, ",", " "), "0"), ",") ?> <?=$unit == 'kg' ? "кг" : "шт" ?></td></tr>
                 <?php endif; ?>
             <tr><td colspan="2" class="pt-4"><h2>Пленка</h2></td></tr>
