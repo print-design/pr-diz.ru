@@ -1133,7 +1133,7 @@ while ($row = $fetcher->Fetch()) {
                                 </div>
                             </div>
                         </div>
-                        <div class="self-adhesive-only">
+                        <div class="self-adhesive-only d-none">
                             <label>Тиражи</label>
                             <div id="quantities_list">
                                 <div class="row mb-3">
