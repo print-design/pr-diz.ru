@@ -70,6 +70,7 @@ $film_variation_id_valid = '';
 $price_valid = '';
 $currency_valid = '';
 $quantity_valid = '';
+$printings_number_valid = '';
 
 $individual_film_name_valid = '';
 $individual_thickness_valid = '';
@@ -112,8 +113,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'quantity'))) {
+    if(filter_input(INPUT_POST, 'work_type_id') != CalculationBase::WORK_TYPE_SELF_ADHESIVE && empty(filter_input(INPUT_POST, 'quantity'))) {
         $quantity_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(filter_input(INPUT_POST, 'work_type_id') == CalculationBase::WORK_TYPE_SELF_ADHESIVE && empty(filter_input(INPUT_POST, 'printings_number'))) {
+        $printings_number_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -230,6 +236,11 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $unit = filter_input(INPUT_POST, 'unit');
         $machine_id = filter_input(INPUT_POST, 'machine_id'); if(empty($machine_id)) $machine_id = "NULL"; if($work_type_id == CalculationBase::WORK_TYPE_NOPRINT) $machine_id = "NULL";
         $quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity'));
+        
+        //**************************************************
+        // ВРЕМЕННО !!!!!!!!!!!!!!!!!!!!!!!!
+        if(empty($quantity)) $quantity = filter_input (INPUT_POST, 'quantity_1');
+        //**************************************************
         
         $film_id = filter_input(INPUT_POST, 'film_id');
         $film_variation_id = filter_input(INPUT_POST, 'film_variation_id'); if($film_id == INDIVIDUAL) $film_variation_id = "NULL";
@@ -1076,12 +1087,13 @@ while ($row = $fetcher->Fetch()) {
                                            name="printings_number" 
                                            class="form-control int-only self-adhesive-only" 
                                            placeholder="Количество тиражей" 
-                                           value="<?=$printings_number ?>" 
+                                           value="<?= empty($printings_number) ? '' : $printings_number ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'printings_number'); $(this).attr('name', 'printings_number'); $(this).attr('placeholder', 'Количество тиражей');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="javascript: $(this).attr('id', 'printings_number'); $(this).attr('name', 'printings_number'); $(this).attr('placeholder', 'Количество тиражей');" 
                                            onfocusout="javascript: $(this).attr('id', 'printings_number'); $(this).attr('name', 'printings_number'); $(this).attr('placeholder', 'Количество тиражей');" />
+                                    <div class="invalid-feedback">Укажите тиражи</div>
                                 </div>
                                 <div>
                                     <button type="button" id="btn_quantities" class="btn btn-outline-dark d-inline" data-toggle="modal" data-target="#quantities" disabled="disabled">Объем заказов</button>
