@@ -1092,6 +1092,7 @@ class Calculation extends CalculationBase {
 // Расчёт для самоклеящейся бумаги
 class CalculationSelfAdhesive extends CalculationBase {
     public $quantity = 0; // Суммарное количество этикеток
+    public $quantities_count = 0; // Количество тиражей
     public $ukpf; // Уравнивающий коэффициент ПФ
     
     public $width_mat = 0; // Ширина материала
@@ -1101,7 +1102,7 @@ class CalculationSelfAdhesive extends CalculationBase {
     public $number_in_raport_pure = 0; // Количество этикеток в рапорте чистый
     public $gap = 0; // Фактический зазор между этикетками
     
-    public $priladka_length = 0; // Метраж приладки одного тиража, м
+    public $priladka_printing = 0; // Метраж приладки одного тиража, м
     public $area_pure = 0; // М2 чистые, м2
     public $length_pog_pure = 0; // М пог. чистые, м
     public $waste_length = 0; // СтартСтопОтход, м
@@ -1189,6 +1190,9 @@ class CalculationSelfAdhesive extends CalculationBase {
         // Суммарный размер тиража
         $this->quantity = array_sum($quantities);
         
+        // Количество тиражей
+        $this->quantities_count = count($quantities);
+        
         // Если материал заказчика, то цена его = 0
         if($customers_material == true) $price = 0;
         
@@ -1237,7 +1241,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         //***************************
         
         // Метраж приладки одного тиража, м
-        $this->priladka_length = $ink_number * $data_priladka->length;
+        $this->priladka_printing = $ink_number * $data_priladka->length;
         
         // М2 чистые, м2
         $this->area_pure = ($length + $this->gap) * ($stream_width + $data_gap->gap_stream) * $this->quantity / 1000000;
@@ -1249,7 +1253,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->waste_length = $data_priladka->waste_percent * $this->length_pog_pure / 100;
         
         // М пог. грязные, м
-        $this->length_pog_dirty = $this->length_pog_pure + ($ink_number * $data_priladka->length) + $this->waste_length;
+        $this->length_pog_dirty = $this->length_pog_pure + ($this->quantities_count * $this->priladka_printing) + $this->waste_length;
         
         // М2 грязные, м2
         $this->area_dirty = $this->length_pog_dirty * $this->width_mat / 1000;
@@ -1282,7 +1286,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         //*****************************
         
         // Время приладки, мин
-        $this->priladka_time = $ink_number * $data_priladka->time;
+        $this->priladka_time = $ink_number * $data_priladka->time * $this->quantities_count;
         
         // Время печати тиража, без приладки, ч
         $this->print_time = ($this->length_pog_pure + $this->waste_length) / $data_machine->speed / 1000;
@@ -1298,7 +1302,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         //************************
         
         // М2 запечатки, м2
-        $this->print_area = (($stream_width + $data_gap->gap_stream) * ($length + $data_gap->gap_raport) * $quantities[0] / 1000000) + ($this->length_pog_dirty * 0.01);
+        $this->print_area = (($stream_width + $data_gap->gap_stream) * ($length + $data_gap->gap_raport) * $this->quantity / 1000000) + ($this->length_pog_dirty * 0.01);
         
         // Масса краски в смеси, кг
         $this->ink_1kg_mix_weight = 1 + $data_ink->solvent_part;
@@ -1462,13 +1466,13 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->cost = $this->film_cost + $this->work_cost + $this->ink_cost + ($this->cliche_cost * $this->ukpf);
         
         // Себестоимость за единицу
-        $this->cost_per_unit = $this->cost / $quantities[0];
+        $this->cost_per_unit = $this->cost / $this->quantity;
         
         // Отгрузочная стоимость
         $this->shipping_cost = $this->cost + ($this->cost * $this->extracharge / 100);
         
         // Отгрузочная стоимость за единицу
-        $this->shipping_cost_per_unit = $this->shipping_cost / $quantities[0];
+        $this->shipping_cost_per_unit = $this->shipping_cost / $this->quantity;
         
         // Прибыль
         $this->income = $this->shipping_cost - $this->cost;

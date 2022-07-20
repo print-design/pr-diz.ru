@@ -300,14 +300,14 @@ if($id !== null) {
         //***************************
         
         array_push($file_data, array("Метраж приладки одного тиража",
-            CalculationBase::Display($calculation->priladka_length, 0),
+            CalculationBase::Display($calculation->priladka_printing, 0),
             "|= $ink_number * ".$data_priladka->length,
             "красочность * метраж приладки 1 краски"));
         
         array_push($file_data, array("М2 чистые, м2", 
             CalculationBase::Display($calculation->area_pure, 2),
             "|= (".CalculationBase::Display($length, 2)." + ".CalculationBase::Display($calculation->gap, 2).") * (".CalculationBase::Display($stream_width, 2)." + ".CalculationBase::Display($data_gap->gap_stream, 2).") * ". CalculationBase::Display($calculation->quantity, 0)." / 1 000 000",
-            "(длина этикетки чистая + фактический зазор) * (ширина этикетки + ЗазорРучей) * суммарное количество этикеток / 1 000 000"));
+            "(длина этикетки чистая + фактический зазор) * (ширина этикетки + ЗазорРучей) * суммарное кол-во этикеток всех тиражей / 1 000 000"));
         
         array_push($file_data, array("М. пог. чистые, м",
             CalculationBase::Display($calculation->length_pog_pure, 2),
@@ -321,8 +321,8 @@ if($id !== null) {
         
         array_push($file_data, array("М пог. грязные, м",
             CalculationBase::Display($calculation->length_pog_dirty, 2),
-            "|= ". CalculationBase::Display($calculation->length_pog_pure, 2)." + ($ink_number * ". CalculationBase::Display($data_priladka->length, 2).") + ". CalculationBase::Display($calculation->waste_length, 2),
-            "м. пог чистые + (красчность * метраж приладки 1 краски) + СтартСтопОтход"));
+            "|= ". CalculationBase::Display($calculation->length_pog_pure, 2)." + (".$calculation->quantities_count." * ". CalculationBase::Display($calculation->priladka_printing, 0).") + ". CalculationBase::Display($calculation->waste_length, 2),
+            "м. пог чистые + (количество тиражей * метраж приладки 1 тиража) + СтартСтопОтход"));
         
         array_push($file_data, array("М2 грязные, m2",
             CalculationBase::Display($calculation->area_dirty, 2),
@@ -370,8 +370,8 @@ if($id !== null) {
         
         array_push($file_data, array("Время приладки, ч",
             CalculationBase::Display($calculation->priladka_time, 2),
-            "|= $ink_number"." * ".CalculationBase::Display($data_priladka->time, 2),
-            "красочность * время приладки 1 краски"));
+            "|= $ink_number"." * ".CalculationBase::Display($data_priladka->time, 2)." * ".$calculation->quantities_count,
+            "красочность * время приладки 1 краски * количество тиражей"));
         
         array_push($file_data, array("Время печати тиража, без приладки, ч",
             CalculationBase::Display($calculation->print_time, 2),
@@ -396,8 +396,8 @@ if($id !== null) {
         
         array_push($file_data, array("М2 запечатки, м2",
             CalculationBase::Display($calculation->print_area, 2),
-            "|= ((". CalculationBase::Display($stream_width, 2)." + ". CalculationBase::Display($data_gap->gap_stream, 2).") * (". CalculationBase::Display($length, 2)." + ". CalculationBase::Display($data_gap->gap_raport, 2).") * $quantities[0] / 1000000".") + (". CalculationBase::Display($calculation->length_pog_dirty, 2)." * 0,01)",
-            "((ширина этикетки + ЗазорРучей) * (длина этикетки + ЗазорРапорт) * кол-во этикеток / 1000000) + (м. пог. грязные * 0,01)"));
+            "|= ((". CalculationBase::Display($stream_width, 2)." + ". CalculationBase::Display($data_gap->gap_stream, 2).") * (". CalculationBase::Display($length, 2)." + ". CalculationBase::Display($data_gap->gap_raport, 2).") * ". CalculationBase::Display($calculation->quantity, 0)." / 1 000 000".") + (". CalculationBase::Display($calculation->length_pog_dirty, 2)." * 0,01)",
+            "((ширина этикетки + ЗазорРучей) * (длина этикетки + ЗазорРапорт) * суммарное кол-во этикеток всех тиражей / 1 000 000) + (м. пог. грязные * 0,01)"));
         
         array_push($file_data, array("Масса краски в смеси, кг",
             CalculationBase::Display($calculation->ink_1kg_mix_weight, 2),
@@ -564,8 +564,8 @@ if($id !== null) {
         
         array_push($file_data, array("Себестоимость за шт, руб",
             CalculationBase::Display($calculation->cost_per_unit, 2),
-            "|= ". CalculationBase::Display($calculation->cost, 2)." / ". CalculationBase::Display($quantities[0], 2),
-            "себестоимость / количество этикеток"));
+            "|= ". CalculationBase::Display($calculation->cost, 2)." / ". CalculationBase::Display($calculation->quantity, 2),
+            "себестоимость / суммарное кол-во этикеток всех тиражей"));
         
         array_push($file_data, array("Отгрузочная стоимость, руб",
             CalculationBase::Display($calculation->shipping_cost, 2),
@@ -574,8 +574,8 @@ if($id !== null) {
             
         array_push($file_data, array("Отгрузочная стоимость за шт, руб",
             CalculationBase::Display($calculation->shipping_cost_per_unit, 2),
-            "|= ".CalculationBase::Display($calculation->shipping_cost, 2)." / ".CalculationBase::Display($quantities[0], 2),
-            "отгрузочная стоимость / размер тиража"));
+            "|= ".CalculationBase::Display($calculation->shipping_cost, 2)." / ".CalculationBase::Display($calculation->quantity, 0),
+            "отгрузочная стоимость / суммарное кол-во этикеток всех тиражей"));
             
         array_push($file_data, array("Прибыль, руб",
             CalculationBase::Display($calculation->income, 2),
