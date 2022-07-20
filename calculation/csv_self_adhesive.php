@@ -217,7 +217,15 @@ if($id !== null) {
         array_push($file_data, array("Курс доллара, руб", CalculationBase::Display($usd, 2), "", ""));
         array_push($file_data, array("Курс евро, руб", CalculationBase::Display($euro, 2), "", ""));
         array_push($file_data, array("Машина", $machine, "", ""));
-        array_push($file_data, array("Размеры тиража", implode(', ', $quantities)." шт", "", ""));
+        array_push($file_data, array("Количество тиражей", count($quantities), "", ""));
+        
+        $i = 1;
+        foreach($quantities as $quantity) {
+            array_push($file_data, array("Тираж $i, шт", CalculationBase::Display(intval($quantity), 0), "", ""));
+            $i++;
+        }
+        
+        array_push($file_data, array("Суммарное количество этикеток, шт", CalculationBase::Display($calculation->quantity, 0), "", ""));
         array_push($file_data, array("Марка", $film, "", ""));
         array_push($file_data, array("Толщина", CalculationBase::Display($thickness, 2), "", ""));
         array_push($file_data, array("Плотность", CalculationBase::Display($density, 2), "", ""));
@@ -259,8 +267,8 @@ if($id !== null) {
         // Результаты вычислений
         array_push($file_data, array("Ширина материала, мм",
             CalculationBase::Display($calculation->width_mat, 2),
-            $ski == CalculationBase::NONSTANDARD_SKI ? "|= ".CalculationBase::Display($width_ski, 2) : "|= $streams_number * (".CalculationBase::Display($stream_width, 2)." + ".CalculationBase::Display($data_gap->gap_stream, 2).") + 20",
-            $ski == CalculationBase::NONSTANDARD_SKI ? "вводится вручную" : "количество ручьёв * (ширина этикетки + ЗазорРучей) + 20"));
+            $ski == CalculationBase::NONSTANDARD_SKI ? "|= ".CalculationBase::Display($width_ski, 2) : "|= $streams_number * (".CalculationBase::Display($stream_width, 2)." + ".CalculationBase::Display($data_gap->gap_stream, 2).") + 10",
+            $ski == CalculationBase::NONSTANDARD_SKI ? "вводится вручную" : "количество ручьёв * (ширина этикетки + ЗазорРучей) + 10"));
         
         array_push($file_data, array("Высота этикетки грязная, мм",
             CalculationBase::Display($calculation->length_label_dirty, 2),
@@ -291,10 +299,15 @@ if($id !== null) {
         // Рассчёт по КГ
         //***************************
         
+        array_push($file_data, array("Метраж приладки одного тиража",
+            CalculationBase::Display($calculation->priladka_length, 0),
+            "|= $ink_number * ".$data_priladka->length,
+            "красочность * метраж приладки 1 краски"));
+        
         array_push($file_data, array("М2 чистые, м2", 
             CalculationBase::Display($calculation->area_pure, 2),
-            "|= (".CalculationBase::Display($length, 2)." + ".CalculationBase::Display($calculation->gap, 2).") * (".CalculationBase::Display($stream_width, 2)." + ".CalculationBase::Display($data_gap->gap_stream, 2).") * $quantities[0] / 1000000",
-            "(длина этикетки чистая + фактический зазор) * (ширина этикетки + ЗазорРучей) * количество этикеток / 1000000"));
+            "|= (".CalculationBase::Display($length, 2)." + ".CalculationBase::Display($calculation->gap, 2).") * (".CalculationBase::Display($stream_width, 2)." + ".CalculationBase::Display($data_gap->gap_stream, 2).") * ". CalculationBase::Display($calculation->quantity, 0)." / 1 000 000",
+            "(длина этикетки чистая + фактический зазор) * (ширина этикетки + ЗазорРучей) * суммарное количество этикеток / 1 000 000"));
         
         array_push($file_data, array("М. пог. чистые, м",
             CalculationBase::Display($calculation->length_pog_pure, 2),
@@ -322,8 +335,8 @@ if($id !== null) {
         
         array_push($file_data, array("Масса плёнки чистая (без приладки), кг",
             CalculationBase::Display($calculation->weight_pure, 2),
-            "|= ". CalculationBase::Display($calculation->length_pog_pure, 2)." * ". CalculationBase::Display($calculation->width_mat, 2)." * ". CalculationBase::Display($density, 2)." / 1000000",
-            "м. пог чистые * ширина материала * уд. вес / 1000000"));
+            "|= ". CalculationBase::Display($calculation->length_pog_pure, 2)." * ". CalculationBase::Display($calculation->width_mat, 2)." * ". CalculationBase::Display($density, 2)." / 1 000 000",
+            "м. пог чистые * ширина материала * уд. вес / 1 000 000"));
         
         array_push($file_data, array("Длина плёнки чистая, м",
             CalculationBase::Display($calculation->length_pure, 2),

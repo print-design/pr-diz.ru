@@ -1091,6 +1091,7 @@ class Calculation extends CalculationBase {
 
 // Расчёт для самоклеящейся бумаги
 class CalculationSelfAdhesive extends CalculationBase {
+    public $quantity = 0; // Суммарное количество этикеток
     public $ukpf; // Уравнивающий коэффициент ПФ
     
     public $width_mat = 0; // Ширина материала
@@ -1100,6 +1101,7 @@ class CalculationSelfAdhesive extends CalculationBase {
     public $number_in_raport_pure = 0; // Количество этикеток в рапорте чистый
     public $gap = 0; // Фактический зазор между этикетками
     
+    public $priladka_length = 0; // Метраж приладки одного тиража, м
     public $area_pure = 0; // М2 чистые, м2
     public $length_pog_pure = 0; // М пог. чистые, м
     public $waste_length = 0; // СтартСтопОтход, м
@@ -1184,6 +1186,9 @@ class CalculationSelfAdhesive extends CalculationBase {
             $extracharge, // Наценка на тираж
             $extracharge_cliche // Наценка на ПФ
             ) {
+        // Суммарный размер тиража
+        $this->quantity = array_sum($quantities);
+        
         // Если материал заказчика, то цена его = 0
         if($customers_material == true) $price = 0;
         
@@ -1197,7 +1202,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         // Если нестандартные лыжи: ширина материала вводится вручную
         switch ($ski) {
             case self::STANDARD_SKI:
-                $this->width_mat = $streams_number * ($stream_width + $data_gap->gap_stream) + 20;
+                $this->width_mat = $streams_number * ($stream_width + $data_gap->gap_stream) + 10;
                 break;
             
             case self::NONSTANDARD_SKI:
@@ -1231,8 +1236,11 @@ class CalculationSelfAdhesive extends CalculationBase {
         // Рассчёт по КГ
         //***************************
         
+        // Метраж приладки одного тиража, м
+        $this->priladka_length = $ink_number * $data_priladka->length;
+        
         // М2 чистые, м2
-        $this->area_pure = ($length + $this->gap) * ($stream_width + $data_gap->gap_stream) * $quantities[0] / 1000000;
+        $this->area_pure = ($length + $this->gap) * ($stream_width + $data_gap->gap_stream) * $this->quantity / 1000000;
         
         // М. пог. чистые, м
         $this->length_pog_pure = $this->area_pure / ($this->width_dirty * $streams_number / 1000);
