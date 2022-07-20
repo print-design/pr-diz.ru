@@ -10,6 +10,9 @@
                 <?php if(!empty($quantity) && !empty($unit)): ?>
             <tr><th>Объем заказа</th><td><?= rtrim(rtrim(number_format($quantity, 2, ",", " "), "0"), ",") ?> <?=$unit == 'kg' ? "кг" : "шт" ?></td></tr>
                 <?php endif; ?>
+                <?php if(!empty($printings_number)): ?>
+            <tr><th>Тиражей</th><td><?=$printings_number ?></td></tr>
+                <?php endif; ?>
             <tr><td colspan="2" class="pt-4"><h2>Пленка</h2></td></tr>
             <tr><th colspan="2">Основная пленка</th></tr>
                 <?php if(empty($film_name)): ?>

@@ -522,14 +522,15 @@ if(!empty($id)) {
             <div class="value mb-2"><?= CalculationBase::Display(floatval($weight_dirty), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(intval($length_dirty), 0) ?> м</span></div>
         </div>
         <div class="col-8">
-            <h3>Тиражи</h3>
             <?php
             $sql = "select quantity from calculation_quantity where calculation_id = $id";
             $grabber = new Grabber($sql);
             $rows = $grabber->result;
             $half = ceil(count($rows) / 2);
             $i = 1;
+            $printings_number = count($rows);
             ?>
+            <h3>Тиражей&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?=$printings_number ?></span></h3>
             <div class="row">
                 <div class="col-6">
                 <?php foreach($rows as $row): ?>
