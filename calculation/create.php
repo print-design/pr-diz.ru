@@ -123,6 +123,17 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $form_valid = false;
     }
     
+    // Если тип "Самоклеящийся материал", то должен быть добавлен хотя бы один тираж
+    // Иначе поле "Размер тиража" не должно быть пустое
+    if(filter_input(INPUT_POST, 'work_type_id') == CalculationBase::WORK_TYPE_SELF_ADHESIVE && empty(filter_input(INPUT_POST, 'quantity_1'))) {
+        $printings_number_valid = ISINVALID;
+        $form_valid = false;
+    }
+    elseif(filter_input(INPUT_POST, 'work_type_id') != CalculationBase::WORK_TYPE_SELF_ADHESIVE && empty (filter_input(INPUT_POST, 'quantity'))) {
+        $quantity_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
     // Валидация цен - они должны быть не меньше минимальных
     $price_min = filter_input(INPUT_POST, 'price_min');
     $price = filter_input(INPUT_POST, 'price');
@@ -823,10 +834,10 @@ while ($row = $fetcher->Fetch()) {
     </head>
     <body>
         <?php
-        if(!empty($work_type_id) && $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+        if(!empty($work_type_id) && $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE && $form_valid) {
             include './right_panel_self_adhesive.php';
         }
-        else {
+        elseif($form_valid) {
             include './right_panel.php';
         }
         
@@ -1100,19 +1111,22 @@ while ($row = $fetcher->Fetch()) {
                             <div class="d-flex justify-content-between">
                                 <div class="w-75">
                                     <?php
-                                    $printings_number = 0;
-                                    $qi = 1;
-                                    $quantity_var = "quantity_$qi";
-                                    while(!empty($$quantity_var)) {
-                                        $printings_number++;
-                                        $qi++;
+                                    $printings_number = filter_input(INPUT_POST, 'printings_number');
+                                    if(empty($printings_number)) {
+                                        $printings_number = 0;
+                                        $qi = 1;
                                         $quantity_var = "quantity_$qi";
+                                        while(!empty($$quantity_var)) {
+                                            $printings_number++;
+                                            $qi++;
+                                            $quantity_var = "quantity_$qi";
+                                        }
                                     }
                                     ?>
                                     <input type="text" 
                                            id="printings_number" 
                                            name="printings_number" 
-                                           class="form-control int-only self-adhesive-only" 
+                                           class="form-control int-only self-adhesive-only<?=$printings_number_valid ?>" 
                                            placeholder="Количество тиражей" 
                                            value="<?= empty($printings_number) ? '' : $printings_number ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
@@ -2250,6 +2264,7 @@ while ($row = $fetcher->Fetch()) {
                     quantities_list += "</div>";
                     $('#quantities_list').html(quantities_list);
                     $('#quantities').modal('hide');
+                    $('#printings_number').removeClass('is-invalid');
                     HideCalculation();
                 }
             });
