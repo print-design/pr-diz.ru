@@ -1151,6 +1151,8 @@ class CalculationSelfAdhesive extends CalculationBase {
     public $film_cost_per_unit; // Масса с приладкой на 1 кг
     public $film_waste_cost; // отходы, стоимость
     public $film_waste_weight; // отходы, масса
+    
+    public $lengths; // Длины тиражей
 
     public function __construct(DataPriladka $data_priladka, 
             DataMachine $data_machine, 
@@ -1494,6 +1496,13 @@ class CalculationSelfAdhesive extends CalculationBase {
         
         // Отходы плёнки, масса
         $this->film_waste_weight = $this->weight_dirty - $this->weight_pure;
+        
+        // Длины тиражей
+        $this->lengths = array();
+        
+        foreach($quantities as $key => $quantity) {
+            $this->lengths[$key] = ($quantity + $this->gap) / $streams_number / 1000;
+        }
     }
 }
 ?>

@@ -105,11 +105,11 @@ if($id !== null) {
     
     // Размеры тиражей
     $quantities = array();
-    $sql = "select quantity from calculation_quantity where calculation_id = $id";
+    $sql = "select id, quantity from calculation_quantity where calculation_id = $id";
     $fetcher = new Fetcher($sql);
     
     while($row = $fetcher->Fetch()) {
-        array_push($quantities, $row['quantity']);
+        $quantities[$row['id']] = $row['quantity'];
     }
     
     // ПОЛУЧЕНИЕ НОРМ
@@ -220,7 +220,7 @@ if($id !== null) {
         array_push($file_data, array("Количество тиражей", count($quantities), "", ""));
         
         $i = 1;
-        foreach($quantities as $quantity) {
+        foreach($quantities as $key => $quantity) {
             array_push($file_data, array("Тираж $i, шт", CalculationBase::Display(intval($quantity), 0), "", ""));
             $i++;
         }
@@ -611,6 +611,18 @@ if($id !== null) {
             CalculationBase::Display($calculation->film_waste_weight, 2),
             "|= ".CalculationBase::Display($calculation->weight_dirty, 2)." - ".CalculationBase::Display($calculation->weight_pure, 2),
             "масса плёнки грязная - масса плёнки чистая"));
+        
+        array_push($file_data, array("", "", "", ""));
+        
+        $i = 1;
+        
+        foreach($quantities as $key => $quantity) {
+            array_push($file_data, array("Длина тиража $i, м",
+                CalculationBase::Display($calculation->lengths[$key], 2),
+                "|= (".CalculationBase::Display(intval($quantity), 2)." + ".CalculationBase::Display($calculation->gap, 2).") / $streams_number / 1000",
+                "(кол-во этикеток + фактический зазор) / кол-во ручьёв / 1000"));
+            $i++;
+        }
         
         //****************************************
         // Сохранение в файл

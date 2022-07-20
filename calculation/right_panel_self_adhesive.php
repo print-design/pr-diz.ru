@@ -185,11 +185,11 @@ if(!empty($id)) {
         
         // Размеры тиражей
         $param_quantities = array();
-        $sql = "select quantity from calculation_quantity where calculation_id = $id";
+        $sql = "select id, quantity from calculation_quantity where calculation_id = $id";
         $fetcher = new Fetcher($sql);
     
         while($row = $fetcher->Fetch()) {
-            array_push($param_quantities, $row['quantity']);
+            $param_quantities[$row['id']] = $row['quantity'];
         }
         
         // ПОЛУЧЕНИЕ НОРМ
@@ -386,6 +386,14 @@ if(!empty($id)) {
             $error_message = $executer->error;
         }
         
+        if(empty($error_message)) {
+            foreach($calculation->lengths as $key => $length) {
+                $sql = "update calculation_quantity set length = ".$length." where id = $key";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+            }
+        }
+        
         //***************************************************
         // ЧИТАЕМ СОХРАНЁННЫЕ РЕЗУЛЬТАТЫ ИЗ БАЗЫ
         $fetcher = new Fetcher($sql_calculation_result);
@@ -523,7 +531,7 @@ if(!empty($id)) {
         </div>
         <div class="col-8">
             <?php
-            $sql = "select quantity from calculation_quantity where calculation_id = $id";
+            $sql = "select quantity, length from calculation_quantity where calculation_id = $id";
             $grabber = new Grabber($sql);
             $rows = $grabber->result;
             $half = ceil(count($rows) / 2);
@@ -534,7 +542,7 @@ if(!empty($id)) {
             <div class="row">
                 <div class="col-6">
                 <?php foreach($rows as $row): ?>
-                <div class='value mb-2'><span class='font-weight-normal'><?=$i ?>. </span><?=CalculationBase::Display(intval($row['quantity']), 0) ?> шт&nbsp;&nbsp;&nbsp;<span class='font-weight-normal'>000 000 м</span></div>
+                    <div class='value mb-2'><span class='font-weight-normal'><?=$i ?>. </span><?=CalculationBase::Display(intval($row['quantity']), 0) ?> шт&nbsp;&nbsp;&nbsp;<span class='font-weight-normal'><?= CalculationBase::Display(intval($row['length']), 0) ?> м</span></div>
                 <?php if($i == $half): ?>
                 </div>
                 <div class="col-6">
