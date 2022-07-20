@@ -1146,7 +1146,7 @@ while ($row = $fetcher->Fetch()) {
                                             echo "</div>";
                                             echo "<div class='col-3'>";
                                         }
-                                        echo "<p style='font-size: larger;'>".CalculationBase::Display($$quantity_var, 0)." шт</p>";
+                                        echo "<p style='font-size: larger;'>$qi. ".CalculationBase::Display(intval($$quantity_var), 0)." шт</p>";
                                         echo "<input type='hidden' id='quantity_$qi' name='quantity_$qi' value='".$$quantity_var."' />";
                                         $qi++;
                                         $quantity_var = "quantity_$qi";
@@ -2161,6 +2161,7 @@ while ($row = $fetcher->Fetch()) {
                 $('#btn_quantities').removeAttr('disabled');
             }
             
+            // Открытие модального окна со списком заказов
             $('#btn_quantities').click(function(){
                 num = $('#printings_number').val();
                 $('#quantities_form_body').html('');
@@ -2168,7 +2169,7 @@ while ($row = $fetcher->Fetch()) {
                 quantities_html = '';
                 
                 for(i=1; i<=num; i++) {
-                    quantities_html += "<div class='form-group mb-3'><input type='text' id='quantity_" + i + "' name='quantity_" + i + "' class='form-control int-format' placeholder='Тираж " + i + " (кол-во этикеток)' value='" + (!$('#quantity_' + i).val() ? '' : $('#quantity_' + i).val()) + "' required='required' /><div class='invalid-feedback'>Указать значение</div></div>";
+                    quantities_html += "<div class='form-group mb-3'><input type='text' id='quantity_" + i + "' name='quantity_" + i + "' class='form-control int-format' placeholder='Тираж " + i + " (кол-во этикеток)' value='" + (!$('#quantity_' + i).val() ? '' : Intl.NumberFormat('ru-RU').format($('#quantity_' + i).val())) + "' required='required' /><div class='invalid-feedback'>Указать значение</div></div>";
                 }
                 
                 $('#quantities_form_body').html(quantities_html);
@@ -2249,6 +2250,7 @@ while ($row = $fetcher->Fetch()) {
                     quantities_list += "</div>";
                     $('#quantities_list').html(quantities_list);
                     $('#quantities').modal('hide');
+                    HideCalculation();
                 }
             });
             
