@@ -637,7 +637,10 @@ if($raport === null && isset($row['raport'])) {
 }
 
 $number_in_raport = filter_input(INPUT_POST, 'number_in_raport');
-if($number_in_raport === null && isset($row['number_in_raport'])) {
+if(empty($number_in_raport)) {
+    $number_in_raport = filter_input(INPUT_POST, 'number_in_raport_2');
+}
+if(empty($number_in_raport) && isset($row['number_in_raport'])) {
     $number_in_raport = $row['number_in_raport'];
 }
 
