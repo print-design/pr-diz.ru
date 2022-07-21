@@ -113,7 +113,7 @@ if($id !== null) {
     }
     
     // ПОЛУЧЕНИЕ НОРМ
-    $data_priladka = new DataPriladka(null, null, null);
+    $data_priladka = new DataPriladka(null, null, null, null);
     $data_machine = new DataMachine(null, null, null);
     $data_gap = new DataGap(null, null);
     $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
@@ -122,14 +122,14 @@ if($id !== null) {
     
     if(!empty($date)) {
         if(empty($machine_id)) {
-            $data_priladka = new DataPriladka(0, 0, 0);
+            $data_priladka = new DataPriladka(0, 0, 0, 0);
         }
         else {
-            $sql = "select machine_id, time, length, waste_percent from norm_priladka where id in (select max(id) from norm_priladka where date <= '$date' group by machine_id)";
+            $sql = "select machine_id, time, length, stamp, waste_percent from norm_priladka where id in (select max(id) from norm_priladka where date <= '$date' group by machine_id)";
             $fetcher = new Fetcher($sql);
             while ($row = $fetcher->Fetch()) {
                 if($row['machine_id'] == $machine_id) {
-                    $data_priladka = new DataPriladka($row['time'], $row['length'], $row['waste_percent']);
+                    $data_priladka = new DataPriladka($row['time'], $row['length'], $row['stamp'], $row['waste_percent']);
                 }
             }
         }
@@ -301,8 +301,8 @@ if($id !== null) {
         
         array_push($file_data, array("Метраж приладки одного тиража",
             CalculationBase::Display($calculation->priladka_printing, 0),
-            "|= $ink_number * ".$data_priladka->length,
-            "красочность * метраж приладки 1 краски"));
+            "|= ($ink_number * ". CalculationBase::Display($data_priladka->length, 0).") + ".CalculationBase::Display($data_priladka->stamp, 0),
+            "(красочность * метраж приладки 1 краски) + метраж приладки штампа"));
         
         array_push($file_data, array("М2 чистые, м2", 
             CalculationBase::Display($calculation->area_pure, 2),

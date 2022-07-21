@@ -2,13 +2,15 @@
 // Данные приладки
 class DataPriladka {
     public $time; // Время приладки
-    public $length; // Длина приладки
+    public $length; // Длина приладки 1 краски
+    public $stamp; // Длина приладки штампа
     public $waste_percent; // Процент отходов от приладки
     
     // Конструктор
-    public function __construct($time, $length, $waste_percent) {
+    public function __construct($time, $length, $stamp, $waste_percent) {
         $this->time = $time;
         $this->length = $length;
+        $this->stamp = $stamp;
         $this->waste_percent = $waste_percent;
     }
 }
@@ -1243,7 +1245,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         //***************************
         
         // Метраж приладки одного тиража, м
-        $this->priladka_printing = $ink_number * $data_priladka->length;
+        $this->priladka_printing = ($ink_number * $data_priladka->length) + $data_priladka->stamp;
         
         // М2 чистые, м2
         $this->area_pure = ($length + $this->gap) * ($stream_width + $data_gap->gap_stream) * $this->quantity / 1000000;

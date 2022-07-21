@@ -193,7 +193,7 @@ if(!empty($id)) {
         }
         
         // ПОЛУЧЕНИЕ НОРМ
-        $data_priladka = new DataPriladka(null, null, null);
+        $data_priladka = new DataPriladka(null, null, null, null);
         $data_machine = new DataMachine(null, null, null);
         $data_gap = new DataGap(null, null);
         $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
@@ -202,14 +202,14 @@ if(!empty($id)) {
     
         if(empty($error_message)) {
             if(empty($param_machine_id)) {
-                $data_priladka = new DataPriladka(0, 0, 0);
+                $data_priladka = new DataPriladka(0, 0, 0, 0);
             }
             else {
-                $sql = "select machine_id, time, length, waste_percent from norm_priladka where id in (select max(id) from norm_priladka where date <= '$param_date' group by machine_id)";
+                $sql = "select machine_id, time, length, stamp, waste_percent from norm_priladka where id in (select max(id) from norm_priladka where date <= '$param_date' group by machine_id)";
                 $fetcher = new Fetcher($sql);
                 while ($row = $fetcher->Fetch()) {
                     if($row['machine_id'] == $param_machine_id) {
-                        $data_priladka = new DataPriladka($row['time'], $row['length'], $row['waste_percent']);
+                        $data_priladka = new DataPriladka($row['time'], $row['length'], $row['stamp'], $row['waste_percent']);
                     }
                 }
             }
