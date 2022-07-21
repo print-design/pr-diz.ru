@@ -619,7 +619,7 @@ if($id !== null) {
         foreach($quantities as $key => $quantity) {
             array_push($file_data, array("Длина тиража $i, м",
                 CalculationBase::Display($calculation->lengths[$key], 2),
-                "|= (".CalculationBase::Display(intval($length), 2)." + ".CalculationBase::Display($calculation->gap, 2).") * ".CalculationBase::Display($quantities[$key], 0)." / $streams_number / 1000",
+                "|= (".CalculationBase::Display(intval($length), 2)." + ".CalculationBase::Display($calculation->gap, 2).") * ".CalculationBase::Display(intval($quantities[$key]), 0)." / $streams_number / 1000",
                 "(длина этикетки + фактический зазор) * кол-во этикеток этого тиража / кол-во ручьёв / 1000"));
             $i++;
         }
