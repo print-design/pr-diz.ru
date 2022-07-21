@@ -33,11 +33,13 @@ class DataMachine {
 class DataGap {
     public $gap_raport; // ЗазорРапорт
     public $gap_stream; // ЗазорРучей
+    public $ski; // ширина одной лыжи
     
     // Конструктор
-    public function __construct($gap_raport, $gap_stream) {
+    public function __construct($gap_raport, $gap_stream, $ski) {
         $this->gap_raport = $gap_raport;
         $this->gap_stream = $gap_stream;
+        $this->ski = $ski;
     }
 }
 
@@ -1206,11 +1208,11 @@ class CalculationSelfAdhesive extends CalculationBase {
         // НИЖЕ НАЧИНАЕТСЯ ВЫЧИСЛЕНИЕ
         
         // Ширина материала, мм
-        // Если стадартные лыжи: количество ручьёв * (ширина ручья + расстояние между ручьями) + 20
+        // Если стадартные лыжи: (количество ручьёв * (ширина ручья + расстояние между ручьями)) + (ширина одной лыжи * 2)
         // Если нестандартные лыжи: ширина материала вводится вручную
         switch ($ski) {
             case self::STANDARD_SKI:
-                $this->width_mat = $streams_number * ($stream_width + $data_gap->gap_stream) + 10;
+                $this->width_mat = ($streams_number * ($stream_width + $data_gap->gap_stream)) + ($data_gap->ski * 2);
                 break;
             
             case self::NONSTANDARD_SKI:

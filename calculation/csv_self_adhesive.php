@@ -115,7 +115,7 @@ if($id !== null) {
     // ПОЛУЧЕНИЕ НОРМ
     $data_priladka = new DataPriladka(null, null, null, null);
     $data_machine = new DataMachine(null, null, null);
-    $data_gap = new DataGap(null, null);
+    $data_gap = new DataGap(null, null, null);
     $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
     $data_cliche = new DataCliche(null, null, null, null, null, null);
     $data_extracharge = array();
@@ -147,10 +147,10 @@ if($id !== null) {
             }
         }
         
-        $sql = "select gap_raport, gap_stream from norm_gap where date <= '$date' order by id desc limit 1";
+        $sql = "select gap_raport, gap_stream, ski from norm_gap where date <= '$date' order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
-            $data_gap = new DataGap($row['gap_raport'], $row['gap_stream']);
+            $data_gap = new DataGap($row['gap_raport'], $row['gap_stream'], $row['ski']);
         }
         
         $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_price, lacquer_currency, lacquer_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense "
@@ -267,8 +267,8 @@ if($id !== null) {
         // Результаты вычислений
         array_push($file_data, array("Ширина материала, мм",
             CalculationBase::Display($calculation->width_mat, 2),
-            $ski == CalculationBase::NONSTANDARD_SKI ? "|= ".CalculationBase::Display($width_ski, 2) : "|= $streams_number * (".CalculationBase::Display($stream_width, 2)." + ".CalculationBase::Display($data_gap->gap_stream, 2).") + 10",
-            $ski == CalculationBase::NONSTANDARD_SKI ? "вводится вручную" : "количество ручьёв * (ширина этикетки + ЗазорРучей) + 10"));
+            $ski == CalculationBase::NONSTANDARD_SKI ? "|= ".CalculationBase::Display($width_ski, 2) : "|= ($streams_number * (".CalculationBase::Display($stream_width, 2)." + ".CalculationBase::Display($data_gap->gap_stream, 2).")) + (".CalculationBase::Display($data_gap->ski, 2)." * 2)",
+            $ski == CalculationBase::NONSTANDARD_SKI ? "вводится вручную" : "(количество ручьёв * (ширина этикетки + ЗазорРучей)) + (ширина одной лыжи * 2)"));
         
         array_push($file_data, array("Высота этикетки грязная, мм",
             CalculationBase::Display($calculation->length_label_dirty, 2),
