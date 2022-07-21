@@ -284,10 +284,10 @@ if(!empty($id)) {
                 }
             }
         
-            $sql = "select time, length, stamp, waste_percent from norm_laminator_priladka where date <= '$param_date' order by id desc limit 1";
+            $sql = "select time, length, waste_percent from norm_laminator_priladka where date <= '$param_date' order by id desc limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
-                $data_priladka_laminator = new DataPriladka($row['time'], $row['length'], $row['stamp'], $row['waste_percent']);
+                $data_priladka_laminator = new DataPriladka($row['time'], $row['length'], 0, $row['waste_percent']);
             }
         
             if(empty($param_machine_id)) {
