@@ -61,7 +61,7 @@ if(null !== filter_input(INPUT_POST, 'norm_priladka_submit')) {
         $new_stamp = filter_input(INPUT_POST, 'stamp'); if($new_stamp === null) $new_stamp = "NULL";
         $new_waste_percent = filter_input(INPUT_POST, 'waste_percent');
         
-        if($old_time != $new_time || $old_length != $new_length || $old_stamp != $new_stamp || $old_waste_percent != $new_waste_percent) {
+        if($old_time != $new_time || $old_length != $new_length || ($new_stamp != "NULL" && $old_stamp != $new_stamp) || $old_waste_percent != $new_waste_percent) {
             $sql = "insert into norm_priladka (machine_id, time, length, stamp, waste_percent) values ($machine_id, $new_time, $new_length, $new_stamp, $new_waste_percent)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
