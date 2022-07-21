@@ -542,7 +542,7 @@ if(!empty($id)) {
             <div class="row">
                 <div class="col-6">
                 <?php foreach($rows as $row): ?>
-                    <div class='value mb-2'><span class='font-weight-normal'><?=$i ?>. </span><?=CalculationBase::Display(intval($row['quantity']), 0) ?> шт&nbsp;&nbsp;&nbsp;<span class='font-weight-normal'><?= CalculationBase::Display(intval($row['length']), 0) ?> м</span></div>
+                    <div class='value mb-2'><span class='font-weight-normal'><?=$i ?>.&nbsp;&nbsp;&nbsp;</span><?=CalculationBase::Display(intval($row['quantity']), 0) ?> шт&nbsp;&nbsp;&nbsp;<span class='font-weight-normal'><?= CalculationBase::Display(intval($row['length']), 0) ?> м</span></div>
                 <?php if($i == $half): ?>
                 </div>
                 <div class="col-6">

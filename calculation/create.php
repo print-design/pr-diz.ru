@@ -1163,7 +1163,7 @@ while ($row = $fetcher->Fetch()) {
                                             echo "</div>";
                                             echo "<div class='col-3'>";
                                         }
-                                        echo "<p style='font-size: larger;'>$qi. ".CalculationBase::Display(intval($$quantity_var), 0)." шт</p>";
+                                        echo "<p style='font-size: larger;'>$qi.&nbsp;&nbsp;&nbsp;".CalculationBase::Display(intval($$quantity_var), 0)." шт</p>";
                                         echo "<input type='hidden' id='quantity_$qi' name='quantity_$qi' value='".$$quantity_var."' />";
                                         $qi++;
                                         $quantity_var = "quantity_$qi";
@@ -2259,7 +2259,7 @@ while ($row = $fetcher->Fetch()) {
                             quantities_list += "</div>";
                             quantities_list += "<div class='col-3'>";
                         }
-                        quantities_list += "<p style='font-size: larger;'>" + i + ". " + $('#quantity_' + i).val() + " шт</p>"
+                        quantities_list += "<p style='font-size: larger;'>" + i + ".&nbsp;&nbsp;&nbsp;" + $('#quantity_' + i).val() + " шт</p>"
                         quantities_list += "<input type='hidden' id='quantity_" + i + "' name='quantity_" + i + "' value='" + $('#quantity_' + i).val().replace(/\D/g, "") + "' />";
                     }
             
