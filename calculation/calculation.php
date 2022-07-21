@@ -1501,7 +1501,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->lengths = array();
         
         foreach($quantities as $key => $quantity) {
-            $this->lengths[$key] = ($quantity + $this->gap) / $streams_number / 1000;
+            $this->lengths[$key] = ($length + $this->gap) * $quantities[$key] / $streams_number / 1000;
         }
     }
 }
