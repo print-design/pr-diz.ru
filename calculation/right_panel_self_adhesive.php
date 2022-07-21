@@ -387,8 +387,8 @@ if(!empty($id)) {
         }
         
         if(empty($error_message)) {
-            foreach($calculation->lengths as $key => $length) {
-                $sql = "update calculation_quantity set length = ".$length." where id = $key";
+            foreach($calculation->lengths as $key => $value) {
+                $sql = "update calculation_quantity set length = ".$value." where id = $key";
                 $executer = new Executer($sql);
                 $error_message = $executer->error;
             }
