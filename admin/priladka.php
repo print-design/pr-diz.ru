@@ -41,25 +41,28 @@ if(null !== filter_input(INPUT_POST, 'norm_priladka_submit')) {
         // Старый объект
         $old_time = '';
         $old_length = '';
+        $old_stamp = '';
         $old_waste_percent = '';
         
-        $sql = "select time, length, waste_percent from norm_priladka where machine_id = $machine_id order by date desc limit 1";
+        $sql = "select time, length, stamp, waste_percent from norm_priladka where machine_id = $machine_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
             $old_time = $row['time'];
             $old_length = $row['length'];
+            $old_stamp = $row['stamp'];
             $old_waste_percent = $row['waste_percent'];
         }
         
         // Новый объект
         $new_time = filter_input(INPUT_POST, 'time');
         $new_length = filter_input(INPUT_POST, 'length');
+        $new_stamp = filter_input(INPUT_POST, 'stamp'); if($new_stamp === null) $new_stamp = "NULL";
         $new_waste_percent = filter_input(INPUT_POST, 'waste_percent');
         
-        if($old_time != $new_time || $old_length != $new_length || $old_waste_percent != $new_waste_percent) {
-            $sql = "insert into norm_priladka (machine_id, time, length, waste_percent) values ($machine_id, $new_time, $new_length, $new_waste_percent)";
+        if($old_time != $new_time || $old_length != $new_length || $old_stamp != $new_stamp || $old_waste_percent != $new_waste_percent) {
+            $sql = "insert into norm_priladka (machine_id, time, length, stamp, waste_percent) values ($machine_id, $new_time, $new_length, $new_stamp, $new_waste_percent)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -72,9 +75,10 @@ if(null !== filter_input(INPUT_POST, 'norm_priladka_submit')) {
 // Получение объекта
 $time = '';
 $length = '';
+$stamp = '';
 $waste_percent = '';
 
-$sql = "select time, length, waste_percent from norm_priladka where machine_id = $machine_id order by date desc limit 1";
+$sql = "select time, length, stamp, waste_percent from norm_priladka where machine_id = $machine_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -83,6 +87,7 @@ if(empty($error_message)) {
 if($row = $fetcher->Fetch()) {
     $time = $row['time'];
     $length = $row['length'];
+    $stamp = $row['stamp'];
     $waste_percent = $row['waste_percent'];
 }
 ?>
@@ -149,6 +154,24 @@ if($row = $fetcher->Fetch()) {
                                    onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Метраж, метры');" />
                             <div class="invalid-feedback">Метраж обязательно</div>
                         </div>
+                        <?php if($machine_id == ATLAS): ?>
+                        <div class="form-group">
+                            <label for="stamp">Метраж приладки штампа (метры)</label>
+                            <input type="text" 
+                                   class="form-control float-only" 
+                                   id="stamp" 
+                                   name="stamp" 
+                                   value="<?= empty($stamp) ? "" : floatval($stamp) ?>" 
+                                   placeholder="Метраж, метры" 
+                                   required="required" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onmouseup="javascript: $(this).attr('id', 'stamp'); $(this).attr('name', 'stamp'); $(this).attr('placeholder', 'Метраж, метры');" 
+                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                   onkeyup="javascript: $(this).attr('id', 'stamp'); $(this).attr('name', 'stamp'); $(this).attr('placeholder', 'Метраж, метры');" 
+                                   onfocusout="javascript: $(this).attr('id', 'stamp'); $(this).attr('name', 'stamp'); $(this).attr('placeholder', 'Метраж, метры');" />
+                            <div class="invalid-feedback">Метраж приладки штампа обязательно</div>
+                        </div>
+                        <?php endif; ?>
                         <div class="form-group">
                             <label for="length">Процент отходов на СтартСтоп</label>
                             <div class="input-group">
