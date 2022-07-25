@@ -46,12 +46,16 @@
                 $('input#id').change();
                 $('input#id').focusin();
                 $('#close_video').click();
+                // Автоматичеески нажимаем "Найти"
+                $('#find-submit').click();
             }
             else if(e.detail.value.includes('roll/roll.php?id=')) {
                 $('input#id').val("Р" + substrings[1]);
                 $('input#id').change();
                 $('input#id').focusin();
                 $('#close_video').click();
+                // Автоматичеески нажимаем "Найти"
+                $('#find-submit').click();
             }
             else if(e.detail.value.includes('pallet/roll.php?id=')) {
                 $.ajax({ url: "../ajax/roll_id_to_number.php?id=" + substrings[1] })
@@ -60,6 +64,8 @@
                         $('input#id').change();
                         $('input#id').focusin();
                         $('#close_video').click();
+                        // Автоматичеески нажимаем "Найти"
+                        $('#find-submit').click();
                     })
                     .fail(function() {
                         $('input#id').val("Ошибка");
@@ -78,6 +84,8 @@
             $('input#id').change();
             $('input#id').focusin();
             $('#close_video').click();
+            // Автоматичеески нажимаем "Найти"
+            $('#find-submit').click();
         }
     });
     
