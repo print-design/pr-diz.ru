@@ -1507,13 +1507,29 @@ while ($row = $fetcher->Fetch()) {
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="form-check">
-                                        <label class="form-check-label text-nowrap mt-3" style="line-height: 25px;">
-                                            <?php
-                                            $checked = $lamination1_customers_material == 1 ? " checked='checked'" : "";
-                                            ?>
-                                            <input type="checkbox" class="form-check-input" id="lamination1_customers_material" name="lamination1_customers_material" value="on"<?=$checked ?>>Сырьё заказчика
-                                        </label>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <div class="form-check">
+                                                <label class="form-check-label text-nowrap mt-3" style="line-height: 25px;">
+                                                    <?php
+                                                    $checked = $lamination1_customers_material == 1 ? " checked='checked'" : "";
+                                                    ?>
+                                                    <input type="checkbox" class="form-check-input" id="lamination1_customers_material" name="lamination1_customers_material" value="on"<?=$checked ?>>Сырьё заказчика
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-7">
+                                            <div class="form-check-inline">
+                                                <label class="form-check-label mt-3">
+                                                    <input type="radio" class="form-check-input" id="solvent_yes" name="solvent" value="yes" />Сольвент
+                                                </label>
+                                            </div>
+                                            <div class="form-check-inline">
+                                                <label class="form-check-label mt-3">
+                                                    <input type="radio" class="form-check-input" id="solvent_no" name="solvent" value="no" />Бессольвент
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -2862,6 +2878,10 @@ while ($row = $fetcher->Fetch()) {
                 $('#lamination2_film_variation_id').attr('required', 'required');
                 $('#lamination2_price').attr('required', 'required');
                 SetFilmFieldsVisibility($('#lamination2_film_id').val(), $('#lamination2_customers_material').is(':checked'), 'lamination2_');
+                
+                // Скрываем радиобаттон "бессольвент" и устанавливаем выбранным радиобаттон "Сольвент"
+                $('#solvent_yes').click();
+                $('#solvent_no').parent().parent().addClass('d-none');
             }
             
             <?php if(!empty($lamination2_film_id) || !empty($lamination2_individual_film_name)): ?>
@@ -2887,6 +2907,9 @@ while ($row = $fetcher->Fetch()) {
                 
                 $('#lamination2_ski').val(<?= CalculationBase::STANDARD_SKI ?>);
                 $('#lamination2_ski').change();
+                
+                // Показываем радиобаттон "Бессольвент"
+                $('#solvent_no').parent().parent().removeClass('d-none');
             }
             
             // Считаем длину этикетки (рапорт / количество этикеток в рапорте)
