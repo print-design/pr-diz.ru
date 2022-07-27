@@ -1508,7 +1508,7 @@ while ($row = $fetcher->Fetch()) {
                                 </div>
                                 <div class="col-6">
                                     <div class="row">
-                                        <div class="col-5">
+                                        <div class="col-4">
                                             <div class="form-check">
                                                 <label class="form-check-label text-nowrap mt-3" style="line-height: 25px;">
                                                     <?php
@@ -1518,15 +1518,19 @@ while ($row = $fetcher->Fetch()) {
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="col-7">
+                                        <?php
+                                        $solvent_yes_checked = " checked='checked'";
+                                        $solvent_no_checked = "";
+                                        ?>
+                                        <div class="col-8">
                                             <div class="form-check-inline">
                                                 <label class="form-check-label mt-3">
-                                                    <input type="radio" class="form-check-input" id="solvent_yes" name="solvent" value="yes" />Сольвент
+                                                    <input type="radio" class="form-check-input" id="solvent_yes" name="solvent" value="yes"<?=$solvent_yes_checked ?> />Сольвент
                                                 </label>
                                             </div>
                                             <div class="form-check-inline">
                                                 <label class="form-check-label mt-3">
-                                                    <input type="radio" class="form-check-input" id="solvent_no" name="solvent" value="no" />Бессольвент
+                                                    <input type="radio" class="form-check-input" id="solvent_no" name="solvent" value="no"<?=$solvent_no_checked ?> />Бессольвент
                                                 </label>
                                             </div>
                                         </div>
