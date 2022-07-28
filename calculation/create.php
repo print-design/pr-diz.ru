@@ -1911,53 +1911,45 @@ while ($row = $fetcher->Fetch()) {
                         <!-- Количество красок (для самоклейки возможно 0) -->
                         <div class="print-only self-adhesive-only d-none">
                             <div class="row">
-                                <div class="col-3" id="ink-col-ink">
-                                    <div class="form-group">
-                                        <label for="ink_number">Количество красок</label>
-                                        <select id="ink_number" name="ink_number" class="form-control print-only self-adhesive-only d-none">
-                                            <option value="" hidden="hidden">Количество красок...</option>
-                                            <?php
-                                            if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): 
-                                            $selected = "";
-                                            if($ink_number == 0) {
-                                                $selected = " selected='selected'";
-                                            }
-                                            ?>
-                                        <option<?=$selected ?>>0</option>
-                                            <?php
-                                            endif;
-                                            if(!empty($ink_number) || !empty($machine_id)):
-                                            for($i = 1; $i <= $colorfulnesses[$machine_id]; $i++):
-                                            $selected = "";
-                                            if($ink_number == $i) {
-                                                $selected = " selected='selected'";
-                                            }
-                                            ?>
-                                        <option<?=$selected ?>><?=$i ?></option>
-                                            <?php
-                                            endfor;
-                                            endif;
-                                            ?>
-                                        </select>
-                                    </div>
+                                <div class="form-group col-3" id="ink-col-ink">
+                                    <label for="ink_number">Количество красок</label>
+                                    <select id="ink_number" name="ink_number" class="form-control print-only self-adhesive-only d-none">
+                                        <option value="" hidden="hidden">Количество красок...</option>
+                                        <?php
+                                        if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): 
+                                        $selected = "";
+                                        if($ink_number == 0) {
+                                            $selected = " selected='selected'";
+                                        }
+                                        ?>
+                                    <option<?=$selected ?>>0</option>
+                                        <?php
+                                        endif;
+                                        if(!empty($ink_number) || !empty($machine_id)):
+                                        for($i = 1; $i <= $colorfulnesses[$machine_id]; $i++):
+                                        $selected = "";
+                                        if($ink_number == $i) {
+                                            $selected = " selected='selected'";
+                                        }
+                                        ?>
+                                    <option<?=$selected ?>><?=$i ?></option>
+                                        <?php
+                                        endfor;
+                                        endif;
+                                        ?>
+                                    </select>
                                 </div>
-                                <div class="col-3 self-adhesive-only" id="ink-col-cliche-flint">
-                                    <div class="form-group">
-                                        <label for="cliche_number_flint">Кол-во новых Флинт</label>
-                                        <input type="number" min="0" id="cliche_number_flint" name="cliche_number_flint" class="form-control self-adhesive-only d-none" />
-                                    </div>
+                                <div class="form-group col-3 self-adhesive-only" id="ink-col-cliche-flint">
+                                    <label for="cliche_number_flint">Кол-во новых Флинт</label>
+                                    <input type="number" min="0" id="cliche_number_flint" name="cliche_number_flint" class="form-control self-adhesive-only d-none" />
                                 </div>
-                                <div class="col-3 self-adhesive-only" id="ink-col-cliche-kodak">
-                                    <div class="form-group">
-                                        <label for="cliche_number_kodak">Кол-во новых Кодак</label>
-                                        <input type="number" min="0" id="cliche_number_kodak" name="cliche_number_kodak" class="form-control self-adhesive-only d-none" />
-                                    </div>
+                                <div class="form-group col-3 self-adhesive-only" id="ink-col-cliche-kodak">
+                                    <label for="cliche_number_kodak">Кол-во новых Кодак</label>
+                                    <input type="number" min="0" id="cliche_number_kodak" name="cliche_number_kodak" class="form-control self-adhesive-only d-none" />
                                 </div>
-                                <div class="col-3 self-adhesive-only" id="ink-col-cliche-old">
-                                    <div class="form-group">
-                                        <label for="cliche_number_old">Кол-во старых форм</label>
-                                        <input type="number" min="0" id="cliche_number_old" name="cliche_number_old" class="form-control self-adhesive-only" readonly="readonly" />
-                                    </div>
+                                <div class="form-group col-3 self-adhesive-only" id="ink-col-cliche-old">
+                                    <label for="cliche_number_old">Кол-во старых форм</label>
+                                    <input type="number" min="0" id="cliche_number_old" name="cliche_number_old" class="form-control self-adhesive-only" readonly="readonly" />
                                 </div>
                             </div>
                             <!-- Каждая краска -->
@@ -3010,12 +3002,27 @@ while ($row = $fetcher->Fetch()) {
                 $('.ink_block').addClass('d-none');
                 $('.ink').removeAttr('required');
                 
+                work_type_id = $('#work_type_id').val();
+                
                 if(count != '') {
                     iCount = parseInt(count);
                     
                     for(var i=1; i<=iCount; i++) {
                         $('#ink_block_' + i).removeClass('d-none');
                         $('#ink_' + i).attr('required', 'required');
+                        
+                        if(work_type_id == <?= CalculationBase::WORK_TYPE_PRINT ?> && $('#percent_group_' + i).hasClass('col-6')) {
+                            $('#percent_group_' + i).removeClass('col-6');
+                            $('#percent_group_' + i).addClass('col-3');
+                            $('#cliche_group_' + i).removeClass('d-none');
+                            $('#cliche_group_' + i).addClass('col-3');
+                        }
+                        else if(work_type_id == <?= CalculationBase::WORK_TYPE_SELF_ADHESIVE ?> && $('#percent_group_' + i).hasClass('col-3')) {
+                            $('#percent_group_' + i).removeClass('col-3');
+                            $('#percent_group_' + i).addClass('col-6');
+                            $('#cliche_group_' + i).removeClass('col-3');
+                            $('#cliche_group_' + i).addClass('d-none');
+                        }
                     }
                 }
             });
@@ -3024,6 +3031,7 @@ while ($row = $fetcher->Fetch()) {
             $('.ink').change(function(){
                 ink = $(this).val();
                 var data_id = $(this).attr('data-id');
+                work_type_id = $('#work_type_id').val();
                 
                 // Устанавливаем видимость всех элементов по умолчанию, как если бы выбрали пустое значение
                 $('#ink_group_' + data_id).removeClass('col-12');
@@ -3037,9 +3045,11 @@ while ($row = $fetcher->Fetch()) {
                 $('#cmyk_group_' + data_id).addClass('d-none');
                 
                 $('#percent_group_' + data_id).removeClass('col-3');
+                $('#percent_group_' + data_id).removeClass('col-6');
                 $('#percent_group_' + data_id).addClass('d-none');
                 
                 $('#cliche_group_' + data_id).removeClass('col-3');
+                $('#cliche_group_' + data_id).removeClass('col-6');
                 $('#cliche_group_' + data_id).addClass('d-none');
                 
                 // Снимаем атрибут required с кода цвета, CMYK и процента
@@ -3048,21 +3058,29 @@ while ($row = $fetcher->Fetch()) {
                 $('#percent_' + data_id).removeAttr('required');
                 
                 // Затем, в зависимости от выбранного значения, устанавливаем видимость нужного элемента для этого значения
+                if(ink == 'lacquer' || ink == 'white' || ink == 'cmyk' || ink == 'panton') {
+                    if(work_type_id == <?= CalculationBase::WORK_TYPE_PRINT ?>) {
+                        $('#percent_group_' + data_id).removeClass('col-6');
+                        $('#percent_group_' + data_id).addClass('col-3');
+                        $('#percent_group_' + data_id).removeClass('d-none');
+                        $('#cliche_group_' + data_id).addClass('col-3');
+                        $('#cliche_group_' + data_id).removeClass('d-none');
+                    }
+                    else if(work_type_id == <?= CalculationBase::WORK_TYPE_SELF_ADHESIVE ?>) {
+                        $('#percent_group_' + data_id).addClass('col-6');
+                        $('#percent_group_' + data_id).removeClass('col-3');
+                        $('#percent_group_' + data_id).removeClass('d-none');
+                        $('#cliche_group_' + data_id).addClass('d-none');
+                    }
+                }
+                
                 if(ink == 'lacquer')  {
                     $('#ink_group_' + data_id).addClass('col-6');
-                    $('#percent_group_' + data_id).addClass('col-3');
-                    $('#percent_group_' + data_id).removeClass('d-none');
-                    $('#cliche_group_' + data_id).addClass('col-3');
-                    $('#cliche_group_' + data_id).removeClass('d-none');
                     
                     $('#percent_' + data_id).attr('required', 'required');
                 }
                 else if(ink == 'white') {
                     $('#ink_group_' + data_id).addClass('col-6');
-                    $('#percent_group_' + data_id).addClass('col-3');
-                    $('#percent_group_' + data_id).removeClass('d-none');
-                    $('#cliche_group_' + data_id).addClass('col-3');
-                    $('#cliche_group_' + data_id).removeClass('d-none');
                     
                     $('#percent_' + data_id).attr('required', 'required');
                 }
@@ -3070,10 +3088,6 @@ while ($row = $fetcher->Fetch()) {
                     $('#ink_group_' + data_id).addClass('col-3');
                     $('#cmyk_group_' + data_id).addClass('col-3');
                     $('#cmyk_group_' + data_id).removeClass('d-none');
-                    $('#percent_group_' + data_id).addClass('col-3');
-                    $('#percent_group_' + data_id).removeClass('d-none');
-                    $('#cliche_group_' + data_id).addClass('col-3');
-                    $('#cliche_group_' + data_id).removeClass('d-none');
                     
                     $('#percent_' + data_id).attr('required', 'required');
                     $('#cmyk_' + data_id).attr('required', 'required');
@@ -3082,10 +3096,6 @@ while ($row = $fetcher->Fetch()) {
                     $('#ink_group_' + data_id).addClass('col-3');
                     $('#color_group_' + data_id).addClass('col-3');
                     $('#color_group_' + data_id).removeClass('d-none');
-                    $('#percent_group_' + data_id).addClass('col-3');
-                    $('#percent_group_' + data_id).removeClass('d-none');
-                    $('#cliche_group_' + data_id).addClass('col-3');
-                    $('#cliche_group_' + data_id).removeClass('d-none');
                     
                     $('#percent_' + data_id).attr('required', 'required');
                     $('#color_' + data_id).attr('required', 'required');
