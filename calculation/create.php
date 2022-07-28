@@ -1910,33 +1910,55 @@ while ($row = $fetcher->Fetch()) {
                         </div>
                         <!-- Количество красок (для самоклейки возможно 0) -->
                         <div class="print-only self-adhesive-only d-none">
-                            <div class="form-group">
-                                <label for="ink_number">Количество красок</label>
-                                <select id="ink_number" name="ink_number" class="form-control print-only self-adhesive-only d-none">
-                                    <option value="" hidden="hidden">Количество красок...</option>
-                                        <?php
-                                        if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): 
-                                        $selected = "";
-                                        if($ink_number == 0) {
-                                            $selected = " selected='selected'";
-                                        }
-                                        ?>
-                                    <option<?=$selected ?>>0</option>
-                                        <?php
-                                        endif;
-                                        if(!empty($ink_number) || !empty($machine_id)):
-                                        for($i = 1; $i <= $colorfulnesses[$machine_id]; $i++):
-                                        $selected = "";
-                                        if($ink_number == $i) {
-                                            $selected = " selected='selected'";
-                                        }
-                                        ?>
-                                    <option<?=$selected ?>><?=$i ?></option>
-                                        <?php
-                                        endfor;
-                                        endif;
-                                        ?>
-                                </select>
+                            <div class="row">
+                                <div class="col-3" id="ink-col-ink">
+                                    <div class="form-group">
+                                        <label for="ink_number">Количество красок</label>
+                                        <select id="ink_number" name="ink_number" class="form-control print-only self-adhesive-only d-none">
+                                            <option value="" hidden="hidden">Количество красок...</option>
+                                            <?php
+                                            if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): 
+                                            $selected = "";
+                                            if($ink_number == 0) {
+                                                $selected = " selected='selected'";
+                                            }
+                                            ?>
+                                        <option<?=$selected ?>>0</option>
+                                            <?php
+                                            endif;
+                                            if(!empty($ink_number) || !empty($machine_id)):
+                                            for($i = 1; $i <= $colorfulnesses[$machine_id]; $i++):
+                                            $selected = "";
+                                            if($ink_number == $i) {
+                                                $selected = " selected='selected'";
+                                            }
+                                            ?>
+                                        <option<?=$selected ?>><?=$i ?></option>
+                                            <?php
+                                            endfor;
+                                            endif;
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-3 self-adhesive-only" id="ink-col-cliche-flint">
+                                    <div class="form-group">
+                                        <label for="cliche_number_flint">Кол-во новых Флинт</label>
+                                        <input type="number" min="0" id="cliche_number_flint" name="cliche_number_flint" class="form-control self-adhesive-only d-none" />
+                                    </div>
+                                </div>
+                                <div class="col-3 self-adhesive-only" id="ink-col-cliche-kodak">
+                                    <div class="form-group">
+                                        <label for="cliche_number_kodak">Кол-во новых Кодак</label>
+                                        <input type="number" min="0" id="cliche_number_kodak" name="cliche_number_kodak" class="form-control self-adhesive-only d-none" />
+                                    </div>
+                                </div>
+                                <div class="col-3 self-adhesive-only" id="ink-col-cliche-old">
+                                    <div class="form-group">
+                                        <label for="cliche_number_old">Кол-во старых форм</label>
+                                        <input type="number" min="0" id="cliche_number_old" name="cliche_number_old" class="form-control self-adhesive-only" readonly="readonly" />
+                                    </div>
+                                </div>
                             </div>
                             <!-- Каждая краска -->
                             <?php
@@ -2303,6 +2325,17 @@ while ($row = $fetcher->Fetch()) {
             $('#work_type_id').change(function() {
                 SetFieldsVisibility($(this).val());
                 FillMachines($(this).val());
+                
+                // Для типа "Самоклеящийся материал" делаем список красок узким,
+                // чтобы уместились поля для количества форм
+                if($(this).val() == <?= CalculationBase::WORK_TYPE_PRINT ?>) {
+                    $('#ink-col-ink').removeClass('col-3');
+                    $('#ink-col-ink').addClass('col-12');
+                }
+                else if($(this).val() == <?= CalculationBase::WORK_TYPE_SELF_ADHESIVE ?>) {
+                    $('#ink-col-ink').removeClass('col-12');
+                    $('#ink-col-ink').addClass('col-3');
+                }
             });
             
             // Заполняем список машин
