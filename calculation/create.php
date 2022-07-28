@@ -1940,16 +1940,16 @@ while ($row = $fetcher->Fetch()) {
                                     </select>
                                 </div>
                                 <div class="form-group col-3 self-adhesive-only" id="ink-col-cliche-flint">
-                                    <label for="cliche_number_flint">Кол-во новых Флинт</label>
-                                    <input type="number" min="0" id="cliche_number_flint" name="cliche_number_flint" class="form-control self-adhesive-only d-none" />
+                                    <label for="cliches_count_flint">Кол-во новых Флинт</label>
+                                    <input type="text" id="cliches_count_flint" name="cliches_count_flint" value="0" class="form-control int-only self-adhesive-only d-none" />
                                 </div>
                                 <div class="form-group col-3 self-adhesive-only" id="ink-col-cliche-kodak">
-                                    <label for="cliche_number_kodak">Кол-во новых Кодак</label>
-                                    <input type="number" min="0" id="cliche_number_kodak" name="cliche_number_kodak" class="form-control self-adhesive-only d-none" />
+                                    <label for="cliches_count_kodak">Кол-во новых Кодак</label>
+                                    <input type="text" id="cliches_count_kodak" name="cliches_count_kodak" value="0" class="form-control int-only self-adhesive-only d-none" />
                                 </div>
                                 <div class="form-group col-3 self-adhesive-only" id="ink-col-cliche-old">
-                                    <label for="cliche_number_old">Кол-во старых форм</label>
-                                    <input type="number" min="0" id="cliche_number_old" name="cliche_number_old" class="form-control self-adhesive-only" readonly="readonly" />
+                                    <label for="cliches_count_old">Кол-во старых форм</label>
+                                    <input type="text" id="cliches_count_old" name="cliches_count_old" value="0" class="form-control int-only self-adhesive-only" readonly="readonly" />
                                 </div>
                             </div>
                             <!-- Каждая краска -->
@@ -2264,6 +2264,11 @@ while ($row = $fetcher->Fetch()) {
                 }
             });
             
+            // При открытии модального окна установка фокуса на первом поле
+            $('#quantities').on('shown.bs.modal', function() {
+                $('#quantity_1').focus();
+            });
+            
             // Обработка нажатия кнопки OK в модальной форме добавления размера тиража
             $('#quantities_submit').click(function() {
                 is_valid = true;
@@ -2304,6 +2309,64 @@ while ($row = $fetcher->Fetch()) {
                     $('#printings_number').removeClass('is-invalid');
                     HideCalculation();
                 }
+                
+                SetClichesCount();
+            });
+            
+            // Установление количества форм: Флинт, Кодак и старых
+            function SetClichesCount() {
+                if($('#work_type_id').val() == <?= CalculationBase::WORK_TYPE_SELF_ADHESIVE ?>) {
+                    ink_number = $('#ink_number').val();
+                    printings_number = $('#printings_number').val();
+                    
+                    //if(Number.isInteger(ink_number) && Number.isInteger(printings_number)) {
+                    if(!isNaN(ink_number) && !isNaN(printings_number)) {
+                        cliches_count = ink_number * printings_number;
+                        $('#cliches_count_old').val(cliches_count);
+                        $('#cliches_count_flint').val(0);
+                        $('#cliches_count_kodak').val(0);
+                    }
+                }
+            }
+            
+            // Пересчёт количества форм: Флинт, Кодак и старых
+            function ReSetClichesCount() {
+                ink_number = $('#ink_number').val();
+                printings_number = $('#printings_number').val();
+                cliches_count_flint = $('#cliches_count_flint').val();
+                cliches_count_kodak = $('#cliches_count_kodak').val();
+                cliches_count_old = $('#cliches_count_old').val();
+                
+                if(!isNaN(ink_number) && ink_number != '' && 
+                        !isNaN(printings_number) && printings_number != '' && 
+                        !isNaN(cliches_count_flint) && cliches_count_flint != '' && 
+                        !isNaN(cliches_count_kodak) && cliches_count_kodak != '' && 
+                        !isNaN(cliches_count_old) && cliches_count_old != '') {
+                    cliches_count_old = (parseInt(ink_number) * parseInt(printings_number)) - (parseInt(cliches_count_flint) + parseInt(cliches_count_kodak));
+                    if(cliches_count_old < 0) {
+                        cliches_count_old = 0;
+                    }
+                    $('#cliches_count_old').val(cliches_count_old);
+                }
+                else {
+                    $('#cliches_count_old').val(0);
+                }
+            }
+            
+            $('#cliches_count_flint').keyup(function() {
+                ReSetClichesCount();
+            });
+            
+            $('#cliches_count_flint').change(function() {
+                ReSetClichesCount();
+            });
+            
+            $('#cliches_count_kodak').keyup(function() {
+                ReSetClichesCount();
+            });
+            
+            $('#cliches_count_kodak').change(function() {
+                ReSetClichesCount();
             });
             
             // Список заказчиков с поиском
@@ -3025,6 +3088,8 @@ while ($row = $fetcher->Fetch()) {
                         }
                     }
                 }
+                
+                SetClichesCount();
             });
             
             // Обработка выбора краски
