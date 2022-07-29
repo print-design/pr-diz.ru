@@ -498,12 +498,12 @@ if($id !== null) {
         
         array_push($file_data, array("Себестоимость всех форм Флинт, руб",
             CalculationBase::Display($calculation->cliche_all_flint_price, 2),
-            "|= $cliches_count_flint * ".CalculationBase::Display($calculation->cliche_flint_price, $decimals),
+            "|= $cliches_count_flint * ".CalculationBase::Display($calculation->cliche_flint_price, 2),
             "количество форм Флинт * себестоимость 1 формы Флинт"));
         
         array_push($file_data, array("Себестоимость всех форм Кодак, руб",
             CalculationBase::Display($calculation->cliche_all_kodak_price, 2),
-            "|= $cliches_count_kodak * ".CalculationBase::Display($calculation->cliche_kodak_price, $decimals),
+            "|= $cliches_count_kodak * ".CalculationBase::Display($calculation->cliche_kodak_price, 2),
             "количество форм Кодак * себестоимость 1 формы Кодак"));
         
         array_push($file_data, array("Количество новых форм",
