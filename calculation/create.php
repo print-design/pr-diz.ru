@@ -708,8 +708,10 @@ for ($i=1; $i<=$ink_number; $i++) {
         $$cliche_var = $row["cliche_$i"];
     }
     
-    if($$cliche_var != CalculationBase::OLD) {
-        $new_forms_number++;
+    if($work_type_id == CalculationBase::WORK_TYPE_PRINT) {
+        if($$cliche_var != CalculationBase::OLD) {
+            $new_forms_number++;
+        }
     }
 }
 
@@ -755,6 +757,11 @@ if(isset($row['extracharge_cliche'])) {
 $num_for_customer = null;
 if(isset($row['num_for_customer'])) {
     $num_for_customer = $row['num_for_customer'];
+}
+
+// Общее количество новых форм
+if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+    $new_forms_number += ($cliches_count_flint + $cliches_count_kodak);
 }
 
 // Данные об объёмах заказов

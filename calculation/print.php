@@ -115,8 +115,10 @@ for($i=1; $i<=$ink_number; $i++) {
     $cliche_var = "cliche_$i";
     $$cliche_var = $row[$cliche_var];
     
-    if(!empty($$cliche_var) && $$cliche_var != CalculationBase::OLD) {
-        $new_forms_number++;
+    if($work_type_id == CalculationBase::WORK_TYPE_PRINT) {
+        if(!empty($$cliche_var) && $$cliche_var != CalculationBase::OLD) {
+            $new_forms_number++;
+        }
     }
 }
 
@@ -126,6 +128,10 @@ $cliches_count_kodak = $row['cliches_count_kodak'];
 $cliches_count_old = $row['cliches_count_old'];
 $extracharge = $row['extracharge'];
 $extracharge_cliche = $row['extracharge_cliche'];
+
+if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+    $new_forms_number += ($cliches_count_flint + $cliches_count_kodak);
+}
 
 $customer = $row['customer'];
 $customer_phone = $row['customer_phone'];
