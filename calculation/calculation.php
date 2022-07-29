@@ -1136,8 +1136,11 @@ class CalculationSelfAdhesive extends CalculationBase {
     public $cliche_height; // Высота формы, мм
     public $cliche_width; // ширина формы, мм
     public $cliche_area; // площадь формы, мм
+    public $cliche_flint_price; // себестоимость формы Флинт, руб
+    public $cliche_kodak_price; // себестоимость формы Кодак, руб
+    public $cliche_all_flint_price; // себестоимость всех форм Флинт, руб
+    public $cliche_all_kodak_price; // себестоимость всех форм Кодак, руб
     public $cliche_new_number; // количество новых форм
-    public $cliche_costs; // массив: стоимость каждой формы, руб
     
     public $extracharge = 0; // Наценка на тираж
     public $extracharge_cliche = 0; // Наценка на ПФ
@@ -1190,6 +1193,9 @@ class CalculationSelfAdhesive extends CalculationBase {
             $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8, // Форма (старая, Флинт, Кодак)
             
             $cliche_in_price, // Включить ПФ в себестоимость
+            $cliches_count_flint, // Количество форм Флинт
+            $cliches_count_kodak, // Количество форм Кодак
+            $cliches_count_old, // Количество старых форм
             $extracharge, // Наценка на тираж
             $extracharge_cliche // Наценка на ПФ
             ) {
@@ -1379,42 +1385,22 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->cliche_width = ($streams_number * $stream_width + 20) + 20;
         
         // Площадь форм, см
-        $this->cliche_area = $this->cliche_height * $this->cliche_width / 100;
+        $this->cliche_area = $this->cliche_height * $this->cliche_width;
         
-        // Создаём массив стоимостей каждой формы
-        $this->cliche_costs = array();
+        // Себестоимость 1 формы Флинт, руб
+        $this->cliche_flint_price = $this->cliche_area * $data_cliche->flint_price * self::GetCurrencyRate($data_cliche->flint_currency, $usd, $euro);
+        
+        // Себестоимость 1 формы Кодак, руб
+        $this->cliche_kodak_price = $this->cliche_area * $data_cliche->kodak_price * self::GetCurrencyRate($data_cliche->kodak_currency, $usd, $euro);
+        
+        // Себестоимость всех форм Флинт, руб
+        $this->cliche_all_flint_price = $cliches_count_flint * $this->cliche_flint_price;
+        
+        // Себестоимость всех форм Кодак, руб
+        $this->cliche_all_kodak_price * $cliches_count_kodak * $this->cliche_kodak_price;
         
         // Количество новых форм
-        $this->cliche_new_number = 0;
-        
-        // Перебираем все формы, определяем стоимость каждой, помещаем эту величину в массив
-        for($i=1; $i<=$ink_number; $i++) {
-            $cliche = "cliche_$i";
-            
-            // Если форма не старая, то количество новых форм увеличинаем на 1
-            if(!empty($$cliche) && $$cliche != self::OLD) {
-                $this->cliche_new_number += 1;
-            }
-            
-            $cliche_sm_price = 0;
-            $cliche_currency = "";
-            
-            switch ($$cliche) {
-                case self::FLINT:
-                    $cliche_sm_price = $data_cliche->flint_price;
-                    $cliche_currency = $data_cliche->flint_currency;
-                    break;
-                
-                case self::KODAK:
-                    $cliche_sm_price = $data_cliche->kodak_price;
-                    $cliche_currency = $data_cliche->kodak_currency;
-                    break;
-            }
-            
-            // Стоимость формы, руб
-            $cliche_cost = $this->cliche_area * $cliche_sm_price * self::GetCurrencyRate($cliche_currency, $usd, $euro);
-            $this->cliche_costs[$i] = $cliche_cost;
-        }
+        $this->cliche_new_number = $cliches_count_flint + $cliches_count_kodak;
         
         //********************************
         // НАЦЕНКА
@@ -1462,11 +1448,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         }
         
         // Себестоимость ПФ
-        $this->cliche_cost = 0;
-        
-        for($i=1; $i<=$ink_number; $i++) {
-            $this->cliche_cost += $this->cliche_costs[$i];
-        }
+        $this->cliche_cost = $this->cliche_all_flint_price + $this->cliche_all_kodak_price;
         
         // Себестоимость
         $this->cost = $this->film_cost + $this->work_cost + $this->ink_cost + ($this->cliche_cost * $this->ukpf);

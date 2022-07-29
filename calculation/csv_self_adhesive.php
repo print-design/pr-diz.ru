@@ -30,6 +30,9 @@ if($id !== null) {
     $ink_number = 0; // Красочность
     
     $cliche_in_price = null; // Включить формы в стоимость
+    $cliches_count_flint = null; // Количество форм Флинт
+    $cliches_count_kodak = null; // Количество форм Кодак
+    $cliches_count_old = null; // Количество старых форм
     $extracharge = null; // Наценка на тираж
     $extracharge_cliche = null; // Наценка на ПФ
     
@@ -43,7 +46,7 @@ if($id !== null) {
             . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
             . "rc.percent_1, rc.percent_2, rc.percent_3, rc.percent_4, rc.percent_5, rc.percent_6, rc.percent_7, rc.percent_8, "
             . "rc.cliche_1, rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8, "
-            . "rc.cliche_in_price, rc.extracharge, rc.extracharge_cliche "
+            . "rc.cliche_in_price, rc.cliches_count_flint, rc.cliches_count_kodak, rc.cliches_count_old, rc.extracharge, rc.extracharge_cliche "
             . "from calculation rc "
             . "left join machine m on rc.machine_id = m.id "
             . "left join film_variation fv on rc.film_variation_id = fv.id "
@@ -86,6 +89,9 @@ if($id !== null) {
         $cliche_1 = $row['cliche_1']; $cliche_2 = $row['cliche_2']; $cliche_3 = $row['cliche_3']; $cliche_4 = $row['cliche_4']; $cliche_5 = $row['cliche_5']; $cliche_6 = $row['cliche_6']; $cliche_7 = $row['cliche_7']; $cliche_8 = $row['cliche_8'];
         
         $cliche_in_price = $row['cliche_in_price']; // Включать стоимиость ПФ в тираж
+        $cliches_count_flint = $row['cliches_count_flint']; // Количество форм Флинт
+        $cliches_count_kodak = $row['cliches_count_kodak']; // Количество форм Кодак
+        $cliches_count_old = $row['cliches_count_old']; // Количество старых форм
         $extracharge = $row['extracharge']; // Наценка на тираж
         $extracharge_cliche = $row['extracharge_cliche']; // Наценка на ПФ
     }
@@ -208,6 +214,9 @@ if($id !== null) {
                 $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8, 
                 
                 $cliche_in_price, // Стоимость ПФ включается в себестоимость
+                $cliches_count_flint, // Количество форм Флинт
+                $cliches_count_kodak, // Количество форм Кодак
+                $cliches_count_old, // Количество старых форм
                 $extracharge, // Наценка на тираж
                 $extracharge_cliche); // Наценка на ПФ
         
@@ -474,35 +483,33 @@ if($id !== null) {
         
         array_push($file_data, array("Площадь форм, см",
             CalculationBase::Display($calculation->cliche_area, 2),
-            "|= ".CalculationBase::Display($calculation->cliche_height, 2)." * ".CalculationBase::Display($calculation->cliche_width, 2)." / 100",
-            "высота форм * ширина форм / 100"));
+            "|= ".CalculationBase::Display($calculation->cliche_height, 2)." * ".CalculationBase::Display($calculation->cliche_width, 2),
+            "высота форм * ширина форм"));
+        
+        array_push($file_data, array("Себестоимость 1 формы Флинт, руб",
+            CalculationBase::Display($calculation->cliche_flint_price, 2),
+            "|= ".CalculationBase::Display($calculation->cliche_area, 2)." * ".CalculationBase::Display($data_cliche->flint_price, 2)." * ".CalculationBase::GetCurrencyRate($data_cliche->flint_currency, $usd, $euro),
+            "площадь формы * стоимиость формы Флинт * валюта"));
+        
+        array_push($file_data, array("Себестоимость 1 формы Кодак, руб",
+            CalculationBase::Display($calculation->cliche_kodak_price, 2),
+            "|= ".CalculationBase::Display($calculation->cliche_area, 2)." * ".CalculationBase::Display($data_cliche->kodak_price, 2)." * ".CalculationBase::GetCurrencyRate($data_cliche->kodak_currency, $usd, $euro),
+            "площадь формы * стоимость формы Кодак * валюта"));
+        
+        array_push($file_data, array("Себестоимость всех форм Флинт, руб",
+            CalculationBase::Display($calculation->cliche_all_flint_price, 2),
+            "|= $cliches_count_flint * ".CalculationBase::Display($calculation->cliche_flint_price, $decimals),
+            "количество форм Флинт * себестоимость 1 формы Флинт"));
+        
+        array_push($file_data, array("Себестоимость всех форм Кодак, руб",
+            CalculationBase::Display($calculation->cliche_all_kodak_price, 2),
+            "|= $cliches_count_kodak * ".CalculationBase::Display($calculation->cliche_kodak_price, $decimals),
+            "количество форм Кодак * себестоимость 1 формы Кодак"));
         
         array_push($file_data, array("Количество новых форм",
-            CalculationBase::Display($calculation->cliche_new_number, 2),"", ""));
-        
-        for($i=1; $i<=$ink_number; $i++) {
-            $cliche = "cliche_$i";
-            
-            $cliche_sm_price = 0;
-            $cliche_currency = "";
-            
-            switch ($$cliche) {
-                case Calculation::FLINT:
-                    $cliche_sm_price = $data_cliche->flint_price;
-                    $cliche_currency = $data_cliche->flint_currency;
-                    break;
-                
-                case Calculation::KODAK:
-                    $cliche_sm_price = $data_cliche->kodak_price;
-                    $cliche_currency = $data_cliche->kodak_currency;
-                    break;
-            }
-            
-            array_push($file_data, array("Цена формы $i, руб",
-                CalculationBase::Display($calculation->cliche_costs[$i], 2),
-                "|= ".CalculationBase::Display($calculation->cliche_area, 2)." * ".CalculationBase::Display($cliche_sm_price, 2)." * ".CalculationBase::Display($calculation->GetCurrencyRate($cliche_currency, $usd, $euro), 2),
-                "площадь формы * цена формы за 1 см * курс валюты"));
-        }
+            CalculationBase::Display($calculation->cliche_new_number, 2),
+            "|= $cliches_count_flint + $cliches_count_kodak",
+            "количество форм Флинт + количество форм Кодак"));
         
         array_push($file_data, array("", "", "", ""));
         
@@ -554,8 +561,8 @@ if($id !== null) {
         
         array_push($file_data, array("Стоимость форм, руб",
             CalculationBase::Display($calculation->cliche_cost, 2),
-            "|= ".$total_cliche_cost_formula,
-            "сумма стоимости всех форм"));
+            "|= ".CalculationBase::Display($calculation->cliche_all_flint_price, 2)." + ".CalculationBase::Display($calculation->cliche_all_kodak_price, $decimals),
+            "себестоимость всех форм Флинт + себестоимость всех форм Кодак"));
         
         array_push($file_data, array("Себестоимость, руб",
             CalculationBase::Display($calculation->cost, 2),
