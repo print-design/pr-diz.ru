@@ -1397,7 +1397,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->cliche_all_flint_price = $cliches_count_flint * $this->cliche_flint_price;
         
         // Себестоимость всех форм Кодак, руб
-        $this->cliche_all_kodak_price * $cliches_count_kodak * $this->cliche_kodak_price;
+        $this->cliche_all_kodak_price = $cliches_count_kodak * $this->cliche_kodak_price;
         
         // Количество новых форм
         $this->cliche_new_number = $cliches_count_flint + $cliches_count_kodak;
