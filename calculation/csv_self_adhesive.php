@@ -19,7 +19,7 @@ if($id !== null) {
     $currency = null; // Валюта
     $customers_material; // Материал заказчика
     $ski = null; // Лыжи
-    $width_ski = null; // Ширина плёнки
+    $width_ski = null; // Ширина материала
     
     $machine = null;
     $machine_id = null;
@@ -59,20 +59,20 @@ if($id !== null) {
         $name = $row['name'];
         
         if(!empty($row['film_variation_id'])) {
-            $film = $row['film']; // Основная пленка, марка
-            $thickness = $row['thickness']; // Основная пленка, толщина, мкм
-            $density = $row['density']; // Основная пленка, плотность, г/м2
+            $film = $row['film']; // Материал, марка
+            $thickness = $row['thickness']; // Материал, толщина, мкм
+            $density = $row['density']; // Материал, плотность, г/м2
         }
         else {
-            $film = $row['individual_film_name']; // Основная пленка, марка
-            $thickness = $row['individual_thickness']; // Основная пленка, толщина, мкм
-            $density = $row['individual_density']; // Основная пленка, плотность, г/м2
+            $film = $row['individual_film_name']; // Материал, марка
+            $thickness = $row['individual_thickness']; // Материал, толщина, мкм
+            $density = $row['individual_density']; // Материал, плотность, г/м2
         }
-        $price = $row['price']; // Основная пленка, цена
-        $currency = $row['currency']; // Основная пленка, валюта
-        $customers_material = $row['customers_material']; // Основная плёнка, другая, материал заказчика
-        $ski = $row['ski']; // Основная пленка, лыжи
-        $width_ski = $row['width_ski']; // Основная пленка, ширина пленки, мм
+        $price = $row['price']; // Материал, цена
+        $currency = $row['currency']; // Материал, валюта
+        $customers_material = $row['customers_material']; // Материал, другой, материал заказчика
+        $ski = $row['ski']; // Материал, лыжи
+        $width_ski = $row['width_ski']; // Ширина материала, мм
         
         $machine = $row['machine'];
         $machine_id = $row['machine_id'];
@@ -199,7 +199,7 @@ if($id !== null) {
                 $currency, // Валюта цены материала
                 $customers_material, // Материал заказчика
                 $ski, // Лыжи
-                $width_ski, // Ширина плёнки, мм
+                $width_ski, // Ширина материала, мм
                 
                 $length, // Длина этикетки, мм
                 $stream_width, // Ширина этикетки, мм
@@ -239,7 +239,7 @@ if($id !== null) {
         array_push($file_data, array("Толщина", CalculationBase::Display($thickness, 2), "", ""));
         array_push($file_data, array("Плотность", CalculationBase::Display($density, 2), "", ""));
         array_push($file_data, array("Лыжи", $calculation->GetSkiName($ski), "", ""));
-        if($ski == CalculationBase::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки, мм", CalculationBase::Display ($width_ski, 2), "", ""));
+        if($ski == CalculationBase::NONSTANDARD_SKI) array_push ($file_data, array("Ширина материала, мм", CalculationBase::Display ($width_ski, 2), "", ""));
         if($customers_material == true) array_push ($file_data, array("Материал заказчика", "", "", ""));
         else array_push ($file_data, array("Цена", CalculationBase::Display ($price, 2)." ".$calculation->GetCurrencyName ($currency).($currency == CalculationBase::USD ? " (".CalculationBase::Display ($price * $usd, 2)." руб)" : "").($currency == CalculationBase::EURO ? " (".CalculationBase::Display ($price * $euro, 2)." руб)" : ""), "", ""));
         
@@ -342,22 +342,22 @@ if($id !== null) {
         // Массы и длины плёнок
         //***************************
         
-        array_push($file_data, array("Масса плёнки чистая (без приладки), кг",
+        array_push($file_data, array("Масса материала чистая (без приладки), кг",
             CalculationBase::Display($calculation->weight_pure, 2),
             "|= ". CalculationBase::Display($calculation->length_pog_pure, 2)." * ". CalculationBase::Display($calculation->width_mat, 2)." * ". CalculationBase::Display($density, 2)." / 1 000 000",
             "м. пог чистые * ширина материала * уд. вес / 1 000 000"));
         
-        array_push($file_data, array("Длина плёнки чистая, м",
+        array_push($file_data, array("Длина материала чистая, м",
             CalculationBase::Display($calculation->length_pure, 2),
             "|= ". CalculationBase::Display($calculation->length_pog_pure, 2),
             "м. пог. чистые"));
         
-        array_push($file_data, array("Масса плёнки грязная (с приладкой), кг",
+        array_push($file_data, array("Масса материала грязная (с приладкой), кг",
             CalculationBase::Display($calculation->weight_dirty, 2),
             "|= ". CalculationBase::Display($calculation->area_dirty, 2)." * ". CalculationBase::Display($density, 2)." / 1000",
             "м2 грязные * удельный вес / 1000"));
         
-        array_push($file_data, array("Длина плёнки грязная, м",
+        array_push($file_data, array("Длина материала грязная, м",
             CalculationBase::Display($calculation->length_dirty, 2),
             "|= ".CalculationBase::Display($calculation->length_pog_dirty, 2),
             "м. пог. чистые"));
@@ -366,7 +366,7 @@ if($id !== null) {
         // Себестоимость плёнок
         //*****************************
         
-        array_push($file_data, array("Себестоимость плёнки грязная (с приладкой), руб",
+        array_push($file_data, array("Себестоимость материала грязная (с приладкой), руб",
             CalculationBase::Display($calculation->film_cost, 2),
             "|= ". CalculationBase::Display($calculation->area_dirty, 2)." * ". CalculationBase::Display($price, 2)." * ".CalculationBase::Display(CalculationBase::GetCurrencyRate($currency, $usd, $euro), 2),
             "м2 грязные * цена * курс валюты"));
@@ -558,7 +558,7 @@ if($id !== null) {
         array_push($file_data, array("Себестоимость, руб",
             CalculationBase::Display($calculation->cost, 2),
             "|= ". CalculationBase::Display($calculation->film_cost, 2)." + ". CalculationBase::Display($calculation->work_cost, 2)." + ". CalculationBase::Display($calculation->ink_cost, 2)." + (". CalculationBase::Display($calculation->cliche_cost, 2)." * ". CalculationBase::Display($calculation->ukpf, 0).")",
-            "стоимость плёнки + стоимость работы + стоимость краски + (стоимость форм * УКПФ)"));
+            "стоимость материала + стоимость работы + стоимость краски + (стоимость форм * УКПФ)"));
         
         array_push($file_data, array("Себестоимость за шт, руб",
             CalculationBase::Display($calculation->cost_per_unit, 2),
@@ -593,7 +593,7 @@ if($id !== null) {
         array_push($file_data, array("Общий вес всех материала с приладкой, кг",
             CalculationBase::Display($calculation->total_weight_dirty, 2),
             "|= ".CalculationBase::Display($calculation->weight_dirty, 2),
-            "масса плёнки грязная"));
+            "масса материала грязная"));
         
         array_push($file_data, array("Стоимость за м2 1, руб",
             CalculationBase::Display($calculation->film_cost_per_unit, 2),
@@ -608,7 +608,7 @@ if($id !== null) {
         array_push($file_data, array("Отходы, кг",
             CalculationBase::Display($calculation->film_waste_weight, 2),
             "|= ".CalculationBase::Display($calculation->weight_dirty, 2)." - ".CalculationBase::Display($calculation->weight_pure, 2),
-            "масса плёнки грязная - масса плёнки чистая"));
+            "масса материала грязная - масса материала чистая"));
         
         array_push($file_data, array("", "", "", ""));
         
