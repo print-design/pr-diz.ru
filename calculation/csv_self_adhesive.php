@@ -550,15 +550,6 @@ if($id !== null) {
             "|= ".$total_ink_expense_formula,
             "Сумма расход всех красок"));
         
-        $total_cliche_cost_formula = "";
-        
-        for($i=1; $i<=$ink_number; $i++) {
-            if(!empty($total_cliche_cost_formula)) {
-                $total_cliche_cost_formula .= " + ";
-            }
-            $total_cliche_cost_formula .= CalculationBase::Display($calculation->cliche_costs[$i], 2);
-        }
-        
         array_push($file_data, array("Стоимость форм, руб",
             CalculationBase::Display($calculation->cliche_cost, 2),
             "|= ".CalculationBase::Display($calculation->cliche_all_flint_price, 2)." + ".CalculationBase::Display($calculation->cliche_all_kodak_price, $decimals),
