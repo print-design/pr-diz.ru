@@ -338,6 +338,9 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         $cliche_in_price = 0; if(filter_input(INPUT_POST, 'cliche_in_price') == 'on') $cliche_in_price = 1;
+        $cliches_count_flint = filter_input(INPUT_POST, 'cliches_count_flint'); if($cliches_count_flint === null) $cliches_count_flint = "NULL";
+        $cliches_count_kodak = filter_input(INPUT_POST, 'cliches_count_kodak'); if($cliches_count_kodak === null) $cliches_count_kodak = "NULL";
+        $cliches_count_old = filter_input(INPUT_POST, 'cliches_count_old'); if($cliches_count_old === null) $cliches_count_old = "NULL";
         
         $sql = "insert into calculation (customer_id, name, unit, quantity, work_type_id, "
                 . "film_variation_id, price, currency, individual_film_name, individual_thickness, individual_density, customers_material, ski, width_ski, "
@@ -349,7 +352,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
                 . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, cliche_1, "
                 . "cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8, "
-                . "cliche_in_price) "
+                . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old) "
                 . "values($customer_id, '$name', '$unit', $quantity, $work_type_id, "
                 . "$film_variation_id, $price, '$currency', '$individual_film_name', $individual_thickness, $individual_density, $customers_material, $ski, $width_ski, "
                 . "$lamination1_film_variation_id, $lamination1_price, '$lamination1_currency', '$lamination1_individual_film_name', $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, $lamination1_ski, $lamination1_width_ski, "
@@ -360,7 +363,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
                 . "'$percent_1', '$percent_2', '$percent_3', '$percent_4', '$percent_5', '$percent_6', '$percent_7', '$percent_8', "
                 . "'$cliche_1', '$cliche_2', '$cliche_3', '$cliche_4', '$cliche_5', '$cliche_6', '$cliche_7', '$cliche_8', "
-                . "$cliche_in_price)";
+                . "$cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $insert_id = $executer->insert_id;
