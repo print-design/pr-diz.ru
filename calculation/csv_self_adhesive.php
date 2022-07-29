@@ -552,7 +552,7 @@ if($id !== null) {
         
         array_push($file_data, array("Стоимость форм, руб",
             CalculationBase::Display($calculation->cliche_cost, 2),
-            "|= ".CalculationBase::Display($calculation->cliche_all_flint_price, 2)." + ".CalculationBase::Display($calculation->cliche_all_kodak_price, $decimals),
+            "|= ".CalculationBase::Display($calculation->cliche_all_flint_price, 2)." + ".CalculationBase::Display($calculation->cliche_all_kodak_price, 2),
             "себестоимость всех форм Флинт + себестоимость всех форм Кодак"));
         
         array_push($file_data, array("Себестоимость, руб",
