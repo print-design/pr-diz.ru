@@ -413,7 +413,7 @@ if(!empty($id)) {
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
             . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, c.cliche_1, "
             . "c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
-            . "cliche_in_price, extracharge, extracharge_cliche, "
+            . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old, extracharge, extracharge_cliche, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
             . "from calculation c where c.id = $id";
     $fetcher = new Fetcher($sql);
@@ -716,6 +716,30 @@ for ($i=1; $i<=$ink_number; $i++) {
 $cliche_in_price = filter_input(INPUT_POST, 'cliche_in_price');
 if($cliche_in_price === null && isset($row['cliche_in_price'])) {
     $cliche_in_price = $row['cliche_in_price'];
+}
+
+$cliches_count_flint = filter_input(INPUT_POST, 'cliches_count_flint');
+if($cliches_count_flint === null && isset($row['cliches_count_flint'])) {
+    $cliches_count_flint = $row['cliches_count_flint'];
+}
+if($cliches_count_flint === null) {
+    $cliches_count_flint = 0;
+}
+
+$cliches_count_kodak = filter_input(INPUT_POST, 'cliches_count_kodak');
+if($cliches_count_kodak === null && isset($row['cliches_count_kodak'])) {
+    $cliches_count_kodak = $row['cliches_count_kodak'];
+}
+if($cliches_count_kodak === null) {
+    $cliches_count_kodak = 0;
+}
+
+$cliches_count_old = filter_input(INPUT_POST, 'cliches_count_old');
+if($cliches_count_old === null && isset($row['cliches_count_old'])) {
+    $cliches_count_old = $row['cliches_count_old'];
+}
+if($cliches_count_old === null) {
+    $cliches_count_old = 0;
 }
 
 $extracharge = null;
@@ -1914,7 +1938,13 @@ while ($row = $fetcher->Fetch()) {
                         <!-- Количество красок (для самоклейки возможно 0) -->
                         <div class="print-only self-adhesive-only d-none">
                             <div class="row">
-                                <div class="form-group col-3" id="ink-col-ink">
+                                <?php
+                                $ink_number_class = " col-12";
+                                if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                    $ink_number_class = " col-3";
+                                }
+                                ?>
+                                <div class="form-group<?=$ink_number_class ?>" id="ink-col-ink">
                                     <label for="ink_number">Количество красок</label>
                                     <select id="ink_number" name="ink_number" class="form-control print-only self-adhesive-only d-none">
                                         <option value="" hidden="hidden">Количество красок...</option>
@@ -1944,15 +1974,15 @@ while ($row = $fetcher->Fetch()) {
                                 </div>
                                 <div class="form-group col-3 self-adhesive-only" id="ink-col-cliche-flint">
                                     <label for="cliches_count_flint">Кол-во новых Флинт</label>
-                                    <input type="text" id="cliches_count_flint" name="cliches_count_flint" value="0" class="form-control int-only self-adhesive-only d-none" />
+                                    <input type="text" id="cliches_count_flint" name="cliches_count_flint" value="<?=$cliches_count_flint ?>" class="form-control int-only self-adhesive-only d-none" />
                                 </div>
                                 <div class="form-group col-3 self-adhesive-only" id="ink-col-cliche-kodak">
                                     <label for="cliches_count_kodak">Кол-во новых Кодак</label>
-                                    <input type="text" id="cliches_count_kodak" name="cliches_count_kodak" value="0" class="form-control int-only self-adhesive-only d-none" />
+                                    <input type="text" id="cliches_count_kodak" name="cliches_count_kodak" value="<?=$cliches_count_kodak ?>" class="form-control int-only self-adhesive-only d-none" />
                                 </div>
                                 <div class="form-group col-3 self-adhesive-only" id="ink-col-cliche-old">
                                     <label for="cliches_count_old">Кол-во старых форм</label>
-                                    <input type="text" id="cliches_count_old" name="cliches_count_old" value="0" class="form-control int-only self-adhesive-only" readonly="readonly" />
+                                    <input type="text" id="cliches_count_old" name="cliches_count_old" value="<?=$cliches_count_old ?>" class="form-control int-only self-adhesive-only" readonly="readonly" />
                                 </div>
                             </div>
                             <!-- Каждая краска -->
@@ -1978,20 +2008,38 @@ while ($row = $fetcher->Fetch()) {
                         
                                 if($$ink_var_name == "white" || $$ink_var_name == "lacquer") {
                                     $ink_class = " col-6";
-                                    $percent_class = " col-3";
-                                    $cliche_class = " col-3";
+                                    
+                                    if($work_type_id == CalculationBase::WORK_TYPE_PRINT) {
+                                        $percent_class = " col-3";
+                                        $cliche_class = " col-3";
+                                    }
+                                    elseif ($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                        $percent_class = " col-6";
+                                    }
                                 }
                                 else if($$ink_var_name == "panton") {
                                     $ink_class = " col-3";
                                     $color_class = " col-3";
-                                    $percent_class = " col-3";
-                                    $cliche_class = " col-3";
+                                    
+                                    if($work_type_id == CalculationBase::WORK_TYPE_PRINT) {
+                                        $percent_class = " col-3";
+                                        $cliche_class = " col-3";
+                                    }
+                                    elseif($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                        $percent_class = " col-6";
+                                    }
                                 }
                                 else if($$ink_var_name == "cmyk") {
                                     $ink_class = " col-3";
                                     $cmyk_class = " col-3";
-                                    $percent_class = " col-3";
-                                    $cliche_class = " col-3";
+                                    
+                                    if($work_type_id == CalculationBase::WORK_TYPE_PRINT) {
+                                        $percent_class = " col-3";
+                                        $cliche_class = " col-3";
+                                    }
+                                    elseif($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                        $percent_class = " col-6";
+                                    }
                                 }
                                 ?>
                                 <div class="form-group<?=$ink_class ?>" id="ink_group_<?=$i ?>">
@@ -2092,7 +2140,6 @@ while ($row = $fetcher->Fetch()) {
                                         $old_selected = "";
                                         $flint_selected = "";
                                         $kodak_selected = "";
-                                        $tver_selected = "";
                                     
                                         $cliche_var = "cliche_$i";
                                         $cliche_selected_var = $$cliche_var."_selected";
@@ -2101,10 +2148,6 @@ while ($row = $fetcher->Fetch()) {
                                         <option value="<?= CalculationBase::FLINT ?>"<?=$flint_selected ?>>Новая Флинт</option>
                                         <option value="<?= CalculationBase::KODAK ?>"<?=$kodak_selected ?>>Новая Кодак</option>
                                         <option value="<?= CalculationBase::OLD ?>"<?=$old_selected ?>>Старая</option>
-                                        <?php if(false): ?>
-                                        <!-- Тверские формы решили убрать -->
-                                        <option value="<?=TVER ?>"<?=$tver_selected ?>>Новая Тверь</option>
-                                        <?php endif; ?>
                                     </select>
                                 </div>
                             </div>

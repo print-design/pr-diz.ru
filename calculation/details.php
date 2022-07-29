@@ -55,7 +55,7 @@ $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_t
         . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
         . "rc.percent_1, rc.percent_2, rc.percent_3, rc.percent_4, rc.percent_5, rc.percent_6, rc.percent_7, rc.percent_8, rc.cliche_1, "
         . "rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8, "
-        . "rc.cliche_in_price, rc.extracharge, rc.extracharge_cliche, "
+        . "rc.cliche_in_price, rc.cliches_count_flint, rc.cliches_count_kodak, rc.cliches_count_old, rc.extracharge, rc.extracharge_cliche, "
         . "cus.name customer, cus.phone customer_phone, cus.extension customer_extension, cus.email customer_email, cus.person customer_person, "
         . "(select count(id) from calculation where customer_id = rc.customer_id and id <= rc.id) num_for_customer,"
         . "(select gap from calculation_result where calculation_id = rc.id) gap "
@@ -159,6 +159,9 @@ for($i=1; $i<=$ink_number; $i++) {
 }
 
 $cliche_in_price = $row['cliche_in_price'];
+$cliches_count_flint = $row['cliches_count_flint'];
+$cliches_count_kodak = $row['cliches_count_kodak'];
+$cliches_count_old = $row['cliches_count_old'];
 $extracharge = $row['extracharge'];
 $extracharge_cliche = $row['extracharge_cliche'];
 

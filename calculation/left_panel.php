@@ -163,13 +163,19 @@ $cliche_width = ($streams_number * $stream_width + 20) + ((!empty($ski) && $ski 
 $cliche_area = $cliche_height * $cliche_width / 100;
 ?>
 <p class="font-weight-bold mt-3">Красочность: <?=$ink_number." ".GetInkWithCases($ink_number) ?></p>
+<?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+<p>Количество форм: Флинт <?=$cliches_count_flint ?>, Кодак <?=$cliches_count_kodak ?>, старых <?=$cliches_count_old ?></p>
+<?php endif; ?>
+
 <table class="table w-100">
     <tr>
         <th class="ink">Цветовая схема</th>
         <th class="ink">Цвет</th>
         <th class="ink">Запечатка</th>
+        <?php if($work_type_id == CalculationBase::WORK_TYPE_PRINT): ?>
         <th class="ink">Тип полимера</th>
         <th class="ink">Форма</th>
+        <?php endif; ?>
         <th class="ink">Себестоимость</th>
     </tr>
     <?php
@@ -210,6 +216,7 @@ $cliche_area = $cliche_height * $cliche_width / 100;
             ?>
         </td>
         <td><?=$$percent_var ?>%</td>
+        <?php if($work_type_id == CalculationBase::WORK_TYPE_PRINT): ?>
         <td>
             <?php
             switch ($$cliche_var) {
@@ -234,6 +241,7 @@ $cliche_area = $cliche_height * $cliche_width / 100;
             }
             ?>
         </td>
+        <?php endif; ?>
         <td class="text-nowrap">
             <?php
             switch ($$cliche_var) {
