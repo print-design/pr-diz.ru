@@ -1923,9 +1923,9 @@ while ($row = $fetcher->Fetch()) {
                                     <select id="lamination_roller_width" name="lamination_roller_width" class="form-control lam-only d-none">
                                         <option value="" hidden="hidden">Ширина ламинирующего вала...</option>
                                         <?php
-                                        $sql = "select value from norm_laminator_roller where active = 1 ";
+                                        $sql = "select value from norm_laminator_roller where laminator_id = 1 and active = 1 ";
                                         if(!empty($lamination_roller_width)) {
-                                            $sql .= "union select value from norm_laminator_roller where active = 0 and value = $lamination_roller_width ";
+                                            $sql .= "union select value from norm_laminator_roller where and laminator_id = 1 and active = 0 and value = $lamination_roller_width ";
                                         }
                                         $sql .= "order by value";
                                         $fetcher = new Fetcher($sql);

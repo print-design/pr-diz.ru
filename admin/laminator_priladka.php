@@ -6,6 +6,9 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Ламинатор
+$laminator_id = filter_input(INPUT_GET, 'laminator_id');
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -40,7 +43,7 @@ if(null !== filter_input(INPUT_POST, 'norm_laminator_priladka_submit')) {
         $old_length = '';
         $old_waste_percent = '';
         
-        $sql = "select time, length, waste_percent from norm_laminator_priladka order by date desc limit 1";
+        $sql = "select time, length, waste_percent from norm_laminator_priladka where laminator_id = $laminator_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -56,7 +59,7 @@ if(null !== filter_input(INPUT_POST, 'norm_laminator_priladka_submit')) {
         $new_waste_percent = filter_input(INPUT_POST, 'waste_percent');
         
         if($old_time != $new_time || $old_length != $new_length || $old_waste_percent != $new_waste_percent) {
-            $sql = "insert into norm_laminator_priladka (time, length, waste_percent) values ($new_time, $new_length, $new_waste_percent)";
+            $sql = "insert into norm_laminator_priladka (laminator_id, time, length, waste_percent) values ($laminator_id, $new_time, $new_length, $new_waste_percent)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -71,7 +74,7 @@ $time = '';
 $length = '';
 $waste_percent = '';
 
-$sql = "select time, length, waste_percent from norm_laminator_priladka order by date desc limit 1";
+$sql = "select time, length, waste_percent from norm_laminator_priladka where laminator_id = $laminator_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -113,6 +116,7 @@ if($row = $fetcher->Fetch()) {
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
+                        <input type="hidden" id="laminator_id" name="laminator_id" value="<?= $laminator_id ?>" />
                         <div class="form-group">
                             <label for="time">Время приладки (мин)</label>
                             <input type="text" 

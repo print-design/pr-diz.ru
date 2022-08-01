@@ -6,13 +6,17 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Ламинатор
+$laminator_id = filter_input(INPUT_GET, 'laminator_id');
+
 // Добавление ширины вала
 if(null !== filter_input(INPUT_POST, 'roller_create_submit')) {
+    $laminator_id = filter_input(INPUT_POST, 'laminator_id');
     $value = filter_input(INPUT_POST, 'value');
     
     if(!empty($value)) {
         // Проверка, имеется ли такой вал
-        $sql = "select count(id) from norm_laminator_roller where value=$value";
+        $sql = "select count(id) from norm_laminator_roller where laminator_id=$laminator_id and value=$value";
         $fetcher = new Fetcher($sql);
         
         $count = 0;
@@ -25,7 +29,7 @@ if(null !== filter_input(INPUT_POST, 'roller_create_submit')) {
         }
         
         if(empty($error_message)) {
-            $sql = "insert into norm_laminator_roller (value) values($value)";
+            $sql = "insert into norm_laminator_roller (laminator_id, value) values($laminator_id, $value)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -72,7 +76,7 @@ if(null !== filter_input(INPUT_POST, 'roller_delete_submit')) {
                             <th style="border-top: 0;" class="text-right">Активный</th>
                         </tr>
                         <?php
-                        $sql = "select id, value, active from norm_laminator_roller order by value";
+                        $sql = "select id, value, active from norm_laminator_roller where laminator_id = $laminator_id order by value";
                         $grabber = new Grabber($sql);
                         $rollers = $grabber->result;
                         foreach ($rollers as $row):
@@ -95,6 +99,7 @@ if(null !== filter_input(INPUT_POST, 'roller_delete_submit')) {
                     </table>
                     <h2>Новая ширина вала</h2>
                     <form method="post" class="form-inline">
+                        <input type="hidden" name="laminator_id" value="<?=$laminator_id ?>" />
                         <input type="hidden" name="scroll" />
                         <input type="text" class="form-control mr-2 int-only" name="value" placeholder="Ширина вала..." required="required" />
                         <button type="submit" name="roller_create_submit" class="btn btn-outline-dark fas fa-plus"></button>

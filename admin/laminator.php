@@ -6,6 +6,9 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Ламинатор
+$laminator_id = filter_input(INPUT_GET, 'laminator_id');
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -38,7 +41,7 @@ if(null !== filter_input(INPUT_POST, 'norm_laminator_submit')) {
         $old_speed = '';
         $old_max_width = '';
         
-        $sql = "select price, speed, max_width from norm_laminator order by date desc limit 1";
+        $sql = "select price, speed, max_width from norm_laminator where laminator_id = $laminator_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -54,7 +57,7 @@ if(null !== filter_input(INPUT_POST, 'norm_laminator_submit')) {
         $new_max_width = filter_input(INPUT_POST, 'max_width');
         
         if($old_price != $new_price || $old_speed != $new_speed || $old_max_width != $new_max_width) {
-            $sql = "insert into norm_laminator (price, speed, max_width) values ($new_price, $new_speed, $new_max_width)";
+            $sql = "insert into norm_laminator (laminator_id, price, speed, max_width) values ($laminator_id, $new_price, $new_speed, $new_max_width)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -69,7 +72,7 @@ $price = '';
 $speed = '';
 $max_width = '';
 
-$sql = "select price, speed, max_width from norm_laminator order by date desc limit 1";
+$sql = "select price, speed, max_width from norm_laminator where laminator_id = $laminator_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -111,6 +114,7 @@ if($row = $fetcher->Fetch()) {
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
+                        <input type="hidden" id="laminator_id" name="laminator_id" value="<?= filter_input(INPUT_GET, 'laminator_id') ?>" />
                         <div class="form-group">
                             <label for="price">Цена работы оборудования, руб/час</label>
                             <input type="text" 
