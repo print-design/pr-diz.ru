@@ -124,6 +124,8 @@ if(!empty($id)) {
         $param_machine = null;
         $param_machine_shortname = null;
         $param_machine_id = null;
+        $param_laminator = null;
+        $param_laminator_id = null;
         $param_length = null; // Длина этикетки, мм
         $param_width = null; // Обрезная ширина, мм (если плёнка без печати)
         $param_stream_width = null; // Ширина ручья, мм (если плёнка с печатью)
@@ -146,7 +148,7 @@ if(!empty($id)) {
                 . "lamination2_f.name lamination2_film, lamination2_fv.thickness lamination2_thickness, lamination2_fv.weight lamination2_density, "
                 . "rc.lamination2_film_variation_id, rc.lamination2_price, rc.lamination2_currency, rc.lamination2_individual_film_name, rc.lamination2_individual_thickness, rc.lamination2_individual_density, "
                 . "rc.lamination2_customers_material, rc.lamination2_ski, rc.lamination2_width_ski, "
-                . "m.name machine, m.shortname machine_shortname, rc.machine_id, rc.length, rc.stream_width, rc.streams_number, rc.raport, rc.lamination_roller_width, rc.ink_number, "
+                . "m.name machine, m.shortname machine_shortname, rc.machine_id, lam.name laminator, rc.laminator_id, rc.length, rc.stream_width, rc.streams_number, rc.raport, rc.lamination_roller_width, rc.ink_number, "
                 . "rc.ink_1, rc.ink_2, rc.ink_3, rc.ink_4, rc.ink_5, rc.ink_6, rc.ink_7, rc.ink_8, "
                 . "rc.color_1, rc.color_2, rc.color_3, rc.color_4, rc.color_5, rc.color_6, rc.color_7, rc.color_8, "
                 . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
@@ -223,6 +225,8 @@ if(!empty($id)) {
             $param_machine = $row['machine'];
             $param_machine_shortname = $row['machine_shortname'];
             $param_machine_id = $row['machine_id'];
+            $param_laminator = $row['laminator'];
+            $param_laminator_id = $row['laminator_id'];
             $param_length = $row['length']; // Длина этикетки, мм
             $param_stream_width = $row['stream_width']; // Ширина ручья, мм
             $param_streams_number = $row['streams_number']; // Количество ручьёв
@@ -275,38 +279,44 @@ if(!empty($id)) {
                 $data_priladka = new DataPriladka(0, 0, 0, 0);
             }
             else {
-                $sql = "select machine_id, time, length, stamp, waste_percent from norm_priladka where id in (select max(id) from norm_priladka where date <= '$param_date' group by machine_id)";
+                $sql = "select time, length, stamp, waste_percent from norm_priladka where date <= '$param_date' and machine_id = $param_machine_id order by id desc limit 1";
                 $fetcher = new Fetcher($sql);
-                while ($row = $fetcher->Fetch()) {
-                    if($row['machine_id'] == $param_machine_id) {
-                        $data_priladka = new DataPriladka($row['time'], $row['length'], $row['stamp'], $row['waste_percent']);
-                    }
+                if ($row = $fetcher->Fetch()) {
+                    $data_priladka = new DataPriladka($row['time'], $row['length'], $row['stamp'], $row['waste_percent']);
                 }
             }
         
-            $sql = "select time, length, waste_percent from norm_laminator_priladka where date <= '$param_date' order by id desc limit 1";
-            $fetcher = new Fetcher($sql);
-            if($row = $fetcher->Fetch()) {
-                $data_priladka_laminator = new DataPriladka($row['time'], $row['length'], 0, $row['waste_percent']);
+            if(empty($param_laminator_id)) {
+                $data_priladka_laminator = new DataPriladka(0, 0, 0, 0);
+            }
+            else {
+                $sql = "select time, length, waste_percent from norm_laminator_priladka where date <= '$param_date' and laminator_id = $param_laminator_id order by id desc limit 1";
+                $fetcher = new Fetcher($sql);
+                if($row = $fetcher->Fetch()) {
+                    $data_priladka_laminator = new DataPriladka($row['time'], $row['length'], 0, $row['waste_percent']);
+                }
             }
         
             if(empty($param_machine_id)) {
                 $data_machine = new DataMachine(0, 0, 0);
             }
             else {
-                $sql = "select machine_id, price, speed, max_width from norm_machine where id in (select max(id) from norm_machine where date <= '$param_date' group by machine_id)";
+                $sql = "select price, speed, max_width from norm_machine where date <= '$param_date' and machine_id = $param_machine_id order by id desc limit 1";
                 $fetcher = new Fetcher($sql);
-                while ($row = $fetcher->Fetch()) {
-                    if($row['machine_id'] == $param_machine_id) {
-                        $data_machine = new DataMachine($row['price'], $row['speed'], $row['max_width']);
-                    }
+                if ($row = $fetcher->Fetch()) {
+                    $data_machine = new DataMachine($row['price'], $row['speed'], $row['max_width']);
                 }
             }
         
-            $sql = "select price, speed, max_width from norm_laminator where date <= '$param_date' order by id desc limit 1";
-            $fetcher = new Fetcher($sql);
-            if($row = $fetcher->Fetch()) {
-                $data_machine_laminator = new DataMachine($row['price'], $row['speed'], $row['max_width']);
+            if(empty($param_laminator_id)) {
+                $data_machine_laminator = new DataMachine(0, 0, 0);
+            }
+            else {
+                $sql = "select price, speed, max_width from norm_laminator where date <= '$param_date' and laminator_id = $param_laminator_id order by id desc limit 1";
+                $fetcher = new Fetcher($sql);
+                if($row = $fetcher->Fetch()) {
+                    $data_machine_laminator = new DataMachine($row['price'], $row['speed'], $row['max_width']);
+                }
             }
         
             $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_price, lacquer_currency, lacquer_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense "
