@@ -118,7 +118,7 @@ $current_date_time = date("dmYHis");
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-nowrap pb-5">ID от поставщика<br /><span class="text-nowrap font-weight-bold"><?=$id_from_supplier ?></span></td>
+                        <td class="pb-5"><span class="text-nowrap">ID от поставщика</span><br /><span class="font-weight-bold" style="word-break: break-all;"><?=$id_from_supplier ?></span></td>
                         <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top:2px;">2</sup></span></td>
                     </tr>
                     <tr>
@@ -171,7 +171,7 @@ $current_date_time = date("dmYHis");
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-nowrap pb-5">ID от поставщика<br /><span class="text-nowrap font-weight-bold"><?=$id_from_supplier ?></span></td>
+                        <td class="pb-5"><span class="text-nowrap">ID от поставщика</span><br /><span class="font-weight-bold" style="word-break: break-all;"><?=$id_from_supplier ?></span></td>
                         <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top:2px;">2</sup></span></td>
                     </tr>
                     <tr>
@@ -284,7 +284,7 @@ $current_date_time = date("dmYHis");
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-nowrap pb-5">ID от поставщика<br /><span class="text-nowrap font-weight-bold"><?=$pr_id_from_supplier ?></span></td>
+                        <td class="pb-5"><span class="text-nowrap">ID от поставщика</span><br /><span class="font-weight-bold" style="word-break: break-all;"><?=$pr_id_from_supplier ?></span></td>
                         <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></span></td>
                     </tr>
                     <tr>
