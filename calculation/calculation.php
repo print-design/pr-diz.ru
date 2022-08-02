@@ -227,6 +227,14 @@ class CalculationBase {
     const FLINT = "flint";
     const KODAK = "kodak";
     
+    // Ламинатор сольвент/бессольвент
+    const SOLVENT_YES = 'yes';
+    const SOLVENT_NO = 'no';
+    
+    // ID ламинатора
+    const LAMINATOR_SOLVENT = 1;
+    const LAMINATOR_SOLVENTLESS = 2;
+    
     // Машины
     // Используется в условии: если комифлекс, то растворитель флексоль 32, если нет - этоксипропанол
     const COMIFLEX = 'comiflex';
