@@ -1571,12 +1571,12 @@ while ($row = $fetcher->Fetch()) {
                                         <div class="col-8">
                                             <div class="form-check-inline">
                                                 <label class="form-check-label mt-3">
-                                                    <input type="radio" class="form-check-input" id="solvent_yes" name="laminator_id" value="yes"<?=$solvent_yes_checked ?> />Сольвент
+                                                    <input type="radio" class="form-check-input" id="solvent_yes" name="laminator_id" value="<?= CalculationBase::SOLVENT_YES ?>"<?=$solvent_yes_checked ?> />Сольвент
                                                 </label>
                                             </div>
                                             <div class="form-check-inline">
                                                 <label class="form-check-label mt-3">
-                                                    <input type="radio" class="form-check-input" id="solvent_no" name="laminator_id" value="no"<?=$solvent_no_checked ?> />Бессольвент
+                                                    <input type="radio" class="form-check-input" id="solvent_no" name="laminator_id" value="<?= CalculationBase::SOLVENT_NO ?>"<?=$solvent_no_checked ?> />Бессольвент
                                                 </label>
                                             </div>
                                         </div>
