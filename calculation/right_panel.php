@@ -157,6 +157,7 @@ if(!empty($id)) {
                 . "rc.cliche_in_price, rc.extracharge, rc.extracharge_cliche "
                 . "from calculation rc "
                 . "left join machine m on rc.machine_id = m.id "
+                . "left join laminator lam on rc.laminator_id = lam.id "
                 . "left join film_variation fv on rc.film_variation_id = fv.id "
                 . "left join film f on fv.film_id = f.id "
                 . "left join film_variation lamination1_fv on rc.lamination1_film_variation_id = lamination1_fv.id "
