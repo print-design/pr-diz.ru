@@ -2997,8 +2997,10 @@ while ($row = $fetcher->Fetch()) {
                 SetFieldsVisibility($('#work_type_id').val());
                 SetFilmFieldsVisibility($('#lamination1_film_id').val(), $('#lamination1_customers_material').is(':checked'), 'lamination1_');
                 
+                <?php if(empty($laminator_id)): ?>
                 // Устанавливаем по умолчанию выбранным радиобаттон "Сольвент"
                 $('#solvent_yes').click();
+                <?php endif; ?>
             }
             
             <?php if(!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)): ?>
