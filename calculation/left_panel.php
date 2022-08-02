@@ -39,7 +39,7 @@
                 <td><?= GetSkiNameExt($lamination1_ski, $lamination1_width_ski) ?></td>
             </tr>
                 <?php elseif(!empty($lamination1_film_name)): ?>
-            <tr><th colspan="2">Ламинация 1<?= empty($solvent) ? "" : ($solvent == CalculationBase::SOLVENT_YES ? " (сольвент)" : " (бессольвент)") ?></th></tr>
+            <tr><th colspan="2">Ламинация 1<?= empty($laminator_id) ? "" : ($laminator_id == CalculationBase::SOLVENT_YES ? " (сольвент)" : " (бессольвент)") ?></th></tr>
             <tr><td colspan="2"><?=$lamination1_film_name ?></td></tr>
             <tr>
                 <td><?= number_format($lamination1_thickness, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($lamination1_weight, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>

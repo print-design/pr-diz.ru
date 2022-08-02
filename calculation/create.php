@@ -307,7 +307,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             }
         }
         
-        $solvent = filter_input(INPUT_POST, 'solvent');
+        $laminator_id = filter_input(INPUT_POST, 'laminator_id'); if(empty($laminator_id)) $laminator_id = "NULL";
         $length = $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'length_2') : filter_input(INPUT_POST, 'length'); if(empty($length)) $length = "NULL";
         $stream_width = $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'stream_width_2') : filter_input(INPUT_POST, 'stream_width'); if(empty($stream_width)) $stream_width = "NULL";
         $streams_number = filter_input(INPUT_POST, 'streams_number'); if(empty($streams_number)) $streams_number = "NULL";
@@ -347,7 +347,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "film_variation_id, price, currency, individual_film_name, individual_thickness, individual_density, customers_material, ski, width_ski, "
                 . "lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, lamination1_ski, lamination1_width_ski, "
                 . "lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, lamination2_ski, lamination2_width_ski, "
-                . "solvent, streams_number, machine_id, length, stream_width, raport, number_in_raport, lamination_roller_width, ink_number, manager_id, status_id, "
+                . "laminator_id, streams_number, machine_id, length, stream_width, raport, number_in_raport, lamination_roller_width, ink_number, manager_id, status_id, "
                 . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
                 . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                 . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -358,7 +358,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "$film_variation_id, $price, '$currency', '$individual_film_name', $individual_thickness, $individual_density, $customers_material, $ski, $width_ski, "
                 . "$lamination1_film_variation_id, $lamination1_price, '$lamination1_currency', '$lamination1_individual_film_name', $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, $lamination1_ski, $lamination1_width_ski, "
                 . "$lamination2_film_variation_id, $lamination2_price, '$lamination2_currency', '$lamination2_individual_film_name', $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, $lamination2_ski, $lamination2_width_ski, "
-                . "'$solvent', $streams_number, $machine_id, $length, $stream_width, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $manager_id, $status_id, "
+                . "$laminator_id, $streams_number, $machine_id, $length, $stream_width, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $manager_id, $status_id, "
                 . "'$ink_1', '$ink_2', '$ink_3', '$ink_4', '$ink_5', '$ink_6', '$ink_7', '$ink_8', "
                 . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                 . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
@@ -408,7 +408,7 @@ if(!empty($id)) {
             . "(select film_id from film_variation where id = c.lamination1_film_variation_id) lamination1_film_id, "
             . "c.lamination2_film_variation_id, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_ski, c.lamination2_width_ski, "
             . "(select film_id from film_variation where id = c.lamination2_film_variation_id) lamination2_film_id, "
-            . "c.solvent, c.streams_number, c.machine_id, c.length, c.stream_width, c.raport, c.number_in_raport, c.lamination_roller_width, c.ink_number, c.manager_id, c.status_id, "
+            . "c.laminator_id, c.streams_number, c.machine_id, c.length, c.stream_width, c.raport, c.number_in_raport, c.lamination_roller_width, c.ink_number, c.manager_id, c.status_id, "
             . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
             . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
@@ -609,9 +609,9 @@ if($lamination2_width_ski === null && isset($row['lamination2_width_ski'])) {
     $lamination2_width_ski = $row['lamination2_width_ski'];
 }
 
-$solvent = filter_input(INPUT_POST, 'solvent');
-if($solvent === null && isset($row['solvent'])) {
-    $solvent = $row['solvent'];
+$laminator_id = filter_input(INPUT_POST, 'laminator_id');
+if($laminator_id === null && isset($row['laminator_id'])) {
+    $laminator_id = $row['laminator_id'];
 }
 
 $streams_number = filter_input(INPUT_POST, 'streams_number');
@@ -1561,22 +1561,22 @@ while ($row = $fetcher->Fetch()) {
                                         <?php
                                         $solvent_yes_checked = "";
                                         $solvent_no_checked = "";
-                                        if($solvent == CalculationBase::SOLVENT_YES) {
+                                        if($laminator_id == CalculationBase::SOLVENT_YES) {
                                             $solvent_yes_checked = " checked='checked'";
                                         }
-                                        elseif($solvent == CalculationBase::SOLVENT_NO) {
+                                        elseif($laminator_id == CalculationBase::SOLVENT_NO) {
                                             $solvent_no_checked = " checked='checked'";
                                         }
                                         ?>
                                         <div class="col-8">
                                             <div class="form-check-inline">
                                                 <label class="form-check-label mt-3">
-                                                    <input type="radio" class="form-check-input" id="solvent_yes" name="solvent" value="yes"<?=$solvent_yes_checked ?> />Сольвент
+                                                    <input type="radio" class="form-check-input" id="solvent_yes" name="laminator_id" value="yes"<?=$solvent_yes_checked ?> />Сольвент
                                                 </label>
                                             </div>
                                             <div class="form-check-inline">
                                                 <label class="form-check-label mt-3">
-                                                    <input type="radio" class="form-check-input" id="solvent_no" name="solvent" value="no"<?=$solvent_no_checked ?> />Бессольвент
+                                                    <input type="radio" class="form-check-input" id="solvent_no" name="laminator_id" value="no"<?=$solvent_no_checked ?> />Бессольвент
                                                 </label>
                                             </div>
                                         </div>
@@ -1935,11 +1935,7 @@ while ($row = $fetcher->Fetch()) {
                                     <select id="lamination_roller_width" name="lamination_roller_width" class="form-control lam-only d-none">
                                         <option value="" hidden="hidden">Ширина ламинирующего вала...</option>
                                         <?php
-                                        if(!empty($solvent)):
-                                        $laminator_id = 0;
-                                        if($solvent == CalculationBase::SOLVENT_YES) $laminator_id = CalculationBase::LAMINATOR_SOLVENT;
-                                        elseif($solvent == CalculationBase::SOLVENT_NO) $laminator_id = CalculationBase::LAMINATOR_SOLVENTLESS;
-                                        
+                                        if(!empty($laminator_id)):
                                         $sql = "select value from norm_laminator_roller where laminator_id = $laminator_id and active = 1 ";
                                         if(!empty($lamination_roller_width)) {
                                             $sql .= "union select value from norm_laminator_roller where laminator_id = 1 and active = 0 and value = $lamination_roller_width ";
@@ -3080,7 +3076,7 @@ while ($row = $fetcher->Fetch()) {
             
             // Обрабатываем выбор сольвентного или бессольвентного ламинатора
             $('#solvent_yes').click(function() {
-                $.ajax({ url: "../ajax/laminator_roller.php?solvent=yes" })
+                $.ajax({ url: "../ajax/laminator_roller.php?laminator_id=<?= CalculationBase::SOLVENT_YES ?>" })
                         .done(function(data) {
                             $('#lamination_roller_width').html(data);
                         })
@@ -3090,7 +3086,7 @@ while ($row = $fetcher->Fetch()) {
             });
             
             $('#solvent_no').click(function() {
-                $.ajax({ url: "../ajax/laminator_roller.php?solvent=no" })
+                $.ajax({ url: "../ajax/laminator_roller.php?laminator_id=<?= CalculationBase::SOLVENT_NO ?>" })
                         .done(function(data) {
                             $('#lamination_roller_width').html(data);
                         })
