@@ -9,6 +9,10 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
 // Ламинатор
 $laminator_id = filter_input(INPUT_GET, 'laminator_id');
 
+// "Растворителя" / "отвердителя"
+$solvent_genitive = "растворителя";
+if($laminator_id == 2) $solvent_genitive = "отвердителя";
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -182,7 +186,7 @@ if($row = $fetcher->Fetch()) {
                             <div class="invalid-feedback">Цена чистого клея обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="solvent_price">Цена растворителя для клея (за кг)</label>
+                            <label for="solvent_price">Цена <?=$solvent_genitive ?> для клея (за кг)</label>
                             <div class="input-group">
                                 <input type="text" 
                                        class="form-control float-only" 
@@ -205,7 +209,7 @@ if($row = $fetcher->Fetch()) {
                                     </select>
                                 </div>
                             </div>
-                            <div class="invalid-feedback">Цена растворителя для клея обязательно</div>
+                            <div class="invalid-feedback">Цена <?=$solvent_genitive ?> для клея обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="glue_expense">Расход смеси клея, г/м<sup>2</sup></label>
@@ -240,7 +244,7 @@ if($row = $fetcher->Fetch()) {
                             <div class="invalid-feedback">Расход смеси клея при ламинации ПЭТ обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="solvent_part">Расход растворителя (кг) на 1 кг клея</label>
+                            <label for="solvent_part">Расход <?=$solvent_genitive ?> (кг) на 1 кг клея</label>
                             <input type="text" 
                                    class="form-control float-only" 
                                    id="solvent_part" 
@@ -253,7 +257,7 @@ if($row = $fetcher->Fetch()) {
                                    onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                    onkeyup="javascript: $(this).attr('id', 'solvent_part'); $(this).attr('name', 'solvent_part'); $(this).attr('placeholder', 'Растворитель');" 
                                    onfocusout="javascript: $(this).attr('id', 'solvent_part'); $(this).attr('name', 'solvent_part'); $(this).attr('placeholder', 'Растворитель');" />
-                            <div class="invalid-feedback">Расход растворителя на 1 кг клея обязательно</div>
+                            <div class="invalid-feedback">Расход <?=$solvent_genitive ?> на 1 кг клея обязательно</div>
                         </div>
                         <button type="submit" id="norm_glue_submit" name="norm_glue_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
                     </form>
