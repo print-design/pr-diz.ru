@@ -383,9 +383,9 @@ if($row = $fetcher->Fetch()) {
             ?>
             <form method="post">
                 <div class="row">
-                    <div class="col-12 col-md-8 col-lg-6 d-table">
+                    <div class="col-12 col-md-8 col-lg-4 d-table">
                         <div class="d-table-row">
-                            <div class="d-table-cell pr-3" style="width: 33%;">
+                            <div class="d-table-cell w-50 pr-3">
                                 <div class="form-group">
                                     <label for="c_price">Чистый C (за кг)</label>
                                     <div class="input-group">
@@ -413,7 +413,7 @@ if($row = $fetcher->Fetch()) {
                                     <div class="invalid-feedback">Чистый C обязательно</div>
                                 </div>
                             </div>
-                            <div class="d-table-cell pl-3 pr-3" style="width: 33%;">
+                            <div class="d-table-cell w-50 pl-3" style="width: 33%;">
                                 <div class="form-group">
                                     <label for="c_expense">Расход смеси C (г/м<sup>2</sup>)</label>
                                     <input type="text" 
@@ -429,34 +429,6 @@ if($row = $fetcher->Fetch()) {
                                            onkeyup="javascript: $(this).attr('id', 'c_expense'); $(this).attr('name', 'c_expense'); $(this).attr('placeholder', 'Расход смеси C (г/м2)');" 
                                            onfocusout="javascript: $(this).attr('id', 'c_expense'); $(this).attr('name', 'c_expense'); $(this).attr('placeholder', 'Расход смеси C (г/м2)');" />
                                     <div class="invalid-feedback">Расход смеси C обязательно</div>
-                                </div>
-                            </div>
-                            <div class="d-table-cell pl-3" style="width: 33%;">
-                                <div class="form-group">
-                                    <label for="self_adhesive_laquer_price">Самоклейка, цена лака (за кг)</label>
-                                    <div class="input-group">
-                                        <input type="text" 
-                                            class="form-control float-only" 
-                                            id="self_adhesive_laquer_price" 
-                                            name="self_adhesive_laquer_price"
-                                            value="<?= empty($self_adhesive_laquer_price) || $self_adhesive_laquer_price == 0.0 ? "" : floatval($self_adhesive_laquer_price) ?>" 
-                                            placeholder="Самоклейка, цена лака (за кг)" 
-                                            required="required" 
-                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                            onmouseup="javascript: $(this).attr('id', 'self_adhesive_laquer_price'); $(this).attr('name', 'self_adhesive_laquer_price'); $(this).attr('placeholder', 'Самоклейка, цена лака (за кг)');" 
-                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                            onkeyup="javascript: $(this).attr('id', 'self_adhesive_laquer_price'); $(this).attr('name', 'self_adhesive_laquer_price'); $(this).attr('placeholder', 'Самоклейка, цена лака (за кг)');" 
-                                            onfocusout="javascript: $(this).attr('id', 'self_adhesive_laquer_price'); $(this).attr('name', 'self_adhesive_laquer_price'); $(this).attr('placeholder', 'Самоклейка, цена лака (за кг)');" />
-                                        <div class="input-group-append"> 
-                                            <select id="self_adhesive_laquer_currency" name="self_adhesive_laquer_currency" required="required">
-                                                <option value="" hidden="">...</option>
-                                                <option value="rub"<?=$self_adhesive_laquer_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
-                                                <option value="usd"<?=$self_adhesive_laquer_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                                <option value="euro"<?=$self_adhesive_laquer_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="invalid-feedback">Самоклейка, цена лака обязательно</div>
                                 </div>
                             </div>
                         </div>
@@ -489,7 +461,7 @@ if($row = $fetcher->Fetch()) {
                                     <div class="invalid-feedback">Чистый M обязательно</div>
                                 </div>
                             </div>
-                            <div class="d-table-cell pl-3 pr-3">
+                            <div class="d-table-cell pl-3">
                                 <div class="form-group">
                                     <label for="m_expense">Расход смеси M (г/м<sup>2</sup>)</label>
                                     <input type="text" 
@@ -505,24 +477,6 @@ if($row = $fetcher->Fetch()) {
                                            onkeyup="javascript: $(this).attr('id', 'm_expense'); $(this).attr('name', 'm_expense'); $(this).attr('placeholder', 'Расход смеси M (г/м2)');" 
                                            onfocusout="javascript: $(this).attr('id', 'm_expense'); $(this).attr('name', 'm_expense'); $(this).attr('placeholder', 'Расход смеси M (г/м2)');" />
                                     <div class="invalid-feedback">Расход смеси M обязательно</div>
-                                </div>
-                            </div>
-                            <div class="d-table-cell pl-3">
-                                <div class="form-group">
-                                    <label for="self_adhesive_laquer_expense">Самоклейка, расход чистого лака (г/м<sup>2</sup>)</label>
-                                    <input type="text" 
-                                           class="form-control float-only" 
-                                           id="self_adhesive_laquer_expense" 
-                                           name="self_adhesive_laquer_expense"
-                                           value="<?= empty($self_adhesive_laquer_expense) || $self_adhesive_laquer_expense == 0.0 ? "" : floatval($self_adhesive_laquer_expense) ?>" 
-                                           placeholder="Самоклейка, расход чистого лака (г/м2)" 
-                                           required="required" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'self_adhesive_laquer_expense'); $(this).attr('name', 'self_adhesive_laquer_expense'); $(this).attr('placeholder', 'Самоклейка, расход чистого лака (г/м2)');" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'self_adhesive_laquer_expense'); $(this).attr('name', 'self_adhesive_laquer_expense'); $(this).attr('placeholder', 'Самоклейка, расход чистого лака (г/м2)');" 
-                                           onfocusout="javascript: $(this).attr('id', 'self_adhesive_laquer_expense'); $(this).attr('name', 'self_adhesive_laquer_expense'); $(this).attr('placeholder', 'Самоклейка, расход чистого лака (г/м2)');" />
-                                    <div class="invalid-feedback">Самоклейка, расход чистого лака обязательно</div>
                                 </div>
                             </div>
                         </div>
@@ -573,7 +527,6 @@ if($row = $fetcher->Fetch()) {
                                     <div class="invalid-feedback">Расход смеси Y обязательно</div>
                                 </div>
                             </div>
-                            <div class="d-table-cell pl-3"></div>
                         </div>
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
@@ -622,7 +575,6 @@ if($row = $fetcher->Fetch()) {
                                     <div class="invalid-feedback">Расход  смеси K обязательно</div>
                                 </div>
                             </div>
-                            <div class="d-table-cell pl-3"></div>
                         </div>
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
@@ -671,7 +623,6 @@ if($row = $fetcher->Fetch()) {
                                     <div class="invalid-feedback">Расход смеси пантона обязательно</div>
                                 </div>
                             </div>
-                            <div class="d-table-cell pl-3"></div>
                         </div>
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
@@ -720,7 +671,6 @@ if($row = $fetcher->Fetch()) {
                                     <div class="invalid-feedback">Расход смеси белой обязательно</div>
                                 </div>
                             </div>
-                            <div class="d-table-cell pl-3"></div>
                         </div>
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
@@ -769,7 +719,54 @@ if($row = $fetcher->Fetch()) {
                                     <div class="invalid-feedback">Расход смеси лака обязательно</div>
                                 </div>
                             </div>
-                            <div class="d-table-cell pl-3"></div>
+                        </div>
+                        <div class="d-table-row">
+                            <div class="d-table-cell pr-3">
+                                <div class="form-group">
+                                    <label for="self_adhesive_laquer_price">Самоклейка, цена лака (за кг)</label>
+                                    <div class="input-group">
+                                        <input type="text" 
+                                            class="form-control float-only" 
+                                            id="self_adhesive_laquer_price" 
+                                            name="self_adhesive_laquer_price"
+                                            value="<?= empty($self_adhesive_laquer_price) || $self_adhesive_laquer_price == 0.0 ? "" : floatval($self_adhesive_laquer_price) ?>" 
+                                            placeholder="Самоклейка, цена лака (за кг)" 
+                                            required="required" 
+                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                            onmouseup="javascript: $(this).attr('id', 'self_adhesive_laquer_price'); $(this).attr('name', 'self_adhesive_laquer_price'); $(this).attr('placeholder', 'Самоклейка, цена лака (за кг)');" 
+                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                            onkeyup="javascript: $(this).attr('id', 'self_adhesive_laquer_price'); $(this).attr('name', 'self_adhesive_laquer_price'); $(this).attr('placeholder', 'Самоклейка, цена лака (за кг)');" 
+                                            onfocusout="javascript: $(this).attr('id', 'self_adhesive_laquer_price'); $(this).attr('name', 'self_adhesive_laquer_price'); $(this).attr('placeholder', 'Самоклейка, цена лака (за кг)');" />
+                                        <div class="input-group-append"> 
+                                            <select id="self_adhesive_laquer_currency" name="self_adhesive_laquer_currency" required="required">
+                                                <option value="" hidden="">...</option>
+                                                <option value="rub"<?=$self_adhesive_laquer_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
+                                                <option value="usd"<?=$self_adhesive_laquer_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
+                                                <option value="euro"<?=$self_adhesive_laquer_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="invalid-feedback">Самоклейка, цена лака обязательно</div>
+                                </div>
+                            </div>
+                            <div class="d-table-cell pl-3">
+                                <div class="form-group">
+                                    <label for="self_adhesive_laquer_expense">Самоклейка, расход чистого лака (г/м<sup>2</sup>)</label>
+                                    <input type="text" 
+                                           class="form-control float-only" 
+                                           id="self_adhesive_laquer_expense" 
+                                           name="self_adhesive_laquer_expense"
+                                           value="<?= empty($self_adhesive_laquer_expense) || $self_adhesive_laquer_expense == 0.0 ? "" : floatval($self_adhesive_laquer_expense) ?>" 
+                                           placeholder="Самоклейка, расход чистого лака (г/м2)" 
+                                           required="required" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'self_adhesive_laquer_expense'); $(this).attr('name', 'self_adhesive_laquer_expense'); $(this).attr('placeholder', 'Самоклейка, расход чистого лака (г/м2)');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'self_adhesive_laquer_expense'); $(this).attr('name', 'self_adhesive_laquer_expense'); $(this).attr('placeholder', 'Самоклейка, расход чистого лака (г/м2)');" 
+                                           onfocusout="javascript: $(this).attr('id', 'self_adhesive_laquer_expense'); $(this).attr('name', 'self_adhesive_laquer_expense'); $(this).attr('placeholder', 'Самоклейка, расход чистого лака (г/м2)');" />
+                                    <div class="invalid-feedback">Самоклейка, расход чистого лака обязательно</div>
+                                </div>
+                            </div>
                         </div>
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
@@ -828,7 +825,6 @@ if($row = $fetcher->Fetch()) {
                                     <div class="invalid-feedback">Цена флексоля 82 обязательно</div>
                                 </div>
                             </div>
-                            <div class="d-table-cell pl-3"></div>
                         </div>
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
@@ -867,14 +863,12 @@ if($row = $fetcher->Fetch()) {
                                     <div class="invalid-feedback">Ограничение на минимальную стоимость обязательно</div>
                                 </div>
                             </div>
-                            <div class="d-table-cell pl-3"></div>
                         </div>
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <button type="submit" id="norm_ink_submit" name="norm_ink_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
                             </div>
                             <div class="d-table-cell pl-3 pr-3"></div>
-                            <div class="d-table-cell pl-3"></div>
                         </div>
                     </div>
                 </div>
