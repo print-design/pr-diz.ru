@@ -139,29 +139,7 @@
         </table>
     </div>
 </div>
-<?php
-if($work_type_id != CalculationBase::WORK_TYPE_NOPRINT):
-
-// Стоимость форм
-$cliche_data = null;
-
-$sql = "select flint_price, flint_currency, kodak_price, kodak_currency, scotch_price, scotch_currency "
-        . "from norm_cliche where date <= '$date' order by id desc limit 1";
-$fetcher = new Fetcher($sql);
-
-if($row = $fetcher->Fetch()) {
-    $cliche_data = new DataCliche($row['flint_price'], $row['flint_currency'], $row['kodak_price'], $row['kodak_currency'], $row['scotch_price'], $row['scotch_currency']);
-}
-
-// Высота форм
-$cliche_height = $raport + 20;
-
-// Ширина форм
-$cliche_width = ($streams_number * $stream_width + 20) + ((!empty($ski) && $ski == CalculationBase::NO_SKI) ? 0 : 20);
-
-// Площадь форм
-$cliche_area = $cliche_height * $cliche_width / 100;
-?>
+<?php if($work_type_id != CalculationBase::WORK_TYPE_NOPRINT): ?>
 <p class="font-weight-bold mt-3">Красочность: <?=$ink_number." ".GetInkWithCases($ink_number) ?></p>
 <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
 <p>Количество форм: Флинт <?=$cliches_count_flint ?>, Кодак <?=$cliches_count_kodak ?>, старых <?=$cliches_count_old ?></p>
@@ -176,7 +154,6 @@ $cliche_area = $cliche_height * $cliche_width / 100;
         <th class="ink">Тип полимера</th>
         <th class="ink">Форма</th>
         <?php endif; ?>
-        <th class="ink">Себестоимость</th>
     </tr>
     <?php
     for($i=1; $i<=$ink_number; $i++):
@@ -242,21 +219,6 @@ $cliche_area = $cliche_height * $cliche_width / 100;
             ?>
         </td>
         <?php endif; ?>
-        <td class="text-nowrap">
-            <?php
-            switch ($$cliche_var) {
-                case CalculationBase::OLD:
-                    echo '0 ₽';
-                    break;
-                case CalculationBase::FLINT:
-                    echo CalculationBase::Display($cliche_area * $cliche_data->flint_price * CalculationBase::GetCurrencyRate($cliche_data->flint_currency, $usd, $euro), 2)." ₽";
-                    break;
-                case CalculationBase::KODAK:
-                    echo CalculationBase::Display($cliche_area * $cliche_data->kodak_price * CalculationBase::GetCurrencyRate($cliche_data->kodak_currency, $usd, $euro), 2)." ₽";
-                    break;
-            }
-            ?>
-        </td>
     </tr>
     <?php endfor; ?>
 </table>
