@@ -57,9 +57,7 @@
             
             // Нахождение наименьшего и наибольшего процента для данного уровня
             $percent_step = 0;
-            if($min_streams_counts[$keys[$index]] > 0) {
-                $percent_step = (floatval($percent_high) - floatval($percent_low)) / $min_streams_counts[$keys[$index]];
-            }
+            $percent_step = (floatval($percent_high) - floatval($percent_low)) / (floatval($min_streams_counts[$keys[$index]]) + 1.0);
             $new_percent_low = $percent_low;
             $new_percent_high = $percent_low + $percent_step;
 
@@ -95,8 +93,12 @@
                 }
             }
             
-            if($index > 0 && $index < 3) {
-                echo intval($percent_low)." --- $index %<br />";
+            if($new_percent_high > $variables->current_percent) {
+                $variables->current_percent = $new_percent_high;
+            }
+            
+            if($index > 0 && $variables->current_percent <= 100) {
+                echo intval($variables->current_percent)." %<br />";
             }
         }
         
@@ -105,6 +107,7 @@
                 $this->max_streams_widths_sum = 0;
                 $this->source_width = $source_width;
                 $this->streams_counts = array();
+                $this->current_percent = 0;
             }
             
             // Наибольшая сумма ширин ручьёв в одном резе
@@ -115,6 +118,9 @@
             
             // Количества ручьёв для каждого конечного ролика в одном резе
             public $streams_counts;
+            
+            // Текущий процент
+            public $current_percent;
         }
         
         if(null !== filter_input(INPUT_POST, 'cut_sumbit') && !empty(filter_input(INPUT_POST, 'source_width')) && !empty(filter_input(INPUT_POST, 'cut_length')) && !empty(filter_input(INPUT_POST, 'width_1')) && !empty(filter_input(INPUT_POST, 'length_1'))) {
