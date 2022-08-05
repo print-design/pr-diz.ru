@@ -95,7 +95,9 @@
                 }
             }
             
-            echo intval($percent_low)." %<br />";
+            if($index > 0 && $index < 3) {
+                echo intval($percent_low)." --- $index %<br />";
+            }
         }
         
         class Variables {
