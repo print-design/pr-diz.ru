@@ -478,8 +478,8 @@ if($id !== null) {
         
         array_push($file_data, array("Ширина форм, мм",
             CalculationBase::Display($calculation->cliche_width, 2),
-            "|= (".CalculationBase::Display($streams_number, 2)." * ".CalculationBase::Display($stream_width, 2)." + 20) + ".((!empty($ski_1) && $ski_1 == Calculation::NO_SKI) ? 0 : 20),
-            "(кол-во ручьёв * ширина ручьёв + 20 мм), если есть лыжи (стандартные или нестандартные), то ещё + 20 мм"));
+            "|= (".CalculationBase::Display($streams_number, 2)." * ".CalculationBase::Display($calculation->width_dirty, 2)." + 20) + 20",
+            "(кол-во ручьёв * ширина этикетки грязная + 20 мм) + 20 мм (для самоклейки без лыж не бывает)"));
         
         array_push($file_data, array("Площадь форм, см",
             CalculationBase::Display($calculation->cliche_area, 2),

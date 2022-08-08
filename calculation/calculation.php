@@ -1386,7 +1386,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->cliche_height = $raport + 20;
         
         // Ширина форм, мм (для самоклейки без лыж не бывает)
-        $this->cliche_width = ($streams_number * $stream_width + 20) + 20;
+        $this->cliche_width = ($streams_number * $this->width_dirty + 20) + 20;
         
         // Площадь форм, см
         $this->cliche_area = $this->cliche_height * $this->cliche_width;
