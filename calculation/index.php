@@ -308,7 +308,7 @@ $title = $status_titles[$status_id];
                 placeholder: "Тип работы...",
                 maximumSelectionLength: 1,
                 language: "ru",
-                width: '10rem'
+                width: '15rem'
             });
             
             $('#manager').select2({
