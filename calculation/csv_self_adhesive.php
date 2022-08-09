@@ -483,8 +483,8 @@ if($id !== null) {
         
         array_push($file_data, array("Площадь форм, см",
             CalculationBase::Display($calculation->cliche_area, 2),
-            "|= ".CalculationBase::Display($calculation->cliche_height, 2)." * ".CalculationBase::Display($calculation->cliche_width, 2),
-            "высота форм * ширина форм"));
+            "|= ".CalculationBase::Display($calculation->cliche_height, 2)." * ".CalculationBase::Display($calculation->cliche_width, 2)." / 100",
+            "высота форм * ширина форм / 100"));
         
         array_push($file_data, array("Себестоимость 1 формы Флинт, руб",
             CalculationBase::Display($calculation->cliche_flint_price, 2),

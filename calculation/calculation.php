@@ -1389,7 +1389,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->cliche_width = ($streams_number * $this->width_dirty + 20) + 20;
         
         // Площадь форм, см
-        $this->cliche_area = $this->cliche_height * $this->cliche_width;
+        $this->cliche_area = $this->cliche_height * $this->cliche_width / 100;
         
         // Себестоимость 1 формы Флинт, руб
         $this->cliche_flint_price = $this->cliche_area * $data_cliche->flint_price * self::GetCurrencyRate($data_cliche->flint_currency, $usd, $euro);
