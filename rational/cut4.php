@@ -99,15 +99,15 @@ include '../include/topscripts.php';
             
             // Конечные ролики с ключами
             var plan_rolls = {};
+            var sorted_by_width = {};
             
             var i = 1;
             
             while($('#width_' + i).val() !== '' && $('#width_' + i).val() !== undefined && $('#length_' + i).val() !== '' && $('#length_' + i).val() !== undefined) {
                 plan_rolls[i] = {'width': $('#width_' + i).val(), 'length': $('#length_' + i).val()};
+                sorted_by_width[plan_rolls[i]['width']] = i;
                 i++;
             }
-            
-            //plan_rolls.sort(function(first, second) { return second[1]['width'] - first[1]['width'] });
             
             show_source = "<div class='source'>";
             show_source += "-------------------------------------------------------------------------------<br />";
@@ -115,7 +115,8 @@ include '../include/topscripts.php';
             show_source += "-------------------------------------------------------------------------------<br />";
             show_source += "Задание на раскрой материала:<br />";
             
-            for(var key in plan_rolls) {
+            for(var width in sorted_by_width) {
+                var key = sorted_by_width[width];
                 show_source += "номер = " + key + "; ширина = " + plan_rolls[key]['width'] + " мм; длина = " + plan_rolls[key]['length'] + " м;<br />";
             }
             
