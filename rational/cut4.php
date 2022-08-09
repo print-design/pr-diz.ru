@@ -7,9 +7,9 @@
                 <tr>
                     <td>
                         <label for="source_width">Ширина исходного ролика, мм</label><br />
-                        <input type="number" min="1" name="source_width" value="<?= filter_input(INPUT_POST, 'source_width') ?>" required="required" /><br /><br />
+                        <input type="number" min="1" name="source_width" value="<?= filter_input(INPUT_POST, 'source_width') ?>1500" required="required" /><br /><br />
                         <label for="cut_length">Длина одного съёма, м</label><br />
-                        <input type="number" min="1" name="cut_length" value="<?= filter_input(INPUT_POST, 'cut_length') ?>" required="required" /><br /><br />
+                        <input type="number" min="1" name="cut_length" value="<?= filter_input(INPUT_POST, 'cut_length') ?>2000" required="required" /><br /><br />
                     </td>
                     <td>
                         <?php
@@ -22,7 +22,7 @@
                             if($key_exists) array_push ($post_roll_keys, $post_roll_key);
                         } while ($key_exists);
                         ?>
-                        <table>
+                        <table style="display: none;">
                             <tr>
                                 <th>Ширина, мм</th>
                                 <?php foreach($post_roll_keys as $item): ?>
@@ -44,10 +44,35 @@
                                 <td>&nbsp;</td>
                             </tr>
                         </table>
+                        <table>
+                            <tr>
+                                <th>Ширина, мм</th>
+                                <td><input type="number" min="1" name="width_1" style="width: 70px;" value="120" /></td>
+                                <td><input type="number" min="1" name="width_2" style="width: 70px;" value="140" /></td>
+                                <td><input type="number" min="1" name="width_3" style="width: 70px;" value="150" /></td>
+                                <td><input type="number" min="1" name="width_4" style="width: 70px;" value="260" /></td>
+                                <td><input type="number" min="1" name="width_5" style="width: 70px;" value="200" /></td>
+                                <td><input type="number" min="1" name="width_6" style="width: 70px;" value="205" /></td>
+                            </tr>
+                            <tr>
+                                <th>Длина, м</th>
+                                <td><input type="number" min="1" name="length_1" style="width: 70px;" value="10000" /></td>
+                                <td><input type="number" min="1" name="length_1" style="width: 70px;" value="2000" /></td>
+                                <td><input type="number" min="1" name="length_1" style="width: 70px;" value="18000" /></td>
+                                <td><input type="number" min="1" name="length_1" style="width: 70px;" value="4000" /></td>
+                                <td><input type="number" min="1" name="length_1" style="width: 70px;" value="2000" /></td>
+                                <td><input type="number" min="1" name="length_1" style="width: 70px;" value="4000" /></td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
             </table>
-            <button type="button" name="cut_sumbit">Рассчитать</button>
+            <button type="button" name="cut_sumbit" onclick="javascript: Start();">Рассчитать</button>
         </form>
     </body>
+    <script>
+        function Start() {
+            alert('STARTING...');
+        }
+    </script>
 </html>
