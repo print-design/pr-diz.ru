@@ -74,10 +74,15 @@ include '../include/topscripts.php';
             </table>
             <button type="button" name="cut_sumbit" onclick="javascript: Start();">Рассчитать</button>
         </form>
+        <div id="percent" style="font-size: xx-large;"></div>
     </body>
     <script src='<?=APPLICATION ?>/js/jquery-3.5.1.min.js'></script>
     <script>
         function Start() {
+            while($('#percent').prev().prop("tagName") != "FORM") {
+                $('#percent').prev().remove();
+            }
+            
             if($('#source_width').val() === '' ||
                     $('#cut_length').val() === '' ||
                     $('#width_1').val() === '' || $('#width_1').val() === undefined ||
@@ -86,12 +91,39 @@ include '../include/topscripts.php';
                 return;
             }
             
+            // Ширина исходного ролика, мм
             var source_width = $('#source_width').val();
-            var cut_length = $('#cut_length').val();
-            var width = $('#width_1').val();
-            var length = $('#length_1').val();
             
-            alert('<?=APPLICATION ?> ' + source_width + ' ' + cut_length + ' ' + width + ' ' + length);
+            // Длина одного реза, м
+            var cut_length = $('#cut_length').val();
+            
+            // Конечные ролики с ключами
+            var plan_rolls = {};
+            
+            var i = 1;
+            
+            while($('#width_' + i).val() !== '' && $('#width_' + i).val() !== undefined && $('#length_' + i).val() !== '' && $('#length_' + i).val() !== undefined) {
+                plan_rolls[i] = {'width': $('#width_' + i).val(), 'length': $('#length_' + i).val()};
+                i++;
+            }
+            
+            //plan_rolls.sort(function(first, second) { return second[1]['width'] - first[1]['width'] });
+            
+            show_source = "<div class='source'>";
+            show_source += "-------------------------------------------------------------------------------<br />";
+            show_source += "Ширина исходного роля " + source_width + " мм; один съём " + cut_length + " метров.<br />";
+            show_source += "-------------------------------------------------------------------------------<br />";
+            show_source += "Задание на раскрой материала:<br />";
+            
+            for(var key in plan_rolls) {
+                show_source += "номер = " + key + "; ширина = " + plan_rolls[key]['width'] + " мм; длина = " + plan_rolls[key]['length'] + " м;<br />";
+            }
+            
+            show_source += "</div>";
+            
+            $('#percent').before(show_source);
+            
+            $('#percent').text('4 %');
         }
     </script>
 </html>
