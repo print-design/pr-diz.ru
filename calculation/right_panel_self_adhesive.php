@@ -11,10 +11,10 @@ if(null !== filter_input(INPUT_POST, 'extracharge-submit')) {
     $extracharge = filter_input(INPUT_POST, 'extracharge');
     $quantity = 0;
     
-    $sql = "select quantity from calculation_quantity where id = $id order by id";
+    $sql = "select sum(quantity) from calculation_quantity where calculation_id = $id order by id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
-        $quantity = $row['quantity'];
+        $quantity = $row[0];
     }
     
     $sql = "update calculation set extracharge=$extracharge where id=$id";
@@ -28,7 +28,7 @@ if(null !== filter_input(INPUT_POST, 'extracharge-submit')) {
     }
     
     if(empty($error_message)) {
-        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.shipping_cost_per_unit = cr.shipping_cost / $quantity where c.id = $id";
+        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.shipping_cost_per_unit = cr.shipping_cost / $quantity where c.id = $id"; echo $sql;
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
