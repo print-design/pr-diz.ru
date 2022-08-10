@@ -80,14 +80,73 @@ include '../include/topscripts.php';
     <script>
         class Variables {
             constructor(source_width) {
+                // Наибольшая сумма ширин ручьёв в одном резе
                 this.max_streams_widths_cum = 0;
+                
+                // Ширина исходного ролика
                 this.source_width = source_width;
+                
+                // Количества ручьёв для каждого конечного ролика в одном резе
                 this.streams_counts = {};
+                
+                // Текущий процент
+                this.current_percent = 0;
             }
         }
         
-        function Iterate(plan_rolls, min_streams_counts, variables, streams_counts, index) {
-            // alert(streams_counts[1]);
+        function Iterate(plan_rolls, min_streams_counts, variables, streams_counts, index, percent_low, percent_high) {
+            // Список ключей конечных роликов
+            var ki = 0;
+            var keys = {};
+            for(key in plan_rolls) {
+                keys[ki] = key;
+                ki++;
+            }
+            
+            // Нахождение наименьшего и наибольшего процента для данного уровня
+            percent_step = (parseFloat(percent_high) - parseFloat(percent_low)) / (parseFloat(min_streams_counts[keys[index]]) + 1.0);
+            new_percent_low = percent_low;
+            new_percent_high = percent_low + percent_step;
+            
+            // Для каждого возможного количества ручьёв в одном резе
+            for(i=0; i<=min_streams_counts[keys[index]]; i++) {
+                new_streams_counts = streams_counts;
+                
+                // К списку количество ручьёв для предыдущих роликов добавляем количество ручьёв для данного ролика
+                new_streams_counts[keys[index]] = i;
+                
+                if(keys[index + 1] !== undefined) {
+                    // Если ещё не дошли до последнего ролика, то перебираем все возможные количества ручьёв для следующего ролика.
+                    //Iterate(plan_rolls, min_streams_counts, variables, new_streams_counts, index + 1, new_percent_low, new_percent_high);
+                    new_percent_low += percent_step;
+                    new_percent_high += percent_step;
+                }
+                else {
+                    // Если дошли до последнего ролика, то
+                    // определяем сумму ширин всех ручьёв.
+                    streams_widths_sum = 0;
+                    
+                    for(var key in new_streams_counts) {
+                        streams_widths_sum += new_streams_counts[key] * (parseInt(plan_rolls[key]['width']) / 1000);
+                    }
+                    
+                    // Если сумма ручьёв меньше или равна ширины исходного ролика и больше максимальной суммы,
+                    // то обозначаем эту сумму, как максимальную,
+                    // а это сочетание ручьёв, как оптимальное.
+                    if(streams_widths_sum <= variables.source_width && streams_widths_sum > variables.max_streams_widths_cum) {
+                        variables.max_streams_widths_cum = streams_widths_sum;
+                        variables.streams_counts = new_streams_counts;
+                    }
+                }
+            }
+            
+            if(new_percent_high > variables.current_percent) {
+                variables.current_percent = new_percent_high;
+            }
+            
+            if(index > 0 && variables.current_percent <= 100) {
+                $('#percent').text(parseInt(variables.current_percent) + ' %');
+            }
         }
         
         function Start() {
@@ -133,7 +192,6 @@ include '../include/topscripts.php';
             }
             
             show_source += "</div>";
-            
             $('#percent').before(show_source);
             
             // Минимальные количества ручьёв в одном резе для каждого конечного ролика
@@ -157,16 +215,20 @@ include '../include/topscripts.php';
             var last_cut = 1;
             
             // Делаем резы, пока не будут использованы все ручьи из возможных
+            show_cuts = "<div id='cuts'>";
+            
             while(cut < 5) {
                 let last_cut = cut;
                 let variables = new Variables(source_width / 1000);
                 
                 // Перебираем все возможные количества ручьёв для каждого конечного ролика
-                Iterate(plan_rolls, min_streams_counts, variables, variables.streams_counts, 0);
+                Iterate(plan_rolls, min_streams_counts, variables, variables.streams_counts, 0, 0.0, 100.0);
                 
-                $('#percent').text(cut + ' %');
                 cut++;
             }
+            
+            show_cuts += "</div>";
+            $('#percent').before(show_cuts);
         }
     </script>
 </html>
