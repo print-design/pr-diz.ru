@@ -10,9 +10,9 @@ include '../include/topscripts.php';
                 <tr>
                     <td>
                         <label for="source_width">Ширина исходного ролика, мм</label><br />
-                        <input type="number" min="1" name="source_width" value="1500" required="required" /><br /><br />
+                        <input type="number" min="1" id="source_width" name="source_width" value="1500" required="required" /><br /><br />
                         <label for="cut_length">Длина одного съёма, м</label><br />
-                        <input type="number" min="1" name="cut_length" value="2000" required="required" /><br /><br />
+                        <input type="number" min="1" id="cut_length" name="cut_length" value="2000" required="required" /><br /><br />
                     </td>
                     <td>
                         <?php
@@ -74,14 +74,15 @@ include '../include/topscripts.php';
             </table>
             <button type="button" name="cut_sumbit" onclick="javascript: Start();">Рассчитать</button>
         </form>
-        <div id="percent" style="font-size: xx-large;"></div>
+        <div id="source"></div>
+        <div id="result"></div>
+        <div id="waiting" style="position: absolute; left: 50px; top: 50px;"></div>
     </body>
     <script src='<?=APPLICATION ?>/js/jquery-3.5.1.min.js'></script>
     <script>
         function Start() {
-            while($('#percent').prev().prop("tagName") != "FORM") {
-                $('#percent').prev().remove();
-            }
+            $('#source').html('');
+            $('#result').html('');
             
             if($('#source_width').val() === '' ||
                     $('#cut_length').val() === '' ||
@@ -109,8 +110,7 @@ include '../include/topscripts.php';
                 i++;
             }
             
-            show_source = "<div class='source'>";
-            show_source += "-------------------------------------------------------------------------------<br />";
+            show_source = "-------------------------------------------------------------------------------<br />";
             show_source += "Ширина исходного роля " + source_width + " мм; один съём " + cut_length + " метров.<br />";
             show_source += "-------------------------------------------------------------------------------<br />";
             show_source += "Задание на раскрой материала:<br />";
@@ -120,8 +120,18 @@ include '../include/topscripts.php';
                 show_source += "номер = " + key + "; ширина = " + plan_rolls[key]['width'] + " мм; длина = " + plan_rolls[key]['length'] + " м;<br />";
             }
             
-            show_source += "</div>";
-            $('#percent').before(show_source);
+            $('#source').html(show_source);
+            $('#waiting').html("<img src='../images/waiting2.gif' title='waiting' />");
+            
+            var get_params = '';
+            $.ajax({ url: 'count.php' + get_params })
+                    .done(function(data) {
+                        $('#result').html(data);
+                        $('#waiting').html('');
+                    })
+                    .fail(function() {
+                        $('#result').html("<p style='color: red;'>Ошибка при вычислении.</p>");
+                    });
         }
     </script>
 </html>
