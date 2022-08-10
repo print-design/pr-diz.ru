@@ -124,6 +124,7 @@ include '../include/topscripts.php';
                     })
                     .fail(function() {
                         $('#result').html("<p style='color: red;'>Ошибка при вычислении.</p>");
+                        $('#waiting').html('');
                     });
         }
     </script>
