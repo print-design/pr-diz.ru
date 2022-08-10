@@ -74,14 +74,12 @@ include '../include/topscripts.php';
             </table>
             <button type="button" name="cut_sumbit" onclick="javascript: Start();">Рассчитать</button>
         </form>
-        <div id="source"></div>
         <div id="result"></div>
         <div id="waiting" style="position: absolute; left: 50px; top: 50px;"></div>
     </body>
     <script src='<?=APPLICATION ?>/js/jquery-3.5.1.min.js'></script>
     <script>
         function Start() {
-            $('#source').html('');
             $('#result').html('');
             
             if($('#source_width').val() === '' ||
@@ -100,30 +98,25 @@ include '../include/topscripts.php';
             
             // Конечные ролики с ключами
             var plan_rolls = {};
-            var sorted_by_width = {};
             
             var i = 1;
             
             while($('#width_' + i).val() !== '' && $('#width_' + i).val() !== undefined && $('#length_' + i).val() !== '' && $('#length_' + i).val() !== undefined) {
                 plan_rolls[i] = {'width': $('#width_' + i).val(), 'length': $('#length_' + i).val()};
-                sorted_by_width[plan_rolls[i]['width']] = i;
                 i++;
             }
             
-            show_source = "-------------------------------------------------------------------------------<br />";
-            show_source += "Ширина исходного роля " + source_width + " мм; один съём " + cut_length + " метров.<br />";
-            show_source += "-------------------------------------------------------------------------------<br />";
-            show_source += "Задание на раскрой материала:<br />";
-            
-            for(var width in sorted_by_width) {
-                var key = sorted_by_width[width];
-                show_source += "номер = " + key + "; ширина = " + plan_rolls[key]['width'] + " мм; длина = " + plan_rolls[key]['length'] + " м;<br />";
-            }
-            
-            $('#source').html(show_source);
+            // Отправляем запрос к вычислению
             $('#waiting').html("<img src='../images/waiting2.gif' title='waiting' />");
             
-            var get_params = '';
+            var get_params = '?source_width=' + source_width;
+            get_params += '&cut_length=' + cut_length;
+            
+            for(var key in plan_rolls) {
+                get_params += '&width_' + key + '=' + plan_rolls[key]['width'];
+                get_params += '&length_' + key + '=' + plan_rolls[key]['length'];
+            }
+            
             $.ajax({ url: 'count.php' + get_params })
                     .done(function(data) {
                         $('#result').html(data);
