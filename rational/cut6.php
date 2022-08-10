@@ -1,6 +1,9 @@
+<?php
+include '../include/topscripts.php';
+?>
 <html>
     <body>
-        <a href="cut5.php" title="Очистить">Очистить</a>
+        <a href="cut6.php" title="Очистить">Очистить</a>
         <h1>Раскрой</h1>
         <form method="post">
             <table>
@@ -69,7 +72,56 @@
                     </td>
                 </tr>
             </table>
-            <button type="submit" name="cut_sumbit">Рассчитать</button>
+            <button type="button" name="cut_sumbit" onclick="javascript: Start();">Рассчитать</button>
         </form>
+        <div id="percent" style="font-size: xx-large;"></div>
     </body>
+    <script src='<?=APPLICATION ?>/js/jquery-3.5.1.min.js'></script>
+    <script>
+        function Start() {
+            while($('#percent').prev().prop("tagName") != "FORM") {
+                $('#percent').prev().remove();
+            }
+            
+            if($('#source_width').val() === '' ||
+                    $('#cut_length').val() === '' ||
+                    $('#width_1').val() === '' || $('#width_1').val() === undefined ||
+                    $('#length_1').val() === '' || $('#length_1').val() === undefined) {
+                alert('Введите данные');
+                return;
+            }
+            
+            // Ширина исходного ролика, мм
+            var source_width = $('#source_width').val();
+            
+            // Длина одного реза, м
+            var cut_length = $('#cut_length').val();
+            
+            // Конечные ролики с ключами
+            var plan_rolls = {};
+            var sorted_by_width = {};
+            
+            var i = 1;
+            
+            while($('#width_' + i).val() !== '' && $('#width_' + i).val() !== undefined && $('#length_' + i).val() !== '' && $('#length_' + i).val() !== undefined) {
+                plan_rolls[i] = {'width': $('#width_' + i).val(), 'length': $('#length_' + i).val()};
+                sorted_by_width[plan_rolls[i]['width']] = i;
+                i++;
+            }
+            
+            show_source = "<div class='source'>";
+            show_source += "-------------------------------------------------------------------------------<br />";
+            show_source += "Ширина исходного роля " + source_width + " мм; один съём " + cut_length + " метров.<br />";
+            show_source += "-------------------------------------------------------------------------------<br />";
+            show_source += "Задание на раскрой материала:<br />";
+            
+            for(var width in sorted_by_width) {
+                var key = sorted_by_width[width];
+                show_source += "номер = " + key + "; ширина = " + plan_rolls[key]['width'] + " мм; длина = " + plan_rolls[key]['length'] + " м;<br />";
+            }
+            
+            show_source += "</div>";
+            $('#percent').before(show_source);
+        }
+    </script>
 </html>
