@@ -78,6 +78,18 @@ include '../include/topscripts.php';
     </body>
     <script src='<?=APPLICATION ?>/js/jquery-3.5.1.min.js'></script>
     <script>
+        class Variables {
+            constructor(source_width) {
+                this.max_streams_widths_cum = 0;
+                this.source_width = source_width;
+                this.streams_counts = {};
+            }
+        }
+        
+        function Iterate(plan_rolls, min_streams_counts, variables, streams_counts, index) {
+            // alert(streams_counts[1]);
+        }
+        
         function Start() {
             while($('#percent').prev().prop("tagName") != "FORM") {
                 $('#percent').prev().remove();
@@ -124,7 +136,37 @@ include '../include/topscripts.php';
             
             $('#percent').before(show_source);
             
-            $('#percent').text('4 %');
+            // Минимальные количества ручьёв в одном резе для каждого конечного ролика
+            var min_streams_counts = {};
+            
+            for(var key in plan_rolls) {
+                min_streams_counts[key] = Math.floor(plan_rolls[key]['length'] / cut_length);
+            }
+            
+            // Суммы длин во всех резах для каждого конечного ролика
+            var lengths_sums = {};
+            
+            for(var key in plan_rolls) {
+                lengths_sums[key] = 0;
+            }
+            
+            // Номер реза
+            var cut = 1;
+            
+            // Последний рез
+            var last_cut = 1;
+            
+            // Делаем резы, пока не будут использованы все ручьи из возможных
+            while(cut < 5) {
+                let last_cut = cut;
+                let variables = new Variables(source_width / 1000);
+                
+                // Перебираем все возможные количества ручьёв для каждого конечного ролика
+                Iterate(plan_rolls, min_streams_counts, variables, variables.streams_counts, 0);
+                
+                $('#percent').text(cut + ' %');
+                cut++;
+            }
         }
     </script>
 </html>
