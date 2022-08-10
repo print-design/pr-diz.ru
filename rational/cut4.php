@@ -94,7 +94,7 @@ include '../include/topscripts.php';
             }
         }
         
-        function Iterate(plan_rolls, min_streams_counts, variables, streams_counts, index, percent_low, percent_high) {
+        function Iterate(plan_rolls, min_streams_counts, variables, streams_counts, index, percent_low, percent_high) { $('#percent').text(percent_low + ' %'); if(!confirm(percent_low)) { return; }
             // Список ключей конечных роликов
             var ki = 0;
             var keys = {};
@@ -109,7 +109,7 @@ include '../include/topscripts.php';
             new_percent_high = percent_low + percent_step;
             
             // Для каждого возможного количества ручьёв в одном резе
-            for(i=0; i<=min_streams_counts[keys[index]]; i++) {
+            for(i=0; i<=min_streams_counts[keys[index]]; i++) {  $('#percent').text(i);
                 new_streams_counts = streams_counts;
                 
                 // К списку количество ручьёв для предыдущих роликов добавляем количество ручьёв для данного ролика
@@ -117,7 +117,7 @@ include '../include/topscripts.php';
                 
                 if(keys[index + 1] !== undefined) {
                     // Если ещё не дошли до последнего ролика, то перебираем все возможные количества ручьёв для следующего ролика.
-                    //Iterate(plan_rolls, min_streams_counts, variables, new_streams_counts, index + 1, new_percent_low, new_percent_high);
+                    Iterate(plan_rolls, min_streams_counts, variables, new_streams_counts, index + 1, new_percent_low, new_percent_high);
                     new_percent_low += percent_step;
                     new_percent_high += percent_step;
                 }
@@ -145,7 +145,8 @@ include '../include/topscripts.php';
             }
             
             if(index > 0 && variables.current_percent <= 100) {
-                $('#percent').text(parseInt(variables.current_percent) + ' %');
+                //$('#percent').text(parseInt(variables.current_percent) + ' %');
+                $('#percent').text(variables.current_percent + ' %');
             }
         }
         
@@ -217,7 +218,7 @@ include '../include/topscripts.php';
             // Делаем резы, пока не будут использованы все ручьи из возможных
             show_cuts = "<div id='cuts'>";
             
-            while(cut < 5) {
+            while(cut < 2) {
                 let last_cut = cut;
                 let variables = new Variables(source_width / 1000);
                 
