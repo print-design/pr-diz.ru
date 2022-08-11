@@ -1,3 +1,6 @@
+<?php
+include '../include/topscripts.php';
+?>
 <html>
     <body>
         <a href="cut5.php" title="Очистить">Очистить</a>
@@ -7,9 +10,9 @@
                 <tr>
                     <td>
                         <label for="source_width">Ширина исходного ролика, мм</label><br />
-                        <input type="number" min="1" name="source_width" value="1500" required="required" /><br /><br />
+                        <input type="number" min="1" id="source_width" name="source_width" value="1500" required="required" /><br /><br />
                         <label for="cut_length">Длина одного съёма, м</label><br />
-                        <input type="number" min="1" name="cut_length" value="2000" required="required" /><br /><br />
+                        <input type="number" min="1" id="cut_length" name="cut_length" value="2000" required="required" /><br /><br />
                     </td>
                     <td>
                         <?php
@@ -27,20 +30,20 @@
                             <tr>
                                 <th>Ширина, мм</th>
                                 <?php foreach($post_roll_keys as $item): ?>
-                                <td><input type="number" min="1" name="width_<?=$item ?>" value="<?= filter_input(INPUT_POST, "width_$item") ?>" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_<?=$item ?>" name="width_<?=$item ?>" value="<?= filter_input(INPUT_POST, "width_$item") ?>" style="width: 70px;" /></td>
                                 <?php endforeach; ?>
                                 <?php if(null !== filter_input(INPUT_POST, 'add_submit') || count($post_roll_keys) == 0): ?>
-                                <td><input type="number" min="1" name="width_<?=$post_roll_key ?>" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_<?=$post_roll_key ?>" name="width_<?=$post_roll_key ?>" style="width: 70px;" /></td>
                                 <?php endif; ?>
                                 <td><button type="submit" name="add_submit">Добавить</button></td>
                             </tr>
                             <tr>
                                 <th>Длина, м</th>
                                 <?php foreach($post_roll_keys as $item): ?>
-                                <td><input type="number" min="1" name="length_<?=$item ?>" value="<?= filter_input(INPUT_POST, "length_$item") ?>" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_<?=$item ?>" name="length_<?=$item ?>" value="<?= filter_input(INPUT_POST, "length_$item") ?>" style="width: 70px;" /></td>
                                 <?php endforeach; ?>
                                 <?php if(null !== filter_input(INPUT_POST, 'add_submit') || count($post_roll_keys) == 0): ?>
-                                <td><input type="number" min="1" name="length_<?=$post_roll_key ?>" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_<?=$post_roll_key ?>" name="length_<?=$post_roll_key ?>" style="width: 70px;" /></td>
                                 <?php endif; ?>
                                 <td>&nbsp;</td>
                             </tr>
@@ -49,248 +52,80 @@
                         <table>
                             <tr>
                                 <th>Ширина, мм</th>
-                                <td><input type="number" min="1" id="width_1" name="width_1" style="width: 70px;" value="120" /></td>
-                                <td><input type="number" min="1" id="width_2" name="width_2" style="width: 70px;" value="140" /></td>
-                                <td><input type="number" min="1" id="width_3" name="width_3" style="width: 70px;" value="150" /></td>
-                                <td><input type="number" min="1" id="width_4" name="width_4" style="width: 70px;" value="260" /></td>
-                                <td><input type="number" min="1" id="width_5" name="width_5" style="width: 70px;" value="200" /></td>
-                                <td><input type="number" min="1" id="width_6" name="width_6" style="width: 70px;" value="205" /></td>
+                                <td><input type="number" min="1" id="width_1" name="width_1" value="120" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_2" name="width_2" value="140" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_3" name="width_3" value="150" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_4" name="width_4" value="260" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_5" name="width_5" value="200" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_6" name="width_6" value="205" style="width: 70px;" /></td>
                             </tr>
                             <tr>
                                 <th>Длина, м</th>
-                                <td><input type="number" min="1" id="length_1" name="length_1" style="width: 70px;" value="10000" /></td>
-                                <td><input type="number" min="1" id="length_2" name="length_2" style="width: 70px;" value="2000" /></td>
-                                <td><input type="number" min="1" id="length_3" name="length_3" style="width: 70px;" value="18000" /></td>
-                                <td><input type="number" min="1" id="length_4" name="length_4" style="width: 70px;" value="4000" /></td>
-                                <td><input type="number" min="1" id="length_5" name="length_5" style="width: 70px;" value="2000" /></td>
-                                <td><input type="number" min="1" id="length_6" name="length_6" style="width: 70px;" value="4000" /></td>
+                                <td><input type="number" min="1" id="length_1" name="length_1" value="10000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_2" name="length_2" value="2000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_3" name="length_3" value="18000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_4" name="length_4" value="4000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_5" name="length_5" value="2000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_6" name="length_6" value="4000" style="width: 70px;" /></td>
                             </tr>
                         </table>
                     </td>
                 </tr>
             </table>
-            <button type="submit" name="cut_sumbit">Рассчитать</button>
+            <button type="button" name="cut_sumbit" onclick="javascript: Start();">Рассчитать</button>
         </form>
-        <?php
-        // Перебор всех возможных количеств ручьёв в одном резе для каждого конечного ролика
-        function Iterate($plan_rolls, $min_streams_counts, $variables, $streams_counts, $index, $percent_low, $percent_high) {
-            // Список ключей конечных роликов
-            $keys = array_keys($plan_rolls);
+        <div id="result"></div>
+        <div id="waiting" style="position: absolute; left: 50px; top: 50px;"></div>
+    </body>
+    <script src='<?=APPLICATION ?>/js/jquery-3.5.1.min.js'></script>
+    <script>
+        function Start() {
+            $('#result').html('');
             
-            // Нахождение наименьшего и наибольшего процента для данного уровня
-            $percent_step = (floatval($percent_high) - floatval($percent_low)) / (floatval($min_streams_counts[$keys[$index]]) + 1.0);
-            $new_percent_low = $percent_low;
-            $new_percent_high = $percent_low + $percent_step;
-
-            // Для каждого возможного количества ручьёв в одном резе
-            for($i=0; $i<=$min_streams_counts[$keys[$index]]; $i++) {
-                $new_streams_counts = $streams_counts;
-                
-                // К списку количеств ручьёв для предыдущих роликов добавляем количество ручьёв для данного ролика
-                $new_streams_counts[$keys[$index]] = $i;
-                    
-                if(array_key_exists($index + 1, $keys)) {
-                    // Если ещё не дошли до последнего ролика, то перебираем все возможные количества ручьёв для следующего ролика.
-                    Iterate($plan_rolls, $min_streams_counts, $variables, $new_streams_counts, $index + 1, $new_percent_low, $new_percent_high);
-                    $new_percent_low += $percent_step;
-                    $new_percent_high += $percent_step;
-                }
-                else {
-                    // Если дошли до последнего ролика, то
-                    // Определяем сумму ширин всех ручьёв.
-                    $streams_widths_sum = 0;
-                    
-                    foreach($new_streams_counts as $key => $value) {
-                        $streams_widths_sum += $value * (intval($plan_rolls[$key]['width']) / 1000);
-                    }
-                    
-                    // Если сумма ручьёв меньше или равна ширины исходного ролика и больше максимальной суммы,
-                    // то обозначаем эту сумму, как максимальную, 
-                    // а это сочетание количеств ручьёв - как оптимальное.
-                    if($streams_widths_sum <= $variables->source_width && $streams_widths_sum > $variables->max_streams_widths_sum) {
-                        $variables->max_streams_widths_sum = $streams_widths_sum;
-                        $variables->streams_counts = $new_streams_counts;
-                    }
-                }
+            if($('#source_width').val() === '' ||
+                    $('#cut_length').val() === '' ||
+                    $('#width_1').val() === '' || $('#width_1').val() === undefined ||
+                    $('#length_1').val() === '' || $('#length_1').val() === undefined) {
+                alert('Введите данные');
+                return;
             }
             
-            if($new_percent_high > $variables->current_percent) {
-                $variables->current_percent = $new_percent_high;
-            }
-            
-            if($index > 0 && $variables->current_percent <= 100) {
-                //echo intval($variables->current_percent)." %<br />";
-            }
-        }
-        
-        class Variables {
-            public function __construct($source_width) {
-                $this->max_streams_widths_sum = 0;
-                $this->source_width = $source_width;
-                $this->streams_counts = array();
-                $this->current_percent = 0;
-            }
-            
-            // Наибольшая сумма ширин ручьёв в одном резе
-            public $max_streams_widths_sum;
-            
-            // Ширина исходного ролика
-            public $source_width;
-            
-            // Количества ручьёв для каждого конечного ролика в одном резе
-            public $streams_counts;
-            
-            // Текущий процент
-            public $current_percent;
-        }
-        
-        if(null !== filter_input(INPUT_POST, 'cut_sumbit') && !empty(filter_input(INPUT_POST, 'source_width')) && !empty(filter_input(INPUT_POST, 'cut_length')) && !empty(filter_input(INPUT_POST, 'width_1')) && !empty(filter_input(INPUT_POST, 'length_1'))) {
             // Ширина исходного ролика, мм
-            $source_width = filter_input(INPUT_POST, 'source_width');
+            var source_width = $('#source_width').val();
             
             // Длина одного реза, м
-            $cut_length = filter_input(INPUT_POST, 'cut_length');
+            var cut_length = $('#cut_length').val();
             
-            // Ширины конечных роликов, мм
-            $plan_widths = array();
-
-            // Длины конечных роликов, м
-            $plan_lengths = array();
-            
-            $i = 1;
-            
-            while (!empty(filter_input(INPUT_POST, "width_$i")) && !empty(filter_input(INPUT_POST, "length_$i"))) {
-                $plan_widths[$i] = filter_input(INPUT_POST, "width_$i");
-                $plan_lengths[$i] = filter_input(INPUT_POST, "length_$i");
-                $i++;
-            }
-        
-            // Сортируем список ширин по значению
-            asort($plan_widths);
-        
             // Конечные ролики с ключами
-            $plan_rolls = array();
-        
-            foreach($plan_widths as $key => $value) {
-                $plan_rolls[$key] = array('width' => $value, 'length' => $plan_lengths[$key]);
-            }
-        
-            echo "-------------------------------------------------------------------------------<br />";
-            echo "Ширина исходного роля $source_width мм; один съём $cut_length метров.<br />";
-            echo "-------------------------------------------------------------------------------<br />";
-            echo "Задание на раскрой материала:<br />";
-            foreach($plan_rolls as $key => $value) {
-                echo "номер = $key; ширина = ".$value['width'].' мм; длина = '.$value['length'].' м;<br />';
-            }
-
-            // Минимальные количества ручьёв в одном резе для каждого конечного ролика
-            $min_streams_counts = array();
-            foreach($plan_rolls as $key => $value) {
-                $min_streams_counts[$key] = floor($value['length'] / $cut_length);
-            }
-        
-            // Суммы длин во всех резах для каждого конечного ролика
-            $lengths_sums = array();
-            foreach($plan_rolls as $key => $value) {
-                $lengths_sum[$key] = 0;
-            }
-        
-            // Номер реза
-            $cut = 1;
-        
-            // Последний рез
-            $last_cut = 1;
-        
-            // Делаем резы, пока не будут использованы все ручьи из возможных
-            while (count(array_filter($min_streams_counts, function($value) { return $value > 0; })) > 0) {
-                $last_cut = $cut;
-                $variables = new Variables($source_width / 1000);
+            var plan_rolls = {};
             
-                // Перебираем все возможные количества ручьёв для каждого конечного ролика
-                Iterate($plan_rolls, $min_streams_counts, $variables, $variables->streams_counts, 0, 0.0, 100.0);
+            var i = 1;
             
-                // Остатки - часть ширины исходного ролика, не охваченная ручьями
-                $variables->source_width = $variables->source_width - $variables->max_streams_widths_sum;
+            while($('#width_' + i).val() !== '' && $('#width_' + i).val() !== undefined && $('#length_' + i).val() !== '' && $('#length_' + i).val() !== undefined) {
+                plan_rolls[i] = {'width': $('#width_' + i).val(), 'length': $('#length_' + i).val()};
+                i++;
+            }
             
-                echo "------------------------------------------------------------<br />";
-                echo "Рез №$cut; Остатки = ".($variables->source_width * 1000)." мм Х $cut_length м<br />";
-        
-                // Для каждого из ручьёв
-                foreach($variables->streams_counts as $key => $value) {
-                    $lengths_sum[$key] += $variables->streams_counts[$key] * $cut_length;
-                    if($value > 0) {
-                        echo "номер = $key; ширина = ".$plan_rolls[$key]['width']." мм; ручьёв = ".$variables->streams_counts[$key]."; длина = ".($variables->streams_counts[$key] * $cut_length)." м; сумма длин = ".$lengths_sum[$key]." м;<br />";
-                    
-                        // От минимального количества ручьёв в одном резе для данного конечного ролика
-                        // отнимаем количество уже использованных ручьёв для данного конечного ролика.
-                        $min_streams_counts[$key] -= $variables->streams_counts[$key];
-                        if($min_streams_counts[$key] < 0) $min_streams_counts[$key] = 0;
-                    }
-                }
-        
-                $cut++;
-            }
-        
-            // Разница между суммой длин для каждого конечного ролика и плановой длиной этого ролика
-            $fact_plan_diffs = array();
-            foreach($lengths_sum as $key => $value) {
-                $fact_plan_diffs[$key] = $lengths_sum[$key] - $plan_rolls[$key]['length'];
-            }
-        
-            echo "=================================================================<br />";
-            echo "<br />";
-            echo "ИТОГО: ЗАДАНО/ПОЛУЧЕНО/РАЗНОСТЬ: <br />";
-        
-            foreach($plan_rolls as $key => $value) {
-                echo "номер = $key; ширина = ".$value['width']." мм; задано = ".$value['length']." м; получено = ".$lengths_sum[$key]." м; разн. = ".$fact_plan_diffs[$key]." м<br />";
-            }
-        
-            echo "<br />";
-            echo "========================================================<br />";
-            echo "Кроим остатки шириной ".($variables->source_width * 1000)." мм; один съём $cut_length метров<br />";
-            echo "--------------------------------------------------------<br />";
-            echo "Добавляем в рез №$last_cut:<br /><br />";
-        
-            $min_streams_counts = array();
-            foreach($plan_rolls as $key => $value) { 
-                $min_streams_counts[$key] = floor($value['length'] / $cut_length);
-            }
-        
-            $variables = new Variables($variables->source_width);
+            // Отправляем запрос к вычислению
+            $('#waiting').html("<img src='../images/waiting2.gif' title='waiting' />");
             
-            // Перебираем все возможные количества резов для первого конечного ролика,
-            // затем для каждого из этих значений перебираем все возможные количества резов для следующего ролика,
-            // и так далее до последнего ролика.
-            Iterate($plan_rolls, $min_streams_counts, $variables, $variables->streams_counts, 0, 0.0, 100.0);
-        
-            // Остатки - часть ширины исходного ролика, не охваченная ручьями
-            $variables->source_width = floatval($variables->source_width) - floatval($variables->max_streams_widths_sum);
+            var get_params = '?source_width=' + source_width;
+            get_params += '&cut_length=' + cut_length;
             
-            foreach($variables->streams_counts as $key => $value) {
-                $lengths_sum[$key] += $variables->streams_counts[$key] * $cut_length;
-                if($value > 0) {
-                    echo "номер = $key; ширина = ".$plan_rolls[$key]['width']." м: ручьёв = ".$variables->streams_counts[$key]."; длина = ".($variables->streams_counts[$key] * $cut_length)." м<br />";
-                    $min_streams_counts[$key] -= $variables->streams_counts[$key];
-                    if($min_streams_counts[$key] < 0) $min_streams_counts[$key] = 0;
-                }
+            for(var key in plan_rolls) {
+                get_params += '&width_' + key + '=' + plan_rolls[key]['width'];
+                get_params += '&length_' + key + '=' + plan_rolls[key]['length'];
             }
-            echo "Получаем остатки = ".($variables->source_width * 1000)." мм X $cut_length м<br /><br />";
-        
-            $fact_plan_diffs = array();
-            foreach($lengths_sum as $key => $value) {
-                $fact_plan_diffs[$key] = $lengths_sum[$key] - $plan_rolls[$key]['length'];
-            }
-        
-            echo "================================================================<br />";
-            echo "<br />";
-            echo "ИТОГО: ЗАДАНО/ПОЛУЧЕНО/РАЗНОСТЬ=ПОЛУЧЕНО-ЗАДАНО: <br /><br />";
-        
-            foreach($plan_rolls as $key => $value) {
-                if($value['length'] > 0) {
-                    echo "номер = $key; ширина = ".$value['width']." мм; задано = ".$value['length']." м; получено = ".$lengths_sum[$key]." м; разн. = ".$fact_plan_diffs[$key]."<br />";
-                }
-            }
+            
+            $.ajax({ url: 'count.php' + get_params })
+                    .done(function(data) {
+                        $('#result').html(data);
+                        $('#waiting').html('');
+                    })
+                    .fail(function() {
+                        $('#result').html("<p style='color: red;'>Ошибка при вычислении.</p>");
+                        $('#waiting').html('');
+                    });
         }
-        ?>
-    </body>
+    </script>
 </html>
