@@ -30,20 +30,20 @@ include '../include/topscripts.php';
                             <tr>
                                 <th>Ширина, мм</th>
                                 <?php foreach($post_roll_keys as $item): ?>
-                                <td><input type="number" min="1" name="width_<?=$item ?>" value="<?= filter_input(INPUT_POST, "width_$item") ?>" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_<?=$item ?>" name="width_<?=$item ?>" value="<?= filter_input(INPUT_POST, "width_$item") ?>" style="width: 70px;" /></td>
                                 <?php endforeach; ?>
                                 <?php if(null !== filter_input(INPUT_POST, 'add_submit') || count($post_roll_keys) == 0): ?>
-                                <td><input type="number" min="1" name="width_<?=$post_roll_key ?>" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_<?=$post_roll_key ?>" name="width_<?=$post_roll_key ?>" style="width: 70px;" /></td>
                                 <?php endif; ?>
                                 <td><button type="submit" name="add_submit">Добавить</button></td>
                             </tr>
                             <tr>
                                 <th>Длина, м</th>
                                 <?php foreach($post_roll_keys as $item): ?>
-                                <td><input type="number" min="1" name="length_<?=$item ?>" value="<?= filter_input(INPUT_POST, "length_$item") ?>" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_<?=$item ?>" name="length_<?=$item ?>" value="<?= filter_input(INPUT_POST, "length_$item") ?>" style="width: 70px;" /></td>
                                 <?php endforeach; ?>
                                 <?php if(null !== filter_input(INPUT_POST, 'add_submit') || count($post_roll_keys) == 0): ?>
-                                <td><input type="number" min="1" name="length_<?=$post_roll_key ?>" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_<?=$post_roll_key ?>" name="length_<?=$post_roll_key ?>" style="width: 70px;" /></td>
                                 <?php endif; ?>
                                 <td>&nbsp;</td>
                             </tr>
@@ -52,21 +52,27 @@ include '../include/topscripts.php';
                         <table>
                             <tr>
                                 <th>Ширина, мм</th>
-                                <td><input type="number" min="1" id="width_1" name="width_1" style="width: 70px;" value="120" /></td>
-                                <td><input type="number" min="1" id="width_2" name="width_2" style="width: 70px;" value="140" /></td>
-                                <td><input type="number" min="1" id="width_3" name="width_3" style="width: 70px;" value="150" /></td>
-                                <td><input type="number" min="1" id="width_4" name="width_4" style="width: 70px;" value="260" /></td>
-                                <td><input type="number" min="1" id="width_5" name="width_5" style="width: 70px;" value="200" /></td>
-                                <td><input type="number" min="1" id="width_6" name="width_6" style="width: 70px;" value="205" /></td>
+                                <td><input type="number" min="1" id="width_1" name="width_1" value="120" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_2" name="width_2" value="140" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_3" name="width_3" value="150" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_4" name="width_4" value="170" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_5" name="width_5" value="185" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_6" name="width_6" value="200" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_7" name="width_7" value="215" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_8" name="width_8" value="220" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_9" name="width_9" value="240" style="width: 70px;" /></td>
                             </tr>
                             <tr>
                                 <th>Длина, м</th>
-                                <td><input type="number" min="1" id="length_1" name="length_1" style="width: 70px;" value="10000" /></td>
-                                <td><input type="number" min="1" id="length_2" name="length_2" style="width: 70px;" value="2000" /></td>
-                                <td><input type="number" min="1" id="length_3" name="length_3" style="width: 70px;" value="18000" /></td>
-                                <td><input type="number" min="1" id="length_4" name="length_4" style="width: 70px;" value="4000" /></td>
-                                <td><input type="number" min="1" id="length_5" name="length_5" style="width: 70px;" value="2000" /></td>
-                                <td><input type="number" min="1" id="length_6" name="length_6" style="width: 70px;" value="4000" /></td>
+                                <td><input type="number" min="1" id="length_1" name="length_1" value="8000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_2" name="length_2" value="8000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_3" name="length_3" value="4000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_4" name="length_4" value="8000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_5" name="length_5" value="10000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_6" name="length_6" value="4000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_7" name="length_7" value="4000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_8" name="length_8" value="40000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_9" name="length_9" value="6000" style="width: 70px;" /></td>
                             </tr>
                         </table>
                     </td>
