@@ -1,6 +1,6 @@
 <html>
     <body>
-        <a href="cut3.php" title="Очистить">Очистить</a>
+        <a href="cut_old.php" title="Очистить">Очистить</a>
         <h1>Раскрой</h1>
         <form method="post">
             <table>
@@ -51,15 +51,9 @@
         </form>
         <?php
         // Перебор всех возможных количеств ручьёв в одном резе для каждого конечного ролика
-        function Iterate($plan_rolls, $min_streams_counts, $variables, $streams_counts, $index, $percent_low, $percent_high) {
+        function Iterate($plan_rolls, $min_streams_counts, $variables, $streams_counts, $index) {
             // Список ключей конечных роликов
             $keys = array_keys($plan_rolls);
-            
-            // Нахождение наименьшего и наибольшего процента для данного уровня
-            $percent_step = 0;
-            $percent_step = (floatval($percent_high) - floatval($percent_low)) / (floatval($min_streams_counts[$keys[$index]]) + 1.0);
-            $new_percent_low = $percent_low;
-            $new_percent_high = $percent_low + $percent_step;
 
             // Для каждого возможного количества ручьёв в одном резе
             for($i=0; $i<=$min_streams_counts[$keys[$index]]; $i++) {
@@ -70,9 +64,7 @@
                     
                 if(array_key_exists($index + 1, $keys)) {
                     // Если ещё не дошли до последнего ролика, то перебираем все возможные количества ручьёв для следующего ролика.
-                    Iterate($plan_rolls, $min_streams_counts, $variables, $new_streams_counts, $index + 1, $new_percent_low, $new_percent_high);
-                    $new_percent_low += $percent_step;
-                    $new_percent_high += $percent_step;
+                    Iterate($plan_rolls, $min_streams_counts, $variables, $new_streams_counts, $index + 1);
                 }
                 else {
                     // Если дошли до последнего ролика, то
@@ -92,14 +84,6 @@
                     }
                 }
             }
-            
-            if($new_percent_high > $variables->current_percent) {
-                $variables->current_percent = $new_percent_high;
-            }
-            
-            if($index > 0 && $variables->current_percent <= 100) {
-                echo intval($variables->current_percent)." %<br />";
-            }
         }
         
         class Variables {
@@ -107,7 +91,6 @@
                 $this->max_streams_widths_sum = 0;
                 $this->source_width = $source_width;
                 $this->streams_counts = array();
-                $this->current_percent = 0;
             }
             
             // Наибольшая сумма ширин ручьёв в одном резе
@@ -118,9 +101,6 @@
             
             // Количества ручьёв для каждого конечного ролика в одном резе
             public $streams_counts;
-            
-            // Текущий процент
-            public $current_percent;
         }
         
         if(null !== filter_input(INPUT_POST, 'cut_sumbit') && !empty(filter_input(INPUT_POST, 'source_width')) && !empty(filter_input(INPUT_POST, 'cut_length')) && !empty(filter_input(INPUT_POST, 'width_1')) && !empty(filter_input(INPUT_POST, 'length_1'))) {
@@ -186,7 +166,7 @@
                 $variables = new Variables($source_width / 1000);
             
                 // Перебираем все возможные количества ручьёв для каждого конечного ролика
-                Iterate($plan_rolls, $min_streams_counts, $variables, $variables->streams_counts, 0, 0.0, 100.0);
+                Iterate($plan_rolls, $min_streams_counts, $variables, $variables->streams_counts, 0);
             
                 // Остатки - часть ширины исходного ролика, не охваченная ручьями
                 $variables->source_width = $variables->source_width - $variables->max_streams_widths_sum;
@@ -240,7 +220,7 @@
             // Перебираем все возможные количества резов для первого конечного ролика,
             // затем для каждого из этих значений перебираем все возможные количества резов для следующего ролика,
             // и так далее до последнего ролика.
-            Iterate($plan_rolls, $min_streams_counts, $variables, $variables->streams_counts, 0, 0.0, 100.0);
+            Iterate($plan_rolls, $min_streams_counts, $variables, $variables->streams_counts, 0);
         
             // Остатки - часть ширины исходного ролика, не охваченная ручьями
             $variables->source_width = floatval($variables->source_width) - floatval($variables->max_streams_widths_sum);
