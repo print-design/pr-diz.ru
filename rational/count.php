@@ -11,26 +11,24 @@ function Iterate($plan_rolls, $min_streams_counts, $variables, $streams_counts, 
         // К списку количеств ручьёв для предыдущих роликов добавляем количество ручьёв для данного ролика
         $new_streams_counts[$keys[$index]] = $i;
                     
-        if(array_key_exists($index + 1, $keys)) {
-            // Если ещё не дошли до последнего ролика, то перебираем все возможные количества ручьёв для следующего ролика.
+        // Определяем сумму ширин всех ручьёв.
+        // Если сумма ручьёв меньше ширины исходящего ролика и есть следующий уровень,
+        // то идём на следующий уровень.
+        // Иначе если сумма ручьёв меньше или равна ширине исходного ролика и больше максимальной суммы,
+        // то обозначаем эту сумму, как максимальную,
+        // а количество ручьёв, как оптимальное.
+        $streams_widths_sum = 0;
+        
+        foreach($new_streams_counts as $key => $value) {
+            $streams_widths_sum += $value * (intval($plan_rolls[$key]['width']) / 1000);
+        }
+        
+        if($streams_widths_sum < $variables->source_width && array_key_exists($index + 1, $keys)) {
             Iterate($plan_rolls, $min_streams_counts, $variables, $new_streams_counts, $index + 1);
         }
-        else {
-            // Если дошли до последнего ролика, то
-            // Определяем сумму ширин всех ручьёв.
-            $streams_widths_sum = 0;
-                    
-            foreach($new_streams_counts as $key => $value) {
-                $streams_widths_sum += $value * (intval($plan_rolls[$key]['width']) / 1000);
-            }
-                    
-            // Если сумма ручьёв меньше или равна ширины исходного ролика и больше максимальной суммы,
-            // то обозначаем эту сумму, как максимальную, 
-            // а это сочетание количеств ручьёв - как оптимальное.
-            if($streams_widths_sum <= $variables->source_width && $streams_widths_sum > $variables->max_streams_widths_sum) {
-                $variables->max_streams_widths_sum = $streams_widths_sum;
-                $variables->streams_counts = $new_streams_counts;
-            }
+        elseif($streams_widths_sum <= $variables->source_width && $streams_widths_sum > $variables->max_streams_widths_sum) {
+            $variables->max_streams_widths_sum = $streams_widths_sum;
+            $variables->streams_counts = $new_streams_counts;
         }
     }
 }
