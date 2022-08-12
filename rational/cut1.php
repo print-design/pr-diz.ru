@@ -83,8 +83,8 @@ include '../include/topscripts.php';
             <button type="button" name="cut_sumbit" onclick="javascript: Start();">Рассчитать</button>
         </form>
         <div id="source"></div>
-        <div id="result"></div>
         <div id="cuts"></div>
+        <div id="result"></div>
         <div id="error" style="color: red; font-size: xx-large;"></div>
         <div id="waiting" style="position: absolute; left: 50px; top: 50px;"></div>
     </body>
@@ -154,6 +154,19 @@ include '../include/topscripts.php';
                             }
                             
                             $('#source').html(source);
+                            
+                            var cuts = "";
+                            
+                            for(var i in data.cuts) {
+                                cuts += "------------------------------------------------------------<br />";
+                                cuts += "Рез №" + i +"; Остатки = " + data.cuts[i].remainder + " мм Х " + data.cuts[i].length + " м<br />";
+                                
+                                for(var key in data.cuts[i].streams_counts) {
+                                    cuts += "номер = " + key + "; ширина = " + data.cuts[i].streams_counts[key].width + " мм; ручьёв = " + data.cuts[i].streams_counts[key].streams_count + "; длина = " + data.cuts[i].streams_counts[key].length + " м; сумма длин = " + data.cuts[i].streams_counts[key].lengths_sum + " м;<br />";
+                                }
+                            }
+                            
+                            $('#cuts').html(cuts);
                         }
                         
                         $('#waiting').html('');

@@ -49,8 +49,12 @@ class Variables {
     // Количества ручьёв для каждого конечного ролика в одном резе
     public $streams_counts;
 }
-        
+
+// Конечная выдача
 $result = array();
+
+// Резы
+$cuts = array();
 $text = "";
 
 // Ширина исходного ролика, мм
@@ -104,14 +108,16 @@ while (count(array_filter($min_streams_counts, function($value) { return $value 
     // Остатки - часть ширины исходного ролика, не охваченная ручьями
     $variables->source_width = $variables->source_width - $variables->max_streams_widths_sum;
             
-    $text .= "------------------------------------------------------------<br />";
-    $text .= "Рез №$cut; Остатки = ".($variables->source_width * 1000)." мм Х $cut_length м<br />";
-        
-    // Для каждого из ручьёв
+    $current_cut = array();
+    $current_cut['remainder'] = intval($variables->source_width * 1000);
+    $current_cut['length'] = $cut_length;
+    $current_streams_counts = array();
+    
+    // Для каждого из количеств ручьёв
     foreach($variables->streams_counts as $key => $value) {
         $lengths_sum[$key] += $variables->streams_counts[$key] * $cut_length;
         if($value > 0) {
-            $text .= "номер = $key; ширина = ".$plan_rolls[$key]['width']." мм; ручьёв = ".$variables->streams_counts[$key]."; длина = ".($variables->streams_counts[$key] * $cut_length)." м; сумма длин = ".$lengths_sum[$key]." м;<br />";
+            $current_streams_counts[$key] = array('key' => $key, 'width' => $plan_rolls[$key]['width'], 'streams_count' => $variables->streams_counts[$key], 'length' => $variables->streams_counts[$key] * $cut_length, 'lengths_sum' => $lengths_sum[$key]);
                     
             // От минимального количества ручьёв в одном резе для данного конечного ролика
             // отнимаем количество уже использованных ручьёв для данного конечного ролика.
@@ -119,6 +125,9 @@ while (count(array_filter($min_streams_counts, function($value) { return $value 
             if($min_streams_counts[$key] < 0) $min_streams_counts[$key] = 0;
         }
     }
+    
+    $current_cut['streams_counts'] = $current_streams_counts;
+    $cuts[$cut] = $current_cut;
         
     $cut++;
 }
@@ -183,6 +192,7 @@ foreach($plan_rolls as $key => $value) {
     }
 }
 
+$result['cuts'] = $cuts;
 $result["error"] = "";
 $result["text"] = $text;
 echo json_encode($result);
