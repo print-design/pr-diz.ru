@@ -84,6 +84,7 @@ include '../include/topscripts.php';
         </form>
         <div id="source"></div>
         <div id="cuts"></div>
+        <div id="summary"></div>
         <div id="result"></div>
         <div id="error" style="color: red; font-size: xx-large;"></div>
         <div id="waiting" style="position: absolute; left: 50px; top: 50px;"></div>
@@ -94,6 +95,7 @@ include '../include/topscripts.php';
             $('#source').html('');
             $('#result').html('');
             $('#cuts').html('');
+            $('#summary').html('');
             $('#error').text('');
             
             if($('#source_width').val() === '' ||
@@ -167,6 +169,16 @@ include '../include/topscripts.php';
                             }
                             
                             $('#cuts').html(cuts);
+                            
+                            var summary = "=================================================================<br /><br />";
+                            summary += "ИТОГО: ЗАДАНО/ПОЛУЧЕНО/РАЗНОСТЬ: <br />";
+                            
+                            for(var i in sort_by_width) {
+                                key = sort_by_width[i];
+                                summary += "номер = " + key + "; ширина = " + data.summary[key].width + " мм; задано = " + data.summary[key].length + " м; получено = " + data.summary[key].lengths_sum + " м; разн. = " + data.summary[key].fact_plan_diff + " м<br />";
+                            }
+                            
+                            $('#summary').html(summary);
                         }
                         
                         $('#waiting').html('');

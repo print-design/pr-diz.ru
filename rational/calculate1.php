@@ -52,9 +52,6 @@ class Variables {
 
 // Конечная выдача
 $result = array();
-
-// Резы
-$cuts = array();
 $text = "";
 
 // Ширина исходного ролика, мм
@@ -98,6 +95,8 @@ $cut = 1;
 $last_cut = 1;
 
 // Делаем резы, пока не будут использованы все ручьи из возможных
+$cuts = array();
+
 while (count(array_filter($min_streams_counts, function($value) { return $value > 0; })) > 0) {
     $last_cut = $cut;
     $variables = new Variables($source_width / 1000);
@@ -131,20 +130,23 @@ while (count(array_filter($min_streams_counts, function($value) { return $value 
         
     $cut++;
 }
+
+$result['cuts'] = $cuts;
         
 // Разница между суммой длин для каждого конечного ролика и плановой длиной этого ролика
 $fact_plan_diffs = array();
 foreach($lengths_sum as $key => $value) {
     $fact_plan_diffs[$key] = $lengths_sum[$key] - $plan_rolls[$key]['length'];
 }
-        
-$text .= "=================================================================<br />";
-$text .= "<br />";
-$text .= "ИТОГО: ЗАДАНО/ПОЛУЧЕНО/РАЗНОСТЬ: <br />";
+
+// ИТОГО: ЗАДАНО/ПОЛУЧЕНО/РАЗНОСТЬ
+$summary = array();
         
 foreach($plan_rolls as $key => $value) {
-    $text .= "номер = $key; ширина = ".$value['width']." мм; задано = ".$value['length']." м; получено = ".$lengths_sum[$key]." м; разн. = ".$fact_plan_diffs[$key]." м<br />";
+    $summary[$key] = array('key' => $key, 'width' => $value['width'], 'length' => $value['length'], 'lengths_sum' => $lengths_sum[$key], 'fact_plan_diff' => $fact_plan_diffs[$key]);
 }
+
+$result['summary'] = $summary;
         
 $text .= "<br />";
 $text .= "========================================================<br />";
@@ -192,7 +194,7 @@ foreach($plan_rolls as $key => $value) {
     }
 }
 
-$result['cuts'] = $cuts;
+
 $result["error"] = "";
 $result["text"] = $text;
 echo json_encode($result);
