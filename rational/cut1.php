@@ -3,16 +3,24 @@ include '../include/topscripts.php';
 ?>
 <html>
     <body>
-        <a href="cut.php" title="Очистить">Очистить</a>
+        <a href="cut1.php" title="Очистить">Очистить</a>
         <h1>Раскрой</h1>
         <form method="post">
             <table>
                 <tr>
+                    <?php if(false): ?>
                     <td>
                         <label for="source_width">Ширина исходного ролика, мм</label><br />
                         <input type="number" min="1" id="source_width" name="source_width" value="<?= filter_input(INPUT_POST, 'source_width') ?>" required="required" /><br /><br />
                         <label for="cut_length">Длина одного съёма, м</label><br />
                         <input type="number" min="1" id="cut_length" name="cut_length" value="<?= filter_input(INPUT_POST, 'cut_length') ?>" required="required" /><br /><br />
+                    </td>
+                    <?php endif; ?>
+                    <td>
+                        <label for="source_width">Ширина исходного ролика, мм</label><br />
+                        <input type="number" min="1" id="source_width" name="source_width" value="1500" required="required" /><br /><br />
+                        <label for="cut_length">Длина одного съёма, м</label><br />
+                        <input type="number" min="1" id="cut_length" name="cut_length" value="2000" required="required" /><br /><br />
                     </td>
                     <td>
                         <?php
@@ -25,6 +33,7 @@ include '../include/topscripts.php';
                             if($key_exists) array_push ($post_roll_keys, $post_roll_key);
                         } while ($key_exists);
                         ?>
+                        <?php if(false): ?>
                         <table>
                             <tr>
                                 <th>Ширина, мм</th>
@@ -47,12 +56,34 @@ include '../include/topscripts.php';
                                 <td>&nbsp;</td>
                             </tr>
                         </table>
+                        <?php endif; ?>
+                        <table>
+                            <tr>
+                                <th>Ширина, мм</th>
+                                <td><input type="number" min="1" id="width_1" name="width_1" value="120" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_2" name="width_2" value="140" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_3" name="width_3" value="150" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_4" name="width_4" value="260" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_5" name="width_5" value="200" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_6" name="width_6" value="205" style="width: 70px;" /></td>
+                            </tr>
+                            <tr>
+                                <th>Длина, м</th>
+                                <td><input type="number" min="1" id="length_1" name="length_1" value="10000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_2" name="length_2" value="2000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_3" name="length_3" value="18000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_4" name="length_4" value="4000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_5" name="length_5" value="2000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_6" name="length_6" value="4000" style="width: 70px;" /></td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
             </table>
             <button type="button" name="cut_sumbit" onclick="javascript: Start();">Рассчитать</button>
         </form>
         <div id="result"></div>
+        <div id="error" style="color: red; font-size: xx-large;"></div>
         <div id="waiting" style="position: absolute; left: 50px; top: 50px;"></div>
     </body>
     <script src='<?=APPLICATION ?>/js/jquery-3.5.1.min.js'></script>
@@ -95,9 +126,14 @@ include '../include/topscripts.php';
                 get_params += '&length_' + key + '=' + plan_rolls[key]['length'];
             }
             
-            $.ajax({ url: 'calculate.php' + get_params })
+            $.ajax({ dataType: 'JSON', url: 'calculate1.php' + get_params })
                     .done(function(data) {
-                        $('#result').html(data);
+                        if(data.error !== '' && data.error !== undefined) {
+                            $('error').html(data.error);
+                        }
+                        else {
+                            $('#result').html(data.text);
+                        }
                         $('#waiting').html('');
                     })
                     .fail(function() {
