@@ -159,7 +159,7 @@ include '../include/topscripts.php';
                         $('#waiting').html('');
                     })
                     .fail(function() {
-                        //$('#error').text("Ошибка при вычислении.");
+                        $('#error').text("Ошибка при вычислении.");
                         $('#waiting').html('');
                     });
         }

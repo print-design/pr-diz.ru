@@ -70,7 +70,7 @@ while(!empty(filter_input(INPUT_GET, "width_$i")) && !empty(filter_input(INPUT_G
 }
 
 if(count($plan_rolls) == 0) {
-    $result["error"] = "<p style='color: red;'>Не задано ни одного параметра конечного ролика.</p>";
+    $result["error"] = "Не задано ни одного параметра конечного ролика.";
     echo json_encode($result);
     exit();
 }
