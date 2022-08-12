@@ -82,14 +82,19 @@ include '../include/topscripts.php';
             </table>
             <button type="button" name="cut_sumbit" onclick="javascript: Start();">Рассчитать</button>
         </form>
+        <div id="source"></div>
         <div id="result"></div>
+        <div id="cuts"></div>
         <div id="error" style="color: red; font-size: xx-large;"></div>
         <div id="waiting" style="position: absolute; left: 50px; top: 50px;"></div>
     </body>
     <script src='<?=APPLICATION ?>/js/jquery-3.5.1.min.js'></script>
     <script>
         function Start() {
+            $('#source').html('');
             $('#result').html('');
+            $('#cuts').html('');
+            $('#error').text('');
             
             if($('#source_width').val() === '' ||
                     $('#cut_length').val() === '' ||
@@ -108,10 +113,14 @@ include '../include/topscripts.php';
             // Конечные ролики с ключами
             var plan_rolls = {};
             
+            // Сортировка по ширине
+            var sort_by_width = {};
+            
             var i = 1;
             
             while($('#width_' + i).val() !== '' && $('#width_' + i).val() !== undefined && $('#length_' + i).val() !== '' && $('#length_' + i).val() !== undefined) {
                 plan_rolls[i] = {'width': $('#width_' + i).val(), 'length': $('#length_' + i).val()};
+                sort_by_width[plan_rolls[i]['width']] = i;
                 i++;
             }
             
@@ -129,15 +138,28 @@ include '../include/topscripts.php';
             $.ajax({ dataType: 'JSON', url: 'calculate1.php' + get_params })
                     .done(function(data) {
                         if(data.error !== '' && data.error !== undefined) {
-                            $('error').html(data.error);
+                            $('#error').text(data.error);
                         }
                         else {
                             $('#result').html(data.text);
+                            
+                            var source = "-------------------------------------------------------------------------------<br />";
+                            source += "Ширина исходного роля " + source_width + " мм; один съём " + cut_length + " метров.<br />"
+                            source += "-------------------------------------------------------------------------------<br />";
+                            source += "Задание на раскрой материала:<br />";
+                            
+                            for(var i in sort_by_width) {
+                                var key = sort_by_width[i];
+                                source += "номер = " + key + "; ширина = " + plan_rolls[key]['width'] + " мм; длина = " + plan_rolls[key]['length'] + " м;<br />";
+                            }
+                            
+                            $('#source').html(source);
                         }
+                        
                         $('#waiting').html('');
                     })
                     .fail(function() {
-                        $('#result').html("<p style='color: red;'>Ошибка при вычислении.</p>");
+                        //$('#error').text("Ошибка при вычислении.");
                         $('#waiting').html('');
                     });
         }

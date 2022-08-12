@@ -59,43 +59,20 @@ $source_width = filter_input(INPUT_GET, 'source_width');
 // Длина одного реза, м
 $cut_length = filter_input(INPUT_GET, 'cut_length');
 
-// Ширины конечных роликов, мм
-$plan_widths = array();
-
-// Длины конечных роликов, м
-$plan_lengths = array();
+// Конечные ролики с ключами
+$plan_rolls = array();
 
 $i = 1;
 
 while(!empty(filter_input(INPUT_GET, "width_$i")) && !empty(filter_input(INPUT_GET, "length_$i"))) {
-    $plan_widths[$i] = filter_input(INPUT_GET, "width_$i");
-    $plan_lengths[$i] = filter_input(INPUT_GET, "length_$i");
+    $plan_rolls[$i] = array('width' => filter_input(INPUT_GET, "width_$i"), 'length' => filter_input(INPUT_GET, "length_$i"));
     $i++;
 }
 
-if(count($plan_widths) == 0 || count($plan_widths) == 0) {
+if(count($plan_rolls) == 0) {
     $result["error"] = "<p style='color: red;'>Не задано ни одного параметра конечного ролика.</p>";
     echo json_encode($result);
     exit();
-}
-
-// Сортируем список ширин по значению
-asort($plan_widths);
-        
-// Конечные ролики с ключами
-$plan_rolls = array();
-        
-foreach($plan_widths as $key => $value) {
-    $plan_rolls[$key] = array('width' => $value, 'length' => $plan_lengths[$key]);
-}
-
-$text .= "-------------------------------------------------------------------------------<br />";
-$text .= "Ширина исходного роля $source_width мм; один съём $cut_length метров.<br />";
-$text .= "-------------------------------------------------------------------------------<br />";
-$text .= "Задание на раскрой материала:<br />";
-
-foreach($plan_rolls as $key => $value) {
-    $text .=  "номер = $key; ширина = ".$value['width'].' мм; длина = '.$value['length'].' м;<br />';
 }
 
 // Минимальные количества ручьёв в одном резе для каждого конечного ролика
@@ -115,7 +92,7 @@ $cut = 1;
         
 // Последний рез
 $last_cut = 1;
-        
+
 // Делаем резы, пока не будут использованы все ручьи из возможных
 while (count(array_filter($min_streams_counts, function($value) { return $value > 0; })) > 0) {
     $last_cut = $cut;
