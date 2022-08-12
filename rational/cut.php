@@ -139,7 +139,7 @@ include '../include/topscripts.php';
                 get_params += '&length_' + key + '=' + plan_rolls[key]['length'];
             }
             
-            $.ajax({ dataType: 'JSON', url: 'calculate1.php' + get_params })
+            $.ajax({ dataType: 'JSON', url: 'calculate.php' + get_params })
                     .done(function(data) {
                         if(data.error !== '' && data.error !== undefined) {
                             $('#error').text(data.error);
