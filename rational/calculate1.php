@@ -116,7 +116,7 @@ while (count(array_filter($min_streams_counts, function($value) { return $value 
     foreach($variables->streams_counts as $key => $value) {
         $lengths_sum[$key] += $variables->streams_counts[$key] * $cut_length;
         if($value > 0) {
-            $current_streams_counts[$key] = array('key' => $key, 'width' => $plan_rolls[$key]['width'], 'streams_count' => $variables->streams_counts[$key], 'length' => $variables->streams_counts[$key] * $cut_length, 'lengths_sum' => $lengths_sum[$key]);
+            $current_streams_counts[$key] = array('width' => $plan_rolls[$key]['width'], 'streams_count' => $variables->streams_counts[$key], 'length' => $variables->streams_counts[$key] * $cut_length, 'lengths_sum' => $lengths_sum[$key]);
                     
             // От минимального количества ручьёв в одном резе для данного конечного ролика
             // отнимаем количество уже использованных ручьёв для данного конечного ролика.
@@ -143,16 +143,14 @@ foreach($lengths_sum as $key => $value) {
 $summary = array();
         
 foreach($plan_rolls as $key => $value) {
-    $summary[$key] = array('key' => $key, 'width' => $value['width'], 'length' => $value['length'], 'lengths_sum' => $lengths_sum[$key], 'fact_plan_diff' => $fact_plan_diffs[$key]);
+    $summary[$key] = array('width' => $value['width'], 'length' => $value['length'], 'lengths_sum' => $lengths_sum[$key], 'fact_plan_diff' => $fact_plan_diffs[$key]);
 }
 
 $result['summary'] = $summary;
-        
-$text .= "<br />";
-$text .= "========================================================<br />";
-$text .= "Кроим остатки шириной ".($variables->source_width * 1000)." мм; один съём $cut_length метров<br />";
-$text .= "--------------------------------------------------------<br />";
-$text .= "Добавляем в рез №$last_cut:<br /><br />";
+
+// Остатки - часть ширины исходного ролика, не охваченная ручьями
+$remainder = $variables->source_width * 1000;
+$result['remainder'] = $remainder;
         
 $min_streams_counts = array();
 foreach($plan_rolls as $key => $value) { 
@@ -165,19 +163,23 @@ $variables = new Variables($variables->source_width);
 // затем для каждого из этих значений перебираем все возможные количества резов для следующего ролика,
 // и так далее до последнего ролика.
 Iterate($plan_rolls, $min_streams_counts, $variables, $variables->streams_counts, 0);
-        
-// Остатки - часть ширины исходного ролика, не охваченная ручьями
+
+$cut_ext = array();
 $variables->source_width = floatval($variables->source_width) - floatval($variables->max_streams_widths_sum);
             
 foreach($variables->streams_counts as $key => $value) {
     $lengths_sum[$key] += $variables->streams_counts[$key] * $cut_length;
     if($value > 0) {
-        $text .= "номер = $key; ширина = ".$plan_rolls[$key]['width']." м: ручьёв = ".$variables->streams_counts[$key]."; длина = ".($variables->streams_counts[$key] * $cut_length)." м<br />";
+        $cut_ext[$key] = array('width' => $plan_rolls[$key]['width'], 'streams_count' => $variables->streams_counts[$key], 'length' => $variables->streams_counts[$key] * $cut_length);
         $min_streams_counts[$key] -= $variables->streams_counts[$key];
         if($min_streams_counts[$key] < 0) $min_streams_counts[$key] = 0;
     }
 }
-$text .= "Получаем остатки = ".($variables->source_width * 1000)." мм X $cut_length м<br /><br />";
+
+$result['cut_ext'] = $cut_ext;
+
+$remainder_ext = $variables->source_width * 1000;
+$result['remainder_ext'] = $remainder_ext;
         
 $fact_plan_diffs = array();
 foreach($lengths_sum as $key => $value) {

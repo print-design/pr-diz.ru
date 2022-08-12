@@ -85,6 +85,7 @@ include '../include/topscripts.php';
         <div id="source"></div>
         <div id="cuts"></div>
         <div id="summary"></div>
+        <div id="cut_ext"></div>
         <div id="result"></div>
         <div id="error" style="color: red; font-size: xx-large;"></div>
         <div id="waiting" style="position: absolute; left: 50px; top: 50px;"></div>
@@ -93,9 +94,10 @@ include '../include/topscripts.php';
     <script>
         function Start() {
             $('#source').html('');
-            $('#result').html('');
             $('#cuts').html('');
             $('#summary').html('');
+            $('#cut_ext').html('');
+            $('#result').html('');
             $('#error').text('');
             
             if($('#source_width').val() === '' ||
@@ -158,13 +160,14 @@ include '../include/topscripts.php';
                             $('#source').html(source);
                             
                             var cuts = "";
+                            var cut = 0;
                             
-                            for(var i in data.cuts) {
+                            for(cut in data.cuts) {
                                 cuts += "------------------------------------------------------------<br />";
-                                cuts += "Рез №" + i +"; Остатки = " + data.cuts[i].remainder + " мм Х " + data.cuts[i].length + " м<br />";
+                                cuts += "Рез №" + cut +"; Остатки = " + data.cuts[cut].remainder + " мм Х " + data.cuts[cut].length + " м<br />";
                                 
-                                for(var key in data.cuts[i].streams_counts) {
-                                    cuts += "номер = " + key + "; ширина = " + data.cuts[i].streams_counts[key].width + " мм; ручьёв = " + data.cuts[i].streams_counts[key].streams_count + "; длина = " + data.cuts[i].streams_counts[key].length + " м; сумма длин = " + data.cuts[i].streams_counts[key].lengths_sum + " м;<br />";
+                                for(var key in data.cuts[cut].streams_counts) {
+                                    cuts += "номер = " + key + "; ширина = " + data.cuts[cut].streams_counts[key].width + " мм; ручьёв = " + data.cuts[cut].streams_counts[key].streams_count + "; длина = " + data.cuts[cut].streams_counts[key].length + " м; сумма длин = " + data.cuts[cut].streams_counts[key].lengths_sum + " м;<br />";
                                 }
                             }
                             
@@ -179,6 +182,20 @@ include '../include/topscripts.php';
                             }
                             
                             $('#summary').html(summary);
+                            
+                            var cut_ext = "<br />";
+                            cut_ext += "========================================================<br />";
+                            cut_ext += "Кроим остатки шириной " + data.remainder + " мм; один съём " + cut_length + " метров<br />";
+                            cut_ext += "--------------------------------------------------------<br />";
+                            cut_ext += "Добавляем в рез №" + cut + ":<br /><br />";
+                            
+                            for(var key in data.cut_ext) {
+                                cut_ext += "номер = " + key + "; ширина = " + data.cut_ext[key].width + " м: ручьёв = " + data.cut_ext[key].streams_count + "; длина = " + data.cut_ext[key].length + " м<br />";
+                            }
+                            
+                            cut_ext += "Получаем остатки = " + data.remainder_ext + " мм X " + cut_length + " м<br /><br />";
+                            
+                            $('#cut_ext').html(cut_ext);
                         }
                         
                         $('#waiting').html('');
