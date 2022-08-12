@@ -14,6 +14,14 @@ include '../include/topscripts.php';
                         <label for="cut_length">Длина одного съёма, м</label><br />
                         <input type="number" min="1" id="cut_length" name="cut_length" value="<?= filter_input(INPUT_POST, 'cut_length') ?>" required="required" /><br /><br />
                     </td>
+                    <?php if(false): ?>
+                    <td>
+                        <label for="source_width">Ширина исходного ролика, мм</label><br />
+                        <input type="number" min="1" id="source_width" name="source_width" value="1500" required="required" /><br /><br />
+                        <label for="cut_length">Длина одного съёма, м</label><br />
+                        <input type="number" min="1" id="cut_length" name="cut_length" value="2000" required="required" /><br /><br />
+                    </td>
+                    <?php endif; ?>
                     <td>
                         <?php
                         $post_roll_keys = array();
@@ -47,18 +55,50 @@ include '../include/topscripts.php';
                                 <td>&nbsp;</td>
                             </tr>
                         </table>
+                        <?php if(false): ?>
+                        <table>
+                            <tr>
+                                <th>Ширина, мм</th>
+                                <td><input type="number" min="1" id="width_1" name="width_1" value="120" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_2" name="width_2" value="140" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_3" name="width_3" value="150" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_4" name="width_4" value="260" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_5" name="width_5" value="200" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="width_6" name="width_6" value="205" style="width: 70px;" /></td>
+                            </tr>
+                            <tr>
+                                <th>Длина, м</th>
+                                <td><input type="number" min="1" id="length_1" name="length_1" value="10000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_2" name="length_2" value="2000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_3" name="length_3" value="18000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_4" name="length_4" value="4000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_5" name="length_5" value="2000" style="width: 70px;" /></td>
+                                <td><input type="number" min="1" id="length_6" name="length_6" value="4000" style="width: 70px;" /></td>
+                            </tr>
+                        </table>
+                        <?php endif; ?>
                     </td>
                 </tr>
             </table>
             <button type="button" name="cut_sumbit" onclick="javascript: Start();">Рассчитать</button>
         </form>
-        <div id="result"></div>
+        <div id="source"></div>
+        <div id="cuts"></div>
+        <div id="summary"></div>
+        <div id="cut_ext"></div>
+        <div id="summary_ext"></div>
+        <div id="error" style="color: red; font-size: xx-large;"></div>
         <div id="waiting" style="position: absolute; left: 50px; top: 50px;"></div>
     </body>
     <script src='<?=APPLICATION ?>/js/jquery-3.5.1.min.js'></script>
     <script>
         function Start() {
-            $('#result').html('');
+            $('#source').html('');
+            $('#cuts').html('');
+            $('#summary').html('');
+            $('#cut_ext').html('');
+            $('#summary_ext').html('');
+            $('#error').text('');
             
             if($('#source_width').val() === '' ||
                     $('#cut_length').val() === '' ||
@@ -77,10 +117,14 @@ include '../include/topscripts.php';
             // Конечные ролики с ключами
             var plan_rolls = {};
             
+            // Сортировка по ширине
+            var sort_by_width = {};
+            
             var i = 1;
             
             while($('#width_' + i).val() !== '' && $('#width_' + i).val() !== undefined && $('#length_' + i).val() !== '' && $('#length_' + i).val() !== undefined) {
                 plan_rolls[i] = {'width': $('#width_' + i).val(), 'length': $('#length_' + i).val()};
+                sort_by_width[plan_rolls[i]['width']] = i;
                 i++;
             }
             
@@ -95,13 +139,76 @@ include '../include/topscripts.php';
                 get_params += '&length_' + key + '=' + plan_rolls[key]['length'];
             }
             
-            $.ajax({ url: 'calculate.php' + get_params })
+            $.ajax({ dataType: 'JSON', url: 'calculate1.php' + get_params })
                     .done(function(data) {
-                        $('#result').html(data);
+                        if(data.error !== '' && data.error !== undefined) {
+                            $('#error').text(data.error);
+                        }
+                        else {
+                            var source = "-------------------------------------------------------------------------------<br />";
+                            source += "Ширина исходного роля " + source_width + " мм; один съём " + cut_length + " метров.<br />"
+                            source += "-------------------------------------------------------------------------------<br />";
+                            source += "Задание на раскрой материала:<br />";
+                            
+                            for(var i in sort_by_width) {
+                                var key = sort_by_width[i];
+                                source += "номер = " + key + "; ширина = " + plan_rolls[key]['width'] + " мм; длина = " + plan_rolls[key]['length'] + " м;<br />";
+                            }
+                            
+                            $('#source').html(source);
+                            
+                            var cuts = "";
+                            var cut = 0;
+                            
+                            for(cut in data.cuts) {
+                                cuts += "------------------------------------------------------------<br />";
+                                cuts += "Рез №" + cut +"; Остатки = " + data.cuts[cut].remainder + " мм Х " + data.cuts[cut].length + " м<br />";
+                                
+                                for(var key in data.cuts[cut].streams_counts) {
+                                    cuts += "номер = " + key + "; ширина = " + data.cuts[cut].streams_counts[key].width + " мм; ручьёв = " + data.cuts[cut].streams_counts[key].streams_count + "; длина = " + data.cuts[cut].streams_counts[key].length + " м; сумма длин = " + data.cuts[cut].streams_counts[key].lengths_sum + " м;<br />";
+                                }
+                            }
+                            
+                            $('#cuts').html(cuts);
+                            
+                            var summary = "=================================================================<br /><br />";
+                            summary += "ИТОГО: ЗАДАНО/ПОЛУЧЕНО/РАЗНОСТЬ: <br />";
+                            
+                            for(var i in sort_by_width) {
+                                key = sort_by_width[i];
+                                summary += "номер = " + key + "; ширина = " + data.summary[key].width + " мм; задано = " + data.summary[key].length + " м; получено = " + data.summary[key].lengths_sum + " м; разн. = " + data.summary[key].fact_plan_diff + " м<br />";
+                            }
+                            
+                            $('#summary').html(summary);
+                            
+                            var cut_ext = "<br />";
+                            cut_ext += "========================================================<br />";
+                            cut_ext += "Кроим остатки шириной " + data.remainder + " мм; один съём " + cut_length + " метров<br />";
+                            cut_ext += "--------------------------------------------------------<br />";
+                            cut_ext += "Добавляем в рез №" + cut + ":<br /><br />";
+                            
+                            for(var key in data.cut_ext) {
+                                cut_ext += "номер = " + key + "; ширина = " + data.cut_ext[key].width + " м: ручьёв = " + data.cut_ext[key].streams_count + "; длина = " + data.cut_ext[key].length + " м<br />";
+                            }
+                            
+                            cut_ext += "Получаем остатки = " + data.remainder_ext + " мм X " + cut_length + " м<br /><br />";
+                            $('#cut_ext').html(cut_ext);
+                            
+                            var summary_ext = "================================================================<br /><br />";
+                            summary_ext += "ИТОГО: ЗАДАНО/ПОЛУЧЕНО/РАЗНОСТЬ=ПОЛУЧЕНО-ЗАДАНО: <br /><br />";
+                            
+                            for(var i in sort_by_width) {
+                                key = sort_by_width[i];
+                                summary_ext += "номер = " + key + "; ширина = " + data.summary_ext[key].width + " мм; задано = " + data.summary_ext[key].length + " м; получено = " + data.summary_ext[key].lengths_sum + " м; разн. = " + data.summary_ext[key].fact_plan_diff + " м<br />";
+                            }
+                            
+                            $('#summary_ext').html(summary_ext);
+                        }
+                        
                         $('#waiting').html('');
                     })
                     .fail(function() {
-                        $('#result').html("<p style='color: red;'>Ошибка при вычислении.</p>");
+                        $('#error').text("Ошибка при вычислении.");
                         $('#waiting').html('');
                     });
         }
