@@ -146,10 +146,7 @@ foreach($plan_rolls as $key => $value) {
 }
 
 $result['summary'] = $summary;
-
-// Остатки - часть ширины исходного ролика, не охваченная ручьями
-$remainder = $variables->source_width * 1000;
-$result['remainder'] = $remainder;
+$result['remainder'] = intval($variables->source_width * 1000);
         
 $min_streams_counts = array();
 foreach($plan_rolls as $key => $value) { 
@@ -164,6 +161,8 @@ $variables = new Variables($variables->source_width);
 Iterate($plan_rolls, $min_streams_counts, $variables, $variables->streams_counts, 0);
 
 $cut_ext = array();
+
+// Остатки - часть ширины исходного ролика, не охваченная ручьями
 $variables->source_width = floatval($variables->source_width) - floatval($variables->max_streams_widths_sum);
             
 foreach($variables->streams_counts as $key => $value) {
@@ -176,9 +175,7 @@ foreach($variables->streams_counts as $key => $value) {
 }
 
 $result['cut_ext'] = $cut_ext;
-
-$remainder_ext = $variables->source_width * 1000;
-$result['remainder_ext'] = $remainder_ext;
+$result['remainder_ext'] = intval($variables->source_width * 1000);
         
 $fact_plan_diffs = array();
 foreach($lengths_sum as $key => $value) {
