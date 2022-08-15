@@ -47,7 +47,7 @@ function GetPrintingsWithCases($number) {
 }
 
 // !!!!!! Удаляем все двойные или тройные пробелы в названиях расчётов (иначе будут проблемы в поиске по названию).
-$sql = "update calculation set name = replace(name, '  ', ' ') where name like('  ')";
+$sql = "update calculation set name = replace(name, '  ', ' ') where name like('%  %')";
 $executer = new Executer($sql);
 
 $status_titles = array(DRAFT => "Черновики", CALCULATION => "Расчеты");
