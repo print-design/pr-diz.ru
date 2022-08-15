@@ -109,6 +109,12 @@ $title = $status_titles[$status_id];
                         if(empty($where)) $where = " where c.customer_id=$customer";
                         else $where .= " and c.customer_id=$customer";
                     }
+                    
+                    $name = filter_input(INPUT_GET, 'name');
+                    if(!empty($name)) {
+                        if(empty($where)) $where = " where replace(trim(c.name), '  ', ' ')='$name'";
+                        else $where .= " and replace(trim(c.name), '  ', ' ')='$name'";
+                    }
 
                     // Общее количество расчётов для установления количества страниц в постраничном выводе
                     $sql = "select count(c.id) from calculation c left join customer cus on c.customer_id=cus.id$where";
@@ -178,6 +184,19 @@ $title = $status_titles[$status_id];
                             endwhile;
                             ?>
                         </select>
+                        <select id="name" name="name" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Наименование...</option>
+                            <?php
+                            $sql = "select distinct replace(trim(c.name), '  ', ' ') name from calculation c where c.status_id = $status_id order by c.name";
+                            $fetcher = new Fetcher($sql);
+                            
+                            while ($row = $fetcher->Fetch()):
+                            ?>
+                            <option<?=($row['name'] == filter_input(INPUT_GET, 'name') ? " selected='selected'" : "") ?>><?=$row['name'] ?></option>
+                            <?php
+                            endwhile;
+                            ?>
+                        </select>
                     </form>
                     <a href="create.php" class="btn btn-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
                 </div>
@@ -237,7 +256,7 @@ $title = $status_titles[$status_id];
                         }
                     }
                     
-                    $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.quantity, "
+                    $sql = "select c.id, c.date, c.customer_id, cus.name customer, replace(trim(c.name), '  ', ' ') name, c.quantity, "
                             . "(select count(quantity) from calculation_quantity where calculation_id = c.id) quantities, "
                             . "c.unit, wt.name work_type, u.last_name, u.first_name, c.status_id, "
                             . "(select id from techmap where calculation_id = c.id order by id desc limit 1) techmap_id, "
@@ -319,6 +338,12 @@ $title = $status_titles[$status_id];
             
             $('#customer').select2({
                 placeholder: "Заказчик...",
+                maximumSelectionLength: 1,
+                language: "ru"
+            });
+            
+            $('#name').select2({
+                placeholder: "Наименование...",
                 maximumSelectionLength: 1,
                 language: "ru"
             });
