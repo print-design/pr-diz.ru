@@ -187,7 +187,11 @@ $title = $status_titles[$status_id];
                         <select id="name" name="name" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Наименование...</option>
                             <?php
-                            $sql = "select distinct replace(trim(c.name), '  ', ' ') name from calculation c where c.status_id = $status_id order by trim(c.name)";
+                            $sql = "select distinct replace(trim(c.name), '  ', ' ') name from calculation c where c.status_id = $status_id ";
+                            if(!empty($customer)) {
+                                $sql .= "and c.customer_id = $customer ";
+                            }
+                            $sql .= "order by trim(c.name)";
                             $fetcher = new Fetcher($sql);
                             
                             while ($row = $fetcher->Fetch()):
