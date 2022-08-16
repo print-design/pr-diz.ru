@@ -136,8 +136,6 @@ $status_id = $row['status_id'];
 
 $new_forms_number = 0;
 
-$gap = $row['gap'];
-
 for($i=1; $i<=$ink_number; $i++) {
     $ink_var = "ink_$i";
     $$ink_var = $row[$ink_var];
@@ -179,6 +177,14 @@ $customer_email = $row['customer_email'];
 $customer_person = $row['customer_person'];
 
 $num_for_customer = $row['num_for_customer'];
+
+$gap = $row['gap'];
+
+// Если есть ламинация, а ламинатор пустой, то присваиваем ему значение "Сольвент".
+// (В старых расчётах ламинатор может быть не указан, поскольку тогда бессольвента не было.)
+if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name)) && empty($laminator_id)) {
+    $laminator_id = CalculationBase::SOLVENT_YES;
+}
 ?>
 <!DOCTYPE html>
 <html>
