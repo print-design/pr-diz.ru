@@ -995,7 +995,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         Объем заказа
                         <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
                     </div>
-                    <div class="modal-body" id="quantities_form_body" style="max-height: 80vh; overflow-y: scroll;"></div>
+                    <div class="modal-body" id="quantities_form_body" style="max-height: 70vh; overflow-y: scroll;"></div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-dark mt-3" data-dismiss="modal" style="width: 150px;">Отмена</button>
                         <button type="button" id="quantities_submit" name="quantities_submit" class="btn btn-dark mt-3" style="width: 150px;">OK</button>

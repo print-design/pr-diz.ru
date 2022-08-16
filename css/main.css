@@ -537,6 +537,18 @@ textarea#editable {
     left: 120px;
 }
 
+.select2-selection__choice__remove {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #EC3A7A;
+    padding-left: 6px;
+    padding-right: 6px;
+    color: white !important;
+    border: solid 1px lightgray;
+    border-radius: 5px;
+}
+
 /* Правая панель расчётов */
 .param-title {
     font-size: large;
