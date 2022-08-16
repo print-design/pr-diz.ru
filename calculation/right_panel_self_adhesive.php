@@ -518,12 +518,23 @@ if(!empty($id)) {
             <div class="value mb-2"><?= CalculationBase::Display(floatval($income), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display($income_per_unit, 3) ?> &#8381; за шт</span></div>
         </div>
     </div>
-    <div class="mt-3">
-        <h2>Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= CalculationBase::Display(floatval($total_weight_dirty), 0) ?> кг</span></h2>
+    <div class="mt-3 row text-nowrap">
+        <div class="col-4">
+            <h2>Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= CalculationBase::Display(floatval($total_weight_dirty), 0) ?> кг</span></h2>
+        </div>
+        <div class="col-8">
+            <?php
+            $sql = "select quantity, length from calculation_quantity where calculation_id = $id";
+            $grabber = new Grabber($sql);
+            $rows = $grabber->result;
+            $printings_number = count($rows);
+            ?>
+            <h2>Тиражей&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?=$printings_number ?></span></h2>
+        </div>
     </div>
+    <h3>Самоклеящийся материал&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($weight_dirty), 0) ?> кг</span></h3>
     <div class="row text-nowrap">
         <div class="col-4 pr-4">
-            <h3>Самоклеящийся материал&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($weight_dirty), 0) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
             <div class="value mb-2"><?= CalculationBase::Display(floatval($film_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($film_cost_per_unit), 3) ?> &#8381; за м<sup>2</sup></div>
             <div>Ширина</div>
@@ -536,18 +547,13 @@ if(!empty($id)) {
             <div class="value mb-2"><?= CalculationBase::Display(floatval($weight_dirty), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(intval($length_dirty), 0) ?> м</span></div>
         </div>
         <div class="col-8">
-            <?php
-            $sql = "select quantity, length from calculation_quantity where calculation_id = $id";
-            $grabber = new Grabber($sql);
-            $rows = $grabber->result;
-            $half = ceil(count($rows) / 2);
-            $i = 1;
-            $printings_number = count($rows);
-            ?>
-            <h3>Тиражей&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?=$printings_number ?></span></h3>
             <div class="row">
                 <div class="col-6">
-                <?php foreach($rows as $row): ?>
+                <?php
+                $half = ceil(count($rows) / 2);
+                $i = 1;
+                foreach($rows as $row):
+                ?>
                     <div class='value mb-2'><span class='font-weight-normal'><?=$i ?>.&nbsp;&nbsp;&nbsp;</span><?=CalculationBase::Display(intval($row['quantity']), 0) ?> шт&nbsp;&nbsp;&nbsp;<span class='font-weight-normal'><?= CalculationBase::Display(intval($row['length']), 0) ?> м</span></div>
                 <?php if($i == $half): ?>
                 </div>
