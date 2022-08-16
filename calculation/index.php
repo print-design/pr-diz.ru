@@ -335,25 +335,28 @@ $title = $status_titles[$status_id];
                 placeholder: "Тип работы...",
                 maximumSelectionLength: 1,
                 language: "ru",
-                width: '15rem'
+                width: '8rem'
             });
             
             $('#manager').select2({
                 placeholder: "Менеджер...",
                 maximumSelectionLength: 1,
-                language: "ru"
+                language: "ru",
+                width: '8rem'
             });
             
             $('#customer').select2({
                 placeholder: "Заказчик...",
                 maximumSelectionLength: 1,
-                language: "ru"
+                language: "ru",
+                width: '15rem'
             });
             
             $('#name').select2({
                 placeholder: "Наименование...",
                 maximumSelectionLength: 1,
-                language: "ru"
+                language: "ru",
+                width: '15rem'
             });
             
             // Заполнение информации о заказчике

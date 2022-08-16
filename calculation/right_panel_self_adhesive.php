@@ -520,7 +520,7 @@ if(!empty($id)) {
     </div>
     <div class="mt-3 row text-nowrap">
         <div class="col-4">
-            <h2>Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= CalculationBase::Display(floatval($total_weight_dirty), 0) ?> кг</span></h2>
+            <h2>Материалы</h2>
         </div>
         <div class="col-8">
             <?php
@@ -536,7 +536,7 @@ if(!empty($id)) {
     <div class="row text-nowrap">
         <div class="col-4 pr-4">
             <div>Закупочная стоимость</div>
-            <div class="value mb-2"><?= CalculationBase::Display(floatval($film_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($film_cost_per_unit), 3) ?> &#8381; за м<sup>2</sup></div>
+            <div class="value mb-2"><?= CalculationBase::Display(floatval($film_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($film_cost_per_unit), 3) ?>&#8381; за м<sup>2</sup></div>
             <div>Ширина</div>
             <div class="value mb-2"><?= CalculationBase::Display(intval($width), 0) ?> мм</div>
             <div>На приладку тиража</div>

@@ -537,11 +537,6 @@ textarea#editable {
     left: 120px;
 }
 
-.select2-selection__choice__remove {
-    float: right;
-    margin-left: 4px;
-}
-
 /* Правая панель расчётов */
 .param-title {
     font-size: large;
