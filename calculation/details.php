@@ -318,12 +318,55 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
                 ChangeLimitIntValue($(this), 999);
             });
             
+            function SetExtracharge(param) {
+                extracharge = parseInt(param);
+                
+                if(!isNaN(extracharge) && extracharge > -1) {
+                    $.ajax({ dataType: 'JSON', url: '_set_extracharge.php?work_type_id=<?=$work_type_id ?>&extracharge=' + extracharge })
+                            .done(function(data) {
+                                if(data.error != '') {
+                                    alert(data.error);
+                                }
+                                else {
+                                    $('#shipping_cost').text(data.shipping_cost);
+                                    $('#shipping_cost_per_unit').text(data.shipping_cost_per_unit);
+                                    $('#income').text(data.income);
+                                    $('#income_per_unit').text(data.income_per_unit);
+                                }
+                            })
+                            .fail(function() {
+                                alert("Ошибка при редактировании наценки");
+                            });
+                }
+            }
+            
+            function SetExtrachargeCliche(param) {
+                extracharge_cliche = parseInt(param);
+                
+                if(!isNaN(extracharge_cliche) && extracharge_cliche > -1) {
+                    $.ajax({ dataType: 'JSON', url: "_set_extracharge_cliche.php?work_type_id=<?=$work_type_id ?>&extracharge_cliche=" + extracharge_cliche })
+                            .done(function(data) {
+                                if(data.error != '') {
+                                    alert(data.error);
+                                }
+                                else {
+                                    $('#shipping_cliche_cost').text(data.shipping_cliche_cost);
+                                }
+                            })
+                            .fail(function() {
+                                alert("Ошибка при редактировании наценки ПФ");
+                            });
+                }
+            }
+            
             $('#extracharge').keyup(function(){
-                $('#extracharge-submit').removeClass('d-none');
+                SetExtracharge($(this).val());
+                //$('#extracharge-submit').removeClass('d-none');
             });
             
             $('#extracharge_cliche').keyup(function(){
-                $('#extracharge-cliche-submit').removeClass('d-none');
+                SetExtrachargeCliche($(this).val());
+                //$('#extracharge-cliche-submit').removeClass('d-none');
             });
             
             // Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне
