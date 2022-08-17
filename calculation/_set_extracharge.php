@@ -13,7 +13,7 @@ if(empty($id)) {
 elseif(empty($work_type_id)) {
     $result['error'] = "Не указан тип работы";
 }
-elseif(empty ($extracharge)) {
+elseif($extracharge === null || $extracharge === '') {
     $result['error'] = "Не указан размер наценки";
 }
 else {

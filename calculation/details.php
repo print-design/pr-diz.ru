@@ -297,27 +297,39 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
                 AdjustFixedBlock($('#calculation'));
             }
             
-            // Ограничение значений наценки
-            $('#extracharge').keydown(function(e) {
-                if(!KeyDownLimitIntValue($(e.target), e, 999)) {
+            // Ограницение значений наценки от 0 до 999
+            function LimitExtracharge(param) {
+                if(param == '') {
+                    return true;
+                }
+                
+                ival = parseInt(param);
+                
+                if(isNaN(ival) || ival < 0 || ival > 999) {
                     return false;
                 }
+                else {
+                    return true;
+                }
+            }
+            
+            $('#extracharge').keydown(function() {
+                return LimitExtracharge($(this).val());
             });
             
-            $('#extracharge_cliche').keydown(function(e) {
-                if(!KeyDownLimitIntValue($(e.target), e, 999)) {
-                    return false;
-                }
+            $('#extracharge_cliche').keydown(function() {
+                return LimitExtracharge($(this).val());
             });
             
             $('#extracharge').change(function(){
-                ChangeLimitIntValue($(this), 999);
+                return LimitExtracharge($(this).val());
             });
             
             $('#extracharge_cliche').change(function(){
-                ChangeLimitIntValue($(this), 999);
+                return LimitExtracharge($(this).val());
             });
             
+            // Вычисляем отгрузочную стоимость при других наценках
             function SetExtracharge(param) {
                 extracharge = parseInt(param);
                 

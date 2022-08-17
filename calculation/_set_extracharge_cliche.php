@@ -9,7 +9,7 @@ $result = array();
 if(empty($id)) {
     $result['error'] = "Не указан ID расчёта";
 }
-elseif(empty ($extracharge_cliche)) {
+elseif($extracharge_cliche === null || $extracharge_cliche === '') {
     $result['error'] = "Не указан размер наценки";
 }
 else {
