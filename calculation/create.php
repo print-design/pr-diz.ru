@@ -343,7 +343,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $cliches_count_kodak = filter_input(INPUT_POST, 'cliches_count_kodak'); if($cliches_count_kodak === null) $cliches_count_kodak = "NULL";
         $cliches_count_old = filter_input(INPUT_POST, 'cliches_count_old'); if($cliches_count_old === null) $cliches_count_old = "NULL";
         
-        $stamp = filter_input(INPUT_POST, 'stamp'); if($stamp === null) $stamp = "NULL";
+        $stamp = filter_input(INPUT_POST, 'stamp'); if($stamp === null || $stamp === '') $stamp = "NULL";
         $stamp_in_price = 0; if(filter_input(INPUT_POST, 'stamp_in_price') == 'on') $stamp_in_price = 1;
         
         $sql = "insert into calculation (customer_id, name, unit, quantity, work_type_id, "
