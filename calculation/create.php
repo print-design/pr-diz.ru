@@ -2216,10 +2216,10 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label for="stamp_price" id="for_stamp_price">Стоимость штампа, &#8381;</label>
+                                        <label for="stamp" id="for_stamp">Стоимость штампа, &#8381;</label>
                                         <input type="text" 
-                                               id="stamp_price" 
-                                               name="stamp_price" 
+                                               id="stamp" 
+                                               name="stamp" 
                                                class="form-control float-only self-adhesive-only d-none" 
                                                placeholder="Стоимость штампа, &#8381;" 
                                                value="<?=$stamp ?>" 
