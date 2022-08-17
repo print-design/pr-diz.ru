@@ -28,7 +28,7 @@ if(null !== filter_input(INPUT_POST, 'extracharge-submit')) {
     }
     
     if(empty($error_message)) {
-        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.shipping_cost_per_unit = cr.shipping_cost / $quantity where c.id = $id"; echo $sql;
+        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.shipping_cost_per_unit = cr.shipping_cost / $quantity where c.id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
