@@ -343,6 +343,9 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $cliches_count_kodak = filter_input(INPUT_POST, 'cliches_count_kodak'); if($cliches_count_kodak === null) $cliches_count_kodak = "NULL";
         $cliches_count_old = filter_input(INPUT_POST, 'cliches_count_old'); if($cliches_count_old === null) $cliches_count_old = "NULL";
         
+        $stamp = filter_input(INPUT_POST, 'stamp'); if($stamp === null) $stamp = "NULL";
+        $stamp_in_price = 0; if(filter_input(INPUT_POST, 'stamp_in_price') == 'on') $stamp_in_price = 1;
+        
         $sql = "insert into calculation (customer_id, name, unit, quantity, work_type_id, "
                 . "film_variation_id, price, currency, individual_film_name, individual_thickness, individual_density, customers_material, ski, width_ski, "
                 . "lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, lamination1_ski, lamination1_width_ski, "
@@ -353,7 +356,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
                 . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, cliche_1, "
                 . "cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8, "
-                . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old) "
+                . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old, "
+                . "stamp, stamp_in_price) "
                 . "values($customer_id, '$name', '$unit', $quantity, $work_type_id, "
                 . "$film_variation_id, $price, '$currency', '$individual_film_name', $individual_thickness, $individual_density, $customers_material, $ski, $width_ski, "
                 . "$lamination1_film_variation_id, $lamination1_price, '$lamination1_currency', '$lamination1_individual_film_name', $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, $lamination1_ski, $lamination1_width_ski, "
@@ -364,7 +368,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
                 . "'$percent_1', '$percent_2', '$percent_3', '$percent_4', '$percent_5', '$percent_6', '$percent_7', '$percent_8', "
                 . "'$cliche_1', '$cliche_2', '$cliche_3', '$cliche_4', '$cliche_5', '$cliche_6', '$cliche_7', '$cliche_8', "
-                . "$cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old)";
+                . "$cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, "
+                . "$stamp, $stamp_in_price)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $insert_id = $executer->insert_id;
@@ -415,6 +420,7 @@ if(!empty($id)) {
             . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, c.cliche_1, "
             . "c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
             . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old, extracharge, extracharge_cliche, "
+            . "stamp, stamp_in_price, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
             . "from calculation c where c.id = $id";
     $fetcher = new Fetcher($sql);
@@ -758,6 +764,16 @@ if(isset($row['extracharge'])) {
 $extracharge_cliche = null;
 if(isset($row['extracharge_cliche'])) {
     $extracharge_cliche = $row['extracharge_cliche'];
+}
+
+$stamp = filter_input(INPUT_POST, 'stamp');
+if($stamp === null && isset($row['stamp'])) {
+    $stamp = $row['stamp'];
+}
+
+$stamp_in_price = filter_input(INPUT_POST, 'stamp_in_price');
+if($stamp_in_price === null && isset($row['stamp_in_price'])) {
+    $stamp_in_price = $row['stamp_in_price'];
 }
 
 $num_for_customer = null;
@@ -2189,7 +2205,38 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             <?php
                                             $checked = $cliche_in_price == 1 ? " checked='checked'" : "";
                                             ?>
-                                            <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?>>Включить ПФ в себестоимость
+                                            <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?> />Включить ПФ в себестоимость
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Штамп -->
+                        <div class="self-adhesive-only d-none">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="stamp_price" id="for_stamp_price">Стоимость штампа, &#8381;</label>
+                                        <input type="text" 
+                                               id="stamp_price" 
+                                               name="stamp_price" 
+                                               class="form-control float-only self-adhesive-only d-none" 
+                                               placeholder="Стоимость штампа, &#8381;" 
+                                               value="<?=$stamp ?>" 
+                                               onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onmouseup="javascript: $(this).attr('name', 'stamp'); $(this).attr('placeholder', 'Стоимость штампа, &#8381;');" 
+                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                               onkeyup="javascript: $(this).attr('name', 'stamp'); $(this).attr('placeholder', 'Стоимость штампа, &#8381;');" 
+                                               onfocusout="javascript: $(this).attr('name', 'stamp'); $(this).attr('placeholder', 'Стоимость штампа, &#8381;');" />
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-check mt-1">
+                                        <label class="form-check-label text-nowrap mt-4" style="line-height: 25px;">
+                                            <?php
+                                            $checked = $stamp_in_price == 1 ? " checked='checked'" : "";
+                                            ?>
+                                            <input type="checkbox" class="form-check-input" id="stamp_in_price" name="stamp_in_price" value="on"<?=$checked ?> />Включить штамп в себестоимость
                                         </label>
                                     </div>
                                 </div>
