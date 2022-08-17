@@ -297,36 +297,35 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
                 AdjustFixedBlock($('#calculation'));
             }
             
-            // Ограницение значений наценки от 0 до 999
-            function LimitExtracharge(param) {
-                if(param == '') {
+            // Ограничение значений наценки
+            $('#extracharge').keydown(function(e) {
+                if(($(e.target).val() === 0 || $(e.target).val() === '') && e.key == 0) {
                     return true;
                 }
-                
-                ival = parseInt(param);
-                
-                if(isNaN(ival) || ival < 0 || ival > 999) {
+                else if(!KeyDownLimitIntValue($(e.target), e, 999)) {
                     return false;
                 }
-                else {
-                    return true;
-                }
-            }
-            
-            $('#extracharge').keydown(function() {
-                return LimitExtracharge($(this).val());
             });
             
-            $('#extracharge_cliche').keydown(function() {
-                return LimitExtracharge($(this).val());
+            $('#extracharge_cliche').keydown(function(e) {
+                if(($(e.target).val() === 0 || $(e.target).val() === '') && e.key == 0) {
+                    return true;
+                }
+                else if(!KeyDownLimitIntValue($(e.target), e, 999)) {
+                    return false;
+                }
             });
             
             $('#extracharge').change(function(){
-                return LimitExtracharge($(this).val());
+                if($(this).val() !== 0) {
+                    ChangeLimitIntValue($(this), 999);
+                }
             });
             
             $('#extracharge_cliche').change(function(){
-                return LimitExtracharge($(this).val());
+                if($(this).val() !== 0) {
+                    ChangeLimitIntValue($(this), 999);
+                }
             });
             
             // Вычисляем отгрузочную стоимость при других наценках
