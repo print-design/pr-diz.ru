@@ -1158,6 +1158,7 @@ class CalculationSelfAdhesive extends CalculationBase {
     public $shipping_cliche_cost; // отгрузочная стоимость форм
     public $income; // прибыль
     public $income_per_unit; // прибыль за единицу
+    public $stamp; // Себестоимость штампа
     public $total_weight_dirty; // общая масса с приладкой
     public $film_cost_per_unit; // Масса с приладкой на 1 кг
     public $film_waste_cost; // отходы, стоимость
@@ -1201,7 +1202,9 @@ class CalculationSelfAdhesive extends CalculationBase {
             $cliches_count_kodak, // Количество форм Кодак
             $cliches_count_old, // Количество старых форм
             $extracharge, // Наценка на тираж
-            $extracharge_cliche // Наценка на ПФ
+            $extracharge_cliche, // Наценка на ПФ
+            
+            $stamp // Себестоимость штампа
             ) {
         // Суммарный размер тиража
         $this->quantity = array_sum($quantities);
@@ -1474,6 +1477,9 @@ class CalculationSelfAdhesive extends CalculationBase {
         
         // Отгрузочная стоимость ПФ
         $this->shipping_cliche_cost = $this->cliche_cost + ($this->cliche_cost * $this->extracharge_cliche / 100);
+        
+        // Себестоимость штампа
+        $this->stamp = floatval($stamp);
         
         // Масса плёнки с приладкой
         $this->total_weight_dirty = $this->weight_dirty;
