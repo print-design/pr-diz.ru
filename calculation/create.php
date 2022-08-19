@@ -1972,13 +1972,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         <!-- Количество красок (для самоклейки возможно 0) -->
                         <div class="print-only self-adhesive-only d-none">
                             <div class="row">
-                                <?php
-                                $ink_number_class = " col-12";
-                                if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
-                                    $ink_number_class = " col-3";
-                                }
-                                ?>
-                                <div class="form-group<?=$ink_number_class ?>" id="ink-col-ink">
+                                <div class="form-group col-12" id="ink-col-ink">
                                     <label for="ink_number">Количество красок</label>
                                     <select id="ink_number" name="ink_number" class="form-control print-only self-adhesive-only d-none">
                                         <option value="" hidden="hidden">Количество красок...</option>
@@ -2005,6 +1999,12 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         endif;
                                         ?>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="row self-adhesive-only d-none">
+                                <div class="form-group col-3 self-adhesive-only" id="ink-col-cliche">
+                                    <label for="cliches_count">Кол-во форм всего</label>
+                                    <input type="text" id="cliches_count" name="cliches_count" value="" class="form-control int-only self-adhesive-only d-none" disabled="disabled" />
                                 </div>
                                 <div class="form-group col-3 self-adhesive-only" id="ink-col-cliche-flint">
                                     <label for="cliches_count_flint">Кол-во новых Флинт</label>
@@ -2481,17 +2481,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             $('#work_type_id').change(function() {
                 SetFieldsVisibility($(this).val());
                 FillMachines($(this).val());
-                
-                // Для типа "Самоклеящийся материал" делаем список красок узким,
-                // чтобы уместились поля для количества форм
-                if($(this).val() == <?= CalculationBase::WORK_TYPE_PRINT ?>) {
-                    $('#ink-col-ink').removeClass('col-3');
-                    $('#ink-col-ink').addClass('col-12');
-                }
-                else if($(this).val() == <?= CalculationBase::WORK_TYPE_SELF_ADHESIVE ?>) {
-                    $('#ink-col-ink').removeClass('col-12');
-                    $('#ink-col-ink').addClass('col-3');
-                }
             });
             
             // Заполняем список машин
