@@ -2004,7 +2004,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             <div class="row self-adhesive-only d-none">
                                 <div class="form-group col-3 self-adhesive-only" id="ink-col-cliche">
                                     <label for="cliches_count">Кол-во форм всего</label>
-                                    <input type="text" id="cliches_count" name="cliches_count" value="" class="form-control int-only self-adhesive-only d-none" disabled="disabled" />
+                                    <input type="text" id="cliches_count" name="cliches_count" value="" class="form-control int-only self-adhesive-only d-none" />
                                 </div>
                                 <div class="form-group col-3 self-adhesive-only" id="ink-col-cliche-flint">
                                     <label for="cliches_count_flint">Кол-во новых Флинт</label>
