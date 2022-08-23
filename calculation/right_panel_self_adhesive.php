@@ -513,10 +513,8 @@ if(!empty($id)) {
             <h3>Отгрузочная стоимость</h3>
             <div>Отгрузочная стоимость <?=$cliche_in_price == 1 ? 'с' : 'без' ?> ПФ</div>
             <div class="value"><span id="shipping_cost"><?= CalculationBase::Display(floatval($shipping_cost), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="shipping_cost_per_unit"><?= CalculationBase::Display(floatval($shipping_cost_per_unit), 3) ?></span> &#8381; за шт</span></div>
-            <?php if($cliche_in_price != 1): ?>
             <div class="mt-2">Отгрузочная стоимость ПФ</div>
             <div class="value"><span id="shipping_cliche_cost"><?= CalculationBase::Display(floatval($shipping_cliche_cost), 0) ?></span> &#8381;</div>
-            <?php endif; ?>
         </div>
         <div class="col-4">
             <h3>Прибыль</h3>
