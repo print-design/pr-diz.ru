@@ -46,6 +46,10 @@ function GetPrintingsWithCases($number) {
     return $result;
 }
 
+// !!!!!! Удаляем все двойные или тройные пробелы в названиях расчётов (иначе будут проблемы в поиске по названию).
+$sql = "update calculation set name = replace(name, '  ', ' ') where name like('%  %')";
+$executer = new Executer($sql);
+
 $status_titles = array(DRAFT => "Черновики", CALCULATION => "Расчеты");
 $status_id = filter_input(INPUT_GET, 'status');
 if(empty($status_id)) $status_id = CALCULATION;
@@ -109,6 +113,12 @@ $title = $status_titles[$status_id];
                         if(empty($where)) $where = " where c.customer_id=$customer";
                         else $where .= " and c.customer_id=$customer";
                     }
+                    
+                    $name = filter_input(INPUT_GET, 'name');
+                    if(!empty($name)) {
+                        if(empty($where)) $where = " where trim(c.name)='$name'";
+                        else $where .= " and trim(c.name)='$name'";
+                    }
 
                     // Общее количество расчётов для установления количества страниц в постраничном выводе
                     $sql = "select count(c.id) from calculation c left join customer cus on c.customer_id=cus.id$where";
@@ -163,17 +173,34 @@ $title = $status_titles[$status_id];
                         <select id="customer" name="customer" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Заказчик...</option>
                             <?php
-                            $customer_where = "";
+                            $customer_where = "where c.status_id = $status_id";
                             $customer_manager = GetUserId();
                             if(!IsInRole(array('technologist', 'dev', 'manager-senior'))) {
-                                $customer_where = " where c.manager_id = $customer_manager";
+                                $customer_where .= " and c.manager_id = $customer_manager";
                             }
-                            $sql = "select distinct cus.id, cus.name from calculation c inner join customer cus on c.customer_id = cus.id$customer_where order by cus.name";
+                            $sql = "select distinct cus.id, cus.name from calculation c inner join customer cus on c.customer_id = cus.id $customer_where order by cus.name";
                             $fetcher = new Fetcher($sql);
                             
                             while ($row = $fetcher->Fetch()):
                             ?>
                             <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'customer') ? " selected='selected'" : "") ?>><?=$row['name'] ?></option>
+                            <?php
+                            endwhile;
+                            ?>
+                        </select>
+                        <select id="name" name="name" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Наименование...</option>
+                            <?php
+                            $sql = "select distinct trim(c.name) name from calculation c where c.status_id = $status_id ";
+                            if(!empty($customer)) {
+                                $sql .= "and c.customer_id = $customer ";
+                            }
+                            $sql .= "order by trim(c.name)";
+                            $fetcher = new Fetcher($sql);
+                            
+                            while ($row = $fetcher->Fetch()):
+                            ?>
+                            <option<?=($row['name'] == filter_input(INPUT_GET, 'name') ? " selected='selected'" : "") ?>><?=$row['name'] ?></option>
                             <?php
                             endwhile;
                             ?>
@@ -237,7 +264,7 @@ $title = $status_titles[$status_id];
                         }
                     }
                     
-                    $sql = "select c.id, c.date, c.customer_id, cus.name customer, c.name, c.quantity, "
+                    $sql = "select c.id, c.date, c.customer_id, cus.name customer, trim(c.name) name, c.quantity, "
                             . "(select count(quantity) from calculation_quantity where calculation_id = c.id) quantities, "
                             . "c.unit, wt.name work_type, u.last_name, u.first_name, c.status_id, "
                             . "(select id from techmap where calculation_id = c.id order by id desc limit 1) techmap_id, "
@@ -308,19 +335,28 @@ $title = $status_titles[$status_id];
                 placeholder: "Тип работы...",
                 maximumSelectionLength: 1,
                 language: "ru",
-                width: '15rem'
+                width: '8rem'
             });
             
             $('#manager').select2({
                 placeholder: "Менеджер...",
                 maximumSelectionLength: 1,
-                language: "ru"
+                language: "ru",
+                width: '8rem'
             });
             
             $('#customer').select2({
                 placeholder: "Заказчик...",
                 maximumSelectionLength: 1,
-                language: "ru"
+                language: "ru",
+                width: '15rem'
+            });
+            
+            $('#name').select2({
+                placeholder: "Наименование...",
+                maximumSelectionLength: 1,
+                language: "ru",
+                width: '15rem'
             });
             
             // Заполнение информации о заказчике
