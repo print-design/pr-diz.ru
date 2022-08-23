@@ -55,7 +55,7 @@ $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_t
         . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
         . "rc.percent_1, rc.percent_2, rc.percent_3, rc.percent_4, rc.percent_5, rc.percent_6, rc.percent_7, rc.percent_8, rc.cliche_1, "
         . "rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8, "
-        . "rc.cliche_in_price, rc.cliches_count_flint, rc.cliches_count_kodak, rc.cliches_count_old, rc.extracharge, rc.extracharge_cliche, stamp, "
+        . "rc.cliche_in_price, rc.cliches_count_flint, rc.cliches_count_kodak, rc.cliches_count_old, rc.extracharge, rc.extracharge_cliche, "
         . "cus.name customer, cus.phone customer_phone, cus.extension customer_extension, cus.email customer_email, cus.person customer_person, "
         . "(select count(id) from calculation where customer_id = rc.customer_id and id <= rc.id) num_for_customer,"
         . "(select gap from calculation_result where calculation_id = rc.id) gap "
@@ -165,8 +165,6 @@ $cliches_count_kodak = $row['cliches_count_kodak'];
 $cliches_count_old = $row['cliches_count_old'];
 $extracharge = $row['extracharge'];
 $extracharge_cliche = $row['extracharge_cliche'];
-
-$stamp = $row['stamp'];
 
 if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
     $new_forms_number += ($cliches_count_flint + $cliches_count_kodak);
@@ -297,86 +295,31 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
             
             // Ограничение значений наценки
             $('#extracharge').keydown(function(e) {
-                if(($(e.target).val() == 0 || $(e.target).val() == '' || $(e.target).prop('selectionStart') != $(e.target).prop('selectionEnd')) && e.key == 0) {
-                    return true;
-                }
-                else if(!KeyDownLimitIntValue($(e.target), e, 999)) {
+                if(!KeyDownLimitIntValue($(e.target), e, 999)) {
                     return false;
                 }
             });
             
             $('#extracharge_cliche').keydown(function(e) {
-                if(($(e.target).val() == 0 || $(e.target).val() == '' || $(e.target).prop('selectionStart') != $(e.target).prop('selectionEnd')) && e.key == 0) {
-                    return true;
-                }
-                else if(!KeyDownLimitIntValue($(e.target), e, 999)) {
+                if(!KeyDownLimitIntValue($(e.target), e, 999)) {
                     return false;
                 }
             });
             
             $('#extracharge').change(function(){
-                if($(this).val() !== '0') {
-                    ChangeLimitIntValue($(this), 999);
-                }
+                ChangeLimitIntValue($(this), 999);
             });
             
             $('#extracharge_cliche').change(function(){
-                if($(this).val() !== '0') {
-                    ChangeLimitIntValue($(this), 999);
-                }
+                ChangeLimitIntValue($(this), 999);
             });
             
-            // Вычисляем отгрузочную стоимость при других наценках
-            function SetExtracharge(param) {
-                extracharge = parseInt(param);
-                
-                if(!isNaN(extracharge) && extracharge > -1) {
-                    $.ajax({ dataType: 'JSON', url: '_set_extracharge.php?id=<?=$id ?>&work_type_id=<?=$work_type_id ?>&extracharge=' + extracharge })
-                            .done(function(data) {
-                                if(data.error != '') {
-                                    alert(data.error);
-                                }
-                                else {
-                                    $('#shipping_cost').text(data.shipping_cost);
-                                    $('#shipping_cost_per_unit').text(data.shipping_cost_per_unit);
-                                    $('#income').text(data.income);
-                                    $('#income_per_unit').text(data.income_per_unit);
-                                }
-                            })
-                            .fail(function() {
-                                alert("Ошибка при редактировании наценки");
-                            });
-                }
-            }
-            
-            function SetExtrachargeCliche(param) {
-                extracharge_cliche = parseInt(param);
-                
-                if(!isNaN(extracharge_cliche) && extracharge_cliche > -1) {
-                    $.ajax({ dataType: 'JSON', url: "_set_extracharge_cliche.php?id=<?=$id ?>&extracharge_cliche=" + extracharge_cliche })
-                            .done(function(data) {
-                                if(data.error != '') {
-                                    alert(data.error);
-                                }
-                                else {
-                                    $('#shipping_cliche_cost').text(data.shipping_cliche_cost);
-                                    $('#income_cliche').text(data.income_cliche);
-                                }
-                            })
-                            .fail(function() {
-                                alert("Ошибка при редактировании наценки ПФ");
-                            });
-                }
-            }
-            
             $('#extracharge').keyup(function(){
-                SetExtracharge($(this).val());
-                //$('#extracharge-submit').removeClass('d-none');
+                $('#extracharge-submit').removeClass('d-none');
             });
             
             $('#extracharge_cliche').keyup(function(){
-                SetExtrachargeCliche($(this).val());
-                //$('#extracharge-cliche-submit').removeClass('d-none');
+                $('#extracharge-cliche-submit').removeClass('d-none');
             });
             
             // Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне

@@ -343,8 +343,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $cliches_count_kodak = filter_input(INPUT_POST, 'cliches_count_kodak'); if($cliches_count_kodak === null) $cliches_count_kodak = "NULL";
         $cliches_count_old = filter_input(INPUT_POST, 'cliches_count_old'); if($cliches_count_old === null) $cliches_count_old = "NULL";
         
-        $stamp = filter_input(INPUT_POST, 'stamp'); if($stamp === null || $stamp === '') $stamp = "NULL";
-        
         $sql = "insert into calculation (customer_id, name, unit, quantity, work_type_id, "
                 . "film_variation_id, price, currency, individual_film_name, individual_thickness, individual_density, customers_material, ski, width_ski, "
                 . "lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, lamination1_ski, lamination1_width_ski, "
@@ -355,7 +353,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
                 . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, cliche_1, "
                 . "cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8, "
-                . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old, stamp) "
+                . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old) "
                 . "values($customer_id, '$name', '$unit', $quantity, $work_type_id, "
                 . "$film_variation_id, $price, '$currency', '$individual_film_name', $individual_thickness, $individual_density, $customers_material, $ski, $width_ski, "
                 . "$lamination1_film_variation_id, $lamination1_price, '$lamination1_currency', '$lamination1_individual_film_name', $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, $lamination1_ski, $lamination1_width_ski, "
@@ -366,7 +364,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
                 . "'$percent_1', '$percent_2', '$percent_3', '$percent_4', '$percent_5', '$percent_6', '$percent_7', '$percent_8', "
                 . "'$cliche_1', '$cliche_2', '$cliche_3', '$cliche_4', '$cliche_5', '$cliche_6', '$cliche_7', '$cliche_8', "
-                . "$cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $stamp)";
+                . "$cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $insert_id = $executer->insert_id;
@@ -416,7 +414,7 @@ if(!empty($id)) {
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
             . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, c.cliche_1, "
             . "c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
-            . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old, extracharge, extracharge_cliche, stamp, "
+            . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old, extracharge, extracharge_cliche, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
             . "from calculation c where c.id = $id";
     $fetcher = new Fetcher($sql);
@@ -762,11 +760,6 @@ if(isset($row['extracharge_cliche'])) {
     $extracharge_cliche = $row['extracharge_cliche'];
 }
 
-$stamp = filter_input(INPUT_POST, 'stamp');
-if($stamp === null && isset($row['stamp'])) {
-    $stamp = $row['stamp'];
-}
-
 $num_for_customer = null;
 if(isset($row['num_for_customer'])) {
     $num_for_customer = $row['num_for_customer'];
@@ -1002,7 +995,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         Объем заказа
                         <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
                     </div>
-                    <div class="modal-body" id="quantities_form_body" style="max-height: 70vh; overflow-y: scroll;"></div>
+                    <div class="modal-body" id="quantities_form_body" style="max-height: 80vh; overflow-y: scroll;"></div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-dark mt-3" data-dismiss="modal" style="width: 150px;">Отмена</button>
                         <button type="button" id="quantities_submit" name="quantities_submit" class="btn btn-dark mt-3" style="width: 150px;">OK</button>
@@ -2196,29 +2189,8 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             <?php
                                             $checked = $cliche_in_price == 1 ? " checked='checked'" : "";
                                             ?>
-                                            <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?> />Включить ПФ в себестоимость
+                                            <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?>>Включить ПФ в себестоимость
                                         </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Штамп -->
-                        <div class="self-adhesive-only d-none">
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label for="stamp" id="for_stamp">Стоимость штампа, &#8381;</label>
-                                        <input type="text" 
-                                               id="stamp" 
-                                               name="stamp" 
-                                               class="form-control float-only self-adhesive-only d-none" 
-                                               placeholder="Стоимость штампа, &#8381;" 
-                                               value="<?=$stamp ?>" 
-                                               onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('name', 'stamp'); $(this).attr('placeholder', 'Стоимость штампа, &#8381;');" 
-                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('name', 'stamp'); $(this).attr('placeholder', 'Стоимость штампа, &#8381;');" 
-                                               onfocusout="javascript: $(this).attr('name', 'stamp'); $(this).attr('placeholder', 'Стоимость штампа, &#8381;');" />
                                     </div>
                                 </div>
                             </div>
@@ -3317,88 +3289,33 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 $("#create_calculation_submit").removeClass("d-none");
             }
             
-            // Ограничение значений наценки
+            // Ограницение значений наценки
             $('#extracharge').keydown(function(e) {
-                if(($(e.target).val() == 0 || $(e.target).val() == '' || $(e.target).prop('selectionStart') != $(e.target).prop('selectionEnd')) && e.key == 0) {
-                    return true;
-                }
-                else if(!KeyDownLimitIntValue($(e.target), e, 999)) {
+                if(!KeyDownLimitIntValue($(e.target), e, 999)) {
                     return false;
                 }
             });
             
             $('#extracharge_cliche').keydown(function(e) {
-                if(($(e.target).val() == 0 || $(e.target).val() == '' || $(e.target).prop('selectionStart') != $(e.target).prop('selectionEnd')) && e.key == 0) {
-                    return true;
-                }
-                else if(!KeyDownLimitIntValue($(e.target), e, 999)) {
+                if(!KeyDownLimitIntValue($(e.target), e, 999)) {
                     return false;
                 }
             });
             
             $('#extracharge').change(function(){
-                if($(this).val() !== '0') {
-                    ChangeLimitIntValue($(this), 999);
-                }
+                ChangeLimitIntValue($(this), 999);
             });
             
             $('#extracharge_cliche').change(function(){
-                if($(this).val() !== '0') {
-                    ChangeLimitIntValue($(this), 999);
-                }
+                ChangeLimitIntValue($(this), 999);
             });
             
-            // Вычисляем отгрузочную стоимость при других наценках
-            function SetExtracharge(param) {
-                extracharge = parseInt(param);
-                
-                if(!isNaN(extracharge) && extracharge > -1) {
-                    $.ajax({ dataType: 'JSON', url: '_set_extracharge.php?id=<?=$id ?>&work_type_id=<?=$work_type_id ?>&extracharge=' + extracharge })
-                            .done(function(data) {
-                                if(data.error != '') {
-                                    alert(data.error);
-                                }
-                                else {
-                                    $('#shipping_cost').text(data.shipping_cost);
-                                    $('#shipping_cost_per_unit').text(data.shipping_cost_per_unit);
-                                    $('#income').text(data.income);
-                                    $('#income_per_unit').text(data.income_per_unit);
-                                }
-                            })
-                            .fail(function() {
-                                alert("Ошибка при редактировании наценки");
-                            });
-                }
-            }
-            
-            function SetExtrachargeCliche(param) {
-                extracharge_cliche = parseInt(param);
-                
-                if(!isNaN(extracharge_cliche) && extracharge_cliche > -1) {
-                    $.ajax({ dataType: 'JSON', url: "_set_extracharge_cliche.php?id=<?=$id ?>&extracharge_cliche=" + extracharge_cliche })
-                            .done(function(data) {
-                                if(data.error != '') {
-                                    alert(data.error);
-                                }
-                                else {
-                                    $('#shipping_cliche_cost').text(data.shipping_cliche_cost);
-                                    $('#income_cliche').text(data.income_cliche);
-                                }
-                            })
-                            .fail(function() {
-                                alert("Ошибка при редактировании наценки ПФ");
-                            });
-                }
-            }
-            
             $('#extracharge').keyup(function(){
-                SetExtracharge($(this).val());
-                //$('#extracharge-submit').removeClass('d-none');
+                $('#extracharge-submit').removeClass('d-none');
             });
             
             $('#extracharge_cliche').keyup(function(){
-                SetExtrachargeCliche($(this).val());
-                //$('#extracharge-cliche-submit').removeClass('d-none');
+                $('#extracharge-cliche-submit').removeClass('d-none');
             });
             
             // Ограничение значения поля "пантон"

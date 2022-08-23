@@ -990,7 +990,7 @@ if($id !== null) {
             $total_cliche_cost_formula .= CalculationBase::Display($calculation->cliche_costs[$i], 2);
         }
         
-        array_push($file_data, array("Себестоимость ПФ, руб",
+        array_push($file_data, array("Стоимость форм, руб",
             CalculationBase::Display($calculation->cliche_cost, 2),
             "|= ".$total_cliche_cost_formula,
             "сумма стоимости всех форм"));
@@ -1029,11 +1029,6 @@ if($id !== null) {
             CalculationBase::Display($calculation->shipping_cliche_cost, 2),
             "|= ".CalculationBase::Display($calculation->cliche_cost, 2)." + (".CalculationBase::Display($calculation->cliche_cost, 2)." * ".CalculationBase::Display($calculation->extracharge_cliche, 2)." / 100)",
             "сумма стоимости всех форм + (сумма стоимости всех форм * наценка на ПФ / 100)"));
-        
-        array_push($file_data, array("Прибыль ПФ, руб",
-            CalculationBase::Display($calculation->income_cliche, 2),
-            "|= ".CalculationBase::Display($calculation->shipping_cliche_cost, 2)." - ".CalculationBase::Display($calculation->cliche_cost, 2),
-            "отгрузочная стоимость ПФ - себестоимость ПФ"));
         
         array_push($file_data, array("Общий вес всех плёнок с приладкой, кг",
             CalculationBase::Display($calculation->total_weight_dirty, 2),
