@@ -3320,12 +3320,55 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
             });
             
+            // Вычисляем отгрузочную стоимость при других наценках
+            function SetExtracharge(param) {
+                extracharge = parseInt(param);
+                
+                if(!isNaN(extracharge) && extracharge > -1) {
+                    $.ajax({ dataType: 'JSON', url: '_set_extracharge.php?id=<?=$id ?>&work_type_id=<?=$work_type_id ?>&extracharge=' + extracharge })
+                            .done(function(data) {
+                                if(data.error != '') {
+                                    alert(data.error);
+                                }
+                                else {
+                                    $('#shipping_cost').text(data.shipping_cost);
+                                    $('#shipping_cost_per_unit').text(data.shipping_cost_per_unit);
+                                    $('#income').text(data.income);
+                                    $('#income_per_unit').text(data.income_per_unit);
+                                }
+                            })
+                            .fail(function() {
+                                alert("Ошибка при редактировании наценки");
+                            });
+                }
+            }
+            
+            function SetExtrachargeCliche(param) {
+                extracharge_cliche = parseInt(param);
+                
+                if(!isNaN(extracharge_cliche) && extracharge_cliche > -1) {
+                    $.ajax({ dataType: 'JSON', url: "_set_extracharge_cliche.php?id=<?=$id ?>&extracharge_cliche=" + extracharge_cliche })
+                            .done(function(data) {
+                                if(data.error != '') {
+                                    alert(data.error);
+                                }
+                                else {
+                                    $('#shipping_cliche_cost').text(data.shipping_cliche_cost);
+                                    $('#income_cliche').text(data.income_cliche);
+                                }
+                            })
+                            .fail(function() {
+                                alert("Ошибка при редактировании наценки ПФ");
+                            });
+                }
+            }
+            
             $('#extracharge').keyup(function(){
-                $('#extracharge-submit').removeClass('d-none');
+                SetExtracharge($(this).val());
             });
             
             $('#extracharge_cliche').keyup(function(){
-                $('#extracharge-cliche-submit').removeClass('d-none');
+                SetExtrachargeCliche($(this).val());
             });
             
             // Ограничение значения поля "пантон"
