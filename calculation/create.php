@@ -3319,7 +3319,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             // Ограничение значений наценки
             $('#extracharge').keydown(function(e) {
-                if(($(e.target).val() == 0 || $(e.target).val() == '') && e.key == 0) {
+                if(($(e.target).val() == 0 || $(e.target).val() == '' || $(e.target).prop('selectionStart') != $(e.target).prop('selectionEnd')) && e.key == 0) {
                     return true;
                 }
                 else if(!KeyDownLimitIntValue($(e.target), e, 999)) {
@@ -3328,7 +3328,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             });
             
             $('#extracharge_cliche').keydown(function(e) {
-                if(($(e.target).val() == 0 || $(e.target).val() == '') && e.key == 0) {
+                if(($(e.target).val() == 0 || $(e.target).val() == '' || $(e.target).prop('selectionStart') != $(e.target).prop('selectionEnd')) && e.key == 0) {
                     return true;
                 }
                 else if(!KeyDownLimitIntValue($(e.target), e, 999)) {
