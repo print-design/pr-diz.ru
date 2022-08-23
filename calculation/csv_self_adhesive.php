@@ -590,6 +590,11 @@ if($id !== null) {
             "|= ".CalculationBase::Display($calculation->cliche_cost, 2)." + (".CalculationBase::Display($calculation->cliche_cost, 2)." * ".CalculationBase::Display($calculation->extracharge_cliche, 2)." / 100)",
             "сумма стоимости всех форм + (сумма стоимости всех форм * наценка на ПФ / 100)"));
         
+        array_push($file_data, array("Прибыль ПФ, руб",
+            CalculationBase::Display($calculation->income_cliche, 2),
+            "|= ".CalculationBase::Display($calculation->shipping_cliche_cost, 2)." - ".CalculationBase::Display($calculation->cliche_cost, 2),
+            "отгрузочная стоимость ПФ - себестоимость ПФ"));
+        
         array_push($file_data, array("Общий вес всех материала с приладкой, кг",
             CalculationBase::Display($calculation->total_weight_dirty, 2),
             "|= ".CalculationBase::Display($calculation->weight_dirty, 2),

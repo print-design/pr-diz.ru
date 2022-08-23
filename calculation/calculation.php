@@ -463,6 +463,7 @@ class Calculation extends CalculationBase {
     public $shipping_cliche_cost; // Отгрузочная стоимость форм 
     public $income; // Прибыль
     public $income_per_unit; // Прибыль за единицу
+    public $income_cliche; // Прибыль ПФ
     public $total_weight_dirty; // Общая масса с приладкой 
     public $film_cost_per_unit_1, $film_cost_per_unit_2, $film_cost_per_unit_3; // Масса с приладкой на 1 кг
     public $film_waste_cost_1, $film_waste_cost_2, $film_waste_cost_3; // Отходы, стоимость
@@ -1077,6 +1078,9 @@ class Calculation extends CalculationBase {
         // Отгрузочная стоимость ПФ
         $this->shipping_cliche_cost = $this->cliche_cost + ($this->cliche_cost * $this->extracharge_cliche / 100);
         
+        // Прибыль ПФ
+        $this->income_cliche = $this->shipping_cliche_cost - $this->cliche_cost;
+        
         // Масса плёнки с приладкой
         $this->total_weight_dirty = $this->weight_dirty_1 + $this->weight_dirty_2 + $this->weight_dirty_3;
         
@@ -1158,6 +1162,7 @@ class CalculationSelfAdhesive extends CalculationBase {
     public $shipping_cliche_cost; // отгрузочная стоимость форм
     public $income; // прибыль
     public $income_per_unit; // прибыль за единицу
+    public $income_cliche; // прибыль ПФ
     public $total_weight_dirty; // общая масса с приладкой
     public $film_cost_per_unit; // Масса с приладкой на 1 кг
     public $film_waste_cost; // отходы, стоимость
@@ -1474,6 +1479,9 @@ class CalculationSelfAdhesive extends CalculationBase {
         
         // Отгрузочная стоимость ПФ
         $this->shipping_cliche_cost = $this->cliche_cost + ($this->cliche_cost * $this->extracharge_cliche / 100);
+        
+        // Прибыль ПФ
+        $this->income_cliche = $this->shipping_cliche_cost - $this->cliche_cost;
         
         // Масса плёнки с приладкой
         $this->total_weight_dirty = $this->weight_dirty;
