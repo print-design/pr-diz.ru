@@ -26,12 +26,19 @@ else {
     }
     
     if(empty($error_message)) {
-        $sql = "select shipping_cliche_cost from calculation_result where calculation_id = $id order by id desc limit 1";
+        $sql = "update calculation_result set income_cliche = shipping_cliche_cost - cliche_cost";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
+    if(empty($error_message)) {
+        $sql = "select shipping_cliche_cost, income_cliche from calculation_result where calculation_id = $id order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
             $result['shipping_cliche_cost'] = CalculationBase::Display(floatval($row['shipping_cliche_cost']), 0);
+            $result['income_cliche'] = CalculationBase::Display(floatval($row['income_cliche']), 0);
         }
     }
     

@@ -360,6 +360,7 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
                                 }
                                 else {
                                     $('#shipping_cliche_cost').text(data.shipping_cliche_cost);
+                                    $('#income_cliche').text(data.income_cliche);
                                 }
                             })
                             .fail(function() {
