@@ -20,7 +20,7 @@ else {
     $error_message = $executer->error;
     
     if(empty($error_message)) {
-        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.shipping_cliche_cost = cr.cliche_cost + (cr.cliche_cost * c.extracharge_cliche / 100) where c.id = $id";
+        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.shipping_cliche_cost = (cr.cliche_cost + (cr.cliche_cost * c.extracharge_cliche / 100)) * c.customer_pays_for_cliche where c.id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
