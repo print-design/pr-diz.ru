@@ -245,9 +245,9 @@
             <div class="form-check">
                 <label class="form-check-label text-nowrap" style="line-height: 25px;">
                     <?php
-                    $checked = " checked='checked'";
+                    $checked = $customer_pays_for_cliche == 1 ? " checked='checked'" : "";
                     ?>
-                    <input type="checkbox" class="form-check-input" id="customer_pays_for_cliche" name="customer_pays_for_cliche" value="on"<?=$checked ?><?=DISABLED_ATTR ?> />Заказчик платит за ПФ
+                    <input type="checkbox" class="form-check-input" id="customer_pays_for_cliche" name="customer_pays_for_cliche" value="on"<?=$checked ?><?=DISABLED_ATTR ?> onchange="javascript: this.form.submit();" />Заказчик платит за ПФ
                     <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                     <input type="hidden" id="customer_pays_for_cliche_submit" name="customer_pays_for_cliche_submit" value="1" />
                     <input type="hidden" name="scroll" />
