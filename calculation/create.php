@@ -2189,7 +2189,18 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             <?php
                                             $checked = $cliche_in_price == 1 ? " checked='checked'" : "";
                                             ?>
-                                            <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?>>Включить ПФ в себестоимость
+                                            <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?> />Включить ПФ в себестоимость
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-6"></div>
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <label class="form-check-label text-nowrap" style="line-height: 25px;">
+                                            <?php
+                                            $checked = "";
+                                            ?>
+                                            <input type="checkbox" class="form-check-input" id="we_pay_for_cliche" name="we_pay_for_cliche" value="on"<?=$checked ?> />Мы платим за ПФ
                                         </label>
                                     </div>
                                 </div>

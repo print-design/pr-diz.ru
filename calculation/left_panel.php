@@ -231,9 +231,25 @@
                     <?php
                     $checked = $cliche_in_price == 1 ? " checked='checked'" : "";
                     ?>
-                    <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?><?=DISABLED_ATTR ?> onchange="javascript: this.form.submit();">Включить ПФ в себестоимость
+                    <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?><?=DISABLED_ATTR ?> onchange="javascript: this.form.submit();" />Включить ПФ в себестоимость
                     <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                     <input type="hidden" id="cliche_in_price_submit" name="cliche_in_price_submit" value="1" />
+                    <input type="hidden" name="scroll" />
+                </label>
+            </div>
+        </form>
+    </div>
+    <div class="col-6"></div>
+    <div class="col-6">
+        <form method="post" class="form-inline">
+            <div class="form-check">
+                <label class="form-check-label text-nowrap" style="line-height: 25px;">
+                    <?php
+                    $checked = "";
+                    ?>
+                    <input type="checkbox" class="form-check-input" id="we_pay_for_cliche" name="we_pay_for_cliche" value="on"<?=$checked ?><?=DISABLED_ATTR ?> />Мы платим за ПФ
+                    <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                    <input type="hidden" id="we_pay_for_cliche_submit" name="we_pay_for_cliche_submit" value="1" />
                     <input type="hidden" name="scroll" />
                 </label>
             </div>
