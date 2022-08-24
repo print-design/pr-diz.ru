@@ -35,6 +35,7 @@ if($id !== null) {
     $cliches_count_old = null; // Количество старых форм
     $extracharge = null; // Наценка на тираж
     $extracharge_cliche = null; // Наценка на ПФ
+    $customer_pays_for_cliche = null; // Заказчик платит за ПФ
     
     $sql = "select rc.date, rc.name, "
             . "f.name film, fv.thickness thickness, fv.weight density, "
@@ -46,7 +47,7 @@ if($id !== null) {
             . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
             . "rc.percent_1, rc.percent_2, rc.percent_3, rc.percent_4, rc.percent_5, rc.percent_6, rc.percent_7, rc.percent_8, "
             . "rc.cliche_1, rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8, "
-            . "rc.cliche_in_price, rc.cliches_count_flint, rc.cliches_count_kodak, rc.cliches_count_old, rc.extracharge, rc.extracharge_cliche "
+            . "rc.cliche_in_price, rc.cliches_count_flint, rc.cliches_count_kodak, rc.cliches_count_old, rc.extracharge, rc.extracharge_cliche, rc.customer_pays_for_cliche "
             . "from calculation rc "
             . "left join machine m on rc.machine_id = m.id "
             . "left join film_variation fv on rc.film_variation_id = fv.id "
@@ -94,6 +95,7 @@ if($id !== null) {
         $cliches_count_old = $row['cliches_count_old']; // Количество старых форм
         $extracharge = $row['extracharge']; // Наценка на тираж
         $extracharge_cliche = $row['extracharge_cliche']; // Наценка на ПФ
+        $customer_pays_for_cliche = $row['customer_pays_for_cliche']; // Заказчик платит на ПФ
     }
     
     // Курсы валют
@@ -218,7 +220,8 @@ if($id !== null) {
                 $cliches_count_kodak, // Количество форм Кодак
                 $cliches_count_old, // Количество старых форм
                 $extracharge, // Наценка на тираж
-                $extracharge_cliche); // Наценка на ПФ
+                $extracharge_cliche, // Наценка на ПФ
+                $customer_pays_for_cliche); // Заказчик платит за ПФ
         
         // Данные CSV-файла
         $file_data = array();
@@ -263,6 +266,13 @@ if($id !== null) {
         }
         else {
             array_push($file_data, array("Не включать ПФ в себестоимость", "", "", ""));
+        }
+        
+        if($customer_pays_for_cliche == 1) {
+            array_push($file_data, array("Заказчик платит за ПФ", "", "", ""));
+        }
+        else {
+            array_push($file_data, array("Мы платим за ПФ", "", "", ""));
         }
         
         array_push($file_data, array("ЗазорРапорт", CalculationBase::Display($data_gap->gap_raport, 2), "", ""));

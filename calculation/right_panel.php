@@ -143,6 +143,7 @@ if(!empty($id)) {
         $param_cliche_in_price = null; // Включить ПФ в стоимость
         $param_extracharge = null; // Наценка на тираж
         $param_extracharge_cliche = null; // Наценка на ПФ
+        $param_customer_pays_for_cliche = null; // Заказчик платит за ПФ
     
         $sql = "select rc.date, rc.name, rc.unit, rc.quantity, rc.work_type_id, "
                 . "f.name film, fv.thickness thickness, fv.weight density, "
@@ -160,7 +161,7 @@ if(!empty($id)) {
                 . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
                 . "rc.percent_1, rc.percent_2, rc.percent_3, rc.percent_4, rc.percent_5, rc.percent_6, rc.percent_7, rc.percent_8, "
                 . "rc.cliche_1, rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8, "
-                . "rc.cliche_in_price, rc.extracharge, rc.extracharge_cliche "
+                . "rc.cliche_in_price, rc.extracharge, rc.extracharge_cliche, rc.customer_pays_for_cliche "
                 . "from calculation rc "
                 . "left join machine m on rc.machine_id = m.id "
                 . "left join laminator lam on rc.laminator_id = lam.id "
@@ -250,6 +251,7 @@ if(!empty($id)) {
             $param_cliche_in_price = $row['cliche_in_price'];
             $param_extracharge = $row['extracharge'];
             $param_extracharge_cliche = $row['extracharge_cliche'];
+            $param_customer_pays_for_cliche = $row['customer_pays_for_cliche'];
         }
     
         $error_message = $fetcher->error;
@@ -371,7 +373,7 @@ if(!empty($id)) {
                 $param_cmyk_1, $param_cmyk_2, $param_cmyk_3, $param_cmyk_4, $param_cmyk_5, $param_cmyk_6, $param_cmyk_7, $param_cmyk_8, 
                 $param_percent_1, $param_percent_2, $param_percent_3, $param_percent_4, $param_percent_5, $param_percent_6, $param_percent_7, $param_percent_8, 
                 $param_cliche_1, $param_cliche_2, $param_cliche_3, $param_cliche_4, $param_cliche_5, $param_cliche_6, $param_cliche_7, $param_cliche_8, 
-                $param_cliche_in_price, $param_extracharge, $param_extracharge_cliche);
+                $param_cliche_in_price, $param_extracharge, $param_extracharge_cliche, $param_customer_pays_for_cliche);
     
         // Себестоимость форм
         $new_cliche_cost = $calculation->cliche_cost;

@@ -58,6 +58,7 @@ if($id !== null) {
     $cliche_in_price = null; // Включить формы в стоимость
     $extracharge = null; // Наценка на тираж
     $extracharge_cliche = null; // Наценка на ПФ
+    $customer_pays_for_cliche = null; // Заказчик платит за ПФ
     
     $sql = "select rc.date, rc.name, rc.unit, rc.quantity, rc.work_type_id, "
             . "f.name film, fv.thickness thickness, fv.weight density, "
@@ -75,7 +76,7 @@ if($id !== null) {
             . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
             . "rc.percent_1, rc.percent_2, rc.percent_3, rc.percent_4, rc.percent_5, rc.percent_6, rc.percent_7, rc.percent_8, "
             . "rc.cliche_1, rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8, "
-            . "rc.cliche_in_price, rc.extracharge, rc.extracharge_cliche "
+            . "rc.cliche_in_price, rc.extracharge, rc.extracharge_cliche, rc.customer_pays_for_cliche "
             . "from calculation rc "
             . "left join machine m on rc.machine_id = m.id "
             . "left join laminator lam on rc.laminator_id = lam.id "
@@ -165,6 +166,7 @@ if($id !== null) {
         $cliche_in_price = $row['cliche_in_price']; // Включать стоимиость ПФ в тираж
         $extracharge = $row['extracharge']; // Наценка на тираж
         $extracharge_cliche = $row['extracharge_cliche']; // Наценка на ПФ
+        $customer_pays_for_cliche = $row['customer_pays_for_cliche']; // Заказчик платит за ПФ
         
         // Если тип работы - плёнка без печати, то 
         // машина = пустая, красочность = 0, рапорт = 0
@@ -348,7 +350,8 @@ if($id !== null) {
                 
                 $cliche_in_price, // Стоимость ПФ включается в себестоимость
                 $extracharge, // Наценка на тираж
-                $extracharge_cliche); // Наценка на ПФ
+                $extracharge_cliche, // Наценка на ПФ
+                $customer_pays_for_cliche); // Заказчик платит за ПФ
         
         // Данные CSV-файла
         $file_data = array();
@@ -422,6 +425,13 @@ if($id !== null) {
         }
         else {
             array_push($file_data, array("Не включать ПФ в себестоимость", "", "", ""));
+        }
+        
+        if($customer_pays_for_cliche == 1) {
+            array_push($file_data, array("Заказчик платит за ПФ", "", "", ""));
+        }
+        else {
+            array_push($file_data, array("Мы платим за ПФ", "", "", ""));
         }
         
         array_push($file_data, array("", "", "", ""));

@@ -403,7 +403,7 @@ class CalculationBase {
 class Calculation extends CalculationBase {
     public $laminations_number = 0; // количество ламинаций
     
-    public $uk1, $uk2, $uk3, $ukpf; // уравнивающий коэффициент 1, 2, 3, ПФ
+    public $uk1, $uk2, $uk3, $ukpf, $ukcuspaypf; // уравнивающий коэффициент 1, 2, 3, ПФ, ЗаказчикПлатитЗаПФ
     public $area_pure_start = 0; // м2 чистые, м2 (рассчитывается: длина * ширина * кол-во в шт.; используется для вычисления массы тиража, если он в шт.)
     public $weight = 0; // масса тиража, кг
     public $width_1, $width_2, $width_3; // ширина материала, мм 
@@ -528,7 +528,8 @@ class Calculation extends CalculationBase {
             
             $cliche_in_price, // Включить ПФ в себестоимость
             $extracharge, // Наценка на тираж
-            $extracharge_cliche // Наценка на ПФ
+            $extracharge_cliche, // Наценка на ПФ
+            $customer_pays_for_cliche // Заказчик платит за ПФ
             ) {
         // Если нет одной ламинации или обеих, то толщина, плотность и цена плёнок для ламинации имеют пустые значения.
         // Присваиваем им значение 0, чтобы программа не сломалась при попытке вычилений с пустым значением.
@@ -593,6 +594,9 @@ class Calculation extends CalculationBase {
         
         // Уравнивающий коэфф. ПФ (УКПФ)=0, когда ПФ не велючен в себестоимость, =1 когда ПФ включен в себестоимость
         $this->ukpf = $cliche_in_price == 1 ? 1 : 0;
+        
+        // Уравнивающий коэфф. ЗаказчикПлатитЗаПФ, когда платит заказчик = 1, когда платим мы = 0
+        $this->ukcuspaypf = $customer_pays_for_cliche == 1 ? 1 : 0;
         
         // НИЖЕ НАЧИНАЕТСЯ ВЫЧИСЛЕНИЕ
         
@@ -1076,7 +1080,7 @@ class Calculation extends CalculationBase {
         $this->income_per_unit = $this->shipping_cost_per_unit - $this->cost_per_unit;
         
         // Отгрузочная стоимость ПФ
-        $this->shipping_cliche_cost = $this->cliche_cost + ($this->cliche_cost * $this->extracharge_cliche / 100);
+        $this->shipping_cliche_cost = ($this->cliche_cost + ($this->cliche_cost * $this->extracharge_cliche / 100)) * $this->ukcuspaypf;
         
         // Прибыль ПФ
         $this->income_cliche = $this->shipping_cliche_cost - $this->cliche_cost;
@@ -1105,7 +1109,7 @@ class Calculation extends CalculationBase {
 class CalculationSelfAdhesive extends CalculationBase {
     public $quantity = 0; // Суммарное количество этикеток
     public $quantities_count = 0; // Количество тиражей
-    public $ukpf; // Уравнивающий коэффициент ПФ
+    public $ukpf, $ukcuspaypf; // Уравнивающий коэффициент ПФ, ЗаказчикПлатитЗаПФ
     
     public $width_mat = 0; // Ширина материала
     public $length_label_dirty = 0; // Высота этикетки грязная
@@ -1206,7 +1210,8 @@ class CalculationSelfAdhesive extends CalculationBase {
             $cliches_count_kodak, // Количество форм Кодак
             $cliches_count_old, // Количество старых форм
             $extracharge, // Наценка на тираж
-            $extracharge_cliche // Наценка на ПФ
+            $extracharge_cliche, // Наценка на ПФ
+            $customer_pays_for_cliche // Заказчик платит за ПФ
             ) {
         // Суммарный размер тиража
         $this->quantity = array_sum($quantities);
@@ -1219,6 +1224,9 @@ class CalculationSelfAdhesive extends CalculationBase {
         
         // Уравнивающий коэфф. ПФ (УКПФ)=0, когда ПФ не включен в стоимость, =1, когда ПФ включен в стоимость
         $this->ukpf = $cliche_in_price == 1 ? 1 : 0;
+        
+        // Уравнивающий коэффициент ЗаказчикПлатитЗаПФ: когда платит заказчик = 1, когда платим мы = 0
+        $this->ukcuspaypf = $customer_pays_for_cliche == 1 ? 1 : 0;
         
         // НИЖЕ НАЧИНАЕТСЯ ВЫЧИСЛЕНИЕ
         
@@ -1478,7 +1486,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->income_per_unit = $this->shipping_cost_per_unit - $this->cost_per_unit;
         
         // Отгрузочная стоимость ПФ
-        $this->shipping_cliche_cost = $this->cliche_cost + ($this->cliche_cost * $this->extracharge_cliche / 100);
+        $this->shipping_cliche_cost = ($this->cliche_cost + ($this->cliche_cost * $this->extracharge_cliche / 100)) * $this->ukcuspaypf;
         
         // Прибыль ПФ
         $this->income_cliche = $this->shipping_cliche_cost - $this->cliche_cost;
