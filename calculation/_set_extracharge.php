@@ -76,7 +76,7 @@ else {
             $result['shipping_cost_per_unit'] = CalculationBase::Display(floatval($row['shipping_cost_per_unit']), 3);
             $result['income'] = CalculationBase::Display(floatval($row['income']), 0);
             $result['income_per_unit'] = CalculationBase::Display(floatval($row['income_per_unit']), 3);
-            $result['income_total'] = $row['cliche_in_price'] == 1 ? CalculationBase::Display(floatval($row['income']), 0) : CalculationBase::Display(floatval($row['income']) + floatval($row['income_cliche']), 0);
+            $result['income_total'] = CalculationBase::Display(floatval($row['income']) + floatval($row['income_cliche']), 0);
         }
     }
     
