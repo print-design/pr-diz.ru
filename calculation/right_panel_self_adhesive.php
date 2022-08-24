@@ -528,6 +528,14 @@ if(!empty($id)) {
             <div class="value"><span id="income_cliche"><?= CalculationBase::Display(floatval($income_cliche), 0) ?></span> &#8381;</div>
         </div>
     </div>
+    <div class="row text-nowrap">
+        <div class="col-4 pr-4"></div>
+        <div class="col-4 pr-4"></div>
+        <div class="col-4">
+            <div>Итоговая прибыль</div>
+            <div class="value mb-2"><span id="income_total"><?=$cliche_in_price ? CalculationBase::Display(floatval($income), 0) : CalculationBase::Display(floatval($income) + floatval($income_cliche), 0) ?></span> &#8381;</div>
+        </div>
+    </div>
     <div class="mt-3 row text-nowrap">
         <div class="col-4">
             <h2>Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= CalculationBase::Display(floatval($total_weight_dirty), 0) ?> кг</span></h2>

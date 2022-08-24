@@ -3335,6 +3335,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     $('#shipping_cost_per_unit').text(data.shipping_cost_per_unit);
                                     $('#income').text(data.income);
                                     $('#income_per_unit').text(data.income_per_unit);
+                                    $('#income_total').text(data.income_total);
                                 }
                             })
                             .fail(function() {
@@ -3355,6 +3356,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 else {
                                     $('#shipping_cliche_cost').text(data.shipping_cliche_cost);
                                     $('#income_cliche').text(data.income_cliche);
+                                    $('#income_total').text(data.income_total);
                                 }
                             })
                             .fail(function() {

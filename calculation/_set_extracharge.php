@@ -67,7 +67,7 @@ else {
     }
     
     if(empty($error_message)) {
-        $sql = "select shipping_cost, shipping_cost_per_unit, income, income_per_unit from calculation_result where calculation_id=$id order by id desc limit 1";
+        $sql = "select shipping_cost, shipping_cost_per_unit, income, income_per_unit, income_cliche, (select cliche_in_price from calculation where id = calculation_id) cliche_in_price from calculation_result where calculation_id=$id order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -76,6 +76,7 @@ else {
             $result['shipping_cost_per_unit'] = CalculationBase::Display(floatval($row['shipping_cost_per_unit']), 3);
             $result['income'] = CalculationBase::Display(floatval($row['income']), 0);
             $result['income_per_unit'] = CalculationBase::Display(floatval($row['income_per_unit']), 3);
+            $result['income_total'] = $row['cliche_in_price'] == 1 ? CalculationBase::Display(floatval($row['income']), 0) : CalculationBase::Display(floatval($row['income']) + floatval($row['income_cliche']), 0);
         }
     }
     
