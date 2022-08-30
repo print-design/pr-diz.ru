@@ -20,6 +20,13 @@ if(null !== filter_input(INPUT_POST, 'cliche_in_price_submit')) {
     $executer = new Executer($sql);
     $error_message = $executer->error;
     
+    // Если ПФ включены в себестоимость, то заказчик всегда платит за ПФ
+    if(empty($error_message) && $cliche_in_price == 1) {
+        $sql = "update calculation set customer_pays_for_cliche = 1 where id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
     if(empty($error_message)) {
         $sql = "delete from calculation_result where calculation_id = $id";
         $executer = new Executer($sql);
@@ -35,6 +42,13 @@ if(null !== filter_input(INPUT_POST, 'customer_pays_for_cliche_submit')) {
     $sql = "update calculation set customer_pays_for_cliche = $customer_pays_for_cliche where id = $id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
+    
+    // Если заказчик не платит за ПФ, то ПФ не включены в себестоимость
+    if(empty($error_message) && $customer_pays_for_cliche == 0) {
+        $sql = "update calculation set cliche_in_price = 0 where id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
     
     if(empty($error_message)) {
         $sql = "delete from calculation_result where calculation_id = $id";

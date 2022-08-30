@@ -2195,7 +2195,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             <?php
                                             $checked = $cliche_in_price == 1 ? " checked='checked'" : "";
                                             ?>
-                                            <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?> />Включить ПФ в себестоимость
+                                            <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?> onchange="javascript: if($(this).is(':checked')) { $('#customer_pays_for_cliche').prop('checked', true); }" />Включить ПФ в себестоимость
                                         </label>
                                     </div>
                                 </div>
@@ -2206,7 +2206,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             <?php
                                             $checked = $customer_pays_for_cliche == 1 ? " checked='checked'" : "";
                                             ?>
-                                            <input type="checkbox" class="form-check-input" id="customer_pays_for_cliche" name="customer_pays_for_cliche" value="on"<?=$checked ?> />Заказчик платит за ПФ
+                                            <input type="checkbox" class="form-check-input" id="customer_pays_for_cliche" name="customer_pays_for_cliche" value="on"<?=$checked ?> onchange="javascript: if(!$(this).is(':checked')) { $('#cliche_in_price').prop('checked', false); }" />Заказчик платит за ПФ
                                         </label>
                                     </div>
                                 </div>
