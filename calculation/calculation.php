@@ -1019,13 +1019,8 @@ class Calculation extends CalculationBase {
             }    
         }
         
-        // Если УКПФ = 1, то наценка на ПФ всегда 0
-        if($this->ukpf == 1) {
-            $this->extracharge_cliche = 0;
-        }
-        else {
-            $this->extracharge_cliche = $extracharge_cliche;
-        }
+        // Наценка на ПФ
+        $this->extracharge_cliche = $extracharge_cliche;
         
         //***********************************************
         //ПРАВАЯ ПАНЕЛЬ
@@ -1438,13 +1433,8 @@ class CalculationSelfAdhesive extends CalculationBase {
             }
         }
         
-        // Если УКПФ = 1, то наценка на ПФ всегда 0
-        if($this->ukpf == 1) {
-            $this->extracharge_cliche = 0;
-        }
-        else {
-            $this->extracharge_cliche = $extracharge_cliche;
-        }
+        // Наценка на ПФ
+        $this->extracharge_cliche = $extracharge_cliche;
         
         //*********************************
         // ПРАВАЯ ПАНЕЛЬ
