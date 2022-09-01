@@ -642,7 +642,7 @@ if(!empty($id)) {
         </div>
     </div>
     <div class="d-flex justify-content-start">
-        <div class="mr-4">
+        <div class="mr-3">
             <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
                 <div class="text-nowrap" style="font-size: x-small;">Наценка на тираж</div>
                 <form method="post" class="form-inline">
@@ -668,7 +668,7 @@ if(!empty($id)) {
             </div>
         </div>
         <?php if($cliche_in_price != 1): ?>
-        <div class="mr-4">
+        <div class="mr-3">
             <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
                 <div class="text-nowrap" style="font-size: x-small;">Наценка на ПФ</div>
                 <form method="post" class="form-inline">
@@ -694,16 +694,16 @@ if(!empty($id)) {
             </div>
         </div>
         <?php endif; ?>
-        <div class="mr-4">
-            <div class="p-2" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 60px; width: 100px;">
-                <div class="text-nowrap" style="font-size: x-small;">Курс евро</div>
-                <?=number_format($euro, 2, ',', ' ') ?>
+        <div class="mr-3">
+            <div class="p-2">
+                <div class="text-nowrap">Курс &#8364;</div>
+                <div class="font-weight-bold" style="font-size: larger;"><?=number_format($euro, 2, ',', ' ') ?></div>
             </div>
         </div>
         <div>
-            <div class="p-2" style="color: gray; border: solid 1px gray; border-radius: 10px; height: 60px; width: 100px;">
-                <div class="text-nowrap" style="font-size: x-small;">Курс доллара</div>
-                <?=number_format($usd, 2, ',', ' ') ?>
+            <div class="p-2">
+                <div class="text-nowrap">Курс &#36;</div>
+                <div class="font-weight-bold" style="font-size: larger;"><?=number_format($usd, 2, ',', ' ') ?></div>
             </div>
         </div>
     </div>
