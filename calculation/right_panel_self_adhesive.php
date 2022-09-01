@@ -507,7 +507,7 @@ if(!empty($id)) {
     <div class="row text-nowrap">
         <div class="col-4 pr-4">
             <h3>Себестоимость</h3>
-            <div>Себестоимость <?=$cliche_in_price == 1 ? 'с' : 'без' ?> ПФ</div>
+            <div>Себестоимость</div>
             <div class="value mb-2"><?= CalculationBase::Display(floatval($cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= CalculationBase::Display(floatval($cost_per_unit), 3) ?> &#8381; за шт</span></div>
             <div class="mt-2">Себестоимость ПФ</div>
             <div class="value"><?= CalculationBase::Display(floatval($cliche_cost), 0) ?> &#8381;</div>
@@ -515,14 +515,14 @@ if(!empty($id)) {
         </div>
         <div class="col-4 pr-4">
             <h3>Отгрузочная стоимость</h3>
-            <div>Отгрузочная стоимость <?=$cliche_in_price == 1 ? 'с' : 'без' ?> ПФ</div>
+            <div>Отгрузочная стоимость</div>
             <div class="value"><span id="shipping_cost"></span><?= CalculationBase::Display(floatval($shipping_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="shipping_cost_per_unit"><?= CalculationBase::Display(floatval($shipping_cost_per_unit), 3) ?></span> &#8381; за шт</span></div>
             <div class="mt-2">Отгрузочная стоимость ПФ</div>
             <div class="value"><span id="shipping_cliche_cost"><?= CalculationBase::Display(floatval($shipping_cliche_cost), 0) ?></span> &#8381;</div>
         </div>
         <div class="col-4">
             <h3>Прибыль</h3>
-            <div>Прибыль <?=$cliche_in_price == 1 ? 'с' : 'без' ?> ПФ</div>
+            <div>Прибыль</div>
             <div class="value mb-2"><span id="income"><?= CalculationBase::Display(floatval($income), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="income_per_unit"><?= CalculationBase::Display($income_per_unit, 3) ?></span> &#8381; за шт</span></div>
             <div class="mt-2">Прибыль ПФ</div>
             <div class="value"><span id="income_cliche"><?= CalculationBase::Display(floatval($income_cliche), 0) ?></span> &#8381;</div>
