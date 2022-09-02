@@ -1,7 +1,18 @@
 <?php
 include '../include/topscripts.php';
+include './database_chinese.php';
 
 const FILENAME = "words.txt";
+
+$sql = "select line, word, transcription, translation from words";
+$grabber = new GrabberChinese($sql);
+$error_message = $grabber->error;
+$result = $grabber->result;
+$words = array();
+
+foreach ($result as $item) {
+    $words[$item['line']] = array('word' => $item['word'], 'transcription' => $item['transcription'], 'translation' => $item['translation']);
+}
 ?>
 <html>
     <head>
@@ -13,11 +24,19 @@ const FILENAME = "words.txt";
     <body>
         <h1>Импорт</h1>
         <?php
-        $words = fopen(FILENAME, 'r');
-        while($line = fgets($words)):
+        $file = fopen(FILENAME, 'r');
+        while($line = fgets($file)):
+        if(array_key_exists($line, $words)):
+        ?>
+        <div class="row">
+            <div class="col-3"></div>
+        </div>
+        <?php
+        else:
         ?>
         <form method="post">
             <input type="hidden" name="scroll" />
+            <input type="hidden" name="line" value="<?=$line ?>" />
             <div class="row">
                 <div class="col-3"><input type="text" class="form-control clickable" name="word" value="<?=$line ?>" /></div>
                 <div class="col-3"><input type="text" class="form-control clickable" name="transcription" /></div>
@@ -27,8 +46,9 @@ const FILENAME = "words.txt";
             </div>
         </form>
         <?php
+        endif;
         endwhile;
-        fclose($words);
+        fclose($file);
         ?>
     </body>
     <script src='<?=APPLICATION ?>/js/jquery-3.5.1.min.js'></script>
@@ -40,8 +60,10 @@ const FILENAME = "words.txt";
             var selStart = textbox.prop('selectionStart');
             var textStart = text.substring(0, selStart).trim();
             var textEnd = text.substring(selStart).trim();
-            $(this).val(textStart);
-            $(this).parent().next().find('input').val(textEnd);
+            if($(this).parent().next().find('input').val() == '') {
+                $(this).val(textStart);
+                $(this).parent().next().find('input').val(textEnd);
+            }
         });
         
         // Прокрутка на прежнее место после отправки формы
