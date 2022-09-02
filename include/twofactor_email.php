@@ -29,7 +29,7 @@
             $code_mail->Host = 'smtp.beget.com';
             $code_mail->Port = 2525;
             $code_mail->Username = 'info@print-diz.ru';
-            $code_mail->Password = '1skyu_9shar_8kpii_5ssap';
+            $code_mail->Password = 'sk1_yush9_ar8_kp5_ii_ss_ap';
         
             // От кого
             $code_mail->setFrom('info@print-diz.ru', 'Принт-Дизайн');
