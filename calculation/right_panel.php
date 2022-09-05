@@ -681,7 +681,7 @@ if(!empty($id)) {
             </form>
         </div>
         <?php if($cliche_in_price != 1): ?>
-        <div class="mr-4 p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px; margin-top: 10px;">
+        <div class="mr-4 p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px; margin-top: 25px;">
             <div class="text-nowrap" style="font-size: x-small;">Наценка на ПФ</div>
             <form>
                 <input type="hidden" name="id" value="<?=$id ?>" />
@@ -704,11 +704,11 @@ if(!empty($id)) {
             </form>
         </div>
         <?php endif; ?>
-        <div class="mr-4" style="margin-top: 12px;">
+        <div class="mr-4" style="margin-top: 29px;">
             <div class="text-nowrap">Курс &#8364;</div>
             <div class="font-weight-bold" style="font-size: larger;"><?= number_format($euro, 2, ',', ' ') ?></div>
         </div>
-        <div class="mr-4" style="margin-top: 12px;">
+        <div class="mr-4" style="margin-top: 29px;">
             <div class="text-nowrap">Курс &#36;</div>
             <div class="font-weight-bold" style="font-size: larger;"><?= number_format($usd, 2, ',', ' ') ?></div>
         </div>
