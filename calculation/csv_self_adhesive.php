@@ -597,13 +597,13 @@ if($id !== null) {
             
         array_push($file_data, array("Отгрузочная стоимость ПФ, руб",
             CalculationBase::Display($calculation->shipping_cliche_cost, 2),
-            "|= ".CalculationBase::Display($calculation->cliche_cost, 2)." + (".CalculationBase::Display($calculation->cliche_cost, 2)." * ".CalculationBase::Display($calculation->extracharge_cliche, 2)." / 100)",
-            "сумма стоимости всех форм + (сумма стоимости всех форм * наценка на ПФ / 100)"));
+            "|= (".CalculationBase::Display($calculation->cliche_cost, 2)." + (".CalculationBase::Display($calculation->cliche_cost, 2)." * ".CalculationBase::Display($calculation->extracharge_cliche, 2)." / 100)) * ((".$calculation->ukcuspaypf." - 1) / -1)",
+            "(сумма стоимости всех форм + (сумма стоимости всех форм * наценка на ПФ / 100)) * CusPayPF * ((КоэфПФ - 1) / -1)"));
         
         array_push($file_data, array("Прибыль ПФ, руб",
             CalculationBase::Display($calculation->income_cliche, 2),
-            "|= ".CalculationBase::Display($calculation->shipping_cliche_cost, 2)." - ".CalculationBase::Display($calculation->cliche_cost, 2),
-            "отгрузочная стоимость ПФ - себестоимость ПФ"));
+            "|= (".CalculationBase::Display($calculation->shipping_cliche_cost, 2)." - ".CalculationBase::Display($calculation->cliche_cost, 2).") * ((".$calculation->ukpf." - 1) / -1)",
+            "(отгрузочная стоимость ПФ - себестоимость ПФ) * ((КоэфПФ - 1) / -1)"));
         
         array_push($file_data, array("Общий вес всех материала с приладкой, кг",
             CalculationBase::Display($calculation->total_weight_dirty, 2),
