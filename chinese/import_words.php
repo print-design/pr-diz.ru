@@ -40,7 +40,7 @@ foreach ($result as $item) {
             <div class="row">
                 <div class="col-3"><input type="text" class="form-control clickable" name="word" value="<?=$line ?>" /></div>
                 <div class="col-3"><input type="text" class="form-control clickable" name="transcription" /></div>
-                <div class="col-3"><input type="text" class="form-control" name="translation" /></div>
+                <div class="col-3"><input type="text" class="form-control clickable1" name="translation" /></div>
                 <div class="col-1"><button type="submit" class="btn btn-dark" name="word_submit">Добавить слово</button></div>
                 <div class="col-1"><button type="submit" class="btn btn-dark" name="group_submit">Добавить раздел</button></div>
             </div>
@@ -60,10 +60,18 @@ foreach ($result as $item) {
             var selStart = textbox.prop('selectionStart');
             var textStart = text.substring(0, selStart).trim();
             var textEnd = text.substring(selStart).trim();
-            if($(this).parent().next().find('input').val() == '') {
-                $(this).val(textStart);
-                $(this).parent().next().find('input').val(textEnd);
-            }
+            $(this).val(textStart);
+            $(this).parent().next().find('input').val(textEnd + ' ' + $(this).parent().next().find('input').val());
+        });
+        
+        $('.clickable1').click(function() {
+            var textbox = $(this);
+            var text = $(this).val();
+            var selStart = textbox.prop('selectionStart');
+            var textStart = text.substring(0, selStart).trim();
+            var textEnd = text.substring(selStart).trim();
+            $(this).parent().prev().find('input').val($(this).parent().prev().find('input').val() + ' ' + textStart);
+            $(this).val(textEnd);
         });
         
         // Прокрутка на прежнее место после отправки формы
