@@ -477,7 +477,7 @@ if(!empty($id)) {
             </form>
         </div>
         <?php if($cliche_in_price != 1): ?>
-        <div class="mr-4 p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
+        <div class="mr-4 p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px; margin-top: 10px;">
             <div class="text-nowrap" style="font-size: x-small;">Наценка на ПФ</div>
             <form>
                 <input type="hidden" name="id" value="<?=$id ?>" />
