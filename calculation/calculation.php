@@ -1083,7 +1083,7 @@ class Calculation extends CalculationBase {
         $this->shipping_cliche_cost = ($this->cliche_cost + ($this->cliche_cost * $this->extracharge_cliche / 100)) * $this->ukcuspaypf * (($this->ukpf - 1) / -1);
         
         // Прибыль ПФ
-        $this->income_cliche = ($this->shipping_cliche_cost - $this->cliche_cost) * (($this->ukpf) / -1);
+        $this->income_cliche = ($this->shipping_cliche_cost - $this->cliche_cost) * (($this->ukpf - 1) / -1);
         
         // Масса плёнки с приладкой
         $this->total_weight_dirty = $this->weight_dirty_1 + $this->weight_dirty_2 + $this->weight_dirty_3;
