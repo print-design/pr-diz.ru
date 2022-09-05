@@ -658,7 +658,7 @@ if(!empty($id)) {
                            onkeyup="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');" 
                            onfocusout="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');"<?=DISABLED_ATTR ?> />
                     <div class="input-group-append" style="height: 28px;">
-                        <span class="input-group-text" style="width: 40px;">%</span>
+                        <span class="input-group-text">%</span>
                     </div>
                 </div>
                 <div class="input-group">
@@ -675,7 +675,7 @@ if(!empty($id)) {
                            onkeyup="javascript: $(this).attr('id', 'input_shipping_cost_per_unit'); $(this).attr('name', 'input_shipping_cost_per_unit');" 
                            onfocusout="javascript: $(this).attr('id', 'input_shipping_cost_per_unit'); $(this).attr('name', 'input_shipping_cost_per_unit');"<?=DISABLED_ATTR ?> />
                     <div class="input-group-append" style="height: 28px;">
-                        <span class="input-group-text" style="width: 40px;">кг</span>
+                        <span class="input-group-text">&#8381;</span>
                     </div>
                 </div>
             </form>
