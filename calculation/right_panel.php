@@ -643,15 +643,14 @@ if(!empty($id)) {
     </div>
     <div class="d-flex justify-content-start">
         <div class="mr-3">
-            <div class="p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px;">
-                <div class="text-nowrap" style="font-size: x-small;">Наценка на тираж</div>
-                <form method="post" class="form-inline">
-                    <input type="hidden" name="id" value="<?=$id ?>" />
-                    <div class="input-group">
+            <div class="p-2">
+                <div class="text-nowrap">Наценка на тираж</div>
+                <form>
+                    <div class="input-group mb-2">
                         <input type="text" 
                                id="extracharge" 
                                name="extracharge" 
-                               style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
+                               style="width: 55px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
                                value="<?=$extracharge ?>" 
                                required="required"
                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
@@ -660,10 +659,26 @@ if(!empty($id)) {
                                onkeyup="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');" 
                                onfocusout="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');"<?=DISABLED_ATTR ?> />
                         <div class="input-group-append" style="height: 28px;">
-                            <span class="input-group-text">%</span>
+                            <span class="input-group-text" style="width: 40px;">%</span>
                         </div>
                     </div>
-                    <button class="btn btn-sm btn-dark d-none" id="extracharge-submit" name="extracharge-submit">Сохранить</button>
+                    <div class="input-group">
+                        <input type="text"
+                               class="float-only"
+                               id="input_shipping_cost_per_unit"
+                               name="input_shipping_cost_per_unit"
+                               style="width: 55px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
+                               value="" 
+                               required="required"
+                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                               onmouseup="javascript: $(this).attr('id', 'input_shipping_cost_per_unit'); $(this).attr('name', 'input_shipping_cost_per_unit');" 
+                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
+                               onkeyup="javascript: $(this).attr('id', 'input_shipping_cost_per_unit'); $(this).attr('name', 'input_shipping_cost_per_unit');" 
+                               onfocusout="javascript: $(this).attr('id', 'input_shipping_cost_per_unit'); $(this).attr('name', 'input_shipping_cost_per_unit');"<?=DISABLED_ATTR ?> />
+                        <div class="input-group-append" style="height: 28px;">
+                            <span class="input-group-text" style="width: 40px;">кг</span>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
