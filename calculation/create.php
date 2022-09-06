@@ -3393,7 +3393,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             // Вычисляем наценку по отгрузочной стоимости за единицу
             function SetShippingCostPerUnit(param) {
-                shipping_cost_per_unit = parseFloat(param);
+                shipping_cost_per_unit = parseFloat(param.replace(',', '.'));
                 
                 if(!isNaN(shipping_cost_per_unit) && shipping_cost_per_unit > -1) {
                     $.ajax({ dataType: 'JSON', url: '_set_shipping_cost_per_unit.php?id=<?=$id ?>&work_type_id=<?=$work_type_id ?>&shipping_cost_per_unit=' + shipping_cost_per_unit })
@@ -3403,6 +3403,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 }
                                 else {
                                     $('#extracharge').val(data.extracharge);
+                                    $('#shipping_cost_per_unit').text(data.shipping_cost_per_unit);
                                 }
                             })
                             .fail(function() {
