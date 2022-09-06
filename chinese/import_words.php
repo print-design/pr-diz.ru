@@ -3,12 +3,17 @@ include '../include/topscripts.php';
 include './database_chinese.php';
 
 const FILENAME = "words.txt";
+$error_message = "";                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
 
 if(null !== filter_input(INPUT_POST, 'word_submit')) {
     $line = addslashes(filter_input(INPUT_POST, 'line'));
     $word = addslashes(filter_input(INPUT_POST, 'word'));
     $transcription = addslashes(filter_input(INPUT_POST, 'transcription'));
+    $translation = addslashes(filter_input(INPUT_POST, 'translation'));
     
+    $sql = "insert into words (line, word, transcription, translation) values ('$line', '$word', '$transcription', '$translation')";
+    $executer = new ExecuterChinese($sql);
+    $error_message = $executer->error;
 }
 
 $sql = "select line, word, transcription, translation from words";
@@ -36,7 +41,21 @@ foreach ($result as $item) {
         if(array_key_exists($line, $words)):
         ?>
         <div class="row">
-            <div class="col-3">СЛОВАРЬ:<?=$line ?></div>
+            <div class="col-3 font-weight-bold"><?=$words[$line]['word'] ?></div>
+            <div class="col-3"><?=$words[$line]['transcription'] ?></div>
+            <div class="col-3"><?=$words[$line]['translation'] ?></div>
+            <div class="col-3">
+                <form method="post" class="form-inline">
+                    <div class="form-group mr-3">
+                        <select name="name" class="form-control">
+                            <option value="">...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-dark" name="set_group_submit">Указать группу</button>
+                    </div>
+                </form>
+            </div>
         </div>
         <?php
         else:
