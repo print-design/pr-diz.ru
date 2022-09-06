@@ -3391,6 +3391,30 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 SetExtrachargeCliche($(this).val());
             });
             
+            // Вычисляем наценку по отгрузочной стоимости за единицу
+            function SetShippingCostPerUnit(param) {
+                shipping_cost_per_unit = parseFloat(param);
+                
+                if(!isNaN(shipping_cost_per_unit) && shipping_cost_per_unit > -1) {
+                    $.ajax({ dataType: 'JSON', url: '_set_shipping_cost_per_unit.php?id=<?=$id ?>&work_type_id=<?=$work_type_id ?>&shipping_cost_per_unit=' + shipping_cost_per_unit })
+                            .done(function(data) {
+                                if(data.error != '') {
+                                    alert(data.error);
+                                }
+                                else {
+                                    $('#extracharge').val(data.extracharge);
+                                }
+                            })
+                            .fail(function() {
+                                alert("Ошибка при редактировании отгрузочной стоимость за единицу");
+                            });
+                }
+            }
+            
+            $('#input_shipping_cost_per_unit').keyup(function() {
+                SetShippingCostPerUnit($(this).val());
+            });
+            
             // Ограничение значения поля "пантон"
             $('input.panton').keypress(function(e) {
                 if(/[^0-9a-zA-Zа-яА-Я]/.test(e.key)) {
@@ -3442,7 +3466,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             });
             
             // Скрытие расчёта при изменении значения полей
-            $("input[id!=extracharge][id!=extracharge_cliche]").change(function () {
+            $("input[id!=extracharge][id!=extracharge_cliche][id!=input_shipping_cost_per_unit]").change(function () {
                 HideCalculation();
             });
             
@@ -3450,7 +3474,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 HideCalculation();
             });
             
-            $("input[id!=extracharge][id!=extracharge_cliche]").keydown(function () {
+            $("input[id!=extracharge][id!=extracharge_cliche][id!=input_shipping_cost_per_unit]").keydown(function () {
                 HideCalculation();
             });
             

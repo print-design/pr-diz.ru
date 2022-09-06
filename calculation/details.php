@@ -409,6 +409,30 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
                 SetExtrachargeCliche($(this).val());
             });
             
+            // Вычисляем наценку по отгрузочной стоимости за единицу
+            function SetShippingCostPerUnit(param) {
+                shipping_cost_per_unit = parseFloat(param);
+                
+                if(!isNaN(shipping_cost_per_unit) && shipping_cost_per_unit > -1) {
+                    $.ajax({ dataType: 'JSON', url: '_set_shipping_cost_per_unit.php?id=<?=$id ?>&work_type_id=<?=$work_type_id ?>&shipping_cost_per_unit=' + shipping_cost_per_unit })
+                            .done(function(data) {
+                                if(data.error != '') {
+                                    alert(data.error);
+                                }
+                                else {
+                                    $('#extracharge').val(data.extracharge);
+                                }
+                            })
+                            .fail(function() {
+                                alert("Ошибка при редактировании отгрузочной стоимость за единицу");
+                            });
+                }
+            }
+            
+            $('#input_shipping_cost_per_unit').keyup(function() {
+                SetShippingCostPerUnit($(this).val());
+            });
+            
             // Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне
             AdjustFixedBlock($('#calculation'));
             
