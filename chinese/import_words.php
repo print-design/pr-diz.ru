@@ -4,6 +4,13 @@ include './database_chinese.php';
 
 const FILENAME = "words.txt";
 
+if(null !== filter_input(INPUT_POST, 'word_submit')) {
+    $line = addslashes(filter_input(INPUT_POST, 'line'));
+    $word = addslashes(filter_input(INPUT_POST, 'word'));
+    $transcription = addslashes(filter_input(INPUT_POST, 'transcription'));
+    
+}
+
 $sql = "select line, word, transcription, translation from words";
 $grabber = new GrabberChinese($sql);
 $error_message = $grabber->error;
@@ -29,7 +36,7 @@ foreach ($result as $item) {
         if(array_key_exists($line, $words)):
         ?>
         <div class="row">
-            <div class="col-3"></div>
+            <div class="col-3">СЛОВАРЬ:<?=$line ?></div>
         </div>
         <?php
         else:
