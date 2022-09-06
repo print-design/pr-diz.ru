@@ -667,7 +667,7 @@ if(!empty($id)) {
                            id="input_shipping_cost_per_unit"
                            name="input_shipping_cost_per_unit"
                            style="width: 75px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
-                           value="<?=number_format($shipping_cost_per_unit, 3, ".", "")  ?>" 
+                           value="<?= floatval($shipping_cost_per_unit)  ?>" 
                            required="required"
                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                            onmouseup="javascript: $(this).attr('id', 'input_shipping_cost_per_unit'); $(this).attr('name', 'input_shipping_cost_per_unit');" 
