@@ -3350,6 +3350,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 else {
                                     $('#shipping_cost').text(data.shipping_cost);
                                     $('#shipping_cost_per_unit').text(data.shipping_cost_per_unit);
+                                    $('#input_shipping_cost_per_unit').val(data.input_shipping_cost_per_unit);
                                     $('#income').text(data.income);
                                     $('#income_per_unit').text(data.income_per_unit);
                                     $('#income_total').text(data.income_total);

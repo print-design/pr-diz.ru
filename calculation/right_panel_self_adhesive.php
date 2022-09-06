@@ -445,7 +445,7 @@ if(!empty($id)) {
                     <input type="text" 
                            id="extracharge" 
                            name="extracharge" 
-                           style="width: 55px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
+                           style="width: 75px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
                            value="<?=$extracharge ?>" 
                            required="required"
                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
@@ -462,8 +462,8 @@ if(!empty($id)) {
                            class="float-only"
                            id="input_shipping_cost_per_unit"
                            name="input_shipping_cost_per_unit"
-                           style="width: 55px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
-                           value="" 
+                           style="width: 75px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
+                           value="<?=number_format($shipping_cost_per_unit, 3, ",", "")  ?>" 
                            required="required"
                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                            onmouseup="javascript: $(this).attr('id', 'input_shipping_cost_per_unit'); $(this).attr('name', 'input_shipping_cost_per_unit');" 
@@ -524,7 +524,7 @@ if(!empty($id)) {
         <div class="col-4 pr-4">
             <h3>Отгрузочная стоимость</h3>
             <div>Отгрузочная стоимость</div>
-            <div class="value"><span id="shipping_cost"></span><?= CalculationBase::Display(floatval($shipping_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="shipping_cost_per_unit"><?= CalculationBase::Display(floatval($shipping_cost_per_unit), 3) ?></span> &#8381; за шт</span></div>
+            <div class="value"><span id="shipping_cost"><?= CalculationBase::Display(floatval($shipping_cost), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="shipping_cost_per_unit"><?= CalculationBase::Display(floatval($shipping_cost_per_unit), 3) ?></span> &#8381; за шт</span></div>
             <div class="mt-2">Отгрузочная стоимость ПФ</div>
             <div class="value"><span id="shipping_cliche_cost"><?= CalculationBase::Display(floatval($shipping_cliche_cost), 0) ?></span> &#8381;</div>
         </div>
