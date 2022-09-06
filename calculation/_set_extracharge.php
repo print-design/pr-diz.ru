@@ -67,7 +67,7 @@ else {
     }
     
     if(empty($error_message)) {
-        $sql = "select shipping_cost, shipping_cost_per_unit, income, income_per_unit, income_cliche, (select cliche_in_price from calculation where id = calculation_id) cliche_in_price from calculation_result where calculation_id=$id order by id desc limit 1";
+        $sql = "select shipping_cost, shipping_cost_per_unit, income, income_per_unit, income_cliche from calculation_result where calculation_id=$id order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         

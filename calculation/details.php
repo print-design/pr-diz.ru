@@ -421,7 +421,11 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
                                 }
                                 else {
                                     $('#extracharge').val(data.extracharge);
+                                    $('#shipping_cost').text(data.shipping_cost);
                                     $('#shipping_cost_per_unit').text(data.shipping_cost_per_unit);
+                                    $('#income').text(data.income);
+                                    $('#income_per_unit').text(data.income_per_unit);
+                                    $('#income_total').text(data.income_total);
                                 }
                             })
                             .fail(function() {

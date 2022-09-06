@@ -43,14 +43,46 @@ else {
         $error_message = $executer->error;
     }
     
+    if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE && $quantity > 0 && empty($error_message)) {
+        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.shipping_cost = cr.shipping_cost_per_unit * $quantity where c.id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    elseif(empty($error_message)) {
+        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.shipping_cost = cr.shipping_cost_per_unit * c.quantity where c.id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
     if(empty($error_message)) {
-        $sql = "select c.extracharge, cr.shipping_cost_per_unit from calculation_result cr inner join calculation c on cr.calculation_id = c.id where c.id = $id";
+        $sql = "update calculation_result set income = shipping_cost - cost";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
+    if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE && $quantity > 0 && empty($error_message)) {
+        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.income_per_unit = cr.income / $quantity where c.id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    elseif(empty($error_message)) {
+        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.income_per_unit = cr.income / c.quantity where c.id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
+    if(empty($error_message)) {
+        $sql = "select c.extracharge, cr.shipping_cost, cr.shipping_cost_per_unit, cr.income, cr.income_per_unit, cr.income_cliche from calculation_result cr inner join calculation c on cr.calculation_id = c.id where c.id = $id";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
             $result['extracharge'] = $row['extracharge'];
+            $result['shipping_cost'] = CalculationBase::Display(floatval($row['shipping_cost']), 0);
             $result['shipping_cost_per_unit'] = CalculationBase::Display(floatval($row['shipping_cost_per_unit']), 3);
+            $result['income'] = CalculationBase::Display(floatval($row['income']), 0);
+            $result['income_per_unit'] = CalculationBase::Display(floatval($row['income_per_unit']), 3);
+            $result['income_total'] = CalculationBase::Display(floatval($row['income']) + floatval($row['income_cliche']), 0);
         }
     }
     
