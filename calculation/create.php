@@ -2221,21 +2221,39 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             </div>
                             <div class="row">
                                 <div class="col-6 self-adhesive-only d-none">
-                                    <div class="form-group" style="border-top: solid 2px lightgray;">
-                                            <label for="knife">Стоимость ножа, руб</label>
-                                            <input type="text"
-                                                   id="knife"
-                                                   name="knife"
-                                                   class="form-control float-only self-adhesive-only d-none"
-                                                   value="<?=$knife ?>"
-                                                   placeholder="Стоимость ножа, руб"
-                                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                   onmouseup="javascript: $(this).attr('id', 'knife'); $(this).attr('name', 'knife'); $(this).attr('placeholder', 'Стоимость ножа, руб');" 
-                                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                   onkeyup="javascript: $(this).attr('id', 'knife'); $(this).attr('name', 'knife'); $(this).attr('placeholder', 'Стоимость ножа, руб');" 
-                                                   onfocusout="javascript: $(this).attr('id', 'knife'); $(this).attr('name', 'knife'); $(this).attr('placeholder', 'Стоимость ножи, руб');" />
-                                            <div class="invalid-feedback">Стоимость ножа обязательно</div>
-                                        </div>
+                                    <div class="form-group" style="border-top: solid 2px lightgray; margin-top: 12px;">
+                                        <label for="knife">Стоимость ножа, руб</label>
+                                        <input type="text"
+                                               id="knife"
+                                               name="knife"
+                                               class="form-control float-only self-adhesive-only d-none"
+                                               value="<?=$knife ?>"
+                                               placeholder="Стоимость ножа, руб"
+                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onmouseup="javascript: $(this).attr('id', 'knife'); $(this).attr('name', 'knife'); $(this).attr('placeholder', 'Стоимость ножа, руб');" 
+                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                               onkeyup="javascript: $(this).attr('id', 'knife'); $(this).attr('name', 'knife'); $(this).attr('placeholder', 'Стоимость ножа, руб');" 
+                                               onfocusout="javascript: $(this).attr('id', 'knife'); $(this).attr('name', 'knife'); $(this).attr('placeholder', 'Стоимость ножи, руб');" />
+                                        <div class="invalid-feedback">Стоимость ножа обязательно</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 self-adhesive-only d-none">
+                                    <div class="form-check" style="border-top: solid 2px lightgray; margin-top: 12px;">
+                                        <label class="form-check-label text-nowrap mt-3" style="line-height: 25px;">
+                                            <?php
+                                            $checked = ""; // $cliche_in_price == 1 ? " checked='checked'" : "";
+                                            ?>
+                                            <input type="checkbox" class="form-check-input" id="knife_in_price" name="knife_in_price" value="on"<?=$checked ?> />Включить нож в себестоимость
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label text-nowrap" style="line-height: 25px;">
+                                            <?php
+                                            $checked = ""; // $customer_pays_for_cliche == 1 ? " checked='checked'" : "";
+                                            ?>
+                                            <input type="checkbox" class="form-check-input" id="customer_pays_for_knife" name="customer_pays_for_knife" value="on"<?=$checked ?> />Заказчик платит за нож
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
