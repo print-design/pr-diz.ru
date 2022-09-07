@@ -366,7 +366,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
                 . "'$percent_1', '$percent_2', '$percent_3', '$percent_4', '$percent_5', '$percent_6', '$percent_7', '$percent_8', "
                 . "'$cliche_1', '$cliche_2', '$cliche_3', '$cliche_4', '$cliche_5', '$cliche_6', '$cliche_7', '$cliche_8', "
-                . "$cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $customer_pays_for_cliche, $knife)"; print_r($_POST);
+                . "$cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $customer_pays_for_cliche, $knife)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $insert_id = $executer->insert_id;
