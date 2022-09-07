@@ -2188,7 +2188,23 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             endfor;
                             ?>
                             <div class="row">
-                                <div class="col-6"></div>
+                                <div class="col-6">
+                                    <div class="form-group self-adhesive-only">
+                                        <label for="knife">Стоимость ножа, руб</label>
+                                        <input type="text"
+                                               id="knife"
+                                               name="knife"
+                                               class="form-control float-only"
+                                               value=""
+                                               placeholder="Стоимость ножа, руб"
+                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onmouseup="javascript: $(this).attr('id', 'knife'); $(this).attr('name', 'knife'); $(this).attr('placeholder', 'Стоимость ножа, руб');" 
+                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                               onkeyup="javascript: $(this).attr('id', 'knife'); $(this).attr('name', 'knife'); $(this).attr('placeholder', 'Стоимость ножа, руб');" 
+                                               onfocusout="javascript: $(this).attr('id', 'knife'); $(this).attr('name', 'knife'); $(this).attr('placeholder', 'Стоимость ножи, руб');" />
+                                        <div class="invalid-feedback">Стоимость ножа обязательно</div>
+                                    </div>
+                                </div>
                                 <div class="col-6">
                                     <div class="form-check">
                                         <label class="form-check-label text-nowrap mt-3" style="line-height: 25px;">
@@ -2198,9 +2214,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?> onchange="javascript: if($(this).is(':checked')) { $('#customer_pays_for_cliche').prop('checked', true); }" />Включить ПФ в себестоимость
                                         </label>
                                     </div>
-                                </div>
-                                <div class="col-6"></div>
-                                <div class="col-6">
                                     <div class="form-check">
                                         <label class="form-check-label text-nowrap" style="line-height: 25px;">
                                             <?php
