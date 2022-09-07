@@ -85,7 +85,8 @@ $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_t
         . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
         . "rc.percent_1, rc.percent_2, rc.percent_3, rc.percent_4, rc.percent_5, rc.percent_6, rc.percent_7, rc.percent_8, rc.cliche_1, "
         . "rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8, "
-        . "rc.cliche_in_price, rc.cliches_count_flint, rc.cliches_count_kodak, rc.cliches_count_old, rc.extracharge, rc.extracharge_cliche, rc.customer_pays_for_cliche, rc.knife, rc.extracharge_knife, "
+        . "rc.cliche_in_price, rc.cliches_count_flint, rc.cliches_count_kodak, rc.cliches_count_old, rc.extracharge, rc.extracharge_cliche, rc.customer_pays_for_cliche, "
+        . "rc.knife, rc.extracharge_knife, rc.knife_in_price, rc.customer_pays_for_knife, "
         . "cus.name customer, cus.phone customer_phone, cus.extension customer_extension, cus.email customer_email, cus.person customer_person, "
         . "(select count(id) from calculation where customer_id = rc.customer_id and id <= rc.id) num_for_customer,"
         . "(select gap from calculation_result where calculation_id = rc.id) gap "
@@ -196,8 +197,11 @@ $cliches_count_old = $row['cliches_count_old'];
 $extracharge = $row['extracharge'];
 $extracharge_cliche = $row['extracharge_cliche'];
 $customer_pays_for_cliche = $row['customer_pays_for_cliche'];
+
 $knife = $row['knife'];
 $extracharge_knife = $row['extracharge_knife'];
+$knife_in_price = $row['knife_in_price'];
+$customer_pays_for_knife = $row['customer_pays_for_knife'];
 
 if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
     $new_forms_number += ($cliches_count_flint + $cliches_count_kodak);
@@ -382,6 +386,10 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
                 }
             }
             
+            $('#extracharge').keyup(function(){
+                SetExtracharge($(this).val());
+            });
+            
             function SetExtrachargeCliche(param) {
                 extracharge_cliche = parseInt(param);
                 
@@ -402,10 +410,6 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
                             });
                 }
             }
-            
-            $('#extracharge').keyup(function(){
-                SetExtracharge($(this).val());
-            });
             
             $('#extracharge_cliche').keyup(function(){
                 SetExtrachargeCliche($(this).val());
@@ -438,6 +442,32 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
             
             $('#input_shipping_cost_per_unit').keyup(function() {
                 SetShippingCostPerUnit($(this).val());
+            });
+            
+            // Вычисляем наценку на нож
+            function SetExtrachargeKnife(param) {
+                extracharge_knife = parseInt(param);
+                
+                if(!isNaN(extracharge_knife) && extracharge_knife > -1) {
+                    $.ajax({ dataType: 'JSON', url: '_set_extracharge_knife.php?id=<?=$id ?>&extracharge_knife=' + extracharge_knife })
+                            .done(function(data) {
+                                if(data.error != '') {
+                                    alert(data.error);
+                                }
+                                else {
+                                    $('#shipping_knife_cost').text(data.shipping_knife_cost);
+                                    $('#income_knife').text(data.income_knife);
+                                    $('#income_total').text(data.income_total);
+                                }
+                            })
+                            .fail(function() {
+                                alert("Ошибка при редактировании наценки на нож");
+                            });
+                }
+            }
+            
+            $('#extracharge_knife').keyup(function(){
+                SetExtrachargeKnife($(this).val());
             });
             
             // Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне

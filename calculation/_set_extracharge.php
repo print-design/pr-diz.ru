@@ -50,7 +50,7 @@ else {
     }
     
     if(empty($error_message)) {
-        $sql = "update calculation_result set income = shipping_cost - cost";
+        $sql = "update calculation_result set income = shipping_cost - cost where calculation_id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
@@ -67,7 +67,7 @@ else {
     }
     
     if(empty($error_message)) {
-        $sql = "select shipping_cost, shipping_cost_per_unit, income, income_per_unit, income_cliche from calculation_result where calculation_id=$id order by id desc limit 1";
+        $sql = "select shipping_cost, shipping_cost_per_unit, income, income_per_unit, income_cliche, income_knife from calculation_result where calculation_id = $id order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -77,7 +77,7 @@ else {
             $result['input_shipping_cost_per_unit'] = floatval($row['shipping_cost_per_unit']);
             $result['income'] = CalculationBase::Display(floatval($row['income']), 0);
             $result['income_per_unit'] = CalculationBase::Display(floatval($row['income_per_unit']), 3);
-            $result['income_total'] = CalculationBase::Display(floatval($row['income']) + floatval($row['income_cliche']), 0);
+            $result['income_total'] = CalculationBase::Display(floatval($row['income']) + floatval($row['income_cliche']) + floatval($row['income_knife']), 0);
         }
     }
     

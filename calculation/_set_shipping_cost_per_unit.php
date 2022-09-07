@@ -72,7 +72,7 @@ else {
     }
     
     if(empty($error_message)) {
-        $sql = "select c.extracharge, cr.shipping_cost, cr.shipping_cost_per_unit, cr.income, cr.income_per_unit, cr.income_cliche from calculation_result cr inner join calculation c on cr.calculation_id = c.id where c.id = $id";
+        $sql = "select c.extracharge, cr.shipping_cost, cr.shipping_cost_per_unit, cr.income, cr.income_per_unit, cr.income_cliche, cr.income_knife from calculation_result cr inner join calculation c on cr.calculation_id = c.id where c.id = $id";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -82,7 +82,7 @@ else {
             $result['shipping_cost_per_unit'] = CalculationBase::Display(floatval($row['shipping_cost_per_unit']), 3);
             $result['income'] = CalculationBase::Display(floatval($row['income']), 0);
             $result['income_per_unit'] = CalculationBase::Display(floatval($row['income_per_unit']), 3);
-            $result['income_total'] = CalculationBase::Display(floatval($row['income']) + floatval($row['income_cliche']), 0);
+            $result['income_total'] = CalculationBase::Display(floatval($row['income']) + floatval($row['income_cliche']) + floatval($row['income_knife']), 0);
         }
     }
     

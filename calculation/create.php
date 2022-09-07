@@ -416,7 +416,8 @@ if(!empty($id)) {
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
             . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, c.cliche_1, "
             . "c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
-            . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old, extracharge, extracharge_cliche, customer_pays_for_cliche, knife, extracharge_knife, "
+            . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old, extracharge, extracharge_cliche, customer_pays_for_cliche, "
+            . "knife, extracharge_knife, knife_in_price, customer_pays_for_knife, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
             . "from calculation c where c.id = $id";
     $fetcher = new Fetcher($sql);
@@ -775,6 +776,21 @@ if($customer_pays_for_cliche === null && isset($row['customer_pays_for_cliche'])
 $knife = filter_input(INPUT_POST, 'knife');
 if($knife === null && isset($row['knife'])) {
     $knife = $row['knife'];
+}
+
+$extracharge_knife = null;
+if(isset($row['extracharge_knife'])) {
+    $extracharge_knife = $row['extracharge_knife'];
+}
+
+$knife_in_price = filter_input(INPUT_POST, 'knife_in_price');
+if($knife_in_price === null && isset($row['knife_in_price'])) {
+    $knife_in_price = $row['knife_in_price'];
+}
+
+$customer_pays_for_knife = filter_input(INPUT_POST, 'customer_pays_for_knife');
+if($customer_pays_for_knife === null && isset($row['customer_pays_for_knife'])) {
+    $customer_pays_for_knife = $row['customer_pays_for_knife'];
 }
 
 $num_for_customer = null;
@@ -3407,6 +3423,10 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
             }
             
+            $('#extracharge').keyup(function(){
+                SetExtracharge($(this).val());
+            });
+            
             function SetExtrachargeCliche(param) {
                 extracharge_cliche = parseInt(param);
                 
@@ -3427,10 +3447,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             });
                 }
             }
-            
-            $('#extracharge').keyup(function(){
-                SetExtracharge($(this).val());
-            });
             
             $('#extracharge_cliche').keyup(function(){
                 SetExtrachargeCliche($(this).val());
@@ -3463,6 +3479,32 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             $('#input_shipping_cost_per_unit').keyup(function() {
                 SetShippingCostPerUnit($(this).val());
+            });
+            
+            // Вычисляем наценку на нож
+            function SetExtrachargeKnife(param) {
+                extracharge_knife = parseInt(param);
+                
+                if(!isNaN(extracharge_knife) && extracharge_knife > -1) {
+                    $.ajax({ dataType: 'JSON', url: '_set_extracharge_knife.php?id=<?=$id ?>&extracharge_knife=' + extracharge_knife })
+                            .done(function(data) {
+                                if(data.error != '') {
+                                    alert(data.error);
+                                }
+                                else {
+                                    $('#shipping_knife_cost').text(data.shipping_knife_cost);
+                                    $('#income_knife').text(data.income_knife);
+                                    $('#income_total').text(data.income_total);
+                                }
+                            })
+                            .fail(function() {
+                                alert("Ошибка при редактировании наценки на нож");
+                            });
+                }
+            }
+            
+            $('#extracharge_knife').keyup(function(){
+                SetExtrachargeKnife($(this).val());
             });
             
             // Ограничение значения поля "пантон"

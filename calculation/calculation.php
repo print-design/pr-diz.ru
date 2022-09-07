@@ -1156,17 +1156,21 @@ class CalculationSelfAdhesive extends CalculationBase {
     
     public $extracharge = 0; // Наценка на тираж
     public $extracharge_cliche = 0; // Наценка на ПФ
+    public $extracharge_knife = 0; // Наценка на нож
     public $ink_cost; // стоимость красок
     public $ink_expense; // расход красок
-    public $cliche_cost; // себестоимость форм
     public $cost; // себестоимость
     public $cost_per_unit; // себестоимость за единицу
+    public $cliche_cost; // себестоимость форм
+    public $knife_cost; // себестоимость ножа
     public $shipping_cost; // отгрузочная стоимость
     public $shipping_cost_per_unit; // отгрузочная стоимость за диницу
-    public $shipping_cliche_cost; // отгрузочная стоимость форм
+    public $shipping_cliche_cost; // отгрузочная стоимость ПФ
+    public $shipping_knife_cost; // отгрузочная стоимость ножа
     public $income; // прибыль
     public $income_per_unit; // прибыль за единицу
     public $income_cliche; // прибыль ПФ
+    public $income_knife; // прибыль на нож
     public $total_weight_dirty; // общая масса с приладкой
     public $film_cost_per_unit; // Масса с приладкой на 1 кг
     public $film_waste_cost; // отходы, стоимость
@@ -1211,7 +1215,11 @@ class CalculationSelfAdhesive extends CalculationBase {
             $cliches_count_old, // Количество старых форм
             $extracharge, // Наценка на тираж
             $extracharge_cliche, // Наценка на ПФ
-            $customer_pays_for_cliche // Заказчик платит за ПФ
+            $customer_pays_for_cliche, // Заказчик платит за ПФ
+            $knife, // Стоимость ножа
+            $extracharge_knife, // Наценка на нож
+            $knife_in_price, // Нож включается в стоимость
+            $customer_pays_for_knife // Заказчик платит за нож
             ) {
         // Суммарный размер тиража
         $this->quantity = array_sum($quantities);
@@ -1446,6 +1454,9 @@ class CalculationSelfAdhesive extends CalculationBase {
             $this->extracharge_cliche = 0;
         }
         
+        // Наценка на нож
+        $this->extracharge_knife = $extracharge_knife;
+        
         //*********************************
         // ПРАВАЯ ПАНЕЛЬ
         //*********************************
@@ -1464,14 +1475,17 @@ class CalculationSelfAdhesive extends CalculationBase {
             $this->ink_expense += $this->ink_expenses[$i];
         }
         
-        // Себестоимость ПФ
-        $this->cliche_cost = $this->cliche_all_flint_price + $this->cliche_all_kodak_price;
-        
         // Себестоимость
         $this->cost = $this->film_cost + $this->work_cost + $this->ink_cost + ($this->cliche_cost * $this->ukpf);
         
         // Себестоимость за единицу
         $this->cost_per_unit = $this->cost / $this->quantity;
+        
+        // Себестоимость ПФ
+        $this->cliche_cost = $this->cliche_all_flint_price + $this->cliche_all_kodak_price;
+        
+        // Себестоимость ножа
+        $this->knife_cost = $knife;
         
         // Отгрузочная стоимость
         $this->shipping_cost = $this->cost + ($this->cost * $this->extracharge / 100);
@@ -1479,17 +1493,23 @@ class CalculationSelfAdhesive extends CalculationBase {
         // Отгрузочная стоимость за единицу
         $this->shipping_cost_per_unit = $this->shipping_cost / $this->quantity;
         
+        // Отгрузочная стоимость ПФ
+        $this->shipping_cliche_cost = ($this->cliche_cost + ($this->cliche_cost * $this->extracharge_cliche / 100)) * $this->ukcuspaypf * (($this->ukpf - 1) / -1);
+        
+        // Отгрузочная стоимость ножа
+        $this->shipping_knife_cost = $this->knife_cost + ($this->knife_cost * $this->extracharge_knife / 100);
+        
         // Прибыль
         $this->income = $this->shipping_cost - $this->cost;
         
         // Прибыль за единицу
         $this->income_per_unit = $this->shipping_cost_per_unit - $this->cost_per_unit;
         
-        // Отгрузочная стоимость ПФ
-        $this->shipping_cliche_cost = ($this->cliche_cost + ($this->cliche_cost * $this->extracharge_cliche / 100)) * $this->ukcuspaypf * (($this->ukpf - 1) / -1);
-        
         // Прибыль ПФ
         $this->income_cliche = ($this->shipping_cliche_cost - $this->cliche_cost) * (($this->ukpf - 1) / -1);
+        
+        // Прибыль на нож
+        $this->income_knife = $this->shipping_knife_cost - $this->knife_cost;
         
         // Масса плёнки с приладкой
         $this->total_weight_dirty = $this->weight_dirty;

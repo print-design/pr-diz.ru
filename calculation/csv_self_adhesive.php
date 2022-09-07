@@ -37,6 +37,11 @@ if($id !== null) {
     $extracharge_cliche = null; // Наценка на ПФ
     $customer_pays_for_cliche = null; // Заказчик платит за ПФ
     
+    $knife = null; // Стоимость ножа
+    $extracharge_knife = null; // Наценка на нож
+    $knife_in_price = null; // Включать нож в себестоимость
+    $customer_pays_for_knife = null; // Заказчик платит за нож
+    
     $sql = "select rc.date, rc.name, "
             . "f.name film, fv.thickness thickness, fv.weight density, "
             . "rc.film_variation_id, rc.price, rc.currency, rc.individual_film_name, rc.individual_thickness, rc.individual_density, "
@@ -47,7 +52,8 @@ if($id !== null) {
             . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
             . "rc.percent_1, rc.percent_2, rc.percent_3, rc.percent_4, rc.percent_5, rc.percent_6, rc.percent_7, rc.percent_8, "
             . "rc.cliche_1, rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8, "
-            . "rc.cliche_in_price, rc.cliches_count_flint, rc.cliches_count_kodak, rc.cliches_count_old, rc.extracharge, rc.extracharge_cliche, rc.customer_pays_for_cliche "
+            . "rc.cliche_in_price, rc.cliches_count_flint, rc.cliches_count_kodak, rc.cliches_count_old, rc.extracharge, rc.extracharge_cliche, rc.customer_pays_for_cliche, "
+            . "rc.knife, rc.extracharge_knife, rc.knife_in_price, rc.customer_pays_for_knife "
             . "from calculation rc "
             . "left join machine m on rc.machine_id = m.id "
             . "left join film_variation fv on rc.film_variation_id = fv.id "
@@ -96,6 +102,11 @@ if($id !== null) {
         $extracharge = $row['extracharge']; // Наценка на тираж
         $extracharge_cliche = $row['extracharge_cliche']; // Наценка на ПФ
         $customer_pays_for_cliche = $row['customer_pays_for_cliche']; // Заказчик платит на ПФ
+        
+        $knife = $row['knife']; // Стоимость ножа
+        $extracharge_knife = $row['extracharge_knife']; // Наценка на нож
+        $knife_in_price = $row['knife_in_price']; // Нож включен в себестоимость
+        $customer_pays_for_knife = $row['customer_pays_for_knife']; // Заказчик платит за нож
     }
     
     // Курсы валют
@@ -221,7 +232,12 @@ if($id !== null) {
                 $cliches_count_old, // Количество старых форм
                 $extracharge, // Наценка на тираж
                 $extracharge_cliche, // Наценка на ПФ
-                $customer_pays_for_cliche); // Заказчик платит за ПФ
+                $customer_pays_for_cliche,  // Заказчик платит за ПФ
+                
+                $knife, // Стоимость ножа
+                $extracharge_knife, // Наценка на нож
+                $knife_in_price, // Включать нож в себестоимость
+                $customer_pays_for_knife); // Заказчик платит за нож
         
         // Данные CSV-файла
         $file_data = array();
@@ -529,6 +545,7 @@ if($id !== null) {
         
         array_push($file_data, array("Наценка на тираж, %", CalculationBase::Display($calculation->extracharge, 2), "", ""));
         array_push($file_data, array("Наценка на ПФ, %", CalculationBase::Display($calculation->extracharge_cliche, 2), "", "Если УКПФ = 1, то наценка на ПФ всегда 0"));
+        array_push($file_data, array("Наценка на нож, %", CalculationBase::Display($calculation->extracharge_knife, 2), "", ""));
         array_push($file_data, array("", "", "", ""));
         
         //*******************************************
@@ -560,11 +577,6 @@ if($id !== null) {
             "|= ".$total_ink_expense_formula,
             "Сумма расход всех красок"));
         
-        array_push($file_data, array("Стоимость форм, руб",
-            CalculationBase::Display($calculation->cliche_cost, 2),
-            "|= ".CalculationBase::Display($calculation->cliche_all_flint_price, 2)." + ".CalculationBase::Display($calculation->cliche_all_kodak_price, 2),
-            "себестоимость всех форм Флинт + себестоимость всех форм Кодак"));
-        
         array_push($file_data, array("Себестоимость, руб",
             CalculationBase::Display($calculation->cost, 2),
             "|= ". CalculationBase::Display($calculation->film_cost, 2)." + ". CalculationBase::Display($calculation->work_cost, 2)." + ". CalculationBase::Display($calculation->ink_cost, 2)." + (". CalculationBase::Display($calculation->cliche_cost, 2)." * ". CalculationBase::Display($calculation->ukpf, 0).")",
@@ -575,6 +587,16 @@ if($id !== null) {
             "|= ". CalculationBase::Display($calculation->cost, 2)." / ". CalculationBase::Display($calculation->quantity, 2),
             "себестоимость / суммарное кол-во этикеток всех тиражей"));
         
+        array_push($file_data, array("Себестоимость форм, руб",
+            CalculationBase::Display($calculation->cliche_cost, 2),
+            "|= ".CalculationBase::Display($calculation->cliche_all_flint_price, 2)." + ".CalculationBase::Display($calculation->cliche_all_kodak_price, 2),
+            "себестоимость всех форм Флинт + себестоимость всех форм Кодак"));
+        
+        array_push($file_data, array("Себестоимость ножа, руб",
+            CalculationBase::Display($calculation->knife_cost, 2),
+            "|= ".CalculationBase::Display($knife, 2),
+            "вводится пользователем"));
+        
         array_push($file_data, array("Отгрузочная стоимость, руб",
             CalculationBase::Display($calculation->shipping_cost, 2),
             "|= ".CalculationBase::Display($calculation->cost, 1)." + (".CalculationBase::Display($calculation->cost, 2)." * ".CalculationBase::Display($calculation->extracharge, 2)." / 100)",
@@ -584,6 +606,16 @@ if($id !== null) {
             CalculationBase::Display($calculation->shipping_cost_per_unit, 2),
             "|= ".CalculationBase::Display($calculation->shipping_cost, 2)." / ".CalculationBase::Display($calculation->quantity, 0),
             "отгрузочная стоимость / суммарное кол-во этикеток всех тиражей"));
+        
+        array_push($file_data, array("Отгрузочная стоимость ПФ, руб",
+            CalculationBase::Display($calculation->shipping_cliche_cost, 2),
+            "|= (".CalculationBase::Display($calculation->cliche_cost, 2)." + (".CalculationBase::Display($calculation->cliche_cost, 2)." * ".CalculationBase::Display($calculation->extracharge_cliche, 2)." / 100)) * ((".$calculation->ukcuspaypf." - 1) / -1)",
+            "(сумма стоимости всех форм + (сумма стоимости всех форм * наценка на ПФ / 100)) * CusPayPF * ((КоэфПФ - 1) / -1)"));
+        
+        array_push($file_data, array("Отгрузочная стоимость ножа, руб",
+            CalculationBase::Display($calculation->shipping_knife_cost, 2),
+            "|= ".CalculationBase::Display($calculation->knife_cost, 2)." + (".CalculationBase::Display($calculation->knife_cost, 2)." * ".CalculationBase::Display($calculation->extracharge_knife, 2)." / 100)",
+            "себестоимость ножа + (себестоимость ножа * наценка на нож / 100)"));
             
         array_push($file_data, array("Прибыль, руб",
             CalculationBase::Display($calculation->income, 2),
@@ -594,16 +626,16 @@ if($id !== null) {
             CalculationBase::Display($calculation->income_per_unit, 2),
             "|= ".CalculationBase::Display($calculation->shipping_cost_per_unit, 2)." - ".CalculationBase::Display($calculation->cost_per_unit, 2),
             "отгрузочная стоимость за шт - себестоимость за шт"));
-            
-        array_push($file_data, array("Отгрузочная стоимость ПФ, руб",
-            CalculationBase::Display($calculation->shipping_cliche_cost, 2),
-            "|= (".CalculationBase::Display($calculation->cliche_cost, 2)." + (".CalculationBase::Display($calculation->cliche_cost, 2)." * ".CalculationBase::Display($calculation->extracharge_cliche, 2)." / 100)) * ((".$calculation->ukcuspaypf." - 1) / -1)",
-            "(сумма стоимости всех форм + (сумма стоимости всех форм * наценка на ПФ / 100)) * CusPayPF * ((КоэфПФ - 1) / -1)"));
         
         array_push($file_data, array("Прибыль ПФ, руб",
             CalculationBase::Display($calculation->income_cliche, 2),
             "|= (".CalculationBase::Display($calculation->shipping_cliche_cost, 2)." - ".CalculationBase::Display($calculation->cliche_cost, 2).") * ((".$calculation->ukpf." - 1) / -1)",
             "(отгрузочная стоимость ПФ - себестоимость ПФ) * ((КоэфПФ - 1) / -1)"));
+        
+        array_push($file_data, array("Прибыль на нож, руб",
+            CalculationBase::Display($calculation->income_knife, 2),
+            "|= ".CalculationBase::Display($calculation->shipping_knife_cost, 2)." - ".CalculationBase::Display($calculation->knife_cost, 2),
+            "отгрузочная стоимость ножа - себестоимость ножа"));
         
         array_push($file_data, array("Общий вес всех материала с приладкой, кг",
             CalculationBase::Display($calculation->total_weight_dirty, 2),
