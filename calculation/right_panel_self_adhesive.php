@@ -500,6 +500,28 @@ if(!empty($id)) {
             </form>
         </div>
         <?php endif; ?>
+        <div class="mr-4 p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px; margin-top: 25px;">
+            <div class="text-nowrap" style="font-size: x-small;">Наценка на нож</div>
+            <form>
+                <input type="hidden" name="id" value="<?=$id ?>" />
+                <div class="input-group">
+                    <input type="text" 
+                           id="extracharge_knife" 
+                           name="extracharge_knife" 
+                           style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
+                           value="<?=$extracharge_knife ?>" 
+                           required="required" 
+                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                           onmouseup="javascript: $(this).attr('id', 'extracharge_knife'); $(this).attr('name', 'extracharge_knife');" 
+                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
+                           onkeyup="javascript: $(this).attr('id', 'extracharge_knife'); $(this).attr('name', 'extracharge_knife');" 
+                           onfocusout="javascript: $(this).attr('id', 'extracharge_knife'); $(this).attr('name', 'extracharge_knife');"<?=DISABLED_ATTR ?> />
+                    <div class="input-group-append" style="height: 28px;">
+                        <span class="input-group-text">%</span>
+                    </div>
+                </div>
+            </form>
+        </div>
         <div class="mr-4" style="margin-top: 29px;">
             <div class="text-nowrap">Курс &#8364;</div>
             <div class="font-weight-bold" style="font-size: larger;"><?= number_format($euro, 2, ',', ' ') ?></div>

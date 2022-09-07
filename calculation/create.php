@@ -416,7 +416,7 @@ if(!empty($id)) {
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
             . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, c.cliche_1, "
             . "c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
-            . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old, extracharge, extracharge_cliche, customer_pays_for_cliche, knife, "
+            . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old, extracharge, extracharge_cliche, customer_pays_for_cliche, knife, extracharge_knife, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
             . "from calculation c where c.id = $id";
     $fetcher = new Fetcher($sql);
@@ -760,6 +760,11 @@ if(isset($row['extracharge'])) {
 $extracharge_cliche = null;
 if(isset($row['extracharge_cliche'])) {
     $extracharge_cliche = $row['extracharge_cliche'];
+}
+
+$extracharge_knife = null;
+if(isset($row['extracharge_knife'])) {
+    $extracharge_knife = $row['extracharge_knife'];
 }
 
 $customer_pays_for_cliche = filter_input(INPUT_POST, 'customer_pays_for_cliche');
@@ -3493,7 +3498,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             });
             
             // Скрытие расчёта при изменении значения полей
-            $("input[id!=extracharge][id!=extracharge_cliche][id!=input_shipping_cost_per_unit]").change(function () {
+            $("input[id!=extracharge][id!=extracharge_cliche][id!=extracharge_knife][id!=input_shipping_cost_per_unit]").change(function () {
                 HideCalculation();
             });
             
@@ -3501,7 +3506,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 HideCalculation();
             });
             
-            $("input[id!=extracharge][id!=extracharge_cliche][id!=input_shipping_cost_per_unit]").keydown(function () {
+            $("input[id!=extracharge][id!=extracharge_cliche][id!=extracharge_knife][id!=input_shipping_cost_per_unit]").keydown(function () {
                 HideCalculation();
             });
             
