@@ -1110,6 +1110,7 @@ class CalculationSelfAdhesive extends CalculationBase {
     public $quantity = 0; // Суммарное количество этикеток
     public $quantities_count = 0; // Количество тиражей
     public $ukpf, $ukcuspaypf; // Уравнивающий коэффициент ПФ, ЗаказчикПлатитЗаПФ
+    public $ukknife, $ukcuspayknife; // Уравнивающий коэффициент нож, ЗаказчикПлатитЗаНож
     
     public $width_mat = 0; // Ширина материала
     public $length_label_dirty = 0; // Высота этикетки грязная
@@ -1235,6 +1236,12 @@ class CalculationSelfAdhesive extends CalculationBase {
         
         // Уравнивающий коэффициент ЗаказчикПлатитЗаПФ: когда платит заказчик = 1, когда платим мы = 0
         $this->ukcuspaypf = $customer_pays_for_cliche == 1 ? 1 : 0;
+        
+        // Уравнивающий коэфф. нож (УКНОЖ)=0, когда нож не включен в стоимость, =1, когда нож включен в стоимость
+        $this->ukknife = $knife_in_price == 1 ? 1 : 0;
+        
+        // Уравнивающий коэфф. ЗаказчикПлатитЗаНож: когда платит заказчик = 1, когда платим мы = 0
+        $this->ukcuspayknife = $customer_pays_for_knife == 1 ? 1 : 0;
         
         // НИЖЕ НАЧИНАЕТСЯ ВЫЧИСЛЕНИЕ
         
@@ -1457,6 +1464,11 @@ class CalculationSelfAdhesive extends CalculationBase {
         // Наценка на нож
         $this->extracharge_knife = $extracharge_knife;
         
+        // Если УКНОЖ = 1, то наценка на нож всегда 0
+        if($this->ukknife == 1) {
+            $this->extracharge_knife = 0;
+        }
+        
         //*********************************
         // ПРАВАЯ ПАНЕЛЬ
         //*********************************
@@ -1476,7 +1488,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         }
         
         // Себестоимость
-        $this->cost = $this->film_cost + $this->work_cost + $this->ink_cost + ($this->cliche_cost * $this->ukpf);
+        $this->cost = $this->film_cost + $this->work_cost + $this->ink_cost + ($this->cliche_cost * $this->ukpf) + ($this->knife_cost * $this->ukknife);
         
         // Себестоимость за единицу
         $this->cost_per_unit = $this->cost / $this->quantity;
@@ -1497,7 +1509,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->shipping_cliche_cost = ($this->cliche_cost + ($this->cliche_cost * $this->extracharge_cliche / 100)) * $this->ukcuspaypf * (($this->ukpf - 1) / -1);
         
         // Отгрузочная стоимость ножа
-        $this->shipping_knife_cost = $this->knife_cost + ($this->knife_cost * $this->extracharge_knife / 100);
+        $this->shipping_knife_cost = ($this->knife_cost + ($this->knife_cost * $this->extracharge_knife / 100)) * $this->ukcuspayknife * (($this->ukknife - 1) / -1);
         
         // Прибыль
         $this->income = $this->shipping_cost - $this->cost;
@@ -1509,7 +1521,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->income_cliche = ($this->shipping_cliche_cost - $this->cliche_cost) * (($this->ukpf - 1) / -1);
         
         // Прибыль на нож
-        $this->income_knife = $this->shipping_knife_cost - $this->knife_cost;
+        $this->income_knife = ($this->shipping_knife_cost - $this->knife_cost) * (($this->ukknife - 1) / -1);
         
         // Масса плёнки с приладкой
         $this->total_weight_dirty = $this->weight_dirty;
