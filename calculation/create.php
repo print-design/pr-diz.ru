@@ -2233,7 +2233,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <div class="form-check">
                                         <label class="form-check-label text-nowrap" style="line-height: 25px;">
                                             <?php
-                                            $checked = $customer_pays_for_cliche == 1 ? " checked='checked'" : "";
+                                            $checked = $customer_pays_for_cliche == 1 || $customer_pays_for_cliche === null ? " checked='checked'" : "";
                                             ?>
                                             <input type="checkbox" class="form-check-input" id="customer_pays_for_cliche" name="customer_pays_for_cliche" value="on"<?=$checked ?> onchange="javascript: if(!$(this).is(':checked')) { $('#cliche_in_price').prop('checked', false); }" />Заказчик платит за ПФ
                                         </label>
@@ -2270,7 +2270,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <div class="form-check">
                                         <label class="form-check-label text-nowrap" style="line-height: 25px;">
                                             <?php
-                                            $checked = $customer_pays_for_knife == 1 ? " checked='checked'" : "";
+                                            $checked = $customer_pays_for_knife == 1 || $customer_pays_for_knife === null ? " checked='checked'" : "";
                                             ?>
                                             <input type="checkbox" class="form-check-input" id="customer_pays_for_knife" name="customer_pays_for_knife" value="on"<?=$checked ?> onchange="javascript: if(!$(this).is(':checked')) { $('#knife_in_price').prop('checked', false); }" />Заказчик платит за нож
                                         </label>
