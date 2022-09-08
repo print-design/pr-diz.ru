@@ -609,12 +609,12 @@ if($id !== null) {
         
         array_push($file_data, array("Отгрузочная стоимость ПФ, руб",
             CalculationBase::Display($calculation->shipping_cliche_cost, 2),
-            "|= (".CalculationBase::Display($calculation->cliche_cost, 2)." + (".CalculationBase::Display($calculation->cliche_cost, 2)." * ".CalculationBase::Display($calculation->extracharge_cliche, 2)." / 100)) * ".$calculation->ukcuspaypf." * ((".$calculation->ukcuspaypf." - 1) / -1)",
+            "|= (".CalculationBase::Display($calculation->cliche_cost, 2)." + (".CalculationBase::Display($calculation->cliche_cost, 2)." * ".CalculationBase::Display($calculation->extracharge_cliche, 2)." / 100)) * ".$calculation->ukcuspaypf." * ((".$calculation->ukpf." - 1) / -1)",
             "(сумма стоимости всех форм + (сумма стоимости всех форм * наценка на ПФ / 100)) * CusPayPF * ((КоэфПФ - 1) / -1)"));
         
         array_push($file_data, array("Отгрузочная стоимость ножа, руб",
             CalculationBase::Display($calculation->shipping_knife_cost, 2),
-            "|= (".CalculationBase::Display($calculation->knife_cost, 2)." + (".CalculationBase::Display($calculation->knife_cost, 2)." * ".CalculationBase::Display($calculation->extracharge_knife, 2)." / 100)) * ".$calculation->ukcuspayknife." * ((".$calculation->ukcuspayknife." - 1) / -1)",
+            "|= (".CalculationBase::Display($calculation->knife_cost, 2)." + (".CalculationBase::Display($calculation->knife_cost, 2)." * ".CalculationBase::Display($calculation->extracharge_knife, 2)." / 100)) * ".$calculation->ukcuspayknife." * ((".$calculation->ukknife." - 1) / -1)",
             "(себестоимость ножа + (себестоимость ножа * наценка на нож / 100)) * CusPayKnife * ((КоэфНож - 1) / -1)"));
             
         array_push($file_data, array("Прибыль, руб",
