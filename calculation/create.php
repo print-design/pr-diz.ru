@@ -344,7 +344,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $cliches_count_old = filter_input(INPUT_POST, 'cliches_count_old'); if($cliches_count_old === null) $cliches_count_old = "NULL";
         $customer_pays_for_cliche = 0; if(filter_input(INPUT_POST, 'customer_pays_for_cliche') == 'on') $customer_pays_for_cliche = 1;
         
-        $knife = filter_input(INPUT_POST, 'knife'); if($knife === null || $knife === '') $knife = "NULL";
+        $knife = filter_input(INPUT_POST, 'knife'); if(empty($knife)) $knife = 0;
         $knife_in_price = 0; if(filter_input(INPUT_POST, 'knife_in_price') == 'on') $knife_in_price = 1;
         $customer_pays_for_knife = 0; if(filter_input(INPUT_POST, 'customer_pays_for_knife') == 'on') $customer_pays_for_knife = 1;
         
