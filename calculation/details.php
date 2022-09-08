@@ -11,7 +11,7 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
 // Атрибут "поле неактивно"
 const DISABLED_ATTR = "";
 
-// Редактирование включения форм в стоимость
+// Редактирование включения ПФ в стоимость
 if(null !== filter_input(INPUT_POST, 'cliche_in_price_submit')) {
     $cliche_in_price = 0; if(filter_input(INPUT_POST, 'cliche_in_price') == 'on') $cliche_in_price = 1;
     $id = filter_input(INPUT_POST, 'id');
@@ -46,6 +46,52 @@ if(null !== filter_input(INPUT_POST, 'customer_pays_for_cliche_submit')) {
     // Если заказчик не платит за ПФ, то ПФ не включены в себестоимость
     if(empty($error_message) && $customer_pays_for_cliche == 0) {
         $sql = "update calculation set cliche_in_price = 0 where id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
+    if(empty($error_message)) {
+        $sql = "delete from calculation_result where calculation_id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+}
+
+// Редактирование включения ножа в стоимость
+if(null !== filter_input(INPUT_POST, 'knife_in_price_submit')) {
+    $knife_in_price = 0; if(filter_input(INPUT_POST, 'knife_in_price') == 'on') $knife_in_price = 1;
+    $id = filter_input(INPUT_POST, 'id');
+    
+    $sql = "update calculation set knife_in_price = $knife_in_price where id = $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    // Если нож включены в себестоимость, то заказчик всегда платит за нож
+    if(empty($error_message) && $knife_in_price == 1) {
+        $sql = "update calculation set customer_pays_for_knife = 1 where id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
+    if(empty($error_message)) {
+        $sql = "delete from calculation_result where calculation_id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+}
+
+// Редактирование стороны, которая платит за нож
+if(null !== filter_input(INPUT_POST, 'customer_pays_for_knife_submit')) {
+    $customer_pays_for_knife = 0; if(filter_input(INPUT_POST, 'customer_pays_for_knife') == 'on') $customer_pays_for_knife = 1;
+    $id = filter_input(INPUT_POST, 'id');
+    
+    $sql = "update calculation set customer_pays_for_knife = $customer_pays_for_knife where id = $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    // Если заказчик не платит за нож, то нож не включены в себестоимость
+    if(empty($error_message) && $customer_pays_for_knife == 0) {
+        $sql = "update calculation set knife_in_price = 0 where id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
