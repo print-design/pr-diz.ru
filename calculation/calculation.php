@@ -1061,6 +1061,12 @@ class Calculation extends CalculationBase {
             $this->cliche_cost += $this->cliche_costs[$i];
         }
         
+        // Отгрузочная стоимость ПФ
+        $this->shipping_cliche_cost = ($this->cliche_cost + ($this->cliche_cost * $this->extracharge_cliche / 100)) * $this->ukcuspaypf * (($this->ukpf - 1) / -1);
+        
+        // Прибыль ПФ
+        $this->income_cliche = ($this->shipping_cliche_cost - $this->cliche_cost) * (($this->ukpf - 1) / -1);
+        
         // Себестоимость
         $this->cost = $this->film_cost + $this->work_cost + $this->ink_cost + $this->glue_cost + ($this->cliche_cost * $this->ukpf);
         
@@ -1079,11 +1085,6 @@ class Calculation extends CalculationBase {
         // Прибыль за единицу
         $this->income_per_unit = $this->shipping_cost_per_unit - $this->cost_per_unit;
         
-        // Отгрузочная стоимость ПФ
-        $this->shipping_cliche_cost = ($this->cliche_cost + ($this->cliche_cost * $this->extracharge_cliche / 100)) * $this->ukcuspaypf * (($this->ukpf - 1) / -1);
-        
-        // Прибыль ПФ
-        $this->income_cliche = ($this->shipping_cliche_cost - $this->cliche_cost) * (($this->ukpf - 1) / -1);
         
         // Масса плёнки с приладкой
         $this->total_weight_dirty = $this->weight_dirty_1 + $this->weight_dirty_2 + $this->weight_dirty_3;
@@ -1487,17 +1488,29 @@ class CalculationSelfAdhesive extends CalculationBase {
             $this->ink_expense += $this->ink_expenses[$i];
         }
         
+        // Себестоимость ПФ
+        $this->cliche_cost = $this->cliche_all_flint_price + $this->cliche_all_kodak_price;
+        
+        // Отгрузочная стоимость ПФ
+        $this->shipping_cliche_cost = ($this->cliche_cost + ($this->cliche_cost * $this->extracharge_cliche / 100)) * $this->ukcuspaypf * (($this->ukpf - 1) / -1);
+        
+        // Прибыль ПФ
+        $this->income_cliche = ($this->shipping_cliche_cost - $this->cliche_cost) * (($this->ukpf - 1) / -1);
+        
+        // Себестоимость ножа
+        $this->knife_cost = $knife;
+        
+        // Отгрузочная стоимость ножа
+        $this->shipping_knife_cost = ($this->knife_cost + ($this->knife_cost * $this->extracharge_knife / 100)) * $this->ukcuspayknife * (($this->ukknife - 1) / -1);
+        
+        // Прибыль на нож
+        $this->income_knife = ($this->shipping_knife_cost - $this->knife_cost) * (($this->ukknife - 1) / -1);
+        
         // Себестоимость
         $this->cost = $this->film_cost + $this->work_cost + $this->ink_cost + ($this->cliche_cost * $this->ukpf) + ($this->knife_cost * $this->ukknife);
         
         // Себестоимость за единицу
         $this->cost_per_unit = $this->cost / $this->quantity;
-        
-        // Себестоимость ПФ
-        $this->cliche_cost = $this->cliche_all_flint_price + $this->cliche_all_kodak_price;
-        
-        // Себестоимость ножа
-        $this->knife_cost = $knife;
         
         // Отгрузочная стоимость
         $this->shipping_cost = $this->cost + ($this->cost * $this->extracharge / 100);
@@ -1505,23 +1518,12 @@ class CalculationSelfAdhesive extends CalculationBase {
         // Отгрузочная стоимость за единицу
         $this->shipping_cost_per_unit = $this->shipping_cost / $this->quantity;
         
-        // Отгрузочная стоимость ПФ
-        $this->shipping_cliche_cost = ($this->cliche_cost + ($this->cliche_cost * $this->extracharge_cliche / 100)) * $this->ukcuspaypf * (($this->ukpf - 1) / -1);
-        
-        // Отгрузочная стоимость ножа
-        $this->shipping_knife_cost = ($this->knife_cost + ($this->knife_cost * $this->extracharge_knife / 100)) * $this->ukcuspayknife * (($this->ukknife - 1) / -1);
-        
         // Прибыль
         $this->income = $this->shipping_cost - $this->cost;
         
         // Прибыль за единицу
         $this->income_per_unit = $this->shipping_cost_per_unit - $this->cost_per_unit;
         
-        // Прибыль ПФ
-        $this->income_cliche = ($this->shipping_cliche_cost - $this->cliche_cost) * (($this->ukpf - 1) / -1);
-        
-        // Прибыль на нож
-        $this->income_knife = ($this->shipping_knife_cost - $this->knife_cost) * (($this->ukknife - 1) / -1);
         
         // Масса плёнки с приладкой
         $this->total_weight_dirty = $this->weight_dirty;
