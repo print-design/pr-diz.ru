@@ -21,7 +21,7 @@ include './database_chinese.php';
             </div>
             <hr />
             <?php
-            $sql = "select word, transcription, translation from words limit 1";
+            $sql = "select word, transcription, translation from words order by rand() limit 1";
             $fetcher = new FetcherChinese($sql);
             if($row = $fetcher->Fetch()):
             ?>
