@@ -1,5 +1,4 @@
 <?php
-include 'database_grafik.php';
 include 'GrafikDateReadonly.php';
 
 class GrafikTimetableReadonly {
