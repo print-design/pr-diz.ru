@@ -22,7 +22,7 @@
                 <a class="nav-link<?=$personal_status ?>" href="<?=APPLICATION ?>/grafik/personal/">Мои настройки</a>
             </li>
             <?php
-            if(IsInRole('admin')):
+            if(IsInRole('technologist', 'manager-senior')):
             $user_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/grafik/user/index.php' ? ' disabled' : '';
             $machine_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/grafik/machine/index.php' ? ' disabled' : '';
             $lamination_status = filter_input(INPUT_SERVER, 'PHP_SELF') == APPLICATION.'/grafik/lamination/index.php' ? ' disabled' : '';

@@ -36,7 +36,7 @@ class GrafikEdition {
             $disabled = '';
         }
         
-        $is_admin = IsInRole('admin');
+        $is_admin = IsInRole('technologist', 'manager-senior');
         
         include 'grafik_edition.php';
     }

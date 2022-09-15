@@ -46,7 +46,7 @@ $error_message = $timetable->error_message;
             ?>
         </div>
         <?php
-        include 'include/footer.php';
+        include '../include/footer_grafik.php';
         ?>
         <script>
             // Подтверждение удаления

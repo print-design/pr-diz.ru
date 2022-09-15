@@ -79,7 +79,7 @@ while($row = $fetcher->Fetch()) {
             <?php endif; ?>
         </div>
         <?php
-        include 'include/footer.php';
+        include '../include/footer_grafik.php';
         ?>
     </body>
 </html>

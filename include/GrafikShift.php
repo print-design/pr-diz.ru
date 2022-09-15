@@ -28,7 +28,7 @@ class GrafikShift {
                 $top = 'top';
             }
             
-            $is_admin = IsInRole('admin');
+            $is_admin = IsInRole('technologist', 'manager-senior');
             
             include 'grafik_shift.php';
         }

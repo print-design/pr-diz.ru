@@ -48,28 +48,28 @@ class GrafikTimetable {
         }
         
         // Список работников №1
-        if(IsInRole('admin') && $this->user1Name != '') {
+        if(IsInRole('technologist', 'manager-senior') && $this->user1Name != '') {
             $this->users1 = (new GrabberGrafik('select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where quit = 0 and ur.role_id = '. $this->userRole.' order by u.fio'))->result;
         }
         
         // Список работников №2
-        if(IsInRole('admin') && $this->user2Name != '') {
+        if(IsInRole('technologist', 'manager-senior') && $this->user2Name != '') {
             $this->users2 = (new GrabberGrafik('select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where quit = 0 and ur.role_id = '. $this->userRole.' order by u.fio'))->result;
         }
         
         // Список статусов
-        if(IsInRole('admin')) {
+        if(IsInRole('technologist', 'manager-senior')) {
             $this->statuses = (new GrabberGrafik("select id, name from edition_status order by name"))->result;
         }
         
         // Список валов
-        if(IsInRole('admin')) {
+        if(IsInRole('technologist', 'manager-senior')) {
             $machine_id = $this->machineId;
             $this->rollers = (new GrabberGrafik("select id, name from roller where machine_id=$machine_id order by position, name"))->result;
         }
         
         // Список ламинаций
-        if(IsInRole('admin')) {
+        if(IsInRole('technologist', 'manager-senior')) {
             $sql = "select id, name from lamination where common = 1 order by sort";
             if($this->isCutter) {
                 $sql = "select id, name from lamination where cutter = 1 order by sort";
@@ -78,7 +78,7 @@ class GrafikTimetable {
         }
         
         // Список менеджеров
-        if(IsInRole('admin')) {
+        if(IsInRole('technologist', 'manager-senior')) {
             $this->managers = (new GrabberGrafik("select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where ur.role_id = 2 order by u.fio"))->result;
         }
         

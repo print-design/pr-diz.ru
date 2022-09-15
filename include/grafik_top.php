@@ -3,7 +3,7 @@
         <h1><?= $this->name ?></h1>
     </div>
     <div class="p-1">
-        <?php if(IsInRole('admin')): ?>
+        <?php if(IsInRole('technologist', 'manager-senior')): ?>
         <div class="d-flex justify-content-end mb-auto">
             <div class="p-1">
                 <form class="form-inline">
