@@ -1,5 +1,5 @@
 <?php
-include 'include/topscripts.php';
+include '../include/topscripts.php';
 
 const ALLOW_EDIT = 'allow_edit';
 
@@ -11,12 +11,12 @@ if(null !== filter_input(INPUT_POST, 'settings_submit')) {
     }
     
     $sql = "delete from settings where name = '".ALLOW_EDIT."'";
-    $executer = new Executer($sql);
+    $executer = new ExecuterGrafik($sql);
     $error_message = $executer->error;
     
     if(empty($error_message)) {
         $sql = "insert into settings (name, bool_value) values ('".ALLOW_EDIT."', $allow_edit)";
-        $executer = new Executer($sql);
+        $executer = new ExecuterGrafik($sql);
         $error_message = $executer->error;
     }
 }
@@ -25,7 +25,7 @@ if(null !== filter_input(INPUT_POST, 'settings_submit')) {
 $allow_edit = 0;
 
 $sql = "select name, bool_value from settings";
-$fetcher = new Fetcher($sql);
+$fetcher = new FetcherGrafik($sql);
 while($row = $fetcher->Fetch()) {
     if($row['name'] == ALLOW_EDIT) {
         $allow_edit = $row['bool_value'];
@@ -36,13 +36,18 @@ while($row = $fetcher->Fetch()) {
 <html>
     <head>
         <?php
-        include 'include/head.php';
+        include '../include/head.php';
         ?>
+        <style>
+            body {
+                padding-left: 0;
+            }
+        </style>
     </head>
     <body>
         <?php
         // put your code here
-        include 'include/header.php';
+        include '../include/header_grafik.php';
         ?>
         <div class="container-fluid">
             <?php

@@ -1,7 +1,11 @@
 <?php
-include 'include/topscripts.php';
-include 'include/restrict_logged_in.php';
-include 'include/GrafikTimetable.php';
+include '../include/topscripts.php';
+include '../include/GrafikTimetable.php';
+
+// Авторизация
+if(!LoggedIn()) {
+    header('Location: '.APPLICATION.'/unauthorized.php');
+}
 
 // Если не указан параметр id, переводим на начальную страницу
 if(empty(filter_input(INPUT_GET, 'id'))) {
@@ -20,12 +24,17 @@ $error_message = $timetable->error_message;
     <head>
         <title>График - <?=$timetable->name ?></title>
         <?php
-        include 'include/head.php';
+        include '../include/head.php';
         ?>
+        <style>
+            body {
+                padding-left: 0;
+            }
+        </style>
     </head>
     <body>
         <?php
-        include 'include/header.php';
+        include '../include/header_grafik.php';
         ?>
         <div style="position: fixed; top: 0; left: 0; z-index: 1000;" id="waiting"></div>
         <div class="container-fluid" id="maincontent">

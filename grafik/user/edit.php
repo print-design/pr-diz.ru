@@ -1,6 +1,10 @@
 <?php
 include '../include/topscripts.php';
-include '../include/restrict_admin.php';
+
+// Авторизация
+if(!IsInRole('admin')) {
+    header('Location: '.APPLICATION.'/unauthorized.php');
+}
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -67,6 +71,11 @@ if ($row = (new Fetcher("select fio, quit, username from user where id=$id"))->F
         <?php
         include '../include/head.php';
         ?>
+        <style>
+            body {
+                padding-left: 0;
+            }
+        </style>
     </head>
     <body>
         <?php

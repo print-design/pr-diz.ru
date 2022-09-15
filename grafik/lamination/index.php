@@ -1,12 +1,16 @@
 <?php
 include '../include/topscripts.php';
+
+// Авторизация
+if(!IsInRole('admin')) {
+    header('Location: '.APPLICATION.'/unauthorized.php');
+}
 ?>
 <!DOCTYPE html>
 <html>
     <head>
         <?php
         include '../include/head.php';
-        include '../include/restrict_admin.php';
         
         // Валидация формы
         define('ISINVALID', ' is-invalid');
@@ -49,6 +53,11 @@ include '../include/topscripts.php';
         include '../include/header.php';
         include '../include/pager_top.php';
         ?>
+        <style>
+            body {
+                padding-left: 0;
+            }
+        </style>
         <div class="container-fluid">
             <?php
             if(isset($error_message) && $error_message != '') {

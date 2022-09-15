@@ -1,6 +1,5 @@
 <?php
 include '../include/topscripts.php';
-include '../include/restrict_logged_in.php';
 include '../include/GrafikTimetable.php';
 
 $date_from = null;

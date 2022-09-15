@@ -1,6 +1,10 @@
 <?php
 include '../include/topscripts.php';
-include '../include/restrict_admin.php';
+
+// Авторизация
+if(!IsInRole('admin')) {
+    header('Location: '.APPLICATION.'/unauthorized.php');
+}
         
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -75,6 +79,11 @@ $rollers_count = $row['rollers_count'];
         <?php
         include '../include/head.php';
         ?>
+        <style>
+            body {
+                padding-left: 0;
+            }
+        </style>
     </head>
     <body>
         <?php

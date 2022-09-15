@@ -1,6 +1,10 @@
 <?php
 include '../include/topscripts.php';
-include '../include/restrict_logged_in.php';
+
+// Авторизация
+if(!LoggedIn()) {
+    header('Location: '.APPLICATION.'/unauthorized.php');
+}
         
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -53,6 +57,11 @@ if($password_change_submit !== null) {
         <?php
         include '../include/head.php';
         ?>
+        <style>
+            body {
+                padding-left: 0;
+            }
+        </style>
     </head>
     <body>
         <?php

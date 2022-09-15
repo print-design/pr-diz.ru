@@ -1,6 +1,10 @@
 <?php
 include '../include/topscripts.php';
-include '../include/restrict_admin.php';
+
+// Авторизация
+if(!IsInRole('admin')) {
+    header('Location: '.APPLICATION.'/unauthorized.php');
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -8,6 +12,11 @@ include '../include/restrict_admin.php';
         <?php
         include '../include/head.php';
         ?>
+        <style>
+            body {
+                padding-left: 0;
+            }
+        </style>
     </head>
     <body>
         <?php

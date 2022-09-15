@@ -8,7 +8,7 @@ class GrafikTimetable {
         $this->machineId = $machine_id;
         
         $sql = "select name, user1_name, user2_name, role_id, has_edition, has_organization, has_length, has_status, has_roller, has_lamination, has_coloring, coloring, has_manager, has_comment, is_cutter from machine where id = $machine_id";
-        $fetcher = new Fetcher($sql);
+        $fetcher = new FetcherGrafik($sql);
         $this->error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
@@ -32,7 +32,7 @@ class GrafikTimetable {
         // Смотрим настройки
         $this->allow_edit = 0;    
         $sql = "select name, bool_value from settings";
-        $fetcher = new Fetcher($sql);
+        $fetcher = new FetcherGrafik($sql);
         while($row = $fetcher->Fetch()) {
             if($row['name'] == "allow_edit") {
                 $this->allow_edit = $row['bool_value'];
@@ -42,30 +42,30 @@ class GrafikTimetable {
         // Проверяем, имеется ли что-нибудь в буфере обмена
         $this->clipboard_db = false;
         $sql = "select count(id) from clipboard";
-        $row = (new Fetcher($sql))->Fetch();
+        $row = (new FetcherGrafik($sql))->Fetch();
         if($row[0] > 0) {
             $this->clipboard_db = true;
         }
         
         // Список работников №1
         if(IsInRole('admin') && $this->user1Name != '') {
-            $this->users1 = (new Grabber('select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where quit = 0 and ur.role_id = '. $this->userRole.' order by u.fio'))->result;
+            $this->users1 = (new GrabberGrafik('select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where quit = 0 and ur.role_id = '. $this->userRole.' order by u.fio'))->result;
         }
         
         // Список работников №2
         if(IsInRole('admin') && $this->user2Name != '') {
-            $this->users2 = (new Grabber('select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where quit = 0 and ur.role_id = '. $this->userRole.' order by u.fio'))->result;
+            $this->users2 = (new GrabberGrafik('select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where quit = 0 and ur.role_id = '. $this->userRole.' order by u.fio'))->result;
         }
         
         // Список статусов
         if(IsInRole('admin')) {
-            $this->statuses = (new Grabber("select id, name from edition_status order by name"))->result;
+            $this->statuses = (new GrabberGrafik("select id, name from edition_status order by name"))->result;
         }
         
         // Список валов
         if(IsInRole('admin')) {
             $machine_id = $this->machineId;
-            $this->rollers = (new Grabber("select id, name from roller where machine_id=$machine_id order by position, name"))->result;
+            $this->rollers = (new GrabberGrafik("select id, name from roller where machine_id=$machine_id order by position, name"))->result;
         }
         
         // Список ламинаций
@@ -74,12 +74,12 @@ class GrafikTimetable {
             if($this->isCutter) {
                 $sql = "select id, name from lamination where cutter = 1 order by sort";
             }
-            $this->laminations = (new Grabber($sql))->result;
+            $this->laminations = (new GrabberGrafik($sql))->result;
         }
         
         // Список менеджеров
         if(IsInRole('admin')) {
-            $this->managers = (new Grabber("select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where ur.role_id = 2 order by u.fio"))->result;
+            $this->managers = (new GrabberGrafik("select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where ur.role_id = 2 order by u.fio"))->result;
         }
         
         // Список рабочих смен
@@ -90,7 +90,7 @@ class GrafikTimetable {
                 . "left join user u1 on ws.user1_id = u1.id "
                 . "left join user u2 on ws.user2_id = u2.id "
                 . "where ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."' and ws.machine_id = ". $this->machineId;
-        $fetcher = new Fetcher($sql);
+        $fetcher = new FetcherGrafik($sql);
         
         while ($item = $fetcher->Fetch()) {
             $all[$item['date'].$item['shift']] = $item;
@@ -111,7 +111,7 @@ class GrafikTimetable {
                 . "inner join workshift ws on e.workshift_id = ws.id "
                 . "where ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."' and ws.machine_id = ". $this->machineId." order by e.position";
         
-        $fetcher = new Fetcher($sql);
+        $fetcher = new FetcherGrafik($sql);
         
         while ($item = $fetcher->Fetch()) {
             if(!array_key_exists($item['date'], $all_editions) || !array_key_exists($item['shift'], $all_editions[$item['date']])) {

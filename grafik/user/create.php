@@ -1,6 +1,10 @@
 <?php
 include '../include/topscripts.php';
-include '../include/restrict_admin.php';
+
+// Авторизация
+if(!IsInRole('admin')) {
+    header('Location: '.APPLICATION.'/unauthorized.php');
+}
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -58,6 +62,11 @@ if($user_create_submit !== null) {
         <?php
         include '../include/header.php';
         ?>
+        <style>
+            body {
+                padding-left: 0;
+            }
+        </style>
         <div class="container-fluid">
             <?php
             if(isset($error_message) && $error_message != '') {

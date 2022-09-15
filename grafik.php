@@ -28,7 +28,7 @@ $error_message = $grafik_machine->error_message;
     </head>
     <body>
         <?php
-        include 'include/header_grafik.php';
+        include 'include/header_grafik_readonly.php';
         ?>
         <div style="position: fixed; top: 100px; left: 100px; z-index: 1000;" id="waiting"></div>
         <div class="container-fluid" id="maincontent">

@@ -1,6 +1,10 @@
 <?php
 include '../include/topscripts.php';
-include '../include/restrict_admin.php';
+
+// Авторизация
+if(!IsInRole('admin')) {
+    header('Location: '.APPLICATION.'/unauthorized.php');
+}
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -88,6 +92,11 @@ $myroles = (new Grabber("select ur.user_id, ur.role_id, r.local_name from role r
         <?php
         include '../include/head.php';
         ?>
+        <style>
+            body {
+                padding-left: 0;
+            }
+        </style>
     </head>
     <body>
         <?php

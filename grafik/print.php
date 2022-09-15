@@ -40,8 +40,13 @@ else {
         <?php
         include 'include/head.php';
         ?>
+        <style>
+            body {
+                padding-left: 0;
+            }
+        </style>
     </head>
-    <body class="print">
+    <body>
         <div class="container-fluid">
             <?php
             if(isset($error_message) && $error_message != '') {
