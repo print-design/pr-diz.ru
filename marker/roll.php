@@ -17,7 +17,6 @@ define('ISINVALID', ' is-invalid');
 $form_valid = true;
 $error_message = '';
 
-$supplier_id_valid = '';
 $film_id_valid = '';
 $film_variation_id_valid = '';
 $width_valid = '';
@@ -25,12 +24,6 @@ $radius_valid = '';
 $cell_valid = '';
 
 if(null !== filter_input(INPUT_POST, 'create-submit')) {
-    $supplier_id = filter_input(INPUT_POST, 'supplier_id');
-    if(empty($supplier_id)) {
-        $supplier_id_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
     $film_id = filter_input(INPUT_POST, 'film_id');
     if(empty($film_id)) {
         $film_id_valid = ISINVALID;
@@ -77,6 +70,23 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
     $comment = '';
     $storekeeper_id = $user_id;
     $status_id = FREE_ROLL_STATUS_ID;
+    
+    // Выбираем рандомного поставщика для данного типа плёнки
+    $supplier_id = null;
+    
+    if(!empty($film_variation_id)) {
+        $sql = "select supplier_id from supplier_film_variation where film_variation_id = $film_variation_id order by rand() limit 1";
+        $fetcher = new Fetcher($sql);
+        
+        if($row = $fetcher->Fetch()) {
+            $supplier_id = $row[0];
+        }
+    }
+    
+    if(empty($supplier_id)) {
+        $error_message = "Ошибка при определении поставщика для плёнки";
+        $form_valid = false;
+    }
     
     if($form_valid) {    
         $sql = "insert into roll (supplier_id, id_from_supplier, film_variation_id, width, length, net_weight, cell, comment, storekeeper_id) "
@@ -134,36 +144,17 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
                         <input type="hidden" id="length" name="length" />
                         <input type="hidden" id="net_weight" name="net_weight" />
                         <div class="form-group">
-                            <label for="supplier_id">Поставщик</label>
-                            <select class="form-control<?=$supplier_id_valid ?>" id="supplier_id" name="supplier_id" required="required">
-                                <option value="" hidden="hidden">Выберите поставщика</option>
-                                <?php
-                                $suppliers = (new Grabber("select id, name from supplier order by name"))->result;
-                                foreach($suppliers as $supplier) {
-                                    $id = $supplier['id'];
-                                    $name = $supplier['name'];
-                                    $selected = '';
-                                    if(filter_input(INPUT_POST, 'supplier_id') == $supplier['id']) $selected = " selected='selected'";
-                                    echo "<option value='$id'$selected>$name</option>";
-                                }
-                                ?>
-                            </select>
-                            <div class="invalid-feedback">Поставщик обязательно</div>
-                        </div>
-                        <div class="form-group">
                             <label for="film_id">Марка плёнки</label>
                             <select class="form-control<?=$film_id_valid ?>" id="film_id" name="film_id" required="required">
                                 <option value="" hidden="hidden">Выберите марку</option>
                                 <?php
-                                if(!empty(filter_input(INPUT_POST, 'supplier_id'))) {
-                                    $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id ".filter_input(INPUT_POST, 'supplier_id')."))"))->result;
-                                    foreach($films as $film) {
-                                        $id = $film['id'];
-                                        $name = $film['name'];
-                                        $selected = '';
-                                        if(filter_input(INPUT_POST, 'film_id') == $id) $selected = " selected='selected'";
-                                        echo "<option value='$id'$selected>$name</option>";
-                                    }
+                                $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation)) order by name"))->result;
+                                foreach($films as $film) {
+                                    $id = $film['id'];
+                                    $name = $film['name'];
+                                    $selected = '';
+                                    if(filter_input(INPUT_POST, 'film_id') == $id) $selected = " selected='selected'";
+                                    echo "<option value='$id'$selected>$name</option>";
                                 }
                                 ?>
                             </select>
@@ -174,8 +165,8 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
                             <select class="form-control<?=$film_variation_id_valid ?>" id="film_variation_id" name="film_variation_id" required="required">
                                 <option value="" hidden="hidden">Выберите толщину</option>
                                 <?php
-                                if(!empty(filter_input(INPUT_POST, 'supplier_id')) && !empty(filter_input(INPUT_POST, 'film_id'))) {
-                                    $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = ".filter_input(INPUT_POST, 'film_id')." and id in (select film_variation_id from supplier_film_variation where supplier_id = ".filter_input(INPUT_POST, 'supplier_id').") order by thickness"))->result;
+                                if(!empty(filter_input(INPUT_POST, 'film_id'))) {
+                                    $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = ".filter_input(INPUT_POST, 'film_id')." and id in (select film_variation_id from supplier_film_variation) order by thickness"))->result;
                                     foreach($film_variations as $film_variation) {
                                         $id = $film_variation['id'];
                                         $thickness = $film_variation['thickness'];
@@ -213,12 +204,12 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
                                 ?>
                                 <div class="form-check-inline">
                                     <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" id="spool" name="spool" value="76"<?=$checked76 ?> />76 мм
+                                        <input type="radio" class="form-check-input spool" id="spool_76" name="spool" value="76"<?=$checked76 ?> />76 мм
                                     </label>
                                 </div>
                                 <div class="form-check-inline">
                                     <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" id="spool" name="spool" value="152"<?=$checked152 ?> />152 мм
+                                        <input type="radio" class="form-check-input spool" id="spool_152" name="spool" value="152"<?=$checked152 ?> />152 мм
                                     </label>
                                 </div>
                             </div>
@@ -247,30 +238,13 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
         include '_footer.php';
         ?>
         <script>
-            // Загрузка списка марок пленки
-            $('#supplier_id').change(function(){
-                if($(this).val() == "") {
-                    $('#film_id').html("<option value=''>Выберите марку</option>");
-                }
-                else {
-                    $.ajax({ url: "../ajax/film.php?supplier_id=" + $(this).val() })
-                            .done(function(data) {
-                                $('#film_id').html(data);
-                                $('#film_id').change();
-                            })
-                            .fail(function() {
-                                alert('Ошибка при выборе поставщика');
-                            });
-                }
-            });
-    
             // Загрузка списка толщин
             $('#film_id').change(function(){
                 if($(this).val() == "") {
                     $('#film_variation_id').html("<option value=''>Выберите толщину</option>");
                 }
                 else {
-                    $.ajax({ url: "../ajax/thickness.php?film_id=" + $(this).val() + "&supplier_id=" + $('#supplier_id').val() })
+                    $.ajax({ url: "../ajax/thickness.php?film_id=" + $(this).val() })
                             .done(function(data) {
                                 $('#film_variation_id').html(data);
                             })
@@ -310,7 +284,7 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
             // Расчёт длины и массы плёнки по шпуле, толщине, радиусу, ширине, удельному весу
             function CalculateByRadius() {
                 film_variation_id = $('#film_variation_id').val();
-                spool = $('#spool:checked').val();
+                spool = $('.spool:checked').val();
                 width = $('#width').val();
                 radius = $('#radius').val();
                 
@@ -327,7 +301,9 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
             }
             
             // Рассчитываем ширину и массу плёнки при изменении значений каждого поля, участвующего в вычислении
-            $('#spool').change(CalculateByRadius);
+            $('#spool_76').change(CalculateByRadius);
+            
+            $('#spool_152').change(CalculateByRadius);
             
             $('#radius').keypress(CalculateByRadius);
             

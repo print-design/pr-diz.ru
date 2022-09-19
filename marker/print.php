@@ -29,17 +29,11 @@ if($row = $fetcher->Fetch()) {
         ?>
     </head>
     <body>
-        <?php
-        $class_attr = " class='d-none'";
-        if(isset($_COOKIE['roll_id_'.$roll_id]) && $_COOKIE['roll_id_'.$roll_id] == 1) {
-            $class_attr = "";
-        }
-        ?>
         <div style="font-size: 50px; float: left;">
             <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
         </div>
-        <div id="finish_link"<?=$class_attr ?> style="float: right;">
-            <a href="<?=APPLICATION ?>/marker/" class="btn btn-dark" style="font-size: 20px;">Завершить</a>
+        <div id="finish_link" style="float: right;">
+            <a href="<?=APPLICATION ?>/marker/roll.php" class="btn btn-dark" style="font-size: 20px;">Завершить</a>
         </div>
         <div style="clear: both;" />
     
@@ -221,11 +215,6 @@ if($row = $fetcher->Fetch()) {
                 sharelink.addEventListener('click', () => {
                     navigator.share(myShareData)
                 });
-        
-                setTimeout(function() { 
-                    document.getElementById('finish_link').removeAttribute('class');
-                    document.cookie = '<?='roll_id_'.$roll_id ?>=1; Path=/;';
-                }, 30000);
             });
         </script>
     </body>
