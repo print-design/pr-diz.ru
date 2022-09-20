@@ -50,10 +50,10 @@ function GetPrintingsWithCases($number) {
 $sql = "update calculation set name = replace(name, '  ', ' ') where name like('%  %')";
 $executer = new Executer($sql);
 
-$status_titles = array(DRAFT => "Черновики", CALCULATION => "Расчеты");
+$status_titles = array(1 => "Расчеты", 2 => "Черновики");
 $status_id = filter_input(INPUT_GET, 'status');
-if(empty($status_id)) $status_id = CALCULATION;
-$title = $status_titles[$status_id];
+if($status_id == DRAFT) $title = $status_titles[2];
+else $title = $status_titles[1];
 ?>
 <!DOCTYPE html>
 <html>
@@ -80,23 +80,20 @@ $title = $status_titles[$status_id];
                     <h1 style="font-size: 32px; font-weight: 600;" class="d-inline"><?=$title ?></h1>
                     <?php
                     // Фильтр
-                    $where = '';
+                    $where = " where c.status_id <> ".DRAFT;
                     
                     if(!empty($status_id)) {
-                        if(empty($where)) $where = " where c.status_id=$status_id";
-                        else $where .= " and c.status_id=$status_id";
+                        $where = " where c.status_id = $status_id";
                     }
                     
                     $unit = filter_input(INPUT_GET, 'unit');
                     if(!empty($unit)) {
-                        if(empty($where)) $where = " where c.unit='$unit'";
-                        else $where .= " and c.unit='$unit'";
+                        $where .= " and c.unit='$unit'";
                     }
                     
                     $work_type = filter_input(INPUT_GET, 'work_type');
                     if(!empty($work_type)) {
-                        if(empty($where)) $where = " where c.work_type_id=$work_type";
-                        else $where .= " and c.work_type_id=$work_type";
+                        $where .= " and c.work_type_id=$work_type";
                     }
                     
                     $manager = filter_input(INPUT_GET, 'manager');
@@ -104,20 +101,17 @@ $title = $status_titles[$status_id];
                         $manager = GetUserId();
                     }
                     if(!empty($manager)) {
-                        if(empty($where)) $where = " where c.manager_id=$manager";
-                        else $where .= " and c.manager_id=$manager";
+                        $where .= " and c.manager_id=$manager";
                     }
                     
                     $customer = filter_input(INPUT_GET, 'customer');
                     if(!empty($customer)) {
-                        if(empty($where)) $where = " where c.customer_id=$customer";
-                        else $where .= " and c.customer_id=$customer";
+                        $where .= " and c.customer_id=$customer";
                     }
                     
                     $name = filter_input(INPUT_GET, 'name');
                     if(!empty($name)) {
-                        if(empty($where)) $where = " where trim(c.name)='$name'";
-                        else $where .= " and trim(c.name)='$name'";
+                        $where .= " and trim(c.name)='$name'";
                     }
 
                     // Общее количество расчётов для установления количества страниц в постраничном выводе
@@ -173,7 +167,8 @@ $title = $status_titles[$status_id];
                         <select id="customer" name="customer" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Заказчик...</option>
                             <?php
-                            $customer_where = "where c.status_id = $status_id";
+                            $customer_where = "where c.status_id <> ".DRAFT;
+                            if($status_id == DRAFT) $customer_where = "where c.status_id = ".DRAFT;
                             $customer_manager = GetUserId();
                             if(!IsInRole(array('technologist', 'dev', 'manager-senior'))) {
                                 $customer_where .= " and c.manager_id = $customer_manager";
@@ -191,11 +186,12 @@ $title = $status_titles[$status_id];
                         <select id="name" name="name" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Наименование...</option>
                             <?php
-                            $sql = "select distinct trim(c.name) name from calculation c where c.status_id = $status_id ";
+                            $name_where = "where c.status_id <>".DRAFT;
+                            if($status_id == DRAFT) $name_where = "where c.status_id = ".DRAFT;
                             if(!empty($customer)) {
-                                $sql .= "and c.customer_id = $customer ";
+                                $name_where .= " and c.customer_id = $customer";
                             }
-                            $sql .= "order by trim(c.name)";
+                            $sql = "select distinct trim(c.name) name from calculation c $name_where order by trim(c.name)";
                             $fetcher = new Fetcher($sql);
                             
                             while ($row = $fetcher->Fetch()):

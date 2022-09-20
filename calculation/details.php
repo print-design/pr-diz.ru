@@ -116,10 +116,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
 }
 
 // Получение объекта
-$id = filter_input(INPUT_POST, 'id');
-if(empty($id)) {
-    $id = filter_input(INPUT_GET, 'id');
-}
+$id = filter_input(INPUT_GET, 'id');
 
 $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_type_id, wt.name work_type, "
         . "rc.film_variation_id, f.name film_name, fv.thickness thickness, fv.weight weight, rc.price, rc.currency, rc.individual_film_name, rc.individual_thickness, rc.individual_density, rc.customers_material, rc.ski, rc.width_ski, "
@@ -135,7 +132,7 @@ $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_t
         . "rc.knife, rc.extracharge_knife, rc.knife_in_price, rc.customer_pays_for_knife, "
         . "cus.name customer, cus.phone customer_phone, cus.extension customer_extension, cus.email customer_email, cus.person customer_person, "
         . "(select count(id) from calculation where customer_id = rc.customer_id and id <= rc.id) num_for_customer,"
-        . "(select gap from calculation_result where calculation_id = rc.id) gap "
+        . "(select gap from calculation_result where calculation_id = rc.id) gap, tm.id techmap_id "
         . "from calculation rc "
         . "left join film_variation fv on rc.film_variation_id = fv.id "
         . "left join film f on fv.film_id = f.id "
@@ -147,6 +144,7 @@ $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_t
         . "left join user u on rc.manager_id = u.id "
         . "left join work_type wt on rc.work_type_id = wt.id "
         . "left join customer cus on rc.customer_id = cus.id "
+        . "left join techmap tm on tm.calculation_id = rc.id "
         . "where rc.id=$id";
 $row = (new Fetcher($sql))->Fetch();
 
@@ -263,6 +261,8 @@ $num_for_customer = $row['num_for_customer'];
 
 $gap = $row['gap'];
 
+$techmap_id = $row['techmap_id'];
+
 // Если есть ламинация, а ламинатор пустой, то присваиваем ему значение "Сольвент".
 // (В старых расчётах ламинатор может быть не указан, поскольку тогда бессольвента не было.)
 if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name)) && empty($laminator_id)) {
@@ -332,7 +332,7 @@ if($status_id == DRAFT || $status_id == CALCULATION) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= $status_id == CALCULATION ? BuildQueryRemove("id") : BuildQueryAddRemove('status', $status_id, 'id') ?>">Назад</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= $status_id == DRAFT ? BuildQueryAddRemove('status', $status_id, 'id') : BuildQueryRemove("id") ?>">Назад</a>
             <!-- Левая половина -->
             <div id="left_side">
                 <h1 style="font-size: 32px; font-weight: 600;"><?= htmlentities($name) ?></h1>
