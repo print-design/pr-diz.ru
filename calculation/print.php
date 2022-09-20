@@ -4,7 +4,7 @@ include './status_ids.php';
 include './calculation.php';
 
 // Атрибут "поле неактивно"
-const DISABLED_ATTR = " disabled='disabled'";
+$disabled_attr = " disabled='disabled'";
 
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
@@ -208,18 +208,10 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
         <div class="co_l-_5" id="left_side">
             <h1 style="font-size: 26px; font-weight: 600; margin: 0; padding: 0;"><?= htmlentities($name) ?></h1>
             <h2 style="font-size: 20px; margin: 0; padding: 0;">№<?=$customer_id."-".$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
-                <?php if(!empty($techmap_id)): ?>
             <div style="width: 100%; padding: 6px; margin-top: 10p; margin-bottom: 10px; border-radius: 8px; font-weight: bold; text-align: center; border: solid 2px gray; color: gray;">
-                <i class="fas fa-file"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Составлена технологическая карта
+                <i class="<?=$status_icons[$status_id] ?>"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$status_names[$status_id] ?>
             </div>
-                <?php else: ?>
-            <div style="width: 100%; padding: 6px; margin-top: 10p; margin-bottom: 10px; border-radius: 8px; font-weight: bold; text-align: center; border: solid 2px gray; color: gray;">
-                <i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Сделан расчёт
-            </div>
-                <?php endif; ?>
-            <?php
-            include './left_panel.php';
-            ?>
+            <?php include './left_panel.php'; ?>
         </div>
         <script>
             var css = '@page { size: landscape; margin: 8mm; }',

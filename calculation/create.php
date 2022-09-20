@@ -55,7 +55,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
 const INDIVIDUAL = -1;
 
 // Атрибут "поле неактивно"
-const DISABLED_ATTR = "";
+$disabled_attr = "";
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');

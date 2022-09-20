@@ -492,7 +492,7 @@ if(!empty($id)) {
                            onmouseup="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');" 
                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
                            onkeyup="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');" 
-                           onfocusout="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');"<?=DISABLED_ATTR ?> />
+                           onfocusout="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');"<?=$disabled_attr ?> />
                     <div class="input-group-append" style="height: 28px;">
                         <span class="input-group-text">%</span>
                     </div>
@@ -509,7 +509,7 @@ if(!empty($id)) {
                            onmouseup="javascript: $(this).attr('id', 'input_shipping_cost_per_unit'); $(this).attr('name', 'input_shipping_cost_per_unit');" 
                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
                            onkeyup="javascript: $(this).attr('id', 'input_shipping_cost_per_unit'); $(this).attr('name', 'input_shipping_cost_per_unit');" 
-                           onfocusout="javascript: $(this).attr('id', 'input_shipping_cost_per_unit'); $(this).attr('name', 'input_shipping_cost_per_unit');"<?=DISABLED_ATTR ?> />
+                           onfocusout="javascript: $(this).attr('id', 'input_shipping_cost_per_unit'); $(this).attr('name', 'input_shipping_cost_per_unit');"<?=$disabled_attr ?> />
                     <div class="input-group-append" style="height: 28px;">
                         <span class="input-group-text">&#8381;</span>
                     </div>
@@ -532,7 +532,7 @@ if(!empty($id)) {
                            onmouseup="javascript: $(this).attr('id', 'extracharge_cliche'); $(this).attr('name', 'extracharge_cliche');" 
                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
                            onkeyup="javascript: $(this).attr('id', 'extracharge_cliche'); $(this).attr('name', 'extracharge_cliche');" 
-                           onfocusout="javascript: $(this).attr('id', 'extracharge_cliche'); $(this).attr('name', 'extracharge_cliche');"<?=DISABLED_ATTR ?> />
+                           onfocusout="javascript: $(this).attr('id', 'extracharge_cliche'); $(this).attr('name', 'extracharge_cliche');"<?=$disabled_attr ?> />
                     <div class="input-group-append" style="height: 28px;">
                         <span class="input-group-text">%</span>
                     </div>
@@ -556,7 +556,7 @@ if(!empty($id)) {
                            onmouseup="javascript: $(this).attr('id', 'extracharge_knife'); $(this).attr('name', 'extracharge_knife');" 
                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
                            onkeyup="javascript: $(this).attr('id', 'extracharge_knife'); $(this).attr('name', 'extracharge_knife');" 
-                           onfocusout="javascript: $(this).attr('id', 'extracharge_knife'); $(this).attr('name', 'extracharge_knife');"<?=DISABLED_ATTR ?> />
+                           onfocusout="javascript: $(this).attr('id', 'extracharge_knife'); $(this).attr('name', 'extracharge_knife');"<?=$disabled_attr ?> />
                     <div class="input-group-append" style="height: 28px;">
                         <span class="input-group-text">%</span>
                     </div>

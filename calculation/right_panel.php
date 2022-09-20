@@ -656,7 +656,7 @@ if(!empty($id)) {
                            onmouseup="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');" 
                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
                            onkeyup="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');" 
-                           onfocusout="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');"<?=DISABLED_ATTR ?> />
+                           onfocusout="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');"<?=$disabled_attr ?> />
                     <div class="input-group-append" style="height: 28px;">
                         <span class="input-group-text">%</span>
                     </div>
@@ -673,7 +673,7 @@ if(!empty($id)) {
                            onmouseup="javascript: $(this).attr('id', 'input_shipping_cost_per_unit'); $(this).attr('name', 'input_shipping_cost_per_unit');" 
                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
                            onkeyup="javascript: $(this).attr('id', 'input_shipping_cost_per_unit'); $(this).attr('name', 'input_shipping_cost_per_unit');" 
-                           onfocusout="javascript: $(this).attr('id', 'input_shipping_cost_per_unit'); $(this).attr('name', 'input_shipping_cost_per_unit');"<?=DISABLED_ATTR ?> />
+                           onfocusout="javascript: $(this).attr('id', 'input_shipping_cost_per_unit'); $(this).attr('name', 'input_shipping_cost_per_unit');"<?=$disabled_attr ?> />
                     <div class="input-group-append" style="height: 28px;">
                         <span class="input-group-text">&#8381;</span>
                     </div>
@@ -696,7 +696,7 @@ if(!empty($id)) {
                            onmouseup="javascript: $(this).attr('id', 'extracharge_cliche'); $(this).attr('name', 'extracharge_cliche');" 
                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
                            onkeyup="javascript: $(this).attr('id', 'extracharge_cliche'); $(this).attr('name', 'extracharge_cliche');" 
-                           onfocusout="javascript: $(this).attr('id', 'extracharge_cliche'); $(this).attr('name', 'extracharge_cliche');"<?=DISABLED_ATTR ?> />
+                           onfocusout="javascript: $(this).attr('id', 'extracharge_cliche'); $(this).attr('name', 'extracharge_cliche');"<?=$disabled_attr ?> />
                     <div class="input-group-append" style="height: 28px;">
                         <span class="input-group-text">%</span>
                     </div>
@@ -830,13 +830,13 @@ if(!empty($id)) {
         </div>
     </div>
     <div style="clear:both"></div>
-        <?php if ($status_id == DRAFT): ?>
+    <?php if ($status_id == DRAFT): ?>
     <form method="post">
         <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
         <input type="hidden" name="status_id" value="<?=CALCULATION ?>" />
         <button type="submit" name="change-status-submit" class="btn btn-outline-dark mt-3" style="width: 200px;">Сохранить</button>
     </form>
-        <?php elseif($status_id == CALCULATION): ?>
+    <?php elseif($status_id == CALCULATION): ?>
     <div class="d-flex justify-content-between">
         <div>
             <a href="techmap.php?calculation_id=<?=$id ?>" class="btn btn-outline-dark mt-3" style="width: 200px;">Составить тех. карту</a>
@@ -849,7 +849,7 @@ if(!empty($id)) {
             </form>
         </div>
     </div>
-        <?php elseif($status_id == TECHMAP): ?>
+    <?php elseif($status_id == TECHMAP): ?>
     <a href="techmap.php?id=<?=$techmap_id ?>" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
-        <?php endif; ?>
+    <?php endif; ?>
 </div>

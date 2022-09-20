@@ -9,7 +9,7 @@ if(!IsInRole(array('technologist', 'dev', 'manager'))) {
 }
 
 // Атрибут "поле неактивно"
-const DISABLED_ATTR = "";
+$disabled_attr = " disabled='disabled'";
 
 // Редактирование включения ПФ в стоимость
 if(null !== filter_input(INPUT_POST, 'cliche_in_price_submit')) {
@@ -268,6 +268,11 @@ $gap = $row['gap'];
 if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name)) && empty($laminator_id)) {
     $laminator_id = CalculationBase::SOLVENT_YES;
 }
+
+// Если статус - "Черновик" или "Сделан  расчёт", то все чекбосы и поля наценки активны
+if($status_id == DRAFT || $status_id == CALCULATION) {
+    $disabled_attr = "";
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -332,29 +337,10 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
             <div id="left_side">
                 <h1 style="font-size: 32px; font-weight: 600;"><?= htmlentities($name) ?></h1>
                 <h2 style="font-size: 26px;">№<?=$customer_id."-".$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
-                <?php
-                if($status_id == DRAFT):
-                ?>
-                <div style="width: 100%; padding: 12px; margin-top: 40p; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px gray; color: gray;">
-                    <i class="fas fa-scroll"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Черновик
+                <div style="width: 100%; padding: 12px; margin-top: 40p; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px <?=$status_colors[$status_id] ?>; color: <?=$status_colors[$status_id] ?>;">
+                    <i class="<?=$status_icons[$status_id] ?>"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$status_names[$status_id] ?>
                 </div>
-                <?php
-                elseif($status_id == CALCULATION):
-                ?>
-                <div style="width: 100%; padding: 12px; margin-top: 40p; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px blue; color: blue;">
-                    <i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Сделан расчёт
-                </div>
-                <?php
-                elseif($status_id == TECHMAP):
-                ?>
-                <div style="width: 100%; padding: 12px; margin-top: 40p; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px green; color: green;">
-                    <i class="fas fa-file"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Составлена технологическая карта
-                </div>
-                <?php
-                endif;
-                
-                include './left_panel.php';
-                ?>
+                <?php include './left_panel.php'; ?>
                 <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Пересчитать</a>
             </div>
         </div>
