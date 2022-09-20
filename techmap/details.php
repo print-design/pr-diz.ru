@@ -32,7 +32,7 @@ $calculation_id = $row['calculation_id'];
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>./calculation/details.php?id=<?= $calculation_id ?>">К расчету</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/details.php?id=<?= $calculation_id ?>">К расчету</a>
             <h1>Технологическая карта (заглушка)</h1>
         </div>
         <?php

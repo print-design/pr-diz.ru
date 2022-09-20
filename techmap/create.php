@@ -61,7 +61,7 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>./calculation/details.php?id=<?= filter_input(INPUT_GET, 'calculation_id') ?>">К расчету</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/details.php?id=<?= filter_input(INPUT_GET, 'calculation_id') ?>">К расчету</a>
             <h1>Создание технологической карты (заглушка)</h1>
             <form method="post">
                 <input type="hidden" name="calculation_id" value="<?= filter_input(INPUT_GET, 'calculation_id') ?>" />
