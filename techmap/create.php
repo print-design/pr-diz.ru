@@ -387,6 +387,7 @@ $date = date('Y-m-d H:i:s');
                     </div>
                     <div class="col-6">
                         <h3>Выберите фотометку</h3>
+                        <div class="form-group"></div>
                     </div>
                 </div>
                 <input type="hidden" name="calculation_id" value="<?= filter_input(INPUT_GET, 'calculation_id') ?>" />
