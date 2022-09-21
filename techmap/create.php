@@ -349,6 +349,41 @@ $date = date('Y-m-d H:i:s');
                 <div class="row">
                     <div class="col-6">
                         <h2>Информация для резчика</h2>
+                        <div class="form-group">
+                            <label for="side">Печать</label>
+                            <select id="side" name="side" class="form-control" required="required">
+                                <option value="" hidden="hidden">...</option>
+                            </select>
+                            <div class="invalid-feedback">Сторона обязательно</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="winding">Намотка до</label>
+                            <select id="winding" name="winding" class="form-control" required="required">
+                                <option value="" hidden="hidden">...</option>
+                            </select>
+                            <div class="invalid-feedback">Намотка обязательно</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="spool">Шпуля</label>
+                            <select id="spool" name="spool" class="form-control" required="required">
+                                <option value="" hidden="hidden">...</option>
+                            </select>
+                            <div class="invalid-feedback">Шпуля обязательно</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="labels">Бирки</label>
+                            <select id="labels" name="labels" class="form-control" required="required">
+                                <option value="" hidden="hidden">...</option>
+                            </select>
+                            <div class="invalid-feedback">Бирки обязательно</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="package">Упаковка</label>
+                            <select id="package" name="package" class="form-control" required="required">
+                                <option value="" hidden="">...</option>
+                            </select>
+                            <div class="invalid-feedback">Упаковка обязательно</div>
+                        </div>
                     </div>
                     <div class="col-6">
                         <h3>Выберите фотометку</h3>
