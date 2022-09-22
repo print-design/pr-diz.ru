@@ -155,6 +155,27 @@ $date = date('Y-m-d H:i:s');
         <?php
         include '../include/head.php';
         ?>
+        <style>
+            .roll-selector input {
+                margin:0;padding:0;
+                -webkit-appearance:none;
+                -moz-appearance:none;
+                appearance:none;
+            }
+            
+            .roll-selector label {
+                cursor:pointer;
+                border: solid 5px white;
+            }
+            
+            .roll-selector label:hover {
+                border: solid 5px lightblue;
+            }
+            
+            .roll-selector input[type="radio"]:checked + label {
+                border: solid 5px darkblue;
+            }
+        </style>
     </head>
     <body>
         <?php
@@ -387,7 +408,24 @@ $date = date('Y-m-d H:i:s');
                     </div>
                     <div class="col-6">
                         <h3>Выберите фотометку</h3>
-                        <div class="form-group"></div>
+                        <div class="form-group roll-selector">
+                            <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_1" name="roll_type" value="1" />
+                            <label for="roll_type_1"><image src="../images/rolls/1-50.gif" style="height: 50px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_2" name="roll_type" value="2" />
+                            <label for="roll_type_2""><image src="../images/rolls/2-50.gif" style="height: 50px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_3" name="roll_type" value="3" />
+                            <label for="roll_type_3""><image src="../images/rolls/3-50.gif" style="height: 50px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_4" name="roll_type" value="4" />
+                            <label for="roll_type_4""><image src="../images/rolls/4-50.gif" style="height: 50px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_5" name="roll_type" value="5" />
+                            <label for="roll_type_5""><image src="../images/rolls/5-50.gif" style="height: 50px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_6" name="roll_type" value="6" />
+                            <label for="roll_type_6""><image src="../images/rolls/6-50.gif" style="height: 50px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_7" name="roll_type" value="7" />
+                            <label for="roll_type_7""><image src="../images/rolls/7-50.gif" style="height: 50px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_8" name="roll_type" value="8" />
+                            <label for="roll_type_8""><image src="../images/rolls/8-50.gif" style="height: 50px; width: auto;" /></label>
+                        </div>
                     </div>
                 </div>
                 <input type="hidden" name="calculation_id" value="<?= filter_input(INPUT_GET, 'calculation_id') ?>" />
