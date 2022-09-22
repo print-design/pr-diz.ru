@@ -2,6 +2,7 @@
 include '../include/topscripts.php';
 include '../calculation/status_ids.php';
 include '../calculation/calculation.php';
+include './constants.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'manager'))) {
@@ -564,8 +565,8 @@ $date = date('Y-m-d H:i:s');
                             <label for="side">Печать</label>
                             <select id="side" name="side" class="form-control<?=$side_valid ?>" required="required">
                                 <option value="" hidden="hidden">...</option>
-                                <option value="1"<?= filter_input(INPUT_POST, 'side') == 1 ? " selected='selected'" : "" ?>>Лицевая</option>
-                                <option value="2"<?= filter_input(INPUT_POST, 'side') == 2 ? " selected='selected'" : "" ?>>Оборотная</option>
+                                <option value="<?=SIDE_FRONT ?>"<?= filter_input(INPUT_POST, 'side') == 1 ? " selected='selected'" : "" ?>>Лицевая</option>
+                                <option value="<?=SIDE_BACK ?>"<?= filter_input(INPUT_POST, 'side') == 2 ? " selected='selected'" : "" ?>>Оборотная</option>
                             </select>
                             <div class="invalid-feedback">Сторона обязательно</div>
                         </div>
@@ -608,8 +609,8 @@ $date = date('Y-m-d H:i:s');
                             <label for="labels">Бирки</label>
                             <select id="labels" name="labels" class="form-control<?=$labels_valid ?>" required="required">
                                 <option value="" hidden="hidden">...</option>
-                                <option value="1"<?= filter_input(INPUT_POST, 'labels') == 1 ? " selected='selected'" : "" ?>>Принт-Дизайн</option>
-                                <option value="2"<?= filter_input(INPUT_POST, 'labels') == 2 ? " selected='selected'" : "" ?>>Безликие</option>
+                                <option value="<?=LABEL_PRINT_DESIGN ?>"<?= filter_input(INPUT_POST, 'labels') == 1 ? " selected='selected'" : "" ?>>Принт-Дизайн</option>
+                                <option value="<?=LABEL_FACELESS ?>"<?= filter_input(INPUT_POST, 'labels') == 2 ? " selected='selected'" : "" ?>>Безликие</option>
                             </select>
                             <div class="invalid-feedback">Бирки обязательно</div>
                         </div>
@@ -617,8 +618,8 @@ $date = date('Y-m-d H:i:s');
                             <label for="package">Упаковка</label>
                             <select id="package" name="package" class="form-control<?=$package_valid ?>" required="required">
                                 <option value="" hidden="">...</option>
-                                <option value="1"<?= filter_input(INPUT_POST, 'package') == 1 ? " selected='selected'" : "" ?>>Паллетирование</option>
-                                <option value="2"<?= filter_input(INPUT_POST, 'package') == 2 ? " selected='selected'" : "" ?>>Россыпью</option>
+                                <option value="<?=PACKAGE_PALLETED ?>"<?= filter_input(INPUT_POST, 'package') == 1 ? " selected='selected'" : "" ?>>Паллетирование</option>
+                                <option value="<?=PACKAGE_BULK ?>"<?= filter_input(INPUT_POST, 'package') == 2 ? " selected='selected'" : "" ?>>Россыпью</option>
                             </select>
                             <div class="invalid-feedback">Упаковка обязательно</div>
                         </div>
