@@ -21,15 +21,66 @@ define('ISINVALID', ' is-invalid');
 $form_valid = true;
 $error_message = '';
 
+$side_valid = '';
+$winding_valid = '';
+$winding_unit_valid = '';
+$spool_valid = '';
+$labels_valid = '';
+$package_valid = '';
+$roll_type_valid = '';
+
 // Создание технологической карты
 if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
-    if(empty(filter_input(INPUT_GET, 'calculation_id'))) {
+    $calculation_id = filter_input(INPUT_POST, 'calculation_id');
+    if(empty($calculation_id)) {
         $error_message == "Не указан ID расчёта";
         $form_valid = false;
     }
     
+    $side = filter_input(INPUT_POST, 'side');
+    if(empty($side)) {
+        $side_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $winding = filter_input(INPUT_POST, 'winding');
+    if(empty($winding)) {
+        $winding_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $winding_unit = filter_input(INPUT_POST, 'winding_unit');
+    if(empty($winding_unit)) {
+        $winding_unit_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $spool = filter_input(INPUT_POST, 'spool');
+    if(empty($spool)) {
+        $spool_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $labels = filter_input(INPUT_POST, 'labels');
+    if(empty($labels)) {
+        $labels_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $package = filter_input(INPUT_POST, 'package');
+    if(empty($package)) {
+        $package_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $roll_type = filter_input(INPUT_POST, 'roll_type');
+    if(empty($roll_type)) {
+        $roll_type_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
     if($form_valid) {
-        $calculation_id = filter_input(INPUT_GET, 'calculation_id');
+        /*$calculation_id = filter_input(INPUT_GET, 'calculation_id');
         
         $sql = "insert into techmap (calculation_id) values($calculation_id)";
         $executer = new Executer($sql);
@@ -44,7 +95,7 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
         
         if(empty($error_message) && !empty($id)) {
             header("Location: details.php?id=$id");
-        }
+        }*/
     }
 }
 
@@ -503,15 +554,17 @@ $date = date('Y-m-d H:i:s');
                 </div>
             </div>
             <form class="mt-5" method="post"<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
+                <input type="hidden" name="scroll" />
+                <input type="hidden" name="calculation_id" value="<?= filter_input(INPUT_GET, 'calculation_id') ?>" />
                 <div class="row">
                     <div class="col-6">
                         <h2>Информация для резчика</h2>
                         <div class="form-group">
                             <label for="side">Печать</label>
-                            <select id="side" name="side" class="form-control" required="required">
+                            <select id="side" name="side" class="form-control<?=$side_valid ?>" required="required">
                                 <option value="" hidden="hidden">...</option>
-                                <option value="1">Лицевая</option>
-                                <option value="2">Оборотная</option>
+                                <option value="1"<?= filter_input(INPUT_POST, 'side') == 1 ? " selected='selected'" : "" ?>>Лицевая</option>
+                                <option value="2"<?= filter_input(INPUT_POST, 'side') == 2 ? " selected='selected'" : "" ?>>Оборотная</option>
                             </select>
                             <div class="invalid-feedback">Сторона обязательно</div>
                         </div>
@@ -521,9 +574,9 @@ $date = date('Y-m-d H:i:s');
                                 <input type="text" 
                                        id="winding" 
                                        name="winding" 
-                                       class="form-control int-only" 
+                                       class="form-control int-only<?=$winding_valid ?>" 
                                        placeholder="Намотка до" 
-                                       value="" 
+                                       value="<?= filter_input(INPUT_POST, 'winding') ?>" 
                                        required="required" 
                                        onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                        onmouseup="javascript: $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" 
@@ -533,8 +586,8 @@ $date = date('Y-m-d H:i:s');
                                 <div class="input-group-append">
                                     <select id="winding_unit" name="winding_unit" required="required">
                                         <option value="" hidden="hidden">...</option>
-                                        <option value="kg">кг</option>
-                                        <option value="mm">мм</option>
+                                        <option value="kg"<?= filter_input(INPUT_POST, 'winding_unit') == 'kg' ? " selected='selected'" : "" ?>>кг</option>
+                                        <option value="mm"<?= filter_input(INPUT_POST, 'winding_unit') == 'mm' ? " selected='selected'" : "" ?>>мм</option>
                                     </select>
                                 </div>
                                 <div class="invalid-feedback">Намотка обязательно</div>
@@ -542,29 +595,29 @@ $date = date('Y-m-d H:i:s');
                         </div>
                         <div class="form-group">
                             <label for="spool">Шпуля</label>
-                            <select id="spool" name="spool" class="form-control" required="required">
+                            <select id="spool" name="spool" class="form-control<?=$spool_valid ?>" required="required">
                                 <option value="" hidden="hidden">...</option>
-                                <option>40</option>
-                                <option>76</option>
-                                <option>152</option>
+                                <option<?= filter_input(INPUT_POST, 'spool') == 40 ? " selected='selected'" : "" ?>>40</option>
+                                <option<?= filter_input(INPUT_POST, 'spool') == 76 ? " selected='selected'" : "" ?>>76</option>
+                                <option<?= filter_input(INPUT_POST, 'spool') == 152 ? " selected='selected'" : "" ?>>152</option>
                             </select>
                             <div class="invalid-feedback">Шпуля обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="labels">Бирки</label>
-                            <select id="labels" name="labels" class="form-control" required="required">
+                            <select id="labels" name="labels" class="form-control<?=$labels_valid ?>" required="required">
                                 <option value="" hidden="hidden">...</option>
-                                <option value="1">Принт-Дизайн</option>
-                                <option value="2">Безликие</option>
+                                <option value="1"<?= filter_input(INPUT_POST, 'labels') == 1 ? " selected='selected'" : "" ?>>Принт-Дизайн</option>
+                                <option value="2"<?= filter_input(INPUT_POST, 'labels') == 2 ? " selected='selected'" : "" ?>>Безликие</option>
                             </select>
                             <div class="invalid-feedback">Бирки обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="package">Упаковка</label>
-                            <select id="package" name="package" class="form-control" required="required">
+                            <select id="package" name="package" class="form-control<?=$package_valid ?>" required="required">
                                 <option value="" hidden="">...</option>
-                                <option value="1">Паллетирование</option>
-                                <option value="2">Россыпью</option>
+                                <option value="1"<?= filter_input(INPUT_POST, 'package') == 1 ? " selected='selected'" : "" ?>>Паллетирование</option>
+                                <option value="2"<?= filter_input(INPUT_POST, 'package') == 2 ? " selected='selected'" : "" ?>>Россыпью</option>
                             </select>
                             <div class="invalid-feedback">Упаковка обязательно</div>
                         </div>
@@ -576,25 +629,26 @@ $date = date('Y-m-d H:i:s');
                             <input type="text" id="x" style="visibility: hidden;" />
                         </div>
                         <div class="form-group roll-selector">
-                            <input type="radio" class="form-check-inline" id="roll_type_1" name="roll_type" value="1" />
-                            <label for="roll_type_1"><image src="../images/rolls/1-50.gif" style="height: 50px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline" id="roll_type_2" name="roll_type" value="2" />
-                            <label for="roll_type_2""><image src="../images/rolls/2-50.gif" style="height: 50px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline" id="roll_type_3" name="roll_type" value="3" />
-                            <label for="roll_type_3""><image src="../images/rolls/3-50.gif" style="height: 50px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline" id="roll_type_4" name="roll_type" value="4" />
-                            <label for="roll_type_4""><image src="../images/rolls/4-50.gif" style="height: 50px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline" id="roll_type_5" name="roll_type" value="5" />
-                            <label for="roll_type_5""><image src="../images/rolls/5-50.gif" style="height: 50px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline" id="roll_type_6" name="roll_type" value="6" />
-                            <label for="roll_type_6""><image src="../images/rolls/6-50.gif" style="height: 50px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline" id="roll_type_7" name="roll_type" value="7" />
-                            <label for="roll_type_7""><image src="../images/rolls/7-50.gif" style="height: 50px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline" id="roll_type_8" name="roll_type" value="8" />
-                            <label for="roll_type_8""><image src="../images/rolls/8-50.gif" style="height: 50px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline" id="roll_type_1" name="roll_type" value="1"<?= filter_input(INPUT_POST, 'roll_type') == 1 ? " checked='checked'" : "" ?> />
+                            <label for="roll_type_1"><image src="../images/roll/roll_type_1.png" style="height: 30px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline" id="roll_type_2" name="roll_type" value="2"<?= filter_input(INPUT_POST, 'roll_type') == 2 ? " checked='checked'" : "" ?> />
+                            <label for="roll_type_2""><image src="../images/roll/roll_type_2.png" style="height: 30px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline" id="roll_type_3" name="roll_type" value="3"<?= filter_input(INPUT_POST, 'roll_type') == 3 ? " checked='checked'" : "" ?> />
+                            <label for="roll_type_3""><image src="../images/roll/roll_type_3.png" style="height: 30px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline" id="roll_type_4" name="roll_type" value="4"<?= filter_input(INPUT_POST, 'roll_type') == 4 ? " checked='checked'" : "" ?> />
+                            <label for="roll_type_4""><image src="../images/roll/roll_type_4.png" style="height: 30px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline" id="roll_type_5" name="roll_type" value="5"<?= filter_input(INPUT_POST, 'roll_type') == 5 ? " checked='checked'" : "" ?> />
+                            <label for="roll_type_5""><image src="../images/roll/roll_type_5.png" style="height: 30px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline" id="roll_type_6" name="roll_type" value="6"<?= filter_input(INPUT_POST, 'roll_type') == 6 ? " checked='checked'" : "" ?> />
+                            <label for="roll_type_6""><image src="../images/roll/roll_type_6.png" style="height: 30px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline" id="roll_type_7" name="roll_type" value="7"<?= filter_input(INPUT_POST, 'roll_type') == 7 ? " checked='checked'" : "" ?> />
+                            <label for="roll_type_7""><image src="../images/roll/roll_type_7.png" style="height: 30px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline" id="roll_type_8" name="roll_type" value="8"<?= filter_input(INPUT_POST, 'roll_type') == 8 ? " checked='checked'" : "" ?> />
+                            <label for="roll_type_8""><image src="../images/roll/roll_type_8.png" style="height: 30px; width: auto;" /></label>
                         </div>
+                        <div class="text-danger<?= empty($roll_type_valid) ? " d-none" : " d-block" ?>">Укажите фотометку</div>
                         <h3>Комментарий</h3>
-                        <textarea rows="6" name="comment" class="form-control"></textarea>
+                        <textarea rows="6" name="comment" class="form-control"><?= filter_input(INPUT_POST, 'comment') ?></textarea>
                     </div>
                 </div>
                 <input type="hidden" name="calculation_id" value="<?= filter_input(INPUT_GET, 'calculation_id') ?>" />
