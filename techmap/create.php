@@ -51,11 +51,16 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
 // Получение объекта
 $calculation_id = filter_input(INPUT_GET, 'calculation_id');
 
-$sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, "
+$sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.work_type_id, c.machine_id, "
         . "c.film_variation_id, f.name film_name, fv.thickness thickness, fv.weight weight, c.price, c.currency, c.individual_film_name, c.individual_thickness, c.individual_density, c.customers_material, c.ski, c.width_ski, "
         . "c.lamination1_film_variation_id, lam1f.name lamination1_film_name, lam1fv.thickness lamination1_thickness, lam1fv.weight lamination1_weight, c.lamination1_price, c.lamination1_currency, c.lamination1_individual_film_name, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, c.lamination1_ski, c.lamination1_width_ski, "
         . "c.lamination2_film_variation_id, lam2f.name lamination2_film_name, lam2fv.thickness lamination2_thickness, lam2fv.weight lamination2_weight, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_ski, c.lamination2_width_ski, "
         . "c.streams_number, c.stream_width, c.raport, c.lamination_roller_width, c.ink_number, "
+        . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
+        . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
+        . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
+        . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, c.cliche_1, "
+        . "c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
         . "cus.name customer, "
         . "u.last_name, u.first_name, "
         . "wt.name work_type, "
@@ -81,6 +86,8 @@ $customer_id = $row['customer_id'];
 $calculation = $row['calculation'];
 $quantity = $row['quantity'];
 $unit = $row['unit'];
+$work_type_id = $row['work_type_id'];
+$machine_id = $row['machine_id'];
 
 $film_variation_id = $row['film_variation_id'];
 $film_name = $row['film_name'];
@@ -125,7 +132,24 @@ $streams_number = $row['streams_number'];
 $stream_width = $row['stream_width'];
 $raport = $row['raport'];
 $lamination_roller_width = $row['lamination_roller_width'];
-$ink_number = $row['ink_number'];
+$ink_number = $row['ink_number']; if(empty($ink_number)) $ink_number = 0;
+
+for($i=1; $i<=$ink_number; $i++) {
+    $ink_var = "ink_$i";
+    $$ink_var = $row[$ink_var];
+    
+    $color_var = "color_$i";
+    $$color_var = $row[$color_var];
+    
+    $cmyk_var = "cmyk_$i";
+    $$cmyk_var = $row[$cmyk_var];
+    
+    $percent_var = "percent_$i";
+    $$percent_var = $row[$percent_var];
+    
+    $cliche_var = "cliche_$i";
+    $$cliche_var = $row[$cliche_var];
+}
 
 $customer = $row['customer'];
 $last_name = $row['last_name'];
@@ -193,7 +217,7 @@ $date = date('Y-m-d H:i:s');
             <div class="name">Наименование: <?=$calculation ?></div>
             <div class="subheader">№<?=$customer_id ?>-<?=$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation_date)->format('d.m.Y') ?></div>
             <h2>Остальная информация</h2>
-            <table>
+            <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                 <tr>
                     <th>Карта составлена</th>
                     <td><?= DateTime::createFromFormat('Y-d-m H:i:s', $date)->format('d.m.Y H:i') ?></td>
@@ -234,7 +258,7 @@ $date = date('Y-m-d H:i:s');
             <div class="row">
                 <div class="col-4">
                     <h3>Печать</h3>
-                    <table>
+                    <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                         <tr>
                             <td>Марка пленки</td>
                             <td><?= empty($film_name) ? $individual_film_name : $film_name ?></td>
@@ -265,7 +289,7 @@ $date = date('Y-m-d H:i:s');
                         </tr>
                         <tr>
                             <td>Растяг</td>
-                            <td>нет</td>
+                            <td>Нет</td>
                         </tr>
                         <tr>
                             <td>Ширина ручья</td>
@@ -279,7 +303,7 @@ $date = date('Y-m-d H:i:s');
                 </div>
                 <div class="col-4">
                     <h3>Ламинация 1</h3>
-                    <table>
+                    <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                         <tr>
                             <td>Марка пленки</td>
                             <td><?= empty($lamination1_film_name) ? $lamination1_individual_film_name : $lamination1_film_name ?></td>
@@ -312,10 +336,10 @@ $date = date('Y-m-d H:i:s');
                 </div>
                 <div class="col-4">
                     <h3>Информация для резчика</h3>
-                    <table>
+                    <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                         <tr>
                             <td>Отгрузка в</td>
-                            <td><?=$unit == 'kg' ? 'кг' : 'шт' ?></td>
+                            <td><?=$unit == 'kg' ? 'Кг' : 'Шт' ?></td>
                         </tr>
                         <tr>
                             <td>Намотка до</td>
@@ -339,10 +363,71 @@ $date = date('Y-m-d H:i:s');
             <div class="row">
                 <div class="col-4">
                     <h3>Красочность: <?=$ink_number ?> цв.</h3>
+                    <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
+                        <?php
+                        for($i = 1; $i <= $ink_number; $i++):
+                        $ink_var = "ink_$i";
+                        $color_var = "color_$i";
+                        $cmyk_var = "cmyk_$i";
+                        $percent_var = "percent_$i";
+                        $cliche_var = "cliche_$i";
+                        
+                        $machine_coeff = $machine_id == CalculationBase::COMIFLEX ? "1.14" : "1.7";
+                        ?>
+                        <tr>
+                            <td>
+                                <?php
+                                switch ($$ink_var) {
+                                    case CalculationBase::CMYK:
+                                        switch ($$cmyk_var) {
+                                            case CalculationBase::CYAN:
+                                                echo "Cyan";
+                                                break;
+                                            case CalculationBase::MAGENDA:
+                                                echo "Magenda";
+                                                break;
+                                            case CalculationBase::YELLOW:
+                                                echo "Yellow";
+                                                break;
+                                            case CalculationBase::KONTUR:
+                                                echo "Kontur";
+                                                break;
+                                        }
+                                        break;
+                                    case CalculationBase::PANTON:
+                                        echo "P".$$color_var;
+                                        break;
+                                    case CalculationBase::WHITE;
+                                        echo "Белая";
+                                        break;
+                                    case CalculationBase::LACQUER;
+                                        echo "Лак";
+                                        break;
+                                }
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                switch ($$cliche_var) {
+                                    case CalculationBase::OLD:
+                                        echo "Старая";
+                                        break;
+                                    case CalculationBase::FLINT:
+                                        echo "Новая Flint $machine_coeff";
+                                        break;
+                                    case CalculationBase::KODAK:
+                                        echo "Новая Kodak $machine_coeff";
+                                        break;
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <?php endfor; ?>
+                    </table>
                 </div>
                 <div class="col-4">
                     <h3>Ламинация 2</h3>
-                    <table>
+                    <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                         <tr>
                             <td>Марка пленки</td>
                             <td><?= empty($lamination2_film_name) ? $lamination2_individual_film_name : $lamination2_film_name ?></td>
@@ -366,7 +451,7 @@ $date = date('Y-m-d H:i:s');
                     </table>
                 </div>
             </div>
-            <form method="post">
+            <form method="post"<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                 <div class="row">
                     <div class="col-6">
                         <h2>Информация для резчика</h2>
@@ -374,20 +459,43 @@ $date = date('Y-m-d H:i:s');
                             <label for="side">Печать</label>
                             <select id="side" name="side" class="form-control" required="required">
                                 <option value="" hidden="hidden">...</option>
+                                <option value="1">Лицевая</option>
+                                <option value="2">Оборотная</option>
                             </select>
                             <div class="invalid-feedback">Сторона обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="winding">Намотка до</label>
-                            <select id="winding" name="winding" class="form-control" required="required">
-                                <option value="" hidden="hidden">...</option>
-                            </select>
-                            <div class="invalid-feedback">Намотка обязательно</div>
+                            <div class="input-group">
+                                <input type="text" 
+                                       id="winding" 
+                                       name="winding" 
+                                       class="form-control int-only" 
+                                       placeholder="Намотка до" 
+                                       value="" 
+                                       required="required" 
+                                       onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onmouseup="javascript: $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" 
+                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                       onkeyup="javascript: $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" 
+                                       onfocusout="javascript: $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" />
+                                <div class="input-group-append">
+                                    <select id="winding_unit" name="winding_unit" required="required">
+                                        <option value="" hidden="hidden">...</option>
+                                        <option value="kg">кг</option>
+                                        <option value="mm">мм</option>
+                                    </select>
+                                </div>
+                                <div class="invalid-feedback">Намотка обязательно</div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="spool">Шпуля</label>
                             <select id="spool" name="spool" class="form-control" required="required">
                                 <option value="" hidden="hidden">...</option>
+                                <option>40</option>
+                                <option>76</option>
+                                <option>152</option>
                             </select>
                             <div class="invalid-feedback">Шпуля обязательно</div>
                         </div>
@@ -395,6 +503,8 @@ $date = date('Y-m-d H:i:s');
                             <label for="labels">Бирки</label>
                             <select id="labels" name="labels" class="form-control" required="required">
                                 <option value="" hidden="hidden">...</option>
+                                <option value="1">Принт-Дизайн</option>
+                                <option value="2">Безликие</option>
                             </select>
                             <div class="invalid-feedback">Бирки обязательно</div>
                         </div>
@@ -402,12 +512,18 @@ $date = date('Y-m-d H:i:s');
                             <label for="package">Упаковка</label>
                             <select id="package" name="package" class="form-control" required="required">
                                 <option value="" hidden="">...</option>
+                                <option value="1">Паллетирование</option>
+                                <option value="2">Россыпью</option>
                             </select>
                             <div class="invalid-feedback">Упаковка обязательно</div>
                         </div>
                     </div>
                     <div class="col-6">
                         <h3>Выберите фотометку</h3>
+                        <div class="form-group">
+                            <label for="x"></label>
+                            <input type="text" id="x" style="visibility: hidden;" />
+                        </div>
                         <div class="form-group roll-selector">
                             <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_1" name="roll_type" value="1" />
                             <label for="roll_type_1"><image src="../images/rolls/1-50.gif" style="height: 50px; width: auto;" /></label>
@@ -426,6 +542,8 @@ $date = date('Y-m-d H:i:s');
                             <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_8" name="roll_type" value="8" />
                             <label for="roll_type_8""><image src="../images/rolls/8-50.gif" style="height: 50px; width: auto;" /></label>
                         </div>
+                        <h3>Комментарий</h3>
+                        <textarea rows="10" name="comment" class="form-control"></textarea>
                     </div>
                 </div>
                 <input type="hidden" name="calculation_id" value="<?= filter_input(INPUT_GET, 'calculation_id') ?>" />
