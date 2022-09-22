@@ -80,9 +80,10 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     }
     
     if($form_valid) {
-        /*$calculation_id = filter_input(INPUT_GET, 'calculation_id');
+        $comment = addslashes($comment);
         
-        $sql = "insert into techmap (calculation_id) values($calculation_id)";
+        $sql = "insert into techmap (calculation_id, side, winding, winding_unit, spool, labels, package, roll_type, comment) "
+                . "values($calculation_id, $side, $winding, '$winding_unit', $spool, $labels, $package, $roll_type, '$comment')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $id = $executer->insert_id;
@@ -95,7 +96,7 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
         
         if(empty($error_message) && !empty($id)) {
             header("Location: details.php?id=$id");
-        }*/
+        }
     }
 }
 
