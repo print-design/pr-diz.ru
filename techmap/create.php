@@ -244,19 +244,19 @@ $date = date('Y-m-d H:i:s');
                 </tr>
             </table>
             <div class="row">
-                <div class="col-4">
+                <div class="col-4 col-md-3">
                     <h2>Информация для печатника</h2>
                 </div>
-                <div class="col-4">
+                <div class="col-4 col-md-3">
                     <h2>Информация для ламинации</h2>
                     <div class="subheader">Кол-во ламинаций: <?=$lamination ?></div>
                 </div>
-                <div class="col-4">
+                <div class="col-4 col-md-3">
                     <h2>Информация для резчика</h2>
                 </div>
             </div>
             <div class="row">
-                <div class="col-4">
+                <div class="col-4 col-md-3">
                     <h3>Печать</h3>
                     <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                         <tr>
@@ -301,7 +301,7 @@ $date = date('Y-m-d H:i:s');
                         </tr>
                     </table>
                 </div>
-                <div class="col-4">
+                <div class="col-4 col-md-3">
                     <h3>Ламинация 1</h3>
                     <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                         <tr>
@@ -334,7 +334,7 @@ $date = date('Y-m-d H:i:s');
                         </tr>
                     </table>
                 </div>
-                <div class="col-4">
+                <div class="col-4 col-md-3">
                     <h3>Информация для резчика</h3>
                     <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                         <tr>
@@ -361,7 +361,7 @@ $date = date('Y-m-d H:i:s');
                 </div>
             </div>
             <div class="row">
-                <div class="col-4">
+                <div class="col-4 col-md-3">
                     <h3>Красочность: <?=$ink_number ?> цв.</h3>
                     <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                         <?php
@@ -425,7 +425,7 @@ $date = date('Y-m-d H:i:s');
                         <?php endfor; ?>
                     </table>
                 </div>
-                <div class="col-4">
+                <div class="col-4 col-md-3">
                     <h3>Ламинация 2</h3>
                     <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                         <tr>
@@ -453,7 +453,7 @@ $date = date('Y-m-d H:i:s');
             </div>
             <form method="post"<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-6 col-md-4">
                         <h2>Информация для резчика</h2>
                         <div class="form-group">
                             <label for="side">Печать</label>
@@ -518,28 +518,28 @@ $date = date('Y-m-d H:i:s');
                             <div class="invalid-feedback">Упаковка обязательно</div>
                         </div>
                     </div>
-                    <div class="col-6">
+                    <div class="col-6 col-md-4">
                         <h3>Выберите фотометку</h3>
                         <div class="form-group">
                             <label for="x"></label>
                             <input type="text" id="x" style="visibility: hidden;" />
                         </div>
                         <div class="form-group roll-selector">
-                            <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_1" name="roll_type" value="1" />
+                            <input type="radio" class="form-check-inline" id="roll_type_1" name="roll_type" value="1" />
                             <label for="roll_type_1"><image src="../images/rolls/1-50.gif" style="height: 50px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_2" name="roll_type" value="2" />
+                            <input type="radio" class="form-check-inline" id="roll_type_2" name="roll_type" value="2" />
                             <label for="roll_type_2""><image src="../images/rolls/2-50.gif" style="height: 50px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_3" name="roll_type" value="3" />
+                            <input type="radio" class="form-check-inline" id="roll_type_3" name="roll_type" value="3" />
                             <label for="roll_type_3""><image src="../images/rolls/3-50.gif" style="height: 50px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_4" name="roll_type" value="4" />
+                            <input type="radio" class="form-check-inline" id="roll_type_4" name="roll_type" value="4" />
                             <label for="roll_type_4""><image src="../images/rolls/4-50.gif" style="height: 50px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_5" name="roll_type" value="5" />
+                            <input type="radio" class="form-check-inline" id="roll_type_5" name="roll_type" value="5" />
                             <label for="roll_type_5""><image src="../images/rolls/5-50.gif" style="height: 50px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_6" name="roll_type" value="6" />
+                            <input type="radio" class="form-check-inline" id="roll_type_6" name="roll_type" value="6" />
                             <label for="roll_type_6""><image src="../images/rolls/6-50.gif" style="height: 50px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_7" name="roll_type" value="7" />
+                            <input type="radio" class="form-check-inline" id="roll_type_7" name="roll_type" value="7" />
                             <label for="roll_type_7""><image src="../images/rolls/7-50.gif" style="height: 50px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline mr-3 mt-3" id="roll_type_8" name="roll_type" value="8" />
+                            <input type="radio" class="form-check-inline" id="roll_type_8" name="roll_type" value="8" />
                             <label for="roll_type_8""><image src="../images/rolls/8-50.gif" style="height: 50px; width: auto;" /></label>
                         </div>
                         <h3>Комментарий</h3>
