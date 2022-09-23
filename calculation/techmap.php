@@ -154,12 +154,12 @@ if(!empty($lamination2_film_name) || !empty($lamination2_individual_film_name)) 
 
 $techmap_id = $row['techmap_id'];
 $techmap_date = $row['techmap_date']; if(empty($techmap_date)) $techmap_date = date('Y-m-d H:i:s');
-$side = $row['side']; if(empty($side)) $side = "Ждем данные";
-$winding = $row['winding']; if(empty($winding)) $winding = "Ждем данные";
+$side = $row['side'];
+$winding = $row['winding'];
 $winding_unit = $row['winding_unit'];
-$spool = $row['spool']; if(empty($spool)) $spool = "Ждем данные";
-$labels = $row['labels']; if(empty($labels)) $labels = "Ждем данные";
-$package = $row['package']; if(empty($package)) $package = "Ждем данные";
+$spool = $row['spool'];
+$labels = $row['labels'];
+$package = $row['package'];
 $roll_type = $row['roll_type'];
 $comment = $row['comment'];
 ?>
@@ -250,6 +250,213 @@ $comment = $row['comment'];
             ?>
             <a class="btn btn-outline-dark backlink" href="details.php?id=<?= $id ?>">К расчету</a>
             <h1><?= empty($techmap_id) ? "Составление тех. карты" : "Технологическая карта" ?></h1>
+            <div class="name">Заказчик: <?=$customer ?></div>
+            <div class="name">Наименование: <?=$calculation ?></div>
+            <div class="subtitle">№<?=$customer_id ?>-<?=$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
+            <h2 class="mt-2">Остальная информация</h2>
+            <div class="row">
+                <div class="col-5">
+                    <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
+                        <tr>
+                            <th>Карта составлена</th>
+                            <td class="text-left"><?= DateTime::createFromFormat('Y-m-d H:i:s', $techmap_date)->format('d.m.Y H:i') ?></td>
+                        </tr>
+                        <tr>
+                            <th>Заказчик</th>
+                            <td class="text-left"><?=$customer ?></td>
+                        </tr>
+                        <tr>
+                            <th class="pb-3">Название заказа</th>
+                            <td class="pb-3 text-left"><?=$calculation ?></td>
+                        </tr>
+                        <tr>
+                            <th>Объем заказа</th>
+                            <td class="text-left"><strong><?= CalculationBase::Display(intval($quantity), 0) ?> <?=$unit == 'kg' ? 'кг' : 'шт' ?></strong> <?= CalculationBase::Display(floatval($length_pure_1), 2) ?> м</td>
+                        </tr>
+                        <tr>
+                            <th>Менеджер</th>
+                            <td class="text-left"><?=$first_name ?> <?=$last_name ?></td>
+                        </tr>
+                        <tr>
+                            <th>Тип работы</th>
+                            <td class="text-left"><?=$work_type ?></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-4">
+                    <h2>Информация для печатника</h2>
+                </div>
+                <div class="col-4">
+                    <h2>Информация для ламинации</h2>
+                    <div class="subtitle">Кол-во ламинаций: <?=$lamination ?></div>
+                </div>
+                <div class="col-4">
+                    <h2>Информация для резчика</h2>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-4">
+                    <h3>Печать</h3>
+                    <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
+                        <tr>
+                            <td>Марка пленки</td>
+                            <td><?= empty($film_name) ? $individual_film_name : $film_name ?></td>
+                        </tr>
+                        <tr>
+                            <td>Толщина</td>
+                            <td><?= empty($film_name) ? CalculationBase::Display(floatval($individual_thickness), 2) : CalculationBase::Display(floatval($thickness), 2) ?> мкм</td>
+                        </tr>
+                        <tr>
+                            <td>Ширина мат-ла</td>
+                            <td><?= CalculationBase::Display(floatval($width_1), 2) ?> мм</td>
+                        </tr>
+                        <tr>
+                            <td>Метраж на приладку</td>
+                            <td><?= CalculationBase::Display(floatval($length_dirty_1) - floatval($length_pure_1), 2) ?> м</td>
+                        </tr>
+                        <tr>
+                            <td>Метраж на тираж</td>
+                            <td><?= CalculationBase::Display(floatval($length_pure_1), 2) ?> м</td>
+                        </tr>
+                        <tr>
+                            <td>Печать</td>
+                            <td>
+                                <?php
+                                switch ($side) {
+                                    case SIDE_FRONT:
+                                        echo 'Лицевая';
+                                        break;
+                                    case SIDE_BACK:
+                                        echo 'Оборотная';
+                                        break;
+                                    default :
+                                        echo "Ждем данные";
+                                        break;
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Рапорт</td>
+                            <td><?= CalculationBase::Display(floatval($raport), 3) ?></td>
+                        </tr>
+                        <tr>
+                            <td>Растяг</td>
+                            <td>Нет</td>
+                        </tr>
+                        <tr>
+                            <td>Ширина ручья</td>
+                            <td><?=$stream_width ?></td>
+                        </tr>
+                        <tr>
+                            <td>Кол-во ручьёв</td>
+                            <td><?=$streams_number ?></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-4">
+                    <h3>Ламинация 1</h3>
+                    <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
+                        <tr>
+                            <td>Марка пленки</td>
+                            <td><?= empty($lamination1_film_name) ? $lamination1_individual_film_name : $lamination1_film_name ?></td>
+                        </tr>
+                        <tr>
+                            <td>Толщина</td>
+                            <td><?= empty($lamination1_film_name) ? CalculationBase::Display(floatval($lamination1_individual_thickness), 2) : CalculationBase::Display(floatval($lamination1_thickness), 2) ?> мкм</td>
+                        </tr>
+                        <tr>
+                            <td>Ширина мат-ла</td>
+                            <td><?= CalculationBase::Display(floatval($width_2), 2) ?> мм</td>
+                        </tr>
+                        <tr>
+                            <td>Метраж на приладку</td>
+                            <td><?= CalculationBase::Display(floatval($length_dirty_2) - floatval($length_pure_2), 2) ?> м</td>
+                        </tr>
+                        <tr>
+                            <td>Метраж на тираж</td>
+                            <td><?= CalculationBase::Display(floatval($length_pure_2), 2) ?> м</td>
+                        </tr>
+                        <tr>
+                            <td>Ламинационный вал</td>
+                            <td><?= CalculationBase::Display(floatval($lamination_roller_width), 2) ?> мм</td>
+                        </tr>
+                        <tr>
+                            <td>Анилокс</td>
+                            <td>Нет</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-4">
+                    <h3>Информация для резчика</h3>
+                    <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
+                        <tr>
+                            <td>Отгрузка в</td>
+                            <td>
+                                <?=$unit == 'kg' ? 'Кг' : 'Шт' ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Намотка до</td>
+                            <td>
+                                <?= empty($winding) ? "Ждем данные" : CalculationBase::Display(intval($winding), 0) ?>
+                                <?php
+                                switch ($winding_unit) {
+                                    case 'kg':
+                                        echo " кг";
+                                        break;
+                                    case 'mm':
+                                        echo " мм";
+                                        break;
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Шпуля</td>
+                            <td><?= empty($spool) ? "Ждем данные" : $spool." мм" ?></td>
+                        </tr>
+                        <tr>
+                            <td>Бирки</td>
+                            <td>
+                                <?php
+                                switch ($labels) {
+                                    case LABEL_PRINT_DESIGN:
+                                        echo "Принт-Дизайн";
+                                        break;
+                                    case LABEL_FACELESS:
+                                        echo "Безликие";
+                                        break;
+                                    default :
+                                        echo "Ждём данные";
+                                        break;
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Упаковка</td>
+                            <td>
+                                <?php
+                                switch ($package) {
+                                    case PACKAGE_PALLETED:
+                                        echo "Паллетирование";
+                                        break;
+                                    case PACKAGE_BULK:
+                                        echo "Россыпью";
+                                        break;
+                                    default :
+                                        echo "Ждем данные";
+                                        break;
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </div>
         <?php
         include '../include/footer.php';
