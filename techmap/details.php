@@ -249,7 +249,7 @@ $date = date('Y-m-d H:i:s');
                     <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                         <tr>
                             <th>Карта составлена</th>
-                            <td class="text-left"><?= DateTime::createFromFormat('Y-d-m H:i:s', $date)->format('d.m.Y H:i') ?></td>
+                            <td class="text-left"><?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y H:i') ?></td>
                         </tr>
                         <tr>
                             <th>Заказчик</th>
