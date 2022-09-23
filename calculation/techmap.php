@@ -385,7 +385,7 @@ if($comment === null) $comment = $row['comment'];
                         </tr>
                         <tr>
                             <th class="pt-3">Объем заказа</th>
-                            <td class="pt-3 text-left"><strong><?= CalculationBase::Display(intval($quantity), 0) ?> <?=$unit == 'kg' ? 'кг' : 'шт' ?></strong> <?= CalculationBase::Display(floatval($length_pure_1), 2) ?> м</td>
+                            <td class="pt-3 text-left"><strong><?= CalculationBase::Display(intval($quantity), 0) ?> <?=$unit == 'kg' ? 'кг' : 'шт' ?></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= CalculationBase::Display(floatval($length_pure_1), 0) ?> м</td>
                         </tr>
                         <tr>
                             <th>Менеджер</th>
@@ -420,19 +420,19 @@ if($comment === null) $comment = $row['comment'];
                         </tr>
                         <tr>
                             <td>Толщина</td>
-                            <td><?= empty($film_name) ? CalculationBase::Display(floatval($individual_thickness), 2) : CalculationBase::Display(floatval($thickness), 2) ?> мкм</td>
+                            <td><?= empty($film_name) ? CalculationBase::Display(floatval($individual_thickness), 0) : CalculationBase::Display(floatval($thickness), 0) ?> мкм</td>
                         </tr>
                         <tr>
                             <td>Ширина мат-ла</td>
-                            <td><?= CalculationBase::Display(floatval($width_1), 2) ?> мм</td>
+                            <td><?= CalculationBase::Display(floatval($width_1), 0) ?> мм</td>
                         </tr>
                         <tr>
                             <td>Метраж на приладку</td>
-                            <td><?= CalculationBase::Display(floatval($length_dirty_1) - floatval($length_pure_1), 2) ?> м</td>
+                            <td><?= CalculationBase::Display(floatval($length_dirty_1) - floatval($length_pure_1), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Метраж на тираж</td>
-                            <td><?= CalculationBase::Display(floatval($length_pure_1), 2) ?> м</td>
+                            <td><?= CalculationBase::Display(floatval($length_pure_1), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Печать</td>
@@ -479,23 +479,23 @@ if($comment === null) $comment = $row['comment'];
                         </tr>
                         <tr>
                             <td>Толщина</td>
-                            <td><?= empty($lamination1_film_name) ? CalculationBase::Display(floatval($lamination1_individual_thickness), 2) : CalculationBase::Display(floatval($lamination1_thickness), 2) ?> мкм</td>
+                            <td><?= empty($lamination1_film_name) ? CalculationBase::Display(floatval($lamination1_individual_thickness), 0) : CalculationBase::Display(floatval($lamination1_thickness), 0) ?> мкм</td>
                         </tr>
                         <tr>
                             <td>Ширина мат-ла</td>
-                            <td><?= CalculationBase::Display(floatval($width_2), 2) ?> мм</td>
+                            <td><?= CalculationBase::Display(floatval($width_2), 0) ?> мм</td>
                         </tr>
                         <tr>
                             <td>Метраж на приладку</td>
-                            <td><?= CalculationBase::Display(floatval($length_dirty_2) - floatval($length_pure_2), 2) ?> м</td>
+                            <td><?= CalculationBase::Display(floatval($length_dirty_2) - floatval($length_pure_2), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Метраж на тираж</td>
-                            <td><?= CalculationBase::Display(floatval($length_pure_2), 2) ?> м</td>
+                            <td><?= CalculationBase::Display(floatval($length_pure_2), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Ламинационный вал</td>
-                            <td><?= CalculationBase::Display(floatval($lamination_roller_width), 2) ?> мм</td>
+                            <td><?= CalculationBase::Display(floatval($lamination_roller_width), 0) ?> мм</td>
                         </tr>
                         <tr>
                             <td>Анилокс</td>
@@ -645,19 +645,19 @@ if($comment === null) $comment = $row['comment'];
                         </tr>
                         <tr>
                             <td>Толщина</td>
-                            <td><?= empty($lamination2_film_name) ? CalculationBase::Display(floatval($lamination2_individual_thickness), 2) : CalculationBase::Display(floatval($lamination2_thickness), 2) ?> мм</td>
+                            <td><?= empty($lamination2_film_name) ? CalculationBase::Display(floatval($lamination2_individual_thickness), 0) : CalculationBase::Display(floatval($lamination2_thickness), 0) ?> мм</td>
                         </tr>
                         <tr>
                             <td>Ширина мат-ла</td>
-                            <td><?= CalculationBase::Display(floatval($width_3), 2) ?> мм</td>
+                            <td><?= CalculationBase::Display(floatval($width_3), 0) ?> мм</td>
                         </tr>
                         <tr>
                             <td>Метраж на приладку</td>
-                            <td><?= CalculationBase::Display(floatval($length_dirty_3) - floatval($length_pure_3), 2) ?> м</td>
+                            <td><?= CalculationBase::Display(floatval($length_dirty_3) - floatval($length_pure_3), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Метраж на тираж</td>
-                            <td><?= CalculationBase::Display(floatval($length_pure_3), 2) ?> м</td>
+                            <td><?= CalculationBase::Display(floatval($length_pure_3), 0) ?> м</td>
                         </tr>
                     </table>
                 </div>
