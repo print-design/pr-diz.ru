@@ -80,6 +80,8 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
         $form_valid = false;
     }
     
+    $comment = filter_input(INPUT_POST, 'comment');
+    
     if($form_valid) {
         $comment = addslashes($comment);
         
