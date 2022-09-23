@@ -35,7 +35,7 @@
     </form>
 </div>
 <?php elseif ($status_id == CONFIRMED): ?>
-<a href="<?=APPLICATION ?>/techmap/create.php?calculation_id=<?=$id ?>" class="btn btn-outline-dark mt-3" style="width: 200px;">Составить тех. карту</a>
+<a href="techmap.php?id=<?=$id ?>" class="btn btn-outline-dark mt-3" style="width: 200px;">Составить тех. карту</a>
 <?php elseif($status_id == TECHMAP): ?>
-<a href="<?=APPLICATION ?>/techmap/details.php?id=<?=$techmap_id ?>" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
+<a href="techmap.php?id=<?=$id ?>" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
 <?php endif; ?>
