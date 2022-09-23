@@ -8,7 +8,7 @@ if(!IsInRole(array('technologist', 'dev', 'manager', 'administrator'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Если не указан calculation_id, направляем к списку технических карт
+// Если не указан id, направляем к списку технических карт
 if(null === filter_input(INPUT_GET, 'id')) {
     header('Location: '.APPLICATION.'/calculation/');
 }
@@ -24,6 +24,101 @@ const LABEL_FACELESS = 2;
 // Упаковка: паллетированная, россыпью
 const PACKAGE_PALLETED = 1;
 const PACKAGE_BULK = 2;
+
+// Значение марки плёнки "другая"
+const INDIVIDUAL = -1;
+
+// Валидация формы
+define('ISINVALID', ' is-invalid');
+$form_valid = true;
+$error_message = '';
+
+$side_valid = '';
+$winding_valid = '';
+$winding_unit_valid = '';
+$spool_valid = '';
+$labels_valid = '';
+$package_valid = '';
+$roll_type_valid = '';
+
+// Создание технологической карты
+if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    if(empty($id)) {
+        $error_message == "Не указан ID расчёта";
+        $form_valid = false;
+    }
+    
+    $techmap_id = filter_input(INPUT_POST, 'techmap_id');
+    
+    $side = filter_input(INPUT_POST, 'side');
+    if(empty($side)) {
+        $side_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $winding = filter_input(INPUT_POST, 'winding');
+    if(empty($winding)) {
+        $winding_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $winding_unit = filter_input(INPUT_POST, 'winding_unit');
+    if(empty($winding_unit)) {
+        $winding_unit_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $spool = filter_input(INPUT_POST, 'spool');
+    if(empty($spool)) {
+        $spool_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $labels = filter_input(INPUT_POST, 'labels');
+    if(empty($labels)) {
+        $labels_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $package = filter_input(INPUT_POST, 'package');
+    if(empty($package)) {
+        $package_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $roll_type = filter_input(INPUT_POST, 'roll_type');
+    if(empty($roll_type)) {
+        $roll_type_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $comment = filter_input(INPUT_POST, 'comment');
+    
+    if($form_valid) {
+        $comment = addslashes($comment);
+        
+        $sql = "";
+        
+        if(empty($techmap_id)) {
+            $sql = "insert into techmap (calculation_id, side, winding, winding_unit, spool, labels, package, roll_type, comment) "
+                    . "values($id, $side, $winding, '$winding_unit', $spool, $labels, $package, $roll_type, '$comment')";
+        }
+        else {
+            $sql = "update techmap set side = $side, winding = $winding, winding_unit = '$winding_unit', spool = $spool, "
+                    . "labels = $labels, package = $package, roll_type = $roll_type, comment = '$comment' where id = $techmap_id";
+        }
+        
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+        
+        if(empty($techmap_id) && empty($error_message)) {
+            $sql = "update calculation set status_id = ".TECHMAP." where id = $id";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
+    }
+}
 
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
@@ -154,14 +249,30 @@ if(!empty($lamination2_film_name) || !empty($lamination2_individual_film_name)) 
 
 $techmap_id = $row['techmap_id'];
 $techmap_date = $row['techmap_date']; if(empty($techmap_date)) $techmap_date = date('Y-m-d H:i:s');
-$side = $row['side'];
-$winding = $row['winding'];
-$winding_unit = $row['winding_unit'];
-$spool = $row['spool'];
-$labels = $row['labels'];
-$package = $row['package'];
-$roll_type = $row['roll_type'];
-$comment = $row['comment'];
+
+$side = filter_input(INPUT_POST, 'side');
+if($side === null) $side = $row['side'];
+
+$winding = filter_input(INPUT_POST, 'winding');
+if($winding === null) $winding = $row['winding'];
+
+$winding_unit = filter_input(INPUT_POST, 'winding_unit');
+if($winding_unit === null) $winding_unit = $row['winding_unit'];
+
+$spool = filter_input(INPUT_POST, 'spool');
+if($spool === null) $spool = $row['spool'];
+
+$labels = filter_input(INPUT_POST, 'labels');
+if($labels === null) $labels = $row['labels'];
+
+$package = filter_input(INPUT_POST, 'package');
+if($package === null) $package = $row['package'];
+
+$roll_type = filter_input(INPUT_POST, 'roll_type');
+if($roll_type === null) $roll_type = $row['roll_type'];
+
+$comment = filter_input(INPUT_POST, 'comment');
+if($comment === null) $comment = $row['comment'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -234,7 +345,10 @@ $comment = $row['comment'];
             }
             
             .roll-selector input[type="radio"]:checked + label {
-                border: solid 5px darkblue;
+                background-image: url(../images/icons/check.svg);
+                background-position-x: 100%;
+                background-position-y: 100%;
+                background-repeat: no-repeat;
             }
         </style>
     </head>
@@ -266,12 +380,12 @@ $comment = $row['comment'];
                             <td class="text-left"><?=$customer ?></td>
                         </tr>
                         <tr>
-                            <th class="pb-3">Название заказа</th>
-                            <td class="pb-3 text-left"><?=$calculation ?></td>
+                            <th>Название заказа</th>
+                            <td class="text-left"><?=$calculation ?></td>
                         </tr>
                         <tr>
-                            <th>Объем заказа</th>
-                            <td class="text-left"><strong><?= CalculationBase::Display(intval($quantity), 0) ?> <?=$unit == 'kg' ? 'кг' : 'шт' ?></strong> <?= CalculationBase::Display(floatval($length_pure_1), 2) ?> м</td>
+                            <th class="pt-3">Объем заказа</th>
+                            <td class="pt-3 text-left"><strong><?= CalculationBase::Display(intval($quantity), 0) ?> <?=$unit == 'kg' ? 'кг' : 'шт' ?></strong> <?= CalculationBase::Display(floatval($length_pure_1), 2) ?> м</td>
                         </tr>
                         <tr>
                             <th>Менеджер</th>
@@ -457,6 +571,198 @@ $comment = $row['comment'];
                     </table>
                 </div>
             </div>
+            <div class="row mt-3">
+                <div class="col-4">
+                    <h3>Красочность: <?=$ink_number ?> цв.</h3>
+                    <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
+                        <?php
+                        for($i = 1; $i <= $ink_number; $i++):
+                        $ink_var = "ink_$i";
+                        $color_var = "color_$i";
+                        $cmyk_var = "cmyk_$i";
+                        $percent_var = "percent_$i";
+                        $cliche_var = "cliche_$i";
+                        
+                        $machine_coeff = $machine_id == CalculationBase::COMIFLEX ? "1.14" : "1.7";
+                        ?>
+                        <tr>
+                            <td>
+                                <?php
+                                switch ($$ink_var) {
+                                    case CalculationBase::CMYK:
+                                        switch ($$cmyk_var) {
+                                            case CalculationBase::CYAN:
+                                                echo "Cyan";
+                                                break;
+                                            case CalculationBase::MAGENDA:
+                                                echo "Magenda";
+                                                break;
+                                            case CalculationBase::YELLOW:
+                                                echo "Yellow";
+                                                break;
+                                            case CalculationBase::KONTUR:
+                                                echo "Kontur";
+                                                break;
+                                        }
+                                        break;
+                                    case CalculationBase::PANTON:
+                                        echo "P".$$color_var;
+                                        break;
+                                    case CalculationBase::WHITE;
+                                        echo "Белая";
+                                        break;
+                                    case CalculationBase::LACQUER;
+                                        echo "Лак";
+                                        break;
+                                }
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                switch ($$cliche_var) {
+                                    case CalculationBase::OLD:
+                                        echo "Старая";
+                                        break;
+                                    case CalculationBase::FLINT:
+                                        echo "Новая Flint $machine_coeff";
+                                        break;
+                                    case CalculationBase::KODAK:
+                                        echo "Новая Kodak $machine_coeff";
+                                        break;
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <?php endfor; ?>
+                    </table>
+                </div>
+                <div class="col-4">
+                    <h3>Ламинация 2</h3>
+                    <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
+                        <tr>
+                            <td>Марка пленки</td>
+                            <td><?= empty($lamination2_film_name) ? $lamination2_individual_film_name : $lamination2_film_name ?></td>
+                        </tr>
+                        <tr>
+                            <td>Толщина</td>
+                            <td><?= empty($lamination2_film_name) ? CalculationBase::Display(floatval($lamination2_individual_thickness), 2) : CalculationBase::Display(floatval($lamination2_thickness), 2) ?> мм</td>
+                        </tr>
+                        <tr>
+                            <td>Ширина мат-ла</td>
+                            <td><?= CalculationBase::Display(floatval($width_3), 2) ?> мм</td>
+                        </tr>
+                        <tr>
+                            <td>Метраж на приладку</td>
+                            <td><?= CalculationBase::Display(floatval($length_dirty_3) - floatval($length_pure_3), 2) ?> м</td>
+                        </tr>
+                        <tr>
+                            <td>Метраж на тираж</td>
+                            <td><?= CalculationBase::Display(floatval($length_pure_3), 2) ?> м</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <form class="mt-5" method="post"<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
+                <input type="hidden" name="scroll" />
+                <input type="hidden" name="id" value="<?= $id ?>" />
+                <input type="hidden" name="techmap_id" value="<?=$techmap_id ?>" />
+                <div class="row">
+                    <div class="col-6">
+                        <h2>Информация для резчика</h2>
+                        <div class="form-group">
+                            <label for="side">Печать</label>
+                            <select id="side" name="side" class="form-control<?=$side_valid ?>" required="required">
+                                <option value="" hidden="hidden">...</option>
+                                <option value="<?=SIDE_FRONT ?>"<?= $side == 1 ? " selected='selected'" : "" ?>>Лицевая</option>
+                                <option value="<?=SIDE_BACK ?>"<?= $side == 2 ? " selected='selected'" : "" ?>>Оборотная</option>
+                            </select>
+                            <div class="invalid-feedback">Сторона обязательно</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="winding">Намотка до</label>
+                            <div class="input-group">
+                                <input type="text" 
+                                       id="winding" 
+                                       name="winding" 
+                                       class="form-control int-only<?=$winding_valid ?>" 
+                                       placeholder="Намотка до" 
+                                       value="<?= $winding ?>" 
+                                       required="required" 
+                                       onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                       onmouseup="javascript: $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" 
+                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                       onkeyup="javascript: $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" 
+                                       onfocusout="javascript: $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" />
+                                <div class="input-group-append">
+                                    <select id="winding_unit" name="winding_unit" required="required">
+                                        <option value="" hidden="hidden">...</option>
+                                        <option value="kg"<?= $winding_unit == 'kg' ? " selected='selected'" : "" ?>>кг</option>
+                                        <option value="mm"<?= $winding_unit == 'mm' ? " selected='selected'" : "" ?>>мм</option>
+                                    </select>
+                                </div>
+                                <div class="invalid-feedback">Намотка обязательно</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="spool">Шпуля</label>
+                            <select id="spool" name="spool" class="form-control<?=$spool_valid ?>" required="required">
+                                <option value="" hidden="hidden">...</option>
+                                <option<?= $spool == 40 ? " selected='selected'" : "" ?>>40</option>
+                                <option<?= $spool == 76 ? " selected='selected'" : "" ?>>76</option>
+                                <option<?= $spool == 152 ? " selected='selected'" : "" ?>>152</option>
+                            </select>
+                            <div class="invalid-feedback">Шпуля обязательно</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="labels">Бирки</label>
+                            <select id="labels" name="labels" class="form-control<?=$labels_valid ?>" required="required">
+                                <option value="" hidden="hidden">...</option>
+                                <option value="<?=LABEL_PRINT_DESIGN ?>"<?= $labels == 1 ? " selected='selected'" : "" ?>>Принт-Дизайн</option>
+                                <option value="<?=LABEL_FACELESS ?>"<?= $labels == 2 ? " selected='selected'" : "" ?>>Безликие</option>
+                            </select>
+                            <div class="invalid-feedback">Бирки обязательно</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="package">Упаковка</label>
+                            <select id="package" name="package" class="form-control<?=$package_valid ?>" required="required">
+                                <option value="" hidden="">...</option>
+                                <option value="<?=PACKAGE_PALLETED ?>"<?= $package == 1 ? " selected='selected'" : "" ?>>Паллетирование</option>
+                                <option value="<?=PACKAGE_BULK ?>"<?= $package == 2 ? " selected='selected'" : "" ?>>Россыпью</option>
+                            </select>
+                            <div class="invalid-feedback">Упаковка обязательно</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <h3>Выберите фотометку</h3>
+                        <div class="form-group">
+                            <label for="x"></label>
+                            <input type="text" id="x" style="visibility: hidden;" />
+                        </div>
+                        <div class="form-group roll-selector">
+                            <input type="radio" class="form-check-inline" id="roll_type_1" name="roll_type" value="1"<?= $roll_type == 1 ? " checked='checked'" : "" ?> />
+                            <label for="roll_type_1" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img src="../images/roll/roll_type_1.png" style="height: 30px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline" id="roll_type_2" name="roll_type" value="2"<?= $roll_type == 2 ? " checked='checked'" : "" ?> />
+                            <label for="roll_type_2" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img src="../images/roll/roll_type_2.png" style="height: 30px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline" id="roll_type_3" name="roll_type" value="3"<?= $roll_type == 3 ? " checked='checked'" : "" ?> />
+                            <label for="roll_type_3" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img src="../images/roll/roll_type_3.png" style="height: 30px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline" id="roll_type_4" name="roll_type" value="4"<?= $roll_type == 4 ? " checked='checked'" : "" ?> />
+                            <label for="roll_type_4" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img src="../images/roll/roll_type_4.png" style="height: 30px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline" id="roll_type_5" name="roll_type" value="5"<?= $roll_type == 5 ? " checked='checked'" : "" ?> />
+                            <label for="roll_type_5" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img src="../images/roll/roll_type_5.png" style="height: 30px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline" id="roll_type_6" name="roll_type" value="6"<?= $roll_type == 6 ? " checked='checked'" : "" ?> />
+                            <label for="roll_type_6" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img src="../images/roll/roll_type_6.png" style="height: 30px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline" id="roll_type_7" name="roll_type" value="7"<?= $roll_type == 7 ? " checked='checked'" : "" ?> />
+                            <label for="roll_type_7" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img src="../images/roll/roll_type_7.png" style="height: 30px; width: auto;" /></label>
+                            <input type="radio" class="form-check-inline" id="roll_type_8" name="roll_type" value="8"<?= $roll_type == 8 ? " checked='checked'" : "" ?> />
+                            <label for="roll_type_8" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img src="../images/roll/roll_type_8.png" style="height: 30px; width: auto;" /></label>
+                        </div>
+                        <div class="text-danger<?= empty($roll_type_valid) ? " d-none" : " d-block" ?>">Укажите фотометку</div>
+                        <h3>Комментарий</h3>
+                        <textarea rows="6" name="comment" class="form-control"><?= html_entity_decode($comment) ?></textarea>
+                    </div>
+                </div>
+                <button type="submit" name="techmap_submit" class="btn btn-outline-dark draft mt-3" style="width: 200px;">Сохранить</button>
+            </form>
         </div>
         <?php
         include '../include/footer.php';
