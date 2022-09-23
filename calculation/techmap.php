@@ -123,7 +123,7 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
 
-$sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.work_type_id, c.machine_id, "
+$sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.work_type_id, c.machine_id, (select shortname from machine where id = c.machine_id) machine, "
         . "c.film_variation_id, f.name film_name, fv.thickness thickness, fv.weight weight, c.price, c.currency, c.individual_film_name, c.individual_thickness, c.individual_density, c.customers_material, c.ski, c.width_ski, "
         . "c.lamination1_film_variation_id, lam1f.name lamination1_film_name, lam1fv.thickness lamination1_thickness, lam1fv.weight lamination1_weight, c.lamination1_price, c.lamination1_currency, c.lamination1_individual_film_name, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, c.lamination1_ski, c.lamination1_width_ski, "
         . "c.lamination2_film_variation_id, lam2f.name lamination2_film_name, lam2fv.thickness lamination2_thickness, lam2fv.weight lamination2_weight, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_ski, c.lamination2_width_ski, "
@@ -163,6 +163,7 @@ $quantity = $row['quantity'];
 $unit = $row['unit'];
 $work_type_id = $row['work_type_id'];
 $machine_id = $row['machine_id'];
+$machine = $row['machine'];
 
 $film_variation_id = $row['film_variation_id'];
 $film_name = $row['film_name'];
@@ -583,7 +584,7 @@ if($comment === null) $comment = $row['comment'];
                         $percent_var = "percent_$i";
                         $cliche_var = "cliche_$i";
                         
-                        $machine_coeff = $machine_id == CalculationBase::COMIFLEX ? "1.14" : "1.7";
+                        $machine_coeff = $machine == CalculationBase::COMIFLEX ? "1.14" : "1.7";
                         ?>
                         <tr>
                             <td>
@@ -696,7 +697,7 @@ if($comment === null) $comment = $row['comment'];
                                 <div class="input-group-append">
                                     <select id="winding_unit" name="winding_unit" required="required">
                                         <option value="" hidden="hidden">...</option>
-                                        <option value="kg"<?= $winding_unit == 'kg' ? " selected='selected'" : "" ?>>кг</option>
+                                        <option value="kg"<?= $winding_unit == 'kg' ? " selected='selected'" : "" ?>>Кг</option>
                                         <option value="mm"<?= $winding_unit == 'mm' ? " selected='selected'" : "" ?>>мм</option>
                                     </select>
                                 </div>
@@ -756,7 +757,7 @@ if($comment === null) $comment = $row['comment'];
                             <input type="radio" class="form-check-inline" id="roll_type_8" name="roll_type" value="8"<?= $roll_type == 8 ? " checked='checked'" : "" ?> />
                             <label for="roll_type_8" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img src="../images/roll/roll_type_8.png" style="height: 30px; width: auto;" /></label>
                         </div>
-                        <div class="text-danger<?= empty($roll_type_valid) ? " d-none" : " d-block" ?>">Укажите фотометку</div>
+                        <div id="roll_type_validation" class="text-danger<?= empty($roll_type_valid) ? " d-none" : " d-block" ?>">Укажите фотометку</div>
                         <h3>Комментарий</h3>
                         <textarea rows="6" name="comment" class="form-control"><?= html_entity_decode($comment) ?></textarea>
                     </div>
@@ -767,5 +768,11 @@ if($comment === null) $comment = $row['comment'];
         <?php
         include '../include/footer.php';
         ?>
+        <script>
+            $('.roll-selector input').change(function(){
+                $('#roll_type_validation').removeClass('d-block');
+                $('#roll_type_validation').addClass('d-none');
+            });
+        </script>
     </body>
 </html>
