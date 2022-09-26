@@ -469,6 +469,10 @@ $uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_nam
                             <td><?= CalculationBase::Display(floatval($length_pure_1), 0) ?> м</td>
                         </tr>
                         <tr>
+                            <td>Всего мат-ла</td>
+                            <td><?= CalculationBase::Display(floatval($length_dirty_1), 0) ?> м</td>
+                        </tr>
+                        <tr>
                             <td>Печать</td>
                             <td>
                                 <?php
@@ -526,6 +530,10 @@ $uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_nam
                         <tr>
                             <td>Метраж на тираж</td>
                             <td><?= CalculationBase::Display(floatval($length_pure_2), 0) ?> м</td>
+                        </tr>
+                        <tr>
+                            <td>Всего мат-ла</td>
+                            <td><?= CalculationBase::Display(floatval($length_dirty_2), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Ламинационный вал</td>
@@ -692,6 +700,10 @@ $uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_nam
                         <tr>
                             <td>Метраж на тираж</td>
                             <td><?= CalculationBase::Display(floatval($length_pure_3), 0) ?> м</td>
+                        </tr>
+                        <tr>
+                            <td>Всего мат-ла</td>
+                            <td><?= CalculationBase::Display(floatval($length_dirty_3), 0) ?> м</td>
                         </tr>
                     </table>
                 </div>
