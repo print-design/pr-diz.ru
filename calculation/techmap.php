@@ -661,7 +661,20 @@ $uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_nam
                                         echo "Лак";
                                         break;
                                 }
+                                
+                                if($$ink_var == CalculationBase::PANTON):
                                 ?>
+                                <a class="panton_edit" href="javascript: void(0);"><img class="ml-2" src="../images/icons/edit1.svg" /></a>
+                                <form class="panton_form form-inline">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text">P</span></div>
+                                        <input type="text" class="form-control" name="color">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-dark" type="submit">OK</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <?php endif; ?>
                             </td>
                             <td>
                                 <?php
