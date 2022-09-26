@@ -435,6 +435,7 @@ $uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_nam
             <div class="row mt-5">
                 <div class="col-4">
                     <h2>Информация для печатника</h2>
+                    <div class="subtitle">Печать</div>
                 </div>
                 <div class="col-4">
                     <h2>Информация для ламинации</h2>
@@ -446,8 +447,11 @@ $uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_nam
             </div>
             <div class="row mt-3">
                 <div class="col-4">
-                    <h3>Печать</h3>
                     <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
+                        <tr>
+                            <td style="padding-top: 5px;">Машина</td>
+                            <td style="padding-top: 5px;"><?= empty($machine) ? "" : ($machine == CalculationBase::COMIFLEX ? "Comiflex" : "ZBS") ?></td>
+                        </tr>
                         <tr>
                             <td>Марка пленки</td>
                             <td><?= empty($film_name) ? $individual_film_name : $film_name ?></td>
