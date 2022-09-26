@@ -120,10 +120,10 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     }
 }
 
-// Получение объекта
+// ПОЛУЧЕНИЕ ОБЪЕКТА
 $id = filter_input(INPUT_GET, 'id');
 
-$sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.work_type_id, c.machine_id, (select shortname from machine where id = c.machine_id) machine, "
+$sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.work_type_id, c.machine_id, (select shortname from machine where id = c.machine_id) machine, laminator_id, "
         . "c.film_variation_id, f.name film_name, fv.thickness thickness, fv.weight weight, c.price, c.currency, c.individual_film_name, c.individual_thickness, c.individual_density, c.customers_material, c.ski, c.width_ski, "
         . "c.lamination1_film_variation_id, lam1f.name lamination1_film_name, lam1fv.thickness lamination1_thickness, lam1fv.weight lamination1_weight, c.lamination1_price, c.lamination1_currency, c.lamination1_individual_film_name, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, c.lamination1_ski, c.lamination1_width_ski, "
         . "c.lamination2_film_variation_id, lam2f.name lamination2_film_name, lam2fv.thickness lamination2_thickness, lam2fv.weight lamination2_weight, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_ski, c.lamination2_width_ski, "
@@ -164,6 +164,7 @@ $unit = $row['unit'];
 $work_type_id = $row['work_type_id'];
 $machine_id = $row['machine_id'];
 $machine = $row['machine'];
+$laminator_id = $row['laminator_id'];
 
 $film_variation_id = $row['film_variation_id'];
 $film_name = $row['film_name'];
@@ -274,6 +275,38 @@ if($roll_type === null) $roll_type = $row['roll_type'];
 
 $comment = filter_input(INPUT_POST, 'comment');
 if($comment === null) $comment = $row['comment'];
+
+// ПОЛУЧЕНИЕ НОРМ
+$data_priladka = new DataPriladka(0, 0, 0, 0);
+$data_priladka_laminator = new DataPriladka(0, 0, 0, 0);
+
+if(!empty($date)) {
+    if(empty($machine_id)) {
+        $data_priladka = new DataPriladka(0, 0, 0, 0);
+    }
+    else {
+        $sql = "select time, length, stamp, waste_percent from norm_priladka where date <= '$date' and machine_id = $machine_id order by id desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if ($row = $fetcher->Fetch()) {
+            $data_priladka = new DataPriladka($row['time'], $row['length'], $row['stamp'], $row['waste_percent']);
+        }
+    }
+    
+    if(empty($laminator_id)) {
+        $data_priladka_laminator = new DataPriladka(0, 0, 0, 0);
+    }
+    else {
+        $sql = "select time, length, waste_percent from norm_laminator_priladka where date <= '$date' and laminator_id = $laminator_id order by id desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $data_priladka_laminator = new DataPriladka($row['time'], $row['length'], 0, $row['waste_percent']);
+        }
+    }
+}
+
+// УРАВНИВАЮЩИЕ КОЭФФИЦИЕНТЫ
+$uk2 = !empty($lamination1_film_name) || !empty($lamination1_individual_film_name) ? 1 : 0; // "нет ламинации - 0, есть ламинация - 1"
+$uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_name) ? 1 : 0; // "нет второй ламинации - 0, есть вторая ламинация - 1"
 ?>
 <!DOCTYPE html>
 <html>
@@ -429,7 +462,7 @@ if($comment === null) $comment = $row['comment'];
                         </tr>
                         <tr>
                             <td>Метраж на приладку</td>
-                            <td><?= CalculationBase::Display(floatval($length_dirty_1) - floatval($length_pure_1), 0) ?> м</td>
+                            <td><?= CalculationBase::Display(floatval($data_priladka->length) * floatval($ink_number), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Метраж на тираж</td>
@@ -488,7 +521,7 @@ if($comment === null) $comment = $row['comment'];
                         </tr>
                         <tr>
                             <td>Метраж на приладку</td>
-                            <td><?= CalculationBase::Display(floatval($length_dirty_2) - floatval($length_pure_2), 0) ?> м</td>
+                            <td><?= CalculationBase::Display(floatval($data_priladka_laminator->length) * $uk2, 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Метраж на тираж</td>
@@ -654,7 +687,7 @@ if($comment === null) $comment = $row['comment'];
                         </tr>
                         <tr>
                             <td>Метраж на приладку</td>
-                            <td><?= CalculationBase::Display(floatval($length_dirty_3) - floatval($length_pure_3), 0) ?> м</td>
+                            <td><?= CalculationBase::Display(floatval($data_priladka_laminator->length) * $uk3, 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Метраж на тираж</td>
