@@ -885,10 +885,6 @@ $uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_nam
                             alert('Ошибка при редактировании пантона');
                         });
             }
-            
-            function EnterPanton(i) {
-                alert(i);
-            }
         </script>
     </body>
 </html>
