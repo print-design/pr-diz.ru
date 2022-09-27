@@ -399,7 +399,7 @@ $uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_nam
             <div class="d-flex justify-content-between">
                 <div><a class="btn btn-outline-dark backlink" href="details.php?id=<?= $id ?>">К расчету</a></div>
                 <div>
-                    <?php if(!empty($id)): ?>
+                    <?php if(!empty($techmap_id)): ?>
                     <a class="btn btn-outline-dark mt-2" target="_blank" style="width: 3rem;" title="Печать" href="print_tm.php?id=<?= $id ?>"><i class="fa fa-print"></i></a>
                     <?php endif; ?>
                 </div>
