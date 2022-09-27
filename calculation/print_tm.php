@@ -240,7 +240,96 @@ $current_date_time = date("dmYHis");
                     от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?>
                 </div>
             </div>
-            <div>Принт-Дизайн</div>
+            <div>
+                <div class="d-inline-block"><img src="../images/logo.svg" /></div>
+                <div class="d-inline-block">Принт-Дизайн</div>
+            </div>
+        </div>
+        <h1><?=$customer ?></h1>
+        <div class="subtitle"><?=$calculation ?></div>
+        <div class="row">
+            <div class="col-6">
+                <p>Карта составлена: <?= DateTime::createFromFormat('Y-m-d H:i:s', $techmap_date)->format('d.m.Y H:i') ?></p>
+                <p>Объем заказа: <strong><?= CalculationBase::Display(intval($quantity), 0) ?> <?=$unit == 'kg' ? 'кг' : 'шт' ?></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= CalculationBase::Display(floatval($length_pure_1), 0) ?> м</p>
+            </div>
+            <div class="col-6">
+                <p>Менеджер: <?=$first_name ?> <?=$last_name ?></p>
+                <p>Тип работы: <?=$work_type ?></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <table class="w-100">
+                    <tr>
+                        <td colspan="2">Информация для печатника</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Печать</td>
+                    </tr>
+                    <tr>
+                        <td>Машина</td>
+                        <td class="text-right"><?= empty($machine) ? "" : ($machine == CalculationBase::COMIFLEX ? "Comiflex" : "ZBS") ?></td>
+                    </tr>
+                    <tr>
+                        <td>Марка пленки</td>
+                        <td class="text-right"><?= empty($film_name) ? $individual_film_name : $film_name ?></td>
+                    </tr>
+                    <tr>
+                        <td>Толщина</td>
+                        <td class="text-right"><?= empty($film_name) ? CalculationBase::Display(floatval($individual_thickness), 0) : CalculationBase::Display(floatval($thickness), 0) ?> мкм</td>
+                    </tr>
+                    <tr>
+                        <td>Ширина мат-ла</td>
+                        <td class="text-right"><?= CalculationBase::Display(floatval($width_1), 0) ?> мм</td>
+                    </tr>
+                    <tr>
+                        <td>Метраж на приладку</td>
+                        <td class="text-right"><?= CalculationBase::Display(floatval($data_priladka->length) * floatval($ink_number), 0) ?> м</td>
+                    </tr>
+                    <tr>
+                        <td>Метраж на тираж</td>
+                        <td class="text-right"><?= CalculationBase::Display(floatval($length_pure_1), 0) ?> м</td>
+                    </tr>
+                    <tr>
+                        <td>Всего мат-ла</td>
+                        <td class="text-right"><?= CalculationBase::Display(floatval($length_dirty_1), 0) ?> м</td>
+                    </tr>
+                    <tr>
+                        <td>Печать</td>
+                        <td class="text-right">
+                            <?php
+                            switch ($side) {
+                                case SIDE_FRONT:
+                                    echo 'Лицевая';
+                                    break;
+                                case SIDE_BACK:
+                                    echo 'Оборотная';
+                                    break;
+                                default :
+                                    echo "Ждем данные";
+                                    break;
+                            }
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Рапорт</td>
+                        <td class="text-right"><?= CalculationBase::Display(floatval($raport), 3) ?></td>
+                    </tr>
+                    <tr>
+                        <td>Растяг</td>
+                        <td class="text-right">Нет</td>
+                    </tr>
+                    <tr>
+                        <td>Ширина ручья</td>
+                        <td class="text-right"><?=$stream_width ?></td>
+                    </tr>
+                    <tr>
+                        <td>Кол-во ручьёв</td>
+                        <td class="text-right"><?=$streams_number ?></td>
+                    </tr>
+                </table>
+            </div>
         </div>
         <?php
         // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
