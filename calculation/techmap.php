@@ -633,6 +633,7 @@ $uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_nam
                         ?>
                         <tr>
                             <td>
+                                <div class="color_label d-inline" id="color_label_<?=$i ?>">
                                 <?php
                                 switch ($$ink_var) {
                                     case CalculationBase::CMYK:
@@ -661,19 +662,23 @@ $uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_nam
                                         echo "Лак";
                                         break;
                                 }
-                                
+                                ?>
+                                </div>
+                                <?php
                                 if($$ink_var == CalculationBase::PANTON):
                                 ?>
-                                <a class="panton_edit" href="javascript: void(0);"><img class="ml-2" src="../images/icons/edit1.svg" /></a>
-                                <form class="panton_form form-inline">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text">P</span></div>
-                                        <input type="text" class="form-control" name="color">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-outline-dark" type="submit">OK</button>
+                                <div class="edit_panton_link d-inline" id="edit_panton_link_<?=$i ?>"><a class="edit_panton" href="javascript: void(0);" onclick="javascript: EditPanton(<?=$i ?>);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
+                                <div class="edit_panton_form d-none" id="edit_panton_form_<?=$i ?>">
+                                    <form class="panton_form form-inline">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend"><span class="input-group-text">P</span></div>
+                                            <input type="text" class="form-control color_input" name="color" id="color_input_<?=$i ?>" value="<?=$$color_var ?>" data-id="<?=$id ?>" data-i="<?=$i ?>">
+                                            <div class="input-group-append">
+                                                <a class="btn btn-outline-dark" href="javascript: void(0);" onclick="javascript: SavePanton(<?=$id ?>, <?=$i ?>);">OK</a>
+                                            </div>
                                         </div>
-                                    </div>
-                                </form>
+                                    </form>
+                                </div>
                                 <?php endif; ?>
                             </td>
                             <td>
@@ -835,6 +840,55 @@ $uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_nam
                 $('#roll_type_validation').removeClass('d-block');
                 $('#roll_type_validation').addClass('d-none');
             });
+            
+            $('.color_input').keydown(function(e) {
+                if(e.which == 13) {
+                    e.preventDefault();
+                    SavePanton($(this).attr('data-id'), $(this).attr('data-i'));
+                }
+            });
+            
+            function EditPanton(i) {
+                $('.color_label').removeClass('d-none');
+                $('.color_label').addClass('d-inline');
+                $('#color_label_' + i).removeClass('d-inline');
+                $('#color_label_' + i).addClass('d-none');
+                
+                $('.edit_panton_link').removeClass('d-none');
+                $('.edit_panton_link').addClass('d-inline');
+                $('#edit_panton_link_' + i).removeClass('d-inline');
+                $('#edit_panton_link_' + i).addClass('d-none');
+                
+                $('.edit_panton_form').removeClass('d-inline');
+                $('.edit_panton_form').addClass('d-none');
+                $('#edit_panton_form_' + i).removeClass('d-none');
+                $('#edit_panton_form_' + i).addClass('d-inline');
+                
+                $('#color_input_' + i).focus();
+            }
+            
+            function SavePanton(id, i) {
+                $.ajax({ url: "edit_panton.php?id=" + id + "&i=" + i + "&value=" + $('#color_input_' + i).val() })
+                        .done(function(data) {
+                            $('#color_label_' + i).text('P' + data);
+                            
+                            $('#edit_panton_form_' + i).removeClass('d-inline');
+                            $('#edit_panton_form_' + i).addClass('d-none');
+                            
+                            $('#color_label_' + i).removeClass('d-none');
+                            $('#color_label_' + i).addClass('d-inline');
+                            
+                            $('#edit_panton_link_' + i).removeClass('d-none');
+                            $('#edit_panton_link_' + i).addClass('d-inline');
+                        })
+                        .fail(function() {
+                            alert('Ошибка при редактировании пантона');
+                        });
+            }
+            
+            function EnterPanton(i) {
+                alert(i);
+            }
         </script>
     </body>
 </html>

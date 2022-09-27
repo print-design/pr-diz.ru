@@ -87,6 +87,9 @@ for($i=1; $i<=8; $i++) {
     $cmyk_valid_var = 'cmyk_'.$i.'_valid';
     $$cmyk_valid_var = '';
     
+    $color_valid_var = 'color_'.$i.'_valid';
+    $$color_valid_var = '';
+    
     $percent_valid_var = 'percent_'.$i.'_valid';
     $$percent_valid_var = '';
 }
