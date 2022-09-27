@@ -396,7 +396,14 @@ $uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_nam
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="details.php?id=<?= $id ?>">К расчету</a>
+            <div class="d-flex justify-content-between">
+                <div><a class="btn btn-outline-dark backlink" href="details.php?id=<?= $id ?>">К расчету</a></div>
+                <div>
+                    <?php if(!empty($id)): ?>
+                    <a class="btn btn-outline-dark mt-2" target="_blank" style="width: 3rem;" title="Печать" href="print_tm.php?id=<?= $id ?>"><i class="fa fa-print"></i></a>
+                    <?php endif; ?>
+                </div>
+            </div>
             <h1><?= empty($techmap_id) ? "Составление тех. карты" : "Технологическая карта" ?></h1>
             <div class="name">Заказчик: <?=$customer ?></div>
             <div class="name">Наименование: <?=$calculation ?></div>
@@ -418,8 +425,8 @@ $uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_nam
                             <td class="text-left"><?=$calculation ?></td>
                         </tr>
                         <tr>
-                            <th class="pt-3">Объем заказа</th>
-                            <td class="pt-3 text-left"><strong><?= CalculationBase::Display(intval($quantity), 0) ?> <?=$unit == 'kg' ? 'кг' : 'шт' ?></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= CalculationBase::Display(floatval($length_pure_1), 0) ?> м</td>
+                            <th>Объем заказа</th>
+                            <td class="text-left"><strong><?= CalculationBase::Display(intval($quantity), 0) ?> <?=$unit == 'kg' ? 'кг' : 'шт' ?></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= CalculationBase::Display(floatval($length_pure_1), 0) ?> м</td>
                         </tr>
                         <tr>
                             <th>Менеджер</th>
