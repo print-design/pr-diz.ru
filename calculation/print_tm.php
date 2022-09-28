@@ -261,11 +261,27 @@ $current_date_time = date("dmYHis");
             .table-header {
                 color: #cccccc;
                 padding-top: 6px;
-                border-bottom: solid 2px #cccccc;
+                border-bottom: solid 2px gray;
             }
             
             table tr td {
                 line-height: 30px;
+                border-bottom: solid 1px #cccccc;
+            }
+            
+            table.fotometka tr td {
+                border: solid 1px #dddddd;
+                padding-left: 4px;
+                padding-top: 4px;
+                padding-right: 20px;
+                padding-bottom: 20px;
+            }
+            
+            .fotochecked {
+                background-image: url(../images/icons/check_black.svg);
+                background-position-x: 50%;
+                background-position-y: 100%;
+                background-repeat: no-repeat;
             }
         </style>
     </head>
@@ -312,13 +328,13 @@ $current_date_time = date("dmYHis");
                 </div>
             </div>
             <div class="row">
-                <div class="col-4">
+                <div class="col-4" style="border-right: solid 1px #cccccc;">
                     <table class="w-100">
                         <tr>
                             <td colspan="2" class="table-header">Информация для печатника</td>
                         </tr>
                         <tr>
-                            <td colspan="2">Печать</td>
+                            <td colspan="2" class="font-weight-bold">Печать</td>
                         </tr>
                         <tr>
                             <td>Машина</td>
@@ -384,7 +400,7 @@ $current_date_time = date("dmYHis");
                         </tr>
                     </table>
                 </div>
-                <div class="col-4">
+                <div class="col-4" style="border-right: solid 1px #cccccc;">
                     <table class="w-100">
                         <tr>
                             <td colspan="2" class="table-header">Информация для ламинации</td>
@@ -394,7 +410,7 @@ $current_date_time = date("dmYHis");
                             <td class="text-right"><?=$lamination ?></td>
                         </tr>
                         <tr>
-                            <td colspan="2">Ламинация 1</td>
+                            <td colspan="2" class="font-weight-bold">Ламинация 1</td>
                         </tr>
                         <tr>
                             <td>Марка пленки</td>
@@ -499,10 +515,10 @@ $current_date_time = date("dmYHis");
                 </div>
             </div>
             <div class="row">
-                <div class="col-4">
+                <div class="col-4" style="border-right: solid 1px #cccccc;">
                     <table class="w-100">
                         <tr>
-                            <td colspan="2">Красочность: <?=$ink_number ?> цв.</td>
+                            <td colspan="2" class="font-weight-bold" style="border-bottom: solid 2px gray;">Красочность: <?=$ink_number ?> цв.</td>
                         </tr>
                         <?php
                         for($i = 1; $i <= $ink_number; $i++):
@@ -567,10 +583,10 @@ $current_date_time = date("dmYHis");
                         ?>
                     </table>
                 </div>
-                <div class="col-4">
+                <div class="col-4" style="border-right: solid 1px #cccccc;">
                     <table class="w-100">
                         <tr>
-                            <td colspan="2">Ламинация 2</td>
+                            <td colspan="2" class="font-weight-bold" style="border-bottom: solid 2px gray;">Ламинация 2</td>
                         </tr>
                         <tr>
                             <td>Марка пленки</td>
@@ -599,24 +615,25 @@ $current_date_time = date("dmYHis");
                     </table>
                 </div>
             </div>
-            <div style="position: relative;">
-                <?php
-                $checked_style = " background-image: url(../images/icons/check.svg); background-position-x: 100%; background-position-y: 100%; background-repeat: no-repeat;";
-                ?>
-                <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 1 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_1.png" style="height: 30px; width: auto;" /></div>
-                <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 2 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_2.png" style="height: 30px; width: auto;" /></div>
-                <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 3 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_3.png" style="height: 30px; width: auto;" /></div>
-                <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 4 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_4.png" style="height: 30px; width: auto;" /></div>
-                <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 5 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_5.png" style="height: 30px; width: auto;" /></div>
-                <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 6 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_6.png" style="height: 30px; width: auto;" /></div>
-                <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 7 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_7.png" style="height: 30px; width: auto;" /></div>
-                <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 8 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_8.png" style="height: 30px; width: auto;" /></div>
-            </div>
-            <div>Комментарий:</div>
-            <div class="row">
-                <div class="col-6">Дизайнер:</div>
-                <div class="col-6">Менеджер:</div>
-            </div>
+            <table class="fotometka" style="margin-top: 10px; margin-bottom: 10px;">
+                <tr>
+                    <td class="fotometka<?= $roll_type == 1 ? " fotochecked" : "" ?>"><img src="../images/roll/roll_type_1.png" style="height: 30px; width: auto;" /></td>
+                    <td class="fotometka<?= $roll_type == 2 ? " fotochecked" : "" ?>"><img src="../images/roll/roll_type_2.png" style="height: 30px; width: auto;" /></td>
+                    <td class="fotometka<?= $roll_type == 3 ? " fotochecked" : "" ?>"><img src="../images/roll/roll_type_3.png" style="height: 30px; width: auto;" /></td>
+                    <td class="fotometka<?= $roll_type == 4 ? " fotochecked" : "" ?>"><img src="../images/roll/roll_type_4.png" style="height: 30px; width: auto;" /></td>
+                    <td class="fotometka<?= $roll_type == 5 ? " fotochecked" : "" ?>"><img src="../images/roll/roll_type_5.png" style="height: 30px; width: auto;" /></td>
+                    <td class="fotometka<?= $roll_type == 6 ? " fotochecked" : "" ?>"><img src="../images/roll/roll_type_6.png" style="height: 30px; width: auto;" /></td>
+                    <td class="fotometka<?= $roll_type == 7 ? " fotochecked" : "" ?>"><img src="../images/roll/roll_type_7.png" style="height: 30px; width: auto;" /></td>
+                    <td class="fotometka<?= $roll_type == 8 ? " fotochecked" : "" ?>"><img src="../images/roll/roll_type_8.png" style="height: 30px; width: auto;" /></td>
+                </tr>
+            </table>
+            <div style="font-size: 18px; font-weight: bold; margin-bottom: 50px;">Комментарий:</div>
+            <table class="w-100">
+                <tr>
+                    <td style="font-size: 18px; font-weight: bold; height: 50px; border: solid 2px #cccccc; padding-left: 5px;">Дизайнер:</td>
+                    <td style="font-size: 18px; font-weight: bold; height: 50px; border: solid 2px #cccccc; padding-left: 5px;">Менеджер:</td>
+                </tr>
+            </table>
             <?php
             // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
             $files = scandir("../temp/");
