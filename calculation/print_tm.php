@@ -376,6 +376,192 @@ $current_date_time = date("dmYHis");
                     </tr>
                 </table>
             </div>
+            <div class="col-4">
+                <table class="w-100">
+                    <tr>
+                        <td colspan="2">Информация для резчика</td>
+                    </tr>
+                    <tr>
+                        <td>Отгрузка в</td>
+                        <td class="text-right"><?=$unit == 'kg' ? 'Кг' : 'Шт' ?></td>
+                    </tr>
+                    <tr>
+                        <td>Намотка до</td>
+                        <td class="text-right">
+                            <?= empty($winding) ? "Ждем данные" : CalculationBase::Display(intval($winding), 0) ?>
+                            <?php
+                            switch ($winding_unit) {
+                                case 'kg':
+                                    echo " кг";
+                                    break;
+                                case 'mm':
+                                    echo " мм";
+                                    break;
+                            }
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Шпуля</td>
+                        <td class="text-right"><?= empty($spool) ? "Ждем данные" : $spool." мм" ?></td>
+                    </tr>
+                    <tr>
+                        <td>Бирки</td>
+                        <td class="text-right">
+                            <?php
+                            switch ($labels) {
+                                case LABEL_PRINT_DESIGN:
+                                    echo "Принт-Дизайн";
+                                    break;
+                                case LABEL_FACELESS:
+                                    echo "Безликие";
+                                    break;
+                                default :
+                                    echo "Ждём данные";
+                                    break;
+                            }
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Упаковка</td>
+                        <td class="text-right">
+                            <?php
+                            switch ($package) {
+                                case PACKAGE_PALLETED:
+                                    echo "Паллетирование";
+                                    break;
+                                case PACKAGE_BULK:
+                                    echo "Россыпью";
+                                    break;
+                                default :
+                                    echo "Ждем данные";
+                                    break;
+                            }
+                            ?>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <table class="w-100">
+                    <tr>
+                        <td colspan="2">Красочность: <?=$ink_number ?> цв.</td>
+                    </tr>
+                    <?php
+                    for($i = 1; $i <= $ink_number; $i++):
+                    $ink_var = "ink_$i";
+                    $color_var = "color_$i";
+                    $cmyk_var = "cmyk_$i";
+                    $percent_var = "percent_$i";
+                    $cliche_var = "cliche_$i";
+                        
+                    $machine_coeff = $machine == CalculationBase::COMIFLEX ? "1.14" : "1.7";
+                    ?>
+                    <tr>
+                        <td>
+                            <?php
+                            switch ($$ink_var) {
+                                case CalculationBase::CMYK:
+                                    switch ($$cmyk_var) {
+                                        case CalculationBase::CYAN:
+                                            echo "Cyan";
+                                            break;
+                                        case CalculationBase::MAGENDA:
+                                            echo "Magenda";
+                                            break;
+                                        case CalculationBase::YELLOW:
+                                            echo "Yellow";
+                                            break;
+                                        case CalculationBase::KONTUR:
+                                            echo "Kontur";
+                                            break;
+                                    }
+                                    break;
+                                case CalculationBase::PANTON:
+                                    echo "P".$$color_var;
+                                    break;
+                                case CalculationBase::WHITE;
+                                    echo "Белая";
+                                    break;
+                                case CalculationBase::LACQUER;
+                                    echo "Лак";
+                                    break;
+                            }
+                            ?>
+                        </td>
+                        <td class="text-right">
+                            <?php
+                            switch ($$cliche_var) {
+                                case CalculationBase::OLD:
+                                    echo "Старая";
+                                    break;
+                                case CalculationBase::FLINT:
+                                    echo "Новая Flint $machine_coeff";
+                                    break;
+                                case CalculationBase::KODAK:
+                                    echo "Новая Kodak $machine_coeff";
+                                    break;
+                            }
+                            ?>
+                        </td>
+                    </tr>
+                    <?php
+                    endfor;
+                    ?>
+                </table>
+            </div>
+            <div class="col-4">
+                <table class="w-100">
+                    <tr>
+                        <td colspan="2">Ламинация 2</td>
+                    </tr>
+                    <tr>
+                        <td>Марка пленки</td>
+                        <td class="text-right"><?= empty($lamination2_film_name) ? $lamination2_individual_film_name : $lamination2_film_name ?></td>
+                    </tr>
+                    <tr>
+                        <td>Толщина</td>
+                        <td class="text-right"><?= empty($lamination2_film_name) ? CalculationBase::Display(floatval($lamination2_individual_thickness), 0) : CalculationBase::Display(floatval($lamination2_thickness), 0) ?> мм</td>
+                    </tr>
+                    <tr>
+                        <td>Ширина мат-ла</td>
+                        <td class="text-right"><?= CalculationBase::Display(floatval($width_3), 0) ?> мм</td>
+                    </tr>
+                    <tr>
+                        <td>Метраж на приладку</td>
+                        <td class="text-right"><?= CalculationBase::Display(floatval($data_priladka_laminator->length) * $uk3, 0) ?> м</td>
+                    </tr>
+                    <tr>
+                        <td>Метраж на тираж</td>
+                        <td class="text-right"><?= CalculationBase::Display(floatval($length_pure_3), 0) ?> м</td>
+                    </tr>
+                    <tr>
+                        <td>Всего мат-ла</td>
+                        <td class="text-right"><?= CalculationBase::Display(floatval($length_dirty_3), 0) ?> м</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div style="position: relative;">
+            <?php
+            $checked_style = " background-image: url(../images/icons/check.svg); background-position-x: 100%; background-position-y: 100%; background-repeat: no-repeat;";
+            ?>
+            <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 1 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_1.png" style="height: 30px; width: auto;" /></div>
+            <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 2 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_2.png" style="height: 30px; width: auto;" /></div>
+            <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 3 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_3.png" style="height: 30px; width: auto;" /></div>
+            <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 4 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_4.png" style="height: 30px; width: auto;" /></div>
+            <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 5 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_5.png" style="height: 30px; width: auto;" /></div>
+            <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 6 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_6.png" style="height: 30px; width: auto;" /></div>
+            <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 7 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_7.png" style="height: 30px; width: auto;" /></div>
+            <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 8 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_8.png" style="height: 30px; width: auto;" /></div>
+        </div>
+        <div>Комментарий:</div>
+        <div class="row">
+            <div class="col-6">Дизайнер:</div>
+            <div class="col-6">Менеджер:</div>
         </div>
         <?php
         // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
