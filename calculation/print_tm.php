@@ -330,6 +330,52 @@ $current_date_time = date("dmYHis");
                     </tr>
                 </table>
             </div>
+            <div class="col-4">
+                <table class="w-100">
+                    <tr>
+                        <td colspan="2">Информация для ламинации</td>
+                    </tr>
+                    <tr>
+                        <td>Кол-во ламинаций</td>
+                        <td class="text-right"><?=$lamination ?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Ламинация 1</td>
+                    </tr>
+                    <tr>
+                        <td>Марка пленки</td>
+                        <td class="text-right"><?= empty($lamination1_film_name) ? $lamination1_individual_film_name : $lamination1_film_name ?></td>
+                    </tr>
+                    <tr>
+                        <td>Толщина</td>
+                        <td class="text-right"><?= empty($lamination1_film_name) ? CalculationBase::Display(floatval($lamination1_individual_thickness), 0) : CalculationBase::Display(floatval($lamination1_thickness), 0) ?> мкм</td>
+                    </tr>
+                    <tr>
+                        <td>Ширина мат-ла</td>
+                        <td class="text-right"><?= CalculationBase::Display(floatval($width_2), 0) ?> мм</td>
+                    </tr>
+                    <tr>
+                        <td>Метраж на приладку</td>
+                        <td class="text-right"><?= CalculationBase::Display(floatval($data_priladka_laminator->length) * $uk2, 0) ?> м</td>
+                    </tr>
+                    <tr>
+                        <td>Метраж на тираж</td>
+                        <td class="text-right"><?= CalculationBase::Display(floatval($length_pure_2), 0) ?> м</td>
+                    </tr>
+                    <tr>
+                        <td>Всего мат-ла</td>
+                        <td class="text-right"><?= CalculationBase::Display(floatval($length_dirty_2), 0) ?> м</td>
+                    </tr>
+                    <tr>
+                        <td>Ламинационный вал</td>
+                        <td class="text-right"><?= CalculationBase::Display(floatval($lamination_roller_width), 0) ?> мм</td>
+                    </tr>
+                    <tr>
+                        <td>Анилокс</td>
+                        <td class="text-right">Нет</td>
+                    </tr>
+                </table>
+            </div>
         </div>
         <?php
         // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
