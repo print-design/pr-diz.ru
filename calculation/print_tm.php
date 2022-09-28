@@ -274,14 +274,8 @@ $current_date_time = date("dmYHis");
                 padding-left: 4px;
                 padding-top: 4px;
                 padding-right: 20px;
-                padding-bottom: 20px;
-            }
-            
-            .fotochecked {
-                background-image: url(../images/icons/check_black.svg);
-                background-position-x: 50%;
-                background-position-y: 100%;
-                background-repeat: no-repeat;
+                text-align: right;
+                vertical-align: top;
             }
         </style>
     </head>
@@ -617,14 +611,38 @@ $current_date_time = date("dmYHis");
             </div>
             <table class="fotometka" style="margin-top: 10px; margin-bottom: 10px;">
                 <tr>
-                    <td class="fotometka<?= $roll_type == 1 ? " fotochecked" : "" ?>"><img src="../images/roll/roll_type_1.png" style="height: 30px; width: auto;" /></td>
-                    <td class="fotometka<?= $roll_type == 2 ? " fotochecked" : "" ?>"><img src="../images/roll/roll_type_2.png" style="height: 30px; width: auto;" /></td>
-                    <td class="fotometka<?= $roll_type == 3 ? " fotochecked" : "" ?>"><img src="../images/roll/roll_type_3.png" style="height: 30px; width: auto;" /></td>
-                    <td class="fotometka<?= $roll_type == 4 ? " fotochecked" : "" ?>"><img src="../images/roll/roll_type_4.png" style="height: 30px; width: auto;" /></td>
-                    <td class="fotometka<?= $roll_type == 5 ? " fotochecked" : "" ?>"><img src="../images/roll/roll_type_5.png" style="height: 30px; width: auto;" /></td>
-                    <td class="fotometka<?= $roll_type == 6 ? " fotochecked" : "" ?>"><img src="../images/roll/roll_type_6.png" style="height: 30px; width: auto;" /></td>
-                    <td class="fotometka<?= $roll_type == 7 ? " fotochecked" : "" ?>"><img src="../images/roll/roll_type_7.png" style="height: 30px; width: auto;" /></td>
-                    <td class="fotometka<?= $roll_type == 8 ? " fotochecked" : "" ?>"><img src="../images/roll/roll_type_8.png" style="height: 30px; width: auto;" /></td>
+                    <td class="fotometka<?= $roll_type == 1 ? " fotochecked" : "" ?>">
+                        <img src="../images/roll/roll_type_1.png" style="height: 50px; width: auto;" />
+                        <?php if($roll_type == 1): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                    </td>
+                    <td class="fotometka<?= $roll_type == 2 ? " fotochecked" : "" ?>">
+                        <img src="../images/roll/roll_type_2.png" style="height: 50px; width: auto;" />
+                        <?php if($roll_type == 2): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                    </td>
+                    <td class="fotometka<?= $roll_type == 3 ? " fotochecked" : "" ?>">
+                        <img src="../images/roll/roll_type_3.png" style="height: 50px; width: auto;" />
+                        <?php if($roll_type == 3): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                    </td>
+                    <td class="fotometka<?= $roll_type == 4 ? " fotochecked" : "" ?>">
+                        <img src="../images/roll/roll_type_4.png" style="height: 50px; width: auto;" />
+                        <?php if($roll_type == 4): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                    </td>
+                    <td class="fotometka<?= $roll_type == 5 ? " fotochecked" : "" ?>">
+                        <img src="../images/roll/roll_type_5.png" style="height: 50px; width: auto;" />
+                        <?php if($roll_type == 5): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                    </td>
+                    <td class="fotometka<?= $roll_type == 6 ? " fotochecked" : "" ?>">
+                        <img src="../images/roll/roll_type_6.png" style="height: 50px; width: auto;" />
+                        <?php if($roll_type == 6): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                    </td>
+                    <td class="fotometka<?= $roll_type == 7 ? " fotochecked" : "" ?>">
+                        <img src="../images/roll/roll_type_7.png" style="height: 50px; width: auto;" />
+                        <?php if($roll_type == 7): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                    </td>
+                    <td class="fotometka<?= $roll_type == 8 ? " fotochecked" : "" ?>">
+                        <img src="../images/roll/roll_type_8.png" style="height: 50px; width: auto;" />
+                        <?php if($roll_type == 8): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                    </td>
                 </tr>
             </table>
             <div style="font-size: 18px; font-weight: bold; margin-bottom: 50px;">Комментарий:</div>
