@@ -218,6 +218,54 @@ $current_date_time = date("dmYHis");
         <style>
             body {
                 padding-left: 0;
+                font-family: 'SF Pro Display';
+                font-size: 16px;
+            }
+            
+            .header_qr {
+                margin-right: 15px;
+            }
+            
+            .header_title {
+                font-weight: bold;
+                font-size: 18px;
+                vertical-align: middle;
+            }
+            
+            .right_logo {
+                padding-right: 10px;
+            }
+            
+            #main {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            
+            #title {
+                font-weight: bold;
+                font-size: 30px;
+                margin-top: 20px;
+            }
+            
+            #subtitle {
+                font-weight: bold;
+                font-size: 24px;
+                margin-top: 8px;
+            }
+            
+            .topproperty {
+                font-size: 18px;
+                margin-top: 6px;
+            }
+            
+            .table-header {
+                color: #cccccc;
+                padding-top: 6px;
+                border-bottom: solid 2px #cccccc;
+            }
+            
+            table tr td {
+                line-height: 30px;
             }
         </style>
     </head>
@@ -234,349 +282,374 @@ $current_date_time = date("dmYHis");
                     QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 3, 4, true);
                 } while (!file_exists($filename));
                 ?>
-                <div class="d-inline-block"><img src='<?=$filename ?>' style='height: 100px; width: 100px;' /></div>
-                <div class="d-inline-block">
+                <div class="d-inline-block header_qr"><img src='<?=$filename ?>' style='height: 100px; width: 100px;' /></div>
+                <div class="d-inline-block header_title">
                     Заказ №<?=$customer_id ?>-<?=$num_for_customer ?><br />
                     от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?>
                 </div>
             </div>
             <div>
-                <div class="d-inline-block"><img src="../images/logo.svg" /></div>
-                <div class="d-inline-block">Принт-Дизайн</div>
+                <div class="d-inline-block right_logo"><img src="../images/logo_with_label.svg" /></div>
             </div>
         </div>
-        <h1><?=$customer ?></h1>
-        <div class="subtitle"><?=$calculation ?></div>
-        <div class="row">
-            <div class="col-6">
-                <p>Карта составлена: <?= DateTime::createFromFormat('Y-m-d H:i:s', $techmap_date)->format('d.m.Y H:i') ?></p>
-                <p>Объем заказа: <strong><?= CalculationBase::Display(intval($quantity), 0) ?> <?=$unit == 'kg' ? 'кг' : 'шт' ?></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= CalculationBase::Display(floatval($length_pure_1), 0) ?> м</p>
+        <div id="main">
+            <div id="title"><?=$customer ?></div>
+            <div id="subtitle"><?=$calculation ?></div>
+            <div class="row">
+                <div class="col-6 topproperty">
+                    <strong>Карта составлена:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DateTime::createFromFormat('Y-m-d H:i:s', $techmap_date)->format('d.m.Y H:i') ?>
+                </div>
+                <div class="col-6 topproperty">
+                    <strong>Менеджер:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$first_name ?> <?=$last_name ?>
+                </div>
             </div>
-            <div class="col-6">
-                <p>Менеджер: <?=$first_name ?> <?=$last_name ?></p>
-                <p>Тип работы: <?=$work_type ?></p>
+            <div class="row">
+                <div class="col-6 topproperty">
+                    <strong>Объем заказа:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= CalculationBase::Display(intval($quantity), 0) ?> <?=$unit == 'kg' ? 'кг' : 'шт' ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= CalculationBase::Display(floatval($length_pure_1), 0) ?> м
+                </div>
+                <div class="col-6 topproperty">
+                    <strong>Тип работы:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$work_type ?>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-4">
-                <table class="w-100">
-                    <tr>
-                        <td colspan="2">Информация для печатника</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">Печать</td>
-                    </tr>
-                    <tr>
-                        <td>Машина</td>
-                        <td class="text-right"><?= empty($machine) ? "" : ($machine == CalculationBase::COMIFLEX ? "Comiflex" : "ZBS") ?></td>
-                    </tr>
-                    <tr>
-                        <td>Марка пленки</td>
-                        <td class="text-right"><?= empty($film_name) ? $individual_film_name : $film_name ?></td>
-                    </tr>
-                    <tr>
-                        <td>Толщина</td>
-                        <td class="text-right"><?= empty($film_name) ? CalculationBase::Display(floatval($individual_thickness), 0) : CalculationBase::Display(floatval($thickness), 0) ?> мкм</td>
-                    </tr>
-                    <tr>
-                        <td>Ширина мат-ла</td>
-                        <td class="text-right"><?= CalculationBase::Display(floatval($width_1), 0) ?> мм</td>
-                    </tr>
-                    <tr>
-                        <td>Метраж на приладку</td>
-                        <td class="text-right"><?= CalculationBase::Display(floatval($data_priladka->length) * floatval($ink_number), 0) ?> м</td>
-                    </tr>
-                    <tr>
-                        <td>Метраж на тираж</td>
-                        <td class="text-right"><?= CalculationBase::Display(floatval($length_pure_1), 0) ?> м</td>
-                    </tr>
-                    <tr>
-                        <td>Всего мат-ла</td>
-                        <td class="text-right"><?= CalculationBase::Display(floatval($length_dirty_1), 0) ?> м</td>
-                    </tr>
-                    <tr>
-                        <td>Печать</td>
-                        <td class="text-right">
-                            <?php
-                            switch ($side) {
-                                case SIDE_FRONT:
-                                    echo 'Лицевая';
-                                    break;
-                                case SIDE_BACK:
-                                    echo 'Оборотная';
-                                    break;
-                                default :
-                                    echo "Ждем данные";
-                                    break;
-                            }
-                            ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Рапорт</td>
-                        <td class="text-right"><?= CalculationBase::Display(floatval($raport), 3) ?></td>
-                    </tr>
-                    <tr>
-                        <td>Растяг</td>
-                        <td class="text-right">Нет</td>
-                    </tr>
-                    <tr>
-                        <td>Ширина ручья</td>
-                        <td class="text-right"><?=$stream_width ?></td>
-                    </tr>
-                    <tr>
-                        <td>Кол-во ручьёв</td>
-                        <td class="text-right"><?=$streams_number ?></td>
-                    </tr>
-                </table>
+            <div class="row">
+                <div class="col-4">
+                    <table class="w-100">
+                        <tr>
+                            <td colspan="2" class="table-header">Информация для печатника</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Печать</td>
+                        </tr>
+                        <tr>
+                            <td>Машина</td>
+                            <td class="text-right"><?= empty($machine) ? "" : ($machine == CalculationBase::COMIFLEX ? "Comiflex" : "ZBS") ?></td>
+                        </tr>
+                        <tr>
+                            <td>Марка пленки</td>
+                            <td class="text-right"><?= empty($film_name) ? $individual_film_name : $film_name ?></td>
+                        </tr>
+                        <tr>
+                            <td>Толщина</td>
+                            <td class="text-right"><?= empty($film_name) ? CalculationBase::Display(floatval($individual_thickness), 0) : CalculationBase::Display(floatval($thickness), 0) ?> мкм</td>
+                        </tr>
+                        <tr>
+                            <td>Ширина мат-ла</td>
+                            <td class="text-right"><?= CalculationBase::Display(floatval($width_1), 0) ?> мм</td>
+                        </tr>
+                        <tr>
+                            <td>Метраж на приладку</td>
+                            <td class="text-right"><?= CalculationBase::Display(floatval($data_priladka->length) * floatval($ink_number), 0) ?> м</td>
+                        </tr>
+                        <tr>
+                            <td>Метраж на тираж</td>
+                            <td class="text-right"><?= CalculationBase::Display(floatval($length_pure_1), 0) ?> м</td>
+                        </tr>
+                        <tr>
+                            <td>Всего мат-ла</td>
+                            <td class="text-right"><?= CalculationBase::Display(floatval($length_dirty_1), 0) ?> м</td>
+                        </tr>
+                        <tr>
+                            <td>Печать</td>
+                            <td class="text-right">
+                                <?php
+                                switch ($side) {
+                                    case SIDE_FRONT:
+                                        echo 'Лицевая';
+                                        break;
+                                    case SIDE_BACK:
+                                        echo 'Оборотная';
+                                        break;
+                                    default :
+                                        echo "Ждем данные";
+                                        break;
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Рапорт</td>
+                            <td class="text-right"><?= CalculationBase::Display(floatval($raport), 3) ?></td>
+                        </tr>
+                        <tr>
+                            <td>Растяг</td>
+                            <td class="text-right">Нет</td>
+                        </tr>
+                        <tr>
+                            <td>Ширина ручья</td>
+                            <td class="text-right"><?=$stream_width ?></td>
+                        </tr>
+                        <tr>
+                            <td>Кол-во ручьёв</td>
+                            <td class="text-right"><?=$streams_number ?></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-4">
+                    <table class="w-100">
+                        <tr>
+                            <td colspan="2" class="table-header">Информация для ламинации</td>
+                        </tr>
+                        <tr>
+                            <td>Кол-во ламинаций</td>
+                            <td class="text-right"><?=$lamination ?></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Ламинация 1</td>
+                        </tr>
+                        <tr>
+                            <td>Марка пленки</td>
+                            <td class="text-right"><?= empty($lamination1_film_name) ? $lamination1_individual_film_name : $lamination1_film_name ?></td>
+                        </tr>
+                        <tr>
+                            <td>Толщина</td>
+                            <td class="text-right"><?= empty($lamination1_film_name) ? CalculationBase::Display(floatval($lamination1_individual_thickness), 0) : CalculationBase::Display(floatval($lamination1_thickness), 0) ?> мкм</td>
+                        </tr>
+                        <tr>
+                            <td>Ширина мат-ла</td>
+                            <td class="text-right"><?= CalculationBase::Display(floatval($width_2), 0) ?> мм</td>
+                        </tr>
+                        <tr>
+                            <td>Метраж на приладку</td>
+                            <td class="text-right"><?= CalculationBase::Display(floatval($data_priladka_laminator->length) * $uk2, 0) ?> м</td>
+                        </tr>
+                        <tr>
+                            <td>Метраж на тираж</td>
+                            <td class="text-right"><?= CalculationBase::Display(floatval($length_pure_2), 0) ?> м</td>
+                        </tr>
+                        <tr>
+                            <td>Всего мат-ла</td>
+                            <td class="text-right"><?= CalculationBase::Display(floatval($length_dirty_2), 0) ?> м</td>
+                        </tr>
+                        <tr>
+                            <td>Ламинационный вал</td>
+                            <td class="text-right"><?= CalculationBase::Display(floatval($lamination_roller_width), 0) ?> мм</td>
+                        </tr>
+                        <tr>
+                            <td>Анилокс</td>
+                            <td class="text-right">Нет</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-4">
+                    <table class="w-100">
+                        <tr>
+                            <td colspan="2" class="table-header">Информация для резчика</td>
+                        </tr>
+                        <tr>
+                            <td>Отгрузка в</td>
+                            <td class="text-right"><?=$unit == 'kg' ? 'Кг' : 'Шт' ?></td>
+                        </tr>
+                        <tr>
+                            <td>Намотка до</td>
+                            <td class="text-right">
+                                <?= empty($winding) ? "Ждем данные" : CalculationBase::Display(intval($winding), 0) ?>
+                                <?php
+                                switch ($winding_unit) {
+                                    case 'kg':
+                                        echo " кг";
+                                        break;
+                                    case 'mm':
+                                        echo " мм";
+                                        break;
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Шпуля</td>
+                            <td class="text-right"><?= empty($spool) ? "Ждем данные" : $spool." мм" ?></td>
+                        </tr>
+                        <tr>
+                            <td>Бирки</td>
+                            <td class="text-right">
+                                <?php
+                                switch ($labels) {
+                                    case LABEL_PRINT_DESIGN:
+                                        echo "Принт-Дизайн";
+                                        break;
+                                    case LABEL_FACELESS:
+                                        echo "Безликие";
+                                        break;
+                                    default :
+                                        echo "Ждём данные";
+                                        break;
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Упаковка</td>
+                            <td class="text-right">
+                                <?php
+                                switch ($package) {
+                                    case PACKAGE_PALLETED:
+                                        echo "Паллетирование";
+                                        break;
+                                    case PACKAGE_BULK:
+                                        echo "Россыпью";
+                                        break;
+                                    default :
+                                        echo "Ждем данные";
+                                        break;
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
-            <div class="col-4">
-                <table class="w-100">
-                    <tr>
-                        <td colspan="2">Информация для ламинации</td>
-                    </tr>
-                    <tr>
-                        <td>Кол-во ламинаций</td>
-                        <td class="text-right"><?=$lamination ?></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">Ламинация 1</td>
-                    </tr>
-                    <tr>
-                        <td>Марка пленки</td>
-                        <td class="text-right"><?= empty($lamination1_film_name) ? $lamination1_individual_film_name : $lamination1_film_name ?></td>
-                    </tr>
-                    <tr>
-                        <td>Толщина</td>
-                        <td class="text-right"><?= empty($lamination1_film_name) ? CalculationBase::Display(floatval($lamination1_individual_thickness), 0) : CalculationBase::Display(floatval($lamination1_thickness), 0) ?> мкм</td>
-                    </tr>
-                    <tr>
-                        <td>Ширина мат-ла</td>
-                        <td class="text-right"><?= CalculationBase::Display(floatval($width_2), 0) ?> мм</td>
-                    </tr>
-                    <tr>
-                        <td>Метраж на приладку</td>
-                        <td class="text-right"><?= CalculationBase::Display(floatval($data_priladka_laminator->length) * $uk2, 0) ?> м</td>
-                    </tr>
-                    <tr>
-                        <td>Метраж на тираж</td>
-                        <td class="text-right"><?= CalculationBase::Display(floatval($length_pure_2), 0) ?> м</td>
-                    </tr>
-                    <tr>
-                        <td>Всего мат-ла</td>
-                        <td class="text-right"><?= CalculationBase::Display(floatval($length_dirty_2), 0) ?> м</td>
-                    </tr>
-                    <tr>
-                        <td>Ламинационный вал</td>
-                        <td class="text-right"><?= CalculationBase::Display(floatval($lamination_roller_width), 0) ?> мм</td>
-                    </tr>
-                    <tr>
-                        <td>Анилокс</td>
-                        <td class="text-right">Нет</td>
-                    </tr>
-                </table>
-            </div>
-            <div class="col-4">
-                <table class="w-100">
-                    <tr>
-                        <td colspan="2">Информация для резчика</td>
-                    </tr>
-                    <tr>
-                        <td>Отгрузка в</td>
-                        <td class="text-right"><?=$unit == 'kg' ? 'Кг' : 'Шт' ?></td>
-                    </tr>
-                    <tr>
-                        <td>Намотка до</td>
-                        <td class="text-right">
-                            <?= empty($winding) ? "Ждем данные" : CalculationBase::Display(intval($winding), 0) ?>
-                            <?php
-                            switch ($winding_unit) {
-                                case 'kg':
-                                    echo " кг";
-                                    break;
-                                case 'mm':
-                                    echo " мм";
-                                    break;
-                            }
-                            ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Шпуля</td>
-                        <td class="text-right"><?= empty($spool) ? "Ждем данные" : $spool." мм" ?></td>
-                    </tr>
-                    <tr>
-                        <td>Бирки</td>
-                        <td class="text-right">
-                            <?php
-                            switch ($labels) {
-                                case LABEL_PRINT_DESIGN:
-                                    echo "Принт-Дизайн";
-                                    break;
-                                case LABEL_FACELESS:
-                                    echo "Безликие";
-                                    break;
-                                default :
-                                    echo "Ждём данные";
-                                    break;
-                            }
-                            ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Упаковка</td>
-                        <td class="text-right">
-                            <?php
-                            switch ($package) {
-                                case PACKAGE_PALLETED:
-                                    echo "Паллетирование";
-                                    break;
-                                case PACKAGE_BULK:
-                                    echo "Россыпью";
-                                    break;
-                                default :
-                                    echo "Ждем данные";
-                                    break;
-                            }
-                            ?>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-4">
-                <table class="w-100">
-                    <tr>
-                        <td colspan="2">Красочность: <?=$ink_number ?> цв.</td>
-                    </tr>
-                    <?php
-                    for($i = 1; $i <= $ink_number; $i++):
-                    $ink_var = "ink_$i";
-                    $color_var = "color_$i";
-                    $cmyk_var = "cmyk_$i";
-                    $percent_var = "percent_$i";
-                    $cliche_var = "cliche_$i";
+            <div class="row">
+                <div class="col-4">
+                    <table class="w-100">
+                        <tr>
+                            <td colspan="2">Красочность: <?=$ink_number ?> цв.</td>
+                        </tr>
+                        <?php
+                        for($i = 1; $i <= $ink_number; $i++):
+                        $ink_var = "ink_$i";
+                        $color_var = "color_$i";
+                        $cmyk_var = "cmyk_$i";
+                        $percent_var = "percent_$i";
+                        $cliche_var = "cliche_$i";
                         
-                    $machine_coeff = $machine == CalculationBase::COMIFLEX ? "1.14" : "1.7";
-                    ?>
-                    <tr>
-                        <td>
-                            <?php
-                            switch ($$ink_var) {
-                                case CalculationBase::CMYK:
-                                    switch ($$cmyk_var) {
-                                        case CalculationBase::CYAN:
-                                            echo "Cyan";
-                                            break;
-                                        case CalculationBase::MAGENDA:
-                                            echo "Magenda";
-                                            break;
-                                        case CalculationBase::YELLOW:
-                                            echo "Yellow";
-                                            break;
-                                        case CalculationBase::KONTUR:
-                                            echo "Kontur";
-                                            break;
-                                    }
-                                    break;
-                                case CalculationBase::PANTON:
-                                    echo "P".$$color_var;
-                                    break;
-                                case CalculationBase::WHITE;
-                                    echo "Белая";
-                                    break;
-                                case CalculationBase::LACQUER;
-                                    echo "Лак";
-                                    break;
-                            }
-                            ?>
-                        </td>
-                        <td class="text-right">
-                            <?php
-                            switch ($$cliche_var) {
-                                case CalculationBase::OLD:
-                                    echo "Старая";
-                                    break;
-                                case CalculationBase::FLINT:
-                                    echo "Новая Flint $machine_coeff";
-                                    break;
-                                case CalculationBase::KODAK:
-                                    echo "Новая Kodak $machine_coeff";
-                                    break;
-                            }
-                            ?>
-                        </td>
-                    </tr>
-                    <?php
-                    endfor;
-                    ?>
-                </table>
+                        $machine_coeff = $machine == CalculationBase::COMIFLEX ? "1.14" : "1.7";
+                        ?>
+                        <tr>
+                            <td>
+                                <?php
+                                switch ($$ink_var) {
+                                    case CalculationBase::CMYK:
+                                        switch ($$cmyk_var) {
+                                            case CalculationBase::CYAN:
+                                                echo "Cyan";
+                                                break;
+                                            case CalculationBase::MAGENDA:
+                                                echo "Magenda";
+                                                break;
+                                            case CalculationBase::YELLOW:
+                                                echo "Yellow";
+                                                break;
+                                            case CalculationBase::KONTUR:
+                                                echo "Kontur";
+                                                break;
+                                        }
+                                        break;
+                                    case CalculationBase::PANTON:
+                                        echo "P".$$color_var;
+                                        break;
+                                    case CalculationBase::WHITE;
+                                        echo "Белая";
+                                        break;
+                                    case CalculationBase::LACQUER;
+                                        echo "Лак";
+                                        break;
+                                }
+                                ?>
+                            </td>
+                            <td class="text-right">
+                                <?php
+                                switch ($$cliche_var) {
+                                    case CalculationBase::OLD:
+                                        echo "Старая";
+                                        break;
+                                    case CalculationBase::FLINT:
+                                        echo "Новая Flint $machine_coeff";
+                                        break;
+                                    case CalculationBase::KODAK:
+                                        echo "Новая Kodak $machine_coeff";
+                                        break;
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <?php
+                        endfor;
+                        ?>
+                    </table>
+                </div>
+                <div class="col-4">
+                    <table class="w-100">
+                        <tr>
+                            <td colspan="2">Ламинация 2</td>
+                        </tr>
+                        <tr>
+                            <td>Марка пленки</td>
+                            <td class="text-right"><?= empty($lamination2_film_name) ? $lamination2_individual_film_name : $lamination2_film_name ?></td>
+                        </tr>
+                        <tr>
+                            <td>Толщина</td>
+                            <td class="text-right"><?= empty($lamination2_film_name) ? CalculationBase::Display(floatval($lamination2_individual_thickness), 0) : CalculationBase::Display(floatval($lamination2_thickness), 0) ?> мм</td>
+                        </tr>
+                        <tr>
+                            <td>Ширина мат-ла</td>
+                            <td class="text-right"><?= CalculationBase::Display(floatval($width_3), 0) ?> мм</td>
+                        </tr>
+                        <tr>
+                            <td>Метраж на приладку</td>
+                            <td class="text-right"><?= CalculationBase::Display(floatval($data_priladka_laminator->length) * $uk3, 0) ?> м</td>
+                        </tr>
+                        <tr>
+                            <td>Метраж на тираж</td>
+                            <td class="text-right"><?= CalculationBase::Display(floatval($length_pure_3), 0) ?> м</td>
+                        </tr>
+                        <tr>
+                            <td>Всего мат-ла</td>
+                            <td class="text-right"><?= CalculationBase::Display(floatval($length_dirty_3), 0) ?> м</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
-            <div class="col-4">
-                <table class="w-100">
-                    <tr>
-                        <td colspan="2">Ламинация 2</td>
-                    </tr>
-                    <tr>
-                        <td>Марка пленки</td>
-                        <td class="text-right"><?= empty($lamination2_film_name) ? $lamination2_individual_film_name : $lamination2_film_name ?></td>
-                    </tr>
-                    <tr>
-                        <td>Толщина</td>
-                        <td class="text-right"><?= empty($lamination2_film_name) ? CalculationBase::Display(floatval($lamination2_individual_thickness), 0) : CalculationBase::Display(floatval($lamination2_thickness), 0) ?> мм</td>
-                    </tr>
-                    <tr>
-                        <td>Ширина мат-ла</td>
-                        <td class="text-right"><?= CalculationBase::Display(floatval($width_3), 0) ?> мм</td>
-                    </tr>
-                    <tr>
-                        <td>Метраж на приладку</td>
-                        <td class="text-right"><?= CalculationBase::Display(floatval($data_priladka_laminator->length) * $uk3, 0) ?> м</td>
-                    </tr>
-                    <tr>
-                        <td>Метраж на тираж</td>
-                        <td class="text-right"><?= CalculationBase::Display(floatval($length_pure_3), 0) ?> м</td>
-                    </tr>
-                    <tr>
-                        <td>Всего мат-ла</td>
-                        <td class="text-right"><?= CalculationBase::Display(floatval($length_dirty_3), 0) ?> м</td>
-                    </tr>
-                </table>
+            <div style="position: relative;">
+                <?php
+                $checked_style = " background-image: url(../images/icons/check.svg); background-position-x: 100%; background-position-y: 100%; background-repeat: no-repeat;";
+                ?>
+                <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 1 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_1.png" style="height: 30px; width: auto;" /></div>
+                <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 2 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_2.png" style="height: 30px; width: auto;" /></div>
+                <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 3 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_3.png" style="height: 30px; width: auto;" /></div>
+                <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 4 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_4.png" style="height: 30px; width: auto;" /></div>
+                <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 5 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_5.png" style="height: 30px; width: auto;" /></div>
+                <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 6 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_6.png" style="height: 30px; width: auto;" /></div>
+                <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 7 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_7.png" style="height: 30px; width: auto;" /></div>
+                <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 8 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_8.png" style="height: 30px; width: auto;" /></div>
             </div>
-        </div>
-        <div style="position: relative;">
+            <div>Комментарий:</div>
+            <div class="row">
+                <div class="col-6">Дизайнер:</div>
+                <div class="col-6">Менеджер:</div>
+            </div>
             <?php
-            $checked_style = " background-image: url(../images/icons/check.svg); background-position-x: 100%; background-position-y: 100%; background-repeat: no-repeat;";
-            ?>
-            <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 1 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_1.png" style="height: 30px; width: auto;" /></div>
-            <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 2 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_2.png" style="height: 30px; width: auto;" /></div>
-            <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 3 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_3.png" style="height: 30px; width: auto;" /></div>
-            <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 4 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_4.png" style="height: 30px; width: auto;" /></div>
-            <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 5 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_5.png" style="height: 30px; width: auto;" /></div>
-            <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 6 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_6.png" style="height: 30px; width: auto;" /></div>
-            <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 7 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_7.png" style="height: 30px; width: auto;" /></div>
-            <div style="position: relative; padding-bottom: 22px; padding-right: 4px; display: inline;<?= $roll_type == 8 ? $checked_style : "" ?>"><img src="../images/roll/roll_type_8.png" style="height: 30px; width: auto;" /></div>
-        </div>
-        <div>Комментарий:</div>
-        <div class="row">
-            <div class="col-6">Дизайнер:</div>
-            <div class="col-6">Менеджер:</div>
-        </div>
-        <?php
-        // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
-        $files = scandir("../temp/");
-        foreach ($files as $file) {
-            $created = filemtime("../temp/".$file);
-            $now = time();
-            $diff = $now - $created;
+            // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
+            $files = scandir("../temp/");
+            foreach ($files as $file) {
+                $created = filemtime("../temp/".$file);
+                $now = time();
+                $diff = $now - $created;
             
-            if($diff > 20 &&
-                    $file != "$current_date_time.png" &&
-                    !is_dir($file)) {
-                unlink("../temp/$file");
+                if($diff > 20 &&
+                        $file != "$current_date_time.png" &&
+                        !is_dir($file)) {
+                    unlink("../temp/$file");
+                }
             }
-        }
-        ?>
+            ?>
+        </div>
+        <script>
+            var css = '@page { size: portrait; margin: 8mm; }',
+                    head = document.head || document.getElementsByTagName('head')[0],
+                    style = document.createElement('style');
+            
+            style.type = 'text/css';
+            style.media = 'print';
+            
+            if (style.styleSheet){
+                style.styleSheet.cssText = css;
+            } else {
+                style.appendChild(document.createTextNode(css));
+            }
+            
+            head.appendChild(style);
+            
+            window.print();
+        </script>
     </body>
 </html>
