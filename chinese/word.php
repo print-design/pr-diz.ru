@@ -12,5 +12,6 @@ if($row = $fetcher->Fetch()) {
     $result['translation'] = $row['translation'];
 }
 
+header("Access-Control-Allow-Origin: *");
 echo json_encode($result);
 ?>
