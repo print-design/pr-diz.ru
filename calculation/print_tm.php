@@ -645,7 +645,7 @@ $current_date_time = date("dmYHis");
                     </td>
                 </tr>
             </table>
-            <div style="font-size: 18px; font-weight: bold; margin-bottom: 50px;">Комментарий:</div>
+            <div style="margin-bottom: 50px;"><span style="font-size: 18px; font-weight: bold;">Комментарий:</span> <?=$comment ?></div>
             <table class="w-100">
                 <tr>
                     <td style="font-size: 18px; font-weight: bold; height: 50px; border: solid 2px #cccccc; padding-left: 5px;">Дизайнер:</td>
