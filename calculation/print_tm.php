@@ -303,8 +303,8 @@ $current_date_time = date("dmYHis");
             </div>
         </div>
         <div id="main">
-            <div id="title"><?=$customer ?></div>
-            <div id="subtitle"><?=$calculation ?></div>
+            <div id="title">Заказчик: <?=$customer ?></div>
+            <div id="subtitle">Наименование: <?=$calculation ?></div>
             <div class="row">
                 <div class="col-6 topproperty">
                     <strong>Карта составлена:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DateTime::createFromFormat('Y-m-d H:i:s', $techmap_date)->format('d.m.Y H:i') ?>

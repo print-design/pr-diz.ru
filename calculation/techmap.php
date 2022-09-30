@@ -836,7 +836,16 @@ $uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_nam
                         <textarea rows="6" name="comment" class="form-control"><?= html_entity_decode($comment) ?></textarea>
                     </div>
                 </div>
-                <button type="submit" name="techmap_submit" class="btn btn-outline-dark draft mt-3" style="width: 200px;">Сохранить</button>
+                <div class="row">
+                    <div class="col-6 d-flex justify-content-between mt-3">
+                        <div><button type="submit" name="techmap_submit" class="btn btn-dark draft" style="width: 175px;">Сохранить</button></div>
+                        <div>
+                            <?php if(!empty($techmap_id)): ?>
+                            <a href="print_tm.php?id=<?= $id ?>" target="_blank" class="btn btn-outline-dark" style="width: 175px;">Печать</a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
         <?php
