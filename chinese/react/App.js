@@ -2,7 +2,7 @@ import './App.css';
 import React from 'react';
 import axios from 'axios';
 
-class DictionaryValue extends React.Component {
+class DictionaryItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = { visible: false };
@@ -38,11 +38,9 @@ class App extends React.Component {
     .then(res => {
       const dictionaryItem = res.data;
       this.setState({ dictionaryItem });
-      
+      this.transcription.current.reset();
+      this.translation.current.reset();
     })
-    
-    this.transcription.current.reset();
-    this.translation.current.reset();
   }
 
   componentDidMount() {
@@ -60,8 +58,8 @@ class App extends React.Component {
     </div>
     <hr />
     <h1>{ this.state.dictionaryItem.word }</h1>
-    <DictionaryValue ref={this.transcription} value={ this.state.dictionaryItem.transcription } button="Показать транскрипцию" />
-    <DictionaryValue ref={this.translation} value={ this.state.dictionaryItem.translation } button="Показать перевод" />
+    <DictionaryItem ref={this.transcription} value={ this.state.dictionaryItem.transcription } button="Показать транскрипцию" />
+    <DictionaryItem ref={this.translation} value={ this.state.dictionaryItem.translation } button="Показать перевод" />
   </div>
   }
 }
