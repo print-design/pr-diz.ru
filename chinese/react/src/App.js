@@ -12,13 +12,13 @@ class DictionaryItem extends React.Component {
 
   render() {
     if(this.state.visible) {
-      return <div className="mt-4 d-none">{this.props.value}</div>
+      return <div className="mt-4">{this.props.value}</div>
     }
 
     return <div className='mt-4'>
       { React.createElement (
         'button',
-        { onClick: () => this.setState({ visible: true }) },
+        { onClick: () => this.setState({ visible: true }), className: 'mt-4 btn btn-outline-dark' },
         this.props.button
       )}
     </div>
@@ -34,7 +34,13 @@ class App extends React.Component {
   }
 
   setnewword = () => {
-    axios.get(`https://pr-diz.ru/chinese/word.php`)
+    var dataservice = `http://localhost/pr-diz.ru/chinese/word.php`;
+
+    if(window.dataservice != null) {
+      dataservice = window.dataservice;
+    }
+
+    axios.get(dataservice)
     .then(res => {
       const dictionaryItem = res.data;
       this.setState({ dictionaryItem });
@@ -52,7 +58,7 @@ class App extends React.Component {
     <div className="text-center">
       { React.createElement(
         'button',
-        { onClick: () => this.setnewword() },
+        { onClick: () => this.setnewword(), className: 'btn btn-dark mt-2' },
         "Новое слово"
       )}
     </div>

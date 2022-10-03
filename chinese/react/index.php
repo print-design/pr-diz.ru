@@ -1,19 +1,25 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8"/>
-<link rel="icon" href="favicon.ico"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<meta name="theme-color" content="#000000"/>
-<meta name="description" content="Web site created using create-react-app"/>
-<link rel="apple-touch-icon" href="logo192.png"/>
-<link rel="manifest" href="manifest.json"/>
-<title>React App</title>
-<script defer="defer" src="static/js/main.f202be35.js"></script>
-<link href="static/css/main.073c9b0a.css" rel="stylesheet">
-</head>
-<body>
-<noscript>You need to enable JavaScript to run this app.</noscript>
-<div id="container"></div>
-</body>
+<?php
+include '../../include/topscripts.php';
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <?php
+        include '../../include/head.php';
+        ?>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            .container {
+                font-size: x-large;
+            }
+        </style>
+        <script>
+            window.dataservice="<?=APPLICATION ?>/chinese/word.php";
+        </script>
+        <script defer="defer" src="main.3459de4c.js"></script>
+    </head>
+    <body>
+        <noscript>You need to enable JavaScript to run this app.</noscript>
+        <div class="container" id="container"></div>
+    </body>
 </html>
