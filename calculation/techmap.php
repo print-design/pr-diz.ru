@@ -566,9 +566,15 @@ $uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_nam
                     <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                         <tr>
                             <td>Отгрузка в</td>
-                            <td>
-                                <?=$unit == 'kg' ? 'Кг' : 'Шт' ?>
-                            </td>
+                            <td><?=$unit == 'kg' ? 'Кг' : 'Шт' ?></td>
+                        </tr>
+                        <tr>
+                            <td>Готовая продукция</td>
+                            <td><?=$unit == 'kg' ? 'Взвешивать' : 'Записывать метраж' ?></td>
+                        </tr>
+                        <tr>
+                            <td>Обрезная ширина</td>
+                            <td><?=$stream_width.(empty($stream_width) ? "" : " мм") ?></td>
                         </tr>
                         <tr>
                             <td>Намотка до</td>
@@ -591,6 +597,10 @@ $uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_nam
                             <td><?= empty($spool) ? "Ждем данные" : $spool." мм" ?></td>
                         </tr>
                         <tr>
+                            <td>Этикеток в 1 м. пог.</td>
+                            <td><?= empty($length) ? "" : CalculationBase::Display(1 / floatval($length) * 1000, 4) ?></td>
+                        </tr>
+                        <tr>
                             <td>Бирки</td>
                             <td>
                                 <?php
@@ -607,6 +617,14 @@ $uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_nam
                                 }
                                 ?>
                             </td>
+                        </tr>
+                        <tr>
+                            <td>Склейки</td>
+                            <td>Помечать</td>
+                        </tr>
+                        <tr>
+                            <td>Отходы</td>
+                            <td>В пресс</td>
                         </tr>
                         <tr>
                             <td>Упаковка</td>

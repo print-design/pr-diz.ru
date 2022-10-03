@@ -455,6 +455,14 @@ $current_date_time = date("dmYHis");
                             <td class="text-right"><?=$unit == 'kg' ? 'Кг' : 'Шт' ?></td>
                         </tr>
                         <tr>
+                            <td>Готовая продукция</td>
+                            <td class="text-right"><?=$unit == 'kg' ? 'Взвешивать' : 'Записывать метраж' ?></td>
+                        </tr>
+                        <tr>
+                            <td>Обрезная ширина</td>
+                            <td class="text-right"><?=$stream_width.(empty($stream_width) ? "" : " мм") ?></td>
+                        </tr>
+                        <tr>
                             <td>Намотка до</td>
                             <td class="text-right">
                                 <?= empty($winding) ? "Ждем данные" : CalculationBase::Display(intval($winding), 0) ?>
@@ -475,6 +483,10 @@ $current_date_time = date("dmYHis");
                             <td class="text-right"><?= empty($spool) ? "Ждем данные" : $spool." мм" ?></td>
                         </tr>
                         <tr>
+                            <td>Этикеток в 1 м. пог.</td>
+                            <td class="text-right"><?= empty($length) ? "" : CalculationBase::Display(1 / floatval($length) * 1000, 4) ?></td>
+                        </tr>
+                        <tr>
                             <td>Бирки</td>
                             <td class="text-right">
                                 <?php
@@ -491,6 +503,14 @@ $current_date_time = date("dmYHis");
                                 }
                                 ?>
                             </td>
+                        </tr>
+                        <tr>
+                            <td>Склейки</td>
+                            <td class="text-right">Помечать</td>
+                        </tr>
+                        <tr>
+                            <td>Отходы</td>
+                            <td class="text-right">В пресс</td>
                         </tr>
                         <tr>
                             <td>Упаковка</td>
