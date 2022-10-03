@@ -127,7 +127,7 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
         . "c.film_variation_id, f.name film_name, fv.thickness thickness, fv.weight weight, c.price, c.currency, c.individual_film_name, c.individual_thickness, c.individual_density, c.customers_material, c.ski, c.width_ski, "
         . "c.lamination1_film_variation_id, lam1f.name lamination1_film_name, lam1fv.thickness lamination1_thickness, lam1fv.weight lamination1_weight, c.lamination1_price, c.lamination1_currency, c.lamination1_individual_film_name, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, c.lamination1_ski, c.lamination1_width_ski, "
         . "c.lamination2_film_variation_id, lam2f.name lamination2_film_name, lam2fv.thickness lamination2_thickness, lam2fv.weight lamination2_weight, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_ski, c.lamination2_width_ski, "
-        . "c.streams_number, c.stream_width, c.raport, c.lamination_roller_width, c.ink_number, "
+        . "c.streams_number, c.stream_width, c.length, c.raport, c.lamination_roller_width, c.ink_number, "
         . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
         . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
@@ -207,6 +207,7 @@ $lamination2_width_ski = $row['lamination2_width_ski'];
 
 $streams_number = $row['streams_number'];
 $stream_width = $row['stream_width'];
+$length = $row['length'];
 $raport = $row['raport'];
 $lamination_roller_width = $row['lamination_roller_width'];
 $ink_number = $row['ink_number']; if(empty($ink_number)) $ink_number = 0;
@@ -511,7 +512,11 @@ $uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_nam
                         </tr>
                         <tr>
                             <td>Ширина ручья</td>
-                            <td><?=$stream_width ?></td>
+                            <td><?=$stream_width.(empty($stream_width) ? "" : " мм") ?></td>
+                        </tr>
+                        <tr>
+                            <td>Длина этикетки</td>
+                            <td><?= CalculationBase::Display(floatval($length), 0).(empty($length) ? "" : " мм") ?></td>
                         </tr>
                         <tr>
                             <td>Кол-во ручьёв</td>
