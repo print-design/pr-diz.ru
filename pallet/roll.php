@@ -262,8 +262,8 @@ if(null === $comment) $comment = $row['comment'];
                                 <?php
                                 $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = $film_id and id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id) order by thickness"))->result;
                                 foreach ($film_variations as $film_variation) {
-                                    $_id = $row['id'];
-                                    $thickness = $row['thickness'];
+                                    $_id = $film_variation['id'];
+                                    $thickness = $film_variation['thickness'];
                                     $weight = $film_variation['weight'];
                                     $selected = '';
                                     if($film_variation_id == $_id) $selected = " selected='selected'";
