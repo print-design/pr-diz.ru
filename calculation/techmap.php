@@ -28,6 +28,11 @@ const PACKAGE_BULK = 2;
 // Значение марки плёнки "другая"
 const INDIVIDUAL = -1;
 
+// Отходы
+const WASTE_PRESS = "В пресс";
+const WASTE_KAGAT = "В кагат";
+const WASTE_PAPER = "В макулатуру";
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -308,6 +313,62 @@ if(!empty($date)) {
 // УРАВНИВАЮЩИЕ КОЭФФИЦИЕНТЫ
 $uk2 = !empty($lamination1_film_name) || !empty($lamination1_individual_film_name) ? 1 : 0; // "нет ламинации - 0, есть ламинация - 1"
 $uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_name) ? 1 : 0; // "нет второй ламинации - 0, есть вторая ламинация - 1"
+
+// Отходы
+$waste1 = "";
+$waste2 = "";
+$waste3 = "";
+$waste = "";
+
+$film_name1 = empty($film_name) ? $individual_film_name : $film_name;
+$film_name2 = empty($lamination1_film_name) ? $lamination1_individual_film_name : $lamination1_film_name;
+$film_name3 = empty($lamination2_film_name) ? $lamination2_individual_film_name : $lamination2_film_name;
+
+$waste_press_films = array("CPP cast", "CPP LA", "HGPL прозрачка", "HMIL.M металл", "HOHL жемчуг", "HWHL белая", "LOBA жемчуг", "LOHM.M", "MGS матовая");
+$waste_paper_film = "Офсет БДМ-7";
+
+if(in_array($film_name1, $waste_press_films)) {
+    $waste1 = WASTE_PRESS;
+}
+elseif($film_name1 == $waste_paper_film) {
+    $waste1 = WASTE_PAPER;
+}
+elseif(empty ($film_name1)) {
+    $waste1 = "";
+}
+else {
+    $waste1 = WASTE_KAGAT;
+}
+
+if(in_array($film_name2, $waste_press_films)) {
+    $waste2 = WASTE_PRESS;
+}
+elseif ($film_name2 == $waste_paper_film) {
+    $waste2 = WASTE_PAPER;
+}
+elseif(empty ($film_name2)) {
+    $waste2 = "";
+}
+else {
+    $waste2 = WASTE_KAGAT;
+}
+
+if(in_array($film_name3, $waste_press_films)) {
+    $waste3 = WASTE_PRESS;
+}
+elseif($film_name3 == $waste_paper_film) {
+    $waste3 = WASTE_PAPER;
+}
+elseif(empty ($film_name3)) {
+    $waste3 = "";
+}
+else {
+    $waste3 = WASTE_KAGAT;
+}
+
+$waste = $waste1;
+if(!empty($waste2) && $waste2 != $waste1) $waste = WASTE_KAGAT;
+if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
 ?>
 <!DOCTYPE html>
 <html>
@@ -624,7 +685,7 @@ $uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_nam
                         </tr>
                         <tr>
                             <td>Отходы</td>
-                            <td>В пресс</td>
+                            <td><?=$waste ?></td>
                         </tr>
                         <tr>
                             <td>Упаковка</td>
