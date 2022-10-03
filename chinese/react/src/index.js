@@ -7,7 +7,7 @@ import reportWebVitals from './reportWebVitals';
 const root = ReactDOM.createRoot(document.getElementById('container'));
 root.render(
   <React.StrictMode>
-    <App original="心" transcription="xin" translation="сердце" />
+    <App />
   </React.StrictMode>
 );
 
