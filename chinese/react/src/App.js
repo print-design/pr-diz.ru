@@ -18,7 +18,7 @@ class DictionaryItem extends React.Component {
     return <div className='mt-4'>
       { React.createElement (
         'button',
-        { onClick: () => this.setState({ visible: true }), className: 'mt-4 btn btn-outline-dark' },
+        { onClick: () => this.setState({ visible: true }), className: 'btn btn-outline-dark' },
         this.props.button
       )}
     </div>

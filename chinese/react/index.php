@@ -16,7 +16,7 @@ include '../../include/topscripts.php';
         <script>
             window.dataservice="<?=APPLICATION ?>/chinese/word.php";
         </script>
-        <script defer="defer" src="main.3459de4c.js"></script>
+        <script defer="defer" src="main.dcfb7812.js"></script>
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
