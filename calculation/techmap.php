@@ -831,8 +831,10 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                         <div class="form-group">
                             <label for="side">Печать</label>
                             <select id="side" name="side" class="form-control<?=$side_valid ?>" required="required">
+                                <?php if($lamination == "нет"): ?>
                                 <option value="" hidden="hidden">...</option>
                                 <option value="<?=SIDE_FRONT ?>"<?= $side == 1 ? " selected='selected'" : "" ?>>Лицевая</option>
+                                <?php endif; ?>
                                 <option value="<?=SIDE_BACK ?>"<?= $side == 2 ? " selected='selected'" : "" ?>>Оборотная</option>
                             </select>
                             <div class="invalid-feedback">Сторона обязательно</div>
