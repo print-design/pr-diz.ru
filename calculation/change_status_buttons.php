@@ -34,7 +34,7 @@
         <button type="submit" name="change-status-submit" class="btn btn-outline-dark draft mt-3" style="width: 200px;">Отклонить</button>
     </form>
 </div>
-<?php elseif ($status_id == CONFIRMED): ?>
+<?php elseif ($status_id == CONFIRMED && $work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
 <a href="techmap.php?id=<?=$id ?>" class="btn btn-outline-dark mt-3" style="width: 200px;">Составить тех. карту</a>
 <?php elseif($status_id == TECHMAP): ?>
 <a href="techmap.php?id=<?=$id ?>" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
