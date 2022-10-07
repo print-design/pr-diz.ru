@@ -712,17 +712,17 @@ if($id !== null) {
         
         array_push($file_data, array("Время печати (без приладки) 1, ч",
             CalculationBase::Display($calculation->print_time_1, 2),
-            $data_machine->speed == 0 ? "0" : "|= (".CalculationBase::Display($calculation->length_pure_start_1, 2)." + ".CalculationBase::Display($calculation->waste_length_1, 2).") / ".CalculationBase::Display($data_machine->speed, 2)." / 1000 * ".CalculationBase::Display($calculation->uk1, 0),
+            $data_machine->speed == 0 ? "|= 0" : "|= (".CalculationBase::Display($calculation->length_pure_start_1, 2)." + ".CalculationBase::Display($calculation->waste_length_1, 2).") / ".CalculationBase::Display($data_machine->speed, 2)." / 1000 * ".CalculationBase::Display($calculation->uk1, 0),
             $data_machine->speed == 0 ? "печати нет" : "(м пог чистые 1 + СтартСтопОтход 1) / скорость работы машины / 1000 * УК1"));
         
         array_push($file_data, array("Время ламинации (без приладки) 2, ч",
             CalculationBase::Display($calculation->lamination_time_2, 2),
-            $data_machine_laminator->speed == 0 ? "0" : "|= (".CalculationBase::Display($calculation->length_pure_start_2, 2)." + ".CalculationBase::Display($calculation->waste_length_2, 2).") / ".CalculationBase::Display($data_machine_laminator->speed, 2)." / 1000 * ".CalculationBase::Display($calculation->uk2, 0),
+            $data_machine_laminator->speed == 0 ? "|= 0" : "|= (".CalculationBase::Display($calculation->length_pure_start_2, 2)." + ".CalculationBase::Display($calculation->waste_length_2, 2).") / ".CalculationBase::Display($data_machine_laminator->speed, 2)." / 1000 * ".CalculationBase::Display($calculation->uk2, 0),
             $data_machine_laminator->speed == 0 ? "ламинации нет" : "(м пог чистые 1 + СтартСтопОтход 1) / скорость работы ламинатора /1000 * УК2"));
         
         array_push($file_data, array("Время ламинации (без приладки) 3, ч",
             CalculationBase::Display($calculation->lamination_time_3, 2),
-            $data_machine_laminator->speed == 0 ? "0" :"|= (".CalculationBase::Display($calculation->length_pure_start_3, 2)." + ".CalculationBase::Display($calculation->waste_length_3, 2).") / ".CalculationBase::Display($data_machine_laminator->speed, 2)." / 1000 * ".CalculationBase::Display($calculation->uk3, 0),
+            $data_machine_laminator->speed == 0 ? "|= 0" :"|= (".CalculationBase::Display($calculation->length_pure_start_3, 2)." + ".CalculationBase::Display($calculation->waste_length_3, 2).") / ".CalculationBase::Display($data_machine_laminator->speed, 2)." / 1000 * ".CalculationBase::Display($calculation->uk3, 0),
             $data_machine_laminator->speed == 0 ? "ламинации нет" : "(м пог чистые 1 + СтартСтопОтход 1) / скорость работы ламинатора / 1000 * УК3"));
         
         array_push($file_data, array("Общее время выполнения тиража 1, ч",
