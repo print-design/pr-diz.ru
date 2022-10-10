@@ -924,7 +924,15 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                 </div>
                 <div class="row">
                     <div class="col-6 d-flex justify-content-between mt-3">
-                        <div><button type="submit" name="techmap_submit" class="btn btn-dark draft" style="width: 175px;">Сохранить</button></div>
+                        <div>
+                            <?php
+                            $submit_class = " d-none";
+                            if(empty($techmap_id)) {
+                                $submit_class = "";
+                            }
+                            ?>
+                            <button type="submit" name="techmap_submit" id="techmap_submit" class="btn btn-dark draft<?=$submit_class ?>" style="width: 175px;">Сохранить</button>
+                        </div>
                         <div>
                             <?php if(!empty($techmap_id)): ?>
                             <a href="print_tm.php?id=<?= $id ?>" target="_blank" class="btn btn-outline-dark" style="width: 175px;">Печать</a>
@@ -943,6 +951,22 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                 $('#roll_type_validation').addClass('d-none');
             });
             
+            // Показываем кнопку "Сохранить" при внесении изменений
+            <?php if(!empty($techmap_id)): ?>
+                $('select').change(function() {
+                    $('#techmap_submit').removeClass('d-none');
+                });
+                
+                $('input').not('.color_input').change(function() {
+                    $('#techmap_submit').removeClass('d-none');
+                });
+                
+                $('input').not('.color_input').keydown(function() {
+                    $('#techmap_submit').removeClass('d-none');
+                });
+            <?php endif; ?>
+            
+            // Редактируем пантоны
             $('.color_input').keydown(function(e) {
                 if(e.which == 13) {
                     e.preventDefault();
