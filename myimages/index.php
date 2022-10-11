@@ -11,7 +11,7 @@ if(null !== filter_input(INPUT_POST, 'delete_submit')) {
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $name = $row['name'];
-            if(is_dir($foldername.$name) || (file_exists($foldername.$name) && unlink($foldername.$name))) {
+            if(is_dir($foldername.$name) || !file_exists($foldername.$name) || unlink($foldername.$name)) {
                 $sql = "delete from myimages where id = $id";
                 $executer = new Executer($sql);
                 $error_message = $executer->error;

@@ -18,14 +18,6 @@ $sql = "select name from myimages where id = $id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $sourcefile = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/myimages/images/".$row['name'];
-    
-    /*$size = getimagesize($sourcefile);
-            $fp = fopen($sourcefile, "rb");
-            if($size && $fp) {
-                header("Content-type: {$size['mime']}");
-                fpassthru($fp);
-                exit();
-            }*/
 }
 else {
     $error_message = "Ошибка при получении имени файла";
