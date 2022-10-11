@@ -1,15 +1,11 @@
 <?php
 include '../include/topscripts.php';
-include './myimage.php';
 
 if(null !== filter_input(INPUT_POST, 'image_submit')) {
     if($_FILES['file']['error'] == 0) {
         if(exif_imagetype($_FILES['file']['tmp_name'])) {
-            $myimage = new MyImage($_FILES['file']['tmp_name']);
-            $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION.'/myimages/images/', 0, 0);
-            
-            if($file_uploaded) {
-                $sql = "insert into myimages (name) values ('$myimage->filename')";
+            if(copy($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].APPLICATION.'/myimages/images/'.$_FILES['file']['name'])) {
+                $sql = "insert into myimages (name) values ('".$_FILES['file']['name']."')";
                 $executer = new Executer($sql);
                 $error_message = $executer->error;
                 $insert_id = $executer->insert_id;
@@ -19,7 +15,7 @@ if(null !== filter_input(INPUT_POST, 'image_submit')) {
                 }
             }
             else {
-                $error_message = "ошибка при загрузке файла";
+                $error_message = "Ошибка при загрузке файла";
             }
         }
     }
