@@ -46,7 +46,7 @@ else {
             <img src="images/<?=$row['name'] ?>" title="<?=$row['name'] ?>" class="img-fluid" />
             <br />
             <?php
-            $imagesize = getimagesize($sourcefile); print_r($imagesize);
+            $imagesize = getimagesize($sourcefile);
             $gdimage = null;
             switch ($imagesize['mime']) {
             case IMAGE_PNG:
@@ -66,7 +66,7 @@ else {
                 break;
             }
             
-            if(!empty($gdimage) && false) {
+            if(!empty($gdimage)) {
                 echo "<table>";
                 for($y = 0; $y < $imagesize[1]; $y++) {
                     echo "<tr>";

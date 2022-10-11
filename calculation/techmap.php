@@ -368,7 +368,7 @@ else {
 
 $waste = $waste1;
 if(!empty($waste2) && $waste2 != $waste1) $waste = WASTE_KAGAT;
-if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
+if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT; echo $waste;
 ?>
 <!DOCTYPE html>
 <html>
