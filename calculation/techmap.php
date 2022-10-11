@@ -964,6 +964,14 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                 $('input').not('.color_input').keydown(function() {
                     $('#techmap_submit').removeClass('d-none');
                 });
+                
+                $('textarea').keydown(function() {
+                    $('#techmap_submit').removeClass('d-none');
+                });
+                
+                $('textarea').change(function() {
+                    $('#techmap_submit').removeClass('d-none');
+                });
             <?php endif; ?>
             
             // Редактируем пантоны
