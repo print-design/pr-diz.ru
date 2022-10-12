@@ -4,7 +4,7 @@ include '../include/topscripts.php';
 if(null !== filter_input(INPUT_POST, 'image_submit')) {
     if($_FILES['file']['error'] == 0) {
         if(exif_imagetype($_FILES['file']['tmp_name'])) {
-            if(copy($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].APPLICATION.'/myimages/images/'.$_FILES['file']['name'])) {
+            if(copy($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].APPLICATION.'/temp/images/'.$_FILES['file']['name'])) {
                 $sql = "insert into myimages (name) values ('".$_FILES['file']['name']."')";
                 $executer = new Executer($sql);
                 $error_message = $executer->error;

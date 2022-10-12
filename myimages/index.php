@@ -1,7 +1,7 @@
 <?php
 include '../include/topscripts.php';
 
-$foldername = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/myimages/images/";
+$foldername = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/temp/images/";
 
 if(null !== filter_input(INPUT_POST, 'delete_submit')) {
     $id = filter_input(INPUT_POST, 'id');
@@ -45,7 +45,7 @@ if(null !== filter_input(INPUT_POST, 'delete_submit')) {
                 while ($row = $fetcher->Fetch()):
                 ?>
                 <div class="col-3" style="position: relative;">
-                    <a href="details.php?id=<?=$row['id'] ?>"><img src="images/<?=$row['name'] ?>" title="<?=$row['name'] ?>" class="img-fluid" /></a>
+                    <a href="details.php?id=<?=$row['id'] ?>"><img src="../temp/images/<?=$row['name'] ?>" title="<?=$row['name'] ?>" class="img-fluid" /></a>
                     <div style="position: absolute; top: 5px; right: 5px;">
                         <form method="post">
                             <input type="hidden" name="id" value="<?=$row['id'] ?>" />

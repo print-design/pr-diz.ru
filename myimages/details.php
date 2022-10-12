@@ -17,7 +17,7 @@ $sourcefile = null;
 $sql = "select name from myimages where id = $id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
-    $sourcefile = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/myimages/images/".$row['name'];
+    $sourcefile = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/temp/images/".$row['name'];
 }
 else {
     $error_message = "Ошибка при получении имени файла";
@@ -43,7 +43,7 @@ else {
             
             if(empty($error_message)):
             ?>
-            <img src="images/<?=$row['name'] ?>" title="<?=$row['name'] ?>" class="img-fluid" />
+            <img src="../temp/images/<?=$row['name'] ?>" title="<?=$row['name'] ?>" class="img-fluid" />
             <br />
             <?php
             $imagesize = getimagesize($sourcefile);
