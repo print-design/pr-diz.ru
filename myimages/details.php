@@ -44,9 +44,12 @@ else {
             if(empty($error_message)):
             ?>
             <img src="../temp/images/<?=$row['name'] ?>" title="<?=$row['name'] ?>" class="img-fluid" />
-            <br />
+            <br /><br />
             <?php
             $imagesize = getimagesize($sourcefile);
+            print_r($imagesize);
+            echo "<br /><br />";
+            
             $gdimage = null;
             switch ($imagesize['mime']) {
             case IMAGE_PNG:
