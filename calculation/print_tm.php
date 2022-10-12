@@ -257,7 +257,7 @@ if(in_array($film_name3, $waste_press_films)) {
 elseif($film_name3 == $waste_paper_film) {
     $waste3 = WASTE_PAPER;
 }
-elseif(empty ($film_name2)) {
+elseif(empty ($film_name3)) {
     $waste3 = "";
 }
 else {
@@ -266,7 +266,7 @@ else {
 
 $waste = $waste1;
 if(!empty($waste2) && $waste2 != $waste1) $waste = WASTE_KAGAT;
-if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT; echo $waste;
+if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
 
 // Текущее время
 $current_date_time = date("dmYHis");
