@@ -36,7 +36,10 @@ if(null !== filter_input(INPUT_POST, 'delete_submit')) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a href="create.php" class="btn btn-outline-dark">Создать</a>
+            <div class="d-flex justify-content-between">
+                <div><a href="create.php" class="btn btn-outline-dark">Создать</a></div>
+                <div><a href="montage.php" class="btn btn-outline-dark">Монтаж</a></div>
+            </div>
             <h1>Мои картинки</h1>
             <div class="row">
                 <?php
