@@ -28,7 +28,7 @@ if(null !== filter_input(INPUT_POST, 'image_submit')) {
         ?>
     </head>
     <body>
-        <div class="container">
+        <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";

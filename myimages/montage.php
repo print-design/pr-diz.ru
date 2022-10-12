@@ -10,7 +10,7 @@ $tifffile = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/temp/tiff/111022_zefir_belo-
         ?>
     </head>
     <body>
-        <div class="container">
+        <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
