@@ -397,7 +397,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         if(empty($error_message)) {
-            header('Location: create.php?id='.$insert_id);
+            header('Location: details.php?id='.$insert_id);
         }
     }
 }
