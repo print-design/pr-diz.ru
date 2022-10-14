@@ -346,6 +346,7 @@ if($status_id == DRAFT || $status_id == CALCULATION) {
         </div>
         <?php
         include '../include/footer.php';
+        include '../include/footer_find.php';
         ?>
         <script>
             // Показ расходов

@@ -2288,6 +2288,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
         </div>
         <?php
         include '../include/footer.php';
+        include '../include/footer_find.php';
         ?>
         <script src="<?=APPLICATION ?>/js/select2.min.js"></script>
         <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>

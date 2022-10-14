@@ -944,6 +944,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
         </div>
         <?php
         include '../include/footer.php';
+        include '../include/footer_find.php';
         ?>
         <script>
             $('.roll-selector input').change(function(){

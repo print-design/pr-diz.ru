@@ -52,8 +52,8 @@ elseif($folder == 'schedule') {
             <?php endif; ?>
         </ul>
         <?php
-        if(substr(filter_input(INPUT_SERVER, 'PHP_SELF'), (strlen(filter_input(INPUT_SERVER, 'PHP_SELF')) - strlen('index.php'))) == 'index.php' && file_exists('filter.php')) {
-            include 'filter.php';
+        if(file_exists('find.php')) {
+            include 'find.php';
         }
         else {
             echo "<div class='ml-auto'></div>";
