@@ -113,6 +113,17 @@ else $title = $status_titles[1];
                     if(!empty($name)) {
                         $where .= " and trim(c.name)='$name'";
                     }
+                    
+                    $find = filter_input(INPUT_GET, 'find');
+                    if(!empty($find)) {
+                        $find_substrings = explode('-', $find);
+                        if(count($find_substrings) != 2 || intval($find_substrings[0]) == 0 || intval($find_substrings[1]) == 0) {
+                            $where .= " and false";
+                        }
+                        else {
+                            $where .= " and c.customer_id = ".intval($find_substrings[0])." and (select count(id) from calculation where customer_id = c.customer_id and id <= c.id) = ".intval($find_substrings[1]);
+                        }
+                    }
 
                     // Общее количество расчётов для установления количества страниц в постраничном выводе
                     $sql = "select count(c.id) from calculation c left join customer cus on c.customer_id=cus.id$where";
