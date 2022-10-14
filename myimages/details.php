@@ -96,6 +96,15 @@ function rgb2cmyk($var1,$g=0,$b=0) {
                 break;
             }
             
+            $ccount = 0;
+            $cvalue = 0.0;
+            $mcount = 0;
+            $mvalue = 0.0;
+            $ycount = 0;
+            $yvalue = 0.0;
+            $kcount = 0;
+            $kvalue = 0.0;
+            
             if(!empty($gdimage)) {
                 echo "<table>";
                 for($y = 0; $y < $imagesize[1]; $y++) {
