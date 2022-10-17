@@ -678,6 +678,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                             <td>
                                 <?php
                                 /* 1) Если намотка до =«кг», то Примерный метраж = (намотка до *1000*1000)/((уд вес пленка 1 + уд вес пленка 2 + уд вес пленка 3)*обрезная ширина))
+                                 * 1) Если намотка до =«кг», то Примерный метраж = (намотка до *1000*1000)/((уд вес пленка 1 + уд вес пленка 2 + уд вес пленка 3)*обрезная ширина))-200
                                  * 2) Если намотка до = «мм» , то значение = "Нет"
                                  * 3) Если намотка до = «шт» , то значение = "Нет" */
                                 if(empty($winding) || empty($winding_unit)) {
@@ -690,7 +691,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                                     echo 'Нет данных по ширине мат-ла';
                                 }
                                 elseif($winding_unit == 'kg') {
-                                    echo CalculationBase::Display((floatval($winding) * 1000 * 1000) / ((floatval($weight) + ($lamination1_weight === null ? 0 : floatval($lamination1_weight)) + ($lamination2_weight === null ? 0 : floatval($lamination2_weight))) * floatval($stream_width)), 0)." м";
+                                    echo CalculationBase::Display((floatval($winding) * 1000 * 1000) / ((floatval($weight) + ($lamination1_weight === null ? 0 : floatval($lamination1_weight)) + ($lamination2_weight === null ? 0 : floatval($lamination2_weight))) * floatval($stream_width)) - 200, 0)." м";
                                 }
                                 else {
                                     echo 'Нет';
