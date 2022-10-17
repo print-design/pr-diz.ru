@@ -326,9 +326,17 @@ $current_date_time = date("dmYHis");
                 border-bottom: solid 2px gray;
             }
             
-            table tr td {
+            td {
                 line-height: 30px;
                 border-bottom: solid 1px #cccccc;
+            }
+            
+            tr td:nth-child(2) {
+                text-align: right;
+            }
+            
+            tr.left td:nth-child(2) {
+                text-align: left;
             }
             
             table.fotometka tr td {
@@ -394,35 +402,35 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <tr>
                             <td>Машина</td>
-                            <td class="text-right"><?= empty($machine) ? "" : ($machine == CalculationBase::COMIFLEX ? "Comiflex" : "ZBS") ?></td>
+                            <td><?= empty($machine) ? "" : ($machine == CalculationBase::COMIFLEX ? "Comiflex" : "ZBS") ?></td>
                         </tr>
                         <tr>
                             <td>Марка пленки</td>
-                            <td class="text-right"><?= empty($film_name) ? $individual_film_name : $film_name ?></td>
+                            <td><?= empty($film_name) ? $individual_film_name : $film_name ?></td>
                         </tr>
                         <tr>
                             <td>Толщина</td>
-                            <td class="text-right"><?= empty($film_name) ? CalculationBase::Display(floatval($individual_thickness), 0) : CalculationBase::Display(floatval($thickness), 0) ?> мкм</td>
+                            <td><?= empty($film_name) ? CalculationBase::Display(floatval($individual_thickness), 0) : CalculationBase::Display(floatval($thickness), 0) ?> мкм</td>
                         </tr>
                         <tr>
                             <td>Ширина мат-ла</td>
-                            <td class="text-right"><?= CalculationBase::Display(floatval($width_1), 0) ?> мм</td>
+                            <td><?= CalculationBase::Display(floatval($width_1), 0) ?> мм</td>
                         </tr>
                         <tr>
                             <td>Метраж на приладку</td>
-                            <td class="text-right"><?= CalculationBase::Display(floatval($data_priladka->length) * floatval($ink_number), 0) ?> м</td>
+                            <td><?= CalculationBase::Display(floatval($data_priladka->length) * floatval($ink_number), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Метраж на тираж</td>
-                            <td class="text-right"><?= CalculationBase::Display(floatval($length_pure_1), 0) ?> м</td>
+                            <td><?= CalculationBase::Display(floatval($length_pure_1), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Всего мат-ла</td>
-                            <td class="text-right"><?= CalculationBase::Display(floatval($length_dirty_1), 0) ?> м</td>
+                            <td><?= CalculationBase::Display(floatval($length_dirty_1), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Печать</td>
-                            <td class="text-right">
+                            <td>
                                 <?php
                                 switch ($side) {
                                     case SIDE_FRONT:
@@ -440,23 +448,23 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <tr>
                             <td>Рапорт</td>
-                            <td class="text-right"><?= CalculationBase::Display(floatval($raport), 3) ?></td>
+                            <td><?= CalculationBase::Display(floatval($raport), 3) ?></td>
                         </tr>
                         <tr>
                             <td>Растяг</td>
-                            <td class="text-right">Нет</td>
+                            <td>Нет</td>
                         </tr>
                         <tr>
                             <td>Ширина ручья</td>
-                            <td class="text-right"><?=$stream_width.(empty($stream_width) ? "" : " мм") ?></td>
+                            <td><?=$stream_width.(empty($stream_width) ? "" : " мм") ?></td>
                         </tr>
                         <tr>
                             <td>Длина этикетки</td>
-                            <td class="text-right"><?= CalculationBase::Display(floatval($length), 0).(empty($length) ? "" : " мм") ?></td>
+                            <td><?= CalculationBase::Display(floatval($length), 0).(empty($length) ? "" : " мм") ?></td>
                         </tr>
                         <tr>
                             <td>Кол-во ручьёв</td>
-                            <td class="text-right"><?=$streams_number ?></td>
+                            <td><?=$streams_number ?></td>
                         </tr>
                     </table>
                 </div>
@@ -467,42 +475,42 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <tr>
                             <td>Кол-во ламинаций</td>
-                            <td class="text-right"><?=$lamination ?></td>
+                            <td><?=$lamination ?></td>
                         </tr>
                         <tr>
                             <td colspan="2" class="font-weight-bold">Ламинация 1</td>
                         </tr>
                         <tr>
                             <td>Марка пленки</td>
-                            <td class="text-right"><?= empty($lamination1_film_name) ? $lamination1_individual_film_name : $lamination1_film_name ?></td>
+                            <td><?= empty($lamination1_film_name) ? $lamination1_individual_film_name : $lamination1_film_name ?></td>
                         </tr>
                         <tr>
                             <td>Толщина</td>
-                            <td class="text-right"><?= empty($lamination1_film_name) ? CalculationBase::Display(floatval($lamination1_individual_thickness), 0) : CalculationBase::Display(floatval($lamination1_thickness), 0) ?> мкм</td>
+                            <td><?= empty($lamination1_film_name) ? CalculationBase::Display(floatval($lamination1_individual_thickness), 0) : CalculationBase::Display(floatval($lamination1_thickness), 0) ?> мкм</td>
                         </tr>
                         <tr>
                             <td>Ширина мат-ла</td>
-                            <td class="text-right"><?= CalculationBase::Display(floatval($width_2), 0) ?> мм</td>
+                            <td><?= CalculationBase::Display(floatval($width_2), 0) ?> мм</td>
                         </tr>
                         <tr>
                             <td>Метраж на приладку</td>
-                            <td class="text-right"><?= CalculationBase::Display(floatval($data_priladka_laminator->length) * $uk2, 0) ?> м</td>
+                            <td><?= CalculationBase::Display(floatval($data_priladka_laminator->length) * $uk2, 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Метраж на тираж</td>
-                            <td class="text-right"><?= CalculationBase::Display(floatval($length_pure_2), 0) ?> м</td>
+                            <td><?= CalculationBase::Display(floatval($length_pure_2), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Всего мат-ла</td>
-                            <td class="text-right"><?= CalculationBase::Display(floatval($length_dirty_2), 0) ?> м</td>
+                            <td><?= CalculationBase::Display(floatval($length_dirty_2), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Ламинационный вал</td>
-                            <td class="text-right"><?= CalculationBase::Display(floatval($lamination_roller_width), 0) ?> мм</td>
+                            <td><?= CalculationBase::Display(floatval($lamination_roller_width), 0) ?> мм</td>
                         </tr>
                         <tr>
                             <td>Анилокс</td>
-                            <td class="text-right">Нет</td>
+                            <td>Нет</td>
                         </tr>
                     </table>
                 </div>
@@ -513,19 +521,19 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <tr>
                             <td>Отгрузка в</td>
-                            <td class="text-right"><?=$unit == 'kg' ? 'Кг' : 'Шт' ?></td>
+                            <td><?=$unit == 'kg' ? 'Кг' : 'Шт' ?></td>
                         </tr>
                         <tr>
                             <td>Готовая продукция</td>
-                            <td class="text-right"><?=$unit == 'kg' ? 'Взвешивать' : 'Записывать метраж' ?></td>
+                            <td><?=$unit == 'kg' ? 'Взвешивать' : 'Записывать метраж' ?></td>
                         </tr>
                         <tr>
                             <td>Обрезная ширина</td>
-                            <td class="text-right"><?=$stream_width.(empty($stream_width) ? "" : " мм") ?></td>
+                            <td><?=$stream_width.(empty($stream_width) ? "" : " мм") ?></td>
                         </tr>
                         <tr>
                             <td>Намотка до</td>
-                            <td class="text-right">
+                            <td>
                                 <?php
                                 if(empty($winding)) {
                                     echo 'Ждем данные';
@@ -561,7 +569,7 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <tr>
                             <td>Прим. метраж намотки</td>
-                            <td class="text-right">
+                            <td>
                                 <?php
                                 /* 1) Если намотка до =«кг», то Примерный метраж = (намотка до *1000*1000)/((уд вес пленка 1 + уд вес пленка 2 + уд вес пленка 3)*обрезная ширина))
                                  * 2) Если намотка до = «мм» , то значение = "Нет"
@@ -586,15 +594,15 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <tr>
                             <td>Шпуля</td>
-                            <td class="text-right"><?= empty($spool) ? "Ждем данные" : $spool." мм" ?></td>
+                            <td><?= empty($spool) ? "Ждем данные" : $spool." мм" ?></td>
                         </tr>
                         <tr>
                             <td>Этикеток в 1 м. пог.</td>
-                            <td class="text-right"><?= empty($length) ? "" : CalculationBase::Display(1 / floatval($length) * 1000, 4) ?></td>
+                            <td><?= empty($length) ? "" : CalculationBase::Display(1 / floatval($length) * 1000, 4) ?></td>
                         </tr>
                         <tr>
                             <td>Бирки</td>
-                            <td class="text-right">
+                            <td>
                                 <?php
                                 switch ($labels) {
                                     case LABEL_PRINT_DESIGN:
@@ -612,15 +620,15 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <tr>
                             <td>Склейки</td>
-                            <td class="text-right">Помечать</td>
+                            <td>Помечать</td>
                         </tr>
                         <tr>
                             <td>Отходы</td>
-                            <td class="text-right"><?=$waste ?></td>
+                            <td><?=$waste ?></td>
                         </tr>
                         <tr>
                             <td>Упаковка</td>
-                            <td class="text-right">
+                            <td>
                                 <?php
                                 switch ($package) {
                                     case PACKAGE_PALLETED:
@@ -687,7 +695,7 @@ $current_date_time = date("dmYHis");
                                 }
                                 ?>
                             </td>
-                            <td class="text-right">
+                            <td>
                                 <?php
                                 switch ($$cliche_var) {
                                     case CalculationBase::OLD:
@@ -715,27 +723,27 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <tr>
                             <td>Марка пленки</td>
-                            <td class="text-right"><?= empty($lamination2_film_name) ? $lamination2_individual_film_name : $lamination2_film_name ?></td>
+                            <td><?= empty($lamination2_film_name) ? $lamination2_individual_film_name : $lamination2_film_name ?></td>
                         </tr>
                         <tr>
                             <td>Толщина</td>
-                            <td class="text-right"><?= empty($lamination2_film_name) ? CalculationBase::Display(floatval($lamination2_individual_thickness), 0) : CalculationBase::Display(floatval($lamination2_thickness), 0) ?> мм</td>
+                            <td><?= empty($lamination2_film_name) ? CalculationBase::Display(floatval($lamination2_individual_thickness), 0) : CalculationBase::Display(floatval($lamination2_thickness), 0) ?> мм</td>
                         </tr>
                         <tr>
                             <td>Ширина мат-ла</td>
-                            <td class="text-right"><?= CalculationBase::Display(floatval($width_3), 0) ?> мм</td>
+                            <td><?= CalculationBase::Display(floatval($width_3), 0) ?> мм</td>
                         </tr>
                         <tr>
                             <td>Метраж на приладку</td>
-                            <td class="text-right"><?= CalculationBase::Display(floatval($data_priladka_laminator->length) * $uk3, 0) ?> м</td>
+                            <td><?= CalculationBase::Display(floatval($data_priladka_laminator->length) * $uk3, 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Метраж на тираж</td>
-                            <td class="text-right"><?= CalculationBase::Display(floatval($length_pure_3), 0) ?> м</td>
+                            <td><?= CalculationBase::Display(floatval($length_pure_3), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Всего мат-ла</td>
-                            <td class="text-right"><?= CalculationBase::Display(floatval($length_dirty_3), 0) ?> м</td>
+                            <td><?= CalculationBase::Display(floatval($length_dirty_3), 0) ?> м</td>
                         </tr>
                     </table>
                 </div>
@@ -778,7 +786,7 @@ $current_date_time = date("dmYHis");
             </table>
             <div style="margin-bottom: 50px;"><span style="font-size: 18px; font-weight: bold;">Комментарий:</span> <?=$comment ?></div>
             <table class="w-100">
-                <tr>
+                <tr class="left">
                     <td style="font-size: 18px; font-weight: bold; height: 50px; border: solid 2px #cccccc; padding-left: 5px;">Дизайнер:</td>
                     <td style="font-size: 18px; font-weight: bold; height: 50px; border: solid 2px #cccccc; padding-left: 5px;">Менеджер:</td>
                 </tr>
