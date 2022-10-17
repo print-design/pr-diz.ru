@@ -640,14 +640,34 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                         <tr>
                             <td>Намотка до</td>
                             <td>
-                                <?= empty($winding) ? "Ждем данные" : CalculationBase::Display(intval($winding), 0) ?>
                                 <?php
+                                if(empty($winding)) {
+                                    echo 'Ждем данные';
+                                }
+                                elseif(empty ($winding_unit)) {
+                                    echo 'Нет данных по кг/мм/м';
+                                }
+                                elseif($winding_unit == 'pc') {
+                                    if(empty($length)) {
+                                        echo 'Нет данных по длине этикетки';
+                                    }
+                                    else {
+                                        echo CalculationBase::Display(floatval($winding) * floatval($length) / 1000, 0);
+                                    }
+                                }
+                                else {
+                                    echo CalculationBase::Display(floatval($winding), 0);
+                                }
+                                
                                 switch ($winding_unit) {
                                     case 'kg':
                                         echo " кг";
                                         break;
                                     case 'mm':
                                         echo " мм";
+                                        break;
+                                    case 'pc':
+                                        echo " м";
                                         break;
                                 }
                                 ?>
@@ -859,6 +879,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                                         <option value="" hidden="hidden">...</option>
                                         <option value="kg"<?= $winding_unit == 'kg' ? " selected='selected'" : "" ?>>Кг</option>
                                         <option value="mm"<?= $winding_unit == 'mm' ? " selected='selected'" : "" ?>>мм</option>
+                                        <option value="pc"<?= $winding_unit == 'pc' ? " selected='selected'" : "" ?>>шт</option>
                                     </select>
                                 </div>
                                 <div class="invalid-feedback">Намотка обязательно</div>
