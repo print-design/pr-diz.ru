@@ -527,7 +527,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                         </tr>
                         <tr>
                             <td>Толщина</td>
-                            <td><?= empty($film_name) ? CalculationBase::Display(floatval($individual_thickness), 0) : CalculationBase::Display(floatval($thickness), 0) ?> мкм</td>
+                            <td><?= empty($film_name) ? CalculationBase::Display(floatval($individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($individual_density), 2), "0").' г/м<sup>2</sup>' : CalculationBase::Display(floatval($thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($weight), 2), "0").' г/м<sup>2</sup>' ?></td>
                         </tr>
                         <tr>
                             <td>Ширина мат-ла</td>
@@ -594,7 +594,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                         </tr>
                         <tr>
                             <td>Толщина</td>
-                            <td><?= empty($lamination1_film_name) ? CalculationBase::Display(floatval($lamination1_individual_thickness), 0) : CalculationBase::Display(floatval($lamination1_thickness), 0) ?> мкм</td>
+                            <td><?= empty($lamination1_film_name) ? CalculationBase::Display(floatval($lamination1_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($lamination1_individual_density), 2), "0").' г/м<sup>2</sup>' : CalculationBase::Display(floatval($lamination1_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($lamination1_weight), 2), "0").' г/м<sup>2</sup>' ?></td>
                         </tr>
                         <tr>
                             <td>Ширина мат-ла</td>
@@ -846,7 +846,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                         </tr>
                         <tr>
                             <td>Толщина</td>
-                            <td><?= empty($lamination2_film_name) ? CalculationBase::Display(floatval($lamination2_individual_thickness), 0) : CalculationBase::Display(floatval($lamination2_thickness), 0) ?> мм</td>
+                            <td><?= empty($lamination2_film_name) ? CalculationBase::Display(floatval($lamination2_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($lamination2_individual_density), 2), "0").' г/м<sup>2</sup>' : CalculationBase::Display(floatval($lamination2_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($lamination2_weight), 2), "0").' г/м<sup>2</sup>' ?></td>
                         </tr>
                         <tr>
                             <td>Ширина мат-ла</td>
