@@ -539,7 +539,7 @@ $current_date_time = date("dmYHis");
                                     echo 'Ждем данные';
                                 }
                                 elseif(empty ($winding_unit)) {
-                                    echo 'Нет данных по кг/мм/м';
+                                    echo 'Нет данных по кг/мм/м/шт';
                                 }
                                 elseif($winding_unit == 'pc') {
                                     if(empty($length)) {
@@ -560,6 +560,9 @@ $current_date_time = date("dmYHis");
                                     case 'mm':
                                         echo " мм";
                                         break;
+                                    case 'm':
+                                        echo " м";
+                                        break;
                                     case 'pc':
                                         echo " м";
                                         break;
@@ -574,18 +577,22 @@ $current_date_time = date("dmYHis");
                                 /* 1) Если намотка до =«кг», то Примерный метраж = (намотка до *1000*1000)/((уд вес пленка 1 + уд вес пленка 2 + уд вес пленка 3)*обрезная ширина))
                                  * 1) Если намотка до =«кг», то Примерный метраж = (намотка до *1000*1000)/((уд вес пленка 1 + уд вес пленка 2 + уд вес пленка 3)*обрезная ширина))-200
                                  * 2) Если намотка до = «мм» , то значение = "Нет"
-                                 * 3) Если намотка до = «шт» , то значение = "Нет" */
+                                 * 3) Если намотка до = «м», то значение = "Нет"
+                                 * 4) Если намотка до = «шт» , то значение = "Нет" */
                                 if(empty($winding) || empty($winding_unit)) {
                                     echo 'Ждем данные';
                                 }
-                                elseif(empty ($weight)) {
+                                elseif(empty ($weight) && empty($individual_density)) {
                                     echo 'Нет данных по уд. весу пленки';
                                 }
                                 elseif(empty ($width_1)) {
                                     echo 'Нет данных по ширине мат-ла';
                                 }
                                 elseif($winding_unit == 'kg') {
-                                    echo CalculationBase::Display((floatval($winding) * 1000 * 1000) / ((floatval($weight) + ($lamination1_weight === null ? 0 : floatval($lamination1_weight)) + ($lamination2_weight === null ? 0 : floatval($lamination2_weight))) * floatval($stream_width)) - 200, 0)." м";
+                                    $final_density = empty($weight) ? $individual_density : $weight;
+                                    $lamination1_final_density = empty($lamination1_weight) ? $lamination1_individual_density : $lamination1_weight;
+                                    $lamination2_final_density = empty($lamination2_weight) ? $lamination2_individual_density : $lamination2_weight;
+                                    echo CalculationBase::Display((floatval($winding) * 1000 * 1000) / ((floatval($final_density) + ($lamination1_final_density === null ? 0 : floatval($lamination1_final_density)) + ($lamination2_final_density === null ? 0 : floatval($lamination2_final_density))) * floatval($stream_width)) - 200, 0)." м";
                                 }
                                 else {
                                     echo 'Нет';
