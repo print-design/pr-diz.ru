@@ -23,6 +23,11 @@ const WASTE_PRESS = "В пресс";
 const WASTE_KAGAT = "В кагат";
 const WASTE_PAPER = "В макулатуру";
 
+// Фотометка
+const PHOTOLABEL_LEFT = "left";
+const PHOTOLABEL_RIGHT = "right";
+const PHOTOLABEL_BOTH = "both";
+
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
 
@@ -41,7 +46,7 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
         . "wt.name work_type, "
         . "cr.width_1, cr.length_pure_1, cr.length_dirty_1, cr.width_2, cr.length_pure_2, cr.length_dirty_2, cr.width_3, cr.length_pure_3, cr.length_dirty_3, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
-        . "tm.id techmap_id, tm.date techmap_date, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, tm.roll_type, tm.comment "
+        . "tm.id techmap_id, tm.date techmap_date, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, tm.photolabel, tm.roll_type, tm.comment "
         . "from calculation c "
         . "left join techmap tm on tm.calculation_id = c.id "
         . "left join film_variation fv on c.film_variation_id = fv.id "
@@ -156,29 +161,15 @@ if(!empty($lamination2_film_name) || !empty($lamination2_individual_film_name)) 
 $techmap_id = $row['techmap_id'];
 $techmap_date = $row['techmap_date']; if(empty($techmap_date)) $techmap_date = date('Y-m-d H:i:s');
 
-$side = filter_input(INPUT_POST, 'side');
-if($side === null) $side = $row['side'];
-
-$winding = filter_input(INPUT_POST, 'winding');
-if($winding === null) $winding = $row['winding'];
-
-$winding_unit = filter_input(INPUT_POST, 'winding_unit');
-if($winding_unit === null) $winding_unit = $row['winding_unit'];
-
-$spool = filter_input(INPUT_POST, 'spool');
-if($spool === null) $spool = $row['spool'];
-
-$labels = filter_input(INPUT_POST, 'labels');
-if($labels === null) $labels = $row['labels'];
-
-$package = filter_input(INPUT_POST, 'package');
-if($package === null) $package = $row['package'];
-
-$roll_type = filter_input(INPUT_POST, 'roll_type');
-if($roll_type === null) $roll_type = $row['roll_type'];
-
-$comment = filter_input(INPUT_POST, 'comment');
-if($comment === null) $comment = $row['comment'];
+$side = $row['side'];
+$winding = $row['winding'];
+$winding_unit = $row['winding_unit'];
+$spool = $row['spool'];
+$labels = $row['labels'];
+$package = $row['package'];
+$photolabel = $row['photolabel'];
+$roll_type = $row['roll_type'];
+$comment = $row['comment'];
 
 // ПОЛУЧЕНИЕ НОРМ
 $data_priladka = new DataPriladka(0, 0, 0, 0);
@@ -756,38 +747,68 @@ $current_date_time = date("dmYHis");
                     </table>
                 </div>
             </div>
+            <div style="margin-top: 10px; margin-bottom: 10px;">
+                <span style="font-size: 18px; font-weight: bold;">Фотометка:</span>&nbsp;
+                <?php
+                switch ($photolabel) {
+                    case PHOTOLABEL_LEFT:
+                        echo "Левая";
+                        break;
+                    case PHOTOLABEL_RIGHT:
+                        echo "Правая";
+                        break;
+                    case PHOTOLABEL_BOTH:
+                        echo "Обе";
+                        break;
+                }
+                ?>
+            </div>
+            <?php
+            $roll_folder = "roll";
+            switch ($photolabel) {
+                case PHOTOLABEL_LEFT:
+                    $roll_folder = "roll_left";
+                    break;
+                case PHOTOLABEL_RIGHT:
+                    $roll_folder = "roll_right";
+                    break;
+                case PHOTOLABEL_BOTH:
+                    $roll_folder = "roll_both";
+                    break;
+            }
+            ?>
             <table class="fotometka" style="margin-top: 10px; margin-bottom: 10px;">
                 <tr>
                     <td class="fotometka<?= $roll_type == 1 ? " fotochecked" : "" ?>">
-                        <img src="../images/roll/roll_type_1.png" style="height: 50px; width: auto;" />
+                        <img src="../images/<?=$roll_folder ?>/roll_type_1.png" style="height: 50px; width: auto;" />
                         <?php if($roll_type == 1): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
                     </td>
                     <td class="fotometka<?= $roll_type == 2 ? " fotochecked" : "" ?>">
-                        <img src="../images/roll/roll_type_2.png" style="height: 50px; width: auto;" />
+                        <img src="../images/<?=$roll_folder ?>/roll_type_2.png" style="height: 50px; width: auto;" />
                         <?php if($roll_type == 2): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
                     </td>
                     <td class="fotometka<?= $roll_type == 3 ? " fotochecked" : "" ?>">
-                        <img src="../images/roll/roll_type_3.png" style="height: 50px; width: auto;" />
+                        <img src="../images/<?=$roll_folder ?>/roll_type_3.png" style="height: 50px; width: auto;" />
                         <?php if($roll_type == 3): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
                     </td>
                     <td class="fotometka<?= $roll_type == 4 ? " fotochecked" : "" ?>">
-                        <img src="../images/roll/roll_type_4.png" style="height: 50px; width: auto;" />
+                        <img src="../images/<?=$roll_folder ?>/roll_type_4.png" style="height: 50px; width: auto;" />
                         <?php if($roll_type == 4): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
                     </td>
                     <td class="fotometka<?= $roll_type == 5 ? " fotochecked" : "" ?>">
-                        <img src="../images/roll/roll_type_5.png" style="height: 50px; width: auto;" />
+                        <img src="../images/<?=$roll_folder ?>/roll_type_5.png" style="height: 50px; width: auto;" />
                         <?php if($roll_type == 5): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
                     </td>
                     <td class="fotometka<?= $roll_type == 6 ? " fotochecked" : "" ?>">
-                        <img src="../images/roll/roll_type_6.png" style="height: 50px; width: auto;" />
+                        <img src="../images/<?=$roll_folder ?>/roll_type_6.png" style="height: 50px; width: auto;" />
                         <?php if($roll_type == 6): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
                     </td>
                     <td class="fotometka<?= $roll_type == 7 ? " fotochecked" : "" ?>">
-                        <img src="../images/roll/roll_type_7.png" style="height: 50px; width: auto;" />
+                        <img src="../images/<?=$roll_folder ?>/roll_type_7.png" style="height: 50px; width: auto;" />
                         <?php if($roll_type == 7): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
                     </td>
                     <td class="fotometka<?= $roll_type == 8 ? " fotochecked" : "" ?>">
-                        <img src="../images/roll/roll_type_8.png" style="height: 50px; width: auto;" />
+                        <img src="../images/<?=$roll_folder ?>/roll_type_8.png" style="height: 50px; width: auto;" />
                         <?php if($roll_type == 8): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
                     </td>
                 </tr>
