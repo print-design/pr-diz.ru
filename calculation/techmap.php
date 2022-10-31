@@ -33,6 +33,11 @@ const WASTE_PRESS = "В пресс";
 const WASTE_KAGAT = "В кагат";
 const WASTE_PAPER = "В макулатуру";
 
+// Фотометка
+const PHOTOLABEL_LEFT = "left";
+const PHOTOLABEL_RIGHT = "right";
+const PHOTOLABEL_BOTH = "both";
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -44,6 +49,7 @@ $winding_unit_valid = '';
 $spool_valid = '';
 $labels_valid = '';
 $package_valid = '';
+$photolabel_valid = '';
 $roll_type_valid = '';
 
 // Создание технологической карты
@@ -92,6 +98,12 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
         $form_valid = false;
     }
     
+    $photolabel = filter_input(INPUT_POST, 'photolabel');
+    if($photolabel != PHOTOLABEL_LEFT && $photolabel != PHOTOLABEL_RIGHT && $photolabel != PHOTOLABEL_BOTH) {
+        $photolabel_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
     $roll_type = filter_input(INPUT_POST, 'roll_type');
     if(empty($roll_type)) {
         $roll_type_valid = ISINVALID;
@@ -106,12 +118,12 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
         $sql = "";
         
         if(empty($techmap_id)) {
-            $sql = "insert into techmap (calculation_id, side, winding, winding_unit, spool, labels, package, roll_type, comment) "
-                    . "values($id, $side, $winding, '$winding_unit', $spool, $labels, $package, $roll_type, '$comment')";
+            $sql = "insert into techmap (calculation_id, side, winding, winding_unit, spool, labels, package, photolabel, roll_type, comment) "
+                    . "values($id, $side, $winding, '$winding_unit', $spool, $labels, $package, '$photolabel', $roll_type, '$comment')";
         }
         else {
             $sql = "update techmap set side = $side, winding = $winding, winding_unit = '$winding_unit', spool = $spool, "
-                    . "labels = $labels, package = $package, roll_type = $roll_type, comment = '$comment' where id = $techmap_id";
+                    . "labels = $labels, package = $package, photolabel = '$photolabel', roll_type = $roll_type, comment = '$comment' where id = $techmap_id";
         }
         
         $executer = new Executer($sql);
@@ -143,7 +155,7 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
         . "wt.name work_type, "
         . "cr.width_1, cr.length_pure_1, cr.length_dirty_1, cr.width_2, cr.length_pure_2, cr.length_dirty_2, cr.width_3, cr.length_pure_3, cr.length_dirty_3, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
-        . "tm.id techmap_id, tm.date techmap_date, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, tm.roll_type, tm.comment "
+        . "tm.id techmap_id, tm.date techmap_date, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, tm.photolabel, tm.roll_type, tm.comment "
         . "from calculation c "
         . "left join techmap tm on tm.calculation_id = c.id "
         . "left join film_variation fv on c.film_variation_id = fv.id "
@@ -275,6 +287,9 @@ if($labels === null) $labels = $row['labels'];
 
 $package = filter_input(INPUT_POST, 'package');
 if($package === null) $package = $row['package'];
+
+$photolabel = filter_input(INPUT_POST, 'photolabel');
+if($photolabel === null) $photolabel = $row['photolabel'];
 
 $roll_type = filter_input(INPUT_POST, 'roll_type');
 if($roll_type === null) $roll_type = $row['roll_type'];
@@ -941,7 +956,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                         <div class="form-group">
                             <label for="package">Упаковка</label>
                             <select id="package" name="package" class="form-control<?=$package_valid ?>" required="required">
-                                <option value="" hidden="">...</option>
+                                <option value="" hidden="hidden">...</option>
                                 <option value="<?=PACKAGE_PALLETED ?>"<?= $package == 1 ? " selected='selected'" : "" ?>>Паллетирование</option>
                                 <option value="<?=PACKAGE_BULK ?>"<?= $package == 2 ? " selected='selected'" : "" ?>>Россыпью</option>
                             </select>
@@ -949,30 +964,50 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                         </div>
                     </div>
                     <div class="col-6">
-                        <h3>Выберите фотометку</h3>
+                        <h3 style="margin-top: 20px;">Выберите фотометку</h3>
                         <div class="form-group">
-                            <label for="x"></label>
-                            <input type="text" id="x" style="visibility: hidden;" />
+                            <label for="photolabel">Фотометка</label>
+                            <select id="photolabel" name="photolabel" class="form-control<?=$photolabel_valid ?>" required="required">
+                                <option value="" hidden="hidden">...</option>
+                                <option value="<?=PHOTOLABEL_LEFT ?>"<?=$photolabel == PHOTOLABEL_LEFT ? " selected='selected'" : "" ?>>Левая</option>
+                                <option value="<?=PHOTOLABEL_RIGHT ?>"<?=$photolabel == PHOTOLABEL_RIGHT ? " selected='selected'" : "" ?>>Правая</option>
+                                <option value="<?=PHOTOLABEL_BOTH ?>"<?=$photolabel == PHOTOLABEL_BOTH ? " selected='selected'" : "" ?>>Обе</option>
+                            </select>
+                            <div class="invalid-feedback">Расположение фотометки обязательно</div>
                         </div>
                         <div class="form-group roll-selector">
+                            <?php
+                            $roll_folder = "roll";
+                            switch ($photolabel) {
+                                case PHOTOLABEL_LEFT:
+                                    $roll_folder = "roll_left";
+                                    break;
+                                case PHOTOLABEL_RIGHT:
+                                    $roll_folder = "roll_right";
+                                    break;
+                                case PHOTOLABEL_BOTH:
+                                    $roll_folder = "roll_both";
+                                    break;
+                            }
+                            ?>
                             <input type="radio" class="form-check-inline" id="roll_type_1" name="roll_type" value="1"<?= $roll_type == 1 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_1" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img src="../images/roll/roll_type_1.png" style="height: 30px; width: auto;" /></label>
+                            <label for="roll_type_1" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_1_image" src="../images/<?=$roll_folder ?>/roll_type_1.png" style="height: 30px; width: auto;" /></label>
                             <input type="radio" class="form-check-inline" id="roll_type_2" name="roll_type" value="2"<?= $roll_type == 2 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_2" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img src="../images/roll/roll_type_2.png" style="height: 30px; width: auto;" /></label>
+                            <label for="roll_type_2" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_2_image" src="../images/<?=$roll_folder ?>/roll_type_2.png" style="height: 30px; width: auto;" /></label>
                             <input type="radio" class="form-check-inline" id="roll_type_3" name="roll_type" value="3"<?= $roll_type == 3 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_3" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img src="../images/roll/roll_type_3.png" style="height: 30px; width: auto;" /></label>
+                            <label for="roll_type_3" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_3_image" src="../images/<?=$roll_folder ?>/roll_type_3.png" style="height: 30px; width: auto;" /></label>
                             <input type="radio" class="form-check-inline" id="roll_type_4" name="roll_type" value="4"<?= $roll_type == 4 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_4" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img src="../images/roll/roll_type_4.png" style="height: 30px; width: auto;" /></label>
+                            <label for="roll_type_4" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_4_image" src="../images/<?=$roll_folder ?>/roll_type_4.png" style="height: 30px; width: auto;" /></label>
                             <input type="radio" class="form-check-inline" id="roll_type_5" name="roll_type" value="5"<?= $roll_type == 5 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_5" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img src="../images/roll/roll_type_5.png" style="height: 30px; width: auto;" /></label>
+                            <label for="roll_type_5" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_5_image" src="../images/<?=$roll_folder ?>/roll_type_5.png" style="height: 30px; width: auto;" /></label>
                             <input type="radio" class="form-check-inline" id="roll_type_6" name="roll_type" value="6"<?= $roll_type == 6 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_6" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img src="../images/roll/roll_type_6.png" style="height: 30px; width: auto;" /></label>
+                            <label for="roll_type_6" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_6_image" src="../images/<?=$roll_folder ?>/roll_type_6.png" style="height: 30px; width: auto;" /></label>
                             <input type="radio" class="form-check-inline" id="roll_type_7" name="roll_type" value="7"<?= $roll_type == 7 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_7" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img src="../images/roll/roll_type_7.png" style="height: 30px; width: auto;" /></label>
+                            <label for="roll_type_7" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_7_image" src="../images/<?=$roll_folder ?>/roll_type_7.png" style="height: 30px; width: auto;" /></label>
                             <input type="radio" class="form-check-inline" id="roll_type_8" name="roll_type" value="8"<?= $roll_type == 8 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_8" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img src="../images/roll/roll_type_8.png" style="height: 30px; width: auto;" /></label>
+                            <label for="roll_type_8" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_8_image" src="../images/<?=$roll_folder ?>/roll_type_8.png" style="height: 30px; width: auto;" /></label>
                         </div>
-                        <div id="roll_type_validation" class="text-danger<?= empty($roll_type_valid) ? " d-none" : " d-block" ?>">Укажите фотометку</div>
+                        <div id="roll_type_validation" class="text-danger<?= empty($roll_type_valid) ? " d-none" : " d-block" ?>">Выберите сторону печати</div>
                         <h3>Комментарий</h3>
                         <textarea rows="6" name="comment" class="form-control"><?= html_entity_decode($comment) ?></textarea>
                     </div>
@@ -1035,6 +1070,32 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                 if(e.which == 13) {
                     e.preventDefault();
                     SavePanton($(this).attr('data-id'), $(this).attr('data-i'));
+                }
+            });
+            
+            // Изменение рисунка роликов при выборе фотометки
+            $('select#photolabel').change(function() {
+                switch($(this).val()) {
+                    case '<?=PHOTOLABEL_LEFT ?>':
+                        for(var i = 1; i <= 8; i++) {
+                            $('img#roll_type_' + i + '_image').attr('src', '../images/roll_left/roll_type_' + i + '.png');
+                        }
+                        break;
+                    case '<?=PHOTOLABEL_RIGHT ?>':
+                        for(var i = 1; i <= 8; i++) {
+                            $('img#roll_type_' + i + '_image').attr('src', '../images/roll_right/roll_type_' + i + '.png');
+                        }
+                        break;
+                    case '<?=PHOTOLABEL_BOTH ?>':
+                        for(var i = 1; i <= 8; i++) {
+                            $('img#roll_type_' + i + '_image').attr('src', '../images/roll_both/roll_type_' + i + '.png');
+                        }
+                        break;
+                    default :
+                        for(var i = 1; i <= 8; i++) {
+                            $('img#roll_type_' + i + '_image').attr('src', '../images/roll/roll_type_' + i + '.png');
+                        }
+                        break;
                 }
             });
             
