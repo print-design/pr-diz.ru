@@ -912,7 +912,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                                         <option value="" hidden="hidden">...</option>
                                         <option value="kg"<?= $winding_unit == 'kg' ? " selected='selected'" : "" ?>>Кг</option>
                                         <option value="mm"<?= $winding_unit == 'mm' ? " selected='selected'" : "" ?>>мм</option>
-                                        <option value="m"<?= $winding_unit == 'm' ? " selected='selected'" : "" ?>>метры</option>
+                                        <option value="m"<?= $winding_unit == 'm' ? " selected='selected'" : "" ?>>Метры</option>
                                         <option value="pc"<?= $winding_unit == 'pc' ? " selected='selected'" : "" ?>>шт</option>
                                     </select>
                                 </div>
