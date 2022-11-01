@@ -759,7 +759,7 @@ $current_date_time = date("dmYHis");
                         echo "Правая";
                         break;
                     case PHOTOLABEL_BOTH:
-                        echo "Обе";
+                        echo "Две фотометки";
                         break;
                     case PHOTOLABEL_NONE:
                         echo "Без фотометки";
