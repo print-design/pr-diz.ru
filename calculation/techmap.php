@@ -145,7 +145,7 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
         . "c.film_variation_id, f.name film_name, fv.thickness thickness, fv.weight weight, c.price, c.currency, c.individual_film_name, c.individual_thickness, c.individual_density, c.customers_material, c.ski, c.width_ski, "
         . "c.lamination1_film_variation_id, lam1f.name lamination1_film_name, lam1fv.thickness lamination1_thickness, lam1fv.weight lamination1_weight, c.lamination1_price, c.lamination1_currency, c.lamination1_individual_film_name, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, c.lamination1_ski, c.lamination1_width_ski, "
         . "c.lamination2_film_variation_id, lam2f.name lamination2_film_name, lam2fv.thickness lamination2_thickness, lam2fv.weight lamination2_weight, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_ski, c.lamination2_width_ski, "
-        . "c.streams_number, c.stream_width, c.length, c.raport, c.lamination_roller_width, c.ink_number, "
+        . "c.streams_number, c.stream_width, c.length, c.raport, c.number_in_raport, c.lamination_roller_width, c.ink_number, "
         . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
         . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
@@ -154,7 +154,7 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
         . "cus.name customer, "
         . "u.last_name, u.first_name, "
         . "wt.name work_type, "
-        . "cr.width_1, cr.length_pure_1, cr.length_dirty_1, cr.width_2, cr.length_pure_2, cr.length_dirty_2, cr.width_3, cr.length_pure_3, cr.length_dirty_3, "
+        . "cr.width_1, cr.length_pure_1, cr.length_dirty_1, cr.width_2, cr.length_pure_2, cr.length_dirty_2, cr.width_3, cr.length_pure_3, cr.length_dirty_3, gap, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
         . "tm.id techmap_id, tm.date techmap_date, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, tm.photolabel, tm.roll_type, tm.comment "
         . "from calculation c "
@@ -227,6 +227,7 @@ $streams_number = $row['streams_number'];
 $stream_width = $row['stream_width'];
 $length = $row['length'];
 $raport = $row['raport'];
+$number_in_raport = $row['number_in_raport'];
 $lamination_roller_width = $row['lamination_roller_width'];
 $ink_number = $row['ink_number']; if(empty($ink_number)) $ink_number = 0;
 
@@ -261,6 +262,7 @@ $length_dirty_2 = $row['length_dirty_2'];
 $width_3 = $row['width_3'];
 $length_pure_3 = $row['length_pure_3'];
 $length_dirty_3 = $row['length_dirty_3'];
+$gap = $row['gap'];
 
 $num_for_customer = $row['num_for_customer'];
 
@@ -385,6 +387,12 @@ else {
 $waste = $waste1;
 if(!empty($waste2) && $waste2 != $waste1) $waste = WASTE_KAGAT;
 if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
+
+// Тиражи
+$sql = "select quantity, length from calculation_quantity where calculation_id = $id";
+$grabber = new Grabber($sql);
+$error_message = $grabber->error;
+$printings = $grabber->result;
 ?>
 <!DOCTYPE html>
 <html>
@@ -536,13 +544,13 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
             </div>
             <div class="row mt-3">
                 <div class="col-4">
-                    <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
+                    <table>
                         <tr>
                             <td style="padding-top: 5px;">Машина</td>
                             <td style="padding-top: 5px;"><?= empty($machine) ? "" : ($machine == CalculationBase::COMIFLEX ? "Comiflex" : "ZBS") ?></td>
                         </tr>
                         <tr>
-                            <td>Марка пленки</td>
+                            <td>Марка мат-ла</td>
                             <td><?= empty($film_name) ? $individual_film_name : $film_name ?></td>
                         </tr>
                         <tr>
@@ -554,13 +562,21 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                             <td><?= CalculationBase::Display(floatval($width_1), 0) ?> мм</td>
                         </tr>
                         <tr>
-                            <td>Метраж на приладку</td>
+                            <td><?= $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? "На приладку 1 тиража" : "Метраж на приладку" ?></td>
                             <td><?= CalculationBase::Display(floatval($data_priladka->length) * floatval($ink_number), 0) ?> м</td>
                         </tr>
+                        <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+                        <tr>
+                            <td>Всего тиражей</td>
+                            <td><?= count($printings) ?></td>
+                        </tr>
+                        <?php endif; ?>
+                        <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td>Метраж на тираж</td>
                             <td><?= CalculationBase::Display(floatval($length_pure_1), 0) ?> м</td>
                         </tr>
+                        <?php endif; ?>
                         <tr>
                             <td>Всего мат-ла</td>
                             <td><?= CalculationBase::Display(floatval($length_dirty_1), 0) ?> м</td>
@@ -592,7 +608,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                             <td>Нет</td>
                         </tr>
                         <tr>
-                            <td>Ширина ручья</td>
+                            <td><?= $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? "Ширина этикетки" : "Ширина ручья" ?></td>
                             <td><?=$stream_width.(empty($stream_width) ? "" : " мм") ?></td>
                         </tr>
                         <tr>
@@ -603,6 +619,37 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                             <td>Кол-во ручьёв</td>
                             <td><?=$streams_number ?></td>
                         </tr>
+                        <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+                        <tr>
+                            <td>Этикеток в рапорте</td>
+                            <td><?=$number_in_raport ?></td>
+                        </tr>
+                        <tr>
+                            <td>Вертикальный зазор между этикетками</td>
+                            <td><?= CalculationBase::Display($gap, 2) ?> мм</td>
+                        </tr>
+                        <tr>
+                            <td>Горизонтальный зазор между этикетками</td>
+                            <td>
+                                <?php
+                                $sql = "select gap_stream from norm_gap order by date desc limit 1";
+                                $fetcher = new Fetcher($sql);
+                                if($row = $fetcher->Fetch()) {
+                                    $norm_stream = $row[0];
+                                    echo CalculationBase::Display($norm_stream, 2).' мм';
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Красочность</td>
+                            <td><?=$ink_number ?> цв.</td>
+                        </tr>
+                        <tr>
+                            <td>Штамп</td>
+                            <td>Нет</td>
+                        </tr>
+                        <?php endif; ?>
                     </table>
                 </div>
                 <div class="col-4">
@@ -610,7 +657,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                     <h3>Ламинация 1</h3>
                     <table>
                         <tr>
-                            <td>Марка пленки</td>
+                            <td>Марка мат-ла</td>
                             <td><?= empty($lamination1_film_name) ? $lamination1_individual_film_name : $lamination1_film_name ?></td>
                         </tr>
                         <tr>
@@ -646,7 +693,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                 </div>
                 <div class="col-4">
                     <h3>Информация для резчика</h3>
-                    <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
+                    <table>
                         <tr>
                             <td>Отгрузка в</td>
                             <td><?=$unit == 'kg' ? 'Кг' : 'Шт' ?></td>
@@ -783,10 +830,11 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                     </table>
                 </div>
             </div>
+            <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="row mt-3">
                 <div class="col-4">
                     <h3>Красочность: <?=$ink_number ?> цв.</h3>
-                    <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
+                    <table>
                         <?php
                         for($i = 1; $i <= $ink_number; $i++):
                         $ink_var = "ink_$i";
@@ -867,11 +915,10 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                     </table>
                 </div>
                 <div class="col-4">
-                    <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
                     <h3>Ламинация 2</h3>
                     <table>
                         <tr>
-                            <td>Марка пленки</td>
+                            <td>Марка мат-ла</td>
                             <td><?= empty($lamination2_film_name) ? $lamination2_individual_film_name : $lamination2_film_name ?></td>
                         </tr>
                         <tr>
@@ -895,9 +942,9 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                             <td><?= CalculationBase::Display(floatval($length_dirty_3), 0) ?> м</td>
                         </tr>
                     </table>
-                    <?php endif; ?>
                 </div>
             </div>
+            <?php endif; ?>
             <form class="mt-5" method="post"<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                 <input type="hidden" name="scroll" />
                 <input type="hidden" name="id" value="<?= $id ?>" />
