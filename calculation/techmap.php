@@ -489,7 +489,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
             <h2 class="mt-2">Остальная информация</h2>
             <div class="row">
                 <div class="col-5">
-                    <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
+                    <table>
                         <tr>
                             <th>Карта составлена</th>
                             <td class="text-left"><?= DateTime::createFromFormat('Y-m-d H:i:s', $techmap_date)->format('d.m.Y H:i') ?></td>
@@ -502,10 +502,12 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                             <th>Название заказа</th>
                             <td class="text-left"><?=$calculation ?></td>
                         </tr>
+                        <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <th>Объем заказа</th>
                             <td class="text-left"><strong><?= CalculationBase::Display(intval($quantity), 0) ?> <?=$unit == 'kg' ? 'кг' : 'шт' ?></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= CalculationBase::Display(floatval($length_pure_1), 0) ?> м</td>
                         </tr>
+                        <?php endif; ?>
                         <tr>
                             <th>Менеджер</th>
                             <td class="text-left"><?=$first_name ?> <?=$last_name ?></td>
@@ -523,8 +525,10 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                     <div class="subtitle">Печать</div>
                 </div>
                 <div class="col-4">
+                    <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
                     <h2>Информация для ламинации</h2>
                     <div class="subtitle">Кол-во ламинаций: <?=$lamination ?></div>
+                    <?php endif; ?>
                 </div>
                 <div class="col-4">
                     <h2>Информация для резчика</h2>
@@ -602,8 +606,9 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                     </table>
                 </div>
                 <div class="col-4">
+                    <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
                     <h3>Ламинация 1</h3>
-                    <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
+                    <table>
                         <tr>
                             <td>Марка пленки</td>
                             <td><?= empty($lamination1_film_name) ? $lamination1_individual_film_name : $lamination1_film_name ?></td>
@@ -637,6 +642,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                             <td>Нет</td>
                         </tr>
                     </table>
+                    <?php endif; ?>
                 </div>
                 <div class="col-4">
                     <h3>Информация для резчика</h3>
@@ -861,8 +867,9 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                     </table>
                 </div>
                 <div class="col-4">
+                    <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
                     <h3>Ламинация 2</h3>
-                    <table<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
+                    <table>
                         <tr>
                             <td>Марка пленки</td>
                             <td><?= empty($lamination2_film_name) ? $lamination2_individual_film_name : $lamination2_film_name ?></td>
@@ -888,6 +895,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                             <td><?= CalculationBase::Display(floatval($length_dirty_3), 0) ?> м</td>
                         </tr>
                     </table>
+                    <?php endif; ?>
                 </div>
             </div>
             <form class="mt-5" method="post"<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
@@ -972,13 +980,13 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                                 <option value="<?=PHOTOLABEL_LEFT ?>"<?=$photolabel == PHOTOLABEL_LEFT ? " selected='selected'" : "" ?>>Левая</option>
                                 <option value="<?=PHOTOLABEL_RIGHT ?>"<?=$photolabel == PHOTOLABEL_RIGHT ? " selected='selected'" : "" ?>>Правая</option>
                                 <option value="<?=PHOTOLABEL_BOTH ?>"<?=$photolabel == PHOTOLABEL_BOTH ? " selected='selected'" : "" ?>>Две фотометки</option>
-                                <option value="<?=PHOTOLABEL_NONE ?>"<?=$photolabel == PHOTOLABEL_NONE ? " selected='selected'" : "" ?>>Без фотометки</option>
+                                <option value="<?=PHOTOLABEL_NONE ?>"<?=$photolabel == PHOTOLABEL_NONE || (empty($photolabel) && $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) ? " selected='selected'" : "" ?>>Без фотометки</option>
                             </select>
                             <div class="invalid-feedback">Расположение фотометки обязательно</div>
                         </div>
                         <div class="form-group roll-selector">
                             <?php
-                            $roll_folder = "roll_left";
+                            $roll_folder = $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? "roll" : "roll_left";
                             switch ($photolabel) {
                                 case PHOTOLABEL_LEFT:
                                     $roll_folder = "roll_left";
@@ -1028,7 +1036,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                             <button type="submit" name="techmap_submit" id="techmap_submit" class="btn btn-dark draft<?=$submit_class ?>" style="width: 175px;">Сохранить</button>
                         </div>
                         <div>
-                            <?php if(!empty($techmap_id)): ?>
+                            <?php if(!empty($techmap_id) && $work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
                             <a href="print_tm.php?id=<?= $id ?>" target="_blank" class="btn btn-outline-dark" style="width: 175px;">Печать</a>
                             <?php endif; ?>
                         </div>

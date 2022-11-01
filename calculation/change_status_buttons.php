@@ -7,9 +7,7 @@
 <?php elseif($status_id == CALCULATION): ?>
 <div class="d-flex justify-content-between">
     <div>
-        <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
         <a href="techmap.php?id=<?=$id ?>" class="btn btn-outline-dark mt-3" style="width: 200px;">Составить тех. карту</a>
-        <?php endif; ?>
     </div>
     <div>
         <form method="post">
