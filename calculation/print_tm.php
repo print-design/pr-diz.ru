@@ -764,11 +764,14 @@ $current_date_time = date("dmYHis");
                     case PHOTOLABEL_NONE:
                         echo "Без фотометки";
                         break;
+                    default :
+                        echo ($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? "Без фотометки" : "Левая");
+                        break;
                 }
                 ?>
             </div>
             <?php
-            $roll_folder = "roll";
+            $roll_folder = ($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? "roll" : "roll_left");
             switch ($photolabel) {
                 case PHOTOLABEL_LEFT:
                     $roll_folder = "roll_left";
@@ -778,6 +781,9 @@ $current_date_time = date("dmYHis");
                     break;
                 case PHOTOLABEL_BOTH:
                     $roll_folder = "roll_both";
+                    break;
+                case PHOTOLABEL_NONE:
+                    $roll_folder = "roll";
                     break;
             }
             ?>
