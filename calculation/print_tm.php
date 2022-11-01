@@ -27,6 +27,7 @@ const WASTE_PAPER = "В макулатуру";
 const PHOTOLABEL_LEFT = "left";
 const PHOTOLABEL_RIGHT = "right";
 const PHOTOLABEL_BOTH = "both";
+const PHOTOLABEL_NONE = "none";
 
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
@@ -759,6 +760,9 @@ $current_date_time = date("dmYHis");
                         break;
                     case PHOTOLABEL_BOTH:
                         echo "Обе";
+                        break;
+                    case PHOTOLABEL_NONE:
+                        echo "Без фотометки";
                         break;
                 }
                 ?>
