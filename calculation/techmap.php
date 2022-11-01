@@ -969,7 +969,6 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                         <div class="form-group">
                             <label for="photolabel">Фотометка</label>
                             <select id="photolabel" name="photolabel" class="form-control<?=$photolabel_valid ?>" required="required">
-                                <option value="" hidden="hidden">...</option>
                                 <option value="<?=PHOTOLABEL_LEFT ?>"<?=$photolabel == PHOTOLABEL_LEFT ? " selected='selected'" : "" ?>>Левая</option>
                                 <option value="<?=PHOTOLABEL_RIGHT ?>"<?=$photolabel == PHOTOLABEL_RIGHT ? " selected='selected'" : "" ?>>Правая</option>
                                 <option value="<?=PHOTOLABEL_BOTH ?>"<?=$photolabel == PHOTOLABEL_BOTH ? " selected='selected'" : "" ?>>Две фотометки</option>
@@ -979,7 +978,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                         </div>
                         <div class="form-group roll-selector">
                             <?php
-                            $roll_folder = "roll";
+                            $roll_folder = "roll_left";
                             switch ($photolabel) {
                                 case PHOTOLABEL_LEFT:
                                     $roll_folder = "roll_left";
@@ -989,6 +988,9 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                                     break;
                                 case PHOTOLABEL_BOTH:
                                     $roll_folder = "roll_both";
+                                    break;
+                                case PHOTOLABEL_NONE:
+                                    $roll_folder = "roll";
                                     break;
                             }
                             ?>
