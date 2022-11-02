@@ -958,12 +958,52 @@ $printings = $grabber->result;
                     $printing_sequence++;
                 ?>
                 <div class="col-3">
-                    <p><span class="font-weight-bold">Тираж <?=$printing_sequence ?></span>&nbsp;&nbsp;&nbsp;<?=$row['length'] ?> м</p>
+                    <div style="font-size: large;"><span class="font-weight-bold">Тираж <?=$printing_sequence ?></span>&nbsp;&nbsp;&nbsp;<?=$row['length'] ?> м</div>
+                    <table class="mb-3">
+                    <?php
+                    for($i = 1; $i <= $ink_number; $i++):
+                    $ink_var = "ink_$i";
+                    $color_var = "color_$i";
+                    $cmyk_var = "cmyk_$i";
+                    ?>
+                        <tr>
+                            <td>
+                                <?php
+                                switch($$ink_var) {
+                                    case CalculationBase::CMYK:
+                                        switch ($$cmyk_var) {
+                                            case CalculationBase::CYAN:
+                                                echo 'Cyan';
+                                                break;
+                                            case CalculationBase::MAGENDA:
+                                                echo 'Magenda';
+                                                break;
+                                            case CalculationBase::YELLOW:
+                                                echo 'Yellow';
+                                                break;
+                                            case CalculationBase::KONTUR:
+                                                echo 'Kontur';
+                                                break;
+                                        }
+                                        break;
+                                    case CalculationBase::WHITE:
+                                        echo 'Белая';
+                                        break;
+                                    case CalculationBase::LACQUER:
+                                        echo 'Лак';
+                                        break;
+                                }
+                                ?>
+                            </td>
+                            <td>Ждем данные</td>
+                        </tr>
+                    <?php endfor; ?>
+                    </table>
                 </div>
                 <?php endwhile; ?>
             </div>
             <?php endif; ?>
-            <form class="mt-5" method="post"<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
+            <form class="mt-3" method="post"<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                 <input type="hidden" name="scroll" />
                 <input type="hidden" name="id" value="<?= $id ?>" />
                 <input type="hidden" name="techmap_id" value="<?=$techmap_id ?>" />
