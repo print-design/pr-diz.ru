@@ -945,6 +945,24 @@ $printings = $grabber->result;
                 </div>
             </div>
             <?php endif; ?>
+            <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+            <div class="mt-5 mb-3">
+                <button type="button" class="btn btn-outline-dark" id="set_printings">Настроить тиражи</button>
+            </div>
+            <div class="row">
+                <?php
+                $sql = "select quantity, length from calculation_quantity where calculation_id = $id";
+                $fetcher = new Fetcher($sql);
+                $printing_sequence = 0;
+                while($row = $fetcher->Fetch()):
+                    $printing_sequence++;
+                ?>
+                <div class="col-3">
+                    <p><span class="font-weight-bold">Тираж <?=$printing_sequence ?></span>&nbsp;&nbsp;&nbsp;<?=$row['length'] ?> м</p>
+                </div>
+                <?php endwhile; ?>
+            </div>
+            <?php endif; ?>
             <form class="mt-5" method="post"<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                 <input type="hidden" name="scroll" />
                 <input type="hidden" name="id" value="<?= $id ?>" />
