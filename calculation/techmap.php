@@ -497,8 +497,15 @@ $printings = $grabber->result;
                         Настроить тиражи
                         <button type="button" class="close set_printings_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>
                     </div>
-                    <div class="modal-body">
-                        <div style="font-size: x-large; font-weight: bold;">Тираж 1</div>
+                    <?php
+                    $printing_sequence = 0;
+                    foreach ($printings as $printing):
+                    $printing_sequence++;
+                    $display = "d-none";
+                    if($printing_sequence == 1) $display = "d-block";
+                    ?>
+                    <div class="modal-body set_printings_<?=$printing_sequence ?> <?=$display ?>">
+                        <div class="font-weight-bold"><span style="font-size: x-large;">Тираж <?=$printing_sequence ?></span>&nbsp;&nbsp;&nbsp;<span style="font-size: large;"><?= number_format(floatval($printing['length']), 0, ",", "") ?> м</span></div>
                         <div class="d-flex justify-content-start">
                             <div class="mr-2">
                                 <div>Новая Flint <?=$machine_coeff ?></div>
@@ -506,23 +513,16 @@ $printings = $grabber->result;
                                 <div>Старая</div>
                             </div>
                             <div class="text-right ml-2">
-                                <div>выбрано 0 из <?=$cliches_count_flint ?></div>
-                                <div>выбрано 0 из <?=$cliches_count_kodak ?></div>
-                                <div>выбрано 0 из <?=$cliches_count_old ?></div>
+                                <div class="cliches_used_flint">выбрано 0 из <?=$cliches_count_flint ?></div>
+                                <div class="cliches_used_kodak">выбрано 0 из <?=$cliches_count_kodak ?></div>
+                                <div class="cliches_used_old">выбрано 0 из <?=$cliches_count_old ?></div>
                             </div>
                         </div>
-                                <div class="row">
-                                    <div class="col-6"></div>
-                                    <div class="col-6 text-right"></div>
-                                    <div class="col-6"></div>
-                                    <div class="col-6 text-right"></div>
-                                    <div class="col-6"></div>
-                                    <div class="col-6 text-right"></div>
-                                </div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer set_printings_<?=$printing_sequence ?> <?=$display ?>">
                         Следующий
                     </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </div>
@@ -999,14 +999,12 @@ $printings = $grabber->result;
             </div>
             <div class="row">
                 <?php
-                $sql = "select quantity, length from calculation_quantity where calculation_id = $id";
-                $fetcher = new Fetcher($sql);
                 $printing_sequence = 0;
-                while($row = $fetcher->Fetch()):
+                foreach($printings as $printing):
                     $printing_sequence++;
                 ?>
                 <div class="col-3">
-                    <div style="font-size: large;"><span class="font-weight-bold">Тираж <?=$printing_sequence ?></span>&nbsp;&nbsp;&nbsp;<?=$row['length'] ?> м</div>
+                    <div style="font-size: large;"><span class="font-weight-bold">Тираж <?=$printing_sequence ?></span>&nbsp;&nbsp;&nbsp;<?=$printing['length'] ?> м</div>
                     <table class="mb-3">
                     <?php
                     for($i = 1; $i <= $ink_number; $i++):
@@ -1051,7 +1049,7 @@ $printings = $grabber->result;
                     <?php endfor; ?>
                     </table>
                 </div>
-                <?php endwhile; ?>
+                <?php endforeach; ?>
             </div>
             <?php endif; ?>
             <form class="mt-3" method="post"<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
