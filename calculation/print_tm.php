@@ -29,6 +29,11 @@ const PHOTOLABEL_RIGHT = "right";
 const PHOTOLABEL_BOTH = "both";
 const PHOTOLABEL_NONE = "none";
 
+// Получение коэффициента машины
+function GetMachineCoeff($machine) {
+    return $machine == CalculationBase::COMIFLEX ? "1.14" : "1.7";
+}
+
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
 
@@ -259,6 +264,8 @@ else {
 $waste = $waste1;
 if(!empty($waste2) && $waste2 != $waste1) $waste = WASTE_KAGAT;
 if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
+
+$machine_coeff = GetMachineCoeff($machine);
 
 // Текущее время
 $current_date_time = date("dmYHis");
@@ -660,8 +667,6 @@ $current_date_time = date("dmYHis");
                         $cmyk_var = "cmyk_$i";
                         $percent_var = "percent_$i";
                         $cliche_var = "cliche_$i";
-                        
-                        $machine_coeff = $machine == CalculationBase::COMIFLEX ? "1.14" : "1.7";
                         ?>
                         <tr>
                             <td>

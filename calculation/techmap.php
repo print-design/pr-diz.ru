@@ -39,6 +39,11 @@ const PHOTOLABEL_RIGHT = "right";
 const PHOTOLABEL_BOTH = "both";
 const PHOTOLABEL_NONE = "none";
 
+// Получение коэффициента машины
+function GetMachineCoeff($machine) {
+    return $machine == CalculationBase::COMIFLEX ? "1.14" : "1.7";
+}
+
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -151,6 +156,7 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
         . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, c.cliche_1, "
         . "c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
+        . "c.cliches_count_flint, c.cliches_count_kodak, c.cliches_count_old, "
         . "cus.name customer, "
         . "u.last_name, u.first_name, "
         . "wt.name work_type, "
@@ -247,6 +253,10 @@ for($i=1; $i<=$ink_number; $i++) {
     $cliche_var = "cliche_$i";
     $$cliche_var = $row[$cliche_var];
 }
+
+$cliches_count_flint = $row['cliches_count_flint'];
+$cliches_count_kodak = $row['cliches_count_kodak'];
+$cliches_count_old = $row['cliches_count_old'];
 
 $customer = $row['customer'];
 $last_name = $row['last_name'];
@@ -388,6 +398,8 @@ $waste = $waste1;
 if(!empty($waste2) && $waste2 != $waste1) $waste = WASTE_KAGAT;
 if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
 
+$machine_coeff = GetMachineCoeff($machine);
+
 // Тиражи
 $sql = "select quantity, length from calculation_quantity where calculation_id = $id";
 $grabber = new Grabber($sql);
@@ -476,6 +488,44 @@ $printings = $grabber->result;
         <?php
         include '../include/header.php';
         ?>
+        <div id="set_printings" class="modal fade show">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header font-weight-bold" style="font-size: x-large;">
+                        <div class="d-inline-block" style="position: relative; top: -3px;"><img src="../images/icons/printing.svg" style="top: 20px;" /></div>
+                        &nbsp;&nbsp;&nbsp;
+                        Настроить тиражи
+                        <button type="button" class="close set_printings_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div style="font-size: x-large; font-weight: bold;">Тираж 1</div>
+                        <div class="d-flex justify-content-start">
+                            <div class="mr-2">
+                                <div>Новая Flint <?=$machine_coeff ?></div>
+                                <div>Новая Kodak <?=$machine_coeff ?></div>
+                                <div>Старая</div>
+                            </div>
+                            <div class="text-right ml-2">
+                                <div>выбрано 0 из <?=$cliches_count_flint ?></div>
+                                <div>выбрано 0 из <?=$cliches_count_kodak ?></div>
+                                <div>выбрано 0 из <?=$cliches_count_old ?></div>
+                            </div>
+                        </div>
+                                <div class="row">
+                                    <div class="col-6"></div>
+                                    <div class="col-6 text-right"></div>
+                                    <div class="col-6"></div>
+                                    <div class="col-6 text-right"></div>
+                                    <div class="col-6"></div>
+                                    <div class="col-6 text-right"></div>
+                                </div>
+                    </div>
+                    <div class="modal-footer">
+                        Следующий
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
@@ -842,8 +892,6 @@ $printings = $grabber->result;
                         $cmyk_var = "cmyk_$i";
                         $percent_var = "percent_$i";
                         $cliche_var = "cliche_$i";
-                        
-                        $machine_coeff = $machine == CalculationBase::COMIFLEX ? "1.14" : "1.7";
                         ?>
                         <tr>
                             <td>
@@ -947,7 +995,7 @@ $printings = $grabber->result;
             <?php endif; ?>
             <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="mt-5 mb-3">
-                <button type="button" class="btn btn-outline-dark" id="set_printings">Настроить тиражи</button>
+                <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#set_printings">Настроить тиражи</button>
             </div>
             <div class="row">
                 <?php
@@ -985,6 +1033,9 @@ $printings = $grabber->result;
                                                 echo 'Kontur';
                                                 break;
                                         }
+                                        break;
+                                    case CalculationBase::PANTON:
+                                        echo "P".$$color_var;
                                         break;
                                     case CalculationBase::WHITE:
                                         echo 'Белая';
