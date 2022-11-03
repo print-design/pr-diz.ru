@@ -400,14 +400,37 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
 
 $machine_coeff = GetMachineCoeff($machine);
 
-// Тиражи
+// Тиражи и формы
 $printings = array();
+$cliches = array();
+$cliches_used_flint = 0;
+$cliches_used_kodak = 0;
+$cliches_used_old = 0;
 
 if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
     $sql = "select id, quantity, length from calculation_quantity where calculation_id = $id";
     $grabber = new Grabber($sql);
     $error_message = $grabber->error;
     $printings = $grabber->result;
+    
+    $sql = "select calculation_quantity_id, calculation_quantity_sequence, name from calculation_cliche where calculation_quantity_id in (select id from calculation_quantity where calculation_id = $id)";
+    $fetcher = new Fetcher($sql);
+    $error_message = $fetcher->error;
+    while($row = $fetcher->Fetch()) {
+        $cliches[$row['calculation_quantity_id']][$row['calculation_quantity_sequence']] = $row['name'];
+        
+        switch ($row['name']) {
+            case CalculationBase::FLINT:
+                $cliches_used_flint++;
+                break;
+            case CalculationBase::KODAK:
+                $cliches_used_kodak++;
+                break;
+            case CalculationBase::OLD:
+                $cliches_used_old++;
+                break;
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -518,9 +541,9 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                 <div>Старая</div>
                             </div>
                             <div class="text-right ml-2">
-                                <div class="cliches_used_flint">выбрано 0 из <?=$cliches_count_flint ?></div>
-                                <div class="cliches_used_kodak">выбрано 0 из <?=$cliches_count_kodak ?></div>
-                                <div class="cliches_used_old">выбрано 0 из <?=$cliches_count_old ?></div>
+                                <div class="cliches_used_flint">выбрано <?=$cliches_used_flint ?> из <?=$cliches_count_flint ?></div>
+                                <div class="cliches_used_kodak">выбрано <?=$cliches_used_kodak ?> из <?=$cliches_count_kodak ?></div>
+                                <div class="cliches_used_old">выбрано <?=$cliches_used_old ?> из <?=$cliches_count_old ?></div>
                             </div>
                         </div>
                         <?php
@@ -563,9 +586,9 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                             </label>
                             <select class="form-control" id="select_cliche_<?=$printing['id'] ?>_<?=$i ?>">
                                 <option value="" hidden="hidden">Ждем данные</option>
-                                <option value="flint">Новая Flint <?=$machine_coeff ?></option>
-                                <option value="kodak">Новая Kodak <?=$machine_coeff ?></option>
-                                <option value="old">Старая</option>
+                                <option value="<?= CalculationBase::FLINT ?>">Новая Flint <?=$machine_coeff ?></option>
+                                <option value="<?= CalculationBase::KODAK ?>">Новая Kodak <?=$machine_coeff ?></option>
+                                <option value="<?= CalculationBase::OLD ?>">Старая</option>
                             </select>
                         </div>
                         <?php endfor; ?>
