@@ -584,7 +584,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                 }
                                 ?>
                             </label>
-                            <select class="form-control" id="select_cliche_<?=$printing['id'] ?>_<?=$i ?>">
+                            <select class="form-control select_cliche" id="select_cliche_<?=$printing['id'] ?>_<?=$i ?>">
                                 <?php
                                 // Если для этой краски назначена конкретная форма, то она выбрана в списке
                                 $flint_selected = '';
@@ -1156,7 +1156,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                 }
                                 ?>
                             </td>
-                            <td>
+                            <td id="cliche_<?=$printing['id'] ?>_<?=$i ?>">
                                 <?php
                                 if(empty($cliches[$printing['id']][$i])) {
                                     echo 'Ждем данные';
@@ -1440,6 +1440,22 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                 $('.set_printings').addClass('d-none');
                 $('.set_printings_' + $(this).attr('data-printing')).removeClass('d-none');
                 $('.set_printings_' + $(this).attr('data-printing')).addClass('d-block');
+            });
+            
+            // Обработка выбора формы
+            $('.select_cliche').change(function() {
+                $.ajax({ dataType: 'JSON', url: '_edit_cliche.php?machine_coeff=<?=$machine_coeff ?>' })
+                        .done(function(data) {
+                            if(data.error != '') {
+                                alert(data.error);
+                            }
+                            else {
+                                $('#cliche_' + data.ink_id + '_' + data.ink_sequence).text(data.cliche);
+                            }
+                        })
+                        .fail(function() {
+                            alert("Ошибка при выборе формы");
+                        });
             });
         </script>
     </body>
