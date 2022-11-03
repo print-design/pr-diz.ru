@@ -28,7 +28,7 @@ if(empty($error_message)) {
 }
 
 if(empty($error_message)) {
-    $sql = "select(select count(id) FROM calculation_cliche WHERE name = '".CalculationBase::FLINT."' and calculation_quantity_id = $printing_id) flint_used, (select count(id) FROM calculation_cliche WHERE name = '".CalculationBase::KODAK."' and calculation_quantity_id = $printing_id) kodak_used, (select count(id) FROM calculation_cliche WHERE name = '".CalculationBase::OLD."' and calculation_quantity_id = $printing_id) old_used";
+    $sql = "select(select count(id) FROM calculation_cliche WHERE name = '".CalculationBase::FLINT."' and calculation_quantity_id in (select id from calculation_quantity where calculation_id = (select calculation_id from calculation_quantity where id = $printing_id))) flint_used, (select count(id) FROM calculation_cliche WHERE name = '".CalculationBase::KODAK."' and calculation_quantity_id in (select id from calculation_quantity where calculation_id = (select calculation_id from calculation_quantity where id = $printing_id))) kodak_used, (select count(id) FROM calculation_cliche WHERE name = '".CalculationBase::OLD."' and calculation_quantity_id in (select id from calculation_quantity where calculation_id = (select calculation_id from calculation_quantity where id = $printing_id))) old_used";
     $fetcher = new Fetcher($sql);
     $error_message = $fetcher->error;
     
