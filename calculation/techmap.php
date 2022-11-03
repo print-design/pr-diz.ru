@@ -401,10 +401,14 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
 $machine_coeff = GetMachineCoeff($machine);
 
 // Тиражи
-$sql = "select quantity, length from calculation_quantity where calculation_id = $id";
-$grabber = new Grabber($sql);
-$error_message = $grabber->error;
-$printings = $grabber->result;
+$printings = array();
+
+if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+    $sql = "select id, quantity, length from calculation_quantity where calculation_id = $id";
+    $grabber = new Grabber($sql);
+    $error_message = $grabber->error;
+    $printings = $grabber->result;
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -488,6 +492,7 @@ $printings = $grabber->result;
         <?php
         include '../include/header.php';
         ?>
+        <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
         <div id="set_printings" class="modal fade show">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -525,7 +530,7 @@ $printings = $grabber->result;
                         $cmyk_var = "cmyk_$i";
                         ?>
                         <div class="form-group">
-                            <label>
+                            <label for="select_cliche_<?=$printing['id'] ?>_<?=$i ?>">
                                 <?php
                                 switch($$ink_var) {
                                     case CalculationBase::CMYK:
@@ -556,7 +561,7 @@ $printings = $grabber->result;
                                 }
                                 ?>
                             </label>
-                            <select class="form-control" id="select_cliche_<?=$printing_sequence ?>_<?=$i ?>">
+                            <select class="form-control" id="select_cliche_<?=$printing['id'] ?>_<?=$i ?>">
                                 <option value="" hidden="hidden">Ждем данные</option>
                                 <option value="flint">Новая Flint <?=$machine_coeff ?></option>
                                 <option value="kodak">Новая Kodak <?=$machine_coeff ?></option>
@@ -581,6 +586,7 @@ $printings = $grabber->result;
                 </div>
             </div>
         </div>
+        <?php endif; ?>
         <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
