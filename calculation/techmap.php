@@ -584,7 +584,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                 }
                                 ?>
                             </label>
-                            <select class="form-control select_cliche" id="select_cliche_<?=$printing['id'] ?>_<?=$i ?>">
+                            <select class="form-control select_cliche" id="select_cliche_<?=$printing['id'] ?>_<?=$i ?>" data-ink-id="<?=$printing['id'] ?>" data-ink-sequence="<?=$i ?>">
                                 <?php
                                 // Если для этой краски назначена конкретная форма, то она выбрана в списке
                                 $flint_selected = '';
@@ -1444,7 +1444,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
             
             // Обработка выбора формы
             $('.select_cliche').change(function() {
-                $.ajax({ dataType: 'JSON', url: '_edit_cliche.php?machine_coeff=<?=$machine_coeff ?>' })
+                $.ajax({ dataType: 'JSON', url: '_edit_cliche.php?ink_id=' + $(this).attr('data-ink-id') + '&ink_sequence=' + $(this).attr('data-ink-sequence') + '&cliche=' + $(this).val() + '&machine_coeff=<?=$machine_coeff ?>' })
                         .done(function(data) {
                             if(data.error != '') {
                                 alert(data.error);
