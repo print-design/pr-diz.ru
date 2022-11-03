@@ -585,10 +585,38 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                 ?>
                             </label>
                             <select class="form-control" id="select_cliche_<?=$printing['id'] ?>_<?=$i ?>">
+                                <?php
+                                // Если для этой краски назначена конкретная форма, то она выбрана в списке
+                                $flint_selected = '';
+                                if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CalculationBase::FLINT) {
+                                    $flint_selected = " selected='selected'";
+                                }
+                                $kodak_selected = '';
+                                if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CalculationBase::KODAK) {
+                                    $kodak_selected = " selected='selected'";
+                                }
+                                $old_selected = '';
+                                if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CalculationBase::OLD) {
+                                    $old_selected = " selected='selected'";
+                                }
+                                
+                                $flint_hidden = '';
+                                if(empty($flint_selected) && $cliches_used_flint >= $cliches_count_flint) {
+                                    $flint_hidden = " hidden='hidden'";
+                                }
+                                $kodak_hidden = '';
+                                if(empty($kodak_selected) && $cliches_used_kodak >= $cliches_count_kodak) {
+                                    $kodak_hidden = " hidden='hidden'";
+                                }
+                                $old_hidden = '';
+                                if(empty($old_selected) && $cliches_used_old >= $cliches_count_old) {
+                                    $old_hidden = " hidden='hidden'";
+                                }
+                                ?>
                                 <option value="" hidden="hidden">Ждем данные</option>
-                                <option value="<?= CalculationBase::FLINT ?>">Новая Flint <?=$machine_coeff ?></option>
-                                <option value="<?= CalculationBase::KODAK ?>">Новая Kodak <?=$machine_coeff ?></option>
-                                <option value="<?= CalculationBase::OLD ?>">Старая</option>
+                                <option value="<?= CalculationBase::FLINT ?>"<?=$flint_selected ?><?=$flint_hidden ?>>Новая Flint <?=$machine_coeff ?></option>
+                                <option value="<?= CalculationBase::KODAK ?>"<?=$kodak_selected ?><?=$kodak_hidden ?>>Новая Kodak <?=$machine_coeff ?></option>
+                                <option value="<?= CalculationBase::OLD ?>"<?=$old_selected ?><?=$old_hidden ?>>Старая</option>
                             </select>
                         </div>
                         <?php endfor; ?>
@@ -1128,7 +1156,26 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                 }
                                 ?>
                             </td>
-                            <td>Ждем данные</td>
+                            <td>
+                                <?php
+                                if(empty($cliches[$printing['id']][$i])) {
+                                    echo 'Ждем данные';
+                                }
+                                else {
+                                    switch ($cliches[$printing['id']][$i]) {
+                                        case CalculationBase::FLINT:
+                                            echo "Новая Flint $machine_coeff";
+                                            break;
+                                        case CalculationBase::KODAK:
+                                            echo "Новая Kodak $machine_coeff";
+                                            break;
+                                        case CalculationBase::OLD:
+                                            echo "Старая";
+                                            break;
+                                    }
+                                }
+                                ?>
+                            </td>
                         </tr>
                     <?php endfor; ?>
                     </table>
