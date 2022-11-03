@@ -541,9 +541,9 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                 <div>Старая</div>
                             </div>
                             <div class="text-right ml-2">
-                                <div class="cliches_used_flint">выбрано <?=$cliches_used_flint ?> из <?=$cliches_count_flint ?></div>
-                                <div class="cliches_used_kodak">выбрано <?=$cliches_used_kodak ?> из <?=$cliches_count_kodak ?></div>
-                                <div class="cliches_used_old">выбрано <?=$cliches_used_old ?> из <?=$cliches_count_old ?></div>
+                                <div class="cliches_used_flint">выбрано <span class="flint_used"><?=$cliches_used_flint ?></span> из <?=$cliches_count_flint ?></div>
+                                <div class="cliches_used_kodak">выбрано <span class="kodak_used"><?=$cliches_used_kodak ?></span> из <?=$cliches_count_kodak ?></div>
+                                <div class="cliches_used_old">выбрано <span class="old_used"><?=$cliches_used_old ?></span> из <?=$cliches_count_old ?></div>
                             </div>
                         </div>
                         <?php
@@ -614,9 +614,9 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                 }
                                 ?>
                                 <option value="" hidden="hidden">Ждем данные</option>
-                                <option value="<?= CalculationBase::FLINT ?>"<?=$flint_selected ?><?=$flint_hidden ?>>Новая Flint <?=$machine_coeff ?></option>
-                                <option value="<?= CalculationBase::KODAK ?>"<?=$kodak_selected ?><?=$kodak_hidden ?>>Новая Kodak <?=$machine_coeff ?></option>
-                                <option value="<?= CalculationBase::OLD ?>"<?=$old_selected ?><?=$old_hidden ?>>Старая</option>
+                                <option class="option_flint" id="option_flint_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CalculationBase::FLINT ?>"<?=$flint_selected ?><?=$flint_hidden ?>>Новая Flint <?=$machine_coeff ?></option>
+                                <option class="option_kodak" id="option_kodak_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CalculationBase::KODAK ?>"<?=$kodak_selected ?><?=$kodak_hidden ?>>Новая Kodak <?=$machine_coeff ?></option>
+                                <option class="option_old" id="option_old_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CalculationBase::OLD ?>"<?=$old_selected ?><?=$old_hidden ?>>Старая</option>
                             </select>
                         </div>
                         <?php endfor; ?>
@@ -1434,6 +1434,8 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                         });
             }
             
+            <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+                
             // Переход между страницами редактирования форм тиражей
             $('.change_printing').click(function() {
                 $('.set_printings').removeClass('d-block');
@@ -1450,13 +1452,45 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                 alert(data.error);
                             }
                             else {
-                                $('#cliche_' + data.ink_id + '_' + data.ink_sequence).text(data.cliche);
+                                var cliche = '';
+                                switch(data.cliche) {
+                                    case '<?= CalculationBase::FLINT ?>':
+                                        cliche = 'Новая Flint ' + data.machine_coeff;
+                                        break;
+                                    case '<?= CalculationBase::KODAK ?>':
+                                        cliche = 'Новая Kodak ' + data.machine_coeff;
+                                        break;
+                                    case '<?= CalculationBase::OLD ?>':
+                                        cliche = 'Старая';
+                                        break;
+                                }
+                                $('#cliche_' + data.ink_id + '_' + data.ink_sequence).text(cliche);
+                                
+                                $('span.flint_used').text(data.flint_used);
+                                $('span.kodak_used').text(data.kodak_used);
+                                $('span.old_used').text(data.old_used);
+                                
+                                $('option.option_flint').removeAttr('hidden');
+                                $('option.option_kodak').removeAttr('hidden');
+                                $('option.option_old').removeAttr('hidden');
+                                if(data.flint_used >= <?=$cliches_count_flint ?>) {
+                                    $('option.option_flint').attr('hidden', 'hidden');
+                                }
+                                if(data.kodak_used >= <?=$cliches_count_kodak ?>) {
+                                    $('option.option_kodak').attr('hidden', 'hidden');
+                                }
+                                if(data.old_used >= <?=$cliches_count_old ?>) {
+                                    $('option.option_old').attr('hidden', 'hidden');
+                                }
+                                $('option#option_' + data.cliche + '_' + data.ink_id + '_' + data.ink_sequence).removeAttr('hidden');
                             }
                         })
                         .fail(function() {
                             alert("Ошибка при выборе формы");
                         });
             });
+            
+            <?php endif; ?>
         </script>
     </body>
 </html>

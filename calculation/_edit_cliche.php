@@ -12,28 +12,12 @@ $result = array();
 $result['error'] = '';
 $result['ink_id'] = $ink_id;
 $result['ink_sequence'] = $ink_sequence;
+$result['cliche'] = $cliche;
+$result['machine_coeff'] = $machine_coeff;
 
-switch($cliche) {
-    case CalculationBase::FLINT:
-        $result['cliche'] = "Новая Flint $machine_coeff";
-        break;
-    case CalculationBase::KODAK:
-        $result['cliche'] = "Новая Kodak $machine_coeff";
-        break;
-    case CalculationBase::OLD:
-        $result['cliche'] = "Старая";
-        break;
-    default :
-        $result['cliche'] = $cliche;
-}
-
-$result['flint_used'] = 111;
-$result['kodak_used'] = 222;
-$result['old_used'] = 333;
-
-$result['flint_hidden'] = 0;
-$result['kodak_hidden'] = 1;
-$result['old_hidden'] = 0;
+$result['flint_used'] = 2;
+$result['kodak_used'] = 25;
+$result['old_used'] = 5;
 
 echo json_encode($result);
 ?>
