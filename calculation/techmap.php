@@ -504,7 +504,7 @@ $printings = $grabber->result;
                     $display = "d-none";
                     if($printing_sequence == 1) $display = "d-block";
                     ?>
-                    <div class="modal-body set_printings_<?=$printing_sequence ?> <?=$display ?>">
+                    <div class="modal-body set_printings set_printings_<?=$printing_sequence ?> <?=$display ?>">
                         <div class="font-weight-bold"><span style="font-size: x-large;">Тираж <?=$printing_sequence ?></span>&nbsp;&nbsp;&nbsp;<span style="font-size: large;"><?= number_format(floatval($printing['length']), 0, ",", "") ?> м</span></div>
                         <div class="d-flex justify-content-start">
                             <div class="mr-2">
@@ -519,8 +519,17 @@ $printings = $grabber->result;
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer set_printings_<?=$printing_sequence ?> <?=$display ?>">
-                        Следующий
+                    <div class="modal-footer set_printings set_printings_<?=$printing_sequence ?> <?=$display ?>" style="justify-content: flex-start;">
+                        <?php if($printing_sequence == 1): ?>
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Закрыть</button>
+                        <?php else: ?>
+                        <button type="button" class="btn btn-light change_printing" data-printing="<?=($printing_sequence - 1) ?>"><i class="fas fa-chevron-left mr-2"></i>Тираж <?=($printing_sequence - 1) ?></button>
+                        <?php endif; ?>
+                        <?php if($printing_sequence == count($printings)): ?>
+                        <button type="button" class="btn btn-dark" data-dismiss="modal">Завершить</button>
+                        <?php else: ?>
+                        <button type="button" class="btn btn-dark change_printing" data-printing="<?=($printing_sequence + 1) ?>">Тираж <?=($printing_sequence + 1) ?><i class="fas fa-chevron-right ml-2"></i></button>
+                        <?php endif; ?>
                     </div>
                     <?php endforeach; ?>
                 </div>
@@ -1302,6 +1311,14 @@ $printings = $grabber->result;
                             alert('Ошибка при редактировании пантона');
                         });
             }
+            
+            // Переход между страницами редактирования форм тиражей
+            $('.change_printing').click(function() {
+                $('.set_printings').removeClass('d-block');
+                $('.set_printings').addClass('d-none');
+                $('.set_printings_' + $(this).attr('data-printing')).removeClass('d-none');
+                $('.set_printings_' + $(this).attr('data-printing')).addClass('d-block');
+            });
         </script>
     </body>
 </html>
