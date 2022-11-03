@@ -413,11 +413,11 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
     $error_message = $grabber->error;
     $printings = $grabber->result;
     
-    $sql = "select calculation_quantity_id, calculation_quantity_sequence, name from calculation_cliche where calculation_quantity_id in (select id from calculation_quantity where calculation_id = $id)";
+    $sql = "select calculation_quantity_id, sequence, name from calculation_cliche where calculation_quantity_id in (select id from calculation_quantity where calculation_id = $id)";
     $fetcher = new Fetcher($sql);
     $error_message = $fetcher->error;
     while($row = $fetcher->Fetch()) {
-        $cliches[$row['calculation_quantity_id']][$row['calculation_quantity_sequence']] = $row['name'];
+        $cliches[$row['calculation_quantity_id']][$row['sequence']] = $row['name'];
         
         switch ($row['name']) {
             case CalculationBase::FLINT:
@@ -584,7 +584,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                 }
                                 ?>
                             </label>
-                            <select class="form-control select_cliche" id="select_cliche_<?=$printing['id'] ?>_<?=$i ?>" data-ink-id="<?=$printing['id'] ?>" data-ink-sequence="<?=$i ?>">
+                            <select class="form-control select_cliche" id="select_cliche_<?=$printing['id'] ?>_<?=$i ?>" data-printing-id="<?=$printing['id'] ?>" data-sequence="<?=$i ?>">
                                 <?php
                                 // Если для этой краски назначена конкретная форма, то она выбрана в списке
                                 $flint_selected = '';
@@ -1446,7 +1446,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
             
             // Обработка выбора формы
             $('.select_cliche').change(function() {
-                $.ajax({ dataType: 'JSON', url: '_edit_cliche.php?ink_id=' + $(this).attr('data-ink-id') + '&ink_sequence=' + $(this).attr('data-ink-sequence') + '&cliche=' + $(this).val() + '&machine_coeff=<?=$machine_coeff ?>' })
+                $.ajax({ dataType: 'JSON', url: '_edit_cliche.php?printing_id=' + $(this).attr('data-printing-id') + '&sequence=' + $(this).attr('data-sequence') + '&cliche=' + $(this).val() + '&machine_coeff=<?=$machine_coeff ?>' })
                         .done(function(data) {
                             if(data.error != '') {
                                 alert(data.error);
@@ -1464,7 +1464,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                         cliche = 'Старая';
                                         break;
                                 }
-                                $('#cliche_' + data.ink_id + '_' + data.ink_sequence).text(cliche);
+                                $('#cliche_' + data.printing_id + '_' + data.sequence).text(cliche);
                                 
                                 $('span.flint_used').text(data.flint_used);
                                 $('span.kodak_used').text(data.kodak_used);
@@ -1482,7 +1482,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                 if(data.old_used >= <?=$cliches_count_old ?>) {
                                     $('option.option_old').attr('hidden', 'hidden');
                                 }
-                                $('option#option_' + data.cliche + '_' + data.ink_id + '_' + data.ink_sequence).removeAttr('hidden');
+                                $('option#option_' + data.cliche + '_' + data.printing_id + '_' + data.sequence).removeAttr('hidden');
                             }
                         })
                         .fail(function() {
