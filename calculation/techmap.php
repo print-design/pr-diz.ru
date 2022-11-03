@@ -506,7 +506,7 @@ $printings = $grabber->result;
                     ?>
                     <div class="modal-body set_printings set_printings_<?=$printing_sequence ?> <?=$display ?>">
                         <div class="font-weight-bold"><span style="font-size: x-large;">Тираж <?=$printing_sequence ?></span>&nbsp;&nbsp;&nbsp;<span style="font-size: large;"><?= number_format(floatval($printing['length']), 0, ",", "") ?> м</span></div>
-                        <div class="d-flex justify-content-start">
+                        <div class="d-flex justify-content-start mb-3">
                             <div class="mr-2">
                                 <div>Новая Flint <?=$machine_coeff ?></div>
                                 <div>Новая Kodak <?=$machine_coeff ?></div>
@@ -518,6 +518,52 @@ $printings = $grabber->result;
                                 <div class="cliches_used_old">выбрано 0 из <?=$cliches_count_old ?></div>
                             </div>
                         </div>
+                        <?php
+                        for($i = 1; $i <= $ink_number; $i++):
+                        $ink_var = "ink_$i";
+                        $color_var = "color_$i";
+                        $cmyk_var = "cmyk_$i";
+                        ?>
+                        <div class="form-group">
+                            <label>
+                                <?php
+                                switch($$ink_var) {
+                                    case CalculationBase::CMYK:
+                                        switch ($$cmyk_var) {
+                                            case CalculationBase::CYAN:
+                                                echo 'Cyan';
+                                                break;
+                                            case CalculationBase::MAGENDA:
+                                                echo 'Magenda';
+                                                break;
+                                            case CalculationBase::YELLOW:
+                                                echo 'Yellow';
+                                                break;
+                                            case CalculationBase::KONTUR:
+                                                echo 'Kontur';
+                                                break;
+                                        }
+                                        break;
+                                    case CalculationBase::PANTON:
+                                        echo 'Pantone '.$$color_var;
+                                        break;
+                                    case CalculationBase::WHITE:
+                                        echo 'Белая';
+                                        break;
+                                    case CalculationBase::LACQUER:
+                                        echo 'Лак';
+                                        break;
+                                }
+                                ?>
+                            </label>
+                            <select class="form-control" id="select_cliche_<?=$printing_sequence ?>_<?=$i ?>">
+                                <option value="" hidden="hidden">Ждем данные</option>
+                                <option value="flint">Новая Flint <?=$machine_coeff ?></option>
+                                <option value="kodak">Новая Kodak <?=$machine_coeff ?></option>
+                                <option value="old">Старая</option>
+                            </select>
+                        </div>
+                        <?php endfor; ?>
                     </div>
                     <div class="modal-footer set_printings set_printings_<?=$printing_sequence ?> <?=$display ?>" style="justify-content: flex-start;">
                         <?php if($printing_sequence == 1): ?>
