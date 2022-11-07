@@ -6,6 +6,7 @@ $printing_id = filter_input(INPUT_GET, 'printing_id');
 $sequence = filter_input(INPUT_GET, 'sequence');
 $cliche = filter_input(INPUT_GET, 'cliche');
 $machine_coeff = filter_input(INPUT_GET, 'machine_coeff');
+$repeat_from = filter_input(INPUT_GET, 'repeat_from');
 
 $result = array();
 $result['error'] = '';
@@ -42,6 +43,7 @@ if(empty($error_message)) {
         $result['sequence'] = $sequence;
         $result['cliche'] = $cliche;
         $result['machine_coeff'] = $machine_coeff;
+        $result['repeat_from'] = $repeat_from;
         
         $result['flint_used'] = $row['flint_used'];
         $result['kodak_used'] = $row['kodak_used'];

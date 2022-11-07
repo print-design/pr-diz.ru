@@ -403,6 +403,7 @@ $machine_coeff = GetMachineCoeff($machine);
 // Тиражи и формы
 $printings = array();
 $cliches = array();
+$repeats = array();
 $cliches_used_flint = 0;
 $cliches_used_kodak = 0;
 $cliches_used_old = 0;
@@ -413,11 +414,12 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
     $error_message = $grabber->error;
     $printings = $grabber->result;
     
-    $sql = "select calculation_quantity_id, sequence, name from calculation_cliche where calculation_quantity_id in (select id from calculation_quantity where calculation_id = $id)";
+    $sql = "select calculation_quantity_id, sequence, name, repeat_from from calculation_cliche where calculation_quantity_id in (select id from calculation_quantity where calculation_id = $id)";
     $fetcher = new Fetcher($sql);
     $error_message = $fetcher->error;
     while($row = $fetcher->Fetch()) {
         $cliches[$row['calculation_quantity_id']][$row['sequence']] = $row['name'];
+        $repeats[$row['calculation_quantity_id']][$row['sequence']] = $row['repeat_from'];
         
         switch ($row['name']) {
             case CalculationBase::FLINT:
@@ -551,9 +553,16 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                         $ink_var = "ink_$i";
                         $color_var = "color_$i";
                         $cmyk_var = "cmyk_$i";
+                        
+                        $cliche_width_style = " w-100";
+                        $repeat_display_style = " d-none"; //echo "QWE"; print_r($cliches);
+                        if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CalculationBase::REPEAT) {
+                            $cliche_width_style = " w-50";
+                            $repeat_display_style = "";
+                        }
                         ?>
                         <div class="d-flex justify-content-between">
-                            <div class="form-group w-50">
+                            <div class="form-group<?=$cliche_width_style ?>">
                                 <label for="select_cliche_<?=$printing['id'] ?>_<?=$i ?>">
                                     <?php
                                     switch($$ink_var) {
@@ -629,16 +638,15 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                     <option class="option_repeat" id="option_repeat_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CalculationBase::REPEAT ?>"<?=$repeat_selected ?><?=$repeat_hidden ?>>Повторное использование</option>
                                 </select>
                             </div>
-                            <div class="form-group pl-2 w-50">
+                            <div class="form-group pl-2 w-50<?=$repeat_display_style ?>">
                                 <label for="repeat_from_<?=$printing['id'] ?>_<?=$i ?>">С какого тиража</label>
                                 <select class="form-control repeat_from" id="repeat_from_<?=$printing['id'] ?>_<?=$i ?>" data-printing-id="<?=$printing['id'] ?>" data-sequence="<?=$i ?>">
-                                    <?php /*for($rep_pr = 1; $rep_pr <= $printing_sequence; $rep_pr++): ?>
-                                    <oprion><?="rep_pr" ?></oprion>
-                                    <?php endfor;*/ ?>
-                                    <?php for($rep_pr = 1; $rep_pr <= 9; $rep_pr++) {
-                                        echo "<option>4</option>";
-                                    }
+                                    <?php
+                                    for($rep_pr = 1; $rep_pr < $printing_sequence; $rep_pr++):
+                                        $rep_pr_selected = $repeats[$printing['id']][$i] == $rep_pr ? " selected='selected'" : "";
                                     ?>
+                                        <option<?=$rep_pr_selected ?>><?= $rep_pr ?></option>
+                                    <?php endfor; ?>
                                 </select>
                             </div>
                         </div>
@@ -1195,6 +1203,9 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                         case CalculationBase::OLD:
                                             echo "Старая";
                                             break;
+                                        case CalculationBase::REPEAT:
+                                            echo "Повт. исп. с тир. ".$repeats[$printing['id']][$i];
+                                            break;
                                     }
                                 }
                                 ?>
@@ -1469,7 +1480,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
             
             // Обработка выбора формы
             $('.select_cliche').change(function() {
-                $.ajax({ dataType: 'JSON', url: '_edit_cliche.php?printing_id=' + $(this).attr('data-printing-id') + '&sequence=' + $(this).attr('data-sequence') + '&cliche=' + $(this).val() + '&machine_coeff=<?=$machine_coeff ?>' })
+                $.ajax({ dataType: 'JSON', url: '_edit_cliche.php?printing_id=' + $(this).attr('data-printing-id') + '&sequence=' + $(this).attr('data-sequence') + '&cliche=' + $(this).val() + '&machine_coeff=<?=$machine_coeff ?>&repeat_from=' + $('select#repeat_from_' + $(this).attr('data-printing-id') + '_' + $(this).attr('data-sequence')).val() })
                         .done(function(data) {
                             if(data.error != '') {
                                 alert(data.error);
