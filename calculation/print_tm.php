@@ -470,8 +470,9 @@ $current_date_time = date("dmYHis");
                 <div class="col-4" style="border-right: solid 1px #cccccc;">
                     <table class="w-100">
                         <tr>
-                            <td colspan="2" class="table-header">Информация для ламинации</td>
+                            <td colspan="2" class="table-header"><?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?> Информация для ламинации<?php else: echo "<br /> "; endif; ?></td>
                         </tr>
+                        <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td>Кол-во ламинаций</td>
                             <td><?=$lamination ?></td>
@@ -511,6 +512,7 @@ $current_date_time = date("dmYHis");
                             <td>Анилокс</td>
                             <td>Нет</td>
                         </tr>
+                        <?php endif; ?>
                     </table>
                 </div>
                 <div class="col-4">
@@ -654,6 +656,7 @@ $current_date_time = date("dmYHis");
                     </table>
                 </div>
             </div>
+            <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="row">
                 <div class="col-4" style="border-right: solid 1px #cccccc;">
                     <table class="w-100">
@@ -753,6 +756,7 @@ $current_date_time = date("dmYHis");
                     </table>
                 </div>
             </div>
+            <?php endif; ?>
             <div style="margin-top: 10px; margin-bottom: 10px;">
                 <span style="font-size: 18px; font-weight: bold;">Фотометка:</span>&nbsp;
                 <?php
