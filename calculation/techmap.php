@@ -613,7 +613,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                     $old_hidden = " hidden='hidden'";
                                 }
                                 ?>
-                                <option value="" hidden="hidden">Ждем данные</option>
+                                <option value="">Ждем данные</option>
                                 <option class="option_flint" id="option_flint_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CalculationBase::FLINT ?>"<?=$flint_selected ?><?=$flint_hidden ?>>Новая Flint <?=$machine_coeff ?></option>
                                 <option class="option_kodak" id="option_kodak_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CalculationBase::KODAK ?>"<?=$kodak_selected ?><?=$kodak_hidden ?>>Новая Kodak <?=$machine_coeff ?></option>
                                 <option class="option_old" id="option_old_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CalculationBase::OLD ?>"<?=$old_selected ?><?=$old_hidden ?>>Старая</option>
@@ -1462,6 +1462,9 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                         break;
                                     case '<?= CalculationBase::OLD ?>':
                                         cliche = 'Старая';
+                                        break;
+                                    default :
+                                        cliche = 'Ждем данные';
                                         break;
                                 }
                                 $('#cliche_' + data.printing_id + '_' + data.sequence).text(cliche);

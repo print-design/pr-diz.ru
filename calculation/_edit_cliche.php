@@ -17,7 +17,12 @@ $error_message = $fetcher->error;
 if(empty($error_message)) {
     if($row = $fetcher->Fetch()) {
         $id = $row[0];
-        $sql = "update calculation_cliche set name = '$cliche' where id = $id";
+        if(empty($cliche)) {
+            $sql = "delete from calculation_cliche where id = $id";
+        }
+        else {
+            $sql = "update calculation_cliche set name = '$cliche' where id = $id";
+        }
     }
     else {
         $sql = "insert into calculation_cliche(calculation_quantity_id, sequence, name) values($printing_id, $sequence, '$cliche')";
