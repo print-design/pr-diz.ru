@@ -643,7 +643,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                 <select class="form-control repeat_from" id="repeat_from_<?=$printing['id'] ?>_<?=$i ?>" data-printing-id="<?=$printing['id'] ?>" data-sequence="<?=$i ?>">
                                     <?php
                                     for($rep_pr = 1; $rep_pr < $printing_sequence; $rep_pr++):
-                                        $rep_pr_selected = $repeats[$printing['id']][$i] == $rep_pr ? " selected='selected'" : "";
+                                        $rep_pr_selected = (!empty($repeats[$printing['id']][$i]) && $repeats[$printing['id']][$i] == $rep_pr) ? " selected='selected'" : "";
                                     ?>
                                         <option<?=$rep_pr_selected ?>><?= $rep_pr ?></option>
                                     <?php endfor; ?>
