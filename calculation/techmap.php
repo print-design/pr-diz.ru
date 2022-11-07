@@ -1355,7 +1355,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                             <button type="submit" name="techmap_submit" id="techmap_submit" class="btn btn-dark draft<?=$submit_class ?>" style="width: 175px;">Сохранить</button>
                         </div>
                         <div>
-                            <?php if(!empty($techmap_id) && $work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+                            <?php if(!empty($techmap_id)): ?>
                             <a href="print_tm.php?id=<?= $id ?>" target="_blank" class="btn btn-outline-dark" style="width: 175px;">Печать</a>
                             <?php endif; ?>
                         </div>
