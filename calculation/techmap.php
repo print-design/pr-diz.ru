@@ -1480,6 +1480,17 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
             
             // Обработка выбора формы
             $('.select_cliche').change(function() {
+                if($(this).val() == '<?= CalculationBase::REPEAT ?>') {
+                    $(this).parent().removeClass('w-100');
+                    $(this).parent().addClass('w-50');
+                    $(this).parent().next().removeClass('d-none');
+                }
+                else {
+                    $(this).parent().removeClass('w-50');
+                    $(this).parent().addClass('w-100');
+                    $(this).parent().next().addClass('d-none');
+                }
+                
                 $.ajax({ dataType: 'JSON', url: '_edit_cliche.php?printing_id=' + $(this).attr('data-printing-id') + '&sequence=' + $(this).attr('data-sequence') + '&cliche=' + $(this).val() + '&machine_coeff=<?=$machine_coeff ?>&repeat_from=' + $('select#repeat_from_' + $(this).attr('data-printing-id') + '_' + $(this).attr('data-sequence')).val() })
                         .done(function(data) {
                             if(data.error != '') {
@@ -1498,7 +1509,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                         cliche = 'Старая';
                                         break;
                                     case '<?= CalculationBase::REPEAT ?>':
-                                        cliche = 'Повт. исп.';
+                                        cliche = 'Повт. исп. с тир. ' + $('select#repeat_from_' + data.printing_id + '_' + data.sequence).val();
                                         break;
                                     default :
                                         cliche = 'Ждем данные';
@@ -1527,6 +1538,23 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                         })
                         .fail(function() {
                             alert("Ошибка при выборе формы");
+                        });
+            });
+            
+            // Обработка выбора, с какого тиража повторное использование
+            $('.repeat_from').change(function() {
+                $.ajax({ dataType: 'JSON', url: '_edit_repeat.php?printing_id=' + $(this).attr('data-printing-id') + '&sequence=' + $(this).attr('data-sequence') + '&repeat_from=' + $(this).val() })
+                        .done(function(data) {
+                            if(data.error != '') {
+                                alert(data.error);
+                            }
+                            else {
+                                cliche = 'Повт. исп. с тир. ' + data.repeat_from;
+                                $('#cliche_' + data.printing_id + '_' + data.sequence).text(cliche);
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при изменении с какого тиража повторное использование');
                         });
             });
             

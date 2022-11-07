@@ -21,12 +21,18 @@ if(empty($error_message)) {
         if(empty($cliche)) {
             $sql = "delete from calculation_cliche where id = $id";
         }
+        elseif($cliche == CalculationBase::REPEAT) {
+            $sql = "update calculation_cliche set name = '$cliche', repeat_from = $repeat_from where id = $id";
+        }
         else {
-            $sql = "update calculation_cliche set name = '$cliche' where id = $id";
+            $sql = "update calculation_cliche set name = '$cliche', repeat_from = NULL where id = $id";
         }
     }
+    elseif(!empty ($repeat_from)) {
+        $sql = "insert into calculation_cliche(calculation_quantity_id, sequence, name, repeat_from) values($printing_id, $sequence, '$cliche', $repeat_from)";
+    }
     else {
-        $sql = "insert into calculation_cliche(calculation_quantity_id, sequence, name) values($printing_id, $sequence, '$cliche')";
+        $sql = "insert into calculation_cliche(calculation_quantity_id, sequence, name, repeat_from) values($printing_id, $sequence, '$cliche', NULL)";
     }
     
     $executer = new Executer($sql);
