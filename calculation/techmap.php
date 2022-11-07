@@ -552,72 +552,95 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                         $color_var = "color_$i";
                         $cmyk_var = "cmyk_$i";
                         ?>
-                        <div class="form-group">
-                            <label for="select_cliche_<?=$printing['id'] ?>_<?=$i ?>">
-                                <?php
-                                switch($$ink_var) {
-                                    case CalculationBase::CMYK:
-                                        switch ($$cmyk_var) {
-                                            case CalculationBase::CYAN:
-                                                echo 'Cyan';
-                                                break;
-                                            case CalculationBase::MAGENDA:
-                                                echo 'Magenda';
-                                                break;
-                                            case CalculationBase::YELLOW:
-                                                echo 'Yellow';
-                                                break;
-                                            case CalculationBase::KONTUR:
-                                                echo 'Kontur';
-                                                break;
-                                        }
-                                        break;
-                                    case CalculationBase::PANTON:
-                                        echo 'Pantone '.$$color_var;
-                                        break;
-                                    case CalculationBase::WHITE:
-                                        echo 'Белая';
-                                        break;
-                                    case CalculationBase::LACQUER:
-                                        echo 'Лак';
-                                        break;
-                                }
-                                ?>
-                            </label>
-                            <select class="form-control select_cliche" id="select_cliche_<?=$printing['id'] ?>_<?=$i ?>" data-printing-id="<?=$printing['id'] ?>" data-sequence="<?=$i ?>">
-                                <?php
-                                // Если для этой краски назначена конкретная форма, то она выбрана в списке
-                                $flint_selected = '';
-                                if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CalculationBase::FLINT) {
-                                    $flint_selected = " selected='selected'";
-                                }
-                                $kodak_selected = '';
-                                if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CalculationBase::KODAK) {
-                                    $kodak_selected = " selected='selected'";
-                                }
-                                $old_selected = '';
-                                if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CalculationBase::OLD) {
-                                    $old_selected = " selected='selected'";
-                                }
+                        <div class="d-flex justify-content-between">
+                            <div class="form-group w-50">
+                                <label for="select_cliche_<?=$printing['id'] ?>_<?=$i ?>">
+                                    <?php
+                                    switch($$ink_var) {
+                                        case CalculationBase::CMYK:
+                                            switch ($$cmyk_var) {
+                                                case CalculationBase::CYAN:
+                                                    echo 'Cyan';
+                                                    break;
+                                                case CalculationBase::MAGENDA:
+                                                    echo 'Magenda';
+                                                    break;
+                                                case CalculationBase::YELLOW:
+                                                    echo 'Yellow';
+                                                    break;
+                                                case CalculationBase::KONTUR:
+                                                    echo 'Kontur';
+                                                    break;
+                                            }
+                                            break;
+                                        case CalculationBase::PANTON:
+                                            echo 'Pantone '.$$color_var;
+                                            break;
+                                        case CalculationBase::WHITE:
+                                            echo 'Белая';
+                                            break;
+                                        case CalculationBase::LACQUER:
+                                            echo 'Лак';
+                                            break;
+                                    }
+                                    ?>
+                                </label>
+                                <select class="form-control select_cliche" id="select_cliche_<?=$printing['id'] ?>_<?=$i ?>" data-printing-id="<?=$printing['id'] ?>" data-sequence="<?=$i ?>">
+                                    <?php
+                                    // Если для этой краски назначена конкретная форма, то она выбрана в списке
+                                    $flint_selected = '';
+                                    if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CalculationBase::FLINT) {
+                                        $flint_selected = " selected='selected'";
+                                    }
+                                    $kodak_selected = '';
+                                    if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CalculationBase::KODAK) {
+                                        $kodak_selected = " selected='selected'";
+                                    }
+                                    $old_selected = '';
+                                    if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CalculationBase::OLD) {
+                                        $old_selected = " selected='selected'";
+                                    }
+                                    $repeat_selected = '';
+                                    if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CalculationBase::REPEAT) {
+                                        $repeat_selected = " selected='selected'";
+                                    }
                                 
-                                $flint_hidden = '';
-                                if(empty($flint_selected) && $cliches_used_flint >= $cliches_count_flint) {
-                                    $flint_hidden = " hidden='hidden'";
-                                }
-                                $kodak_hidden = '';
-                                if(empty($kodak_selected) && $cliches_used_kodak >= $cliches_count_kodak) {
-                                    $kodak_hidden = " hidden='hidden'";
-                                }
-                                $old_hidden = '';
-                                if(empty($old_selected) && $cliches_used_old >= $cliches_count_old) {
-                                    $old_hidden = " hidden='hidden'";
-                                }
-                                ?>
-                                <option value="">Ждем данные</option>
-                                <option class="option_flint" id="option_flint_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CalculationBase::FLINT ?>"<?=$flint_selected ?><?=$flint_hidden ?>>Новая Flint <?=$machine_coeff ?></option>
-                                <option class="option_kodak" id="option_kodak_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CalculationBase::KODAK ?>"<?=$kodak_selected ?><?=$kodak_hidden ?>>Новая Kodak <?=$machine_coeff ?></option>
-                                <option class="option_old" id="option_old_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CalculationBase::OLD ?>"<?=$old_selected ?><?=$old_hidden ?>>Старая</option>
-                            </select>
+                                    $flint_hidden = '';
+                                    if(empty($flint_selected) && $cliches_used_flint >= $cliches_count_flint) {
+                                        $flint_hidden = " hidden='hidden'";
+                                    }
+                                    $kodak_hidden = '';
+                                    if(empty($kodak_selected) && $cliches_used_kodak >= $cliches_count_kodak) {
+                                        $kodak_hidden = " hidden='hidden'";
+                                    }
+                                    $old_hidden = '';
+                                    if(empty($old_selected) && $cliches_used_old >= $cliches_count_old) {
+                                        $old_hidden = " hidden='hidden'";
+                                    }
+                                    $repeat_hidden = '';
+                                    if($printing_sequence == 1) {
+                                        $repeat_hidden = " hidden='hidden'";
+                                    }
+                                    ?>
+                                    <option value="">Ждем данные</option>
+                                    <option class="option_flint" id="option_flint_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CalculationBase::FLINT ?>"<?=$flint_selected ?><?=$flint_hidden ?>>Новая Flint <?=$machine_coeff ?></option>
+                                    <option class="option_kodak" id="option_kodak_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CalculationBase::KODAK ?>"<?=$kodak_selected ?><?=$kodak_hidden ?>>Новая Kodak <?=$machine_coeff ?></option>
+                                    <option class="option_old" id="option_old_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CalculationBase::OLD ?>"<?=$old_selected ?><?=$old_hidden ?>>Старая</option>
+                                    <option class="option_repeat" id="option_repeat_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CalculationBase::REPEAT ?>"<?=$repeat_selected ?><?=$repeat_hidden ?>>Повторное использование</option>
+                                </select>
+                            </div>
+                            <div class="form-group pl-2 w-50">
+                                <label for="repeat_from_<?=$printing['id'] ?>_<?=$i ?>">С какого тиража</label>
+                                <select class="form-control repeat_from" id="repeat_from_<?=$printing['id'] ?>_<?=$i ?>" data-printing-id="<?=$printing['id'] ?>" data-sequence="<?=$i ?>">
+                                    <?php /*for($rep_pr = 1; $rep_pr <= $printing_sequence; $rep_pr++): ?>
+                                    <oprion><?="rep_pr" ?></oprion>
+                                    <?php endfor;*/ ?>
+                                    <?php for($rep_pr = 1; $rep_pr <= 9; $rep_pr++) {
+                                        echo "<option>4</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
                         </div>
                         <?php endfor; ?>
                     </div>
@@ -1462,6 +1485,9 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                         break;
                                     case '<?= CalculationBase::OLD ?>':
                                         cliche = 'Старая';
+                                        break;
+                                    case '<?= CalculationBase::REPEAT ?>':
+                                        cliche = 'Повт. исп.';
                                         break;
                                     default :
                                         cliche = 'Ждем данные';

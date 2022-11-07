@@ -226,6 +226,7 @@ class CalculationBase {
     const OLD = "old";
     const FLINT = "flint";
     const KODAK = "kodak";
+    const REPEAT = "repeat";
     
     // ID ламинатора
     const SOLVENT_YES = 1;
