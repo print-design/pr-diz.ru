@@ -757,7 +757,7 @@ $current_date_time = date("dmYHis");
                 </div>
             </div>
             <?php endif; ?>
-            <div style="margin-top: 10px; margin-bottom: 10px;">
+            <div style="margin-top: 30px; margin-bottom: 10px;">
                 <span style="font-size: 18px; font-weight: bold;">Фотометка:</span>&nbsp;
                 <?php
                 switch ($photolabel) {
