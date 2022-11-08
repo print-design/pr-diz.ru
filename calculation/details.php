@@ -313,6 +313,29 @@ if($status_id == DRAFT || $status_id == CALCULATION) {
                 background-color: gray;
                 border-color: gray;
             }
+            
+            h1 {
+                font-size: 32px;
+                font-weight: 600;
+            }
+            
+            h2 {
+                font-size: 26px;
+            }
+            
+            #status {
+                width: 100%;
+                padding: 12px;
+                margin-top: 40p;
+                margin-bottom: 40px;
+                border-radius: 10px;
+                font-weight: bold;
+                text-align: center; 
+            }
+            
+            .form_button {
+                width: 200px;
+            }
         </style>
     </head>
     <body>
@@ -335,13 +358,13 @@ if($status_id == DRAFT || $status_id == CALCULATION) {
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= $status_id == DRAFT ? BuildQueryAddRemove('status', $status_id, 'id') : BuildQueryRemove("id") ?>">Назад</a>
             <!-- Левая половина -->
             <div id="left_side">
-                <h1 style="font-size: 32px; font-weight: 600;"><?= htmlentities($name) ?></h1>
-                <h2 style="font-size: 26px;">№<?=$customer_id."-".$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
-                <div style="width: 100%; padding: 12px; margin-top: 40p; margin-bottom: 40px; border-radius: 10px; font-weight: bold; text-align: center; border: solid 2px <?=$status_colors[$status_id] ?>; color: <?=$status_colors[$status_id] ?>;">
+                <h1><?= htmlentities($name) ?></h1>
+                <h2>№<?=$customer_id."-".$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
+                <div id="status" style="border: solid 2px <?=$status_colors[$status_id] ?>; color: <?=$status_colors[$status_id] ?>;">
                     <i class="<?=$status_icons[$status_id] ?>"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$status_names[$status_id] ?>
                 </div>
                 <?php include './left_panel.php'; ?>
-                <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-dark mt-5 mr-2" style="width: 200px;">Пересчитать</a>
+                <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-dark mt-5 mr-2 form_button">Пересчитать</a>
             </div>
         </div>
         <?php
