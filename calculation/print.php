@@ -183,8 +183,8 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
                 margin-top: 0;
             }
             
-            h1 { font-size: 26px; }
-            h2 { font-size: 20px; }
+            h1 { font-size: 26px; font-weight: 600; margin: 0; padding: 0; }
+            h2 { font-size: 20px; margin: 0; padding: 0; }
             h3 { font-size: 16px; }
             #right-panel { line-height: 1.3rem; }
             #right-panel .value { font-size: 18px; }
@@ -193,6 +193,18 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
             #calculation .value { font-size: 16px; }
             .btn { display: none; }
             #costs { display: block!important; }
+            
+            #status {
+                width: 100%;
+                padding: 6px;
+                margin-top: 10p;
+                margin-bottom: 10px;
+                border-radius: 8px;
+                font-weight: bold;
+                text-align: center;
+                border: solid 2px gray;
+                color: gray;
+            }
         </style>
     </head>
     <body>
@@ -206,9 +218,9 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
         ?>
         <!-- Левая половина -->
         <div class="co_l-_5" id="left_side">
-            <h1 style="font-size: 26px; font-weight: 600; margin: 0; padding: 0;"><?= htmlentities($name) ?></h1>
-            <h2 style="font-size: 20px; margin: 0; padding: 0;">№<?=$customer_id."-".$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
-            <div style="width: 100%; padding: 6px; margin-top: 10p; margin-bottom: 10px; border-radius: 8px; font-weight: bold; text-align: center; border: solid 2px gray; color: gray;">
+            <h1><?= htmlentities($name) ?></h1>
+            <h2>№<?=$customer_id."-".$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
+            <div id="status">
                 <i class="<?=$status_icons[$status_id] ?>"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$status_names[$status_id] ?>
             </div>
             <?php include './left_panel.php'; ?>
