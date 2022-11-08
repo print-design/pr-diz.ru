@@ -464,7 +464,7 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <tr>
                             <td>Машина</td>
-                            <td><?=str_starts_with($machine, "zbs") ? "ZBS" : ucfirst($machine) ?></td>
+                            <td><?= mb_stristr($machine, "zbs") ? "ZBS" : ucfirst($machine) ?></td>
                         </tr>
                         <tr>
                             <td>Марка мат-ла</td>
