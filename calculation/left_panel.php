@@ -227,7 +227,7 @@
     <div class="col-6">
         <form method="post" class="form-inline">
             <div class="form-check">
-                <label class="form-check-label text-nowrap" style="line-height: 25px;">
+                <label class="form-check-label text-nowrap mt-2">
                     <?php
                     $checked = $cliche_in_price == 1 ? " checked='checked'" : "";
                     ?>
@@ -243,7 +243,7 @@
     <div class="col-6">
         <form method="post" class="form-inline">
             <div class="form-check">
-                <label class="form-check-label text-nowrap" style="line-height: 25px;">
+                <label class="form-check-label text-nowrap mt-2 mb-2">
                     <?php
                     $checked = $customer_pays_for_cliche == 1 ? " checked='checked'" : "";
                     ?>
@@ -259,10 +259,10 @@
 <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
 <div class="row">
     <div class="col-6"></div>
-    <div class="col-6" style="border-top: solid 2px lightgray; margin-top: 6px; padding-top: 6px;">
+    <div class="col-6" style="border-top: solid 2px lightgray;">
         <form method="post" class="form-inline">
             <div class="form-check">
-                <label class="form-check-label text-nowrap" style="line-height: 25px;">
+                <label class="form-check-label text-nowrap mt-2">
                     <?php
                     $checked = $knife_in_price == 1 ? " checked='checked'" : "";
                     ?>
@@ -278,7 +278,7 @@
     <div class="col-6">
         <form method="post" class="form-inline">
             <div class="form-check">
-                <label class="form-check-label text-nowrap" style="line-height: 25px;">
+                <label class="form-check-label text-nowrap mt-2">
                     <?php
                     $checked = $customer_pays_for_knife == 1 ? " checked='checked'" : "";
                     ?>
