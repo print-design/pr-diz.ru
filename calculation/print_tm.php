@@ -276,6 +276,8 @@ $repeats = array();
 $cliches_used_flint = 0;
 $cliches_used_kodak = 0;
 $cliches_used_old = 0;
+$quantities_sum = 0;
+$lengths_sum = 0;
 
 if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
     $sql = "select id, quantity, length from calculation_quantity where calculation_id = $id";
@@ -301,6 +303,11 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                 $cliches_used_old++;
                 break;
         }
+    }
+    
+    foreach($printings as $printing) {
+        $quantities_sum += intval($printing['quantity']);
+        $lengths_sum += intval($printing['length']);
     }
 }
 
@@ -491,7 +498,7 @@ $current_date_time = date("dmYHis");
             </div>
             <div class="row">
                 <div class="col-6 topproperty">
-                    <strong>Объем заказа:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= CalculationBase::Display(intval($quantity), 0) ?> <?=$unit == 'kg' ? 'кг' : 'шт' ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= CalculationBase::Display(floatval($length_pure_1), 0) ?> м
+                    <strong>Объем заказа:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= CalculationBase::Display(intval($quantities_sum), 0) ?> шт&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= CalculationBase::Display(floatval($lengths_sum), 0) ?> м
                 </div>
                 <div class="col-6 topproperty">
                     <strong>Тип работы:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$work_type ?>
