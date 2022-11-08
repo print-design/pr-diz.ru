@@ -41,7 +41,7 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
         . "c.film_variation_id, f.name film_name, fv.thickness thickness, fv.weight weight, c.price, c.currency, c.individual_film_name, c.individual_thickness, c.individual_density, c.customers_material, c.ski, c.width_ski, "
         . "c.lamination1_film_variation_id, lam1f.name lamination1_film_name, lam1fv.thickness lamination1_thickness, lam1fv.weight lamination1_weight, c.lamination1_price, c.lamination1_currency, c.lamination1_individual_film_name, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, c.lamination1_ski, c.lamination1_width_ski, "
         . "c.lamination2_film_variation_id, lam2f.name lamination2_film_name, lam2fv.thickness lamination2_thickness, lam2fv.weight lamination2_weight, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_ski, c.lamination2_width_ski, "
-        . "c.streams_number, c.stream_width, c.length, c.raport, c.lamination_roller_width, c.ink_number, "
+        . "c.streams_number, c.stream_width, c.length, c.raport, c.number_in_raport, c.lamination_roller_width, c.ink_number, "
         . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
         . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
@@ -50,7 +50,7 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
         . "cus.name customer, "
         . "u.last_name, u.first_name, "
         . "wt.name work_type, "
-        . "cr.width_1, cr.length_pure_1, cr.length_dirty_1, cr.width_2, cr.length_pure_2, cr.length_dirty_2, cr.width_3, cr.length_pure_3, cr.length_dirty_3, "
+        . "cr.width_1, cr.length_pure_1, cr.length_dirty_1, cr.width_2, cr.length_pure_2, cr.length_dirty_2, cr.width_3, cr.length_pure_3, cr.length_dirty_3, gap, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
         . "tm.id techmap_id, tm.date techmap_date, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, tm.photolabel, tm.roll_type, tm.comment "
         . "from calculation c "
@@ -123,6 +123,7 @@ $streams_number = $row['streams_number'];
 $stream_width = $row['stream_width'];
 $length = $row['length'];
 $raport = $row['raport'];
+$number_in_raport = $row['number_in_raport'];
 $lamination_roller_width = $row['lamination_roller_width'];
 $ink_number = $row['ink_number']; if(empty($ink_number)) $ink_number = 0;
 
@@ -157,6 +158,7 @@ $length_dirty_2 = $row['length_dirty_2'];
 $width_3 = $row['width_3'];
 $length_pure_3 = $row['length_pure_3'];
 $length_dirty_3 = $row['length_dirty_3'];
+$gap = $row['gap'];
 
 $num_for_customer = $row['num_for_customer'];
 
@@ -267,6 +269,41 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
 
 $machine_coeff = GetMachineCoeff($machine);
 
+// Тиражи и формы
+$printings = array();
+$cliches = array();
+$repeats = array();
+$cliches_used_flint = 0;
+$cliches_used_kodak = 0;
+$cliches_used_old = 0;
+
+if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+    $sql = "select id, quantity, length from calculation_quantity where calculation_id = $id";
+    $grabber = new Grabber($sql);
+    $error_message = $grabber->error;
+    $printings = $grabber->result;
+    
+    $sql = "select calculation_quantity_id, sequence, name, repeat_from from calculation_cliche where calculation_quantity_id in (select id from calculation_quantity where calculation_id = $id)";
+    $fetcher = new Fetcher($sql);
+    $error_message = $fetcher->error;
+    while($row = $fetcher->Fetch()) {
+        $cliches[$row['calculation_quantity_id']][$row['sequence']] = $row['name'];
+        $repeats[$row['calculation_quantity_id']][$row['sequence']] = $row['repeat_from'];
+        
+        switch ($row['name']) {
+            case CalculationBase::FLINT:
+                $cliches_used_flint++;
+                break;
+            case CalculationBase::KODAK:
+                $cliches_used_kodak++;
+                break;
+            case CalculationBase::OLD:
+                $cliches_used_old++;
+                break;
+        }
+    }
+}
+
 // Текущее время
 $current_date_time = date("dmYHis");
 ?>
@@ -297,7 +334,7 @@ $current_date_time = date("dmYHis");
                 padding-right: 10px;
             }
             
-            #main {
+            #main, #title {
                 padding-left: 10px;
                 padding-right: 10px;
             }
@@ -326,7 +363,7 @@ $current_date_time = date("dmYHis");
             }
             
             td {
-                line-height: 30px;
+                line-height: 32px;
                 border-bottom: solid 1px #cccccc;
             }
             
@@ -346,33 +383,59 @@ $current_date_time = date("dmYHis");
                 text-align: right;
                 vertical-align: top;
             }
+            
+            #fixed_top {
+                position: fixed;
+                top: 0px;
+                left: 0px;
+                width: 100%;
+            }
+            
+            #fixed_bottom {
+                position: fixed;
+                bottom: 0px;
+                left: 0px;
+                width: 100%;
+            }
+            
+            #placeholder_top {
+                height: 160px;
+            }
+            
+            .break_page {
+                page-break-before: always;
+                height: 160px;
+            }
         </style>
     </head>
     <body>
-        <div class="d-flex justify-content-between">
-            <div>
-                <?php
-                include '../qr/qrlib.php';
-                $errorCorrectionLevel = 'L'; // 'L','M','Q','H'
-                $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/calculation/details.php?id='.$id;
-                $filename = "../temp/$current_date_time.png";
+        <div id="fixed_top">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <?php
+                    include '../qr/qrlib.php';
+                    $errorCorrectionLevel = 'L'; // 'L','M','Q','H'
+                    $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/calculation/details.php?id='.$id;
+                    $filename = "../temp/$current_date_time.png";
                 
-                do {
-                    QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 3, 4, true);
-                } while (!file_exists($filename));
-                ?>
-                <div class="d-inline-block header_qr"><img src='<?=$filename ?>' style='height: 100px; width: 100px;' /></div>
-                <div class="d-inline-block header_title">
-                    Заказ №<?=$customer_id ?>-<?=$num_for_customer ?><br />
-                    от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?>
+                    do {
+                        QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 3, 4, true);
+                    } while (!file_exists($filename));
+                    ?>
+                    <div class="d-inline-block header_qr"><img src='<?=$filename ?>' style='height: 100px; width: 100px;' /></div>
+                    <div class="d-inline-block header_title">
+                        Заказ №<?=$customer_id ?>-<?=$num_for_customer ?><br />
+                        от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-inline-block right_logo"><img src="../images/logo_with_label.svg" /></div>
                 </div>
             </div>
-            <div>
-                <div class="d-inline-block right_logo"><img src="../images/logo_with_label.svg" /></div>
-            </div>
-        </div>
-        <div id="main">
             <div id="title">Заказчик: <?=$customer ?></div>
+        </div>
+        <div id="placeholder_top"></div>
+        <div id="main">
             <div id="subtitle">Наименование: <?=$calculation ?></div>
             <div class="row">
                 <div class="col-6 topproperty">
@@ -401,10 +464,10 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <tr>
                             <td>Машина</td>
-                            <td><?= empty($machine) ? "" : ($machine == CalculationBase::COMIFLEX ? "Comiflex" : "ZBS") ?></td>
+                            <td><?=str_starts_with($machine, "zbs") ? "ZBS" : ucfirst($machine) ?></td>
                         </tr>
                         <tr>
-                            <td>Марка пленки</td>
+                            <td>Марка мат-ла</td>
                             <td><?= empty($film_name) ? $individual_film_name : $film_name ?></td>
                         </tr>
                         <tr>
@@ -416,13 +479,21 @@ $current_date_time = date("dmYHis");
                             <td><?= CalculationBase::Display(floatval($width_1), 0) ?> мм</td>
                         </tr>
                         <tr>
-                            <td>Метраж на приладку</td>
+                            <td><?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? "На приладку 1 тиража" : "Метраж на приладку" ?></td>
                             <td><?= CalculationBase::Display(floatval($data_priladka->length) * floatval($ink_number), 0) ?> м</td>
                         </tr>
+                        <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+                        <tr>
+                            <td>Всего тиражей</td>
+                            <td><?=count($printings) ?></td>
+                        </tr>
+                        <?php endif; ?>
+                        <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td>Метраж на тираж</td>
                             <td><?= CalculationBase::Display(floatval($length_pure_1), 0) ?> м</td>
                         </tr>
+                        <?php endif; ?>
                         <tr>
                             <td>Всего мат-ла</td>
                             <td><?= CalculationBase::Display(floatval($length_dirty_1), 0) ?> м</td>
@@ -454,7 +525,7 @@ $current_date_time = date("dmYHis");
                             <td>Нет</td>
                         </tr>
                         <tr>
-                            <td>Ширина ручья</td>
+                            <td><?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? "Ширина этикетки" : "Ширина ручья" ?></td>
                             <td><?=$stream_width.(empty($stream_width) ? "" : " мм") ?></td>
                         </tr>
                         <tr>
@@ -465,6 +536,37 @@ $current_date_time = date("dmYHis");
                             <td>Кол-во ручьёв</td>
                             <td><?=$streams_number ?></td>
                         </tr>
+                        <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+                        <tr>
+                            <td>Этикеток в рапорте</td>
+                            <td><?=$number_in_raport ?></td>
+                        </tr>
+                        <tr>
+                            <td>Вертикальный зазор между этикетками</td>
+                            <td><?= CalculationBase::Display($gap, 2) ?> мм</td>
+                        </tr>
+                        <tr>
+                            <td>Горизонтальный зазор между этикетками</td>
+                            <td>
+                                <?php
+                                $sql = "select gap_stream from norm_gap order by date desc limit 1";
+                                $fetcher = new Fetcher($sql);
+                                if($row = $fetcher->Fetch()) {
+                                    $norm_stream = $row[0];
+                                    echo CalculationBase::Display($norm_stream, 2).' мм';
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Красочность</td>
+                            <td><?=$ink_number ?> цв.</td>
+                        </tr>
+                        <tr>
+                            <td>Штамп</td>
+                            <td>Нет</td>
+                        </tr>
+                        <?php endif; ?>
                     </table>
                 </div>
                 <div class="col-4" style="border-right: solid 1px #cccccc;">
@@ -833,12 +935,106 @@ $current_date_time = date("dmYHis");
                 </tr>
             </table>
             <div style="margin-bottom: 50px;"><span style="font-size: 18px; font-weight: bold;">Комментарий:</span> <?=$comment ?></div>
-            <table class="w-100">
-                <tr class="left">
-                    <td style="font-size: 18px; font-weight: bold; height: 50px; border: solid 2px #cccccc; padding-left: 5px;">Дизайнер:</td>
-                    <td style="font-size: 18px; font-weight: bold; height: 50px; border: solid 2px #cccccc; padding-left: 5px;">Менеджер:</td>
-                </tr>
-            </table>
+            <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+            <div class="break_page"></div>
+            <div class="row">
+                <?php
+                $printing_sequence = 0;
+                $counter = 0;
+                foreach($printings as $printing):
+                    $printing_sequence++;
+                    $counter++;
+                    
+                if($counter > 4) {
+                    echo "</div>";
+                    
+                    if($printing_sequence == 13) {
+                        echo "<div class='break-page'></div>";
+                    }
+                    
+                    echo "<div class='row'>";
+                    $counter = 1;
+                }
+                ?>
+                <div class="col-3">
+                    <div style="font-size: large;" class="mt-4 mb-2"><span class="font-weight-bold">Тираж <?=$printing_sequence ?></span>&nbsp;&nbsp;&nbsp;<?= CalculationBase::Display(floatval($printing['length']), 0) ?> м</div>
+                    <table class="mb-3">
+                    <?php
+                    for($i = 1; $i <= $ink_number; $i++):
+                    $ink_var = "ink_$i";
+                    $color_var = "color_$i";
+                    $cmyk_var = "cmyk_$i";
+                    ?>
+                        <tr>
+                            <td>
+                                <?php
+                                switch($$ink_var) {
+                                    case CalculationBase::CMYK:
+                                        switch ($$cmyk_var) {
+                                            case CalculationBase::CYAN:
+                                                echo 'Cyan';
+                                                break;
+                                            case CalculationBase::MAGENDA:
+                                                echo 'Magenda';
+                                                break;
+                                            case CalculationBase::YELLOW:
+                                                echo 'Yellow';
+                                                break;
+                                            case CalculationBase::KONTUR:
+                                                echo 'Kontur';
+                                                break;
+                                        }
+                                        break;
+                                    case CalculationBase::PANTON:
+                                        echo "P".$$color_var;
+                                        break;
+                                    case CalculationBase::WHITE:
+                                        echo 'Белая';
+                                        break;
+                                    case CalculationBase::LACQUER:
+                                        echo 'Лак';
+                                        break;
+                                }
+                                ?>
+                            </td>
+                            <td id="cliche_<?=$printing['id'] ?>_<?=$i ?>">
+                                <?php
+                                if(empty($cliches[$printing['id']][$i])) {
+                                    echo 'Ждем данные';
+                                }
+                                else {
+                                    switch ($cliches[$printing['id']][$i]) {
+                                        case CalculationBase::FLINT:
+                                            echo "Новая Flint $machine_coeff";
+                                            break;
+                                        case CalculationBase::KODAK:
+                                            echo "Новая Kodak $machine_coeff";
+                                            break;
+                                        case CalculationBase::OLD:
+                                            echo "Старая";
+                                            break;
+                                        case CalculationBase::REPEAT:
+                                            echo "Повт. исп. с тир. ".$repeats[$printing['id']][$i];
+                                            break;
+                                    }
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                    <?php endfor; ?>
+                    </table>
+                </div>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
+            <div id="fixed_bottom">
+                <table class="w-100">
+                    <tr class="left">
+                        <td style="font-size: 18px; font-weight: bold; height: 50px; border: solid 2px #cccccc; padding-left: 5px;">Дизайнер:</td>
+                        <td style="font-size: 18px; font-weight: bold; height: 50px; border: solid 2px #cccccc; padding-left: 5px;">Менеджер:</td>
+                    </tr>
+                </table>
+            </div>
             <?php
             // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
             $files = scandir("../temp/");

@@ -740,7 +740,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                     <table>
                         <tr>
                             <td style="padding-top: 5px;">Машина</td>
-                            <td style="padding-top: 5px;"><?= empty($machine) ? "" : ($machine == CalculationBase::COMIFLEX ? "Comiflex" : "ZBS") ?></td>
+                            <td style="padding-top: 5px;"><?=str_starts_with($machine, "zbs") ? "ZBS" : ucfirst($machine) ?></td>
                         </tr>
                         <tr>
                             <td>Марка мат-ла</td>
