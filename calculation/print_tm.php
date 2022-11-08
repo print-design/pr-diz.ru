@@ -322,6 +322,13 @@ $current_date_time = date("dmYHis");
             
             .header_qr {
                 margin-right: 15px;
+                height: 100px;
+                width: 100px;
+            }
+            
+            .header_qr img {
+                height: 100px;
+                width: 100px;
             }
             
             .header_title {
@@ -375,6 +382,11 @@ $current_date_time = date("dmYHis");
                 text-align: left;
             }
             
+            table.fotometka {
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+            
             table.fotometka tr td {
                 border: solid 1px #dddddd;
                 padding-left: 4px;
@@ -382,6 +394,30 @@ $current_date_time = date("dmYHis");
                 padding-right: 20px;
                 text-align: right;
                 vertical-align: top;
+            }
+            
+            td.fotometka img:nth-child(1) {
+                 height: 50px;
+                 width: auto;
+            }
+            
+            .photolable {
+                margin-top: 30px;
+                margin-bottom: 10px;
+                font-size: 18px;
+            }
+            
+            #comment {
+                margin-bottom: 50px;
+                font-size: 18px;
+            }
+            
+            .border-bottom-2 {
+                border-bottom: solid 2px gray;
+            }
+            
+            .printing_title {
+                font-size: large;
             }
             
             #fixed_top {
@@ -396,6 +432,14 @@ $current_date_time = date("dmYHis");
                 bottom: 0px;
                 left: 0px;
                 width: 100%;
+            }
+            
+            #fixed_bottom table tbody tr td {
+                font-size: 18px;
+                font-weight: bold;
+                height: 50px;
+                border: solid 2px #cccccc;
+                padding-left: 5px;
             }
             
             #placeholder_top {
@@ -422,7 +466,7 @@ $current_date_time = date("dmYHis");
                         QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 3, 4, true);
                     } while (!file_exists($filename));
                     ?>
-                    <div class="d-inline-block header_qr"><img src='<?=$filename ?>' style='height: 100px; width: 100px;' /></div>
+                    <div class="d-inline-block header_qr"><img src='<?=$filename ?>' /></div>
                     <div class="d-inline-block header_title">
                         Заказ №<?=$customer_id ?>-<?=$num_for_customer ?><br />
                         от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?>
@@ -454,7 +498,7 @@ $current_date_time = date("dmYHis");
                 </div>
             </div>
             <div class="row">
-                <div class="col-4" style="border-right: solid 1px #cccccc;">
+                <div class="col-4 border-right">
                     <table class="w-100">
                         <tr>
                             <td colspan="2" class="table-header">Информация для печатника</td>
@@ -569,7 +613,7 @@ $current_date_time = date("dmYHis");
                         <?php endif; ?>
                     </table>
                 </div>
-                <div class="col-4" style="border-right: solid 1px #cccccc;">
+                <div class="col-4 border-right">
                     <table class="w-100">
                         <tr>
                             <td colspan="2" class="table-header"><?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?> Информация для ламинации<?php else: echo "<br /> "; endif; ?></td>
@@ -760,10 +804,10 @@ $current_date_time = date("dmYHis");
             </div>
             <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="row">
-                <div class="col-4" style="border-right: solid 1px #cccccc;">
+                <div class="col-4 border-right">
                     <table class="w-100">
                         <tr>
-                            <td colspan="2" class="font-weight-bold" style="border-bottom: solid 2px gray;">Красочность: <?=$ink_number ?> цв.</td>
+                            <td colspan="2" class="font-weight-bold border-bottom-2">Красочность: <?=$ink_number ?> цв.</td>
                         </tr>
                         <?php
                         for($i = 1; $i <= $ink_number; $i++):
@@ -826,10 +870,10 @@ $current_date_time = date("dmYHis");
                         ?>
                     </table>
                 </div>
-                <div class="col-4" style="border-right: solid 1px #cccccc;">
+                <div class="col-4 border-right">
                     <table class="w-100">
                         <tr>
-                            <td colspan="2" class="font-weight-bold" style="border-bottom: solid 2px gray;">Ламинация 2</td>
+                            <td colspan="2" class="font-weight-bold border-bottom-2">Ламинация 2</td>
                         </tr>
                         <tr>
                             <td>Марка пленки</td>
@@ -859,8 +903,8 @@ $current_date_time = date("dmYHis");
                 </div>
             </div>
             <?php endif; ?>
-            <div style="margin-top: 30px; margin-bottom: 10px;">
-                <span style="font-size: 18px; font-weight: bold;">Фотометка:</span>&nbsp;
+            <div class="photolable">
+                <span class="font-weight-bold">Фотометка:</span>&nbsp;
                 <?php
                 switch ($photolabel) {
                     case PHOTOLABEL_LEFT:
@@ -898,43 +942,43 @@ $current_date_time = date("dmYHis");
                     break;
             }
             ?>
-            <table class="fotometka" style="margin-top: 10px; margin-bottom: 10px;">
+            <table class="fotometka">
                 <tr>
                     <td class="fotometka<?= $roll_type == 1 ? " fotochecked" : "" ?>">
-                        <img src="../images/<?=$roll_folder ?>/roll_type_1.png" style="height: 50px; width: auto;" />
+                        <img src="../images/<?=$roll_folder ?>/roll_type_1.png" />
                         <?php if($roll_type == 1): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
                     </td>
                     <td class="fotometka<?= $roll_type == 2 ? " fotochecked" : "" ?>">
-                        <img src="../images/<?=$roll_folder ?>/roll_type_2.png" style="height: 50px; width: auto;" />
+                        <img src="../images/<?=$roll_folder ?>/roll_type_2.png" />
                         <?php if($roll_type == 2): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
                     </td>
                     <td class="fotometka<?= $roll_type == 3 ? " fotochecked" : "" ?>">
-                        <img src="../images/<?=$roll_folder ?>/roll_type_3.png" style="height: 50px; width: auto;" />
+                        <img src="../images/<?=$roll_folder ?>/roll_type_3.png" />
                         <?php if($roll_type == 3): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
                     </td>
                     <td class="fotometka<?= $roll_type == 4 ? " fotochecked" : "" ?>">
-                        <img src="../images/<?=$roll_folder ?>/roll_type_4.png" style="height: 50px; width: auto;" />
+                        <img src="../images/<?=$roll_folder ?>/roll_type_4.png" />
                         <?php if($roll_type == 4): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
                     </td>
                     <td class="fotometka<?= $roll_type == 5 ? " fotochecked" : "" ?>">
-                        <img src="../images/<?=$roll_folder ?>/roll_type_5.png" style="height: 50px; width: auto;" />
+                        <img src="../images/<?=$roll_folder ?>/roll_type_5.png" />
                         <?php if($roll_type == 5): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
                     </td>
                     <td class="fotometka<?= $roll_type == 6 ? " fotochecked" : "" ?>">
-                        <img src="../images/<?=$roll_folder ?>/roll_type_6.png" style="height: 50px; width: auto;" />
+                        <img src="../images/<?=$roll_folder ?>/roll_type_6.png" />
                         <?php if($roll_type == 6): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
                     </td>
                     <td class="fotometka<?= $roll_type == 7 ? " fotochecked" : "" ?>">
-                        <img src="../images/<?=$roll_folder ?>/roll_type_7.png" style="height: 50px; width: auto;" />
+                        <img src="../images/<?=$roll_folder ?>/roll_type_7.png" />
                         <?php if($roll_type == 7): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
                     </td>
                     <td class="fotometka<?= $roll_type == 8 ? " fotochecked" : "" ?>">
-                        <img src="../images/<?=$roll_folder ?>/roll_type_8.png" style="height: 50px; width: auto;" />
+                        <img src="../images/<?=$roll_folder ?>/roll_type_8.png" />
                         <?php if($roll_type == 8): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
                     </td>
                 </tr>
             </table>
-            <div style="margin-bottom: 50px;"><span style="font-size: 18px; font-weight: bold;">Комментарий:</span> <?=$comment ?></div>
+            <div id="comment"><span class="font-weight-bold">Комментарий:</span> <?=$comment ?></div>
             <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="break_page"></div>
             <div class="row">
@@ -957,7 +1001,7 @@ $current_date_time = date("dmYHis");
                 }
                 ?>
                 <div class="col-3">
-                    <div style="font-size: large;" class="mt-4 mb-2"><span class="font-weight-bold">Тираж <?=$printing_sequence ?></span>&nbsp;&nbsp;&nbsp;<?= CalculationBase::Display(floatval($printing['length']), 0) ?> м</div>
+                    <div class="mt-4 mb-2 printing_title"><span class="font-weight-bold">Тираж <?=$printing_sequence ?></span>&nbsp;&nbsp;&nbsp;<?= CalculationBase::Display(floatval($printing['length']), 0) ?> м</div>
                     <table class="mb-3">
                     <?php
                     for($i = 1; $i <= $ink_number; $i++):
@@ -1030,8 +1074,8 @@ $current_date_time = date("dmYHis");
             <div id="fixed_bottom">
                 <table class="w-100">
                     <tr class="left">
-                        <td style="font-size: 18px; font-weight: bold; height: 50px; border: solid 2px #cccccc; padding-left: 5px;">Дизайнер:</td>
-                        <td style="font-size: 18px; font-weight: bold; height: 50px; border: solid 2px #cccccc; padding-left: 5px;">Менеджер:</td>
+                        <td>Дизайнер:</td>
+                        <td>Менеджер:</td>
                     </tr>
                 </table>
             </div>
