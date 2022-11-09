@@ -332,13 +332,13 @@ $current_date_time = date("dmYHis");
             
             .header_qr {
                 margin-right: 15px;
-                height: 100px;
-                width: 100px;
+                height: 80px;
+                width: 80px;
             }
             
             .header_qr img {
-                height: 100px;
-                width: 100px;
+                height: 80px;
+                width: 80px;
             }
             
             .header_title {
@@ -351,7 +351,7 @@ $current_date_time = date("dmYHis");
                 padding-right: 10px;
             }
             
-            #main, #title {
+            #main, #fixed_top {
                 padding-left: 10px;
                 padding-right: 10px;
             }
@@ -447,12 +447,12 @@ $current_date_time = date("dmYHis");
                 }
                 
                 #placeholder_top {
-                    height: 160px;
+                    height: 260px;
                 }
                 
                 .break_page {
                     page-break-before: always;
-                    height: 160px;
+                    height: 260px;
                 }
             }
             
@@ -476,7 +476,7 @@ $current_date_time = date("dmYHis");
                     $filename = "../temp/$current_date_time.png";
                 
                     do {
-                        QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 3, 4, true);
+                        QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 3, 0, true);
                     } while (!file_exists($filename));
                     ?>
                     <div class="d-inline-block header_qr"><img src='<?=$filename ?>' /></div>
@@ -490,9 +490,6 @@ $current_date_time = date("dmYHis");
                 </div>
             </div>
             <div id="title">Заказчик: <?=$customer ?></div>
-        </div>
-        <div id="placeholder_top"></div>
-        <div id="main">
             <div id="subtitle">Наименование: <?=$calculation ?></div>
             <div class="row">
                 <div class="col-6 topproperty">
@@ -510,6 +507,9 @@ $current_date_time = date("dmYHis");
                     <strong>Тип работы:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$work_type ?>
                 </div>
             </div>
+        </div>
+        <div id="placeholder_top"></div>
+        <div id="main">
             <div class="row">
                 <div class="col-4 border-right">
                     <table class="w-100">
