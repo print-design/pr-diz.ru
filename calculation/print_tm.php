@@ -386,6 +386,7 @@ $current_date_time = date("dmYHis");
             
             tr td:nth-child(2) {
                 text-align: right;
+                padding-left: 10px;
             }
             
             tr.left td:nth-child(2) {
@@ -1013,8 +1014,12 @@ $current_date_time = date("dmYHis");
                 }
                 ?>
                 <div class="col-3">
-                    <div class="mt-4 mb-2 printing_title"><span class="font-weight-bold">Тираж <?=$printing_sequence ?></span>&nbsp;&nbsp;&nbsp;<?= CalculationBase::Display(floatval($printing['length']), 0) ?> м</div>
-                    <table class="mb-3">
+                    <div class="mt-4 mb-2 printing_title font-weight-bold">Тираж <?=$printing_sequence ?></div>
+                    <div class="d-flex justify-content-between font-italic border-bottom">
+                        <div><?= CalculationBase::Display(intval($printing['quantity']), 0) ?> шт</div>
+                        <div><?= CalculationBase::Display(floatval($printing['length']), 0) ?> м</div>
+                    </div>
+                    <table class="mb-3 w-100">
                     <?php
                     for($i = 1; $i <= $ink_number; $i++):
                     $ink_var = "ink_$i";

@@ -489,6 +489,11 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
             
             tr td:nth-child(2) {
                 text-align: right;
+                padding-left: 10px;
+            }
+            
+            .printing_title {
+                font-size: large;
             }
             
             .roll-selector input {
@@ -538,7 +543,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                     if($printing_sequence == 1) $display = "d-block";
                     ?>
                     <div class="modal-body set_printings set_printings_<?=$printing_sequence ?> <?=$display ?>">
-                        <div class="font-weight-bold"><span style="font-size: x-large;">Тираж <?=$printing_sequence ?></span>&nbsp;&nbsp;&nbsp;<span style="font-size: large;"><?= CalculationBase::Display(floatval($printing['length']), 0) ?> м</span></div>
+                        <div class="printing_title font-weight-bold"><span style="font-size: x-large;">Тираж <?=$printing_sequence ?></span>&nbsp;&nbsp;&nbsp;<span style="font-size: large;"><?= CalculationBase::Display(floatval($printing['length']), 0) ?> м</span></div>
                         <div class="d-flex justify-content-start mb-3">
                             <div class="mr-2">
                                 <div>Новая Flint <?=$machine_coeff ?></div>
@@ -1150,8 +1155,12 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                     $printing_sequence++;
                 ?>
                 <div class="col-3">
-                    <div style="font-size: large;"><span class="font-weight-bold">Тираж <?=$printing_sequence ?></span>&nbsp;&nbsp;&nbsp;<?= CalculationBase::Display(floatval($printing['length']), 0) ?> м</div>
-                    <table class="mb-3">
+                    <div class="printing_title font-weight-bold">Тираж <?=$printing_sequence ?></div>
+                    <div class="d-flex justify-content-between font-italic border-bottom">
+                        <div><?= CalculationBase::Display(intval($printing['quantity']), 0) ?> шт</div>
+                        <div><?= CalculationBase::Display(floatval($printing['length']), 0) ?> м</div>
+                    </div>
+                    <table class="mb-3 w-100">
                     <?php
                     for($i = 1; $i <= $ink_number; $i++):
                     $ink_var = "ink_$i";
