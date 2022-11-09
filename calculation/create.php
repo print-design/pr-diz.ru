@@ -48,7 +48,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     $executer = new Executer($sql);
     $error_message = $executer->error;
     
-    header("Location: ".BuildQueryRemove("status"));
+    header("Location: details.php?id=$id");
 }
 
 // Значение марки плёнки "другая"
@@ -397,7 +397,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         if(empty($error_message)) {
-            header('Location: details.php?id='.$insert_id);
+            header('Location: create.php?id='.$insert_id);
         }
     }
 }

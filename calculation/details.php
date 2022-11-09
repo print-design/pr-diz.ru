@@ -112,7 +112,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     $executer = new Executer($sql);
     $error_message = $executer->error;
     
-    header("Location: ".BuildQueryRemove("status"));
+    header("Location: details.php?id=$id");
 }
 
 // Получение объекта
