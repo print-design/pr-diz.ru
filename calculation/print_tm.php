@@ -620,7 +620,7 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <tr>
                             <td>Штамп</td>
-                            <td><?= $knife == 0 ? "Старый" : "Новый" ?></td>
+                            <td><?= (empty($knife) || $knife == 0) ? "Старый" : "Новый" ?></td>
                         </tr>
                         <?php endif; ?>
                     </table>

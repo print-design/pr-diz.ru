@@ -843,7 +843,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                         </tr>
                         <tr>
                             <td>Штамп</td>
-                            <td><?= $knife == 0 ? "Старый" : "Новый" ?></td>
+                            <td><?= (empty($knife) || $knife == 0) ? "Старый" : "Новый" ?></td>
                         </tr>
                         <?php endif; ?>
                     </table>
