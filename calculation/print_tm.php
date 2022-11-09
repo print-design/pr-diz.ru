@@ -47,6 +47,7 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
         . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, c.cliche_1, "
         . "c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
+        . "c.knife, "
         . "cus.name customer, "
         . "u.last_name, u.first_name, "
         . "wt.name work_type, "
@@ -143,6 +144,8 @@ for($i=1; $i<=$ink_number; $i++) {
     $cliche_var = "cliche_$i";
     $$cliche_var = $row[$cliche_var];
 }
+
+$knife = $row['knife'];
 
 $customer = $row['customer'];
 $last_name = $row['last_name'];
@@ -427,18 +430,29 @@ $current_date_time = date("dmYHis");
                 font-size: large;
             }
             
-            #fixed_top {
-                position: fixed;
-                top: 0px;
-                left: 0px;
-                width: 100%;
-            }
-            
-            #fixed_bottom {
-                position: fixed;
-                bottom: 0px;
-                left: 0px;
-                width: 100%;
+            @media print {
+                #fixed_top {
+                    position: fixed;
+                    top: 0px;
+                    left: 0px;
+                    width: 100%;
+                }
+                
+                #fixed_bottom {
+                    position: fixed;
+                    bottom: 0px;
+                    left: 0px;
+                    width: 100%;
+                }
+                
+                #placeholder_top {
+                    height: 160px;
+                }
+                
+                .break_page {
+                    page-break-before: always;
+                    height: 160px;
+                }
             }
             
             #fixed_bottom table tbody tr td {
@@ -447,15 +461,6 @@ $current_date_time = date("dmYHis");
                 height: 50px;
                 border: solid 2px #cccccc;
                 padding-left: 5px;
-            }
-            
-            #placeholder_top {
-                height: 160px;
-            }
-            
-            .break_page {
-                page-break-before: always;
-                height: 160px;
             }
         </style>
     </head>
@@ -615,7 +620,7 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <tr>
                             <td>Штамп</td>
-                            <td>Нет</td>
+                            <td><?= $knife == 0 ? "Старый" : "Новый" ?></td>
                         </tr>
                         <?php endif; ?>
                     </table>

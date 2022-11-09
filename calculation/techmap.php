@@ -156,6 +156,7 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
         . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, c.cliche_1, "
         . "c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
+        . "c.knife, "
         . "c.cliches_count_flint, c.cliches_count_kodak, c.cliches_count_old, "
         . "cus.name customer, "
         . "u.last_name, u.first_name, "
@@ -253,6 +254,8 @@ for($i=1; $i<=$ink_number; $i++) {
     $cliche_var = "cliche_$i";
     $$cliche_var = $row[$cliche_var];
 }
+
+$knife = $row['knife'];
 
 $cliches_count_flint = $row['cliches_count_flint'];
 $cliches_count_kodak = $row['cliches_count_kodak'];
@@ -840,7 +843,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                         </tr>
                         <tr>
                             <td>Штамп</td>
-                            <td>Нет</td>
+                            <td><?= $knife == 0 ? "Старый" : "Новый" ?></td>
                         </tr>
                         <?php endif; ?>
                     </table>
