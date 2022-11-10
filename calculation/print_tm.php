@@ -48,12 +48,12 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
         . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, c.cliche_1, "
         . "c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
         . "c.knife, "
-        . "cus.name customer, "
+        . "cus.name customer, sup.name supplier, "
         . "u.last_name, u.first_name, "
         . "wt.name work_type, "
         . "cr.width_1, cr.length_pure_1, cr.length_dirty_1, cr.width_2, cr.length_pure_2, cr.length_dirty_2, cr.width_3, cr.length_pure_3, cr.length_dirty_3, gap, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
-        . "tm.id techmap_id, tm.date techmap_date, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, tm.photolabel, tm.roll_type, tm.comment "
+        . "tm.id techmap_id, tm.date techmap_date, tm.supplier_id, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, tm.photolabel, tm.roll_type, tm.comment "
         . "from calculation c "
         . "left join techmap tm on tm.calculation_id = c.id "
         . "left join film_variation fv on c.film_variation_id = fv.id "
@@ -66,6 +66,7 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
         . "inner join user u on c.manager_id = u.id "
         . "inner join work_type wt on c.work_type_id = wt.id "
         . "left join calculation_result cr on cr.calculation_id = c.id "
+        . "left join supplier sup on tm.supplier_id = sup.id "
         . "where c.id = $id";
 
 $fetcher = new Fetcher($sql);
@@ -148,6 +149,7 @@ for($i=1; $i<=$ink_number; $i++) {
 $knife = $row['knife'];
 
 $customer = $row['customer'];
+$supplier = $row['supplier'];
 $last_name = $row['last_name'];
 $first_name = $row['first_name'];
 $work_type = $row['work_type'];
@@ -523,6 +525,12 @@ $current_date_time = date("dmYHis");
                             <td>Машина</td>
                             <td><?= mb_stristr($machine, "zbs") ? "ZBS" : ucfirst($machine) ?></td>
                         </tr>
+                        <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+                        <tr>
+                            <td>Поставщик</td>
+                            <td><?= empty($supplier) ? "Ждем данные" : $supplier ?></td>
+                        </tr>
+                        <?php endif; ?>
                         <tr>
                             <td>Марка мат-ла</td>
                             <td><?= empty($film_name) ? $individual_film_name : $film_name ?></td>

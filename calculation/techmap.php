@@ -49,6 +49,7 @@ define('ISINVALID', ' is-invalid');
 $form_valid = true;
 $error_message = '';
 
+$supplier_id_valid = '';
 $side_valid = '';
 $winding_valid = '';
 $winding_unit_valid = '';
@@ -67,6 +68,12 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     }
     
     $techmap_id = filter_input(INPUT_POST, 'techmap_id');
+    
+    $supplier_id = filter_input(INPUT_POST, 'supplier_id');
+    if($supplier_id !== null && empty($supplier_id)) {
+        $supplier_id_valid = ISINVALID;
+        $form_valid = false;
+    }
     
     $side = filter_input(INPUT_POST, 'side');
     if(empty($side)) {
@@ -119,16 +126,19 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     $comment = filter_input(INPUT_POST, 'comment');
     
     if($form_valid) {
+        if(empty($supplier_id)) {
+            $supplier_id = "NULL";
+        }
         $comment = addslashes($comment);
         
         $sql = "";
         
         if(empty($techmap_id)) {
-            $sql = "insert into techmap (calculation_id, side, winding, winding_unit, spool, labels, package, photolabel, roll_type, comment) "
+            $sql = "insert into techmap (calculation_id, supplier_id, side, winding, winding_unit, spool, labels, package, photolabel, roll_type, comment) "
                     . "values($id, $side, $winding, '$winding_unit', $spool, $labels, $package, '$photolabel', $roll_type, '$comment')";
         }
         else {
-            $sql = "update techmap set side = $side, winding = $winding, winding_unit = '$winding_unit', spool = $spool, "
+            $sql = "update techmap set supplier_id = $supplier_id, side = $side, winding = $winding, winding_unit = '$winding_unit', spool = $spool, "
                     . "labels = $labels, package = $package, photolabel = '$photolabel', roll_type = $roll_type, comment = '$comment' where id = $techmap_id";
         }
         
@@ -158,12 +168,12 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
         . "c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
         . "c.knife, "
         . "c.cliches_count_flint, c.cliches_count_kodak, c.cliches_count_old, "
-        . "cus.name customer, "
+        . "cus.name customer, sup.name supplier, "
         . "u.last_name, u.first_name, "
         . "wt.name work_type, "
         . "cr.width_1, cr.length_pure_1, cr.length_dirty_1, cr.width_2, cr.length_pure_2, cr.length_dirty_2, cr.width_3, cr.length_pure_3, cr.length_dirty_3, gap, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
-        . "tm.id techmap_id, tm.date techmap_date, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, tm.photolabel, tm.roll_type, tm.comment "
+        . "tm.id techmap_id, tm.date techmap_date, tm.supplier_id, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, tm.photolabel, tm.roll_type, tm.comment "
         . "from calculation c "
         . "left join techmap tm on tm.calculation_id = c.id "
         . "left join film_variation fv on c.film_variation_id = fv.id "
@@ -176,6 +186,7 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
         . "inner join user u on c.manager_id = u.id "
         . "inner join work_type wt on c.work_type_id = wt.id "
         . "left join calculation_result cr on cr.calculation_id = c.id "
+        . "left join supplier sup on tm.supplier_id = sup.id "
         . "where c.id = $id";
 
 $fetcher = new Fetcher($sql);
@@ -262,6 +273,7 @@ $cliches_count_kodak = $row['cliches_count_kodak'];
 $cliches_count_old = $row['cliches_count_old'];
 
 $customer = $row['customer'];
+$supplier = $row['supplier'];
 $last_name = $row['last_name'];
 $first_name = $row['first_name'];
 $work_type = $row['work_type'];
@@ -285,6 +297,9 @@ if(!empty($lamination2_film_name) || !empty($lamination2_individual_film_name)) 
 
 $techmap_id = $row['techmap_id'];
 $techmap_date = $row['techmap_date']; if(empty($techmap_date)) $techmap_date = date('Y-m-d H:i:s');
+
+$supplier_id = filter_input(INPUT_POST, 'supplier_id');
+if($supplier_id === null) $supplier_id = $row['supplier_id'];
 
 $side = filter_input(INPUT_POST, 'side');
 if($side === null) $side = $row['side'];
@@ -750,6 +765,12 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                             <td style="padding-top: 5px;">Машина</td>
                             <td style="padding-top: 5px;"><?= mb_stristr($machine, "zbs") ? "ZBS" : ucfirst($machine) ?></td>
                         </tr>
+                        <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+                        <tr>
+                            <td>Поставщик</td>
+                            <td><?= empty($supplier) ? "Ждем данные" : $supplier ?></td>
+                        </tr>
+                        <?php endif; ?>
                         <tr>
                             <td>Марка мат-ла</td>
                             <td><?= empty($film_name) ? $individual_film_name : $film_name ?></td>
@@ -1229,6 +1250,22 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                 <div class="row">
                     <div class="col-6">
                         <h2>Информация для резчика</h2>
+                        <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+                        <div class="form-group">
+                            <label for="supplier_id">Поставщик</label>
+                            <select id="supplier_id" name="supplier_id" class="form-control<?=$supplier_id_valid ?>" required="required">
+                                <option value="" hidden="hidden">...</option>
+                                <?php
+                                $sql = "select id, name from supplier where id in (select supplier_id from supplier_film_variation where film_variation_id = $film_variation_id)";
+                                $fetcher = new Fetcher($sql);
+                                while($row = $fetcher->Fetch()):
+                                    $checked = $supplier_id == $row['id'] ? " selected='selected'" : "";
+                                ?>
+                                <option value="<?=$row['id'] ?>"<?=$checked ?>><?=$row['name'] ?></option>
+                                <?php endwhile; ?>
+                            </select>
+                        </div>
+                        <?php endif; ?>
                         <div class="form-group">
                             <label for="side">Печать</label>
                             <select id="side" name="side" class="form-control<?=$side_valid ?>" required="required">
