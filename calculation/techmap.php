@@ -826,23 +826,6 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                             <td><?=$number_in_raport ?></td>
                         </tr>
                         <tr>
-                            <td>Вертикальный зазор между этикетками</td>
-                            <td><?= CalculationBase::Display($gap, 2) ?> мм</td>
-                        </tr>
-                        <tr>
-                            <td>Горизонтальный зазор между этикетками</td>
-                            <td>
-                                <?php
-                                $sql = "select gap_stream from norm_gap order by date desc limit 1";
-                                $fetcher = new Fetcher($sql);
-                                if($row = $fetcher->Fetch()) {
-                                    $norm_stream = $row[0];
-                                    echo CalculationBase::Display($norm_stream, 2).' мм';
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
                             <td>Красочность</td>
                             <td><?=$ink_number ?> цв.</td>
                         </tr>
@@ -904,8 +887,18 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                             <td><?=$unit == 'kg' ? 'Взвешивать' : 'Записывать метраж' ?></td>
                         </tr>
                         <tr>
-                            <td>Обрезная ширина</td>
-                            <td><?=$stream_width.(empty($stream_width) ? "" : " мм") ?></td>
+                            <td><?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? "Обр. шир. / Гор. зазор" : "Обрезная ширина" ?></td>
+                            <?php
+                            $norm_stream = "";
+                            if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                $sql = "select gap_stream from norm_gap order by date desc limit 1";
+                                $fetcher = new Fetcher($sql);
+                                if($row = $fetcher->Fetch()) {
+                                    $norm_stream = CalculationBase::Display($row[0], 2);
+                                }
+                            }
+                            ?>
+                            <td><?= $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? (CalculationBase::Display(floatval($stream_width), 2).(empty($stream_width) ? "" : " / ").$norm_stream." мм") : (empty($stream_width) ? "" : CalculationBase::Display(intval($stream_width), 0)." мм") ?></td>
                         </tr>
                         <tr>
                             <td>Намотка до</td>

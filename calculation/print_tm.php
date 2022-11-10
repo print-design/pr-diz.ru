@@ -599,23 +599,6 @@ $current_date_time = date("dmYHis");
                             <td><?=$number_in_raport ?></td>
                         </tr>
                         <tr>
-                            <td>Вертикальный зазор между этикетками</td>
-                            <td><?= CalculationBase::Display($gap, 2) ?> мм</td>
-                        </tr>
-                        <tr>
-                            <td>Горизонтальный зазор между этикетками</td>
-                            <td>
-                                <?php
-                                $sql = "select gap_stream from norm_gap order by date desc limit 1";
-                                $fetcher = new Fetcher($sql);
-                                if($row = $fetcher->Fetch()) {
-                                    $norm_stream = $row[0];
-                                    echo CalculationBase::Display($norm_stream, 2).' мм';
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
                             <td>Красочность</td>
                             <td><?=$ink_number ?> цв.</td>
                         </tr>
@@ -688,8 +671,16 @@ $current_date_time = date("dmYHis");
                             <td><?=$unit == 'kg' ? 'Взвешивать' : 'Записывать метраж' ?></td>
                         </tr>
                         <tr>
-                            <td>Обрезная ширина</td>
-                            <td><?=$stream_width.(empty($stream_width) ? "" : " мм") ?></td>
+                            <td>Обр. шир. / Гор. зазор</td>
+                            <?php
+                            $norm_stream = "";
+                            $sql = "select gap_stream from norm_gap order by date desc limit 1";
+                            $fetcher = new Fetcher($sql);
+                            if($row = $fetcher->Fetch()) {
+                                $norm_stream = CalculationBase::Display($row[0], 2);
+                            }
+                            ?>
+                            <td><?= CalculationBase::Display(floatval($stream_width), 2).(empty($stream_width) ? "" : " / ").$norm_stream." мм" ?></td>
                         </tr>
                         <tr>
                             <td>Намотка до</td>
