@@ -688,7 +688,21 @@ $current_date_time = date("dmYHis");
                                 $norm_stream = CalculationBase::Display($row[0], 2);
                             }
                             ?>
-                            <td><?= CalculationBase::Display(floatval($stream_width), 2).(empty($stream_width) ? "" : " / ").$norm_stream." мм" ?></td>
+                            <td>
+                                <?php
+                                if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                    if(empty($norm_stream)) {
+                                        echo CalculationBase::Display(intval($stream_width), 0)." мм";
+                                    }
+                                    else {
+                                        echo CalculationBase::Display(floatval($stream_width) + floatval($norm_stream), 2)." / ".CalculationBase::Display(floatval($norm_stream), 2)." мм";
+                                    }
+                                }
+                                else {
+                                    echo CalculationBase::Display(intval($stream_width), 0)." мм";
+                                }
+                                ?>
+                            </td>
                         </tr>
                         <tr>
                             <td>Намотка до</td>
