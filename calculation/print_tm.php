@@ -527,8 +527,8 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
-                            <td>Поставщик</td>
-                            <td><?= empty($supplier) ? "Ждем данные" : $supplier ?></td>
+                            <td>Поставщик мат-ла</td>
+                            <td><?= empty($supplier) ? "Любой" : $supplier ?></td>
                         </tr>
                         <?php endif; ?>
                         <tr>

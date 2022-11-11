@@ -49,7 +49,6 @@ define('ISINVALID', ' is-invalid');
 $form_valid = true;
 $error_message = '';
 
-$supplier_id_valid = '';
 $side_valid = '';
 $winding_valid = '';
 $winding_unit_valid = '';
@@ -70,10 +69,6 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     $techmap_id = filter_input(INPUT_POST, 'techmap_id');
     
     $supplier_id = filter_input(INPUT_POST, 'supplier_id');
-    if($supplier_id !== null && empty($supplier_id)) {
-        $supplier_id_valid = ISINVALID;
-        $form_valid = false;
-    }
     
     $side = filter_input(INPUT_POST, 'side');
     if(empty($side)) {
@@ -135,7 +130,7 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
         
         if(empty($techmap_id)) {
             $sql = "insert into techmap (calculation_id, supplier_id, side, winding, winding_unit, spool, labels, package, photolabel, roll_type, comment) "
-                    . "values($id, $side, $winding, '$winding_unit', $spool, $labels, $package, '$photolabel', $roll_type, '$comment')";
+                    . "values($id, $supplier_id, $side, $winding, '$winding_unit', $spool, $labels, $package, '$photolabel', $roll_type, '$comment')";
         }
         else {
             $sql = "update techmap set supplier_id = $supplier_id, side = $side, winding = $winding, winding_unit = '$winding_unit', spool = $spool, "
@@ -767,8 +762,20 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                         </tr>
                         <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
-                            <td>Поставщик</td>
-                            <td><?= empty($supplier) ? "Ждем данные" : $supplier ?></td>
+                            <td>Поставщик мат-ла</td>
+                            <td>
+                                <?php
+                                if(empty($techmap_id)) {
+                                    echo "Ждем данные";
+                                }
+                                elseif(empty ($supplier)) {
+                                    echo "Любой";
+                                }
+                                else {
+                                    echo $supplier;
+                                }
+                                ?>
+                            </td>
                         </tr>
                         <?php endif; ?>
                         <tr>
@@ -1266,9 +1273,9 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                         <h2>Информация для резчика</h2>
                         <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
                         <div class="form-group">
-                            <label for="supplier_id">Поставщик</label>
-                            <select id="supplier_id" name="supplier_id" class="form-control<?=$supplier_id_valid ?>" required="required">
-                                <option value="" hidden="hidden">...</option>
+                            <label for="supplier_id">Поставщик мат-ла</label>
+                            <select id="supplier_id" name="supplier_id" class="form-control">
+                                <option value="">Любой</option>
                                 <?php
                                 $sql = "select id, name from supplier where id in (select supplier_id from supplier_film_variation where film_variation_id = $film_variation_id)";
                                 $fetcher = new Fetcher($sql);
