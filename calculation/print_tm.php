@@ -679,7 +679,7 @@ $current_date_time = date("dmYHis");
                             <td><?=$unit == 'kg' ? 'Взвешивать' : 'Записывать метраж' ?></td>
                         </tr>
                         <tr>
-                            <td>Обр. шир. / Гор. зазор</td>
+                            <td><?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? "Обр. шир. / Гор. зазор" : "Обрезная ширина" ?></td>
                             <?php
                             $norm_stream = "";
                             $sql = "select gap_stream from norm_gap order by date desc limit 1";
