@@ -663,7 +663,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                     for($rep_pr = 1; $rep_pr < $printing_sequence; $rep_pr++):
                                         $rep_pr_selected = (!empty($repeats[$printing['id']][$i]) && $repeats[$printing['id']][$i] == $rep_pr) ? " selected='selected'" : "";
                                     ?>
-                                        <option<?=$rep_pr_selected ?>><?= $rep_pr ?></option>
+                                    <option<?=$rep_pr_selected ?>><?= $rep_pr ?></option>
                                     <?php endfor; ?>
                                 </select>
                             </div>
@@ -701,7 +701,10 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                     <?php endif; ?>
                 </div>
             </div>
-            <h1><?= empty($techmap_id) ? "Составление тех. карты" : "Технологическая карта" ?></h1>
+            <div class="d-flex justify-content-between">
+                <div><h1><?= empty($techmap_id) ? "Составление тех. карты" : "Технологическая карта" ?></h1></div>
+                <div><button type="btn" class="btn btn-outline-dark" data-toggle="modal" data-target="#techmapModal">Подгрузить из другого заказа</button></div>
+            </div>
             <div class="name">Заказчик: <?=$customer ?></div>
             <div class="name">Наименование: <?=$calculation ?></div>
             <div class="subtitle">№<?=$customer_id ?>-<?=$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
@@ -1264,6 +1267,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                 <?php endforeach; ?>
             </div>
             <?php endif; ?>
+            <a name="form" />
             <form class="mt-3" method="post"<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                 <input type="hidden" name="scroll" />
                 <input type="hidden" name="id" value="<?= $id ?>" />
@@ -1425,6 +1429,14 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                     </div>
                 </div>
             </form>
+        </div>
+        <!-- Подгрузка тех. карты из другого заказа -->
+        <div class="modal fixed-left fade" id="techmapModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-aside" role="document">
+                <div class="modal-content" style="padding-left: 32px; padding-right: 32px; padding-bottom: 32px; padding-top: 84px; width: 521px; overflow-y: auto;">
+                    <h>Подгрузка</h>
+                </div>
+            </div>
         </div>
         <?php
         include '../include/footer.php';
