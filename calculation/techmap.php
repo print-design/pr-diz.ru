@@ -1434,7 +1434,31 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
         <div class="modal fixed-left fade" id="techmapModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-aside" role="document">
                 <div class="modal-content" style="padding-left: 32px; padding-right: 32px; padding-bottom: 32px; padding-top: 84px; width: 521px; overflow-y: auto;">
-                    <h>Подгрузка</h>
+                    <h2><?=$customer ?></h2>
+                    <?php
+                    /*
+                    echo $customer_id."<br />";
+                    echo $work_type_id."<br />";
+                    $lamination = "нет";
+                    if(!empty($lamination1_film_name) || !empty($lamination1_individual_film_name)) $lamination = "1";
+                    if(!empty($lamination2_film_name) || !empty($lamination2_individual_film_name)) $lamination = "2";
+                     * 
+                     */
+                    $sql = "select c.id, c.date, c.name "
+                            . "from calculation c "
+                            . "inner join techmap tm on tm.calculation_id = c.id "
+                            . "where customer_id = $customer_id "
+                            . "and work_type_id = $work_type_id ";
+                    $sql .= "order by c.date";
+                    $fetcher = new Fetcher($sql);
+                    
+                    while($row = $fetcher->Fetch()):
+                    $c_date = DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y');
+                    $c_name = $row['name'];
+                    ?>
+                    <p><?=$c_date.' -- '.$c_name ?></p>
+                    <?php endwhile; ?>
+                    <button type="button" class="close" data-dismiss='modal' style="position: absolute; right: 34px; top: 34px; z-index: 2000;"><img src="../images/icons/close_modal_red.svg" /></button>
                 </div>
             </div>
         </div>
