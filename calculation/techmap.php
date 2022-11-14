@@ -1436,7 +1436,8 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                 <div class="modal-content" style="padding-left: 32px; padding-right: 32px; padding-bottom: 32px; padding-top: 84px; width: 521px; overflow-y: auto;">
                     <h2><?=$customer ?></h2>
                     <?php
-                    $sql = "select c.id, c.date, c.name "
+                    $sql = "select c.id c_id, c.date c_date, c.name c_name, "
+                            . "tm.id tm_id, tm.supplier_id tm_supplier_id, tm.side tm_side, tm.winding tm_winding, tm.winding_unit tm_winding_unit, tm.spool tm_spool, tm.labels tm_labels, tm.package tm_package, tm.photolabel tm_photolabel, tm.roll_type tm_roll_type, tm.comment tm_comment "
                             . "from calculation c "
                             . "inner join techmap tm on tm.calculation_id = c.id "
                             . "where tm.id <> $techmap_id "
@@ -1461,14 +1462,38 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                     $fetcher = new Fetcher($sql);
                     
                     while($row = $fetcher->Fetch()):
-                    $c_date = DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y');
-                    $c_name = $row['name'];
+                    $c_id = $row['c_id'];
+                    $c_date = DateTime::createFromFormat('Y-m-d H:i:s', $row['c_date'])->format('d.m.Y');
+                    $c_name = $row['c_name'];
+                    $tm_id = $row['tm_id'];
+                    $tm_supplier_id = $row['tm_supplier_id'];
+                    $tm_side = $row['tm_side'];
+                    $tm_winding = $row['tm_winding'];
+                    $tm_winding_unit = $row['tm_winding_unit'];
+                    $tm_spool = $row['tm_spool'];
+                    $tm_labels = $row['tm_labels'];
+                    $tm_package = $row['tm_package'];
+                    $tm_photolabel = $row['tm_photolabel'];
+                    $tm_roll_type = $row['tm_roll_type'];
+                    $tm_comment = $row['tm_comment'];
                     ?>
                     <div class="border-bottom mb-2">
                         <div class="d-flex justify-content-between">
                             <div class="pt-2 font-weight-bold" style="font-size: large;"><?='ТК от '.$c_date ?></div>
                             <div>
                                 <form method="post" action="#form">
+                                    <input type="hidden" name="id" value="<?= $c_id ?>" />
+                                    <input type="hidden" name="techmap_id" value="<?=$tm_id ?>" />
+                                    <input type="hidden" name="supplier_id" value="<?=$tm_supplier_id ?>" />
+                                    <input type="hidden" name="side" value="<?=$tm_side ?>" />
+                                    <input type="hidden" name="winding" value="<?= $tm_winding ?>" />
+                                    <input type="hidden" name="winding_unit" value="<?=$tm_winding_unit ?>" />
+                                    <input type="hidden" name="spool" value="<?=$tm_spool ?>" />
+                                    <input type="hidden" name="labels" value="<?=$tm_labels ?>" />
+                                    <input type="hidden" name="package" value="<?=$tm_package ?>" />
+                                    <input type="hidden" name="photolabel" value="<?=$tm_photolabel ?>" />
+                                    <input type="hidden" name="roll_type" value="<?=$tm_roll_type ?>" />
+                                    <input type="hidden" name="comment" value="<?=$tm_comment ?>" />
                                     <button type="submit" class="btn btn-light">+ Подцепить</button>
                                 </form>
                             </div>
