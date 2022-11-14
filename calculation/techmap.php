@@ -1436,19 +1436,27 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                 <div class="modal-content" style="padding-left: 32px; padding-right: 32px; padding-bottom: 32px; padding-top: 84px; width: 521px; overflow-y: auto;">
                     <h2><?=$customer ?></h2>
                     <?php
-                    /*
-                    echo $customer_id."<br />";
-                    echo $work_type_id."<br />";
-                    $lamination = "нет";
-                    if(!empty($lamination1_film_name) || !empty($lamination1_individual_film_name)) $lamination = "1";
-                    if(!empty($lamination2_film_name) || !empty($lamination2_individual_film_name)) $lamination = "2";
-                     * 
-                     */
                     $sql = "select c.id, c.date, c.name "
                             . "from calculation c "
                             . "inner join techmap tm on tm.calculation_id = c.id "
-                            . "where customer_id = $customer_id "
+                            . "where tm.id <> $techmap_id "
+                            . "and customer_id = $customer_id "
                             . "and work_type_id = $work_type_id ";
+                    switch($lamination) {
+                        case "нет":
+                            $sql .= "and c.lamination1_film_variation_id is null and c.lamination1_individual_film_name = '' ";
+                            break;
+                        case "1";
+                            $sql .= "and (c.lamination1_film_variation_id is not null or c.lamination1_individual_film_name <> '') "
+                                    . "and c.lamination2_film_variation_id is null and c.lamination2_individual_film_name = '' ";
+                            break;
+                        case "2";
+                            $sql .= "and (c.lamination2_film_variation_id is not null or c.lamination2_individual_film_name <> '') ";
+                            break;
+                        default :
+                            $sql .= "and false ";
+                            break;
+                    }
                     $sql .= "order by c.date";
                     $fetcher = new Fetcher($sql);
                     
@@ -1456,7 +1464,17 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                     $c_date = DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y');
                     $c_name = $row['name'];
                     ?>
-                    <p><?=$c_date.' -- '.$c_name ?></p>
+                    <div class="border-bottom mb-2">
+                        <div class="d-flex justify-content-between">
+                            <div class="pt-2 font-weight-bold" style="font-size: large;"><?='ТК от '.$c_date ?></div>
+                            <div>
+                                <form method="post" action="#form">
+                                    <button type="submit" class="btn btn-light">+ Подцепить</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div style="font-size: large;"><?=$c_name ?></div>
+                    </div>
                     <?php endwhile; ?>
                     <button type="button" class="close" data-dismiss='modal' style="position: absolute; right: 34px; top: 34px; z-index: 2000;"><img src="../images/icons/close_modal_red.svg" /></button>
                 </div>
