@@ -1440,9 +1440,11 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                             . "tm.id tm_id, tm.supplier_id tm_supplier_id, tm.side tm_side, tm.winding tm_winding, tm.winding_unit tm_winding_unit, tm.spool tm_spool, tm.labels tm_labels, tm.package tm_package, tm.photolabel tm_photolabel, tm.roll_type tm_roll_type, tm.comment tm_comment "
                             . "from calculation c "
                             . "inner join techmap tm on tm.calculation_id = c.id "
-                            . "where tm.id <> $techmap_id "
-                            . "and customer_id = $customer_id "
+                            . "where customer_id = $customer_id "
                             . "and work_type_id = $work_type_id ";
+                    if(!empty($techmap_id)) {
+                        $sql .= "and tm.id <> $techmap_id ";
+                    }
                     switch($lamination) {
                         case "нет":
                             $sql .= "and c.lamination1_film_variation_id is null and c.lamination1_individual_film_name = '' ";
