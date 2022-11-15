@@ -39,6 +39,9 @@ const PHOTOLABEL_RIGHT = "right";
 const PHOTOLABEL_BOTH = "both";
 const PHOTOLABEL_NONE = "none";
 
+// Данные получены из другой тех. карты
+const FROM_OTHER_TECHMAP = "from_other_techmap";
+
 // Получение коэффициента машины
 function GetMachineCoeff($machine) {
     return $machine == CalculationBase::COMIFLEX ? "1.14" : "1.7";
@@ -1415,7 +1418,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                         <div>
                             <?php
                             $submit_class = " d-none";
-                            if(empty($techmap_id)) {
+                            if(empty($techmap_id) || $_POST[FROM_OTHER_TECHMAP] !== null) {
                                 $submit_class = "";
                             }
                             ?>
@@ -1484,6 +1487,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                             <div class="pt-2 font-weight-bold" style="font-size: large;"><?='ТК от '.$c_date ?></div>
                             <div>
                                 <form method="post" action="#form">
+                                    <input type="hidden" name="<?=FROM_OTHER_TECHMAP ?>" value="1" />
                                     <input type="hidden" name="id" value="<?= $c_id ?>" />
                                     <input type="hidden" name="techmap_id" value="<?=$tm_id ?>" />
                                     <input type="hidden" name="supplier_id" value="<?=$tm_supplier_id ?>" />
