@@ -27,6 +27,11 @@ and open the template in the editor.
         <?php
         include 'include/head.php';
         ?>
+        <style>
+            #topmost {
+                height: 85px;
+            }
+        </style>
     </head>
     <body>
         <?php
