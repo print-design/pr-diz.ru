@@ -2228,7 +2228,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <div class="form-check">
                                         <label class="form-check-label text-nowrap mt-3" style="line-height: 25px;">
                                             <?php
-                                            $checked = $cliche_in_price == 1 ? " checked='checked'" : "";
+                                            $checked = $cliche_in_price == 1 || $cliche_in_price === null ? " checked='checked'" : "";
                                             ?>
                                             <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?> onchange="javascript: if($(this).is(':checked')) { $('#customer_pays_for_cliche').prop('checked', true); }" />Включить ПФ в себестоимость
                                         </label>
