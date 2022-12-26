@@ -23,8 +23,10 @@ $white_price_valid = "";
 $white_expense_valid = "";
 $panton_price_valid = "";
 $panton_expense_valid = "";
-$lacquer_price_valid = "";
-$lacquer_expense_valid = "";
+$lacquer_glossy_price_valid = "";
+$lacquer_glossy_expense_valid = "";
+$lacquer_matte_price_valid = "";
+$lacquer_matte_expense_valid = "";
 $solvent_etoxipropanol_price_valid = "";
 $solvent_flexol82_price_valid = "";
 $solvent_part_valid = "";
@@ -36,7 +38,7 @@ $self_adhesive_laquer_expense_valid = "";
 // Сохранение введённых значений
 if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
     if(empty(filter_input(INPUT_POST, 'c_price')) || empty(filter_input(INPUT_POST, 'c_currency'))) {
-        $c_valid = ISINVALID;
+        $c_price_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -46,7 +48,7 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
     }
     
     if(empty(filter_input(INPUT_POST, 'm_price')) || empty(filter_input(INPUT_POST, 'm_currency'))) {
-        $m_valid = ISINVALID;
+        $m_price_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -56,7 +58,7 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
     }
     
     if(empty(filter_input(INPUT_POST, 'y_price')) || empty(filter_input(INPUT_POST, 'y_currency'))) {
-        $y_valid = ISINVALID;
+        $y_price_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -66,7 +68,7 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
     }
     
     if(empty(filter_input(INPUT_POST, 'k_price')) || empty(filter_input(INPUT_POST, 'k_currency'))) {
-        $k_valid = ISINVALID;
+        $k_price_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -76,7 +78,7 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
     }
     
     if(empty(filter_input(INPUT_POST, 'white_price')) || empty(filter_input(INPUT_POST, 'white_currency'))) {
-        $white_valid = ISINVALID;
+        $white_price_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -86,7 +88,7 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
     }
     
     if(empty(filter_input(INPUT_POST, 'panton_price')) || empty(filter_input(INPUT_POST, 'panton_currency'))) {
-        $panton_valid = ISINVALID;
+        $panton_price_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -95,13 +97,23 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'lacquer_price')) || empty(filter_input(INPUT_POST, 'lacquer_currency'))) {
-        $lacquer_valid = ISINVALID;
+    if(empty(filter_input(INPUT_POST, 'lacquer_glossy_price')) || empty(filter_input(INPUT_POST, 'lacquer_glossy_currency'))) {
+        $lacquer_glossy_price_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'lacquer_expense'))) {
-        $lacquer_expense_valid = ISINVALID;
+    if(empty(filter_input(INPUT_POST, 'lacquer_glossy_expense'))) {
+        $lacquer_glossy_expense_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(empty(filter_input(INPUT_POST, 'lacquer_matte_price')) || empty(filter_input(INPUT_POST, 'lacquer_matte_currency'))) {
+        $lacquer_matte_price_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(empty(filter_input(INPUT_POST, 'lacquer_matte_expense'))) {
+        $lacquer_matte_expense_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -155,9 +167,12 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
         $old_panton_price = "";
         $old_panton_currency = "";
         $old_panton_expense = "";
-        $old_lacquer_price = "";
-        $old_lacquer_currency = "";
-        $old_lacquer_expense = "";
+        $old_lacquer_glossy_price = "";
+        $old_lacquer_glossy_currency = "";
+        $old_lacquer_glossy_expense = "";
+        $old_lacquer_matte_price = "";
+        $old_lacquer_matte_currency = "";
+        $old_lacquer_matte_expense = "";
         $old_solvent_etoxipropanol_price = "";
         $old_solvent_etoxipropanol_currency = "";
         $old_solvent_flexol82_price = "";
@@ -169,7 +184,7 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
         $old_self_adhesive_laquer_currency = "";
         $old_self_adhesive_laquer_expense = "";
         
-        $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_price, lacquer_currency, lacquer_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense from norm_ink order by date desc limit 1";
+        $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense from norm_ink order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -192,9 +207,12 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
             $old_panton_price = $row["panton_price"];
             $old_panton_currency = $row["panton_currency"];
             $old_panton_expense = $row['panton_expense'];
-            $old_lacquer_price = $row["lacquer_price"];
-            $old_lacquer_currency = $row["lacquer_currency"];
-            $old_lacquer_expense = $row['lacquer_expense'];
+            $old_lacquer_glossy_price = $row["lacquer_glossy_price"];
+            $old_lacquer_glossy_currency = $row["lacquer_glossy_currency"];
+            $old_lacquer_glossy_expense = $row['lacquer_glossy_expense'];
+            $old_lacquer_matte_price  = $row['lacquer_matte_price'];
+            $old_lacquer_matte_currency  = $row['lacquer_matte_currency'];
+            $old_lacquer_matte_expense  = $row['lacquer_matte_expense'];
             $old_solvent_etoxipropanol_price = $row["solvent_etoxipropanol_price"];
             $old_solvent_etoxipropanol_currency = $row["solvent_etoxipropanol_currency"];
             $old_solvent_flexol82_price = $row['solvent_flexol82_price'];
@@ -226,9 +244,12 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
         $new_panton_price = filter_input(INPUT_POST, "panton_price");
         $new_panton_currency = filter_input(INPUT_POST, "panton_currency");
         $new_panton_expense = filter_input(INPUT_POST, 'panton_expense');
-        $new_lacquer_price = filter_input(INPUT_POST, "lacquer_price");
-        $new_lacquer_currency = filter_input(INPUT_POST, "lacquer_currency");
-        $new_lacquer_expense = filter_input(INPUT_POST, 'lacquer_expense');
+        $new_lacquer_glossy_price = filter_input(INPUT_POST, "lacquer_glossy_price");
+        $new_lacquer_glossy_currency = filter_input(INPUT_POST, "lacquer_glossy_currency");
+        $new_lacquer_glossy_expense = filter_input(INPUT_POST, 'lacquer_glossy_expense');
+        $new_lacquer_matte_price = filter_input(INPUT_POST, "lacquer_matte_price");
+        $new_lacquer_matte_currency = filter_input(INPUT_POST, "lacquer_matte_currency");
+        $new_lacquer_matte_expense = filter_input(INPUT_POST, 'lacquer_matte_expense');
         $new_solvent_etoxipropanol_price = filter_input(INPUT_POST, "solvent_etoxipropanol_price");
         $new_solvent_etoxipropanol_currency = filter_input(INPUT_POST, "solvent_etoxipropanol_currency");
         $new_solvent_flexol82_price = filter_input(INPUT_POST, 'solvent_flexol82_price');
@@ -258,9 +279,12 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
                 $old_panton_price != $new_panton_price ||
                 $old_panton_currency != $new_panton_currency || 
                 $old_panton_expense != $new_panton_expense ||
-                $old_lacquer_price != $new_lacquer_price ||
-                $old_lacquer_currency != $new_lacquer_currency || 
-                $old_lacquer_expense != $new_lacquer_expense ||
+                $old_lacquer_glossy_price != $new_lacquer_glossy_price ||
+                $old_lacquer_glossy_currency != $new_lacquer_glossy_currency || 
+                $old_lacquer_glossy_expense != $new_lacquer_glossy_expense ||
+                $old_lacquer_matte_price != $new_lacquer_matte_price ||
+                $old_lacquer_matte_currency != $new_lacquer_matte_currency ||
+                $old_lacquer_matte_expense != $new_lacquer_matte_expense ||
                 $old_solvent_etoxipropanol_price != $new_solvent_etoxipropanol_price ||
                 $old_solvent_etoxipropanol_currency != $new_solvent_etoxipropanol_currency || 
                 $old_solvent_flexol82_price != $new_solvent_flexol82_price || 
@@ -271,7 +295,7 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
                 $old_self_adhesive_laquer_price != $new_self_adhesive_laquer_price ||
                 $old_self_adhesive_laquer_currency != $new_self_adhesive_laquer_currency ||
                 $old_self_adhesive_laquer_expense != $new_self_adhesive_laquer_expense) {
-            $sql = "insert into norm_ink (c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_price, lacquer_currency, lacquer_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense) values ($new_c_price, '$new_c_currency', $new_c_expense, $new_m_price, '$new_m_currency', $new_m_expense, $new_y_price, '$new_y_currency', $new_y_expense, $new_k_price, '$new_k_currency', $new_k_expense, $new_white_price, '$new_white_currency', $new_white_expense, $new_panton_price, '$new_panton_currency', $new_panton_expense, $new_lacquer_price, '$new_lacquer_currency', $new_lacquer_expense, $new_solvent_etoxipropanol_price, '$new_solvent_etoxipropanol_currency', $new_solvent_flexol82_price, '$new_solvent_flexol82_currency', $new_solvent_part, $new_min_price, $new_self_adhesive_laquer_price, '$new_self_adhesive_laquer_currency', $new_self_adhesive_laquer_expense)";
+            $sql = "insert into norm_ink (c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense) values ($new_c_price, '$new_c_currency', $new_c_expense, $new_m_price, '$new_m_currency', $new_m_expense, $new_y_price, '$new_y_currency', $new_y_expense, $new_k_price, '$new_k_currency', $new_k_expense, $new_white_price, '$new_white_currency', $new_white_expense, $new_panton_price, '$new_panton_currency', $new_panton_expense, $new_lacquer_glossy_price, '$new_lacquer_glossy_currency', $new_lacquer_glossy_expense, $new_lacquer_matte_price, '$new_lacquer_matte_currency', $new_lacquer_matte_expense, $new_solvent_etoxipropanol_price, '$new_solvent_etoxipropanol_currency', $new_solvent_flexol82_price, '$new_solvent_flexol82_currency', $new_solvent_part, $new_min_price, $new_self_adhesive_laquer_price, '$new_self_adhesive_laquer_currency', $new_self_adhesive_laquer_expense)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -297,9 +321,12 @@ $k_expense = "";
 $white_price = "";
 $white_currency = "";
 $white_expense = "";
-$panton_price = "";
-$panton_currency = "";
-$panton_expense = "";
+$panton_glossy_price = "";
+$panton_glossy_currency = "";
+$panton_glossy_expense = "";
+$panton_matte_price = "";
+$panton_matte_currency = "";
+$panton_matte_expense = "";
 $lacquer_price = "";
 $lacquer_currency = "";
 $lacquer_expense = "";
@@ -314,7 +341,7 @@ $self_adhesive_laquer_price = "";
 $self_adhesive_laquer_currency = "";
 $self_adhesive_laquer_expense = "";
 
-$sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_price, lacquer_currency, lacquer_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense from norm_ink order by date desc limit 1";
+$sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense from norm_ink order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -339,9 +366,12 @@ if($row = $fetcher->Fetch()) {
     $panton_price = $row["panton_price"];
     $panton_currency = $row["panton_currency"];
     $panton_expense = $row['panton_expense'];
-    $lacquer_price = $row["lacquer_price"];
-    $lacquer_currency = $row["lacquer_currency"];
-    $lacquer_expense = $row['lacquer_expense'];
+    $lacquer_glossy_price = $row["lacquer_glossy_price"];
+    $lacquer_glossy_currency = $row["lacquer_glossy_currency"];
+    $lacquer_glossy_expense = $row['lacquer_glossy_expense'];
+    $lacquer_matte_price = $row["lacquer_matte_price"];
+    $lacquer_matte_currency = $row["lacquer_matte_currency"];
+    $lacquer_matte_expense = $row['lacquer_matte_expense'];
     $solvent_etoxipropanol_price = $row["solvent_etoxipropanol_price"];
     $solvent_etoxipropanol_currency = $row["solvent_etoxipropanol_currency"];
     $solvent_flexol82_price = $row['solvent_flexol82_price'];
@@ -675,48 +705,96 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="lacquer_price">Чистый Лак (за кг)</label>
+                                    <label for="lacquer_glossy_price">Чистый Лак глянцевый (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
-                                               id="lacquer_price" 
-                                               name="lacquer_price" 
-                                               value="<?= empty($lacquer_price) || $lacquer_price == 0.0 ? "" : floatval($lacquer_price) ?>" 
+                                               id="lacquer_glossy_price" 
+                                               name="lacquer_glossy_price" 
+                                               value="<?= empty($lacquer_glossy_price) || $lacquer_glossy_price == 0.0 ? "" : floatval($lacquer_glossy_price) ?>" 
                                                placeholder="Цена, за кг" 
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'lacquer_price'); $(this).attr('name', 'lacquer_price'); $(this).attr('placeholder', 'Цена, за кг');" 
+                                               onmouseup="javascript: $(this).attr('id', 'lacquer_glossy_price'); $(this).attr('name', 'lacquer_glossy_price'); $(this).attr('placeholder', 'Цена, за кг');" 
                                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'lacquer_price'); $(this).attr('name', 'lacquer_price'); $(this).attr('placeholder', 'Цена, за кг');" 
-                                               onfocusout="javascript: $(this).attr('id', 'lacquer_price'); $(this).attr('name', 'lacquer_price'); $(this).attr('placeholder', 'Цена, за кг');" />
+                                               onkeyup="javascript: $(this).attr('id', 'lacquer_glossy_price'); $(this).attr('name', 'lacquer_glossy_price'); $(this).attr('placeholder', 'Цена, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'lacquer_glossy_price'); $(this).attr('name', 'lacquer_glossy_price'); $(this).attr('placeholder', 'Цена, за кг');" />
                                         <div class="input-group-append">
-                                            <select id="lacquer_currency" name="lacquer_currency" required="required">
+                                            <select id="lacquer_glossy_currency" name="lacquer_glossy_currency" required="required">
                                                 <option value="" hidden="">...</option>
-                                                <option value="rub"<?=$lacquer_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
-                                                <option value="usd"<?=$lacquer_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                                <option value="euro"<?=$lacquer_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
+                                                <option value="rub"<?=$lacquer_glossy_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
+                                                <option value="usd"<?=$lacquer_glossy_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
+                                                <option value="euro"<?=$lacquer_glossy_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback">Чистый Лак обязательно</div>
+                                    <div class="invalid-feedback">Чистый Лак глянцевый обязательно</div>
                                 </div>
                             </div>
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
-                                    <label for="lacquer_expense">Расход смеси лака (г/м<sup>2</sup>)</label>
+                                    <label for="lacquer_glossy_expense">Расход смеси лака глянцевого (г/м<sup>2</sup>)</label>
                                     <input type="text" 
                                            class="form-control float-only" 
-                                           id="lacquer_expense" 
-                                           name="lacquer_expense" 
-                                           value="<?= empty($lacquer_expense) || $lacquer_expense == 0.0 ? "" : floatval($lacquer_expense) ?>" 
-                                           placeholder="Расход смеси лака (г/м2)" 
+                                           id="lacquer_glossy_expense" 
+                                           name="lacquer_glossy_expense" 
+                                           value="<?= empty($lacquer_glossy_expense) || $lacquer_glossy_expense == 0.0 ? "" : floatval($lacquer_glossy_expense) ?>" 
+                                           placeholder="Расход смеси лака глянцевого (г/м2)" 
                                            required="required" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'lacquer_expense'); $(this).attr('name', 'lacquer_expense'); $(this).attr('placeholder', 'Расход смеси лака (г/м2)');" 
+                                           onmouseup="javascript: $(this).attr('id', 'lacquer_glossy_expense'); $(this).attr('name', 'lacquer_glossy_expense'); $(this).attr('placeholder', 'Расход смеси лака глянцевого (г/м2)');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'lacquer_expense'); $(this).attr('name', 'lacquer_expense'); $(this).attr('placeholder', 'Расход смеси лака (г/м2)');" 
-                                           onfocusout="javascript: $(this).attr('id', 'lacquer_expense'); $(this).attr('name', 'lacquer_expense'); $(this).attr('placeholder', 'Расход смеси лака (г/м2)');" />
-                                    <div class="invalid-feedback">Расход смеси лака обязательно</div>
+                                           onkeyup="javascript: $(this).attr('id', 'lacquer_glossy_expense'); $(this).attr('name', 'lacquer_glossy_expense'); $(this).attr('placeholder', 'Расход смеси лака глянцевого (г/м2)');" 
+                                           onfocusout="javascript: $(this).attr('id', 'lacquer_glossy_expense'); $(this).attr('name', 'lacquer_glossy_expense'); $(this).attr('placeholder', 'Расход смеси лака глянцевого (г/м2)');" />
+                                    <div class="invalid-feedback">Расход смеси лака глянцевого обязательно</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-table-row">
+                            <div class="d-table-cell pr-3">
+                                <div class="form-group">
+                                    <label for="lacquer_matte_price">Чистый Лак матовый (за кг)</label>
+                                    <div class="input-group">
+                                        <input type="text" 
+                                               class="form-control float-only" 
+                                               id="lacquer_matte_price" 
+                                               name="lacquer_matte_price" 
+                                               value="<?= empty($lacquer_matte_price) || $lacquer_matte_price == 0.0 ? "" : floatval($lacquer_matte_price) ?>" 
+                                               placeholder="Цена, за кг" 
+                                               required="required" 
+                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onmouseup="javascript: $(this).attr('id', 'lacquer_matte_price'); $(this).attr('name', 'lacquer_matte_price'); $(this).attr('placeholder', 'Цена, за кг');" 
+                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                               onkeyup="javascript: $(this).attr('id', 'lacquer_matte_price'); $(this).attr('name', 'lacquer_matte_price'); $(this).attr('placeholder', 'Цена, за кг');" 
+                                               onfocusout="javascript: $(this).attr('id', 'lacquer_matte_price'); $(this).attr('name', 'lacquer_matte_price'); $(this).attr('placeholder', 'Цена, за кг');" />
+                                        <div class="input-group-append">
+                                            <select id="lacquer_matte_currency" name="lacquer_matte_currency" required="required">
+                                                <option value="" hidden="">...</option>
+                                                <option value="rub"<?=$lacquer_matte_currency == "rub" ? " selected='selected'" : "" ?>>Руб</option>
+                                                <option value="usd"<?=$lacquer_matte_currency == "usd" ? " selected='selected'" : "" ?>>USD</option>
+                                                <option value="euro"<?=$lacquer_matte_currency == "euro" ? " selected='selected'" : "" ?>>EUR</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="invalid-feedback">Чистый Лак матовый обязательно</div>
+                                </div>
+                            </div>
+                            <div class="d-table-cell pl-3">
+                                <div class="form-group">
+                                    <label for="lacquer_matte_expense">Расход смеси лака матового (г/м<sup>2</sup>)</label>
+                                    <input type="text" 
+                                           class="form-control float-only" 
+                                           id="lacquer_matte_expense" 
+                                           name="lacquer_matte_expense" 
+                                           value="<?= empty($lacquer_matte_expense) || $lacquer_matte_expense == 0.0 ? "" : floatval($lacquer_matte_expense) ?>" 
+                                           placeholder="Расход смеси лака матового (г/м2)" 
+                                           required="required" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'lacquer_matte_expense'); $(this).attr('name', 'lacquer_matte_expense'); $(this).attr('placeholder', 'Расход смеси лака матового (г/м2)');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'lacquer_matte_expense'); $(this).attr('name', 'lacquer_matte_expense'); $(this).attr('placeholder', 'Расход смеси лака матового (г/м2)');" 
+                                           onfocusout="javascript: $(this).attr('id', 'lacquer_matte_expense'); $(this).attr('name', 'lacquer_matte_expense'); $(this).attr('placeholder', 'Расход смеси лака матового (г/м2)');" />
+                                    <div class="invalid-feedback">Расход смеси лака матового обязательно</div>
                                 </div>
                             </div>
                         </div>

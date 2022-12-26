@@ -222,6 +222,10 @@ class CalculationBase {
     const YELLOW = "yellow";
     const KONTUR = "kontur";
     
+    // Лак
+    const LACQUER_GLOSSY = "glossy";
+    const LACQUER_MATTE = "matte";
+    
     // Формы
     const OLD = "old";
     const FLINT = "flint";
