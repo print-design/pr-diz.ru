@@ -1392,21 +1392,21 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                             }
                             ?>
                             <input type="radio" class="form-check-inline" id="roll_type_1" name="roll_type" value="1"<?= $roll_type == 1 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_1" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_1_image" src="../images/<?=$roll_folder ?>/roll_type_1.png" style="height: 30px; width: auto;" /></label>
+                            <label for="roll_type_1" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_1_image" src="../images/<?=$roll_folder ?>/roll_type_1.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
                             <input type="radio" class="form-check-inline" id="roll_type_2" name="roll_type" value="2"<?= $roll_type == 2 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_2" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_2_image" src="../images/<?=$roll_folder ?>/roll_type_2.png" style="height: 30px; width: auto;" /></label>
+                            <label for="roll_type_2" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_2_image" src="../images/<?=$roll_folder ?>/roll_type_2.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
                             <input type="radio" class="form-check-inline" id="roll_type_3" name="roll_type" value="3"<?= $roll_type == 3 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_3" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_3_image" src="../images/<?=$roll_folder ?>/roll_type_3.png" style="height: 30px; width: auto;" /></label>
+                            <label for="roll_type_3" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_3_image" src="../images/<?=$roll_folder ?>/roll_type_3.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
                             <input type="radio" class="form-check-inline" id="roll_type_4" name="roll_type" value="4"<?= $roll_type == 4 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_4" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_4_image" src="../images/<?=$roll_folder ?>/roll_type_4.png" style="height: 30px; width: auto;" /></label>
+                            <label for="roll_type_4" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_4_image" src="../images/<?=$roll_folder ?>/roll_type_4.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
                             <input type="radio" class="form-check-inline" id="roll_type_5" name="roll_type" value="5"<?= $roll_type == 5 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_5" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_5_image" src="../images/<?=$roll_folder ?>/roll_type_5.png" style="height: 30px; width: auto;" /></label>
+                            <label for="roll_type_5" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_5_image" src="../images/<?=$roll_folder ?>/roll_type_5.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
                             <input type="radio" class="form-check-inline" id="roll_type_6" name="roll_type" value="6"<?= $roll_type == 6 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_6" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_6_image" src="../images/<?=$roll_folder ?>/roll_type_6.png" style="height: 30px; width: auto;" /></label>
+                            <label for="roll_type_6" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_6_image" src="../images/<?=$roll_folder ?>/roll_type_6.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
                             <input type="radio" class="form-check-inline" id="roll_type_7" name="roll_type" value="7"<?= $roll_type == 7 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_7" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_7_image" src="../images/<?=$roll_folder ?>/roll_type_7.png" style="height: 30px; width: auto;" /></label>
+                            <label for="roll_type_7" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_7_image" src="../images/<?=$roll_folder ?>/roll_type_7.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
                             <input type="radio" class="form-check-inline" id="roll_type_8" name="roll_type" value="8"<?= $roll_type == 8 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_8" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_8_image" src="../images/<?=$roll_folder ?>/roll_type_8.png" style="height: 30px; width: auto;" /></label>
+                            <label for="roll_type_8" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_8_image" src="../images/<?=$roll_folder ?>/roll_type_8.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
                         </div>
                         <div id="roll_type_validation" class="text-danger<?= empty($roll_type_valid) ? " d-none" : " d-block" ?>">Выберите сторону печати</div>
                         <h3>Комментарий</h3>
@@ -1557,22 +1557,22 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                 switch($(this).val()) {
                     case '<?=PHOTOLABEL_LEFT ?>':
                         for(var i = 1; i <= 8; i++) {
-                            $('img#roll_type_' + i + '_image').attr('src', '../images/roll_left/roll_type_' + i + '.png');
+                            $('img#roll_type_' + i + '_image').attr('src', '../images/roll_left/roll_type_' + i + '.png<?='?'. time() ?>');
                         }
                         break;
                     case '<?=PHOTOLABEL_RIGHT ?>':
                         for(var i = 1; i <= 8; i++) {
-                            $('img#roll_type_' + i + '_image').attr('src', '../images/roll_right/roll_type_' + i + '.png');
+                            $('img#roll_type_' + i + '_image').attr('src', '../images/roll_right/roll_type_' + i + '.png<?='?'. time() ?>');
                         }
                         break;
                     case '<?=PHOTOLABEL_BOTH ?>':
                         for(var i = 1; i <= 8; i++) {
-                            $('img#roll_type_' + i + '_image').attr('src', '../images/roll_both/roll_type_' + i + '.png');
+                            $('img#roll_type_' + i + '_image').attr('src', '../images/roll_both/roll_type_' + i + '.png<?='?'. time() ?>');
                         }
                         break;
                     default :
                         for(var i = 1; i <= 8; i++) {
-                            $('img#roll_type_' + i + '_image').attr('src', '../images/roll/roll_type_' + i + '.png');
+                            $('img#roll_type_' + i + '_image').attr('src', '../images/roll/roll_type_' + i + '.png<?='?'. time() ?>');
                         }
                         break;
                 }
