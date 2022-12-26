@@ -21,7 +21,6 @@ const ATLAS = 5;
     $extracharge_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/extracharge.php')) == APPLICATION.'/admin/extracharge.php' ? " active" : "";
     $ink_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/ink.php')) == APPLICATION.'/admin/ink.php' ? " active" : "";
     $cliche_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/cliche.php')) == APPLICATION.'/admin/cliche.php' ? " active" : "";
-    $currency_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/currency.php')) == APPLICATION.'/admin/currency.php' ? " active" : "";
     
     $sql = "select id, name from laminator order by position";
     $fetcher = new Fetcher($sql);
@@ -41,7 +40,6 @@ const ATLAS = 5;
     <a href="extracharge.php" class="mr-4<?=$extracharge_class ?>">Наценка</a>
     <a href="ink.php" class="mr-4<?=$ink_class ?>">Цена краски</a>
     <a href="cliche.php" class="mr-4<?=$cliche_class ?>">Цена форм</a>
-    <a href="currency.php" class="mr-4<?=$currency_class ?>">Курсы валют</a>
 </div>
 <?php
 if(!empty($machine_id)):
