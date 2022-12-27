@@ -160,6 +160,7 @@
     $ink_var = "ink_$i";
     $color_var = "color_$i";
     $cmyk_var = "cmyk_$i";
+    $lacquer_var = "lacquer_$i";
     $percent_var = "percent_$i";
     $cliche_var = "cliche_$i";
     ?>
@@ -175,6 +176,14 @@
                     break;
                 case 'lacquer':
                     echo 'Лак';
+                    switch ($$lacquer_var) {
+                        case CalculationBase::LACQUER_GLOSSY:
+                            echo ' глянцевый';
+                            break;
+                        case CalculationBase::LACQUER_MATTE:
+                            echo ' матовый';
+                            break;
+                    }
                     break;
                 case  'white':
                     echo 'Белый';
