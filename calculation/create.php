@@ -3398,6 +3398,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         $('#ink_group_' + data_id).addClass('col-3');
                         $('#lacquer_group_' + data_id).addClass('col-3');
                         $('#lacquer_group_' + data_id).removeClass('d-none');
+                        $('#lacquer_' + data_id).attr('required', 'required');
                     }
                     else if(work_type_id == <?= CalculationBase::WORK_TYPE_SELF_ADHESIVE ?>) {
                         $('#ink_group_' + data_id).addClass('col-6');
