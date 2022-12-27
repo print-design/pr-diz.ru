@@ -1418,7 +1418,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                         <div>
                             <?php
                             $submit_class = " d-none";
-                            if(empty($techmap_id) || $_POST[FROM_OTHER_TECHMAP] !== null) {
+                            if(empty($techmap_id) || filter_input(INPUT_POST, FROM_OTHER_TECHMAP) !== null) {
                                 $submit_class = "";
                             }
                             ?>
