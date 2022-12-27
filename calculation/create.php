@@ -87,6 +87,9 @@ for($i=1; $i<=8; $i++) {
     $cmyk_valid_var = 'cmyk_'.$i.'_valid';
     $$cmyk_valid_var = '';
     
+    $lacquer_valid_var = 'lacquer_'.$i.'_valid';
+    $$lacquer_valid_var = '';
+    
     $color_valid_var = 'color_'.$i.'_valid';
     $$color_valid_var = '';
     
@@ -220,6 +223,9 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $cmyk_var = "cmyk_".$i;
             $$cmyk_var = filter_input(INPUT_POST, 'cmyk_'.$i);
             
+            $lacquer_var = "lacquer_".$i;
+            $$lacquer_var = filter_input(INPUT_POST, 'lacquer_'.$i);
+            
             $percent_var = "percent_".$i;
             $$percent_var = filter_input(INPUT_POST, 'percent_'.$i);
             
@@ -238,6 +244,12 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             if($$ink_var == 'cmyk' && empty($$cmyk_var)) {
                 $cmyk_valid_var = 'cmyk_'.$i.'_valid';
                 $$cmyk_valid_var = ISINVALID;
+                $form_valid = false;
+            }
+            
+            if($ink_var == 'lacquer' && empty($$lacquer_var)) {
+                $lacquer_valid_var = 'lacquer_'.$i.'_valid';
+                $$lacquer_valid_var = ISINVALID;
                 $form_valid = false;
             }
         }
@@ -333,6 +345,9 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $cmyk_var = "cmyk_$i";
             $$cmyk_var = filter_input(INPUT_POST, "cmyk_$i");
             
+            $lacquer_var = "lacquer_$i";
+            $$lacquer_var = filter_input(INPUT_POST, "lacquer_$i");
+            
             $percent_var = "percent_$i";
             $$percent_var = filter_input(INPUT_POST, "percent_$i");
             if(empty($$percent_var)) $$percent_var = "NULL";
@@ -359,8 +374,9 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
                 . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                 . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
-                . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, cliche_1, "
-                . "cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8, "
+                . "lacquer_1, lacquer_2, lacquer_3, lacquer_4, lacquer_5, lacquer_6, lacquer_7, lacquer_8, "
+                . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
+                . "cliche_1, cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8, "
                 . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old, customer_pays_for_cliche, "
                 . "knife, knife_in_price, customer_pays_for_knife) "
                 . "values($customer_id, '$name', '$unit', $quantity, $work_type_id, "
@@ -371,6 +387,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "'$ink_1', '$ink_2', '$ink_3', '$ink_4', '$ink_5', '$ink_6', '$ink_7', '$ink_8', "
                 . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                 . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
+                . "'$lacquer_1', '$lacquer_2', '$lacquer_3', '$lacquer_4', '$lacquer_5', '$lacquer_6', '$lacquer_7', '$lacquer_8', "
                 . "'$percent_1', '$percent_2', '$percent_3', '$percent_4', '$percent_5', '$percent_6', '$percent_7', '$percent_8', "
                 . "'$cliche_1', '$cliche_2', '$cliche_3', '$cliche_4', '$cliche_5', '$cliche_6', '$cliche_7', '$cliche_8', "
                 . "$cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $customer_pays_for_cliche, "
@@ -422,8 +439,9 @@ if(!empty($id)) {
             . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
             . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
-            . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, c.cliche_1, "
-            . "c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
+            . "c.lacquer_1, c.lacquer_2, c.lacquer_3, c.lacquer_4, c.lacquer_5, c.lacquer_6, c.lacquer_7, c.lacquer_8, "
+            . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, "
+            . "c.cliche_1, c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
             . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old, extracharge, extracharge_cliche, customer_pays_for_cliche, "
             . "knife, extracharge_knife, knife_in_price, customer_pays_for_knife, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
@@ -691,6 +709,7 @@ $new_forms_number = 0;
 $ink_1 = null; $ink_2 = null; $ink_3 = null; $ink_4 = null; $ink_5 = null; $ink_6 = null; $ink_7 = null; $ink_8 = null;
 $color_1 = null; $color_2 = null; $color_3 = null; $color_4 = null; $color_5 = null; $color_6 = null; $color_7 = null; $color_8 = null;
 $cmyk_1 = null; $cmyk_2 = null; $cmyk_3 = null; $cmyk_4 = null; $cmyk_5 = null; $cmyk_6 = null; $cmyk_7 = null; $cmyk_8 = null;
+$lacquer_1 = null; $lacquer_2 = null; $lacquer_3 = null; $lacquer_4 = null; $lacquer_5 = null; $lacquer_6 = null; $lacquer_7 = null; $lacquer_8 = null;
 $percent_1 = null; $percent_2 = null; $percent_3 = null; $percent_4 = null; $percent_5 = null; $percent_6 = null; $percent_7 = null; $percent_8 = null;
 $cliche_1 = null; $cliche_2 = null; $cliche_3 = null; $cliche_4 = null; $cliche_5 = null; $cliche_6 = null; $cliche_7 = null; $cliche_8 = null;
 
@@ -711,6 +730,12 @@ for ($i=1; $i<=$ink_number; $i++) {
     $$cmyk_var = filter_input(INPUT_POST, "cmyk_$i");
     if(null === $$cmyk_var && isset($row["cmyk_$i"])) {
         $$cmyk_var = $row["cmyk_$i"];
+    }
+    
+    $lacquer_var = "lacquer_$i";
+    $$lacquer_var = filter_input(INPUT_POST, "lacquer_$i");
+    if(null === $$lacquer_var && isset($row["lacquer_$i"])) {
+        $$lacquer_var = $row["lacquer_$i"];
     }
     
     $percent_var = "percent_$i";
@@ -2068,13 +2093,14 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 <?php
                                 $ink_class = " col-12";
                                 $cmyk_class = " d-none";
+                                $lacquer_class = " d-none";
                                 $color_class = " d-none";
                                 $percent_class = " d-none";
                                 $cliche_class = " d-none";
                             
                                 $ink_var_name = "ink_$i";
                         
-                                if($$ink_var_name == "white" || $$ink_var_name == "lacquer") {
+                                if($$ink_var_name == "white") {
                                     $ink_class = " col-6";
                                     
                                     if($work_type_id == CalculationBase::WORK_TYPE_PRINT) {
@@ -2085,7 +2111,24 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         $percent_class = " col-6";
                                     }
                                 }
-                                else if($$ink_var_name == "panton") {
+                                elseif($$ink_var_name == "lacquer") {
+                                    if($work_type_id == CalculationBase::WORK_TYPE_PRINT) {
+                                        $ink_class = " col-3";
+                                        $lacquer_class = " col-3";
+                                    }
+                                    elseif($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                        $ink_class = " col-6";
+                                    }
+                                    
+                                    if($work_type_id == CalculationBase::WORK_TYPE_PRINT) {
+                                        $percent_class = " col-3";
+                                        $cliche_class = " col-3";
+                                    }
+                                    elseif ($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                        $percent_class = " col-6";
+                                    }
+                                }
+                                elseif($$ink_var_name == "panton") {
                                     $ink_class = " col-3";
                                     $color_class = " col-3";
                                     
@@ -2097,7 +2140,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         $percent_class = " col-6";
                                     }
                                 }
-                                else if($$ink_var_name == "cmyk") {
+                                elseif($$ink_var_name == "cmyk") {
                                     $ink_class = " col-3";
                                     $cmyk_class = " col-3";
                                     
@@ -2175,6 +2218,26 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         <option value="kontur"<?=$kontur_selected ?>>Kontur</option>
                                     </select>
                                     <div class="invalid-feedback">Выберите компонент цвета</div>
+                                </div>
+                                <div class="form-group<?=$lacquer_class ?>" id="lacquer_group_<?=$i ?>">
+                                    <?php
+                                    $lacquer_var = "lacquer_$i";
+                                    $lacquer_var_valid = 'lacquer_'.$i.'_valid';
+                                    ?>
+                                    <label for="lacquer_<?=$i ?>">Лак</label>
+                                    <select id="lacquer_<?=$i ?>" name="lacquer_<?=$i ?>" class="form-control lacquer<?=$$lacquer_var_valid ?>" data-id="<?=$i ?>">
+                                        <option value="" hidden="hidden" selected="selected">Лак...</option>
+                                        <?php
+                                        $glossy_selected = "";
+                                        $matte_selected = "";
+                                        
+                                        $lacquer_var_selected = $$lacquer_var.'_selected';
+                                        $$lacquer_var_selected = " selected='selected'";
+                                        ?>
+                                        <option value="glossy"<?=$glossy_selected ?>>Глянцевый</option>
+                                        <option value="matte"<?=$matte_selected ?>>Матовый</option>
+                                    </select>
+                                    <div class="invalid-feedback">Выберите лак</div>
                                 </div>
                                 <div class="form-group<?=$percent_class ?>" id="percent_group_<?=$i ?>">
                                     <?php
@@ -3295,6 +3358,9 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 $('#cmyk_group_' + data_id).removeClass('col-3');
                 $('#cmyk_group_' + data_id).addClass('d-none');
                 
+                $('#lacquer_group_' + data_id).removeClass('col-3');
+                $('#lacquer_group_' + data_id).addClass('d-none');
+                
                 $('#percent_group_' + data_id).removeClass('col-3');
                 $('#percent_group_' + data_id).removeClass('col-6');
                 $('#percent_group_' + data_id).addClass('d-none');
@@ -3303,9 +3369,10 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 $('#cliche_group_' + data_id).removeClass('col-6');
                 $('#cliche_group_' + data_id).addClass('d-none');
                 
-                // Снимаем атрибут required с кода цвета, CMYK и процента
+                // Снимаем атрибут required с кода цвета, CMYK, лака и процента
                 $('#color_' + data_id).removeAttr('required');
                 $('#cmyk_' + data_id).removeAttr('required');
+                $('#lacquer_' + data_id).removeAttr('required');
                 $('#percent_' + data_id).removeAttr('required');
                 
                 // Затем, в зависимости от выбранного значения, устанавливаем видимость нужного элемента для этого значения
@@ -3322,11 +3389,19 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         $('#percent_group_' + data_id).removeClass('col-3');
                         $('#percent_group_' + data_id).removeClass('d-none');
                         $('#cliche_group_' + data_id).addClass('d-none');
+                        $('#cliche_group_' + data_id).removeClass('col-3');
                     }
                 }
                 
                 if(ink == 'lacquer')  {
-                    $('#ink_group_' + data_id).addClass('col-6');
+                    if(work_type_id == <?= CalculationBase::WORK_TYPE_PRINT ?>) {
+                        $('#ink_group_' + data_id).addClass('col-3');
+                        $('#lacquer_group_' + data_id).addClass('col-3');
+                        $('#lacquer_group_' + data_id).removeClass('d-none');
+                    }
+                    else if(work_type_id == <?= CalculationBase::WORK_TYPE_SELF_ADHESIVE ?>) {
+                        $('#ink_group_' + data_id).addClass('col-6');
+                    }
                     
                     $('#percent_' + data_id).attr('required', 'required');
                 }
