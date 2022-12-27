@@ -812,7 +812,7 @@ if($id !== null) {
             
             array_push($file_data, array("Расход КраскаСмеси $i, кг",
                 CalculationBase::Display($calculation->ink_expenses[$i], 2),
-                "|= ".CalculationBase::Display($calculation->print_area, 2)." * ".CalculationBase::Display($calculation->GetInkExpense($$ink, $$cmyk, $data_ink->c_expense, $data_ink->m_expense, $data_ink->y_expense, $data_ink->k_expense, $data_ink->panton_expense, $data_ink->white_expense, $data_ink->lacquer_expense), 2)." * ".CalculationBase::Display($$percent, 2)." / 1000 / 100",
+                "|= ".CalculationBase::Display($calculation->print_area, 2)." * ".CalculationBase::Display($calculation->GetInkExpense($$ink, $$cmyk, $$lacquer, $data_ink->c_expense, $data_ink->m_expense, $data_ink->y_expense, $data_ink->k_expense, $data_ink->panton_expense, $data_ink->white_expense, $data_ink->lacquer_glossy_expense, $data_ink->lacquer_matte_expense), 2)." * ".CalculationBase::Display($$percent, 2)." / 1000 / 100",
                 "площадь запечатки * расход КраскаСмеси за 1 м2 * процент краски $i / 1000 / 100"));
             
             array_push($file_data, array("Стоимость КраскаСмеси $i, руб",

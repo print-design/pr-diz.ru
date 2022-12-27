@@ -293,7 +293,7 @@ class CalculationBase {
                         return new DataPrice($lacquer_matte_price, $lacquer_matte_currency);
                         
                     default :
-                        return new DataPrice($lacquer_matte_price, $lacquer_matte_currency);
+                        return new DataPrice($lacquer_glossy_price, $lacquer_glossy_currency);
                 }
                 
             default :
@@ -302,7 +302,7 @@ class CalculationBase {
     }
     
     // Получение расхода краски
-    function GetInkExpense($ink, $cmyk, $c_expense, $m_expense, $y_expense, $k_expense, $panton_expense, $white_expense, $lacquer_expense) {
+    function GetInkExpense($ink, $cmyk, $lacquer, $c_expense, $m_expense, $y_expense, $k_expense, $panton_expense, $white_expense, $lacquer_glossy_expense, $lacquer_matte_expense) {
         switch ($ink) {
             case self::CMYK:
                 switch ($cmyk) {
@@ -325,7 +325,13 @@ class CalculationBase {
                 return $white_expense;
                 
             case self::LACQUER:
-                return $lacquer_expense;
+                switch($lacquer) {
+                    case self::LACQUER_MATTE:
+                        return $lacquer_matte_expense;
+                        
+                    default :
+                        return $lacquer_glossy_expense;
+                }
                 
             default :
                 return null;
@@ -904,7 +910,7 @@ class Calculation extends CalculationBase {
             $this->mix_ink_kg_prices[$i] = $mix_ink_kg_price;
             
             // Расход КраскаСмеси, кг
-            $ink_expense = $this->print_area * $this->GetInkExpense($$ink, $$cmyk, $data_ink->c_expense, $data_ink->m_expense, $data_ink->y_expense, $data_ink->k_expense, $data_ink->panton_expense, $data_ink->white_expense, $data_ink->lacquer_expense) * $$percent / 1000 / 100;
+            $ink_expense = $this->print_area * $this->GetInkExpense($$ink, $$cmyk, $$lacquer, $data_ink->c_expense, $data_ink->m_expense, $data_ink->y_expense, $data_ink->k_expense, $data_ink->panton_expense, $data_ink->white_expense, $data_ink->lacquer_glossy_expense, $data_ink->lacquer_matte_expense) * $$percent / 1000 / 100;
             $this->ink_expenses[$i] = $ink_expense;
             
             // Стоимость КраскаСмеси, руб
@@ -1419,7 +1425,7 @@ class CalculationSelfAdhesive extends CalculationBase {
                 $this->mix_ink_kg_prices[$i] = $mix_ink_kg_price;
             
                 // Расход КраскаСмеси, кг
-                $ink_expense = $this->print_area * $this->GetInkExpense($$ink, $$cmyk, $data_ink->c_expense, $data_ink->m_expense, $data_ink->y_expense, $data_ink->k_expense, $data_ink->panton_expense, $data_ink->white_expense, $data_ink->lacquer_expense) * $$percent / 1000 / 100;
+                $ink_expense = $this->print_area * $this->GetInkExpense($$ink, $$cmyk, $$lacquer, $data_ink->c_expense, $data_ink->m_expense, $data_ink->y_expense, $data_ink->k_expense, $data_ink->panton_expense, $data_ink->white_expense, $data_ink->lacquer_glossy_expense, $data_ink->lacquer_matte_expense) * $$percent / 1000 / 100;
                 $this->ink_expenses[$i] = $ink_expense;
             
                 // Стоимость КраскаСмеси, руб
