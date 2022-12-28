@@ -168,24 +168,16 @@
         <td>
             <?php
             switch ($$ink_var) {
-                case 'cmyk':
+                case CalculationBase::CMYK:
                     echo "CMYK";
                     break;
-                case 'panton':
+                case CalculationBase::PANTON:
                     echo 'Пантон';
                     break;
-                case 'lacquer':
+                case CalculationBase::LACQUER:
                     echo 'Лак';
-                    switch ($$lacquer_var) {
-                        case CalculationBase::LACQUER_GLOSSY:
-                            echo ' глянцевый';
-                            break;
-                        case CalculationBase::LACQUER_MATTE:
-                            echo ' матовый';
-                            break;
-                    }
                     break;
-                case  'white':
+                case CalculationBase::WHITE:
                     echo 'Белый';
                     break;
             }
@@ -193,11 +185,21 @@
         </td>
         <td>
             <?php
-            if($$ink_var == "cmyk") {
+            if($$ink_var == CalculationBase::CMYK) {
                 echo $$cmyk_var;
             }
-            elseif($$ink_var == "panton") {
+            elseif($$ink_var == CalculationBase::PANTON) {
                 echo 'P'.$$color_var;
+            }
+            elseif($$ink_var == CalculationBase::LACQUER) {
+                switch ($$lacquer_var) {
+                    case CalculationBase::LACQUER_GLOSSY:
+                        echo 'глянцевый';
+                        break;
+                    case CalculationBase::LACQUER_MATTE:
+                        echo 'матовый';
+                        break;
+                }
             }
             ?>
         </td>
