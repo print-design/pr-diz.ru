@@ -51,6 +51,23 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     header("Location: details.php?id=$id");
 }
 
+// Получение норм
+$gap_raport = null;
+
+$sql = "select gap_raport from norm_gap order by id desc limit 1";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $gap_raport = $row['gap_raport'];
+}
+
+$min_percent = null;
+
+$sql = "select min_percent from norm_ink order by id desc limit 1";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $min_percent = $row['min_percent'];
+}
+
 // Значение марки плёнки "другая"
 const INDIVIDUAL = -1;
 
@@ -229,7 +246,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $percent_var = "percent_".$i;
             $$percent_var = filter_input(INPUT_POST, 'percent_'.$i);
             
-            if(empty($$percent_var)) {
+            if(empty($$percent_var) || (intval($$percent_var) < intval($min_percent))) {
                 $percent_valid_var = 'percent_'.$i.'_valid';
                 $$percent_valid_var = ISINVALID;
                 $form_valid = false;
@@ -860,15 +877,6 @@ elseif(filter_input(INPUT_GET, 'id') !== null) {
         $qi++;
         $quantity_var = "quantity_$qi";
     }
-}
-
-// Получение норм
-$gap_raport = null;
-
-$sql = "select gap_raport from norm_gap order by id desc limit 1";
-$fetcher = new Fetcher($sql);
-if($row = $fetcher->Fetch()) {
-    $gap_raport = $row['gap_raport'];
 }
 
 // Расчёт скрываем:
@@ -2261,7 +2269,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         <div class="input-group-append">
                                             <span class="input-group-text">%</span>
                                         </div>
-                                        <div class="invalid-feedback">Процент обязательно</div>
+                                        <div class="invalid-feedback">Процент обязательно, не менее <?=$min_percent ?></div>
                                     </div>
                                 </div>
                                 <div class="form-group<?=$cliche_class ?>" id="cliche_group_<?=$i ?>">
