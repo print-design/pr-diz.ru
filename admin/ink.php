@@ -35,6 +35,8 @@ $min_price_valid = "";
 $self_adhesive_laquer_price_valid = "";
 $self_adhesive_laquer_expense_valid = "";
 
+$min_percent_valid = "";
+
 // Сохранение введённых значений
 if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
     if(empty(filter_input(INPUT_POST, 'c_price')) || empty(filter_input(INPUT_POST, 'c_currency'))) {
@@ -147,6 +149,11 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
         $form_valid = false;
     }
     
+    if(filter_input(INPUT_POST, 'min_percent') === null) {
+        $min_percent_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
     if($form_valid) {
         // Старый объект
         $old_c_price = "";
@@ -184,7 +191,9 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
         $old_self_adhesive_laquer_currency = "";
         $old_self_adhesive_laquer_expense = "";
         
-        $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense from norm_ink order by date desc limit 1";
+        $old_min_percent = "";
+        
+        $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense, min_percent from norm_ink order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -223,6 +232,8 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
             $old_self_adhesive_laquer_price = $row['self_adhesive_laquer_price'];
             $old_self_adhesive_laquer_currency = $row['self_adhesive_laquer_currency'];
             $old_self_adhesive_laquer_expense = $row['self_adhesive_laquer_expense'];
+            
+            $old_min_percent = $row['min_percent'];
         }
         
         // Новый объект
@@ -261,6 +272,8 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
         $new_self_adhesive_laquer_currency = filter_input(INPUT_POST, 'self_adhesive_laquer_currency');
         $new_self_adhesive_laquer_expense = filter_input(INPUT_POST, 'self_adhesive_laquer_expense');
         
+        $new_min_percent = filter_input(INPUT_POST, 'min_percent');
+        
         if($old_c_price != $new_c_price ||
                 $old_c_currency != $new_c_currency || 
                 $old_c_expense != $new_c_expense ||
@@ -294,8 +307,10 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
                 
                 $old_self_adhesive_laquer_price != $new_self_adhesive_laquer_price ||
                 $old_self_adhesive_laquer_currency != $new_self_adhesive_laquer_currency ||
-                $old_self_adhesive_laquer_expense != $new_self_adhesive_laquer_expense) {
-            $sql = "insert into norm_ink (c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense) values ($new_c_price, '$new_c_currency', $new_c_expense, $new_m_price, '$new_m_currency', $new_m_expense, $new_y_price, '$new_y_currency', $new_y_expense, $new_k_price, '$new_k_currency', $new_k_expense, $new_white_price, '$new_white_currency', $new_white_expense, $new_panton_price, '$new_panton_currency', $new_panton_expense, $new_lacquer_glossy_price, '$new_lacquer_glossy_currency', $new_lacquer_glossy_expense, $new_lacquer_matte_price, '$new_lacquer_matte_currency', $new_lacquer_matte_expense, $new_solvent_etoxipropanol_price, '$new_solvent_etoxipropanol_currency', $new_solvent_flexol82_price, '$new_solvent_flexol82_currency', $new_solvent_part, $new_min_price, $new_self_adhesive_laquer_price, '$new_self_adhesive_laquer_currency', $new_self_adhesive_laquer_expense)";
+                $old_self_adhesive_laquer_expense != $new_self_adhesive_laquer_expense ||
+                
+                $old_min_percent != $new_min_percent) {
+            $sql = "insert into norm_ink (c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense, min_percent) values ($new_c_price, '$new_c_currency', $new_c_expense, $new_m_price, '$new_m_currency', $new_m_expense, $new_y_price, '$new_y_currency', $new_y_expense, $new_k_price, '$new_k_currency', $new_k_expense, $new_white_price, '$new_white_currency', $new_white_expense, $new_panton_price, '$new_panton_currency', $new_panton_expense, $new_lacquer_glossy_price, '$new_lacquer_glossy_currency', $new_lacquer_glossy_expense, $new_lacquer_matte_price, '$new_lacquer_matte_currency', $new_lacquer_matte_expense, $new_solvent_etoxipropanol_price, '$new_solvent_etoxipropanol_currency', $new_solvent_flexol82_price, '$new_solvent_flexol82_currency', $new_solvent_part, $new_min_price, $new_self_adhesive_laquer_price, '$new_self_adhesive_laquer_currency', $new_self_adhesive_laquer_expense, $new_min_percent)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -344,7 +359,9 @@ $self_adhesive_laquer_price = "";
 $self_adhesive_laquer_currency = "";
 $self_adhesive_laquer_expense = "";
 
-$sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense from norm_ink order by date desc limit 1";
+$min_percent = "";
+
+$sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense, min_percent from norm_ink order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -385,6 +402,8 @@ if($row = $fetcher->Fetch()) {
     $self_adhesive_laquer_price = $row['self_adhesive_laquer_price'];
     $self_adhesive_laquer_currency = $row['self_adhesive_laquer_currency'];
     $self_adhesive_laquer_expense = $row['self_adhesive_laquer_expense'];
+    
+    $min_percent = $row['min_percent'];
 }
 ?>
 <!DOCTYPE html>
@@ -942,6 +961,29 @@ if($row = $fetcher->Fetch()) {
                                            onkeyup="javascript: $(this).attr('id', 'min_price'); $(this).attr('name', 'min_price'); $(this).attr('placeholder', 'Мин. стоимость, руб');" 
                                            onfocusout="javascript: $(this).attr('id', 'min_price'); $(this).attr('name', 'min_price'); $(this).attr('placeholder', 'Мин. стоимость, руб');" />
                                     <div class="invalid-feedback">Ограничение на минимальную стоимость обязательно</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-table-row">
+                            <div class="d-table-cell pr-3">
+                                <div class="form-group">
+                                    <label for="min_percent">Минимальный процент запечатки</label>
+                                    <div class="input-group">
+                                        <input type="text"
+                                               class="form-control"
+                                               id="min_percent"
+                                               name="min_percent"
+                                               value="<?= $min_percent ?>"
+                                               placeholder="Мин. процент запечатки"
+                                               required="required"
+                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');"
+                                               onmouseup="javascript: $(this).attr('id', 'min_percent'); $(this).attr('name', 'min_percent'); $(this).attr('placeholder', 'Мин. процент запечатки');"
+                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }"
+                                               onkeyup="javascript: $(this).attr('id', 'min_percent'); $(this).attr('name', 'min_percent'); $(this).attr('placeholder', 'Мин. процент запечатки');"
+                                               onfocusout="javascript: $(this).attr('id', 'min_percent'); $(this).attr('name', 'min_percent'); $(this).attr('placeholder', 'Мин. процент запечатки');" />
+                                        <div class="input-group-append"><div class="input-group-text">%</div></div>
+                                    </div>
+                                    <div class="invalid-feedback">Минимальный процент запечатки обязательно</div>
                                 </div>
                             </div>
                         </div>
