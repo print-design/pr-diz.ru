@@ -2269,7 +2269,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         <div class="input-group-append">
                                             <span class="input-group-text">%</span>
                                         </div>
-                                        <div class="invalid-feedback">Процент обязательно, не менее <?=$min_percent ?></div>
+                                        <div class="invalid-feedback">Не менее <?=$min_percent ?></div>
                                     </div>
                                 </div>
                                 <div class="form-group<?=$cliche_class ?>" id="cliche_group_<?=$i ?>">
