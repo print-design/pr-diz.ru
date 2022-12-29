@@ -1004,7 +1004,7 @@ $current_date_time = date("dmYHis");
                     </td>
                 </tr>
             </table>
-            <div id="comment"><span class="font-weight-bold">Комментарий:</span> <?=$comment ?></div>
+            <div id="comment" style="white-space: pre;"><span class="font-weight-bold">Комментарий:</span><br /><?=$comment ?></div>
             <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="break_page"></div>
             <div class="row">
