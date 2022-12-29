@@ -75,13 +75,14 @@ class DataInk {
     public $solvent_flexol82_currency;
     public $solvent_part; // Расход растворителя на 1 кг краски
     public $min_price; // Ограничение на минимальную стоимость
+    public $min_price_per_ink; // Мин. стоимость 1 цвета
     
     public $self_adhesive_laquer_price; // Самоклейка, цена лака за кг
     public $self_adhesive_laquer_currency; // Самоклейка, валюьа лака
     public $self_adhesive_laquer_expense; // Самоклейка, расход чистого лака
     
     // Конструктор
-    public function __construct($c_price, $c_currency, $c_expense, $m_price, $m_currency, $m_expense, $y_price, $y_currency, $y_expense, $k_price, $k_currency, $k_expense, $white_price, $white_currency, $white_expense, $panton_price, $panton_currency, $panton_expense, $lacquer_glossy_price, $lacquer_glossy_currency, $lacquer_glossy_expense, $lacquer_matte_price, $lacquer_matte_currency, $lacquer_matte_expense, $solvent_etoxipropanol_price, $solvent_etoxipropanol_currency, $solvent_flexol82_price, $solvent_flexol82_currency, $solvent_part, $min_price, $self_adhesive_laquer_price, $self_adhesive_laquer_currency, $self_adhesive_laquer_expense) {
+    public function __construct($c_price, $c_currency, $c_expense, $m_price, $m_currency, $m_expense, $y_price, $y_currency, $y_expense, $k_price, $k_currency, $k_expense, $white_price, $white_currency, $white_expense, $panton_price, $panton_currency, $panton_expense, $lacquer_glossy_price, $lacquer_glossy_currency, $lacquer_glossy_expense, $lacquer_matte_price, $lacquer_matte_currency, $lacquer_matte_expense, $solvent_etoxipropanol_price, $solvent_etoxipropanol_currency, $solvent_flexol82_price, $solvent_flexol82_currency, $solvent_part, $min_price, $min_price_per_ink, $self_adhesive_laquer_price, $self_adhesive_laquer_currency, $self_adhesive_laquer_expense) {
         $this->c_price = $c_price;
         $this->c_currency = $c_currency;
         $this->c_expense = $c_expense;
@@ -112,6 +113,7 @@ class DataInk {
         $this->solvent_flexol82_currency = $solvent_flexol82_currency;
         $this->solvent_part = $solvent_part;
         $this->min_price = $min_price;
+        $this->min_price_per_ink = $min_price_per_ink;
         
         $this->self_adhesive_laquer_price = $self_adhesive_laquer_price;
         $this->self_adhesive_laquer_currency = $self_adhesive_laquer_currency;
@@ -453,6 +455,7 @@ class Calculation extends CalculationBase {
     public $mix_ink_kg_prices; // массив: цена 1 кг каждой КраскаСмеси
     public $ink_expenses; // массив: расход каждой КраскаСмеси
     public $ink_costs; // массив: стоимость каждой КраскаСмеси
+    public $ink_costs_final; // массив: стоимость каждой КраскаСмеси финальная
     
     public $glue_kg_weight; // расход КлеяСмеси на 1 кг клея, кг
     public $glue_kg_price; // цена 1 кг чистого клея, руб
@@ -916,6 +919,14 @@ class Calculation extends CalculationBase {
             // Стоимость КраскаСмеси, руб
             $ink_cost = $ink_expense * $mix_ink_kg_price;
             $this->ink_costs[$i] = $ink_cost;
+            
+            // Стоимость КраскаСмеси финальная, руб
+            if($ink_cost < $data_ink->min_price_per_ink) {
+                $this->ink_costs_final[$i] = floatval($data_ink->min_price_per_ink);
+            }
+            else {
+                $this->ink_costs_final[$i] = $ink_cost;
+            }
         }
         
         //********************************************
@@ -1066,7 +1077,7 @@ class Calculation extends CalculationBase {
         $this->ink_cost = 0;
         
         for($i=1; $i<=$ink_number; $i++) {
-            $this->ink_cost += $this->ink_costs[$i];
+            $this->ink_cost += $this->ink_costs_final[$i];
         }
         
         // Общий расход всех КраскаСмеси
@@ -1171,6 +1182,7 @@ class CalculationSelfAdhesive extends CalculationBase {
     public $mix_ink_kg_prices; // массив: цена 1 кг каждой краскаСмеси
     public $ink_expenses; // массив: расход каждой КраскаСмеси
     public $ink_costs; // массив: стоимость каждой КраскаСмеси
+    public $ink_costs_final; // массив: стоимость каждой КраскаСммеси финальная
     
     public $cliche_height; // Высота формы, мм
     public $cliche_width; // ширина формы, мм
@@ -1431,6 +1443,14 @@ class CalculationSelfAdhesive extends CalculationBase {
                 // Стоимость КраскаСмеси, руб
                 $ink_cost = $ink_expense * $mix_ink_kg_price;
                 $this->ink_costs[$i] = $ink_cost;
+                
+                // Стоимость КраскаСмеси финальная, руб
+                if($ink_cost < $data_ink->min_price_per_ink) {
+                    $this->ink_costs_final[$i] = floatval($data_ink->min_price_per_ink);
+                }
+                else {
+                    $this->ink_costs_final[$i] = $ink_cost;
+                }
             }
         }
         
@@ -1505,7 +1525,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->ink_cost = 0;
         
         for($i=1; $i<=$ink_number; $i++) {
-            $this->ink_cost += $this->ink_costs[$i];
+            $this->ink_cost += $this->ink_costs_final[$i];
         }
         
         // Общий расход всех КраскаСмеси

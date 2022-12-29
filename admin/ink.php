@@ -1001,10 +1001,10 @@ if($row = $fetcher->Fetch()) {
                                 <div class="form-group">
                                     <label for="min_price_per_ink">Минимальная стоимость 1 цвета (руб)</label>
                                     <input type="text"
-                                           class="form-control float-only"
+                                           class="form-control int-only"
                                            id="min_price_per_ink"
                                            name="min_price_per_ink"
-                                           value="<?=$min_price_per_ink ?>"
+                                           value="<?= floatval($min_price_per_ink) ?>"
                                            placeholder="Мин. стоимость 1 цвета, руб"
                                            required="required"
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');"

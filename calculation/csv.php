@@ -209,7 +209,7 @@ if($id !== null) {
     $data_priladka_laminator = new DataPriladka(null, null, null, null);
     $data_machine = new DataMachine(null, null, null);
     $data_machine_laminator = new DataMachine(null, null, null);
-    $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+    $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
     $data_glue = new DataGlue(null, null, null, null, null, null, null);
     $data_cliche = new DataCliche(null, null, null, null, null, null);
     $data_extracharge = array();
@@ -259,11 +259,11 @@ if($id !== null) {
             }
         }
         
-        $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense "
+        $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price, min_price_per_ink, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense "
                 . "from norm_ink where date <= '$date' order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
-            $data_ink = new DataInk($row['c_price'], $row['c_currency'], $row['c_expense'], $row['m_price'], $row['m_currency'], $row['m_expense'], $row['y_price'], $row['y_currency'], $row['y_expense'], $row['k_price'], $row['k_currency'], $row['k_expense'], $row['white_price'], $row['white_currency'], $row['white_expense'], $row['panton_price'], $row['panton_currency'], $row['panton_expense'], $row['lacquer_glossy_price'], $row['lacquer_glossy_currency'], $row['lacquer_glossy_expense'], $row['lacquer_matte_price'], $row['lacquer_matte_currency'], $row['lacquer_matte_expense'], $row['solvent_etoxipropanol_price'], $row['solvent_etoxipropanol_currency'], $row['solvent_flexol82_price'], $row['solvent_flexol82_currency'], $row['solvent_part'], $row['min_price'], $row['self_adhesive_laquer_price'], $row['self_adhesive_laquer_currency'], $row['self_adhesive_laquer_expense']);
+            $data_ink = new DataInk($row['c_price'], $row['c_currency'], $row['c_expense'], $row['m_price'], $row['m_currency'], $row['m_expense'], $row['y_price'], $row['y_currency'], $row['y_expense'], $row['k_price'], $row['k_currency'], $row['k_expense'], $row['white_price'], $row['white_currency'], $row['white_expense'], $row['panton_price'], $row['panton_currency'], $row['panton_expense'], $row['lacquer_glossy_price'], $row['lacquer_glossy_currency'], $row['lacquer_glossy_expense'], $row['lacquer_matte_price'], $row['lacquer_matte_currency'], $row['lacquer_matte_expense'], $row['solvent_etoxipropanol_price'], $row['solvent_etoxipropanol_currency'], $row['solvent_flexol82_price'], $row['solvent_flexol82_currency'], $row['solvent_part'], $row['min_price'], $row['min_price_per_ink'], $row['self_adhesive_laquer_price'], $row['self_adhesive_laquer_currency'], $row['self_adhesive_laquer_expense']);
         }
         
         if(empty($laminator_id)) {
@@ -819,7 +819,13 @@ if($id !== null) {
                 CalculationBase::Display($calculation->ink_costs[$i], 2),
                 "|= ". CalculationBase::Display($calculation->mix_ink_kg_prices[$i], 2)." * ". CalculationBase::Display($calculation->ink_expenses[$i], 2),
                 "Расход КраскаСмеси $i * цена 1 кг КраскаСмеси $i"));
+            
+            array_push($file_data, array("Стоимость КраскаСмеси $i финальная, руб",
+                CalculationBase::Display($calculation->ink_costs_final[$i], 2),
+                "|= ".CalculationBase::Display($calculation->ink_costs[$i], 2)." < ".CalculationBase::Display($data_ink->min_price_per_ink, 2)." ? ".CalculationBase::Display($data_ink->min_price_per_ink, 2)." : ".CalculationBase::Display($calculation->ink_costs[$i], 2),
+                "Если стоимость КраскаСмеси меньше, чем мин. стоимость 1 цвета, то мин. стоимость 1 цвета, иначе - стоимость КраскаСмеси"));
         }
+        
         
         array_push($file_data, array("", "", "", ""));
         
@@ -972,7 +978,7 @@ if($id !== null) {
             if(!empty($total_ink_cost_formula)) {
                 $total_ink_cost_formula .= " + ";
             }
-            $total_ink_cost_formula .= CalculationBase::Display($calculation->ink_costs[$i], 2);
+            $total_ink_cost_formula .= CalculationBase::Display($calculation->ink_costs_final[$i], 2);
             
             if(!empty($total_ink_expense_formula)) {
                 $total_ink_expense_formula .= " + ";
