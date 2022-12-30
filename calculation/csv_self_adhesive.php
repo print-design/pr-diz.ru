@@ -467,7 +467,7 @@ if($id !== null) {
         
         array_push($file_data, array("Стоимость испарения растворителя, руб",
             CalculationBase::Display($calculation->vaporization_cost, 2),
-            "|= ". CalculationBase::Display($this->vaporization_expense, 2)." * ". CalculationBase::Display($ink_solvent_kg_price, 2)." * ".$this->ukvap,
+            "|= ". CalculationBase::Display($calculation->vaporization_expense, 2)." * ". CalculationBase::Display($ink_solvent_kg_price, 2)." * ".$calculation->ukvap,
             "Расход испарения растворителя КГ * стоимость растворителя за КГ * КоэфИспарения"));
         
         for($i=1; $i<=$ink_number; $i++) {
@@ -518,7 +518,7 @@ if($id !== null) {
                 
                 array_push($file_data, array("Расход (краска + растворитель на одну краску), руб",
                     CalculationBase::Display($calculation->ink_costs_mix[$i], 2),
-                    "|= ". CalculationBase::Display($this->ink_costs[$i], 2)." + ". CalculationBase::Display($this->vaporization_cost, 2),
+                    "|= ". CalculationBase::Display($calculation->ink_costs[$i], 2)." + ". CalculationBase::Display($calculation->vaporization_cost, 2),
                     "Стоимость КраскаСмеси на тираж ₽ + Стоимость испарения растворителя ₽"));
                 
                 array_push($file_data, array("Стоимость КраскаСмеси $i финальная, руб",
