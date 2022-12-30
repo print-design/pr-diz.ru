@@ -848,7 +848,7 @@ if($id !== null) {
             
             array_push($file_data, array("Стоимость КраскаСмеси $i финальная, руб",
                 CalculationBase::Display($calculation->ink_costs_final[$i], 2),
-                "|= ".CalculationBase::Display($calculation->ink_costs_mix[$i], 2)." < ".CalculationBase::Display($data_ink->min_price_per_ink, 2)." ? ".CalculationBase::Display($data_ink->min_price_per_ink, 2)." : ".CalculationBase::Display($calculation->ink_costs_mix[$i], 2),
+                "|= ЕСЛИ(".CalculationBase::Display($calculation->ink_costs_mix[$i], 2)." < ".CalculationBase::Display($data_ink->min_price_per_ink, 2)." ; ".CalculationBase::Display($data_ink->min_price_per_ink, 2)." ; ".CalculationBase::Display($calculation->ink_costs_mix[$i], 2).")",
                 "Если расход (краска + растворитель на одну краску) меньше, чем мин. стоимость 1 цвета, то мин. стоимость 1 цвета, иначе - Расход (краска + растворитель на одну краску)"));
         }
         
