@@ -965,7 +965,7 @@ class Calculation extends CalculationBase {
                 $this->ink_costs_final[$i] = floatval($data_ink->min_price_per_ink);
             }
             else {
-                $this->ink_costs_final[$i] = $ink_cost;
+                $this->ink_costs_final[$i] = floatval($this->ink_costs_mix[$i]);
             }
         }
         
@@ -1526,7 +1526,7 @@ class CalculationSelfAdhesive extends CalculationBase {
                     $this->ink_costs_final[$i] = floatval($data_ink->min_price_per_ink);
                 }
                 else {
-                    $this->ink_costs_final[$i] = $ink_cost;
+                    $this->ink_costs_final[$i] = floatval($this->ink_costs_mix[$i]);
                 }
             }
         }

@@ -302,6 +302,9 @@ if($id !== null) {
         // Если материал заказчика, то его цена = 0
         if($customers_material == true) $price = 0;
         
+        // Коэффициент испарения растворителя
+        array_push($file_data, array("КоэфИспарения", $calculation->ukvap, "", "расход растворителя на испарение больше нуля - 1, меньше или равно нулю - 0"));
+        
         // Результаты вычислений
         array_push($file_data, array("Ширина материала, мм",
             CalculationBase::Display($calculation->width_mat, 2),
@@ -447,6 +450,26 @@ if($id !== null) {
             "|= ". CalculationBase::Display($data_ink->solvent_etoxipropanol_price, 2)." * ".CalculationBase::Display(CalculationBase::GetCurrencyRate($data_ink->solvent_etoxipropanol_currency, $usd, $euro), 2),
             "цена этоксипропанола * курс валюты"));
         
+        array_push($file_data, array("М2 испарения грязная, м2",
+            CalculationBase::Display($calculation->vaporization_area_dirty, 2),
+            "|= ". CalculationBase::Display($data_machine->width, 0)." * ". CalculationBase::Display($calculation->length_dirty_start_1, 2)." / 100",
+            "Ширина машины * м. пог грязные / 100"));
+        
+        array_push($file_data, array("М2 испарения чистая, м2",
+            CalculationBase::Display($calculation->vaporization_area_pure, 2),
+            "|= ". CalculationBase::Display($calculation->vaporization_area_dirty, 2)." - ". CalculationBase::Display($calculation->print_area, 2),
+            "М2 испарения грязное - М2 запечатки"));
+        
+        array_push($file_data, array("Расход испарения растворителя, кг",
+            CalculationBase::Display($calculation->vaporization_expense, 2),
+            "|= ". CalculationBase::Display($calculation->vaporization_area_pure, 2)." * ". CalculationBase::Display($data_machine->vaporization_expense, 2),
+            "М2 испарения растворителя чистое * расход Растворителя на испарения (г/м2)"));
+        
+        array_push($file_data, array("Стоимость испарения растворителя, руб",
+            CalculationBase::Display($calculation->vaporization_cost, 2),
+            "|= ". CalculationBase::Display($this->vaporization_expense, 2)." * ". CalculationBase::Display($ink_solvent_kg_price, 2)." * ".$this->ukvap,
+            "Расход испарения растворителя КГ * стоимость растворителя за КГ * КоэфИспарения"));
+        
         for($i=1; $i<=$ink_number; $i++) {
             $ink = "ink_$i";
             $cmyk = "cmyk_$i";
@@ -493,10 +516,15 @@ if($id !== null) {
                     "|= ". CalculationBase::Display($calculation->ink_expenses[$i], 2)." * ".CalculationBase::Display($calculation->mix_ink_kg_prices[$i], 2),
                     "Расход КраскаСмеси $i * цена 1 кг КраскаСмеси $i"));
                 
+                array_push($file_data, array("Расход (краска + растворитель на одну краску), руб",
+                    CalculationBase::Display($calculation->ink_costs_mix[$i], 2),
+                    "|= ". CalculationBase::Display($this->ink_costs[$i], 2)." + ". CalculationBase::Display($this->vaporization_cost, 2),
+                    "Стоимость КраскаСмеси на тираж ₽ + Стоимость испарения растворителя ₽"));
+                
                 array_push($file_data, array("Стоимость КраскаСмеси $i финальная, руб",
                     CalculationBase::Display($calculation->ink_costs_final[$i], 2),
-                    "|= ".CalculationBase::Display($calculation->ink_costs[$i], 2)." < ".CalculationBase::Display($data_ink->min_price_per_ink, 2)." ? ".CalculationBase::Display($data_ink->min_price_per_ink, 2)." : ".CalculationBase::Display($calculation->ink_costs[$i], 2),
-                    "Если стоимость КраскаСмеси меньше, чем мин. стоимость 1 цвета, то мин. стоимость 1 цвета, иначе - стоимость КраскаСмеси"));
+                    "|= ".CalculationBase::Display($calculation->ink_costs_mix[$i], 2)." < ".CalculationBase::Display($data_ink->min_price_per_ink, 2)." ? ".CalculationBase::Display($data_ink->min_price_per_ink, 2)." : ".CalculationBase::Display($calculation->ink_costs_mix[$i], 2),
+                    "Если расход (краска + растворитель на одну краску) меньше, чем мин. стоимость 1 цвета, то мин. стоимость 1 цвета, иначе - расход (краска + растворитель на одну краску)"));
             }
         }
         
