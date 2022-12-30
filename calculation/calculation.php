@@ -20,12 +20,16 @@ class DataMachine {
     public $price; // Цена
     public $speed; // Скорость
     public $max_width; // Максимальная ширина
+    public $width; // Ширина машины
+    public $vaporization_expense; // Расход растворителя на испарение
     
     // Контруктор
-    public function __construct($price, $speed, $max_width) {
+    public function __construct($price, $speed, $max_width, $width, $vaporization_expense) {
         $this->price = $price;
         $this->speed = $speed;
         $this->max_width = $max_width;
+        $this->width = $width;
+        $this->vaporization_expense = $vaporization_expense;
     }
 }
 
