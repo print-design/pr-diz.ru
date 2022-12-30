@@ -207,8 +207,8 @@ if($id !== null) {
     // ПОЛУЧЕНИЕ НОРМ
     $data_priladka = new DataPriladka(null, null, null, null);
     $data_priladka_laminator = new DataPriladka(null, null, null, null);
-    $data_machine = new DataMachine(null, null, null);
-    $data_machine_laminator = new DataMachine(null, null, null);
+    $data_machine = new DataMachine(null, null, null, null, null);
+    $data_machine_laminator = new DataMachine(null, null, null, null, null);
     $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
     $data_glue = new DataGlue(null, null, null, null, null, null, null);
     $data_cliche = new DataCliche(null, null, null, null, null, null);
@@ -238,24 +238,24 @@ if($id !== null) {
         }
         
         if(empty($machine_id)) {
-            $data_machine = new DataMachine(0, 0, 0);
+            $data_machine = new DataMachine(0, 0, 0, 0, 0);
         }
         else {
-            $sql = "select price, speed, max_width from norm_machine where date <= '$date' and machine_id = $machine_id order by id desc limit 1";
+            $sql = "select price, speed, max_width, width, vaporization_expense from norm_machine where date <= '$date' and machine_id = $machine_id order by id desc limit 1";
             $fetcher = new Fetcher($sql);
             if ($row = $fetcher->Fetch()) {
-                $data_machine = new DataMachine($row['price'], $row['speed'], $row['max_width']);
+                $data_machine = new DataMachine($row['price'], $row['speed'], $row['max_width'], $row['width'], $row['vaporization_expense']);
             }
         }
         
         if(empty($laminator_id)) {
-            $data_machine_laminator = new DataMachine(0, 0, 0);
+            $data_machine_laminator = new DataMachine(0, 0, 0, 0, 0);
         }
         else {
             $sql = "select price, speed, max_width from norm_laminator where date <= '$date' and laminator_id = $laminator_id order by id desc limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
-                $data_machine_laminator = new DataMachine($row['price'], $row['speed'], $row['max_width']);
+                $data_machine_laminator = new DataMachine($row['price'], $row['speed'], $row['max_width'], 0, 0);
             }
         }
         
