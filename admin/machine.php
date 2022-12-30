@@ -17,6 +17,8 @@ $error_message = '';
 $price_valid = '';
 $speed_valid = '';
 $max_width_valid = '';
+$width_valid = '';
+$vaporization_coeff_valid = '';
 
 // Сохранение введённых значений
 if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
@@ -35,13 +37,25 @@ if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
         $form_valid = false;
     }
     
+    if(empty(filter_input(INPUT_POST, 'width'))) {
+        $width_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(empty(filter_input(INPUT_POST, 'vaporization_coeff'))) {
+        $vaporization_coeff_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
     if($form_valid) {
         // Старый объект
         $old_price = '';
         $old_speed = '';
         $old_max_width = '';
+        $old_width = '';
+        $old_vaporization_coeff = '';
         
-        $sql = "select price, speed, max_width from norm_machine where machine_id = $machine_id order by date desc limit 1";
+        $sql = "select price, speed, max_width, width, vaporization_coeff from norm_machine where machine_id = $machine_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -49,15 +63,23 @@ if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
             $old_price = $row['price'];
             $old_speed = $row['speed'];
             $old_max_width = $row['max_width'];
+            $old_width = $row['width'];
+            $old_vaporization_coeff = $row['vaporization_coeff'];
         }
         
         // Новый объект
         $new_price = filter_input(INPUT_POST, 'price');
         $new_speed = filter_input(INPUT_POST, 'speed');
         $new_max_width = filter_input(INPUT_POST, 'max_width');
+        $new_width = filter_input(INPUT_POST, 'width');
+        $new_vaporization_coeff = filter_input(INPUT_POST, 'vaporization_coeff');
         
-        if($old_price != $new_price || $old_speed != $new_speed || $old_max_width != $new_max_width) {
-            $sql = "insert into norm_machine (machine_id, price, speed, max_width) values ($machine_id, $new_price, $new_speed, $new_max_width)";
+        if($old_price != $new_price || 
+                $old_speed != $new_speed || 
+                $old_max_width != $new_max_width || 
+                $old_width != $new_width || 
+                $old_vaporization_coeff != $new_vaporization_coeff) {
+            $sql = "insert into norm_machine (machine_id, price, speed, max_width, width, vaporization_coeff) values ($machine_id, $new_price, $new_speed, $new_max_width, $new_width, $new_vaporization_coeff)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -71,8 +93,10 @@ if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
 $price = '';
 $speed = '';
 $max_width = '';
+$width = '';
+$vaporization_coeff = '';
 
-$sql = "select price, speed, max_width from norm_machine where machine_id = $machine_id order by date desc limit 1";
+$sql = "select price, speed, max_width, width, vaporization_coeff from norm_machine where machine_id = $machine_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -82,6 +106,8 @@ if($row = $fetcher->Fetch()) {
     $price = $row['price'];
     $speed = $row['speed'];
     $max_width = $row['max_width'];
+    $width = $row['width'];
+    $vaporization_coeff = $row['vaporization_coeff'];
 }
 ?>
 <!DOCTYPE html>
@@ -154,14 +180,46 @@ if($row = $fetcher->Fetch()) {
                                    id="max_width" 
                                    name="max_width" 
                                    value="<?= empty($max_width) ? "" : intval($max_width) ?>" 
-                                   placeholder="Ширина, мм" 
+                                   placeholder="Макс. ширина мат-ла, мм" 
                                    required="required" 
                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'max_width'); $(this).attr('name', 'max_width'); $(this).attr('placeholder', 'Ширина, мм');" 
+                                   onmouseup="javascript: $(this).attr('id', 'max_width'); $(this).attr('name', 'max_width'); $(this).attr('placeholder', 'Макс. ширина мат-ла, мм');" 
                                    onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'max_width'); $(this).attr('name', 'max_width'); $(this).attr('placeholder', 'Ширина, мм');" 
-                                   onfocusout="javascript: $(this).attr('id', 'max_width'); $(this).attr('name', 'max_width'); $(this).attr('placeholder', 'Ширина, мм');" />
+                                   onkeyup="javascript: $(this).attr('id', 'max_width'); $(this).attr('name', 'max_width'); $(this).attr('placeholder', 'Макс. ширина мат-ла, мм');" 
+                                   onfocusout="javascript: $(this).attr('id', 'max_width'); $(this).attr('name', 'max_width'); $(this).attr('placeholder', 'Макс. ширина мат-ла, мм');" />
                             <div class="invalid-feedback">Максимальная ширина материала обязательно</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="width">Ширина машины, мм</label>
+                            <input type="text" 
+                                   class="form-control int-only" 
+                                   id="width" 
+                                   name="width" 
+                                   value="<?= empty($width) ? "" : intval($width) ?>" 
+                                   placeholder="Ширина машины, мм" 
+                                   required="required" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onmouseup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина машины, мм');" 
+                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                   onkeyup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина машины, мм');" 
+                                   onfocusout="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина машины, мм');" />
+                            <div class="invalid-feedback">Ширина машины обязательно</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vaporization_coeff">Расход растворителя на испарение, г/м<sup>2</sup></label>
+                            <input type="text" 
+                                   class="form-control float-only" 
+                                   id="vaporization_coeff" 
+                                   name="vaporization_coeff" 
+                                   value="<?= empty($vaporization_coeff) ? "" : floatval($vaporization_coeff) ?>" 
+                                   placeholder="Расх. раств. на испар., г/м2" 
+                                   required="required" 
+                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                   onmouseup="javascript: $(this).attr('id', 'vaporization_coeff'); $(this).attr('name', 'vaporization_coeff'); $(this).attr('placeholder', 'Расх. раств. на испар., г/м2');" 
+                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                   onkeyup="javascript: $(this).attr('id', 'vaporization_coeff'); $(this).attr('name', 'vaporization_coeff'); $(this).attr('placeholder', 'Расх. раств. на испар., г/м2');" 
+                                   onfocusout="javascript: $(this).attr('id', 'vaporization_coeff'); $(this).attr('name', 'vaporization_coeff'); $(this).attr('placeholder', 'Расх. раств. на испар., г/м2');" />
+                            <div class="invalid-feedback">Расход растворителя на испарение обязательно</div>
                         </div>
                         <button type="submit" id="norm_machine_submit" name="norm_machine_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
                     </form>
