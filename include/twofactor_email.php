@@ -20,6 +20,9 @@
             $code_mail = new \PHPMailer\PHPMailer\PHPMailer();
             $code_mail->CharSet = 'UTF-8';
         
+            /*
+            * **************************************
+            * Версия BEGET (на всякий случай)
             // Настройки SMTP
             $code_mail->isSMTP();
             $code_mail->SMTPAuth = true;
@@ -33,6 +36,26 @@
         
             // От кого
             $code_mail->setFrom('info@print-diz.ru', 'Принт-Дизайн');
+             */
+            
+            /*
+             * ***************************************
+             * Новая версия
+             */
+            
+            // Настройки SMTP
+            $form_mail->isSMTP();
+            $form_mail->SMTPAuth = true;
+            $form_mail->SMTPDebug = 0;
+            $form_mail->SMTPSecure = "ssl";
+    
+            $form_mail->Host = 'mail.hosting.reg.ru';
+            $form_mail->Port = 465;
+            $form_mail->Username = 'admin@pr-diz.ru';
+            $form_mail->Password = 'sk1_yush9_ar8_kp5_ii_ss_ap';
+    
+            // От кого
+            $form_mail->setFrom('admin@pr-diz.ru', 'Пр-Дизайн');
             
             // Кому
             $code_mail->addAddress(EMAIL_TO, EMAIL_TO_NAME);
