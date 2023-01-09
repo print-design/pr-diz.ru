@@ -55,7 +55,7 @@
             $form_mail->Password = 'sk1_yush9_ar8_kp5_ii_ss_ap';
     
             // От кого
-            $form_mail->setFrom('admin@pr-diz.ru', 'Пр-Дизайн');
+            $form_mail->setFrom('admin@pr-diz.ru', 'Принт-Дизайн');
             
             // Кому
             $code_mail->addAddress(EMAIL_TO, EMAIL_TO_NAME);
