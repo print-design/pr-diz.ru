@@ -44,18 +44,18 @@
              */
             
             // Настройки SMTP
-            $form_mail->isSMTP();
-            $form_mail->SMTPAuth = true;
-            $form_mail->SMTPDebug = 0;
-            $form_mail->SMTPSecure = "ssl";
+            $code_mail->isSMTP();
+            $code_mail->SMTPAuth = true;
+            $code_mail->SMTPDebug = 0;
+            $code_mail->SMTPSecure = "ssl";
     
-            $form_mail->Host = 'mail.hosting.reg.ru';
-            $form_mail->Port = 465;
-            $form_mail->Username = 'admin@pr-diz.ru';
-            $form_mail->Password = 'sk1_yush9_ar8_kp5_ii_ss_ap';
+            $code_mail->Host = 'mail.hosting.reg.ru';
+            $code_mail->Port = 465;
+            $code_mail->Username = 'admin@pr-diz.ru';
+            $code_mail->Password = 'sk1_yush9_ar8_kp5_ii_ss_ap';
     
             // От кого
-            $form_mail->setFrom('admin@pr-diz.ru', 'Принт-Дизайн');
+            $code_mail->setFrom('admin@pr-diz.ru', 'Принт-Дизайн');
             
             // Кому
             $code_mail->addAddress(EMAIL_TO, EMAIL_TO_NAME);
