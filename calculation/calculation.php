@@ -1206,7 +1206,7 @@ class CalculationSelfAdhesive extends CalculationBase {
     public $weight_pure = 0; // Масса плёнки чистая (без приладки), кг
     public $length_pure = 0; // Длина плёнки чистая, м
     public $weight_dirty = 0; // Масса плёнки грязная (с приладкой), кг
-    public $length_dirty = 0; // Длина плёнки гразная, м
+    public $length_dirty = 0; // Длина плёнки грязная, м
     
     public $film_cost = 0; // Себестоимость грязная
     public $priladka_time = 0; // Приладка Время, ч
@@ -1449,7 +1449,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         }
         
         // М2 испарения грязная, м2
-        $this->vaporization_area_dirty = $data_machine->width * $this->length_dirty_start_1 / 100;
+        $this->vaporization_area_dirty = $data_machine->width * $this->length_pog_dirty / 100;
         
         // М2 испарения чистая, м2
         $this->vaporization_area_pure = $this->vaporization_area_dirty - $this->print_area;
@@ -1458,7 +1458,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->vaporization_expense = $this->vaporization_area_pure * $data_machine->vaporization_expense;
         
         // Стоимость испарения растворителя
-        $this->vaporization_cost = $this->vaporization_expense * $ink_solvent_kg_price * $this->ukvap;
+        $this->vaporization_cost = $this->vaporization_expense * $this->ink_etoxypropanol_kg_price * $this->ukvap;
         
         
         // Создаём массив цен за 1 кг каждой краски
@@ -1499,6 +1499,9 @@ class CalculationSelfAdhesive extends CalculationBase {
                 // Стоимость чистой краски, руб
                 $ink_cost = $ink_expense * $ink_kg_price;
                 $this->ink_costs[$i] = $ink_cost;
+                
+                // Поскольку здесь лак используется без растворителя, то стоимость финальная не меняется
+                $this->ink_costs_final[$i] = $this->ink_costs[$i];
             }
             else {
                 // Цена 1 кг чистой краски, руб

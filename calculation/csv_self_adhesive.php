@@ -452,7 +452,7 @@ if($id !== null) {
         
         array_push($file_data, array("М2 испарения грязная, м2",
             CalculationBase::Display($calculation->vaporization_area_dirty, 2),
-            "|= ". CalculationBase::Display($data_machine->width, 0)." * ". CalculationBase::Display($calculation->length_dirty_start_1, 2)." / 100",
+            "|= ". CalculationBase::Display($data_machine->width, 0)." * ". CalculationBase::Display($calculation->length_pog_dirty, 2)." / 100",
             "Ширина машины * м. пог грязные / 100"));
         
         array_push($file_data, array("М2 испарения чистая, м2",
@@ -467,7 +467,7 @@ if($id !== null) {
         
         array_push($file_data, array("Стоимость испарения растворителя, руб",
             CalculationBase::Display($calculation->vaporization_cost, 2),
-            "|= ". CalculationBase::Display($calculation->vaporization_expense, 2)." * ". CalculationBase::Display($ink_solvent_kg_price, 2)." * ".$calculation->ukvap,
+            "|= ". CalculationBase::Display($calculation->vaporization_expense, 2)." * ". CalculationBase::Display($calculation->ink_etoxypropanol_kg_price, 2)." * ".$calculation->ukvap,
             "Расход испарения растворителя КГ * стоимость растворителя за КГ * КоэфИспарения"));
         
         for($i=1; $i<=$ink_number; $i++) {
