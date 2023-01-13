@@ -60,6 +60,7 @@ $labels_valid = '';
 $package_valid = '';
 $photolabel_valid = '';
 $roll_type_valid = '';
+$cliche_valid = '';
 
 // Создание технологической карты
 if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
@@ -122,6 +123,20 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     }
     
     $comment = filter_input(INPUT_POST, 'comment');
+    
+    // Проверяем, чтобы были заполнены формы для всех красок
+    $sql = "select count(distinct cq.id) * c.ink_number - count(cc.id) "
+            . "from calculation_cliche cc "
+            . "right join calculation_quantity cq on cc.calculation_quantity_id = cq.id "
+            . "inner join calculation c on cq.calculation_id = c.id where c.id = $id";
+    
+    $fetcher = new Fetcher($sql);
+    $row = $fetcher->Fetch();
+    
+    if($row[0] === null || $row[0] > 0) {
+        $cliche_valid = ISINVALID;
+        $form_valid = false;
+    }
     
     if($form_valid) {
         if(empty($supplier_id)) {
@@ -1187,7 +1202,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
             <?php endif; ?>
             <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="mt-5 mb-3">
-                <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#set_printings">Настроить тиражи</button>
+                <button type="button" id="show_set_printings" class="btn btn-outline-dark" data-toggle="modal" data-target="#set_printings">Настроить тиражи</button>
             </div>
             <div class="row">
                 <?php
@@ -1271,6 +1286,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
             </div>
             <?php endif; ?>
             <a name="form" />
+            <div id="cliche_validation" class="text-danger<?= empty($cliche_valid) ? " d-none" : " d-block" ?>">Укажите формы для каждой краски</div>
             <form class="mt-3" method="post"<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                 <input type="hidden" name="scroll" />
                 <input type="hidden" name="id" value="<?= $id ?>" />
@@ -1418,7 +1434,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                         <div>
                             <?php
                             $submit_class = " d-none";
-                            if(empty($techmap_id) || filter_input(INPUT_POST, FROM_OTHER_TECHMAP) !== null) {
+                            if(empty($techmap_id) || filter_input(INPUT_POST, FROM_OTHER_TECHMAP) !== null || !$form_valid) {
                                 $submit_class = "";
                             }
                             ?>
@@ -1516,9 +1532,16 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
         include '../include/footer_find.php';
         ?>
         <script>
+            // Скрываем сообщение о невалидном значении стороны печати
             $('.roll-selector input').change(function(){
                 $('#roll_type_validation').removeClass('d-block');
                 $('#roll_type_validation').addClass('d-none');
+            });
+            
+            // Скрываем сообщение о невалидном заполнении форм
+            $('button#show_set_printings').click(function() {
+                $('#cliche_validation').removeClass('d-block');
+                $('#cliche_validation').addClass('d-none');
             });
             
             // Показываем кнопку "Сохранить" при внесении изменений
