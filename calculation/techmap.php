@@ -70,6 +70,8 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
         $form_valid = false;
     }
     
+    $work_type_id = filter_input(INPUT_POST, 'work_type_id');
+    
     $techmap_id = filter_input(INPUT_POST, 'techmap_id');
     
     $supplier_id = filter_input(INPUT_POST, 'supplier_id');
@@ -124,18 +126,20 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     
     $comment = filter_input(INPUT_POST, 'comment');
     
-    // Проверяем, чтобы были заполнены формы для всех красок
-    $sql = "select count(distinct cq.id) * c.ink_number - count(cc.id) "
-            . "from calculation_cliche cc "
-            . "right join calculation_quantity cq on cc.calculation_quantity_id = cq.id "
-            . "inner join calculation c on cq.calculation_id = c.id where c.id = $id";
-    
-    $fetcher = new Fetcher($sql);
-    $row = $fetcher->Fetch();
-    
-    if($row[0] === null || $row[0] > 0) {
-        $cliche_valid = ISINVALID;
-        $form_valid = false;
+    if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+        // Проверяем, чтобы были заполнены формы для всех красок
+        $sql = "select count(distinct cq.id) * c.ink_number - count(cc.id) "
+                . "from calculation_cliche cc "
+                . "right join calculation_quantity cq on cc.calculation_quantity_id = cq.id "
+                . "inner join calculation c on cq.calculation_id = c.id where c.id = $id";
+        
+        $fetcher = new Fetcher($sql);
+        $row = $fetcher->Fetch();
+        
+        if($row[0] === null || $row[0] > 0) {
+            $cliche_valid = ISINVALID;
+            $form_valid = false;
+        }
     }
     
     if($form_valid) {
@@ -1290,6 +1294,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
             <form class="mt-3" method="post"<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                 <input type="hidden" name="scroll" />
                 <input type="hidden" name="id" value="<?= $id ?>" />
+                <input type="hidden" name="work_type_id" value="<?=$work_type_id ?>" />
                 <input type="hidden" name="techmap_id" value="<?=$techmap_id ?>" />
                 <div class="row">
                     <div class="col-6">
