@@ -718,8 +718,27 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
             <div class="d-flex justify-content-between">
                 <div><a class="btn btn-outline-dark backlink" href="details.php?id=<?= $id ?>">К расчету</a></div>
                 <div>
-                    <?php if(!empty($techmap_id)): ?>
-                    <a class="btn btn-outline-dark mt-2" target="_blank" style="width: 3rem;" title="Печать" href="print_tm.php?id=<?= $id ?>"><i class="fa fa-print"></i></a>
+                    <?php
+                    if(!empty($techmap_id)):     
+                    $print_class = "d-block";
+                    $no_print_class = "d-none";
+                    
+                    if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                        $total_cliches_count = count($printings) * $ink_number;
+                        $valid_cliches_count = 0;
+                    
+                        foreach ($cliches as $cliches_row) {
+                            $valid_cliches_count += count($cliches_row);
+                        }
+                        
+                        if($total_cliches_count - $valid_cliches_count > 0) {
+                            $print_class = "d-none";
+                            $no_print_class = "d-block";
+                        }
+                    }
+                    ?>
+                    <a class="btn btn-outline-dark mt-2 <?=$no_print_class ?>" id="top_no_print_btn" target="_self" style="width: 3rem;" title="Печать" href="javascript: void(0);" onclick="javascript: $('#cliche_validation').removeClass('d-none'); $('#cliche_validation').addClass('d-block'); window.location.replace('#cliche_validation');"><i class="fa fa-print"></i></a>
+                    <a class="btn btn-outline-dark mt-2 <?=$print_class ?>" id="top_print_btn" target="_blank" style="width: 3rem;" title="Печать" href="print_tm.php?id=<?=$id ?>"><i class="fa fa-print"></i></a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -1446,8 +1465,28 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                             <button type="submit" name="techmap_submit" id="techmap_submit" class="btn btn-dark draft<?=$submit_class ?>" style="width: 175px;">Сохранить</button>
                         </div>
                         <div>
-                            <?php if(!empty($techmap_id)): ?>
-                            <a href="print_tm.php?id=<?= $id ?>" target="_blank" class="btn btn-outline-dark" style="width: 175px;">Печать</a>
+                            <?php
+                            if(!empty($techmap_id)):
+                            
+                            $print_class = "d-block";
+                            $no_print_class = "d-none";
+                    
+                            if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                $total_cliches_count = count($printings) * $ink_number;
+                                $valid_cliches_count = 0;
+                    
+                                foreach ($cliches as $cliches_row) {
+                                    $valid_cliches_count += count($cliches_row);
+                                }
+                        
+                                if($total_cliches_count - $valid_cliches_count > 0) {
+                                    $print_class = "d-none";
+                                    $no_print_class = "d-block";
+                                }
+                            }
+                            ?>
+                            <a id="no_print_btn" href="javascript: void(0);" target="_self" class="btn btn-outline-dark <?=$no_print_class ?>" style="width: 175px;" onclick="javascript: $('#cliche_validation').removeClass('d-none'); $('#cliche_validation').addClass('d-block'); window.location.replace('#cliche_validation');">Печать</a>
+                            <a id="print_btn" href="print_tm.php?id=<?=$id ?>" target="_blank" class="btn btn-outline-dark <?=$print_class ?>" style="width: 175px;">Печать</a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -1654,6 +1693,26 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                 $('.set_printings_' + $(this).attr('data-printing')).addClass('d-block');
             });
             
+            // Обработка выбора формы (начальные значения)
+            <?php
+            if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE):
+                $total_cliches_count = count($printings) * $ink_number;
+                $valid_cliches_count = 0;
+                    
+                foreach ($cliches as $cliches_row) {
+                    $valid_cliches_count += count($cliches_row);
+                }    
+            ?>
+                total_cliches_count = <?=$total_cliches_count ?>;
+                valid_cliches_count = <?=$valid_cliches_count ?>;
+            <?php endif; ?>
+                
+            old_cliche = '';
+                
+            $('.select_cliche').mousedown(function() {
+                old_cliche = $(this).val();
+            });
+            
             // Обработка выбора формы
             $('.select_cliche').change(function() {
                 if($(this).val() == '<?= CalculationBase::REPEAT ?>') {
@@ -1710,6 +1769,10 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                     $('option.option_old').attr('hidden', 'hidden');
                                 }
                                 $('option#option_' + data.cliche + '_' + data.printing_id + '_' + data.sequence).removeAttr('hidden');
+                                
+                                <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+                                    alert(total_cliches_count + ' ' + valid_cliches_count + ' ' + old_cliche + ' ' + data.cliche);
+                                <?php endif; ?>
                             }
                         })
                         .fail(function() {
