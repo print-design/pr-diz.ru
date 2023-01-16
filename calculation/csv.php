@@ -59,6 +59,7 @@ if($id !== null) {
     $extracharge = null; // Наценка на тираж
     $extracharge_cliche = null; // Наценка на ПФ
     $customer_pays_for_cliche = null; // Заказчик платит за ПФ
+    $extra_expense = null; // Дополнительные расходы с кг/шт
     
     $sql = "select rc.date, rc.name, rc.unit, rc.quantity, rc.work_type_id, "
             . "f.name film, fv.thickness thickness, fv.weight density, "
@@ -77,7 +78,7 @@ if($id !== null) {
             . "rc.lacquer_1, rc.lacquer_2, rc.lacquer_3, rc.lacquer_4, rc.lacquer_5, rc.lacquer_6, rc.lacquer_7, rc.lacquer_8, "
             . "rc.percent_1, rc.percent_2, rc.percent_3, rc.percent_4, rc.percent_5, rc.percent_6, rc.percent_7, rc.percent_8, "
             . "rc.cliche_1, rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8, "
-            . "rc.cliche_in_price, rc.extracharge, rc.extracharge_cliche, rc.customer_pays_for_cliche "
+            . "rc.cliche_in_price, rc.extracharge, rc.extracharge_cliche, rc.customer_pays_for_cliche, rc.extra_expense "
             . "from calculation rc "
             . "left join machine m on rc.machine_id = m.id "
             . "left join laminator lam on rc.laminator_id = lam.id "
@@ -169,6 +170,7 @@ if($id !== null) {
         $extracharge = $row['extracharge']; // Наценка на тираж
         $extracharge_cliche = $row['extracharge_cliche']; // Наценка на ПФ
         $customer_pays_for_cliche = $row['customer_pays_for_cliche']; // Заказчик платит за ПФ
+        $extra_expense = $row['extra_expense']; // Дополнительные расходы с кг/шт
         
         // Если тип работы - плёнка без печати, то 
         // машина = пустая, красочность = 0, рапорт = 0
@@ -354,7 +356,8 @@ if($id !== null) {
                 $cliche_in_price, // Стоимость ПФ включается в себестоимость
                 $extracharge, // Наценка на тираж
                 $extracharge_cliche, // Наценка на ПФ
-                $customer_pays_for_cliche); // Заказчик платит за ПФ
+                $customer_pays_for_cliche, // Заказчик платит за ПФ
+                $extra_expense); // Дополнительные расходы с кг/шт
         
         // Данные CSV-файла
         $file_data = array();
@@ -436,6 +439,8 @@ if($id !== null) {
         else {
             array_push($file_data, array("Мы платим за ПФ", "", "", ""));
         }
+        
+        array_push($file_data, array("Дополнительные расходы с ".$calculation->GetUnitName($unit).", руб", CalculationBase::Display($extra_expense, 3), "", ""));
         
         array_push($file_data, array("", "", "", ""));
         
@@ -984,6 +989,15 @@ if($id !== null) {
         array_push($file_data, array("", "", "", ""));
         
         //*******************************************
+        // Дополнительные расходы
+        //*******************************************
+        
+        array_push($file_data, array("Общие дополнительные расходы, руб", CalculationBase::Display($calculation->total_extra_expense, 2), 
+            "|= ".CalculationBase::Display($extra_expense, 3)." * ".$quantity, 
+            "дополнительные расходы с ".$calculation->GetUnitName($unit)));
+        array_push($file_data, array("", "", "", ""));
+        
+        //*******************************************
         // Данные для правой панели
         //*******************************************
         
@@ -1063,13 +1077,13 @@ if($id !== null) {
             
         array_push($file_data, array("Прибыль, руб",
             CalculationBase::Display($calculation->income, 2),
-            "|= ".CalculationBase::Display($calculation->shipping_cost, 2)." - ".CalculationBase::Display($calculation->cost, 2),
-            "отгрузочная стоимость - себестоимость"));
+            "|= ".CalculationBase::Display($calculation->shipping_cost, 2)." - ".CalculationBase::Display($calculation->cost, 2)." - ".CalculationBase::Display($calculation->total_extra_expense, 2),
+            "отгрузочная стоимость - себестоимость - общие дополнительные расходы"));
             
         array_push($file_data, array("Прибыль за ".$calculation->GetUnitName($unit).", руб",
             CalculationBase::Display($calculation->income_per_unit, 2),
-            "|= ".CalculationBase::Display($calculation->shipping_cost_per_unit, 2)." - ".CalculationBase::Display($calculation->cost_per_unit, 2),
-            "отгрузочная стоимость за ". $calculation->GetUnitName($unit)." - себестоимость за ". $calculation->GetUnitName($unit)));
+            "|= ".CalculationBase::Display($calculation->shipping_cost_per_unit, 2)." - ".CalculationBase::Display($calculation->cost_per_unit, 2)." - ".CalculationBase::Display($extra_expense, 3),
+            "отгрузочная стоимость за ". $calculation->GetUnitName($unit)." - себестоимость за ". $calculation->GetUnitName($unit)." - дополнительные расходы с ".$calculation->GetUnitName($unit)));
             
         array_push($file_data, array("Отгрузочная стоимость ПФ, руб",
             CalculationBase::Display($calculation->shipping_cliche_cost, 2),

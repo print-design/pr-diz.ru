@@ -297,6 +297,8 @@ if($id !== null) {
             array_push($file_data, array("Мы платим за ПФ", "", "", ""));
         }
         
+        array_push($file_data, array("Дополнительные расходы с шт, руб", CalculationBase::Display($extra_expense, 3), "", ""));
+        
         array_push($file_data, array("ЗазорРапорт", CalculationBase::Display($data_gap->gap_raport, 2), "", ""));
         array_push($file_data, array("ЗазорРучей", CalculationBase::Display($data_gap->gap_stream, 2), "", ""));
         
@@ -589,6 +591,15 @@ if($id !== null) {
         array_push($file_data, array("", "", "", ""));
         
         //*******************************************
+        // Дополнительные расходы
+        //*******************************************
+        
+        array_push($file_data, array("Общие дополнительные расходы, руб", CalculationBase::Display($calculation->total_extra_expense, 2), 
+            "|= ".CalculationBase::Display($extra_expense, 3)." * ".$calculation->quantity, 
+            "дополнительные расходы с шт"));
+        array_push($file_data, array("", "", "", ""));
+        
+        //*******************************************
         // Данные для правой панели
         //*******************************************
         
@@ -659,13 +670,13 @@ if($id !== null) {
             
         array_push($file_data, array("Прибыль, руб",
             CalculationBase::Display($calculation->income, 2),
-            "|= ".CalculationBase::Display($calculation->shipping_cost, 2)." - ".CalculationBase::Display($calculation->cost, 2),
-            "отгрузочная стоимость - себестоимость"));
+            "|= ".CalculationBase::Display($calculation->shipping_cost, 2)." - ".CalculationBase::Display($calculation->cost, 2)." - ".CalculationBase::Display($calculation->total_extra_expense, 3),
+            "отгрузочная стоимость - себестоимость - общие дополнительные расходы"));
             
         array_push($file_data, array("Прибыль за шт, руб",
             CalculationBase::Display($calculation->income_per_unit, 2),
-            "|= ".CalculationBase::Display($calculation->shipping_cost_per_unit, 2)." - ".CalculationBase::Display($calculation->cost_per_unit, 2),
-            "отгрузочная стоимость за шт - себестоимость за шт"));
+            "|= ".CalculationBase::Display($calculation->shipping_cost_per_unit, 2)." - ".CalculationBase::Display($calculation->cost_per_unit, 2)." - ".CalculationBase::Display($extra_expense, 3),
+            "отгрузочная стоимость за шт - себестоимость за шт - дополнительные расходы за шт"));
         
         array_push($file_data, array("Прибыль ПФ, руб",
             CalculationBase::Display($calculation->income_cliche, 2),

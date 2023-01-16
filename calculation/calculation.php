@@ -504,6 +504,7 @@ class Calculation extends CalculationBase {
     public $film_cost_per_unit_1, $film_cost_per_unit_2, $film_cost_per_unit_3; // Масса с приладкой на 1 кг
     public $film_waste_cost_1, $film_waste_cost_2, $film_waste_cost_3; // Отходы, стоимость
     public $film_waste_weight_1, $film_waste_weight_2, $film_waste_weight_3; // Отходы, масса
+    public $total_extra_expense; // Общие дополнительные расходы
 
     // Конструктор
     public function __construct(DataPriladka $data_priladka, 
@@ -566,7 +567,8 @@ class Calculation extends CalculationBase {
             $cliche_in_price, // Включить ПФ в себестоимость
             $extracharge, // Наценка на тираж
             $extracharge_cliche, // Наценка на ПФ
-            $customer_pays_for_cliche // Заказчик платит за ПФ
+            $customer_pays_for_cliche, // Заказчик платит за ПФ
+            $extra_expense // Дополнительные расходы с кг/шт
             ) {
         // Если нет одной ламинации или обеих, то толщина, плотность и цена плёнок для ламинации имеют пустые значения.
         // Присваиваем им значение 0, чтобы программа не сломалась при попытке вычилений с пустым значением.
@@ -1104,6 +1106,13 @@ class Calculation extends CalculationBase {
         }
         
         //***********************************************
+        // ДОПОЛНИТЕЛЬНЫЕ РАСХОДЫ
+        //***********************************************
+        
+        // Общие дополнительные расходы
+        $this->total_extra_expense = $extra_expense * $quantity;
+        
+        //***********************************************
         //ПРАВАЯ ПАНЕЛЬ
         //***********************************************
         
@@ -1156,11 +1165,10 @@ class Calculation extends CalculationBase {
         $this->shipping_cost_per_unit = $this->shipping_cost / $quantity;
         
         // Прибыль
-        $this->income = $this->shipping_cost - $this->cost;
+        $this->income = $this->shipping_cost - $this->cost - $this->total_extra_expense;
         
         // Прибыль за единицу
-        $this->income_per_unit = $this->shipping_cost_per_unit - $this->cost_per_unit;
-        
+        $this->income_per_unit = $this->shipping_cost_per_unit - $this->cost_per_unit - $extra_expense;
         
         // Масса плёнки с приладкой
         $this->total_weight_dirty = $this->weight_dirty_1 + $this->weight_dirty_2 + $this->weight_dirty_3;
@@ -1260,6 +1268,7 @@ class CalculationSelfAdhesive extends CalculationBase {
     public $film_cost_per_unit; // Масса с приладкой на 1 кг
     public $film_waste_cost; // отходы, стоимость
     public $film_waste_weight; // отходы, масса
+    public $total_extra_expense; // Общие дополнительные расходы
     
     public $lengths; // Длины тиражей
 
@@ -1599,6 +1608,13 @@ class CalculationSelfAdhesive extends CalculationBase {
         }
         
         //*********************************
+        // ДОПОЛНИТЕЛЬНЫЕ РАСХОДЫ
+        //*********************************
+        
+        // Общие дополнительные расходы
+        $this->total_extra_expense = $extra_expense * $this->quantity;
+        
+        //*********************************
         // ПРАВАЯ ПАНЕЛЬ
         //*********************************
         
@@ -1647,11 +1663,10 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->shipping_cost_per_unit = $this->shipping_cost / $this->quantity;
         
         // Прибыль
-        $this->income = $this->shipping_cost - $this->cost;
+        $this->income = $this->shipping_cost - $this->cost - $this->total_extra_expense;
         
         // Прибыль за единицу
-        $this->income_per_unit = $this->shipping_cost_per_unit - $this->cost_per_unit;
-        
+        $this->income_per_unit = $this->shipping_cost_per_unit - $this->cost_per_unit - $extra_expense;
         
         // Масса плёнки с приладкой
         $this->total_weight_dirty = $this->weight_dirty;
