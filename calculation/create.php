@@ -382,6 +382,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $knife = filter_input(INPUT_POST, 'knife'); if(empty($knife)) $knife = 0;
         $knife_in_price = 0; if(filter_input(INPUT_POST, 'knife_in_price') == 'on') $knife_in_price = 1;
         $customer_pays_for_knife = 0; if(filter_input(INPUT_POST, 'customer_pays_for_knife') == 'on') $customer_pays_for_knife = 1;
+        $extra_expense = filter_input(INPUT_POST, 'extra_expense'); if(empty($extra_expense)) $extra_expense = 0;
         
         $sql = "insert into calculation (customer_id, name, unit, quantity, work_type_id, "
                 . "film_variation_id, price, currency, individual_film_name, individual_thickness, individual_density, customers_material, ski, width_ski, "
@@ -395,7 +396,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
                 . "cliche_1, cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8, "
                 . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old, customer_pays_for_cliche, "
-                . "knife, knife_in_price, customer_pays_for_knife) "
+                . "knife, knife_in_price, customer_pays_for_knife, extra_expense) "
                 . "values($customer_id, '$name', '$unit', $quantity, $work_type_id, "
                 . "$film_variation_id, $price, '$currency', '$individual_film_name', $individual_thickness, $individual_density, $customers_material, $ski, $width_ski, "
                 . "$lamination1_film_variation_id, $lamination1_price, '$lamination1_currency', '$lamination1_individual_film_name', $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, $lamination1_ski, $lamination1_width_ski, "
@@ -408,7 +409,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "'$percent_1', '$percent_2', '$percent_3', '$percent_4', '$percent_5', '$percent_6', '$percent_7', '$percent_8', "
                 . "'$cliche_1', '$cliche_2', '$cliche_3', '$cliche_4', '$cliche_5', '$cliche_6', '$cliche_7', '$cliche_8', "
                 . "$cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $customer_pays_for_cliche, "
-                . "$knife, $knife_in_price, $customer_pays_for_knife)";
+                . "$knife, $knife_in_price, $customer_pays_for_knife, $extra_expense)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $insert_id = $executer->insert_id;
@@ -460,7 +461,7 @@ if(!empty($id)) {
             . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, "
             . "c.cliche_1, c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
             . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old, extracharge, extracharge_cliche, customer_pays_for_cliche, "
-            . "knife, extracharge_knife, knife_in_price, customer_pays_for_knife, "
+            . "knife, extracharge_knife, knife_in_price, customer_pays_for_knife, extra_expense, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
             . "from calculation c where c.id = $id";
     $fetcher = new Fetcher($sql);
@@ -841,6 +842,11 @@ if($knife_in_price === null && isset($row['knife_in_price'])) {
 $customer_pays_for_knife = filter_input(INPUT_POST, 'customer_pays_for_knife');
 if($customer_pays_for_knife === null && isset($row['customer_pays_for_knife'])) {
     $customer_pays_for_knife = $row['customer_pays_for_knife'];
+}
+
+$extra_expense = filter_input(INPUT_POST, 'extra_expense');
+if($extra_expense === null && isset($row['extra_expense'])) {
+    $extra_expense = $row['extra_expense'];
 }
 
 $num_for_customer = null;
@@ -2294,7 +2300,22 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             endfor;
                             ?>
                             <div class="row">
-                                <div class="col-6"></div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="extra_expense" id="label_extra_expense">Дополнительные расходы с шт, руб</label>
+                                        <input type="text" 
+                                               id="extra_expense" 
+                                               name="extra_expense" 
+                                               class="form-control float-only" 
+                                               value="<?=$extra_expense ?>" 
+                                               placeholder="Дополнительные расходы, руб" 
+                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onmouseup="javascript: $(this).attr('id', 'extra_expense'); $(this).attr('name', 'extra_expense'); $(this).attr('placeholder', 'Дополнительные расходы, руб');" 
+                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                               onkeyup="javascript: $(this).attr('id', 'extra_expense'); $(this).attr('name', 'extra_expense'); $(this).attr('placeholder', 'Дополнительные расходы, руб');" 
+                                               onfocusout="javascript: $(this).attr('id', 'extra_expense'); $(this).attr('name', 'extra_expense'); $(this).attr('palceholder', 'Дополнительные расходы, руб');" />
+                                    </div>
+                                </div>
                                 <div class="col-6">
                                     <div class="form-check">
                                         <label class="form-check-label text-nowrap mt-3" style="line-height: 25px;">
@@ -2637,20 +2658,25 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             }
             
             // Если единица объёма - кг, то в поле "Объём" пишем "Объём, кг", иначе "Объем, шт"
+            // Если единица объёма - кг, то в поле "Дополнительные расходы" пишем "кг", иначе - "шт"
             if($('input[value=kg]').is(':checked')) {
                 $('#label_quantity').text('Объем заказа, кг');
+                $('#label_extra_expense').text('Дополнительные расходы с кг, руб');
             }
             
             if($('input[value=pieces]').is(':checked')) {
                 $('#label_quantity').text('Объем заказа, шт');
+                $('#label_extra_expense').text('Дополнительные расходы с шт, руб');
             }
                 
             $('input[name=unit]').click(function(){
                 if($(this).val() == 'kg') {
                     $('#label_quantity').text('Объем заказа, кг');
+                    $('#label_extra_expense').text('Дополнительные расходы с кг, руб');
                 }
                 else {
                     $('#label_quantity').text('Объем заказа, шт');
+                    $('#label_extra_expense').text('Дополнительные расходы с шт, руб');
                 }
             });
             

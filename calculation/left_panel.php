@@ -1,3 +1,15 @@
+<?php
+function GetSkiNameExt($param, $param_width) {
+    switch ($param) {
+        case CalculationBase::STANDARD_SKI:
+            return "Стандартные лыжи";
+        case CalculationBase::NONSTANDARD_SKI:
+            return "Ширина $param_width мм";
+        default :
+            return 'Без лыж';
+    }
+}
+?>
 <div class="row">
     <div class="col-6">
         <table class="calculation-table">
@@ -124,18 +136,7 @@
                 <?php if(!empty($lamination1_individual_film_name) || !empty($lamination1_film_name)): ?>
             <tr><th>Ширина ламинирующего вала</th><td><?= $lamination_roller_width ?> мм</td></tr>
                 <?php endif; ?>
-                <?php
-                function GetSkiNameExt($param, $param_width) {
-                    switch ($param) {
-                        case CalculationBase::STANDARD_SKI:
-                            return "Стандартные лыжи";
-                        case CalculationBase::NONSTANDARD_SKI:
-                            return "Ширина $param_width мм";
-                        default :
-                            return 'Без лыж';
-                    }
-                }
-                ?>
+            <tr><th>Дополнительные расходы с <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></th><td><?=rtrim(rtrim(number_format($extra_expense, 2, ",", ""), "0"), ",") ?> руб</td></tr>
         </table>
     </div>
 </div>
