@@ -1713,6 +1713,10 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                 old_cliche = $(this).val();
             });
             
+            $('.select_cliche').focusin(function() {
+                old_cliche = $(this).val();
+            });
+            
             // Обработка выбора формы
             $('.select_cliche').change(function() {
                 if($(this).val() == '<?= CalculationBase::REPEAT ?>') {
