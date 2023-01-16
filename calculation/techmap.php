@@ -737,8 +737,8 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                         }
                     }
                     ?>
-                    <a class="btn btn-outline-dark mt-2 <?=$no_print_class ?>" id="top_no_print_btn" target="_self" style="width: 3rem;" title="Печать" href="javascript: void(0);" onclick="javascript: $('#cliche_validation').removeClass('d-none'); $('#cliche_validation').addClass('d-block'); window.location.replace('#cliche_validation');"><i class="fa fa-print"></i></a>
-                    <a class="btn btn-outline-dark mt-2 <?=$print_class ?>" id="top_print_btn" target="_blank" style="width: 3rem;" title="Печать" href="print_tm.php?id=<?=$id ?>"><i class="fa fa-print"></i></a>
+                    <a class="btn btn-outline-dark mt-2 no_print_btn <?=$no_print_class ?>" id="top_no_print_btn" target="_self" style="width: 3rem;" title="Печать" href="javascript: void(0);" onclick="javascript: $('#cliche_validation').removeClass('d-none'); $('#cliche_validation').addClass('d-block'); window.location.replace('#cliche_validation');"><i class="fa fa-print"></i></a>
+                    <a class="btn btn-outline-dark mt-2 print_btn <?=$print_class ?>" id="top_print_btn" target="_blank" style="width: 3rem;" title="Печать" href="print_tm.php?id=<?=$id ?>"><i class="fa fa-print"></i></a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -1485,8 +1485,8 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                 }
                             }
                             ?>
-                            <a id="no_print_btn" href="javascript: void(0);" target="_self" class="btn btn-outline-dark <?=$no_print_class ?>" style="width: 175px;" onclick="javascript: $('#cliche_validation').removeClass('d-none'); $('#cliche_validation').addClass('d-block'); window.location.replace('#cliche_validation');">Печать</a>
-                            <a id="print_btn" href="print_tm.php?id=<?=$id ?>" target="_blank" class="btn btn-outline-dark <?=$print_class ?>" style="width: 175px;">Печать</a>
+                            <a id="no_print_btn" href="javascript: void(0);" target="_self" class="btn btn-outline-dark no_print_btn <?=$no_print_class ?>" style="width: 175px;" onclick="javascript: $('#cliche_validation').removeClass('d-none'); $('#cliche_validation').addClass('d-block'); window.location.replace('#cliche_validation');">Печать</a>
+                            <a id="print_btn" href="print_tm.php?id=<?=$id ?>" target="_blank" class="btn btn-outline-dark print_btn <?=$print_class ?>" style="width: 175px;">Печать</a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -1774,8 +1774,32 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                 }
                                 $('option#option_' + data.cliche + '_' + data.printing_id + '_' + data.sequence).removeAttr('hidden');
                                 
+                                // Если заполнены не все формы, то запрещаем печатать техкарту
                                 <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
-                                    alert(total_cliches_count + ' ' + valid_cliches_count + ' ' + old_cliche + ' ' + data.cliche);
+                                    empty_old_cliche = old_cliche === '';
+                                    empty_new_cliche = data.cliche === '';
+                                    
+                                    if(empty_old_cliche && !empty_new_cliche) {
+                                        valid_cliches_count++;
+                                    }
+                                    else if(!empty_old_cliche && empty_new_cliche) {
+                                        valid_cliches_count--;
+                                    }
+                                    
+                                    if(valid_cliches_count < total_cliches_count) {
+                                        $('.print_btn').removeClass('d-block');
+                                        $('.print_btn').addClass('d-none');
+                                        
+                                        $('.no_print_btn').removeClass('d-none');
+                                        $('.no_print_btn').addClass('d-block');
+                                    }
+                                    else {
+                                        $('.no_print_btn').removeClass('d-block');
+                                        $('.no_print_btn').addClass('d-none');
+                                        
+                                        $('.print_btn').removeClass('d-none');
+                                        $('.print_btn').addClass('d-block');
+                                    }
                                 <?php endif; ?>
                             }
                         })
