@@ -138,7 +138,7 @@ if(!empty($id)) {
                 . "rc.percent_1, rc.percent_2, rc.percent_3, rc.percent_4, rc.percent_5, rc.percent_6, rc.percent_7, rc.percent_8, "
                 . "rc.cliche_1, rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8, "
                 . "rc.cliche_in_price, rc.cliches_count_flint, rc.cliches_count_kodak, rc.cliches_count_old, rc.extracharge, rc.extracharge_cliche, rc.customer_pays_for_cliche, "
-                . "rc.knife, rc.extracharge_knife, rc.knife_in_price, rc.customer_pays_for_knife "
+                . "rc.knife, rc.extracharge_knife, rc.knife_in_price, rc.customer_pays_for_knife, rc.extra_expense "
                 . "from calculation rc "
                 . "left join machine m on rc.machine_id = m.id "
                 . "left join film_variation fv on rc.film_variation_id = fv.id "
@@ -193,6 +193,7 @@ if(!empty($id)) {
             $param_extracharge_knife = $row['extracharge_knife']; // Наценка на нож
             $param_knife_in_price = $row['knife_in_price']; // Включать нож в себестоимость
             $param_customer_pays_for_knife = $row['customer_pays_for_knife']; // Заказчик платит за нож
+            $param_extra_expense = $row['extra_expense'];
         }
         
         $error_message = $fetcher->error;
@@ -293,7 +294,7 @@ if(!empty($id)) {
                 $param_lacquer_1, $param_lacquer_2, $param_lacquer_3, $param_lacquer_4, $param_lacquer_5, $param_lacquer_6, $param_lacquer_7, $param_lacquer_8, 
                 $param_percent_1, $param_percent_2, $param_percent_3, $param_percent_4, $param_percent_5, $param_percent_6, $param_percent_7, $param_percent_8, 
                 $param_cliche_1, $param_cliche_2, $param_cliche_3, $param_cliche_4, $param_cliche_5, $param_cliche_6, $param_cliche_7, $param_cliche_8, 
-                $cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $param_extracharge, $param_extracharge_cliche, $param_customer_pays_for_cliche, $param_knife, $param_extracharge_knife, $param_knife_in_price, $param_customer_pays_for_knife);
+                $cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $param_extracharge, $param_extracharge_cliche, $param_customer_pays_for_cliche, $param_knife, $param_extracharge_knife, $param_knife_in_price, $param_customer_pays_for_knife, $param_extra_expense);
         
         // Себестоимость
         $new_cost = $calculation->cost;

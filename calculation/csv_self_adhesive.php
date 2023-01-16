@@ -41,6 +41,7 @@ if($id !== null) {
     $extracharge_knife = null; // Наценка на нож
     $knife_in_price = null; // Включать нож в себестоимость
     $customer_pays_for_knife = null; // Заказчик платит за нож
+    $extra_expense = null; // Дополнительные расходы с кг/шт
     
     $sql = "select rc.date, rc.name, "
             . "f.name film, fv.thickness thickness, fv.weight density, "
@@ -54,7 +55,7 @@ if($id !== null) {
             . "rc.percent_1, rc.percent_2, rc.percent_3, rc.percent_4, rc.percent_5, rc.percent_6, rc.percent_7, rc.percent_8, "
             . "rc.cliche_1, rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8, "
             . "rc.cliche_in_price, rc.cliches_count_flint, rc.cliches_count_kodak, rc.cliches_count_old, rc.extracharge, rc.extracharge_cliche, rc.customer_pays_for_cliche, "
-            . "rc.knife, rc.extracharge_knife, rc.knife_in_price, rc.customer_pays_for_knife "
+            . "rc.knife, rc.extracharge_knife, rc.knife_in_price, rc.customer_pays_for_knife, rc.extra_expense "
             . "from calculation rc "
             . "left join machine m on rc.machine_id = m.id "
             . "left join film_variation fv on rc.film_variation_id = fv.id "
@@ -109,6 +110,7 @@ if($id !== null) {
         $extracharge_knife = $row['extracharge_knife']; // Наценка на нож
         $knife_in_price = $row['knife_in_price']; // Нож включен в себестоимость
         $customer_pays_for_knife = $row['customer_pays_for_knife']; // Заказчик платит за нож
+        $extra_expense = $row['extra_expense']; // Дополнительные расходы с кг/шт
     }
     
     // Курсы валют
@@ -240,7 +242,8 @@ if($id !== null) {
                 $knife, // Стоимость ножа
                 $extracharge_knife, // Наценка на нож
                 $knife_in_price, // Включать нож в себестоимость
-                $customer_pays_for_knife); // Заказчик платит за нож
+                $customer_pays_for_knife, // Заказчик платит за нож
+                $extra_expense); // Дополнительные расходы с кг/шт
         
         // Данные CSV-файла
         $file_data = array();

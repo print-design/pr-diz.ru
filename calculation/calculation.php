@@ -1305,7 +1305,8 @@ class CalculationSelfAdhesive extends CalculationBase {
             $knife, // Стоимость ножа
             $extracharge_knife, // Наценка на нож
             $knife_in_price, // Нож включается в стоимость
-            $customer_pays_for_knife // Заказчик платит за нож
+            $customer_pays_for_knife, // Заказчик платит за нож
+            $extra_expense // Дополнительные расходы с кг/шт
             ) {
         // Суммарный размер тиража
         $this->quantity = array_sum($quantities);
