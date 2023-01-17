@@ -1268,6 +1268,8 @@ class CalculationSelfAdhesive extends CalculationBase {
     public $cliche_all_flint_price; // себестоимость всех форм Флинт, руб
     public $cliche_all_kodak_price; // себестоимость всех форм Кодак, руб
     public $cliche_new_number; // количество новых форм
+    public $scotch_costs; // массив: стоимость скотча
+    public $scotch_cost; // общая себестоимость скотча
     
     public $extracharge = 0; // Наценка на тираж
     public $extracharge_cliche = 0; // Наценка на ПФ
@@ -1594,6 +1596,26 @@ class CalculationSelfAdhesive extends CalculationBase {
         // Количество новых форм
         $this->cliche_new_number = $cliches_count_flint + $cliches_count_kodak;
         
+        //********************************************
+        // Стоимость скотча
+        //********************************************
+        
+        // Стоимость скотча для каждой краски
+        $this->scotch_costs = array();
+        
+        for($i=1; $i<=8; $i++) {
+            $cliche_area = 0;
+            
+            if($i <= $ink_number) {
+                $cliche_area = $this->cliche_area;
+            }
+            
+            $this->scotch_costs[$i] = $cliche_area * $data_cliche->scotch_price * self::GetCurrencyRate($data_cliche->scotch_currency, $usd, $euro) / 100;
+        }
+        
+        // Общая себестоимость скотча
+        $this->scotch_cost = array_sum($this->scotch_costs);
+        
         //********************************
         // НАЦЕНКА
         //********************************
@@ -1673,7 +1695,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->income_knife = ($this->shipping_knife_cost - $this->knife_cost) * (($this->ukknife - 1) / -1);
         
         // Себестоимость
-        $this->cost = $this->film_cost + $this->work_cost + $this->ink_cost + ($this->cliche_cost * $this->ukpf) + ($this->knife_cost * $this->ukknife);
+        $this->cost = $this->film_cost + $this->work_cost + $this->ink_cost + ($this->cliche_cost * $this->ukpf) + ($this->knife_cost * $this->ukknife) + $this->scotch_cost;
         
         // Себестоимость за единицу
         $this->cost_per_unit = $this->cost / $this->quantity;

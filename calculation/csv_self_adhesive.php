@@ -582,6 +582,44 @@ if($id !== null) {
         array_push($file_data, array("", "", "", ""));
         
         //*******************************************
+        // Стоимость скотча
+        //*******************************************
+        
+        $scotch_formula = "";
+        $scotch_comment = "";
+        
+        for($i = 1; $i <= 8; $i++) {
+            if(!empty($scotch_formula)) {
+                $scotch_formula .= " + ";
+            }
+            
+            if(!empty($scotch_comment)) {
+                $scotch_comment .= " + ";
+            }
+            
+            $scotch_formula .= CalculationBase::Display($calculation->scotch_costs[$i], 2);
+            $scotch_comment .= "стоимость скотча цвет $i";
+            
+            $cliche_area = 0;
+            
+            if($i <= $ink_number) {
+                $cliche_area = $calculation->cliche_area;
+            }
+            
+            array_push($file_data, array("Стоимость скотча Цвет $i, руб",
+                CalculationBase::Display($calculation->scotch_costs[$i], 2),
+                "|= ".CalculationBase::Display($cliche_area, 2)." * ".CalculationBase::Display($data_cliche->scotch_price, 2)." * ".CalculationBase::Display($calculation->GetCurrencyRate($data_cliche->scotch_currency, $usd, $euro), 2)." / 100",
+                "площадь формы цвет $i, см2 * площадь скотча за м2 * курс валюты / 100"));
+        }
+        
+        array_push($file_data, array("Общая себестоимость скотча, руб",
+            CalculationBase::Display($calculation->scotch_cost, 2),
+            "|= ".$scotch_formula,
+            $scotch_comment));
+        
+        array_push($file_data, array("", "", "", ""));
+        
+        //*******************************************
         // Наценка
         //*******************************************
         
@@ -630,8 +668,8 @@ if($id !== null) {
         
         array_push($file_data, array("Себестоимость, руб",
             CalculationBase::Display($calculation->cost, 2),
-            "|= ". CalculationBase::Display($calculation->film_cost, 2)." + ". CalculationBase::Display($calculation->work_cost, 2)." + ". CalculationBase::Display($calculation->ink_cost, 2)." + (". CalculationBase::Display($calculation->cliche_cost, 2)." * ". CalculationBase::Display($calculation->ukpf, 0).") + (".CalculationBase::Display($calculation->knife_cost, 2)." * ".CalculationBase::Display($calculation->ukknife, 0).")",
-            "стоимость материала + стоимость работы + стоимость краски + (стоимость форм * УКПФ) + (стоимость ножа * УКНОЖ)"));
+            "|= ". CalculationBase::Display($calculation->film_cost, 2)." + ". CalculationBase::Display($calculation->work_cost, 2)." + ". CalculationBase::Display($calculation->ink_cost, 2)." + (". CalculationBase::Display($calculation->cliche_cost, 2)." * ". CalculationBase::Display($calculation->ukpf, 0).") + (".CalculationBase::Display($calculation->knife_cost, 2)." * ".CalculationBase::Display($calculation->ukknife, 0).") + ".CalculationBase::Display($calculation->scotch_cost, 2),
+            "стоимость материала + стоимость работы + стоимость краски + (стоимость форм * УКПФ) + (стоимость ножа * УКНОЖ) + стоимость скотча"));
         
         array_push($file_data, array("Себестоимость за шт, руб",
             CalculationBase::Display($calculation->cost_per_unit, 2),
