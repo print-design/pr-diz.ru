@@ -549,7 +549,7 @@ if($id !== null) {
             "|= (".CalculationBase::Display($streams_number, 2)." * ".CalculationBase::Display($calculation->width_dirty, 2)." + 20) + 20",
             "(кол-во ручьёв * ширина этикетки грязная + 20 мм) + 20 мм (для самоклейки без лыж не бывает)"));
         
-        array_push($file_data, array("Площадь форм, см",
+        array_push($file_data, array("Площадь форм, см2",
             CalculationBase::Display($calculation->cliche_area, 2),
             "|= ".CalculationBase::Display($calculation->cliche_height, 2)." * ".CalculationBase::Display($calculation->cliche_width, 2)." / 100",
             "высота форм * ширина форм / 100"));

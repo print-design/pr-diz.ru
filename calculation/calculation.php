@@ -483,6 +483,8 @@ class Calculation extends CalculationBase {
     public $cliche_area; // площадь формы, см2
     public $cliche_new_number; // количество новых форм
     public $cliche_costs; // массив: стоимость каждой формы, руб
+    public $scotch_costs; // массив: стоимость скотча
+    public $scotch_cost; // общая себестоимость скотча
     
     public $extracharge = 0; // Наценка на тираж
     public $extracharge_cliche = 0; // Наценка на ПФ
@@ -1066,6 +1068,26 @@ class Calculation extends CalculationBase {
         }
         
         //********************************************
+        // Стоимость скотча
+        //********************************************
+        
+        // Стоимость скотча для каждой краски
+        $this->scotch_costs = array();
+        
+        for($i=1; $i<=8; $i++) {
+            $cliche_area = 0;
+            
+            if($i <= $ink_number) {
+                $cliche_area = $this->cliche_area;
+            }
+            
+            $this->scotch_costs[$i] = $cliche_area * $data_cliche->scotch_price * self::GetCurrencyRate($data_cliche->scotch_currency, $usd, $euro) / 100;
+        }
+        
+        // Общая себестоимость скотча
+        $this->scotch_cost = array_sum($this->scotch_costs);
+        
+        //********************************************
         // НАЦЕНКА
         //********************************************
         
@@ -1153,7 +1175,7 @@ class Calculation extends CalculationBase {
         $this->income_cliche = ($this->shipping_cliche_cost - $this->cliche_cost) * (($this->ukpf - 1) / -1);
         
         // Себестоимость
-        $this->cost = $this->film_cost + $this->work_cost + $this->ink_cost + $this->glue_cost + ($this->cliche_cost * $this->ukpf);
+        $this->cost = $this->film_cost + $this->work_cost + $this->ink_cost + $this->glue_cost + ($this->cliche_cost * $this->ukpf) + $this->scotch_cost;
         
         // Себестоимость за единицу
         $this->cost_per_unit = $this->cost / $quantity;

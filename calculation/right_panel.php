@@ -355,7 +355,7 @@ if(!empty($id)) {
                     . "from norm_cliche where date <= '$date' order by id desc limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
-                $cliche_data = new DataCliche($row['flint_price'], $row['flint_currency'], $row['kodak_price'], $row['kodak_currency'], $row['scotch_price'], $row['scotch_currency']);
+                $data_cliche = new DataCliche($row['flint_price'], $row['flint_currency'], $row['kodak_price'], $row['kodak_currency'], $row['scotch_price'], $row['scotch_currency']);
             }
             
             $sql = "select extracharge_type_id, from_weight, to_weight, value from extracharge";
@@ -366,7 +366,7 @@ if(!empty($id)) {
         }
     
         // ДЕЛАЕМ РАСЧЁТ
-        $calculation = new Calculation($data_priladka, $data_priladka_laminator, $data_machine, $data_machine_laminator, $data_ink, $data_glue, $cliche_data, $data_extracharge, $new_usd, $new_euro, 
+        $calculation = new Calculation($data_priladka, $data_priladka_laminator, $data_machine, $data_machine_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, $new_usd, $new_euro, 
                 $param_unit, $param_quantity, $param_work_type_id, 
                 $param_film_1, $param_thickness_1, $param_density_1, $param_price_1, $param_currency_1, $param_customers_material_1, $param_ski_1, $param_width_ski_1, 
                 $param_film_2, $param_thickness_2, $param_density_2, $param_price_2, $param_currency_2, $param_customers_material_2, $param_ski_2, $param_width_ski_2, 
