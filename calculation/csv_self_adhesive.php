@@ -608,8 +608,8 @@ if($id !== null) {
             
             array_push($file_data, array("Стоимость скотча Цвет $i, руб",
                 CalculationBase::Display($calculation->scotch_costs[$i], 2),
-                "|= ".CalculationBase::Display($cliche_area, 2)." * ".CalculationBase::Display($data_cliche->scotch_price, 2)." * ".CalculationBase::Display($calculation->GetCurrencyRate($data_cliche->scotch_currency, $usd, $euro), 2)." / 100",
-                "площадь формы цвет $i, см2 * площадь скотча за м2 * курс валюты / 100"));
+                "|= ".CalculationBase::Display($cliche_area, 2)." * ".CalculationBase::Display($data_cliche->scotch_price, 2)." * ".CalculationBase::Display($calculation->GetCurrencyRate($data_cliche->scotch_currency, $usd, $euro), 2)." / 10000",
+                "площадь формы цвет $i, см2 * площадь скотча за м2 * курс валюты / 10000"));
         }
         
         array_push($file_data, array("Общая себестоимость скотча, руб",

@@ -1081,7 +1081,7 @@ class Calculation extends CalculationBase {
                 $cliche_area = $this->cliche_area;
             }
             
-            $this->scotch_costs[$i] = $cliche_area * $data_cliche->scotch_price * self::GetCurrencyRate($data_cliche->scotch_currency, $usd, $euro) / 100;
+            $this->scotch_costs[$i] = $cliche_area * $data_cliche->scotch_price * self::GetCurrencyRate($data_cliche->scotch_currency, $usd, $euro) / 10000;
         }
         
         // Общая себестоимость скотча
@@ -1610,7 +1610,7 @@ class CalculationSelfAdhesive extends CalculationBase {
                 $cliche_area = $this->cliche_area;
             }
             
-            $this->scotch_costs[$i] = $cliche_area * $data_cliche->scotch_price * self::GetCurrencyRate($data_cliche->scotch_currency, $usd, $euro) / 100;
+            $this->scotch_costs[$i] = $cliche_area * $data_cliche->scotch_price * self::GetCurrencyRate($data_cliche->scotch_currency, $usd, $euro) / 10000;
         }
         
         // Общая себестоимость скотча
