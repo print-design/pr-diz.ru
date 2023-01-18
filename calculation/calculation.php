@@ -78,15 +78,14 @@ class DataInk {
     public $solvent_flexol82_price;
     public $solvent_flexol82_currency;
     public $solvent_part; // Расход растворителя на 1 кг краски
-    public $min_price; // Ограничение на минимальную стоимость
     public $min_price_per_ink; // Мин. стоимость 1 цвета
-    
     public $self_adhesive_laquer_price; // Самоклейка, цена лака за кг
     public $self_adhesive_laquer_currency; // Самоклейка, валюьа лака
     public $self_adhesive_laquer_expense; // Самоклейка, расход чистого лака
+    public $min_percent; // Минимальный процент запечатки
     
     // Конструктор
-    public function __construct($c_price, $c_currency, $c_expense, $m_price, $m_currency, $m_expense, $y_price, $y_currency, $y_expense, $k_price, $k_currency, $k_expense, $white_price, $white_currency, $white_expense, $panton_price, $panton_currency, $panton_expense, $lacquer_glossy_price, $lacquer_glossy_currency, $lacquer_glossy_expense, $lacquer_matte_price, $lacquer_matte_currency, $lacquer_matte_expense, $solvent_etoxipropanol_price, $solvent_etoxipropanol_currency, $solvent_flexol82_price, $solvent_flexol82_currency, $solvent_part, $min_price, $min_price_per_ink, $self_adhesive_laquer_price, $self_adhesive_laquer_currency, $self_adhesive_laquer_expense) {
+    public function __construct($c_price, $c_currency, $c_expense, $m_price, $m_currency, $m_expense, $y_price, $y_currency, $y_expense, $k_price, $k_currency, $k_expense, $white_price, $white_currency, $white_expense, $panton_price, $panton_currency, $panton_expense, $lacquer_glossy_price, $lacquer_glossy_currency, $lacquer_glossy_expense, $lacquer_matte_price, $lacquer_matte_currency, $lacquer_matte_expense, $solvent_etoxipropanol_price, $solvent_etoxipropanol_currency, $solvent_flexol82_price, $solvent_flexol82_currency, $solvent_part, $min_price_per_ink, $self_adhesive_laquer_price, $self_adhesive_laquer_currency, $self_adhesive_laquer_expense, $min_percent) {
         $this->c_price = $c_price;
         $this->c_currency = $c_currency;
         $this->c_expense = $c_expense;
@@ -116,12 +115,11 @@ class DataInk {
         $this->solvent_flexol82_price = $solvent_flexol82_price;
         $this->solvent_flexol82_currency = $solvent_flexol82_currency;
         $this->solvent_part = $solvent_part;
-        $this->min_price = $min_price;
         $this->min_price_per_ink = $min_price_per_ink;
-        
         $this->self_adhesive_laquer_price = $self_adhesive_laquer_price;
         $this->self_adhesive_laquer_currency = $self_adhesive_laquer_currency;
         $this->self_adhesive_laquer_expense = $self_adhesive_laquer_expense;
+        $this->min_percent = $min_percent;
     }
 }
 
