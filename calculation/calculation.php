@@ -15,21 +15,33 @@ class DataPriladka {
     }
 }
 
-// Характеристика оборудования
+// Характеристика печатной машины
 class DataMachine {
     public $price; // Цена
     public $speed; // Скорость
-    public $max_width; // Максимальная ширина
     public $width; // Ширина машины
     public $vaporization_expense; // Расход растворителя на испарение
     
     // Контруктор
-    public function __construct($price, $speed, $max_width, $width, $vaporization_expense) {
+    public function __construct($price, $speed, $width, $vaporization_expense) {
+        $this->price = $price;
+        $this->speed = $speed;
+        $this->width = $width;
+        $this->vaporization_expense = $vaporization_expense;
+    }
+}
+
+// Характеристика ламинатора
+class DataLaminator {
+    public $price; // Цена
+    public $speed; // Скорость
+    public $max_width; // Максимальная ширина
+    
+    // Конструктор
+    public function __construct($price, $speed, $max_width) {
         $this->price = $price;
         $this->speed = $speed;
         $this->max_width = $max_width;
-        $this->width = $width;
-        $this->vaporization_expense = $vaporization_expense;
     }
 }
 
@@ -510,7 +522,7 @@ class Calculation extends CalculationBase {
     public function __construct(DataPriladka $data_priladka, 
             DataPriladka $data_priladka_laminator,
             DataMachine $data_machine,
-            DataMachine $data_machine_laminator,
+            DataLaminator $data_laminator,
             DataInk $data_ink,
             DataGlue $data_glue,
             DataCliche $data_cliche,
@@ -844,11 +856,11 @@ class Calculation extends CalculationBase {
         
         // Время ламинации (без приладки) 2, ч
         // Если печати нет, то сразу возвращаем 0, иначе получится деление на 0
-        $this->lamination_time_2 = $data_machine_laminator->speed == 0 ? 0 : ($this->length_pure_start_2 + $this->waste_length_2) / $data_machine_laminator->speed / 1000 * $this->uk2;
+        $this->lamination_time_2 = $data_laminator->speed == 0 ? 0 : ($this->length_pure_start_2 + $this->waste_length_2) / $data_laminator->speed / 1000 * $this->uk2;
         
         // Время ламинации (без приладки) 3, ч
         // Если печати нет, то сразу возвращаем 0, иначе получится деление на 0
-        $this->lamination_time_3 = $data_machine_laminator->speed == 0 ? 0 : ($this->length_pure_start_3 + $this->waste_length_3) / $data_machine_laminator->speed / 1000 * $this->uk3;
+        $this->lamination_time_3 = $data_laminator->speed == 0 ? 0 : ($this->length_pure_start_3 + $this->waste_length_3) / $data_laminator->speed / 1000 * $this->uk3;
         
         
         // Общее время выполнения тиража 1, ч
@@ -865,10 +877,10 @@ class Calculation extends CalculationBase {
         $this->work_cost_1 = $this->work_time_1 * $data_machine->price;
         
         // Стоимость выполнения тиража 2, руб
-        $this->work_cost_2 = $this->work_time_2 * $data_machine_laminator->price;
+        $this->work_cost_2 = $this->work_time_2 * $data_laminator->price;
         
         // Стоимость выполнения тиража 3, руб
-        $this->work_cost_3 = $this->work_time_3 * $data_machine_laminator->price;
+        $this->work_cost_3 = $this->work_time_3 * $data_laminator->price;
         
         //****************************************
         // Расход краски

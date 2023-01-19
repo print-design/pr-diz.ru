@@ -280,8 +280,8 @@ if(!empty($id)) {
         // ПОЛУЧЕНИЕ НОРМ
         $data_priladka = new DataPriladka(null, null, null, null);
         $data_priladka_laminator = new DataPriladka(null, null, null, null);
-        $data_machine = new DataMachine(null, null, null, null, null);
-        $data_machine_laminator = new DataMachine(null, null, null, null, null);
+        $data_machine = new DataMachine(null, null, null, null);
+        $data_laminator = new DataLaminator(null, null, null);
         $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
         $data_glue = new DataGlue(null, null, null, null, null, null, null);
         $data_cliche = new DataCliche(null, null, null, null, null, null);
@@ -311,24 +311,24 @@ if(!empty($id)) {
             }
         
             if(empty($param_machine_id)) {
-                $data_machine = new DataMachine(0, 0, 0, 0, 0);
+                $data_machine = new DataMachine(0, 0, 0, 0);
             }
             else {
-                $sql = "select price, speed, max_width, width, vaporization_expense from norm_machine where date <= '$param_date' and machine_id = $param_machine_id order by id desc limit 1";
+                $sql = "select price, speed, width, vaporization_expense from norm_machine where date <= '$param_date' and machine_id = $param_machine_id order by id desc limit 1";
                 $fetcher = new Fetcher($sql);
                 if ($row = $fetcher->Fetch()) {
-                    $data_machine = new DataMachine($row['price'], $row['speed'], $row['max_width'], $row['width'], $row['vaporization_expense']);
+                    $data_machine = new DataMachine($row['price'], $row['speed'], $row['width'], $row['vaporization_expense']);
                 }
             }
         
             if(empty($param_laminator_id)) {
-                $data_machine_laminator = new DataMachine(0, 0, 0, 0, 0);
+                $data_laminator = new DataLaminator(0, 0, 0);
             }
             else {
                 $sql = "select price, speed, max_width from norm_laminator where date <= '$param_date' and laminator_id = $param_laminator_id order by id desc limit 1";
                 $fetcher = new Fetcher($sql);
                 if($row = $fetcher->Fetch()) {
-                    $data_machine_laminator = new DataMachine($row['price'], $row['speed'], $row['max_width'], 0, 0);
+                    $data_laminator = new DataLaminator($row['price'], $row['speed'], $row['max_width']);
                 }
             }
         
@@ -366,7 +366,7 @@ if(!empty($id)) {
         }
     
         // ДЕЛАЕМ РАСЧЁТ
-        $calculation = new Calculation($data_priladka, $data_priladka_laminator, $data_machine, $data_machine_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, $new_usd, $new_euro, 
+        $calculation = new Calculation($data_priladka, $data_priladka_laminator, $data_machine, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, $new_usd, $new_euro, 
                 $param_unit, $param_quantity, $param_work_type_id, 
                 $param_film_1, $param_thickness_1, $param_density_1, $param_price_1, $param_currency_1, $param_customers_material_1, $param_ski_1, $param_width_ski_1, 
                 $param_film_2, $param_thickness_2, $param_density_2, $param_price_2, $param_currency_2, $param_customers_material_2, $param_ski_2, $param_width_ski_2, 

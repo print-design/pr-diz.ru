@@ -209,8 +209,8 @@ if($id !== null) {
     // ПОЛУЧЕНИЕ НОРМ
     $data_priladka = new DataPriladka(null, null, null, null);
     $data_priladka_laminator = new DataPriladka(null, null, null, null);
-    $data_machine = new DataMachine(null, null, null, null, null);
-    $data_machine_laminator = new DataMachine(null, null, null, null, null);
+    $data_machine = new DataMachine(null, null, null, null);
+    $data_laminator = new DataLaminator(null, null, null);
     $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
     $data_glue = new DataGlue(null, null, null, null, null, null, null);
     $data_cliche = new DataCliche(null, null, null, null, null, null);
@@ -240,24 +240,24 @@ if($id !== null) {
         }
         
         if(empty($machine_id)) {
-            $data_machine = new DataMachine(0, 0, 0, 0, 0);
+            $data_machine = new DataMachine(0, 0, 0, 0);
         }
         else {
-            $sql = "select price, speed, max_width, width, vaporization_expense from norm_machine where date <= '$date' and machine_id = $machine_id order by id desc limit 1";
+            $sql = "select price, speed, width, vaporization_expense from norm_machine where date <= '$date' and machine_id = $machine_id order by id desc limit 1";
             $fetcher = new Fetcher($sql);
             if ($row = $fetcher->Fetch()) {
-                $data_machine = new DataMachine($row['price'], $row['speed'], $row['max_width'], $row['width'], $row['vaporization_expense']);
+                $data_machine = new DataMachine($row['price'], $row['speed'], $row['width'], $row['vaporization_expense']);
             }
         }
         
         if(empty($laminator_id)) {
-            $data_machine_laminator = new DataMachine(0, 0, 0, 0, 0);
+            $data_laminator = new DataLaminator(0, 0, 0);
         }
         else {
             $sql = "select price, speed, max_width from norm_laminator where date <= '$date' and laminator_id = $laminator_id order by id desc limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
-                $data_machine_laminator = new DataMachine($row['price'], $row['speed'], $row['max_width'], 0, 0);
+                $data_laminator = new DataLaminator($row['price'], $row['speed'], $row['max_width']);
             }
         }
         
@@ -299,7 +299,7 @@ if($id !== null) {
         $calculation = new Calculation($data_priladka, 
                 $data_priladka_laminator,
                 $data_machine,
-                $data_machine_laminator,
+                $data_laminator,
                 $data_ink,
                 $data_glue,
                 $data_cliche,
@@ -726,13 +726,13 @@ if($id !== null) {
         
         array_push($file_data, array("Время ламинации (без приладки) 2, ч",
             CalculationBase::Display($calculation->lamination_time_2, 2),
-            $data_machine_laminator->speed == 0 ? "|= 0" : "|= (".CalculationBase::Display($calculation->length_pure_start_2, 2)." + ".CalculationBase::Display($calculation->waste_length_2, 2).") / ".CalculationBase::Display($data_machine_laminator->speed, 2)." / 1000 * ".CalculationBase::Display($calculation->uk2, 0),
-            $data_machine_laminator->speed == 0 ? "ламинации нет" : "(м пог чистые 1 + СтартСтопОтход 1) / скорость работы ламинатора /1000 * УК2"));
+            $data_laminator->speed == 0 ? "|= 0" : "|= (".CalculationBase::Display($calculation->length_pure_start_2, 2)." + ".CalculationBase::Display($calculation->waste_length_2, 2).") / ".CalculationBase::Display($data_laminator->speed, 2)." / 1000 * ".CalculationBase::Display($calculation->uk2, 0),
+            $data_laminator->speed == 0 ? "ламинации нет" : "(м пог чистые 1 + СтартСтопОтход 1) / скорость работы ламинатора /1000 * УК2"));
         
         array_push($file_data, array("Время ламинации (без приладки) 3, ч",
             CalculationBase::Display($calculation->lamination_time_3, 2),
-            $data_machine_laminator->speed == 0 ? "|= 0" :"|= (".CalculationBase::Display($calculation->length_pure_start_3, 2)." + ".CalculationBase::Display($calculation->waste_length_3, 2).") / ".CalculationBase::Display($data_machine_laminator->speed, 2)." / 1000 * ".CalculationBase::Display($calculation->uk3, 0),
-            $data_machine_laminator->speed == 0 ? "ламинации нет" : "(м пог чистые 1 + СтартСтопОтход 1) / скорость работы ламинатора / 1000 * УК3"));
+            $data_laminator->speed == 0 ? "|= 0" :"|= (".CalculationBase::Display($calculation->length_pure_start_3, 2)." + ".CalculationBase::Display($calculation->waste_length_3, 2).") / ".CalculationBase::Display($data_laminator->speed, 2)." / 1000 * ".CalculationBase::Display($calculation->uk3, 0),
+            $data_laminator->speed == 0 ? "ламинации нет" : "(м пог чистые 1 + СтартСтопОтход 1) / скорость работы ламинатора / 1000 * УК3"));
         
         array_push($file_data, array("Общее время выполнения тиража 1, ч",
             CalculationBase::Display($calculation->work_time_1, 2),
@@ -756,12 +756,12 @@ if($id !== null) {
         
         array_push($file_data, array("Стоимость выполнения тиража 2, руб",
             CalculationBase::Display($calculation->work_cost_2, 2),
-            "|= ".CalculationBase::Display($calculation->work_time_2, 2)." * ".CalculationBase::Display($data_machine_laminator->price, 2),
+            "|= ".CalculationBase::Display($calculation->work_time_2, 2)." * ".CalculationBase::Display($data_laminator->price, 2),
             "общее время выполнения 2 * цена работы оборудования 2"));
         
         array_push($file_data, array("Стоимость выполнения тиража 3, руб",
             CalculationBase::Display($calculation->work_cost_3, 2),
-            "|= ".CalculationBase::Display($calculation->work_time_3, 2)." * ".CalculationBase::Display($data_machine_laminator->price, 2),
+            "|= ".CalculationBase::Display($calculation->work_time_3, 2)." * ".CalculationBase::Display($data_laminator->price, 2),
             "общее время выполнения 3 * цена работы оборудования 3"));
         
         array_push($file_data, array("", "", "", ""));

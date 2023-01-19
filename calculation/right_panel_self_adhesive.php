@@ -226,7 +226,7 @@ if(!empty($id)) {
         
         // ПОЛУЧЕНИЕ НОРМ
         $data_priladka = new DataPriladka(null, null, null, null);
-        $data_machine = new DataMachine(null, null, null, null, null);
+        $data_machine = new DataMachine(null, null, null, null);
         $data_gap = new DataGap(null, null, null);
         $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
         $data_cliche = new DataCliche(null, null, null, null, null, null);
@@ -247,14 +247,14 @@ if(!empty($id)) {
             }
         
             if(empty($param_machine_id)) {
-                $data_machine = new DataMachine(0, 0, 0, 0, 0);
+                $data_machine = new DataMachine(0, 0, 0, 0);
             }
             else {
-                $sql = "select machine_id, price, speed, max_width, width, vaporization_expense from norm_machine where id in (select max(id) from norm_machine where date <= '$param_date' group by machine_id)";
+                $sql = "select machine_id, price, speed, width, vaporization_expense from norm_machine where id in (select max(id) from norm_machine where date <= '$param_date' group by machine_id)";
                 $fetcher = new Fetcher($sql);
                 while ($row = $fetcher->Fetch()) {
                     if($row['machine_id'] == $param_machine_id) {
-                        $data_machine = new DataMachine($row['price'], $row['speed'], $row['max_width'], $row['width'], $row['vaporization_expense']);
+                        $data_machine = new DataMachine($row['price'], $row['speed'], $row['width'], $row['vaporization_expense']);
                     }
                 }
             }
