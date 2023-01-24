@@ -574,7 +574,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                     $display = "d-none";
                     if($printing_sequence == 1) $display = "d-block";
                     ?>
-                    <div class="modal-body set_printings set_printings_<?=$printing_sequence ?> <?=$display ?>">
+                    <div style="max-height: 70vh; overflow-y: scroll;" class="modal-body set_printings set_printings_<?=$printing_sequence ?> <?=$display ?>">
                         <div class="printing_title font-weight-bold"><span style="font-size: x-large;">Тираж <?=$printing_sequence ?></span>&nbsp;&nbsp;&nbsp;<span style="font-size: large;"><?= CalculationBase::Display(floatval($printing['length']), 0) ?> м</span></div>
                         <div class="d-flex justify-content-start mb-3">
                             <div class="mr-2">
