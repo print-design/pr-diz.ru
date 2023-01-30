@@ -466,7 +466,6 @@ if($id !== null) {
         array_push($file_data, array("УК2", $calculation->uk2, "", "нет ламинации - 0, есть ламинация - 1"));
         array_push($file_data, array("УК3", $calculation->uk3, "", "нет второй ламинации - 0, есть вторая ламинация - 1"));
         array_push($file_data, array("УКПФ", $calculation->ukpf, "", "ПФ не включен в себестоимость - 0, ПФ включен в себестоимость - 1"));
-        array_push($file_data, array("КоэфИспарения", $calculation->ukvap, "", "расход растворителя на испарение больше нуля - 1, меньше или равно нулю - 0"));
         
         // Результаты вычислений
         array_push($file_data, array("М2 чистые, м2",
@@ -704,20 +703,20 @@ if($id !== null) {
         // Время - деньги
         //*****************************************
         
-        array_push($file_data, array("Время приладки 1, мин",
+        array_push($file_data, array("Время приладки 1, ч",
             CalculationBase::Display($calculation->priladka_time_1, 2),
-            "|= ".CalculationBase::Display($ink_number, 2)." * ".CalculationBase::Display($data_priladka->time, 2),
-            "красочность * время приладки 1 краски"));
+            "|= ".CalculationBase::Display($ink_number, 2)." * ".CalculationBase::Display($data_priladka->time, 2)." / 60",
+            "красочность * время приладки 1 краски / 60"));
         
-        array_push($file_data, array("Время приладки 2, мин",
+        array_push($file_data, array("Время приладки 2, ч",
             CalculationBase::Display($calculation->priladka_time_2, 2),
-            "|= ".CalculationBase::Display($data_priladka_laminator->time, 2)." * ".CalculationBase::Display($calculation->uk2, 0),
-            "время приладки ламинатора * УК2"));
+            "|= ".CalculationBase::Display($data_priladka_laminator->time, 2)." * ".CalculationBase::Display($calculation->uk2, 0)." / 60",
+            "время приладки ламинатора * УК2 / 60"));
         
-        array_push($file_data, array("Время приладки 3, мин",
+        array_push($file_data, array("Время приладки 3, ч",
             CalculationBase::Display($calculation->priladka_time_3, 2),
-            "|= ".CalculationBase::Display($data_priladka_laminator->time, 2)." * ".CalculationBase::Display($calculation->uk3, 0),
-            "время приладки ламинатора * УК3"));
+            "|= ".CalculationBase::Display($data_priladka_laminator->time, 2)." * ".CalculationBase::Display($calculation->uk3, 0)." / 60",
+            "время приладки ламинатора * УК3 / 60"));
         
         array_push($file_data, array("Время печати (без приладки) 1, ч",
             CalculationBase::Display($calculation->print_time_1, 2),
@@ -780,44 +779,32 @@ if($id !== null) {
             "|= 1 + ".CalculationBase::Display($data_ink->solvent_part, 2),
             "1 + расход растворителя на 1 кг краски"));
         
-        array_push($file_data, array("Цена 1 кг чистого флексоля 82, руб",
+        array_push($file_data, array("Цена 1 кг чистого флексоля 82, ".$calculation->GetCurrencyName($data_ink->solvent_flexol82_currency),
             CalculationBase::Display($calculation->ink_flexol82_kg_price, 2),
-            "|= ".CalculationBase::Display($data_ink->solvent_flexol82_price, 2)." * ".CalculationBase::Display($calculation->GetCurrencyRate($data_ink->solvent_flexol82_currency, $usd, $euro), 2),
-            "цена 1 кг флексоля 82 * курс валюты"));
+            "|= ".CalculationBase::Display($data_ink->solvent_flexol82_price, 2),
+            "цена 1 кг флексоля 82, ".$calculation->GetCurrencyName($data_ink->solvent_flexol82_currency)));
         
-        array_push($file_data, array("Цена 1 кг чистого этоксипропанола, руб",
+        array_push($file_data, array("Цена 1 кг чистого этоксипропанола, ".$calculation->GetCurrencyName($data_ink->solvent_etoxipropanol_currency),
             CalculationBase::Display($calculation->ink_etoxypropanol_kg_price, 2),
-            "|= ". CalculationBase::Display($data_ink->solvent_etoxipropanol_price, 2)." * ". CalculationBase::Display($calculation->GetCurrencyRate($data_ink->solvent_etoxipropanol_currency, $usd, $euro), 2),
-            "цена 1 кг этоксипропанола * курс валюты"));
+            "|= ". CalculationBase::Display($data_ink->solvent_etoxipropanol_price, 2),
+            "цена 1 кг этоксипропанола, ".$calculation->GetCurrencyName($data_ink->solvent_etoxipropanol_currency)));
         
         $ink_solvent_kg_price = 0;
+        $ink_solvent_currency = 1;
             
         if($machine_shortname == Calculation::COMIFLEX) {
             $ink_solvent_kg_price = $calculation->ink_flexol82_kg_price;
+            $ink_solvent_currency = $calculation->GetCurrencyRate($data_ink->solvent_flexol82_currency, $usd, $euro);
         }
         else {
             $ink_solvent_kg_price = $calculation->ink_etoxypropanol_kg_price;
+            $ink_solvent_currency = $calculation->GetCurrencyRate($data_ink->solvent_etoxipropanol_currency, $usd, $euro);
         }
         
-        array_push($file_data, array("М2 испарения грязная, м2",
+        array_push($file_data, array("М2 испарения растворителя грязная, м2",
             CalculationBase::Display($calculation->vaporization_area_dirty, 2),
             "|= ". CalculationBase::Display($data_machine->width, 0)." * ". CalculationBase::Display($calculation->length_dirty_start_1, 2)." / 100",
             "Ширина машины * м. пог грязные / 100"));
-        
-        array_push($file_data, array("М2 испарения чистая, м2",
-            CalculationBase::Display($calculation->vaporization_area_pure, 2),
-            "|= ". CalculationBase::Display($calculation->vaporization_area_dirty, 2)." - ". CalculationBase::Display($calculation->print_area, 2),
-            "М2 испарения грязное - М2 запечатки"));
-        
-        array_push($file_data, array("Расход испарения растворителя, кг",
-            CalculationBase::Display($calculation->vaporization_expense, 2),
-            "|= ". CalculationBase::Display($calculation->vaporization_area_pure, 2)." * ". CalculationBase::Display($data_machine->vaporization_expense, 2),
-            "М2 испарения растворителя чистое * расход Растворителя на испарения (г/м2)"));
-        
-        array_push($file_data, array("Стоимость испарения растворителя, руб",
-            CalculationBase::Display($calculation->vaporization_cost, 2),
-            "|= ". CalculationBase::Display($calculation->vaporization_expense, 2)." * ". CalculationBase::Display($ink_solvent_kg_price, 2)." * ".$calculation->ukvap,
-            "Расход испарения растворителя КГ * стоимость растворителя за КГ * КоэфИспарения"));
         
         for($i=1; $i<=$ink_number; $i++) {
             $ink = "ink_$i";
@@ -846,17 +833,31 @@ if($id !== null) {
                 "|= ". CalculationBase::Display($calculation->mix_ink_kg_prices[$i], 2)." * ". CalculationBase::Display($calculation->ink_expenses[$i], 2),
                 "Расход КраскаСмеси $i * цена 1 кг КраскаСмеси $i"));
             
+            array_push($file_data, array("М2 испарения растворителя чистая, м2",
+                CalculationBase::Display($calculation->vaporization_area_pure, 2),
+                "|= ". CalculationBase::Display($calculation->vaporization_area_dirty, 2)." - (". CalculationBase::Display($calculation->print_area, 2)." * ".CalculationBase::Display($$percent, 2)." / 100)",
+                "М2 испарения растворителя грязное - (М2 запечатки * процент запечатки / 100)"));
+        
+            array_push($file_data, array("Расход испарения растворителя, кг",
+                CalculationBase::Display($calculation->vaporization_expense, 2),
+                "|= ". CalculationBase::Display($calculation->vaporization_area_pure, 2)." * ". CalculationBase::Display($data_machine->vaporization_expense, 2)." / 1000",
+                "М2 испарения растворителя чистое * расход Растворителя на испарения (г/м2) / 1000"));
+        
+            array_push($file_data, array("Стоимость испарения растворителя, руб",
+                CalculationBase::Display($calculation->vaporization_cost, 2),
+                "|= ". CalculationBase::Display($calculation->vaporization_expense, 2)." * ". CalculationBase::Display($ink_solvent_kg_price, 2)." * ".CalculationBase::Display($ink_solvent_currency, 2),
+                "Расход испарения растворителя КГ * стоимость растворителя за КГ * валюту"));
+            
             array_push($file_data, array("Расход (краска + растворитель на одну краску), руб",
                 CalculationBase::Display($calculation->ink_costs_mix[$i], 2),
                 "|= ". CalculationBase::Display($calculation->ink_costs[$i], 2)." + ". CalculationBase::Display($calculation->vaporization_cost, 2),
-                "Стоимость КраскаСмеси на тираж ₽ + Стоимость испарения растворителя ₽"));
+                "Стоимость КраскаСмеси на тираж, ₽ + Стоимость испарения растворителя, ₽"));
             
             array_push($file_data, array("Стоимость КраскаСмеси $i финальная, руб",
                 CalculationBase::Display($calculation->ink_costs_final[$i], 2),
                 "|= ЕСЛИ(".CalculationBase::Display($calculation->ink_costs_mix[$i], 2)." < ".CalculationBase::Display($data_ink->min_price_per_ink, 2)." ; ".CalculationBase::Display($data_ink->min_price_per_ink, 2)." ; ".CalculationBase::Display($calculation->ink_costs_mix[$i], 2).")",
                 "Если расход (краска + растворитель на одну краску) меньше, чем мин. стоимость 1 цвета, то мин. стоимость 1 цвета, иначе - Расход (краска + растворитель на одну краску)"));
         }
-        
         
         array_push($file_data, array("", "", "", ""));
         
@@ -936,20 +937,20 @@ if($id !== null) {
         // Стоимость форм
         //***********************************
         
-        array_push($file_data, array("Высота форм, мм",
+        array_push($file_data, array("Высота форм, м",
             CalculationBase::Display($calculation->cliche_height, 2),
             "|= ".CalculationBase::Display($raport, 2)." + 20",
-            "рапорт + 20мм"));
+            "(рапорт + 20мм) / 1000"));
         
-        array_push($file_data, array("Ширина форм, мм",
+        array_push($file_data, array("Ширина форм, м",
             CalculationBase::Display($calculation->cliche_width, 2),
             "|= (".CalculationBase::Display($streams_number, 2)." * ".CalculationBase::Display($stream_width, 2)." + 20) + ".((!empty($ski_1) && $ski_1 == Calculation::NO_SKI) ? 0 : 20),
-            "(кол-во ручьёв * ширина ручьёв + 20 мм), если есть лыжи (стандартные или нестандартные), то ещё + 20 мм"));
+            "((кол-во ручьёв * ширина ручьёв + 20 мм), если есть лыжи (стандартные или нестандартные), то ещё + 20 мм) / 1000"));
         
-        array_push($file_data, array("Площадь форм, см2",
+        array_push($file_data, array("Площадь форм, м2",
             CalculationBase::Display($calculation->cliche_area, 2),
-            "|= ".CalculationBase::Display($calculation->cliche_height, 2)." * ".CalculationBase::Display($calculation->cliche_width, 2)." / 100",
-            "высота форм * ширина форм / 100"));
+            "|= ".CalculationBase::Display($calculation->cliche_height, 2)." * ".CalculationBase::Display($calculation->cliche_width, 2),
+            "высота форм * ширина форм"));
         
         array_push($file_data, array("Количество новых форм",
             CalculationBase::Display($calculation->cliche_new_number, 2),"", ""));
@@ -975,7 +976,7 @@ if($id !== null) {
             array_push($file_data, array("Цена формы $i, руб",
                 CalculationBase::Display($calculation->cliche_costs[$i], 2),
                 "|= ".CalculationBase::Display($calculation->cliche_area, 2)." * ".CalculationBase::Display($cliche_sm_price, 2)." * ".CalculationBase::Display($calculation->GetCurrencyRate($cliche_currency, $usd, $euro), 2),
-                "площадь формы * цена формы за 1 см2 * курс валюты / 100"));
+                "площадь формы, м2 * 10000 * цена формы за 1 см2 * курс валюты"));
         }
         
         array_push($file_data, array("", "", "", ""));
@@ -1007,8 +1008,8 @@ if($id !== null) {
             
             array_push($file_data, array("Стоимость скотча Цвет $i, руб",
                 CalculationBase::Display($calculation->scotch_costs[$i], 2),
-                "|= ".CalculationBase::Display($cliche_area, 2)." * ".CalculationBase::Display($data_cliche->scotch_price, 2)." * ".CalculationBase::Display($calculation->GetCurrencyRate($data_cliche->scotch_currency, $usd, $euro), 2)." / 10000",
-                "площадь формы цвет $i, см2 * цена скотча за м2 * курс валюты / 10000"));
+                "|= ".CalculationBase::Display($cliche_area, 2)." * ".CalculationBase::Display($data_cliche->scotch_price, 2)." * ".CalculationBase::Display($calculation->GetCurrencyRate($data_cliche->scotch_currency, $usd, $euro), 2),
+                "площадь формы цвет $i, см2 * цена скотча за м2 * курс валюты"));
         }
         
         array_push($file_data, array("Общая себестоимость скотча, руб",
@@ -1024,15 +1025,6 @@ if($id !== null) {
         
         array_push($file_data, array("Наценка на тираж, %", CalculationBase::Display($calculation->extracharge, 2), "", ""));
         array_push($file_data, array("Наценка на ПФ, %", CalculationBase::Display($calculation->extracharge_cliche, 2), "", "Если УКПФ = 1, то наценка на ПФ всегда 0"));
-        array_push($file_data, array("", "", "", ""));
-        
-        //*******************************************
-        // Дополнительные расходы
-        //*******************************************
-        
-        array_push($file_data, array("Общие дополнительные расходы, руб", CalculationBase::Display($calculation->total_extra_expense, 2), 
-            "|= ".CalculationBase::Display($extra_expense, 3)." * ".$quantity, 
-            "дополнительные расходы с ".$calculation->GetUnitName($unit)));
         array_push($file_data, array("", "", "", ""));
         
         //*******************************************
@@ -1115,8 +1107,8 @@ if($id !== null) {
             
         array_push($file_data, array("Прибыль, руб",
             CalculationBase::Display($calculation->income, 2),
-            "|= ".CalculationBase::Display($calculation->shipping_cost, 2)." - ".CalculationBase::Display($calculation->cost, 2)." - ".CalculationBase::Display($calculation->total_extra_expense, 2),
-            "отгрузочная стоимость - себестоимость - общие дополнительные расходы"));
+            "|= (".CalculationBase::Display($calculation->shipping_cost, 2)." - ".CalculationBase::Display($calculation->cost, 2).") - (".CalculationBase::Display($extra_expense, 3)." * ".$quantity.")",
+            "(отгрузочная стоимость - себестоимость) - (объём заказа, кг/шт * доп. расходы)"));
             
         array_push($file_data, array("Прибыль за ".$calculation->GetUnitName($unit).", руб",
             CalculationBase::Display($calculation->income_per_unit, 2),

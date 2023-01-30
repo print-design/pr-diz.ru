@@ -442,7 +442,7 @@ class CalculationBase {
 class Calculation extends CalculationBase {
     public $laminations_number = 0; // количество ламинаций
     
-    public $uk1, $uk2, $uk3, $ukpf, $ukcuspaypf, $ukvap; // уравнивающий коэффициент 1, 2, 3, ПФ, ЗаказчикПлатитЗаПФ, коэфф. испарения
+    public $uk1, $uk2, $uk3, $ukpf, $ukcuspaypf; // уравнивающий коэффициент 1, 2, 3, ПФ, ЗаказчикПлатитЗаПФ
     public $area_pure_start = 0; // м2 чистые, м2 (рассчитывается: длина * ширина * кол-во в шт.; используется для вычисления массы тиража, если он в шт.)
     public $weight = 0; // масса тиража, кг
     public $width_1, $width_2, $width_3; // ширина материала, мм 
@@ -841,13 +841,13 @@ class Calculation extends CalculationBase {
         //*****************************************
         
         // Время приладки 1, мин
-        $this->priladka_time_1 = $ink_number * $data_priladka->time;
+        $this->priladka_time_1 = $ink_number * $data_priladka->time / 60;
         
         // Время приладки 2, мин
-        $this->priladka_time_2 = $data_priladka_laminator->time * $this->uk2;
+        $this->priladka_time_2 = $data_priladka_laminator->time * $this->uk2 / 60;
         
         // Время приладки 3, мин
-        $this->priladka_time_3 = $data_priladka_laminator->time * $this->uk3;
+        $this->priladka_time_3 = $data_priladka_laminator->time * $this->uk3 / 60;
         
 
         // Время печати (без приладки) 1, ч
@@ -893,41 +893,26 @@ class Calculation extends CalculationBase {
         $this->ink_1kg_mix_weight = 1 + $data_ink->solvent_part;
         
         // Цена 1 кг чистого флексоля 82, руб
-        $this->ink_flexol82_kg_price = $data_ink->solvent_flexol82_price * self::GetCurrencyRate($data_ink->solvent_flexol82_currency, $usd, $euro);
+        $this->ink_flexol82_kg_price = $data_ink->solvent_flexol82_price;
         
         // Цена 1 кг чистого этоксипропанола, руб
-        $this->ink_etoxypropanol_kg_price = $data_ink->solvent_etoxipropanol_price * self::GetCurrencyRate($data_ink->solvent_etoxipropanol_currency, $usd, $euro);
+        $this->ink_etoxypropanol_kg_price = $data_ink->solvent_etoxipropanol_price;
         
         // Если печатаем на Комифлекс, то пользуемся флексолем82, иначе - этоксипропанолом
         $ink_solvent_kg_price = 0;
+        $ink_solvent_currency = 1;
         
         if($machine_shortname == self::COMIFLEX) {
             $ink_solvent_kg_price = $this->ink_flexol82_kg_price;
+            $ink_solvent_currency = self::GetCurrencyRate($data_ink->solvent_flexol82_currency, $usd, $euro);
         }
         else {
             $ink_solvent_kg_price = $this->ink_etoxypropanol_kg_price;
+            $ink_solvent_currency = self::GetCurrencyRate($data_ink->solvent_etoxipropanol_currency, $usd, $euro);
         }
         
-        // Коэффициент испарения
-        if($data_machine->vaporization_expense > 0) {
-            $this->ukvap = 1;
-        }
-        else {
-            $this->ukvap = 0;
-        }
-        
-        // М2 испарения грязная, м2
+        // М2 испарения растворителя грязная, м2
         $this->vaporization_area_dirty = $data_machine->width * $this->length_dirty_start_1 / 100;
-        
-        // М2 испарения чистая, м2
-        $this->vaporization_area_pure = $this->vaporization_area_dirty - $this->print_area;
-        
-        // Расход испарения растворителя, кг
-        $this->vaporization_expense = $this->vaporization_area_pure * $data_machine->vaporization_expense;
-        
-        // Стоимость испарения растворителя
-        $this->vaporization_cost = $this->vaporization_expense * $ink_solvent_kg_price * $this->ukvap;
-        
         
         // Создаём массивв цен за 1 кг каждой чистой краски
         $this->ink_kg_prices = array();
@@ -971,7 +956,16 @@ class Calculation extends CalculationBase {
             $ink_cost = $ink_expense * $mix_ink_kg_price;
             $this->ink_costs[$i] = $ink_cost;
             
-            // Расход (краска + растворитель на одну краску)
+            // М2 испарения растворителя чистая, м2
+            $this->vaporization_area_pure = $this->vaporization_area_dirty - ($this->print_area * $$percent / 100);
+        
+            // Расход испарения растворителя, кг
+            $this->vaporization_expense = $this->vaporization_area_pure * $data_machine->vaporization_expense / 1000;
+        
+            // Стоимость испарения растворителя, руб
+            $this->vaporization_cost = $this->vaporization_expense * $ink_solvent_kg_price * $ink_solvent_currency;
+            
+            // Расход (краска + растворитель на одну краску), руб
             $this->ink_costs_mix[$i] = $this->ink_costs[$i] + $this->vaporization_cost;
             
             // Стоимость КраскаСмеси финальная, руб
@@ -1033,14 +1027,14 @@ class Calculation extends CalculationBase {
         // Стоимость форм
         //***********************************
         
-        // Высота форм, мм
-        $this->cliche_height = $raport + 20;
+        // Высота форм, м
+        $this->cliche_height = ($raport + 20) / 1000;
         
-        // Ширина форм, мм
-        $this->cliche_width = ($streams_number * $stream_width + 20) + ((!empty($ski_1) && $ski_1 == self::NO_SKI) ? 0 : 20);
+        // Ширина форм, м
+        $this->cliche_width = ($streams_number * $stream_width + 20 + ((!empty($ski_1) && $ski_1 == self::NO_SKI) ? 0 : 20)) / 1000;
         
-        // Площадь форм, см
-        $this->cliche_area = $this->cliche_height * $this->cliche_width / 100;
+        // Площадь форм, м2
+        $this->cliche_area = $this->cliche_height * $this->cliche_width;
         
         // Создаём массив стоимостей каждой формы
         $this->cliche_costs = array();
@@ -1073,7 +1067,7 @@ class Calculation extends CalculationBase {
             }
             
             // Стоимость формы, руб
-            $cliche_cost = $this->cliche_area * $cliche_sm_price * self::GetCurrencyRate($cliche_currency, $usd, $euro);
+            $cliche_cost = $this->cliche_area * 10000 * $cliche_sm_price * self::GetCurrencyRate($cliche_currency, $usd, $euro);
             $this->cliche_costs[$i] = $cliche_cost;
         }
         
@@ -1091,7 +1085,7 @@ class Calculation extends CalculationBase {
                 $cliche_area = $this->cliche_area;
             }
             
-            $this->scotch_costs[$i] = $cliche_area * $data_cliche->scotch_price * self::GetCurrencyRate($data_cliche->scotch_currency, $usd, $euro) / 10000;
+            $this->scotch_costs[$i] = $cliche_area * $data_cliche->scotch_price * self::GetCurrencyRate($data_cliche->scotch_currency, $usd, $euro);
         }
         
         // Общая себестоимость скотча
@@ -1136,13 +1130,6 @@ class Calculation extends CalculationBase {
         if($this->ukpf == 1) {
             $this->extracharge_cliche = 0;
         }
-        
-        //***********************************************
-        // ДОПОЛНИТЕЛЬНЫЕ РАСХОДЫ
-        //***********************************************
-        
-        // Общие дополнительные расходы
-        $this->total_extra_expense = $extra_expense * $quantity;
         
         //***********************************************
         //ПРАВАЯ ПАНЕЛЬ
@@ -1197,7 +1184,7 @@ class Calculation extends CalculationBase {
         $this->shipping_cost_per_unit = $this->shipping_cost / $quantity;
         
         // Прибыль
-        $this->income = $this->shipping_cost - $this->cost - $this->total_extra_expense;
+        $this->income = ($this->shipping_cost - $this->cost) - ($extra_expense * $quantity);
         
         // Прибыль за единицу
         $this->income_per_unit = $this->shipping_cost_per_unit - $this->cost_per_unit - $extra_expense;
