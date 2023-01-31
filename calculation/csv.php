@@ -1177,7 +1177,7 @@ if($id !== null) {
         
         //***************************************************
         // Сохранение в файл
-        $file_name = DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y')." $name.csv";
+        $file_name = DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y').' '.str_replace(',', '_', $name).".csv";
         
         DownloadSendHeaders($file_name);
         echo Array2Csv($file_data, $titles);
