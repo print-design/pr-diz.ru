@@ -688,10 +688,10 @@ if($id !== null) {
             CalculationBase::Display($calculation->shipping_knife_cost, 2),
             "|= (".CalculationBase::Display($calculation->knife_cost, 2)." + (".CalculationBase::Display($calculation->knife_cost, 2)." * ".CalculationBase::Display($calculation->extracharge_knife, 2)." / 100)) * ".$calculation->ukcuspayknife." * ((".$calculation->ukknife." - 1) / -1)",
             "(себестоимость ножа + (себестоимость ножа * наценка на нож / 100)) * CusPayKnife * ((КоэфНож - 1) / -1)"));
-            
+        
         array_push($file_data, array("Прибыль, руб",
             CalculationBase::Display($calculation->income, 2),
-            "|= (".CalculationBase::Display($calculation->shipping_cost, 2)." - ".CalculationBase::Display($calculation->cost, 2).") - (".CalculationBase::Display($extra_expense, 3)." * ".$quantity.")",
+            "|= ".CalculationBase::Display($calculation->shipping_cost, 2)." - ".CalculationBase::Display($calculation->cost, 2)." - (".CalculationBase::Display($extra_expense, 3)." * ".$calculation->quantity.")",
             "(отгрузочная стоимость - себестоимость) - (доп. расходы на кг / шт * объём заказа, кг/шт)"));
             
         array_push($file_data, array("Прибыль за шт, руб",
