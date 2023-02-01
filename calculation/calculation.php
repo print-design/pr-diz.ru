@@ -1222,7 +1222,7 @@ class Calculation extends CalculationBase {
 class CalculationSelfAdhesive extends CalculationBase {
     public $quantity = 0; // Суммарное количество этикеток
     public $quantities_count = 0; // Количество тиражей
-    public $ukpf, $ukcuspaypf, $ukvap; // Уравнивающий коэффициент ПФ, ЗаказчикПлатитЗаПФ, коэфф. испарения
+    public $ukpf, $ukcuspaypf; // Уравнивающий коэффициент ПФ, ЗаказчикПлатитЗаПФ
     public $ukknife, $ukcuspayknife; // Уравнивающий коэффициент нож, ЗаказчикПлатитЗаНож
     
     public $width_mat = 0; // Ширина материала
@@ -1257,7 +1257,6 @@ class CalculationSelfAdhesive extends CalculationBase {
     public $vaporization_area_dirty; // м2 испарения грязная
     public $vaporization_area_pure; // м2 испарения чистая
     public $vaporization_expense; // расход испарения растворителя, кг
-    public $vaporization_cost; // стоимость испарения растворителя, руб
     
     public $ink_kg_prices; // массив: цена 1 кг каждой чистой краски
     public $mix_ink_kg_prices; // массив: цена 1 кг каждой краскаСмеси
@@ -1480,14 +1479,6 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->ink_etoxypropanol_kg_price = $data_ink->solvent_etoxipropanol_price * self::GetCurrencyRate($data_ink->solvent_etoxipropanol_currency, $usd, $euro);
         
         
-        // Коэффициент испарения
-        if($data_machine->vaporization_expense > 0) {
-            $this->ukvap = 1;
-        }
-        else {
-            $this->ukvap = 0;
-        }
-        
         // М2 испарения грязная, м2
         $this->vaporization_area_dirty = $data_machine->width * $this->length_pog_dirty / 100;
         
@@ -1496,9 +1487,6 @@ class CalculationSelfAdhesive extends CalculationBase {
         
         // Расход испарения растворителя, кг
         $this->vaporization_expense = $this->vaporization_area_pure * $data_machine->vaporization_expense;
-        
-        // Стоимость испарения растворителя
-        $this->vaporization_cost = $this->vaporization_expense * $this->ink_etoxypropanol_kg_price * $this->ukvap;
         
         
         // Создаём массив цен за 1 кг каждой краски
@@ -1561,8 +1549,8 @@ class CalculationSelfAdhesive extends CalculationBase {
                 $ink_cost = $ink_expense * $mix_ink_kg_price;
                 $this->ink_costs[$i] = $ink_cost;
                 
-                // Расход (краска + растворитель на одну краску)
-                $this->ink_costs_mix[$i] = $this->ink_costs[$i] + $this->vaporization_cost;
+                // Расходы (КраскаСмеси на одну краску), руб
+                $this->ink_costs_mix[$i] = $this->ink_costs[$i];
                 
                 // Стоимость КраскаСмеси финальная, руб
                 if($this->ink_costs_mix[$i] < $data_ink->min_price_per_ink) {
@@ -1578,20 +1566,20 @@ class CalculationSelfAdhesive extends CalculationBase {
         // Стоимость форм
         //********************************
         
-        // Высота форм, мм
-        $this->cliche_height = $raport + 20;
+        // Высота форм, м
+        $this->cliche_height = ($raport + 20) / 1000;
         
-        // Ширина форм, мм (для самоклейки без лыж не бывает)
-        $this->cliche_width = ($streams_number * $this->width_dirty + 20) + 20;
+        // Ширина форм, м (для самоклейки без лыж не бывает)
+        $this->cliche_width = ($streams_number * $this->width_dirty + 20 + 20) / 1000;
         
-        // Площадь форм, см
-        $this->cliche_area = $this->cliche_height * $this->cliche_width / 100;
+        // Площадь форм, м2
+        $this->cliche_area = $this->cliche_height * $this->cliche_width;
         
         // Себестоимость 1 формы Флинт, руб
-        $this->cliche_flint_price = $this->cliche_area * $data_cliche->flint_price * self::GetCurrencyRate($data_cliche->flint_currency, $usd, $euro);
+        $this->cliche_flint_price = $this->cliche_area * 10000 * $data_cliche->flint_price * self::GetCurrencyRate($data_cliche->flint_currency, $usd, $euro);
         
         // Себестоимость 1 формы Кодак, руб
-        $this->cliche_kodak_price = $this->cliche_area * $data_cliche->kodak_price * self::GetCurrencyRate($data_cliche->kodak_currency, $usd, $euro);
+        $this->cliche_kodak_price = $this->cliche_area * 10000 * $data_cliche->kodak_price * self::GetCurrencyRate($data_cliche->kodak_currency, $usd, $euro);
         
         // Себестоимость всех форм Флинт, руб
         $this->cliche_all_flint_price = $cliches_count_flint * $this->cliche_flint_price;
@@ -1616,7 +1604,7 @@ class CalculationSelfAdhesive extends CalculationBase {
                 $cliche_area = $this->cliche_area;
             }
             
-            $this->scotch_costs[$i] = $cliche_area * $data_cliche->scotch_price * self::GetCurrencyRate($data_cliche->scotch_currency, $usd, $euro) / 10000;
+            $this->scotch_costs[$i] = $cliche_area * $data_cliche->scotch_price * self::GetCurrencyRate($data_cliche->scotch_currency, $usd, $euro);
         }
         
         // Общая себестоимость скотча
@@ -1656,13 +1644,6 @@ class CalculationSelfAdhesive extends CalculationBase {
         if($this->ukknife == 1) {
             $this->extracharge_knife = 0;
         }
-        
-        //*********************************
-        // ДОПОЛНИТЕЛЬНЫЕ РАСХОДЫ
-        //*********************************
-        
-        // Общие дополнительные расходы
-        $this->total_extra_expense = $extra_expense * $this->quantity;
         
         //*********************************
         // ПРАВАЯ ПАНЕЛЬ
@@ -1713,7 +1694,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->shipping_cost_per_unit = $this->shipping_cost / $this->quantity;
         
         // Прибыль
-        $this->income = $this->shipping_cost - $this->cost - $this->total_extra_expense;
+        $this->income = $this->shipping_cost - $this->cost - ($extra_expense * $this->quantity);
         
         // Прибыль за единицу
         $this->income_per_unit = $this->shipping_cost_per_unit - $this->cost_per_unit - $extra_expense;
