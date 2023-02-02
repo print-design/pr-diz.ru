@@ -803,8 +803,8 @@ if($id !== null) {
         
         array_push($file_data, array("М2 испарения растворителя грязная, м2",
             CalculationBase::Display($calculation->vaporization_area_dirty, 2),
-            "|= ". CalculationBase::Display($data_machine->width, 0)." * ". CalculationBase::Display($calculation->length_dirty_start_1, 2)." / 100",
-            "Ширина машины * м. пог грязные / 100"));
+            "|= ". CalculationBase::Display($data_machine->width, 0)." * ". CalculationBase::Display($calculation->length_dirty_start_1, 2)." / 1000",
+            "Ширина машины * м. пог грязные / 1000"));
         
         array_push($file_data, array("", "", "", ""));
         

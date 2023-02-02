@@ -912,7 +912,7 @@ class Calculation extends CalculationBase {
         }
         
         // М2 испарения растворителя грязная, м2
-        $this->vaporization_area_dirty = $data_machine->width * $this->length_dirty_start_1 / 100;
+        $this->vaporization_area_dirty = $data_machine->width * $this->length_dirty_start_1 / 1000;
         
         // Создаём массив: м2 испарения чистая
         $this->vaporization_areas_pure = array();
