@@ -806,6 +806,8 @@ if($id !== null) {
             "|= ". CalculationBase::Display($data_machine->width, 0)." * ". CalculationBase::Display($calculation->length_dirty_start_1, 2)." / 100",
             "Ширина машины * м. пог грязные / 100"));
         
+        array_push($file_data, array("", "", "", ""));
+        
         for($i=1; $i<=$ink_number; $i++) {
             $ink = "ink_$i";
             $cmyk = "cmyk_$i";
@@ -833,22 +835,22 @@ if($id !== null) {
                 "|= ". CalculationBase::Display($calculation->mix_ink_kg_prices[$i], 2)." * ". CalculationBase::Display($calculation->ink_expenses[$i], 2),
                 "Расход КраскаСмеси $i * цена 1 кг КраскаСмеси $i"));
             
-            array_push($file_data, array("М2 испарения растворителя чистая, м2",
+            array_push($file_data, array("М2 испарения растворителя чистая КраскаСмеси $i, м2",
                 CalculationBase::Display($calculation->vaporization_areas_pure[$i], 2),
                 "|= ". CalculationBase::Display($calculation->vaporization_area_dirty, 2)." - (". CalculationBase::Display($calculation->print_area, 2)." * ".CalculationBase::Display($$percent, 2)." / 100)",
                 "М2 испарения растворителя грязное - (М2 запечатки * процент запечатки / 100)"));
         
-            array_push($file_data, array("Расход испарения растворителя, кг",
+            array_push($file_data, array("Расход испарения растворителя КраскаСмеси $i, кг",
                 CalculationBase::Display($calculation->vaporization_expenses[$i], 2),
                 "|= ". CalculationBase::Display($calculation->vaporization_areas_pure[$i], 2)." * ". CalculationBase::Display($data_machine->vaporization_expense, 2)." / 1000",
                 "М2 испарения растворителя чистое * расход Растворителя на испарения (г/м2) / 1000"));
         
-            array_push($file_data, array("Стоимость испарения растворителя, руб",
+            array_push($file_data, array("Стоимость испарения растворителя КраскаСмеси $i, руб",
                 CalculationBase::Display($calculation->vaporization_costs[$i], 2),
                 "|= ". CalculationBase::Display($calculation->vaporization_expenses[$i], 2)." * ". CalculationBase::Display($ink_solvent_kg_price, 2)." * ".CalculationBase::Display($ink_solvent_currency, 2),
                 "Расход испарения растворителя КГ * стоимость растворителя за КГ * валюту"));
             
-            array_push($file_data, array("Расход (краска + растворитель на одну краску), руб",
+            array_push($file_data, array("Расход (краска + растворитель на одну краску) КраскаСмеси $i, руб",
                 CalculationBase::Display($calculation->ink_costs_mix[$i], 2),
                 "|= ". CalculationBase::Display($calculation->ink_costs[$i], 2)." + ". CalculationBase::Display($calculation->vaporization_costs[$i], 2),
                 "Стоимость КраскаСмеси на тираж, ₽ + Стоимость испарения растворителя, ₽"));
