@@ -455,7 +455,7 @@ if($status_id == DRAFT || $status_id == CALCULATION) {
                 extracharge_cliche = parseInt(param);
                 
                 if(!isNaN(extracharge_cliche) && extracharge_cliche > -1) {
-                    $.ajax({ dataType: 'JSON', url: "_set_extracharge_cliche.php?id=<?=$id ?>&extracharge_cliche=" + extracharge_cliche })
+                    $.ajax({ dataType: 'JSON', url: "_set_extracharge_cliche.php?id=<?=$id ?>&work_type_id=<?=$work_type_id ?>&extracharge_cliche=" + extracharge_cliche })
                             .done(function(data) {
                                 if(data.error != '') {
                                     alert(data.error);
@@ -510,7 +510,7 @@ if($status_id == DRAFT || $status_id == CALCULATION) {
                 extracharge_knife = parseInt(param);
                 
                 if(!isNaN(extracharge_knife) && extracharge_knife > -1) {
-                    $.ajax({ dataType: 'JSON', url: '_set_extracharge_knife.php?id=<?=$id ?>&extracharge_knife=' + extracharge_knife })
+                    $.ajax({ dataType: 'JSON', url: '_set_extracharge_knife.php?id=<?=$id ?>&work_type_id=<?=$work_type_id ?>&extracharge_knife=' + extracharge_knife })
                             .done(function(data) {
                                 if(data.error != '') {
                                     alert(data.error);

@@ -605,7 +605,7 @@ if(!empty($id)) {
         <div class="col-4">
             <h3>Прибыль</h3>
             <div>Прибыль</div>
-            <div class="value mb-2"><span id="income"><?= CalculationBase::Display(floatval($income), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="income_per_unit"><?= CalculationBase::Display($income_per_unit, 3) ?></span> &#8381; за шт</span></div>
+            <div class="value mb-2"><span id="income"><?= CalculationBase::Display(floatval($income), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="income_per_unit"><?= CalculationBase::Display(floatval($income_per_unit), 3) ?></span> &#8381; за шт</span></div>
             <div class="mt-2">Прибыль ПФ</div>
             <div class="value"><span id="income_cliche"><?= CalculationBase::Display(floatval($income_cliche), 0) ?></span> &#8381;</div>
         </div>
