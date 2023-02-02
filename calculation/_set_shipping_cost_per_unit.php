@@ -43,30 +43,25 @@ else {
         $error_message = $executer->error;
     }
     
+    if(empty($error_message)) {
+        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.shipping_cost = cr.cost + (cr.cost * c.extracharge / 100) where c.id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
     if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE && $quantity > 0 && empty($error_message)) {
-        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.shipping_cost = cr.shipping_cost_per_unit * $quantity where c.id = $id";
+        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.income = cr.shipping_cost - cr.cost - (c.extra_expense * $quantity) where c.id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
     elseif(empty($error_message)) {
-        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.shipping_cost = cr.shipping_cost_per_unit * c.quantity where c.id = $id";
+        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.income = cr.shipping_cost - cr.cost - (c.extra_expense * c.quantity) where c.id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
     
     if(empty($error_message)) {
-        $sql = "update calculation_result set income = shipping_cost - cost";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
-    }
-    
-    if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE && $quantity > 0 && empty($error_message)) {
-        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.income_per_unit = cr.income / $quantity where c.id = $id";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
-    }
-    elseif(empty($error_message)) {
-        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.income_per_unit = cr.income / c.quantity where c.id = $id";
+        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.income_per_unit = cr.shipping_cost_per_unit - cr.cost_per_unit - c.extra_expense where c.id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
