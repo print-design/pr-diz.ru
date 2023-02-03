@@ -538,18 +538,18 @@ if($id !== null) {
         
         array_push($file_data, array("Время приладки, ч",
             CalculationBase::Display($calculation->priladka_time, 2),
-            "|= $ink_number"." * ".CalculationBase::Display($data_priladka->time, 2)." * ".$calculation->quantities_count,
-            "красочность * время приладки 1 краски * количество тиражей"));
+            "|= $ink_number"." * ".CalculationBase::Display($data_priladka->time, 2)." / 60 * ".$calculation->quantities_count,
+            "красочность * время приладки 1 краски, мин / 60 * количество тиражей"));
         
         array_push($file_data, array("Время печати тиража, без приладки, ч",
             CalculationBase::Display($calculation->print_time, 2),
             "|= (". CalculationBase::Display($calculation->length_pog_pure, 2)." + ". CalculationBase::Display($calculation->waste_length, 2).") / ". CalculationBase::Display($data_machine->speed, 2)." / 1000",
-            "м. пог. чистые + СтартСтопОтход) / скорость работы машины / 1000"));
+            "(м. пог. чистые + СтартСтопОтход) / скорость работы машины / 1000"));
         
         array_push($file_data, array("Общее время выполнения тиража, ч",
             CalculationBase::Display($calculation->work_time, 2),
-            "|= ". CalculationBase::Display($calculation->priladka_time, 2)." / 60 + ". CalculationBase::Display($calculation->print_time, 2),
-            "время приладки / 60 + время печати тиража"));
+            "|= ". CalculationBase::Display($calculation->priladka_time, 2)." + ". CalculationBase::Display($calculation->print_time, 2),
+            "время приладки + время печати тиража"));
         
         array_push($file_data, array("Стоимость выполнения, руб",
             CalculationBase::Display($calculation->work_cost, 2),
