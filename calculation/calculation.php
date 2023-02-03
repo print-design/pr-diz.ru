@@ -439,7 +439,7 @@ class CalculationBase {
     
     // Подготовка параметров для конструктора класса расчёта
     // и создание объекта расчёта
-    public static function Create($id, $work_type_id) {
+    public static function Create($id) {
         // ПОЛУЧЕНИЕ ИСХОДНЫХ ДАННЫХ
         $date = null;
         $name = null;

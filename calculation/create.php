@@ -3523,7 +3523,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 extracharge = parseInt(param);
                 
                 if(!isNaN(extracharge) && extracharge > -1) {
-                    $.ajax({ dataType: 'JSON', url: '_set_extracharge.php?id=<?=$id ?>&work_type_id=<?=$work_type_id ?>&extracharge=' + extracharge })
+                    $.ajax({ dataType: 'JSON', url: '_set_extracharge.php?id=<?=$id ?>&extracharge=' + extracharge })
                             .done(function(data) {
                                 if(data.error != '') {
                                     alert(data.error);
@@ -3551,7 +3551,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 extracharge_cliche = parseInt(param);
                 
                 if(!isNaN(extracharge_cliche) && extracharge_cliche > -1) {
-                    $.ajax({ dataType: 'JSON', url: "_set_extracharge_cliche.php?id=<?=$id ?>&work_type_id=<?=$work_type_id ?>&extracharge_cliche=" + extracharge_cliche })
+                    $.ajax({ dataType: 'JSON', url: "_set_extracharge_cliche.php?id=<?=$id ?>&extracharge_cliche=" + extracharge_cliche })
                             .done(function(data) {
                                 if(data.error != '') {
                                     alert(data.error);
@@ -3577,7 +3577,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 shipping_cost_per_unit = parseFloat(param.replace(',', '.'));
                 
                 if(!isNaN(shipping_cost_per_unit) && shipping_cost_per_unit > -1) {
-                    $.ajax({ dataType: 'JSON', url: '_set_shipping_cost_per_unit.php?id=<?=$id ?>&work_type_id=<?=$work_type_id ?>&shipping_cost_per_unit=' + shipping_cost_per_unit })
+                    $.ajax({ dataType: 'JSON', url: '_set_shipping_cost_per_unit.php?id=<?=$id ?>&shipping_cost_per_unit=' + shipping_cost_per_unit })
                             .done(function(data) {
                                 if(data.error != '') {
                                     alert(data.error);
@@ -3606,7 +3606,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 extracharge_knife = parseInt(param);
                 
                 if(!isNaN(extracharge_knife) && extracharge_knife > -1) {
-                    $.ajax({ dataType: 'JSON', url: '_set_extracharge_knife.php?id=<?=$id ?>&work_type_id=<?=$work_type_id ?>&extracharge_knife=' + extracharge_knife })
+                    $.ajax({ dataType: 'JSON', url: '_set_extracharge_knife.php?id=<?=$id ?>&extracharge_knife=' + extracharge_knife })
                             .done(function(data) {
                                 if(data.error != '') {
                                     alert(data.error);

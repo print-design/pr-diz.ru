@@ -3,15 +3,11 @@ include '../include/topscripts.php';
 include './calculation.php';
 
 $id = filter_input(INPUT_GET, 'id');
-$work_type_id = filter_input(INPUT_GET, 'work_type_id');
 $extracharge = filter_input(INPUT_GET, 'extracharge');
 $result = array();
 
 if(empty($id)) {
     $result['error'] = "Не указан ID расчёта";
-}
-elseif(empty($work_type_id)) {
-    $result['error'] = "Не указан тип работы";
 }
 elseif($extracharge === null || $extracharge === '') {
     $result['error'] = "Не указан размер наценки";
@@ -27,7 +23,7 @@ else {
     $income_per_unit = 0;
     
     if(empty($error_message)) {
-        $calculation = CalculationBase::Create($id, $work_type_id);
+        $calculation = CalculationBase::Create($id);
         
         if($calculation instanceof CalculationBase) {
             $shipping_cost = $calculation->shipping_cost;
