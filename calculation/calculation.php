@@ -864,13 +864,13 @@ class Calculation extends CalculationBase {
         
         
         // Общее время выполнения тиража 1, ч
-        $this->work_time_1 = $this->priladka_time_1 / 60 + $this->print_time_1;
+        $this->work_time_1 = $this->priladka_time_1 + $this->print_time_1;
          
         // Общее время выполнения тиража 2, ч
-        $this->work_time_2 = $this->priladka_time_2 / 60 + $this->lamination_time_2;
+        $this->work_time_2 = $this->priladka_time_2 + $this->lamination_time_2;
         
         // Общее время выполнения тиража 3, ч
-        $this->work_time_3 = $this->priladka_time_3 / 60 + $this->lamination_time_3;
+        $this->work_time_3 = $this->priladka_time_3 + $this->lamination_time_3;
         
         
         // Стоимость выполнения тиража 1, руб

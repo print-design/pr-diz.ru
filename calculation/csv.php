@@ -763,18 +763,18 @@ if($id !== null) {
         
         array_push($file_data, array("Общее время выполнения тиража 1, ч",
             CalculationBase::Display($calculation->work_time_1, 2),
-            "|= ".CalculationBase::Display($calculation->priladka_time_1, 2)." / 60 + ".CalculationBase::Display($calculation->print_time_1, 2),
-            "время приладки 1 / 60 + время печати"));
+            "|= ".CalculationBase::Display($calculation->priladka_time_1, 2)." + ".CalculationBase::Display($calculation->print_time_1, 2),
+            "время приладки 1 + время печати"));
         
         array_push($file_data, array("Общее время выполнения тиража 2, ч",
             CalculationBase::Display($calculation->work_time_2, 2),
-            "|= ".CalculationBase::Display($calculation->priladka_time_2, 2)." / 60 + ".CalculationBase::Display($calculation->lamination_time_2, 2),
-            "время приладки 2 / 60 + время ламинации 1"));
+            "|= ".CalculationBase::Display($calculation->priladka_time_2, 2)." + ".CalculationBase::Display($calculation->lamination_time_2, 2),
+            "время приладки 2 + время ламинации 1"));
         
         array_push($file_data, array("Общее время выполнения тиража 3, ч",
             CalculationBase::Display($calculation->work_time_3, 2),
-            "|= ".CalculationBase::Display($calculation->priladka_time_3, 2)." / 60 + ".CalculationBase::Display($calculation->lamination_time_3, 2),
-            "время приладки 3 / 60 + время ламинации 2"));
+            "|= ".CalculationBase::Display($calculation->priladka_time_3, 2)." + ".CalculationBase::Display($calculation->lamination_time_3, 2),
+            "время приладки 3 + время ламинации 2"));
         
         array_push($file_data, array("Стоимость выполнения тиража 1, руб",
             CalculationBase::Display($calculation->work_cost_1, 2),
