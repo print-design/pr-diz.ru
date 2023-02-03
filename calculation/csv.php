@@ -78,7 +78,8 @@ if($id !== null) {
             . "rc.lacquer_1, rc.lacquer_2, rc.lacquer_3, rc.lacquer_4, rc.lacquer_5, rc.lacquer_6, rc.lacquer_7, rc.lacquer_8, "
             . "rc.percent_1, rc.percent_2, rc.percent_3, rc.percent_4, rc.percent_5, rc.percent_6, rc.percent_7, rc.percent_8, "
             . "rc.cliche_1, rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8, "
-            . "rc.cliche_in_price, rc.extracharge, rc.extracharge_cliche, rc.customer_pays_for_cliche, rc.extra_expense "
+            . "rc.cliche_in_price, rc.cliches_count_flint, rc.cliches_count_kodak, rc.cliches_count_old, rc.extracharge, rc.extracharge_cliche, rc.customer_pays_for_cliche, "
+            . "rc.knife, rc.extracharge_knife, rc.knife_in_price, rc.customer_pays_for_knife, rc.extra_expense "
             . "from calculation rc "
             . "left join machine m on rc.machine_id = m.id "
             . "left join laminator lam on rc.laminator_id = lam.id "
@@ -167,9 +168,17 @@ if($id !== null) {
         $cliche_1 = $row['cliche_1']; $cliche_2 = $row['cliche_2']; $cliche_3 = $row['cliche_3']; $cliche_4 = $row['cliche_4']; $cliche_5 = $row['cliche_5']; $cliche_6 = $row['cliche_6']; $cliche_7 = $row['cliche_7']; $cliche_8 = $row['cliche_8'];
         
         $cliche_in_price = $row['cliche_in_price']; // Включать стоимиость ПФ в тираж
+        $cliches_count_flint = $row['cliches_count_flint']; // Количество форм Флинт
+        $cliches_count_kodak = $row['cliches_count_kodak']; // Количество форм Кодак
+        $cliches_count_old = $row['cliches_count_old']; // Количество старых форм
         $extracharge = $row['extracharge']; // Наценка на тираж
         $extracharge_cliche = $row['extracharge_cliche']; // Наценка на ПФ
         $customer_pays_for_cliche = $row['customer_pays_for_cliche']; // Заказчик платит за ПФ
+        
+        $knife = $row['knife']; // Стоимость ножа
+        $extracharge_knife = $row['extracharge_knife']; // Наценка на нож
+        $knife_in_price = $row['knife_in_price']; // Нож включен в себестоимость
+        $customer_pays_for_knife = $row['customer_pays_for_knife']; // Заказчик платит за нож
         $extra_expense = $row['extra_expense']; // Дополнительные расходы с кг/шт
         
         // Если тип работы - плёнка без печати, то 
@@ -206,11 +215,24 @@ if($id !== null) {
         }
     }
     
+    // Размеры тиражей
+    $quantities = array();
+    
+    if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE && empty($error_message)) {
+        $sql = "select id, quantity from calculation_quantity where calculation_id = $id";
+        $fetcher = new Fetcher($sql);
+    
+        while($row = $fetcher->Fetch()) {
+            $quantities[$row['id']] = $row['quantity'];
+        }
+    }
+    
     // ПОЛУЧЕНИЕ НОРМ
     $data_priladka = new DataPriladka(null, null, null, null);
     $data_priladka_laminator = new DataPriladka(null, null, null, null);
     $data_machine = new DataMachine(null, null, null, null);
     $data_laminator = new DataLaminator(null, null, null);
+    $data_gap = new DataGap(null, null, null);
     $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
     $data_glue = new DataGlue(null, null, null, null, null, null, null);
     $data_cliche = new DataCliche(null, null, null, null, null, null);
@@ -259,6 +281,12 @@ if($id !== null) {
             if($row = $fetcher->Fetch()) {
                 $data_laminator = new DataLaminator($row['price'], $row['speed'], $row['max_width']);
             }
+        }
+        
+        $sql = "select gap_raport, gap_stream, ski from norm_gap where date <= '$date' order by id desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $data_gap = new DataGap($row['gap_raport'], $row['gap_stream'], $row['ski']);
         }
         
         $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price_per_ink, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense, min_percent "
