@@ -263,8 +263,8 @@ class CalculationBase {
     const COMIFLEX = 'comiflex';
     
     // Исходные величины для вычислений
-    public $data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge,
-            $usd, $euro, $unit, $quantity, $quantities, $work_type_id,
+    public $data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
+            $usd, $euro, $date, $name, $unit, $quantity, $quantities, $work_type_id,
             $film_1, $thickness_1, $density_1, $price_1, $currency_1, $customers_material_1, $ski_1, $width_ski_1,
             $film_2, $thickness_2, $density_2, $price_2, $currency_2, $customers_material_2, $ski_2, $width_ski_2,
             $film_3, $thickness_3, $density_3, $price_3, $currency_3, $customers_material_3, $ski_3, $width_ski_3,
@@ -292,6 +292,8 @@ class CalculationBase {
             array $data_extracharge,
             $usd, // Курс доллара
             $euro, // Курс евро
+            $date, // Дата
+            $name, // Наименование
             $unit, // Кг или шт
             $quantity, // Размер тиража в кг или шт
             array $quantities, // Размер тиража в шт
@@ -364,6 +366,8 @@ class CalculationBase {
         $this->data_extracharge = $data_extracharge;
         $this->usd = $usd; // Курс доллара
         $this->euro = $euro; // Курс евро
+        $this->date = $date; // Дата
+        $this->name = $name; // Наименование
         $this->unit = $unit; // Кг или шт
         $this->quantity = $quantity; // Размер тиража в кг или шт
         $this->quantities = $quantities; // Размер тиража в шт
@@ -930,6 +934,8 @@ class CalculationBase {
                     $data_extracharge,
                     $usd, // Курс доллара
                     $euro, // Курс евро
+                    $date, // Дата
+                    $name, // Наименование
                     $unit, // Кг или шт
                     $quantity, // Размер тиража в кг или шт
                     $quantities, // Размер тиража в шт
@@ -1003,6 +1009,8 @@ class CalculationBase {
                     $data_extracharge,
                     $usd, // Курс доллара
                     $euro, // Курс евро
+                    $date, // Дата
+                    $name, // Наименование
                     $unit, // Кг или шт
                     $quantity, // Размер тиража в кг или шт
                     $quantities, // Размер тиража в шт
@@ -1162,6 +1170,8 @@ class Calculation extends CalculationBase {
             array $data_extracharge,
             $usd, // Курс доллара
             $euro, // Курс евро
+            $date, // Дата
+            $name, // Наименование
             $unit, // Кг или шт
             $quantity, // Размер тиража в кг или шт
             array $quantities, // Размер тиража в шт
@@ -1224,7 +1234,7 @@ class Calculation extends CalculationBase {
             $extra_expense // Дополнительные расходы с кг/шт
             ) {
         parent::__construct($data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
-                $usd, $euro, $unit, $quantity, $quantities, $work_type_id, 
+                $usd, $euro, $date, $name, $unit, $quantity, $quantities, $work_type_id, 
                 $film_1, $thickness_1, $density_1, $price_1, $currency_1, $customers_material_1, $ski_1, $width_ski_1, 
                 $film_2, $thickness_2, $density_2, $price_2, $currency_2, $customers_material_2, $ski_2, $width_ski_2, 
                 $film_3, $thickness_3, $density_3, $price_3, $currency_3, $customers_material_3, $ski_3, $width_ski_3, 
@@ -1968,6 +1978,8 @@ class CalculationSelfAdhesive extends CalculationBase {
             array $data_extracharge,
             $usd, // Курс доллара
             $euro, // Курс евро
+            $date, // Дата
+            $name, // Наименование
             $unit, // Кг или шт
             $quantity, // Размер тиража в кг или шт
             array $quantities, // Размер тиража в шт
@@ -2030,7 +2042,7 @@ class CalculationSelfAdhesive extends CalculationBase {
             $extra_expense // Дополнительные расходы с кг/шт
             ) {
         parent::__construct($data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
-                $usd, $euro, $unit, $quantity, $quantities, $work_type_id, 
+                $usd, $euro, $date, $name, $unit, $quantity, $quantities, $work_type_id, 
                 $film_1, $thickness_1, $density_1, $price_1, $currency_1, $customers_material_1, $ski_1, $width_ski_1, 
                 $film_2, $thickness_2, $density_2, $price_2, $currency_2, $customers_material_2, $ski_2, $width_ski_2, 
                 $film_3, $thickness_3, $density_3, $price_3, $currency_3, $customers_material_3, $ski_3, $width_ski_3, 
