@@ -262,6 +262,170 @@ class CalculationBase {
     // Используется в условии: если комифлекс, то растворитель флексоль 32, если нет - этоксипропанол
     const COMIFLEX = 'comiflex';
     
+    // Исходные величины для вычислений
+    public $data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge,
+            $usd, $euro, $unit, $quantity, $quantities, $work_type_id,
+            $film_1, $thickness_1, $density_1, $price_1, $currency_1, $customers_material_1, $ski_1, $width_ski_1,
+            $film_2, $thickness_2, $density_2, $price_2, $currency_2, $customers_material_2, $ski_2, $width_ski_2,
+            $film_3, $thickness_3, $density_3, $price_3, $currency_3, $customers_material_3, $ski_3, $width_ski_3,
+            $machine_id, $machine_shortname, $length, $stream_width, $streams_number, $raport, $lamination_roller_width, $ink_number,
+            
+            $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
+            $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
+            $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, 
+            $lacquer_1, $lacquer_2, $lacquer_3, $lacquer_4, $lacquer_5, $lacquer_6, $lacquer_7, $lacquer_8, 
+            $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, 
+            $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8, 
+            
+            $cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $extracharge, $extracharge_cliche, $customer_pays_for_cliche,
+            $knife, $extracharge_knife, $knife_in_price, $customer_pays_for_knife, $extra_expense;
+    
+    // Конструктор
+    public function __construct(DataPriladka $data_priladka, 
+            DataPriladka $data_priladka_laminator,
+            DataMachine $data_machine,
+            DataGap $data_gap,
+            DataLaminator $data_laminator,
+            DataInk $data_ink,
+            DataGlue $data_glue,
+            DataCliche $data_cliche,
+            array $data_extracharge,
+            $usd, // Курс доллара
+            $euro, // Курс евро
+            $unit, // Кг или шт
+            $quantity, // Размер тиража в кг или шт
+            array $quantities, // Размер тиража в шт
+            $work_type_id, // Тип работы: с печатью или без печати
+        
+            $film_1, // Основная пленка, марка
+            $thickness_1, // Основная пленка, толщина, мкм
+            $density_1, // Основная пленка, плотность, г/м2
+            $price_1, // Основная пленка, цена
+            $currency_1, // Основная пленка, валюта
+            $customers_material_1, // Основная плёнка, другая, материал заказчика
+            $ski_1, // Основная пленка, лыжи
+            $width_ski_1, // Основная пленка, ширина пленки, мм
+        
+            $film_2, // Ламинация 1, марка
+            $thickness_2, // Ламинация 1, толщина, мкм
+            $density_2, // Ламинация 1, плотность, г/м2
+            $price_2, // Ламинация 1, цена
+            $currency_2, // Ламинация 1, валюта
+            $customers_material_2, // Ламинация 1, другая, материал заказчика
+            $ski_2, // Ламинация 1, лыжи
+            $width_ski_2, // Ламинация 1, ширина пленки, мм
+        
+            $film_3, // Ламинация 2, марка
+            $thickness_3, // Ламинация 2, толщина, мкм
+            $density_3, // Ламинация 2, плотность, г/м2
+            $price_3, // Ламинация 2, цена
+            $currency_3, // Ламинация 2, валюта
+            $customers_material_3, // Ламинация 2, другая, уд. вес
+            $ski_3, // Ламинация 2, лыжи
+            $width_ski_3,  // Ламинация 2, ширина пленки, мм
+        
+            $machine_id, // Машина
+            $machine_shortname, // Короткое наименование машины
+            $length, // Длина этикетки, мм
+            $stream_width, // Ширина ручья, мм
+            $streams_number, // Количество ручьёв
+            $raport, // Рапорт
+            $lamination_roller_width, // Ширина ламинирующего вала
+            $ink_number, // Красочность
+            
+            $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, // Тип краски (CMYK, пантон, белая, лак)
+            $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, // Номер пантона
+            $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, // Тип CMYK (cyan, magenda, yellow, kontur)
+            $lacquer_1, $lacquer_2, $lacquer_3, $lacquer_4, $lacquer_5, $lacquer_6, $lacquer_7, $lacquer_8, // Тип лака (глянцевый, матовый)
+            $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, // Процент данной краски
+            $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8, // Форма (старая, Флинт, Кодак)
+            
+            $cliche_in_price, // Включить ПФ в себестоимость
+            $cliches_count_flint, // Количество форм Флинт
+            $cliches_count_kodak, // Количество форм Кодак
+            $cliches_count_old, // Количество старых форм
+            $extracharge, // Наценка на тираж
+            $extracharge_cliche, // Наценка на ПФ
+            $customer_pays_for_cliche, // Заказчик платит за ПФ
+            $knife, // Стоимость ножа
+            $extracharge_knife, // Наценка на нож
+            $knife_in_price, // Нож включается в стоимость
+            $customer_pays_for_knife, // Заказчик платит за нож
+            $extra_expense // Дополнительные расходы с кг/шт
+            ) {
+        $this->data_priladka = $data_priladka;
+        $this->data_priladka_laminator = $data_priladka_laminator;
+        $this->data_machine = $data_machine;
+        $this->data_gap = $data_gap;
+        $this->data_laminator = $data_laminator;
+        $this->data_ink = $data_ink;
+        $this->data_glue = $data_glue;
+        $this->data_cliche = $data_cliche;
+        $this->data_extracharge = $data_extracharge;
+        $this->usd = $usd; // Курс доллара
+        $this->euro = $euro; // Курс евро
+        $this->unit = $unit; // Кг или шт
+        $this->quantity = $quantity; // Размер тиража в кг или шт
+        $this->quantities = $quantities; // Размер тиража в шт
+        $this->work_type_id = $work_type_id; // Тип работы: с печатью или без печати
+        
+        $this->film_1 = $film_1; // Основная пленка, марка
+        $this->thickness_1 = $thickness_1; // Основная пленка, толщина, мкм
+        $this->density_1 = $density_1; // Основная пленка, плотность, г/м2
+        $this->price_1 = $price_1; // Основная пленка, цена
+        $this->currency_1 = $currency_1; // Основная пленка, валюта
+        $this->customers_material_1 = $customers_material_1; // Основная плёнка, другая, материал заказчика
+        $this->ski_1 = $ski_1; // Основная пленка, лыжи
+        $this->width_ski_1 = $width_ski_1; // Основная пленка, ширина пленки, мм
+        
+        $this->film_2 = $film_2; // Ламинация 1, марка
+        $this->thickness_2 = $thickness_2; // Ламинация 1, толщина, мкм
+        $this->density_2 = $density_2; // Ламинация 1, плотность, г/м2
+        $this->price_2 = $price_2; // Ламинация 1, цена
+        $this->currency_2 = $currency_2; // Ламинация 1, валюта
+        $this->customers_material_2 = $customers_material_2; // Ламинация 1, другая, материал заказчика
+        $this->ski_2 = $ski_2; // Ламинация 1, лыжи
+        $this->width_ski_2 = $width_ski_2; // Ламинация 1, ширина пленки, мм
+        
+        $this->film_3 = $film_3; // Ламинация 2, марка
+        $this->thickness_3 = $thickness_3; // Ламинация 2, толщина, мкм
+        $this->density_3 = $density_3; // Ламинация 2, плотность, г/м2
+        $this->price_3 = $price_3; // Ламинация 2, цена
+        $this->currency_3 = $currency_3; // Ламинация 2, валюта
+        $this->customers_material_3 = $customers_material_3; // Ламинация 2, другая, уд. вес
+        $this->ski_3 = $ski_3; // Ламинация 2, лыжи
+        $this->width_ski_3 = $width_ski_3;  // Ламинация 2, ширина пленки, мм
+        
+        $this->machine_id = $machine_id; // Машина
+        $this->machine_shortname = $machine_shortname; // Короткое наименование машины
+        $this->length = $length; // Длина этикетки, мм
+        $this->stream_width = $stream_width; // Ширина ручья, мм
+        $this->streams_number = $streams_number; // Количество ручьёв
+        $this->raport = $raport; // Рапорт
+        $this->lamination_roller_width = $lamination_roller_width; // Ширина ламинирующего вала
+        $this->ink_number = $ink_number; // Красочность
+        
+        $this->ink_1 = $ink_1; $this->ink_2 = $ink_2; $this->ink_3 = $ink_3; $this->ink_4 = $ink_4; $this->ink_5 = $ink_5; $this->ink_6 = $ink_6; $this->ink_7 = $ink_7; $this->ink_8 = $ink_8; // Тип краски (CMYK, пантон, белая, лак)
+        $this->color_1 = $color_1; $this->color_2 = $color_2; $this->color_3 = $color_3; $this->color_4 = $color_4; $this->color_5 = $color_5; $this->color_6 = $color_6; $this->color_7 = $color_7; $this->color_8 = $color_8; // Номер пантона
+        $this->cmyk_1 = $cmyk_1; $this->cmyk_2 = $cmyk_2; $this->cmyk_3 = $cmyk_3; $this->cmyk_4 = $cmyk_4; $this->cmyk_5 = $cmyk_5; $this->cmyk_6 = $cmyk_6; $this->cmyk_7 = $cmyk_7; $this->cmyk_8 = $cmyk_8; // Тип CMYK (cyan, magenda, yellow, kontur)
+        $this->lacquer_1 = $lacquer_1; $this->lacquer_2 = $lacquer_2; $this->lacquer_3 = $lacquer_3; $this->lacquer_4 = $lacquer_4; $this->lacquer_5 = $lacquer_5; $this->lacquer_6 = $lacquer_6; $this->lacquer_7 = $lacquer_7; $this->lacquer_8 = $lacquer_8; // Тип лака (глянцевый, матовый)
+        $this->percent_1 = $percent_1; $this->percent_2 = $percent_2; $this->percent_3 = $percent_3; $this->percent_4 = $percent_4; $this->percent_5 = $percent_5; $percent_6 = $percent_6; $this->percent_7 = $percent_7; $this->percent_8 = $percent_8; // Процент данной краски
+        $this->cliche_1 = $cliche_1; $this->cliche_2 = $cliche_2; $this->cliche_3 = $cliche_3; $this->cliche_4 = $cliche_4; $this->cliche_5 = $cliche_5; $this->cliche_6 = $cliche_6; $this->cliche_7 = $cliche_7; $this->cliche_8 = $cliche_8; // Форма (старая, Флинт, Кодак)
+        
+        $this->cliche_in_price = $cliche_in_price; // Включить ПФ в себестоимость
+        $this->cliches_count_flint = $cliches_count_flint; // Количество форм Флинт
+        $this->cliches_count_kodak = $cliches_count_kodak; // Количество форм Кодак
+        $this->cliches_count_old = $cliches_count_old; // Количество старых форм
+        $this->extracharge = $extracharge; // Наценка на тираж
+        $this->extracharge_cliche = $extracharge_cliche; // Наценка на ПФ
+        $this->customer_pays_for_cliche = $customer_pays_for_cliche; // Заказчик платит за ПФ
+        $this->knife = $knife; // Стоимость ножа
+        $this->extracharge_knife = $extracharge_knife; // Наценка на нож
+        $this->knife_in_price = $knife_in_price; // Нож включается в стоимость
+        $this->customer_pays_for_knife = $customer_pays_for_knife; // Заказчик платит за нож
+        $this->extra_expense = $extra_expense;
+    }
+    
     // Получения курса валюты (get - функция получения)
     public static function GetCurrencyRate($currency, $usd, $euro) {
         switch($currency) {
@@ -756,114 +920,149 @@ class CalculationBase {
     
         if($work_type_id == self::WORK_TYPE_SELF_ADHESIVE && empty($error_message)) {
             return new CalculationSelfAdhesive($data_priladka, 
-                $data_machine, 
-                $data_gap, 
-                $data_ink, 
-                $data_cliche, 
-                $data_extracharge, 
-                $usd, // Курс доллара
-                $euro, // Курс евро
-                $quantities, // Размер тиража в шт
-                
-                $film_1, // Марка материла
-                $thickness_1, // Толщина материала, мкм
-                $density_1, // Плотность материала, г/м2
-                $price_1, // Цена материала
-                $currency_1, // Валюта цены материала
-                $customers_material_1, // Материал заказчика
-                $ski_1, // Лыжи
-                $width_ski_1, // Ширина материала, мм
-                
-                $length, // Длина этикетки, мм
-                $stream_width, // Ширина этикетки, мм
-                $streams_number, // Количество ручьёв
-                $raport, // Рапорт, мм
-                $ink_number, // Красочность
-                
-                $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
-                $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
-                $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, 
-                $lacquer_1, $lacquer_2, $lacquer_3, $lacquer_4, $lacquer_5, $lacquer_6, $lacquer_7, $lacquer_8, 
-                $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, 
-                $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8, 
-                
-                $cliche_in_price, // Стоимость ПФ включается в себестоимость
-                $cliches_count_flint, // Количество форм Флинт
-                $cliches_count_kodak, // Количество форм Кодак
-                $cliches_count_old, // Количество старых форм
-                $extracharge, // Наценка на тираж
-                $extracharge_cliche, // Наценка на ПФ
-                $customer_pays_for_cliche,  // Заказчик платит за ПФ
-                
-                $knife, // Стоимость ножа
-                $extracharge_knife, // Наценка на нож
-                $knife_in_price, // Включать нож в себестоимость
-                $customer_pays_for_knife, // Заказчик платит за нож
-                $extra_expense); // Дополнительные расходы с кг/шт;
+                    $data_priladka_laminator,
+                    $data_machine,
+                    $data_gap,
+                    $data_laminator,
+                    $data_ink,
+                    $data_glue,
+                    $data_cliche,
+                    $data_extracharge,
+                    $usd, // Курс доллара
+                    $euro, // Курс евро
+                    $unit, // Кг или шт
+                    $quantity, // Размер тиража в кг или шт
+                    $quantities, // Размер тиража в шт
+                    $work_type_id, // Тип работы: с печатью или без печати
+                    
+                    $film_1, // Основная пленка, марка
+                    $thickness_1, // Основная пленка, толщина, мкм
+                    $density_1, // Основная пленка, плотность, г/м2
+                    $price_1, // Основная пленка, цена
+                    $currency_1, // Основная пленка, валюта
+                    $customers_material_1, // Основная плёнка, другая, материал заказчика
+                    $ski_1, // Основная пленка, лыжи
+                    $width_ski_1, // Основная пленка, ширина пленки, мм
+                    
+                    $film_2, // Ламинация 1, марка
+                    $thickness_2, // Ламинация 1, толщина, мкм
+                    $density_2, // Ламинация 1, плотность, г/м2
+                    $price_2, // Ламинация 1, цена
+                    $currency_2, // Ламинация 1, валюта
+                    $customers_material_2, // Ламинация 1, другая, материал заказчика
+                    $ski_2, // Ламинация 1, лыжи
+                    $width_ski_2, // Ламинация 1, ширина пленки, мм
+                    
+                    $film_3, // Ламинация 2, марка
+                    $thickness_3, // Ламинация 2, толщина, мкм
+                    $density_3, // Ламинация 2, плотность, г/м2
+                    $price_3, // Ламинация 2, цена
+                    $currency_3, // Ламинация 2, валюта
+                    $customers_material_3, // Ламинация 2, другая, уд. вес
+                    $ski_3, // Ламинация 2, лыжи
+                    $width_ski_3,  // Ламинация 2, ширина пленки, мм
+                    
+                    $machine_id, // Машина
+                    $machine_shortname, // Короткое наименование машины
+                    $length, // Длина этикетки, мм
+                    $stream_width, // Ширина ручья, мм
+                    $streams_number, // Количество ручьёв
+                    $raport, // Рапорт
+                    $lamination_roller_width, // Ширина ламинирующего вала
+                    $ink_number, // Красочность
+                    
+                    $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, // Тип краски (CMYK, пантон, белая, лак)
+                    $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, // Номер пантона
+                    $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, // Тип CMYK (cyan, magenda, yellow, kontur)
+                    $lacquer_1, $lacquer_2, $lacquer_3, $lacquer_4, $lacquer_5, $lacquer_6, $lacquer_7, $lacquer_8, // Тип лака (глянцевый, матовый)
+                    $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, // Процент данной краски
+                    $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8, // Форма (старая, Флинт, Кодак)
+                    
+                    $cliche_in_price, // Включить ПФ в себестоимость
+                    $cliches_count_flint, // Количество форм Флинт
+                    $cliches_count_kodak, // Количество форм Кодак
+                    $cliches_count_old, // Количество старых форм
+                    $extracharge, // Наценка на тираж
+                    $extracharge_cliche, // Наценка на ПФ
+                    $customer_pays_for_cliche, // Заказчик платит за ПФ
+                    $knife, // Стоимость ножа
+                    $extracharge_knife, // Наценка на нож
+                    $knife_in_price, // Нож включается в стоимость
+                    $customer_pays_for_knife, // Заказчик платит за нож
+                    $extra_expense); // Дополнительные расходы с кг/шт
         }
         elseif(empty ($error_message)) {
             return new Calculation($data_priladka, 
-                $data_priladka_laminator,
-                $data_machine,
-                $data_laminator,
-                $data_ink,
-                $data_glue,
-                $data_cliche,
-                $data_extracharge,
-                $usd, // Курс доллара
-                $euro, // Курс евро
-                $unit, // Кг или шт
-                $quantity, // Размер тиража в кг или шт
-                $work_type_id, // Тип работы: с печатью или без печати
-                
-                $film_1, // Основная пленка, марка
-                $thickness_1, // Основная пленка, толщина, мкм
-                $density_1, // Основная пленка, плотность, г/м2
-                $price_1, // Основная пленка, цена
-                $currency_1, // Основная пленка, валюта
-                $customers_material_1, // Основная плёнка, другая, материал заказчика
-                $ski_1, // Основная пленка, лыжи
-                $width_ski_1, // Основная пленка, ширина пленки, мм
-                
-                $film_2, // Ламинация 1, марка
-                $thickness_2, // Ламинация 1, толщина, мкм
-                $density_2, // Ламинация 1, плотность, г/м2
-                $price_2, // Ламинация 1, цена
-                $currency_2, // Ламинация 1, валюта
-                $customers_material_2, // Ламинация 1, другая, материал заказчика
-                $ski_2, // Ламинация 1, лыжи
-                $width_ski_2, // Ламинация 1, ширина пленки, мм
-                
-                $film_3, // Ламинация 2, марка
-                $thickness_3, // Ламинация 2, толщина, мкм
-                $density_3, // Ламинация 2, плотность, г/м2
-                $price_3, // Ламинация 2, цена
-                $currency_3, // Ламинация 2, валюта
-                $customers_material_3, // Ламинация 2, другая, уд. вес
-                $ski_3, // Ламинация 2, лыжи
-                $width_ski_3,  // Ламинация 2, ширина пленки, мм
-                
-                $machine_id, // Машина
-                $machine_shortname, // Короткое название машины
-                $length, // Длина этикетки, мм
-                $stream_width, // Ширина ручья, мм
-                $streams_number, // Количество ручьёв
-                $raport, // Рапорт
-                $lamination_roller_width, // Ширина ламинирующего вала
-                $ink_number, // Красочность
-                
-                $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
-                $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
-                $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, 
-                $lacquer_1, $lacquer_2, $lacquer_3, $lacquer_4, $lacquer_5, $lacquer_6, $lacquer_7, $lacquer_8, 
-                $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, 
-                $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8, 
-                
-                $cliche_in_price, // Стоимость ПФ включается в себестоимость
-                $extracharge, // Наценка на тираж
-                $extracharge_cliche, // Наценка на ПФ
-                $customer_pays_for_cliche, // Заказчик платит за ПФ
-                $extra_expense); // Дополнительные расходы с кг/шт
+                    $data_priladka_laminator,
+                    $data_machine,
+                    $data_gap,
+                    $data_laminator,
+                    $data_ink,
+                    $data_glue,
+                    $data_cliche,
+                    $data_extracharge,
+                    $usd, // Курс доллара
+                    $euro, // Курс евро
+                    $unit, // Кг или шт
+                    $quantity, // Размер тиража в кг или шт
+                    $quantities, // Размер тиража в шт
+                    $work_type_id, // Тип работы: с печатью или без печати
+                    
+                    $film_1, // Основная пленка, марка
+                    $thickness_1, // Основная пленка, толщина, мкм
+                    $density_1, // Основная пленка, плотность, г/м2
+                    $price_1, // Основная пленка, цена
+                    $currency_1, // Основная пленка, валюта
+                    $customers_material_1, // Основная плёнка, другая, материал заказчика
+                    $ski_1, // Основная пленка, лыжи
+                    $width_ski_1, // Основная пленка, ширина пленки, мм
+                    
+                    $film_2, // Ламинация 1, марка
+                    $thickness_2, // Ламинация 1, толщина, мкм
+                    $density_2, // Ламинация 1, плотность, г/м2
+                    $price_2, // Ламинация 1, цена
+                    $currency_2, // Ламинация 1, валюта
+                    $customers_material_2, // Ламинация 1, другая, материал заказчика
+                    $ski_2, // Ламинация 1, лыжи
+                    $width_ski_2, // Ламинация 1, ширина пленки, мм
+                    
+                    $film_3, // Ламинация 2, марка
+                    $thickness_3, // Ламинация 2, толщина, мкм
+                    $density_3, // Ламинация 2, плотность, г/м2
+                    $price_3, // Ламинация 2, цена
+                    $currency_3, // Ламинация 2, валюта
+                    $customers_material_3, // Ламинация 2, другая, уд. вес
+                    $ski_3, // Ламинация 2, лыжи
+                    $width_ski_3,  // Ламинация 2, ширина пленки, мм
+                    
+                    $machine_id, // Машина
+                    $machine_shortname, // Короткое наименование машины
+                    $length, // Длина этикетки, мм
+                    $stream_width, // Ширина ручья, мм
+                    $streams_number, // Количество ручьёв
+                    $raport, // Рапорт
+                    $lamination_roller_width, // Ширина ламинирующего вала
+                    $ink_number, // Красочность
+                    
+                    $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, // Тип краски (CMYK, пантон, белая, лак)
+                    $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, // Номер пантона
+                    $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, // Тип CMYK (cyan, magenda, yellow, kontur)
+                    $lacquer_1, $lacquer_2, $lacquer_3, $lacquer_4, $lacquer_5, $lacquer_6, $lacquer_7, $lacquer_8, // Тип лака (глянцевый, матовый)
+                    $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, // Процент данной краски
+                    $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8, // Форма (старая, Флинт, Кодак)
+                    
+                    $cliche_in_price, // Включить ПФ в себестоимость
+                    $cliches_count_flint, // Количество форм Флинт
+                    $cliches_count_kodak, // Количество форм Кодак
+                    $cliches_count_old, // Количество старых форм
+                    $extracharge, // Наценка на тираж
+                    $extracharge_cliche, // Наценка на ПФ
+                    $customer_pays_for_cliche, // Заказчик платит за ПФ
+                    $knife, // Стоимость ножа
+                    $extracharge_knife, // Наценка на нож
+                    $knife_in_price, // Нож включается в стоимость
+                    $customer_pays_for_knife, // Заказчик платит за нож
+                    $extra_expense); // Дополнительные расходы с кг/шт
         }
         else {
             return $error_message;
@@ -955,6 +1154,7 @@ class Calculation extends CalculationBase {
     public function __construct(DataPriladka $data_priladka, 
             DataPriladka $data_priladka_laminator,
             DataMachine $data_machine,
+            DataGap $data_gap,
             DataLaminator $data_laminator,
             DataInk $data_ink,
             DataGlue $data_glue,
@@ -964,6 +1164,7 @@ class Calculation extends CalculationBase {
             $euro, // Курс евро
             $unit, // Кг или шт
             $quantity, // Размер тиража в кг или шт
+            array $quantities, // Размер тиража в шт
             $work_type_id, // Тип работы: с печатью или без печати
         
             $film_1, // Основная пленка, марка
@@ -1010,11 +1211,33 @@ class Calculation extends CalculationBase {
             $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8, // Форма (старая, Флинт, Кодак)
             
             $cliche_in_price, // Включить ПФ в себестоимость
+            $cliches_count_flint, // Количество форм Флинт
+            $cliches_count_kodak, // Количество форм Кодак
+            $cliches_count_old, // Количество старых форм
             $extracharge, // Наценка на тираж
             $extracharge_cliche, // Наценка на ПФ
             $customer_pays_for_cliche, // Заказчик платит за ПФ
+            $knife, // Стоимость ножа
+            $extracharge_knife, // Наценка на нож
+            $knife_in_price, // Нож включается в стоимость
+            $customer_pays_for_knife, // Заказчик платит за нож
             $extra_expense // Дополнительные расходы с кг/шт
             ) {
+        parent::__construct($data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
+                $usd, $euro, $unit, $quantity, $quantities, $work_type_id, 
+                $film_1, $thickness_1, $density_1, $price_1, $currency_1, $customers_material_1, $ski_1, $width_ski_1, 
+                $film_2, $thickness_2, $density_2, $price_2, $currency_2, $customers_material_2, $ski_2, $width_ski_2, 
+                $film_3, $thickness_3, $density_3, $price_3, $currency_3, $customers_material_3, $ski_3, $width_ski_3, 
+                $machine_id, $machine_shortname, $length, $stream_width, $streams_number, $raport, $lamination_roller_width, $ink_number, 
+                $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
+                $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
+                $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, 
+                $lacquer_1, $lacquer_2, $lacquer_3, $lacquer_4, $lacquer_5, $lacquer_6, $lacquer_7, $lacquer_8, 
+                $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, 
+                $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8, 
+                $cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $extracharge, $extracharge_cliche, $customer_pays_for_cliche, 
+                $knife, $extracharge_knife, $knife_in_price, $customer_pays_for_knife, $extra_expense);
+                
         // Если нет одной ламинации или обеих, то толщина, плотность и цена плёнок для ламинации имеют пустые значения.
         // Присваиваем им значение 0, чтобы программа не сломалась при попытке вычилений с пустым значением.
         if(empty($thickness_2)) $thickness_2 = 0;
@@ -1735,28 +1958,55 @@ class CalculationSelfAdhesive extends CalculationBase {
     public $lengths; // Длины тиражей
 
     public function __construct(DataPriladka $data_priladka, 
-            DataMachine $data_machine, 
-            DataGap $data_gap, 
-            DataInk $data_ink, 
-            DataCliche $data_cliche, 
-            array $data_extracharge, 
+            DataPriladka $data_priladka_laminator,
+            DataMachine $data_machine,
+            DataGap $data_gap,
+            DataLaminator $data_laminator,
+            DataInk $data_ink,
+            DataGlue $data_glue,
+            DataCliche $data_cliche,
+            array $data_extracharge,
             $usd, // Курс доллара
             $euro, // Курс евро
+            $unit, // Кг или шт
+            $quantity, // Размер тиража в кг или шт
             array $quantities, // Размер тиража в шт
-            
-            $film, // Марка бумаги
-            $thickness, // Толщина, мкм
-            $density, // Плотность, г/м2
-            $price, // Цена
-            $currency, // Валюта
-            $customers_material, // Материал заказчика
-            $ski, // Лыжи
-            $width_ski, // Ширина материала
-            
-            $length, // Длина этикетки
+            $work_type_id, // Тип работы: с печатью или без печати
+        
+            $film_1, // Основная пленка, марка
+            $thickness_1, // Основная пленка, толщина, мкм
+            $density_1, // Основная пленка, плотность, г/м2
+            $price_1, // Основная пленка, цена
+            $currency_1, // Основная пленка, валюта
+            $customers_material_1, // Основная плёнка, другая, материал заказчика
+            $ski_1, // Основная пленка, лыжи
+            $width_ski_1, // Основная пленка, ширина пленки, мм
+        
+            $film_2, // Ламинация 1, марка
+            $thickness_2, // Ламинация 1, толщина, мкм
+            $density_2, // Ламинация 1, плотность, г/м2
+            $price_2, // Ламинация 1, цена
+            $currency_2, // Ламинация 1, валюта
+            $customers_material_2, // Ламинация 1, другая, материал заказчика
+            $ski_2, // Ламинация 1, лыжи
+            $width_ski_2, // Ламинация 1, ширина пленки, мм
+        
+            $film_3, // Ламинация 2, марка
+            $thickness_3, // Ламинация 2, толщина, мкм
+            $density_3, // Ламинация 2, плотность, г/м2
+            $price_3, // Ламинация 2, цена
+            $currency_3, // Ламинация 2, валюта
+            $customers_material_3, // Ламинация 2, другая, уд. вес
+            $ski_3, // Ламинация 2, лыжи
+            $width_ski_3,  // Ламинация 2, ширина пленки, мм
+        
+            $machine_id, // Машина
+            $machine_shortname, // Короткое наименование машины
+            $length, // Длина этикетки, мм
             $stream_width, // Ширина ручья, мм
             $streams_number, // Количество ручьёв
             $raport, // Рапорт
+            $lamination_roller_width, // Ширина ламинирующего вала
             $ink_number, // Красочность
             
             $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, // Тип краски (CMYK, пантон, белая, лак)
@@ -1779,6 +2029,21 @@ class CalculationSelfAdhesive extends CalculationBase {
             $customer_pays_for_knife, // Заказчик платит за нож
             $extra_expense // Дополнительные расходы с кг/шт
             ) {
+        parent::__construct($data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
+                $usd, $euro, $unit, $quantity, $quantities, $work_type_id, 
+                $film_1, $thickness_1, $density_1, $price_1, $currency_1, $customers_material_1, $ski_1, $width_ski_1, 
+                $film_2, $thickness_2, $density_2, $price_2, $currency_2, $customers_material_2, $ski_2, $width_ski_2, 
+                $film_3, $thickness_3, $density_3, $price_3, $currency_3, $customers_material_3, $ski_3, $width_ski_3, 
+                $machine_id, $machine_shortname, $length, $stream_width, $streams_number, $raport, $lamination_roller_width, $ink_number, 
+                $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
+                $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
+                $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, 
+                $lacquer_1, $lacquer_2, $lacquer_3, $lacquer_4, $lacquer_5, $lacquer_6, $lacquer_7, $lacquer_8, 
+                $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, 
+                $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8, 
+                $cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $extracharge, $extracharge_cliche, $customer_pays_for_cliche, 
+                $knife, $extracharge_knife, $knife_in_price, $customer_pays_for_knife, $extra_expense);
+        
         // Суммарный размер тиража
         $this->quantity = array_sum($quantities);
         
@@ -1786,7 +2051,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->quantities_count = count($quantities);
         
         // Если материал заказчика, то цена его = 0
-        if($customers_material == true) $price = 0;
+        if($customers_material_1 == true) $price = 0;
         
         // Уравнивающий коэфф. ПФ (УКПФ)=0, когда ПФ не включен в стоимость, =1, когда ПФ включен в стоимость
         $this->ukpf = $cliche_in_price == 1 ? 1 : 0;
@@ -1805,13 +2070,13 @@ class CalculationSelfAdhesive extends CalculationBase {
         // Ширина материала, мм
         // Если стадартные лыжи: (количество ручьёв * (ширина ручья + расстояние между ручьями)) + (ширина одной лыжи * 2)
         // Если нестандартные лыжи: ширина материала вводится вручную
-        switch ($ski) {
+        switch ($ski_1) {
             case self::STANDARD_SKI:
                 $this->width_mat = ($streams_number * ($stream_width + $data_gap->gap_stream)) + ($data_gap->ski * 2);
                 break;
             
             case self::NONSTANDARD_SKI:
-                $this->width_mat = $width_ski;
+                $this->width_mat = $width_ski_1;
                 break;
             
             default :
@@ -1864,13 +2129,13 @@ class CalculationSelfAdhesive extends CalculationBase {
         //***************************
         
         // Масса плёнки чистая (без приладки), кг
-        $this->weight_pure = $this->length_pog_pure * $this->width_mat * $density / 1000000;
+        $this->weight_pure = $this->length_pog_pure * $this->width_mat * $density_1 / 1000000;
         
         // Длина плёнки чистая, м
         $this->length_pure = $this->length_pog_pure;
         
         // Масса плёнки грязная (с приладкой), кг
-        $this->weight_dirty = $this->area_dirty * $density / 1000;
+        $this->weight_dirty = $this->area_dirty * $density_1 / 1000;
         
         // Длина плёнки грязная, м
         $this->length_dirty = $this->length_pog_dirty;
@@ -1880,7 +2145,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         //*****************************
         
         // Себестоимость плёнки грязная (с приладкой), руб
-        $this->film_cost = $this->area_dirty * $price * self::GetCurrencyRate($currency, $usd, $euro);
+        $this->film_cost = $this->area_dirty * $price_1 * self::GetCurrencyRate($currency_1, $usd, $euro);
         
         //*****************************
         // Время - деньги
@@ -2136,10 +2401,10 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->total_weight_dirty = $this->weight_dirty;
         
         // Стоимость плёнки за единицу
-        $this->film_cost_per_unit = $price * self::GetCurrencyRate($currency, $usd, $euro);
+        $this->film_cost_per_unit = $price_1 * self::GetCurrencyRate($currency_1, $usd, $euro);
         
         // Отходы плёнки, стоимость
-        $this->film_waste_cost = ($this->weight_dirty - $this->weight_pure) * $price * self::GetCurrencyRate($currency, $usd, $euro);
+        $this->film_waste_cost = ($this->weight_dirty - $this->weight_pure) * $price_1 * self::GetCurrencyRate($currency_1, $usd, $euro);
         
         // Отходы плёнки, масса
         $this->film_waste_weight = $this->weight_dirty - $this->weight_pure;
