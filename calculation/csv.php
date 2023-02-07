@@ -14,8 +14,8 @@ if($id !== null) {
     // Данные CSV-файла
     $file_data = array();
         
-    array_push($file_data, array("Курс доллара, руб", CalculationBase::Display($calculation->usd, 2), "", ""));
-    array_push($file_data, array("Курс евро, руб", CalculationBase::Display($calculation->euro, 2), "", ""));
+    array_push($file_data, array("Курс доллара, руб", CalculationBase::Display($calculation->usd, 5), "", ""));
+    array_push($file_data, array("Курс евро, руб", CalculationBase::Display($calculation->euro, 5), "", ""));
     if($calculation->work_type_id == Calculation::WORK_TYPE_PRINT) array_push ($file_data, array("Тип работы", "Плёнка с печатью", "", ""));
     elseif($calculation->work_type_id == Calculation::WORK_TYPE_NOPRINT) array_push ($file_data, array("Тип работы", "Плёнка без печати", "", ""));
         
@@ -30,41 +30,41 @@ if($id !== null) {
     array_push($file_data, array("Размер тиража", $calculation->quantity.' '. $calculation->GetUnitName($calculation->unit), "", ""));
     array_push($file_data, array("Марка 1", $calculation->film_1, "", ""));
     array_push($file_data, array("Толщина 1, мкм", $calculation->thickness_1, "", ""));
-    array_push($file_data, array("Плотность 1, г/м2", CalculationBase::Display($calculation->density_1, 2), "", ""));
+    array_push($file_data, array("Плотность 1, г/м2", CalculationBase::Display($calculation->density_1, 5), "", ""));
     array_push($file_data, array("Лыжи 1", $calculation->GetSkiName($calculation->ski_1), "", ""));
-    if($calculation->ski_1 == Calculation::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки 1, мм", CalculationBase::Display($calculation->width_ski_1, 2), "", ""));
+    if($calculation->ski_1 == Calculation::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки 1, мм", CalculationBase::Display($calculation->width_ski_1, 5), "", ""));
     if($calculation->customers_material_1 == true) array_push ($file_data, array("Материал заказчика 1", "", "", ""));
-    else array_push ($file_data, array("Цена 1", CalculationBase::Display($calculation->price_1, 2)." ". $calculation->GetCurrencyName($calculation->currency_1).($calculation->currency_1 == Calculation::USD ? " (". CalculationBase::Display($calculation->price_1 * $calculation->usd, 2)." руб)" : "").($calculation->currency_1 == Calculation::EURO ? " (". CalculationBase::Display($calculation->price_1 * $calculation->euro, 2)." руб)" : ""), "", ""));
+    else array_push ($file_data, array("Цена 1", CalculationBase::Display($calculation->price_1, 5)." ". $calculation->GetCurrencyName($calculation->currency_1).($calculation->currency_1 == Calculation::USD ? " (". CalculationBase::Display($calculation->price_1 * $calculation->usd, 5)." руб)" : "").($calculation->currency_1 == Calculation::EURO ? " (". CalculationBase::Display($calculation->price_1 * $calculation->euro, 5)." руб)" : ""), "", ""));
         
     if($calculation->laminations_number > 0) {
         array_push($file_data, array("Марка 2", $calculation->film_2, "", ""));
         array_push($file_data, array("Толщина 2, мкм", $calculation->thickness_2, "", ""));
-        array_push($file_data, array("Плотность 2, г/м2", CalculationBase::Display($calculation->density_2, 2), "", ""));
+        array_push($file_data, array("Плотность 2, г/м2", CalculationBase::Display($calculation->density_2, 5), "", ""));
         array_push($file_data, array("Лыжи 2", $calculation->GetSkiName($calculation->ski_2), "", ""));
-        if($calculation->ski_2 == Calculation::NONSTANDARD_SKI) array_push($file_data, array("Ширина пленки 2, мм", CalculationBase::Display($calculation->width_ski_2, 2), "", ""));
+        if($calculation->ski_2 == Calculation::NONSTANDARD_SKI) array_push($file_data, array("Ширина пленки 2, мм", CalculationBase::Display($calculation->width_ski_2, 5), "", ""));
         if($calculation->customers_material_2 == true) array_push ($file_data, array("Материал заказчика 2", "", "", ""));
-        else array_push ($file_data, array("Цена 2", CalculationBase::Display($calculation->price_2, 2)." ". $calculation->GetCurrencyName($calculation->currency_2).($calculation->currency_2 == Calculation::USD ? " (".CalculationBase::Display($calculation->price_2 * $calculation->usd, 2)." руб)" : "").($calculation->currency_2 == Calculation::EURO ? " (".CalculationBase::Display($calculation->price_2 * $calculation->euro, 2)." руб)" : ""), "", ""));
+        else array_push ($file_data, array("Цена 2", CalculationBase::Display($calculation->price_2, 5)." ". $calculation->GetCurrencyName($calculation->currency_2).($calculation->currency_2 == Calculation::USD ? " (".CalculationBase::Display($calculation->price_2 * $calculation->usd, 5)." руб)" : "").($calculation->currency_2 == Calculation::EURO ? " (".CalculationBase::Display($calculation->price_2 * $calculation->euro, 5)." руб)" : ""), "", ""));
     }
         
     if($calculation->laminations_number > 1) {
         array_push($file_data, array("Марка 3", $calculation->film_3, "", ""));
         array_push($file_data, array("Толщина 3, мкм", $calculation->thickness_3, "", ""));
-        array_push($file_data, array("Плотность 3, г/м2", CalculationBase::Display($calculation->density_3, 2), "", ""));
+        array_push($file_data, array("Плотность 3, г/м2", CalculationBase::Display($calculation->density_3, 5), "", ""));
         array_push($file_data, array("Лыжи 3", $calculation->GetSkiName($calculation->ski_3), "", ""));
-        if($ski_3 == Calculation::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки 3, мм", CalculationBase::Display($calculation->width_ski_3, 2), "", ""));
+        if($ski_3 == Calculation::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки 3, мм", CalculationBase::Display($calculation->width_ski_3, 5), "", ""));
         if($customers_material_3 == true) array_push ($file_data, array("Материал заказчика (лам 2)", "", "", ""));
-        else array_push ($file_data, array("Цена 3", CalculationBase::Display($calculation->price_3, 2)." ". $calculation->GetCurrencyName($calculation->currency_3).($currency_3 == Calculation::USD ? " (".CalculationBase::Display($price_3 * $usd, 2)." руб)" : "").($calculation->currency_3 == Calculation::EURO ? " (".CalculationBase::Display($calculation->price_3 * $calculation->euro, 2)." руб)" : ""), "", ""));
+        else array_push ($file_data, array("Цена 3", CalculationBase::Display($calculation->price_3, 5)." ". $calculation->GetCurrencyName($calculation->currency_3).($currency_3 == Calculation::USD ? " (".CalculationBase::Display($price_3 * $usd, 5)." руб)" : "").($calculation->currency_3 == Calculation::EURO ? " (".CalculationBase::Display($calculation->price_3 * $calculation->euro, 5)." руб)" : ""), "", ""));
     }
         
     array_push($file_data, array("Ширина ручья, мм", $calculation->stream_width, "", ""));
     array_push($file_data, array("Количество ручьёв", $calculation->streams_number, "", ""));
         
     if(!empty($calculation->machine_id)) {
-        array_push($file_data, array("Рапорт", CalculationBase::Display($calculation->raport, 2), "", ""));
+        array_push($file_data, array("Рапорт", CalculationBase::Display($calculation->raport, 5), "", ""));
     }
         
     if($calculation->laminations_number > 0) {
-        array_push($file_data, array("Ширина ламинирующего вала, мм", CalculationBase::Display($calculation->lamination_roller_width, 2), "", ""));
+        array_push($file_data, array("Ширина ламинирующего вала, мм", CalculationBase::Display($calculation->lamination_roller_width, 5), "", ""));
     }
         
     if(!empty($calculation->machine_id)) {
@@ -92,7 +92,7 @@ if($id !== null) {
         array_push($file_data, array("Мы платим за ПФ", "", "", ""));
     }
         
-    array_push($file_data, array("Дополнительные расходы с ".$calculation->GetUnitName($calculation->unit).", руб", CalculationBase::Display($calculation->extra_expense, 3), "", ""));
+    array_push($file_data, array("Дополнительные расходы с ".$calculation->GetUnitName($calculation->unit).", руб", CalculationBase::Display($calculation->extra_expense, 5), "", ""));
     
     array_push($file_data, array("", "", "", ""));
         
@@ -121,104 +121,104 @@ if($id !== null) {
         
     // Результаты вычислений
     array_push($file_data, array("М2 чистые, м2",
-        CalculationBase::Display($calculation->area_pure_start, 2),
-        $calculation->unit == Calculation::KG ? "" : "|= ".CalculationBase::Display($calculation->length, 2)." * ".CalculationBase::Display($calculation->stream_width, 2)." * ".CalculationBase::Display($calculation->quantity, 2)." / 1000000",
+        CalculationBase::Display($calculation->area_pure_start, 5),
+        $calculation->unit == Calculation::KG ? "" : "|= ".CalculationBase::Display($calculation->length, 5)." * ".CalculationBase::Display($calculation->stream_width, 5)." * ".CalculationBase::Display($calculation->quantity, 5)." / 1000000",
         $calculation->unit == Calculation::KG ? "Считается только при размере тиража в штуках" : "длина этикетки * ширина ручья * количество штук / 1 000 000"));
         
     array_push($file_data, array("Масса тиража, кг", 
-        CalculationBase::Display($calculation->weight, 2),
-        $calculation->unit == Calculation::KG ? "|= ".$calculation->quantity : "|= ".CalculationBase::Display($calculation->area_pure_start, 2)." * (".CalculationBase::Display($calculation->density_1, 2)." + ".CalculationBase::Display($calculation->density_2, 2)." + ".CalculationBase::Display($calculation->density_3, 2).") / 1000",
+        CalculationBase::Display($calculation->weight, 5),
+        $calculation->unit == Calculation::KG ? "|= ".$calculation->quantity : "|= ".CalculationBase::Display($calculation->area_pure_start, 5)." * (".CalculationBase::Display($calculation->density_1, 5)." + ".CalculationBase::Display($calculation->density_2, 5)." + ".CalculationBase::Display($calculation->density_3, 5).") / 1000",
         $calculation->unit == Calculation::KG ? "размер тиража в кг" : "м2 чистые * (уд. вес 1 + уд. вес 2 + уд. вес 3) / 1000"));
         
     $width_1_formula = "";
         
     switch ($calculation->ski_1) {
         case Calculation::NO_SKI:
-            $calculation->width_1_formula = "|= ".CalculationBase::Display($calculation->streams_number, 2)." * ".CalculationBase::Display($calculation->stream_width, 2);
+            $calculation->width_1_formula = "|= ".CalculationBase::Display($calculation->streams_number, 5)." * ".CalculationBase::Display($calculation->stream_width, 5);
             break;
             
         case Calculation::STANDARD_SKI:
-            $calculation->width_1_formula = "|= ".CalculationBase::Display($calculation->streams_number, 2)." * ".CalculationBase::Display($calculation->stream_width, 2)." + 20";
+            $calculation->width_1_formula = "|= ".CalculationBase::Display($calculation->streams_number, 5)." * ".CalculationBase::Display($calculation->stream_width, 5)." + 20";
             break;
             
         case Calculation::NONSTANDARD_SKI:
-            $calculation->width_1_formula = "|= ".CalculationBase::Display($calculation->width_ski_1, 2);
+            $calculation->width_1_formula = "|= ".CalculationBase::Display($calculation->width_ski_1, 5);
             break;
     }
         
     array_push($file_data, array("Ширина материала 1, мм",
-        CalculationBase::Display($calculation->width_1, 2),
+        CalculationBase::Display($calculation->width_1, 5),
         $calculation->width_1_formula,
         "без лыж 1: количество ручьёв * ширина ручья, стандартные лыжи 1: количество ручьёв * ширина ручья + 20 мм, нестандартные лыжи 1: вводится вручную"));
         
     $calculation->width_2_formula = "";
     switch ($calculation->ski_2) {
         case Calculation::NO_SKI:
-            $calculation->width_2_formula = "|= ".CalculationBase::Display($calculation->streams_number, 2)." * ".CalculationBase::Display($calculation->stream_width, 2);
+            $calculation->width_2_formula = "|= ".CalculationBase::Display($calculation->streams_number, 5)." * ".CalculationBase::Display($calculation->stream_width, 5);
             break;
             
         case Calculation::STANDARD_SKI:
-            $calculation->width_2_formula = "|= ".CalculationBase::Display($calculation->streams_number, 2)." * ".CalculationBase::Display($calculation->stream_width, 2)." + 20";
+            $calculation->width_2_formula = "|= ".CalculationBase::Display($calculation->streams_number, 5)." * ".CalculationBase::Display($calculation->stream_width, 5)." + 20";
             break;
             
         case Calculation::NONSTANDARD_SKI:
-            $calculation->width_2_formula = "|= ".CalculationBase::Display($calculation->width_ski_2, 2);
+            $calculation->width_2_formula = "|= ".CalculationBase::Display($calculation->width_ski_2, 5);
             break;
     }
         
     array_push($file_data, array("Ширина материала 2, мм",
-        CalculationBase::Display($calculation->width_2, 2),
+        CalculationBase::Display($calculation->width_2, 5),
         $calculation->width_2_formula,
         "без лыж 2: количество ручьёв * ширина ручья, стандартные лыжи 2: количество ручьёв * ширина ручья + 20 мм, нестандартные лыжи 2: вводится вручную"));
         
     $calculation->width_3_formula = "";
     switch ($calculation->ski_3) {
         case Calculation::NO_SKI:
-            $calculation->width_3_formula = "|= ".CalculationBase::Display($calculation->streams_number, 2)." * ".CalculationBase::Display($calculation->stream_width, 2);
+            $calculation->width_3_formula = "|= ".CalculationBase::Display($calculation->streams_number, 5)." * ".CalculationBase::Display($calculation->stream_width, 5);
             break;
             
         case Calculation::STANDARD_SKI:
-            $calculation->width_3_formula = "|= ".CalculationBase::Display($calculation->streams_number, 2)." * ".CalculationBase::Display($calculation->stream_width, 2)." + 20";
+            $calculation->width_3_formula = "|= ".CalculationBase::Display($calculation->streams_number, 5)." * ".CalculationBase::Display($calculation->stream_width, 5)." + 20";
             break;
             
         case Calculation::NONSTANDARD_SKI:
-            $calculation->width_3_formula = "|= ".CalculationBase::Display($calculation->width_ski_3, 2);
+            $calculation->width_3_formula = "|= ".CalculationBase::Display($calculation->width_ski_3, 5);
             break;
     }
         
     array_push($file_data, array("Ширина материала 3, мм",
-        CalculationBase::Display($calculation->width_3, 2),
+        CalculationBase::Display($calculation->width_3, 5),
         $calculation->width_3_formula,
         "без лыж 3: количество ручьёв * ширина ручья, стандартные лыжи 3: количество ручьёв * ширина ручья + 20 мм, нестандартные лыжи 3: вводится вручную"));
         
     array_push($file_data, array("М2 чистые 1, м2",
-        CalculationBase::Display($calculation->area_pure_1, 2),
-        "|= ".CalculationBase::Display($calculation->weight, 2)." * 1000 / (".CalculationBase::Display($calculation->density_1, 2)." + ".CalculationBase::Display($calculation->density_2, 2)." + ".CalculationBase::Display($calculation->density_3, 2).")",
+        CalculationBase::Display($calculation->area_pure_1, 5),
+        "|= ".CalculationBase::Display($calculation->weight, 5)." * 1000 / (".CalculationBase::Display($calculation->density_1, 5)." + ".CalculationBase::Display($calculation->density_2, 5)." + ".CalculationBase::Display($calculation->density_3, 5).")",
         "масса тиража * 1000 / (уд. вес 1 + уд. вес 2 + уд. вес 3)"));
         
     array_push($file_data, array("М2 чистые 2, м2",
-        CalculationBase::Display($calculation->area_pure_2, 2),
-        "|= ".CalculationBase::Display($calculation->weight, 2)." * 1000 / (".CalculationBase::Display($calculation->density_1, 2)." + ".CalculationBase::Display($calculation->density_2, 2)." + ".CalculationBase::Display($calculation->density_3, 2).") * ".$calculation->uk2,
+        CalculationBase::Display($calculation->area_pure_2, 5),
+        "|= ".CalculationBase::Display($calculation->weight, 5)." * 1000 / (".CalculationBase::Display($calculation->density_1, 5)." + ".CalculationBase::Display($calculation->density_2, 5)." + ".CalculationBase::Display($calculation->density_3, 5).") * ".$calculation->uk2,
         "масса тиража * 1000 / (уд. вес 1 + уд. вес 2 + уд. вес 3) * УК2"));
         
     array_push($file_data, array("М2 чистые 3, м2",
-        CalculationBase::Display($calculation->area_pure_3, 2),
-        "|= ".CalculationBase::Display($calculation->weight, 2)." * 1000 / (".CalculationBase::Display($calculation->density_1, 2)." + ".CalculationBase::Display($calculation->density_2, 2)." + ".CalculationBase::Display($calculation->density_3, 2).") * ".$calculation->uk3,
+        CalculationBase::Display($calculation->area_pure_3, 5),
+        "|= ".CalculationBase::Display($calculation->weight, 5)." * 1000 / (".CalculationBase::Display($calculation->density_1, 5)." + ".CalculationBase::Display($calculation->density_2, 5)." + ".CalculationBase::Display($calculation->density_3, 5).") * ".$calculation->uk3,
         "масса тиража * 1000 / (уд. вес 1 + уд. вес 2 + уд. вес 3) * УК3"));
         
     array_push($file_data, array("М пог чистые 1, м",
-        CalculationBase::Display($calculation->length_pure_start_1, 2),
-        "|= ".CalculationBase::Display($calculation->area_pure_1, 2)." / (".CalculationBase::Display($calculation->streams_number, 2)." * ".CalculationBase::Display($calculation->stream_width, 2)." / 1000)",
+        CalculationBase::Display($calculation->length_pure_start_1, 5),
+        "|= ".CalculationBase::Display($calculation->area_pure_1, 5)." / (".CalculationBase::Display($calculation->streams_number, 5)." * ".CalculationBase::Display($calculation->stream_width, 5)." / 1000)",
         "м2 чистые 1 / (количество ручьёв * ширина ручья / 1000)"));
         
     array_push($file_data, array("М пог чистые 2, м",
-        CalculationBase::Display($calculation->length_pure_start_2, 2),
-        "|= ".CalculationBase::Display($calculation->area_pure_2, 2)." / (".CalculationBase::Display($calculation->streams_number, 2)." * ".CalculationBase::Display($calculation->stream_width, 2)." / 1000)",
+        CalculationBase::Display($calculation->length_pure_start_2, 5),
+        "|= ".CalculationBase::Display($calculation->area_pure_2, 5)." / (".CalculationBase::Display($calculation->streams_number, 5)." * ".CalculationBase::Display($calculation->stream_width, 5)." / 1000)",
         "м2 чистые 2 / (количество ручьёв * ширина ручья / 1000)"));
         
     array_push($file_data, array("М пог чистые 2, м",
-        CalculationBase::Display($calculation->length_pure_start_3, 2),
-        "|= ".CalculationBase::Display($calculation->area_pure_3, 2)." / (".CalculationBase::Display($calculation->streams_number, 2)." * ".CalculationBase::Display($calculation->stream_width, 2)." / 1000)",
+        CalculationBase::Display($calculation->length_pure_start_3, 5),
+        "|= ".CalculationBase::Display($calculation->area_pure_3, 5)." / (".CalculationBase::Display($calculation->streams_number, 5)." * ".CalculationBase::Display($calculation->stream_width, 5)." / 1000)",
         "м2 чистые 3 / (количество ручьёв * ширина ручья / 1000)"));
         
     array_push($file_data, array("СтартСтопОтход 1",
@@ -630,7 +630,7 @@ if($id !== null) {
         array_push($file_data, array("Цена формы $i, руб",
             CalculationBase::Display($calculation->cliche_costs[$i], 2),
             "|= ".CalculationBase::Display($calculation->cliche_area, 2)." * ".CalculationBase::Display($cliche_sm_price, 2)." * ".CalculationBase::Display($calculation->GetCurrencyRate($cliche_currency, $calculation->usd, $calculation->euro), 2),
-            "площадь формы, м2 * 10000 * цена формы за 1 см2 * курс валюты"));
+            "площадь формы, м2 * цена формы за 1 см2 * курс валюты"));
     }
         
     array_push($file_data, array("", "", "", ""));

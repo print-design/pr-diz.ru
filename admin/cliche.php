@@ -132,20 +132,20 @@ if($row = $fetcher->Fetch()) {
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
                         <div class="form-group">
-                            <label for="flint_price">Flint (за см<sup>2</sup>)</label>
+                            <label for="flint_price">Flint (за м<sup>2</sup>)</label>
                             <div class="input-group">
                                 <input type="text" 
                                        class="form-control float-only" 
                                        id="flint_price" 
                                        name="flint_price" 
                                        value="<?= empty($flint_price) ? "" : floatval($flint_price) ?>" 
-                                       placeholder="Стоимость, за см2" 
+                                       placeholder="Стоимость, за м2" 
                                        required="required" 
                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'flint_price'); $(this).attr('name', 'flint_price'); $(this).attr('placeholder', 'Стоимость, за см2');" 
+                                       onmouseup="javascript: $(this).attr('id', 'flint_price'); $(this).attr('name', 'flint_price'); $(this).attr('placeholder', 'Стоимость, за м2');" 
                                        onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'flint_price'); $(this).attr('name', 'flint_price'); $(this).attr('placeholder', 'Стоимость, за см2');" 
-                                       onfocusout="javascript: $(this).attr('id', 'flint_price'); $(this).attr('name', 'flint_price'); $(this).attr('placeholder', 'Стоимость, за см2');" />
+                                       onkeyup="javascript: $(this).attr('id', 'flint_price'); $(this).attr('name', 'flint_price'); $(this).attr('placeholder', 'Стоимость, за м2');" 
+                                       onfocusout="javascript: $(this).attr('id', 'flint_price'); $(this).attr('name', 'flint_price'); $(this).attr('placeholder', 'Стоимость, за м2');" />
                                 <div class="input-group-append">
                                     <select id="flint_currency" name="flint_currency" required="required">
                                         <option value="" hidden="">...</option>
@@ -158,20 +158,20 @@ if($row = $fetcher->Fetch()) {
                             <div class="invalid-feedback">Flint обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="kodak_price">Kodak (за см<sup>2</sup>)</label>
+                            <label for="kodak_price">Kodak (за м<sup>2</sup>)</label>
                             <div class="input-group">
                                 <input type="text" 
                                        class="form-control float-only" 
                                        id="kodak_price" 
                                        name="kodak_price" 
                                        value="<?= empty($kodak_price) ? "" : floatval($kodak_price) ?>" 
-                                       placeholder="Стоимость, за см2" 
+                                       placeholder="Стоимость, за м2" 
                                        required="required" 
                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'kodak_price'); $(this).attr('name', 'kodak_price'); $(this).attr('placeholder', 'Стоимость, за см2');" 
+                                       onmouseup="javascript: $(this).attr('id', 'kodak_price'); $(this).attr('name', 'kodak_price'); $(this).attr('placeholder', 'Стоимость, за м2');" 
                                        onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'kodak_price'); $(this).attr('name', 'kodak_price'); $(this).attr('placeholder', 'Стоимость, за см2');" 
-                                       onfocusout="javascript: $(this).attr('id', 'kodak_price'); $(this).attr('name', 'kodak_price'); $(this).attr('placeholder', 'Стоимость, за см2');" />
+                                       onkeyup="javascript: $(this).attr('id', 'kodak_price'); $(this).attr('name', 'kodak_price'); $(this).attr('placeholder', 'Стоимость, за м2');" 
+                                       onfocusout="javascript: $(this).attr('id', 'kodak_price'); $(this).attr('name', 'kodak_price'); $(this).attr('placeholder', 'Стоимость, за м2');" />
                                 <div class="input-group-append">
                                     <select id="kodak_currency" name="kodak_currency" required="required">
                                         <option value="" hidden="">...</option>

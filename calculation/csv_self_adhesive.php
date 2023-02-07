@@ -14,7 +14,7 @@ if($id !== null) {
     // Данные CSV-файла
     $file_data = array();
     
-    array_push($file_data, array("Курс доллара, руб", CalculationBase::Display($calculation->usd, 2), "", ""));
+    array_push($file_data, array("Курс доллара, руб", CalculationBase::Display($calculation->usd, 5), "", ""));
     array_push($file_data, array("Курс евро, руб", CalculationBase::Display($calculation->euro, 2), "", ""));
     array_push($file_data, array("Машина", $calculation->machine, "", ""));
     array_push($file_data, array("Количество тиражей", count($calculation->quantities), "", ""));
@@ -314,13 +314,13 @@ if($id !== null) {
         
     array_push($file_data, array("Себестоимость 1 формы Флинт, руб",
         CalculationBase::Display($calculation->cliche_flint_price, 2),
-        "|= ".CalculationBase::Display($calculation->cliche_area, 2)." * 10000 * ".CalculationBase::Display($calculation->data_cliche->flint_price, 2)." * ".CalculationBase::Display(CalculationBase::GetCurrencyRate($calculation->data_cliche->flint_currency, $calculation->usd, $calculation->euro), 2),
-        "площадь формы * 10000 * стоимиость формы Флинт * валюта"));
+        "|= ".CalculationBase::Display($calculation->cliche_area, 2)." * ".CalculationBase::Display($calculation->data_cliche->flint_price, 2)." * ".CalculationBase::Display(CalculationBase::GetCurrencyRate($calculation->data_cliche->flint_currency, $calculation->usd, $calculation->euro), 2),
+        "площадь формы * стоимиость формы Флинт * валюта"));
         
     array_push($file_data, array("Себестоимость 1 формы Кодак, руб",
         CalculationBase::Display($calculation->cliche_kodak_price, 2),
-        "|= ".CalculationBase::Display($calculation->cliche_area, 2)." * 10000 * ".CalculationBase::Display($calculation->data_cliche->kodak_price, 2)." * ".CalculationBase::Display(CalculationBase::GetCurrencyRate($calculation->data_cliche->kodak_currency, $calculation->usd, $calculation->euro), 2),
-        "площадь формы * 10000 * стоимость формы Кодак * валюта"));
+        "|= ".CalculationBase::Display($calculation->cliche_area, 2)." * ".CalculationBase::Display($calculation->data_cliche->kodak_price, 2)." * ".CalculationBase::Display(CalculationBase::GetCurrencyRate($calculation->data_cliche->kodak_currency, $calculation->usd, $calculation->euro), 2),
+        "площадь формы * стоимость формы Кодак * валюта"));
         
     array_push($file_data, array("Себестоимость всех форм Флинт, руб",
         CalculationBase::Display($calculation->cliche_all_flint_price, 2),

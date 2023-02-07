@@ -1747,7 +1747,7 @@ class Calculation extends CalculationBase {
             }
             
             // Стоимость формы, руб
-            $cliche_cost = $this->cliche_area * 10000 * $cliche_sm_price * self::GetCurrencyRate($cliche_currency, $usd, $euro);
+            $cliche_cost = $this->cliche_area * $cliche_sm_price * self::GetCurrencyRate($cliche_currency, $usd, $euro);
             $this->cliche_costs[$i] = $cliche_cost;
         }
         
@@ -2292,10 +2292,10 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->cliche_area = $this->cliche_height * $this->cliche_width;
         
         // Себестоимость 1 формы Флинт, руб
-        $this->cliche_flint_price = $this->cliche_area * 10000 * $data_cliche->flint_price * self::GetCurrencyRate($data_cliche->flint_currency, $usd, $euro);
+        $this->cliche_flint_price = $this->cliche_area * $data_cliche->flint_price * self::GetCurrencyRate($data_cliche->flint_currency, $usd, $euro);
         
         // Себестоимость 1 формы Кодак, руб
-        $this->cliche_kodak_price = $this->cliche_area * 10000 * $data_cliche->kodak_price * self::GetCurrencyRate($data_cliche->kodak_currency, $usd, $euro);
+        $this->cliche_kodak_price = $this->cliche_area * $data_cliche->kodak_price * self::GetCurrencyRate($data_cliche->kodak_currency, $usd, $euro);
         
         // Себестоимость всех форм Флинт, руб
         $this->cliche_all_flint_price = $cliches_count_flint * $this->cliche_flint_price;
