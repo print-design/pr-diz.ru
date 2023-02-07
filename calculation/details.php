@@ -487,7 +487,7 @@ if($status_id == DRAFT || $status_id == CALCULATION) {
                                     alert(data.error);
                                 }
                                 else {
-                                    $('#extracharge').val(data.extracharge);
+                                    $('#extracharge').val(Math.round(data.extracharge));
                                     $('#shipping_cost').text(data.shipping_cost);
                                     $('#shipping_cost_per_unit').text(data.shipping_cost_per_unit);
                                     $('#income').text(data.income);

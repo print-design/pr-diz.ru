@@ -52,28 +52,6 @@ else {
         $error_message = $executer->error;
     }
     
-    // Вычисляем второй раз отгрузочную стоимость, так чтобы она была равна: отгрузочная стоимость за штуку * количество штук
-    $work_type_id = 0;
-    
-    if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
-        $sql = "select work_type_id from calculation where id = $id order by id";
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            $quantity = $row[0];
-        }
-    }
-    
-    if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE && $quantity > 0 && empty($error_message)) {
-        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.shipping_cost = cr.shipping_cost_per_unit * (select sum(quantity) from calculation_quantity where calculation_id = $id) where c.id = $id";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
-    }
-    elseif(empty($error_message)) {
-        $sql = "update calculation_result cr inner join calculation c on cr.calculation_id = c.id set cr.shipping_cost = cr.shipping_cost_per_unit * c.quantity where c.id = $id";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
-    }
-    
     if(empty($error_message)) {
         $sql = "select c.extracharge, cr.shipping_cost, cr.shipping_cost_per_unit, cr.income, cr.income_per_unit, cr.income_cliche, cr.income_knife from calculation_result cr inner join calculation c on cr.calculation_id = c.id where c.id = $id";
         $fetcher = new Fetcher($sql);
