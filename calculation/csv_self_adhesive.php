@@ -367,7 +367,7 @@ if($id !== null) {
         array_push($file_data, array("Стоимость скотча Цвет $i, руб",
             CalculationBase::Display($calculation->scotch_costs[$i], 5),
             "|= ".CalculationBase::Display($calculation->cliche_area, 5)." * ".CalculationBase::Display($calculation->data_cliche->scotch_price, 5)." * ".CalculationBase::Display($calculation->GetCurrencyRate($calculation->data_cliche->scotch_currency, $calculation->usd, $calculation->euro), 5),
-            "площадь формы цвет $i, см2 * цена скотча за м2 * курс валюты"));
+            "площадь формы цвет $i, м2 * цена скотча за м2 * курс валюты"));
     }
         
     array_push($file_data, array("Общая себестоимость скотча, руб",

@@ -1134,7 +1134,7 @@ class Calculation extends CalculationBase {
     
     public $cliche_height; // высота формы, мм
     public $cliche_width; // ширина формы, мм
-    public $cliche_area; // площадь формы, см2
+    public $cliche_area; // площадь формы, м2
     public $cliche_new_number; // количество новых форм
     public $cliche_costs; // массив: стоимость каждой формы, руб
     public $scotch_costs; // массив: стоимость скотча
