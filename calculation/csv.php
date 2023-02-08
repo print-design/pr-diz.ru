@@ -51,9 +51,9 @@ if($id !== null) {
         array_push($file_data, array("Толщина 3, мкм", $calculation->thickness_3, "", ""));
         array_push($file_data, array("Плотность 3, г/м2", CalculationBase::Display($calculation->density_3, 5), "", ""));
         array_push($file_data, array("Лыжи 3", $calculation->GetSkiName($calculation->ski_3), "", ""));
-        if($ski_3 == Calculation::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки 3, мм", CalculationBase::Display($calculation->width_ski_3, 5), "", ""));
-        if($customers_material_3 == true) array_push ($file_data, array("Материал заказчика (лам 2)", "", "", ""));
-        else array_push ($file_data, array("Цена 3", CalculationBase::Display($calculation->price_3, 5)." ". $calculation->GetCurrencyName($calculation->currency_3).($currency_3 == Calculation::USD ? " (".CalculationBase::Display($price_3 * $usd, 5)." руб)" : "").($calculation->currency_3 == Calculation::EURO ? " (".CalculationBase::Display($calculation->price_3 * $calculation->euro, 5)." руб)" : ""), "", ""));
+        if($calculation->ski_3 == Calculation::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки 3, мм", CalculationBase::Display($calculation->width_ski_3, 5), "", ""));
+        if($calculation->customers_material_3 == true) array_push ($file_data, array("Материал заказчика (лам 2)", "", "", ""));
+        else array_push ($file_data, array("Цена 3", CalculationBase::Display($calculation->price_3, 5)." ". $calculation->GetCurrencyName($calculation->currency_3).($calculation->currency_3 == Calculation::USD ? " (".CalculationBase::Display($calculation->price_3 * $calculation->usd, 5)." руб)" : "").($calculation->currency_3 == Calculation::EURO ? " (".CalculationBase::Display($calculation->price_3 * $calculation->euro, 5)." руб)" : ""), "", ""));
     }
         
     array_push($file_data, array("Ширина ручья, мм", $calculation->stream_width, "", ""));
