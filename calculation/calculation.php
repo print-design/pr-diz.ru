@@ -1811,11 +1811,6 @@ class Calculation extends CalculationBase {
             $this->extracharge_cliche = 0;
         }
         
-        // Если УКЗаказчикПлатитЗаПФ = 0 (то есть, заказчик не платит за ПФ), то наценка на ПФ всегда 0
-        if($this->ukcuspaypf == 0) {
-            $this->extracharge_cliche = 0;
-        }
-        
         //***********************************************
         //ПРАВАЯ ПАНЕЛЬ
         //***********************************************
@@ -2358,21 +2353,11 @@ class CalculationSelfAdhesive extends CalculationBase {
             $this->extracharge_cliche = 0;
         }
         
-        // Если УКЗаказчикПлатитЗаПФ = 0 (то есть, заказчик не платит за ПФ), то наценка на ПФ всегда 0
-        if($this->ukcuspaypf == 0) {
-            $this->extracharge_cliche = 0;
-        }
-        
         // Наценка на нож
         $this->extracharge_knife = $extracharge_knife;
         
         // Если УКНОЖ = 1, то наценка на нож всегда 0
         if($this->ukknife == 1) {
-            $this->extracharge_knife = 0;
-        }
-        
-        // Если УКЗаказчикПлатитЗаНож = 0 (то есть, заказчик не платит за нож), то наценка на нож всегда 0
-        if($this->ukcuspayknife == 0) {
             $this->extracharge_knife = 0;
         }
         
