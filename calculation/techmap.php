@@ -1061,7 +1061,21 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                         </tr>
                         <tr>
                             <td>Этикеток в 1 м. пог.</td>
-                            <td><?= empty($length) ? "" : CalculationBase::Display(1 / floatval($length) * 1000, 4) ?></td>
+                            <td>
+                                <?php
+                                if(empty($length)) {
+                                    echo "";
+                                }
+                                elseif($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                    // Делаем новый расчёт (необходимо для получения параметра "количество этикеток в рапорте чистое")
+                                    $calculation = CalculationBase::Create(filter_input(INPUT_GET, 'id'));
+                                    echo CalculationBase::Display(floatval($calculation->number_in_raport_pure) / floatval($calculation->raport) * 1000.0, 4);
+                                }
+                                else {
+                                    echo CalculationBase::Display(1 / floatval($length) * 1000, 4);
+                                }
+                                ?>
+                            </td>
                         </tr>
                         <tr>
                             <td>Бирки</td>
