@@ -1777,7 +1777,7 @@ class Calculation extends CalculationBase {
         
         // Если имеющаяся наценка не пустая, оставляем её
         // Если пустая, вычисляем
-        if(!empty($extracharge)) {
+        if(!empty($extracharge) && $extracharge > 0) { // !!!! Значение 0.000 не считается EMPTY
             $this->extracharge = $extracharge;
         }
         else {
@@ -2332,7 +2332,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         
         // Если имеющаяся наценка не пустая, оставляем её
         // Если пустая, высисляем
-        if(!empty($extracharge)) {
+        if(!empty($extracharge) && $extracharge > 0) { // !!!! Значение 0.000 не считается EMPTY
             $this->extracharge = $extracharge;
         }
         else {
