@@ -39,7 +39,7 @@ else {
     }
     
     if(empty($error_message)) {
-        $sql = "select shipping_knife_cost, income, income_cliche, income_knife from calculation_result where calculation_id = $id order by id desc limit 1";
+        $sql = "select shipping_knife_cost, income, income_per_unit, income_cliche, income_knife from calculation_result where calculation_id = $id order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
