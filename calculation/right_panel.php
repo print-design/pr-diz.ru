@@ -359,6 +359,11 @@ if(!empty($id)) {
         }
     }
 }
+
+// Корректируем значения себестоимости, отгрузочной стоимости, прибыли и итоговой прибыли, чтобы не было "разницы в 1 рубль".
+$cost = round($cost_per_unit, 3) * $quantity;
+$shipping_cost = round($shipping_cost_per_unit, 3) * $quantity;
+$income = round($income_per_unit, 3) * $quantity;
 ?>
 <div id="calculation"<?=$calculation_class ?>>
     <div class="d-flex justify-content-between">
@@ -474,7 +479,7 @@ if(!empty($id)) {
         <div class="col-4 pr-4"></div>
         <div class="col-4">
             <div>Итоговая прибыль</div>
-            <div class="value mb-2"><span id="income_total"><?=CalculationBase::Display(floatval($income) + floatval($income_cliche), 0) ?></span> &#8381;</div>
+            <div class="value mb-2"><span id="income_total"><?=CalculationBase::Display(round(floatval($income), 0) + round(floatval($income_cliche), 0), 0) ?></span> &#8381;</div>
         </div>
     </div>
     <div class="mt-3">
