@@ -47,7 +47,7 @@ else {
         if($row = $fetcher->Fetch()) {
             $result['shipping_knife_cost'] = CalculationBase::Display(floatval($row['shipping_knife_cost']), 0);
             $result['income_knife'] = CalculationBase::Display(floatval($row['income_knife']), 0);
-            $result['income_total'] = CalculationBase::Display(round(floatval($row['income_per_unit']), 0) * $quantity + round(floatval($row['income_cliche']), 0) + round(floatval($row['income_knife']), 0), 0);
+            $result['income_total'] = CalculationBase::Display(round(floatval($row['income_per_unit']), 3) * floatval($calculation->quantity) + round(floatval($row['income_cliche']), 0) + round(floatval($row['income_knife']), 0), 0);
         }
     }
     
