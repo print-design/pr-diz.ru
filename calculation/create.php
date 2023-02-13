@@ -2345,7 +2345,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             id="knife"
                                             name="knife"
                                             class="form-control float-only self-adhesive-only d-none"
-                                            value="<?=$knife ?>"
+                                            value="<?=round($knife, 2) ?>"
                                             placeholder="Стоимость ножа, руб"
                                             onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                             onmouseup="javascript: $(this).attr('id', 'knife'); $(this).attr('name', 'knife'); $(this).attr('placeholder', 'Стоимость ножа, руб');" 
