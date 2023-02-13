@@ -3506,6 +3506,15 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
             });
             
+            $('#extracharge_knife').keydown(function(e) {
+                if(($(e.target).val() == 0 || $(e.target).val() == '' || $(e.target).prop('selectionStart') != $(e.target).prop('selectionEnd')) && e.key == 0) {
+                    return true;
+                }
+                else if(!KeyDownLimitIntValue($(e.target), e, 999)) {
+                    return false;
+                }
+            });
+            
             $('#extracharge').change(function(){
                 if($(this).val() !== '0') {
                     ChangeLimitIntValue($(this), 999);
@@ -3513,6 +3522,12 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             });
             
             $('#extracharge_cliche').change(function(){
+                if($(this).val() !== '0') {
+                    ChangeLimitIntValue($(this), 999);
+                }
+            });
+            
+            $('#extracharge_knife').change(function(){
                 if($(this).val() !== '0') {
                     ChangeLimitIntValue($(this), 999);
                 }
