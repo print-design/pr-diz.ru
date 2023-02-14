@@ -291,16 +291,26 @@ if(!empty($id)) {
 
 // Корректируем значения себестоимости, отгрузочной стоимости, прибыли и итоговой прибыли, чтобы не было "разницы в 1 рубль".
 // Для этого первым делом определяем количество штук
-$quantity = 0;
-$sql = "select sum(quantity) from calculation_quantity where calculation_id = $id order by id";
-$fetcher = new Fetcher($sql);
-if($row = $fetcher->Fetch()) {
-    $quantity = $row[0];
+if(!empty($id)) {
+    $quantity = 0;
+    $sql = "select sum(quantity) from calculation_quantity where calculation_id = $id order by id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $quantity = $row[0];
+    }
 }
 
-$cost = round($cost_per_unit, 3) * $quantity;
-$shipping_cost = round($shipping_cost_per_unit, 3) * $quantity;
-$income = round($income_per_unit, 3) * $quantity;
+if(!empty($cost_per_unit) && !empty($quantity)) {
+    $cost = round($cost_per_unit, 3) * $quantity;
+}
+
+if(!empty($shipping_cost_per_unit) && !empty($quantity)) {
+    $shipping_cost = round($shipping_cost_per_unit, 3) * $quantity;
+}
+
+if(!empty($income_per_unit) && !empty($quantity)) {
+    $income = round($income_per_unit, 3) * $quantity;
+}
 ?>
 <div id="calculation"<?=$calculation_class ?>>
     <div class="d-flex justify-content-between">

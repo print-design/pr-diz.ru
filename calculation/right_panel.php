@@ -361,9 +361,17 @@ if(!empty($id)) {
 }
 
 // Корректируем значения себестоимости, отгрузочной стоимости, прибыли и итоговой прибыли, чтобы не было "разницы в 1 рубль".
-$cost = round($cost_per_unit, 3) * $quantity;
-$shipping_cost = round($shipping_cost_per_unit, 3) * $quantity;
-$income = round($income_per_unit, 3) * $quantity;
+if(!empty($cost_per_unit) && !empty($quantity)) {
+    $cost = round($cost_per_unit, 3) * $quantity;
+}
+
+if(!empty($shipping_cost_per_unit) && !empty($quantity)) {
+    $shipping_cost = round($shipping_cost_per_unit, 3) * $quantity;
+}
+
+if(!empty($income_per_unit) && !empty($quantity)) {
+    $income = round($income_per_unit, 3) * $quantity;
+}
 ?>
 <div id="calculation"<?=$calculation_class ?>>
     <div class="d-flex justify-content-between">
