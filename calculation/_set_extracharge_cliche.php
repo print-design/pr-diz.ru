@@ -43,11 +43,10 @@ else {
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
-        // Значения income_total дополнительно корректируем, чтобы не было "разницы в 1 рубль"
         if($row = $fetcher->Fetch()) {
             $result['shipping_cliche_cost'] = CalculationBase::Display(floatval($row['shipping_cliche_cost']), 0);
             $result['income_cliche'] = CalculationBase::Display(floatval($row['income_cliche']), 0);
-            $result['income_total'] = CalculationBase::Display(round(floatval($row['income_per_unit']), 3) * $calculation->quantity + round(floatval($row['income_cliche']), 0) + round(floatval($row['income_knife']), 0), 0);
+            $result['income_total'] = CalculationBase::Display(round(floatval($row['income']), 0) + round(floatval($row['income_cliche']), 0) + round(floatval($row['income_knife']), 0), 0);
         }
     }
     
