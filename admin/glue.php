@@ -249,7 +249,7 @@ if($row = $fetcher->Fetch()) {
                                    class="form-control float-only" 
                                    id="solvent_part" 
                                    name="solvent_part" 
-                                   value="<?= empty($solvent_part) ? "" : $solvent_part ?>" 
+                                   value="<?= empty($solvent_part) ? "" : floatval($solvent_part) ?>" 
                                    placeholder="Растворитель" 
                                    required="required" 
                                    onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
