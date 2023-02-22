@@ -1846,7 +1846,7 @@ class Calculation extends CalculationBase {
         }
         
         // Отгрузочная стоимость ПФ
-        $this->shipping_cliche_cost = ($this->cliche_cost + ($this->cliche_cost * $this->extracharge_cliche / 100)) * $this->ukcuspaypf * (($this->ukpf - 1) / -1);
+        $this->shipping_cliche_cost = $this->cliche_cost * (1 + ($this->extracharge_cliche / 100)) * $this->ukcuspaypf * (($this->ukpf - 1) / -1);
         
         // Прибыль ПФ
         $this->income_cliche = ($this->shipping_cliche_cost - $this->cliche_cost) * (($this->ukpf - 1) / -1);
@@ -1858,7 +1858,7 @@ class Calculation extends CalculationBase {
         $this->cost_per_unit = $this->cost / $quantity;
         
         // Отгрузочная стоимость
-        $this->shipping_cost = $this->cost + ($this->cost * $this->extracharge / 100);
+        $this->shipping_cost = $this->cost * (1 + ($this->extracharge / 100));
         
         // Отгрузочная стоимость за единицу
         $this->shipping_cost_per_unit = $this->shipping_cost / $quantity;
@@ -2386,7 +2386,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->cliche_cost = $this->cliche_all_flint_price + $this->cliche_all_kodak_price;
         
         // Отгрузочная стоимость ПФ
-        $this->shipping_cliche_cost = ($this->cliche_cost + ($this->cliche_cost * $this->extracharge_cliche / 100)) * $this->ukcuspaypf * (($this->ukpf - 1) / -1);
+        $this->shipping_cliche_cost = $this->cliche_cost * (1 + ($this->extracharge_cliche / 100)) * $this->ukcuspaypf * (($this->ukpf - 1) / -1);
         
         // Прибыль ПФ
         $this->income_cliche = ($this->shipping_cliche_cost - $this->cliche_cost) * (($this->ukpf - 1) / -1);
@@ -2395,7 +2395,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->knife_cost = $knife;
         
         // Отгрузочная стоимость ножа
-        $this->shipping_knife_cost = ($this->knife_cost + ($this->knife_cost * $this->extracharge_knife / 100)) * $this->ukcuspayknife * (($this->ukknife - 1) / -1);
+        $this->shipping_knife_cost = $this->knife_cost * (1 + ($this->extracharge_knife / 100)) * $this->ukcuspayknife * (($this->ukknife - 1) / -1);
         
         // Прибыль на нож
         $this->income_knife = ($this->shipping_knife_cost - $this->knife_cost) * (($this->ukknife - 1) / -1);
@@ -2407,7 +2407,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->cost_per_unit = $this->cost / $this->quantity;
         
         // Отгрузочная стоимость
-        $this->shipping_cost = $this->cost + ($this->cost * $this->extracharge / 100);
+        $this->shipping_cost = $this->cost * (1 + ($this->extracharge / 100));
         
         // Отгрузочная стоимость за единицу
         $this->shipping_cost_per_unit = $this->shipping_cost / $this->quantity;

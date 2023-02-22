@@ -354,12 +354,12 @@ if($id !== null) {
     //*****************************************
     // Время - деньги
     //*****************************************
-        
+    
     array_push($file_data, array("Время приладки 1, ч",
         CalculationBase::Display($calculation->priladka_time_1, 5),
         "|= ".CalculationBase::Display($calculation->ink_number, 5)." * ".CalculationBase::Display($calculation->data_priladka->time, 5)." / 60",
         "красочность * время приладки 1 краски / 60"));
-        
+    
     array_push($file_data, array("Время приладки 2, ч",
         CalculationBase::Display($calculation->priladka_time_2, 5),
         "|= ".CalculationBase::Display($calculation->data_priladka_laminator->time, 5)." * ".CalculationBase::Display($calculation->uk2, 0)." / 60",
@@ -751,8 +751,8 @@ if($id !== null) {
         
     array_push($file_data, array("Отгрузочная стоимость, руб",
         CalculationBase::Display($calculation->shipping_cost, 5),
-        "|= ".CalculationBase::Display($calculation->cost, 5)." + (".CalculationBase::Display($calculation->cost, 5)." * ".CalculationBase::Display($calculation->extracharge, 5)." / 100)",
-        "себестоимость + (себестоимость * наценка на тираж / 100)"));
+        "|= ".CalculationBase::Display($calculation->cost, 5)." * (1 + (".CalculationBase::Display($calculation->extracharge, 5)." / 100))",
+        "себестоимость * (1 + (наценка на тираж / 100))"));
             
     array_push($file_data, array("Отгрузочная стоимость за ".$calculation->GetUnitName($calculation->unit).", руб",
         CalculationBase::Display($calculation->shipping_cost_per_unit, 5),
@@ -771,8 +771,8 @@ if($id !== null) {
             
     array_push($file_data, array("Отгрузочная стоимость ПФ, руб",
         CalculationBase::Display($calculation->shipping_cliche_cost, 5),
-        "|= (".CalculationBase::Display($calculation->cliche_cost, 5)." + (".CalculationBase::Display($calculation->cliche_cost, 5)." * ".CalculationBase::Display($calculation->extracharge_cliche, 5)." / 100)) * ((".$calculation->ukpf." - 1) / -1)",
-        "(сумма стоимости всех форм + (сумма стоимости всех форм * наценка на ПФ / 100)) * CusPayPF * ((КоэфПФ - 1) / -1)"));
+        "|= ".CalculationBase::Display($calculation->cliche_cost, 5)." * (1 + (".CalculationBase::Display($calculation->extracharge_cliche, 5)." / 100)) * ((".$calculation->ukpf." - 1) / -1)",
+        "сумма стоимости всех форм * (1 + (наценка на ПФ / 100)) * CusPayPF * ((КоэфПФ - 1) / -1)"));
         
     array_push($file_data, array("Прибыль ПФ, руб",
         CalculationBase::Display($calculation->income_cliche, 5),
