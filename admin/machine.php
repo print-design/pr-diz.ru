@@ -36,7 +36,7 @@ if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'vaporization_expense'))) {
+    if(null === filter_input(INPUT_POST, 'vaporization_expense')) {
         $vaporization_expense_valid = ISINVALID;
         $form_valid = false;
     }
@@ -177,6 +177,9 @@ if($row = $fetcher->Fetch()) {
                                    onfocusout="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина машины, мм');" />
                             <div class="invalid-feedback">Ширина машины обязательно</div>
                         </div>
+                        <?php if($machine_id ==ATLAS ): ?>
+                        <input type="hidden" id="vaporization_expense" name="vaporization_expense" value="0" />
+                        <?php else: ?>
                         <div class="form-group">
                             <label for="vaporization_expense">Расход растворителя на испарение, г/м<sup>2</sup></label>
                             <input type="text" 
@@ -193,6 +196,7 @@ if($row = $fetcher->Fetch()) {
                                    onfocusout="javascript: $(this).attr('id', 'vaporization_expense'); $(this).attr('name', 'vaporization_expense'); $(this).attr('placeholder', 'Расх. раств. на испар., г/м2');" />
                             <div class="invalid-feedback">Расход растворителя на испарение обязательно</div>
                         </div>
+                        <?php endif; ?>
                         <button type="submit" id="norm_machine_submit" name="norm_machine_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
                     </form>
                 </div>
