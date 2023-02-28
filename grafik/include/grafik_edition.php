@@ -93,7 +93,7 @@
     <?php if($this->timetable->hasLength): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
-        <input type="text" min="0" pattern="\d*" value="<?=$this->edition['length'] ?>" onfocusout="javascript: EditLength($(this))" data-id='<?=$this->edition['id'] ?>' class="editable int-only" style="width:65px;" />
+        <input type="text" value="<?=$this->edition['length'] ?>" onfocusout="javascript: EditLength($(this))" data-id='<?=$this->edition['id'] ?>' class="editable int-only" style="width:65px;" />
         <?php
         elseif(!empty($this->edition['status'])):
             echo $this->edition['status'];
