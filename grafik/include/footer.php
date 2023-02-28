@@ -9,32 +9,37 @@
 <script src="<?=APPLICATION ?>/js/popper.min.js"></script>
 
 <script>
-    // Всплывающие подсказки
+    
     $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip(); 
+        Initialize();
     });
     
-    // Фильтрация ввода
-    $('.int-only').keypress(function(e) {
-        if(/\D/.test(String.fromCharCode(e.charCode))) {
-            return false;
-        }
-    });
-        
-    $('.float-only').keypress(function(e) {
-        if(!/[\.\d]/.test(String.fromCharCode(e.charCode))) {
-            return false;
-        }
-    });
+    function Initialize() {
+        // Всплывающие подсказки
+        $('[data-toggle="tooltip"]').tooltip();
     
-    // Валидация
-    $('input').keypress(function(){
-        $(this).removeClass('is-invalid');
-    });
+        // Фильтрация ввода
+        $('.int-only').keypress(function(e) {
+            if(/\D/.test(String.fromCharCode(e.charCode))) {
+                return false;
+            }
+        });
         
-    $('select').change(function(){
-        $(this).removeClass('is-invalid');
-    });
+        $('.float-only').keypress(function(e) {
+            if(!/[\.\d]/.test(String.fromCharCode(e.charCode))) {
+                return false;
+            }
+        });
+    
+        // Валидация
+        $('input').keypress(function(){
+            $(this).removeClass('is-invalid');
+        });
+        
+        $('select').change(function(){
+            $(this).removeClass('is-invalid');
+        });
+    }
     
     // Прокрутка на прежнее место после отправки формы
     // и поддержание заголовка таблицы всегда сверху экрана

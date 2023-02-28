@@ -127,6 +127,9 @@ $error_message = $timetable->error_message;
                 $(".editions").autocomplete({
                     source: editions
                 });
+                
+                // Выполнение функций при загрузке документа
+                Initialize();
             }
             
             // Активация автозаполнения
