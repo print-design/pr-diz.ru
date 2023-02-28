@@ -177,7 +177,7 @@ if($row = $fetcher->Fetch()) {
                                    onfocusout="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина машины, мм');" />
                             <div class="invalid-feedback">Ширина машины обязательно</div>
                         </div>
-                        <?php if($machine_id ==ATLAS ): ?>
+                        <?php if($machine_id == ATLAS ): ?>
                         <input type="hidden" id="vaporization_expense" name="vaporization_expense" value="0" />
                         <?php else: ?>
                         <div class="form-group">
