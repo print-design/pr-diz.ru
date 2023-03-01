@@ -264,7 +264,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $form_valid = false;
             }
             
-            if($ink_var == 'lacquer' && empty($$lacquer_var)) {
+            if($$ink_var == 'lacquer' && empty($$lacquer_var)) {
                 $lacquer_valid_var = 'lacquer_'.$i.'_valid';
                 $$lacquer_valid_var = ISINVALID;
                 $form_valid = false;
@@ -3711,11 +3711,20 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             <?php endif; ?>
             
             // Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне
-            AdjustFixedBlock($('#calculation'));
+            if($('#calculation').offset() != undefined) {
+                AdjustFixedBlock($('#calculation'));
+            }
             
             $(window).on("scroll", function(){
                 AdjustFixedBlock($('#calculation'));
             });
+            
+            // Повторное прокручивание страницы 
+            // (так как после первого прокручивания внизу страницы нарисовались новые элементы, 
+            // и текущее положение вертикальной полосы прокрутки уже не соответствует размеру страницы)
+            <?php if(!empty($_REQUEST['scroll'])): ?>
+                window.scrollTo(0, <?php echo intval($_REQUEST['scroll']); ?>);
+            <?php endif; ?>
         </script>
     </body>
 </html>
