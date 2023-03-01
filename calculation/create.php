@@ -3716,7 +3716,9 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             }
             
             $(window).on("scroll", function(){
-                AdjustFixedBlock($('#calculation'));
+                if($('#calculation').offset() != undefined) {
+                    AdjustFixedBlock($('#calculation'));
+                }
             });
             
             // Повторное прокручивание страницы 
