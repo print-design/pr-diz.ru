@@ -1089,7 +1089,8 @@ class Calculation extends CalculationBase {
     public $uk1, $uk2, $uk3, $ukpf, $ukcuspaypf; // уравнивающий коэффициент 1, 2, 3, ПФ, ЗаказчикПлатитЗаПФ
     public $area_pure_start = 0; // м2 чистые, м2 (рассчитывается: длина * ширина * кол-во в шт.; используется для вычисления массы тиража, если он в шт.)
     public $weight = 0; // масса тиража, кг
-    public $width_1, $width_2, $width_3; // ширина материала, мм 
+    public $width_start_1, $width_start_2, $width_start_3; // ширина материала начальная (до приведения к числу кратному 5), мм
+    public $width_1, $width_2, $width_3; // ширина материала кратная 5, мм 
     public $area_pure_1, $area_pure_2, $area_pure_3; // м2 чистые, м2 (рассчитывается: вес / плотность)
     public $length_pure_start_1, $length_pure_start_2, $length_pure_start_3; // м пог чистые, м
     public $waste_length_1, $waste_length_2, $waste_length_3; // СтартСтопОтход, м
@@ -1342,65 +1343,75 @@ class Calculation extends CalculationBase {
             $this->weight = $this->area_pure_start * ($density_1 + $density_2 + $density_3) / 1000;
         }
 
-        // Ширина материала 1, мм
+        // Ширина материала (начальная) 1, мм
         // Если без лыж: количество ручьёв * ширина ручья
         // Если стандартные лыжи: количество ручьёв * ширина ручья + 20
         // Если нестандартные лыжи: ширина материала вводится вручную
         switch($ski_1) {
             case self::NO_SKI:
-                $this->width_1 = $streams_number * $stream_width;
+                $this->width_start_1 = $streams_number * $stream_width;
                 break;
                 
             case self::STANDARD_SKI:
-                $this->width_1 = $streams_number * $stream_width + 20;
+                $this->width_start_1 = $streams_number * $stream_width + 20;
                 break;
         
             case self::NONSTANDARD_SKI:
-                $this->width_1 = $width_ski_1;
+                $this->width_start_1 = $width_ski_1;
                 break;
             
             default :
-                $this->width_1 = 0;
+                $this->width_start_1 = 0;
                 break;
         }
         
-        // Ширина материала 2, мм
+        // Ширина материала (начальная) 2, мм
         switch($ski_2) {
             case self::NO_SKI:
-                $this->width_2 = $streams_number * $stream_width;
+                $this->width_start_2 = $streams_number * $stream_width;
                 break;
         
             case self::STANDARD_SKI:
-                $this->width_2 = $streams_number * $stream_width + 20;
+                $this->width_start_2 = $streams_number * $stream_width + 20;
                 break;
         
             case self::NONSTANDARD_SKI:
-                $this->width_2 = $width_ski_2;
+                $this->width_start_2 = $width_ski_2;
                 break;
             
             default :
-                $this->width_2 = 0;
+                $this->width_start_2 = 0;
                 break;
         }
         
-        // Ширина материала 1, мм
+        // Ширина материала (начальная) 3, мм
         switch($ski_3) {
             case self::NO_SKI:
-                $this->width_3 = $streams_number * $stream_width;
+                $this->width_start_3 = $streams_number * $stream_width;
                 break;
         
             case self::STANDARD_SKI:
-                $this->width_3 = $streams_number * $stream_width + 20;
+                $this->width_start_3 = $streams_number * $stream_width + 20;
                 break;
         
             case self::NONSTANDARD_SKI:
-                $this->width_3 = $width_ski_3;
+                $this->width_start_3 = $width_ski_3;
                 break;
             
             default :
-                $this->width_3 = 0;
+                $this->width_start_3 = 0;
                 break;
         }
+        
+        // Ширина материала (кратная 5) 1, мм
+        $this->width_1 = ceil($this->width_start_1 / 5) * 5;
+        
+        // Ширина материала (кратная 5) 2, мм
+        $this->width_2 = ceil($this->width_start_2 / 5) * 5;
+        
+        // Ширина материала (кратная 5) 3, мм
+        $this->width_3 = ceil($this->width_start_3 / 5) * 5;
+        
         
         // М2 чистые 1, м2
         $this->area_pure_1 = $this->weight * 1000 / ($density_1 + $density_2 + $density_3);
