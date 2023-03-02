@@ -21,9 +21,11 @@ const SIDE_BACK = 2;
 const LABEL_PRINT_DESIGN = 1;
 const LABEL_FACELESS = 2;
 
-// Упаковка: паллетированная, россыпью
+// Упаковка: паллетированная, россыпью, европаллет, коробки
 const PACKAGE_PALLETED = 1;
 const PACKAGE_BULK = 2;
+const PACKAGE_EUROPALLET = 3;
+const PACKAGE_BOXES = 4;
 
 // Значение марки плёнки "другая"
 const INDIVIDUAL = -1;
@@ -1114,6 +1116,12 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                     case PACKAGE_BULK:
                                         echo "Россыпью";
                                         break;
+                                    case PACKAGE_EUROPALLET:
+                                        echo "Европаллет";
+                                        break;
+                                    case PACKAGE_BOXES:
+                                        echo "Коробки";
+                                        break;
                                     default :
                                         echo "Ждем данные";
                                         break;
@@ -1409,8 +1417,10 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                             <label for="package">Упаковка</label>
                             <select id="package" name="package" class="form-control<?=$package_valid ?>" required="required">
                                 <option value="" hidden="hidden">...</option>
-                                <option value="<?=PACKAGE_PALLETED ?>"<?= $package == 1 ? " selected='selected'" : "" ?>>Паллетирование</option>
-                                <option value="<?=PACKAGE_BULK ?>"<?= $package == 2 ? " selected='selected'" : "" ?>>Россыпью</option>
+                                <option value="<?=PACKAGE_PALLETED ?>"<?= $package == PACKAGE_PALLETED ? " selected='selected'" : "" ?>>Паллетирование</option>
+                                <option value="<?=PACKAGE_BULK ?>"<?= $package == PACKAGE_BULK ? " selected='selected'" : "" ?>>Россыпью</option>
+                                <option value="<?=PACKAGE_EUROPALLET ?>"<?= $package == PACKAGE_EUROPALLET ? " selected='selected'" : "" ?>>Европаллет</option>
+                                <option value="<?=PACKAGE_BOXES ?>"<?= $package == PACKAGE_BOXES ? " selected='selected'" : "" ?>>Коробки</option>
                             </select>
                             <div class="invalid-feedback">Упаковка обязательно</div>
                         </div>

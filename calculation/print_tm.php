@@ -11,9 +11,11 @@ const SIDE_BACK = 2;
 const LABEL_PRINT_DESIGN = 1;
 const LABEL_FACELESS = 2;
 
-// Упаковка: паллетированная, россыпью
+// Упаковка: паллетированная, россыпью, европаллет, коробки
 const PACKAGE_PALLETED = 1;
 const PACKAGE_BULK = 2;
+const PACKAGE_EUROPALLET = 3;
+const PACKAGE_BOXES = 4;
 
 // Значение марки плёнки "другая"
 const INDIVIDUAL = -1;
@@ -817,6 +819,12 @@ $current_date_time = date("dmYHis");
                                         break;
                                     case PACKAGE_BULK:
                                         echo "Россыпью";
+                                        break;
+                                    case PACKAGE_EUROPALLET:
+                                        echo "Европаллет";
+                                        break;
+                                    case PACKAGE_BOXES:
+                                        echo "Коробки";
                                         break;
                                     default :
                                         echo "Ждем данные";
