@@ -525,6 +525,11 @@ textarea#editable {
     padding: 30px;
 }
 
+/* Отображение подсказки валидации (invalid-feedback) для сложных полей форм (input-group) */
+.input-group:has( > .is-invalid) + .invalid-feedback {
+    display: block;
+}
+
 /* СПИСОК С ПОИСКОМ */
 /* 1. Высота поля поиска */
 .select2-selection {

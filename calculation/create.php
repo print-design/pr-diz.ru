@@ -959,10 +959,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 background: gray;
                 border-color: gray;
             }
-            
-            .input-group:has( > .is-invalid) + .invalid-feedback {
-                display: block;
-            }
         </style>
     </head>
     <body>
