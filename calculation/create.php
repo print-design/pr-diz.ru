@@ -264,10 +264,12 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $form_valid = false;
             }
             
-            if($$ink_var == 'lacquer' && empty($$lacquer_var)) {
-                $lacquer_valid_var = 'lacquer_'.$i.'_valid';
-                $$lacquer_valid_var = ISINVALID;
-                $form_valid = false;
+            if(filter_input(INPUT_POST, 'work_type_id') == CalculationBase::WORK_TYPE_PRINT) {
+                if($$ink_var == 'lacquer' && empty($$lacquer_var)) {
+                    $lacquer_valid_var = 'lacquer_'.$i.'_valid';
+                    $$lacquer_valid_var = ISINVALID;
+                    $form_valid = false;
+                }
             }
         }
     }
@@ -1603,7 +1605,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                    name="lamination1_price" 
                                                    class="form-control float-only film-price<?=$lamination1_price_valid ?>" 
                                                    placeholder="Цена" 
-                                                   value="<?=round($lamination1_price, 2) ?>" 
+                                                   value="<?= is_float($lamination1_price) ?  round($lamination1_price, 2) : $lamination1_price ?>" 
                                                    onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                                    onmouseup="javascript: $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" 
                                                    onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
@@ -1803,7 +1805,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                        name="lamination2_price" 
                                                        class="form-control float-only film-price<?=$lamination2_price_valid ?>" 
                                                        placeholder="Цена" 
-                                                       value="<?=round($lamination2_price, 2) ?>" 
+                                                       value="<?= is_float($lamination2_price) ? round($lamination2_price, 2) : $lamination2_price ?>" 
                                                        onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                                        onmouseup="javascript: $(this).attr('name', 'lamination2_price'); $(this).attr('placeholder', 'Цена');" 
                                                        onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
