@@ -16,6 +16,7 @@ $error_message = '';
 
 $time_valid = '';
 $length_valid = '';
+$stamp_valid = '';
 $waste_percent_valid = '';
 
 // Сохранение введённых значений
@@ -27,6 +28,11 @@ if(null !== filter_input(INPUT_POST, 'norm_priladka_submit')) {
     
     if(empty(filter_input(INPUT_POST, 'length'))) {
         $length_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(key_exists('stamp', $_POST) && empty(filter_input(INPUT_POST, 'stamp'))) {
+        $stamp_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -125,7 +131,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="time">Время приладки 1 краски (мин)</label>
                             <input type="text" 
-                                   class="form-control float-only" 
+                                   class="form-control float-only<?=$time_valid ?>" 
                                    id="time" 
                                    name="time" 
                                    value="<?= empty($time) ? "" : floatval($time) ?>" 
@@ -141,7 +147,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="length">Метраж приладки 1 краски (метры)</label>
                             <input type="text" 
-                                   class="form-control float-only" 
+                                   class="form-control float-only<?=$length_valid ?>" 
                                    id="length" 
                                    name="length" 
                                    value="<?= empty($length) ? "" : floatval($length) ?>" 
@@ -158,7 +164,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="stamp">Метраж приладки штампа (метры)</label>
                             <input type="text" 
-                                   class="form-control float-only" 
+                                   class="form-control float-only<?=$stamp_valid ?>" 
                                    id="stamp" 
                                    name="stamp" 
                                    value="<?= empty($stamp) ? "" : floatval($stamp) ?>" 
@@ -176,7 +182,7 @@ if($row = $fetcher->Fetch()) {
                             <label for="length">Процент отходов на СтартСтоп</label>
                             <div class="input-group">
                                 <input type="text" 
-                                       class="form-control" 
+                                       class="form-control float-none<?=$waste_percent_valid ?>" 
                                        id="waste_percent" 
                                        name="waste_percent" 
                                        value="<?= empty($waste_percent) ? "" : intval($waste_percent) ?>" 

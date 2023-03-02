@@ -163,7 +163,7 @@ if($row = $fetcher->Fetch()) {
                             <label for="glue_price">Цена чистого клея (за кг)</label>
                             <div class="input-group">
                                 <input type="text" 
-                                       class="form-control float-only" 
+                                       class="form-control float-only<?=$glue_price_valid ?>" 
                                        id="glue_price" 
                                        name="glue_price" 
                                        value="<?= empty($glue_price) ? "" : floatval($glue_price) ?>" 
@@ -189,7 +189,7 @@ if($row = $fetcher->Fetch()) {
                             <label for="solvent_price">Цена <?=$solvent_genitive ?> для клея (за кг)</label>
                             <div class="input-group">
                                 <input type="text" 
-                                       class="form-control float-only" 
+                                       class="form-control float-only<?=$solvent_price_valid ?>" 
                                        id="solvent_price" 
                                        name="solvent_price" 
                                        value="<?= empty($solvent_price) ? "" : floatval($solvent_price) ?>" 
@@ -214,7 +214,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="glue_expense">Расход смеси клея, г/м<sup>2</sup></label>
                             <input type="text" 
-                                   class="form-control float-only" 
+                                   class="form-control float-only<?=$glue_expense_valid ?>" 
                                    id="glue_expense" 
                                    name="glue_expense" 
                                    value="<?= empty($glue_expense) ? "" : floatval($glue_expense) ?>" 
@@ -230,7 +230,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="glue_expense_pet">Расход смеси клея при ламинации ПЭТ, г/м<sup>2</sup></label>
                             <input type="text" 
-                                   class="form-control float-only" 
+                                   class="form-control float-only<?=$glue_expense_pet_valid ?>" 
                                    id="glue_expense_pet" 
                                    name="glue_expense_pet" 
                                    value="<?= empty($glue_expense_pet) ? "" : floatval($glue_expense_pet) ?>" 
@@ -246,7 +246,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="solvent_part">Расход <?=$solvent_genitive ?> (кг) на 1 кг клея</label>
                             <input type="text" 
-                                   class="form-control float-only" 
+                                   class="form-control float-only<?=$solvent_part_valid ?>" 
                                    id="solvent_part" 
                                    name="solvent_part" 
                                    value="<?= empty($solvent_part) ? "" : floatval($solvent_part) ?>" 

@@ -100,7 +100,7 @@ if($row = $fetcher->Fetch()) {
                             <label for="usd">Доллар</label>
                             <div class="input-group">
                                 <input type="text" 
-                                       class="form-control float-only" 
+                                       class="form-control float-only<?=$usd_valid ?>" 
                                        id="usd" 
                                        name="usd" 
                                        value="<?= empty($usd) ? "" : floatval($usd) ?>" 
@@ -119,7 +119,7 @@ if($row = $fetcher->Fetch()) {
                             <label for="euro">Евро</label>
                             <div class="input-group">
                                 <input type="text" 
-                                       class="form-control float-only" 
+                                       class="form-control float-only<?=$euro_valid ?>" 
                                        id="euro" 
                                        name="euro" 
                                        value="<?= empty($euro) ? "" : floatval($euro) ?>" 

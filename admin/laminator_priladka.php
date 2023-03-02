@@ -120,7 +120,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="time">Время приладки (мин)</label>
                             <input type="text" 
-                                   class="form-control float-only" 
+                                   class="form-control float-only<?=$time_valid ?>" 
                                    id="time" 
                                    name="time" 
                                    value="<?= empty($time) ? "" : floatval($time) ?>" 
@@ -136,7 +136,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="length">Метраж приладки (метры)</label>
                             <input type="text" 
-                                   class="form-control float-only" 
+                                   class="form-control float-only<?=$length_valid ?>" 
                                    id="length" 
                                    name="length" 
                                    value="<?= empty($length) ? "" : floatval($length) ?>" 
@@ -153,7 +153,7 @@ if($row = $fetcher->Fetch()) {
                             <label for="length">Процент отходов на СтартСтоп</label>
                             <div class="input-group">
                                 <input type="text" 
-                                       class="form-control" 
+                                       class="form-control float-only<?=$waste_percent_valid ?>" 
                                        id="waste_percent" 
                                        name="waste_percent" 
                                        value="<?= empty($waste_percent) ? "" : intval($waste_percent) ?>" 

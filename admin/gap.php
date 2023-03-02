@@ -125,7 +125,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="gap_raport">ЗазорРапорт (минимальное расстояние между этикетками), мм</label>
                             <input type="text" 
-                                   class="form-control float-only" 
+                                   class="form-control float-only<?=$gap_raport_valid ?>" 
                                    id="gap_raport" 
                                    name="gap_raport" 
                                    value="<?= empty($gap_raport) ? "" : floatval($gap_raport) ?>" 
@@ -141,7 +141,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="gap_stream">ЗазорРучей (минимальное расстояние между ручьями), мм</label>
                             <input type="text" 
-                                   class="form-control float-only" 
+                                   class="form-control float-only<?=$gap_stream_valid ?>" 
                                    id="gap_stream" 
                                    name="gap_stream" 
                                    value="<?= empty($gap_stream) ? "" : floatval($gap_stream) ?>" 
@@ -157,7 +157,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="ski">Ширина 1 лыжи, мм</label>
                             <input type="text" 
-                                   class="form-control float-only" 
+                                   class="form-control float-only<?=$ski_valid ?>" 
                                    id="ski" 
                                    name="ski" 
                                    value="<?= empty($ski) ? "" : floatval($ski) ?>" 

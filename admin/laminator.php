@@ -118,7 +118,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="price">Цена работы оборудования, руб/час</label>
                             <input type="text" 
-                                   class="form-control float-only" 
+                                   class="form-control float-only<?=$price_valid ?>" 
                                    id="price" 
                                    name="price" 
                                    value="<?= empty($price) ? "" : floatval($price) ?>" 
@@ -134,7 +134,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="speed">Скорость работы оборудования, км/час</label>
                             <input type="text" 
-                                   class="form-control float-only" 
+                                   class="form-control float-only<?=$speed_valid ?>" 
                                    id="speed" 
                                    name="speed" 
                                    value="<?= empty($speed) ? "" : floatval($speed) ?>" 
@@ -150,7 +150,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="max_width">Максимальная ширина материала, мм</label>
                             <input type="text" 
-                                   class="form-control int-only" 
+                                   class="form-control int-only<?=$max_width_valid ?>" 
                                    id="max_width" 
                                    name="max_width" 
                                    value="<?= empty($max_width) ? "" : intval($max_width) ?>" 

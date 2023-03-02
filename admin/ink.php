@@ -134,7 +134,7 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'min_price_per_ink'))) {
+    if(filter_input(INPUT_POST, 'min_price_per_ink') === null) {
         $min_price_per_ink_valid = ISINVALID;
         $form_valid = false;
     }
@@ -427,7 +427,7 @@ if($row = $fetcher->Fetch()) {
                                     <label for="c_price">Чистый C (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
-                                               class="form-control float-only" 
+                                               class="form-control float-only<?=$c_price_valid ?>" 
                                                id="c_price" 
                                                name="c_price" 
                                                value="<?= empty($c_price) || $c_price == 0.0 ? "" : floatval($c_price) ?>" 
@@ -454,7 +454,7 @@ if($row = $fetcher->Fetch()) {
                                 <div class="form-group">
                                     <label for="c_expense">Расход смеси C (г/м<sup>2</sup>)</label>
                                     <input type="text" 
-                                           class="form-control float-only" 
+                                           class="form-control float-only<?=$c_expense_valid ?>" 
                                            id="c_expense" 
                                            name="c_expense" 
                                            value="<?= empty($c_expense) || $c_expense == 0.0 ? "" : floatval($c_expense) ?>" 
@@ -475,7 +475,7 @@ if($row = $fetcher->Fetch()) {
                                     <label for="m_price">Чистый M (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
-                                               class="form-control float-only" 
+                                               class="form-control float-only<?=$m_price_valid ?>" 
                                                id="m_price" 
                                                name="m_price" 
                                                value="<?= empty($m_price) || $m_price == 0.0 ? "" : floatval($m_price) ?>" 
@@ -502,7 +502,7 @@ if($row = $fetcher->Fetch()) {
                                 <div class="form-group">
                                     <label for="m_expense">Расход смеси M (г/м<sup>2</sup>)</label>
                                     <input type="text" 
-                                           class="form-control float-only" 
+                                           class="form-control float-only<?=$m_expense_valid ?>" 
                                            id="m_expense" 
                                            name="m_expense" 
                                            value="<?= empty($m_expense) || $m_expense == 0.0 ? "" : floatval($m_expense) ?>" 
@@ -523,7 +523,7 @@ if($row = $fetcher->Fetch()) {
                                     <label for="y_price">Чистый Y (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
-                                               class="form-control float-only" 
+                                               class="form-control float-only<?=$y_price_valid ?>" 
                                                id="y_price" 
                                                name="y_price" 
                                                value="<?= empty($y_price) || $y_price == 0.0 ? "" : floatval($y_price) ?>" 
@@ -550,7 +550,7 @@ if($row = $fetcher->Fetch()) {
                                 <div class="form-group">
                                     <label for="y_expense">Расход смеси Y (г/м<sup>2</sup>)</label>
                                     <input type="text" 
-                                           class="form-control float-only" 
+                                           class="form-control float-only<?=$y_expense_valid ?>" 
                                            id="y_expense" 
                                            name="y_expense" 
                                            value="<?= empty($y_expense) || $y_expense == 0.0 ? "" : floatval($y_expense) ?>" 
@@ -571,7 +571,7 @@ if($row = $fetcher->Fetch()) {
                                     <label for="k_price">Чистый K (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
-                                               class="form-control float-only" 
+                                               class="form-control float-only<?=$k_price_valid ?>" 
                                                id="k_price" 
                                                name="k_price" 
                                                value="<?= empty($k_price) || $k_price == 0.0 ? "" : floatval($k_price) ?>" 
@@ -598,7 +598,7 @@ if($row = $fetcher->Fetch()) {
                                 <div class="form-group">
                                     <label for="k_expense">Расход смеси K (г/м<sup>2</sup>)</label>
                                     <input type="text" 
-                                           class="form-control float-only" 
+                                           class="form-control float-only<?=$k_expense_valid ?>" 
                                            id="k_expense" 
                                            name="k_expense" 
                                            value="<?= empty($k_expense) || $k_expense == 0.0 ? "" : floatval($k_expense) ?>" 
@@ -619,7 +619,7 @@ if($row = $fetcher->Fetch()) {
                                     <label for="panton_price">Чистый Пантон (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
-                                               class="form-control float-only" 
+                                               class="form-control float-only<?=$panton_price_valid ?>" 
                                                id="panton_price" 
                                                name="panton_price" 
                                                value="<?= empty($panton_price) || $panton_price == 0.0 ? "" : floatval($panton_price) ?>" 
@@ -646,7 +646,7 @@ if($row = $fetcher->Fetch()) {
                                 <div class="form-group">
                                     <label for="panton_expense">Расход смеси пантона (г/м<sup>2</sup>)</label>
                                     <input type="text" 
-                                           class="form-control float-only" 
+                                           class="form-control float-only<?=$panton_expense_valid ?>" 
                                            id="panton_expense" 
                                            name="panton_expense" 
                                            value="<?= empty($panton_expense) || $panton_expense == 0.0 ? "" : floatval($panton_expense) ?>" 
@@ -667,7 +667,7 @@ if($row = $fetcher->Fetch()) {
                                     <label for="white_price">Чистая Белая (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
-                                               class="form-control float-only" 
+                                               class="form-control float-only<?=$white_price_valid ?>" 
                                                id="white_price" 
                                                name="white_price" 
                                                value="<?= empty($white_price) || $white_price == 0.0 ? "" : floatval($white_price) ?>" 
@@ -694,7 +694,7 @@ if($row = $fetcher->Fetch()) {
                                 <div class="form-group">
                                     <label for="white_expense">Расход смеси белой (г/м<sup>2</sup>)</label>
                                     <input type="text" 
-                                           class="form-control float-only" 
+                                           class="form-control float-only<?=$white_expense_valid ?>" 
                                            id="white_expense" 
                                            name="white_expense" 
                                            value="<?= empty($white_expense) || $white_expense == 0.0 ? "" : floatval($white_expense) ?>" 
@@ -715,7 +715,7 @@ if($row = $fetcher->Fetch()) {
                                     <label for="lacquer_glossy_price">Чистый Лак глянцевый (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
-                                               class="form-control float-only" 
+                                               class="form-control float-only<?=$lacquer_glossy_price_valid ?>" 
                                                id="lacquer_glossy_price" 
                                                name="lacquer_glossy_price" 
                                                value="<?= empty($lacquer_glossy_price) || $lacquer_glossy_price == 0.0 ? "" : floatval($lacquer_glossy_price) ?>" 
@@ -742,7 +742,7 @@ if($row = $fetcher->Fetch()) {
                                 <div class="form-group">
                                     <label for="lacquer_glossy_expense">Расход смеси лака глянцевого (г/м<sup>2</sup>)</label>
                                     <input type="text" 
-                                           class="form-control float-only" 
+                                           class="form-control float-only<?=$lacquer_glossy_expense_valid ?>" 
                                            id="lacquer_glossy_expense" 
                                            name="lacquer_glossy_expense" 
                                            value="<?= empty($lacquer_glossy_expense) || $lacquer_glossy_expense == 0.0 ? "" : floatval($lacquer_glossy_expense) ?>" 
@@ -763,7 +763,7 @@ if($row = $fetcher->Fetch()) {
                                     <label for="lacquer_matte_price">Чистый Лак матовый (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
-                                               class="form-control float-only" 
+                                               class="form-control float-only<?=$lacquer_matte_price_valid ?>" 
                                                id="lacquer_matte_price" 
                                                name="lacquer_matte_price" 
                                                value="<?= empty($lacquer_matte_price) || $lacquer_matte_price == 0.0 ? "" : floatval($lacquer_matte_price) ?>" 
@@ -790,7 +790,7 @@ if($row = $fetcher->Fetch()) {
                                 <div class="form-group">
                                     <label for="lacquer_matte_expense">Расход смеси лака матового (г/м<sup>2</sup>)</label>
                                     <input type="text" 
-                                           class="form-control float-only" 
+                                           class="form-control float-only<?=$lacquer_matte_expense_valid ?>" 
                                            id="lacquer_matte_expense" 
                                            name="lacquer_matte_expense" 
                                            value="<?= empty($lacquer_matte_expense) || $lacquer_matte_expense == 0.0 ? "" : floatval($lacquer_matte_expense) ?>" 
@@ -811,7 +811,7 @@ if($row = $fetcher->Fetch()) {
                                     <label for="self_adhesive_laquer_price">Самоклейка, цена лака (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
-                                            class="form-control float-only" 
+                                            class="form-control float-only<?=$self_adhesive_laquer_price_valid ?>" 
                                             id="self_adhesive_laquer_price" 
                                             name="self_adhesive_laquer_price"
                                             value="<?= empty($self_adhesive_laquer_price) || $self_adhesive_laquer_price == 0.0 ? "" : floatval($self_adhesive_laquer_price) ?>" 
@@ -838,7 +838,7 @@ if($row = $fetcher->Fetch()) {
                                 <div class="form-group">
                                     <label for="self_adhesive_laquer_expense">Самоклейка, расход чистого лака (г/м<sup>2</sup>)</label>
                                     <input type="text" 
-                                           class="form-control float-only" 
+                                           class="form-control float-only<?=$self_adhesive_laquer_expense_valid ?>" 
                                            id="self_adhesive_laquer_expense" 
                                            name="self_adhesive_laquer_expense"
                                            value="<?= empty($self_adhesive_laquer_expense) || $self_adhesive_laquer_expense == 0.0 ? "" : floatval($self_adhesive_laquer_expense) ?>" 
@@ -860,7 +860,7 @@ if($row = $fetcher->Fetch()) {
                                     <div class="input-group">
                                         <input type="text" 
                                                class="form-control float-only" 
-                                               id="solvent_etoxipropanol_price" 
+                                               id="solvent_etoxipropanol_price<?=$solvent_etoxipropanol_price_valid ?>" 
                                                name="solvent_etoxipropanol_price" 
                                                value="<?= empty($solvent_etoxipropanol_price) || $solvent_etoxipropanol_price == 0.0 ? "" : floatval($solvent_etoxipropanol_price) ?>" 
                                                placeholder="Цена, за кг" 
@@ -887,7 +887,7 @@ if($row = $fetcher->Fetch()) {
                                     <label for="solvent_flexol82_price">Цена флексоля 82 (за кг)</label>
                                     <div class="input-group">
                                         <input type="text" 
-                                               class="form-control float-only" 
+                                               class="form-control float-only<?=$solvent_flexol82_price_valid ?>" 
                                                id="solvent_flexol82_price" 
                                                name="solvent_flexol82_price" 
                                                value="<?= empty($solvent_flexol82_price) || $solvent_flexol82_price == 0.0 ? "" : floatval($solvent_flexol82_price) ?>" 
@@ -916,7 +916,7 @@ if($row = $fetcher->Fetch()) {
                                 <div class="form-group">
                                     <label for="solvent_part">Расход растворителя (кг) на 1 кг краски (лака)</label>
                                     <input type="text" 
-                                           class="form-control float-only" 
+                                           class="form-control float-only<?=$solvent_part_valid ?>" 
                                            id="solvent_part" 
                                            name="solvent_part" 
                                            value="<?= empty($solvent_part) || $solvent_part == 0.0 ? "" : floatval($solvent_part) ?>" 
@@ -935,7 +935,7 @@ if($row = $fetcher->Fetch()) {
                                     <label for="min_percent">Минимальный процент запечатки</label>
                                     <div class="input-group">
                                         <input type="text"
-                                               class="form-control int-only"
+                                               class="form-control int-only<?=$min_percent_valid ?>"
                                                id="min_percent"
                                                name="min_percent"
                                                value="<?= $min_percent ?>"
@@ -957,7 +957,7 @@ if($row = $fetcher->Fetch()) {
                                 <div class="form-group">
                                     <label for="min_price_per_ink">Минимальная стоимость 1 цвета (руб)</label>
                                     <input type="text"
-                                           class="form-control int-only"
+                                           class="form-control int-only<?=$min_price_per_ink_valid ?>"
                                            id="min_price_per_ink"
                                            name="min_price_per_ink"
                                            value="<?= floatval($min_price_per_ink) ?>"

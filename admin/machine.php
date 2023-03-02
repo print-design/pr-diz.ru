@@ -132,7 +132,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="price">Цена работы оборудования (руб/час)</label>
                             <input type="text" 
-                                   class="form-control float-only" 
+                                   class="form-control float-only<?=$price_valid ?>" 
                                    id="price" 
                                    name="price" 
                                    value="<?= empty($price) ? "" : floatval($price) ?>" 
@@ -148,7 +148,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="speed">Скорость работы оборудования (км/час)</label>
                             <input type="text" 
-                                   class="form-control float-only" 
+                                   class="form-control float-only<?=$speed_valid ?>" 
                                    id="speed" 
                                    name="speed" 
                                    value="<?= empty($speed) ? "" : floatval($speed) ?>" 
@@ -164,7 +164,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="width">Ширина машины, мм</label>
                             <input type="text" 
-                                   class="form-control int-only" 
+                                   class="form-control int-only<?=$width_valid ?>" 
                                    id="width" 
                                    name="width" 
                                    value="<?= empty($width) ? "" : intval($width) ?>" 
@@ -183,7 +183,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="vaporization_expense">Расход растворителя на испарение, г/м<sup>2</sup></label>
                             <input type="text" 
-                                   class="form-control float-only" 
+                                   class="form-control float-only<?=$vaporization_expense_valid ?>" 
                                    id="vaporization_expense" 
                                    name="vaporization_expense" 
                                    value="<?= empty($vaporization_expense) ? "" : floatval($vaporization_expense) ?>" 

@@ -135,7 +135,7 @@ if($row = $fetcher->Fetch()) {
                             <label for="flint_price">Flint (за м<sup>2</sup>)</label>
                             <div class="input-group">
                                 <input type="text" 
-                                       class="form-control float-only" 
+                                       class="form-control float-only<?=$flint_price_valid ?>" 
                                        id="flint_price" 
                                        name="flint_price" 
                                        value="<?= empty($flint_price) ? "" : floatval($flint_price) ?>" 
@@ -161,7 +161,7 @@ if($row = $fetcher->Fetch()) {
                             <label for="kodak_price">Kodak (за м<sup>2</sup>)</label>
                             <div class="input-group">
                                 <input type="text" 
-                                       class="form-control float-only" 
+                                       class="form-control float-only<?=$kodak_price_valid ?>" 
                                        id="kodak_price" 
                                        name="kodak_price" 
                                        value="<?= empty($kodak_price) ? "" : floatval($kodak_price) ?>" 
@@ -187,7 +187,7 @@ if($row = $fetcher->Fetch()) {
                             <label for="scotch_price">Скотч (за м<sup>2</sup>)</label>
                             <div class="input-group">
                                 <input type="text" 
-                                       class="form-control float-only" 
+                                       class="form-control float-only<?=$scotch_price_valid ?>" 
                                        id="scotch_price" 
                                        name="scotch_price" 
                                        value="<?= empty($scotch_price) ? "" : floatval($scotch_price) ?>" 
