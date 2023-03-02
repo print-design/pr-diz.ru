@@ -193,15 +193,18 @@ if($id !== null) {
     
     array_push($file_data, array("Ширина материала (кратная 5) 1, мм",
         CalculationBase::Display($calculation->width_1, 5),
-        "|= ОКРВВЕРХ(".CalculationBase::Display($calculation->width_start_1, 5)." / 5; 1) * 5"));
+        "|= ОКРВВЕРХ(".CalculationBase::Display($calculation->width_start_1, 5)." / 5; 1) * 5",
+        "окрвверх(ширина материала начальная 1 / 5) * 5"));
     
     array_push($file_data, array("Ширина материала (кратная 5) 2, мм",
         CalculationBase::Display($calculation->width_2, 5),
-        "|= ОКРВВЕРХ(".CalculationBase::Display($calculation->width_start_2, 5)." / 5; 1) * 5"));
+        "|= ОКРВВЕРХ(".CalculationBase::Display($calculation->width_start_2, 5)." / 5; 1) * 5",
+        "окрвверх(ширина материала начальная 2 / 5) * 5"));
     
     array_push($file_data, array("Ширина материала (кратная 5) 3, мм",
         CalculationBase::Display($calculation->width_3, 5),
-        "|= ОКРВВЕРХ(".CalculationBase::Display($calculation->width_start_3, 5)." / 5; 1) * 5"));
+        "|= ОКРВВЕРХ(".CalculationBase::Display($calculation->width_start_3, 5)." / 5; 1) * 5",
+        "окрвверх(ширина материала начальная 3 / 5) * 5"));
         
     array_push($file_data, array("М2 чистые 1, м2",
         CalculationBase::Display($calculation->area_pure_1, 5),

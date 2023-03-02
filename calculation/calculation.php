@@ -1910,7 +1910,8 @@ class CalculationSelfAdhesive extends CalculationBase {
     public $ukpf, $ukcuspaypf; // Уравнивающий коэффициент ПФ, ЗаказчикПлатитЗаПФ
     public $ukknife, $ukcuspayknife; // Уравнивающий коэффициент нож, ЗаказчикПлатитЗаНож
     
-    public $width_mat = 0; // Ширина материала
+    public $width_start = 0; // Ширина материала (начальная), мм
+    public $width_mat = 0; // Ширина материала (кратная 5), мм
     public $length_label_dirty = 0; // Высота этикетки грязная
     public $width_dirty = 0; // Ширина этикетки грязная
     public $number_in_raport_dirty = 0; // Количество этикеток в рапорте грязный
@@ -2099,22 +2100,25 @@ class CalculationSelfAdhesive extends CalculationBase {
         
         // НИЖЕ НАЧИНАЕТСЯ ВЫЧИСЛЕНИЕ
         
-        // Ширина материала, мм
+        // Ширина материала (начальная), мм
         // Если стадартные лыжи: (количество ручьёв * (ширина ручья + расстояние между ручьями)) + (ширина одной лыжи * 2)
         // Если нестандартные лыжи: ширина материала вводится вручную
         switch ($ski_1) {
             case self::STANDARD_SKI:
-                $this->width_mat = ($streams_number * ($stream_width + $data_gap->gap_stream)) + ($data_gap->ski * 2);
+                $this->width_start = ($streams_number * ($stream_width + $data_gap->gap_stream)) + ($data_gap->ski * 2);
                 break;
             
             case self::NONSTANDARD_SKI:
-                $this->width_mat = $width_ski_1;
+                $this->width_start = $width_ski_1;
                 break;
             
             default :
-                $this->width_mat = 0;
+                $this->width_start = 0;
                 break;
         }
+        
+        // Ширина материала (кратная 5), мм
+        $this->width_mat = ceil($this->width_start / 5) * 5;
         
         // Высота этикетки грязная, мм
         $this->length_label_dirty = $length + $data_gap->gap_raport;

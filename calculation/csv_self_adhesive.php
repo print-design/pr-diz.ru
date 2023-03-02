@@ -74,10 +74,15 @@ if($id !== null) {
     if($calculation->customers_material_1 == true) $calculation->price_1 = 0;
         
     // Результаты вычислений
-    array_push($file_data, array("Ширина материала, мм",
-        CalculationBase::Display($calculation->width_mat, 5),
+    array_push($file_data, array("Ширина материала (начальная), мм",
+        CalculationBase::Display($calculation->width_start, 5),
         $calculation->ski_1 == CalculationBase::NONSTANDARD_SKI ? "|= ".CalculationBase::Display($calculation->width_ski_1, 5) : "|= ($calculation->streams_number * (".CalculationBase::Display($calculation->stream_width, 5)." + ".CalculationBase::Display($calculation->data_gap->gap_stream, 5).")) + (".CalculationBase::Display($calculation->data_gap->ski, 5)." * 2)",
         $calculation->ski_1 == CalculationBase::NONSTANDARD_SKI ? "вводится вручную" : "(количество ручьёв * (ширина этикетки + ЗазорРучей)) + (ширина одной лыжи * 2)"));
+    
+    array_push($file_data, array("Ширина материала (кратная 5), мм",
+        CalculationBase::Display($calculation->width_mat, 5),
+        "|= ОКРВВЕРХ(".CalculationBase::Display($calculation->width_start, 5)." / 5; 1) * 5",
+        "окрвверх(ширина материала начальная / 5) * 5"));
         
     array_push($file_data, array("Высота этикетки грязная, мм",
         CalculationBase::Display($calculation->length_label_dirty, 5),
