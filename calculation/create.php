@@ -3301,6 +3301,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 $.ajax({ url: "../ajax/laminator_roller.php?laminator_id=<?= CalculationBase::SOLVENT_YES ?>" })
                         .done(function(data) {
                             $('#lamination_roller_width').html(data);
+                            SetLaminationRollerWidthOnChange();
                         })
                         .fail(function() {
                             alert('Ошибка при заполнении ширин ламинирующего вала');
@@ -3311,6 +3312,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 $.ajax({ url: "../ajax/laminator_roller.php?laminator_id=<?= CalculationBase::SOLVENT_NO ?>" })
                         .done(function(data) {
                             $('#lamination_roller_width').html(data);
+                            SetLaminationRollerWidthOnChange();
                         })
                         .fail(function() {
                             alert('Ошибка при заполнении ширин ламинирующего вала');
@@ -3318,12 +3320,52 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             });
             
             // При выборе значения "Ввести вручную" в списке ширин ламинирующего вала, скрываем список и показываем текстовое поле
-            $('select#lamination_roller_width').change(function() {
-                if($(this).val() == -1) {
-                    $('#lamination_roller_width_control').html("<input type='text' id='lamination_roller_width' name='lamination_roller_width' placeholder='Ширина ламинирующего вала, мм' class='form-control int-only lam-only' required='required' />");
-                    $('input#lamination_roller_width').focus();
-                }
-            });
+            function SetLaminationRollerWidthOnChange() {
+                $('select#lamination_roller_width').change(function() {
+                    if($(this).val() == -1) {
+                        $('#lamination_roller_width_control').html("<input type='text' id='lamination_roller_width' name='lamination_roller_width' placeholder='Ширина ламинирующего вала, мм' class='form-control int-only lam-only' required='required' />");
+                        $('input#lamination_roller_width').focus();
+                        SetLaminationRollerWidthHandler();
+                    }
+                });
+            }
+            
+            SetLaminationRollerWidthOnChange();
+            
+            // Обработка нажатия клавиш в текстовом поле "Ширина ламинирующего вала"
+            function SetLaminationRollerWidthHandler() {
+                $('input#lamination_roller_width').keydown(function(e) {
+                    if(e.which != 8 && e.which != 46 && e.which != 37 && e.which != 39) {
+                        if(/\D/.test(e.key)) {
+                            return false;
+                        }
+                    }
+                });
+                
+                $('input#lamination_roller_width').keyup(function(e) {
+                    var val = $(this).val();
+                    val = val.replaceAll(/\D/g, '');
+                    $(this).val(val);
+                    
+                    if(e.which == 8 && val == '') {
+                        $('#lamination_roller_width_control').html("<select id='lamination_roller_width' name='lamination_roller_width' class='form-control lam-only'><option value='' hidden='hidden'>Ширина ламинирующего вала...</option></select>");
+                        if($('#solvent_yes').is(':checked')) {
+                            $('#solvent_yes').click();
+                        }
+                        if($('#solvent_no').is(':checked')) {
+                            $('#solvent_no').click();
+                        }
+                    }
+                });
+                
+                $('input#lamination_roller_width').change(function(e) {
+                    var val = $(this).val();
+                    val = val.replace(/[^\d]/g, '');
+                    $(this).val(val);
+                });
+            }
+            
+            SetLaminationRollerWidthHandler();
             
             // Считаем длину этикетки (рапорт / количество этикеток в рапорте)
             function CountLength() {
