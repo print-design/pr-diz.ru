@@ -1416,7 +1416,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                name="price" 
                                                class="form-control float-only film-price<?=$price_valid ?>" 
                                                placeholder="Цена" 
-                                               value="<?=round($price, 2) ?>"
+                                               value="<?= empty($price) ? "" : round($price, 2) ?>"
                                                required="required" 
                                                onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                                onmouseup="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
@@ -1605,7 +1605,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                    name="lamination1_price" 
                                                    class="form-control float-only film-price<?=$lamination1_price_valid ?>" 
                                                    placeholder="Цена" 
-                                                   value="<?= is_float($lamination1_price) ?  round($lamination1_price, 2) : $lamination1_price ?>" 
+                                                   value="<?= empty($lamination1_price) ? "" : round($lamination1_price, 2) ?>" 
                                                    onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                                    onmouseup="javascript: $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" 
                                                    onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
@@ -1805,7 +1805,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                        name="lamination2_price" 
                                                        class="form-control float-only film-price<?=$lamination2_price_valid ?>" 
                                                        placeholder="Цена" 
-                                                       value="<?= is_float($lamination2_price) ? round($lamination2_price, 2) : $lamination2_price ?>" 
+                                                       value="<?= empty($lamination2_price) ? "" : round($lamination2_price, 2) ?>" 
                                                        onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                                        onmouseup="javascript: $(this).attr('name', 'lamination2_price'); $(this).attr('placeholder', 'Цена');" 
                                                        onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
@@ -2019,28 +2019,55 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             <!-- Ширина ламинирующего вала -->
                             <div class="col-6 lam-only d-none">
                                 <div class="form-group">
-                                    <label for="lamination_roller_width">Ширина ламинирующего вала</label>
-                                    <select id="lamination_roller_width" name="lamination_roller_width" class="form-control lam-only d-none">
-                                        <option value="" hidden="hidden">Ширина ламинирующего вала...</option>
+                                    <label for="lamination_roller_width">Ширина ламинирующего вала, мм</label>
+                                    <div id="lamination_roller_width_control">
                                         <?php
                                         if(!empty($laminator_id)):
-                                        $sql = "select value from norm_laminator_roller where laminator_id = $laminator_id and active = 1 ";
-                                        if(!empty($lamination_roller_width)) {
-                                            $sql .= "union select value from norm_laminator_roller where laminator_id = 1 and active = 0 and value = $lamination_roller_width ";
-                                        }
-                                        $sql .= "order by value";
-                                        $fetcher = new Fetcher($sql);
+                                            $sql = "select value from norm_laminator_roller where laminator_id = $laminator_id and active = 1 ";
+                                            if(!empty($lamination_roller_width)) {
+                                                $sql .= "union select value from norm_laminator_roller where laminator_id = $laminator_id and active = 0 and value = $lamination_roller_width ";
+                                            }
+                                            $sql .= "order by value";
+                                            $grabber = new Grabber($sql);
+                                            $lamination_roller_widths = $grabber->result;
+                                            $in_list = false;
+                                            
+                                            foreach($lamination_roller_widths as $row) {
+                                                if($row['value'] == $lamination_roller_width) {
+                                                    $in_list = true;
+                                                }
+                                            }
                                         
-                                        while ($row = $fetcher->Fetch()):
-                                            $selected = "";
-                                            if($row[0] == $lamination_roller_width) $selected = " selected='selected'";
-                                        ?>
-                                        <option<?=$selected ?>><?=$row[0] ?></option>
+                                            if($in_list):
+                                            ?>
+                                            <select id="lamination_roller_width" name="lamination_roller_width" class="form-control lam-only d-none">
+                                                <?php
+                                                if(!empty($lamination_roller_widths)):
+                                                foreach($lamination_roller_widths as $row):
+                                                    $selected = "";
+                                                    if($row['value'] == $lamination_roller_width) { 
+                                                        $selected = " selected='selected'";
+                                                    }
+                                                ?>
+                                                <option<?=$selected ?>><?=$row['value'] ?></option>
+                                                <?php
+                                                endforeach;
+                                                ?>
+                                                <option disabled="disabled">-</option>
+                                                <option value="-1">Добавить вручную...</option>
+                                            <?php endif; ?>
+                                        </select>
+                                        <?php else: ?>
+                                        <input type='text' id='lamination_roller_width' name='lamination_roller_width' placeholder='Ширина ламинирующего вала, мм' value="<?=$lamination_roller_width ?>" class='form-control int-only lam-only' required='required' />
                                         <?php
-                                        endwhile;
                                         endif;
+                                        else:
                                         ?>
-                                    </select>
+                                        <select id="lamination_roller_width" name="lamination_roller_width" class="form-control lam-only d-none">
+                                            <option value="" hidden="hidden">Ширина ламинирующего вала...</option>
+                                        </select>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -3288,6 +3315,14 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         .fail(function() {
                             alert('Ошибка при заполнении ширин ламинирующего вала');
                         });
+            });
+            
+            // При выборе значения "Ввести вручную" в списке ширин ламинирующего вала, скрываем список и показываем текстовое поле
+            $('select#lamination_roller_width').change(function() {
+                if($(this).val() == -1) {
+                    $('#lamination_roller_width_control').html("<input type='text' id='lamination_roller_width' name='lamination_roller_width' placeholder='Ширина ламинирующего вала, мм' class='form-control int-only lam-only' required='required' />");
+                    $('input#lamination_roller_width').focus();
+                }
             });
             
             // Считаем длину этикетки (рапорт / количество этикеток в рапорте)
