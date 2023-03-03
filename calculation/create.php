@@ -2745,6 +2745,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             // Обработка выбора машины, заполнение списка рапортов
             $('#machine_id').change(function() {
                 $('#raport_control').html("<select id='raport' name='raport' class='form-control print-only self-adhesive-only'><option value='' hidden='hidden'>Рапорт...</option></select>");
+                SetRaportOnChange();
                 
                 if($(this).val() == "") {
                     $('select#raport').html("<option value=''>Рапорт...</option>")
@@ -2781,6 +2782,9 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             // При выборе значения "Ввести вручную" в списке рапортов, скрываем список и показываем текстовое поле
             function SetRaportOnChange() {
                 $('select#raport').change(function() {
+                    CountLength();
+                    CountNumberInRaport();
+                    
                     if($(this).val() == -1) {
                         $('#raport_control').html("<input type='text' id='raport' name='raport' placeholder='Рапорт, мм' class='form-control float-only print-only self-adhesive-only' required='required' />");
                         $('input#raport').focus();
@@ -2810,9 +2814,13 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     val = val.replaceAll(/[^\.\,\d]/g, '');
                     $(this).val(val);
                     
+                    CountLength();
+                    CountNumberInRaport();
+                    
                     if(e.which == 8 && val == '') {
                         $('#raport_control').html("<select id='raport' name='raport' class='form-control print-only self-adhesive-only'><option value='' hidden='hidden'>Рапорт...</option></select>");
                         $('#machine_id').change();
+                        SetRaportOnChange();
                     }
                 });
                 
@@ -2821,6 +2829,9 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     val = val.replace(',', '.');
                     val = val.replace(/[^\.\d]/g, '');
                     $(this).val(val);
+                    
+                    CountLength();
+                    CountNumberInRaport();
                 });
             }
             
@@ -3481,11 +3492,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $('#gap_fact').text('Зазор между этикетками ' + s_gap_fact + ' мм');
                 }
             }
-            
-            $('#raport').change(function() {
-                CountLength();
-                CountNumberInRaport();
-            });
             
             $('#number_in_raport').change(function() {
                 CountLength();
