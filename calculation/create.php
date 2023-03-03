@@ -2744,8 +2744,10 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             // Обработка выбора машины, заполнение списка рапортов
             $('#machine_id').change(function() {
+                $('#raport_control').html("<select id='raport' name='raport' class='form-control print-only self-adhesive-only'><option value='' hidden='hidden'>Рапорт...</option></select>");
+                
                 if($(this).val() == "") {
-                    $('#raport').html("<option value=''>Рапорт...</option>")
+                    $('select#raport').html("<option value=''>Рапорт...</option>")
                     $('#ink_number').html("<option value='' hidden='hidden'>Количество красок...</option>");
                     $('#ink_number').change();
                 }
@@ -2768,12 +2770,61 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $.ajax({ url: "../ajax/raport.php?machine_id=" + $(this).val() })
                             .done(function(data) {
                                 $('#raport').html(data);
+                                SetRaportOnChange();
                             })
                             .fail(function() {
                                 alert('Ошибка при заполнении списка рапортов');
                             });
                 }
             });
+            
+            // При выборе значения "Ввести вручную" в списке рапортов, скрываем список и показываем текстовое поле
+            function SetRaportOnChange() {
+                $('select#raport').change(function() {
+                    if($(this).val() == -1) {
+                        $('#raport_control').html("<input type='text' id='raport' name='raport' placeholder='Рапорт, мм' class='form-control float-only print-only self-adhesive-only' required='required' />");
+                        $('input#raport').focus();
+                        SetRaportHandler();
+                    }
+                });
+            }
+            
+            SetRaportOnChange();
+            
+            // Обработка нажатия клавиш в текстовом поле "Рапорт"
+            function SetRaportHandler() {
+                $('input#raport').keydown(function(e) {
+                    if(e.which != 8 && e.which != 46 && e.which != 37 && e.which != 39) {
+                        if(!/[\.\,\d]/.test(e.key)) {
+                            return false;
+                        }
+                        
+                        if(/[\.\,]/.test(e.key) && ($(this).val().includes('.') || $(this).val().includes(','))) {
+                            return false;
+                        }
+                    }
+                });
+                
+                $('input#raport').keyup(function(e) {
+                    var val = $(this).val();
+                    val = val.replaceAll(/[^\.\,\d]/g, '');
+                    $(this).val(val);
+                    
+                    if(e.which == 8 && val == '') {
+                        $('#raport_control').html("<select id='raport' name='raport' class='form-control print-only self-adhesive-only'><option value='' hidden='hidden'>Рапорт...</option></select>");
+                        $('#machine_id').change();
+                    }
+                });
+                
+                $('input#raport').change(function(e) {
+                    var val = $(this).val();
+                    val = val.replace(',', '.');
+                    val = val.replace(/[^\.\d]/g, '');
+                    $(this).val(val);
+                });
+            }
+            
+            SetRaportHandler()
             
             // Обработка выбора типа плёнки основной плёнки: перерисовка списка толщин и установка видимости полей
             $('#film_id').change(function(){
