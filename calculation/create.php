@@ -2055,7 +2055,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                 ?>
                                                 <option disabled="disabled">-</option>
                                                 <option value="-1">Добавить вручную...</option>
-                                            <?php endif; ?>
+                                                <?php endif; ?>
                                             </select>
                                         <?php else: ?>
                                         <input type='text' id='lamination_roller_width' name='lamination_roller_width' placeholder='Ширина ламинирующего вала, мм' value="<?=$lamination_roller_width ?>" class='form-control int-only lam-only' required='required' />
