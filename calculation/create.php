@@ -1948,26 +1948,56 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             <div class="col-6 print-only self-adhesive-only d-none">
                                 <div class="form-group">
                                     <label for="raport">Рапорт</label>
-                                    <select id="raport" name="raport" class="form-control print-only self-adhesive-only d-none">
-                                        <option value="" hidden="hidden" selected="selected">Рапорт...</option>
+                                    <div id="raport_control">
                                         <?php
-                                        if(!empty($machine_id)) {
+                                        if(!empty($machine_id)):
                                             $sql = "select value from raport where active = 1 and machine_id = $machine_id ";
                                             if(!empty($raport)) {
                                                 $sql .= "union select value from raport where active = 0 and machine_id = $machine_id and value = $raport ";
                                             }
                                             $sql .= "order by value";
-                                            $fetcher = new Fetcher($sql);
+                                            $grabber = new Grabber($sql);
+                                            $raports = $grabber->result;
+                                            $in_list = false;
                                             
-                                            while($row = $fetcher->Fetch()) {
-                                                $raport_value = floatval($row['value']);
-                                                $selected = "";
-                                                if($raport_value == $raport) $selected = " selected='selected'";
-                                                echo "<option value='$raport_value'$selected>$raport_value</option>";
+                                            if(!empty($raport)) {
+                                                foreach($raports as $row) {
+                                                    if($row['value'] == $raport) {
+                                                        $in_list = true;
+                                                    }
+                                                }
                                             }
-                                        }
-                                        ?>
-                                    </select>
+                                            
+                                            if($in_list):
+                                            ?>
+                                        <select id="raport" name="raport" class="form-control print-only self-adhesive-only">
+                                            <?php
+                                            if(!empty($raports) && !empty($raport)):
+                                                foreach($raports as $row):
+                                                $selected = "";
+                                            if($row['value'] == $raport) {
+                                                $selected = " selected='selected'";
+                                            }
+                                            ?>
+                                            <option<?=$selected ?>><?=$row['value'] ?></option>
+                                            <?php
+                                            endforeach;
+                                            ?>
+                                            <option disabled="disabled">-</option>
+                                            <option value="-1">Добавить вручную...</option>
+                                            <?php endif; ?>
+                                        </select>
+                                        <?php else: ?>
+                                        <input type="text" id="raport" name="raport" placeholder="Рапорт, мм" value="<?=$raport ?>" class="form-control print-only self-adhesive-only" required="required" />
+                                            <?php
+                                            endif;
+                                            else:
+                                                ?>
+                                        <select id="raport" name="raport" class="form-control print-only self-adhesive-only d-none">
+                                            <option value="" hidden="hidden">Рапорт...</option>
+                                        </select>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                             </div>
                             <!-- Количество этикеток в рапорте -->
@@ -2032,9 +2062,11 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             $lamination_roller_widths = $grabber->result;
                                             $in_list = false;
                                             
-                                            foreach($lamination_roller_widths as $row) {
-                                                if($row['value'] == $lamination_roller_width) {
-                                                    $in_list = true;
+                                            if(!empty($lamination_roller_width)) {
+                                                foreach($lamination_roller_widths as $row) {
+                                                    if($row['value'] == $lamination_roller_width) {
+                                                        $in_list = true;
+                                                    }
                                                 }
                                             }
                                         
@@ -2042,7 +2074,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             ?>
                                             <select id="lamination_roller_width" name="lamination_roller_width" class="form-control lam-only d-none">
                                                 <?php
-                                                if(!empty($lamination_roller_widths)):
+                                                if(!empty($lamination_roller_widths) && !empty($lamination_roller_width)):
                                                 foreach($lamination_roller_widths as $row):
                                                     $selected = "";
                                                     if($row['value'] == $lamination_roller_width) { 

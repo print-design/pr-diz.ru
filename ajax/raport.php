@@ -17,3 +17,5 @@ if(!empty($machine_id)) {
     }
 }
 ?>
+<option disabled="disabled">-</option>
+<option value="-1">Ввести вручную...</option>
