@@ -3478,11 +3478,11 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             // Считаем количество этикеток в рапорте (рапорт / длина этикетки грязная, округляем в меньшую сторону)
             // Считаем фактический зазор: (рапорт - (длина этикетки чистая * кол-во этикеток в рапорте чистое)) / кол-во этикеток в рапорте чистое
-            function CountNumberInRaport() {
+            function CountNumberInRaport() { //alert('works');
                 var raport = $('#raport').val();
                 var length = $('#length_2').val();
                 var gap_raport = <?=$gap_raport ?>;
-                if(raport != '' && length != '') {
+                if(raport != '' && raport != '-1' && length != '') {
                     var f_raport = parseFloat(raport);
                     var f_length = parseFloat(length);
                     var f_gap_raport = parseFloat(gap_raport);
@@ -3493,6 +3493,10 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     var gap_fact = (f_raport - (f_length * number_in_raport)) / number_in_raport;
                     var s_gap_fact = Intl.NumberFormat('ru', { maximumFractionDigits: 2 }).format(gap_fact);
                     $('#gap_fact').text('Зазор между этикетками ' + s_gap_fact + ' мм');
+                }
+                else {
+                    $('#number_in_raport_2').val('');
+                    $('#gap_fact').text('');
                 }
             }
             
