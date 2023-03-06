@@ -20,7 +20,7 @@ if($id === null) {
 }
         
 // Получение объекта
-$sql = "select m.name, m.position, m.user1_name, m.user2_name, m.role_id, m.has_organization, m.has_edition, m.has_length, m.has_status, m.has_roller, m.has_lamination, m.has_coloring, m.coloring, m.has_manager, m.has_comment, m.is_cutter, r.local_name role "
+$sql = "select m.name, m.position, m.user1_name, m.user2_name, m.role_id, m.has_organization, m.has_edition, m.has_material, m.has_thickness, m.has_width, m.has_length, m.has_status, m.has_roller, m.has_lamination, m.has_coloring, m.coloring, m.has_manager, m.has_comment, m.is_cutter, r.local_name role "
         . "from machine m "
         . "left join role r on m.role_id = r.id "
         . "where m.id=$id";
@@ -32,6 +32,9 @@ $user2_name = $row['user2_name'];
 $role_id = $row['role_id'];
 $has_organization = $row['has_organization'];
 $has_edition = $row['has_edition'];
+$has_material = $row['has_material'];
+$has_thickness = $row['has_thickness'];
+$has_width = $row['has_width'];
 $has_length = $row['has_length'];
 $has_status = $row['has_status'];
 $has_roller = $row['has_roller'];

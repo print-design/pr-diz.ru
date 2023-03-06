@@ -7,7 +7,7 @@ class GrafikTimetable {
         $this->dateTo = $to;
         $this->machineId = $machine_id;
         
-        $sql = "select name, user1_name, user2_name, role_id, has_edition, has_organization, has_length, has_status, has_roller, has_lamination, has_coloring, coloring, has_manager, has_comment, is_cutter from machine where id = $machine_id";
+        $sql = "select name, user1_name, user2_name, role_id, has_organization, has_edition, has_material, has_thickness, has_width, has_length, has_status, has_roller, has_lamination, has_coloring, coloring, has_manager, has_comment, is_cutter from machine where id = $machine_id";
         $fetcher = new Fetcher($sql);
         $this->error_message = $fetcher->error;
         
@@ -16,8 +16,11 @@ class GrafikTimetable {
             $this->user1Name = $row['user1_name'];
             $this->user2Name = $row['user2_name'];
             $this->userRole = $row['role_id'];
-            $this->hasEdition = $row['has_edition'];
             $this->hasOrganization = $row['has_organization'];
+            $this->hasEdition = $row['has_edition'];
+            $this->hasMaterial = $row['has_material'];
+            $this->hasThickness = $row['has_thickness'];
+            $this->hasWidth = $row['has_width'];
             $this->hasLength = $row['has_length'];
             $this->hasStatus = $row['has_status'];
             $this->hasRoller = $row['has_roller'];
@@ -98,7 +101,7 @@ class GrafikTimetable {
         
         // Список тиражей
         $all_editions = [];
-        $sql = "select ws.date, ws.shift, ws.machine_id, e.id, e.workshift_id, e.name edition, e.organization, e.length, e.coloring, e.comment, e.position, e.continuation, "
+        $sql = "select ws.date, ws.shift, ws.machine_id, e.id, e.workshift_id, e.organization, e.name edition, e.length, e.coloring, e.comment, e.position, e.continuation, "
                 . "e.status_id, s.name status, "
                 . "e.roller_id, r.name roller, "
                 . "e.lamination_id, lam.name lamination, "
@@ -169,8 +172,11 @@ class GrafikTimetable {
     public $user2Name = '';
     public $userRole = 0;
     
-    public $hasEdition = false;
     public $hasOrganization = false;
+    public $hasEdition = false;
+    public $hasMaterial = false;
+    public $hasThickness = false;
+    public $hasWidth = false;
     public $hasLength = false;
     public $hasStatus = false;
     public $hasRoller = false;

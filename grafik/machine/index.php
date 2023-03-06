@@ -51,7 +51,7 @@ include '../include/restrict_admin.php';
                 </thead>
                 <tbody>
                     <?php
-                    $sql = "select m.id, m.name, m.position, m.user1_name, m.user2_name, m.role_id, m.has_organization, m.has_edition, m.has_length, m.has_status, m.has_roller, m.has_lamination, m.has_coloring, m.coloring, m.has_manager, m.has_comment, m.is_cutter, r.local_name role "
+                    $sql = "select m.id, m.name, m.position, m.user1_name, m.user2_name, m.role_id, m.has_organization, m.has_edition, m.has_material, m.has_thickness, m.has_width, m.has_length, m.has_status, m.has_roller, m.has_lamination, m.has_coloring, m.coloring, m.has_manager, m.has_comment, m.is_cutter, r.local_name role "
                             . "from machine m "
                             . "left join role r on m.role_id = r.id "
                             . "order by m.position asc";
@@ -66,6 +66,9 @@ include '../include/restrict_admin.php';
                         <td><?=$row['role'] ?></td>
                         <td><?=$row['has_organization'] == true ? '<i class="fas fa-check"></i>' : '' ?></td>
                         <td><?=$row['has_edition'] == true ? '<i class="fas fa-check"></i>' : '' ?></td>
+                        <td><?=$row['has_material'] == true ? '<i class="fas fa-check"></i>' : '' ?></td>
+                        <td><?=$row['has_thickness'] == true ? '<i class="fas fa-check"></i>' : '' ?></td>
+                        <td><?=$row['has_width'] == true ? '<i class="fas fa-check"></i>' : '' ?></td>
                         <td><?=$row['has_length'] == true ? '<i class="fas fa-check"></i>' : '' ?></td>
                         <td><?=$row['has_status'] == true ? '<i class="fas fa-check"></i>' : '' ?></td>
                         <td><?=$row['has_roller'] == true ? '<i class="fas fa-check"></i>' : '' ?></td>

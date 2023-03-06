@@ -42,7 +42,7 @@ if($id === null) {
 }
         
 // Получение объекта
-$sql = "select m.name, m.position, m.user1_name, m.user2_name, m.role_id, m.has_organization, m.has_edition, m.has_length, m.has_status, m.has_roller, m.has_lamination, m.has_coloring, m.coloring, m.has_manager, m.has_comment, m.is_cutter, r.local_name role, "
+$sql = "select m.name, m.position, m.user1_name, m.user2_name, m.role_id, m.has_organization, m.has_edition, m.has_material, m.has_thickness, m.has_width, m.has_length, m.has_status, m.has_roller, m.has_lamination, m.has_coloring, m.coloring, m.has_manager, m.has_comment, m.is_cutter, r.local_name role, "
         . "(select count(id) from workshift where machine_id = m.id) workshifts_count, "
         . "(select count(id) from roller where machine_id = m.id) rollers_count "
         . "from machine m "
@@ -56,6 +56,9 @@ $user2_name = $row['user2_name'];
 $role_id = $row['role_id'];
 $has_organization = $row['has_organization'];
 $has_edition = $row['has_edition'];
+$has_material = $row['has_material'];
+$has_thickness = $row['has_thickness'];
+$has_width = $row['has_width'];
 $has_length = $row['has_length'];
 $has_status = $row['has_status'];
 $has_roller = $row['has_roller'];
@@ -110,6 +113,9 @@ $rollers_count = $row['rollers_count'];
                         <tr><th>Роль</th><td><?=$role ?></td></tr>
                         <tr><th>Есть организация</th><td><?=$has_organization == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
                         <tr><th>Есть тираж</th><td><?=$has_edition == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
+                        <tr><th>Есть материал</th><td><?=$has_material == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
+                        <tr><th>Есть толщина</th><td><?=$has_thickness == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
+                        <tr><th>Есть ширина</th><td><?=$has_width == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
                         <tr><th>Есть длина</th><td><?=$has_length == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
                         <tr><th>Есть статус</th><td><?=$has_status == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>
                         <tr><th>Есть вал</th><td><?=$has_roller == true ? '<i class="fas fa-check"></i>' : '' ?></td></tr>

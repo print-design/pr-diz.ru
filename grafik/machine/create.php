@@ -28,8 +28,11 @@ if(null !== filter_input(INPUT_POST, 'machine_create_submit')) {
     $user1_name = filter_input(INPUT_POST, 'user1_name');
     $user2_name = filter_input(INPUT_POST, 'user2_name');
     $role_id = filter_input(INPUT_POST, 'role_id');
-    $has_edition = filter_input(INPUT_POST, 'has_edition') == 'on' ? 1 : 0;
     $has_organization = filter_input(INPUT_POST, 'has_organization') == 'on' ? 1 : 0;
+    $has_edition = filter_input(INPUT_POST, 'has_edition') == 'on' ? 1 : 0;
+    $has_material = filter_input(INPUT_POST, 'has_material') == 'on' ? 1 : 0;
+    $has_thickness = filter_input(INPUT_POST, 'has_thickness') == 'on' ? 1 : 0;
+    $has_width = filter_input(INPUT_POST, 'has_width') == 'on' ? 1 : 0;
     $has_length = filter_input(INPUT_POST, 'has_length') == 'on' ? 1 : 0;
     $has_status = filter_input(INPUT_POST, 'has_status') == 'on' ? 1 : 0;
     $has_roller = filter_input(INPUT_POST, 'has_roller') == 'on' ? 1 : 0;
@@ -45,8 +48,8 @@ if(null !== filter_input(INPUT_POST, 'machine_create_submit')) {
         $name = addslashes($name);
         $user1_name = addslashes($user1_name);
         $user2_name = addslashes($user2_name);
-        $executer = new Executer("insert into machine (name, position, user1_name, user2_name, role_id, has_edition, has_organization, has_length, has_status, has_roller, has_lamination, has_coloring, coloring, has_manager, has_comment, is_cutter) "
-                . "values ('$name', $position, '$user1_name', '$user2_name', $role_id, $has_edition, $has_organization, $has_length, $has_status, $has_roller, $has_lamination, $has_coloring, $coloring, $has_manager, $has_comment, $is_cutter)");
+        $executer = new Executer("insert into machine (name, position, user1_name, user2_name, role_id, has_organization, has_edition, has_material, has_thickness, has_width, has_length, has_status, has_roller, has_lamination, has_coloring, coloring, has_manager, has_comment, is_cutter) "
+                . "values ('$name', $position, '$user1_name', '$user2_name', $role_id, $has_organization, $has_edition, $has_material, $has_thickness, $has_width, $has_length, $has_status, $has_roller, $has_lamination, $has_coloring, $coloring, $has_manager, $has_comment, $is_cutter)");
         $error_message = $executer->error;
         $id = $executer->insert_id;
         
@@ -132,6 +135,30 @@ if(null !== filter_input(INPUT_POST, 'machine_create_submit')) {
                             ?>
                             <input type="checkbox" class="form-check-input" id="has_edition" name="has_edition"<?=$has_edition_checked ?> />
                             <label class="form-check-label" for="has_edition">Есть тираж</label>
+                        </div>
+                        <div class="form-check">
+                            <?php
+                            $has_material_checked = "";
+                            if(filter_input(INPUT_POST, 'has_material')) $has_material_checked = " checked='checked'";
+                            ?>
+                            <input type="checkbox" class="form-check-input" id="has_material" name="has_material"<?=$has_material_checked ?> />
+                            <label class="form-check-label" for="has_material">Есть материал</label>
+                        </div>
+                        <div class="form-check">
+                            <?php
+                            $has_thickness_checked = "";
+                            if(filter_input(INPUT_POST, 'has_thickness')) $has_thickness_checked = " checked='checked'";
+                            ?>
+                            <input type="checkbox" class="form-check-input" id="has_thickness" name="has_thickness"<?=$has_thickness_checked ?> />
+                            <label class="form-check-label" for="has_thickness">Есть толщина</label>
+                        </div>
+                        <div class="form-check">
+                            <?php
+                            $has_width_checked = "";
+                            if(filter_input(INPUT_POST, 'has_width')) $has_width_checked = " checked='checked'";
+                            ?>
+                            <input type="checkbox" class="form-check-input" id="has_width" name="has_width"<?=$has_width_checked ?> />
+                            <label class="form-check-label" for="has_width">Есть ширина</label>
                         </div>
                         <div class="form-check">
                             <?php

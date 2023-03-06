@@ -28,8 +28,11 @@ if(null !== filter_input(INPUT_POST, 'machine_edit_submit')) {
     $user1_name = filter_input(INPUT_POST, 'user1_name');
     $user2_name = filter_input(INPUT_POST, 'user2_name');
     $role_id = filter_input(INPUT_POST, 'role_id');
-    $has_edition = filter_input(INPUT_POST, 'has_edition') == 'on' ? 1 : 0;
     $has_organization = filter_input(INPUT_POST, 'has_organization') == 'on' ? 1 : 0;
+    $has_edition = filter_input(INPUT_POST, 'has_edition') == 'on' ? 1 : 0;
+    $has_material = filter_input(INPUT_POST, 'has_material') == 'on' ? 1 : 0;
+    $has_thickness = filter_input(INPUT_POST, 'has_thickness') == 'on' ? 1 : 0;
+    $has_width = filter_input(INPUT_POST, 'has_width') == 'on' ? 1 : 0;
     $has_length = filter_input(INPUT_POST, 'has_length') == 'on' ? 1 : 0;
     $has_status = filter_input(INPUT_POST, 'has_status') == 'on' ? 1 : 0;
     $has_roller = filter_input(INPUT_POST, 'has_roller') == 'on' ? 1 : 0;
@@ -47,7 +50,8 @@ if(null !== filter_input(INPUT_POST, 'machine_edit_submit')) {
         $user1_name = addslashes($user1_name);
         $user2_name = addslashes($user2_name);
         $error_message = (new Executer("update machine set name='$name', position=$position, user1_name='$user1_name', user2_name='$user2_name', "
-                . "role_id=$role_id, has_edition=$has_edition, has_organization=$has_organization, has_length=$has_length, "
+                . "role_id=$role_id, has_organization=$has_organization, has_edition=$has_edition, "
+                . "has_material=$has_material, has_thickness=$has_thickness, has_width=$has_width, has_length=$has_length, "
                 . "has_status=$has_status, has_roller=$has_roller, has_lamination=$has_lamination, has_coloring=$has_coloring, "
                 . "coloring=$coloring, has_manager=$has_manager, has_comment=$has_comment, is_cutter=$is_cutter "
                 . "where id=$id"))->error;
@@ -66,15 +70,18 @@ if($id == null) {
         
 // Получение объекта
 $row = (new Fetcher("select name, position, user1_name, user2_name, role_id, "
-        . "has_edition, has_organization, has_length, has_status, has_roller, has_lamination, has_coloring, coloring, has_manager, has_comment, is_cutter "
+        . "has_organization, has_edition, has_material, has_thickness, has_width, has_length, has_status, has_roller, has_lamination, has_coloring, coloring, has_manager, has_comment, is_cutter "
         . "from machine where id=$id"))->Fetch();
 $name = htmlentities($row['name']);
 $position = $row['position'];
 $user1_name = htmlentities($row['user1_name']);
 $user2_name = htmlentities($row['user2_name']);
 $role_id = $row['role_id'];
-$has_edition = $row['has_edition'];
 $has_organization = $row['has_organization'];
+$has_edition = $row['has_edition'];
+$has_material = $row['has_material'];
+$has_thickness = $row['has_thickness'];
+$has_width = $row['has_width'];
 $has_length = $row['has_length'];
 $has_status = $row['has_status'];
 $has_roller = $row['has_roller'];
@@ -162,6 +169,30 @@ $is_cutter = $row['is_cutter'];
                             ?>
                             <input type="checkbox" class="form-check-input" id="has_edition" name="has_edition"<?=$has_edition_checked ?> />
                             <label class="form-check-label" for="has_edition">Есть тираж</label>
+                        </div>
+                        <div class="form-check">
+                            <?php
+                            $has_material_checked = "";
+                            if($has_material) $has_material_checked = " checked='checked'";
+                            ?>
+                            <input type="checkbox" class="form-check-input" id="has_material" name="has_material"<?=$has_material_checked ?> />
+                            <label class="form-check-label" for="has_material">Есть материал</label>
+                        </div>
+                        <div class="form-check">
+                            <?php
+                            $has_thickness_checked = "";
+                            if($has_thickness) $has_thickness_checked = " checked='checked'";
+                            ?>
+                            <input type="checkbox" class="form-check-input" id="has_thickness" name="has_thickness"<?=$has_thickness_checked ?> />
+                            <label class="form-check-label" for="has_thickness">Есть толщина</label>
+                        </div>
+                        <div class="form-check">
+                            <?php
+                            $has_width_checked = "";
+                            if($has_width) $has_width_checked = " checked='checked'";
+                            ?>
+                            <input type="checkbox" class="form-check-input" id="has_width" name="has_width"<?=$has_width_checked ?> />
+                            <label class="form-check-label" for="has_width">Есть ширина</label>
                         </div>
                         <div class="form-check">
                             <?php
