@@ -119,11 +119,11 @@
         <select data-id='<?=$this->edition['id'] ?>' onfocusout="javascript: EditThickness($(this))">
             <optgroup>
                 <option value="">...</option>
-                <?php $selected = ''; if($this->edition['material'] == '10 мкм') $selected = " selected = 'selected'"; ?>
+                <?php $selected = ''; if($this->edition['thickness'] == '10 мкм') $selected = " selected = 'selected'"; ?>
                 <option<?=$selected ?>>10 мкм</option>
-                <?php $selected = ''; if($this->edition['material'] == '11 мкм') $selected = " selected = 'selected'"; ?>
+                <?php $selected = ''; if($this->edition['thickness'] == '11 мкм') $selected = " selected = 'selected'"; ?>
                 <option<?=$selected ?>>11 мкм</option>
-                <?php $selected = ''; if($this->edition['material'] == '12 мкм') $selected = " selected = 'selected'"; ?>
+                <?php $selected = ''; if($this->edition['thickness'] == '12 мкм') $selected = " selected = 'selected'"; ?>
                 <option<?=$selected ?>>12 мкм</option>
             </optgroup>
         </select>
