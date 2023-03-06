@@ -3465,11 +3465,14 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             function CountLength() {
                 var raport = $('#raport').val();
                 var number_in_raport = $('#number_in_raport').val();
-                if(raport != '' && number_in_raport != '') {
+                if(raport != '' && raport != '-1' && number_in_raport != '') {
                     var f_raport = parseFloat(raport);
                     var i_number_in_raport = parseInt(number_in_raport);
                     var length = Math.floor(f_raport / i_number_in_raport * 10) / 10;
                     $('#length').val(length);
+                }
+                else {
+                    $('#length').val('');
                 }
             }
             
