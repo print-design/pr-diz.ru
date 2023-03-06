@@ -165,6 +165,45 @@ $error_message = $timetable->error_message;
                             field.val('70773');
                 });
             }
+            
+            function EditMaterial(select) {
+                var material = select.val();
+                var id = select.attr('data-id');
+                select.val('');
+                $.ajax({ url: "ajax/edition.php?material=" + material + "&id=" + id, context: select })
+                        .done(function(data) {
+                            select.val(data);
+                        })
+                        .fail(function() {
+                            alert('Ошибка при выборе марки пленки');
+                        });
+            }
+            
+            function EditThickness(select) {
+                var thickness = select.val();
+                var id = select.attr('data-id');
+                select.val('');
+                $.ajax({ url: "ajax/edition.php?thickness=" + thickness + "&id=" + id, context: select })
+                        .done(function(data) {
+                            select.val(data);
+                        })
+                        .fail(function() {
+                            alert('Ошибка при выборе толщины');
+                        });
+            }
+            
+            function EditWidth(field) {
+                var width = field.val();
+                var id = field.attr('data-id');
+                field.val('000');
+                $.ajax({ url: "ajax/edition.php?width=" + width + "&id=" + id, context: field })
+                        .done(function(data) {
+                            field.val(data);
+                        })
+                        .fail(function() {
+                            field.val('70773');
+                        });
+            }
     
             function EditLength(field) {
                 var length = field.val();

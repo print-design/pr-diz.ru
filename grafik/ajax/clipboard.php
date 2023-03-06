@@ -5,7 +5,7 @@ $error_message = '';
 
 $edition = filter_input(INPUT_GET, 'edition');
 if($edition !== null) {
-    $sql = "select e.name, e.organization, e.length, e.status_id, e.lamination_id, e.coloring, e.roller_id, e.manager_id, e.comment, ws.user1_id, ws.user2_id "
+    $sql = "select e.name, e.organization, e.material, e.thickness, e.width, e.length, e.status_id, e.lamination_id, e.coloring, e.roller_id, e.manager_id, e.comment, ws.user1_id, ws.user2_id "
             . "from edition e "
             . "inner join workshift ws on e.workshift_id=ws.id "
             . "where e.id=$edition";

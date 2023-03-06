@@ -25,6 +25,15 @@
     <!-- Наименование -->
     <?php if($this->timetable->hasEdition): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     
+    <!-- Марка пленки -->
+    <?php if($this->timetable->hasMaterial): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    
+    <!-- Толщина -->
+    <?php if($this->timetable->hasThickness): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    
+    <!-- Ширина -->
+    <?php if($this->timetable->hasWidth): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    
     <!-- Метраж -->
     <?php if($this->timetable->hasLength): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     

@@ -101,7 +101,7 @@ class GrafikTimetable {
         
         // Список тиражей
         $all_editions = [];
-        $sql = "select ws.date, ws.shift, ws.machine_id, e.id, e.workshift_id, e.organization, e.name edition, e.length, e.coloring, e.comment, e.position, e.continuation, "
+        $sql = "select ws.date, ws.shift, ws.machine_id, e.id, e.workshift_id, e.organization, e.name edition, e.material, e.thickness, e.width, e.length, e.coloring, e.comment, e.position, e.continuation, "
                 . "e.status_id, s.name status, "
                 . "e.roller_id, r.name roller, "
                 . "e.lamination_id, lam.name lamination, "

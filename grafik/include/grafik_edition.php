@@ -89,6 +89,65 @@
     </td>
     <?php endif; ?>
     
+    <!-- Марка пленки -->
+    <?php if($this->timetable->hasMaterial): ?>
+    <td class="<?=$top.' '.$this->shift ?>">
+        <?php if($is_admin): ?>
+        <select data-id='<?=$this->edition['id'] ?>' onfocusout="javascript: EditMaterial($(this))">
+            <optgroup>
+                <option value="">...</option>
+                <?php $selected = ''; if($this->edition['material'] == 'Прозрачная') $selected = " selected = 'selected'"; ?>
+                <option<?=$selected ?>>Прозрачная</option>
+                <?php $selected = ''; if($this->edition['material'] == 'Белая') $selected = " selected = 'selected'"; ?>
+                <option<?=$selected ?>>Белая</option>
+                <?php $selected = ''; if($this->edition['material'] == 'Металлическая') $selected = " selected = 'selected'"; ?>
+                <option<?=$selected ?>>Металлическая</option>
+            </optgroup>
+        </select>
+        <?php
+        else:
+            echo $this->edition['material'];
+        endif;
+        ?>
+    </td>
+    <?php endif; ?>
+    
+    <!-- Толщина -->
+    <?php if($this->timetable->hasThickness): ?>
+    <td class="<?=$top.' '.$this->shift ?>">
+        <?php if($is_admin): ?>
+        <select data-id='<?=$this->edition['id'] ?>' onfocusout="javascript: EditThickness($(this))">
+            <optgroup>
+                <option value="">...</option>
+                <?php $selected = ''; if($this->edition['material'] == '10 мкм') $selected = " selected = 'selected'"; ?>
+                <option<?=$selected ?>>10 мкм</option>
+                <?php $selected = ''; if($this->edition['material'] == '11 мкм') $selected = " selected = 'selected'"; ?>
+                <option<?=$selected ?>>11 мкм</option>
+                <?php $selected = ''; if($this->edition['material'] == '12 мкм') $selected = " selected = 'selected'"; ?>
+                <option<?=$selected ?>>12 мкм</option>
+            </optgroup>
+        </select>
+        <?php
+        else:
+            echo $this->edition['thickness'];
+        endif;
+        ?>
+    </td>
+    <?php endif; ?>
+    
+    <!-- Ширина -->
+    <?php if($this->timetable->hasWidth): ?>
+    <td class="<?=$top.' '.$this->shift ?>">
+        <?php if($is_admin): ?>
+        <input type="text" value="<?=$this->edition['width'] ?>" onfocusout="javascript: EditWidth($(this))" data-id='<?=$this->edition['id'] ?>' class="editable" style="width:65px;" />
+        <?php
+        else:
+            echo $this->edition['width'];
+        endif;
+        ?>
+    </td>
+    <?php endif; ?>
+    
     <!-- Метраж -->
     <?php if($this->timetable->hasLength): ?>
     <td class="<?=$top.' '.$this->shift ?>">

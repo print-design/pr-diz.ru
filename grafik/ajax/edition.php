@@ -4,6 +4,21 @@ include '../include/topscripts.php';
 $error_message = '';
 $id = filter_input(INPUT_GET, 'id');
 
+$organization = filter_input(INPUT_GET, 'organization');
+if($organization !== null) {
+    $error_message = (new Executer("update edition set organization='$organization' where id=$id"))->error;
+    
+    if($error_message == '') {
+        $fetcher = new Fetcher("select organization from edition where id=$id");
+        $row = $fetcher->Fetch();
+        $error_message = $fetcher->error;
+        
+        if($error_message == '') {
+            echo $row['organization'];
+        }
+    }
+}
+
 $edition = filter_input(INPUT_GET, 'edition');
 if($edition !== null) {
     $error_message = (new Executer("update edition set name='$edition' where id=$id"))->error;
@@ -19,17 +34,51 @@ if($edition !== null) {
     }
 }
 
-$organization = filter_input(INPUT_GET, 'organization');
-if($organization !== null) {
-    $error_message = (new Executer("update edition set organization='$organization' where id=$id"))->error;
+$material = filter_input(INPUT_GET, 'material');
+if($material !== null) {
+    $error_message = (new Executer("update edition set material='$material' where id=$id"))->error;
     
     if($error_message == '') {
-        $fetcher = new Fetcher("select organization from edition where id=$id");
+        $fetcher = new Fetcher("select material from edition where id=$id");
         $row = $fetcher->Fetch();
         $error_message = $fetcher->error;
         
         if($error_message == '') {
-            echo $row['organization'];
+            echo $row['material'];
+        }
+    }
+}
+
+$thickness = filter_input(INPUT_GET, 'thickness');
+if($thickness !== null) {
+    $error_message = (new Executer("update edition set thickness='$thickness' where id=$id"))->error;
+    
+    if($error_message == '') {
+        $fetcher = new Fetcher("select thickness from edition where id=$id");
+        $row = $fetcher->Fetch();
+        $error_message = $fetcher->error;
+        
+        if($error_message == '') {
+            echo $row['thickness'];
+        }
+    }
+}
+
+$width = filter_input(INPUT_GET, 'width');
+if($width !== null) {
+    if($width == '') {
+        $width = 'NULL';
+    }
+    
+    $error_message = (new Executer("update edition set width=$width where id=$id"))->error;
+    
+    if($error_message == '') {
+        $fetcher = new Fetcher("select width from edition where id=$id");
+        $row = $fetcher->Fetch();
+        $error_message = $fetcher->error;
+        
+        if($error_message == '') {
+            echo $row['width'];
         }
     }
 }

@@ -30,8 +30,11 @@
                     <input type="hidden" id="user1Name" name="user1Name" value="<?= $this->user1Name ?>"/>
                     <input type="hidden" id="user2Name" name="user2Name" value="<?= $this->user2Name ?>"/>
                     <input type="hidden" id="userRole" name="userRole" value="<?= $this->userRole ?>"/>
-                    <input type="hidden" id="hasEdition" name="hasEdition" value="<?= $this->hasEdition ?>"/>
                     <input type="hidden" id="hasOrganization" name="hasOrganization" value="<?= $this->hasOrganization ?>"/>
+                    <input type="hidden" id="hasEdition" name="hasEdition" value="<?= $this->hasEdition ?>"/>
+                    <input type="hidden" id="hasMaterial" name="hasMaterial" value="<?=$this->hasMaterial ?>"/>
+                    <input type="hidden" id="hasThickness" name="hasThickness" value="<?=$this->hasThickness ?>"/>
+                    <input type="hidden" id="hasWidth" name="hasWidth" value="<?=$this->hasWidth ?>"/>
                     <input type="hidden" id="hasLength" name="hasLength" value="<?= $this->hasLength ?>"/>
                     <input type="hidden" id="hasStatus" name="hasStatus" value="<?= $this->hasStatus ?>"/>
                     <input type="hidden" id="hasRoller" name="hasRoller" value="<?= $this->hasRoller ?>"/>

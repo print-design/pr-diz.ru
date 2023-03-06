@@ -8,6 +8,9 @@
     <?php if($this->timetable->user2Name): ?><td class="<?=$top.' '.$this->shift ?>"><?= array_key_exists('u2_fio', $this->shift_data) ? $this->shift_data['u2_fio'] : '' ?></td><?php endif; ?>
     <?php if($this->timetable->hasOrganization): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     <?php if($this->timetable->hasEdition): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->hasMaterial): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->hasThickness): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->hasWidth): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     <?php if($this->timetable->hasLength): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     <?php if($this->timetable->hasRoller): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     <?php if($this->timetable->hasLamination): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
