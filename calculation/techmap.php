@@ -888,7 +888,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                         </tr>
                         <tr>
                             <td>Длина этикетки</td>
-                            <td><?= CalculationBase::Display(floatval($length), 0).(empty($length) ? "" : " мм") ?></td>
+                            <td><?= rtrim(CalculationBase::Display(floatval($length), 2), "0").(empty($length) ? "" : " мм") ?></td>
                         </tr>
                         <tr>
                             <td>Кол-во ручьёв</td>
