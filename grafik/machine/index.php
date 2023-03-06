@@ -39,6 +39,9 @@ include '../include/restrict_admin.php';
                         <th>Роль</th>
                         <th>Заказчик</th>
                         <th>Наименование</th>
+                        <th>Материал</th>
+                        <th>Толщина</th>
+                        <th>Ширина</th>
                         <th>Длина</th>
                         <th>Статус</th>
                         <th>Вал</th>
