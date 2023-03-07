@@ -146,7 +146,7 @@
     <?php if($this->timetable->hasWidth): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
-        <input type="text" value="<?=$this->edition['width'] ?>" onfocusout="javascript: EditWidth($(this))" data-id='<?=$this->edition['id'] ?>' class="editable" style="width:65px;" />
+        <input type="text" value="<?=$this->edition['width'] ?>" onfocusout="javascript: EditWidth($(this))" data-id='<?=$this->edition['id'] ?>' class="editable int-only" style="width:65px;" />
         <?php
         else:
             echo $this->edition['width'];
