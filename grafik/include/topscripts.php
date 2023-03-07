@@ -221,6 +221,33 @@ class Fetcher {
     }
 }
 
+class FetcherErp {
+    public $error = '';
+    private $result;
+    
+    function __construct($sql) {
+        $conn = new mysqli(DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME_ERP);
+        
+        if($conn->connect_error) {
+            $this->error = 'Ошибка соединения: '.$conn->connect_error;
+            return;
+        }
+        
+        $conn->query('set names utf8');
+        $this->result = $conn->query($sql);
+        
+        if(is_bool($this->result)) {
+            $this->error = $conn->error;
+        }
+        
+        $conn->close();
+    }
+    
+    function Fetch() {
+        return mysqli_fetch_array($this->result);
+    }
+}
+
 // Валидация формы логина
 define('LOGINISINVALID', ' is-invalid');
 $login_form_valid = true;

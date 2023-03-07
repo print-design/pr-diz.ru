@@ -85,6 +85,23 @@ class GrafikTimetable {
             $this->managers = (new Grabber("select u.id, u.fio from user u inner join user_role ur on ur.user_id = u.id where ur.role_id = 2 order by u.fio"))->result;
         }
         
+        // Список материала
+        if(IsInRole('admin')) {
+            $sql = "select f.name, fv.thickness, fv.weight "
+                    . "from film_variation fv "
+                    . "inner join film f on fv.film_id = f.id "
+                    . "order by f.name, fv.thickness";
+            $fetcher = new FetcherErp($sql);
+            
+            while ($row = $fetcher->Fetch()) {
+                if(!key_exists($row['name'], $this->materials)) {
+                    $this->materials[$row['name']] = [];
+                }
+                
+                array_push($this->materials[$row['name']], $row['thickness'].'/'.$row['weight']);
+            }
+        }
+        
         // Список рабочих смен
         $all = array();
         $sql = "select ws.id, ws.date date, date_format(ws.date, '%d.%m.%Y') fdate, ws.shift, ws.machine_id, u1.id u1_id, u1.fio u1_fio, u2.id u2_id, u2.fio u2_fio, "
@@ -198,6 +215,7 @@ class GrafikTimetable {
     public $rollers = [];
     public $laminations = [];
     public $managers = [];
+    public $materials = [];
     
     private $grafik_dates = [];
     

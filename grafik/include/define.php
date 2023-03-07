@@ -5,6 +5,7 @@ define('DATABASE_HOST', 'localhost');
 define('DATABASE_USER', 'root');
 define('DATABASE_PASSWORD', '');
 define('DATABASE_NAME', 'grafik');
+define('DATABASE_NAME_ERP', 'erp');
 
 define('USER_ID', '543fde_fgeeferlj76_huGTF_eerrFE_er_eeWE');
 define('USERNAME', 'jjjgYY7765_kjnbhg77GGH_ijjhg__weeewZX');

@@ -94,15 +94,17 @@
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
         <select data-id='<?=$this->edition['id'] ?>' onfocusout="javascript: EditMaterial($(this))">
-            <optgroup>
-                <option value="">...</option>
-                <?php $selected = ''; if($this->edition['material'] == 'Прозрачная') $selected = " selected = 'selected'"; ?>
-                <option<?=$selected ?>>Прозрачная</option>
-                <?php $selected = ''; if($this->edition['material'] == 'Белая') $selected = " selected = 'selected'"; ?>
-                <option<?=$selected ?>>Белая</option>
-                <?php $selected = ''; if($this->edition['material'] == 'Металлическая') $selected = " selected = 'selected'"; ?>
-                <option<?=$selected ?>>Металлическая</option>
-            </optgroup>
+            <option value="">...</option>
+            <?php
+            $materials = array_keys($this->timetable->materials);
+            if(!empty($this->edition['material']) && !in_array($this->edition['material'], $materials)) {
+                array_push($materials, $this->edition['material']);
+            }
+            foreach($materials as $material):
+                $selected = ''; if($this->edition['material'] == $material) $selected = " selected = 'selected'";
+            ?>
+            <option<?=$selected ?>><?=$material ?></option>
+            <?php endforeach; ?>
         </select>
         <?php
         else:
@@ -117,15 +119,20 @@
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
         <select data-id='<?=$this->edition['id'] ?>' onfocusout="javascript: EditThickness($(this))">
-            <optgroup>
-                <option value="">...</option>
-                <?php $selected = ''; if($this->edition['thickness'] == '10 мкм') $selected = " selected = 'selected'"; ?>
-                <option<?=$selected ?>>10 мкм</option>
-                <?php $selected = ''; if($this->edition['thickness'] == '11 мкм') $selected = " selected = 'selected'"; ?>
-                <option<?=$selected ?>>11 мкм</option>
-                <?php $selected = ''; if($this->edition['thickness'] == '12 мкм') $selected = " selected = 'selected'"; ?>
-                <option<?=$selected ?>>12 мкм</option>
-            </optgroup>
+            <option value="">...</option>
+            <?php
+            $thicknesses = [];
+            if(key_exists($this->edition['material'], $this->timetable->materials)) {
+                $thicknesses = $this->timetable->materials[$this->edition['material']];
+            }
+            if(!empty($this->edition['thickness']) && !in_array($this->edition['thickness'], $thicknesses)) {
+                array_push($thicknesses, $this->edition['thickness']);
+            }
+            foreach($thicknesses as $thickness):
+                $selected = ''; if($this->edition['thickness'] == $thickness) $selected = " selected = 'selected'";
+            ?>
+            <option<?=$selected ?>><?=$thickness ?></option>
+            <?php endforeach; ?>
         </select>
         <?php
         else:
@@ -167,16 +174,14 @@
     <?php if($is_admin): if($this->timetable->hasStatus): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <select data-id='<?=$this->edition['id'] ?>' onfocusout="javascript: EditStatus($(this))" style='width:85px;'>
-            <optgroup>
-                <option value="">...</option>
-                    <?php
-                    foreach ($this->timetable->statuses as $value) {
-                        $selected = '';
-                        if($this->edition['status_id'] == $value['id']) $selected = " selected = 'selected'";
-                        echo "<option$selected value='".$value['id']."'>".$value['name']."</option>";
-                    }
-                    ?>
-            </optgroup>
+            <option value="">...</option>
+            <?php
+            foreach ($this->timetable->statuses as $value) {
+                $selected = '';
+                    if($this->edition['status_id'] == $value['id']) $selected = " selected = 'selected'";
+                    echo "<option$selected value='".$value['id']."'>".$value['name']."</option>";
+                }
+            ?>
         </select>
     </td>
     <?php endif; endif; ?>
@@ -186,16 +191,14 @@
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
         <select data-id='<?=$this->edition['id'] ?>' onfocusout="javascript: EditRoller($(this))">
-            <optgroup>
-                <option value="">...</option>
-                <?php
-                foreach ($this->timetable->rollers as $value) {
-                    $selected = '';
-                    if($this->edition['roller_id'] == $value['id']) $selected = " selected = 'selected'";
-                    echo "<option$selected value='".$value['id']."'>".$value['name']."</option>";
-                }
-                ?>
-            </optgroup>
+            <option value="">...</option>
+            <?php
+            foreach ($this->timetable->rollers as $value) {
+                $selected = '';
+                if($this->edition['roller_id'] == $value['id']) $selected = " selected = 'selected'";
+                echo "<option$selected value='".$value['id']."'>".$value['name']."</option>";
+            }
+            ?>
         </select>
         <?php
         else:
@@ -210,16 +213,14 @@
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
         <select data-id='<?=$this->edition['id'] ?>' onfocusout="javascript: EditLamination($(this))" style='width:55px;'>
-            <optgroup>
-                <option value="">...</option>
-                <?php
-                foreach ($this->timetable->laminations as $value) {
-                    $selected = '';
-                    if($this->edition['lamination_id'] == $value['id']) $selected = " selected = 'selected'";
-                    echo "<option$selected value='".$value['id']."'>".$value['name']."</option>";
-                }
-                ?>
-            </optgroup>
+            <option value="">...</option>
+            <?php
+            foreach ($this->timetable->laminations as $value) {
+                $selected = '';
+                if($this->edition['lamination_id'] == $value['id']) $selected = " selected = 'selected'";
+                echo "<option$selected value='".$value['id']."'>".$value['name']."</option>";
+            }
+            ?>
         </select>
         <?php
         else:
@@ -247,16 +248,14 @@
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
         <select data-id='<?=$this->edition['id'] ?>'<?=$this->allow_edit_disabled ?> onfocusout="javascript: EditManager($(this))" style='width:120px;'>
-            <optgroup>
-                <option value="">...</option>
-                <?php
-                foreach ($this->timetable->managers as $value) {
-                    $selected = '';
-                    if($this->edition['manager_id'] == $value['id']) $selected = " selected = 'selected'";
-                    echo "<option$selected value='".$value['id']."'>".$value['fio']."</option>";
-                }
-                ?>
-            </optgroup>
+            <option value="">...</option>
+            <?php
+            foreach ($this->timetable->managers as $value) {
+                $selected = '';
+                if($this->edition['manager_id'] == $value['id']) $selected = " selected = 'selected'";
+                echo "<option$selected value='".$value['id']."'>".$value['fio']."</option>";
+            }
+            ?>
         </select>    
         <?php
         else:
