@@ -36,17 +36,41 @@ if($edition !== null) {
 
 $material = filter_input(INPUT_GET, 'material');
 if($material !== null) {
-    $error_message = (new Executer("update edition set material='$material' where id=$id"))->error;
+    $result = [];
+    $result['error'] = '';
+    $result['material'] = '';
+    $result['thicknesses'] = [];
+    
+    $error_message = (new Executer("update edition set material='$material', thickness=NULL where id=$id"))->error;
     
     if($error_message == '') {
         $fetcher = new Fetcher("select material from edition where id=$id");
         $row = $fetcher->Fetch();
-        $error_message = $fetcher->error;
+        $error_message = $fetcher->error;    
         
-        if($error_message == '') {
-            echo $row['material'];
+        if(empty($error_message)) {
+            $result['material'] = $row['material'];
         }
     }
+    
+    if(empty($error_message)) {
+        $sql = "select fv.thickness, fv.weight "
+                . "from film_variation fv "
+                . "inner join film f on fv.film_id = f.id "
+                . "where f.name = '$material' "
+                . "order by fv.thickness";
+        $fetcher = new FetcherErp($sql);
+        
+        while ($row = $fetcher->Fetch()) {
+            array_push($result['thicknesses'], $row['thickness'].'/'.$row['weight']);
+        }
+    }
+    
+    if(!empty($error_message)) {
+        $result['error'] = $error_message;
+    }
+    
+    echo json_encode($result);
 }
 
 $thickness = filter_input(INPUT_GET, 'thickness');

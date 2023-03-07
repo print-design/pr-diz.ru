@@ -170,9 +170,15 @@ $error_message = $timetable->error_message;
                 var material = select.val();
                 var id = select.attr('data-id');
                 select.val('');
-                $.ajax({ url: "ajax/edition.php?material=" + material + "&id=" + id, context: select })
+                $.ajax({ dataType: 'JSON', url: "ajax/edition.php?material=" + material + "&id=" + id, context: select })
                         .done(function(data) {
-                            select.val(data);
+                            select.val(data.material);
+                    
+                            var options = "<option value=''>...</options>";
+                            for(var item in data.thicknesses) {
+                                options += "<option>" + data.thicknesses[item] + "</option>";
+                            }
+                            $('.select_thickness[data-id=' + id + ']').html(options);
                         })
                         .fail(function() {
                             alert('Ошибка при выборе марки пленки');
@@ -418,7 +424,7 @@ $error_message = $timetable->error_message;
             function EditManager(select) {
                 var manager_id = select.val();
                 var id = select.attr('data-id');
-                $(this).val('');
+                select.val('');
                 $.ajax({ url: "ajax/edition.php?manager_id=" + manager_id + "&id=" + id, context: select })
                         .done(function(data){
                             select.val(data);

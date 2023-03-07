@@ -93,7 +93,7 @@
     <?php if($this->timetable->hasMaterial): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
-        <select data-id='<?=$this->edition['id'] ?>' onfocusout="javascript: EditMaterial($(this))">
+        <select data-id='<?=$this->edition['id'] ?>' onchange="javascript: EditMaterial($(this))">
             <option value="">...</option>
             <?php
             $materials = array_keys($this->timetable->materials);
@@ -118,7 +118,7 @@
     <?php if($this->timetable->hasThickness): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
-        <select data-id='<?=$this->edition['id'] ?>' onfocusout="javascript: EditThickness($(this))">
+        <select data-id='<?=$this->edition['id'] ?>' class='select_thickness' onchange="javascript: EditThickness($(this));">
             <option value="">...</option>
             <?php
             $thicknesses = [];
@@ -173,7 +173,7 @@
     <!-- Статус -->
     <?php if($is_admin): if($this->timetable->hasStatus): ?>
     <td class="<?=$top.' '.$this->shift ?>">
-        <select data-id='<?=$this->edition['id'] ?>' onfocusout="javascript: EditStatus($(this))" style='width:85px;'>
+        <select data-id='<?=$this->edition['id'] ?>' onchange="javascript: EditStatus($(this))" style='width:85px;'>
             <option value="">...</option>
             <?php
             foreach ($this->timetable->statuses as $value) {
@@ -190,7 +190,7 @@
     <?php if($this->timetable->hasRoller): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
-        <select data-id='<?=$this->edition['id'] ?>' onfocusout="javascript: EditRoller($(this))">
+        <select data-id='<?=$this->edition['id'] ?>' onchange="javascript: EditRoller($(this))">
             <option value="">...</option>
             <?php
             foreach ($this->timetable->rollers as $value) {
@@ -212,7 +212,7 @@
     <?php if($this->timetable->hasLamination): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
-        <select data-id='<?=$this->edition['id'] ?>' onfocusout="javascript: EditLamination($(this))" style='width:55px;'>
+        <select data-id='<?=$this->edition['id'] ?>' onchange="javascript: EditLamination($(this))" style='width:55px;'>
             <option value="">...</option>
             <?php
             foreach ($this->timetable->laminations as $value) {
@@ -247,7 +247,7 @@
     <?php if($this->timetable->hasManager): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?php if($is_admin): ?>
-        <select data-id='<?=$this->edition['id'] ?>'<?=$this->allow_edit_disabled ?> onfocusout="javascript: EditManager($(this))" style='width:120px;'>
+        <select data-id='<?=$this->edition['id'] ?>'<?=$this->allow_edit_disabled ?> onchange="javascript: EditManager($(this))" style='width:120px;'>
             <option value="">...</option>
             <?php
             foreach ($this->timetable->managers as $value) {
