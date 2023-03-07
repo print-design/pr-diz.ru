@@ -267,7 +267,7 @@ table.table tr th {
     vertical-align: middle;
     font-size: 14px;
     line-height: 20px;
-    padding-left: 25px;
+    padding-left: 15px;
     padding-top: 12px;
     padding-bottom: 12px;
 }
@@ -278,8 +278,8 @@ table.table tr td {
     font-weight: 400;
     vertical-align: middle;
     height: 40px;
-    padding-left: 25px;
-    padding-right: 25px;
+    padding-left: 15px;
+    padding-right: 15px;
     padding-top: 10px;
     padding-bottom: 10px;
 }

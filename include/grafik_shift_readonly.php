@@ -1,7 +1,7 @@
 <tr>
     <?php if($this->shift == 'day'): ?>
-    <td class="<?=$top ?>" rowspan="<?=$this->date_editions_count ?>" style="padding-left: 7px; padding-right: 7px;"><?=$GLOBALS['weekdays'][$this->date->format('w')] ?></td>
-    <td class="<?=$top ?>" rowspan="<?=$this->date_editions_count ?>" style="padding-left: 7px; padding-right: 7px;"><?=$this->date->format('d.m').".".$this->date->format('Y') ?></td>
+    <td class="<?=$top ?>" rowspan="<?=$this->date_editions_count ?>"><?=$GLOBALS['weekdays'][$this->date->format('w')] ?></td>
+    <td class="<?=$top ?>" rowspan="<?=$this->date_editions_count ?>"><?=$this->date->format('d.m').".".$this->date->format('Y') ?></td>
     <?php endif; ?>
     <td class="<?=$top.' '.$this->shift ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?></td>
     <?php if($this->timetable->user1Name): ?><td class="<?=$top.' '.$this->shift ?>"><?= array_key_exists('u1_fio', $this->shift_data) ? $this->shift_data['u1_fio'] : '' ?></td><?php endif; ?>
