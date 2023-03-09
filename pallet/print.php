@@ -126,7 +126,7 @@ $current_date_time = date("dmYHis");
                         <td>Длина<br /><strong><?=$length ?> м</strong></td>
                     </tr>
                     <tr>
-                        <td class="text-nowrap pb-5">Марка пленки<br /><strong><?=$film ?></strong></td>
+                        <td class="pb-5">Марка пленки<br /><strong><?=$film ?></strong></td>
                         <td class="text-nowrap pb-5">Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
                     </tr>
                     <tr>
@@ -179,8 +179,8 @@ $current_date_time = date("dmYHis");
                         <td>Длина<br /><strong><?=$length ?> м</strong></td>
                     </tr>
                     <tr>
-                        <td>Марка пленки<br /><strong><?=$film ?></strong></td>
-                        <td>Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
+                        <td class="pb-5">Марка пленки<br /><strong><?=$film ?></strong></td>
+                        <td class="text-nowrap pb-5">Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
                     </tr>
                     <tr>
                         <td>Статус<br /><strong><?=$status ?></strong></td>
@@ -292,8 +292,8 @@ $current_date_time = date("dmYHis");
                         <td>Длина<br /><strong><?=$length ?> м</strong></td>
                     </tr>
                     <tr>
-                        <td>Марка пленки<br /><strong><?=$film ?></strong></td>
-                        <td>Масса нетто<br /><strong><?=$weight ?> кг</strong></td>
+                        <td class="pb-5">Марка пленки<br /><strong><?=$film ?></strong></td>
+                        <td class="text-nowrap pb-5">Масса нетто<br /><strong><?=$weight ?> кг</strong></td>
                     </tr>
                     <tr>
                         <td>Статус<br /><strong><?=$status ?></strong></td>
