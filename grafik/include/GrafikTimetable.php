@@ -87,7 +87,7 @@ class GrafikTimetable {
         
         // Список материала
         if(IsInRole('admin')) {
-            $sql = "select f.name, fv.thickness, fv.weight "
+            $sql = "select f.name, fv.thickness "
                     . "from film_variation fv "
                     . "inner join film f on fv.film_id = f.id "
                     . "order by f.name, fv.thickness";
@@ -98,7 +98,7 @@ class GrafikTimetable {
                     $this->materials[$row['name']] = [];
                 }
                 
-                array_push($this->materials[$row['name']], $row['thickness'].'/'.$row['weight']);
+                array_push($this->materials[$row['name']], $row['thickness']);
             }
         }
         

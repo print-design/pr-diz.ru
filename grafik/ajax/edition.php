@@ -54,7 +54,7 @@ if($material !== null) {
     }
     
     if(empty($error_message)) {
-        $sql = "select fv.thickness, fv.weight "
+        $sql = "select fv.thickness "
                 . "from film_variation fv "
                 . "inner join film f on fv.film_id = f.id "
                 . "where f.name = '$material' "
@@ -62,7 +62,7 @@ if($material !== null) {
         $fetcher = new FetcherErp($sql);
         
         while ($row = $fetcher->Fetch()) {
-            array_push($result['thicknesses'], $row['thickness'].'/'.$row['weight']);
+            array_push($result['thicknesses'], $row['thickness']);
         }
     }
     
