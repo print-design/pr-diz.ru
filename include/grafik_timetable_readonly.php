@@ -36,6 +36,7 @@
             <?php if($this->hasThickness): ?><th>Толщина</th><?php endif; ?>
             <?php if($this->hasWidth): ?><th>Ширина</th><?php endif; ?>
             <?php if($this->hasLength): ?><th>Метраж</th><?php endif; ?>
+            <?php if(IsInRole('storekeeper')): ?><th>Нужно подготовить</th><?php endif; ?>
             <?php if($this->hasRoller): ?><th>Вал</th><?php endif; ?>
             <?php if($this->hasLamination): ?><th>Ламинация</th><?php endif; ?>
             <?php if($this->hasColoring): ?><th>Кр-ть</th><?php endif; ?>

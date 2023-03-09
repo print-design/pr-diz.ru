@@ -12,6 +12,7 @@
     <?php if($this->timetable->hasThickness): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     <?php if($this->timetable->hasWidth): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     <?php if($this->timetable->hasLength): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if(IsInRole('storekeeper')): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     <?php if($this->timetable->hasRoller): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     <?php if($this->timetable->hasLamination): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     <?php if($this->timetable->hasColoring): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
