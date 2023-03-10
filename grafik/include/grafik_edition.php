@@ -103,7 +103,7 @@
             foreach($materials as $material):
                 $selected = ''; if($this->edition['material'] == $material) $selected = " selected = 'selected'";
             ?>
-            <option<?=$selected ?>><?=$material ?></option>
+            <option<?=$selected ?> value="<?=$material ?>"><?= mb_substr($material, 0, 20) ?></option>
             <?php endforeach; ?>
         </select>
         <?php
