@@ -11,7 +11,7 @@
     <?php if($this->timetable->hasOrganization): ?><td class="<?=$top.' '.$this->shift ?>"><?=$this->edition['organization'] ?></td><?php endif; ?>
     <?php if($this->timetable->hasEdition): ?><td class="<?=$top.' '.$this->shift ?>"><?=$this->edition['edition'] ?></td><?php endif; ?>
     <?php if($this->timetable->hasMaterial): ?><td class="<?=$top.' '.$this->shift ?>"><?=$this->edition['material'] ?></td><?php endif; ?>
-    <?php if($this->timetable->hasThickness): ?><td class="<?=$top.' '.$this->shift ?>"><?=$this->edition['thickness'] ?></td><?php endif; ?>
+    <?php if($this->timetable->hasThickness): ?><td class="<?=$top.' '.$this->shift ?>"><?=$this->edition['thickness'].(empty($this->edition['thickness']) ? '' : ' мкм') ?></td><?php endif; ?>
     <?php if($this->timetable->hasWidth): ?><td class="<?=$top.' '.$this->shift ?>"><?=$this->edition['width'] ?></td><?php endif; ?>
     <?php if($this->timetable->hasLength): ?><td class="<?=$top.' '.$this->shift ?>"><?= empty($this->edition['status']) ? $this->edition['length'] : $this->edition['status'] ?></td><?php endif; ?>
     <?php if($this->timetable->hasPrepare): ?><td class="<?=$top.' '.$this->shift ?>"><?=$this->edition['prepare'] ?></td><?php endif; ?>

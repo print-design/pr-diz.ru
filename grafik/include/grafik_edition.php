@@ -131,12 +131,12 @@
             foreach($thicknesses as $thickness):
                 $selected = ''; if($this->edition['thickness'] == $thickness) $selected = " selected = 'selected'";
             ?>
-            <option<?=$selected ?>><?=$thickness ?></option>
+            <option<?=$selected ?> value="<?=$thickness ?>"><?=$thickness ?> мкм</option>
             <?php endforeach; ?>
         </select>
         <?php
         else:
-            echo $this->edition['thickness'];
+            echo $this->edition['thickness'].(empty($this->edition['thickness']) ? '' : ' мкм');
         endif;
         ?>
     </td>

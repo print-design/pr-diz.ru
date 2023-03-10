@@ -176,7 +176,7 @@ $error_message = $timetable->error_message;
                     
                             var options = "<option value=''>...</options>";
                             for(var item in data.thicknesses) {
-                                options += "<option>" + data.thicknesses[item] + "</option>";
+                                options += "<option value='" + data.thicknesses[item] + "'>" + data.thicknesses[item] + " мкм</option>";
                             }
                             $('.select_thickness[data-id=' + id + ']').html(options);
                         })
