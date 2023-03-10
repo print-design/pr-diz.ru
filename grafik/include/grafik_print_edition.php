@@ -47,7 +47,7 @@
     <!-- Толщина -->
     <?php if($this->timetable->hasThickness): ?>
     <td class="<?=$top.' '.$this->shift ?>">
-        <?=$this->edition['thickness'] ?>
+        <?=(empty($this->edition['thickness']) ? '' : $this->edition['thickness'].' мкм') ?>
     </td>
     <?php endif; ?>
     

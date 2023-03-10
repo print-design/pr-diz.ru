@@ -136,7 +136,7 @@
         </select>
         <?php
         else:
-            echo $this->edition['thickness'].(empty($this->edition['thickness']) ? '' : ' мкм');
+            echo (empty($this->edition['thickness']) ? '' : $this->edition['thickness'].' мкм');
         endif;
         ?>
     </td>
