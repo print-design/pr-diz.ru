@@ -75,7 +75,8 @@ if($material !== null) {
 
 $thickness = filter_input(INPUT_GET, 'thickness');
 if($thickness !== null) {
-    $error_message = (new Executer("update edition set thickness='$thickness' where id=$id"))->error;
+    if(empty($thickness)) $thickness = "NULL";
+    $error_message = (new Executer("update edition set thickness=$thickness where id=$id"))->error;
     
     if($error_message == '') {
         $fetcher = new Fetcher("select thickness from edition where id=$id");
