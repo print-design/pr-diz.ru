@@ -3028,18 +3028,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             <?php if(!empty($lamination2_film_id) && $lamination2_film_id != INDIVIDUAL && $lamination2_customers_material != 1): ?>
             $('#lamination2_film_variation_id').change();
             <?php endif; ?>
-            
-            // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
-            $('#streams_number').keydown(function(e) {
-                if(!KeyDownLimitIntValue($(e.target), e, 50)) {
-                    return false;
-                }
-            });
-    
-            $("#streams_number").change(function(){
-                ChangeLimitIntValue($(this), 50);
-            });
-            
+                            
             // В поле "процент" ограничиваем значения: целые числа от 1 до 100
             $('.percent').keydown(function(e) {
                 if(!KeyDownLimitIntValue($(e.target), e, 100)) {
@@ -3395,6 +3384,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 $.ajax({ url: "../ajax/laminator_roller.php?laminator_id=<?= CalculationBase::SOLVENT_YES ?>" })
                         .done(function(data) {
                             $('#lamination_roller_width').html(data);
+                            SelectLaminatorRoller();
                             SetLaminationRollerWidthOnChange();
                         })
                         .fail(function() {
@@ -3406,6 +3396,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 $.ajax({ url: "../ajax/laminator_roller.php?laminator_id=<?= CalculationBase::SOLVENT_NO ?>" })
                         .done(function(data) {
                             $('#lamination_roller_width').html(data);
+                            SelectLaminatorRoller();
                             SetLaminationRollerWidthOnChange();
                         })
                         .fail(function() {
@@ -3817,23 +3808,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 SetExtrachargeKnife($(this).val());
             });
             
-            // Ограничение значения поля "пантон"
-            $('input.panton').keypress(function(e) {
-                if(/[^0-9a-zA-Zа-яА-Я]/.test(e.key)) {
-                    return false;
-                }
-            });
-            
-            $('input.panton').keyup(function() {
-                var val = $(this).val();
-                val = val.replaceAll(/[^0-9a-zA-Zа-яА-Я]/g, '');
-            });
-    
-            $('input.panton').change(function(e) {
-                var val = $(this).val();
-                val = val.replace(/[^0-9a-zA-Zа-яА-Я]/g, '');
-            });
-            
             // Ограничение значения поля "Обрезная ширина" до 1600
             $('input#width').keydown(function(e) {
                 if(!KeyDownLimitIntValue($(e.target), e, 1600)) {
@@ -3856,6 +3830,47 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 ChangeLimitIntValue($(this), 999);
             });
             
+            // Автоматический выбор ламинирующего вала по следующему алгоритму:
+            // Кол-во ручьев * ширину ручья +5, затем должен выбираться наиболее близкий из списка вал , но в большую сторону.
+            // Если в большую сторону вала нет , то включается режим ручного ввода.
+            function SelectLaminatorRoller() {
+                if(!$('#lamination_roller_width').hasClass('d-none')) {
+                    var streams_number = $('#streams_number').val();
+                    var stream_width = $('#stream_width').val();
+                    // solvent_yes
+                    // if($('#solvent_yes').is(':checked')) {
+                    if(!isNaN(streams_number) && !isNaN(stream_width) &&
+                            streams_number != '' && stream_width != '' &&
+                            streams_number != undefined && stream_width != undefined &&
+                            ($('#solvent_yes').is(':checked') || $('#solvent_no').is(':checked'))) {
+                        alert('OK');
+                    }
+                    else {
+                        alert('BAD');
+                    }
+                    
+                    //alert('Selecting laminatir roller ' + streams_number + ' ' + stream_width);
+                    //$('#stream_width').val(streams_number);
+                    $('#lamination_roller_width').val(400);
+                }
+            }
+            
+            // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
+            $('input#streams_number').keydown(function(e) {
+                if(!KeyDownLimitIntValue($(e.target), e, 50)) {
+                    return false;
+                }
+            });
+            
+            $('input#streams_number').keyup(function() {
+                SelectLaminatorRoller();
+            });
+    
+            $('input#streams_number').change(function(){
+                ChangeLimitIntValue($(this), 50);
+                SelectLaminatorRoller();
+            });
+            
             // Ограничение значения поля "Ширина ручья" до 4 цифр
             $('input#stream_width').keydown(function(e) {
                 if(!KeyDownLimitIntValue($(e.target), e, 9999)) {
@@ -3863,8 +3878,30 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
             });
             
+            $('input#stream_width').keyup(function() {
+                SelectLaminatorRoller();
+            });
+            
             $('input#stream_width').change(function(){
                 ChangeLimitIntValue($(this), 9999);
+                SelectLaminatorRoller();
+            });
+            
+            // Ограничение значения поля "пантон"
+            $('input.panton').keypress(function(e) {
+                if(/[^0-9a-zA-Zа-яА-Я]/.test(e.key)) {
+                    return false;
+                }
+            });
+            
+            $('input.panton').keyup(function() {
+                var val = $(this).val();
+                val = val.replaceAll(/[^0-9a-zA-Zа-яА-Я]/g, '');
+            });
+    
+            $('input.panton').change(function(e) {
+                var val = $(this).val();
+                val = val.replace(/[^0-9a-zA-Zа-яА-Я]/g, '');
             });
             
             // Скрытие расчёта при изменении значения полей
