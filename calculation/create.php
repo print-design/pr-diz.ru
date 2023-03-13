@@ -3432,7 +3432,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     val = val.replaceAll(/\D/g, '');
                     $(this).val(val);
                     
-                    if(e.which == 8 && val == '') {
+                    if((e.which == 8 || e.which == 46) && val == '') {
                         $('#lamination_roller_width_control').html("<select id='lamination_roller_width' name='lamination_roller_width' class='form-control lam-only'><option value='' hidden='hidden'>Ширина ламинирующего вала...</option></select>");
                         if($('#solvent_yes').is(':checked')) {
                             $('#solvent_yes').click();
@@ -3842,6 +3842,13 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             streams_number != '' && stream_width != '' &&
                             streams_number != undefined && stream_width != undefined &&
                             ($('#solvent_yes').is(':checked') || $('#solvent_no').is(':checked'))) {
+                        if($('input#lamination_roller_width').val() != undefined && $('input#lamination_roller_width').val() != '') { 
+                            $('#lamination_roller_width_control').html("<select id='lamination_roller_width' name='lamination_roller_width' class='form-control lam-only'><option value='' hidden='hidden'>Ширина ламинирующего вала...</option></select>");
+                            if($('#solvent_yes').is(':checked')) $('#solvent_yes').click();
+                            else if($('#solvent_no').is(':checked')) $('#solvent_no').click();
+                        }
+                        //else {
+                    
                         material_width = streams_number * stream_width + 5;
                         laminator_widths = $.map($('#lamination_roller_width option'), function(option) {
                             if(!isNaN(option.value) && option.value > material_width) {
@@ -3861,6 +3868,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         if(laminator_width == -1) {
                             $('#lamination_roller_width').val(material_width);
                         }
+                    //}
                     }
                 }
             }
