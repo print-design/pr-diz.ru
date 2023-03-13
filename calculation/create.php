@@ -3837,21 +3837,31 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 if(!$('#lamination_roller_width').hasClass('d-none')) {
                     var streams_number = $('#streams_number').val();
                     var stream_width = $('#stream_width').val();
-                    // solvent_yes
-                    // if($('#solvent_yes').is(':checked')) {
+                    
                     if(!isNaN(streams_number) && !isNaN(stream_width) &&
                             streams_number != '' && stream_width != '' &&
                             streams_number != undefined && stream_width != undefined &&
                             ($('#solvent_yes').is(':checked') || $('#solvent_no').is(':checked'))) {
-                        alert('OK');
+                        material_width = streams_number * stream_width + 5;
+                        laminator_widths = $.map($('#lamination_roller_width option'), function(option) {
+                            if(!isNaN(option.value) && option.value > material_width) {
+                               return option.value;
+                            }
+                        });
+                        
+                        laminator_width = -1;
+                        
+                        if(laminator_widths.length > 0) {
+                            laminator_width = Math.min.apply(null, laminator_widths);
+                        }
+                        
+                        $('#lamination_roller_width').val(laminator_width);
+                        $('#lamination_roller_width').change();
+                        
+                        if(laminator_width == -1) {
+                            $('#lamination_roller_width').val(material_width);
+                        }
                     }
-                    else {
-                        alert('BAD');
-                    }
-                    
-                    //alert('Selecting laminatir roller ' + streams_number + ' ' + stream_width);
-                    //$('#stream_width').val(streams_number);
-                    $('#lamination_roller_width').val(400);
                 }
             }
             
