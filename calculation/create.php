@@ -3847,7 +3847,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             if($('#solvent_yes').is(':checked')) $('#solvent_yes').click();
                             else if($('#solvent_no').is(':checked')) $('#solvent_no').click();
                         }
-                        //else {
                     
                         material_width = streams_number * stream_width + 5;
                         laminator_widths = $.map($('#lamination_roller_width option'), function(option) {
@@ -3868,7 +3867,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         if(laminator_width == -1) {
                             $('#lamination_roller_width').val(material_width);
                         }
-                    //}
                     }
                 }
             }
