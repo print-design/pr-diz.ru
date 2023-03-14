@@ -66,14 +66,14 @@
     <?php endif; ?>
     
     <!-- Вал -->
-    <?php if($this->timetable->hasRoller): ?>
+    <?php if($this->timetable->hasRoller && false): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?=$this->edition['roller'] ?>
     </td>
     <?php endif; ?>
     
     <!-- Ламинация -->
-    <?php if($this->timetable->hasLamination): ?>
+    <?php if($this->timetable->hasLamination && false): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?=$this->edition['lamination'] ?>
     </td>

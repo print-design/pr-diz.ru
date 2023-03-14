@@ -38,10 +38,10 @@
     <?php if($this->timetable->hasLength): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     
     <!-- Вал -->
-    <?php if($this->timetable->hasRoller): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->hasRoller && false): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     
     <!-- Ламинация -->
-    <?php if($this->timetable->hasLamination): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <?php if($this->timetable->hasLamination && false): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     
     <!-- Красочность -->
     <?php if($this->timetable->hasColoring): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
