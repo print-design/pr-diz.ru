@@ -40,7 +40,8 @@
             <input type="hidden" id="hasColoring" name="hasColoring" value="<?= $this->hasColoring ?>"/>
             <input type="hidden" id="hasManager" name="hasManager" value="<?= $this->hasManager ?>"/>
             <input type="hidden" id="hasComment" name="hasComment" value="<?= $this->hasComment ?>"/>
-            <button type="submit" class="form-control btn btn-outline-dark" id="print_submit" name="print_submit">Печать&nbsp;<i class="fas fa-print"></i></button>
+            <input type="hidden" name="print_submit" value="1" />
+            <button type="button" class="form-control btn btn-outline-dark" onclick="javascript: this.form.submit();">Печать&nbsp;<i class="fas fa-print"></i></button>
         </form>
         <?php endif; ?>
     </div>
