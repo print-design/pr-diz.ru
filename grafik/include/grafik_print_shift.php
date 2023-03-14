@@ -37,11 +37,14 @@
     <!-- Метраж -->
     <?php if($this->timetable->hasLength): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     
-    <!-- Вал -->
-    <?php if($this->timetable->hasRoller): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <!-- Нужно подготовить (только для кладовщика) -->
+    <?php if($this->timetable->hasPrepare): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     
-    <!-- Ламинация -->
-    <?php if($this->timetable->hasLamination): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    <!-- Вал (не показываем на печати для кладовщика, так как не будет хватать места для "Нужно подготовить") -->
+    <?php if($this->timetable->hasRoller && !$this->timetable->hasPrepare): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
+    
+    <!-- Ламинация (не показываем на печати для кладовщика, так как не будет хватать места для "Нужно подготовить") -->
+    <?php if($this->timetable->hasLamination && !$this->timetable->hasPrepare): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>
     
     <!-- Красочность -->
     <?php if($this->timetable->hasColoring): ?><td class="<?=$top.' '.$this->shift ?>"></td><?php endif; ?>

@@ -35,6 +35,7 @@
             <input type="hidden" id="hasWidth" name="hasWidth" value="<?=$this->hasWidth ?>"/>
             <input type="hidden" id="hasLength" name="hasLength" value="<?= $this->hasLength ?>"/>
             <input type="hidden" id="hasStatus" name="hasStatus" value="<?= $this->hasStatus ?>"/>
+            <input type="hidden" id="hasPrepare" name="hasPrepare" value="<?= $this->hasPrepare ?>"/>
             <input type="hidden" id="hasRoller" name="hasRoller" value="<?= $this->hasRoller ?>"/>
             <input type="hidden" id="hasLamination" name="hasLamination" value="<?= $this->hasLamination ?>"/>
             <input type="hidden" id="hasColoring" name="hasColoring" value="<?= $this->hasColoring ?>"/>

@@ -32,6 +32,11 @@ class GrafikTimetable {
             $this->isCutter = $row['is_cutter'];
         }
         
+        // Параметр "нужно подготовить" (только для роли "кладовщик")
+        if(null !== filter_input(INPUT_POST, 'hasPrepare')) {
+            $this->hasPrepare = filter_input(INPUT_POST, 'hasPrepare');
+        }
+        
         // Смотрим настройки
         $this->allow_edit = 0;    
         $sql = "select name, bool_value from settings";
@@ -138,6 +143,23 @@ class GrafikTimetable {
                 $all_editions[$item['date']][$item['shift']] = []; 
             }
             
+            // Параметр "нужно подготовить" (только для роли "кладовщик")
+            $item['prepare'] = "";
+            
+            if($this->hasPrepare) {
+                $coeffLam = 0;
+                if($item['lamination_id'] == self::ONE_LAMINATION) $coeffLam = 1;
+                elseif($item['lamination_id'] == self::TWO_LAMINATIONS) $coeffLam = 2;
+                
+                if(($this->machineId == self::COMIFLEX || $this->machineId == self::ZBS1 || $this->machineId == self::ZBS2 || $this->machineId == self::ZBS3) && empty($item['status_id']) && !empty($item['length']) && !empty($item['coloring'])) {
+                    $item['prepare'] = $item['length'] + ($item['coloring'] * 300) + ($item['length'] * 0.03) + ($coeffLam * 200);
+                }
+                elseif(($this->machineId == self::LAMINATOR_SOLVENT || $this->machineId == self::LAMINATOR_NOSOLVENT) && empty ($item['status_id']) && !empty ($item['length'])) {
+                    $item['prepare'] = $item['length'] + ($item['length'] * 0.03) + 200;
+                }
+            }
+            
+            // Добавляем тираж в список тиражей
             array_push($all_editions[$item['date']][$item['shift']], $item);
         }
         
@@ -180,6 +202,23 @@ class GrafikTimetable {
         }
     }
     
+    public const COMIFLEX = 1;
+    public const ZBS1 = 2;
+    public const ZBS2 = 3;
+    public const ZBS3 = 4;
+    public const ATLAS = 5;
+    public const LAMINATOR_SOLVENT = 6;
+    public const CUT1 = 7;
+    public const CUT2 = 9;
+    public const CUT3 = 10;
+    public const CUT_ATLAS = 11;
+    public const CUT_SOMA = 12;
+    public const LAMINATOR_NOSOLVENT = 13;
+    public const CUT4 = 14;
+    
+    public const ONE_LAMINATION = 4;
+    public const TWO_LAMINATIONS = 5;
+    
     public $dateFrom;
     public $dateTo;
     public $machineId;
@@ -203,6 +242,8 @@ class GrafikTimetable {
     public $hasManager = false;
     public $hasComment = false;
     public $isCutter = false;
+    
+    public $hasPrepare = false;
 
     public $error_message = '';
     

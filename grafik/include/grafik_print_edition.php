@@ -65,15 +65,22 @@
     </td>
     <?php endif; ?>
     
-    <!-- Вал -->
-    <?php if($this->timetable->hasRoller): ?>
+    <!-- Нужно подготовить (только для кладовщика) -->
+    <?php if($this->timetable->hasPrepare): ?>
+    <td class="<?=$top.' '.$this->shift ?>">
+        <?=(empty($this->edition['prepare']) ? $this->edition['prepare'] : $this->edition['prepare']) ?>
+    </td>
+    <?php endif; ?>
+    
+    <!-- Вал (не показываем на печати для кладовщика, так как не будет хватать места для "Нужно подготовить") -->
+    <?php if($this->timetable->hasRoller && !$this->timetable->hasPrepare): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?=$this->edition['roller'] ?>
     </td>
     <?php endif; ?>
     
-    <!-- Ламинация -->
-    <?php if($this->timetable->hasLamination): ?>
+    <!-- Ламинация (не показываем на печати для кладовщика, так как не будет хватать места для "Нужно подготовить") -->
+    <?php if($this->timetable->hasLamination && !$this->timetable->hasPrepare): ?>
     <td class="<?=$top.' '.$this->shift ?>">
         <?=$this->edition['lamination'] ?>
     </td>

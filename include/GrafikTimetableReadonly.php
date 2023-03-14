@@ -32,10 +32,8 @@ class GrafikTimetableReadonly {
             $this->isCutter = $row['is_cutter'];
         }
         
-        $id = filter_input(INPUT_GET, 'id');
-        
         // Параметр "нужно подготовить" (только для роли "кладовщик")
-        if(IsInRole("storekeeper") && ($id == self::COMIFLEX || $id == self::ZBS1 || $id == self::ZBS2 || $id == self::ZBS3 || $id == self::LAMINATOR_SOLVENT || $id == self::LAMINATOR_NOSOLVENT)) {
+        if(IsInRole("storekeeper") && ($this->machineId == self::COMIFLEX || $this->machineId == self::ZBS1 || $this->machineId == self::ZBS2 || $this->machineId == self::ZBS3 || $this->machineId == self::LAMINATOR_SOLVENT || $this->machineId == self::LAMINATOR_NOSOLVENT)) {
             $this->hasPrepare = true;
         }
         
@@ -83,10 +81,10 @@ class GrafikTimetableReadonly {
                 if($item['lamination_id'] == self::ONE_LAMINATION) $coeffLam = 1;
                 elseif($item['lamination_id'] == self::TWO_LAMINATIONS) $coeffLam = 2;
                 
-                if(($id == self::COMIFLEX || $id == self::ZBS1 || $id == self::ZBS2 || $id == self::ZBS3) && empty($item['status_id']) && !empty($item['length']) && !empty($item['coloring'])) {
+                if(($this->machineId == self::COMIFLEX || $this->machineId == self::ZBS1 || $this->machineId == self::ZBS2 || $this->machineId == self::ZBS3) && empty($item['status_id']) && !empty($item['length']) && !empty($item['coloring'])) {
                     $item['prepare'] = $item['length'] + ($item['coloring'] * 300) + ($item['length'] * 0.03) + ($coeffLam * 200);
                 }
-                elseif(($id == self::LAMINATOR_SOLVENT || $id == self::LAMINATOR_NOSOLVENT) && empty ($item['status_id']) && !empty ($item['length'])) {
+                elseif(($this->machineId == self::LAMINATOR_SOLVENT || $this->machineId == self::LAMINATOR_NOSOLVENT) && empty ($item['status_id']) && !empty ($item['length'])) {
                     $item['prepare'] = $item['length'] + ($item['length'] * 0.03) + 200;
                 }
             }
