@@ -3850,7 +3850,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     
                         material_width = streams_number * stream_width + 5;
                         laminator_widths = $.map($('#lamination_roller_width option'), function(option) {
-                            if(!isNaN(option.value) && option.value > material_width) {
+                            if(!isNaN(option.value) && option.value >= material_width) {
                                return option.value;
                             }
                         });
